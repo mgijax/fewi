@@ -19,6 +19,7 @@
 			in the datasource deployment file, or if you wish to change any of the other settings 
 			in this file.</li>
 			<li>execute the deploy-ds ant task to deploy the jdbc driver and datasource files.</li>
+			<li>copy the following files from your jboss/common/lib/ into ./lib: ejb3-persistance.jar, servlet-api.jar, slf4j-api-1.5.8.jar</li>
 	</ul>
  
 	 </p>
