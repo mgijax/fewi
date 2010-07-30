@@ -20,24 +20,22 @@ public class MarkerFinder {
 	private SolrMarkerHunter markerHunter;
 	
 	@Autowired
-	private HibernateMarkerDAO markerGatherer;
-	
-	GenericGatherer<Marker> markerG = 
-			new HibernateGatherer<Marker>(Marker.class);
+	private HibernateGatherer<Marker> markerGatherer;
 
 	public List<Marker> getMarkersByID(List<Integer> markerIDs) {
 		logger.info("get markerIDs");
+		markerGatherer.setType(Marker.class);
 		return markerGatherer.get(markerIDs);
 	}
 
 	public Marker getMarkerByID(int id) {
 		logger.info("get id");
+		markerGatherer.setType(Marker.class);
 		return markerGatherer.get(id);
 	}
 
 	public MarkerResults searchMarkers(MarkerQuery query) {
-		logger.info("searchMarkers");
-		markerG.get(10603);
+		logger.info("searchMarkers");			
 		return markerHunter.searchMarkers(query);
 	}
 

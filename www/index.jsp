@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-  <head><title>Spring 3.0.2 / Hibernate 3.3.2 Prototype</title></head>
+  <head><title>Spring 3.0.3 / Hibernate 3.3.2 Prototype</title></head>
   <body>
     <h1>Prototype for MGI Spring/Hibernate WI</h1>
     <p>This is the MGI prototype skeleton for integrating Spring 3.0.3 and Hibernate 3.3.2.  It contains 
@@ -22,8 +22,8 @@
 	</ul>
  
 	 </p>
-    <p><a href='marker_list.html'>Link</a> to the existing Marker Summary page.<br/>
-    <a href='refernce_list.html'>Link</a> to the existing Reference Summary page.</p>
+    <p><a href='/fewi/mgi/marker/'>Link</a> to the existing Marker Query Form.</p>
+    
     <h3>JBoss 5.1 configuration:</h3>
     <p>I have used the default deployment configuration for my prototype.  You will 
     need to do a couple of things to prepare JBoss.

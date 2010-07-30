@@ -5,27 +5,32 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Repository
 public class HibernateGatherer<T> implements GenericGatherer<T> {
 
-	@Autowired
-	private SessionFactory sessionFactory;
-	
 	private Class<T> type;
 	
-	public HibernateGatherer(Class<T> type){
-		this.type = type;
-	}
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public T get(Integer key) {
 		System.out.println("gatherer get key");
-		if (sessionFactory != null){
+		if (sessionFactory != null && type != null){
 			return (T)sessionFactory.getCurrentSession().get(type, key);
+		} 
+		if (sessionFactory == null){
+			System.out.println("null sessionFactory");
 		}
-		System.out.println("null sessionFactory");
+		
+		if (type == null){
+			System.out.println("null type");
+		}
+
 		return null;
 	}
 
@@ -38,4 +43,9 @@ public class HibernateGatherer<T> implements GenericGatherer<T> {
 		}
 		return results;
 	}
+
+	public void setType(Class<T> type) {
+		this.type = type;
+	}
+
 }

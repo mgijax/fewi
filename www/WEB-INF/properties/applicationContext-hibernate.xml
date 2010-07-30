@@ -44,11 +44,12 @@
 		p:sessionFactory-ref="sessionFactory"/>
 			
 	<tx:annotation-driven/>
-
+	
 	<!--
-		Activates various annotations to be detected in bean classes:
-		Spring's @Required and @Autowired, as well as JSR 250's @Resource.
+	Activates various annotations to be detected in bean classes:
+	Spring's @Required and @Autowired, as well as JSR 250's @Resource.
 	-->
 	<context:annotation-config/>
+	
 	
 </beans>

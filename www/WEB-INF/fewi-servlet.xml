@@ -18,6 +18,7 @@
 	<!-- Packages to scan for @Controller & @Repository annotations -->
 	<context:component-scan base-package="mgi.frontend.controller"/>
 	<context:component-scan base-package="mgi.frontend.finder"/>
+
 	
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />

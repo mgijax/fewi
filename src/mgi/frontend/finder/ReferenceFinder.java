@@ -17,20 +17,23 @@ public class ReferenceFinder {
 	@Autowired
 	private SolrReferenceHunter referenceHunter;
 	
-	private GenericGatherer<Reference> referenceGatherer = 
-		new HibernateGatherer<Reference>(Reference.class);
+	@Autowired
+	private HibernateGatherer<Reference> referenceGatherer;
 
 	public List<Reference> getReferencesByID(List<Integer> referenceIDs) {
+		referenceGatherer.setType(Reference.class);
 		return referenceGatherer.get(referenceIDs);
 	}
 
 	public Reference getReferenceByID(int id) {
+		referenceGatherer.setType(Reference.class);
 		return referenceGatherer.get(id);
+
 	}
 
-	public MarkerResults searchMarkers(MarkerQuery query) {
-		//return referenceHunter.searchReferences(query);
-		return null;
+	public MarkerResults searchReferences(MarkerQuery query) {
+		return referenceHunter.searchReferences(query);
+
 	}
 
 

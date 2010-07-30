@@ -50,11 +50,13 @@ body {
 
 <script type="text/javascript">
 YAHOO.example.DynamicData = function() {
+	
+	// this function formats the marker detail link
     this.symbolLinkFormatter = function(elLiner, oRecord, oColumn, oData) {
-		elLiner.innerHTML = ' <a href="/proto/mgi/marker/' + oRecord.getData("markerKey") + '">' + oRecord.getData("symbol") + '</a>';
+		elLiner.innerHTML = ' <a href="/fewi/mgi/marker/' + oRecord.getData("markerKey") + '">' + oRecord.getData("symbol") + '</a>';
     };
     
-    // Add the custom formatter to the shortcuts
+    // Adds the formatter above to the to the symbol col
     YAHOO.widget.DataTable.Formatter.symbolLink = this.symbolLinkFormatter;
 
     // Column definitions
@@ -63,12 +65,6 @@ YAHOO.example.DynamicData = function() {
         {key:"name", label:"Name", sortable:true},
         {key:"type", label:"Type", sortable:true}
     ];
-
-    // Custom parser
-    var stringToDate = function(sData) {
-        var array = sData.split("-");
-        return new Date(array[1] + " " + array[0] + ", " + array[2]);
-    };
     
     // DataSource instance
     var myDataSource = new YAHOO.util.DataSource("json?${queryString}&");
