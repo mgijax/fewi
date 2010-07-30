@@ -14,9 +14,9 @@ ID: ${marker.primaryID}<br/>
 Symbol: ${marker.symbol}<br/>
 Name: ${marker.name}<br/>
 Type: ${marker.markerType}<br/>
-References: (<a href="/proto/mgi/reference/marker/${marker.markerKey}">All)<br/>
+References: (<a href="/fewi/mgi/reference/marker/${marker.markerKey}">All)<br/>
 <c:forEach var="reference" items="${marker.references}">
-	<a href="/proto/mgi/reference/${reference.referenceKey}">
+	<a href="/fewi/mgi/reference/${reference.referenceKey}">
 		${reference.jnumID}</a> ${reference.journal} ${reference.title}<br/>
 
 </c:forEach>
