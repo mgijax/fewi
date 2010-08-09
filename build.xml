@@ -24,6 +24,12 @@
         <target name="prepare" depends="clean">
                 <echo>Creating build directory</echo>
                 <mkdir dir="${compile.dir}"/>
+
+
+                <copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
+
+
+
         </target>
 
 
