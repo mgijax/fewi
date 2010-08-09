@@ -8,7 +8,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	
-	<link href="/fewi/css/mgi_qf.css" rel="stylesheet" type="text/css"/>
+	<link href="/fewi/mgi_qf.css" rel="stylesheet" type="text/css"/>
 	
 	<title>Marker Query</title>
 </head>
