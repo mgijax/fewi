@@ -1,48 +1,64 @@
-<project name="fewi" default="deploy" basedir=".">
+<project name="fewi" default="compile" basedir=".">
 
-	<property file="build.properties"/>
-	
-    <path id="libs">
-        <fileset includes="*.jar" dir="www/WEB-INF/lib" />
-    	<fileset includes="*.jar" dir="lib" />
-    </path>
 
-	<target name="prepare" depends="clean">
-		<echo>Creating build directory</echo>
-		<mkdir dir="${build.dir}"/>
-	</target>
-	
-	<target name="clean" description="Clean output directories">
-		<delete>
-			<fileset dir="${build.dir}">
-				<include name="**/*.class"/>
-			</fileset>
-		</delete>
-		<delete file="${project.name}.war"/>
-	</target>
-	
-	<target name="compile" depends="prepare">
-		<echo>Compile source</echo>
-		<javac srcdir="${src.dir}" destdir="${build.dir}">
-			<classpath refid="libs"/>
-		</javac>
-	</target>
+        <!--pull in values from the properties file -->
+        <property file="build.properties"/>
 
-	<target name="war" depends="compile">
-		<echo>Build war file</echo>	
-		<war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
-			<fileset dir="www"/>
-		</war>
-	</target>
-	
-	<target name="deploy" depends="war">
-		<echo>Deploy war</echo>
-		<copy file="${project.name}.war" todir="${deploy.dir}" overwrite="true"/>
-	</target>	
-	
-	<target name="deploy-ds" >
-		<echo>Deploy datasource</echo>
-		<copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
-	</target>
-	
+
+        <!--libs -->
+        <path id="libs">
+                <fileset includes="*.jar" dir="www/WEB-INF/lib" />
+                <fileset includes="*.jar" dir="${jbossLib.dir}" />
+                <fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
+        </path>
+
+
+        <!--clean -->
+        <target name="clean">
+                <delete dir="${compile.dir}"/>
+                <delete file="${project.name}.war"/>
+        </target>
+
+
+        <!--prepare -->
+        <target name="prepare" depends="clean">
+                <echo>Creating build directory</echo>
+                <mkdir dir="${compile.dir}"/>
+        </target>
+
+
+        <!--compile -->
+        <target name="compile" depends="prepare">
+                <echo>Compile source</echo>
+                <javac srcdir="${src.dir}" destdir="${compile.dir}">
+                        <classpath refid="libs"/>
+                </javac>
+        </target>
+
+
+        <!--war -->
+        <target name="war" depends="compile">
+                <echo>Build war file</echo>        
+                <war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
+                        <fileset dir="www"/>
+                        <fileset dir="www/css"/>
+                </war>
+        </target>
+
+
+        <!--deploy -->
+        <target name="deploy" depends="war">
+                <echo>Deploy war</echo>
+                <copy file="${project.name}.war" todir="${deploy.dir}" overwrite="true"/>
+        </target>        
+
+
+        <!--deploy-ds -->
+        <target name="deploy-ds" >
+                <echo>Deploy datasource</echo>
+                <copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
+                <copy file="${jdbcdriver}" todir="${jboss.dir}lib" overwrite="true"/>
+        </target>
+
+
 </project>
