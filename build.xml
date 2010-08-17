@@ -1,4 +1,4 @@
-<project name="fewi" default="compile" basedir=".">
+<project name="fewi" default="war" basedir=".">
 
 
         <!--pull in values from the properties file -->
@@ -24,12 +24,7 @@
         <target name="prepare" depends="clean">
                 <echo>Creating build directory</echo>
                 <mkdir dir="${compile.dir}"/>
-
-
                 <copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
-
-
-
         </target>
 
 
