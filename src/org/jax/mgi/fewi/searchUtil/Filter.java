@@ -13,24 +13,16 @@ public class Filter {
     //  INTERNAL FIELDS
     //////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * The name of the property
-	 */
+	// The name of the property
 	protected String property;
 
-	/**
-	 * The value to compare the property with
-	 */
+	// The value to compare the property with
 	protected List<String> values = new ArrayList<String>();
 
-	/**
-	 * The type of comparison
-	 */
+	// The type of comparison
 	protected int operator;
 
-	/**
-	 * List of filters, indicating this is a filter containing nested filters
-	 */
+	// List of filters, indicating this is a filter containing nested filters
 	protected List<Filter> nestedFilters = new ArrayList<Filter>();
 
 
@@ -62,7 +54,7 @@ public class Filter {
 	}
 
 	/**
-	 * Creates a basic filter; supply property/value/operator
+	 * Creates a basic filter; supply property, valueList, and operator
 	 */
 	public Filter(String property, List<String> values, int operator) {
 		this.property = property;
@@ -142,6 +134,7 @@ public class Filter {
 		this.nestedFilters = nestedFilters;
 	}
 
+
     //////////////////////////////////////////////////////////////////////////
     //  PROPERTY DETECTION FOR RECURSION
     //////////////////////////////////////////////////////////////////////////
@@ -177,6 +170,13 @@ public class Filter {
 	}
 
 	/**
+	 * Create a new Filter using the != operator.
+	 */
+	public static Filter notEqual(String property, String value) {
+		return new Filter(property, value, OP_NOT_EQUAL);
+	}
+
+	/**
 	 * Create a new Filter using the < operator.
 	 */
 	public static Filter lessThan(String property, String value) {
@@ -206,10 +206,6 @@ public class Filter {
 
 	/**
 	 * Create a new Filter using the IN operator.
-	 *
-	 * <p>
-	 * This takes a variable number of parameters. Any number of values can be
-	 * specified.
 	 */
 	public static Filter in(String property, List<String> values) {
 		return new Filter(property, values, OP_IN);
@@ -217,15 +213,10 @@ public class Filter {
 
 	/**
 	 * Create a new Filter using the NOT IN operator.
-	 *
-	 * <p>
-	 * This takes a variable number of parameters. Any number of values can be
-	 * specified.
 	 */
 	public static Filter notIn(String property, List<String> values) {
 		return new Filter(property, values, OP_NOT_IN);
 	}
-
 
 	/**
 	 * Create a new Filter using the LIKE operator.
@@ -235,61 +226,24 @@ public class Filter {
 	}
 
 	/**
-	 * Create a new Filter using the != operator.
+	 * Create a new container Filter (contains other filters) using
+	 * the AND operator
 	 */
-	public static Filter notEqual(String property, String value) {
-		return new Filter(property, value, OP_NOT_EQUAL);
+	public static Filter and(List<Filter> filters) {
+		Filter filter = new Filter();
+		filter.setOperator(OP_AND);
+		filter.setNestedFilters(filters);
+		return filter;
 	}
 
-
-
-
-
-
-
-
-
 	/**
-	 * Used with OP_OR and OP_AND filters. These filters take a collection of
-	 * filters as their value. This method adds a filter to that list.
+	 * Create a new container Filter (contains other filters) using
+	 * the OR operator
 	 */
-//	@SuppressWarnings("unchecked")
-//	public void add(Filter filter) {
-//		if (value == null || !(value instanceof List)) {
-//			value = new ArrayList();
-//		}
-//		((List) value).add(filter);
-//	}
-
-
-	/**
-	 * Create a new Filter using the AND operator.
-	 *
-	 * <p>
-	 * This takes a variable number of parameters. Any number of
-	 * <code>Filter</code>s can be specified.
-	 */
-//	public static Filter and(Filter... filters) {
-//		Filter filter = new Filter("AND", null, OP_AND);
-//		for (Filter f : filters) {
-//			filter.add(f);
-//		}
-//		return filter;
-//	}
-
-	/**
-	 * Create a new Filter using the OR operator.
-	 *
-	 * <p>
-	 * This takes a variable number of parameters. Any number of
-	 * <code>Filter</code>s can be specified.
-	 */
-//	public static Filter or(Filter... filters) {
-//		Filter filter = and(filters);
-//		filter.property = "OR";
-//		filter.operator = OP_OR;
-//		return filter;
-//	}
-
-
+	public static Filter or(List<Filter> filters) {
+		Filter filter = new Filter();
+		filter.setOperator(OP_OR);
+		filter.setNestedFilters(filters);
+		return filter;
+	}
 }
