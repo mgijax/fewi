@@ -25,6 +25,8 @@ public class Filter {
 	// List of filters, indicating this is a filter containing nested filters
 	protected List<Filter> nestedFilters = new ArrayList<Filter>();
 
+	// The type of comparison to use for joining nested filters
+	protected int filterComparison;
 
     //////////////////////////////////////////////////////////////////////////
     //  CONSTRUCTORS
@@ -86,10 +88,8 @@ public class Filter {
 
 	// operators for nested filters
 	public static final int
-		OP_AND = 1000,
-		OP_OR = 1001,
-		OP_NOT = 1002;
-
+		FC_AND = 1000,
+		FC_OR = 1001;
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -132,6 +132,14 @@ public class Filter {
 	}
 	public void setNestedFilters(List<Filter> nestedFilters) {
 		this.nestedFilters = nestedFilters;
+	}
+
+	// filterComparison
+	public int getFilterComparison() {
+		return filterComparison;
+	}
+	public void setFilterComparison(int filterComparison) {
+		this.filterComparison = filterComparison;
 	}
 
 
@@ -231,7 +239,7 @@ public class Filter {
 	 */
 	public static Filter and(List<Filter> filters) {
 		Filter filter = new Filter();
-		filter.setOperator(OP_AND);
+		filter.setOperator(FC_AND);
 		filter.setNestedFilters(filters);
 		return filter;
 	}
@@ -242,7 +250,7 @@ public class Filter {
 	 */
 	public static Filter or(List<Filter> filters) {
 		Filter filter = new Filter();
-		filter.setOperator(OP_OR);
+		filter.setOperator(FC_OR);
 		filter.setNestedFilters(filters);
 		return filter;
 	}
