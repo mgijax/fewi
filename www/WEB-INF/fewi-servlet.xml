@@ -16,8 +16,8 @@
 	<context:property-placeholder location="classpath:../properties/jdbc.properties" />
 
 	<!-- Packages to scan for @Controller & @Repository annotations -->
-	<context:component-scan base-package="mgi.frontend.controller"/>
-	<context:component-scan base-package="mgi.frontend.finder"/>
+	<context:component-scan base-package="org.jax.mgi.fewi.controller"/>
+	<context:component-scan base-package="org.jax.mgi.fewi.finder"/>
 
 	
 	<!-- Configures the @Controller programming model -->
