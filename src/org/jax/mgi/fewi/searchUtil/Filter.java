@@ -26,7 +26,7 @@ public class Filter {
 	protected List<Filter> nestedFilters = new ArrayList<Filter>();
 
 	// The type of comparison to use for joining nested filters
-	protected int filterComparison;
+	protected int filterJoinClause;
 
     //////////////////////////////////////////////////////////////////////////
     //  CONSTRUCTORS
@@ -135,11 +135,11 @@ public class Filter {
 	}
 
 	// filterComparison
-	public int getFilterComparison() {
-		return filterComparison;
+	public int getFilterJoinClause() {
+		return filterJoinClause;
 	}
-	public void setFilterComparison(int filterComparison) {
-		this.filterComparison = filterComparison;
+	public void setFilterJoinClause(int filterJoinClause) {
+		this.filterJoinClause = filterJoinClause;
 	}
 
 
@@ -239,7 +239,7 @@ public class Filter {
 	 */
 	public static Filter and(List<Filter> filters) {
 		Filter filter = new Filter();
-		filter.setOperator(FC_AND);
+		filter.setFilterJoinClause(FC_AND);
 		filter.setNestedFilters(filters);
 		return filter;
 	}
@@ -250,7 +250,7 @@ public class Filter {
 	 */
 	public static Filter or(List<Filter> filters) {
 		Filter filter = new Filter();
-		filter.setOperator(FC_OR);
+		filter.setFilterJoinClause(FC_OR);
 		filter.setNestedFilters(filters);
 		return filter;
 	}
