@@ -79,7 +79,11 @@ public class Filter {
 		OP_GREATER_OR_EQUAL = 5,
 		OP_LIKE = 6,
 		OP_NULL = 7,
-		OP_NOT_NULL = 8;
+		OP_NOT_NULL = 8,
+	    OP_BEGINS = 9,
+	    OP_ENDS = 10,
+	    OP_CONTAINS = 11;
+	 
 
 	// advanced operators
 	public static final int
