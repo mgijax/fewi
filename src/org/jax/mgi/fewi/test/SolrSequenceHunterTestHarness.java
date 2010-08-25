@@ -25,7 +25,7 @@ public class SolrSequenceHunterTestHarness {
         
         // A Very simple filter
         
-        Filter testFilter = new Filter(SearchConstants.SEQUENCE_ID, "100", Filter.OP_GREATER_THAN);
+        Filter testFilter = new Filter(SearchConstants.SEQ_ID, "100", Filter.OP_GREATER_THAN);
 
         dummySearch.setFilter(testFilter);
         Sort sort = new Sort();
@@ -38,8 +38,8 @@ public class SolrSequenceHunterTestHarness {
        
         // A nested Filter
         
-        Filter base1 = new Filter(SearchConstants.MARKER_KEY, "10603", Filter.OP_LESS_THAN);
-        Filter base2 = new Filter(SearchConstants.REFERENCE_KEY, "", Filter.OP_IN);
+        Filter base1 = new Filter(SearchConstants.MRK_KEY, "10603", Filter.OP_LESS_THAN);
+        Filter base2 = new Filter(SearchConstants.REF_KEY, "", Filter.OP_IN);
         List <String> values = new ArrayList <String> ();
         values.add("testString1");
         values.add("testString2");
