@@ -17,6 +17,7 @@ public class SearchConstants {
     public static final String REF_JOURNAL			= "journal";
     public static final String REF_TEXT_ABSTRACT	= "text_abstract";
     public static final String REF_TEXT_TITLE       = "text_title";
+    public static final String REF_YEAR             = "year";
     
     // sequence constants
     public static final String SEQ_ID               = "sequence_id";
