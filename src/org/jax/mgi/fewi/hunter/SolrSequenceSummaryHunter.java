@@ -38,10 +38,10 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
          * 
          */
         
-        propertyMap.put(SearchConstants.SEQ_ID, new SolrPropertyMapper(IndexConstants.SEQUENCE_ID));
-        propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MARKER_KEY));
-        propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REFERENCE_KEY));
-        propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQUENCE_KEY));
+        propertyMap.put(SearchConstants.SEQ_ID, new SolrPropertyMapper(IndexConstants.SEQ_ID));
+        propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
+        propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
+        propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
         
         // These values are here for testing purposes.
         
@@ -61,7 +61,7 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
          * and implement the special logic in there.
          */
         
-        keyString = IndexConstants.SEQUENCE_KEY;
+        keyString = IndexConstants.SEQ_KEY;
         
     }
    

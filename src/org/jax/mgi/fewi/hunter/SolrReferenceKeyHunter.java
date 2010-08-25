@@ -22,7 +22,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrSequenceKeyHunter extends SolrHunter {
+public class SolrReferenceKeyHunter extends SolrHunter {
     
     /***
      * The constructor sets up this hunter so that it is specific to sequence
@@ -30,7 +30,7 @@ public class SolrSequenceKeyHunter extends SolrHunter {
      * inherited from its superclass, and then relies on the superclass to 
      * perform all of the needed work via the hunt() method.
      */
-    public SolrSequenceKeyHunter() {        
+    public SolrReferenceKeyHunter() {        
         
         /*
          * Setup the property map.  This maps from the properties of the incoming
@@ -38,11 +38,11 @@ public class SolrSequenceKeyHunter extends SolrHunter {
          * 
          */
         
-        propertyMap.put(SearchConstants.SEQ_ID, new SolrPropertyMapper(IndexConstants.SEQ_ID));
+        propertyMap.put(SearchConstants.REF_ID, new SolrPropertyMapper(IndexConstants.REF_ID));
                 
         // Set the url for the solr instance.
         
-        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/sequence/";
+        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/reference/";
         
         /*
          * The name of the field we want to iterate through the documents for
@@ -51,7 +51,7 @@ public class SolrSequenceKeyHunter extends SolrHunter {
          * and implement the special logic in there.
          */
         
-        keyString = IndexConstants.SEQ_KEY;
+        keyString = IndexConstants.REF_KEY;
         
     }
    
