@@ -22,7 +22,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrSequenceSummaryHunter extends SolrHunter {
+public class SolrSequenceKeyHunter extends SolrHunter {
     
     /***
      * The constructor sets up this hunter so that it is specific to sequence
@@ -30,7 +30,7 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
      * inherited from its superclass, and then relies on the superclass to 
      * perform all of the needed work via the hunt() method.
      */
-    public SolrSequenceSummaryHunter() {        
+    public SolrSequenceKeyHunter() {        
         
         /*
          * Setup the property map.  This maps from the properties of the incoming
@@ -39,17 +39,7 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
          */
         
         propertyMap.put(SearchConstants.SEQ_ID, new SolrPropertyMapper(IndexConstants.SEQUENCE_ID));
-        propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MARKER_KEY));
-        propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REFERENCE_KEY));
-        propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQUENCE_KEY));
-        
-        // These values are here for testing purposes.
-        
-        ArrayList <String> testMappingList = new ArrayList();
-        testMappingList.add("field1");
-        testMappingList.add("field2");
-        propertyMap.put("field", new SolrPropertyMapper(testMappingList, "AND"));
-        
+                
         // Set the url for the solr instance.
         
         solrUrl = "http://cardolan.informatics.jax.org:8983/solr/sequence/";
