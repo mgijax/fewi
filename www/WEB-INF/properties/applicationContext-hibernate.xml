@@ -13,7 +13,7 @@
 
 	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
 	<!-- (in this case, JDBC-related settings for the dataSource definition below) -->
-	<context:property-placeholder location="classpath:../properties/jdbc.properties" />
+	<context:property-placeholder location="classpath:../properties/fewi.properties" />
 
 	<!-- JNDI DataSource for JEE environments -->
 	<jee:jndi-lookup id="dataSource" jndi-name="${jndi.datasource}"/>
