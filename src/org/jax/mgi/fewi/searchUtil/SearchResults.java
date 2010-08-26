@@ -15,6 +15,9 @@ public class SearchResults<T> {
 	// Database keys identified as the results from a search
 	protected List<String> resultKeys = new ArrayList<String>();
 
+	// Database keys identified as the results from a search
+	protected List<String> resultStrings = new ArrayList<String>();
+
 	// Result Objects of a given search
 	protected List<T> resultObjects = new ArrayList<T>();
 
@@ -39,6 +42,20 @@ public class SearchResults<T> {
 	 */
 	public void setResultKeys(List<String> resultKeys) {
 		this.resultKeys = resultKeys;
+	}
+
+	/**
+	 * Get the keys of the results returned
+	 */
+	public List<String> getResultStrings() {
+		return resultStrings;
+	}
+
+	/**
+	 * Set the result keys of the search.
+	 */
+	public void setResultStrings(List<String> resultStrings) {
+		this.resultStrings= resultStrings;
 	}
 
 	/**
