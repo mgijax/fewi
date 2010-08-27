@@ -163,7 +163,7 @@ public class Filter {
 	public boolean isBasicFilter() {
 
 		boolean isBasic = true;
-		if (!nestedFilters.isEmpty() && nestedFilters.size() > 1) {
+		if (!nestedFilters.isEmpty()) {
 			isBasic = false;
 		}
 		return isBasic;
