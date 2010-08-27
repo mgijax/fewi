@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jax.mgi.fewi.hunter.SolrReferenceSummaryHunter;
 import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -83,6 +84,26 @@ public class SolrSequenceHunterTestHarness {
         System.out.println("The fifth query: ");
         sssh.hunt(dummySearch, dummyResults);
         
-    }
+        System.out.println("Starting the references testing.");
+        Filter refFilter1 = new Filter(SearchConstants.REF_AUTHOR_ANY, "jones");
+        
+        SolrReferenceSummaryHunter srsh = new SolrReferenceSummaryHunter();
+        
 
+        SearchParams params = new SearchParams();
+        Filter ftest = new Filter();
+        List<Filter> flist3= new ArrayList<Filter>();
+        flist3.add(new Filter(SearchConstants.REF_AUTHOR_ANY, "jones"));
+        ftest.setNestedFilters(flist3);
+        params.setFilter(ftest); 
+        
+        srsh.hunt(params, dummyResults);
+        
+        flist3.add(new Filter());
+        ftest.setNestedFilters(flist3);
+        params.setFilter(ftest);
+        srsh.hunt(params, dummyResults);
+
+        
+    }
 }
