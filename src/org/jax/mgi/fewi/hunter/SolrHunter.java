@@ -16,6 +16,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.apache.commons.lang.*;
 
 /**
  * This is the Solr specific hunter.  It is responsible for mapping the higher
@@ -51,8 +52,8 @@ public class SolrHunter implements Hunter {
         // Setup the mapping of the logical ands and or to the vendor
         // specific ones.
         
-        filterClauseMap.put(Filter.FC_AND, "AND");
-        filterClauseMap.put(Filter.FC_OR, "OR");
+        filterClauseMap.put(Filter.FC_AND, " AND ");
+        filterClauseMap.put(Filter.FC_OR, " OR ");
    
     }
     
@@ -214,6 +215,17 @@ public class SolrHunter implements Hunter {
         
         if (filter.isBasicFilter()) {
             
+            // Check to see if the property is null or an empty string, 
+            // if it is, return an empty string
+            
+            if (filter.getProperty() == null || filter.getProperty().equals("")) {
+                return "";
+            }
+            else {
+                System.out.println(filter.getProperty());
+            }
+            
+            
             // If its not an IN or NOT IN, get the query clause and return it 
             
             if (filter.getOperator() != Filter.OP_IN 
@@ -259,19 +271,17 @@ public class SolrHunter implements Hunter {
             queryString = "(";
             int first = 1;
             List<Filter> filters = filter.getNestedFilters();
+            
+            List<String> resultsString = new ArrayList<String>();
+            
             for (Filter f: filters) {
-                if (first == 1) {
-                    queryString += translateFilter(f, propertyMap);
-                    first =0;
-                }
-                else {
-                    queryString += " " 
-                        + filterClauseMap.get(filter.getOperator()) + " " 
-                        + translateFilter(f, propertyMap);
+                
+                String tempString = translateFilter(f, propertyMap);
+                if (! tempString.equals("")) {
+                    resultsString.add(tempString);
                 }
             }
-            queryString += ")";
-            return queryString;
+            return "(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getOperator())) + ")"; 
         }    
     }
 }
