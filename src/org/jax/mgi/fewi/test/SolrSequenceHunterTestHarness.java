@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
+import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceSummaryHunter;
 import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -26,7 +28,7 @@ public class SolrSequenceHunterTestHarness {
         
         // A Very simple filter
         
-        Filter testFilter = new Filter(SearchConstants.SEQ_ID, "100", Filter.OP_GREATER_THAN);
+        Filter testFilter = new Filter(SearchConstants.SEQ_ID, "NM_001122733", Filter.OP_EQUAL);
 
         dummySearch.setFilter(testFilter);
         Sort sort = new Sort();
@@ -103,6 +105,16 @@ public class SolrSequenceHunterTestHarness {
         ftest.setNestedFilters(flist3);
         params.setFilter(ftest);
         srsh.hunt(params, dummyResults);
+        
+        SolrAuthorsACHunter saah = new SolrAuthorsACHunter();
+        Filter fauthor = new Filter(SearchConstants.REF_AUTHOR, "hart");
+        params.setFilter(fauthor);
+        saah.hunt(params, dummyResults);
+        
+        SolrJournalsACHunter sjah = new SolrJournalsACHunter();
+        Filter fjournal = new Filter(SearchConstants.REF_JOURNAL, "natu");
+        params.setFilter(fjournal);
+        sjah.hunt(params, dummyResults);
 
         
     }
