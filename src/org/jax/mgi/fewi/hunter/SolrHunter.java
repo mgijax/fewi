@@ -116,7 +116,7 @@ public class SolrHunter implements Hunter {
         
         query.setRows(searchParams.getPageSize());
         
-        query.setStart(searchParams.getStartIndex());
+        query.setStart(searchParams.getStartIndex()-1);
         
         System.out.println("The Solr query:" + query + "\n");
 
