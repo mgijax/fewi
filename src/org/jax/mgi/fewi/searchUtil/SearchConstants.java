@@ -12,6 +12,7 @@ public class SearchConstants {
     public static final String REF_ID			    = "reference_id";
     public static final String REF_KEY              = "reference_key";
     public static final String REF_AUTHOR_ANY		= "author_any";
+    public static final String REF_AUTHOR           = "author";
     public static final String REF_AUTHOR_FIRST		= "author_first";
     public static final String REF_AUTHOR_LAST		= "author_last";
     public static final String REF_JOURNAL			= "journal";
