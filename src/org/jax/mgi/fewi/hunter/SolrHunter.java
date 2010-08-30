@@ -37,6 +37,8 @@ public class SolrHunter implements Hunter {
    
     protected String solrUrl;
     protected String keyString;
+    protected String otherString;
+    
     protected HashMap <String, PropertyMapper> propertyMap = 
         new HashMap<String, PropertyMapper>();
    
@@ -134,7 +136,13 @@ public class SolrHunter implements Hunter {
          * We do this in a generic manner via the packKeys method.
          */
         
-        searchResults.setResultKeys(packKeys(sdl));
+        if (this.keyString != null) {
+            searchResults.setResultKeys(packKeys(sdl));
+        }
+        
+        if (this.otherString != null) {
+            searchResults.setResultObjects(packExtraInfo(sdl));
+        }
         
         /**
          * Set the total number found.
@@ -183,6 +191,22 @@ public class SolrHunter implements Hunter {
         }
 
         return keys;
+    }
+    
+    List<String> packExtraInfo(SolrDocumentList sdl) {
+        List<String> info = new ArrayList<String>();
+        
+        System.out.println("Other Strings: ");
+        
+        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        {
+            SolrDocument doc = (SolrDocument) iter.next();
+            
+            info.add((String) doc.getFieldValue(otherString));
+            System.out.println(doc.getFieldValue(otherString));
+        }
+
+        return info;
     }
     
     /**
