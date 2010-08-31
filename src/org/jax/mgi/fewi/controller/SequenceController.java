@@ -4,7 +4,10 @@ import java.util.*;
 
 // fewi & data model objects
 import org.jax.mgi.fewi.finder.SequenceFinder;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
 import mgi.frontend.datamodel.*;
 
 //external libs
@@ -47,8 +50,15 @@ public class SequenceController {
 	@RequestMapping(value="/{seqID}", method = RequestMethod.GET)
 	public ModelAndView seqDetail(@PathVariable("seqID") String seqID) {
 
+		SearchParams searchParams = new SearchParams();
 
-		ModelAndView mav = new ModelAndView("sequenceDetail");
+		Filter seqIdFilter = new Filter(SearchConstants.SEQ_ID, seqID);
+        searchParams.setFilter(seqIdFilter);
+
+        sequenceFinder.getSequenceByID(searchParams);
+
+
+		ModelAndView mav = new ModelAndView("sequence_detail");
 
 		mav.addObject("seqID", seqID);
 
@@ -64,7 +74,7 @@ public class SequenceController {
 	public ModelAndView seqSummeryByRef(@PathVariable("refID") String refID) {
 
 
-		ModelAndView mav = new ModelAndView("sequenceSummaryByRefID");
+		ModelAndView mav = new ModelAndView("sequence_summaryByRefID");
 
 		mav.addObject("refID", refID);
 
