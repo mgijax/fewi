@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReferenceFinder {
-	
+
 	private Logger logger = LoggerFactory.getLogger(ReferenceFinder.class);
 
 	@Autowired
@@ -25,17 +25,17 @@ public class ReferenceFinder {
 	@Autowired
 	private HibernateObjectGatherer<Reference> referenceGatherer;
 
-	public List<Reference> getReferencesByID(List<Integer> markerIDs) {
-		logger.info("get referenceIDs");
-		referenceGatherer.setType(Reference.class);
-		return referenceGatherer.get(markerIDs);
-	}
+//	public List<Reference> getReferencesByID(List<String> markerIDs) {
+//		logger.info("get referenceIDs");
+//		referenceGatherer.setType(Reference.class);
+//		return referenceGatherer.get(markerIDs);
+//	}
 
-	public Reference getReferenceByID(int id) {
-		logger.info("get id");
-		referenceGatherer.setType(Reference.class);
-		return referenceGatherer.get(id);
-	}
+//	public Reference getReferenceByID(int id) {
+//		logger.info("get id");
+//		referenceGatherer.setType(Reference.class);
+//		return referenceGatherer.get(id);
+//	}
 
 	public SearchResults<Reference> searchReferences(SearchParams params) {
 		logger.info("searchReferences");
@@ -43,16 +43,11 @@ public class ReferenceFinder {
 		logger.info("hunt");
 		referenceHunter.hunt(params, results);
 		logger.info("solr done");
-		List<String> keys = results.getResultKeys();
-		List<Integer> iKeys = new ArrayList<Integer>();
-		logger.info("convert keys");
-		for (String k : keys) {
-			System.out.println("convert: " + k);
-			iKeys.add(new Integer(k));
-		}
+
+
 		logger.info("gather");
 		referenceGatherer.setType(Reference.class);
-		results.setResultObjects(referenceGatherer.get(iKeys));
+		results.setResultObjects(referenceGatherer.get(results.getResultKeys()));
 		return results;
 	}
 

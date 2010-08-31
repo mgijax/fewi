@@ -5,7 +5,11 @@ import java.util.*;
 // fewi & data model objects
 import org.jax.mgi.fewi.finder.SequenceFinder;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+
 import mgi.frontend.datamodel.*;
+import org.jax.mgi.fewi.hunter.SolrSequenceKeyHunter;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +21,40 @@ public class SequenceFinder {
 
 	private Logger logger = LoggerFactory.getLogger(SequenceFinder.class);
 
+	@Autowired
+	private SolrSequenceKeyHunter sequenceHunter;
+
+	@Autowired
+	private HibernateObjectGatherer<Sequence> sequenceGatherer;
 
 
-	public List<Sequence> getSequenceByID(SearchParams searchParams) {
+    /////////////////////////////////////////////////////////////////////////
+    //  Retrieval of a sequence, for a given ID
+    /////////////////////////////////////////////////////////////////////////
+
+	public SearchResults<Sequence> getSequenceByID(SearchParams searchParams) {
+
 
 		logger.info("SequenceFinder.getSequenceByID");
 
-//		Hunter seqHunter = new
-		List<Sequence> seqList = new ArrayList<Sequence>();
+		SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
 
-		return seqList;
+		sequenceHunter.hunt(searchParams, searchResults);
+
+//		referenceGatherer.setType(Reference.class);
+//		results.setResultObjects(referenceGatherer.get(iKeys));
+
+System.out.println("-->>object retrieval; sending key --> " + searchResults.getResultKeys());
+
+		sequenceGatherer.setType(Sequence.class);
+        List<Sequence> seqList = sequenceGatherer.get( searchResults.getResultKeys() );
+
+System.out.println("-->>sequence list length --> " + seqList.size());
+
+
+
+
+		return searchResults;
 	}
 
 
