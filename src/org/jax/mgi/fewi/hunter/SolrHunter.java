@@ -305,7 +305,7 @@ public class SolrHunter implements Hunter {
                     resultsString.add(tempString);
                 }
             }
-            return "(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getOperator())) + ")"; 
+            return "(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")"; 
         }    
     }
 }
