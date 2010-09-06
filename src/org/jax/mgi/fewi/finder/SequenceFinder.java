@@ -7,10 +7,12 @@ import org.jax.mgi.fewi.finder.SequenceFinder;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 
+// mgi classes
 import mgi.frontend.datamodel.*;
 import org.jax.mgi.fewi.hunter.SolrSequenceKeyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 
+// external libs
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,46 +36,21 @@ public class SequenceFinder {
 
 	public SearchResults<Sequence> getSequenceByID(SearchParams searchParams) {
 
+		logger.info("SequenceFinder.getSequenceByID()");
 
-		logger.info("SequenceFinder.getSequenceByID");
-
+		// result object to be returned
 		SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
 
+		// ask the hunter to identify which objects to return
 		sequenceHunter.hunt(searchParams, searchResults);
 
-//		referenceGatherer.setType(Reference.class);
-//		results.setResultObjects(referenceGatherer.get(iKeys));
-
-System.out.println("-->>object retrieval; sending key --> " + searchResults.getResultKeys());
-
+		// gather objects identified by the hunter, add them to the results
 		sequenceGatherer.setType(Sequence.class);
         List<Sequence> seqList = sequenceGatherer.get( searchResults.getResultKeys() );
-
-System.out.println("-->>sequence list length --> " + seqList.size());
-
-
-
+        searchResults.setResultObjects(seqList);
 
 		return searchResults;
 	}
 
-
-
-//	@Autowired
-//	private SolrMarkerHunter markerHunter;
-
-//	@Autowired
-//	private HibernateGatherer<Marker> markerGatherer;
-
-//	public List<Marker> getMarkersByID(List<Integer> markerIDs) {
-//		logger.info("get markerIDs");
-//		markerGatherer.setType(Marker.class);
-//		return markerGatherer.get(markerIDs);
-//	}
-
-//	public MarkerResults searchMarkers(MarkerQuery query) {
-//		logger.info("searchMarkers");
-//		return markerHunter.searchMarkers(query);
-//	}
 
 }

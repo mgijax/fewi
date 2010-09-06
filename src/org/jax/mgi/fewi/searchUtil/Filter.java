@@ -83,7 +83,7 @@ public class Filter {
 	    OP_BEGINS = 9,
 	    OP_ENDS = 10,
 	    OP_CONTAINS = 11;
-	 
+
 
 	// advanced operators
 	public static final int
@@ -138,7 +138,7 @@ public class Filter {
 		this.nestedFilters = nestedFilters;
 	}
 
-	// filterComparison
+	// filter join clause
 	public int getFilterJoinClause() {
 		return filterJoinClause;
 	}
@@ -154,7 +154,7 @@ public class Filter {
 	public boolean hasNestedFilters() {
 
 		boolean hasNested = false;
-		if (!nestedFilters.isEmpty() && nestedFilters.size() > 1) {
+		if (!nestedFilters.isEmpty()) {
 			hasNested = true;
 		}
 		return hasNested;

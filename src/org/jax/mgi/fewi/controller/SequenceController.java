@@ -31,17 +31,19 @@ public class SequenceController {
 
 	private Logger logger = LoggerFactory.getLogger(SequenceController.class);
 
+
+private @Value("${foo.url}") String foourl;         //in fewi.prop
+//private @Value("${BIOMART_URL}") String biomart;    //in fewi.prop
+private @Value("${hostname}") String silverURL;   //in GlobalConfig.prop
+
 	@Autowired
 	private SequenceFinder sequenceFinder;
 
-//	@RequestMapping(method=RequestMethod.GET)
-//	public ModelAndView getQueryForm() {
-//
-//		ModelAndView mav = new ModelAndView("sequenceQuery");
-//
-//		return mav;
-//	}
-
+    private String hostname;
+    @Value("#{GlobalConfig.hostname}")
+    public void setHostName(String hostname) {
+        this.hostname = hostname;
+    }
 
     /////////////////////////////////////////////////////////////////////////
     //  Sequence Detail
@@ -50,17 +52,34 @@ public class SequenceController {
 	@RequestMapping(value="/{seqID}", method = RequestMethod.GET)
 	public ModelAndView seqDetail(@PathVariable("seqID") String seqID) {
 
-		SearchParams searchParams = new SearchParams();
+		// returned ModelAndView object;  dictates view to forward to
+		ModelAndView mav = new ModelAndView("sequence_detail");
 
+		// setup search parameters object
+		SearchParams searchParams = new SearchParams();
 		Filter seqIdFilter = new Filter(SearchConstants.SEQ_ID, seqID);
         searchParams.setFilter(seqIdFilter);
 
-        sequenceFinder.getSequenceByID(searchParams);
+        // find the requested sequence
+        SearchResults searchResults
+          = sequenceFinder.getSequenceByID(searchParams);
 
+        List<Sequence> seqList = searchResults.getResultObjects();
 
-		ModelAndView mav = new ModelAndView("sequence_detail");
+        if (seqList.size() > 1) {
+			//TODO log error; exit; forward to summary
+		}
 
+        Sequence sequence = seqList.get(0);
+
+        // package objects for view layer
 		mav.addObject("seqID", seqID);
+		mav.addObject("sequence", sequence);
+
+
+System.out.println("--->" + foourl);
+//System.out.println("--->" + hostname);
+
 
 		return mav;
 	}
