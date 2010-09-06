@@ -10,7 +10,7 @@
                 <fileset includes="*.jar" dir="www/WEB-INF/lib" />
                 <fileset includes="*.jar" dir="${jbossLib.dir}" />
                 <fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
-        	    <fileset includes="fe.jar" dir="${fe.dir}" />
+                <fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
         </path>
 
 
@@ -26,7 +26,8 @@
                 <echo>Creating build directory</echo>
                 <mkdir dir="${compile.dir}"/>
                 <copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
-        		<copy file="${fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
+                <copy file="${lib_java_fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
+
         </target>
 
 
