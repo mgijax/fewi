@@ -1,37 +1,27 @@
 package org.jax.mgi.fewi.template;
 
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class WebTemplate {
 
-    String templateLoc;
+	private @Value("${template.dir}") String templateLoc;
 
     String headHtml;
     String bodyStartHtml;
     String bodyStopHtml;
     String cssFiles = new String();
     String jsFiles = new String();
-
-    //////////////
-    // Constructor
-    //////////////
-    public WebTemplate(String directory) {
-
-        templateLoc = directory;
-
-        // preload all relevant template files
-        try {
-            headHtml = setTemplate("templateHead.html");
-            bodyStartHtml = setTemplate("templateBodyStart.html");
-            bodyStopHtml = setTemplate("templateBodyStop.html");
-        }
-        catch (Exception exc) {
-            exc.printStackTrace();
-        }
-    }
-
-
+    
     ////////////////////
     // Setters/Modifiers
     ////////////////////
@@ -110,7 +100,19 @@ public class WebTemplate {
         }
     }
 
-
-
+    @PostConstruct
+    public void init (){
+    	
+    	System.out.println("init template");
+        // preload all relevant template files
+        try {
+            headHtml = setTemplate("templateHead.html");
+            bodyStartHtml = setTemplate("templateBodyStart.html");
+            bodyStopHtml = setTemplate("templateBodyStop.html");
+        }
+        catch (Exception exc) {
+            exc.printStackTrace();
+        }
+    }
 
 }
