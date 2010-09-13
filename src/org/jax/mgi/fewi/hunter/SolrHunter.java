@@ -263,12 +263,14 @@ public class SolrHunter implements Hunter {
             else {
                 
                 int operator;
-                
+                String joinClause = "";
                 if (filter.getOperator() == Filter.OP_NOT_IN) {
                     operator = Filter.OP_NOT_EQUAL;
+                    joinClause = " AND ";
                 }
                 else {
                     operator = Filter.OP_EQUAL;
+                    joinClause = " OR ";
                 }
                 String output = "(";
                 int first = 1;
@@ -278,7 +280,7 @@ public class SolrHunter implements Hunter {
                         first = 0;
                     }
                     else {
-                        output += " OR " + propertyMap.get(filter.getProperty()).getClause(value, operator);
+                        output += joinClause + propertyMap.get(filter.getProperty()).getClause(value, operator);
                     }
                 }
                 return output + ")";
