@@ -82,8 +82,9 @@ public class Filter {
 		OP_NOT_NULL = 8,
 	    OP_BEGINS = 9,
 	    OP_ENDS = 10,
-	    OP_CONTAINS = 11;
-
+	    OP_CONTAINS = 11,
+	    OP_HAS_WORD = 12,
+	    OP_WORD_BEGINS = 13;
 
 	// advanced operators
 	public static final int
