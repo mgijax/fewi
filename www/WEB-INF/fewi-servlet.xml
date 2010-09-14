@@ -11,6 +11,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 			
 	<context:property-placeholder location="classpath:../properties/fewi.properties" />
+	<util:properties id="GlobalConfig" location="classpath:../properties/GlobalConfig.properties" />
 
 	<!-- Packages to scan for @Controller & @Repository annotations -->
 	<context:component-scan base-package="org.jax.mgi.fewi.controller"/>
@@ -27,5 +28,9 @@
 		<property name="prefix" value="/WEB-INF/jsp/"/>
 		<property name="suffix" value=".jsp"/>
 	</bean>
+
+
+
+
 
 </beans>
