@@ -86,7 +86,7 @@ public class SolrPropertyMapper implements PropertyMapper {
     private String handleOperand(int operand, String value, String field) {
 
         if (operand == Filter.OP_EQUAL) {
-            return field + ":" + value;
+            return field + ":\"" + value + "\"";
         }
         else if (operand == Filter.OP_GREATER_THAN) {
             Integer newValue = new Integer(value);
@@ -97,6 +97,9 @@ public class SolrPropertyMapper implements PropertyMapper {
             Integer newValue = new Integer(value);
             newValue--;
             return field + ":[* TO "+newValue+"]";
+        }
+        else if (operand == Filter.OP_WORD_BEGINS) {
+            return field + ":" + value;
         }
         else if (operand == Filter.OP_GREATER_OR_EQUAL) {
             return field + ":[" + value + " TO *]";
