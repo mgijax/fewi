@@ -26,7 +26,9 @@
 
 <div id="titleBarWrapper" style="max-width:1200px" userdoc="">    
     <!--myTitle -->
-    <span class="titleBarMainTitle">${refID}</span>
+    <div class="titleBarMainTitle">${refID}</div>
+    <div class="titleBarMainTitle">---${sequence.symbol}---</div>
+    <div class="titleBarMainTitle">---${sequence.sequenceKey}---</div>
 </div>
 
 
