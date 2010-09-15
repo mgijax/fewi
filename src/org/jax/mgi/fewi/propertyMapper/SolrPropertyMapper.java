@@ -98,7 +98,7 @@ public class SolrPropertyMapper implements PropertyMapper {
             newValue--;
             return field + ":[* TO "+newValue+"]";
         }
-        else if (operand == Filter.OP_WORD_BEGINS) {
+        else if (operand == Filter.OP_WORD_BEGINS || operand == Filter.OP_HAS_WORD) {
             return field + ":" + value;
         }
         else if (operand == Filter.OP_GREATER_OR_EQUAL) {
