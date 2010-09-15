@@ -1,13 +1,10 @@
 package org.jax.mgi.fewi.forms;
 
-import java.util.HashSet;
-import java.util.Set;
 
 public class ReferenceQueryForm {
 	
 	private String author;
 	private String authorScope = "any";
-	private Set<String> authorOperator = new HashSet<String>();
 	private String Journal;
 	private Integer year;
 	private String text;
@@ -20,12 +17,6 @@ public class ReferenceQueryForm {
 	}
 	public void setAuthor(String author) {
 		this.author = author;
-	}
-	public Set<String> getAuthorOperator() {
-		return authorOperator;
-	}
-	public void setAuthorOperator(Set<String> authorOperator) {
-		this.authorOperator = authorOperator;
 	}
 	public String getJournal() {
 		return Journal;
@@ -72,10 +63,8 @@ public class ReferenceQueryForm {
 	@Override
 	public String toString() {
 		return "ReferenceQueryForm [Journal=" + Journal + ", author=" + author
-				+ ", authorOperator=" + authorOperator + ", authorScope="
-				+ authorScope + ", id=" + id + ", inAbstract=" + inAbstract
-				+ ", inTitle=" + inTitle + ", text=" + text + ", year=" + year
-				+ "]";
+				+ ", authorScope=" + authorScope + ", id=" + id
+				+ ", inAbstract=" + inAbstract + ", inTitle=" + inTitle
+				+ ", text=" + text + ", year=" + year + "]";
 	}
-
 }
