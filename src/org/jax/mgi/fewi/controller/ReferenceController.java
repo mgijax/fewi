@@ -24,17 +24,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/*
+ * This controller maps all /reference/ uri's
+ */
 @Controller
 @RequestMapping(value="/reference")
 public class ReferenceController {
-		
+	
+	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(ReferenceController.class);
 	
+	// get the finder to use for various methods
 	@Autowired
 	private ReferenceFinder referenceFinder;
 
+	// add a new ReferenceQueryForm and MySirtPaginator objects to model for QF 
 	@RequestMapping(method=RequestMethod.GET)
 	public String getQueryForm(Model model) {
 		model.addAttribute(new ReferenceQueryForm());
@@ -42,20 +49,26 @@ public class ReferenceController {
 		return "reference_query";
 	}
 	
+	// qf submission.  drop completed ReferenceQueryForm object and query string
+	// into model for summary to use
 	@RequestMapping("/summary")
-	public String referenceSummary(HttpServletRequest request, Model model) {
+	public String referenceSummary(HttpServletRequest request, Model model,
+			@ModelAttribute ReferenceQueryForm queryForm) {
 
+		model.addAttribute("referenceQueryForm", queryForm);
 		model.addAttribute("queryString", request.getQueryString());
 		logger.debug("queryString: " + request.getQueryString());
 
 		return "reference_summary";
 	}
 	
+	// this is the logis to perform the query and retur json results
 	@RequestMapping("/json")
 	public @ResponseBody SearchResults<Reference> referenceSummaryJson(
 			@ModelAttribute ReferenceQueryForm query,
 			@ModelAttribute MySortPaginator mySort) {
 				
+		logger.debug(query.toString());
 		logger.debug("mysort: " + mySort.toString());
 		
 		SearchParams params = new SearchParams();
@@ -63,9 +76,12 @@ public class ReferenceController {
 		
 		String sortStr = mySort.getSort();
 		if (sortStr == null || "".equals(sortStr)){
+			// set a default sort
 			mySort.setSort("journal");
 		}
 		
+		//this is interim code.  soon there will be one sort and/or paginator
+		// for now convert mySort to the object required by SearchParams
 		Sort sort = new Sort(mySort.getSort());
 		if (mySort.getDir().equals("asc")){
 			sort.setDesc(true);
@@ -78,11 +94,13 @@ public class ReferenceController {
 		params.setStartIndex(mySort.getStartIndex());
 		params.setPageSize(mySort.getResults());
 		
+		// start filter list to add filters to
 		List<Filter> filterList = new ArrayList<Filter>();
 		
+		//build author query filter
 		if(query.getAuthor() != null && !"".equals(query.getAuthor())){
-			List<String> authors = Arrays.asList(query.getAuthor().split(";"));
-			logger.debug("authors: ", authors.toArray());
+			List<String> authors = Arrays.asList(query.getAuthor().trim().split(";"));	
+			
 			String scope = query.getAuthorScope();
 			if ("first".equals(scope)){
 				filterList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST, authors, Filter.OP_IN));
@@ -93,25 +111,47 @@ public class ReferenceController {
 			}
 		}
 
+		// build journal query filter
 		if(query.getJournal() != null && !"".equals(query.getJournal())){
-			List<String> journals = Arrays.asList(query.getJournal().split(";"));
-			filterList.add(new Filter(SearchConstants.REF_JOURNAL, journals, Filter.OP_EQUAL));
+			List<String> journals = Arrays.asList(query.getJournal().trim().split(";"));
+			filterList.add(new Filter(SearchConstants.REF_JOURNAL, journals, Filter.OP_IN));
 		}
 		
-		if(query.getYear() != null ){
-			filterList.add(new Filter(SearchConstants.REF_YEAR, query.getYear().toString(), Filter.OP_EQUAL));
+		// build year query filter
+		String year = query.getYear().trim();
+		if(year != null && !"".equals(year)){
+			int rangeLoc = year.indexOf("-");
+			if(rangeLoc > -1){
+				// TODO validate years are numbers
+				List<String> years = Arrays.asList(query.getAuthor().trim().split("-"));
+				if (years.size() == 2){
+					// TODO handle years in any order
+					filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_GREATER_OR_EQUAL));
+					filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(1), Filter.OP_LESS_OR_EQUAL));
+				} else if (years.size() == 1) {
+					if (rangeLoc == 0){
+						filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_LESS_OR_EQUAL));
+					} else {
+						filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_GREATER_OR_EQUAL));
+					}
+				}
+				// TODO error: too many years entered
+			} else {
+				filterList.add(new Filter(SearchConstants.REF_YEAR, year, Filter.OP_EQUAL));
+			}
 		}
 		
+		// build text query filter
 		if(query.getText() != null && !"".equals(query.getText())){
 			Filter f = new Filter();
 			List<Filter> textFilters = new ArrayList<Filter>();
 			
 			String text = query.getText();
 			if(query.isInAbstract()){
-				textFilters.add(new Filter(SearchConstants.REF_TEXT_ABSTRACT, text, Filter.OP_EQUAL));
+				textFilters.add(new Filter(SearchConstants.REF_TEXT_ABSTRACT, text, Filter.OP_CONTAINS));
 			}
 			if(query.isInTitle()){
-				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE, text, Filter.OP_EQUAL));
+				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE, text, Filter.OP_CONTAINS));
 			}
 			if (textFilters.size() == 1) {
 				filterList.add(textFilters.get(0));
@@ -122,17 +162,65 @@ public class ReferenceController {
 			}
 		}
 		
+		// we do have some filters, build 'em and add to searchParams
 		if (filterList.size() > 0){
 			Filter f = new Filter();
 			f.setFilterJoinClause(Filter.FC_AND);
 			f.setNestedFilters(filterList);
 			params.setFilter(f);
+		// none yet, so check the id query and build it
 		} else if (query.getId() != null && !"".equals(query.getId())){
 			List<String> ids = Arrays.asList(query.getId().split(";"));	
 			params.setFilter(new Filter(SearchConstants.REF_ID, ids, Filter.OP_EQUAL));
+		} else {
+			//TODO no query params
 		}
-
+		// perform query and return results as json
+		logger.debug("params parsed");
 		return referenceFinder.searchReferences(params);
 	}
+	
+	// mapping for author autocomplete requests
+	@RequestMapping("/autocomplete/author")
+	public @ResponseBody SearchResults<String> authorAutoComplete(@RequestParam("query") String query) {
+		List<String> words = Arrays.asList(query.trim().split("[^a-zA-Z0-9']+"));
+		logger.debug("author query:" + words.toString());
+		SearchParams params = buildACQuery(SearchConstants.REF_AUTHOR, words);
+		SearchResults<String> results = referenceFinder.getAuthorAutoComplete(params);
+		return results;
+	}
+	
+	// mapping for journal autocomplete requests
+	@RequestMapping("/autocomplete/journal")
+	public @ResponseBody SearchResults<String> journalAutoComplete(@RequestParam("query") String query) {
+		List<String> words = Arrays.asList(query.trim().split("[^a-zA-Z0-9]"));
+		logger.debug("journal query:" + words.toString());
+		SearchParams params = buildACQuery(SearchConstants.REF_JOURNAL, words);
+		SearchResults<String> results = referenceFinder.getJournalAutoComplete(params);
+		return results;
+	}
 
+	// convenience method to build SearchParams object for autocomplete queries 
+	private SearchParams buildACQuery(String param, List<String> queries){
+		Filter f;
+		SearchParams params = new SearchParams();
+		params.setPageSize(1000);
+		params.setStartIndex(0);
+		
+		if (queries.size() > 1){
+			f = new Filter();
+			List<Filter> fList = new ArrayList<Filter>();
+			Filter fItem;
+			for (String q : queries) {
+				fItem = new Filter(param, q, Filter.OP_WORD_BEGINS);
+				fList.add(fItem);
+			}
+			f.setNestedFilters(fList);
+			f.setFilterJoinClause(Filter.FC_AND);
+		} else {
+			f = new Filter(param, queries.get(0), Filter.OP_WORD_BEGINS);
+		}
+		params.setFilter(f);
+		return params;
+	}
 }
