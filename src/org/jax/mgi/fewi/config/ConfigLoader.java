@@ -12,13 +12,13 @@ import org.springframework.web.context.ServletContextAware;
 
 @Component
 public class ConfigLoader implements ServletContextAware {
-	
+
 	private Logger logger = LoggerFactory.getLogger(ConfigLoader.class);
     private ServletContext servletContext;
-    
+
     @Autowired
     private ConfigWrapper configWrapper;
-    
+
     @Autowired
     private WebTemplate webTemplate;
 
