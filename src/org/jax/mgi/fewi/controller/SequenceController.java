@@ -34,7 +34,7 @@ public class SequenceController {
 
 private @Value("${foo.url}") String foourl;         //in fewi.prop
 //private @Value("${BIOMART_URL}") String biomart;    //in fewi.prop
-private @Value("${hostname}") String silverURL;   //in GlobalConfig.prop
+//private @Value("${hostname}") String silverURL;   //in GlobalConfig.prop
 
 	@Autowired
 	private SequenceFinder sequenceFinder;
