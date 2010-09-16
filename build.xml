@@ -27,7 +27,7 @@
                 <mkdir dir="${compile.dir}"/>
                 <copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
                 <copy file="${lib_java_fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
-
+                <copy file="${global_config.dir}/GlobalConfig.properties" todir="./www/WEB-INF/properties" overwrite="true"/>
         </target>
 
 
