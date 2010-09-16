@@ -14,12 +14,8 @@
 	<util:properties id="GlobalConfig" location="classpath:../properties/GlobalConfig.properties" />
 
 	<!-- Packages to scan for @Controller & @Repository annotations -->
-	<context:component-scan base-package="org.jax.mgi.fewi.controller"/>
-	<context:component-scan base-package="org.jax.mgi.fewi.finder"/>
-	<context:component-scan base-package="org.jax.mgi.fewi.hunter"/>
-	<context:component-scan base-package="org.jax.mgi.fewi.objectGatherer"/>
-	<context:component-scan base-package="org.jax.mgi.fewi.config"/>
-	
+	<context:component-scan base-package="org.jax.mgi.fewi"/>
+
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
 
