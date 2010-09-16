@@ -21,7 +21,8 @@ public class SearchParams {
 	// pagination control;  first result to be returned
 	protected int startIndex = 1;
 
-	// pagination control;  size of the page
+	// pagination control;  size of resultset to be returned
+	// negative number signifies no limit
 	protected int pageSize = 25;
 
 
