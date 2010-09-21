@@ -1,10 +1,9 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mgi.frontend.datamodel.Reference;
 
+import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
+import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceSummaryHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -21,33 +20,36 @@ public class ReferenceFinder {
 
 	@Autowired
 	private SolrReferenceSummaryHunter referenceHunter;
+	
+	@Autowired
+	private SolrAuthorsACHunter authorACHunter;
+	
+	@Autowired
+	private SolrJournalsACHunter journalACHunter;
 
 	@Autowired
 	private HibernateObjectGatherer<Reference> referenceGatherer;
 
-//	public List<Reference> getReferencesByID(List<String> markerIDs) {
-//		logger.info("get referenceIDs");
-//		referenceGatherer.setType(Reference.class);
-//		return referenceGatherer.get(markerIDs);
-//	}
-
-//	public Reference getReferenceByID(int id) {
-//		logger.info("get id");
-//		referenceGatherer.setType(Reference.class);
-//		return referenceGatherer.get(id);
-//	}
-
 	public SearchResults<Reference> searchReferences(SearchParams params) {
-		logger.info("searchReferences");
+		logger.debug("searchReferences");
 		SearchResults<Reference> results = new SearchResults<Reference>();
-		logger.info("hunt");
+		logger.debug("hunt");
 		referenceHunter.hunt(params, results);
-		logger.info("solr done");
-
-
-		logger.info("gather");
+		logger.debug("gather");
 		referenceGatherer.setType(Reference.class);
 		results.setResultObjects(referenceGatherer.get(results.getResultKeys()));
+		return results;
+	}
+	
+	public SearchResults<String> getAuthorAutoComplete(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		authorACHunter.hunt(params, results);
+		return results;
+	}
+	
+	public SearchResults<String> getJournalAutoComplete(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		journalACHunter.hunt(params, results);
 		return results;
 	}
 
