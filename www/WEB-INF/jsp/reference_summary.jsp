@@ -4,49 +4,18 @@
 
 ${templateBean.templateHeadHtml}
 
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
 <title>Reference Summary</title>
 
-<style type="text/css">
-/*margin and padding on body element
-  can introduce errors in determining
-  element position and are not recommended;
-  we turn them off as a foundation for YUI
-  CSS treatments. */
-body {
-	margin:0;
-	padding:0;
-}
-#yui-history-iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  visibility: hidden;
-}
-
-</style>
-
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.1/build/fonts/fonts-min.css" />
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.1/build/paginator/assets/skins/sam/paginator.css" />
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.1/build/datatable/assets/skins/sam/datatable.css" />
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/connection/connection-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/json/json-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/element/element-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/paginator/paginator-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/datasource/datasource-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/datatable/datatable-min.js"></script>
-
-<script src="/fewi/js/blank.html"></script>
+<script src="/fewi/js/rowexpansion.js"></script>
 
 <!-- Browser History Manager source file -->
 <script src="http://yui.yahooapis.com/2.8.1/build/history/history-min.js"></script>
 
 ${templateBean.templateBodyStartHtml}
 
-<iframe id="yui-history-iframe" src="/fewi/js/rowexpansion.js"></iframe>
+<iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
 
@@ -56,24 +25,42 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitle">References Summary</span>
 </div>
 <!-- end header bar -->
+<div>
+	<div id="querySummary">
+		<span class="enhance">You searched for:</span><br/>
+		<c:if test="${not empty referenceQueryForm.author}"><span class="label">Author:</span> 
+			${fn:replace(referenceQueryForm.author,";", ",") }<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.journal}"><span class="label">Journal:</span>
+			${fn:replace(referenceQueryForm.journal,";", ",") }<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.year}"><span class="label">Year:</span> ${referenceQueryForm.year}<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.text}"><span class="label">Text:</span> ${referenceQueryForm.text}<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.id}"><span class="label">ID:</span> ${referenceQueryForm.id}<br/></c:if>
+	</div>
+	<div id="paginationTop"  style="float:right;"></div>
+</div>
 
 <div id="dynamicdata"></div>
 
 <script type="text/javascript">
 (function () {	
-	// this function formats the marker detail link
+	// this function formats the vol(iss)pg column
     this.volFormatter = function(elLiner, oRecord, oColumn, oData) {
 		elLiner.innerHTML= '<b>' + oRecord.getData("vol") + '</b>(' + oRecord.getData("issue") + ')' + oRecord.getData("pages");
     };
+
+	// this function formats the id cell
+    this.idFormatter = function(elLiner, oRecord, oColumn, oData) {
+		elLiner.innerHTML= oRecord.getData("pubMedID") + '<br/>' + oRecord.getData("jnumID");
+    };
     
-    // Adds the formatter above to the to the symbol col
+    // Adds the formatters above to the to the symbol col
     YAHOO.widget.DataTable.Formatter.vol = this.volFormatter;
+    YAHOO.widget.DataTable.Formatter.id = this.idFormatter;
 
     // Column definitions
     var myColumnDefs = [ // sortable:true enables sorting
-        {key:"jnumID", label:"jnumID", sortable:false},
-        {key:"authors", label:"Authors", sortable:true},
-
+        {key:"idFormatter", label:"PubMed ID<br/>MGI Reference ID", sortable:false, formatter:"id"},
+        {key:"authors", label:"Author(s)", sortable:true},
         {key:"title", label:"Title", sortable:false},
         {key:"journal", label:"Journal", sortable:true},
         {key:"year", label:"Year", sortable:true},
@@ -87,6 +74,7 @@ ${templateBean.templateBodyStartHtml}
         resultsList: "resultObjects",
         fields: [
 			{key:"jnumID"},
+			{key:"pubMedID"},
             {key:"journal"},
             {key:"title"},
             {key:"authors"},
@@ -107,13 +95,13 @@ ${templateBean.templateBodyStartHtml}
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
-        template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span>",
-        pageReportTemplate : "Showing items {startIndex} - {endIndex} of {totalRecords}",
+        template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+        pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
         rowsPerPage : 25,
-        pageLinks: 5
+        pageLinks: 5,
+        recordOffset: 1
     });
-
 
     // DataTable configurations
     var myConfigs = {
@@ -172,7 +160,7 @@ ${templateBean.templateBodyStartHtml}
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
         oPayload.pagination = {
             rowsPerPage: Number(pRequest['results']) || 25,
-            recordOffset: Number(pRequest['startIndex']) || 0
+            recordOffset: Number(pRequest['startIndex']) || 1
         };
         oPayload.sortedBy = {
             key: pRequest['sort'] || "journal",
@@ -183,7 +171,7 @@ ${templateBean.templateBodyStartHtml}
     
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
-        startIndex = startIndex || 0;
+        startIndex = startIndex || 1;
         sortKey   = sortKey || "journal";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
