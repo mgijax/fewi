@@ -32,7 +32,7 @@ public class SolrSequenceHunterTestHarness {
 
         dummySearch.setFilter(testFilter);
         Sort sort = new Sort();
-        sort.setProperty("sequence_key");
+        sort.setSort("sequence_key");
         dummySearch.addSort(sort);
         
         System.out.println("The first query: ");

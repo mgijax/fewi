@@ -7,7 +7,6 @@ import java.util.*;
  */
 public class SearchParams {
 
-
     //////////////////////////////////////////////////////////////////////////
     //  INTERNAL FIELDS
     //////////////////////////////////////////////////////////////////////////
@@ -18,14 +17,8 @@ public class SearchParams {
 	// ordered list of sorts
 	protected List<Sort> sorts = new ArrayList<Sort>();
 
-	// pagination control;  first result to be returned
-	protected int startIndex = 1;
-
-	// pagination control;  size of resultset to be returned
-	// negative number signifies no limit
-	protected int pageSize = 25;
-
-
+	// pagination bean
+	private Paginator paginator = new Paginator();
 
     //////////////////////////////////////////////////////////////////////////
     //  BASIC ACCESSORS
@@ -69,20 +62,28 @@ public class SearchParams {
 		this.sorts = sorts;
 		return;
 	}
+	
+	/**
+	 * Set Paginator
+	 */
+	
+	public void setPaginator(Paginator paginator){
+		this.paginator = paginator;
+	}
 
     public int getStartIndex() {
-        return startIndex;
+        return this.paginator.getStartIndex();
     }
 
     public void setStartIndex(int startIndex) {
-        this.startIndex = startIndex;
+        this.paginator.setStartIndex(startIndex);
     }
 
     public int getPageSize() {
-        return pageSize;
+        return this.paginator.getResults();
     }
 
     public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+        this.paginator.setResults(pageSize);
     }
 }
