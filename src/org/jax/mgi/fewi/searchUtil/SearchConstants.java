@@ -27,4 +27,8 @@ public class SearchConstants {
     // marker constants
     public static final String MRK_KEY              = "marker_key";
     
+    // allele constants
+    public static final String ALL_KEY              = "allele_key";
+    public static final String ALL_SYSTEM           = "allele_system";
+    public static final String ALL_DRIVER           = "allele_driver";
 }
