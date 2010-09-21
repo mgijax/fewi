@@ -52,7 +52,7 @@ public class SolrJournalsACHunter extends SolrHunter {
          */
         
         //keyString = IndexConstants.SEQ_KEY;
-        otherString = IndexConstants.REF_JOURNAL;
+        otherString = IndexConstants.REF_JOURNAL_SORT;
         
     }
    

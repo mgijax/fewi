@@ -52,7 +52,7 @@ public class SolrAuthorsACHunter extends SolrHunter {
          */
         
         //keyString = IndexConstants.SEQ_KEY;
-        otherString = IndexConstants.REF_AUTHOR;
+        otherString = IndexConstants.REF_AUTHOR_SORT;
         
     }
    
