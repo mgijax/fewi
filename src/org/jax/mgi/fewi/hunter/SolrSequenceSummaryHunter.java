@@ -43,13 +43,6 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
         propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
         
-        // These values are here for testing purposes.
-        
-        ArrayList <String> testMappingList = new ArrayList();
-        testMappingList.add("field1");
-        testMappingList.add("field2");
-        propertyMap.put("field", new SolrPropertyMapper(testMappingList, "AND"));
-        
         // Set the url for the solr instance.
         
         solrUrl = "http://cardolan.informatics.jax.org:8983/solr/sequence/";
