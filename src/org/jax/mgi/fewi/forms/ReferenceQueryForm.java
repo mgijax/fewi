@@ -6,7 +6,7 @@ public class ReferenceQueryForm {
 	private String author;
 	private String authorScope = "any";
 	private String Journal;
-	private Integer year;
+	private String year;
 	private String text;
 	private boolean inTitle = true;
 	private boolean inAbstract = true;
@@ -24,10 +24,10 @@ public class ReferenceQueryForm {
 	public void setJournal(String journal) {
 		Journal = journal;
 	}
-	public Integer getYear() {
+	public String getYear() {
 		return year;
 	}
-	public void setYear(Integer year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 	public String getText() {
