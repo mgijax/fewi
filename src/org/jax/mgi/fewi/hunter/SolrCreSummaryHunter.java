@@ -6,7 +6,7 @@ import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrSequenceSummaryHunter extends SolrHunter {
+public class SolrCreSummaryHunter extends SolrHunter {
     
     /***
      * The constructor sets up this hunter so that it is specific to sequence
@@ -14,7 +14,7 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
      * inherited from its superclass, and then relies on the superclass to 
      * perform all of the needed work via the hunt() method.
      */
-    public SolrSequenceSummaryHunter() {        
+    public SolrCreSummaryHunter() {        
         
         /*
          * Setup the property map.  This maps from the properties of the incoming
@@ -22,22 +22,20 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
          * 
          */
         
-        propertyMap.put(SearchConstants.SEQ_ID, new SolrPropertyMapper(IndexConstants.SEQ_ID));
-        propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
-        propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
-        propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
+        propertyMap.put(SearchConstants.ALL_DRIVER, new SolrPropertyMapper(IndexConstants.ALL_DRIVER));
+        propertyMap.put(SearchConstants.ALL_SYSTEM, new SolrPropertyMapper(IndexConstants.CRE_ALL_SYSTEM));
         
         // Set the url for the solr instance.
         
-        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/sequence/";
+        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/cre/";
         
         /*
          * The name of the field we want to iterate through the documents for
-         * and place into the output.  In this case we want the standar list 
-         * of object keys returned.
+         * and place into the output.  In this case we are looking for the 
+         * standard list of keys to be returned.
          */
         
-        keyString = IndexConstants.SEQ_KEY;
+        keyString = IndexConstants.ALL_KEY;
         
     }
    
