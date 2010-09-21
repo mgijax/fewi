@@ -1,6 +1,5 @@
 package org.jax.mgi.fewi.searchUtil;
 
-import java.util.*;
 
 /**
  * A Sort is used to signify the sorting parameters of a result set
@@ -13,7 +12,11 @@ public class Sort {
     /////////////////////////////////////////////////////////////////////////
 
 	// The name of the property
-	protected String property;
+	protected String sort;
+	
+	public static final String
+		DIR_ASC = "asc",
+		DIR_DESC = "desc";
 
 	// Accending or Decending order
 	protected boolean desc = false;
@@ -32,15 +35,15 @@ public class Sort {
 	 * Create a sort for a given property.
 	 * Defaults to decending
 	 */
-	public Sort(String property) {
-		this.property = property;
+	public Sort(String sort) {
+		this.sort = sort;
 	}
 
 	/**
 	 * Create a sort for a given property and direction
 	 */
-	public Sort(String property, boolean desc) {
-		this.property = property;
+	public Sort(String sort, boolean desc) {
+		this.sort = sort;
 		this.desc = desc;
 	}
 
@@ -49,12 +52,12 @@ public class Sort {
     //  BASIC ACCESSORS
     /////////////////////////////////////////////////////////////////////////
 
-	public String getProperty() {
-		return property;
+	public String getSort() {
+		return sort;
 	}
 
-	public void setProperty(String property) {
-		this.property = property;
+	public void setSort(String sort) {
+		this.sort = sort;
 	}
 
 	public boolean isDesc() {
@@ -77,6 +80,11 @@ public class Sort {
 
 	public static Sort desc(String property) {
 		return new Sort(property, true);
+	}
+
+	@Override
+	public String toString() {
+		return "Sort [desc=" + desc + ", sort=" + sort + "]";
 	}
 
 
