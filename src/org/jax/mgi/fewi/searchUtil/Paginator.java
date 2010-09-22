@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.searchUtil;
 
 public class Paginator {
 	
-	private Integer startIndex = 1;
+	private Integer startIndex = 0;
 	private Integer results = 25;
 	
 	public Integer getStartIndex() {

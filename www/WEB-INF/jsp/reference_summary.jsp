@@ -160,7 +160,7 @@ ${templateBean.templateBodyStartHtml}
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
         oPayload.pagination = {
             rowsPerPage: Number(pRequest['results']) || 25,
-            recordOffset: Number(pRequest['startIndex']) || 1
+            recordOffset: Number(pRequest['startIndex']) || 0
         };
         oPayload.sortedBy = {
             key: pRequest['sort'] || "journal",
@@ -171,7 +171,7 @@ ${templateBean.templateBodyStartHtml}
     
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
-        startIndex = startIndex || 1;
+        startIndex = startIndex || 0;
         sortKey   = sortKey || "journal";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
