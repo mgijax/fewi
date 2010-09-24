@@ -17,6 +17,9 @@ public class SearchResults<T> {
 
 	// Database keys identified as the results from a search
 	protected List<String> resultStrings = new ArrayList<String>();
+	
+	// Database keys identified as the results from a search
+    protected List<String> resultFacets = new ArrayList<String>();
 
 	// Result Objects of a given search
 	protected List<T> resultObjects = new ArrayList<T>();
@@ -72,7 +75,15 @@ public class SearchResults<T> {
 		this.resultObjects = resultObjects;
 	}
 
-	/**
+	public List<String> getResultFacets() {
+        return resultFacets;
+    }
+
+    public void setResultFacets(List<String> resultFacets) {
+        this.resultFacets = resultFacets;
+    }
+
+    /**
 	 * Get the total number of possible results (-1 means unspecified)
 	 */
 	public int getTotalCount() {
