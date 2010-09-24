@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.propertyMapper.PropertyMapper;
@@ -37,6 +38,7 @@ public class SolrHunter implements Hunter {
     protected String solrUrl;
     protected String keyString;
     protected String otherString;
+    protected String facetString;
 
     protected HashMap <String, PropertyMapper> propertyMap =
         new HashMap<String, PropertyMapper>();
@@ -118,6 +120,12 @@ public class SolrHunter implements Hunter {
         query.setRows(searchParams.getPageSize());
 
         query.setStart(searchParams.getStartIndex());
+        
+        if (facetString != null) {
+            query.addFacetField(facetString);
+            query.setFacetMinCount(1);
+            query.setFacetSort("lex");
+        }
 
         System.out.println("The Solr query:" + query + "\n");
 
@@ -140,8 +148,14 @@ public class SolrHunter implements Hunter {
         }
 
         if (this.otherString != null) {
-            searchResults.setResultObjects(packExtraInfo(sdl));
+            searchResults.setResultStrings(packExtraInfo(sdl));
         }
+        
+        if (this.facetString != null) {
+            searchResults.setResultFacets(packFacet(rsp));
+        }
+        
+        
 
         /**
          * Set the total number found.
@@ -206,6 +220,19 @@ public class SolrHunter implements Hunter {
         }
 
         return info;
+    }
+    
+    List<String> packFacet(QueryResponse rsp) {
+        List<String> facet = new ArrayList<String>();
+
+        System.out.println("Facet Strings: ");
+
+        for (Count c: rsp.getFacetField(facetString).getValues()) {
+            facet.add(c.getName());
+            System.out.println(c.getName());
+        }
+
+        return facet;
     }
 
     /**
