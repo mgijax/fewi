@@ -17,6 +17,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 
 /**
  * This is the Solr specific hunter.  It is responsible for mapping the higher
@@ -42,6 +43,10 @@ public class SolrHunter implements Hunter {
 
     protected HashMap <String, PropertyMapper> propertyMap =
         new HashMap<String, PropertyMapper>();
+    
+    protected HashMap <String, SolrSortMapper> sortMap =
+        new HashMap<String, SolrSortMapper>();
+
 
     /**
      * Here we map the higher level join clauses to their
@@ -101,18 +106,28 @@ public class SolrHunter implements Hunter {
         query.setQuery(queryString);
 
         /**
-         * Tear apart the sort objects and add them to the query string.
+         * Tear apart the sort objects and add them to the query string.  This currently
+         * maps to a sorMapper object, which can turn a conceptual single column sort
+         * from the wi's perspective to its multiple column sort in the indexes.
          */
 
         for (Sort sort: searchParams.getSorts()) {
             if (sort.isDesc()) {
-                query.addSortField(sort.getSort(), SolrQuery.ORDER.desc);
+                if (sortMap.containsKey(sort.getSort())) {
+                    for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
+                        query.addSortField(ssm, SolrQuery.ORDER.desc);
+                    }
+                }
             }
             else {
-                query.addSortField(sort.getSort(), SolrQuery.ORDER.asc);
+                if (sortMap.containsKey(sort.getSort())) {
+                    for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
+                        query.addSortField(ssm, SolrQuery.ORDER.asc);
+                    }
+                }
             }
         }
-
+        
         /**
          * Set the pagination parameters.
          */
