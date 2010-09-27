@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +21,15 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
      */
     public SolrReferenceSummaryHunter() {        
         
-        /*
+        /**
+         * Set up the sorting filter mapping. 
+         */
+        
+        sortMap.put(SortConstants.REF_AUTHORS, new SolrSortMapper(IndexConstants.REF_AUTHOR));
+        sortMap.put(SortConstants.REF_JOURNAL, new SolrSortMapper(IndexConstants.REF_JOURNAL));
+        sortMap.put(SortConstants.REF_YEAR, new SolrSortMapper(IndexConstants.REF_YEAR));
+        
+        /**
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
          * 
