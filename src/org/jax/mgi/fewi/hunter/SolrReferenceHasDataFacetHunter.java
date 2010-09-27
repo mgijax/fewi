@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.hunter;
 import java.util.ArrayList;
 
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.stereotype.Repository;
@@ -36,13 +37,12 @@ public class SolrReferenceHasDataFacetHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_TEXT_ABSTRACT, new SolrPropertyMapper(IndexConstants.REF_ABSTRACT));
         propertyMap.put(SearchConstants.REF_TEXT_TITLE, new SolrPropertyMapper(IndexConstants.REF_TITLE));
         propertyMap.put(SearchConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
+        propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
         
                 
         // Set the url for the solr instance.
         
         solrUrl = "http://cardolan.informatics.jax.org:8983/solr/reference/";
-        
-        
         
         /*
          * The name of the field we want to iterate through the documents for
