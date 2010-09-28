@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.hunter;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,18 +22,17 @@ public class SolrJournalsACHunter extends SolrHunter {
          */
         
         propertyMap.put(SearchConstants.REF_JOURNAL, new SolrPropertyMapper(IndexConstants.REF_JOURNAL));
-                
-        // Set the url for the solr instance.
-        
-        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/journalsAC/";
         
         /*
          * For this hunter we are not interested in keys, we instead want to pack 
          * a specific field from the returned solr documents into the response.
-         */
-        
+         */       
         otherString = IndexConstants.REF_JOURNAL_SORT;
         
     }
-   
+	
+	@Value("${solr.journals_ac.url}")
+	public void setSolrUrl(String solrUrl) {
+		super.solrUrl = solrUrl;
+	}
 }

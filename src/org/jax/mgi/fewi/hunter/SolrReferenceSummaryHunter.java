@@ -5,31 +5,23 @@ import java.util.ArrayList;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class SolrReferenceSummaryHunter extends SolrHunter {
     
     /***
-     * The constructor sets up this hunter so that it is specific to reference
+     * The constructor sets up this hunter so that it is specific to sequence
      * summary pages.  Each item in the constructor sets a value that it has 
      * inherited from its superclass, and then relies on the superclass to 
      * perform all of the needed work via the hunt() method.
      */
+	
     public SolrReferenceSummaryHunter() {        
         
-        /**
-         * Set up the sorting filter mapping. 
-         */
-        
-        sortMap.put(SortConstants.REF_AUTHORS, new SolrSortMapper(IndexConstants.REF_AUTHOR));
-        sortMap.put(SortConstants.REF_JOURNAL, new SolrSortMapper(IndexConstants.REF_JOURNAL));
-        sortMap.put(SortConstants.REF_YEAR, new SolrSortMapper(IndexConstants.REF_YEAR));
-        
-        /**
+        /*
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
          * 
@@ -48,19 +40,19 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_TEXT_TITLE, new SolrPropertyMapper(IndexConstants.REF_TITLE));
         propertyMap.put(SearchConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
-                
-        // Set the url for the solr instance.
-        
-        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/reference/";
-        
+
         /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to pack it into the 
          * keys collection in the response.
-         */
-        
+         */       
         keyString = IndexConstants.REF_KEY;
         
     }
-   
+	
+	@Value("${solr.reference.url}")
+	public void setSolrUrl(String solrUrl) {
+		super.solrUrl = solrUrl;
+	}
+	
 }

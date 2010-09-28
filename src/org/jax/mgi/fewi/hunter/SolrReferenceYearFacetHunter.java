@@ -6,6 +6,7 @@ import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -38,11 +39,7 @@ public class SolrReferenceYearFacetHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_TEXT_TITLE, new SolrPropertyMapper(IndexConstants.REF_TITLE));
         propertyMap.put(SearchConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
-                
-        // Set the url for the solr instance.
-        
-        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/reference/";
-        
+
         /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to pack it into the 
@@ -53,5 +50,9 @@ public class SolrReferenceYearFacetHunter extends SolrHunter {
         facetString = IndexConstants.REF_YEAR;
         
     }
-   
+	
+	@Value("${solr.reference.url}")
+	public void setSolrUrl(String solrUrl) {
+		super.solrUrl = solrUrl;
+	}
 }
