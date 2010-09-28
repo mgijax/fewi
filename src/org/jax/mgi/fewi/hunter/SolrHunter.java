@@ -18,6 +18,8 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the Solr specific hunter.  It is responsible for mapping the higher
@@ -47,6 +49,7 @@ public class SolrHunter implements Hunter {
     protected HashMap <String, SolrSortMapper> sortMap =
         new HashMap<String, SolrSortMapper>();
 
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Here we map the higher level join clauses to their
@@ -102,7 +105,7 @@ public class SolrHunter implements Hunter {
 
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
-        System.out.println(queryString);
+        logger.info(queryString);
         query.setQuery(queryString);
 
         /**
@@ -142,7 +145,7 @@ public class SolrHunter implements Hunter {
             query.setFacetSort("lex");
         }
 
-        System.out.println("The Solr query:" + query + "\n");
+        logger.info("The Solr query:" + query + "\n");
 
         /**
          * Run the query.
@@ -208,14 +211,14 @@ public class SolrHunter implements Hunter {
     List<String> packKeys(SolrDocumentList sdl) {
         List<String> keys = new ArrayList<String>();
 
-        System.out.println("Keys: ");
+        logger.debug("Keys: ");
 
         for (Iterator iter = sdl.iterator(); iter.hasNext();)
         {
             SolrDocument doc = (SolrDocument) iter.next();
 
             keys.add((String) doc.getFieldValue(keyString));
-            System.out.println(doc.getFieldValue(keyString));
+            logger.debug("" + doc.getFieldValue(keyString));
         }
 
         return keys;
@@ -224,14 +227,14 @@ public class SolrHunter implements Hunter {
     List<String> packExtraInfo(SolrDocumentList sdl) {
         List<String> info = new ArrayList<String>();
 
-        System.out.println("Other Strings: ");
+        logger.debug("Other Strings: ");
 
         for (Iterator iter = sdl.iterator(); iter.hasNext();)
         {
             SolrDocument doc = (SolrDocument) iter.next();
 
             info.add((String) doc.getFieldValue(otherString));
-            System.out.println(doc.getFieldValue(otherString));
+            logger.debug("" + doc.getFieldValue(otherString));
         }
 
         return info;
@@ -240,11 +243,11 @@ public class SolrHunter implements Hunter {
     List<String> packFacet(QueryResponse rsp) {
         List<String> facet = new ArrayList<String>();
 
-        System.out.println("Facet Strings: ");
+        logger.debug("Facet Strings: ");
 
         for (Count c: rsp.getFacetField(facetString).getValues()) {
             facet.add(c.getName());
-            System.out.println(c.getName());
+            logger.debug(c.getName());
         }
 
         return facet;
@@ -287,7 +290,7 @@ public class SolrHunter implements Hunter {
                 return "";
             }
             else {
-                System.out.println(filter.getProperty());
+                logger.debug("This filter: " + filter.getProperty());
             }
 
 
