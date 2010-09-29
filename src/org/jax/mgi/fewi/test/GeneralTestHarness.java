@@ -34,7 +34,7 @@ public class GeneralTestHarness {
 
         dummySearch.setFilter(testFilter);
         Sort sort = new Sort();
-        sort.setProperty("sequence_key");
+        sort.setSort("sequence_key");
         dummySearch.addSort(sort);
         
         System.out.println("The first query: ");
@@ -94,7 +94,7 @@ public class GeneralTestHarness {
         Filter fauthor = new Filter(SearchConstants.REF_AUTHOR, "har");
         params.setFilter(fauthor);
         Sort foo = new Sort();
-        foo.setProperty(IndexConstants.REF_AUTHOR_SORT);
+        foo.setSort(IndexConstants.REF_AUTHOR_SORT);
         foo.setDesc(false);
         List <Sort> sortList = new ArrayList<Sort>();
         params.setSorts(sortList);
@@ -104,7 +104,7 @@ public class GeneralTestHarness {
         Filter fjournal = new Filter(SearchConstants.REF_JOURNAL, "nat");
         params.setFilter(fjournal);
         foo = new Sort();
-        foo.setProperty(IndexConstants.REF_JOURNAL_SORT);
+        foo.setSort(IndexConstants.REF_JOURNAL_SORT);
         foo.setDesc(false);
         sortList = new ArrayList<Sort>();
         params.setSorts(sortList);
