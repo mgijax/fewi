@@ -6,14 +6,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConfigWrapper {
 	
-	private @Value("${solr.url.reference}") String solr;
-	private @Value("${foo.url}") String foo;
+	private @Value("${solr.reference.url}") String solr;
 	
 	public String getSolr() {
 		return solr;
 	}
-	public String getFoo() {
-		return foo;
-	}
 
+	public String formatStr(String s){
+		return "your arg: " + s; 
+	}
 }
