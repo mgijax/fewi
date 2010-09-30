@@ -32,7 +32,7 @@ public class SequenceController {
 	private Logger logger = LoggerFactory.getLogger(SequenceController.class);
 
 
-private @Value("${foo.url}") String foourl;         //in fewi.prop
+//private @Value("${foo.url}") String foourl;         //in fewi.prop
 //private @Value("${BIOMART_URL}") String biomart;    //in fewi.prop
 //private @Value("${hostname}") String silverURL;   //in GlobalConfig.prop
 
@@ -77,7 +77,7 @@ private @Value("${foo.url}") String foourl;         //in fewi.prop
 		mav.addObject("sequence", sequence);
 
 
-System.out.println("--->" + foourl);
+//System.out.println("--->" + foourl);
 //System.out.println("--->" + hostname);
 
 
