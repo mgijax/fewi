@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,13 +22,18 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
      */
 	
     public SolrReferenceSummaryHunter() {        
+        /**
+         * Set up the sorting filter mapping. 
+         */       
+        sortMap.put(SortConstants.REF_AUTHORS, new SolrSortMapper(IndexConstants.REF_AUTHOR));
+        sortMap.put(SortConstants.REF_JOURNAL, new SolrSortMapper(IndexConstants.REF_JOURNAL));
+        sortMap.put(SortConstants.REF_YEAR, new SolrSortMapper(IndexConstants.REF_YEAR));
         
-        /*
+        /**
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
          * 
-         */
-        
+         */      
         ArrayList <String> refList = new ArrayList <String> ();
         refList.add(IndexConstants.JNUM_ID);
         refList.add(IndexConstants.PUBMED_ID);
@@ -40,14 +47,13 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_TEXT_TITLE, new SolrPropertyMapper(IndexConstants.REF_TITLE));
         propertyMap.put(SearchConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
-
+        
         /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to pack it into the 
          * keys collection in the response.
          */       
         keyString = IndexConstants.REF_KEY;
-        
     }
 	
 	@Value("${solr.reference.url}")
