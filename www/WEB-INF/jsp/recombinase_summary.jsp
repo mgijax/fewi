@@ -40,19 +40,19 @@ ${templateBean.templateBodyStartHtml}
 
 <script type="text/javascript">
 (function () {	
-	// this function formats the vol(iss)pg column
-//    this.volFormatter = function(elLiner, oRecord, oColumn, oData) {
-//		elLiner.innerHTML= 'hi';
-//   };
+	
+	this.symbolFormatter = function(elLiner, oRecord, oColumn, oData) {
+		elLiner.innerHTML= '<b>' + oRecord.getData("symbol") + '</b>';
+    };
     
     // Adds the formatters above to the to the symbol col
-//    YAHOO.widget.DataTable.Formatter.vol = this.volFormatter;
+    YAHOO.widget.DataTable.Formatter.fSymbol = this.symbolFormatter;
 
 
     // Column definitions
     var myColumnDefs = [ // sortable:true enables sorting
         {key:"driver", label:"Driver", sortable:true},
-//        {key:"volFormatter", label:"Allele Symbol<br/>Gene; Allele Name", sortable:false, formatter:"vol"},
+        {key:"symbolFormatter", label:"Allele Symbol<br/>Gene; Allele Name", sortable:true, formatter:"fSymbol"},
         {key:"symbol", label:"Symbol", sortable:true},
         {key:"name", label:"Name", sortable:true},
         {key:"geneName", label:"Gene Name", sortable:true},
