@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public class SolrCreSummaryHunter extends SolrHunter {
     
     /***
-     * The constructor sets up this hunter so that it is specific to sequence
+     * The constructor sets up this hunter so that it is specific to cre
      * summary pages.  Each item in the constructor sets a value that it has 
      * inherited from its superclass, and then relies on the superclass to 
      * perform all of the needed work via the hunt() method.
