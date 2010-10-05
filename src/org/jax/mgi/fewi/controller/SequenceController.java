@@ -8,6 +8,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.util.StyleAlternator;
 import mgi.frontend.datamodel.*;
 
 //external libs
@@ -29,35 +30,22 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/sequence")
 public class SequenceController {
 
-	private Logger logger = LoggerFactory.getLogger(SequenceController.class);
+    private Logger logger = LoggerFactory.getLogger(SequenceController.class);
 
+    @Autowired
+    private SequenceFinder sequenceFinder;
 
-//private @Value("${foo.url}") String foourl;         //in fewi.prop
-//private @Value("${BIOMART_URL}") String biomart;    //in fewi.prop
-//private @Value("${hostname}") String silverURL;   //in GlobalConfig.prop
-
-	@Autowired
-	private SequenceFinder sequenceFinder;
-
-    private String hostname;
-    @Value("#{GlobalConfig.hostname}")
-    public void setHostName(String hostname) {
-        this.hostname = hostname;
-    }
 
     /////////////////////////////////////////////////////////////////////////
     //  Sequence Detail
     /////////////////////////////////////////////////////////////////////////
 
-	@RequestMapping(value="/{seqID}", method = RequestMethod.GET)
-	public ModelAndView seqDetail(@PathVariable("seqID") String seqID) {
+    @RequestMapping(value="/{seqID}", method = RequestMethod.GET)
+    public ModelAndView seqDetail(@PathVariable("seqID") String seqID) {
 
-		// returned ModelAndView object;  dictates view to forward to
-		ModelAndView mav = new ModelAndView("sequence_detail");
-
-		// setup search parameters object
-		SearchParams searchParams = new SearchParams();
-		Filter seqIdFilter = new Filter(SearchConstants.SEQ_ID, seqID);
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter seqIdFilter = new Filter(SearchConstants.SEQ_ID, seqID);
         searchParams.setFilter(seqIdFilter);
 
         // find the requested sequence
@@ -66,39 +54,71 @@ public class SequenceController {
 
         List<Sequence> seqList = searchResults.getResultObjects();
 
-        if (seqList.size() > 1) {
-			//TODO log error; exit; forward to summary
-		}
+        if (seqList.size() < 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Sequence Found");
+            return mav;
+        }
 
+        // success;  pull out the sequence, and forward to the detail page,
         Sequence sequence = seqList.get(0);
 
-        // package objects for view layer
-		mav.addObject("seqID", seqID);
-		mav.addObject("sequence", sequence);
+        // returned ModelAndView object;  dictates view to forward to
+        ModelAndView mav = new ModelAndView("sequence_detail");
+
+        // package style objects for view layer
+        mav.addObject("trStyles", new StyleAlternator("stripe1","stripe2"));
+        mav.addObject("leftTdStyles", new StyleAlternator("cat1","cat2"));
+        mav.addObject("rightTdStyles", new StyleAlternator("data1","data2"));
+
+        // package data objects for view layer
+        mav.addObject("seqID", seqID);
+        mav.addObject("sequence", sequence);
+
+        // package chromosome value
+        List<SequenceLocation> locList = sequence.getLocations();
+        if (!locList.isEmpty()) {
+            mav.addObject("chromosome", locList.get(0).getChromosome());
+        }
+
+        // package annotated markers
+        Set<Marker> markers = sequence.getMarkers();
+        if (!markers.isEmpty()) {
+            mav.addObject("markers", markers);
+        }
+
+        // package probes
+        Set<Probe> probes = sequence.getProbes();
+        if (!probes.isEmpty()) {
+            mav.addObject("probes", probes);
+        }
+
+        // package referenes
+        List<Reference> references = sequence.getReferences();
+        if (!references.isEmpty()) {
+            mav.addObject("references", references);
+        }
 
 
-//System.out.println("--->" + foourl);
-//System.out.println("--->" + hostname);
-
-
-		return mav;
-	}
+        return mav;
+    }
 
 
     /////////////////////////////////////////////////////////////////////////
     //  Sequence Summary by Reference
     /////////////////////////////////////////////////////////////////////////
 
-	@RequestMapping(value="/reference/{refID}", method = RequestMethod.GET)
-	public ModelAndView seqSummeryByRef(@PathVariable("refID") String refID) {
+    @RequestMapping(value="/reference/{refID}", method = RequestMethod.GET)
+    public ModelAndView seqSummeryByRef(@PathVariable("refID") String refID) {
 
 
-		ModelAndView mav = new ModelAndView("sequence_summaryByRefID");
+        ModelAndView mav = new ModelAndView("sequence_summaryByRefID");
 
-		mav.addObject("refID", refID);
+        mav.addObject("refID", refID);
 
-		return mav;
-	}
+        return mav;
+    }
 
 
 
