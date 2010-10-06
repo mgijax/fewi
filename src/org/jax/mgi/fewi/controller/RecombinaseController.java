@@ -116,12 +116,16 @@ public class RecombinaseController {
 		String d = request.getParameter("dir");
 		boolean desc = false;
 		
-		if ("authors".equalsIgnoreCase(s)){
-			s = SortConstants.REF_AUTHORS;
-		} else if ("journal".equalsIgnoreCase(s)){
-			s = SortConstants.REF_JOURNAL;
+		if ("symbol".equalsIgnoreCase(s)){
+			s = SortConstants.CRE_SYMBOL;
+		} else if ("alleletype".equalsIgnoreCase(s)){
+			s = SortConstants.CRE_TYPE;
+		} else if ("induciblenote".equalsIgnoreCase(s)){
+			s = SortConstants.CRE_INDUCIBLE;
+		} else if ("countofreferences".equalsIgnoreCase(s)){
+			s = SortConstants.CRE_REF_COUNT;
 		} else {
-			s = SortConstants.REF_YEAR;
+			s = SortConstants.CRE_DRIVER;
 		}
 		
 		if("desc".equalsIgnoreCase(d)){
