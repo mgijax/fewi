@@ -36,11 +36,33 @@ ${templateBean.templateBodyStartHtml}
 	<div id="paginationTop"  style="float:right;"></div>
 </div>
 
+<script type="text/javascript">
+function flipColumn (checkboxID, column) {
+	var thisCheckBox = document.getElementById(checkboxID);
+	var myDataTable = YAHOO.mgiData.myDataTable;
+	if (YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
+		alert ("about to delete column: " + column);
+		myDataTable.removeColumn (column);
+		YAHOO.util.Dom.removeClass(thisCheckBox, "checkboxSelected");
+		alert ("deleted column: " + column);
+	} else {
+		alert ("about to insert column: " + column);
+		myDataTable.insertColumn (column);
+		YAHOO.util.Dom.addClass(thisCheckBox, "checkboxSelected");
+		alert ("inserted column: " + column);
+	}
+}
+</script>
+
+<div id="checkboxes">
+    <input type="checkbox" id="refsCountCheckbox" checked="checked"
+	class="checkboxSelected"
+        onClick="flipColumn('refsCountCheckbox', 'countOfReferences');"></input>
+</div>
 <div id="dynamicdata"></div>
 
 <script type="text/javascript">
 (function () {	
-	
 	this.symbolFormatter = function(elLiner, oRecord, oColumn, oData) {
 		elLiner.innerHTML= '<b>' + oRecord.getData("symbol") + '</b>';
     };
@@ -48,15 +70,34 @@ ${templateBean.templateBodyStartHtml}
     // Adds the formatters above to the to the symbol col
     YAHOO.widget.DataTable.Formatter.fSymbol = this.symbolFormatter;
 
+	// this function formats the allele/gene nomenclature column
+    this.nomenFormatter = function(elLiner, oRecord, oColumn, oData) {
+		// if gene name and allele name match, only show one
+		if (oRecord.getData("name") == oRecord.getData("geneName")) {
+			elLiner.innerHTML= '<b>' + oRecord.getData("symbol") + '</b><br/>' + 
+			oRecord.getData("name");
+		} else {
+			// the gene name and allele name differ, so show both
+			elLiner.innerHTML= '<b>' + oRecord.getData("symbol") + '</b><br/>' + 
+				oRecord.getData("geneName") + '; ' + oRecord.getData("name");
+		}
+	};
 
-    // Column definitions
-    var myColumnDefs = [ // sortable:true enables sorting
+    // Adds the formatters above to the to the data table, so we can reference
+    // them by name for individual columns
+    YAHOO.widget.DataTable.Formatter.nomen = this.nomenFormatter;
+
+    // Column definitions -- sortable:true enables sorting
+    // These are our actual columns, in the default ordering.
+    var myColumnDefs = [
         {key:"driver", label:"Driver", sortable:true},
+        {key:"nomenFormatter", label:"Allele Symbol<br/>Gene; Allele Name",
+			sortable:false, formatter:"nomen"},
         {key:"symbolFormatter", label:"Allele Symbol<br/>Gene; Allele Name", sortable:true, formatter:"fSymbol"},
         {key:"symbol", label:"Symbol", sortable:true},
         {key:"name", label:"Name", sortable:true},
         {key:"geneName", label:"Gene Name", sortable:true},
-        {key:"primaryID", label:"Primary ID", sortable:true},
+//        {key:"primaryID", label:"Primary ID", sortable:true},
         {key:"alleleType", label:"Allele Type", sortable:true},
         {key:"inducibleNote", label:"Inducible", sortable:true},
         {key:"countOfReferences", label:"Refs", sortable:true},
@@ -101,11 +142,14 @@ ${templateBean.templateBodyStartHtml}
     var myConfigs = {
         paginator : myPaginator,
         dynamicData : true,
+        draggableColumns : true,
         initialLoad : false
     };  
     
     // DataTable instance
     var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
+    YAHOO.namespace ('mgiData');
+    YAHOO.mgiData.myDataTable = myDataTable;
 
 
     // Show loading message while page is being rendered
@@ -163,6 +207,16 @@ ${templateBean.templateBodyStartHtml}
         };
         return true;
     };
+
+	// TODO -- check out these methods, as they may be useful for showing a Loading message
+	//	during loads of new data
+	// myDataTable.doBeforePaginatorChange()
+	// myDataTable.doBeforeSortColumn()
+	// myDataTable.showTableMessage()
+    
+    // TODO -- other useful methods
+    // myDataTable.hideColumn()
+    // myDataTable.showColumn()
     
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
