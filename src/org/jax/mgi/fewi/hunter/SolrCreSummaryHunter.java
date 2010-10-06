@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.hunter;
 
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,14 @@ public class SolrCreSummaryHunter extends SolrHunter {
      */
     public SolrCreSummaryHunter() {        
         
+        /*
+         * Setup the sort mapping.
+         */
+        sortMap.put(SortConstants.CRE_DRIVER, new SolrSortMapper(IndexConstants.ALL_DRIVER));
+        sortMap.put(SortConstants.CRE_SYMBOL, new SolrSortMapper(IndexConstants.ALL_SYMBOL_SORT));
+        sortMap.put(SortConstants.CRE_TYPE, new SolrSortMapper(IndexConstants.ALL_TYPE_SORT));
+        sortMap.put(SortConstants.CRE_INDUCIBLE, new SolrSortMapper(IndexConstants.ALL_INDUCIBLE));
+        sortMap.put(SortConstants.CRE_REF_COUNT, new SolrSortMapper(IndexConstants.ALL_REFERENCE_COUNT_SORT));
         /*
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
