@@ -42,12 +42,12 @@ function flipColumn (checkboxID, column) {
 	var myDataTable = YAHOO.mgiData.myDataTable;
 	if (YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
 		alert ("about to delete column: " + column);
-		myDataTable.removeColumn (column);
+		myDataTable.hideColumn (column);
 		YAHOO.util.Dom.removeClass(thisCheckBox, "checkboxSelected");
 		alert ("deleted column: " + column);
 	} else {
 		alert ("about to insert column: " + column);
-		myDataTable.insertColumn (column);
+		myDataTable.showColumn (column);
 		YAHOO.util.Dom.addClass(thisCheckBox, "checkboxSelected");
 		alert ("inserted column: " + column);
 	}
