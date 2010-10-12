@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.*;
+import java.io.*;
 
 // fewi & data model objects
 import org.jax.mgi.fewi.finder.SequenceFinder;
@@ -60,6 +61,12 @@ public class SequenceController {
             mav.addObject("errorMsg", "No Sequence Found");
             return mav;
         }
+        if (seqList.size() > 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
 
         // success;  pull out the sequence, and forward to the detail page,
         Sequence sequence = seqList.get(0);
@@ -99,7 +106,6 @@ public class SequenceController {
         if (!references.isEmpty()) {
             mav.addObject("references", references);
         }
-
 
         return mav;
     }
