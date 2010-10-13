@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConfigWrapper {
 
-
-    // property objects; will be loaded at construction
-    Properties fewiProperties = new Properties();   // fewi.properties
-    Properties globalProperties = new Properties(); // GlobalConfig.properties
+    // property objects; will be loaded at post-construction
+    Properties fewiProps = new Properties();   // fewi.properties
+    Properties globalProps = new Properties(); // GlobalConfig.properties
+    Properties externalUrlProps = new Properties(); // externalUrl.properties
 
 
     @PostConstruct
@@ -26,12 +26,12 @@ public class ConfigWrapper {
           ConfigWrapper.class.getClassLoader().getResourceAsStream("../properties/fewi.properties");
 
 
-        try {globalProperties.load(gcPropertiesIn);}
+        try {globalProps.load(gcPropertiesIn);}
         catch (Exception e) {
           System.out.println("--> ConfigWrapper - Error loading GlobalConfig.properties");
         }
 
-        try {fewiProperties.load(fwPropertiesIn);}
+        try {fewiProps.load(fwPropertiesIn);}
         catch (Exception e) {
           System.out.println("--> ConfigWrapper - Error loading fewi.properties");
         }
@@ -42,17 +42,46 @@ public class ConfigWrapper {
     //  accessors mapping file properties to bean-based access for view
     ///////////////////////////////////////////////////////////////////////////
 
+    // fewi url - favor local config value in fewi.properties
     public String getFewiUrl() {
-		if (fewiProperties.getProperty("fewi.url") != null) {
-          return fewiProperties.getProperty("fewi.url");
+		if (fewiProps.getProperty("fewi.url") != null) {
+          return fewiProps.getProperty("fewi.url");
 	    }
-        return globalProperties.getProperty("FEWI_URL");
+        return globalProps.getProperty("FEWI_URL");
     }
+
+    // seqfetch
 	public String getSeqFetchUrl() {
-		return globalProperties.getProperty("SEQFETCH_URL");
+		return globalProps.getProperty("SEQFETCH_URL");
 	}
 
+
+    // Rat Map
+	public String getRatMapUrl() {
+		return externalUrlProps.getProperty("ratmap");
+	}
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
