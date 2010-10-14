@@ -10,6 +10,7 @@ import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.ReferenceQueryForm;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -83,8 +84,10 @@ public class ReferenceController {
 	}
 	
 	private Filter parseReferenceQueryForm(ReferenceQueryForm query){
-		// start filter list to add filters to
-		List<Filter> filterList = new ArrayList<Filter>();
+		// start filter list for query filters
+		List<Filter> queryList = new ArrayList<Filter>();
+		// start filter list to store facet filters
+		List<Filter> facetList = new ArrayList<Filter>();
 		
 		//build author query filter
 		if(query.getAuthor() != null && !"".equals(query.getAuthor())){
@@ -92,18 +95,18 @@ public class ReferenceController {
 			
 			String scope = query.getAuthorScope();
 			if ("first".equals(scope)){
-				filterList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST, authors, Filter.OP_IN));
+				queryList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST, authors, Filter.OP_IN));
 			} else if ("last".equals(scope)){
-				filterList.add(new Filter(SearchConstants.REF_AUTHOR_LAST, authors, Filter.OP_IN));
+				queryList.add(new Filter(SearchConstants.REF_AUTHOR_LAST, authors, Filter.OP_IN));
 			} else {
-				filterList.add(new Filter(SearchConstants.REF_AUTHOR_ANY, authors, Filter.OP_IN));
+				queryList.add(new Filter(SearchConstants.REF_AUTHOR_ANY, authors, Filter.OP_IN));
 			}
 		}
 
 		// build journal query filter
 		if(query.getJournal() != null && !"".equals(query.getJournal())){
 			List<String> journals = Arrays.asList(query.getJournal().trim().split(";"));
-			filterList.add(new Filter(SearchConstants.REF_JOURNAL, journals, Filter.OP_IN));
+			queryList.add(new Filter(SearchConstants.REF_JOURNAL, journals, Filter.OP_IN));
 		}
 		
 		// build year query filter
@@ -115,18 +118,18 @@ public class ReferenceController {
 				List<String> years = Arrays.asList(query.getAuthor().trim().split("-"));
 				if (years.size() == 2){
 					// TODO handle years in any order
-					filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_GREATER_OR_EQUAL));
-					filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(1), Filter.OP_LESS_OR_EQUAL));
+					queryList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_GREATER_OR_EQUAL));
+					queryList.add(new Filter(SearchConstants.REF_YEAR, years.get(1), Filter.OP_LESS_OR_EQUAL));
 				} else if (years.size() == 1) {
 					if (rangeLoc == 0){
-						filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_LESS_OR_EQUAL));
+						queryList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_LESS_OR_EQUAL));
 					} else {
-						filterList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_GREATER_OR_EQUAL));
+						queryList.add(new Filter(SearchConstants.REF_YEAR, years.get(0), Filter.OP_GREATER_OR_EQUAL));
 					}
 				}
 				// TODO error: too many years entered
 			} else {
-				filterList.add(new Filter(SearchConstants.REF_YEAR, year, Filter.OP_EQUAL));
+				queryList.add(new Filter(SearchConstants.REF_YEAR, year, Filter.OP_EQUAL));
 			}
 		}
 		
@@ -143,28 +146,58 @@ public class ReferenceController {
 				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE, text, Filter.OP_CONTAINS));
 			}
 			if (textFilters.size() == 1) {
-				filterList.add(textFilters.get(0));
+				queryList.add(textFilters.get(0));
 			} else {
 				tf.setFilterJoinClause(Filter.FC_OR);
 				tf.setNestedFilters(textFilters);
-				filterList.add(tf);
+				queryList.add(tf);
 			}
 		}
 		
+		if(query.getAuthorFilter().size() > 0){
+			facetList.add(new Filter(FacetConstants.REF_AUTHORS, 
+					query.getAuthorFilter(), Filter.OP_IN));
+		}
+		
+		if (query.getJournalFilter().size() > 0){
+			facetList.add(new Filter(FacetConstants.REF_JOURNALS, 
+					query.getJournalFilter(), Filter.OP_IN));
+		}
+		
+		if (query.getYearFilter().size() > 0){
+			List<String> years = new ArrayList<String>();
+			for (Integer yearString : query.getYearFilter()) {
+				years.add(String.valueOf(yearString));
+			}
+			facetList.add(new Filter(FacetConstants.REF_YEAR, 
+					years, Filter.OP_IN));
+		}
+		
+		if (query.getCuratedDataFilter().size() > 0){
+			facetList.add(new Filter(FacetConstants.REF_CURATED_DATA, 
+					query.getCuratedDataFilter(), Filter.OP_IN));
+		}
+		
 		// we do have some filters, build 'em and add to searchParams
-		if (filterList.size() > 0){
+		if (queryList.size() > 0){
 			Filter f = new Filter();
 			f.setFilterJoinClause(Filter.FC_AND);
-			f.setNestedFilters(filterList);
+			queryList.addAll(facetList);
+			f.setNestedFilters(queryList);
 			return f;
 		// none yet, so check the id query and build it
 		} else if (query.getId() != null && !"".equals(query.getId())){
 			List<String> ids = Arrays.asList(query.getId().split(";"));
+			facetList.add(new Filter(SearchConstants.REF_ID, ids, Filter.OP_IN));
 			//TODO filter 'PMID:' from ids
-			return new Filter(SearchConstants.REF_ID, ids, Filter.OP_IN);
+			Filter f = new Filter();
+			f.setFilterJoinClause(Filter.FC_AND);
+			f.setNestedFilters(facetList);
+			return f;
 		} else {
 			//TODO no query params
 		}
+		
 		return new Filter();
 	}
 	
@@ -218,7 +251,6 @@ public class ReferenceController {
 		Filter f;
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000);
-		//params.setStartIndex(0);
 		
 		if (queries.size() > 1){
 			f = new Filter();
@@ -235,5 +267,62 @@ public class ReferenceController {
 		}
 		params.setFilter(f);
 		return params;
+	}
+	
+	// mapping for author autocomplete requests
+	@RequestMapping("/facet/author")
+	public @ResponseBody SearchResults<String> facetAuthor(
+			@ModelAttribute ReferenceQueryForm query) {
+			
+		logger.info(query.toString());
+		
+		SearchParams params = new SearchParams();		
+		params.setFilter(this.parseReferenceQueryForm(query));
+	
+		// perform query and return results as json
+		logger.debug("params parsed");
+		return referenceFinder.getAuthorFacet(params);
+	}
+	
+	@RequestMapping("/facet/journal")
+	public @ResponseBody SearchResults<String> facetJournal(
+			@ModelAttribute ReferenceQueryForm query) {
+			
+		logger.info(query.toString());
+		
+		SearchParams params = new SearchParams();		
+		params.setFilter(this.parseReferenceQueryForm(query));
+	
+		// perform query and return results as json
+		logger.debug("params parsed");
+		return referenceFinder.getJournalFacet(params);
+	}
+	
+	@RequestMapping("/facet/year")
+	public @ResponseBody SearchResults<String> facetYear(
+			@ModelAttribute ReferenceQueryForm query) {
+			
+		logger.info(query.toString());
+		
+		SearchParams params = new SearchParams();		
+		params.setFilter(this.parseReferenceQueryForm(query));
+	
+		// perform query and return results as json
+		logger.debug("params parsed");
+		return referenceFinder.getYearFacet(params);
+	}
+	
+	@RequestMapping("/facet/data")
+	public @ResponseBody SearchResults<String> facetData(
+			@ModelAttribute ReferenceQueryForm query) {
+			
+		logger.info(query.toString());
+		
+		SearchParams params = new SearchParams();		
+		params.setFilter(this.parseReferenceQueryForm(query));
+	
+		// perform query and return results as json
+		logger.debug("params parsed");
+		return referenceFinder.getDataFacet(params);
 	}
 }

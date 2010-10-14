@@ -46,7 +46,12 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_TEXT_ABSTRACT, new SolrPropertyMapper(IndexConstants.REF_ABSTRACT));
         propertyMap.put(SearchConstants.REF_TEXT_TITLE, new SolrPropertyMapper(IndexConstants.REF_TITLE));
         propertyMap.put(SearchConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
+        
+        propertyMap.put(FacetConstants.REF_AUTHORS, new SolrPropertyMapper(IndexConstants.REF_AUTHOR_FACET));
+        propertyMap.put(FacetConstants.REF_JOURNALS, new SolrPropertyMapper(IndexConstants.REF_JOURNAL_FACET));
+        propertyMap.put(FacetConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
+        
         
         /*
          * The name of the field we want to iterate through the documents for

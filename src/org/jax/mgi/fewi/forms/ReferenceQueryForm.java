@@ -1,5 +1,8 @@
 package org.jax.mgi.fewi.forms;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ReferenceQueryForm {
 	
@@ -11,6 +14,10 @@ public class ReferenceQueryForm {
 	private boolean inTitle = true;
 	private boolean inAbstract = true;
 	private String id;
+	private List<String> authorFilter = new ArrayList<String>();
+	private List<String> journalFilter = new ArrayList<String>();
+	private List<Integer> yearFilter = new ArrayList<Integer>();
+	private List<String> curatedDataFilter = new ArrayList<String>();
 	
 	public String getAuthor() {
 		return author;
@@ -60,11 +67,37 @@ public class ReferenceQueryForm {
 	public void setAuthorScope(String authorScope) {
 		this.authorScope = authorScope;
 	}
+	public List<String> getAuthorFilter() {
+		return authorFilter;
+	}
+	public void setAuthorFilter(List<String> authorFilter) {
+		this.authorFilter = authorFilter;
+	}
+	public List<String> getJournalFilter() {
+		return journalFilter;
+	}
+	public void setJournalFilter(List<String> journalFilter) {
+		this.journalFilter = journalFilter;
+	}
+	public List<Integer> getYearFilter() {
+		return yearFilter;
+	}
+	public void setYearFilter(List<Integer> yearFilter) {
+		this.yearFilter = yearFilter;
+	}
+	public List<String> getCuratedDataFilter() {
+		return curatedDataFilter;
+	}
+	public void setCuratedDataFilter(List<String> curatedDateFilter) {
+		this.curatedDataFilter = curatedDateFilter;
+	}
 	@Override
 	public String toString() {
 		return "ReferenceQueryForm [Journal=" + Journal + ", author=" + author
-				+ ", authorScope=" + authorScope + ", id=" + id
-				+ ", inAbstract=" + inAbstract + ", inTitle=" + inTitle
-				+ ", text=" + text + ", year=" + year + "]";
+				+ ", authorFilter=" + authorFilter + ", authorScope="
+				+ authorScope + ", curatedDateFilter=" + curatedDataFilter
+				+ ", id=" + id + ", inAbstract=" + inAbstract + ", inTitle="
+				+ inTitle + ", journalFilter=" + journalFilter + ", text="
+				+ text + ", year=" + year + ", yearFilter=" + yearFilter + "]";
 	}
 }

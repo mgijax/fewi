@@ -4,7 +4,11 @@ import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
 import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
+import org.jax.mgi.fewi.hunter.SolrReferenceAuthorFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrReferenceHasDataFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrReferenceJournalFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceSummaryHunter;
+import org.jax.mgi.fewi.hunter.SolrReferenceYearFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -26,6 +30,18 @@ public class ReferenceFinder {
 	
 	@Autowired
 	private SolrJournalsACHunter journalACHunter;
+	
+	@Autowired
+	private SolrReferenceAuthorFacetHunter authorFacetHunter;
+	
+	@Autowired
+	private SolrReferenceJournalFacetHunter journalFacetHunter;
+	
+	@Autowired
+	private SolrReferenceYearFacetHunter yearFacetHunter;
+	
+	@Autowired
+	private SolrReferenceHasDataFacetHunter dataFacetHunter;
 
 	@Autowired
 	private HibernateObjectGatherer<Reference> referenceGatherer;
@@ -50,6 +66,30 @@ public class ReferenceFinder {
 	public SearchResults<String> getJournalAutoComplete(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		journalACHunter.hunt(params, results);
+		return results;
+	}
+	
+	public SearchResults<String> getAuthorFacet(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		authorFacetHunter.hunt(params, results);
+		return results;
+	}
+	
+	public SearchResults<String> getJournalFacet(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		journalFacetHunter.hunt(params, results);
+		return results;
+	}
+	
+	public SearchResults<String> getYearFacet(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		yearFacetHunter.hunt(params, results);
+		return results;
+	}
+	
+	public SearchResults<String> getDataFacet(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		dataFacetHunter.hunt(params, results);
 		return results;
 	}
 
