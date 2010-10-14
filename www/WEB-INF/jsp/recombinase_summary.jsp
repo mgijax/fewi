@@ -41,35 +41,30 @@ function flipColumn (checkboxID, column) {
 	var thisCheckBox = document.getElementById(checkboxID);
 	var myDataTable = YAHOO.mgiData.myDataTable;
 	if (YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
-		alert ("about to delete column: " + column);
 		myDataTable.hideColumn (column);
 		YAHOO.util.Dom.removeClass(thisCheckBox, "checkboxSelected");
-		alert ("deleted column: " + column);
 	} else {
-		alert ("about to insert column: " + column);
 		myDataTable.showColumn (column);
 		YAHOO.util.Dom.addClass(thisCheckBox, "checkboxSelected");
-		alert ("inserted column: " + column);
 	}
 }
 </script>
 
 <div id="checkboxes">
+    <input type="checkbox" id="alleleTypeCheckbox" checked="checked"
+		class="checkboxSelected"
+        onClick="flipColumn('alleleTypeCheckbox', 'alleleType');">Allele&nbsp;Type</input>
+    <input type="checkbox" id="inducibleCheckbox" checked="checked"
+		class="checkboxSelected"
+        onClick="flipColumn('inducibleCheckbox', 'inducibleNote');">Inducible</input>
     <input type="checkbox" id="refsCountCheckbox" checked="checked"
-	class="checkboxSelected"
-        onClick="flipColumn('refsCountCheckbox', 'countOfReferences');"></input>
+		class="checkboxSelected"
+        onClick="flipColumn('refsCountCheckbox', 'countOfReferences');">References</input>
 </div>
 <div id="dynamicdata"></div>
 
 <script type="text/javascript">
 (function () {	
-	this.symbolFormatter = function(elLiner, oRecord, oColumn, oData) {
-		elLiner.innerHTML= '<b>' + oRecord.getData("symbol") + '</b>';
-    };
-    
-    // Adds the formatters above to the to the symbol col
-    YAHOO.widget.DataTable.Formatter.fSymbol = this.symbolFormatter;
-
 	// this function formats the allele/gene nomenclature column
     this.nomenFormatter = function(elLiner, oRecord, oColumn, oData) {
 		// if gene name and allele name match, only show one
@@ -93,11 +88,7 @@ function flipColumn (checkboxID, column) {
         {key:"driver", label:"Driver", sortable:true},
         {key:"nomenFormatter", label:"Allele Symbol<br/>Gene; Allele Name",
 			sortable:false, formatter:"nomen"},
-        {key:"symbolFormatter", label:"Allele Symbol<br/>Gene; Allele Name", sortable:true, formatter:"fSymbol"},
         {key:"symbol", label:"Symbol", sortable:true},
-        {key:"name", label:"Name", sortable:true},
-        {key:"geneName", label:"Gene Name", sortable:true},
-//        {key:"primaryID", label:"Primary ID", sortable:true},
         {key:"alleleType", label:"Allele Type", sortable:true},
         {key:"inducibleNote", label:"Inducible", sortable:true},
         {key:"countOfReferences", label:"Refs", sortable:true},
