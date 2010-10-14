@@ -5,6 +5,8 @@
 
 ${templateBean.templateHeadHtml}
 
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
 <title>Reference Query</title>
 
 ${templateBean.templateBodyStartHtml}

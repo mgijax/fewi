@@ -4,6 +4,8 @@
 
 ${templateBean.templateHeadHtml}
 
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
 <!--begin custom header content for this example-->
 <script type="text/javascript">
 	document.documentElement.className = "yui-pe";
@@ -124,8 +126,8 @@ var History = YAHOO.util.History;
         var expTotal = oRecord.getData("countOfGXDAssays") + oRecord.getData("countOfGXDResults") + oRecord.getData("countOfGXDStructures");
         if (expTotal > 0){
 	        text = text + "<li>Expression assays: " + oRecord.getData("countOfGXDAssays");
-	        text = text + " results: " + oRecord.getData("countOfGXDResults");
-	        text = text + " tissues: " + oRecord.getData("countOfGXDStructures") + '</li>';
+	        text = text + ", results: " + oRecord.getData("countOfGXDResults");
+	        text = text + ", tissues: " + oRecord.getData("countOfGXDStructures") + '</li>';
         }
         if (oRecord.getData("countOfGXDIndex") > 0){           
         	text = text + "<li>Gene expression literature content records: " + oRecord.getData("countOfGXDIndex") + '</li>';
@@ -158,11 +160,11 @@ var History = YAHOO.util.History;
     // Column definitions
     var myColumnDefs = [ // sortable:true enables sorting
         {key:"idFormatter", label:"PubMed ID<br/>MGI Reference ID", sortable:false, 
-            formatter:"id", width:75},
+            formatter:"id", width:65},
         {key:"authors", label:"Author(s)", sortable:true, width:250},
         {key:"title", label:"Title", sortable:false},
         {key:"journal", label:"Journal", sortable:true, width:150},
-        {key:"year", label:"Year", sortable:true, width:40},
+        {key:"year", label:"Year", sortable:true, width:35},
         {key:"volFomatter", label:"Vol(Iss)Pg", sortable:false, formatter:"vol", width:100},
         {key:"dataFomatter", label:"Curated Data", sortable:false, formatter:"data", width:300}
     ];
