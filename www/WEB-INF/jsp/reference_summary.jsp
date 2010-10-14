@@ -4,20 +4,52 @@
 
 ${templateBean.templateHeadHtml}
 
-<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+<!--begin custom header content for this example-->
+<script type="text/javascript">
+	document.documentElement.className = "yui-pe";
+</script>
+
+<script src="${configBean.fewiUrl}js/rowexpansion.js"></script>
+
+<style type="text/css">
+#example {
+    height:30em;
+}
+
+label { 
+    display:block;
+    float:left;
+    width:45%;
+    clear:left;
+}
+
+.clear {
+    clear:both;
+}
+
+#resp {
+    margin:10px;
+    padding:5px;
+    border:1px solid #ccc;
+    background:#fff;
+}
+
+#resp li {
+    font-family:monospace
+}
+
+.yui-pe .yui-pe-content {
+    display:none;
+}
+
+</style>
 
 <title>Reference Summary</title>
 
-<script src="/fewi/js/rowexpansion.js"></script>
-
-<!-- Browser History Manager source file -->
-<script src="http://yui.yahooapis.com/2.8.1/build/history/history-min.js"></script>
-
 ${templateBean.templateBodyStartHtml}
 
-<iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
+<iframe id="yui-history-iframe" src="${configBean.fewiUrl}js/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
-
 
 <!-- begin header bar -->
 <div id="titleBarWrapper" style="max-width:1200px" userdoc="marker_help.shtml">	
@@ -39,13 +71,47 @@ ${templateBean.templateBodyStartHtml}
 	<div id="paginationTop"  style="float:right;"></div>
 </div>
 
+<div>
+	<a id="authorFilter">Author Filter <img src="${configBean.fewiUrl}images/filter.png" width="12" height="12" /></a> 
+</div>
+<div>
+	<a id="journalFilter">Journal Filter <img src="${configBean.fewiUrl}images/filter.png" width="12" height="12" /></a> 
+</div>
+<div>
+	<a id="yearFilter">Year Filter <img src="${configBean.fewiUrl}images/filter.png" width="12" height="12" /></a> 
+</div>
+<div>
+	<a id="curatedDataFilter">Data Filter <img src="${configBean.fewiUrl}images/filter.png" width="12" height="12" /></a> 
+</div>
+
 <div id="dynamicdata"></div>
 
+<div class="facetFilter">
+<div id="facetDialog">
+	<div class="hd">Filter</div>
+	
+	<div class="bd">
+		<form:form method="GET" action="${configBean.fewiUrl}reference/summary">
+		
+		</form:form>
+	</div>
+</div>
+</div>
+
 <script type="text/javascript">
+var myDataSource;
+var myDataTable;
+var generateRequest;
+var facets = [];
+
+// Integrate with Browser History Manager
+var History = YAHOO.util.History;
+
+
 (function () {	
 	// this function formats the vol(iss)pg column
     this.volFormatter = function(elLiner, oRecord, oColumn, oData) {
-		elLiner.innerHTML= '<b>' + oRecord.getData("vol") + '</b>(' + oRecord.getData("issue") + ')' + oRecord.getData("pages");
+        elLiner.innerHTML= '<b>' + oRecord.getData("vol") + '</b>(' + oRecord.getData("issue") + ')' + oRecord.getData("pages");
     };
 
 	// this function formats the id cell
@@ -53,22 +119,56 @@ ${templateBean.templateBodyStartHtml}
 		elLiner.innerHTML= oRecord.getData("pubMedID") + '<br/>' + oRecord.getData("jnumID");
     };
     
+    this.dataFormatter = function(elLiner, oRecord, oColumn, oData) {
+        var text = '<ul class=\"curatedData\">';
+        var expTotal = oRecord.getData("countOfGXDAssays") + oRecord.getData("countOfGXDResults") + oRecord.getData("countOfGXDStructures");
+        if (expTotal > 0){
+	        text = text + "<li>Expression assays: " + oRecord.getData("countOfGXDAssays");
+	        text = text + " results: " + oRecord.getData("countOfGXDResults");
+	        text = text + " tissues: " + oRecord.getData("countOfGXDStructures") + '</li>';
+        }
+        if (oRecord.getData("countOfGXDIndex") > 0){           
+        	text = text + "<li>Gene expression literature content records: " + oRecord.getData("countOfGXDIndex") + '</li>';
+        }
+        if(oRecord.getData("countOfMarkers") > 0){
+	        text = text + "<li>Genome features: " + oRecord.getData("countOfMarkers") + '</li>';
+        }
+        if(oRecord.getData("countOfAlleles") > 0){
+	        text = text + "<li>Phenotypic alleles: " + oRecord.getData("countOfAlleles") + '</li>';
+        }
+        if(oRecord.getData("countOfOrthologs") > 0){
+	        text = text + "<li>Mamallian orthologs: " + oRecord.getData("countOfOrthologs") + '</li>';
+        }
+        if(oRecord.getData("countOfMappingResults") > 0){
+	        text = text + "<li>Mapping data: " + oRecord.getData("countOfMappingResults") + '</li>';
+        }
+        if(oRecord.getData("countOfProbes") > 0){
+	        text = text + "<li>Molecular probes and clones: " + oRecord.getData("countOfProbes") + '</li>';
+        }
+        if(oRecord.getData("countOfSequenceResults") >0){
+	        text = text + "<li>Sequences: " + oRecord.getData("countOfSequenceResults") + '</li>';  
+        }
+		elLiner.innerHTML = text + '</ul>';      
+    };
     // Adds the formatters above to the to the symbol col
     YAHOO.widget.DataTable.Formatter.vol = this.volFormatter;
     YAHOO.widget.DataTable.Formatter.id = this.idFormatter;
+    YAHOO.widget.DataTable.Formatter.data = this.dataFormatter;
 
     // Column definitions
     var myColumnDefs = [ // sortable:true enables sorting
-        {key:"idFormatter", label:"PubMed ID<br/>MGI Reference ID", sortable:false, formatter:"id"},
-        {key:"authors", label:"Author(s)", sortable:true},
+        {key:"idFormatter", label:"PubMed ID<br/>MGI Reference ID", sortable:false, 
+            formatter:"id", width:75},
+        {key:"authors", label:"Author(s)", sortable:true, width:250},
         {key:"title", label:"Title", sortable:false},
-        {key:"journal", label:"Journal", sortable:true},
-        {key:"year", label:"Year", sortable:true},
-        {key:"volFomatter", label:"Vol(Iss)Pg", sortable:false, formatter:"vol"},
+        {key:"journal", label:"Journal", sortable:true, width:150},
+        {key:"year", label:"Year", sortable:true, width:40},
+        {key:"volFomatter", label:"Vol(Iss)Pg", sortable:false, formatter:"vol", width:100},
+        {key:"dataFomatter", label:"Curated Data", sortable:false, formatter:"data", width:300}
     ];
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource("json?${queryString}&");
+    myDataSource = new YAHOO.util.DataSource("${configBean.fewiUrl}reference/json?${queryString}&");
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
     myDataSource.responseSchema = {
         resultsList: "resultObjects",
@@ -83,6 +183,16 @@ ${templateBean.templateBodyStartHtml}
             {key:"vol"},
             {key:"issue"},
             {key:"pages"},
+            {key:"countOfAlleles"},
+            {key:"countOfGXDAssays"},
+            {key:"countOfGXDIndex"},
+            {key:"countOfGXDResults"},
+            {key:"countOfGXDStructures"},
+            {key:"countOfMappingResults"},
+            {key:"countOfOrthalogs"},
+            {key:"countOfMarkers"},
+            {key:"countOfProbes"},
+            {key:"countOfSequenceResults"}
         ],
         metaFields: {
             totalRecords: "totalCount",
@@ -111,14 +221,11 @@ ${templateBean.templateBodyStartHtml}
     };  
     
     // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
+    myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
 
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);    
     
-    // Integrate with Browser History Manager
-    var History = YAHOO.util.History;
-
     // Define a custom function to route sorting through the Browser History Manager
     var handleSorting = function (oColumn) {
         // Calculate next sort direction for given Column
@@ -170,16 +277,23 @@ ${templateBean.templateBodyStartHtml}
     };
     
     // Returns a request string for consumption by the DataSource
-    var generateRequest = function(startIndex,sortKey,dir,results) {
+    generateRequest = function(startIndex,sortKey,dir,results) {
         startIndex = startIndex || 0;
         sortKey   = sortKey || "journal";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
-        return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
+        var stateParams = "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
+        var facetParams = '';
+        for (key in facets){
+			for (item in facets[key]){
+				facetParams = facetParams + '&' + key + '=' + facets[key][item];
+			}
+        }
+        return stateParams + facetParams;
     };
 
     // Called by Browser History Manager to trigger a new state
-    var handleHistoryNavigation = function (request) {
+    handleHistoryNavigation = function (request) {
         // Sends a new request to the DataSource
         myDataSource.sendRequest(request,{
             success : myDataTable.onDataReturnSetRows,
@@ -218,6 +332,141 @@ function parseRequest(request){
 	return reply;
 }
 
+YAHOO.util.Event.onDOMReady(function () {
+
+	var oCallback = {
+		    success : myDataTable.onDataReturnInitializeTable,
+		    failure : myDataTable.onDataReturnInitializeTable,
+		    scope: this
+	};
+				
+	// Define various event handlers for Dialog
+	var handleSubmit = function() {		
+
+		var selections = this.getData();
+
+		for (i in selections){
+			facets[i] = selections[i];
+		}
+
+		var state = myDataTable.getState();
+		var newState = generateRequest(0, 
+				state.sortedBy.key, 
+				state.sortedBy.dir, 
+				myDataTable.get("paginator").getRowsPerPage()
+		);
+		
+		History.navigate("myDataTable", newState);
+		this.submit();
+	};
+	var handleCancel = function() {
+		this.cancel();
+	};
+	var handleSuccess = function(o) {
+		var response = o.responseText;
+		response = response.split("<!")[0];
+		document.getElementById("resp").innerHTML = response;
+	};
+	var handleFailure = function(o) {
+		alert("Submission failed: " + o.status);
+	};
+	var handleSubmitEvent = function(o) {
+		alert('submitEvent');
+	};
+    
+	// Instantiate the Dialog
+	facetDialog = new YAHOO.widget.Dialog("facetDialog", 
+							{ visible : false, 
+							  context:["yui-col1","tr","tr", ["beforeShow"]],
+							  constraintoviewport : true,
+							  buttons : [{ text:"Go", handler:handleSubmit, isDefault:true } ]
+							});
+
+	// Wire up the success and failure handlers
+	facetDialog.callback = { success: handleSuccess,
+						     failure: handleFailure };
+
+	// Render the Dialog
+	facetDialog.render();
+    
+	// DataSource instance
+	var facetAuthorDS = new YAHOO.util.DataSource("${configBean.fewiUrl}reference/facet/author?${queryString}");
+	facetAuthorDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
+	facetAuthorDS.responseSchema = {resultsList: "resultFacets"};
+
+	var facetJournalDS = new YAHOO.util.DataSource("${configBean.fewiUrl}reference/facet/journal?${queryString}");
+	facetJournalDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
+	facetJournalDS.responseSchema = {resultsList: "resultFacets"};
+
+	var facetYearDS = new YAHOO.util.DataSource("${configBean.fewiUrl}reference/facet/year?${queryString}");
+	facetYearDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
+	facetYearDS.responseSchema = {resultsList: "resultFacets"};
+
+	var facetDataDS = new YAHOO.util.DataSource("${configBean.fewiUrl}reference/facet/data?${queryString}");
+	facetDataDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
+	facetDataDS.responseSchema = {resultsList: "resultFacets"};
+
+	var populateFacet = function (oRequest, oResponse, oPayload) {
+		var res = oResponse.results;
+		var options = [];
+
+		for(x in res){
+			options[x] = '<input type="checkbox" name="' + oPayload.name + '" value="' + res[x] + '"> ' + res[x];
+		}
+		facetDialog.setHeader('Filter by ' + oPayload.title);
+		facetDialog.form.innerHTML = options.join('<br/>');
+	};
+
+	var authorCallback = {success:populateFacet,
+		failure:populateFacet,
+		scope:this,
+		argument:{name:'authorFilter', title:'Author'}
+	};
+
+	var journalCallback = {success:populateFacet,
+			failure:populateFacet,
+			scope:this,
+			argument:{name:'journalFilter', title:'Journal'}
+		};
+
+	var yearCallback = {success:populateFacet,
+			failure:populateFacet,
+			scope:this,
+			argument:{name:'yearFilter', title:'Year'}
+		};
+
+	var dataCallback = {success:populateFacet,
+			failure:populateFacet,
+			scope:this,
+			argument:{name:'curatedDataFilter', title:'Curated Data'}
+		};
+
+	var populateAuthorDialog = function () {
+		facetAuthorDS.sendRequest(null, authorCallback);		
+		facetDialog.show();
+	};
+
+	var populateJournalDialog = function () {
+		facetJournalDS.sendRequest(null, journalCallback);		
+		facetDialog.show();
+	};
+
+	var populateYearDialog = function () {
+		facetYearDS.sendRequest(null, yearCallback);		
+		facetDialog.show();
+	};
+
+	var populateDataDialog = function () {
+		facetDataDS.sendRequest(null, dataCallback);		
+		facetDialog.show();
+	};
+
+	YAHOO.util.Event.addListener("authorFilter", "click", populateAuthorDialog, true);
+	YAHOO.util.Event.addListener("journalFilter", "click", populateJournalDialog, true);
+	YAHOO.util.Event.addListener("yearFilter", "click", populateYearDialog, true);
+	YAHOO.util.Event.addListener("curatedDataFilter", "click", populateDataDialog, true);
+
+});
 </script>
 
 ${templateBean.templateBodyStopHtml}
