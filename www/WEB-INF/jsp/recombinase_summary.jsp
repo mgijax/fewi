@@ -86,9 +86,9 @@ function flipColumn (checkboxID, column) {
     // These are our actual columns, in the default ordering.
     var myColumnDefs = [
         {key:"driver", label:"Driver", sortable:true},
-        {key:"nomenFormatter", label:"Allele Symbol<br/>Gene; Allele Name",
-			sortable:false, formatter:"nomen"},
-        {key:"symbol", label:"Symbol", sortable:true},
+        {key:"symbol", label:"Allele Symbol<br/>Gene; Allele Name",
+			sortable:true, formatter:"nomen"},
+        //{key:"symbol", label:"Symbol", sortable:true},
         {key:"alleleType", label:"Allele Type", sortable:true},
         {key:"inducibleNote", label:"Inducible", sortable:true},
         {key:"countOfReferences", label:"Refs", sortable:true},
