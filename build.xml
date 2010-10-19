@@ -45,7 +45,6 @@
                 <echo>Build war file</echo>        
                 <war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
                         <fileset dir="www"/>
-                        <fileset dir="www/css"/>
                 </war>
         </target>
 
