@@ -82,8 +82,6 @@ ${templateBean.templateBodyStartHtml}
     ${sequence.sequenceType}
     ${sequence.length}
     ${sequence.lengthUnit}
-    ${configBean.seqFetchUrl}
-
   </td>
 </tr>
 
@@ -191,7 +189,7 @@ ${templateBean.templateBodyStartHtml}
     <c:forEach var="marker" items="${markers}" >
       <tr>
       <td valign=top>${marker.markerType}</td>
-      <td valign=top>${marker.symbol}</td>
+      <td valign=top><a href="${configBean.fewiUrl}marker/${marker.symbol}">${marker.symbol}</a></td>
       <td valign=top>${marker.name}</td>
       <td valign=top>${marker.countOfGOTerms}</td>
       <td valign=top>${marker.countOfGXDAssays}</td>
@@ -230,7 +228,7 @@ ${templateBean.templateBodyStartHtml}
             ${collection.collection}
           </c:forEach>
         </td>
-        <td>${probe.cloneid}</td>
+        <td><a href="${configBean.fewiUrl}probe/${probe.cloneid}">${probe.cloneid}</a></td>
         <td>${probe.segmenttype}</td>
       </tr>
     </c:forEach>
