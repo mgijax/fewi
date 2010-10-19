@@ -75,9 +75,8 @@ public class SequenceController {
         ModelAndView mav = new ModelAndView("sequence_detail");
 
         // package style objects for view layer
-        mav.addObject("trStyles", new StyleAlternator("stripe1","stripe2"));
-        mav.addObject("leftTdStyles", new StyleAlternator("cat1","cat2"));
-        mav.addObject("rightTdStyles", new StyleAlternator("data1","data2"));
+        mav.addObject("leftTdStyles", new StyleAlternator("detailCat1","detailCat2"));
+        mav.addObject("rightTdStyles", new StyleAlternator("detailData1","detailData2"));
 
         // package data objects for view layer
         mav.addObject("seqID", seqID);
