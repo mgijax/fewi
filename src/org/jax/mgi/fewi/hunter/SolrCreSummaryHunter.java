@@ -27,7 +27,7 @@ public class SolrCreSummaryHunter extends SolrHunter {
         sortMap.put(SortConstants.CRE_TYPE, new SolrSortMapper(IndexConstants.ALL_TYPE_SORT));
         sortMap.put(SortConstants.CRE_INDUCIBLE, new SolrSortMapper(IndexConstants.ALL_INDUCIBLE));
         sortMap.put(SortConstants.CRE_REF_COUNT, new SolrSortMapper(IndexConstants.ALL_REFERENCE_COUNT_SORT));
-        sortMap.put(SortConstants.CRE_IN_ALIMENTARY_SYSTEM, new SolrSortMapper(IndexConstants.CRE_IN_ALIMENTARY_SYSTEM));
+        sortMap.put(SortConstants.CRE_DETECTED_COUNT, new SolrSortMapper(IndexConstants.CRE_DETECTED_TOTAL_COUNT));
         /*
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
