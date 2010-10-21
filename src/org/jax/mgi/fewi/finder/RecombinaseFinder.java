@@ -18,6 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.jax.mgi.fewi.summary.RecombinaseSummary;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /*-------*/
 /* class */
@@ -43,17 +47,26 @@ public class RecombinaseFinder {
 	/* public instance methods */
 	/*-------------------------*/
 
-	public SearchResults<Allele> searchRecombinases(SearchParams params) {
+	public SearchResults<RecombinaseSummary> searchRecombinases(SearchParams params) {
 		logger.debug ("searchReferences");
-		SearchResults<Allele> results = new SearchResults<Allele>();
+		SearchResults<RecombinaseSummary> results = 
+			new SearchResults<RecombinaseSummary>();
 
 		logger.debug ("hunt");
 		hunter.hunt (params, results);
 
 		logger.debug ("gather");
 		gatherer.setType (Allele.class);
+
+		List<Allele> alleles = gatherer.get (results.getResultKeys());
+		List<RecombinaseSummary> summaries = new ArrayList<RecombinaseSummary> ();
 		
-		results.setResultObjects (gatherer.get (results.getResultKeys()));
+		Iterator<Allele> it = alleles.iterator();
+		while (it.hasNext()) {
+			summaries.add(new RecombinaseSummary(it.next()));
+		}
+		
+		results.setResultObjects (summaries);
 		return results;
 	}
 }
