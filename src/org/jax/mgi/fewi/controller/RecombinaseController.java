@@ -7,6 +7,7 @@ package org.jax.mgi.fewi.controller;
 import mgi.frontend.datamodel.Allele;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
+import org.jax.mgi.fewi.summary.RecombinaseSummary;
 
 /*--------------------------------------*/
 /* standard imports for all controllers */
@@ -84,7 +85,7 @@ public class RecombinaseController {
 	
 	// this is the logic to perform the query and return json results
 	@RequestMapping("/json")
-	public @ResponseBody SearchResults<Allele> recombinaseSummaryJson(
+	public @ResponseBody SearchResults<RecombinaseSummary> recombinaseSummaryJson(
 			HttpServletRequest request, 
 			@ModelAttribute RecombinaseQueryForm query,
 			@ModelAttribute Paginator page) {
@@ -115,7 +116,7 @@ public class RecombinaseController {
 		String s = request.getParameter("sort");
 		String d = request.getParameter("dir");
 		boolean desc = false;
-		
+/*		
 		if ("symbol".equalsIgnoreCase(s)){
 			s = SortConstants.CRE_SYMBOL;
 		} else if ("alleletype".equalsIgnoreCase(s)){
@@ -124,15 +125,19 @@ public class RecombinaseController {
 			s = SortConstants.CRE_INDUCIBLE;
 		} else if ("countofreferences".equalsIgnoreCase(s)){
 			s = SortConstants.CRE_REF_COUNT;
+		} else if ("inalimentarysystem".equalsIgnoreCase(s)){
+			s = SortConstants.CRE_IN_ALIMENTARY_SYSTEM;
 		} else {
 			s = SortConstants.CRE_DRIVER;
 		}
+*/
+		if (s == null) { s = SortConstants.CRE_DRIVER; }
 		
 		if("desc".equalsIgnoreCase(d)){
 			desc = true;
 		}
 		Sort sort = new Sort(s, desc);
-		
+		logger.debug ("sort: " + sort.toString());
 		sorts.add(sort);
 		return sorts;
 	}
