@@ -121,12 +121,18 @@ public class SolrHunter implements Hunter {
                         query.addSortField(ssm, SolrQuery.ORDER.desc);
                     }
                 }
+                else {
+                	query.addSortField(sort.getSort(), SolrQuery.ORDER.desc);
+                }
             }
             else {
                 if (sortMap.containsKey(sort.getSort())) {
                     for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
                         query.addSortField(ssm, SolrQuery.ORDER.asc);
                     }
+                }
+                else {
+                	query.addSortField(sort.getSort(), SolrQuery.ORDER.asc);
                 }
             }
         }
