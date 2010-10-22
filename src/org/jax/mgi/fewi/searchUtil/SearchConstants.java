@@ -31,4 +31,5 @@ public class SearchConstants {
     public static final String ALL_KEY              = "allele_key";
     public static final String ALL_SYSTEM           = "allele_system";
     public static final String ALL_DRIVER           = "allele_driver";
+    public static final String ALL_ID               = "allele_id";
 }
