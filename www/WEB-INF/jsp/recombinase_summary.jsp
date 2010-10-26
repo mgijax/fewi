@@ -74,8 +74,8 @@ cursor: pointer;
 table.checkBoxSelectTable{
     border-collapse:collapse;
     border:1px solid #AAA;
-    border-spacing:0px;
-    padding:0px;
+    border-spacing:2px;
+    padding:2px;
     white-space:nowrap;
     width:auto;
     line-height:1.1;
