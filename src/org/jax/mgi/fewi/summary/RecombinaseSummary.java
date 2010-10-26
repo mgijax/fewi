@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import mgi.frontend.datamodel.AlleleSynonym;
+import org.jax.mgi.fewi.util.FormatHelper;
 
 /** wrapper around an allele, to expose only certain data for a recombinase
  * summary page.  This will aid in efficient conversion to JSON notation and
@@ -39,6 +40,10 @@ public class RecombinaseSummary {
 	
 	// maps from anatomical system abbreviation to its system key
 	private static HashMap systemKeys = new HashMap();
+	
+	// expand and collapse arrows for Recombinase Data field
+	private static String rightArrow = "<img src='http://cardolan.informatics.jax.org/webshare/images/rightArrow.gif' alt='right arrow'>";
+	private static String downArrow = "<img src='http://cardolan.informatics.jax.org/webshare/images/downArrow.gif' alt='down arrow'>";
 	
 	//-------------
 	// constructors
@@ -91,18 +96,21 @@ public class RecombinaseSummary {
     	if (affectedSystems.size() > 0) {
     		String div1ID = nextDivID();
     		String div2ID = nextDivID();
+    		String plSystems = FormatHelper.plural(affectedSystems.size(), "system");
     		
     		div1.append("<div id='" + div1ID + "' class='small' ");
     		div1.append("style='color:blue; cursor:pointer;' ");
     		div1.append("onClick='show(\"" + div2ID + "\"); hide(\"" + div1ID + "\");'>");
-    		div1.append("&gt; ");
-    		div1.append("Detected in " + affectedSystems.size() + " systems.</div>");
+    		div1.append(rightArrow);
+    		div1.append(" Detected in " + affectedSystems.size() + " " 
+    			+ plSystems + ".</div>");
 
     		div2.append("<div id='" + div2ID + "' class='small' style='display:none;'><div ");
     		div2.append("style='color:blue; cursor:pointer;' ");
     		div2.append("onClick='show(\"" + div1ID + "\"); hide(\"" + div2ID + "\");'>");
-    		div2.append ("V ");
-    		div2.append("Detected in " + affectedSystems.size() + " systems.</div>");
+    		div2.append (downArrow);
+    		div2.append(" Detected in " + affectedSystems.size() + " "
+    			+ plSystems + ".</div>");
     		
     		Iterator<AlleleSystem> affectedIterator = affectedSystems.iterator();
     		while (affectedIterator.hasNext()) {
@@ -125,18 +133,21 @@ public class RecombinaseSummary {
     	if (unaffectedSystems.size() > 0) {
     		String div3ID = nextDivID();
     		String div4ID = nextDivID();
+    		String plSystems = FormatHelper.plural(unaffectedSystems.size(), "system");
     		
     		div3.append("<div id='" + div3ID + "' class='small' ");
     		div3.append("style='color:blue; cursor:pointer;' ");
     		div3.append("onClick='show(\"" + div4ID + "\"); hide(\"" + div3ID + "\");'>");
-    		div3.append("&gt; ");
-    		div3.append("Not detected in " + unaffectedSystems.size() + " systems.</div>");
+    		div3.append(rightArrow);
+    		div3.append(" Not detected in " + unaffectedSystems.size() + " "
+    			+ plSystems + ".</div>");
 
     		div4.append("<div id='" + div4ID + "' class='small' style='display:none;'><div ");
     		div4.append("style='color:blue; cursor:pointer;' ");
     		div4.append("onClick='show(\"" + div3ID + "\"); hide(\"" + div4ID + "\");'>");
-    		div4.append("V ");
-    		div4.append("Not detected in " + unaffectedSystems.size() + " systems.</div>");
+    		div4.append(downArrow);
+    		div4.append(" Not detected in " + unaffectedSystems.size() + " "
+    			+ plSystems + ".</div>");
     		
     		Iterator<AlleleSystem> unaffectedIterator = unaffectedSystems.iterator();
     		while (unaffectedIterator.hasNext()) {
@@ -170,8 +181,17 @@ public class RecombinaseSummary {
 //    	return this.allele.getGeneName();
 //    }
     
-    public Integer getImsrCount() {
-    	return this.allele.getImsrStrainCount();
+    public String getImsrCount() {
+    	Integer count = this.allele.getImsrStrainCount();
+    	if ((count == null) || count.equals(0)) { return null; }
+    	
+    	StringBuffer sb = new StringBuffer();
+    	sb.append("<a href='http://lindon.informatics.jax.org:18080/imsr/fetch?page=imsrSummary&gaccid=");
+    	sb.append(this.allele.getPrimaryID());
+    	sb.append("&state=LM&state=OV&state=EM&state=SP'>");
+    	sb.append(this.allele.getImsrStrainCount());
+    	sb.append("</a>");
+    	return sb.toString();
     }
     
     public String getInAdiposeTissue() {
@@ -298,17 +318,16 @@ public class RecombinaseSummary {
 
 	public String getNomenclature() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("<B>");
-		sb.append(this.allele.getSymbol());
-		sb.append("</B><BR/>");
-		sb.append(this.allele.getGeneName());
+		sb.append(FormatHelper.superscript(this.allele.getSymbol()));
+		sb.append("<BR/><SPAN CLASS='small'>");
+		sb.append(FormatHelper.superscript(this.allele.getGeneName()));
 		if (!this.allele.getGeneName().equals(this.allele.getName())) {
 			sb.append("; ");
-			sb.append(this.allele.getName());
+			sb.append(FormatHelper.superscript(this.allele.getName()));
 		}
 		sb.append("<BR/>");
 		sb.append("(<A HREF='/allele/" + this.allele.getPrimaryID()
-				+ "'>phenotype data</A>)");
+				+ "'>phenotype data</A>)</SPAN>");
 		return sb.toString();
 	}
 	
@@ -335,7 +354,7 @@ public class RecombinaseSummary {
 		Iterator<String> si = synonyms.iterator();
 		StringBuffer sb = new StringBuffer();
 		while (si.hasNext()) {
-			sb.append (si.next());
+			sb.append (FormatHelper.superscript(si.next()));
 			if (si.hasNext()) {
 				sb.append (", ");
 			}
@@ -449,9 +468,9 @@ public class RecombinaseSummary {
     private static String specificityLink (String alleleID, Integer systemKey, 
     		String label) {
     	StringBuffer sb = new StringBuffer();
-    	sb.append("<a href='/recombinase/");
+    	sb.append("<a href='/recombinase/specificity?id=");
     	sb.append(alleleID);
-    	sb.append("/");
+    	sb.append("&systemKey=");
     	sb.append(systemKey.toString());
     	sb.append("'>");
     	sb.append(label);
