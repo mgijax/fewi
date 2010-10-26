@@ -105,16 +105,127 @@ ${templateBean.templateBodyStartHtml}
 <!-- end header bar -->
 
 <script type="text/javascript">
-function flipColumn (checkboxID, column) {
-	var thisCheckBox = document.getElementById(checkboxID);
-	var myDataTable = YAHOO.mgiData.myDataTable;
-	if (YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
-		myDataTable.hideColumn (column);
-		YAHOO.util.Dom.removeClass(thisCheckBox, "checkboxSelected");
-	} else {
-		myDataTable.showColumn (column);
-		YAHOO.util.Dom.addClass(thisCheckBox, "checkboxSelected");
+YAHOO.namespace ('mgiData');
+YAHOO.mgiData.selectedSystem = "";
+
+function getCheckboxID (fieldname) {
+	var abbrev = fieldname.substr(0,3).toLowerCase();
+	if (abbrev == "adi") { return "adiposeTissueCheckbox"; }
+	else if (abbrev == "ali") { return "alimentarySystemCheckbox"; }
+	else if (abbrev == "bra") { return "branchialArchesCheckbox"; }
+	else if (abbrev == "car") { return "cardiovascularSystemCheckbox"; }
+	else if (abbrev == "cav") { return "cavitiesAndLiningsCheckbox"; }
+	else if (abbrev == "end") { return "endocrineSystemCheckbox"; }
+	else if (abbrev == "hea") { return "headCheckbox"; }
+	else if (abbrev == "hem") { return "hemolymphoidSystemCheckbox"; }
+	else if (abbrev == "int") { return "integumentalSystemCheckbox"; }
+	else if (abbrev == "lim") { return "limbsCheckbox"; }
+	else if (abbrev == "liv") { return "liverAndBiliarySystemCheckbox"; }
+	else if (abbrev == "mes") { return "mesenchymeCheckbox"; }
+	else if (abbrev == "mus") { return "muscleCheckbox"; }
+	else if (abbrev == "ner") { return "nervousSystemCheckbox"; }
+	else if (abbrev == "ren") { return "renalAndUrinarySystemCheckbox"; }
+	else if (abbrev == "rep") { return "reproductiveSystemCheckbox"; }
+	else if (abbrev == "res") { return "respiratorySystemCheckbox"; }
+	else if (abbrev == "sen") { return "sensoryOrgansCheckbox"; }
+	else if (abbrev == "ske") { return "skeletalSystemCheckbox"; }
+	else if (abbrev == "tai") { return "tailCheckbox"; }
+	else if (abbrev == "ear") { return "earlyEmbryoCheckbox"; }
+	else if (abbrev == "ext") { return "extraEmbryonicCheckbox"; }
+	else if (abbrev == "emb") { return "embryoOtherCheckbox"; }
+	else if (abbrev == "pos") { return "postnatalOtherCheckbox"; }
+	else if (abbrev == "all") {
+		if (fieldname == "Allele Synonyms") { return "synonymsCheckbox"; }
+		else if (fieldname == "Allele Type") { return "alleleTypeCheckbox"; }
 	}
+	else if (abbrev == "ind") { return "inducibleCheckbox"; }
+	else if (abbrev == "ims") { return "imsrCheckbox"; }
+	else if (abbrev == "ref") { return "referenceCheckbox"; }
+	return "";
+}
+function getColumnName (fieldname) {
+	var abbrev = fieldname.substr(0,3).toLowerCase();
+	if (abbrev == "adi") { return "inAdiposeTissue"; }
+	else if (abbrev == "ali") { return "inAlimentarySystem"; }
+	else if (abbrev == "bra") { return "inBranchialArches"; }
+	else if (abbrev == "car") { return "inCardiovascularSystem"; }
+	else if (abbrev == "cav") { return "inCavitiesAndLinings"; }
+	else if (abbrev == "end") { return "inEndocrineSystem"; }
+	else if (abbrev == "hea") { return "inHead"; }
+	else if (abbrev == "hem") { return "inHemolymphoidSystem"; }
+	else if (abbrev == "int") { return "inIntegumentalSystem"; }
+	else if (abbrev == "lim") { return "inLimbs"; }
+	else if (abbrev == "liv") { return "inLiverAndBiliarySystem"; }
+	else if (abbrev == "mes") { return "inMesenchyme"; }
+	else if (abbrev == "mus") { return "inMuscle"; }
+	else if (abbrev == "ner") { return "inNervousSystem"; }
+	else if (abbrev == "ren") { return "inRenalAndUrinarySystem"; }
+	else if (abbrev == "rep") { return "inReproductiveSystem"; }
+	else if (abbrev == "res") { return "inRespiratorySystem"; }
+	else if (abbrev == "sen") { return "inSensoryOrgans"; }
+	else if (abbrev == "ske") { return "inSkeletalSystem"; }
+	else if (abbrev == "tai") { return "inTail"; }
+	else if (abbrev == "ear") { return "inEarlyEmbryo"; }
+	else if (abbrev == "ext") { return "inExtraembryonicComponent"; }
+	else if (abbrev == "emb") { return "inEmbryoOther"; }
+	else if (abbrev == "pos") { return "inPostnatalOther"; }
+	else if (abbrev == "all") {
+		if (fieldname == "Allele Synonyms") { return "synonyms"; }
+		else if (fieldname == "Allele Type") { return "alleleType"; }
+	}
+	else if (abbrev == "ind") { return "inducibleNote"; }
+	else if (abbrev == "ims") { return "imsrCount"; }
+	else if (abbrev == "ref") { return "countOfReferences"; }
+	return "";
+}
+function flipColumn (fieldname) {
+	if (fieldname == "") { return; }
+	var checkboxID = getCheckboxID (fieldname);
+	var thisCheckBox = document.getElementById(checkboxID);
+	if (YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
+		hideColumn (fieldname);
+	} else {
+		showColumn (fieldname);
+	}
+}
+function hideColumn (fieldname) {
+	if (fieldname == "") { return; }
+	var checkboxID = getCheckboxID (fieldname);
+	var thisCheckBox = document.getElementById(checkboxID);
+	var columnName = getColumnName (fieldname);
+	var myDataTable = YAHOO.mgiData.myDataTable;
+//	if (YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
+		myDataTable.hideColumn (columnName);
+		YAHOO.util.Dom.removeClass(thisCheckBox, "checkboxSelected");
+		thisCheckBox.checked = false;
+//	}
+}
+function showColumn (fieldname) {
+	if ((fieldname == "") || (fieldname == null)) { return; }
+	var checkboxID = getCheckboxID (fieldname);
+	var thisCheckBox = document.getElementById(checkboxID);
+	var columnName = getColumnName (fieldname);
+	var myDataTable = YAHOO.mgiData.myDataTable;
+//	if (!YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
+		myDataTable.showColumn (columnName);
+		YAHOO.util.Dom.addClass(thisCheckBox, "checkboxSelected");
+		thisCheckBox.checked = true;
+//	}
+}
+function hide (i) {
+    var elem = document.getElementById(i);
+    if (elem == null) { return false; }
+
+    elem.style.display = 'none';
+    return true;
+}	
+function show (i)
+{
+    var elem = document.getElementById(i);
+    if (elem == null) { return false; }
+
+    elem.style.display = '';
+    return true;
 }
 </script>
 
@@ -126,134 +237,108 @@ function flipColumn (checkboxID, column) {
       columns containing links to data and images.</td>
       <td colspan="2" class="pageAdvice">Hide or show other columns.</td></tr>
 	<tr>
-	  <td><input type="checkbox" id="adiposeTissueCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('adiposeTissueCheckbox', 'inAdiposeTissue');">Adipose&nbsp;Tissue</input>
+	  <td><input type="checkbox" id="adiposeTissueCheckbox" 
+        onClick="flipColumn('Adipose Tissue');">Adipose&nbsp;Tissue</input>
 	  </td>
-	  <td><input type="checkbox" id="headCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('headCheckbox', 'inHead');">Head</input>
+	  <td><input type="checkbox" id="headCheckbox"
+        onClick="flipColumn('Head');">Head</input>
 	  </td>
-	  <td><input type="checkbox" id="muscleCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('muscleCheckbox', 'inMuscle');">Muscle</input>
+	  <td><input type="checkbox" id="muscleCheckbox"
+        onClick="flipColumn('Muscle');">Muscle</input>
 	  </td>
-	  <td><input type="checkbox" id="skeletalSystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('skeletalSystemCheckbox', 'inSkeletalSystem');">Skeletal&nbsp;System</input>
+	  <td><input type="checkbox" id="skeletalSystemCheckbox"
+        onClick="flipColumn('Skeletal System');">Skeletal&nbsp;System</input>
 	  </td>
 	  <td colspan="2"><input type="checkbox" id="synonymsCheckbox" checked="checked"
 		class="checkboxSelected"
-        onClick="flipColumn('synonymsCheckbox', 'synonyms');">Allele&nbsp;Synonyms</input>
+        onClick="flipColumn('Allele Synonyms');">Allele&nbsp;Synonyms</input>
 	  </td>
 	</tr>
 	<tr>
-	  <td><input type="checkbox" id="alimentarySystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('alimentarySystemCheckbox', 'inAlimentarySystem');">Alimentary&nbsp;System</input>
+	  <td><input type="checkbox" id="alimentarySystemCheckbox"
+        onClick="flipColumn('Alimentary System');">Alimentary&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="hemolymphoidSystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('hemolymphoidSystemCheckbox', 'inHemolymphoidSystem');">Hemolymphoid&nbsp;System</input>
+	  <td><input type="checkbox" id="hemolymphoidSystemCheckbox"
+        onClick="flipColumn('Hemolymphoid System');">Hemolymphoid&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="nervousSystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('nervousSystemCheckbox', 'inNervousSystem');">Nervous&nbsp;System</input>
+	  <td><input type="checkbox" id="nervousSystemCheckbox"
+        onClick="flipColumn('Nervous System');">Nervous&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="tailCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('tailCheckbox', 'inTail');">Tail</input>
+	  <td><input type="checkbox" id="tailCheckbox"
+        onClick="flipColumn('Tail');">Tail</input>
 	  </td>
-	  <td><input type="checkbox" id="alleleTypeCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('alleleTypeCheckbox', 'alleleType');">Allele&nbsp;Type</input>
+	  <td><input type="checkbox" id="alleleTypeCheckbox"
+        onClick="flipColumn('Allele Type');">Allele&nbsp;Type</input>
 	  </td>
 	  <td><input type="checkbox" id="imsrCheckbox" checked="checked"
 		class="checkboxSelected"
-        onClick="flipColumn('imsrCheckbox', 'imsrCount');">IMSR</input>
+        onClick="flipColumn('IMSR');">IMSR</input>
 	  </td>
 	</tr>
 	<tr>
-	  <td><input type="checkbox" id="branchialArchesCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('branchialArchesCheckbox', 'inBranchialArches');">Branchial&nbsp;Arches</input>
+	  <td><input type="checkbox" id="branchialArchesCheckbox"
+        onClick="flipColumn('Branchial Arches');">Branchial&nbsp;Arches</input>
 	  </td>
-	  <td><input type="checkbox" id="integumentalSystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('integumentalSystemCheckbox', 'inIntegumentalSystem');">Integumental&nbsp;System</input>
+	  <td><input type="checkbox" id="integumentalSystemCheckbox"
+        onClick="flipColumn('Integumental System');">Integumental&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="renalAndUrinarySystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('renalAndUrinarySystemCheckbox', 'inRenalAndUrinarySystem');">Renal&nbsp;and&nbsp;Urinary&nbsp;System</input>
+	  <td><input type="checkbox" id="renalAndUrinarySystemCheckbox"
+        onClick="flipColumn('Renal and Urinary System');">Renal&nbsp;and&nbsp;Urinary&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="earlyEmbryoCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('earlyEmbryoCheckbox', 'inEarlyEmbryo');">Early&nbsp;Embryo,&nbsp;All&nbsp;Tissues</input>
+	  <td><input type="checkbox" id="earlyEmbryoCheckbox"
+        onClick="flipColumn('Early Embryo');">Early&nbsp;Embryo,&nbsp;All&nbsp;Tissues</input>
 	  </td>
-	  <td><input type="checkbox" id="inducibleCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('inducibleCheckbox', 'inducible');">Inducible</input>
+	  <td><input type="checkbox" id="inducibleCheckbox"
+        onClick="flipColumn('Inducible');">Inducible</input>
 	  </td>
 	  <td><input type="checkbox" id="referenceCheckbox" checked="checked"
 		class="checkboxSelected"
-        onClick="flipColumn('referenceCheckbox', 'countOfReferences');">References</input>
+        onClick="flipColumn('References');">References</input>
 	  </td>
 	</tr>
 	<tr>
-	  <td><input type="checkbox" id="cardiovascularCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('cardiovascularCheckbox', 'inCardiovascularSystem');">Cardiovascular&nbsp;System</input>
+	  <td><input type="checkbox" id="cardiovascularSystemCheckbox"
+        onClick="flipColumn('Cardiovascular System');">Cardiovascular&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="limbsCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('limbsCheckbox', 'inLimbs');">Limbs</input>
+	  <td><input type="checkbox" id="limbsCheckbox"
+        onClick="flipColumn('Limbs');">Limbs</input>
 	  </td>
-	  <td><input type="checkbox" id="reproductiveSystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('reproductiveSystemCheckbox', 'inReproductiveSystem');">Reproductive&nbsp;System</input>
+	  <td><input type="checkbox" id="reproductiveSystemCheckbox"
+        onClick="flipColumn('Reproductive System');">Reproductive&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="extraEmbryonicCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('extraEmbryonicCheckbox', 'inExtraembryonicComponent');">Extraembryonic&nbsp;Component</input>
+	  <td><input type="checkbox" id="extraEmbryonicCheckbox"
+        onClick="flipColumn('Extraembryonic Component');">Extraembryonic&nbsp;Component</input>
 	  </td>
 	  <td colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
-	  <td><input type="checkbox" id="cavitiesAndLiningsCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('cavitiesAndLiningsCheckbox', 'inCavitiesAndLinings');">Cavities&nbsp;And&nbsp;Linings</input>
+	  <td><input type="checkbox" id="cavitiesAndLiningsCheckbox"
+        onClick="flipColumn('Cavities and Linings');">Cavities&nbsp;And&nbsp;Linings</input>
 	  </td>
-	  <td><input type="checkbox" id="liverAndBiliarySystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('liverAndBiliarySystemCheckbox', 'inLiverAndBiliarySystem');">Liver&nbsp;and&nbsp;Biliary&nbsp;System</input>
+	  <td><input type="checkbox" id="liverAndBiliarySystemCheckbox"
+        onClick="flipColumn('Liver and Biliary System');">Liver&nbsp;and&nbsp;Biliary&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="respiratorySystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('respiratorySystemCheckbox', 'inRespiratorySystem');">Respiratory&nbsp;System</input>
+	  <td><input type="checkbox" id="respiratorySystemCheckbox"
+        onClick="flipColumn('Respiratory System');">Respiratory&nbsp;System</input>
 	  </td>
-	  <td colspan="3"><input type="checkbox" id="embryoOtherCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('embryoOtherCheckbox', 'inEmbryoOther');">Embryo-other&nbsp;(Embryonic&nbsp;structures&nbsp;not&nbsp;listed&nbsp;above)</input>
+	  <td colspan="3"><input type="checkbox" id="embryoOtherCheckbox"
+        onClick="flipColumn('Embryo Other');">Embryo-other&nbsp;(Embryonic&nbsp;structures&nbsp;not&nbsp;listed&nbsp;above)</input>
 	  </td>
 	</tr>
 	<tr>
-	  <td><input type="checkbox" id="endocrineSystemCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('endocrineSystemCheckbox', 'inEndocrineSystem');">Endocrine&nbsp;System</input>
+	  <td><input type="checkbox" id="endocrineSystemCheckbox"
+        onClick="flipColumn('Endocrine System');">Endocrine&nbsp;System</input>
 	  </td>
-	  <td><input type="checkbox" id="mesenchymeCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('mesenchymeCheckbox', 'inMesenchyme');">Mesenchyme</input>
+	  <td><input type="checkbox" id="mesenchymeCheckbox"
+        onClick="flipColumn('Mesenchyme');">Mesenchyme</input>
 	  </td>
-	  <td><input type="checkbox" id="sensoryOrgansCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('sensoryOrgansCheckbox', 'inSensoryOrgans');">Sensory&nbsp;Organs</input>
+	  <td><input type="checkbox" id="sensoryOrgansCheckbox"
+        onClick="flipColumn('Sensory Organs');">Sensory&nbsp;Organs</input>
 	  </td>
-	  <td colspan="2"><input type="checkbox" id="postnatalOtherCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('postnatalOtherCheckbox', 'inPostnatalOther');">Postnatal-other&nbsp;(Postnatal&nbsp;structures&nbsp;not&nbsp;listed&nbsp;above)</input>
+	  <td colspan="2"><input type="checkbox" id="postnatalOtherCheckbox"
+        onClick="flipColumn('Postnatal Other');">Postnatal-other&nbsp;(Postnatal&nbsp;structures&nbsp;not&nbsp;listed&nbsp;above)</input>
 	  </td>
-	  <td>Reset Page</td>
+	  <td><span id="summaryResetButton" onClick="resetCheckboxes(); window.location.reload();">Reset Page</span></td>
 	</tr>
   </table>
 </div>
@@ -261,50 +346,44 @@ function flipColumn (checkboxID, column) {
 	<div id="querySummary">
 		<span class="enhance">You searched for:</span><br/>
 		<c:if test="${not empty recombinaseQueryForm.system}"><span class="label">System:</span> 
-			${fn:replace(recombinaseQueryForm.system,";", ",") }<br/></c:if>
+			${fn:replace(recombinaseQueryForm.system,";", ",") }<br/>
+			<script type="text/javascript">
+			  YAHOO.mgiData.selectedSystem="${recombinaseQueryForm.system}";
+			</script></c:if>
 		<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver:</span> 
 			${fn:replace(recombinaseQueryForm.driver,";", ",") }<br/></c:if>
     <span class="pageAdvice" style="height: 20px;">
 	    Click column headings to sort table data.  Drag headings to rearrange columns.
     </span>
 	</div>
-</div>
-<div id="paginationTop"  style="float:right;"></div>
+</div><br/>
+<div id="paginationTop"  style="float:right;"></div><br/>
 <div id="dynamicdata"></div>
 
 <script type="text/javascript">
-(function () {	
-	// this function formats the allele/gene nomenclature column
-    this.nomenFormatter = function(elLiner, oRecord, oColumn, oData) {
-		// if gene name and allele name match, only show one
-		if (oRecord.getData("name") == oRecord.getData("geneName")) {
-			elLiner.innerHTML= '<b>' + oRecord.getData("symbol") + '</b><br/>' + 
-			oRecord.getData("name");
-		} else {
-			// the gene name and allele name differ, so show both
-			elLiner.innerHTML= '<b>' + oRecord.getData("symbol") + '</b><br/>' + 
-				oRecord.getData("geneName") + '; ' + oRecord.getData("name");
-		}
-	};
+function resetCheckboxes() {
+	var hidden = [ "Adipose Tissue", "Alimentary System", "Branchial Arches",
+	    "Cardiovascular System", "Cavities and their Linings", "Endocrine System",
+	    "Head", "Hemolymphoid System", "Integumental System", "Limbs",
+	    "Liver and Biliary System", "Mesenchyme", "Muscle", "Nervous System",
+	    "Renal and Urinary System", "Reproductive System", "Respiratory System",
+	    "Sensory Organs", "Skeletal System", "Tail", "Early Embryo",
+	    "Extraembryonic Component", "Embryo Other", "Postnatal Other", "Allele Type",
+	    "Inducible" ];
 
-    YAHOO.namespace ('mgiData');
-	
-	this.detectedInFormatter = function(elLiner, oRecord, oColumn, oData) {
-		if (oRecord.getData("detectedCount") > 0) {
-			elLiner.innerHTML="Detected In: " + oRecord.getData("detectedCount");
-		} else {
-			elLiner.innerHTML="";
-		}
-		if (oRecord.getData("notDetectedCount") > 0) {
-			elLiner.innerHTML = elLiner.innerHTML + "<br/>Not Detected In: " + oRecord.getData("notDetectedCount");
-		}
-	};
-	
-    // Adds the formatters above to the to the data table, so we can reference
-    // them by name for individual columns
-    YAHOO.widget.DataTable.Formatter.nomen = this.nomenFormatter;
-	YAHOO.widget.DataTable.Formatter.detectedIn = this.detectedInFormatter;
-    
+	var visible = [ "Allele Synonyms", "IMSR", "References" ];
+
+	for (i = 0; i < hidden.length; i++) {
+		hideColumn(hidden[i]);
+	}
+	for (j = 0; j < visible.length; j++) {
+		showColumn(visible[i]);
+	}
+	showColumn(YAHOO.mgiData.selectedSystem);
+}
+</script>
+<script type="text/javascript">
+(function () {	
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.
     var myColumnDefs = [
@@ -312,111 +391,133 @@ function flipColumn (checkboxID, column) {
             label:"<B>Driver</B>",
             width:90, 
             sortable:true},
-        {key:"symbol", 
+        {key:"nomenclature", 
             label:"<B>Allele Symbol<br/>Gene; Allele Name</B>",
 			sortable:true,
-			width:245, 
-			formatter:"nomen"},
-		{key:"detectedIn", 
+			width:245}, 
+		{key:"detectedCount", 
 			label:"<B>Recombinase<br/>Data</B>", 
 			sortable:true, 
-			width:220,
-			formatter:"detectedIn"},
+			width:220},
 	    {key:"inAdiposeTissue", 
 			label:"Adipose<br/>Tissue", 
 			sortable:true,
+			hidden:true,
 			width:54},
 		{key:"inAlimentarySystem",
 			label:"Alimentary<br/>System",
 			sortable:true,
+			hidden:true,
 			width:60},
 		{key:"inBranchialArches",
 			label:"Branchial<br/>Arches",
 			sortable:true,
+			hidden:true,
 			width:60},
 		{key:"inCardiovascularSystem",
 			label:"Cardiovascular<br/>System",
 			sortable:true,
+			hidden:true,
 			width:88},
 		{key:"inCavitiesAndLinings",
 			label:"Cavities &amp;<br/>their Linings",
 			sortable:true,
+			hidden:true,
 			width:72},
 		{key:"inEndocrineSystem",
 			label:"Endocrine<br/>System",
 			sortable:true,
+			hidden:true,
 			width:64},
 		{key:"inHead",
 			label:"Head",
 			sortable:true,
+			hidden:true,
 			width:54},
 		{key:"inHemolymphoidSystem",
 			label:"Hemolymphoid<br/>System",
 			sortable:true,
+			hidden:true,
 			width:88},
 		{key:"inIntegumentalSystem",
 			label:"Integumental<br/>System",
 			sortable:true,
+			hidden:true,
 			width:82},
 		{key:"inLimbs",
 			label:"Limbs",
 			sortable:true,
+			hidden:true,
 			width:54},
 		{key:"inLiverAndBiliarySystem",
 			label:"Liver &amp;<br/>Biliary System",
 			sortable:true,
+			hidden:true,
 			width:84},
 		{key:"inMesenchyme",
 			label:"Mesenchyme",
 			sortable:true,
+			hidden:true,
 			width:82},
 		{key:"inMuscle",
 			label:"Muscle",
 			sortable:true,
+			hidden:true,
 			width:54},
 		{key:"inNervousSystem",
 			label:"Nervous<br/>System",
 			sortable:true,
+			hidden:true,
 			width:60},
 		{key:"inRenalAndUrinarySystem",
 			label:"Renal &amp;<br/>Urinary System",
 			sortable:true,
+			hidden:true,
 			width:90},
 		{key:"inReproductiveSystem",
 			label:"Reproductive<br/>System",
 			sortable:true,
+			hidden:true,
 			width:80},
 		{key:"inRespiratorySystem",
 			label:"Respiratory<br/>System",
 			sortable:true,
+			hidden:true,
 			width:72},
 		{key:"inSensoryOrgans",
 			label:"Sensory<br/>Organs",
 			sortable:true,
+			hidden:true,
 			width:54},
 		{key:"inSkeletalSystem",
 			label:"Skeletal<br/>System",
 			sortable:true,
+			hidden:true,
 			width:60},
 		{key:"inTail",
 			label:"Tail",
 			sortable:true,
+			hidden:true,
 			width:54},
 		{key:"inEarlyEmbryo",
 			label:"Early<br/>Embryo",
 			sortable:true,
+			hidden:true,
 			width:60},
 		{key:"inExtraembryonicComponent",
 			label:"Extraembryonic<br/>Component",
 			sortable:true,
+			hidden:true,
 			width:90},
 		{key:"inEmbryoOther",
 			label:"Embryo<br/>Other",
 			sortable:true,
+			hidden:true,
 			width:60},
 		{key:"inPostnatalOther",
 			label:"Postnatal<br/>Other",
 			sortable:true,
+			hidden:true,
 			width:60},
         {key:"synonyms",
             label:"<B>Allele Synonym</B>",
@@ -425,10 +526,12 @@ function flipColumn (checkboxID, column) {
    		{key:"alleleType", 
             label:"<B>Allele<br/>Type</B>",
             width:60, 
+			hidden:true,
             sortable:true},
         {key:"inducibleNote", 
             label:"<B>Inducible</B>",
             width:58, 
+			hidden:true,
             sortable:true},
         {key:"imsrCount", 
             label:"<B>Find Mice<br/>(IMSR)</B>",
@@ -448,9 +551,8 @@ function flipColumn (checkboxID, column) {
         resultsList: "resultObjects",
         fields: [
 			{key:"driver"},
-			{key:"symbol"},
-			{key:"name"},
-            {key:"geneName"},
+			{key:"nomenclature"},
+            {key:"detectedCount"},
             {key:"inAdiposeTissue"},
             {key:"inAlimentarySystem"},
             {key:"inBranchialArches"},
@@ -475,13 +577,11 @@ function flipColumn (checkboxID, column) {
             {key:"inExtraembryonicComponent"},
             {key:"inEmbryoOther"},
             {key:"inPostnatalOther"},
-            {key:"inducibleNote"},
-            {key:"alleleType"},
-            {key:"countOfReferences"},
-            {key:"imsrCount"},
-            {key:"detectedCount"},
-            {key:"notDetectedCount"},
             {key:"synonyms"},
+            {key:"alleleType"},
+            {key:"inducibleNote"},
+            {key:"imsrCount"},
+            {key:"countOfReferences"},
         ],
         metaFields: {
             totalRecords: "totalCount",
@@ -568,7 +668,7 @@ function flipColumn (checkboxID, column) {
             recordOffset: Number(pRequest['startIndex']) || 0
         };
         oPayload.sortedBy = {
-            key: pRequest['sort'] || "symbol",
+            key: pRequest['sort'] || "nomenclature",
             dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-asc" // Convert from server value to DataTable format
         };
         return true;
@@ -587,7 +687,7 @@ function flipColumn (checkboxID, column) {
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
         startIndex = startIndex || 0;
-        sortKey   = sortKey || "symbol";
+        sortKey   = sortKey || "nomenclature";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
@@ -632,6 +732,7 @@ function parseRequest(request){
 	return reply;
 }
 
+showColumn(YAHOO.mgiData.selectedSystem);
 </script>
 
 ${templateBean.templateBodyStopHtml}
