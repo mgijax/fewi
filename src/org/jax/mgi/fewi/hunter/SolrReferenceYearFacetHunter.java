@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrReferenceYearFacetHunter extends SolrReferenceSummaryHunter {
+public class SolrReferenceYearFacetHunter extends SolrHunter {
     
     /***
      * The constructor sets up this hunter so that it is specific to reference
@@ -26,7 +26,7 @@ public class SolrReferenceYearFacetHunter extends SolrReferenceSummaryHunter {
          * 
          */
         
-/*        ArrayList <String> refList = new ArrayList <String> ();
+        ArrayList <String> refList = new ArrayList <String> ();
         refList.add(IndexConstants.JNUM_ID);
         refList.add(IndexConstants.PUBMED_ID);
         
@@ -41,14 +41,13 @@ public class SolrReferenceYearFacetHunter extends SolrReferenceSummaryHunter {
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
         propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
         propertyMap.put(SearchConstants.ALL_KEY, new SolrPropertyMapper(IndexConstants.ALL_KEY));
-        
-        
+        /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to pack it into the 
          * keys collection in the response.
          */
         
-        keyString = null;
+        //keyString = IndexConstants.REF_KEY;
         facetString = IndexConstants.REF_YEAR;
         
     }
