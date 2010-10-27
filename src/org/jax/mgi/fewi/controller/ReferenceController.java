@@ -6,9 +6,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Sequence;
 
+import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.finder.SequenceFinder;
 import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -24,10 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 /*
  * This controller maps all /reference/ uri's
@@ -42,6 +48,14 @@ public class ReferenceController {
 	// get the finder to use for various methods
 	@Autowired
 	private ReferenceFinder referenceFinder;
+	
+	// get the finder to use for various methods
+	@Autowired
+	private SequenceFinder sequenceFinder;
+	
+	@Autowired
+	private AlleleFinder alleleFinder;
+	
 
 	// add a new ReferenceQueryForm and MySirtPaginator objects to model for QF 
 	@RequestMapping(method=RequestMethod.GET)
@@ -57,7 +71,7 @@ public class ReferenceController {
 	public String referenceSummary(HttpServletRequest request, Model model,
 			@ModelAttribute ReferenceQueryForm queryForm) {
 
-		model.addAttribute("referenceQueryForm", queryForm);
+		//model.addAttribute("referenceQueryForm", queryForm);
 		model.addAttribute("queryString", request.getQueryString());
 		logger.debug("queryString: " + request.getQueryString());
 
@@ -71,7 +85,7 @@ public class ReferenceController {
 			@ModelAttribute ReferenceQueryForm query,
 			@ModelAttribute Paginator page) {
 				
-		logger.debug(query.toString());
+		logger.debug("json query" + query.toString());
 		
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);		
@@ -83,12 +97,93 @@ public class ReferenceController {
 		return referenceFinder.searchReferences(params);
 	}
 	
+	// this is the logis to perform the query and retur json results
+	@RequestMapping("/{refID}")
+	public String referenceById(
+			@PathVariable("refID") String refID,
+			HttpServletRequest request, Model model) {
+		
+		model.addAttribute("queryString", "id=" + refID);		
+		return "reference_summary";		
+	}
+	
+	@RequestMapping("/summary/allele/{alleleID}")
+	public String referenceSummaryForAllele(			
+			@PathVariable("alleleID") String alleleID,
+			HttpServletRequest request, Model model) {
+		
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter seqIdFilter = new Filter(SearchConstants.ALL_ID, alleleID);
+        searchParams.setFilter(seqIdFilter);
+
+        // find the requested sequence
+        SearchResults<Allele> searchResults
+          = alleleFinder.getAlleleByID(searchParams);
+        
+        List<Allele> alleleList = searchResults.getResultObjects();
+
+        if (alleleList.size() < 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Allele Found");
+            return "error";
+        } else if (alleleList.size() > 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return "error";
+        }
+        
+        model.addAttribute("allele", alleleList.get(0));
+		model.addAttribute("queryString", "alleleKey=" + alleleList.get(0).getAlleleKey());
+		
+		return "reference_summary_allele";
+	}
+	
+	@RequestMapping("/summary/sequence/{seqID}")
+	public String referenceSummaryForSequence(
+			@PathVariable("seqID") String seqID,
+			HttpServletRequest request, Model model) {
+		
+		logger.debug("reference_summary_sequence");
+		
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter seqIdFilter = new Filter(SearchConstants.SEQ_ID, seqID);
+        searchParams.setFilter(seqIdFilter);
+
+        // find the requested sequence
+        SearchResults<Sequence> searchResults
+          = sequenceFinder.getSequenceByID(searchParams);
+        
+        List<Sequence> seqList = searchResults.getResultObjects();
+
+        if (seqList.size() < 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Sequence Found");
+            return "error";
+        } else if (seqList.size() > 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return "error";
+        }
+        
+        model.addAttribute("sequence", seqList.get(0));
+		model.addAttribute("queryString", "seqKey=" + seqList.get(0).getSequenceKey());
+		
+		return "reference_summary_sequence";
+	}
+
 	private Filter parseReferenceQueryForm(ReferenceQueryForm query){
 		// start filter list for query filters
 		List<Filter> queryList = new ArrayList<Filter>();
 		// start filter list to store facet filters
 		List<Filter> facetList = new ArrayList<Filter>();
 		
+		logger.debug("get params");
 		//build author query filter
 		if(query.getAuthor() != null && !"".equals(query.getAuthor())){
 			List<String> authors = Arrays.asList(query.getAuthor().trim().split(";"));	
@@ -154,6 +249,21 @@ public class ReferenceController {
 			}
 		}
 		
+		//sequence key
+		if (query.getSeqKey() != null){
+			logger.info("set seqKey filter");
+			queryList.add(new Filter(SearchConstants.SEQ_KEY, 
+					query.getSeqKey().toString(), Filter.OP_EQUAL));
+		}
+		
+		if (query.getAlleleKey() != null){
+			logger.info("set alleleKey filter");
+			queryList.add(new Filter(SearchConstants.ALL_KEY, 
+					query.getAlleleKey().toString(), Filter.OP_EQUAL));
+		}
+		
+		// facet filters
+		logger.debug("get filters");
 		if(query.getAuthorFilter().size() > 0){
 			facetList.add(new Filter(FacetConstants.REF_AUTHORS, 
 					query.getAuthorFilter(), Filter.OP_IN));
@@ -174,10 +284,16 @@ public class ReferenceController {
 		}
 		
 		if (query.getCuratedDataFilter().size() > 0){
+			List<String> selections = new ArrayList<String>();
+			for (String filter : query.getCuratedDataFilter()) {
+				logger.debug(filter.replaceAll("\\*", ","));
+				selections.add(filter.replaceAll("\\*", ","));
+			}
 			facetList.add(new Filter(FacetConstants.REF_CURATED_DATA, 
-					query.getCuratedDataFilter(), Filter.OP_IN));
+					selections, Filter.OP_IN));
 		}
 		
+		logger.debug("build params");
 		// we do have some filters, build 'em and add to searchParams
 		if (queryList.size() > 0){
 			Filter f = new Filter();
