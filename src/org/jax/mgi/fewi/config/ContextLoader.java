@@ -11,13 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
 @Component
-public class ConfigLoader implements ServletContextAware {
+public class ContextLoader implements ServletContextAware {
 
-	private Logger logger = LoggerFactory.getLogger(ConfigLoader.class);
+	private Logger logger = LoggerFactory.getLogger(ContextLoader.class);
     private ServletContext servletContext;
-
-    @Autowired
-    private ConfigWrapper configWrapper;
 
     @Autowired
     private WebTemplate webTemplate;
@@ -28,7 +25,6 @@ public class ConfigLoader implements ServletContextAware {
 
 	@PostConstruct
     public void init() {
-            servletContext.setAttribute("configBean", configWrapper);
             servletContext.setAttribute("templateBean", webTemplate);
             logger.debug("configs loaded");
     }
