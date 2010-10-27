@@ -6,14 +6,18 @@ import java.util.List;
 
 public class ReferenceQueryForm {
 	
-	private String author;
+	private String author = "";
 	private String authorScope = "any";
-	private String Journal;
-	private String year;
-	private String text;
+	private String Journal = "";
+	private String year = "";
+	private String text = "";
 	private boolean inTitle = true;
 	private boolean inAbstract = true;
-	private String id;
+	private String id = "";
+	
+	private Integer seqKey;
+	private Integer alleleKey;
+	
 	private List<String> authorFilter = new ArrayList<String>();
 	private List<String> journalFilter = new ArrayList<String>();
 	private List<Integer> yearFilter = new ArrayList<Integer>();
@@ -91,13 +95,28 @@ public class ReferenceQueryForm {
 	public void setCuratedDataFilter(List<String> curatedDateFilter) {
 		this.curatedDataFilter = curatedDateFilter;
 	}
+	public Integer getSeqKey() {
+		return seqKey;
+	}
+	public void setSeqKey(Integer seqKey) {
+		this.seqKey = seqKey;
+	}
 	@Override
 	public String toString() {
-		return "ReferenceQueryForm [Journal=" + Journal + ", author=" + author
-				+ ", authorFilter=" + authorFilter + ", authorScope="
-				+ authorScope + ", curatedDateFilter=" + curatedDataFilter
-				+ ", id=" + id + ", inAbstract=" + inAbstract + ", inTitle="
-				+ inTitle + ", journalFilter=" + journalFilter + ", text="
-				+ text + ", year=" + year + ", yearFilter=" + yearFilter + "]";
+		return "ReferenceQueryForm [Journal=" + Journal + ", alleleKey="
+				+ alleleKey + ", author=" + author + ", authorFilter="
+				+ authorFilter + ", authorScope=" + authorScope
+				+ ", curatedDataFilter=" + curatedDataFilter + ", id=" + id
+				+ ", inAbstract=" + inAbstract + ", inTitle=" + inTitle
+				+ ", journalFilter=" + journalFilter + ", seqKey=" + seqKey
+				+ ", text=" + text + ", year=" + year + ", yearFilter="
+				+ yearFilter + "]";
 	}
+	public Integer getAlleleKey() {
+		return alleleKey;
+	}
+	public void setAlleleKey(Integer alleleKey) {
+		this.alleleKey = alleleKey;
+	}
+	
 }
