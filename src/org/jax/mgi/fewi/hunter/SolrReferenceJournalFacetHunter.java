@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrReferenceJournalFacetHunter extends SolrHunter {
+public class SolrReferenceJournalFacetHunter extends SolrReferenceSummaryHunter {
     
     /***
      * The constructor sets up this hunter so that it is specific to reference
@@ -20,11 +20,11 @@ public class SolrReferenceJournalFacetHunter extends SolrHunter {
      */
     public SolrReferenceJournalFacetHunter() {        
         
-        /*
+/*        
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
          * 
-         */
+         
         
         ArrayList <String> refList = new ArrayList <String> ();
         refList.add(IndexConstants.JNUM_ID);
@@ -43,12 +43,13 @@ public class SolrReferenceJournalFacetHunter extends SolrHunter {
         
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
         
-        /*
+        
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to pack it into the 
          * keys collection in the response.
-         */
-        
+         
+        */
+        keyString = null;
         facetString = IndexConstants.REF_JOURNAL_FACET;
         
     }
