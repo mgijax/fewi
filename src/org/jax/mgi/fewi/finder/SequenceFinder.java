@@ -10,6 +10,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 // mgi classes
 import mgi.frontend.datamodel.*;
 import org.jax.mgi.fewi.hunter.SolrSequenceKeyHunter;
+import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 
 // external libs
@@ -25,6 +26,10 @@ public class SequenceFinder {
 
 	@Autowired
 	private SolrSequenceKeyHunter sequenceHunter;
+
+	@Autowired
+	private SolrSequenceSummaryHunter solrSequenceSummaryHunter;
+
 
 	@Autowired
 	private HibernateObjectGatherer<Sequence> sequenceGatherer;
@@ -51,6 +56,34 @@ public class SequenceFinder {
 
 		return searchResults;
 	}
+
+
+    /////////////////////////////////////////////////////////////////////////
+    //  Retrieval of sequences, for a given reference ID
+    /////////////////////////////////////////////////////////////////////////
+
+	public SearchResults<Sequence> getSequenceByRefID(SearchParams searchParams) {
+
+System.out.println("---> in getSequenceByRefID");
+
+		logger.info("SequenceFinder.getSequenceByRefID()");
+
+		// result object to be returned
+		SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
+
+System.out.println("---> calling hunter");
+		// ask the hunter to identify which objects to return
+		solrSequenceSummaryHunter.hunt(searchParams, searchResults);
+System.out.println("---> exiting hunter");
+
+		// gather objects identified by the hunter, add them to the results
+		sequenceGatherer.setType(Sequence.class);
+        List<Sequence> seqList = sequenceGatherer.get( searchResults.getResultKeys() );
+        searchResults.setResultObjects(seqList);
+
+		return searchResults;
+	}
+
 
 
 }

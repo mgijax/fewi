@@ -5,6 +5,7 @@ import java.io.*;
 
 // fewi & data model objects
 import org.jax.mgi.fewi.finder.SequenceFinder;
+import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -36,6 +37,8 @@ public class SequenceController {
     @Autowired
     private SequenceFinder sequenceFinder;
 
+    @Autowired
+    private ReferenceFinder referenceFinder;
 
     /////////////////////////////////////////////////////////////////////////
     //  Sequence Detail
@@ -118,8 +121,44 @@ public class SequenceController {
     public ModelAndView seqSummeryByRef(@PathVariable("refID") String refID) {
 
 
+        // setup search parameters object to gather the requested reference
+        SearchParams searchParams = new SearchParams();
+        Filter refIdFilter = new Filter(SearchConstants.REF_ID, refID);
+        searchParams.setFilter(refIdFilter);
+
+        // find the requested reference
+        SearchResults searchResults
+          = referenceFinder.searchReferences(searchParams);
+        List<Reference> refList = searchResults.getResultObjects();
+        if (refList.size() < 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No reference found for ID -> " + refID);
+            return mav;
+        }
+        Reference ref = refList.get(0); //there should be only one
+
+        // setup search parameters object to gather seqs for this reference
+        searchParams = new SearchParams();
+        String refKeyStr = Integer.toString(ref.getReferenceKey());
+        Filter refKeyFilter = new Filter(SearchConstants.REF_KEY, refKeyStr);
+        searchParams.setFilter(refKeyFilter);
+
+        // find the requested sequences for the ref id
+        searchResults = sequenceFinder.getSequenceByRefID(searchParams);
+
+        List<Sequence> seqList = searchResults.getResultObjects();
+        if (seqList.size() < 1) {
+            // forward to error page
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Sequence Found");
+            return mav;
+        }
+
         ModelAndView mav = new ModelAndView("sequence_summaryByRefID");
 
+        mav.addObject("seqList", seqList);
+        mav.addObject("reference", ref);
         mav.addObject("refID", refID);
 
         return mav;
