@@ -1,35 +1,29 @@
+<%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<% Reference reference = (Reference)request.getAttribute("reference"); %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+${templateBean.templateHeadHtml}
 
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    
-    <link href="/fewi/mgi_qf.css" rel="stylesheet" type="text/css"/>
-    
-    <title>Sequence Summary by Reference Page</title>
-</head>
-<body>
+  <title>Mouse Sequence Summary Report</title>
+  <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
+${templateBean.templateBodyStartHtml}
 
 
 
-<!-- begin header bar -->
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="">    
+<!-- header bar -->
+<div id="titleBarWrapper" style="max-width:1200px" userdoc="sequence_detail.shtml">    
     <!--myTitle -->
-    <span class="titleBarMainTitle">Future Sequence Summary (by Reference)</span>
+    <span class="titleBarMainTitle">Sequence Summary</span>
 </div>
-<!-- end header bar -->
 
 
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="">    
-    <!--myTitle -->
-    <div class="titleBarMainTitle">${refID}</div>
-    <div class="titleBarMainTitle">---${sequence.symbol}---</div>
-    <div class="titleBarMainTitle">---${sequence.sequenceKey}---</div>
-</div>
+<!-- structural table -->
+<table class="detailStructureTable">
 
 
 
