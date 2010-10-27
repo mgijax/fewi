@@ -27,23 +27,21 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
-<div style="position:relative;width:100%">
-	<div id="summDiv">
-		<div id="querySummary">
-			<span class="title">You searched for:</span><br/>
-			<c:if test="${not empty referenceQueryForm.author}"><span class="label">Author:</span> 
-				${referenceQueryForm.author}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.journal}"><span class="label">Journal:</span>
-				${referenceQueryForm.journal}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.year}">
-				<span class="label">Year:</span> ${referenceQueryForm.year}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.text}">
-				<span class="label">Text:</span> ${referenceQueryForm.text}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.id}">
-				<span class="label">ID:</span> ${referenceQueryForm.id}<br/></c:if>
-		</div>
-	</div>	
-</div>
+
+<table id="objHeader" class="pad5 borderedTable">
+	<tr>
+	<td class="label">
+		ID:<br/>
+		Type:<br/>
+		Length:<br/>
+	</td>
+	<td class="text">
+		${sequence.primaryID}<br/>
+		${sequence.sequenceType}<br/>
+		${sequence.length}
+	</td>
+	</tr>
+</table>
 
 <table style="width:100%;">
 	<tr>
