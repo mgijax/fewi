@@ -9,10 +9,24 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
-			
+		
+	<!-- Exposes fewi.properties to be used in @Value annotations -->
 	<context:property-placeholder location="classpath:../properties/fewi.properties" />
-	<util:properties id="GlobalConfig" location="classpath:../properties/GlobalConfig.properties" />
 
+	<!-- Exposes externalUrls.properties as a property bean. -->
+	<util:properties id="externalUrls" location="classpath:../properties/externalUrls.properties" />
+
+	<!-- Exposes GlobalConfig.properties and fewi.properties files as a 
+		property bean.  Values cascade so thast the last one set overrides prior values-->
+	<bean id="configBean" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	    <property name="locations">
+	        <list>
+	        	<value>classpath:../properties/GlobalConfig.properties</value>
+	        	<value>classpath:../properties/fewi.properties</value>
+	        </list>
+	    </property>
+	</bean>
+	
 	<!-- Packages to scan for @Controller & @Repository annotations -->
 	<context:component-scan base-package="org.jax.mgi.fewi"/>
 
@@ -23,8 +37,15 @@
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/"/>
 		<property name="suffix" value=".jsp"/>
+		<property name="exposedContextBeanNames">
+	        <list>
+	        	<value>externalUrls</value>
+	        	<value>configBean</value>
+	        </list>
+	    </property>
 	</bean>
 
+	<!-- Allows static resources to be accessed through the Spring DispatcherServlet -->
 	<mvc:default-servlet-handler />
 
 </beans>
