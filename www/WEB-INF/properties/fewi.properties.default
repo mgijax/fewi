@@ -2,9 +2,12 @@
 # Applied by <context:property-placeholder/> from application context XML file
 #-------------------------------------------------------------------------------
 
-# uncomment this property to override the value in GlocalConfig.properties
-#fewi.url=http://server.informatics.jax.org/
-#fewi.url=http://cardolan.informatics.jax.org:38080/fewi/mgi/
+# Use this setion to override values set in GlobalConfig.properties per the
+# the example below.  GlobalConfig naming conventions use all caps with 
+# underscores between words.  
+#
+#FEWI_URL=http://server.informatics.jax.org/
+#FEWI_URL=http://cardolan.informatics.jax.org:38080/fewi/mgi/
 
 # directory in which to find the standard mgi template
 template.dir=/usr/local/mgi/live/mgiconfig/web/
@@ -22,6 +25,8 @@ solr.maxConnectionsPerHost=100
 solr.maxTotalConnections=100
 
 #solr urls
+# note: nested property resolution only works when used with 
+# <context:property-placeholder/> and @Value injection 
 solr.server1.url=http://cardolan:8985/solr/
 solr.reference.url=${solr.server1.url}reference/
 solr.authors_ac.url=${solr.server1.url}authorsAC/
