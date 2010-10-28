@@ -93,6 +93,8 @@ public class RecombinaseSummary {
     	AlleleSystem myAS = null;
     	String system = null;
     	
+    	boolean hasData = false;
+    	
     	if (affectedSystems.size() > 0) {
     		String div1ID = nextDivID();
     		String div2ID = nextDivID();
@@ -123,8 +125,11 @@ public class RecombinaseSummary {
     			}
     			
     			// if we have not already cached this system/key pair, do so
-    			if (!isCachedSystem(system)) {
-    				cacheSystem(system, myAS.getSystemKey());
+    			if (myAS.getSystemKey() != null) {
+    				if (!isCachedSystem(system)) {
+    					cacheSystem(system, myAS.getSystemKey());
+    				}
+    				hasData = true;
     			}
     		}
     		div2.append("</div>");
@@ -160,13 +165,18 @@ public class RecombinaseSummary {
     			}
     			
     			// if we have not already cached this system/key pair, do so
-    			if (!isCachedSystem(system)) {
-    				cacheSystem(system, myAS.getSystemKey());
+    			if (myAS.getSystemKey() != null) {
+    				if (!isCachedSystem(system)) {
+    					cacheSystem(system, myAS.getSystemKey());
+    				}
+    				hasData = true;
     			}
     		}
     		div4.append("</div>");
     	}
 
+    	if (!hasData) { return "No data available"; }
+    	
     	div1.append (div2);
     	div1.append (div3);
     	div1.append (div4);
@@ -467,6 +477,7 @@ public class RecombinaseSummary {
      */
     private static String specificityLink (String alleleID, Integer systemKey, 
     		String label) {
+    	if (systemKey == null) { return label; }
     	StringBuffer sb = new StringBuffer();
     	sb.append("<a href='/recombinase/specificity?id=");
     	sb.append(alleleID);
