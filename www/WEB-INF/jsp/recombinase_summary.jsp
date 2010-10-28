@@ -12,24 +12,24 @@ ${templateBean.templateHeadHtml}
 body {z-index=-2;}
 
 .yui-skin-sam .yui-dt th{
-  background:url(http://cardolan.informatics.jax.org/webshare/images/cre/SpriteYuiOverRide.png)
+  background:url(${configBean.WEBSHARE_URL}images/cre/SpriteYuiOverRide.png)
   repeat-x 0 -1300px;
 }
 .yui-skin-sam th.yui-dt-asc,.yui-skin-sam th.yui-dt-desc{
-  background:url(http://cardolan.informatics.jax.org/webshare/images/cre/SpriteYuiOverRide.png)
+  background:url(${configBean.WEBSHARE_URL}images/cre/SpriteYuiOverRide.png)
   repeat-x 0 -1400px;
 }
 
 .yui-skin-sam th.yui-dt-sortable .yui-dt-liner{
-  background:url(http://cardolan.informatics.jax.org/webshare/images/cre/creSortableArrow.png)
+  background:url(${configBean.WEBSHARE_URL}images/cre/creSortableArrow.png)
   no-repeat right;
 }
 .yui-skin-sam th.yui-dt-asc .yui-dt-liner{
-  background:url(http://cardolan.informatics.jax.org/webshare/images/cre/creDownArrow.png)
+  background:url(${configBean.WEBSHARE_URL}images/cre/creDownArrow.png)
   no-repeat right;
 }
 .yui-skin-sam th.yui-dt-desc .yui-dt-liner{
-  background:url(http://cardolan.informatics.jax.org/webshare/images/cre/creUpArrow.png)
+  background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
   no-repeat right;
 }
 .yui-dt a {
