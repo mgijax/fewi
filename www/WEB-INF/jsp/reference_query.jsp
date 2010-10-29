@@ -12,7 +12,7 @@ ${templateBean.templateHeadHtml}
 ${templateBean.templateBodyStartHtml}
 
 <!-- begin header bar -->
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="marker_help.shtml">	
+<div id="titleBarWrapper" userdoc="marker_help.shtml">	
 	<!--myTitle -->
 	<span class="titleBarMainTitle">References Query</span>
 </div>

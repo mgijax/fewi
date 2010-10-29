@@ -33,6 +33,7 @@
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
 
+
 	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/"/>
@@ -44,8 +45,9 @@
 	        </list>
 	    </property>
 	</bean>
+	
+	<mvc:resources mapping="/assets/**" location="/"/>
 
 	<!-- Allows static resources to be accessed through the Spring DispatcherServlet -->
 	<mvc:default-servlet-handler />
-
 </beans>

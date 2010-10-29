@@ -1,3 +1,6 @@
+<%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "mgi.frontend.datamodel.Allele" %>
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -11,13 +14,13 @@ ${templateBean.templateHeadHtml}
 	document.documentElement.className = "yui-pe";
 </script>
 
-<script src="${configBean.FEWI_URL}js/rowexpansion.js"></script>
+<script src="${configBean.FEWI_URL}assets/js/rowexpansion.js"></script>
 
 <title>References</title>
 
 ${templateBean.templateBodyStartHtml}
 
-<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}js/blank.html"></iframe>
+<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/js/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
 <!-- begin header bar -->
@@ -36,7 +39,8 @@ ${templateBean.templateBodyStartHtml}
 			ID:<br/>
 		</td>
 		<td class="text">
-			${allele.symbol}<br/>
+			<% Allele myAllele = (Allele)request.getAttribute("allele"); %>
+			<%=FormatHelper.superscript(myAllele.getSymbol())%><br/>
 			${allele.name}<br/>
 			${allele.primaryID}
 		</td>

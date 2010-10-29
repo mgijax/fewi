@@ -11,13 +11,13 @@ ${templateBean.templateHeadHtml}
 	document.documentElement.className = "yui-pe";
 </script>
 
-<script src="${configBean.FEWI_URL}js/rowexpansion.js"></script>
+<script src="${configBean.FEWI_URL}assets/js/rowexpansion.js"></script>
 
 <title>References</title>
 
 ${templateBean.templateBodyStartHtml}
 
-<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}js/blank.html"></iframe>
+<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/js/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
 <!-- begin header bar -->

@@ -11,13 +11,13 @@ ${templateBean.templateHeadHtml}
 	document.documentElement.className = "yui-pe";
 </script>
 
-<script src="${configBean.FEWI_URL}js/rowexpansion.js"></script>
+<script src="${configBean.FEWI_URL}assets/js/rowexpansion.js"></script>
 
 <title>References</title>
 
 ${templateBean.templateBodyStartHtml}
 
-<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}js/blank.html"></iframe>
+<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
 <!-- begin header bar -->
@@ -31,16 +31,21 @@ ${templateBean.templateBodyStartHtml}
 	<div id="summDiv">
 		<div id="querySummary">
 			<span class="title">You searched for:</span><br/>
-			<c:if test="${not empty referenceQueryForm.author}"><span class="label">Author:</span> 
+			<c:if test="${not empty referenceQueryForm.author}">
+				<span class="label">Author:</span> 
 				${referenceQueryForm.author}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.journal}"><span class="label">Journal:</span>
+			<c:if test="${not empty referenceQueryForm.journal}">
+				<span class="label">Journal:</span>
 				${referenceQueryForm.journal}<br/></c:if>
 			<c:if test="${not empty referenceQueryForm.year}">
-				<span class="label">Year:</span> ${referenceQueryForm.year}<br/></c:if>
+				<span class="label">Year:</span> 
+				${referenceQueryForm.year}<br/></c:if>
 			<c:if test="${not empty referenceQueryForm.text}">
-				<span class="label">Text:</span> ${referenceQueryForm.text}<br/></c:if>
+				<span class="label">Text:</span> 
+				${referenceQueryForm.text}<br/></c:if>
 			<c:if test="${not empty referenceQueryForm.id}">
-				<span class="label">ID:</span> ${referenceQueryForm.id}<br/></c:if>
+				<span class="label">ID:</span> 
+				${referenceQueryForm.id}<br/></c:if>
 		</div>
 	</div>	
 </div>
