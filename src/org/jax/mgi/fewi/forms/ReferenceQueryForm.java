@@ -101,6 +101,12 @@ public class ReferenceQueryForm {
 	public void setSeqKey(Integer seqKey) {
 		this.seqKey = seqKey;
 	}
+	public Integer getAlleleKey() {
+		return alleleKey;
+	}
+	public void setAlleleKey(Integer alleleKey) {
+		this.alleleKey = alleleKey;
+	}
 	@Override
 	public String toString() {
 		return "ReferenceQueryForm [Journal=" + Journal + ", alleleKey="
@@ -111,12 +117,6 @@ public class ReferenceQueryForm {
 				+ ", journalFilter=" + journalFilter + ", seqKey=" + seqKey
 				+ ", text=" + text + ", year=" + year + ", yearFilter="
 				+ yearFilter + "]";
-	}
-	public Integer getAlleleKey() {
-		return alleleKey;
-	}
-	public void setAlleleKey(Integer alleleKey) {
-		this.alleleKey = alleleKey;
 	}
 	
 }
