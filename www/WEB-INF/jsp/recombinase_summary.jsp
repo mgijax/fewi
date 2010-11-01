@@ -6,7 +6,7 @@ ${templateBean.templateHeadHtml}
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<title>Recombinase Summary</title>
+<title>Cre Allele Summary</title>
 
 <style>
 body {z-index=-2;}
@@ -100,7 +100,7 @@ ${templateBean.templateBodyStartHtml}
 <!-- begin header bar -->
 <div id="titleBarWrapper" style="max-width:1200px" userdoc="marker_help.shtml">	
 	<!--myTitle -->
-	<span class="titleBarMainTitle">Recombinase Summary</span>
+	<span class="titleBarMainTitle">Recombinase Alleles - Tissue Specificity Summary</span>
 </div>
 <!-- end header bar -->
 
@@ -345,13 +345,13 @@ function show (i)
 <div>
 	<div id="querySummary">
 		<span class="enhance">You searched for:</span><br/>
-		<c:if test="${not empty recombinaseQueryForm.system}"><span class="label">System:</span> 
-			${fn:replace(recombinaseQueryForm.system,";", ",") }<br/>
+		<c:if test="${not empty recombinaseQueryForm.system}"><span class="label">Anatomical System</span> equals 
+			<span class="label">${fn:replace(recombinaseQueryForm.system,";", ",") }</span><br/>
 			<script type="text/javascript">
 			  YAHOO.mgiData.selectedSystem="${recombinaseQueryForm.system}";
 			</script></c:if>
-		<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver:</span> 
-			${fn:replace(recombinaseQueryForm.driver,";", ",") }<br/></c:if>
+		<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals 
+			<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
     <span class="pageAdvice" style="height: 20px;">
 	    Click column headings to sort table data.  Drag headings to rearrange columns.
     </span>
@@ -668,7 +668,7 @@ function resetCheckboxes() {
             recordOffset: Number(pRequest['startIndex']) || 0
         };
         oPayload.sortedBy = {
-            key: pRequest['sort'] || "nomenclature",
+            key: pRequest['sort'] || "driver",
             dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-asc" // Convert from server value to DataTable format
         };
         return true;
@@ -687,7 +687,7 @@ function resetCheckboxes() {
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
         startIndex = startIndex || 0;
-        sortKey   = sortKey || "nomenclature";
+        sortKey   = sortKey || "driver";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
