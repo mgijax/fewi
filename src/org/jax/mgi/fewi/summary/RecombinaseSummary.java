@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import mgi.frontend.datamodel.AlleleSynonym;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.IDGenerator;
 
 /** wrapper around an allele, to expose only certain data for a recombinase
  * summary page.  This will aid in efficient conversion to JSON notation and
@@ -32,11 +33,11 @@ public class RecombinaseSummary {
 	// for convenience, this is the allele's RecombinaseInfo object
 	private RecombinaseInfo recombinaseInfo;
 	
-	// shared counter to generate unique DIV IDs
-	private static int divCounter = 0;
+	// generates unique IDs for hidden/shown DIVs
+	private static IDGenerator divIdGenerator = new IDGenerator("div");
 	
-	// shared variable for use in synchronizing access to divCounter
-	private static Integer counterLock = new Integer(0);
+	// generates unique IDs for elements with tooltips
+	private static IDGenerator tooltipIdGenerator = new IDGenerator("tt");
 	
 	// maps from anatomical system abbreviation to its system key
 	private static HashMap systemKeys = new HashMap();
@@ -96,8 +97,8 @@ public class RecombinaseSummary {
     	boolean hasData = false;
     	
     	if (affectedSystems.size() > 0) {
-    		String div1ID = nextDivID();
-    		String div2ID = nextDivID();
+    		String div1ID = divIdGenerator.nextID();
+    		String div2ID = divIdGenerator.nextID();
     		String plSystems = FormatHelper.plural(affectedSystems.size(), "system");
     		
     		div1.append("<div id='" + div1ID + "' class='small' ");
@@ -119,7 +120,7 @@ public class RecombinaseSummary {
     			myAS = affectedIterator.next();
     			system = myAS.getSystem();
     			div2.append(specificityLink(myAS.getAlleleID(), myAS.getSystemKey(),
-    				myAS.getSystem()) );
+    				myAS.getSystem(), null));
     			if (affectedIterator.hasNext()) {
     				div2.append (", ");
     			}
@@ -136,8 +137,8 @@ public class RecombinaseSummary {
     	}
 
     	if (unaffectedSystems.size() > 0) {
-    		String div3ID = nextDivID();
-    		String div4ID = nextDivID();
+    		String div3ID = divIdGenerator.nextID();
+    		String div4ID = divIdGenerator.nextID();
     		String plSystems = FormatHelper.plural(unaffectedSystems.size(), "system");
     		
     		div3.append("<div id='" + div3ID + "' class='small' ");
@@ -159,7 +160,7 @@ public class RecombinaseSummary {
     			myAS = unaffectedIterator.next();
     			system = myAS.getSystem();
     			div4.append(specificityLink(myAS.getAlleleID(), myAS.getSystemKey(),
-        				myAS.getSystem()) );
+        				myAS.getSystem(), null) );
     			if (unaffectedIterator.hasNext()) {
     				div4.append (", ");
     			}
@@ -175,7 +176,16 @@ public class RecombinaseSummary {
     		div4.append("</div>");
     	}
 
-    	if (!hasData) { return "No data available"; }
+    	if (!hasData) { 
+    		StringBuffer sb = new StringBuffer();
+    		sb.append("<span id='");
+    		sb.append(tooltipIdGenerator.nextID());
+    		sb.append("' title='MGI has not curated tissue specificity data");
+    		sb.append(" for this allele in any anatomical systems.'>");
+    		sb.append("No data available");
+    		sb.append("</span>");
+    		return sb.toString();
+    	}
     	
     	div1.append (div2);
     	div1.append (div3);
@@ -230,7 +240,17 @@ public class RecombinaseSummary {
 	}
 
     public String getInducibleNote() {
-    	return this.allele.getInducibleNote();
+    	String note = this.allele.getInducibleNote();
+    	if (note == null) {
+    		return note;
+    	}
+    	StringBuffer sb = new StringBuffer();
+    	sb.append("<span id='");
+    	sb.append(tooltipIdGenerator.nextID());
+    	sb.append("' title='");
+    	sb.append(note);
+    	sb.append("'>Yes</span>");
+    	return sb.toString();
     }
 
 	public String getInEarlyEmbryo() {
@@ -386,11 +406,14 @@ public class RecombinaseSummary {
     	} 
 
     	String label;
+    	String tooltip;
     	if (isDetected.intValue() == 1) {
-    		label = "Detected"; 
+    		label = "Detected";
+    		tooltip = "Recombinase activity was assayed and detected in these tissues.";
     	}
     	else { 
     		label = "Not Detected"; 
+    		tooltip = "Recombinase activity was assayed but not detected in these tissues.";
     	}
     	
     	Integer systemKey = lookupSystem(getSystemCode(system));
@@ -405,7 +428,7 @@ public class RecombinaseSummary {
     		}
     	}
     	
-    	return specificityLink (this.allele.getPrimaryID(), systemKey, label);
+    	return specificityLink (this.allele.getPrimaryID(), systemKey, label, tooltip);
     }
     
     private List<AlleleSystemSummary> wrapSystems (List<AlleleSystem> systems) {
@@ -421,23 +444,6 @@ public class RecombinaseSummary {
     // private static methods
     //-----------------------
     
-    /** get the next ID to use for a DIV.  These are unique until we reach
-     * the maximum value for an int, then they start over at 1.
-     */
-    private static String nextDivID () {
-    	int myCount = 0;
-    	synchronized (counterLock) {
-    		divCounter++;
-    		
-    		// protect against wrap-around so we just start over at 1
-    		if (divCounter < 0) {
-    			divCounter = 1;
-    		}
-    		myCount = divCounter;
-    	}
-    	return "div" + myCount;
-    }
-
     /** return the unique 4-letter lowercase prefix that will uniquely
     * identify an anatomical system (this lets us be more flexible in
     * terms of capitalization and exact term contents)
@@ -476,13 +482,22 @@ public class RecombinaseSummary {
      * of the link
      */
     private static String specificityLink (String alleleID, Integer systemKey, 
-    		String label) {
+    		String label, String tooltip) {
     	if (systemKey == null) { return label; }
     	StringBuffer sb = new StringBuffer();
     	sb.append("<a href='/recombinase/specificity?id=");
     	sb.append(alleleID);
     	sb.append("&systemKey=");
     	sb.append(systemKey.toString());
+    	
+    	if (tooltip != null) {
+    		String id = tooltipIdGenerator.nextID();
+    		sb.append("' id='");
+    		sb.append(id);
+    		sb.append("' title='");
+    		sb.append(tooltip);
+    	}
+    	
     	sb.append("'>");
     	sb.append(label);
     	sb.append("</a>");
@@ -492,7 +507,7 @@ public class RecombinaseSummary {
     /** wrapper for convenience of using an int systemKey
      */
     private static String specificityLink (String alleleID, int systemKey,
-    		String label) {
-    	return specificityLink (alleleID, new Integer(systemKey), label);
+    		String label, String tooltip) {
+    	return specificityLink (alleleID, new Integer(systemKey), label, tooltip);
     }
 }
