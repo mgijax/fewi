@@ -19,3 +19,5 @@
 <script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/container/container-min.js"></script>
 
 <script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/button/button-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/container/container-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/2.8.1/build/selector/selector-min.js"></script>

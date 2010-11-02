@@ -733,6 +733,11 @@ function parseRequest(request){
 }
 
 showColumn(YAHOO.mgiData.selectedSystem);
+
+// activate tooltips in span tags in the table (all can share a common
+// Tooltip object and pick up their contents from the Spans' titles
+YAHOO.mgiData.myTip = new YAHOO.widget.Tooltip ("mgiTip", {
+		context : YAHOO.util.Selector.query("span", YAHOO.mgiData.myDataTable) });
 </script>
 
 ${templateBean.templateBodyStopHtml}
