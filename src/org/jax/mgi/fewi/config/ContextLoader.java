@@ -38,7 +38,7 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 		}
     }
 	
-	public static Properties getConfigBean(String beanName){
+	public static Properties getConfigBean(){
 		return properties;
 	}
 
