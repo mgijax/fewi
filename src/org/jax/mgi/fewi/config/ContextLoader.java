@@ -22,6 +22,7 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 	private ServletContext sc;
 	
 	private static Properties properties = null;
+	private static Properties externalUrls = null;
 
 	private Logger logger = LoggerFactory.getLogger(ContextLoader.class);
 
@@ -36,10 +37,17 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 		if(ac.containsBean("configBean")){
 			properties =  (Properties)ac.getBean("configBean");
 		}
+		if(ac.containsBean("externalUrls")){
+			externalUrls =  (Properties)ac.getBean("externalUrls");
+		}
     }
 	
 	public static Properties getConfigBean(){
 		return properties;
+	}
+	
+	public static Properties getExternalUrls(){
+		return externalUrls;
 	}
 
 	public void setApplicationContext(ApplicationContext ac)
