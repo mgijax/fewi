@@ -3,18 +3,17 @@ package org.jax.mgi.fewi.summary;
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.RecombinaseInfo;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
-
 import javax.persistence.Column;
 import mgi.frontend.datamodel.AlleleSynonym;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDGenerator;
+import org.jax.mgi.fewi.config.ContextLoader;
 
 /** wrapper around an allele, to expose only certain data for a recombinase
  * summary page.  This will aid in efficient conversion to JSON notation and
@@ -43,8 +42,12 @@ public class RecombinaseSummary {
 	private static HashMap systemKeys = new HashMap();
 	
 	// expand and collapse arrows for Recombinase Data field
-	private static String rightArrow = "<img src='http://cardolan.informatics.jax.org/webshare/images/rightArrow.gif' alt='right arrow'>";
-	private static String downArrow = "<img src='http://cardolan.informatics.jax.org/webshare/images/downArrow.gif' alt='down arrow'>";
+	private static String rightArrow = "<img src='" 
+		+ ContextLoader.getConfigBean().getProperty("WEBSHARE_URL") 
+		+ "images/rightArrow.gif' alt='right arrow'>";
+	private static String downArrow = "<img src='"
+		+ ContextLoader.getConfigBean().getProperty("WEBSHARE_URL") 
+		+ "images/downArrow.gif' alt='down arrow'>";
 	
 	//-------------
 	// constructors
@@ -206,7 +209,9 @@ public class RecombinaseSummary {
     	if ((count == null) || count.equals(0)) { return null; }
     	
     	StringBuffer sb = new StringBuffer();
-    	sb.append("<a href='http://lindon.informatics.jax.org:18080/imsr/fetch?page=imsrSummary&gaccid=");
+    	sb.append("<a href='");
+    	sb.append(ContextLoader.getConfigBean().getProperty("IMSRURL"));
+    	sb.append("fetch?page=imsrSummary&gaccid=");
     	sb.append(this.allele.getPrimaryID());
     	sb.append("&state=LM&state=OV&state=EM&state=SP'>");
     	sb.append(this.allele.getImsrStrainCount());
