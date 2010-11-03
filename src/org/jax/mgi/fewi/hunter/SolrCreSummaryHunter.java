@@ -7,6 +7,7 @@ import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.jax.mgi.fewi.config.ContextLoader;
 
 @Repository
 public class SolrCreSummaryHunter extends SolrHunter {
@@ -39,7 +40,7 @@ public class SolrCreSummaryHunter extends SolrHunter {
         
         // Set the url for the solr instance.
         
-        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/cre/";
+        solrUrl = ContextLoader.getConfigBean().getProperty("solr.cre.url");
         
         /*
          * The name of the field we want to iterate through the documents for
