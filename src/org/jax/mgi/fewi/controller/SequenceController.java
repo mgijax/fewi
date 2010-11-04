@@ -44,7 +44,7 @@ public class SequenceController {
     //  Sequence Detail
     /////////////////////////////////////////////////////////////////////////
 
-    @RequestMapping(value="/{seqID}", method = RequestMethod.GET)
+    @RequestMapping(value="/{seqID:.+}", method = RequestMethod.GET)
     public ModelAndView seqDetail(@PathVariable("seqID") String seqID) {
 
         // setup search parameters object
