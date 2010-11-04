@@ -268,7 +268,8 @@ YAHOO.util.Event.onDOMReady(function () {
 		var selections = this.getData();
 
 		for (i in selections){
-			facets[i] = selections[i];
+			var s = selections[i];
+			facets[i] = s;
 		}
 
 		var state = myDataTable.getState();
@@ -311,7 +312,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	// Render the Dialog
 	facetDialog.render();
     
-	// DataSource instance
+	// facet DataSource instances
 	var facetAuthorDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/author?${queryString}");
 	facetAuthorDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetAuthorDS.responseSchema = {resultsList: "resultFacets"};
@@ -328,12 +329,25 @@ YAHOO.util.Event.onDOMReady(function () {
 	facetDataDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetDataDS.responseSchema = {resultsList: "resultFacets"};
 
+	
 	var populateFacet = function (oRequest, oResponse, oPayload) {
 		var res = oResponse.results;
 		var options = [];
 
 		for(x in res){
-			options[x] = '<input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"> ' + res[x];
+			var checked = '';
+			var fVal = res[x];
+			
+			if (oPayload.name in facets){
+				var fil = facets[oPayload.name];
+				var i = fil.length;
+				while (i--) {
+					if (fil[i] === fVal) {
+						checked = ' CHECKED';
+					}
+				}
+			}
+			options[x] = '<input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"' + checked + '> ' + res[x];
 		}
 		facetDialog.setHeader('Filter by ' + oPayload.title);
 		facetDialog.form.innerHTML = options.join('<br/>');

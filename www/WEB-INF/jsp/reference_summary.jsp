@@ -52,7 +52,7 @@ ${templateBean.templateBodyStartHtml}
 
 <table style="width:100%;">
 	<tr>
-	<td class="filters">
+	<td id="filterDiv" class="filters">
 		<a id="authorFilter" class="filterButton">Author Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="journalFilter" class="filterButton">Journal Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="yearFilter" class="filterButton">Year Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
@@ -75,6 +75,12 @@ ${templateBean.templateBodyStartHtml}
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+
+
+</script>
+
 
 <script type="text/javascript">
 	<%@ include file="/js/reference_summary.js" %>

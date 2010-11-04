@@ -10,6 +10,7 @@ import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
@@ -103,6 +104,8 @@ public class ReferenceController {
 
 		// perform query and return results as json
 		logger.debug("params parsed");
+		
+		logger.debug(ContextLoader.getConfigBean().getProperty("WEBSHARE_URL"));
 		return referenceFinder.searchReferences(params);
 	}
 	
@@ -125,7 +128,7 @@ public class ReferenceController {
 	 * by the view.  The view is responsible for issuing the ajax query that 
 	 * will return the results to populate the data table.
 	 */
-	@RequestMapping("/summary/allele/{alleleID}")
+	@RequestMapping("/allele/{alleleID}")
 	public String referenceSummaryForAllele(			
 			@PathVariable("alleleID") String alleleID,
 			HttpServletRequest request, Model model) {		
@@ -166,7 +169,7 @@ public class ReferenceController {
 	 * by the view.  The view is responsible for issuing the ajax query that 
 	 * will return the results to populate the data table.
 	 */
-	@RequestMapping("/summary/sequence/{seqID}")
+	@RequestMapping("/sequence/{seqID}")
 	public String referenceSummaryForSequence(
 			@PathVariable("seqID") String seqID,
 			HttpServletRequest request, Model model) {
@@ -470,11 +473,13 @@ public class ReferenceController {
 			
 		logger.debug(query.toString());
 		
-		SearchParams params = new SearchParams();		
+		SearchParams params = new SearchParams();
 		params.setFilter(this.parseReferenceQueryForm(query));
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
+		
+		logger.debug("facets: " + referenceFinder.getAuthorFacet(params).getResultFacets().size());
 		return referenceFinder.getAuthorFacet(params);
 	}
 	
