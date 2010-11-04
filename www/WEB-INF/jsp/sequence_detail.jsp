@@ -1,4 +1,6 @@
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "org.jax.mgi.fewi.util.ProviderLinker" %>
+<%@ page import = "org.jax.mgi.fewi.util.DBConstants" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -13,6 +15,18 @@ ${templateBean.templateHeadHtml}
 
 ${templateBean.templateBodyStartHtml}
 
+<script>
+  function formatForwardArgs() {
+    if(document.offset.offset.value) {
+        flank = eval(document.offset.offset.value) * 1000
+    } else {
+        flank = ''
+    }
+    document.sequenceForm.action = document.seqPullDownForm.seqPullDown.options[document.seqPullDownForm.seqPullDown.selectedIndex].value;
+    document.sequenceForm.seqs.value = document.seqData.arg.value + flank;
+    document.sequenceForm.submit();
+  }
+</script>
 
 
 <!-- header bar -->
@@ -34,7 +48,8 @@ ${templateBean.templateBodyStartHtml}
     <table width=100%>
     <tr>
     <td>
-       <b>${sequence.primaryID}</b>  
+       <b>${sequence.primaryID}</b>
+       <%=ProviderLinker.getSeqProviderLinks(sequence)%>
     </td>
     <td align=right>
       <c:if test="${not empty sequence.version}">
@@ -68,7 +83,7 @@ ${templateBean.templateBodyStartHtml}
     <b>Provider</b>
   </td>
   <td class="${rightTdStyles.next}" >
-       <!--${sequence.provider}-->
+       ${sequence.provider}
   </td>
 </tr>
 
@@ -79,9 +94,48 @@ ${templateBean.templateBodyStartHtml}
     <b>Sequence</b>
   </td>
   <td class="${rightTdStyles.next}" >
-    ${sequence.sequenceType}
-    ${sequence.length}
-    ${sequence.lengthUnit}
+
+    <div style="position: relative;;width:100%; height:1.5em;">
+
+      ${sequence.sequenceType}
+      ${sequence.length}
+      ${sequence.lengthUnit}
+    
+      <form name="seqData">
+       <input name ="arg" value="<%=FormatHelper.getSeqForwardValue(sequence)%>" type=hidden>
+      </form>
+      <form name="sequenceForm" method="get">
+        <input name="seqs"  type="hidden">
+      </form>
+    
+      <div style="width:22em; position: absolute; top: 0px; left: 160px; ">
+      <form name="offset">
+        <c:choose>
+        <c:when test="${sequence.provider=='VEGA Gene Model' || sequence.provider=='Ensembl Gene Model' || sequence.provider=='NCBI Gene Model'}">
+          <input type="text" size=3 name="offset" value=0 > Kb of flanking sequence
+        </c:when>
+        <c:otherwise>
+          <input type="hidden" name="offset" value="">
+        </c:otherwise>
+        </c:choose>
+      </form>
+      </div>
+
+
+
+      <div style="width:30em; position: absolute; top: 0px; right: 4px; text-align:right;">
+        <form name="seqPullDownForm" method="get">
+        <i>For this sequence</i>
+        <select name='seqPullDown'>
+          <option value="http://www.informatics.jax.org/seqfetch/tofasta.cgi?" selectED>download in FASTA format
+          <option value="http://mouseblast.informatics.jax.org/seqSelect.cgi">forward to MouseBLAST
+        </select>
+        <input type=button value="Go" onClick=formatForwardArgs()><br>
+        </form>
+      </div>
+
+    </div>
+
   </td>
 </tr>
 
@@ -189,7 +243,7 @@ ${templateBean.templateBodyStartHtml}
     <c:forEach var="marker" items="${markers}" >
       <tr>
       <td valign=top>${marker.markerType}</td>
-      <td valign=top><a href="${configBean.fewiUrl}marker/${marker.symbol}">${marker.symbol}</a></td>
+      <td valign=top><a href="${configBean.FEWI_URL}marker/${marker.symbol}">${marker.symbol}</a></td>
       <td valign=top>${marker.name}</td>
       <td valign=top>${marker.countOfGOTerms}</td>
       <td valign=top>${marker.countOfGXDAssays}</td>
@@ -222,13 +276,19 @@ ${templateBean.templateBodyStartHtml}
     <c:forEach var="probe" items="${probes}" >
       <% Probe myProbe = (Probe)pageContext.getAttribute("probe"); %>
       <tr>
-        <td><%=FormatHelper.formatVerbatim(myProbe.getName())%></td>
+        <td>
+          <a href="${configBean.FEWI_URL}probe/key/${probe.probeKey}">
+          <%=FormatHelper.formatVerbatim(myProbe.getName())%>
+          </a>
+        </td>
         <td>
           <c:forEach var="collection" items="${probe.probeCloneCollection}" >
             ${collection.collection}
           </c:forEach>
         </td>
-        <td><a href="${configBean.fewiUrl}probe/${probe.cloneid}">${probe.cloneid}</a></td>
+        <td>
+          ${probe.cloneid}
+        </td>
         <td>${probe.segmenttype}</td>
       </tr>
     </c:forEach>
@@ -248,7 +308,7 @@ ${templateBean.templateBodyStartHtml}
   <td class="${rightTdStyles.next}" >
 
     <c:forEach var="reference" items="${references}" >
-       <a href="${configBean.fewiUrl}reference/${reference.jnumID}">${reference.jnumID}</a>
+       <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
        ${reference.longCitation}
        <br>
     </c:forEach>
