@@ -98,7 +98,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- begin header bar -->
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="marker_help.shtml">	
+<div id="titleBarWrapper" style="max-width:1200px" userdoc="recombinase_alleles_summary_report.shtml">	
 	<!--myTitle -->
 	<span class="titleBarMainTitle">Recombinase Alleles - Tissue Specificity Summary</span>
 </div>
@@ -194,11 +194,9 @@ function hideColumn (fieldname) {
 	var thisCheckBox = document.getElementById(checkboxID);
 	var columnName = getColumnName (fieldname);
 	var myDataTable = YAHOO.mgiData.myDataTable;
-//	if (YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
 		myDataTable.hideColumn (columnName);
 		YAHOO.util.Dom.removeClass(thisCheckBox, "checkboxSelected");
 		thisCheckBox.checked = false;
-//	}
 }
 function showColumn (fieldname) {
 	if ((fieldname == "") || (fieldname == null)) { return; }
@@ -206,11 +204,9 @@ function showColumn (fieldname) {
 	var thisCheckBox = document.getElementById(checkboxID);
 	var columnName = getColumnName (fieldname);
 	var myDataTable = YAHOO.mgiData.myDataTable;
-//	if (!YAHOO.util.Dom.hasClass(thisCheckBox, "checkboxSelected")) {
 		myDataTable.showColumn (columnName);
 		YAHOO.util.Dom.addClass(thisCheckBox, "checkboxSelected");
 		thisCheckBox.checked = true;
-//	}
 }
 function hide (i) {
     var elem = document.getElementById(i);
@@ -383,7 +379,7 @@ function resetCheckboxes() {
 }
 </script>
 <script type="text/javascript">
-(function () {	
+function main() {
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.
     var myColumnDefs = [
@@ -540,7 +536,7 @@ function resetCheckboxes() {
         {key:"countOfReferences", 
             label:"<B>Refs</B>",
             width:36, 
-            sortable:true},
+            sortable:true}
     ];
 
     // DataSource instance
@@ -581,7 +577,7 @@ function resetCheckboxes() {
             {key:"alleleType"},
             {key:"inducibleNote"},
             {key:"imsrCount"},
-            {key:"countOfReferences"},
+            {key:"countOfReferences"}
         ],
         metaFields: {
             totalRecords: "totalCount",
@@ -613,8 +609,8 @@ function resetCheckboxes() {
     // DataTable instance
     var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, 
     	    myDataSource, myConfigs);
+    
     YAHOO.mgiData.myDataTable = myDataTable;
-
 
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), 
@@ -674,19 +670,9 @@ function resetCheckboxes() {
         return true;
     };
 
-	// TODO -- check out these methods, as they may be useful for showing a Loading message
-	//	during loads of new data
-	// myDataTable.doBeforePaginatorChange()
-	// myDataTable.doBeforeSortColumn()
-	// myDataTable.showTableMessage()
-    
-    // TODO -- other useful methods
-    // myDataTable.hideColumn()
-    // myDataTable.showColumn()
-    
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
-        startIndex = startIndex || 0;
+    	startIndex = startIndex || 0;
         sortKey   = sortKey || "driver";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
@@ -695,7 +681,7 @@ function resetCheckboxes() {
 
     // Called by Browser History Manager to trigger a new state
     var handleHistoryNavigation = function (request) {
-        // Sends a new request to the DataSource
+    	// Sends a new request to the DataSource
         myDataSource.sendRequest(request,{
             success : myDataTable.onDataReturnSetRows,
             failure : myDataTable.onDataReturnSetRows,
@@ -720,7 +706,8 @@ function resetCheckboxes() {
 
     // Initialize the Browser History Manager.
     YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");
-})();
+};
+main();
 
 function parseRequest(request){
 	var reply = [];
@@ -735,7 +722,7 @@ function parseRequest(request){
 showColumn(YAHOO.mgiData.selectedSystem);
 
 // activate tooltips in span tags in the table (all can share a common
-// Tooltip object and pick up their contents from the Spans' titles
+// Tooltip object and pick up their contents from the Spans' title attributes
 YAHOO.mgiData.myTip = new YAHOO.widget.Tooltip ("mgiTip", {
 		context : YAHOO.util.Selector.query("span", YAHOO.mgiData.myDataTable) });
 </script>
