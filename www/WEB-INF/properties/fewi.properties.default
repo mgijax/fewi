@@ -19,10 +19,16 @@ hibernate.dialect=org.hibernate.dialect.ProgressDialect
 jndi.datasource=java:fe_frontend
 
 # solr global config
-solr.soTimeout=1000
-solr.connectionTimeout=1000
+solr.soTimeout=30000
+solr.connectionTimeout=30000
 solr.maxConnectionsPerHost=100
 solr.maxTotalConnections=100
+solr.maxRetries=1
+
+# Filter and Results default maximums
+solr.resultsDefault=5000
+solr.factetNumberDefault=5000
+
 
 #solr urls
 # note: nested property resolution only works when used with 
