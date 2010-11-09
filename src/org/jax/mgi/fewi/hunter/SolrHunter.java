@@ -20,6 +20,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * This is the Solr specific hunter.  It is responsible for mapping the higher
@@ -35,13 +36,34 @@ import org.slf4j.LoggerFactory;
 public class SolrHunter implements Hunter {
 
     /**
-     * These strings all have thier values set in the extending classes.
+     * These strings all have their values set in the extending classes.
      */
 
     protected String solrUrl;
     protected String keyString;
     protected String otherString;
     protected String facetString;
+    
+    // Gather the solr server settings from configuration
+    
+    @Value("${solr.soTimeout}")
+    private Integer solrSoTimeout;
+    @Value("${solr.connectionTimeout}")
+    private Integer connectionTimeout;
+    @Value("${solr.maxConnectionsPerHost}")
+    private Integer maxConnectionsPerHost;
+    @Value("${solr.maxTotalConnections}")
+    private Integer maxTotalConnections; 
+    @Value("${solr.maxRetries}")
+    private Integer maxRetries; 
+    
+    // Gather the default sizes for facets and results.  We will use these
+    // unless they are overidden by the request
+    
+    @Value("${solr.resultsDefault}")
+    private Integer resultsDefault; 
+    @Value("${solr.factetNumberDefault}")
+    private Integer factetNumberDefault; 
 
     protected HashMap <String, PropertyMapper> propertyMap =
         new HashMap<String, PropertyMapper>();
@@ -91,15 +113,18 @@ public class SolrHunter implements Hunter {
         CommonsHttpSolrServer server = null;
 
         try { server = new CommonsHttpSolrServer(solrUrl);}
-        catch (Exception e) {e.printStackTrace();}
+        catch (Exception e) {System.out.println("THERE IS AN ERROR.  PLEASE TO FIND IT.");
+            e.printStackTrace();}
 
-        server.setSoTimeout(30000);  // socket read timeout
-        server.setConnectionTimeout(30000);
-        server.setDefaultMaxConnectionsPerHost(100);
-        server.setMaxTotalConnections(100);
+        logger.info("SolrTimeout:" + solrSoTimeout);
+        
+        server.setSoTimeout(solrSoTimeout);  // socket read timeout
+        server.setConnectionTimeout(connectionTimeout);
+        server.setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
+        server.setMaxTotalConnections(maxTotalConnections);
         server.setFollowRedirects(false);  // defaults to false
         server.setAllowCompression(true);
-        server.setMaxRetries(1);
+        server.setMaxRetries(maxRetries);
 
         SolrQuery query = new SolrQuery();
 
@@ -114,6 +139,8 @@ public class SolrHunter implements Hunter {
          * from the wi's perspective to its multiple column sort in the indexes.
          */
 
+        query.setFields("score");
+        
         for (Sort sort: searchParams.getSorts()) {
             if (sort.isDesc()) {
                 if (sortMap.containsKey(sort.getSort())) {
@@ -143,12 +170,18 @@ public class SolrHunter implements Hunter {
 
         query.setRows(searchParams.getPageSize());
 
-        query.setStart(searchParams.getStartIndex());
+        if (searchParams.getStartIndex() != -1) {
+            query.setStart(searchParams.getStartIndex());
+        }
+        else {
+            query.setStart(resultsDefault);
+        }
         
         if (facetString != null) {
             query.addFacetField(facetString);
             query.setFacetMinCount(1);
             query.setFacetSort("lex");
+            query.setFacetLimit(factetNumberDefault);
         }
 
         logger.info("The Solr query:" + query + "\n");
@@ -171,6 +204,10 @@ public class SolrHunter implements Hunter {
             searchResults.setResultKeys(packKeys(sdl));
         }
 
+        if (this.keyString != null) {
+            searchResults.setResultScores(packScore(sdl));
+        }
+        
         if (this.otherString != null) {
             searchResults.setResultStrings(packExtraInfo(sdl));
         }
@@ -225,6 +262,30 @@ public class SolrHunter implements Hunter {
 
             keys.add((String) doc.getFieldValue(keyString));
             logger.debug("" + doc.getFieldValue(keyString));
+        }
+
+        return keys;
+    }
+    
+    /**
+     * packScores
+     * @param sdl
+     * @return List of scores
+     * 
+     * Pack a list of scores that corresponds to the list of keys.
+     */
+
+    List<String> packScore(SolrDocumentList sdl) {
+        List<String> keys = new ArrayList<String>();
+
+        logger.info("scores: ");
+
+        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        {
+            SolrDocument doc = (SolrDocument) iter.next();
+
+            keys.add("" + doc.getFieldValue("score"));
+            logger.info("" + doc.getFieldValue("score"));
         }
 
         return keys;
