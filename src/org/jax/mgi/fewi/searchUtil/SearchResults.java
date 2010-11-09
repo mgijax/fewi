@@ -14,6 +14,9 @@ public class SearchResults<T> {
 
 	// Database keys identified as the results from a search
 	protected List<String> resultKeys = new ArrayList<String>();
+	
+	// Scores for the matched documents
+    protected List<String> resultScores = new ArrayList<String>();
 
 	// Database keys identified as the results from a search
 	protected List<String> resultStrings = new ArrayList<String>();
@@ -48,6 +51,24 @@ public class SearchResults<T> {
 	}
 
 	/**
+	 * Get the list of scores for the documents returned
+	 * @return
+	 */
+	
+	public List<String> getResultScores() {
+        return resultScores;
+    }
+
+	/**
+	 * Set the list of scores for the documents to be returned.
+	 * @param resultScores
+	 */
+	
+    public void setResultScores(List<String> resultScores) {
+        this.resultScores = resultScores;
+    }
+
+    /**
 	 * Get the keys of the results returned
 	 */
 	public List<String> getResultStrings() {
