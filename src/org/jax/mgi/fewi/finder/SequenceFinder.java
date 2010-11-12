@@ -6,6 +6,7 @@ import java.util.*;
 import org.jax.mgi.fewi.finder.SequenceFinder;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.summary.SeqSummaryRow;
 
 // mgi classes
 import mgi.frontend.datamodel.*;
@@ -62,24 +63,42 @@ public class SequenceFinder {
     //  Retrieval of sequences, for a given reference ID
     /////////////////////////////////////////////////////////////////////////
 
-	public SearchResults<Sequence> getSequenceByRefID(SearchParams searchParams) {
+	public SearchResults<SeqSummaryRow> getJsonSeqsForRefID(SearchParams searchParams) {
 
-System.out.println("---> in getSequenceByRefID");
-
-		logger.info("SequenceFinder.getSequenceByRefID()");
-
-		// result object to be returned
-		SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
-
-System.out.println("---> calling hunter");
-		// ask the hunter to identify which objects to return
-		solrSequenceSummaryHunter.hunt(searchParams, searchResults);
-System.out.println("---> exiting hunter");
+		logger.debug("SequenceFinder.getSequenceByRefID()");
 
 		// gather objects identified by the hunter, add them to the results
 		sequenceGatherer.setType(Sequence.class);
+
+		// result object to be returned
+		SearchResults<SeqSummaryRow> searchResults = new SearchResults<SeqSummaryRow>();
+
+		// ask the hunter to identify which objects to return
+		solrSequenceSummaryHunter.hunt(searchParams, searchResults);
+System.out.println("hunt--> keys=" + searchResults.getResultKeys());
+
+
+//faking hunter interaction
+List<String> FAKEresultStrings = new ArrayList<String>();
+FAKEresultStrings.add("5");
+FAKEresultStrings.add("6");
+FAKEresultStrings.add("7");
+
         List<Sequence> seqList = sequenceGatherer.get( searchResults.getResultKeys() );
-        searchResults.setResultObjects(seqList);
+//List<Sequence> seqList = sequenceGatherer.get( FAKEresultStrings );
+System.out.println("seqList size = " + seqList.size());
+
+
+
+		List<SeqSummaryRow> summaryRows = new ArrayList<SeqSummaryRow> ();
+		Iterator<Sequence> it = seqList.iterator();
+		while (it.hasNext()) {
+			summaryRows.add(new SeqSummaryRow(it.next()));
+			logger.debug("-->Sequence to SeqSummaryRow");
+		}
+
+
+        searchResults.setResultObjects(summaryRows);
 
 		return searchResults;
 	}

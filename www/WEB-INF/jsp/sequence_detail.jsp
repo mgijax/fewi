@@ -121,8 +121,6 @@ ${templateBean.templateBodyStartHtml}
       </form>
       </div>
 
-
-
       <div style="width:30em; position: absolute; top: 0px; right: 4px; text-align:right;">
         <form name="seqPullDownForm" method="get">
         <i>For this sequence</i>
