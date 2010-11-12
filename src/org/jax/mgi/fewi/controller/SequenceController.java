@@ -11,6 +11,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.StyleAlternator;
+import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import mgi.frontend.datamodel.*;
 
 //external libs
@@ -117,9 +118,12 @@ public class SequenceController {
     //  Sequence Summary by Reference
     /////////////////////////////////////////////////////////////////////////
 
-    @RequestMapping(value="/reference/{refID}", method = RequestMethod.GET)
+    @RequestMapping(value="/reference/{refID}")
     public ModelAndView seqSummeryByRef(@PathVariable("refID") String refID) {
 
+		logger.debug("-->seqSummeryByRef");
+
+        ModelAndView mav = new ModelAndView("sequence_summary_reference");
 
         // setup search parameters object to gather the requested reference
         SearchParams searchParams = new SearchParams();
@@ -130,40 +134,69 @@ public class SequenceController {
         SearchResults searchResults
           = referenceFinder.searchReferences(searchParams);
         List<Reference> refList = searchResults.getResultObjects();
+
+        // there can be only one...
         if (refList.size() < 1) {
             // forward to error page
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "No reference found for ID -> " + refID);
             return mav;
         }
-        Reference ref = refList.get(0); //there should be only one
-
-        // setup search parameters object to gather seqs for this reference
-        searchParams = new SearchParams();
-        String refKeyStr = Integer.toString(ref.getReferenceKey());
-        Filter refKeyFilter = new Filter(SearchConstants.REF_KEY, refKeyStr);
-        searchParams.setFilter(refKeyFilter);
-
-        // find the requested sequences for the ref id
-        searchResults = sequenceFinder.getSequenceByRefID(searchParams);
-
-        List<Sequence> seqList = searchResults.getResultObjects();
-        if (seqList.size() < 1) {
+        if (refList.size() > 1) {
             // forward to error page
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Sequence Found");
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate references found for ID  -> " + refID);
             return mav;
         }
 
-        ModelAndView mav = new ModelAndView("sequence_summaryByRefID");
+        // pull out the reference, and place into the mav
+        Reference reference = refList.get(0);
 
-        mav.addObject("seqList", seqList);
-        mav.addObject("reference", ref);
-        mav.addObject("refID", refID);
+		mav.addObject("queryString", "refKey=" + reference.getReferenceKey());
+        mav.addObject("reference", reference);
 
         return mav;
     }
 
+
+	// this is the logic to perform the query and return json results
+	@RequestMapping("/json")
+	public @ResponseBody SearchResults<SeqSummaryRow> seqSummaryJson(
+			HttpServletRequest request) {
+
+		logger.debug("-->seqSummaryJson");
+
+		String refKey = request.getParameter("refKey");
+		logger.debug("-->refKey=" + refKey);
+
+		SearchParams params = new SearchParams();
+		params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
+
+		// perform query and return results as json
+		logger.debug("seqSummaryJson params parsed");
+		return sequenceFinder.getJsonSeqsForRefID(params);
+	}
+
+
+
+//        // setup search parameters object to gather seqs for this reference
+//        searchParams = new SearchParams();
+//        String refKeyStr = Integer.toString(ref.getReferenceKey());
+//        Filter refKeyFilter = new Filter(SearchConstants.REF_KEY, refKeyStr);
+//        searchParams.setFilter(refKeyFilter);
+//
+//        // find the requested sequences for the ref id
+//        searchResults = sequenceFinder.getSequenceByRefID(searchParams);
+//
+//        List<Sequence> seqList = searchResults.getResultObjects();
+//        if (seqList.size() < 1) {
+//            // forward to error page
+//            mav = new ModelAndView("error");
+//            mav.addObject("errorMsg", "No Sequence Found");
+//            return mav;
+//        }
+//
+//
 
 
 
