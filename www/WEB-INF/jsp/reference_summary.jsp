@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 ${templateBean.templateHeadHtml}
 
@@ -27,6 +26,7 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
+
 <div style="position:relative;width:100%">
 	<div id="summDiv">
 		<div id="querySummary">
@@ -46,6 +46,11 @@ ${templateBean.templateBodyStartHtml}
 			<c:if test="${not empty referenceQueryForm.id}">
 				<span class="label">ID:</span> 
 				${referenceQueryForm.id}<br/></c:if>
+			<div id="filterSummary" style="display:none;">
+				<span class="label">Filters:</span>
+				<span id="fsList"><span></span></span>
+			</div>	
+			<span id="totalCount" class="count"></span>		
 		</div>
 	</div>	
 </div>

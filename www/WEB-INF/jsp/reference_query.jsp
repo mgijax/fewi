@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
- 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 ${templateBean.templateHeadHtml}
 
@@ -37,7 +35,7 @@ ${templateBean.templateBodyStartHtml}
 			<div style="position:relative;">
 				<div style="float:left; width:300px;text-align:left;">
 					<div id="authorAutoComplete">
-						<input id="author" name="author" type="text" value="" maxlength="256"/>
+						<input id="author" name="author" type="text" maxlength="256"/>
 						<div id="authorContainer"></div>
 					</div>
 				</div>
@@ -57,7 +55,7 @@ ${templateBean.templateBodyStartHtml}
 			<div style="position:relative;">
 				<div style="float:left; width:300px;text-align:left;">
 					<div id="authorAutoComplete">
-						<input id="journal" name="journal" type="text" value="" maxlength="256"/>
+						<input id="journal" name="journal"type="text">
 						<div id="journalContainer"></div>
 					</div>
 				</div>
@@ -162,8 +160,8 @@ YAHOO.example.AuthorAutocomplete = function() {
     oAC.queryDelay = .3;
     oAC.minQueryLength = 2;
     oAC.maxResultsDisplayed = 1000;
-    oAC.useIFrame = true;
     oAC.forceSelection = true;
+    oAC.useIframe = true;
     oAC.allowBrowserAutocomplete = false;
     oAC.delimChar = ";";
 
@@ -189,8 +187,8 @@ YAHOO.example.JournalAutocomplete = function() {
     oAC.queryDelay = .3;
     oAC.minQueryLength = 2;
     oAC.maxResultsDisplayed = 1000;
-    oAC.useIFrame = false;
-    oAC.forceSelection = true;
+    oAC.forceSelection = false;
+    oAC.useIframe = true;
     oAC.allowBrowserAutocomplete = false;
     oAC.delimChar = ";";
 

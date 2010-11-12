@@ -7,10 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Allele;
-import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 
-import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
@@ -23,6 +21,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.summary.ReferenceSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +77,15 @@ public class ReferenceController {
 
 		//model.addAttribute("referenceQueryForm", queryForm);
 		model.addAttribute("queryString", request.getQueryString());
+		
+
+		String text = request.getParameter("text");
+		String sort = "year";
+		if (text != null && !"".equals(text)){
+			sort = "score";
+		}
+		
+		model.addAttribute("defaultSort", sort);
 		logger.debug("queryString: " + request.getQueryString());
 
 		return "reference_summary";
@@ -89,7 +97,7 @@ public class ReferenceController {
 	 * the query to the ReferenceFinder.  The results are returned as JSON
 	 */
 	@RequestMapping("/json")
-	public @ResponseBody SearchResults<Reference> referenceSummaryJson(
+	public @ResponseBody SearchResults<ReferenceSummary> referenceSummaryJson(
 			HttpServletRequest request, 
 			@ModelAttribute ReferenceQueryForm query,
 			@ModelAttribute Paginator page) {
@@ -104,8 +112,7 @@ public class ReferenceController {
 
 		// perform query and return results as json
 		logger.debug("params parsed");
-		
-		logger.debug(ContextLoader.getConfigBean().getProperty("WEBSHARE_URL"));
+
 		return referenceFinder.searchReferences(params);
 	}
 	
@@ -249,19 +256,29 @@ public class ReferenceController {
 		if(year != null && !"".equals(year)){
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){
-				// TODO validate years are numbers
-				List<String> years = Arrays.asList(query.getAuthor().trim().split("-"));
-				if (years.size() == 2){
-					// TODO handle years in any order
+				// TODO validate years are numbers				
+				List<String> years = Arrays.asList(year.split("-"));
+
+				if (years.size() == 2 && !"".equals(years.get(0))){
+					logger.debug("year range: " + years.get(0) + "-" + years.get(1));
+					Integer one = new Integer(years.get(0));
+					Integer two = new Integer(years.get(1));
+					
+					if (one > two){
+						years.set(0, two.toString());
+						years.set(1, one.toString());
+					}
 					queryList.add(new Filter(SearchConstants.REF_YEAR, 
 							years.get(0), Filter.OP_GREATER_OR_EQUAL));
 					queryList.add(new Filter(SearchConstants.REF_YEAR, 
 							years.get(1), Filter.OP_LESS_OR_EQUAL));
-				} else if (years.size() == 1) {
+				} else {
 					if (rangeLoc == 0){
+						logger.debug("year <= " + years.get(1));
 						queryList.add(new Filter(SearchConstants.REF_YEAR, 
-								years.get(0), Filter.OP_LESS_OR_EQUAL));
+								years.get(1), Filter.OP_LESS_OR_EQUAL));
 					} else {
+						logger.debug("year >= " + years.get(0));
 						queryList.add(new Filter(SearchConstants.REF_YEAR, 
 								years.get(0), Filter.OP_GREATER_OR_EQUAL));
 					}
@@ -390,6 +407,8 @@ public class ReferenceController {
 			s = SortConstants.REF_AUTHORS;
 		} else if ("journal".equalsIgnoreCase(s)){
 			s = SortConstants.REF_JOURNAL;
+		} else if ("score".equalsIgnoreCase(s)){
+			// null op
 		} else {
 			s = SortConstants.REF_YEAR;
 		}
