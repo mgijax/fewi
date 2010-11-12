@@ -1,8 +1,13 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.util.ArrayList;
+
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,9 +32,14 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
         propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
         
-        // Set the url for the solr instance.
+        // Sort map
         
-        solrUrl = "http://cardolan.informatics.jax.org:8983/solr/sequence/";
+        ArrayList <String> sortList = new ArrayList <String> ();
+        sortList.add(IndexConstants.SEQ_TYPE_SORT);
+        sortList.add(IndexConstants.SEQ_PROVIDER_SORT);
+        
+        sortMap.put(SortConstants.SEQUENCE_SORT, new SolrSortMapper(sortList));
+        // Set the url for the solr instance.
         
         /*
          * The name of the field we want to iterate through the documents for
@@ -41,4 +51,9 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
         
     }
    
+    @Value("${solr.sequence.url}")
+    public void setSolrUrl(String solrUrl) {
+        super.solrUrl = solrUrl;
+    }
+    
 }
