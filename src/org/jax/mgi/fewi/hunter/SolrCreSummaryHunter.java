@@ -23,7 +23,7 @@ public class SolrCreSummaryHunter extends SolrHunter {
         /*
          * Setup the sort mapping.
          */
-        sortMap.put(SortConstants.CRE_DRIVER, new SolrSortMapper(IndexConstants.ALL_DRIVER));
+        sortMap.put(SortConstants.CRE_DRIVER, new SolrSortMapper(IndexConstants.ALL_DRIVER_SORT));
         sortMap.put(SortConstants.CRE_SYMBOL, new SolrSortMapper(IndexConstants.ALL_SYMBOL_SORT));
         sortMap.put(SortConstants.CRE_TYPE, new SolrSortMapper(IndexConstants.ALL_TYPE_SORT));
         sortMap.put(SortConstants.CRE_INDUCIBLE, new SolrSortMapper(IndexConstants.ALL_INDUCIBLE));
