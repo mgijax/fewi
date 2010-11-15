@@ -376,10 +376,18 @@ public class ReferenceController {
 			return f;
 		// none yet, so check the id query and build it
 		} else if (query.getId() != null && !"".equals(query.getId())){
-			List<String> ids = Arrays.asList(query.getId().split(";"));
+			List<String> parsedIds = Arrays.asList(query.getId().split(";"));
+			List<String> ids = new ArrayList<String>();
+			for (String id : parsedIds) {
+				id = id.trim();
+				if (id.toLowerCase().startsWith("pmid:")){
+					ids.add(id.substring(5));
+				} else {
+					ids.add(id);
+				}
+			}
 			facetList.add(new Filter(SearchConstants.REF_ID, 
 					ids, Filter.OP_IN));
-			//TODO filter 'PMID:' from ids
 			Filter f = new Filter();
 			f.setFilterJoinClause(Filter.FC_AND);
 			f.setNestedFilters(facetList);
@@ -416,6 +424,8 @@ public class ReferenceController {
 		if("desc".equalsIgnoreCase(d)){
 			desc = true;
 		}
+		
+		logger.debug("soret: " + s + " " + d);
 		Sort sort = new Sort(s, desc);
 		
 		sorts.add(sort);
