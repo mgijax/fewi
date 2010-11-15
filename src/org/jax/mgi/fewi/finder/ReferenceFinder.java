@@ -27,29 +27,30 @@ public class ReferenceFinder {
 
 	@Autowired
 	private SolrReferenceSummaryHunter referenceHunter;
-	
+
 	@Autowired
 	private SolrAuthorsACHunter authorACHunter;
-	
+
 	@Autowired
 	private SolrJournalsACHunter journalACHunter;
-	
+
 	@Autowired
 	private SolrReferenceAuthorFacetHunter authorFacetHunter;
-	
+
 	@Autowired
 	private SolrReferenceJournalFacetHunter journalFacetHunter;
-	
+
 	@Autowired
 	private SolrReferenceYearFacetHunter yearFacetHunter;
-	
+
 	@Autowired
 	private SolrReferenceHasDataFacetHunter dataFacetHunter;
 
 	@Autowired
 	private HibernateObjectGatherer<Reference> referenceGatherer;
 
-	public SearchResults<ReferenceSummary> searchReferences(SearchParams params) {
+
+	public SearchResults<ReferenceSummary> searchSummaryReferences(SearchParams params) {
 		logger.debug("searchReferences");
 		SearchResults<ReferenceSummary> results = new SearchResults<ReferenceSummary>();
 		logger.debug("hunt");
@@ -60,43 +61,58 @@ public class ReferenceFinder {
 		ReferenceSummary refSumm;
 		for(Reference ref: referenceGatherer.get(results.getResultKeys())){
 			refSumm = new ReferenceSummary();
-			summaryList.add(refSumm);			
+			summaryList.add(refSumm);
 			refSumm.setReference(ref);
-			refSumm.setScore(results.getResultScores().get(summaryList.indexOf(refSumm)));			
+			refSumm.setScore(results.getResultScores().get(summaryList.indexOf(refSumm)));
 		}
 		return results;
 	}
-	
+
+
+	public SearchResults<Reference> searchReferences(SearchParams params) {
+			logger.debug("-->searchReferences");
+			SearchResults<Reference> results = new SearchResults<Reference>();
+			referenceHunter.hunt(params, results);
+			logger.debug("-->searchReferences results.getResultKeys()" + results.getResultKeys());
+			referenceGatherer.setType(Reference.class);
+
+            List<Reference> refList = referenceGatherer.get( results.getResultKeys() );
+            results.setResultObjects(refList);
+
+			return results;
+	}
+
+
 	public SearchResults<String> getAuthorAutoComplete(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		authorACHunter.hunt(params, results);
 		return results;
 	}
-	
+
 	public SearchResults<String> getJournalAutoComplete(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		journalACHunter.hunt(params, results);
 		return results;
 	}
-	
+
 	public SearchResults<String> getAuthorFacet(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		authorFacetHunter.hunt(params, results);
 		return results;
 	}
-	
+
 	public SearchResults<String> getJournalFacet(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		journalFacetHunter.hunt(params, results);
 		return results;
 	}
-	
+
 	public SearchResults<String> getYearFacet(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		yearFacetHunter.hunt(params, results);
 		return results;
 	}
-	
+
 	public SearchResults<String> getDataFacet(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		dataFacetHunter.hunt(params, results);
