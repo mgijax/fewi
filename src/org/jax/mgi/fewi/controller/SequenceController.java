@@ -10,6 +10,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import mgi.frontend.datamodel.*;
@@ -161,43 +162,46 @@ public class SequenceController {
 
 	// this is the logic to perform the query and return json results
 	@RequestMapping("/json")
-	public @ResponseBody SearchResults<SeqSummaryRow> seqSummaryJson(
+	public @ResponseBody JsonSummaryResponse<SeqSummaryRow> seqSummaryJson(
 			HttpServletRequest request) {
 
 		logger.debug("-->seqSummaryJson");
 
+
+        // The JSON return object and list of summary rows.
+        // These will be serialized to a JSON response for YUI table.
+        JsonSummaryResponse<SeqSummaryRow> jsonResponse
+          = new JsonSummaryResponse<SeqSummaryRow>();
+        List<SeqSummaryRow> summaryRows = new ArrayList<SeqSummaryRow> ();
+
+
+		// parameter parsing
 		String refKey = request.getParameter("refKey");
 		logger.debug("-->refKey=" + refKey);
 
 		SearchParams params = new SearchParams();
 		params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
 
-		// perform query and return results as json
-		logger.debug("seqSummaryJson params parsed");
-		return sequenceFinder.getJsonSeqsForRefID(params);
+		// perform query, and pull out the sequences requested
+        SearchResults searchResults
+          = sequenceFinder.getSequences(params);
+        List<Sequence> seqList = searchResults.getResultObjects();
+
+        // create the list of SeqSummaryRow wrapper objects
+        Iterator<Sequence> it = seqList.iterator();
+        while (it.hasNext()) {
+            Sequence sequence = it.next();
+            if (sequence == null) {
+                logger.debug("--> Null Sequence Object");
+            }else {
+                summaryRows.add(new SeqSummaryRow(sequence));
+            }
+        }
+
+        // place data into JSON response, and return
+        jsonResponse.setSummaryRows(summaryRows);
+        jsonResponse.setTotalCount(searchResults.getTotalCount());
+        return jsonResponse;
 	}
-
-
-
-//        // setup search parameters object to gather seqs for this reference
-//        searchParams = new SearchParams();
-//        String refKeyStr = Integer.toString(ref.getReferenceKey());
-//        Filter refKeyFilter = new Filter(SearchConstants.REF_KEY, refKeyStr);
-//        searchParams.setFilter(refKeyFilter);
-//
-//        // find the requested sequences for the ref id
-//        searchResults = sequenceFinder.getSequenceByRefID(searchParams);
-//
-//        List<Sequence> seqList = searchResults.getResultObjects();
-//        if (seqList.size() < 1) {
-//            // forward to error page
-//            mav = new ModelAndView("error");
-//            mav.addObject("errorMsg", "No Sequence Found");
-//            return mav;
-//        }
-//
-//
-
-
 
 }
