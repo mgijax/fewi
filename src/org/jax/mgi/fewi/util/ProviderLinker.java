@@ -65,60 +65,60 @@ public class ProviderLinker
         // all genbank
         if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {
 
-			links.append("(<a href='" + genBankUrl + seqID + "'>GenBank</a> | ");
+			links.append("<a href='" + genBankUrl + seqID + "'>GenBank</a> | ");
 			links.append("<a href='" + emblUrl + seqID + "'>EMBL</a> | ");
-			links.append("<a href='" + ddbjUrl + seqID + "'>DDBJ</a>)");
+			links.append("<a href='" + ddbjUrl + seqID + "'>DDBJ</a>");
 		}
         // DFCI
         else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
 
-			links.append("(<a href='" + dfciUrl + seqID + "'>DFCI</a>)");
+			links.append("<a href='" + dfciUrl + seqID + "'>DFCI</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBL)) {
 
-			links.append("(<a href='" + ensemblGmUrl + seqID + "'>Ensembl Gene Model</a>)");
+			links.append("<a href='" + ensemblGmUrl + seqID + "'>Ensembl Gene Model</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLPROTEIN)) {
 
-			links.append("(<a href='" + ensemblProtUrl + seqID + "'>Ensembl</a>)");
+			links.append("<a href='" + ensemblProtUrl + seqID + "'>Ensembl</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
 
-			links.append("(<a href='" + ensemblTranUrl + seqID + "'>Ensembl</a>)");
+			links.append("<a href='" + ensemblTranUrl + seqID + "'>Ensembl</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_TREMBL) ||
                  seqProvider.equals(DBConstants.PROVIDER_SWISSPROT)) {
 
-			links.append("(<a href='" + uniProtUrl + seqID + "'>UniProt</a> | ");
-			links.append("<a href='" + ebiUrl + seqID + "'>EBI</a>)");
+			links.append("<a href='" + uniProtUrl + seqID + "'>UniProt</a> | ");
+			links.append("<a href='" + ebiUrl + seqID + "'>EBI</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_NCBI)) {
 
-			links.append("(<a href='" + ncbiGmUrl + seqID + "'>NCBI Gene Model</a>)");
+			links.append("<a href='" + ncbiGmUrl + seqID + "'>NCBI Gene Model</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_NIA)) {
 
-			links.append("(<a href='" + niaUrl + seqID + "'>NIA</a>)");
+			links.append("<a href='" + niaUrl + seqID + "'>NIA</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 
-			links.append("(<a href='" + refSeqUrl + seqID + "'>RefSeq</a>)");
+			links.append("<a href='" + refSeqUrl + seqID + "'>RefSeq</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
 
-			links.append("(<a href='" + vegaTranUrl + seqID + "'>VEGA</a>)");
+			links.append("<a href='" + vegaTranUrl + seqID + "'>VEGA</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_VEGA)) {
 
-			links.append("(<a href='" + vegaGmUrl + seqID + "'>VEGA</a>)");
+			links.append("<a href='" + vegaGmUrl + seqID + "'>VEGA</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
 
-			links.append("(<a href='" + vegaProtUrl + seqID + "'>VEGA</a>)");
+			links.append("<a href='" + vegaProtUrl + seqID + "'>VEGA</a>");
 		}
         else if (seqProvider.equals(DBConstants.PROVIDER_DOTS)) {
 
-			links.append("(<a href='" + dotsUrl + seqID + "'>DoTS</a>)");
+			links.append("<a href='" + dotsUrl + seqID + "'>DoTS</a>");
 		}
 
 
