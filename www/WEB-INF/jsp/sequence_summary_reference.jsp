@@ -87,7 +87,7 @@ function main() {
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
     myDataSource.responseSchema = {
-        resultsList: "resultObjects",
+        resultsList: "summaryRows",
         fields: [
             {key:"seqInfo"},
             {key:"seqType"},

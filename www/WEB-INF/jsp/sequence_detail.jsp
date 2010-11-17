@@ -49,7 +49,7 @@ ${templateBean.templateBodyStartHtml}
     <tr>
     <td>
        <b>${sequence.primaryID}</b>
-       <%=ProviderLinker.getSeqProviderLinks(sequence)%>
+       (<%=ProviderLinker.getSeqProviderLinks(sequence)%>)
     </td>
     <td align=right>
       <c:if test="${not empty sequence.version}">
