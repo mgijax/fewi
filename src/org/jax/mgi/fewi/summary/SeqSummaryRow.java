@@ -6,12 +6,15 @@ import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceSource;
 import mgi.frontend.datamodel.Marker;
 
-import javax.persistence.Column;
-
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDGenerator;
-
+import org.jax.mgi.fewi.util.ProviderLinker;
 import org.jax.mgi.fewi.config.ContextLoader;
+
+import javax.persistence.Column;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * wrapper around a sequence;  represents on row in summary
@@ -21,6 +24,8 @@ public class SeqSummaryRow {
 	//-------------------
 	// instance variables
 	//-------------------
+
+    private Logger logger = LoggerFactory.getLogger(SeqSummaryRow.class);
 
 	// encapsulated row object
 	private Sequence seq;
@@ -38,6 +43,8 @@ public class SeqSummaryRow {
 
     public SeqSummaryRow (Sequence seq) {
     	this.seq = seq;
+    	logger.debug("SeqSummaryRow wrapping sequence w/ key - "
+    	  + seq.getSequenceKey());
     	return;
     }
 
@@ -50,9 +57,11 @@ public class SeqSummaryRow {
 
         StringBuffer seqInfo = new StringBuffer();
         seqInfo.append(this.seq.getPrimaryID());
-        seqInfo.append("&nbsp;<br/>");
+        seqInfo.append("<br/>&nbsp;&nbsp;");
+        seqInfo.append(ProviderLinker.getSeqProviderLinks(this.seq));
+        seqInfo.append("<br/>&nbsp;&nbsp;");
         seqInfo.append("<a href='" + fewiUrl + "sequence/"
-          + seq.getPrimaryID() + "'> MGI Sequence Detail </a>");
+          + seq.getPrimaryID() + "'>MGI Sequence Detail </a>");
 
     	return seqInfo.toString();
     }
