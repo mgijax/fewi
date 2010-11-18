@@ -31,7 +31,9 @@ public class SeqSummaryRow {
 	private Sequence seq;
 
 	// config values
-	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+    String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+    String mblastUrl = ContextLoader.getConfigBean().getProperty("MOUSEBLAST_URL") + "seqSelect.cgi?seqs=";
+    String seqFetchUrl = ContextLoader.getConfigBean().getProperty("SEQFETCH_URL") + "seqs=";
 
 
 	//-------------
@@ -48,9 +50,20 @@ public class SeqSummaryRow {
     	return;
     }
 
+
     //------------------------
     // public instance methods
     //------------------------
+
+    public String getSeqForward() {
+
+        StringBuffer seqForward = new StringBuffer();
+        seqForward.append("<a href='" + seqFetchUrl + FormatHelper.getSeqForwardValue(seq) + "'>FASTA</a>");
+        seqForward.append("<br/>");
+        seqForward.append("<a href='" + mblastUrl + FormatHelper.getSeqForwardValue(seq) + "'>MouseBLAST</a>");
+
+    	return seqForward.toString();
+    }
 
 
     public String getSeqInfo() {
