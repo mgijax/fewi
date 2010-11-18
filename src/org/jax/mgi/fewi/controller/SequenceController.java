@@ -167,20 +167,18 @@ public class SequenceController {
 
 		logger.debug("-->seqSummaryJson");
 
-
         // The JSON return object and list of summary rows.
         // These will be serialized to a JSON response for YUI table.
         JsonSummaryResponse<SeqSummaryRow> jsonResponse
           = new JsonSummaryResponse<SeqSummaryRow>();
         List<SeqSummaryRow> summaryRows = new ArrayList<SeqSummaryRow> ();
 
-
 		// parameter parsing
 		String refKey = request.getParameter("refKey");
 		logger.debug("-->refKey=" + refKey);
-
 		SearchParams params = new SearchParams();
 		params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
+        //TODO - handle other input parameters
 
 		// perform query, and pull out the sequences requested
         SearchResults searchResults
@@ -192,7 +190,7 @@ public class SequenceController {
         while (it.hasNext()) {
             Sequence sequence = it.next();
             if (sequence == null) {
-                logger.debug("--> Null Sequence Object");
+                logger.debug("--> Null Sequence Object for refKey-" + refKey);
             }else {
                 summaryRows.add(new SeqSummaryRow(sequence));
             }
