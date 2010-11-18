@@ -52,6 +52,10 @@ function main() {
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.
     var myColumnDefs = [
+        {key:"seqForward", 
+            label:"<b>Select</b>",
+            width:90, 
+            sortable:false},
         {key:"seqInfo", 
             label:"<b>Sequence</b>",
             width:180, 
@@ -89,6 +93,7 @@ function main() {
     myDataSource.responseSchema = {
         resultsList: "summaryRows",
         fields: [
+            {key:"seqForward"},
             {key:"seqInfo"},
             {key:"seqType"},
             {key:"length"},
