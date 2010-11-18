@@ -378,23 +378,35 @@ YAHOO.util.Event.onDOMReady(function () {
 		};
 
 	var populateAuthorDialog = function () {
-		facetAuthorDS.sendRequest(null, authorCallback);		
+		facetAuthorDS.sendRequest(genFacetQuery("authorFilter"), authorCallback);		
 		facetDialog.show();
 	};
 
 	var populateJournalDialog = function () {
-		facetJournalDS.sendRequest(null, journalCallback);		
+		facetJournalDS.sendRequest(genFacetQuery("journalFilter"), journalCallback);		
 		facetDialog.show();
 	};
 
 	var populateYearDialog = function () {
-		facetYearDS.sendRequest(null, yearCallback);		
+		facetYearDS.sendRequest(genFacetQuery("yearFilter"), yearCallback);		
 		facetDialog.show();
 	};
 
 	var populateDataDialog = function () {
-		facetDataDS.sendRequest(null, dataCallback);		
+		facetDataDS.sendRequest(genFacetQuery("curatedDataFilter"), dataCallback);		
 		facetDialog.show();
+	};
+	
+	var genFacetQuery = function(exclude) {
+        var facetParams = '';
+        for (key in facets){
+        	if (key != exclude){
+				for (item in facets[key]){
+					facetParams = facetParams + '&' + key + '=' + facets[key][item];
+				}
+        	}
+        }
+        return facetParams;
 	};
 
 	YAHOO.util.Event.addListener("authorFilter", "click", populateAuthorDialog, true);
