@@ -307,7 +307,7 @@ ${templateBean.templateBodyStartHtml}
 
     <c:forEach var="reference" items="${references}" >
        <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
-       ${reference.longCitation}
+       ${reference.shortCitation}
        <br>
     </c:forEach>
 
