@@ -45,14 +45,34 @@ public class ReferenceSummary {
 	}
 
 	public String getAuthors() {
-		return reference.getAuthors();
+		StringBuffer sb = new StringBuffer();
+		if ("BOOK".equalsIgnoreCase(this.reference.getReferenceType()) && 
+				this.reference.getBookEditor() != null){
+			sb.append(String.format("<br/><br/><span class=\"ital\">Editors</span>: %s", this.reference.getBookEditor()));
+		}
+		return reference.getAuthors() + sb.toString();
 	}
 
 	public String getTitle() {
+		StringBuffer sb = new StringBuffer();
+		if ("BOOK".equalsIgnoreCase(this.reference.getReferenceType())){
+			if(this.reference.getBookTitle() != null){
+				sb.append(String.format("<span class=\"ital\">Chapter</span>: %s<br/><br/>", this.reference.getTitle()));
+				sb.append(String.format("<span class=\"ital\">Book</span>: %s", this.reference.getBookTitle()));
+			} else {
+				sb.append(String.format("<span class=\"ital\">Book</span>: %s", this.reference.getTitle()));
+			}
+
+			return sb.toString();
+		}
 		return reference.getTitle();
 	}
 
 	public String getJournal() {
+		if("BOOK".equalsIgnoreCase(this.reference.getReferenceType()) && 
+				this.reference.getBookPublisher() != null){
+			return "<span class=\"ital\">Publisher</span>: " + this.reference.getBookPublisher();
+		}
 		return reference.getJournal();
 	}
 
@@ -70,8 +90,7 @@ public class ReferenceSummary {
         int expTotal = reference.getCountOfGXDAssays() + reference.getCountOfGXDResults() + reference.getCountOfGXDStructures();
         if (expTotal > 0){
         	sb.append(String.format("<li>Expression assays: <a href=\"%sexpression/reference/%s\">%,d</a>,", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDAssays()));
-        	sb.append(String.format(" results: <a href=\"%sexpression/reference/%s\">%,d</a>,", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDResults()));
-        	sb.append(String.format(" tissues: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDStructures()));
+        	sb.append(String.format(" results: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDResults()));
         }
         if (reference.getCountOfGXDIndex() > 0){
         	sb.append(String.format("<li>Gene expression literature content records: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
@@ -105,6 +124,26 @@ public class ReferenceSummary {
 		} else {
 			return " ";
 		}
+	}
+
+	public String getBookEdition() {
+		return reference.getBookEdition();
+	}
+
+	public String getBookEditor() {
+		return reference.getBookEditor();
+	}
+
+	public String getBookPlace() {
+		return reference.getBookPlace();
+	}
+
+	public String getBookPublisher() {
+		return reference.getBookPublisher();
+	}
+
+	public String getBookTitle() {
+		return reference.getBookTitle();
 	}
 
 }

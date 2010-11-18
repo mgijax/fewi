@@ -75,7 +75,8 @@ ${templateBean.templateBodyStartHtml}
 	<div id="facetDialog">
 		<div class="hd">Filter</div>	
 		<div class="bd">
-			<form:form method="GET" action="${configBean.FEWI_URL}reference/summary">		
+			<form:form method="GET" action="${configBean.FEWI_URL}reference/summary">
+			<img src="/fewi/mgi/assets/images/loading.gif">	
 			</form:form>
 		</div>
 	</div>

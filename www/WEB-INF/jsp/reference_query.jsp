@@ -128,7 +128,7 @@ ${templateBean.templateBodyStartHtml}
 					<div style="text-align:left;" class="example">
 					20339075 (PubMed)<br/>
 					J:159210 (MGI reference ID)<br/>
-					18989690, 18192873, 18467500
+					18989690; 18192873; 18467500
 					</div>
 				</div>
 

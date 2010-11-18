@@ -22,6 +22,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.ReferenceSummary;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,31 +42,31 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(value="/reference")
 public class ReferenceController {
-
+	
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(ReferenceController.class);
-
+	
 	// get the finders used by various methods
 	@Autowired
 	private ReferenceFinder referenceFinder;
-
+	
 	@Autowired
 	private SequenceFinder sequenceFinder;
-
+	
 	@Autowired
 	private AlleleFinder alleleFinder;
+	
 
-
-	// add a new ReferenceQueryForm and MySirtPaginator objects to model for QF
+	// add a new ReferenceQueryForm and MySirtPaginator objects to model for QF 
 	@RequestMapping(method=RequestMethod.GET)
 	public String getQueryForm(Model model) {
 		model.addAttribute(new ReferenceQueryForm());
 		model.addAttribute("sort", new Paginator());
 		return "reference_query";
 	}
-
-	/*
-	 * This method maps requests for the reference summary view. Note that this
+	
+	/* 
+	 * This method maps requests for the reference summary view. Note that this 
 	 * method does not process the actual query, but rather maps the request
 	 * to the apropriate view and returns any Model objects needed by the
 	 * view. The view is responsible for issuing the ajax query that will
@@ -77,36 +78,36 @@ public class ReferenceController {
 
 		//model.addAttribute("referenceQueryForm", queryForm);
 		model.addAttribute("queryString", request.getQueryString());
-
+		
 
 		String text = request.getParameter("text");
 		String sort = "year";
 		if (text != null && !"".equals(text)){
 			sort = "score";
 		}
-
+		
 		model.addAttribute("defaultSort", sort);
 		logger.debug("queryString: " + request.getQueryString());
 
 		return "reference_summary";
 	}
-
-	/*
-	 * This method maps ajax requests from the reference summary page.  It
+	
+	/* 
+	 * This method maps ajax requests from the reference summary page.  It 
 	 * parses the ReferenceQueryForm, generates SearchParams object, and issues
 	 * the query to the ReferenceFinder.  The results are returned as JSON
 	 */
 	@RequestMapping("/json")
 	public @ResponseBody SearchResults<ReferenceSummary> referenceSummaryJson(
-			HttpServletRequest request,
+			HttpServletRequest request, 
 			@ModelAttribute ReferenceQueryForm query,
 			@ModelAttribute Paginator page) {
-
+				
 		logger.debug("json query: " + query.toString());
-
+		
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
-		params.setPaginator(page);
+		params.setPaginator(page);		
 		params.setSorts(this.parseSorts(request));
 		params.setFilter(this.parseReferenceQueryForm(query));
 
@@ -115,7 +116,7 @@ public class ReferenceController {
 
 		return referenceFinder.searchSummaryReferences(params);
 	}
-
+	
 	/*
 	 * This method maps requests for a reference detail page by id.
 	 */
@@ -123,23 +124,23 @@ public class ReferenceController {
 	public String referenceById(
 			@PathVariable("refID") String refID,
 			HttpServletRequest request, Model model) {
-
-		model.addAttribute("queryString", "id=" + refID);
-		return "reference_summary";
+		
+		model.addAttribute("queryString", "id=" + refID);		
+		return "reference_summary";		
 	}
-
-	/*
-	 * This method maps requests for the reference summary for an allele.
+	
+	/* 
+	 * This method maps requests for the reference summary for an allele.  
 	 * Note that this method does not process the actual query, but rather maps
 	 * the request to the apropriate view and returns any Model objects needed
-	 * by the view.  The view is responsible for issuing the ajax query that
+	 * by the view.  The view is responsible for issuing the ajax query that 
 	 * will return the results to populate the data table.
 	 */
 	@RequestMapping("/allele/{alleleID}")
-	public String referenceSummaryForAllele(
+	public String referenceSummaryForAllele(			
 			@PathVariable("alleleID") String alleleID,
-			HttpServletRequest request, Model model) {
-
+			HttpServletRequest request, Model model) {		
+		
         // setup search parameters object
         SearchParams searchParams = new SearchParams();
         Filter seqIdFilter = new Filter(SearchConstants.ALL_ID, alleleID);
@@ -148,7 +149,7 @@ public class ReferenceController {
         // find the requested sequence
         SearchResults<Allele> searchResults
           = alleleFinder.getAlleleByID(searchParams);
-
+        
         List<Allele> alleleList = searchResults.getResultObjects();
 
         if (alleleList.size() < 1) {
@@ -162,27 +163,27 @@ public class ReferenceController {
             mav.addObject("errorMsg", "Duplicate ID");
             return "error";
         }
-
+        
         model.addAttribute("allele", alleleList.get(0));
 		model.addAttribute("queryString", "alleleKey=" + alleleList.get(0).getAlleleKey());
-
+		
 		return "reference_summary_allele";
 	}
-
+	
 	/*
-	 * This method maps requests for the reference summary for a sequence.
+	 * This method maps requests for the reference summary for a sequence. 
 	 * Note that this method does not process the actual query, but rather maps
 	 * the request to the apropriate view and returns any Model objects needed
-	 * by the view.  The view is responsible for issuing the ajax query that
+	 * by the view.  The view is responsible for issuing the ajax query that 
 	 * will return the results to populate the data table.
 	 */
 	@RequestMapping("/sequence/{seqID}")
 	public String referenceSummaryForSequence(
 			@PathVariable("seqID") String seqID,
 			HttpServletRequest request, Model model) {
-
+		
 		logger.debug("reference_summary_sequence");
-
+		
         // setup search parameters object
         SearchParams searchParams = new SearchParams();
         Filter seqIdFilter = new Filter(SearchConstants.SEQ_ID, seqID);
@@ -191,7 +192,7 @@ public class ReferenceController {
         // find the requested sequence
         SearchResults<Sequence> searchResults
           = sequenceFinder.getSequenceByID(searchParams);
-
+        
         List<Sequence> seqList = searchResults.getResultObjects();
 
         if (seqList.size() < 1) {
@@ -205,103 +206,107 @@ public class ReferenceController {
             mav.addObject("errorMsg", "Duplicate ID");
             return "error";
         }
-
+        
         model.addAttribute("sequence", seqList.get(0));
 		model.addAttribute("queryString", "seqKey=" + seqList.get(0).getSequenceKey());
-
+		
 		return "reference_summary_sequence";
 	}
 
 	/*
-	 * This method parses the ReferenceQueryForm bean and constructs a Filter
-	 * object to represent the query.
+	 * This method parses the ReferenceQueryForm bean and constructs a Filter 
+	 * object to represent the query.  
 	 */
 	private Filter parseReferenceQueryForm(ReferenceQueryForm query){
 		// start filter list for query filters
 		List<Filter> queryList = new ArrayList<Filter>();
 		// start filter list to store facet filters
 		List<Filter> facetList = new ArrayList<Filter>();
-
+		
 		logger.debug("get params");
-
+		
 		// process normal query form parameter.  the resulting filter objects
-		// are added to queryList.
-
+		// are added to queryList.  
+		
 		//build author query filter
 		if(query.getAuthor() != null && !"".equals(query.getAuthor())){
-			List<String> authors = Arrays.asList(query.getAuthor().trim().split(";"));
+
+			List<String> authors = this.parseList(query.getAuthor().trim(), ";");
 
 			String scope = query.getAuthorScope();
 			if ("first".equals(scope)){
-				queryList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST,
+				queryList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST, 
 						authors, Filter.OP_IN));
 			} else if ("last".equals(scope)){
-				queryList.add(new Filter(SearchConstants.REF_AUTHOR_LAST,
+				queryList.add(new Filter(SearchConstants.REF_AUTHOR_LAST, 
 						authors, Filter.OP_IN));
 			} else {
-				queryList.add(new Filter(SearchConstants.REF_AUTHOR_ANY,
+				queryList.add(new Filter(SearchConstants.REF_AUTHOR_ANY, 
 						authors, Filter.OP_IN));
 			}
 		}
 
 		// build journal query filter
 		if(query.getJournal() != null && !"".equals(query.getJournal())){
-			List<String> journals = Arrays.asList(query.getJournal().trim().split(";"));
-			queryList.add(new Filter(SearchConstants.REF_JOURNAL,
+			
+			List<String> journals = this.parseList(query.getJournal().trim(), ";");
+
+			queryList.add(new Filter(SearchConstants.REF_JOURNAL, 
 					journals, Filter.OP_IN));
 		}
-
+		
 		// build year query filter
 		String year = query.getYear().trim();
 		if(year != null && !"".equals(year)){
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){
-				// TODO validate years are numbers
-				List<String> years = Arrays.asList(year.split("-"));
+				// TODO validate years are numbers	
+				
+				List<String> years = this.parseList(year, "-");
 
-				if (years.size() == 2 && !"".equals(years.get(0))){
+				if (years.size() == 2){
 					logger.debug("year range: " + years.get(0) + "-" + years.get(1));
 					Integer one = new Integer(years.get(0));
 					Integer two = new Integer(years.get(1));
-
+					
 					if (one > two){
 						years.set(0, two.toString());
 						years.set(1, one.toString());
 					}
-					queryList.add(new Filter(SearchConstants.REF_YEAR,
+					queryList.add(new Filter(SearchConstants.REF_YEAR, 
 							years.get(0), Filter.OP_GREATER_OR_EQUAL));
-					queryList.add(new Filter(SearchConstants.REF_YEAR,
+					queryList.add(new Filter(SearchConstants.REF_YEAR, 
 							years.get(1), Filter.OP_LESS_OR_EQUAL));
 				} else {
 					if (rangeLoc == 0){
-						logger.debug("year <= " + years.get(1));
-						queryList.add(new Filter(SearchConstants.REF_YEAR,
-								years.get(1), Filter.OP_LESS_OR_EQUAL));
+						logger.debug("year <= " + years.get(0));
+						queryList.add(new Filter(SearchConstants.REF_YEAR, 
+								years.get(0), Filter.OP_LESS_OR_EQUAL));
 					} else {
 						logger.debug("year >= " + years.get(0));
-						queryList.add(new Filter(SearchConstants.REF_YEAR,
+						queryList.add(new Filter(SearchConstants.REF_YEAR, 
 								years.get(0), Filter.OP_GREATER_OR_EQUAL));
 					}
 				}
 				// TODO error: too many years entered
 			} else {
-				queryList.add(new Filter(SearchConstants.REF_YEAR,
+				queryList.add(new Filter(SearchConstants.REF_YEAR, 
 						year, Filter.OP_EQUAL));
 			}
 		}
-
+		
 		// build text query filter
 		if(query.getText() != null && !"".equals(query.getText())){
 			Filter tf = new Filter();
 			List<Filter> textFilters = new ArrayList<Filter>();
-
+			
 			String text = query.getText();
 			if(query.isInAbstract()){
-				textFilters.add(new Filter(SearchConstants.REF_TEXT_ABSTRACT,
+				textFilters.add(new Filter(SearchConstants.REF_TEXT_ABSTRACT, 
 						text, Filter.OP_CONTAINS));
 			}
 			if(query.isInTitle()){
-				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE,
+				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE, 
 						text, Filter.OP_CONTAINS));
 			}
 			if (textFilters.size() == 1) {
@@ -312,36 +317,36 @@ public class ReferenceController {
 				queryList.add(tf);
 			}
 		}
-
+		
 		// process the summary for a parent object (allele, sequence) params.
 		// these are added to queryList just like any regular query form param.
-
+		
 		// build sequence key query filter
 		if (query.getSeqKey() != null){
 			logger.info("set seqKey filter");
-			queryList.add(new Filter(SearchConstants.SEQ_KEY,
+			queryList.add(new Filter(SearchConstants.SEQ_KEY, 
 					query.getSeqKey().toString(), Filter.OP_EQUAL));
 		}
-
+		
 		// build allele key query filter
 		if (query.getAlleleKey() != null){
 			logger.info("set alleleKey filter");
-			queryList.add(new Filter(SearchConstants.ALL_KEY,
+			queryList.add(new Filter(SearchConstants.ALL_KEY, 
 					query.getAlleleKey().toString(), Filter.OP_EQUAL));
 		}
-
-		// process facet filters.  these filters are added to facetList as they
+		
+		// process facet filters.  these filters are added to facetList as they 
 		// should not be considered when validating the actual query.
 		logger.debug("get filters");
-
+		
 		// build author facet query filter
 		if(query.getAuthorFilter().size() > 0){
-			facetList.add(new Filter(FacetConstants.REF_AUTHORS,
+			facetList.add(new Filter(FacetConstants.REF_AUTHORS, 
 					query.getAuthorFilter(), Filter.OP_IN));
 		}
 		// build journal facet query filter
 		if (query.getJournalFilter().size() > 0){
-			facetList.add(new Filter(FacetConstants.REF_JOURNALS,
+			facetList.add(new Filter(FacetConstants.REF_JOURNALS, 
 					query.getJournalFilter(), Filter.OP_IN));
 		}
 		// build year facet query filter
@@ -350,7 +355,7 @@ public class ReferenceController {
 			for (Integer yearString : query.getYearFilter()) {
 				years.add(String.valueOf(yearString));
 			}
-			facetList.add(new Filter(FacetConstants.REF_YEAR,
+			facetList.add(new Filter(FacetConstants.REF_YEAR, 
 					years, Filter.OP_IN));
 		}
 		// build curated data facet query filter
@@ -360,14 +365,14 @@ public class ReferenceController {
 				logger.debug(filter.replaceAll("\\*", ","));
 				selections.add(filter.replaceAll("\\*", ","));
 			}
-			facetList.add(new Filter(FacetConstants.REF_CURATED_DATA,
+			facetList.add(new Filter(FacetConstants.REF_CURATED_DATA, 
 					selections, Filter.OP_IN));
 		}
-
+		
 		logger.debug("build params");
-
+		
 		// TODO id invalid case where ID param and others entered
-		// valid parameters entered, build and return Filter
+		// valid parameters entered, build and return Filter 
 		if (queryList.size() > 0){
 			Filter f = new Filter();
 			f.setFilterJoinClause(Filter.FC_AND);
@@ -376,18 +381,19 @@ public class ReferenceController {
 			return f;
 		// none yet, so check the id query and build it
 		} else if (query.getId() != null && !"".equals(query.getId())){
-			List<String> parsedIds = Arrays.asList(query.getId().split(";"));
-			List<String> ids = new ArrayList<String>();
-			for (String id : parsedIds) {
-				id = id.trim();
+			
+			List<String> ids = this.parseList(query.getId().trim(), ";");
+			List<String> cleanIds = new ArrayList<String>();
+			for (String id : ids) {
 				if (id.toLowerCase().startsWith("pmid:")){
-					ids.add(id.substring(5));
+					cleanIds.add(id.substring(5));
 				} else {
-					ids.add(id);
+					cleanIds.add(id);
 				}
 			}
-			facetList.add(new Filter(SearchConstants.REF_ID,
-					ids, Filter.OP_IN));
+
+			facetList.add(new Filter(SearchConstants.REF_ID, 
+					cleanIds, Filter.OP_IN));
 			Filter f = new Filter();
 			f.setFilterJoinClause(Filter.FC_AND);
 			f.setNestedFilters(facetList);
@@ -395,22 +401,22 @@ public class ReferenceController {
 		} else {
 			//TODO no query params
 		}
-
+		
 		return new Filter();
 	}
-
+	
 	/*
 	 * This is a helper method to parse sort parameters from the query string
-	 * and return a Sort object.
+	 * and return a Sort object.  
 	 */
 	private List<Sort> parseSorts(HttpServletRequest request) {
-
+		
 		List<Sort> sorts = new ArrayList<Sort>();
-
+		
 		String s = request.getParameter("sort");
 		String d = request.getParameter("dir");
 		boolean desc = false;
-
+		
 		if ("authors".equalsIgnoreCase(s)){
 			s = SortConstants.REF_AUTHORS;
 		} else if ("journal".equalsIgnoreCase(s)){
@@ -420,16 +426,29 @@ public class ReferenceController {
 		} else {
 			s = SortConstants.REF_YEAR;
 		}
-
+		
 		if("desc".equalsIgnoreCase(d)){
 			desc = true;
 		}
-
+		
 		logger.debug("soret: " + s + " " + d);
 		Sort sort = new Sort(s, desc);
-
+		
 		sorts.add(sort);
 		return sorts;
+	}
+	
+	private List<String> parseList(String list, String delimiter){
+		String parsed[] = list.split(delimiter);
+		List<String> items = new ArrayList<String>();
+		String item;
+		for (int i = 0; i < parsed.length; i++) {
+			item = parsed[i].trim();
+			if (item != null && !"".equals(item) ){
+				items.add(item);
+			}
+		}
+		return items;
 	}
 
 	/*
@@ -440,7 +459,7 @@ public class ReferenceController {
 	public @ResponseBody SearchResults<String> authorAutoComplete(
 			@RequestParam("query") String query) {
 		// split input on any non-alpha and non-apostrophe characters
-		List<String> words =
+		List<String> words = 
 			Arrays.asList(query.trim().split("[^a-zA-Z0-9']+"));
 		logger.debug("author query:" + words.toString());
 		//build SearchParams for author auto complete query
@@ -448,7 +467,7 @@ public class ReferenceController {
 		// return results
 		return referenceFinder.getAuthorAutoComplete(params);
 	}
-
+	
 	/*
 	 * This method maps requests for journal auto complete results. The results
 	 * are returned as JSON.
@@ -466,15 +485,19 @@ public class ReferenceController {
 	}
 
 	/*
-	 * This is a helper method that takes a List of Strings and generates a
-	 * SearchParams object containing the appropriate Filter objects AND'ed
-	 * together for the requested Auto Complete query.
+	 * This is a helper method that takes a List of Strings and generates a  
+	 * SearchParams object containing the appropriate Filter objects AND'ed 
+	 * together for the requested Auto Complete query.  
 	 */
 	private SearchParams buildACQuery(String param, List<String> queries){
 		Filter f;
 		SearchParams params = new SearchParams();
 		params.setPageSize(1000);
-
+		List<Sort> sorts = new ArrayList<Sort>();
+		Sort s = new Sort(IndexConstants.REF_AUTHOR_SORT, false);
+		sorts.add(s);
+		params.setSorts(sorts);
+		
 		if (queries.size() > 1){
 			f = new Filter();
 			List<Filter> fList = new ArrayList<Filter>();
@@ -491,76 +514,76 @@ public class ReferenceController {
 		params.setFilter(f);
 		return params;
 	}
-
+	
 	/*
 	 * This method maps requests for the author facet list.  The results are
-	 * returned as JSON.
+	 * returned as JSON.  
 	 */
 	@RequestMapping("/facet/author")
 	public @ResponseBody SearchResults<String> facetAuthor(
 			@ModelAttribute ReferenceQueryForm query) {
-
+			
 		logger.debug(query.toString());
-
+		
 		SearchParams params = new SearchParams();
 		params.setFilter(this.parseReferenceQueryForm(query));
-
+	
 		// perform query and return results as json
 		logger.debug("params parsed");
-
+		
 		logger.debug("facets: " + referenceFinder.getAuthorFacet(params).getResultFacets().size());
 		return referenceFinder.getAuthorFacet(params);
 	}
-
+	
 	/*
 	 * This method maps requests for the journal facet list.  The results are
-	 * returned as JSON.
+	 * returned as JSON.  
 	 */
 	@RequestMapping("/facet/journal")
 	public @ResponseBody SearchResults<String> facetJournal(
 			@ModelAttribute ReferenceQueryForm query) {
-
+			
 		logger.debug(query.toString());
-
-		SearchParams params = new SearchParams();
+		
+		SearchParams params = new SearchParams();		
 		params.setFilter(this.parseReferenceQueryForm(query));
-
+	
 		// perform query and return results as json
 		logger.debug("params parsed");
 		return referenceFinder.getJournalFacet(params);
 	}
-
+	
 	/*
 	 * This method maps requests for the year facet list.  The results are
-	 * returned as JSON.
+	 * returned as JSON.  
 	 */
 	@RequestMapping("/facet/year")
 	public @ResponseBody SearchResults<String> facetYear(
 			@ModelAttribute ReferenceQueryForm query) {
-
+			
 		logger.debug(query.toString());
-
-		SearchParams params = new SearchParams();
+		
+		SearchParams params = new SearchParams();		
 		params.setFilter(this.parseReferenceQueryForm(query));
-
+	
 		// perform query and return results as json
 		logger.debug("params parsed");
 		return referenceFinder.getYearFacet(params);
 	}
-
+	
 	/*
-	 * This method maps requests for the curated data  facet list.  The results
-	 * are returned as JSON.
+	 * This method maps requests for the curated data  facet list.  The results 
+	 * are returned as JSON.  
 	 */
 	@RequestMapping("/facet/data")
 	public @ResponseBody SearchResults<String> facetData(
 			@ModelAttribute ReferenceQueryForm query) {
-
+			
 		logger.debug(query.toString());
-
-		SearchParams params = new SearchParams();
+		
+		SearchParams params = new SearchParams();		
 		params.setFilter(this.parseReferenceQueryForm(query));
-
+	
 		// perform query and return results as json
 		logger.debug("params parsed");
 		return referenceFinder.getDataFacet(params);

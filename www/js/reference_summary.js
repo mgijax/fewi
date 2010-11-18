@@ -188,10 +188,12 @@ var History = YAHOO.util.History;
     
 	updateCount = function (newCount) {
 		var countEl = YAHOO.util.Dom.get("totalCount");
-    	if(parseInt(totalCount) < parseInt(newCount)){
-    		totalCount = YAHOO.util.Number.format(newCount, numConfig);   		
-    		countEl.textContent = totalCount + " items match your query.";
-    	}
+		if (!YAHOO.lang.isNull(countEl)){
+	    	if(parseInt(totalCount) < parseInt(newCount)){
+	    		totalCount = YAHOO.util.Number.format(newCount, numConfig);   		
+	    		countEl.textContent = totalCount + " items match your query.";
+	    	}
+		}
 	};
     
     // Returns a request string for consumption by the DataSource
@@ -212,6 +214,7 @@ var History = YAHOO.util.History;
 
     // Called by Browser History Manager to trigger a new state
     handleHistoryNavigation = function (request) {
+    	myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);   
         // Sends a new request to the DataSource
         myDataSource.sendRequest(request,{
             success : myDataTable.onDataReturnSetRows,
@@ -264,7 +267,6 @@ YAHOO.util.Event.onDOMReady(function () {
 		for (i in selections){
 			facets[i] = selections[i];
 		}
-		
 		populateFilterSummary();
 		
 		var state = myDataTable.getState();
@@ -275,9 +277,12 @@ YAHOO.util.Event.onDOMReady(function () {
 		);
 		
 		History.navigate("myDataTable", newState);
+		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">';
 		this.submit();
 	};
 	var handleCancel = function() {
+		alert("Cancel");
+		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">';
 		this.cancel();
 	};
 	var handleSuccess = function(o) {
@@ -303,7 +308,7 @@ YAHOO.util.Event.onDOMReady(function () {
 
 	// Wire up the success and failure handlers
 	facetDialog.callback = { success: handleSuccess,
-						     failure: handleFailure };
+						     failure: handleFailure};
 
 	// Render the Dialog
 	facetDialog.render();
@@ -402,24 +407,27 @@ YAHOO.util.Event.onDOMReady(function () {
 		var fsList = new YAHOO.util.Element('fsList');
         var el;
         
-        var fsItems = fsList.getElementsByClassName('fsItem', 'a');     
-        for(f in fsItems){
-        	fsItems[f].parentNode.removeChild(fsItems[f]);
+        var brItems = YAHOO.util.Dom.getChildren('fsList');
+        for (b in brItems){
+        	fsList.removeChild(brItems[b]);
         }
 
         var vis = false;
         for (k in facets) {
-        	if (facets[k].length > 0){
+        	var inner = facets[k];
+    		for(v in inner) {
         		vis = true;
 	            el = document.createElement("a");
 	            el.setAttribute('class', 'fsItem');
-	            el.setAttribute('id', k);
-	            k = k.charAt(0).toUpperCase() + k.slice(1);
-	            el.textContent = k.replace('Filter', '');
+	            el.setAttribute('id', k + ':' + inner[v]);
+	            var val = k.charAt(0).toUpperCase() + k.slice(1);
+	            el.textContent = val.replace('Filter', '') + ': ' + inner[v];
 	            YAHOO.util.Event.addListener(el, "click", clearFilter);
 
-	            YAHOO.util.Dom.insertBefore(el, YAHOO.util.Dom.getFirstChild(fsList));
-        	}
+	            fsList.appendChild(el);
+    		}
+    		el = document.createElement("br");
+    		YAHOO.util.Dom.insertAfter(el, YAHOO.util.Dom.getLastChild(fsList));    		
         }
 
 		var fSum = YAHOO.util.Dom.get('filterSummary');
@@ -433,7 +441,12 @@ YAHOO.util.Event.onDOMReady(function () {
 	};
 	
 	var clearFilter = function () {
-		facets[this.id] = [];
+		kv = this.id.split(":");		
+		var items = facets[kv[0]];		
+		var idx = items.indexOf(kv[1]); // Find the index
+		if(idx!=-1) {
+			items.splice(idx, 1);
+		}
 		populateFilterSummary();
 		var state = myDataTable.getState();
 		var newState = generateRequest(0, 
