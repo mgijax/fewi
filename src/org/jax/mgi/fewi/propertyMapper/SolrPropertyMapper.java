@@ -117,7 +117,7 @@ public class SolrPropertyMapper implements PropertyMapper {
             return field + ":" + "*" + value;
         }
         else if (operand == Filter.OP_CONTAINS) {
-            return field + ":" + value;
+            return field + ":" + "(" + value + ")";
         }
         return "";
     }
