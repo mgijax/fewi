@@ -139,7 +139,7 @@ public class SolrHunter implements Hunter {
          * from the wi's perspective to its multiple column sort in the indexes.
          */
 
-        query.setFields("score");
+        query.setFields("score"); // Always pack the score
         
         for (Sort sort: searchParams.getSorts()) {
             if (sort.isDesc()) {
