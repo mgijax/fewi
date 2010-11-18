@@ -48,7 +48,7 @@ ${templateBean.templateBodyStartHtml}
 				${referenceQueryForm.id}<br/></c:if>
 			<div id="filterSummary" style="display:none;">
 				<span class="label">Filters:</span>
-				<span id="fsList"><span></span></span>
+				<span id="fsList"></span>
 			</div>	
 			<span id="totalCount" class="count"></span>		
 		</div>
