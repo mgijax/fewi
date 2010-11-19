@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.searchUtil;
+package org.jax.mgi.fewi.summary;
 
 import java.util.*;
 
