@@ -10,7 +10,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import mgi.frontend.datamodel.*;

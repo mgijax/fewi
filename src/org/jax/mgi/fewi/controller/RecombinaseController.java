@@ -8,6 +8,8 @@ import mgi.frontend.datamodel.Allele;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.summary.RecombinaseSummary;
+import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import java.util.Iterator;
 
 /*--------------------------------------*/
 /* standard imports for all controllers */
@@ -73,7 +75,7 @@ public class RecombinaseController {
 	// qf submission.  drop completed ReferenceQueryForm object and query string
 	// into model for summary to use
 	@RequestMapping("/summary")
-	public String referenceSummary(HttpServletRequest request, Model model,
+	public String recombinaseSummary(HttpServletRequest request, Model model,
 			@ModelAttribute RecombinaseQueryForm queryForm) {
 
 		model.addAttribute("recombinaseQueryForm", queryForm);
@@ -85,21 +87,41 @@ public class RecombinaseController {
 	
 	// this is the logic to perform the query and return json results
 	@RequestMapping("/json")
-	public @ResponseBody SearchResults<RecombinaseSummary> recombinaseSummaryJson(
+	public @ResponseBody JsonSummaryResponse<RecombinaseSummary> recombinaseSummaryJson(
 			HttpServletRequest request, 
 			@ModelAttribute RecombinaseQueryForm query,
 			@ModelAttribute Paginator page) {
 				
 		logger.debug(query.toString());
+
+		// set up search parameters
 		
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);		
 		params.setSorts(this.parseSorts(request));
 		params.setFilter(this.parseRecombinaseQueryForm(query));
 
-		// perform query and return results as json
-		logger.debug("params parsed");
-		return recombinaseFinder.searchRecombinases(params);
+		// issue the query and get back the matching Allele objects
+		
+		SearchResults<Allele> searchResults = 
+			recombinaseFinder.searchRecombinases(params);
+		
+		// convert the Alleles to their RecombinaseSummary wrappers, and put
+		// them in the JsonSummaryResponse object
+
+		List<RecombinaseSummary> summaries = new ArrayList<RecombinaseSummary> ();
+		Iterator<Allele> it = searchResults.getResultObjects().iterator();
+		while (it.hasNext()) {
+			summaries.add(new RecombinaseSummary(it.next()));
+		}
+
+        JsonSummaryResponse<RecombinaseSummary> jsonResponse = 
+        	new JsonSummaryResponse<RecombinaseSummary>();
+
+        jsonResponse.setSummaryRows (summaries);
+        jsonResponse.setTotalCount (searchResults.getTotalCount());
+		
+		return jsonResponse;
 	}
 
 	/*--------------------------*/

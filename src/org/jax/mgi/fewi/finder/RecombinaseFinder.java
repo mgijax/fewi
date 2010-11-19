@@ -47,10 +47,9 @@ public class RecombinaseFinder {
 	/* public instance methods */
 	/*-------------------------*/
 
-	public SearchResults<RecombinaseSummary> searchRecombinases(SearchParams params) {
+	public SearchResults<Allele> searchRecombinases(SearchParams params) {
 		logger.debug ("searchReferences");
-		SearchResults<RecombinaseSummary> results = 
-			new SearchResults<RecombinaseSummary>();
+		SearchResults<Allele> results = new SearchResults<Allele>();
 
 		logger.debug ("hunt");
 		hunter.hunt (params, results);
@@ -59,14 +58,8 @@ public class RecombinaseFinder {
 		gatherer.setType (Allele.class);
 
 		List<Allele> alleles = gatherer.get (results.getResultKeys());
-		List<RecombinaseSummary> summaries = new ArrayList<RecombinaseSummary> ();
-		
-		Iterator<Allele> it = alleles.iterator();
-		while (it.hasNext()) {
-			summaries.add(new RecombinaseSummary(it.next()));
-		}
-		
-		results.setResultObjects (summaries);
+
+		results.setResultObjects (alleles);
 		return results;
 	}
 }
