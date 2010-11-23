@@ -26,7 +26,7 @@ public class ReferenceSummary {
 			sb.append(this.reference.getVol());
 		}
 		if (this.reference.getIssue() != null && !"".equals(this.reference.getIssue())){
-			sb.append("(" + this.reference.getIssue() + ")");
+			sb.append(" (" + this.reference.getIssue() + ") ");
 		} else {
 			sb.append(" ");
 		}
@@ -93,7 +93,7 @@ public class ReferenceSummary {
         	sb.append(String.format(" results: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDResults()));
         }
         if (reference.getCountOfGXDIndex() > 0){
-        	sb.append(String.format("<li>Gene expression literature content records: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
+        	sb.append(String.format("<li>Gene expression literature: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
         }
         if(reference.getCountOfMarkers() > 0){
         	sb.append(String.format("<li>Genome features: <a href=\"%smarker/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfMarkers()));
