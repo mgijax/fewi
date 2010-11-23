@@ -28,14 +28,13 @@ ${templateBean.templateBodyStartHtml}
 		</td>
 	</tr>
 
-	<!-- gene symbol/name section -->
 	<TR CLASS="stripe1">
 		<TD CLASS="cat1">Author</TD>
 		<TD>
-			<div style="position:relative;">
+			<div>
 				<div style="float:left; width:300px;text-align:left;">
-					<div id="authorAutoComplete">
-						<input id="author" name="author" type="text" maxlength="256"/>
+					<div id="authorAutoComplete" style="position:relative; z-index:100;">
+						<input id="author" name="author" type="text">
 						<div id="authorContainer"></div>
 					</div>
 				</div>
@@ -48,14 +47,13 @@ ${templateBean.templateBodyStartHtml}
 		</TD>
 	</TR>
 
-    <!-- map position section -->
 	<TR CLASS="stripe2">
 		<TD CLASS="cat2">Journal</TD>
 		<TD>
-			<div style="position:relative;">
-				<div style="float:left; width:300px;text-align:left;">
-					<div id="authorAutoComplete">
-						<input id="journal" name="journal"type="text">
+			<div>
+				<div>
+					<div id="journalAutoComplete">
+						<input id="journal" name="journal" type="text">
 						<div id="journalContainer"></div>
 					</div>
 				</div>
@@ -65,7 +63,7 @@ ${templateBean.templateBodyStartHtml}
 	<tr  CLASS="stripe1">
 		<td CLASS="cat1">Year</td>
 		<td>
-			<div style="position:relative;height:4em;">
+			<div style="height:4em;">
 				<div style="float:left;width:300px;text-align:left;">
 					<input id="year" name="year" cols="40" class="formWidth" type="text" value=""/>
 				</div>
@@ -86,7 +84,7 @@ ${templateBean.templateBodyStartHtml}
 	<tr  CLASS="stripe2">
 		<td CLASS="cat2">Text</td>
 		<td>
-			<div style="position:relative;height:4em;">
+			<div style="height:5em;">
 				<div style="float:left;width:300px;text-align:left;">
 					<textarea id="text" name="text" class="formWidth"></textarea><br/>
 					<input id="inTitle1" name="inTitle" type="checkbox" value="true" checked="checked"/><input type="hidden" name="_inTitle" value="on"/> In Title
@@ -117,7 +115,7 @@ ${templateBean.templateBodyStartHtml}
 			MGI Reference ID
 		</td>
 		<td  CLASS="data1">
-			<div style="position:relative;height:3em;">
+			<div style="height:3em;">
 				<div style="float:left; width:300px;text-align:left;">
 					<input id="id" name="id" class="formWidth" type="text" value="" maxlength="256"/>
 				</div>
@@ -128,7 +126,7 @@ ${templateBean.templateBodyStartHtml}
 					<div style="text-align:left;" class="example">
 					20339075 (PubMed)<br/>
 					J:159210 (MGI reference ID)<br/>
-					18989690; 18192873; 18467500
+					18989690; 18192873; J:159210
 					</div>
 				</div>
 
@@ -146,23 +144,23 @@ ${templateBean.templateBodyStartHtml}
 </form:form>
 
 <script type="text/javascript">
-YAHOO.example.AuthorAutocomplete = function() {
+var authorAutocomplete = function() {
     // Use an XHRDataSource
     var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/author");
     // Set the responseType
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
     oDS.responseSchema = {resultsList : "resultStrings"};
+    oDS.maxCacheEntries = 10;
+    oDS.connXhrMode = "cancelStaleRequests";
 
     // Instantiate the AutoComplete
     var oAC = new YAHOO.widget.AutoComplete("author", "authorContainer", oDS);
     // Throttle requests sent
     oAC.queryDelay = .3;
     oAC.minQueryLength = 2;
-    oAC.maxResultsDisplayed = 1000;
+    oAC.maxResultsDisplayed = 5000;
     oAC.forceSelection = true;
-    oAC.useIframe = true;
-    oAC.allowBrowserAutocomplete = false;
     oAC.delimChar = ";";
 
     return {
@@ -173,23 +171,23 @@ YAHOO.example.AuthorAutocomplete = function() {
 </script>
 
 <script type="text/javascript">
-YAHOO.example.JournalAutocomplete = function() {
+var journalAutocomplete = function() {
     // Use an XHRDataSource
     var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/journal");
     // Set the responseType
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
     oDS.responseSchema = {resultsList : "resultStrings"};
+    oDS.maxCacheEntries = 10;
+    oDS.connXhrMode = "cancelStaleRequests";
 
     // Instantiate the AutoComplete
     var oAC = new YAHOO.widget.AutoComplete("journal", "journalContainer", oDS);
     // Throttle requests sent
     oAC.queryDelay = .3;
     oAC.minQueryLength = 2;
-    oAC.maxResultsDisplayed = 1000;
+    oAC.maxResultsDisplayed = 5000;
     oAC.forceSelection = false;
-    oAC.useIframe = true;
-    oAC.allowBrowserAutocomplete = false;
     oAC.delimChar = ";";
 
     return {
