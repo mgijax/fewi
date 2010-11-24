@@ -13,6 +13,8 @@ ${templateBean.templateHeadHtml}
 
 ${templateBean.templateBodyStartHtml}
 
+<iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
+<input id="yui-history-field" type="hidden">
 
 
 <!-- header bar -->
@@ -43,95 +45,22 @@ ${templateBean.templateBodyStartHtml}
 
 <hr>
 
-
+<table style="width:100%;">
+  <tr>
+    <td class="paginator">
+      <div id="paginationTop">&nbsp;</div>
+    </td>
+  </tr>
+</table>
 
 <div id="dynamicdata"></div>
 
+
+
+
 <script type="text/javascript">
-function main() {
-    // Column definitions -- sortable:true enables sorting
-    // These are our actual columns, in the default ordering.
-    var myColumnDefs = [
-        {key:"seqForward", 
-            label:"<b>Select</b>",
-            width:90, 
-            sortable:false},
-        {key:"seqInfo", 
-            label:"<b>Sequence</b>",
-            width:180, 
-            sortable:false},
-        {key:"seqType", 
-            label:"<b>Type</b>",
-            sortable:false,
-            width:80}, 
-        {key:"length", 
-            label:"<b>Length</b>", 
-            sortable:false, 
-            width:60},
-        {key:"strainSpecies", 
-            label:"<b>Strain/Species</b>", 
-            sortable:false, 
-            width:90},
-        {key:"description", 
-            label:"<b>Description From<br/>Sequence Provider</b>", 
-            sortable:false, 
-            width:300},
-        {key:"cloneCollection", 
-            label:"<b>Clone<br/>Collection</b>", 
-            sortable:false, 
-            width:100},
-        {key:"markerSymbol", 
-            label:"<b>Marker<br/>Symbol</b>", 
-            sortable:false, 
-            width:100}
-    ];
-
-    // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource("${configBean.FEWI_URL}sequence/json?refKey=${reference.referenceKey}&");
-
-    myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-    myDataSource.responseSchema = {
-        resultsList: "summaryRows",
-        fields: [
-            {key:"seqForward"},
-            {key:"seqInfo"},
-            {key:"seqType"},
-            {key:"length"},
-            {key:"strainSpecies"},
-            {key:"description"},
-            {key:"cloneCollection"},
-            {key:"markerSymbol"}
-        ],
-        metaFields: {
-            totalRecords: "totalCount"
-        }
-    };
-
-    // DataTable configurations
-    var myConfigs = {
-        dynamicData : true,
-        draggableColumns : true,
-        initialLoad : true
-    };  
-    
-    // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, 
-            myDataSource, myConfigs);
-    
-    // Show loading message while page is being rendered
-    myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), 
-            YAHOO.widget.DataTable.CLASS_LOADING);    
-    
-
-};
-
-// CALLING MAIN FUNCTION
-main();
-
+  <%@ include file="/js/sequence_summary.js" %>
 </script>
-
-
-
 
 ${templateBean.templateBodyStopHtml}
 
