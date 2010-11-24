@@ -10,6 +10,9 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.Paginator;
+import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.fewi.summary.SeqSummaryRow;
@@ -163,7 +166,8 @@ public class SequenceController {
 	// this is the logic to perform the query and return json results
 	@RequestMapping("/json")
 	public @ResponseBody JsonSummaryResponse<SeqSummaryRow> seqSummaryJson(
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			@ModelAttribute Paginator page) {
 
 		logger.debug("-->seqSummaryJson");
 
@@ -176,7 +180,13 @@ public class SequenceController {
 		// parameter parsing
 		String refKey = request.getParameter("refKey");
 		logger.debug("-->refKey=" + refKey);
-		SearchParams params = new SearchParams();
+
+        // generate search parms object to pass to finders
+        SearchParams params = new SearchParams();
+		Sort sort = new Sort(SortConstants.SEQUENCE_SORT);
+        params.addSort(sort);
+		params.setPaginator(page);
+
 		params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
         //TODO - handle other input parameters
 
