@@ -25,7 +25,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- structural table -->
-<table class="detailStructureTable">
+<table class="summaryHeader">
 
 <!-- ID/Version -->
 <tr >

@@ -10,7 +10,7 @@
 
 ${templateBean.templateHeadHtml}
 
-  <title>Sequence Detail Page</title>
+  <title>Sequence Detail</title>
   <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 ${templateBean.templateBodyStartHtml}
@@ -48,10 +48,18 @@ ${templateBean.templateBodyStartHtml}
     <table width=100%>
     <tr>
     <td>
+
        <b>${sequence.primaryID}</b>
+       <c:if test="${not empty otherIDs}">
+         <c:forEach var="otherID" items="${otherIDs}" >
+           ${otherID.accID}
+         </c:forEach>
+       </c:if>
        (<%=ProviderLinker.getSeqProviderLinks(sequence)%>)
+
     </td>
     <td align=right>
+
       <c:if test="${not empty sequence.version}">
         <b>Version:</b> ${sequence.primaryID}.${sequence.version}
       </c:if>
@@ -59,6 +67,7 @@ ${templateBean.templateBodyStartHtml}
         <b>Last sequence update:</b> ${sequence.sequenceDate} <br>
         <b>Last annotation update:</b> ${sequence.recordDate}
       </c:if>
+
     </td>
     </tr>
     </table>
@@ -83,7 +92,10 @@ ${templateBean.templateBodyStartHtml}
     <b>Provider</b>
   </td>
   <td class="${rightTdStyles.next}" >
-       ${sequence.provider}
+       ${sequence.provider}  
+      <c:if test="${sequence.status=='DELETED'}">
+        <b><i>This sequence has been deleted from the provider database.</i></b>
+      </c:if>
   </td>
 </tr>
 
@@ -146,7 +158,7 @@ ${templateBean.templateBodyStartHtml}
   <td class="${rightTdStyles.next}" >
 
     <c:choose>
-      <c:when test="${sequence.logicalDB=='Sequence DB' || sequence.logicalDB=='RefSeq'}">
+    <c:when test="${sequence.logicalDB=='Sequence DB' || sequence.logicalDB=='RefSeq'}">
 
       <c:if test="${not empty sequence.sources}">
       <table>
@@ -188,13 +200,31 @@ ${templateBean.templateBodyStartHtml}
           </table>
         </td>
         </tr>
+
+        <c:if test="${not empty sourceNotice}">
+        <tr  valign=top ALIGN=left>
+          <td>
+            <i>${sourceNotice}</i>
+         </td>
+        </tr>
+        </c:if>
+
       </table>
       </c:if>
-      
-      </c:when>
-      <c:otherwise>
-        <b>Organism</b> ${sequence.organism}
-      </c:otherwise>
+
+    </c:when>
+
+    <c:otherwise>
+      <div style="position: relative;;width:100%; height:1.5em;">
+        <div style="position: absolute; top: 0px; left: 4px; ">
+          <b>Organism</b> ${sequence.organism}
+        </div>
+        <div style="position: absolute; top: 0px; right: 4px; text-align:right;">
+           See <%=ProviderLinker.getSeqProviderLinks(sequence)%> for source
+        </div>
+      </div>
+    </c:otherwise>
+
     </c:choose>
   </td>
 </tr>
