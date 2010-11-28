@@ -96,10 +96,35 @@ public class SequenceController {
             mav.addObject("chromosome", locList.get(0).getChromosome());
         }
 
+        // package other IDs for this sequence
+        Set<SequenceID> ids = sequence.getIds();
+        if (!ids.isEmpty() & ids.size() > 1) {
+
+            List<SequenceID> otherIDs = new ArrayList<SequenceID>();
+            Iterator<SequenceID> it = ids.iterator();
+
+            // first is the primary ID;  skip it - we only want secondary IDs
+            it.next();
+
+            // make list of secondary IDs
+            while (it.hasNext()) {
+              SequenceID secondaryID = it.next();
+              otherIDs.add(secondaryID);
+            }
+
+            mav.addObject("otherIDs", otherIDs);
+        }
+
         // package annotated markers
         Set<Marker> markers = sequence.getMarkers();
         if (!markers.isEmpty()) {
             mav.addObject("markers", markers);
+        }
+
+        // package source notificaiton
+        if (sequence.hasRawValues()) {
+            mav.addObject("sourceNotice", "* Value from GenBank/EMBL/DDBJ "
+              + "could not be resolved to an MGI controlled vocabulary.");
         }
 
         // package probes
