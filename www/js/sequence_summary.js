@@ -13,7 +13,7 @@ function main() {
             sortable:false},
         {key:"seqType", 
             label:"<b>Type</b>",
-            sortable:true,
+            sortable:false,
             width:80}, 
         {key:"length", 
             label:"<b>Length</b>", 
@@ -82,8 +82,6 @@ function main() {
     var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, 
     	    myDataSource, myConfigs);
     
-//    YAHOO.mgiData.myDataTable = myDataTable;
-
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), 
     	    YAHOO.widget.DataTable.CLASS_LOADING);    
