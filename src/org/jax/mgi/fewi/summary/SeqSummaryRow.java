@@ -5,10 +5,13 @@ import java.util.*;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceSource;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Probe;
+import mgi.frontend.datamodel.ProbeCloneCollection;
 
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDGenerator;
 import org.jax.mgi.fewi.util.ProviderLinker;
+import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
 
 import javax.persistence.Column;
@@ -55,6 +58,7 @@ public class SeqSummaryRow {
     // public instance methods
     //------------------------
 
+
     public String getSeqForward() {
 
         StringBuffer seqForward = new StringBuffer();
@@ -64,6 +68,7 @@ public class SeqSummaryRow {
 
     	return seqForward.toString();
     }
+
 
 
     public String getSeqInfo() {
@@ -79,13 +84,16 @@ public class SeqSummaryRow {
     	return seqInfo.toString();
     }
 
+
     public String getSeqType() {
     	return this.seq.getSequenceType();
     }
 
+
     public String getLength() {
     	return this.seq.getLength().toString();
     }
+
 
     public String getStrainSpecies() {
 
@@ -98,25 +106,75 @@ public class SeqSummaryRow {
     	return "";
     }
 
+
     public String getDescription() {
     	return this.seq.getDescription();
     }
 
+
     public String getCloneCollection() {
-    	return "";
+
+        // return string
+        StringBuffer probeSB = new StringBuffer();
+
+        String seqProvider = seq.getProvider();
+
+        // for these providers, clone collections are not applicable
+        if (seqProvider.equals(DBConstants.PROVIDER_DFCI) ||
+            seqProvider.equals(DBConstants.PROVIDER_REFSEQ) ||
+            seqProvider.equals(DBConstants.PROVIDER_TREMBL) ||
+            seqProvider.equals(DBConstants.PROVIDER_SWISSPROT) ||
+            seqProvider.equals(DBConstants.PROVIDER_NIA) ||
+            seqProvider.equals(DBConstants.PROVIDER_DOTS) )
+        {
+            probeSB.append("Not Applicable");
+        }
+        else // otherwise, derive the clone collections, if any
+        {
+			Set<Probe> probeSet = seq.getProbes();
+			Set<String> cloneCollections = new HashSet<String>();
+
+			// collect unique clone collection values
+			if (probeSet.size() > 0 ) {
+
+                // iterate over probes
+                Probe probe;
+                ProbeCloneCollection pcc;
+                Iterator<Probe> probeIter = probeSet.iterator();
+				while (probeIter.hasNext()) {
+	                probe = probeIter.next();
+	                Set<ProbeCloneCollection> pccSet = probe.getProbeCloneCollection();
+                    Iterator<ProbeCloneCollection> pccIter = pccSet.iterator();
+                    while (pccIter.hasNext()) {
+						pcc = pccIter.next();
+						cloneCollections.add(pcc.getCollection());
+					}
+				}
+                // generate actual string value
+                Iterator<String> ccIter = cloneCollections.iterator();
+				while (ccIter.hasNext()) {
+					probeSB.append(ccIter.next());
+				}
+		    }
+		}
+        return probeSB.toString();
     }
+
 
     public String getMarkerSymbol() {
 
+        StringBuffer markerLinks = new StringBuffer();
 		Set<Marker> markerSet = seq.getMarkers();
         Iterator<Marker> markerIter = markerSet.iterator();
-		Marker marker = markerIter.next();
 
-		if (marker != null) {
-          return "<a href='" + fewiUrl + "marker/"
-            + marker.getSymbol() + "'>" + marker.getSymbol() + "</a>";
+        // for each marker, make a marker link
+        Marker marker;
+        if (markerIter.hasNext()) {
+			marker = markerIter.next();
+            markerLinks.append("<a href='" + fewiUrl + "marker/"
+              + marker.getSymbol() + "'>" + marker.getSymbol() + "</a></br>");
 		}
-    	return "";
+    	return markerLinks.toString();
     }
 
 }
