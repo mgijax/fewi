@@ -8,26 +8,24 @@
 
 ${templateBean.templateHeadHtml}
 
-  <title>Mouse Sequence Summary Report</title>
+  <title>Mouse Sequences Summary Report</title>
   <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 ${templateBean.templateBodyStartHtml}
 
+<!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="sequence_detail.shtml">    
-    <!--myTitle -->
-    <span class="titleBarMainTitle">Mouse Sequences Summary Report</span>
+<div id="titleBarWrapper" userdoc="sequence_summary_report.shtml">    
+  <span class="titleBarMainTitle">Mouse Sequences Summary Report</span>
 </div>
 
 
-<!-- structural table -->
+<!-- header table -->
 <table class="summaryHeader">
-
-<!-- ID/Version -->
 <tr >
   <td class="detailCat1">
        <b>Reference</b>
@@ -41,9 +39,6 @@ ${templateBean.templateBodyStartHtml}
 </tr>
 </table>
 
-
-
-<hr>
 
 <table style="width:100%;">
   <tr>
