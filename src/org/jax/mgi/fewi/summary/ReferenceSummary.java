@@ -71,7 +71,12 @@ public class ReferenceSummary {
 	public String getJournal() {
 		if("BOOK".equalsIgnoreCase(this.reference.getReferenceType()) && 
 				this.reference.getBookPublisher() != null){
-			return "<span class=\"ital\">Publisher</span>: " + this.reference.getBookPublisher();
+			StringBuffer sb = new StringBuffer();
+			sb.append("<span class=\"ital\">Publisher</span>: " + this.reference.getBookPublisher());
+			if (this.reference.getBookPlace() != null){
+				sb.append(", " + this.reference.getBookPlace());
+			}
+			return sb.toString();
 		}
 		return reference.getJournal();
 	}
@@ -93,7 +98,7 @@ public class ReferenceSummary {
         	sb.append(String.format(" results: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDResults()));
         }
         if (reference.getCountOfGXDIndex() > 0){
-        	sb.append(String.format("<li>Gene expression literature: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
+        	sb.append(String.format("<li>Expression literature records: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
         }
         if(reference.getCountOfMarkers() > 0){
         	sb.append(String.format("<li>Genome features: <a href=\"%smarker/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfMarkers()));
@@ -119,10 +124,11 @@ public class ReferenceSummary {
 	}
 	
 	public String getAbstract(){
-		if (this.reference.getAbstract() != null){
+		if (this.reference.getAbstract() != null 
+				&& !"".equals(this.reference.getAbstract())){
 			return this.reference.getAbstract();
 		} else {
-			return " ";
+			return "this reference has no abstract";
 		}
 	}
 

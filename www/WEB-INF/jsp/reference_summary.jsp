@@ -26,46 +26,184 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
+<div id="qWrap">
+<div id="queryForm">
+<form:form method="GET" commandName="referenceQueryForm" action="${configBean.FEWI_URL}reference/summary">
 
-<div style="position:relative;width:100%">
-	<div id="summDiv">
-		<div id="querySummary">
-			<span class="title">You searched for:</span><br/>
-			<c:if test="${not empty referenceQueryForm.author}">
-				<span class="label">Author:</span> 
-				${referenceQueryForm.author}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.journal}">
-				<span class="label">Journal:</span>
-				${referenceQueryForm.journal}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.year}">
-				<span class="label">Year:</span> 
-				${referenceQueryForm.year}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.text}">
-				<span class="label">Text:</span> 
-				${referenceQueryForm.text}<br/></c:if>
-			<c:if test="${not empty referenceQueryForm.id}">
-				<span class="label">ID:</span> 
-				${referenceQueryForm.id}<br/></c:if>
-			<div id="filterSummary" style="display:none;">
-				<span class="label">Filters:</span>
-				<span id="fsList"></span>
-			</div>	
-			<span id="totalCount" class="count"></span>		
-		</div>
-	</div>	
+<!-- query form table -->
+<TABLE WIDTH="100%" class="pad5 borderedTable">
+	<TR>
+		<TD COLSPAN="2" align="left">
+			<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
+			&nbsp;&nbsp;
+			<INPUT TYPE="reset">
+		</td>
+	</tr>
+
+	<TR CLASS="stripe1">
+		<TD CLASS="cat1">Author</TD>
+		<TD>
+			<div>
+				<div style="float:left; width:300px;text-align:left;">
+					<div id="authorAutoComplete" style="position:relative; z-index:100;">
+						<form:input id="author" path="author"></form:input>
+						<div id="authorContainer"></div>
+					</div>
+				</div>
+				<div style="float:left; text-align:left;">
+					<form:radiobutton id="authorScope1" path="authorScope" value="any" checked="checked"/> Any Author(s)<br/>
+		    		<form:radiobutton id="authorScope2" path="authorScope" value="first"/> First Author<br/>
+		    		<form:radiobutton id="authorScope3" path="authorScope" tvalue="last"/> Last Author
+				</div>
+    		</div>
+		</TD>
+	</TR>
+
+	<TR CLASS="stripe2">
+		<TD CLASS="cat2">Journal</TD>
+		<TD>
+			<div>
+				<div>
+					<div id="journalAutoComplete">
+						<form:input id="journal" path="journal"></form:input>
+						<div id="journalContainer"></div>
+					</div>
+				</div>
+    		</div>
+		</TD>
+	</TR>
+	<tr  CLASS="stripe1">
+		<td CLASS="cat1">Year</td>
+		<td>
+			<div style="height:4em;">
+				<div style="float:left;width:300px;text-align:left;">
+					<form:input id="year" path="year" class="formWidth"></form:input>
+				</div>
+				<div style="height:4em;" class="example">
+					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
+						Examples:
+					</div>
+					<div style="text-align:left;" class="example">
+						2008<br/>
+						1990-2004<br/>
+						-2007 (from the earliest reference through 2007)<br/>
+						2009- (from 2009 through the present)
+					</div>
+				</div>
+    		</div>
+		</td>
+	</tr>
+	<tr  CLASS="stripe2">
+		<td CLASS="cat2">Text</td>
+		<td>
+			<div style="height:5em;">
+				<div style="float:left;width:300px;text-align:left;">
+					<form:textarea id="text" path="text" class="formWidth"></form:textarea><br/>
+					<form:checkbox id="inTitle1" path="inTitle" /> In Title
+					<form:checkbox id="inAbstract1" path="inAbstract" /> In Abstract
+				</div>
+				<div style="height:4em;" class="example">
+					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
+						Examples:
+					</div>
+					<div style="text-align:left;" class="example">
+						oocyte, spermatocyte<br/>
+						"telomeres in meiocytes"<br/>
+						5-bromo-2'-deoxyuridine-positive cells<br/>
+					spastic paraplegia spinocerabellar ataxia cerebellum
+					</div>
+				</div>
+    		</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<div style="width:800px; text-align: center; font-weight: bold;">OR</div>
+		</td>
+	</tr>
+	<tr  CLASS="stripe1">
+		<td  CLASS="cat1">
+			PubMed ID or<br/>
+			MGI Reference ID
+		</td>
+		<td  CLASS="data1">
+			<div style="height:3em;">
+				<div style="float:left; width:300px;text-align:left;">
+					<form:input id="id" path="id" class="formWidth" value="" maxlength="256"></form:input>
+				</div>
+				<div style="height:4em;" class="example">
+					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
+						Examples:
+					</div>
+					<div style="text-align:left;" class="example">
+					20339075 (PubMed)<br/>
+					J:159210 (MGI reference ID)<br/>
+					18989690; 18192873; J:159210 (List)
+					</div>
+				</div>
+
+    		</div>
+		</td>
+	</tr>
+    <TR>
+		<TD COLSPAN="3" align="left">
+			<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
+			&nbsp;&nbsp;
+			<INPUT TYPE="reset">
+		</TD>
+    </TR>
+</TABLE>
+</form:form>
+</div>
 </div>
 
-<table style="width:100%;">
+
+<div id="summDiv">
+	<div id="querySummary">
+		<span class="title">You searched for:</span><br/>
+		<span id="totalCount" class="count"></span>	
+		<c:if test="${not empty referenceQueryForm.author}">
+			<span class="label">Author:</span> 
+			${referenceQueryForm.author}<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.journal}">
+			<span class="label">Journal:</span>
+			${referenceQueryForm.journal}<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.year}">
+			<span class="label">Year:</span> 
+			${referenceQueryForm.year}<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.text}">
+			<span class="label">Text:</span> 
+			${referenceQueryForm.text}<br/></c:if>
+		<c:if test="${not empty referenceQueryForm.id}">
+			<span class="label">ID:</span> 
+			${referenceQueryForm.id}<br/></c:if>
+	
+	</div>
+</div>	
+
+
+
+<table style="width:100%; height:125px;">
 	<tr>
+	<td class="paginator">
+		<div id="paginationTop">&nbsp;</div>
+	</td>
+	<td colspan="2">
+		<div id="filterSummary" style="display:none;" class="filters">
+			<span class="label">Filters:</span>
+			<span id="fsList"></span>
+		</div>	
+	</td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>
 	<td id="filterDiv" class="filters">
 		<a id="authorFilter" class="filterButton">Author Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="journalFilter" class="filterButton">Journal Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="yearFilter" class="filterButton">Year Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="curatedDataFilter" class="filterButton">Data Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a>
 	</td>
-	<td class="paginator">
-		<div id="paginationTop">&nbsp;</div>
-	</td>
+	<td><a id="abstractToggle" class="filterButton">Show All Abstracts</a></td>
 	</tr>
 </table>
 
@@ -83,13 +221,64 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <script type="text/javascript">
-
-
-</script>
-
-
-<script type="text/javascript">
 	<%@ include file="/js/reference_summary.js" %>
 </script>
+
+<script type="text/javascript">
+var authorAutocomplete = function() {
+    // Use an XHRDataSource
+    var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/author");
+    // Set the responseType
+    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+    // Define the schema of the JSON results
+    oDS.responseSchema = {resultsList : "resultStrings"};
+    oDS.maxCacheEntries = 10;
+    oDS.connXhrMode = "cancelStaleRequests";
+
+    // Instantiate the AutoComplete
+    var oAC = new YAHOO.widget.AutoComplete("author", "authorContainer", oDS);
+    // Throttle requests sent
+    oAC.queryDelay = .3;
+    oAC.minQueryLength = 2;
+    oAC.maxResultsDisplayed = 5000;
+    oAC.forceSelection = true;
+    oAC.delimChar = ";";
+
+    return {
+        oDS: oDS,
+        oAC: oAC
+    };
+}();
+</script>
+
+<script type="text/javascript">
+var journalAutocomplete = function() {
+    // Use an XHRDataSource
+    var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/journal");
+    // Set the responseType
+    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+    // Define the schema of the JSON results
+    oDS.responseSchema = {resultsList : "resultStrings"};
+    oDS.maxCacheEntries = 10;
+    oDS.connXhrMode = "cancelStaleRequests";
+
+    // Instantiate the AutoComplete
+    var oAC = new YAHOO.widget.AutoComplete("journal", "journalContainer", oDS);
+    // Throttle requests sent
+    oAC.queryDelay = .3;
+    oAC.minQueryLength = 2;
+    oAC.maxResultsDisplayed = 5000;
+    oAC.forceSelection = false;
+    oAC.delimChar = ";";
+
+    return {
+        oDS: oDS,
+        oAC: oAC
+    };
+}();
+
+</script>
+
+
 
 ${templateBean.templateBodyStopHtml}

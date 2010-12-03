@@ -39,7 +39,6 @@ var populateFilterSummary = function () {
 
 	var fSum = YAHOO.util.Dom.get('filterSummary');
 	if (vis){
-
 		YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 	} else {
 
@@ -211,6 +210,9 @@ var clearFilter = function () {
             dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
         };
         
+        var abstractToggle = YAHOO.util.Dom.get('abstractToggle');
+        var txt = 'Show All Abstracts';
+        abstractToggle.innerText ? abstractToggle.innerText=txt : abstractToggle.textContent=txt;
         populateFilterSummary();
         return true;
     };
@@ -445,8 +447,34 @@ YAHOO.util.Event.onDOMReady(function () {
 	YAHOO.util.Event.addListener("journalFilter", "click", populateJournalDialog, true);
 	YAHOO.util.Event.addListener("yearFilter", "click", populateYearDialog, true);
 	YAHOO.util.Event.addListener("curatedDataFilter", "click", populateDataDialog, true);
+	
+	var toggleAbstract = function() {	
+        var txt;
+        this.innerText ? txt=this.innerText : txt=this.textContent;
+        
+        var expand = true;
+        
+        if (txt == 'Hide All Abstracts'){
+        	expand = false;
+        	myDataTable.collapseAllRows();
+        	txt = 'Show All Abstracts';
+        } else {
+        	txt = 'Hide All Abstracts';
+        }
+        
+        this.innerText ? this.innerText=txt : this.textContent=txt;
+        var state = myDataTable.getState();
+        var pagination = state.pagination;
+
+        if (expand){
+        	var i = pagination.recordOffset;
+        	while(i < i + pagination.rowsPerPage){
+        		myDataTable.expandRow(i);
+        		i = i+1;
+        	}
+        }
+	};
+
+	YAHOO.util.Event.addListener("abstractToggle", "click", toggleAbstract);
 
 });
-
-
-

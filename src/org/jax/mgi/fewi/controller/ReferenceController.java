@@ -87,6 +87,7 @@ public class ReferenceController {
 		}
 		
 		model.addAttribute("defaultSort", sort);
+		model.addAttribute("referenceQueryForm", queryForm);
 		logger.debug("queryString: " + request.getQueryString());
 
 		return "reference_summary";
@@ -431,7 +432,7 @@ public class ReferenceController {
 			desc = true;
 		}
 		
-		logger.debug("soret: " + s + " " + d);
+		logger.debug("sort: " + s + " " + d);
 		Sort sort = new Sort(s, desc);
 		
 		sorts.add(sort);

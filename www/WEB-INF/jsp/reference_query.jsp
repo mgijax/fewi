@@ -34,14 +34,14 @@ ${templateBean.templateBodyStartHtml}
 			<div>
 				<div style="float:left; width:300px;text-align:left;">
 					<div id="authorAutoComplete" style="position:relative; z-index:100;">
-						<input id="author" name="author" type="text">
+						<form:input id="author" path="author"></form:input>
 						<div id="authorContainer"></div>
 					</div>
 				</div>
 				<div style="float:left; text-align:left;">
-					<input id="authorScope1" name="authorScope" type="radio" value="any" checked="checked"/> Any Author(s)<br/>
-		    		<input id="authorScope2" name="authorScope" type="radio" value="first"/> First Author<br/>
-		    		<input id="authorScope3" name="authorScope" type="radio" value="last"/> Last Author
+					<form:radiobutton id="authorScope1" path="authorScope" value="any" checked="checked"/> Any Author(s)<br/>
+		    		<form:radiobutton id="authorScope2" path="authorScope" value="first"/> First Author<br/>
+		    		<form:radiobutton id="authorScope3" path="authorScope" tvalue="last"/> Last Author
 				</div>
     		</div>
 		</TD>
@@ -53,7 +53,7 @@ ${templateBean.templateBodyStartHtml}
 			<div>
 				<div>
 					<div id="journalAutoComplete">
-						<input id="journal" name="journal" type="text">
+						<form:input id="journal" path="journal"></form:input>
 						<div id="journalContainer"></div>
 					</div>
 				</div>
@@ -65,7 +65,7 @@ ${templateBean.templateBodyStartHtml}
 		<td>
 			<div style="height:4em;">
 				<div style="float:left;width:300px;text-align:left;">
-					<input id="year" name="year" cols="40" class="formWidth" type="text" value=""/>
+					<form:input id="year" path="year" class="formWidth"></form:input>
 				</div>
 				<div style="height:4em;" class="example">
 					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
@@ -86,9 +86,9 @@ ${templateBean.templateBodyStartHtml}
 		<td>
 			<div style="height:5em;">
 				<div style="float:left;width:300px;text-align:left;">
-					<textarea id="text" name="text" class="formWidth"></textarea><br/>
-					<input id="inTitle1" name="inTitle" type="checkbox" value="true" checked="checked"/><input type="hidden" name="_inTitle" value="on"/> In Title
-					<input id="inAbstract1" name="inAbstract" type="checkbox" value="true" checked="checked"/><input type="hidden" name="_inAbstract" value="on"/> In Abstract
+					<form:textarea id="text" path="text" class="formWidth"></form:textarea><br/>
+					<form:checkbox id="inTitle1" path="inTitle" /> In Title
+					<form:checkbox id="inAbstract1" path="inAbstract" /> In Abstract
 				</div>
 				<div style="height:4em;" class="example">
 					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
@@ -117,7 +117,7 @@ ${templateBean.templateBodyStartHtml}
 		<td  CLASS="data1">
 			<div style="height:3em;">
 				<div style="float:left; width:300px;text-align:left;">
-					<input id="id" name="id" class="formWidth" type="text" value="" maxlength="256"/>
+					<form:input id="id" path="id" class="formWidth" value="" maxlength="256"></form:input>
 				</div>
 				<div style="height:4em;" class="example">
 					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
@@ -126,7 +126,7 @@ ${templateBean.templateBodyStartHtml}
 					<div style="text-align:left;" class="example">
 					20339075 (PubMed)<br/>
 					J:159210 (MGI reference ID)<br/>
-					18989690; 18192873; J:159210
+					18989690; 18192873; J:159210 (List)
 					</div>
 				</div>
 
