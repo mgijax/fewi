@@ -161,7 +161,7 @@ ${templateBean.templateBodyStartHtml}
 <div id="summDiv">
 	<div id="querySummary">
 		<span class="title">You searched for:</span><br/>
-		<span id="totalCount" class="count"></span>	
+		<span id="totalCount" class="count"></span><br/>
 		<c:if test="${not empty referenceQueryForm.author}">
 			<span class="label">Author:</span> 
 			${referenceQueryForm.author}<br/></c:if>
