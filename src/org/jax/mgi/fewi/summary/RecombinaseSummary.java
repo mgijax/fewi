@@ -129,12 +129,12 @@ public class RecombinaseSummary {
     			}
     			
     			// if we have not already cached this system/key pair, do so
-//    			if (myAS.getSystemKey() != null) {
-//    				if (!isCachedSystem(system)) {
-//    					cacheSystem(system, myAS.getSystemKey());
-//    				}
-//    				hasData = true;
-//    			}
+    			if (myAS.getSystemKey() != null) {
+    				if (!isCachedSystem(system)) {
+   				    cacheSystem(system, myAS.getSystemKey());
+    				}
+    				hasData = true;
+    			}
     		}
     		div2.append("</div>");
     	}
@@ -169,12 +169,12 @@ public class RecombinaseSummary {
     			}
     			
     			// if we have not already cached this system/key pair, do so
-//    			if (myAS.getSystemKey() != null) {
-//    				if (!isCachedSystem(system)) {
-//    					cacheSystem(system, myAS.getSystemKey());
-//    				}
-//    				hasData = true;
-//    			}
+    			if (myAS.getSystemKey() != null) {
+    				if (!isCachedSystem(system)) {
+    				    cacheSystem(system, myAS.getSystemKey());
+    				}
+    				hasData = true;
+    			}
     		}
     		div4.append("</div>");
     	}
