@@ -6,8 +6,6 @@
     pageEncoding="ISO-8859-1"%>
 <% Sequence sequence = (Sequence)request.getAttribute("sequence"); %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 ${templateBean.templateHeadHtml}
 
   <title>Sequence Detail</title>
@@ -31,7 +29,6 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" style="max-width:1200px" userdoc="sequence_detail.shtml">    
-    <!--myTitle -->
     <span class="titleBarMainTitle">Sequence Detail</span>
 </div>
 
@@ -311,7 +308,7 @@ ${templateBean.templateBodyStartHtml}
         </td>
         <td>
           <c:forEach var="collection" items="${probe.probeCloneCollection}" >
-            ${collection.collection}
+            ${collection.collection}<br/>
           </c:forEach>
         </td>
         <td>
