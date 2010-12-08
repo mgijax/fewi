@@ -2,15 +2,21 @@ package org.jax.mgi.fewi.finder;
 
 import java.util.*;
 
-// fewi & data model objects
-import org.jax.mgi.fewi.finder.SequenceFinder;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
+/*-------------------------------*/
+/* to be changed for each Finder */
+/*-------------------------------*/
 
-// mgi classes
-import mgi.frontend.datamodel.*;
+import mgi.frontend.datamodel.Sequence;
 import org.jax.mgi.fewi.hunter.SolrSequenceKeyHunter;
 import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
+
+/*----------------------------------------*/
+/* standard classes, used for all Finders */
+/*----------------------------------------*/
+
+// fewi
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 
 // external libs
@@ -19,8 +25,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+
+/*-------*/
+/* class */
+/*-------*/
+
+/*
+ * This finder is responsible for finding sequences
+ */
 @Repository
 public class SequenceFinder {
+
+	/*--------------------*/
+	/* instance variables */
+	/*--------------------*/
 
     private Logger logger = LoggerFactory.getLogger(SequenceFinder.class);
 
@@ -30,25 +48,25 @@ public class SequenceFinder {
     @Autowired
     private SolrSequenceSummaryHunter solrSequenceSummaryHunter;
 
-
     @Autowired
     private HibernateObjectGatherer<Sequence> sequenceGatherer;
 
 
-    /////////////////////////////////////////////////////////////////////////
-    //  Retrieval of a sequence, for a given ID
-    /////////////////////////////////////////////////////////////////////////
+	/*-----------------------------------------*/
+	/* Retrieval of a sequence, for a given ID
+	/*-----------------------------------------*/
 
     public SearchResults<Sequence> getSequenceByID(SearchParams searchParams) {
 
-        logger.info("SequenceFinder.getSequenceByID()");
+        logger.debug("->SequenceFinder.getSequenceByID()");
 
         // result object to be returned
         SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
 
         // ask the hunter to identify which objects to return
         sequenceHunter.hunt(searchParams, searchResults);
-        logger.debug("-->hunt() resultKeys =" + searchResults.getResultKeys());
+        logger.debug("->hunter found these resultKeys - "
+          + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
         sequenceGatherer.setType(Sequence.class);
@@ -59,25 +77,24 @@ public class SequenceFinder {
     }
 
 
-    /////////////////////////////////////////////////////////////////////////
-    //  Retrieval of sequences
-    /////////////////////////////////////////////////////////////////////////
+	/*---------------------------------*/
+	/* Retrieval of multiple sequence
+	/*---------------------------------*/
 
     public SearchResults<Sequence> getSequences(SearchParams searchParams) {
 
-        logger.debug("SequenceFinder.getSequences()");
-
-        // gather objects identified by the hunter, add them to the results
-        sequenceGatherer.setType(Sequence.class);
+        logger.debug("->SequenceFinder.getSequences()");
 
         // result object to be returned
         SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
 
         // ask the hunter to identify which objects to return
         solrSequenceSummaryHunter.hunt(searchParams, searchResults);
-        logger.debug("-->hunt() resultKeys =" + searchResults.getResultKeys());
+        logger.debug("->hunter found these resultKeys - "
+          + searchResults.getResultKeys());
 
-
+        // gather objects identified by the hunter, add them to the results
+        sequenceGatherer.setType(Sequence.class);
         List<Sequence> seqList = sequenceGatherer.get( searchResults.getResultKeys() );
         searchResults.setResultObjects(seqList);
 
