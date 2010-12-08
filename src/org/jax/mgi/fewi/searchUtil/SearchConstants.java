@@ -19,17 +19,22 @@ public class SearchConstants {
     public static final String REF_TEXT_ABSTRACT	= "text_abstract";
     public static final String REF_TEXT_TITLE       = "text_title";
     public static final String REF_YEAR             = "year";
-    
+
     // sequence constants
     public static final String SEQ_ID               = "sequence_id";
     public static final String SEQ_KEY              = "sequence_key";
-    
+
     // marker constants
     public static final String MRK_KEY              = "marker_key";
-    
+    public static final String MRK_ID               = "marker_id";
+
     // allele constants
     public static final String ALL_KEY              = "allele_key";
     public static final String ALL_SYSTEM           = "allele_system";
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
+
+
+    // faux entry;  used by webapp class template
+    public static final String FOO_ID              = "foo_id";
 }
