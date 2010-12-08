@@ -147,7 +147,7 @@ public class SeqSummaryRow {
                     Iterator<ProbeCloneCollection> pccIter = pccSet.iterator();
                     while (pccIter.hasNext()) {
 						pcc = pccIter.next();
-						cloneCollections.add(pcc.getCollection());
+						cloneCollections.add(pcc.getCollection() + "<br/>");
 					}
 				}
                 // generate actual string value
