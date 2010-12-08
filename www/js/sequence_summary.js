@@ -38,7 +38,7 @@ function main() {
     ];
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource("${configBean.FEWI_URL}sequence/json?refKey=${reference.referenceKey}&");
+    var myDataSource = new YAHOO.util.DataSource("${configBean.FEWI_URL}sequence/json?${queryString}&");
 //var myDataSource = new YAHOO.util.DataSource("http://faramir.informatics.jax.org/sequence/json?refKey=110841&");
 //var myDataSource = new YAHOO.util.DataSource("../json?refKey=110841&");
 
