@@ -40,3 +40,4 @@ solr.cre.url=${solr.server1.url}cre/
 solr.journals_ac.url=${solr.server1.url}journalsAC/
 solr.sequence.url=${solr.server1.url}sequence/
 solr.allele.url=${solr.server1.url}allele/
+solr.marker.url=${solr.server1.url}marker/
