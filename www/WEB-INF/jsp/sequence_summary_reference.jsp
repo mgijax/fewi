@@ -4,8 +4,6 @@
     pageEncoding="ISO-8859-1"%>
 <% Reference reference = (Reference)request.getAttribute("reference"); %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 ${templateBean.templateHeadHtml}
 
   <title>Mouse Sequences Summary Report</title>
@@ -27,10 +25,10 @@ ${templateBean.templateBodyStartHtml}
 <!-- header table -->
 <table class="summaryHeader">
 <tr >
-  <td class="detailCat1">
+  <td class="summaryHeaderCat1">
        <b>Reference</b>
   </td>
-  <td class="detailData1">
+  <td class="summaryHeaderData1">
     <a style="font-size:x-large;  font-weight: bold;" 
       href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
     <br/>
