@@ -210,7 +210,7 @@ var clearFilter = function () {
             dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
         };
         
-        var abstractToggle = YAHOO.util.Dom.get('abstractToggle');
+        var abstractToggle = YAHOO.util.Dom.get('toggleAbstract');
         var txt = 'Show All Abstracts';
         abstractToggle.innerText ? abstractToggle.innerText=txt : abstractToggle.textContent=txt;
         populateFilterSummary();
@@ -475,6 +475,14 @@ YAHOO.util.Event.onDOMReady(function () {
         }
 	};
 
-	YAHOO.util.Event.addListener("abstractToggle", "click", toggleAbstract);
+	YAHOO.util.Event.addListener("toggleAbstract", "click", toggleAbstract);
+	
+	(function() {
+	    var Dom = YAHOO.util.Dom,
+	        Event = YAHOO.util.Event;
+	    
+	    var resize = new YAHOO.util.Resize('qfWrap', {handles: ['b'],
+	    	maxHeight:'400', minHeight:'50'});
+	})();
 
 });
