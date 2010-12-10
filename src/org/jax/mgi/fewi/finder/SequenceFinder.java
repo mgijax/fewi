@@ -77,6 +77,26 @@ public class SequenceFinder {
     }
 
 
+	/*--------------------------------------------*/
+	/* Retrieval of a sequence, for a given db key
+	/*--------------------------------------------*/
+
+    public SearchResults<Sequence> getSequenceByKey(String dbKey) {
+
+        logger.debug("->SequenceFinder.getSequenceByKey()");
+
+        // result object to be returned
+        SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
+
+        // gather objects, add them to the results
+        sequenceGatherer.setType(Sequence.class);
+        Sequence seq = sequenceGatherer.get( dbKey );
+        searchResults.addResultObjects(seq);
+
+        return searchResults;
+    }
+
+
 	/*---------------------------------*/
 	/* Retrieval of multiple sequence
 	/*---------------------------------*/

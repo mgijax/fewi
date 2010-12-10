@@ -84,10 +84,10 @@ public class SequenceController {
     //--------------------//
 
     /*
-     * Sequence Detail
+     * Sequence Detail by ID
      */
     @RequestMapping(value="/{seqID:.+}", method = RequestMethod.GET)
-    public ModelAndView seqDetail(@PathVariable("seqID") String seqID) {
+    public ModelAndView seqDetailByID(@PathVariable("seqID") String seqID) {
 
         logger.debug("->seqDetail started");
 
@@ -239,13 +239,11 @@ public class SequenceController {
         SearchParams searchParams = new SearchParams();
         Filter mrkIdFilter = new Filter(SearchConstants.MRK_ID, mrkID);
         searchParams.setFilter(mrkIdFilter);
-logger.debug("1");
 
         // find the requested reference
         SearchResults searchResults
           = markerFinder.getMarkerByID(searchParams);
         List<Marker> mrkList = searchResults.getResultObjects();
-logger.debug("2");
 
         // there can be only one...
         if (mrkList.size() < 1) {
@@ -261,7 +259,6 @@ logger.debug("2");
             return mav;
         }
 
-logger.debug("3");
         // pull out the reference, and place into the mav
         Marker marker = mrkList.get(0);
 
@@ -340,6 +337,92 @@ logger.debug("3");
 
 
 
+    /*
+     * Sequence Detail by key
+     */
+    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
+    public ModelAndView seqDetailByKey(@PathVariable("dbKey") String dbKey) {
+
+        logger.debug("->seqDetailByKey started");
+
+        // find the requested sequence
+        SearchResults searchResults
+          = sequenceFinder.getSequenceByKey(dbKey);
+        List<Sequence> seqList = searchResults.getResultObjects();
+
+        // handle error conditions
+        if (seqList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Sequence Found");
+            return mav;
+        }
+        // success - we have a single object;
+
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("sequence_detail");
+
+        // package detail page style alternators
+        mav.addObject("leftTdStyles",
+          new StyleAlternator("detailCat1","detailCat2"));
+        mav.addObject("rightTdStyles",
+          new StyleAlternator("detailData1","detailData2"));
+
+        //pull out the sequence, and add to mav
+        Sequence sequence = seqList.get(0);
+        mav.addObject("sequence", sequence);
+
+        // package annotated markers
+        Set<Marker> markers = sequence.getMarkers();
+        if (!markers.isEmpty()) {
+            mav.addObject("markers", markers);
+        }
+
+        // package probes
+        Set<Probe> probes = sequence.getProbes();
+        if (!probes.isEmpty()) {
+            mav.addObject("probes", probes);
+        }
+
+        // package referenes
+        List<Reference> references = sequence.getReferences();
+        if (!references.isEmpty()) {
+            mav.addObject("references", references);
+        }
+
+        // package chromosome value
+        List<SequenceLocation> locList = sequence.getLocations();
+        if (!locList.isEmpty()) {
+            mav.addObject("chromosome", locList.get(0).getChromosome());
+        }
+
+        // package other IDs for this sequence
+        Set<SequenceID> ids = sequence.getIds();
+        if (!ids.isEmpty() & ids.size() > 1) {
+
+            List<SequenceID> otherIDs = new ArrayList<SequenceID>();
+            Iterator<SequenceID> it = ids.iterator();
+
+            // first is the primary ID;  skip it - we only want secondary IDs
+            it.next();
+
+            // make list of secondary IDs
+            while (it.hasNext()) {
+              SequenceID secondaryID = it.next();
+              otherIDs.add(secondaryID);
+            }
+
+            // package other IDs
+            mav.addObject("otherIDs", otherIDs);
+        }
+
+        // package source notificaiton
+        if (sequence.hasRawValues()) {
+            mav.addObject("sourceNotice", "* Value from GenBank/EMBL/DDBJ "
+              + "could not be resolved to an MGI controlled vocabulary.");
+        }
+
+        return mav;
+    }
 
 
 }
