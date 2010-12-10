@@ -14,13 +14,13 @@ public class SearchResults<T> {
 
 	// Database keys identified as the results from a search
 	protected List<String> resultKeys = new ArrayList<String>();
-	
+
 	// Scores for the matched documents
     protected List<String> resultScores = new ArrayList<String>();
 
 	// Database keys identified as the results from a search
 	protected List<String> resultStrings = new ArrayList<String>();
-	
+
 	// Database keys identified as the results from a search
     protected List<String> resultFacets = new ArrayList<String>();
 
@@ -52,18 +52,14 @@ public class SearchResults<T> {
 
 	/**
 	 * Get the list of scores for the documents returned
-	 * @return
 	 */
-	
 	public List<String> getResultScores() {
         return resultScores;
     }
 
 	/**
 	 * Set the list of scores for the documents to be returned.
-	 * @param resultScores
 	 */
-	
     public void setResultScores(List<String> resultScores) {
         this.resultScores = resultScores;
     }
@@ -96,13 +92,14 @@ public class SearchResults<T> {
 		this.resultObjects = resultObjects;
 	}
 
-	public List<String> getResultFacets() {
-        return resultFacets;
-    }
 
-    public void setResultFacets(List<String> resultFacets) {
-        this.resultFacets = resultFacets;
-    }
+	/**
+	 * Add a result object
+	 */
+	public void addResultObjects(T resultObject) {
+		this.resultObjects.add(resultObject);
+	}
+
 
     /**
 	 * Get the total number of possible results (-1 means unspecified)
@@ -117,4 +114,23 @@ public class SearchResults<T> {
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
+
+    /**
+	 * Get facets
+	 */
+	public List<String> getResultFacets() {
+        return resultFacets;
+    }
+
+    /**
+	 * Set facets
+	 */
+    public void setResultFacets(List<String> resultFacets) {
+        this.resultFacets = resultFacets;
+    }
+
+
+
+
+
 }
