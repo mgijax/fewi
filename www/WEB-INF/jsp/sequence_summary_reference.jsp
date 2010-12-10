@@ -49,8 +49,6 @@ ${templateBean.templateBodyStartHtml}
 <div id="dynamicdata"></div>
 
 
-
-
 <script type="text/javascript">
   <%@ include file="/js/sequence_summary.js" %>
 </script>
