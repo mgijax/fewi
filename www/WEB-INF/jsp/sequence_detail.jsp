@@ -121,7 +121,7 @@ ${templateBean.templateBodyStartHtml}
       <form name="offset">
         <c:choose>
         <c:when test="${sequence.provider=='VEGA Gene Model' || sequence.provider=='Ensembl Gene Model' || sequence.provider=='NCBI Gene Model'}">
-          <input type="text" size=3 name="offset" value=0 > Kb of flanking sequence
+          &#177; <input type="text" size=3 name="offset" value=0 > Kb of flanking sequence
         </c:when>
         <c:otherwise>
           <input type="hidden" name="offset" value="">
