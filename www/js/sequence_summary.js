@@ -30,11 +30,11 @@ function main() {
         {key:"cloneCollection", 
             label:"<b>Clone<br/>Collection</b>", 
             sortable:false, 
-            width:100},
+            width:120},
         {key:"markerSymbol", 
             label:"<b>Marker<br/>Symbol</b>", 
             sortable:false, 
-            width:100}
+            width:80}
     ];
 
     // DataSource instance
