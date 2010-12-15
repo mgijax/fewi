@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
-	
+
 	private Logger logger = LoggerFactory.getLogger(HibernateObjectGatherer.class);
 
 	private Class<T> type;
@@ -52,7 +52,6 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	@Transactional(readOnly = true)
 	public List<T> get(List<String> keys) {
 
-		logger.debug("gatherer get keys");
 		List<T> results = new ArrayList<T>();
 
 		for (String key : keys) {
@@ -65,7 +64,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	 * Set the type of object for retrieval
 	 */
 	public void setType(Class<T> type) {
-		logger.debug("set type");
+		logger.debug("set type -> " + type);
 		this.type = type;
 	}
 
