@@ -110,6 +110,8 @@ public class SolrHunter implements Hunter {
          * off in a configuration object somewhere.
          */
 
+        searchParams = this.preProcessSearchParams(searchParams);
+        
         CommonsHttpSolrServer server = null;
 
         try { server = new CommonsHttpSolrServer(solrUrl);}
@@ -237,6 +239,17 @@ public class SolrHunter implements Hunter {
         return ;
 
     }
+    
+    /**
+     * This is a hook, any class that needs to modify the searchParams before doing its work will
+     * override this method.
+     * 
+     * @param searchParams
+     * @return
+     */
+    protected SearchParams preProcessSearchParams(SearchParams searchParams) {
+        return searchParams;
+    }
 
     /**
      * packKeys
@@ -356,10 +369,6 @@ public class SolrHunter implements Hunter {
             if (filter.getProperty() == null || filter.getProperty().equals("")) {
                 return "";
             }
-            else {
-                logger.debug("This filter: " + filter.getProperty());
-            }
-
 
             // If its not an IN or NOT IN, get the query clause and return it
 
@@ -404,6 +413,7 @@ public class SolrHunter implements Hunter {
         // as specified by the filterClause.
 
         else {
+            
             String queryString = "";
             queryString = "(";
             int first = 1;
