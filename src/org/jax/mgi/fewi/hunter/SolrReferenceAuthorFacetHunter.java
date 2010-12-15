@@ -1,10 +1,14 @@
 package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.propertyMapper.SolrReferenceTextSearchPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -41,6 +45,23 @@ public class SolrReferenceAuthorFacetHunter extends SolrHunter {
         propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
         propertyMap.put(SearchConstants.ALL_KEY, new SolrPropertyMapper(IndexConstants.ALL_KEY));
                 
+        ArrayList <String> titleList = new ArrayList <String> ();
+        titleList.add(IndexConstants.REF_TITLE_STEMMED);
+        titleList.add(IndexConstants.REF_TITLE_UNSTEMMED);
+        
+        ArrayList <String> abstractList = new ArrayList <String> ();
+        abstractList.add(IndexConstants.REF_ABSTRACT_STEMMED);
+        abstractList.add(IndexConstants.REF_ABSTRACT_UNSTEMMED);
+        
+        propertyMap.put(SearchConstants.REF_TEXT_ABSTRACT, new SolrReferenceTextSearchPropertyMapper(abstractList, "OR"));
+        propertyMap.put(SearchConstants.REF_TEXT_TITLE, new SolrReferenceTextSearchPropertyMapper(titleList, "OR"));
+        
+        ArrayList <String> titleAbstractList = new ArrayList <String> ();
+        titleAbstractList.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
+        titleAbstractList.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
+        
+        propertyMap.put(SearchConstants.REF_TEXT_TITLE_ABSTRACT, new SolrReferenceTextSearchPropertyMapper(titleAbstractList, "OR"));
+                
         propertyMap.put(FacetConstants.REF_AUTHORS, new SolrPropertyMapper(IndexConstants.REF_AUTHOR_FACET));
         propertyMap.put(FacetConstants.REF_JOURNALS, new SolrPropertyMapper(IndexConstants.REF_JOURNAL_FACET));
         propertyMap.put(FacetConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
@@ -61,5 +82,48 @@ public class SolrReferenceAuthorFacetHunter extends SolrHunter {
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
-	
+    private void checkFilter (Filter filter) {
+        if (filter.isBasicFilter()) {
+            return;
+        }
+        else {
+            List <Filter> flist = filter.getNestedFilters();
+            Boolean foundTitle = Boolean.FALSE;
+            Boolean foundAbstract = Boolean.FALSE;
+            String textToSearch = "";
+            
+            for (Filter f: flist) {
+                if (f.isBasicFilter()) {
+                    if (f.getProperty().equals(SearchConstants.REF_TEXT_ABSTRACT)) {
+                        textToSearch = f.getValue();
+                        foundAbstract = Boolean.TRUE;
+                    }
+                    if (f.getProperty().equals(SearchConstants.REF_TEXT_TITLE)) {
+                        textToSearch = f.getValue();
+                        foundTitle = Boolean.TRUE;
+                    }                   
+                    
+                }
+                else {
+                    checkFilter(f);
+                }
+            }
+            
+            if (foundTitle && foundAbstract) {
+                filter.setProperty(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+                filter.setValue(textToSearch);
+                filter.setOperator(Filter.OP_CONTAINS);
+                filter.setNestedFilters(new ArrayList<Filter> ());
+            }
+        }
+    }
+        
+    protected SearchParams preProcessSearchParams(SearchParams searchParams) {
+        
+        Filter filter = searchParams.getFilter();
+        if (!filter.isBasicFilter()) {
+            checkFilter(filter);
+        }
+        return searchParams;
+    }	
 }
