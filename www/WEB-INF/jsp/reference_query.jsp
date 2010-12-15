@@ -41,7 +41,7 @@ ${templateBean.templateBodyStartHtml}
 				<div style="float:left; text-align:left;">
 					<form:radiobutton id="authorScope1" path="authorScope" value="any" checked="checked"/> Any Author(s)<br/>
 		    		<form:radiobutton id="authorScope2" path="authorScope" value="first"/> First Author<br/>
-		    		<form:radiobutton id="authorScope3" path="authorScope" tvalue="last"/> Last Author
+		    		<form:radiobutton id="authorScope3" path="authorScope" value="last"/> Last Author
 				</div>
     		</div>
 		</TD>

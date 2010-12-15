@@ -2,7 +2,9 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +28,7 @@ import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -56,7 +59,9 @@ public class ReferenceController {
 	@Autowired
 	private AlleleFinder alleleFinder;
 	
-
+    @Value("${solr.factetNumberDefault}")
+    private Integer facetLimit; 
+	
 	// add a new ReferenceQueryForm and MySirtPaginator objects to model for QF 
 	@RequestMapping(method=RequestMethod.GET)
 	public String getQueryForm(Model model) {
@@ -235,6 +240,7 @@ public class ReferenceController {
 			List<String> authors = this.parseList(query.getAuthor().trim(), ";");
 
 			String scope = query.getAuthorScope();
+			
 			if ("first".equals(scope)){
 				queryList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST, 
 						authors, Filter.OP_IN));
@@ -521,7 +527,7 @@ public class ReferenceController {
 	 * returned as JSON.  
 	 */
 	@RequestMapping("/facet/author")
-	public @ResponseBody SearchResults<String> facetAuthor(
+	public @ResponseBody Map<String, List<String>> facetAuthor(
 			@ModelAttribute ReferenceQueryForm query) {
 			
 		logger.debug(query.toString());
@@ -531,9 +537,8 @@ public class ReferenceController {
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
-		
-		logger.debug("facets: " + referenceFinder.getAuthorFacet(params).getResultFacets().size());
-		return referenceFinder.getAuthorFacet(params);
+
+		return this.parseFacetResponse(referenceFinder.getAuthorFacet(params));
 	}
 	
 	/*
@@ -541,7 +546,7 @@ public class ReferenceController {
 	 * returned as JSON.  
 	 */
 	@RequestMapping("/facet/journal")
-	public @ResponseBody SearchResults<String> facetJournal(
+	public @ResponseBody Map<String, List<String>> facetJournal(
 			@ModelAttribute ReferenceQueryForm query) {
 			
 		logger.debug(query.toString());
@@ -551,7 +556,7 @@ public class ReferenceController {
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
-		return referenceFinder.getJournalFacet(params);
+		return this.parseFacetResponse(referenceFinder.getJournalFacet(params));
 	}
 	
 	/*
@@ -559,7 +564,7 @@ public class ReferenceController {
 	 * returned as JSON.  
 	 */
 	@RequestMapping("/facet/year")
-	public @ResponseBody SearchResults<String> facetYear(
+	public @ResponseBody Map<String, List<String>> facetYear(
 			@ModelAttribute ReferenceQueryForm query) {
 			
 		logger.debug(query.toString());
@@ -569,7 +574,7 @@ public class ReferenceController {
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
-		return referenceFinder.getYearFacet(params);
+		return this.parseFacetResponse(referenceFinder.getYearFacet(params));
 	}
 	
 	/*
@@ -577,7 +582,7 @@ public class ReferenceController {
 	 * are returned as JSON.  
 	 */
 	@RequestMapping("/facet/data")
-	public @ResponseBody SearchResults<String> facetData(
+	public @ResponseBody Map<String, List<String>> facetData(
 			@ModelAttribute ReferenceQueryForm query) {
 			
 		logger.debug(query.toString());
@@ -587,6 +592,29 @@ public class ReferenceController {
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
-		return referenceFinder.getDataFacet(params);
+		return this.parseFacetResponse(referenceFinder.getDataFacet(params));
+	}
+	
+	private Map<String, List<String>> parseFacetResponse(
+			SearchResults<String> facetResults) {
+		
+		Map<String, List<String>> m = new HashMap<String, List<String>>();
+		List<String> l = new ArrayList<String>();
+		
+		logger.info("facets: " + facetResults.getResultFacets().size());
+		for (String f : facetResults.getResultFacets()) {
+			logger.info(f);
+		}
+		
+			if (facetResults.getResultFacets().size() >= facetLimit){
+				l.add("Too many filter values to display.");
+				m.put("error", l);
+			} else if (facetResults.getResultFacets().size() < 2){				
+				l.add("Nothing to filter here.  Move along.");
+				m.put("error", l);
+			} else {
+				m.put("resultFacets", facetResults.getResultFacets());
+			}
+			return m;
 	}
 }

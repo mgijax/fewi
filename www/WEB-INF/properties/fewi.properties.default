@@ -27,7 +27,7 @@ solr.maxRetries=1
 
 # Filter and Results default maximums
 solr.resultsDefault=5000
-solr.factetNumberDefault=500
+solr.factetNumberDefault=501
 
 
 #solr urls

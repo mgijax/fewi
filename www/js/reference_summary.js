@@ -127,7 +127,7 @@ var clearFilter = function () {
             sortDir: "dir"
         }
     };
-    myDataSource.maxCacheEntries = 10;
+    myDataSource.maxCacheEntries = 3;
     myDataSource.connXhrMode = "cancelStaleRequests";
 
     // Create the Paginator
@@ -294,6 +294,7 @@ YAHOO.util.Event.onDOMReady(function () {
 		    scope: this
 	};
 	
+
 	// Define various event handlers for Dialog
 	var handleSubmit = function() {	
 		var selections = this.getData();
@@ -326,7 +327,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	var handleSubmitEvent = function(o) {
 		alert('submitEvent');
 	};
-    
+
 	// Instantiate the Dialog
 	facetDialog = new YAHOO.widget.Dialog("facetDialog", 
 		{ visible : false, 
@@ -342,29 +343,29 @@ YAHOO.util.Event.onDOMReady(function () {
 
 	// Render the Dialog
 	facetDialog.render();
-    
+
 	// facet DataSource instances
 	var facetAuthorDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/author?${queryString}");
 	facetAuthorDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetAuthorDS.responseSchema = {resultsList: "resultFacets"};
-	facetAuthorDS.maxCacheEntries = 10;
+	facetAuthorDS.maxCacheEntries = 3;
 
 	var facetJournalDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/journal?${queryString}");
 	facetJournalDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetJournalDS.responseSchema = {resultsList: "resultFacets"};
-	facetJournalDS.maxCacheEntries = 10;
+	facetJournalDS.maxCacheEntries = 3;
 
 	var facetYearDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/year?${queryString}");
 	facetYearDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetYearDS.responseSchema = {resultsList: "resultFacets"};
-	facetYearDS.maxCacheEntries = 10;
+	facetYearDS.maxCacheEntries = 3;
 
 	var facetDataDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/data?${queryString}");
 	facetDataDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetDataDS.responseSchema = {resultsList: "resultFacets"};
-	facetDataDS.maxCacheEntries = 10;
-	
-	var populateFacet = function (oRequest, oResponse, oPayload) {
+	facetDataDS.maxCacheEntries = 3;
+
+	var parseFacetResponse = function (oRequest, oResponse, oPayload) {
 		var res = oResponse.results;
 		var options = [];
 
@@ -383,30 +384,38 @@ YAHOO.util.Event.onDOMReady(function () {
 			}
 			options[x] = '<input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"' + checked + '> ' + res[x];
 		}
-		facetDialog.setHeader('Filter by ' + oPayload.title);
-		facetDialog.form.innerHTML = options.join('<br/>');
+		populateFacetDialog(oPayload.title, options.join('<br/>'));
 	};
 
-	var authorCallback = {success:populateFacet,
-		failure:populateFacet,
+	var populateFacetDialog = function (title, body) {
+		facetDialog.setHeader('Filter by ' + title);
+		facetDialog.form.innerHTML = body;
+	}
+
+	var handleError = function (oRequest, oResponse, oPayload) {
+		populateFacetDialog(oPayload.title, 'An error occurred!');
+	};
+
+	var authorCallback = {success:parseFacetResponse,
+		failure:handleError,
 		scope:this,
 		argument:{name:'authorFilter', title:'Author'}
 	};
 
-	var journalCallback = {success:populateFacet,
-			failure:populateFacet,
+	var journalCallback = {success:parseFacetResponse,
+			failure:handleError,
 			scope:this,
 			argument:{name:'journalFilter', title:'Journal'}
 		};
 
-	var yearCallback = {success:populateFacet,
-			failure:populateFacet,
+	var yearCallback = {success:parseFacetResponse,
+			failure:handleError,
 			scope:this,
 			argument:{name:'yearFilter', title:'Year'}
 		};
 
-	var dataCallback = {success:populateFacet,
-			failure:populateFacet,
+	var dataCallback = {success:parseFacetResponse,
+			failure:handleError,
 			scope:this,
 			argument:{name:'curatedDataFilter', title:'Curated Data'}
 		};
@@ -442,7 +451,7 @@ YAHOO.util.Event.onDOMReady(function () {
         }
         return facetParams;
 	};
-
+	
 	YAHOO.util.Event.addListener("authorFilter", "click", populateAuthorDialog, true);
 	YAHOO.util.Event.addListener("journalFilter", "click", populateJournalDialog, true);
 	YAHOO.util.Event.addListener("yearFilter", "click", populateYearDialog, true);
