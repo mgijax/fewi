@@ -8,7 +8,7 @@ package org.jax.mgi.fewi.searchUtil;
 */
 public class SearchConstants {
 
-	// reference constants
+    // reference constants
     public static final String REF_ID			    = "reference_id";
     public static final String REF_KEY              = "reference_key";
     public static final String REF_AUTHOR_ANY		= "author_any";
@@ -19,7 +19,12 @@ public class SearchConstants {
     public static final String REF_TEXT_ABSTRACT	= "text_abstract";
     public static final String REF_TEXT_TITLE       = "text_title";
     public static final String REF_YEAR             = "year";
-
+    
+    // Special new field for when title and abstract are mushed 
+    // together.
+    
+    public static final String REF_TEXT_TITLE_ABSTRACT = "text_title_abstract";
+    
     // sequence constants
     public static final String SEQ_ID               = "sequence_id";
     public static final String SEQ_KEY              = "sequence_key";
