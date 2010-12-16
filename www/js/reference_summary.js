@@ -222,7 +222,7 @@ var clearFilter = function () {
 		if (!YAHOO.lang.isNull(countEl)){
 	    	if(parseInt(totalCount) < parseInt(newCount)){
 	    		totalCount = YAHOO.util.Number.format(newCount, numConfig);   		
-	    		countEl.textContent = totalCount + " items match your query.";
+	    		countEl.textContent = totalCount + " items match your unfiltered query.";
 	    	}
 		}
 	};
