@@ -129,6 +129,7 @@ public class ReferenceController {
 	@RequestMapping("/{refID}")
 	public String referenceById(
 			@PathVariable("refID") String refID,
+			@ModelAttribute ReferenceQueryForm query,
 			HttpServletRequest request, Model model) {
 		
 		model.addAttribute("queryString", "id=" + refID);		
