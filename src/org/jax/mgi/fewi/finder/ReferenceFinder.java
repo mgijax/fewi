@@ -49,7 +49,6 @@ public class ReferenceFinder {
 	@Autowired
 	private HibernateObjectGatherer<Reference> referenceGatherer;
 
-
 	public SearchResults<ReferenceSummary> searchSummaryReferences(SearchParams params) {
 		logger.debug("searchReferences");
 		SearchResults<ReferenceSummary> results = new SearchResults<ReferenceSummary>();
@@ -81,7 +80,6 @@ public class ReferenceFinder {
 
 			return results;
 	}
-
 
 	public SearchResults<String> getAuthorAutoComplete(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
