@@ -37,6 +37,7 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
         ArrayList <String> sortList = new ArrayList <String> ();
         sortList.add(IndexConstants.SEQ_TYPE_SORT);
         sortList.add(IndexConstants.SEQ_PROVIDER_SORT);
+        sortList.add(IndexConstants.SEQ_LENGTH);
         
         sortMap.put(SortConstants.SEQUENCE_SORT, new SolrSortMapper(sortList));
         // Set the url for the solr instance.
