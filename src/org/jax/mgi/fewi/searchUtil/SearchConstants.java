@@ -32,6 +32,7 @@ public class SearchConstants {
     // marker constants
     public static final String MRK_KEY              = "marker_key";
     public static final String MRK_ID               = "marker_id";
+    public static final String MRK_SYMBOL               = "marker_symbol";
 
     // allele constants
     public static final String ALL_KEY              = "allele_key";
