@@ -18,7 +18,10 @@ public class SortConstants {
 	public static final String CRE_DETECTED_COUNT  = "detectedCount";
 
 	// Sequence Summary page
-	public static final String SEQUENCE_SORT       = "sequenceSort";
+
+	public static final String SEQUENCE_TYPE       = "sequenceType";
+	public static final String SEQUENCE_PROVIDER   = "sequenceProvider";
+	public static final String SEQUENCE_LENGTH     = "sequenceLength";
 
 
     // faux entry;  used by webapp class template

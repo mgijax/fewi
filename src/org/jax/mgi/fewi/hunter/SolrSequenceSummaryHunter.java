@@ -33,13 +33,11 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
         
         // Sort map
+                
+        sortMap.put(SortConstants.SEQUENCE_TYPE, new SolrSortMapper(IndexConstants.SEQ_TYPE_SORT));
+        sortMap.put(SortConstants.SEQUENCE_PROVIDER, new SolrSortMapper(IndexConstants.SEQ_PROVIDER_SORT));
+        sortMap.put(SortConstants.SEQUENCE_TYPE, new SolrSortMapper(IndexConstants.SEQ_LENGTH));
         
-        ArrayList <String> sortList = new ArrayList <String> ();
-        sortList.add(IndexConstants.SEQ_TYPE_SORT);
-        sortList.add(IndexConstants.SEQ_PROVIDER_SORT);
-        sortList.add(IndexConstants.SEQ_LENGTH);
-        
-        sortMap.put(SortConstants.SEQUENCE_SORT, new SolrSortMapper(sortList));
         // Set the url for the solr instance.
         
         /*
