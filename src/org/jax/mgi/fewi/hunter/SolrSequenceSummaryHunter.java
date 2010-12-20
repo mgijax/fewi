@@ -36,7 +36,7 @@ public class SolrSequenceSummaryHunter extends SolrHunter {
                 
         sortMap.put(SortConstants.SEQUENCE_TYPE, new SolrSortMapper(IndexConstants.SEQ_TYPE_SORT));
         sortMap.put(SortConstants.SEQUENCE_PROVIDER, new SolrSortMapper(IndexConstants.SEQ_PROVIDER_SORT));
-        sortMap.put(SortConstants.SEQUENCE_TYPE, new SolrSortMapper(IndexConstants.SEQ_LENGTH));
+        sortMap.put(SortConstants.SEQUENCE_LENGTH, new SolrSortMapper(IndexConstants.SEQ_LENGTH));
         
         // Set the url for the solr instance.
         
