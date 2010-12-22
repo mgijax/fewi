@@ -48,9 +48,10 @@ var populateFilterSummary = function () {
 
 var clearFilter = function () {
 	kv = this.id.split(":");		
-	var items = facets[kv[0]];		
-	var idx = items.indexOf(kv[1]); // Find the index
-	if(idx!=-1) {
+	var items = facets[kv[0]];	
+	var val = this.id.slice(this.id.indexOf(":")+1);
+	var idx = items.indexOf(val); // Find the index
+	if(idx != -1) {
 		items.splice(idx, 1);
 	}
 	populateFilterSummary();
@@ -106,7 +107,7 @@ var clearFilter = function () {
     myDataSource = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/json?${queryString}&");
     myDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     myDataSource.responseSchema = {
-        resultsList: "resultObjects",
+        resultsList: "summaryRows",
         fields: [
             {key:"score"},
 			{key:"jnumID"},
@@ -393,7 +394,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	}
 
 	var handleError = function (oRequest, oResponse, oPayload) {
-		populateFacetDialog(oPayload.title, 'An error occurred!');
+		populateFacetDialog(oPayload.title, 'Too many ' + oPayload.title + 's in the matching references to display');
 	};
 
 	var authorCallback = {success:parseFacetResponse,
