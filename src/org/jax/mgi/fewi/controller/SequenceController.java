@@ -279,15 +279,9 @@ public class SequenceController {
 
         logger.debug("->JsonSummaryResponse started");
 
-//        SearchParams params = new SearchParams();
-//        params.setPaginator(page);
-//        params.setSorts(this.parseSorts(request));
-//        params.setFilter(this.parseRecombinaseQueryForm(query));
-
         // generate search parms object to pass to finders
         SearchParams params = new SearchParams();
-        Sort sort = new Sort(SortConstants.SEQUENCE_SORT);
-        params.addSort(sort);
+        params.setSorts(this.genSorts(request));
         params.setPaginator(page);
 
         // parameter parsing
@@ -327,14 +321,6 @@ public class SequenceController {
         jsonResponse.setTotalCount(searchResults.getTotalCount());
         return jsonResponse;
     }
-
-
-    //--------------------//
-    // private methods
-    //--------------------//
-
-
-
 
 
     /*
@@ -424,5 +410,26 @@ public class SequenceController {
         return mav;
     }
 
+
+
+    //--------------------------------------------------------------------//
+    // private methods
+    //--------------------------------------------------------------------//
+
+    // generate the sorts
+    private List<Sort> genSorts(HttpServletRequest request) {
+
+        logger.debug("->genSorts started");
+
+        Sort typeSort = new Sort(SortConstants.SEQUENCE_TYPE);
+        Sort provSort = new Sort(SortConstants.SEQUENCE_PROVIDER);
+        Sort lenSort  = new Sort(SortConstants.SEQUENCE_LENGTH, true);
+
+        List<Sort> sorts = new ArrayList<Sort>();
+        sorts.add(typeSort);
+        sorts.add(provSort);
+        sorts.add(lenSort);
+        return sorts;
+    }
 
 }
