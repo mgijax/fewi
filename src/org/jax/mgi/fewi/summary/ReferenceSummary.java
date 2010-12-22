@@ -1,12 +1,19 @@
 package org.jax.mgi.fewi.summary;
 
-import org.jax.mgi.fewi.config.ContextLoader;
-
 import mgi.frontend.datamodel.Reference;
+
+import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.util.Highlighter;
 
 public class ReferenceSummary {
 	private Reference reference;
 	private String score;
+	private Highlighter textHL, authorHL;
+
+	public ReferenceSummary(Reference reference) {
+		super();
+		this.reference = reference;
+	}
 
 	public void setReference(Reference reference) {
 		this.reference = reference;
@@ -50,22 +57,22 @@ public class ReferenceSummary {
 				this.reference.getBookEditor() != null){
 			sb.append(String.format("<br/><br/><span class=\"ital\">Editors</span>: %s", this.reference.getBookEditor()));
 		}
-		return reference.getAuthors() + sb.toString();
+		return authorHL.highLight(reference.getAuthors()) + sb.toString();
 	}
 
 	public String getTitle() {
 		StringBuffer sb = new StringBuffer();
 		if ("BOOK".equalsIgnoreCase(this.reference.getReferenceType())){
 			if(this.reference.getBookTitle() != null){
-				sb.append(String.format("<span class=\"ital\">Chapter</span>: %s<br/><br/>", this.reference.getTitle()));
-				sb.append(String.format("<span class=\"ital\">Book</span>: %s", this.reference.getBookTitle()));
+				sb.append(String.format("<span class=\"ital\">Chapter</span>: %s<br/><br/>", textHL.highLight(this.reference.getTitle())));
+				sb.append(String.format("<span class=\"ital\">Book</span>: %s", textHL.highLight(this.reference.getBookTitle())));
 			} else {
-				sb.append(String.format("<span class=\"ital\">Book</span>: %s", this.reference.getTitle()));
+				sb.append(String.format("<span class=\"ital\">Book</span>: %s", textHL.highLight(this.reference.getTitle())));
 			}
-
-			return sb.toString();
+		} else {
+			sb.append(textHL.highLight(this.reference.getTitle()));
 		}
-		return reference.getTitle();
+		return sb.toString();
 	}
 
 	public String getJournal() {
@@ -126,10 +133,10 @@ public class ReferenceSummary {
 	public String getAbstract(){
 		if (this.reference.getAbstract() != null 
 				&& !"".equals(this.reference.getAbstract())){
-			return this.reference.getAbstract();
+			return textHL.highLight(this.reference.getAbstract());
 		} else {
-			return "this reference has no abstract";
-		}
+			return textHL.highLight("this reference has no abstract");
+		}		
 	}
 
 	public String getBookEdition() {
@@ -150,6 +157,14 @@ public class ReferenceSummary {
 
 	public String getBookTitle() {
 		return reference.getBookTitle();
+	}
+
+	public void setTextHL(Highlighter highlighter) {
+		this.textHL = highlighter;
+	}
+	
+	public void setAuthorHL(Highlighter highlighter) {
+		this.authorHL = highlighter;
 	}
 
 }

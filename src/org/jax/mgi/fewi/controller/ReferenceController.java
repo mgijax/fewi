@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 
 import org.jax.mgi.fewi.finder.AlleleFinder;
@@ -23,7 +24,9 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.ReferenceSummary;
+import org.jax.mgi.fewi.util.Highlighter;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +107,7 @@ public class ReferenceController {
 	 * the query to the ReferenceFinder.  The results are returned as JSON
 	 */
 	@RequestMapping("/json")
-	public @ResponseBody SearchResults<ReferenceSummary> referenceSummaryJson(
+	public @ResponseBody JsonSummaryResponse<ReferenceSummary> referenceSummaryJson(
 			HttpServletRequest request, 
 			@ModelAttribute ReferenceQueryForm query,
 			@ModelAttribute Paginator page) {
@@ -119,8 +122,39 @@ public class ReferenceController {
 
 		// perform query and return results as json
 		logger.debug("params parsed");
+		
+        SearchResults<Reference> searchResults 
+        		= referenceFinder.searchSummaryReferences(params);
+        List<Reference> refList = searchResults.getResultObjects();
+        
+        String text = query.getText();  
+        String[] tFind = text.split("\\s");
+		Highlighter thl = new Highlighter(tFind);
+		
+		List<String> aParsed = this.parseList(query.getAuthor().trim(), ";");
+		String[] aFind = new String[]{};
+		Highlighter ahl = new Highlighter(aParsed.toArray(aFind));
+		logger.debug("wrap results");
+        List<ReferenceSummary> summaryRows = new ArrayList<ReferenceSummary>();
+        ReferenceSummary row;
+        for (Reference ref : refList) {
+			if (ref != null){
+				row = new ReferenceSummary(ref);
+				row.setScore(searchResults.getResultScores().get(refList.indexOf(ref)));
+				row.setTextHL(thl);
+				row.setAuthorHL(ahl);
+				summaryRows.add(row);
+			} else {
+				logger.debug("--> Null Object");
+			}
+		}
+        
+        JsonSummaryResponse<ReferenceSummary> jsonResponse
+        		= new JsonSummaryResponse<ReferenceSummary>();
+        jsonResponse.setSummaryRows(summaryRows);       
+        jsonResponse.setTotalCount(searchResults.getTotalCount());
 
-		return referenceFinder.searchSummaryReferences(params);
+		return jsonResponse;
 	}
 	
 	/*
@@ -602,20 +636,12 @@ public class ReferenceController {
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
 		
-		logger.info("facets: " + facetResults.getResultFacets().size());
-		for (String f : facetResults.getResultFacets()) {
-			logger.info(f);
+		if (facetResults.getResultFacets().size() >= facetLimit){
+			l.add("Too many filter values to display.");
+			m.put("error", l);
+		} else {
+			m.put("resultFacets", facetResults.getResultFacets());
 		}
-		
-			if (facetResults.getResultFacets().size() >= facetLimit){
-				l.add("Too many filter values to display.");
-				m.put("error", l);
-			} else if (facetResults.getResultFacets().size() < 2){				
-				l.add("Nothing to filter here.  Move along.");
-				m.put("error", l);
-			} else {
-				m.put("resultFacets", facetResults.getResultFacets());
-			}
-			return m;
+		return m;
 	}
 }

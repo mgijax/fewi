@@ -15,6 +15,7 @@ import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.summary.ReferenceSummary;
+import org.jax.mgi.fewi.util.Highlighter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,20 +50,18 @@ public class ReferenceFinder {
 	@Autowired
 	private HibernateObjectGatherer<Reference> referenceGatherer;
 
-	public SearchResults<ReferenceSummary> searchSummaryReferences(SearchParams params) {
+	public SearchResults<Reference> searchSummaryReferences(SearchParams params) {
 		logger.debug("searchReferences");
-		SearchResults<ReferenceSummary> results = new SearchResults<ReferenceSummary>();
+		SearchResults<Reference> results = new SearchResults<Reference>();
+		List<Reference> summaryList = results.getResultObjects();
+		
 		logger.debug("hunt");
 		referenceHunter.hunt(params, results);
+		
 		logger.debug("gather");
 		referenceGatherer.setType(Reference.class);
-		List<ReferenceSummary> summaryList = results.getResultObjects();
-		ReferenceSummary refSumm;
-		for(Reference ref: referenceGatherer.get(results.getResultKeys())){
-			refSumm = new ReferenceSummary();
-			summaryList.add(refSumm);
-			refSumm.setReference(ref);
-			refSumm.setScore(results.getResultScores().get(summaryList.indexOf(refSumm)));
+		for(Reference ref: referenceGatherer.get(results.getResultKeys())){		
+			summaryList.add(ref);
 		}
 		return results;
 	}
