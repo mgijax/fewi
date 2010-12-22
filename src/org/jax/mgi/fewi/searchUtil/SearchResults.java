@@ -1,6 +1,9 @@
 package org.jax.mgi.fewi.searchUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Search Results
@@ -26,6 +29,9 @@ public class SearchResults<T> {
 
 	// Result Objects of a given search
 	protected List<T> resultObjects = new ArrayList<T>();
+	
+	// MetaData mapping
+	protected Map<String, MetaData> metaMapping = new HashMap <String, MetaData>();
 
 	// Total number of possible results
 	protected int totalCount = -1;
@@ -50,7 +56,25 @@ public class SearchResults<T> {
 		this.resultKeys = resultKeys;
 	}
 
+	/** 
+	 * Get a mapping of object key -> MetaData
+	 * @return
+	 */
+	
+	public Map<String, MetaData> getMetaMapping() {
+        return metaMapping;
+    }
+
 	/**
+	 * set the MetaData mapping list
+	 * @param metaMapping
+	 */
+	
+    public void setMetaMapping(Map<String, MetaData> metaMapping) {
+        this.metaMapping = metaMapping;
+    }
+
+    /**
 	 * Get the list of scores for the documents returned
 	 */
 	public List<String> getResultScores() {
