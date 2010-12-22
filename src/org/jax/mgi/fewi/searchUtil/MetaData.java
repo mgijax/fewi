@@ -1,11 +1,12 @@
 package org.jax.mgi.fewi.searchUtil;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class MetaData {
     
     String score;
-    Set <String> highlightWords;
+    Set <String> highlightWords = new HashSet<String> ();
     
     public String getScore() {
         return score;
