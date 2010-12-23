@@ -5,6 +5,7 @@ import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.RecombinaseInfo;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -79,8 +80,8 @@ public class RecombinaseSummary {
     }
     
     public String getCountOfReferences() {
-    	return "<A HREF='/reference/allele/" + this.allele.getPrimaryID()
-    		+ "'>" + this.allele.getCountOfReferences().toString() + "</A>";
+    	return "<a href='/reference/allele/" + this.allele.getPrimaryID()
+    		+ "' target='_new'>" + this.allele.getCountOfReferences().toString() + "</a>";
     }
     
     public String getDetectedCount() {
@@ -88,6 +89,13 @@ public class RecombinaseSummary {
     		this.recombinaseInfo.getAffectedSystems();
     	List<AlleleSystem> unaffectedSystems = 
     		this.recombinaseInfo.getUnaffectedSystems();
+    	
+    	// system keys for systems which were affected
+    	HashSet<Integer> affectedKeys = new HashSet<Integer>();
+    	
+    	// count of unaffected systems which were not in the list of affected
+    	// systems
+    	int unaffectedCount = 0;
     	
     	StringBuffer div1 = new StringBuffer();
     	StringBuffer div2 = new StringBuffer();
@@ -135,45 +143,65 @@ public class RecombinaseSummary {
     				}
     				hasData = true;
     			}
+    			
+    			// remember that this system was on the affected list
+    			affectedKeys.add(myAS.getSystemKey());
     		}
     		div2.append("</div>");
     	}
 
-    	if (unaffectedSystems.size() > 0) {
+    	// walk the unaffected systems and count those which were affected, 
+    	// as the affected designation takes precedence
+    	Iterator<AlleleSystem> unaffectedIterator = unaffectedSystems.iterator();
+		while (unaffectedIterator.hasNext()) {
+			myAS = unaffectedIterator.next();
+			if (!affectedKeys.contains(myAS.getSystemKey())) {
+				unaffectedCount++;
+			}
+		}
+		
+    	if (unaffectedCount > 0) {
     		String div3ID = divIdGenerator.nextID();
     		String div4ID = divIdGenerator.nextID();
-    		String plSystems = FormatHelper.plural(unaffectedSystems.size(), "system");
+    		String plSystems = FormatHelper.plural(unaffectedCount, "system");
     		
     		div3.append("<div id='" + div3ID + "' class='small' ");
     		div3.append("style='color:blue; cursor:pointer;' ");
     		div3.append("onClick='show(\"" + div4ID + "\"); hide(\"" + div3ID + "\");'>");
     		div3.append(rightArrow);
-    		div3.append(" Not detected in " + unaffectedSystems.size() + " "
+    		div3.append(" Not detected in " + unaffectedCount + " "
     			+ plSystems + ".</div>");
 
     		div4.append("<div id='" + div4ID + "' class='small' style='display:none;'><div ");
     		div4.append("style='color:blue; cursor:pointer;' ");
     		div4.append("onClick='show(\"" + div3ID + "\"); hide(\"" + div4ID + "\");'>");
     		div4.append(downArrow);
-    		div4.append(" Not detected in " + unaffectedSystems.size() + " "
+    		div4.append(" Not detected in " + unaffectedCount + " "
     			+ plSystems + ".</div>");
     		
-    		Iterator<AlleleSystem> unaffectedIterator = unaffectedSystems.iterator();
+    		unaffectedIterator = unaffectedSystems.iterator();
     		while (unaffectedIterator.hasNext()) {
     			myAS = unaffectedIterator.next();
-    			system = myAS.getSystem();
-    			div4.append(specificityLink(myAS.getAlleleID(), myAS.getSystemKey(),
-        				myAS.getSystem(), null) );
-    			if (unaffectedIterator.hasNext()) {
-    				div4.append (", ");
-    			}
     			
-    			// if we have not already cached this system/key pair, do so
-    			if (myAS.getSystemKey() != null) {
-    				if (!isCachedSystem(system)) {
-    				    cacheSystem(system, myAS.getSystemKey());
+    			// It is possible for a system to have both affected and
+    			// unaffected data.  In this case, we ignore the unaffected
+    			// data.
+    			
+    			if (!affectedKeys.contains(myAS.getSystemKey())) {
+    				system = myAS.getSystem();
+    				div4.append(specificityLink(myAS.getAlleleID(), myAS.getSystemKey(),
+        				myAS.getSystem(), null) );
+    				if (unaffectedIterator.hasNext()) {
+    					div4.append (", ");
     				}
-    				hasData = true;
+    			
+    				// if we have not already cached this system/key pair, do so
+    				if (myAS.getSystemKey() != null) {
+    					if (!isCachedSystem(system)) {
+    						cacheSystem(system, myAS.getSystemKey());
+    					}
+    					hasData = true;
+    				}
     			}
     		}
     		div4.append("</div>");
@@ -213,7 +241,7 @@ public class RecombinaseSummary {
     	sb.append(ContextLoader.getConfigBean().getProperty("IMSRURL"));
     	sb.append("fetch?page=imsrSummary&gaccid=");
     	sb.append(this.allele.getPrimaryID());
-    	sb.append("&state=LM&state=OV&state=EM&state=SP'>");
+    	sb.append("&state=LM&state=OV&state=EM&state=SP' target='_new'>");
     	sb.append(this.allele.getImsrStrainCount());
     	sb.append("</a>");
     	return sb.toString();
@@ -354,15 +382,15 @@ public class RecombinaseSummary {
 	public String getNomenclature() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(FormatHelper.superscript(this.allele.getSymbol()));
-		sb.append("<BR/><SPAN CLASS='small'>");
+		sb.append("<br/><span class='small'>");
 		sb.append(FormatHelper.superscript(this.allele.getGeneName()));
 		if (!this.allele.getGeneName().equals(this.allele.getName())) {
 			sb.append("; ");
 			sb.append(FormatHelper.superscript(this.allele.getName()));
 		}
-		sb.append("<BR/>");
-		sb.append("(<A HREF='/allele/" + this.allele.getPrimaryID()
-				+ "'>phenotype data</A>)</SPAN>");
+		sb.append("<br/>");
+		sb.append("(<a href='/allele/" + this.allele.getPrimaryID()
+				+ "' target='_new'>phenotype data</A>)</span>");
 		return sb.toString();
 	}
 	
@@ -503,7 +531,7 @@ public class RecombinaseSummary {
     		sb.append(tooltip);
     	}
     	
-    	sb.append("'>");
+    	sb.append("' target='_new'>");
     	sb.append(label);
     	sb.append("</a>");
     	return sb.toString();
