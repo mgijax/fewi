@@ -73,6 +73,16 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
         propertyMap.put(FacetConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
         
+        /*
+         * What fields might we want highlighted results for?
+         */
+        
+        highlightFields.add(IndexConstants.REF_ABSTRACT_STEMMED);
+        highlightFields.add(IndexConstants.REF_ABSTRACT_UNSTEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_STEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_UNSTEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
         
         /*
          * The name of the field we want to iterate through the documents for
@@ -80,6 +90,7 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
          * keys collection in the response.
          */       
         keyString = IndexConstants.REF_KEY;
+        
     }
 	
 	@Value("${solr.reference.url}")

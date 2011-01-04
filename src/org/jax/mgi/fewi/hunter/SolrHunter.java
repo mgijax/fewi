@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -14,6 +16,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.propertyMapper.PropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
@@ -42,7 +45,7 @@ public class SolrHunter implements Hunter {
     protected String solrUrl;
     protected String keyString;
     protected String otherString;
-    protected String facetString;
+    protected String facetString;    
     
     // Gather the solr server settings from configuration
     
@@ -71,6 +74,8 @@ public class SolrHunter implements Hunter {
     protected HashMap <String, SolrSortMapper> sortMap =
         new HashMap<String, SolrSortMapper>();
 
+    protected List <String> highlightFields = new ArrayList<String> ();
+    
     public Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -80,7 +85,8 @@ public class SolrHunter implements Hunter {
 
     private static HashMap<Integer, String> filterClauseMap =
         new HashMap<Integer, String>();
-
+    
+    
     public SolrHunter() {
         // Setup the mapping of the logical ands and or to the vendor
         // specific ones.
@@ -135,6 +141,8 @@ public class SolrHunter implements Hunter {
         logger.info(queryString);
         query.setQuery(queryString);
 
+        
+        
         /**
          * Tear apart the sort objects and add them to the query string.  This currently
          * maps to a sorMapper object, which can turn a conceptual single column sort
@@ -164,6 +172,18 @@ public class SolrHunter implements Hunter {
                 	query.addSortField(sort.getSort(), SolrQuery.ORDER.asc);
                 }
             }
+        }
+        
+        if (! highlightFields.isEmpty()) {
+            for (String field: highlightFields) {
+                query.addHighlightField(field);
+            }
+            query.setHighlight(Boolean.TRUE);
+            query.setHighlightFragsize(30000);
+            query.setHighlightRequireFieldMatch(Boolean.TRUE);
+            query.setParam("hl.simple.pre", "!FRAG!");
+            query.setParam("hl.simple.post", "!FRAG!");
+
         }
         
         /**
@@ -196,7 +216,7 @@ public class SolrHunter implements Hunter {
         try {
         rsp = server.query( query );
         SolrDocumentList sdl = rsp.getResults();
-
+        
         /**
          * Package the results into the searchResults object.
          * We do this in a generic manner via the packKeys method.
@@ -204,9 +224,6 @@ public class SolrHunter implements Hunter {
 
         if (this.keyString != null) {
             searchResults.setResultKeys(packKeys(sdl));
-        }
-
-        if (this.keyString != null) {
             searchResults.setResultScores(packScore(sdl));
         }
         
@@ -218,8 +235,10 @@ public class SolrHunter implements Hunter {
             searchResults.setResultFacets(packFacet(rsp));
         }
         
+        if (!this.highlightFields.isEmpty()) {
+            searchResults.setMetaMapping(packMetadata(sdl, rsp));            
+        }
         
-
         /**
          * Set the total number found.
          */
@@ -280,6 +299,44 @@ public class SolrHunter implements Hunter {
         return keys;
     }
     
+    Map<String, MetaData> packMetadata(SolrDocumentList sdl, QueryResponse rsp) {
+        Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
+        
+        Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
+        
+        for (Iterator iter = sdl.iterator(); iter.hasNext();) {
+            SolrDocument doc = (SolrDocument) iter.next();
+            
+            MetaData tempMeta = new MetaData();
+            tempMeta.setScore("" + doc.getFieldValue("score"));
+            
+            Set<String> highlightKeys = highlights.get(doc.getFieldValue(keyString)).keySet();
+            Map<String, List<String>> highlightsMap = highlights.get(doc.getFieldValue(keyString));
+            for (Iterator iter2 = highlightKeys.iterator(); iter2.hasNext();) {
+                String key = (String) iter2.next();
+                List <String> highlights2 = highlightsMap.get(key);
+                for (String highlightWord: highlights2) {
+                    
+                    Boolean inAHL = Boolean.FALSE; 
+                    String [] fragments = highlightWord.split("!FRAG!");
+                    
+                    for (String frag: fragments) {
+                        if (inAHL) {
+                            tempMeta.addHighlightWords(frag);
+                            inAHL = Boolean.FALSE;
+                        }
+                        else {
+                            inAHL = Boolean.TRUE;
+                        }
+                    }
+                }
+            }
+            metaList.put((String) doc.getFieldValue(keyString), tempMeta);                        
+        }
+        
+        return metaList;
+    }
+    
     /**
      * packScores
      * @param sdl
@@ -303,7 +360,7 @@ public class SolrHunter implements Hunter {
 
         return keys;
     }
-
+    
     List<String> packExtraInfo(SolrDocumentList sdl) {
         List<String> info = new ArrayList<String>();
 

@@ -20,6 +20,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
          * filter list to the corresponding field names in the Solr implementation.
          */
         propertyMap.put(SearchConstants.MRK_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_SYMBOL));
+        propertyMap.put(SearchConstants.MRK_ID, new SolrPropertyMapper(IndexConstants.MRK_ID));
 
         /*
          * The name of the field we want to iterate through the documents for
