@@ -252,11 +252,18 @@ public class MarkerController {
 
         logger.debug("->JsonSummaryResponse started");
 
+        // parameter parsing
+        String refKey = request.getParameter("refKey");
+        
         // generate search parms object;  add pagination, sorts, and filters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(query));
+        
+        if (refKey != null) {
+            params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
+        }        
 
         // perform query, and pull out the requested objects
         SearchResults searchResults

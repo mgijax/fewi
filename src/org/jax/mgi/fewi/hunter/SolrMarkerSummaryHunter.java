@@ -21,6 +21,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
          */
         propertyMap.put(SearchConstants.MRK_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_SYMBOL));
         propertyMap.put(SearchConstants.MRK_ID, new SolrPropertyMapper(IndexConstants.MRK_ID));
+        propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
 
         /*
          * The name of the field we want to iterate through the documents for
