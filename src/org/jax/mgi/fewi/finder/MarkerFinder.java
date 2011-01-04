@@ -1,25 +1,14 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.*;
-
-/*-------------------------------*/
-/* to be changed for each Finder */
-/*-------------------------------*/
+import java.util.List;
 
 import mgi.frontend.datamodel.Marker;
+
 import org.jax.mgi.fewi.hunter.SolrMarkerKeyHunter;
-//import org.jax.mgi.fewi.hunter.MarkerSummaryHunter;
-
-/*----------------------------------------*/
-/* standard classes, used for all Finders */
-/*----------------------------------------*/
-
-// fewi
+import org.jax.mgi.fewi.hunter.SolrMarkerSummaryHunter;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-
-// external libs
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +34,9 @@ public class MarkerFinder {
 
     @Autowired
     private SolrMarkerKeyHunter mrkKeyHunter;
+    
+    @Autowired
+    private SolrMarkerSummaryHunter markerSummaryHunter;
 
 //    @Autowired
 //    private SolrMarkerSummaryHunter mrkSummaryHunter;
@@ -77,11 +69,30 @@ public class MarkerFinder {
         return searchResults;
     }
 
+    /*--------------------------------------------*/
+    /* Retrieval of a marker, for a given db key
+    /*--------------------------------------------*/
+
+    public SearchResults<Marker> getMarkerByKey(String dbKey) {
+
+        logger.debug("->getMarkerByKey()");
+
+        // result object to be returned
+        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+
+        // gather objects, add them to the results
+        mrkGatherer.setType(Marker.class);
+        Marker marker = mrkGatherer.get( dbKey );
+        searchResults.addResultObjects(marker);
+
+        return searchResults;
+    }
+
 
     /*---------------------------------*/
     /* Retrieval of multiple markers
     /*---------------------------------*/
-/* Not needed yet;  commented out
+
     public SearchResults<Marker> getMarkers(SearchParams searchParams) {
 
         logger.debug("->getMarkers");
@@ -90,18 +101,17 @@ public class MarkerFinder {
         SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
         // ask the hunter to identify which objects to return
-        mrkSummaryHunter.hunt(searchParams, searchResults);
+        markerSummaryHunter.hunt(searchParams, searchResults);
         logger.debug("->hunter found these resultKeys - "
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
         mrkGatherer.setType(Marker.class);
-        List<Marker> mrkList = mrkGatherer.get( searchResults.getResultKeys() );
-        searchResults.setResultObjects(mrkList);
+        List<Marker> markerList
+          = mrkGatherer.get( searchResults.getResultKeys() );
+        searchResults.setResultObjects(markerList);
 
         return searchResults;
     }
-*/
-
-
+    
 }
