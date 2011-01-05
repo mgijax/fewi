@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class Highlighter {
 	
-    private Pattern pattern;    // regex pattern built to do the searching
+    private Pattern pattern = null;    // regex pattern built to do the searching
     private String highlightTag = "span";
     private String highlightClass = "highlight";
 
@@ -19,7 +19,7 @@ public class Highlighter {
 	    String patternStr;	    
     		
     	if (toFind != null && !"".equals(toFind)){
-    		patternStr = "\\b(" + StringUtils.join(toFind, "|") + ")";
+    		patternStr = "\\b(" + StringUtils.join(toFind, "|") + ")\\b";
     	    pattern = Pattern.compile( patternStr, Pattern.CASE_INSENSITIVE);
     	}
     }
@@ -30,10 +30,10 @@ public class Highlighter {
 	    // Highlighting is putting text between <b>...</b>
 	    //   someone who knows CSS could probably do this w/ color or something
 	    // Could imagine several highLight methods for diff flavors of highlighting	
-	    Matcher matcher = pattern.matcher(inputText);
 	    if (pattern == null){
 	    	return inputText;
 	    } 
+	    Matcher matcher = pattern.matcher(inputText);
 	    return( matcher.replaceAll(String.format("<%s class=%s>$1</%s>", highlightTag, highlightClass, highlightTag)));
     }
 }
