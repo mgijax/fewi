@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * wrapper around a marker2;  represents on row in summary
+ * wrapper around a marker;  represents on row in summary
  */
 public class MarkerSummaryRow {
 
@@ -25,7 +25,7 @@ public class MarkerSummaryRow {
     private Logger logger = LoggerFactory.getLogger(MarkerSummaryRow.class);
 
 	// encapsulated row object
-	private Marker marker2;
+	private Marker marker;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -35,11 +35,11 @@ public class MarkerSummaryRow {
 	// constructors
 	//-------------
 
-	// hide the default constructor - we NEED a marker2 to wrap
+	// hide the default constructor - we NEED a marker to wrap
     private MarkerSummaryRow () {}
 
-    public MarkerSummaryRow (Marker marker2) {
-    	this.marker2 = marker2;
+    public MarkerSummaryRow (Marker marker) {
+    	this.marker = marker;
     	return;
     }
 
@@ -49,48 +49,50 @@ public class MarkerSummaryRow {
     //------------------------------------------------------------------------
 
     public String getField1() {
-    	return "<a href='" + fewiUrl + "marker2/marker2Id'>MGI Marker2 Detail </a>";
+    	return "<a href='" + fewiUrl + "marker/markerId'>MGI marker Detail </a>";
     }
     public String getField2() {
     	return "<a href='" + fewiUrl
-    	  + "marker2/reference/J:28634'>Marker2 Summary for Reference J:28634</a>";
+    	  + "marker/reference/J:28634'>marker Summary for Reference J:28634</a>";
     }
     public String getField3() {
     	return "Marker 2 interesting data";
     }
 
     public String getSymbol() {
-        return "<a href='" + fewiUrl + "marker2/" + marker2.getPrimaryID() + "'>" + marker2.getSymbol() +" </a>";
+        return "<a href='" + fewiUrl + "marker/" + marker.getPrimaryID() + "'>" + marker.getSymbol() +" </a>";
     }
     
     public String getName() {
-        return marker2.getName();
+        return marker.getName();
     }
     
     public String getChr() {        
-        MarkerLocation bestLoc = marker2.getPreferredCoordinates();
+        MarkerLocation bestLoc = marker.getPreferredCoordinates();
         return bestLoc.getChromosome();
     }    
     
     public String getLocation() {        
-        MarkerLocation bestLoc = marker2.getPreferredCoordinates();
+        MarkerLocation bestLoc = marker.getPreferredCoordinates();
         return bestLoc.getStartCoordinate() + "-" + bestLoc.getEndCoordinate();
     }
 
     public String getCM() {        
-        MarkerLocation bestLoc = marker2.getPreferredCentimorgans();
+        MarkerLocation bestLoc = marker.getPreferredCentimorgans();
         return "" + bestLoc.getCmOffset();
     }
     
     public String getStrand() {
-        return "";
+        MarkerLocation bestLoc = marker.getPreferredCoordinates();
+        return bestLoc.getStrand();
     }
     
     public String getType() {
-        return marker2.getMarkerType();
+        return marker.getMarkerType();
     }
     
     public String getPrimaryID() {
-        return marker2.getPrimaryID();
+        return marker.getPrimaryID();
     }
+    
 }
