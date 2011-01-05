@@ -8,7 +8,9 @@ import org.jax.mgi.fewi.util.Highlighter;
 public class ReferenceSummary {
 	private Reference reference;
 	private String score;
-	private Highlighter textHL, authorHL;
+	private Highlighter titleHL = new Highlighter(null);
+	private Highlighter abstractHL = new Highlighter(null);
+	private Highlighter authorHL = new Highlighter(null);
 
 	public ReferenceSummary(Reference reference) {
 		super();
@@ -64,13 +66,13 @@ public class ReferenceSummary {
 		StringBuffer sb = new StringBuffer();
 		if ("BOOK".equalsIgnoreCase(this.reference.getReferenceType())){
 			if(this.reference.getBookTitle() != null){
-				sb.append(String.format("<span class=\"ital\">Chapter</span>: %s<br/><br/>", textHL.highLight(this.reference.getTitle())));
-				sb.append(String.format("<span class=\"ital\">Book</span>: %s", textHL.highLight(this.reference.getBookTitle())));
+				sb.append(String.format("<span class=\"ital\">Chapter</span>: %s<br/><br/>", titleHL.highLight(this.reference.getTitle())));
+				sb.append(String.format("<span class=\"ital\">Book</span>: %s", titleHL.highLight(this.reference.getBookTitle())));
 			} else {
-				sb.append(String.format("<span class=\"ital\">Book</span>: %s", textHL.highLight(this.reference.getTitle())));
+				sb.append(String.format("<span class=\"ital\">Book</span>: %s", titleHL.highLight(this.reference.getTitle())));
 			}
 		} else {
-			sb.append(textHL.highLight(this.reference.getTitle()));
+			sb.append(titleHL.highLight(this.reference.getTitle()));
 		}
 		return sb.toString();
 	}
@@ -133,9 +135,9 @@ public class ReferenceSummary {
 	public String getAbstract(){
 		if (this.reference.getAbstract() != null 
 				&& !"".equals(this.reference.getAbstract())){
-			return textHL.highLight(this.reference.getAbstract());
+			return abstractHL.highLight(this.reference.getAbstract());
 		} else {
-			return textHL.highLight("this reference has no abstract");
+			return abstractHL.highLight("this reference has no abstract");
 		}		
 	}
 
@@ -159,8 +161,12 @@ public class ReferenceSummary {
 		return reference.getBookTitle();
 	}
 
-	public void setTextHL(Highlighter highlighter) {
-		this.textHL = highlighter;
+	public void setTitleHL(Highlighter highlighter) {
+		this.titleHL = highlighter;
+	}
+	
+	public void setAbstractHL(Highlighter highlighter) {
+		this.abstractHL = highlighter;
 	}
 	
 	public void setAuthorHL(Highlighter highlighter) {
