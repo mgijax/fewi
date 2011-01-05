@@ -19,6 +19,12 @@ public class SearchParams {
 
 	// pagination bean
 	private Paginator paginator = new Paginator();
+	
+	// boolean flags to enable meta packaging
+	private boolean includeRowMeta = false;
+	private boolean includeSetMeta = false;
+	private boolean includeMetaScore = false;
+	private boolean includeMetaHighlight = false;
 
     //////////////////////////////////////////////////////////////////////////
     //  BASIC ACCESSORS
@@ -86,4 +92,37 @@ public class SearchParams {
     public void setPageSize(int pageSize) {
         this.paginator.setResults(pageSize);
     }
+
+	public boolean includeRowMeta() {
+		return includeRowMeta;
+	}
+
+	public void setIncludeRowMeta(boolean includeRowMeta) {
+		this.includeRowMeta = includeRowMeta;
+	}
+
+	public boolean includeSetMeta() {
+		return includeSetMeta;
+	}
+
+	public void setIncludeSetMeta(boolean includeSetMeta) {
+		this.includeSetMeta = includeSetMeta;
+	}
+
+	public boolean includeMetaScore() {
+		return includeMetaScore;
+	}
+
+	public void setIncludeMetaScore(boolean includeMetaScore) {
+		this.includeMetaScore = includeMetaScore;
+	}
+
+	public boolean includeMetaHighlight() {
+		return includeMetaHighlight;
+	}
+
+	public void setIncludeMetaHighlight(boolean includeMetaHighlight) {
+		this.includeMetaHighlight = includeMetaHighlight;
+	}
+
 }
