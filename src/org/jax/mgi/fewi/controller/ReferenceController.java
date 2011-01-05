@@ -3,8 +3,11 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,12 +15,14 @@ import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
 import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -127,8 +132,22 @@ public class ReferenceController {
         		= referenceFinder.searchSummaryReferences(params);
         List<Reference> refList = searchResults.getResultObjects();
         
-        String text = query.getText();  
-        String[] tFind = text.split("\\s");
+        Map<String, MetaData> meta = searchResults.getMetaMapping();
+        
+        Set<String> hlWords = new HashSet<String>();
+        
+        MetaData md;
+        
+        for (Iterator mi = meta.entrySet().iterator(); mi.hasNext();) {
+        	Map.Entry rm = (Map.Entry) mi.next();
+        	md = (MetaData) rm.getValue();
+        	hlWords.addAll(md.getHighlightWords());		
+		}
+
+        String[] tFind = hlWords.toArray(new String[0]);
+        hlWords.toArray(tFind);
+        
+        logger.info("highlight: " + StringUtils.join(tFind, ", "));
 		Highlighter thl = new Highlighter(tFind);
 		
 		List<String> aParsed = this.parseList(query.getAuthor().trim(), ";");
@@ -141,8 +160,15 @@ public class ReferenceController {
 			if (ref != null){
 				row = new ReferenceSummary(ref);
 				row.setScore(searchResults.getResultScores().get(refList.indexOf(ref)));
-				row.setTextHL(thl);
-				row.setAuthorHL(ahl);
+				if (query.isInAbstract()){
+					row.setAbstractHL(thl);
+				}
+				if (query.isInTitle()){
+					row.setTitleHL(thl);
+				}
+				if (aParsed != null && !"".equals(aParsed)){
+					row.setAuthorHL(ahl);
+				}				
 				summaryRows.add(row);
 			} else {
 				logger.debug("--> Null Object");
