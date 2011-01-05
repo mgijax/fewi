@@ -23,5 +23,10 @@ public class MetaData {
     public void addHighlightWords(String word) {
         this.highlightWords.add(word);
     }
+	@Override
+	public String toString() {
+		return "MetaData [highlightWords=" + highlightWords + ", score="
+				+ score + "]";
+	}
 
 }
