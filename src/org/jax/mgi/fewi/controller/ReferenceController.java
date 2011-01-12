@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +13,6 @@ import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
@@ -121,6 +118,10 @@ public class ReferenceController {
 		
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
+		params.setIncludeSetMeta(true);
+		params.setIncludeMetaHighlight(true);
+		params.setIncludeRowMeta(true);
+		params.setIncludeMetaScore(true);
 		params.setPaginator(page);		
 		params.setSorts(this.parseSorts(request));
 		params.setFilter(this.parseReferenceQueryForm(query));
@@ -132,42 +133,35 @@ public class ReferenceController {
         		= referenceFinder.searchSummaryReferences(params);
         List<Reference> refList = searchResults.getResultObjects();
         
-        Map<String, MetaData> meta = searchResults.getMetaMapping();
-        
-        Set<String> hlWords = new HashSet<String>();
-        
-        MetaData md;
-        
-        for (Iterator mi = meta.entrySet().iterator(); mi.hasNext();) {
-        	Map.Entry rm = (Map.Entry) mi.next();
-        	md = (MetaData) rm.getValue();
-        	hlWords.addAll(md.getHighlightWords());		
-		}
-
-        String[] tFind = hlWords.toArray(new String[0]);
-        hlWords.toArray(tFind);
-        
-        logger.info("highlight: " + StringUtils.join(tFind, ", "));
-		Highlighter thl = new Highlighter(tFind);
+        Map<String, Set<String>> highlighting = searchResults.getResultSetMeta().getSetHighlights();
 		
-		List<String> aParsed = this.parseList(query.getAuthor().trim(), ";");
-		String[] aFind = new String[]{};
-		Highlighter ahl = new Highlighter(aParsed.toArray(aFind));
+        Set<String> textHl, authorHL;
+		
 		logger.debug("wrap results");
         List<ReferenceSummary> summaryRows = new ArrayList<ReferenceSummary>();
         ReferenceSummary row;
+        MetaData rowMeta;
+
         for (Reference ref : refList) {
 			if (ref != null){
 				row = new ReferenceSummary(ref);
-				row.setScore(searchResults.getResultScores().get(refList.indexOf(ref)));
+				rowMeta = searchResults.getMetaMapping().get(String.valueOf(ref.getReferenceKey()));
+				if (rowMeta != null){
+					row.setScore(rowMeta.getScore());
+				} else {
+					row.setScore("0");
+				}
 				if (query.isInAbstract()){
-					row.setAbstractHL(thl);
+					textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+					row.setAbstractHL(new Highlighter(textHl));
 				}
 				if (query.isInTitle()){
-					row.setTitleHL(thl);
+					textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+					row.setTitleHL(new Highlighter(textHl));
 				}
-				if (aParsed != null && !"".equals(aParsed)){
-					row.setAuthorHL(ahl);
+				if (query.getAuthor() != null && !"".equals(query.getAuthor())){					
+					authorHL = highlighting.get(SearchConstants.REF_AUTHOR);
+					row.setAuthorHL(new Highlighter(authorHL));
 				}				
 				summaryRows.add(row);
 			} else {

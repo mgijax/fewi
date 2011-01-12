@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,12 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
         Integer key = new Integer(keyStr);
 
-        logger.debug("gatherer get key: " + key);
+
+        //logger.debug("gatherer get key: " + key);
 		if (sessionFactory != null && type != null){
+			//Session s = sessionFactory.getCurrentSession();
 			Session s = sessionFactory.getCurrentSession();
-			return (T)s.get(type, key);
+			return (T)s.load(type, key);
 		}
 
 		// problem conditions
@@ -52,11 +55,19 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	@Transactional(readOnly = true)
 	public List<T> get(List<String> keys) {
 
-		List<T> results = new ArrayList<T>();
-
+		Session s = sessionFactory.getCurrentSession();
+		
+		List<T> results = new ArrayList<T>();		
+		List<Integer> k = new ArrayList<Integer>();
+		
 		for (String key : keys) {
-			results.add(this.get(key));
+			k.add(new Integer(key));
 		}
+		
+		long start = System.nanoTime(); 
+		results = s.createCriteria(type).add(Restrictions.in("id", k)).list();
+		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
+
 		return results;
 	}
 

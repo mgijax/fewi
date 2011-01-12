@@ -14,8 +14,6 @@ import org.jax.mgi.fewi.hunter.SolrReferenceYearFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.summary.ReferenceSummary;
-import org.jax.mgi.fewi.util.Highlighter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

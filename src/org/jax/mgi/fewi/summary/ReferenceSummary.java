@@ -13,7 +13,6 @@ public class ReferenceSummary {
 	private Highlighter authorHL = new Highlighter(null);
 
 	public ReferenceSummary(Reference reference) {
-		super();
 		this.reference = reference;
 	}
 
