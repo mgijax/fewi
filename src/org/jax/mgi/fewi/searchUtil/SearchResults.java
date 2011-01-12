@@ -80,16 +80,16 @@ public class SearchResults<T> {
     /**
 	 * Get the list of scores for the documents returned
 	 */
-	public List<String> getResultScores() {
+/*	public List<String> getResultScores() {
         return resultScores;
-    }
+    }*/
 
 	/**
 	 * Set the list of scores for the documents to be returned.
 	 */
-    public void setResultScores(List<String> resultScores) {
+/*    public void setResultScores(List<String> resultScores) {
         this.resultScores = resultScores;
-    }
+    }*/
 
     /**
 	 * Get the keys of the results returned
