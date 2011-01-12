@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.propertyMapper.PropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
+import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
@@ -70,6 +72,9 @@ public class SolrHunter implements Hunter {
 
     protected HashMap <String, PropertyMapper> propertyMap =
         new HashMap<String, PropertyMapper>();
+    
+    protected HashMap <String, String> fieldToParamMap = 
+        new HashMap<String, String>();
     
     protected HashMap <String, SolrSortMapper> sortMap =
         new HashMap<String, SolrSortMapper>();
@@ -206,38 +211,28 @@ public class SolrHunter implements Hunter {
             query.setFacetLimit(factetNumberDefault);
         }
 
-        logger.info("The Solr query:" + query + "\n");
+        logger.info("This is the Solr query:" + query + "\n");
 
         /**
          * Run the query.
          */
 
         QueryResponse rsp = null;
+        logger.debug("Got here, right before the try loop.");
+        
         try {
         rsp = server.query( query );
         SolrDocumentList sdl = rsp.getResults();
         
         /**
          * Package the results into the searchResults object.
-         * We do this in a generic manner via the packKeys method.
+         * We do this in a generic manner via the packInformation method.
          */
 
-        if (this.keyString != null) {
-            searchResults.setResultKeys(packKeys(sdl));
-            searchResults.setResultScores(packScore(sdl));
-        }
+        packInformation(rsp, searchResults, searchParams);
+
         
-        if (this.otherString != null) {
-            searchResults.setResultStrings(packExtraInfo(sdl));
-        }
-        
-        if (this.facetString != null) {
-            searchResults.setResultFacets(packFacet(rsp));
-        }
-        
-        if (!this.highlightFields.isEmpty()) {
-            searchResults.setMetaMapping(packMetadata(sdl, rsp));            
-        }
+        logger.debug("metaMapping: " + searchResults.getResultSetMeta().toString());
         
         /**
          * Set the total number found.
@@ -283,7 +278,7 @@ public class SolrHunter implements Hunter {
      * to override this method with their own version.
      */
 
-    List<String> packKeys(SolrDocumentList sdl) {
+/*    List<String> packKeys(SolrDocumentList sdl) {
         List<String> keys = new ArrayList<String>();
 
         logger.debug("Keys: ");
@@ -297,9 +292,9 @@ public class SolrHunter implements Hunter {
         }
 
         return keys;
-    }
+    }*/
     
-    Map<String, MetaData> packMetadata(SolrDocumentList sdl, QueryResponse rsp) {
+/*    Map<String, MetaData> packMetadata(SolrDocumentList sdl, QueryResponse rsp) {
         Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
         
         Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
@@ -335,7 +330,7 @@ public class SolrHunter implements Hunter {
         }
         
         return metaList;
-    }
+    }*/
     
     /**
      * packScores
@@ -345,7 +340,7 @@ public class SolrHunter implements Hunter {
      * Pack a list of scores that corresponds to the list of keys.
      */
 
-    List<String> packScore(SolrDocumentList sdl) {
+/*    List<String> packScore(SolrDocumentList sdl) {
         List<String> keys = new ArrayList<String>();
 
         logger.info("scores: ");
@@ -359,9 +354,9 @@ public class SolrHunter implements Hunter {
         }
 
         return keys;
-    }
+    }*/
     
-    List<String> packExtraInfo(SolrDocumentList sdl) {
+/*    List<String> packExtraInfo(SolrDocumentList sdl) {
         List<String> info = new ArrayList<String>();
 
         logger.debug("Other Strings: ");
@@ -375,9 +370,9 @@ public class SolrHunter implements Hunter {
         }
 
         return info;
-    }
+    }*/
     
-    List<String> packFacet(QueryResponse rsp) {
+/*    List<String> packFacet(QueryResponse rsp) {
         List<String> facet = new ArrayList<String>();
 
         logger.debug("Facet Strings: ");
@@ -388,7 +383,7 @@ public class SolrHunter implements Hunter {
         }
 
         return facet;
-    }
+    }*/
 
     /**
      * translateFilter
@@ -487,5 +482,131 @@ public class SolrHunter implements Hunter {
             }
             return "(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")";
         }
+    }
+
+    /**
+     * packInformation
+     * @param sdl
+     * @return List of keys
+     * This generic method is available to all extending classes.  All
+     * that they need to do to take advantage of it is to set the keyString
+     * variable.  This will then be used to extract a given field from the
+     * returned documents as the key we want to return to the wi.
+     *
+     * If something more complex is requires, the implementer is expected
+     * to override this method with their own version.
+     */
+    
+    void packInformation(QueryResponse rsp, SearchResults sr, SearchParams sp) {
+        List<String> keys = new ArrayList<String>();
+        List<String> scoreKeys = new ArrayList<String>();
+        List<String> info = new ArrayList<String>();
+        List<String> facet = new ArrayList<String>();
+                
+        Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>> ();
+        
+        Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
+        
+        Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
+        
+        SolrDocumentList sdl = rsp.getResults();
+    
+        logger.debug("We are in the pack information section.");
+        
+        if (this.facetString != null) {
+            for (Count c: rsp.getFacetField(facetString).getValues()) {
+                facet.add(c.getName());
+                logger.debug(c.getName());
+            }
+        }
+        
+        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        {
+            SolrDocument doc = (SolrDocument) iter.next();
+            
+            if (sp.includeRowMeta()) {
+                MetaData tempMeta = new MetaData();
+                if (sp.includeMetaScore()) {
+                    tempMeta.setScore("" + doc.getFieldValue("score"));
+                }
+                metaList.put((String) doc.getFieldValue(keyString), tempMeta);
+            }
+            
+            if (this.keyString != null) {            
+                keys.add((String) doc.getFieldValue(keyString));
+                logger.debug("" + doc.getFieldValue(keyString));
+                
+                scoreKeys.add("" + doc.getFieldValue("score"));
+                logger.debug("" + doc.getFieldValue(keyString));
+            }
+
+            if (this.otherString != null) {
+                info.add((String) doc.getFieldValue(otherString));
+                logger.debug("OtherString: " + otherString + " -"+ doc.getFieldValue(otherString));
+            }
+            
+            
+            if (!this.highlightFields.isEmpty() && sp.includeMetaHighlight() && sp.includeSetMeta()) {
+            
+            Set<String> highlightKeys = highlights.get(doc.getFieldValue(keyString)).keySet();
+            Map<String, List<String>> highlightsMap = highlights.get(doc.getFieldValue(keyString));
+            for (Iterator iter2 = highlightKeys.iterator(); iter2.hasNext();) {
+                String key = (String) iter2.next();
+
+                List <String> highlights2 = highlightsMap.get(key);
+                for (String highlightWord: highlights2) {
+                    
+                    Boolean inAHL = Boolean.FALSE; 
+                    String [] fragments = highlightWord.split("!FRAG!");
+                    
+                    for (String frag: fragments) {
+                        if (inAHL) {
+                            if (setHighlights.containsKey(fieldToParamMap.get(key))) {
+                                setHighlights.get(fieldToParamMap.get(key)).add(frag);
+                            }
+                            else {
+                                setHighlights.put(fieldToParamMap.get(key), new HashSet <String> ());
+                                setHighlights.get(fieldToParamMap.get(key)).add(frag);
+                            }
+                            inAHL = Boolean.FALSE;
+                        }
+                        else {
+                            inAHL = Boolean.TRUE;
+                        }
+                    }
+                }
+            } 
+        }
+
+        }
+    
+        if (keys != null) {
+            sr.setResultKeys(keys);
+        }
+        
+/*        if (scoreKeys != null) {
+            sr.setResultScores(scoreKeys);
+        }*/
+        
+        if (info != null) {
+            sr.setResultStrings(info);
+        }
+        
+        if (facet != null) {
+            sr.setResultFacets(facet);
+        }
+        
+        if (sp.includeSetMeta()) {
+            sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
+        }
+        
+        if (sp.includeRowMeta()) {
+            sr.setMetaMapping(metaList);
+        }
+        
+/*        if (!this.highlightFields.isEmpty()) {
+            sr.setMetaMapping(metaList);
+            sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
+        }*/
     }
 }

@@ -83,6 +83,24 @@ public class SolrReferenceSummaryHunter extends SolrHunter {
         highlightFields.add(IndexConstants.REF_TITLE_UNSTEMMED);
         highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
         highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
+        highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
+        highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
+        highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
+        
+        /* A reverse Mapping of Highlightable fields in the index to what 
+         * parameter it came from
+         */
+        
+        fieldToParamMap.put(IndexConstants.REF_ABSTRACT_STEMMED, SearchConstants.REF_TEXT_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_ABSTRACT_UNSTEMMED, SearchConstants.REF_TEXT_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_STEMMED, SearchConstants.REF_TEXT_TITLE);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_UNSTEMMED, SearchConstants.REF_TEXT_TITLE);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_STEMMED, SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED, SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_AUTHOR_FORMATTED, SearchConstants.REF_AUTHOR);
+        fieldToParamMap.put(IndexConstants.REF_FIRST_AUTHOR, SearchConstants.REF_AUTHOR);
+        fieldToParamMap.put(IndexConstants.REF_LAST_AUTHOR, SearchConstants.REF_AUTHOR);
+        
         
         /*
          * The name of the field we want to iterate through the documents for

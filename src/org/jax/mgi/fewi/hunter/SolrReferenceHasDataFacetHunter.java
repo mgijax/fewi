@@ -68,6 +68,34 @@ public class SolrReferenceHasDataFacetHunter extends SolrHunter {
         propertyMap.put(FacetConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(FacetConstants.REF_CURATED_DATA, new SolrPropertyMapper(IndexConstants.REF_HAS_DATA));
 
+        /*
+         * What fields might we want highlighted results for?
+         */
+        
+        highlightFields.add(IndexConstants.REF_ABSTRACT_STEMMED);
+        highlightFields.add(IndexConstants.REF_ABSTRACT_UNSTEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_STEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_UNSTEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
+        highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
+        highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
+        highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
+        highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
+        
+        /* A reverse Mapping of Highlightable fields in the index to what 
+         * parameter it came from
+         */
+        
+        fieldToParamMap.put(IndexConstants.REF_ABSTRACT_STEMMED, SearchConstants.REF_TEXT_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_ABSTRACT_UNSTEMMED, SearchConstants.REF_TEXT_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_STEMMED, SearchConstants.REF_TEXT_TITLE);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_UNSTEMMED, SearchConstants.REF_TEXT_TITLE);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_STEMMED, SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED, SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+        fieldToParamMap.put(IndexConstants.REF_AUTHOR_FORMATTED, SearchConstants.REF_AUTHOR);
+        fieldToParamMap.put(IndexConstants.REF_FIRST_AUTHOR, SearchConstants.REF_AUTHOR);
+        fieldToParamMap.put(IndexConstants.REF_LAST_AUTHOR, SearchConstants.REF_AUTHOR);
+        
         
         /*
          * The name of the field we want to iterate through the documents for
