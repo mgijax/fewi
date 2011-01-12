@@ -14,7 +14,7 @@ public class MetaData {
     public void setScore(String score) {
         this.score = score;
     }
-    public Set<String> getHighlightWords() {
+/*    public Set<String> getHighlightWords() {
         return highlightWords;
     }
     public void setHighlightWords(Set<String> highlightWords) {
@@ -27,6 +27,6 @@ public class MetaData {
 	public String toString() {
 		return "MetaData [highlightWords=" + highlightWords + ", score="
 				+ score + "]";
-	}
+	}*/
 
 }
