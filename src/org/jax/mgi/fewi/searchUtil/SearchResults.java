@@ -19,7 +19,7 @@ public class SearchResults<T> {
 	protected List<String> resultKeys = new ArrayList<String>();
 
 	// Scores for the matched documents
-    protected List<String> resultScores = new ArrayList<String>();
+/*    protected List<String> resultScores = new ArrayList<String>();*/
 
 	// Database keys identified as the results from a search
 	protected List<String> resultStrings = new ArrayList<String>();
@@ -33,6 +33,9 @@ public class SearchResults<T> {
 	// MetaData mapping
 	protected Map<String, MetaData> metaMapping = new HashMap <String, MetaData>();
 
+	// Metadata for the result set as a whole
+	protected ResultSetMetaData resultSetMeta = new ResultSetMetaData();
+	
 	// Total number of possible results
 	protected int totalCount = -1;
 
@@ -138,6 +141,14 @@ public class SearchResults<T> {
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
+
+    public ResultSetMetaData getResultSetMeta() {
+        return resultSetMeta;
+    }
+
+    public void setResultSetMeta(ResultSetMetaData resultSetMeta) {
+        this.resultSetMeta = resultSetMeta;
+    }
 
     /**
 	 * Get facets
