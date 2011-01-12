@@ -135,7 +135,7 @@ public class SolrReferenceTextSearchPropertyMapper implements PropertyMapper {
         
         System.out.println("outClause: " + outClause);
         
-        return outClause;
+        return "(" + outClause + ")";
     }
     
     /***
