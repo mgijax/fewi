@@ -31,31 +31,15 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitle">Gene Ontology Classifications</span>
 </div>
 
+<jsp:include page="marker_header.jsp"></jsp:include><br>
 
-<!-- header table -->
-<table class="summaryHeader">
-<tr >
-  <td class="summaryHeaderCat1">
-       <b>Symbol</b><br>
-       <b>Name</b><br>
-       <b>ID</b>
-  </td>
-  <td class="summaryHeaderData1">
-    <a style="font-size:x-large;  font-weight: bold;" 
-      href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a>
-    <br/>
-    ${marker.name}<br>
-    ${marker.primaryID}</td>
-</tr>
-</table>
+<div class="GO">
+<a name="text"></a><h3><b>Go Annotations as Summary Text</b> <a href="#tabular">(Tabular View)</a></h3>
 
-<a href="#text"></a><h3><b>Go Annotations as Summary Text</b> <a href="tabular">(Tabular View)</a></h3>
+<%=ntc.convertNotes(marker.getGOText(), '|')%><br><hr><br>
+</div>
 
-<%=ntc.convertNotes(marker.getGOText(), '|')%>
-
-
-${marker.GOText} <br><hr><br>
-<a href="#tabular"></a><h3><b>Go Annotations in Tabular Form</b> <a href="text">(Text View)</a></h3>
+<a name="tabular"></a><h3><b>Go Annotations in Tabular Form</b> <a href="#text">(Text View)</a></h3>
 <!-- paginator -->
 <table style="width:100%;">
   <tr>
@@ -70,7 +54,7 @@ ${marker.GOText} <br><hr><br>
 
 <!-- including this file will start the data injection -->
 <script type="text/javascript">
-  <%@ include file="/js/foo_summary.js" %>
+  <%@ include file="/js/go_summary_marker.js" %>
 </script>
 
 ${templateBean.templateBodyStopHtml}

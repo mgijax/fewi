@@ -6,7 +6,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Foo Query Summary</title>
+<title>Associated Human Diseases</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -26,23 +26,18 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="foo_help.shtml">	
-	<span class="titleBarMainTitle">Foo Summary for Reference</span>
+	<span class="titleBarMainTitle">Associated Human Diseases</span>
 </div>
 
 
-<!-- header table -->
-<table class="summaryHeader">
-<tr >
-  <td class="summaryHeaderCat1">
-       <b>Reference</b>
-  </td>
-  <td class="summaryHeaderData1">
-    <a style="font-size:x-large;  font-weight: bold;" 
-      href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
-    <br/>
-  </td>
-</tr>
-</table>
+<jsp:include page="marker_header.jsp"></jsp:include><br>
+
+<br>
+Note: Diseases listed here are those where a mutant allele of this gene is 
+involved in a mouse genotype used as a model. This does not mean that 
+mutations in this gene contribute to or are causative of the disease.
+<br><br>
+<em>To see all mouse models associated with a human disease phenotype, click on the disease term below. </em> 
 
 
 <!-- paginator -->
@@ -59,8 +54,10 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- including this file will start the data injection -->
 <script type="text/javascript">
-  <%@ include file="/js/foo_summary.js" %>
+  <%@ include file="/js/omim_summary.js" %>
 </script>
+<br>
+<a href="${configBean.FEWI_URL}marker/${marker.primaryID}/vocab/omim">All ${marker.symbol} mutant alleles</a> associated with human diseases.
 
 ${templateBean.templateBodyStopHtml}
 
