@@ -23,6 +23,7 @@ public class SortConstants {
 	public static final String SEQUENCE_PROVIDER   = "sequenceProvider";
 	public static final String SEQUENCE_LENGTH     = "sequenceLength";
 
+	public static final String VOC_TERM            = "term";
 
     // faux entry;  used by webapp class template
     public static final String FOO_SORT              = "fooSort";

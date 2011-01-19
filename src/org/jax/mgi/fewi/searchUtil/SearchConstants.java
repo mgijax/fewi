@@ -40,6 +40,9 @@ public class SearchConstants {
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
 
+    // Vocab Constants
+    
+    public static final String VOC_VOCAB            = "vocab";
 
     // faux entry;  used by webapp class template
     public static final String FOO_ID              = "foo_id";
