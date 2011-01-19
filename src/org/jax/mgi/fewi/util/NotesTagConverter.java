@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jax.mgi.fewi.config.ContextLoader;
 
 /*import org.jax.mgi.shr.datafactory.ActualDBMap;
 import org.jax.mgi.shr.datafactory.AlleleFactory;
@@ -24,11 +25,12 @@ import org.jax.mgi.shr.webapp.WebAppLogger;*/
 /**
 * @module NotesTagConverter.java
 * @author pf
+* @author mhall
 */
 
 /**  The NotesTagConverter class contains methods which encapsulate
 *   knowledge of the note tags found in note fields.  They allow for easy
-*   conversions of tag->HTML anchor, to be displayed within the javawi2.
+*   conversions of tag->HTML anchor, to be displayed within the fewi.
 *
 * @is a converter used to modify tags found in note fields to thier
 *   expanded HTML anchor equivalents
@@ -40,6 +42,9 @@ import org.jax.mgi.shr.webapp.WebAppLogger;*/
 *    <LI> convertNotes(notes, delimiter) -- returns a string containing
 *       the notes, with converted tags
 *    </OL>
+*    
+*    This has been converted for use with the fewi.  As new tags are needed
+*    they will be added into this class.
 */
 public class NotesTagConverter
 {
@@ -158,155 +163,6 @@ public class NotesTagConverter
         return notes;
     }
 
-
-    /* -------------------------------------------------------------------- */
-
-    /** convert all instances of \AlleleSymbol(MGI ID, flag) to either a link
-    *    or just an allele symbol.  We use a special method, as this is a
-    *    non-standard tag (it needs to retrieve data from the database).
-    */
- /*   public String doAlleleSymbolTag (String input, String cssClass)
-    {
-	// pattern to match; first parameter is MGI ID of an allele, second
-	// parameter indicates whether to make a link (1) or not (0)
-	String tag = "\\\\AlleleSymbol *\\((.*?[|].*?)\\)";
-
-	// regular expression handlers...
-        Pattern p = Pattern.compile (tag);
-	Matcher m = p.matcher (input);
-
-	String parameterString = null;	// parameters in tag when found
-	String replacement = null;	// what tag should be replaced with
-	String[] parameters = null;	// 'parameterString' after being split
-	String mgiID = null;		// MGI ID of allele in this tag
-	boolean makeLink = true;	// does this tag require a link?
-	int alleleKey = -1;		// _Allele_key for allele in this tag
-	String symbol = null;		// symbol for allele in this tag
-	String classStr = "";		// string with css class attribute
-
-	if ((cssClass != null) && (cssClass.length() > 0)) {
-	    classStr = " CLASS='" + cssClass + "'";
-	}
-
-	// needed to look up allele symbols for each 'mgiID'...
-	WICfg config = null;
-	SQLDataManager sqlDM = null;
-	Logger logger = null;
-
-	try
-	{
-            config = new WICfg();
-            sqlDM = new SQLDataManager(config);
-	    logger = new WebAppLogger ("JavaWI");
-	}
-	catch (Exception e)
-	{
-	    return input;	// bail out if cannot do database lookups
-	}
-	LookupCache symbolCache = new LookupCache (sqlDM, logger,
-	    "ALL_Allele", "_Allele_key", "symbol");
-	AlleleFactory alleleFactory = new AlleleFactory (config,sqlDM,logger);
-
-	// pattern to be used when creating an HTML link to an allele
-	String linkPattern =
-	    String.format ("<A HREF='%s", config.getJavaWIUrl());
-	linkPattern = linkPattern
-	       + "WIFetch?page=alleleDetail&id=%s'%s>%s</A>";
-
-	// loop through 'input' to find all matches to 'tag'
-	while (m.find())
-	{
-	    parameterString = m.group(1);
-	    parameters = parameterString.split ("\\|");
-
-	    if (parameters[0] == null)		// invalid ID, bailout
-	    {
-		try
-		{
-		    sqlDM.closeResources();
-		}
-		catch (Exception e)
-		{
-		    // clean-up failed, but bail out anyway
-		}
-
-	        return input;
-	    }
-
-	    // look up data for allele from our memory cache, if possible
-
-            mgiID = parameters[0];
-	    symbol = null;
-
-	    if (this.alleleSymbols.containsKey(mgiID))
-	    {
-		symbol = (String) this.alleleSymbols.get(mgiID);
-	    }
-	    else	// get the allele symbol from the database
-	    {
-	        try
-	        {
-	            alleleKey = alleleFactory.getKeyForID (mgiID);
-	            if (alleleKey != -1)
-		    {
-		        symbol = symbolCache.get(alleleKey);
-			if (symbol != null) {
-		    	    symbol = FormatHelper.superscript(symbol);
-			}
-		    }
-	        }
-	        catch (Exception e) {}		// let symbol remain null
-
-		this.alleleSymbols.put (mgiID, symbol);
-	    }
-
-	    // determine whether this tag should be replaced by a link
-
-	    if ((parameters[1] == null) || (parameters[1].trim().equals("0")))
-	    {
-	        makeLink = false;
-	    }
-	    else
-	    {
-	        makeLink = true;
-	    }
-
-	    // find what text string should replace this tag
-
-	    if (symbol != null)
-	    {
-	        if (makeLink)
-	        {
-		    replacement = String.format (linkPattern, mgiID,
-			classStr, symbol);
-	        }
-	        else
-	        {
-		    replacement = symbol;
-	        }
-	    }
-	    else
-	    {
-	        replacement = "invalid allele";
-	    }
-
-	    // do the replacement and look for the next tag
-
-	    input = m.replaceFirst (replacement);
-	    m = p.matcher (input);
-	}
-	try
-	{
-             sqlDM.closeResources();
-        }
-        catch (Exception e) {
-             //  Couldn't close resource we're leaving anyhow...
-        }
-	return input;
-    }
-*/
-    /* -------------------------------------------------------------------- */
-
     public String useNewWindows (String inputString)
     {
 	Pattern p = Pattern.compile (
@@ -342,98 +198,34 @@ public class NotesTagConverter
         HashMap tags = new HashMap();
 
         // Base URLs used in creating the replacement string patterns
-        String javawiURL        = "";
-        String wiURL            = "";
-        String mgihomeURL       = "";
-
-        String ipURL            = "";
-        String ecURL            = "";
-        String emblURL          = "";
-        String spURL            = "";
-        String ncbiqURL         = "";
-        String ncbipqURL        = "";
-        String ncbinqURL        = "";
-        String jbcURL           = "";
-        String jlrURL           = "";
-        String dxdoiURL         = "";
-
-        // get a WICfg and ActualDBMap, and extract all needed data
-        try
-        {
-
-/*            Integer ec_ldb          = new Integer(8);   // Enzyme Commission
-            Integer embl_ldb        = new Integer(9);   // EMBL
-            Integer sp_ldb          = new Integer(DBConstants.LogicalDB_SwissProt);  // SWISS-PROT
-            Integer ip_ldb          = new Integer(DBConstants.LogicalDB_Interpro);   // InterPro
-            Integer dxdoi_ldb       = new Integer(65);  // NCBI Query
-            Integer ncbiq_ldb       = new Integer(68);  // NCBI Query
-            Integer ncbipq_ldb      = new Integer(69);  // NCBI Protein Query
-            Integer ncbinq_ldb      = new Integer(89);  // NCBI Nucleotide Query
-            Integer jbc_ldb         = new Integer(DBConstants.LogicalDB_JBiolChem);  // Journal of Biological Chemistry
-            Integer jlr_ldb         = new Integer(DBConstants.LogicalDB_JLipidRes);  // Journal of Lipid Research
-*/
-/*            ArrayList spURL_list    = adbMap.getActualDBUrl(sp_ldb);
-            ArrayList ecURL_list    = adbMap.getActualDBUrl(ec_ldb);
-            ArrayList emblURL_list  = adbMap.getActualDBUrl(embl_ldb);
-            ArrayList dxdoiURL_list = adbMap.getActualDBUrl(dxdoi_ldb);
-            ArrayList ipURL_list    = adbMap.getActualDBUrl(ip_ldb);
-            ArrayList ncbiq_list    = adbMap.getActualDBUrl(ncbiq_ldb);
-            ArrayList ncbipq_list   = adbMap.getActualDBUrl(ncbipq_ldb);
-            ArrayList ncbinq_list   = adbMap.getActualDBUrl(ncbinq_ldb);
-            ArrayList jbc_list      = adbMap.getActualDBUrl(jbc_ldb);
-            ArrayList jlr_list      = adbMap.getActualDBUrl(jlr_ldb);*/
-
-/*            spURL           = (String)spURL_list.get(0);
-            ecURL           = (String)ecURL_list.get(0);
-            emblURL         = (String)emblURL_list.get(0);
-            ipURL           = (String)ipURL_list.get(0);
-            ncbiqURL        = (String)ncbiq_list.get(0);
-            ncbipqURL       = (String)ncbipq_list.get(0);
-            ncbinqURL       = (String)ncbinq_list.get(0);
-            jbcURL          = (String)jbc_list.get(0);
-            jlrURL          = (String)jlr_list.get(0);
-            dxdoiURL        = (String)dxdoiURL_list.get(0);*/
-
-            spURL           = "spURL";
-            ecURL           = "ecURL";
-            emblURL         = "emblURL";
-            ipURL           = "ipURL";
-            ncbiqURL        = "ncbiqURL";
-            ncbipqURL       = "ncbipqURL";
-            ncbinqURL       = "ncbinqURL";
-            jbcURL          = "jbcURL";
-            jlrURL          = "jlrURL";
-            dxdoiURL        = "dxdoiURL";            
-            
-/*            javawiURL       = config.getJavaWIUrl();
-            wiURL           = config.getPythonWIUrl();
-            mgihomeURL      = config.getMgiHomeUrl();*/
-            javawiURL       = "javawiurl";
-            wiURL           = "wiUrl";
-            mgihomeURL      = "mgihomeURL";
-
-        }
-        catch (Exception exc)
-        {
-            System.out.println(
-                "noteTagConverter could not gather all needed URLs");
-        }
+        String fewiURL          = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+        String mgihomeURL       = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
+        String ipURL            = ContextLoader.getExternalUrls().getProperty("InterPro");
+        String ecURL            = ContextLoader.getExternalUrls().getProperty("EC");
+        String emblURL          = ContextLoader.getExternalUrls().getProperty("EMBL");
+        String spURL            = ContextLoader.getExternalUrls().getProperty("SWISS_PROT");
+        String ncbiqURL         = ContextLoader.getExternalUrls().getProperty("NCBIQuery");
+        String ncbipqURL        = ContextLoader.getExternalUrls().getProperty("NCBIProteinQuery");
+        String ncbinqURL        = ContextLoader.getExternalUrls().getProperty("NCBINucleotideQuery");
+        String jbcURL           = ContextLoader.getExternalUrls().getProperty("JBiolChem");
+        String jlrURL           = ContextLoader.getExternalUrls().getProperty("JLipidRes");
+        String dxdoiURL         = ContextLoader.getExternalUrls().getProperty("DXDOI");
 
         // Pre-build all anchor replacement strings for each known tag
 
         ///////////////////
-        // javawi2 links //
+        // fewi links //
         ///////////////////
 
         // Marker
         tags.put("\\\\Marker\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A class=\"%s\" HREF=\"%sWIFetch?page=markerDetail&id=%s\" %s>%s</A>",
-            cssAnchorClass, javawiURL, "%s", "%s", "%s"));
+            String.format("<A class=\"%s\" HREF=\"%smarker/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         // Sequence
         tags.put("\\\\Sequence\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%sWIFetch?page=sequenceDetail&id=%s\" %s>%s</A>",
-            cssAnchorClass, javawiURL, "%s", "%s", "%s"));
+            String.format ("<A class=\"%s\" HREF=\"%ssequence/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         ///////////////
         // python wi //
@@ -441,33 +233,33 @@ public class NotesTagConverter
 
         // Accession
         tags.put("\\\\Acc\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A class=\"%s\" HREF=\"%ssearches/accession_report.cgi?id=%s\" %s>%s</A>",
-            cssAnchorClass, wiURL, "%s", "%s", "%s"));
+            String.format("<A class=\"%s\" HREF=\"%saccession/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         // Allele
         tags.put("\\\\Allele\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A style='white-space: normal; 'class=\"%s\" HREF=\"%sWIFetch?page=alleleDetail&id=%s\" %s>%s</A>",
-            cssAnchorClass, javawiURL, "%s", "%s", "%s"));
+            String.format("<A style='white-space: normal; 'class=\"%s\" HREF=\"%sallele/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         // AMA
         tags.put("\\\\AMA\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%ssearches/AMA.cgi?id=%s\" %s>%s</A>",
-            cssAnchorClass, wiURL, "%s", "%s", "%s"));
+            String.format ("<A class=\"%s\" HREF=\"%sama/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         // GO
         tags.put("\\\\GO\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%ssearches/GO.cgi?id=%s\" %s>%s</A>",
-            cssAnchorClass, wiURL, "%s", "%s", "%s"));
+            String.format ("<A class=\"%s\" HREF=\"%sgo/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         // Reference
         tags.put("\\\\Ref\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%ssearches/accession_report.cgi?id=%s\" %s>%s</A>",
-            cssAnchorClass, wiURL, "%s", "%s", "%s"));
+            String.format ("<A class=\"%s\" HREF=\"%sreference/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         // Elsevier (might be a temp solution...python wi renders this tag differently)
         tags.put("\\\\Elsevier\\((.*?[|].*?[|].*?)\\)",
-            String.format (" in <A class=\"%s\" HREF=\"%ssearches/accession_report.cgi?id=%s\" %s>%s</A>",
-            cssAnchorClass, wiURL, "%s", "%s", "%s"));
+            String.format (" in <A class=\"%s\" HREF=\"%saccession/%s\" %s>%s</A>",
+            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
 
         /////////////
         // mgihome //
