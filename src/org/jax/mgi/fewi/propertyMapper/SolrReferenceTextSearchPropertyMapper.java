@@ -63,7 +63,7 @@ public class SolrReferenceTextSearchPropertyMapper implements PropertyMapper {
         
         String queryString = "";
         
-        String [] qouteList = value.split("\"");
+        String [] qouteList = value.toLowerCase().split("\"");
         
         Boolean inQoute = Boolean.FALSE;
         
