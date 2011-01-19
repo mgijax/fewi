@@ -534,10 +534,9 @@ public class SolrHunter implements Hunter {
             
             if (this.keyString != null) {            
                 keys.add((String) doc.getFieldValue(keyString));
-                logger.debug("" + doc.getFieldValue(keyString));
                 
                 scoreKeys.add("" + doc.getFieldValue("score"));
-                logger.debug("" + doc.getFieldValue(keyString));
+                logger.debug("key: " + doc.getFieldValue(keyString));
             }
 
             if (this.otherString != null) {
