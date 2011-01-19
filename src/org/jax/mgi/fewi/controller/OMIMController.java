@@ -7,13 +7,14 @@ import java.util.*;
 /*------------------------------*/
 
 // fewi
-import org.jax.mgi.fewi.finder.FooFinder;
+import org.jax.mgi.fewi.finder.MarkerAnnotationFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
-import org.jax.mgi.fewi.forms.FooQueryForm;
-import org.jax.mgi.fewi.summary.FooSummaryRow;
+import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
+import org.jax.mgi.fewi.summary.OMIMSummaryRow;
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerAnnotation;
 import mgi.frontend.datamodel.Reference;
 
 
@@ -66,7 +67,7 @@ public class OMIMController {
       = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private FooFinder fooFinder;
+    private MarkerAnnotationFinder markerAnnotationFinder;
 
     @Autowired
     private MarkerFinder markerFinder;
@@ -203,7 +204,7 @@ public class OMIMController {
     // go Summary by Marker
     //-------------------------------//
     @RequestMapping(value="/marker/{markerID}")
-    public ModelAndView fooSummeryByRef(@PathVariable("markerID") String markerID) {
+    public ModelAndView annotationSummaryByMarker(@PathVariable("markerID") String markerID) {
 
         logger.debug("->omimSummaryByMarker started");
 
@@ -238,8 +239,8 @@ public class OMIMController {
         mav.addObject("marker", marker);
 
         // pre-generate query string
-        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey());
-
+        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey()+"&vocab=OMIM");
+        
         return mav;
     }
 
@@ -248,9 +249,9 @@ public class OMIMController {
     // JSON summary results
     //----------------------//
     @RequestMapping("/json")
-    public @ResponseBody JsonSummaryResponse<FooSummaryRow> seqSummaryJson(
+    public @ResponseBody JsonSummaryResponse<OMIMSummaryRow> seqSummaryJson(
             HttpServletRequest request,
-			@ModelAttribute FooQueryForm query,
+			@ModelAttribute MarkerAnnotationQueryForm query,
             @ModelAttribute Paginator page) {
 
         logger.debug("->JsonSummaryResponse started");
@@ -263,25 +264,25 @@ public class OMIMController {
 
         // perform query, and pull out the requested objects
         SearchResults searchResults
-          = fooFinder.getFoos(params);
-        List<Marker> fooList = searchResults.getResultObjects();
+          = markerAnnotationFinder.getMarkerAnnotations(params);
+        List<MarkerAnnotation> markerAnnotList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
-        List<FooSummaryRow> summaryRows = new ArrayList<FooSummaryRow> ();
-        Iterator<Marker> it = fooList.iterator();
+        List<OMIMSummaryRow> summaryRows = new ArrayList<OMIMSummaryRow> ();
+        Iterator<MarkerAnnotation> it = markerAnnotList.iterator();
         while (it.hasNext()) {
-            Marker foo = it.next();
-            if (foo == null) {
+            MarkerAnnotation markerAnnot = it.next();
+            if (markerAnnot == null) {
                 logger.debug("--> Null Object");
             }else {
-                summaryRows.add(new FooSummaryRow(foo));
+                summaryRows.add(new OMIMSummaryRow(markerAnnot));
             }
         }
 
         // The JSON return object will be serialized to a JSON response.
         // Client-side JavaScript expects this object
-        JsonSummaryResponse<FooSummaryRow> jsonResponse
-          = new JsonSummaryResponse<FooSummaryRow>();
+        JsonSummaryResponse<OMIMSummaryRow> jsonResponse
+          = new JsonSummaryResponse<OMIMSummaryRow>();
 
         // place data into JSON response, and return
         jsonResponse.setSummaryRows(summaryRows);
@@ -305,7 +306,7 @@ public class OMIMController {
         // retrieve requested sort order; set default if not supplied
         String sortRequested = request.getParameter("sort");
         if (sortRequested == null) {
-            sortRequested = SortConstants.FOO_SORT;
+            sortRequested = SortConstants.VOC_TERM;
         }
 
         String dirRequested  = request.getParameter("dir");
@@ -322,7 +323,7 @@ public class OMIMController {
     }
 
     // generate the filters
-    private Filter genFilters(FooQueryForm query){
+    private Filter genFilters(MarkerAnnotationQueryForm query){
 
         logger.debug("->genFilters started");
         logger.debug("QueryForm -> " + query);
@@ -331,20 +332,18 @@ public class OMIMController {
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
 
-        String param1 = query.getParam1();
-        String param2 = query.getParam2();
+        String mrkKey = query.getMrkKey();
+        String vocab = query.getVocab();
 
         //
-        if ((param1 != null) && (!"".equals(param1))) {
-            filterList.add(new Filter (SearchConstants.FOO_ID, param1,
+        if ((mrkKey != null) && (!"".equals(mrkKey))) {
+            filterList.add(new Filter (SearchConstants.MRK_KEY, mrkKey,
                 Filter.OP_EQUAL));
         }
-
-        //
-        if ((param2 != null) && (!"".equals(param2))) {
-            filterList.add(new Filter (SearchConstants.FOO_ID, param2,
+        if ((vocab != null) && (!"".equals(vocab))) {
+            filterList.add(new Filter (SearchConstants.VOC_VOCAB, vocab,
                 Filter.OP_EQUAL));
-        }
+        }        
 
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
