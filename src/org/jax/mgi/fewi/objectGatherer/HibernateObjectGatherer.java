@@ -34,9 +34,8 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
         //logger.debug("gatherer get key: " + key);
 		if (sessionFactory != null && type != null){
-			//Session s = sessionFactory.getCurrentSession();
 			Session s = sessionFactory.getCurrentSession();
-			return (T)s.load(type, key);
+			return (T)s.get(type, key);
 		}
 
 		// problem conditions
@@ -60,12 +59,11 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		List<T> results = new ArrayList<T>();		
 		List<Integer> k = new ArrayList<Integer>();
 		
+		long start = System.nanoTime();
 		for (String key : keys) {
-			k.add(new Integer(key));
+			results.add(this.get(key));
 		}
-		
-		long start = System.nanoTime(); 
-		results = s.createCriteria(type).add(Restrictions.in("id", k)).list();
+		//results = s.createCriteria(type).add(Restrictions.in("id", k)).list();
 		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
 
 		return results;
