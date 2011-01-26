@@ -40,6 +40,10 @@ public class SearchConstants {
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
 
+    // Cre Constants
+    
+    public static final String CRE_SYSTEM_KEY       = "system_key";
+    
     // Vocab Constants
     
     public static final String VOC_VOCAB            = "vocab";

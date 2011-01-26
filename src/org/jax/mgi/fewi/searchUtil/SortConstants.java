@@ -16,6 +16,22 @@ public class SortConstants {
 	public static final String CRE_INDUCIBLE       = "inducibleNote";
 	public static final String CRE_REF_COUNT       = "countOfReferences";
 	public static final String CRE_DETECTED_COUNT  = "detectedCount";
+	
+    // Cre sorting strings, for the detail page
+    
+    public static final String CRE_BY_STRUCTURE                 = "byStructure";
+    public static final String CRE_BY_AGE                       = "byAge";
+    public static final String CRE_BY_LEVEL                     = "byLevel";
+    public static final String CRE_BY_PATTERN                   = "byPattern";
+    public static final String CRE_BY_JNUM_ID                   = "byJnumID";
+    public static final String CRE_BY_ASSAY_TYPE                = "byAssayType";
+    public static final String CRE_BY_REPORTER_GENE             = "byReporterGene";
+    public static final String CRE_BY_DETECTION_METHOD          = "byDetectionMethod";
+    public static final String CRE_BY_ASSAY_NOTE                = "byAssayNote";
+    public static final String CRE_BY_ALLELIC_COMPOSITION       = "byAllelicComposition";
+    public static final String CRE_BY_SEX                       = "bySex";
+    public static final String CRE_BY_SPECIMEN_NOTE             = "bySpecimenNote";
+    public static final String CRE_BY_RESULT_NOTE               = "byResultNote";
 
 	// Sequence Summary page
 
