@@ -42,3 +42,5 @@ solr.sequence.url=${solr.server1.url}sequence/
 solr.allele.url=${solr.server1.url}allele/
 solr.marker.url=${solr.server1.url}marker/
 solr.markerAnnotation.url=${solr.server1.url}markerAnnotation/
+solr.creAlleleSystem.url=${solr.server1.url}creAlleleSystem/
+solr.creAssayResult.url=${solr.server1.url}creAssayResult/
