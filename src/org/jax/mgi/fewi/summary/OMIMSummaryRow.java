@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.summary;
 
-import mgi.frontend.datamodel.MarkerAnnotation;
+import mgi.frontend.datamodel.Annotation;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public class OMIMSummaryRow {
     private Logger logger = LoggerFactory.getLogger(OMIMSummaryRow.class);
 
 	// encapsulated row object
-	private MarkerAnnotation annot;
+	private Annotation annot;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -33,7 +33,7 @@ public class OMIMSummaryRow {
 	// hide the default constructor - we NEED a foo to wrap
     private OMIMSummaryRow () {}
 
-    public OMIMSummaryRow (MarkerAnnotation markerAnnot) {
+    public OMIMSummaryRow (Annotation markerAnnot) {
     	this.annot = markerAnnot;
     	return;
     }
