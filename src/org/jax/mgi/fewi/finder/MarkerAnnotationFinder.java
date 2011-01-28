@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.finder;
 
 import java.util.List;
 
-import mgi.frontend.datamodel.MarkerAnnotation;
+import mgi.frontend.datamodel.Annotation;
 
 import org.jax.mgi.fewi.hunter.SolrMarkerAnnotationSummaryHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -38,7 +38,7 @@ public class MarkerAnnotationFinder {
     private SolrMarkerAnnotationSummaryHunter markerAnnotationSummaryHunter;
 
     @Autowired
-    private HibernateObjectGatherer<MarkerAnnotation> markerAnnotationGatherer;
+    private HibernateObjectGatherer<Annotation> markerAnnotationGatherer;
 
 
 /*    -----------------------------------------
@@ -71,16 +71,16 @@ public class MarkerAnnotationFinder {
 	/* Retrieval of a foo, for a given db key
 	/*--------------------------------------------*/
 
-    public SearchResults<MarkerAnnotation> getMarkerAnnotationByKey(String dbKey) {
+    public SearchResults<Annotation> getMarkerAnnotationByKey(String dbKey) {
 
         logger.debug("->getMarkerAnnotationByKey()");
 
         // result object to be returned
-        SearchResults<MarkerAnnotation> searchResults = new SearchResults<MarkerAnnotation>();
+        SearchResults<Annotation> searchResults = new SearchResults<Annotation>();
 
         // gather objects, add them to the results
-        markerAnnotationGatherer.setType(MarkerAnnotation.class);
-        MarkerAnnotation foo = markerAnnotationGatherer.get( dbKey );
+        markerAnnotationGatherer.setType(Annotation.class);
+        Annotation foo = markerAnnotationGatherer.get( dbKey );
         searchResults.addResultObjects(foo);
 
         return searchResults;
@@ -91,12 +91,12 @@ public class MarkerAnnotationFinder {
     /* Retrieval of multiple foos
     /*---------------------------------*/
 
-    public SearchResults<MarkerAnnotation> getMarkerAnnotations(SearchParams searchParams) {
+    public SearchResults<Annotation> getMarkerAnnotations(SearchParams searchParams) {
 
         logger.debug("->getMarkerAnnotations");
 
         // result object to be returned
-        SearchResults<MarkerAnnotation> searchResults = new SearchResults<MarkerAnnotation>();
+        SearchResults<Annotation> searchResults = new SearchResults<Annotation>();
 
         // ask the hunter to identify which objects to return
         markerAnnotationSummaryHunter.hunt(searchParams, searchResults);
@@ -104,9 +104,11 @@ public class MarkerAnnotationFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        markerAnnotationGatherer.setType(MarkerAnnotation.class);
-        List<MarkerAnnotation> annotList
+        markerAnnotationGatherer.setType(Annotation.class);
+        logger.info("Got here!");
+        List<Annotation> annotList
           = markerAnnotationGatherer.get( searchResults.getResultKeys() );
+        logger.info("Got here too");
         searchResults.setResultObjects(annotList);
         
         logger.info("Finder retrieved this many objects: " + annotList.size());
