@@ -14,7 +14,7 @@ import org.jax.mgi.fewi.summary.OMIMSummaryRow;
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MarkerAnnotation;
+import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.Reference;
 
 
@@ -239,7 +239,8 @@ public class OMIMController {
         mav.addObject("marker", marker);
 
         // pre-generate query string
-        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey()+"&vocab=OMIM");
+        //mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey()+"&vocab=OMIM");
+        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey());
         
         return mav;
     }
@@ -265,13 +266,13 @@ public class OMIMController {
         // perform query, and pull out the requested objects
         SearchResults searchResults
           = markerAnnotationFinder.getMarkerAnnotations(params);
-        List<MarkerAnnotation> markerAnnotList = searchResults.getResultObjects();
+        List<Annotation> markerAnnotList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
         List<OMIMSummaryRow> summaryRows = new ArrayList<OMIMSummaryRow> ();
-        Iterator<MarkerAnnotation> it = markerAnnotList.iterator();
+        Iterator<Annotation> it = markerAnnotList.iterator();
         while (it.hasNext()) {
-            MarkerAnnotation markerAnnot = it.next();
+            Annotation markerAnnot = it.next();
             if (markerAnnot == null) {
                 logger.debug("--> Null Object");
             }else {
