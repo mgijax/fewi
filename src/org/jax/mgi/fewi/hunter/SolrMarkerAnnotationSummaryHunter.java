@@ -36,7 +36,7 @@ public class SolrMarkerAnnotationSummaryHunter extends SolrHunter {
          * object keys returned.
          */
         
-         keyString = IndexConstants.UNIQUE_KEY;
+         keyString = IndexConstants.ANNOTATION_KEY;
 
     }
 
