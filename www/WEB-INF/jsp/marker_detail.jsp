@@ -55,13 +55,15 @@ ${templateBean.templateBodyStartHtml}
 
 
   <!-- ROW2 -->
-  <c:if test="${not empty marker.synonymString}">
+  <c:if test="${not empty marker.synonyms}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Synonyms
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-        ${marker.synonymString}
+        <c:forEach var="synonym" items="${marker.synonyms}" varStatus="status">
+          ${synonym.synonym}<c:if test="${!status.last}">, </c:if>
+        </c:forEach>
       </td>
     </tr>
   </c:if>
@@ -86,7 +88,7 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
         Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
-        ${marker.preferredCentimorgans.cmOffset} ${marker.preferredCentimorgans.mapUnits}<br/>
+        <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<br/>
         Mapping data(${marker.countOfMappingExperiments})
       </td>
     </tr>
@@ -98,8 +100,10 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=leftTdStyles.getNext() %>">
         Sequence&nbsp;Map
       </td>
+      <fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
+      <fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
       <td class="<%=rightTdStyles.getNext() %>">
-        Chr${marker.preferredCoordinates.chromosome}${marker.preferredCoordinates.startCoordinate}-${marker.preferredCoordinates.endCoordinate} 
+        Chr${marker.preferredCoordinates.chromosome}:${startCoord}-${endCoord} 
         ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
         (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/> 
       </td>
@@ -113,8 +117,8 @@ ${templateBean.templateBodyStartHtml}
         Mammalian<br/>homology
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		<c:forEach var="orthology" items="${marker.orthologousMarkers}">
-		  ${orthology.otherOrganism};
+		<c:forEach var="orthology" items="${marker.orthologousMarkers}" varStatus="status">
+		  ${orthology.otherOrganism}<c:if test="${!status.last}">; </c:if>
 		</c:forEach>
       </td>
     </tr>
@@ -178,8 +182,9 @@ ${templateBean.templateBodyStartHtml}
         Polymorphisms
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		<c:forEach var="item" items="${marker.polymorphismCountsByType}">
-		  ${item.countType}(${item.count}) 
+		<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+		  ${item.countType}(${item.count})
+		  <c:if test="${status.first}">: </c:if>
 		</c:forEach>
       </td>
     </tr>
@@ -221,6 +226,10 @@ ${templateBean.templateBodyStartHtml}
 		  Images (${marker.countOfGxdImages})
 		</c:if>
 		<br/>
+		<c:if test="${not empty marker.gxdResultCountsByStage}">
+		  Theiler Stages: 
+		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">${item.countType}<c:if test="${!status.last}">,</c:if></c:forEach>
+		</c:if>
       </td>
     </tr>
   </c:if>
@@ -253,7 +262,7 @@ ${templateBean.templateBodyStartHtml}
         Other&nbsp;database<br/>links
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		<c:forEach var="item" items="${ids}">
+		<c:forEach var="item" items="${marker.ids}">
 		  ${item.logicalDB} : (${item.accID})<br/> 
 		</c:forEach>
       </td>
@@ -273,12 +282,20 @@ ${templateBean.templateBodyStartHtml}
 
   <!-- ROW15 -->
 
-  <c:if test="${not empty references}">
+  <c:if test="${not empty marker.references}">
     <tr  valign=top ALIGN=left>
       <td class="<%=leftTdStyles.getNext() %>" >
         References
       </td>
       <td class="<%=rightTdStyles.getNext() %>" >
+		<c:forEach var="reference" items="${marker.references}" varStatus="status">
+			<c:if test="${status.first}">(Earliest) ${reference.jnumID}
+				${reference.longCitation}<br/>
+			</c:if>
+			<c:if test="${status.last}">(Latest) ${reference.jnumID}
+				${reference.longCitation}<br/>
+			</c:if>
+		</c:forEach>
 		All references(${marker.countOfReferences})<br/>
       </td>
     </tr>
