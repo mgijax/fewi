@@ -42,47 +42,259 @@ ${templateBean.templateBodyStartHtml}
   <!-- ROW1 -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
-      Symbol
+      <font size="+2">&nbsp;</font>Symbol<br/>
+      Name<br/>
+      ID
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      ${marker.symbol}
+      <font size="+2">${marker.symbol}</font><br/>
+      ${marker.name}<br/>
+      ${marker.primaryID}
     </td>
   </tr>
 
 
   <!-- ROW2 -->
-  <tr >
-    <td class="<%=leftTdStyles.getNext() %>">
-      Name
-    </td>
-    <td class="<%=rightTdStyles.getNext() %>">
-      ${marker.name}
-    </td>
-  </tr>
+  <c:if test="${not empty marker.synonymString}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Synonyms
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+        ${marker.synonymString}
+      </td>
+    </tr>
+  </c:if>
 
+  <!-- ROW3 -->
+  <c:if test="${not empty marker.markerSubtype}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Feature&nbsp;Type
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+        ${marker.markerSubtype}
+      </td>
+    </tr>
+  </c:if>
 
-  <!-- ROW3 - Dynamic row; example of general existance test, and looping. -->
-  <!-- The 'not empty' test first looks for the existance of 'references', -->
-  <!-- ensures it's not null, and ensures it's not empty.  Only then, -->
-  <!-- will it render this section.  Also, an example of a for-each loop. -->
+  <!-- ROW4 -->
+  <c:if test="${not empty marker.preferredCentimorgans}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Genetic&nbsp;Map
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+        Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
+        ${marker.preferredCentimorgans.cmOffset} ${marker.preferredCentimorgans.mapUnits}<br/>
+        Mapping data(${marker.countOfMappingExperiments})
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW5 -->
+  <c:if test="${not empty marker.preferredCoordinates}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Sequence&nbsp;Map
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+        Chr${marker.preferredCoordinates.chromosome}${marker.preferredCoordinates.startCoordinate}-${marker.preferredCoordinates.endCoordinate} 
+        ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
+        (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/> 
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW6 -->
+  <c:if test="${not empty marker.orthologousMarkers}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Mammalian<br/>homology
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<c:forEach var="orthology" items="${marker.orthologousMarkers}">
+		  ${orthology.otherOrganism};
+		</c:forEach>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW7 -->
+  <c:if test="${not empty marker.sequenceIDs}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Sequences
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		Representative Sequences<br/>
+		<c:if test="${marker.countOfSequences > 0}">
+		  All sequences(${marker.countOfSequences}) 
+		</c:if>
+		<c:if test="${marker.countOfRefSeqSequences > 0}">
+		  RefSeq(${marker.countOfRefSeqSequences})
+		</c:if>
+		<c:if test="${marker.countOfUniProtSequences > 0}">
+		  UniProt(${marker.countOfUniProtSequences})
+		</c:if>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW8 -->
+  <c:if test="${not empty marker.alleleAssociations}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Alleles<br/>and<br/>phenotypes
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		All alleles(${marker.countOfAlleles}) : 
+		<c:forEach var="item" items="${marker.alleleCountsByType}">
+		  ${item.countType}(${item.count})
+		</c:forEach>
+		<br/>
+		<c:if test="${not empty marker.markerClip}">
+		  &nbsp;<br/>
+		  <blockquote>${marker.markerClip}</blockquote>
+		  &nbsp;<br/>
+		</c:if>
+		<c:if test="${marker.countOfHumanDiseases > 0}">
+		  Associated Human Diseases(${marker.countOfHumanDiseases})&nbsp;&nbsp;&nbsp;
+		</c:if>
+		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
+		  Alleles Annotated to Human Diseases(${marker.countOfAllelesWithHumanDiseases})&nbsp;&nbsp;&nbsp;
+		</c:if>
+		<c:if test="${marker.countOfPhenotypeImages > 0}">
+		  Phenotype Images(${marker.countOfPhenotypeImages})
+		</c:if>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW9 -->
+  <c:if test="${not empty marker.polymorphismCountsByType}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Polymorphisms
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<c:forEach var="item" items="${marker.polymorphismCountsByType}">
+		  ${item.countType}(${item.count}) 
+		</c:forEach>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW10 -->
+  <c:if test="${marker.countOfGOTerms > 0}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Gene&nbsp;Ontology<br/>(GO)<br/>classifications
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		All GO classifications: (${marker.countOfGOTerms} annotations)<br/>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW11 -->
+  <c:if test="${not empty marker.gxdAssayCountsByType}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Expression
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<c:if test="${marker.countOfGxdLiterature > 0}">
+		  Literature Summary: (${marker.countOfGxdLiterature} records)<br/>
+		</c:if>
+		Data Summary:
+		<c:if test="${marker.countOfGxdAssays > 0}">
+		  Assays (${marker.countOfGxdAssays})&nbsp;&nbsp;&nbsp;
+		</c:if>
+		<c:if test="${marker.countOfGxdResults > 0}">
+		  Results (${marker.countOfGxdResults})&nbsp;&nbsp;&nbsp;
+		</c:if>
+		<c:if test="${marker.countOfGxdTissues > 0}">
+		  Tissues (${marker.countOfGxdTissues})&nbsp;&nbsp;&nbsp;
+		</c:if>
+		<c:if test="${marker.countOfGxdImages > 0}">
+		  Images (${marker.countOfGxdImages})
+		</c:if>
+		<br/>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW12 -->
+  <c:if test="${(not empty marker.molecularReagentCountsByType) || (marker.countOfMicroarrayProbesets > 0) || (marker.countOfAntibodies > 0)}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Molecular<br/>reagents
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<c:forEach var="item" items="${marker.molecularReagentCountsByType}">
+		  ${item.countType}(${item.count}) 
+		</c:forEach>
+		<c:if test="${marker.countOfAntibodies > 0}">
+		  Antibodies(${marker.countOfAntibodies})
+		</c:if>
+		<br/>
+		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
+		  Microarray probesets(${marker.countOfMicroarrayProbesets})
+		</c:if>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW13 -->
+  <c:if test="${not empty marker.ids}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Other&nbsp;database<br/>links
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<c:forEach var="item" items="${ids}">
+		  ${item.logicalDB} : (${item.accID})<br/> 
+		</c:forEach>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW14 -->
+  <c:if test="${not empty marker.ids}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Protein-related<br/>information
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- ROW15 -->
 
   <c:if test="${not empty references}">
-
     <tr  valign=top ALIGN=left>
       <td class="<%=leftTdStyles.getNext() %>" >
         References
       </td>
       <td class="<%=rightTdStyles.getNext() %>" >
-
-        <c:forEach var="ref" items="${references}" >
-          ${ref.jnumID} <br/>
-        </c:forEach>
-    
+		All references(${marker.countOfReferences})<br/>
       </td>
     </tr>
- 
   </c:if>
 
+  <!-- ROW16 -->
+
+  <c:if test="${not empty marker.ids}">
+    <tr  valign=top ALIGN=left>
+      <td class="<%=leftTdStyles.getNext() %>" >
+        Other<br/>accession&nbsp;IDs
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>" >
+      </td>
+    </tr>
+  </c:if>
 
 <!-- close structural table and page template-->
 </table>
