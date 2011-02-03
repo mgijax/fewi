@@ -26,7 +26,7 @@ function main() {
     ];
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource("${configBean.FEWI_URL}foo/json?${queryString}&");
+    var myDataSource = new YAHOO.util.DataSource("${configBean.FEWI_URL}go/json?${queryString}&");
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
     myDataSource.responseSchema = {
