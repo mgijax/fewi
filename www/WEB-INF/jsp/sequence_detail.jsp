@@ -271,7 +271,7 @@ ${templateBean.templateBodyStartHtml}
       <td valign=top><a href="${configBean.FEWI_URL}marker/${marker.symbol}">${marker.symbol}</a></td>
       <td valign=top>${marker.name}</td>
       <td valign=top>${marker.countOfGOTerms}</td>
-      <td valign=top>${marker.countOfGXDAssays}</td>
+      <td valign=top>${marker.countOfGxdAssays}</td>
       <td valign=top>${marker.countOfOrthologs}</td>
       <td valign=top>${marker.countOfAlleles}</td>
       </tr>
