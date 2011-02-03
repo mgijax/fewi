@@ -57,7 +57,7 @@ mutations in this gene contribute to or are causative of the disease.
   <%@ include file="/js/omim_summary.js" %>
 </script>
 <br>
-<a href="${configBean.FEWI_URL}marker/${marker.primaryID}/vocab/omim">All ${marker.symbol} mutant alleles</a> associated with human diseases.
+<a href="${configBean.FEWI_URL}allele/marker/${marker.primaryID}/vocab/omim">All ${marker.symbol} mutant alleles</a> associated with human diseases.
 
 ${templateBean.templateBodyStopHtml}
 
