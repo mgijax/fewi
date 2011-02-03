@@ -31,7 +31,8 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="marker_help.shtml">	
-	<span class="titleBarMainTitle">${marker.symbol} Detail</span>
+	<span class="titleBarMainTitle">${marker.symbol}</span><br/>
+	 ${marker.markerType} Detail
 </div>
 
 
@@ -132,6 +133,9 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		Representative Sequences<br/>
+		${marker.representativeGenomicSequence.primaryID}<br/>
+		${marker.representativeTranscriptSequence.primaryID}<br/>
+		${marker.representativePolypeptideSequence.primaryID}<br/>
 		<c:if test="${marker.countOfSequences > 0}">
 		  All sequences(${marker.countOfSequences}) 
 		</c:if>
@@ -288,14 +292,14 @@ ${templateBean.templateBodyStartHtml}
         References
       </td>
       <td class="<%=rightTdStyles.getNext() %>" >
-		<c:forEach var="reference" items="${marker.references}" varStatus="status">
-			<c:if test="${status.first}">(Earliest) ${reference.jnumID}
-				${reference.longCitation}<br/>
-			</c:if>
-			<c:if test="${status.last}">(Latest) ${reference.jnumID}
-				${reference.longCitation}<br/>
-			</c:if>
-		</c:forEach>
+        <c:set var="earliestRef" value="${marker.earliestReference}"/>
+        <c:set var="latestRef" value="${marker.latestReference}"/>
+	    <c:if test="${not empty earliestRef}">(Earliest) ${earliestRef.jnumID}
+		  ${earliestRef.longCitation}<br/>
+		</c:if>
+		<c:if test="${not empty latestRef}">(Latest) ${latestRef.jnumID}
+		  ${latestRef.longCitation}<br/>
+		</c:if>
 		All references(${marker.countOfReferences})<br/>
       </td>
     </tr>
@@ -303,12 +307,16 @@ ${templateBean.templateBodyStartHtml}
 
   <!-- ROW16 -->
 
-  <c:if test="${not empty marker.ids}">
+  <c:set var="otherMgiIDs" value="${marker.otherMgiIDs}"/>
+  <c:if test="${not empty otherMgiIDs}">
     <tr  valign=top ALIGN=left>
       <td class="<%=leftTdStyles.getNext() %>" >
         Other<br/>accession&nbsp;IDs
       </td>
       <td class="<%=rightTdStyles.getNext() %>" >
+		<c:forEach var="item" items="${otherMgiIDs}" varStatus="status">
+		  ${item.accID}<c:if test="${not status.last}">, </c:if> 
+		</c:forEach>
       </td>
     </tr>
   </c:if>
