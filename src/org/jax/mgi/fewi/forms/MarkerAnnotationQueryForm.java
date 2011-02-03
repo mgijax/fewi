@@ -1,8 +1,8 @@
 package org.jax.mgi.fewi.forms;
 
-/*-------*/
-/* class */
-/*-------*/
+/*----------------------------------------------------------------------------------*/
+/* class: represents the query parameters that can be used with a marker annotation */
+/*----------------------------------------------------------------------------------*/
 
 public class MarkerAnnotationQueryForm {
 
@@ -10,41 +10,14 @@ public class MarkerAnnotationQueryForm {
     //--------------------//
     // instance variables
     //--------------------//
-    private String param1;
-    private String param2;
-    private String param3;
+
     private String mrkKey;
     private String vocab;
-
+    private String restriction;
 
     //--------------------//
     // accessors
     //--------------------//
-
-    // parameter 1
-    public String getParam1() {
-        return param1;
-    }
-    public void setParam1(String param1) {
-        this.param1 = param1;
-    }
-
-    // parameter 2
-    public String getParam2() {
-        return param2;
-    }
-    public void setParam2(String param2) {
-        this.param2 = param2;
-    }
-
-    // parameter 3
-    public String getParam3() {
-        return param3;
-    }
-    public void setParam3(String param3) {
-        this.param3 = param3;
-    }
-
 
     public String getMrkKey() {
         return mrkKey;
@@ -57,6 +30,12 @@ public class MarkerAnnotationQueryForm {
     }
     public void setVocab(String vocab) {
         this.vocab = vocab;
+    }
+    public String getRestriction() {
+        return restriction;
+    }
+    public void setRestriction(String restriction) {
+        this.restriction = restriction;
     }
     //--------------------//
     // toString
