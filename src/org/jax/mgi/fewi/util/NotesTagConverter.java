@@ -77,9 +77,7 @@ public class NotesTagConverter
     public NotesTagConverter (String cssAnchorClass)
         throws IOException
     {
-        logger.info("Trying to make a tag map");
         tagConversions = makeTagMap(cssAnchorClass);
-        logger.info("Did that successfully");
 
         return;
     }
@@ -114,8 +112,6 @@ public class NotesTagConverter
     */
     public String convertNotes (String notes, char delimiter)
     {
-
-        logger.info("Entered into the convert notes subroutine");
         
         String      parmStr             = "";
         String      convertedTag        = "";
@@ -147,7 +143,6 @@ public class NotesTagConverter
             while(m.find()){
 
                 parmStr= m.group(1);
-                logger.info("Found this string." + parmStr);
 
                 // Replace the tag with the new string
                 convertedTag = convertTag(parmStr,
