@@ -47,6 +47,7 @@ public class SearchConstants {
     // Vocab Constants
     
     public static final String VOC_VOCAB            = "vocab";
+    public static final String VOC_RESTRICTION      = "qualifier";
 
     // faux entry;  used by webapp class template
     public static final String FOO_ID              = "foo_id";
