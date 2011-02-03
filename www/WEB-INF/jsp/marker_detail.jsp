@@ -106,7 +106,11 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=rightTdStyles.getNext() %>">
         Chr${marker.preferredCoordinates.chromosome}:${startCoord}-${endCoord} 
         ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
-        (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/> 
+        (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/>
+        <p/>
+        VEGA: ${marker.vegaGeneModelID}<br/> 
+        Ensembl: ${marker.ensemblGeneModelID}<br/> 
+        NCBI: ${marker.ncbiGeneModelID}<br/> 
       </td>
     </tr>
   </c:if>
