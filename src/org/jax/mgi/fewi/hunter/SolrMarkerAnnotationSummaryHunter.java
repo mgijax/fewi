@@ -29,6 +29,7 @@ public class SolrMarkerAnnotationSummaryHunter extends SolrHunter {
          */
         propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
         propertyMap.put(SearchConstants.VOC_VOCAB, new SolrPropertyMapper(IndexConstants.VOC_VOCAB));
+        propertyMap.put(SearchConstants.VOC_RESTRICTION, new SolrPropertyMapper(IndexConstants.VOC_QUALIFIER));
 
         /*
          * The name of the field we want to iterate through the documents for
