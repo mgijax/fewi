@@ -52,7 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
 /*-------*/
 
 /*
- * This controller maps all /go/ uri's
+ * This controller maps all /omim/ uri's
  */
 @Controller
 @RequestMapping(value="/omim")
@@ -72,137 +72,10 @@ public class OMIMController {
     @Autowired
     private MarkerFinder markerFinder;
 
-
-    //--------------------------------------------------------------------//
-    // public methods
-    //--------------------------------------------------------------------//
-
-
-    //--------------------//
-    // Go Query Form
-    // This doesn't exist yet, so its commented out.
-    //--------------------//
-/*    @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getQueryForm() {
-
-        logger.debug("->getQueryForm started");
-
-        ModelAndView mav = new ModelAndView("foo_query");
-        mav.addObject("sort", new Paginator());
-        mav.addObject(new FooQueryForm());
-        return mav;
-    }*/
-
-
-    //-------------------------//
-    // Foo Query Form Summary
-    // Doesn't exist yet, so commented out
-    //-------------------------//
-/*    @RequestMapping("/summary")
-    public ModelAndView fooSummary(HttpServletRequest request,
-            @ModelAttribute FooQueryForm queryForm) {
-
-        logger.debug("->fooSummary started");
-        logger.debug("queryString: " + request.getQueryString());
-
-        ModelAndView mav = new ModelAndView("foo_summary");
-        mav.addObject("queryString", request.getQueryString());
-        mav.addObject("queryForm", queryForm);
-
-        return mav;
-    }*/
-
-
-    //--------------------//
-    // Foo Detail By ID
-    // Doesn't exist yet, so commented out
-    //--------------------//
-/*    @RequestMapping(value="/{fooID:.+}", method = RequestMethod.GET)
-    public ModelAndView fooDetailByID(@PathVariable("fooID") String fooID) {
-
-        logger.debug("->fooDetailByID started");
-
-        // setup search parameters object
-        SearchParams searchParams = new SearchParams();
-        Filter fooIdFilter = new Filter(SearchConstants.FOO_ID, fooID);
-        searchParams.setFilter(fooIdFilter);
-
-        // find the requested foo
-        SearchResults searchResults
-          = fooFinder.getFooByID(searchParams);
-        List<Marker> fooList = searchResults.getResultObjects();
-
-        // there can be only one...
-        if (fooList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Foo Found");
-            return mav;
-        }
-        if (fooList.size() > 1) { // dupe found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate ID");
-            return mav;
-        }
-        // success - we have a single object
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("foo_detail");
-
-        //pull out the foo, and add to mav
-        Marker foo = fooList.get(0);
-        mav.addObject("foo", foo);
-
-        // package referenes; gather via object traversal
-        List<Reference> references = foo.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
-        }
-
-        return mav;
-    }*/
-
-
-    //--------------------//
-    // Foo Detail By Key
-    // Doesn't exist yet, so commented out.
-    //--------------------//
-/*    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView fooDetailByKey(@PathVariable("dbKey") String dbKey) {
-
-        logger.debug("->fooDetailByKey started");
-
-        // find the requested foo
-        SearchResults searchResults
-          = fooFinder.getFooByKey(dbKey);
-        List<Marker> fooList = searchResults.getResultObjects();
-
-        // there can be only one...
-        if (fooList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Foo Found");
-            return mav;
-        }// success
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("foo_detail");
-
-        //pull out the foo, and add to mav
-        Marker foo = fooList.get(0);
-        mav.addObject("foo", foo);
-
-        // package referenes; gather via object traversal
-        List<Reference> references = foo.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
-        }
-
-        return mav;
-    }*/
-
-
     //-------------------------------//
-    // go Summary by Marker
+    // OMIM Summary by Marker
     //-------------------------------//
+    
     @RequestMapping(value="/marker/{markerID}")
     public ModelAndView annotationSummaryByMarker(@PathVariable("markerID") String markerID) {
 
@@ -239,8 +112,7 @@ public class OMIMController {
         mav.addObject("marker", marker);
 
         // pre-generate query string
-        //mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey()+"&vocab=OMIM");
-        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey());
+        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey()+"&vocab=OMIM&restriction=not");
         
         return mav;
     }
@@ -335,6 +207,7 @@ public class OMIMController {
 
         String mrkKey = query.getMrkKey();
         String vocab = query.getVocab();
+        String restriction = query.getRestriction();
 
         //
         if ((mrkKey != null) && (!"".equals(mrkKey))) {
@@ -344,7 +217,11 @@ public class OMIMController {
         if ((vocab != null) && (!"".equals(vocab))) {
             filterList.add(new Filter (SearchConstants.VOC_VOCAB, vocab,
                 Filter.OP_EQUAL));
-        }        
+        }
+        if ((restriction != null) && (!"".equals(restriction))) {
+            filterList.add(new Filter (SearchConstants.VOC_RESTRICTION, restriction,
+                Filter.OP_NOT_EQUAL));
+        }   
 
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();

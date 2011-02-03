@@ -7,14 +7,15 @@ import java.util.*;
 /*------------------------------*/
 
 // fewi
-import org.jax.mgi.fewi.finder.FooFinder;
+import org.jax.mgi.fewi.finder.MarkerAnnotationFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
-import org.jax.mgi.fewi.forms.FooQueryForm;
-import org.jax.mgi.fewi.summary.FooSummaryRow;
+import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
+import org.jax.mgi.fewi.summary.GOSummaryRow;
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Annotation;
 
 
 /*--------------------------------------*/
@@ -66,144 +67,16 @@ public class GOController {
       = LoggerFactory.getLogger(GOController.class);
 
     @Autowired
-    private FooFinder fooFinder;
+    private MarkerAnnotationFinder markerAnnotationFinder;
 
     @Autowired
     private MarkerFinder markerFinder;
-
-
-    //--------------------------------------------------------------------//
-    // public methods
-    //--------------------------------------------------------------------//
-
-
-    //--------------------//
-    // Go Query Form
-    // This doesn't exist yet, so its commented out.
-    //--------------------//
-/*    @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getQueryForm() {
-
-        logger.debug("->getQueryForm started");
-
-        ModelAndView mav = new ModelAndView("foo_query");
-        mav.addObject("sort", new Paginator());
-        mav.addObject(new FooQueryForm());
-        return mav;
-    }*/
-
-
-    //-------------------------//
-    // Foo Query Form Summary
-    // Doesn't exist yet, so commented out
-    //-------------------------//
-/*    @RequestMapping("/summary")
-    public ModelAndView fooSummary(HttpServletRequest request,
-            @ModelAttribute FooQueryForm queryForm) {
-
-        logger.debug("->fooSummary started");
-        logger.debug("queryString: " + request.getQueryString());
-
-        ModelAndView mav = new ModelAndView("foo_summary");
-        mav.addObject("queryString", request.getQueryString());
-        mav.addObject("queryForm", queryForm);
-
-        return mav;
-    }*/
-
-
-    //--------------------//
-    // Foo Detail By ID
-    // Doesn't exist yet, so commented out
-    //--------------------//
-/*    @RequestMapping(value="/{fooID:.+}", method = RequestMethod.GET)
-    public ModelAndView fooDetailByID(@PathVariable("fooID") String fooID) {
-
-        logger.debug("->fooDetailByID started");
-
-        // setup search parameters object
-        SearchParams searchParams = new SearchParams();
-        Filter fooIdFilter = new Filter(SearchConstants.FOO_ID, fooID);
-        searchParams.setFilter(fooIdFilter);
-
-        // find the requested foo
-        SearchResults searchResults
-          = fooFinder.getFooByID(searchParams);
-        List<Marker> fooList = searchResults.getResultObjects();
-
-        // there can be only one...
-        if (fooList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Foo Found");
-            return mav;
-        }
-        if (fooList.size() > 1) { // dupe found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate ID");
-            return mav;
-        }
-        // success - we have a single object
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("foo_detail");
-
-        //pull out the foo, and add to mav
-        Marker foo = fooList.get(0);
-        mav.addObject("foo", foo);
-
-        // package referenes; gather via object traversal
-        List<Reference> references = foo.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
-        }
-
-        return mav;
-    }*/
-
-
-    //--------------------//
-    // Foo Detail By Key
-    // Doesn't exist yet, so commented out.
-    //--------------------//
-/*    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView fooDetailByKey(@PathVariable("dbKey") String dbKey) {
-
-        logger.debug("->fooDetailByKey started");
-
-        // find the requested foo
-        SearchResults searchResults
-          = fooFinder.getFooByKey(dbKey);
-        List<Marker> fooList = searchResults.getResultObjects();
-
-        // there can be only one...
-        if (fooList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Foo Found");
-            return mav;
-        }// success
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("foo_detail");
-
-        //pull out the foo, and add to mav
-        Marker foo = fooList.get(0);
-        mav.addObject("foo", foo);
-
-        // package referenes; gather via object traversal
-        List<Reference> references = foo.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
-        }
-
-        return mav;
-    }*/
-
 
     //-------------------------------//
     // go Summary by Marker
     //-------------------------------//
     @RequestMapping(value="/marker/{markerID}")
-    public ModelAndView fooSummeryByRef(@PathVariable("markerID") String markerID) {
+    public ModelAndView goSummeryByMarker(@PathVariable("markerID") String markerID) {
 
         logger.debug("->goSummeryByMarker started");
 
@@ -238,7 +111,7 @@ public class GOController {
         mav.addObject("marker", marker);
 
         // pre-generate query string
-        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey());
+        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey() + "&vocab=GO");
 
         return mav;
     }
@@ -248,9 +121,9 @@ public class GOController {
     // JSON summary results
     //----------------------//
     @RequestMapping("/json")
-    public @ResponseBody JsonSummaryResponse<FooSummaryRow> seqSummaryJson(
+    public @ResponseBody JsonSummaryResponse<GOSummaryRow> seqSummaryJson(
             HttpServletRequest request,
-			@ModelAttribute FooQueryForm query,
+			@ModelAttribute MarkerAnnotationQueryForm query,
             @ModelAttribute Paginator page) {
 
         logger.debug("->JsonSummaryResponse started");
@@ -263,25 +136,25 @@ public class GOController {
 
         // perform query, and pull out the requested objects
         SearchResults searchResults
-          = fooFinder.getFoos(params);
-        List<Marker> fooList = searchResults.getResultObjects();
+          = markerAnnotationFinder.getMarkerAnnotations(params);
+        List<Annotation> annotList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
-        List<FooSummaryRow> summaryRows = new ArrayList<FooSummaryRow> ();
-        Iterator<Marker> it = fooList.iterator();
+        List<GOSummaryRow> summaryRows = new ArrayList<GOSummaryRow> ();
+        Iterator<Annotation> it = annotList.iterator();
         while (it.hasNext()) {
-            Marker foo = it.next();
-            if (foo == null) {
+            Annotation annot = it.next();
+            if (annot == null) {
                 logger.debug("--> Null Object");
             }else {
-                summaryRows.add(new FooSummaryRow(foo));
+                summaryRows.add(new GOSummaryRow(annot));
             }
         }
 
         // The JSON return object will be serialized to a JSON response.
         // Client-side JavaScript expects this object
-        JsonSummaryResponse<FooSummaryRow> jsonResponse
-          = new JsonSummaryResponse<FooSummaryRow>();
+        JsonSummaryResponse<GOSummaryRow> jsonResponse
+          = new JsonSummaryResponse<GOSummaryRow>();
 
         // place data into JSON response, and return
         jsonResponse.setSummaryRows(summaryRows);
@@ -302,27 +175,32 @@ public class GOController {
 
         List<Sort> sorts = new ArrayList<Sort>();
 
+/*        // Set the default sort order, since this is an unsortable summary/
+        
         // retrieve requested sort order; set default if not supplied
         String sortRequested = request.getParameter("sort");
         if (sortRequested == null) {
-            sortRequested = SortConstants.FOO_SORT;
+            sortRequested = SortConstants.VOC_TERM;
         }
 
         String dirRequested  = request.getParameter("dir");
         boolean desc = false;
         if("desc".equalsIgnoreCase(dirRequested)){
             desc = true;
-        }
+        }*/
 
-        Sort sort = new Sort(sortRequested, desc);
+        Sort sort = new Sort("dagName", true);
+        Sort sort2 = new Sort(SortConstants.VOC_TERM, false);
+        
         sorts.add(sort);
+        sorts.add(sort2);
 
         logger.debug ("sort: " + sort.toString());
         return sorts;
     }
 
     // generate the filters
-    private Filter genFilters(FooQueryForm query){
+    private Filter genFilters(MarkerAnnotationQueryForm query){
 
         logger.debug("->genFilters started");
         logger.debug("QueryForm -> " + query);
@@ -331,20 +209,23 @@ public class GOController {
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
 
-        String param1 = query.getParam1();
-        String param2 = query.getParam2();
+        String mrkKey = query.getMrkKey();
+        String vocab = query.getVocab();
+        String restriction = query.getRestriction();
 
         //
-        if ((param1 != null) && (!"".equals(param1))) {
-            filterList.add(new Filter (SearchConstants.FOO_ID, param1,
+        if ((mrkKey != null) && (!"".equals(mrkKey))) {
+            filterList.add(new Filter (SearchConstants.MRK_KEY, mrkKey,
                 Filter.OP_EQUAL));
         }
-
-        //
-        if ((param2 != null) && (!"".equals(param2))) {
-            filterList.add(new Filter (SearchConstants.FOO_ID, param2,
+        if ((vocab != null) && (!"".equals(vocab))) {
+            filterList.add(new Filter (SearchConstants.VOC_VOCAB, vocab,
                 Filter.OP_EQUAL));
         }
+        if ((restriction != null) && (!"".equals(restriction))) {
+            filterList.add(new Filter (SearchConstants.VOC_RESTRICTION, restriction,
+                Filter.OP_NOT_EQUAL));
+        }   
 
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
