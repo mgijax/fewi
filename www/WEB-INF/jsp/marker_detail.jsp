@@ -103,14 +103,35 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
       <fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
+	  <c:set var="chromosome" value="${marker.preferredCoordinates.chromosome}"/>
+
       <td class="<%=rightTdStyles.getNext() %>">
         Chr${marker.preferredCoordinates.chromosome}:${startCoord}-${endCoord} 
         ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
         (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/>
         <p/>
-        VEGA: ${marker.vegaGeneModelID}<br/> 
-        Ensembl: ${marker.ensemblGeneModelID}<br/> 
-        NCBI: ${marker.ncbiGeneModelID}<br/> 
+        <c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
+        <c:set var="ensemblID" value="${marker.ensemblGeneModelID.accID}"/>
+        <c:set var="ncbiID" value="${marker.ncbiGeneModelID.accID}"/>
+        <c:set var="foundOne" value="0"/>
+		<c:if test="${not empty vegaID}">
+		  <a href="${fn:replace(externalUrls.VEGA_Genome_Browser, '@@@@', vegaID)}" target="_new">VEGA Genome Browser</a>
+		  <c:set var="foundOne" value="1"/>
+		</c:if>
+		<c:if test="${not empty ensemblID}">
+		  <c:if test="${foundOne > 0}"> | </c:if>
+		  <a href="${fn:replace(externalUrls.Ensembl_Genome_Browser, '@@@@', ensemblID)}" target="_new">Ensembl Genome Browser</a>
+		  <c:set var="foundOne" value="1"/>
+		</c:if>
+		<c:if test="${not empty coords}">
+		  <c:if test="${foundOne > 0}"> | </c:if>
+		  <a href="${fn:replace(externalUrls.UCSC_Genome_Browser, '@@@@', coords)}" target="_new">UCSC Browser</a>
+		  <c:set var="foundOne" value="1"/>
+		</c:if>
+		<c:if test="${not empty ncbiID}">
+		  <c:if test="${foundOne > 0}"> | </c:if>
+		  <a href="${fn:replace(externalUrls.NCBI_Map_Viewer, '@@@@', ncbiID)}" target="_new">NCBI Map Viewer</a>
+		</c:if>
       </td>
     </tr>
   </c:if>
@@ -125,6 +146,18 @@ ${templateBean.templateBodyStartHtml}
 		<c:forEach var="orthology" items="${marker.orthologousMarkers}" varStatus="status">
 		  ${orthology.otherOrganism}<c:if test="${!status.last}">; </c:if>
 		</c:forEach>
+		&nbsp;&nbsp;&nbsp;(Mammalian Orthology)<br/>
+		
+		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
+		<c:if test="${not empty pirsf}">
+		  Protein SuperFamily: <a href="${fn:replace(externalUrls.PIRSF, '@@@@', pirsf.termID)}">${pirsf.term}</a><br/>
+		</c:if>
+
+		<c:set var="treeFamDisplayID" value="${marker.treeFamDisplayID.accID}"/>
+		<c:set var="treeFamLinkID" value="${marker.treeFamLinkID.accID}"/>
+		<c:if test="${not (empty treeFamDisplayID or empty treeFamLinkID)}">
+		  TreeFam: <a href="${fn:replace(externalUrls.TreeFam, '@@@@', treeFamLinkID)}">${treeFamDisplayID}</a><br/>
+		</c:if>
       </td>
     </tr>
   </c:if>
@@ -206,6 +239,11 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		All GO classifications: (${marker.countOfGOTerms} annotations)<br/>
+		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
+		<c:if test="${not empty funcbaseID}">
+		  External Resources: 
+		  <a href="${fn:replace(externalUrls.FuncBase, '@@@@', funcbaseID.accID)}">FuncBase</a><br/>
+		</c:if>
       </td>
     </tr>
   </c:if>
@@ -237,7 +275,9 @@ ${templateBean.templateBodyStartHtml}
 		<c:if test="${not empty marker.gxdResultCountsByStage}">
 		  Theiler Stages: 
 		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">${item.countType}<c:if test="${!status.last}">,</c:if></c:forEach>
+		  <br/>
 		</c:if>
+		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(${marker.countOfCdnaSources})<br/></c:if>
       </td>
     </tr>
   </c:if>
@@ -278,12 +318,19 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW14 -->
-  <c:if test="${not empty marker.ids}">
+  <c:set var="interproAnnotations" value="${marker.interproAnnotations}"/>
+  <c:if test="${not empty interproAnnotations}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Protein-related<br/>information
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
+        <table>
+        <tr><td>Resource</td><td>ID</td><td>Description</td></tr>
+        <c:forEach var="item" items="${interproAnnotations}">
+          <tr><td>InterPro</td><td>${item.termID}</td><td>${item.term}</td></tr>
+        </c:forEach>
+        </table>
       </td>
     </tr>
   </c:if>
