@@ -104,6 +104,9 @@ ${templateBean.templateBodyStartHtml}
       <fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
       <fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
 	  <c:set var="chromosome" value="${marker.preferredCoordinates.chromosome}"/>
+	  <c:set var="coord1" value="${fn:replace('Chr<chr>:<start>-<end>', '<chr>', chromosome)}"/>
+	  <c:set var="coord2" value="${fn:replace(coord1, '<start>', startCoord)}"/>
+	  <c:set var="coords" value="${fn:replace(coord2, '<end>', endCoord)}"/>
 
       <td class="<%=rightTdStyles.getNext() %>">
         Chr${marker.preferredCoordinates.chromosome}:${startCoord}-${endCoord} 
@@ -169,10 +172,38 @@ ${templateBean.templateBodyStartHtml}
         Sequences
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		Representative Sequences<br/>
-		${marker.representativeGenomicSequence.primaryID}<br/>
-		${marker.representativeTranscriptSequence.primaryID}<br/>
-		${marker.representativePolypeptideSequence.primaryID}<br/>
+		<form name="sequenceForm" method="GET">
+		<table>
+		  <tr><td colspan="4">Representative Sequences</td><td>Length</td><td>Strain/Species</td><td>Flank</td></tr>
+		  <c:if test="${not empty marker.representativeGenomicSequence}">
+		    <tr><td><input type="checkbox" name="seq1"></td><td>genomic</td>
+		      <td>${marker.representativeGenomicSequence.primaryID}</td>
+		      <td>links</td><td>${marker.representativeGenomicSequence.length}</td>
+		      <td>source</td>
+		      <td>&#177; <input type="text" size="3" name="flank" value="0">&nbsp;Kb</td></tr>
+		  </c:if>
+		  <c:if test="${not empty marker.representativeTranscriptSequence}">
+		    <tr><td><input type="checkbox" name="seq2"></td><td>transcript</td>
+		      <td>${marker.representativeTranscriptSequence.primaryID}</td>
+		      <td>links</td><td>${marker.representativeTranscriptSequence.length}</td>
+		      <td>source</td><td>&nbsp;</td></tr>
+		  </c:if>
+		  <c:if test="${not empty marker.representativePolypeptideSequence}">
+		    <tr><td><input type="checkbox" name="seq3"></td><td>polypeptide</td>
+		      <td>${marker.representativePolypeptideSequence.primaryID}</td>
+		      <td>links</td><td>${marker.representativePolypeptideSequence.length}</td>
+		      <td>source</td><td>&nbsp;</td></tr>
+		  </c:if>
+		</table>
+		</form>
+		<form name="sequenceFormPullDown">
+		  <I>For the selected sequences</I>
+		  <select name="seqPullDown">
+		  <option value="foo" selected> download in FASTA format</option>
+		  <option value="foo2"> forward to MouseBLAST</option>
+		  <input type="button" value="Go">
+		  </select>
+		</form>
 		<c:if test="${marker.countOfSequences > 0}">
 		  All sequences(${marker.countOfSequences}) 
 		</c:if>
@@ -277,7 +308,28 @@ ${templateBean.templateBodyStartHtml}
 		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">${item.countType}<c:if test="${!status.last}">,</c:if></c:forEach>
 		  <br/>
 		</c:if>
+		
 		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(${marker.countOfCdnaSources})<br/></c:if>
+		
+		<c:set var="allenID" value="${marker.allenBrainAtlasID.accID}"/>
+		<c:set var="gensatID" value="${marker.gensatID.accID}"/>
+		<c:set var="geoID" value="${marker.geoID.accID}"/>
+		<c:set var="arrayExpressID" value="${marker.arrayExpressID.accID}"/>
+		<c:if test="${not (empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
+		  External Resources: 
+		  <c:if test="${not empty allenID}">
+		    <a href="${fn:replace (externalUrls.Allen_Brain_Atlas, '@@@@', allenID)}" target="_new">Allen Brain Atlas</a>&nbsp;&nbsp;
+		  </c:if>
+		  <c:if test="${not empty gensatID}">
+		    <a href="${fn:replace (externalUrls.GENSAT, '@@@@', gensatID)}" target="_new">GENSAT</a>&nbsp;&nbsp;
+		  </c:if>
+		  <c:if test="${not empty geoID}">
+		    <a href="${fn:replace (externalUrls.GEO, '@@@@', geoID)}" target="_new">GEO</a>&nbsp;&nbsp;
+		  </c:if>
+		  <c:if test="${not empty arrayExpressID}">
+		    <a href="${fn:replace (externalUrls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">ArrayExpress</a>
+		  </c:if><br/>
+		</c:if>
       </td>
     </tr>
   </c:if>
