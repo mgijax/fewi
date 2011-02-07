@@ -178,20 +178,23 @@ ${templateBean.templateBodyStartHtml}
 		  <c:if test="${not empty marker.representativeGenomicSequence}">
 		    <tr><td><input type="checkbox" name="seq1"></td><td>genomic</td>
 		      <td>${marker.representativeGenomicSequence.primaryID}</td>
-		      <td>links</td><td>${marker.representativeGenomicSequence.length}</td>
+		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td>${marker.representativeGenomicSequence.length}</td>
 		      <td>source</td>
 		      <td>&#177; <input type="text" size="3" name="flank" value="0">&nbsp;Kb</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativeTranscriptSequence}">
 		    <tr><td><input type="checkbox" name="seq2"></td><td>transcript</td>
 		      <td>${marker.representativeTranscriptSequence.primaryID}</td>
-		      <td>links</td><td>${marker.representativeTranscriptSequence.length}</td>
+		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td>${marker.representativeTranscriptSequence.length}</td>
 		      <td>source</td><td>&nbsp;</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativePolypeptideSequence}">
 		    <tr><td><input type="checkbox" name="seq3"></td><td>polypeptide</td>
 		      <td>${marker.representativePolypeptideSequence.primaryID}</td>
-		      <td>links</td><td>${marker.representativePolypeptideSequence.length}</td>
+		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td>${marker.representativePolypeptideSequence.length}</td>
 		      <td>source</td><td>&nbsp;</td></tr>
 		  </c:if>
 		</table>
@@ -205,7 +208,7 @@ ${templateBean.templateBodyStartHtml}
 		  </select>
 		</form>
 		<c:if test="${marker.countOfSequences > 0}">
-		  All sequences(${marker.countOfSequences}) 
+		  All sequences(<a href="${configBean.FEWI_URL}/sequence/marker/${marker.primaryID}">${marker.countOfSequences}</a>) 
 		</c:if>
 		<c:if test="${marker.countOfRefSeqSequences > 0}">
 		  RefSeq(${marker.countOfRefSeqSequences})
@@ -269,7 +272,7 @@ ${templateBean.templateBodyStartHtml}
         Gene&nbsp;Ontology<br/>(GO)<br/>classifications
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		All GO classifications: (${marker.countOfGOTerms} annotations)<br/>
+		All GO classifications: (<a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a> annotations)<br/>
 		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
 		<c:if test="${not empty funcbaseID}">
 		  External Resources: 
@@ -397,10 +400,10 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=rightTdStyles.getNext() %>" >
         <c:set var="earliestRef" value="${marker.earliestReference}"/>
         <c:set var="latestRef" value="${marker.latestReference}"/>
-	    <c:if test="${not empty earliestRef}">(Earliest) ${earliestRef.jnumID}
+	    <c:if test="${not empty earliestRef}">(Earliest) <a href="${configBean.FEWI_URL}reference/${earliestRef.jnumID}">${earliestRef.jnumID}</a>
 		  ${earliestRef.longCitation}<br/>
 		</c:if>
-		<c:if test="${not empty latestRef}">(Latest) ${latestRef.jnumID}
+		<c:if test="${not empty latestRef}">(Latest) <a href="${configBean.FEWI_URL}reference/${latestRef.jnumID}">${latestRef.jnumID}</a>
 		  ${latestRef.longCitation}<br/>
 		</c:if>
 		All references(${marker.countOfReferences})<br/>
