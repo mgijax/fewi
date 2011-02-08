@@ -82,6 +82,7 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW4 -->
+  <c:set var="hasGeneticLocation" value="0"/>
   <c:if test="${not empty marker.preferredCentimorgans}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
@@ -90,6 +91,11 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=rightTdStyles.getNext() %>">
         Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
         <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<br/>
+        <c:if test="${(marker.preferredCentimorgans.chromosome != 'UN') and (marker.preferredCentimorgans.cmOffset > 0.0)}">
+          <c:set var="hasGeneticLocation" value="1"/>
+          Detailed Genetic Map &#177; 1 cM
+        </c:if>
+        <p/>
         Mapping data(${marker.countOfMappingExperiments})
       </td>
     </tr>
@@ -146,10 +152,18 @@ ${templateBean.templateBodyStartHtml}
         Mammalian<br/>homology
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
+        <c:set var="hasHumanOrthology" value="0"/>
 		<c:forEach var="orthology" items="${marker.orthologousMarkers}" varStatus="status">
 		  ${orthology.otherOrganism}<c:if test="${!status.last}">; </c:if>
+		  <c:if test="${orthology.otherOrganism == 'human'}">
+		    <c:set var="hasHumanOrthology" value="1"/>
+		  </c:if>
 		</c:forEach>
 		&nbsp;&nbsp;&nbsp;(Mammalian Orthology)<br/>
+		
+		<c:if test="${(hasHumanOrthology == 1) and (hasGeneticLocation == 1)}">
+		  Comparative Map (Mouse/Human ${marker.symbol} &#177; 2 cM)<P>
+		</c:if>
 		
 		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
 		<c:if test="${not empty pirsf}">
@@ -204,7 +218,7 @@ ${templateBean.templateBodyStartHtml}
 		  <select name="seqPullDown">
 		  <option value="foo" selected> download in FASTA format</option>
 		  <option value="foo2"> forward to MouseBLAST</option>
-		  <input type="button" value="Go">
+		  <input type="button" value="Go" onClick="alert('Not yet implemented')">
 		  </select>
 		</form>
 		<c:if test="${marker.countOfSequences > 0}">
