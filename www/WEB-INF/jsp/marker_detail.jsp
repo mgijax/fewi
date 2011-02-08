@@ -359,15 +359,22 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW13 -->
-  <c:if test="${not empty marker.ids}">
+  <c:set var="otherIDs" value="${marker.otherIDs}"/>
+  <c:if test="${not empty otherIDs}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Other&nbsp;database<br/>links
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		<c:forEach var="item" items="${marker.ids}">
-		  ${item.logicalDB} : (${item.accID})<br/> 
-		</c:forEach>
+        <table>
+			<c:set var="lastLogicalDB" value="0"/>
+			<!--  Yes, this loop is ugly.  It is needed to remove the spaces
+				  before the commas, however.  For maintenance, you may want
+				  to put it on separate lines, then combine them again before
+				  check-in. -->
+			<c:forEach var="item" items="${otherIDs}" varStatus="status"><c:if test="${status.first}"><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td>${item.accID}</c:if><c:if test="${not status.first}"><c:if test="${prevLDB == item.logicalDB}">, ${item.accID}</c:if><c:if test="${prevLDB != item.logicalDB}"></td></tr><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td>${item.accID}</c:if></c:if></c:forEach>
+		  </td></tr>
+		</table>
       </td>
     </tr>
   </c:if>
