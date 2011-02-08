@@ -238,7 +238,7 @@ ${templateBean.templateBodyStartHtml}
 		  &nbsp;<br/>
 		</c:if>
 		<c:if test="${marker.countOfHumanDiseases > 0}">
-		  Associated Human Diseases(${marker.countOfHumanDiseases})&nbsp;&nbsp;&nbsp;
+		  Associated Human Diseases(<a href="${configBean.FEWI_URL}omim/marker/${marker.primaryID}">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
 		  Alleles Annotated to Human Diseases(${marker.countOfAllelesWithHumanDiseases})&nbsp;&nbsp;&nbsp;
