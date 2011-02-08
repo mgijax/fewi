@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
+import java.text.Annotation;
 import java.util.*;
 
 /*------------------------------*/
@@ -149,12 +150,47 @@ public class MarkerController {
         Marker marker = markerList.get(0);
         mav.addObject("marker", marker);
 
-        // package referenes; gather via object traversal
-        List<Reference> references = marker.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
+        // We need to pull out the GO terms we want to use as teasers for
+        // each ontology.  (This is easier in Java than JSTL, so we do
+        // it here.)
+        
+        List<mgi.frontend.datamodel.Annotation> pAnnot = this.noDuplicates(
+        		marker.getGoProcessAnnotations());
+        List<mgi.frontend.datamodel.Annotation> cAnnot = this.noDuplicates(
+        		marker.getGoComponentAnnotations());
+        List<mgi.frontend.datamodel.Annotation> fAnnot = this.noDuplicates(
+        		marker.getGoFunctionAnnotations());
+        	
+        if (!pAnnot.isEmpty()) {
+        	if (pAnnot.size() > 2) {
+        		mav.addObject ("processAnnot3", pAnnot.get(2));
+        	}
+        	if (pAnnot.size() > 1) {
+        		mav.addObject ("processAnnot2", pAnnot.get(1));
+        	}
+       		mav.addObject ("processAnnot1", pAnnot.get(0));
         }
 
+        if (!fAnnot.isEmpty()) {
+        	if (fAnnot.size() > 2) {
+        		mav.addObject ("functionAnnot3", fAnnot.get(2));
+        	}
+        	if (fAnnot.size() > 1) {
+        		mav.addObject ("functionAnnot2", fAnnot.get(1));
+        	}
+       		mav.addObject ("functionAnnot1", fAnnot.get(0));
+        }
+        
+        if (!cAnnot.isEmpty()) {
+        	if (cAnnot.size() > 2) {
+        		mav.addObject ("componentAnnot3", cAnnot.get(2));
+        	}
+        	if (cAnnot.size() > 1) {
+        		mav.addObject ("componentAnnot2", cAnnot.get(1));
+        	}
+       		mav.addObject ("componentAnnot1", cAnnot.get(0));
+        }
+               
         return mav;
     }
 
@@ -360,5 +396,32 @@ public class MarkerController {
         return containerFilter;
     }
 
-
+    /** return a List comparable to 'annotations' but with the duplicate
+     * terms stripped out.
+     */
+    private List<mgi.frontend.datamodel.Annotation> noDuplicates (
+    		List<mgi.frontend.datamodel.Annotation> annotations) {
+    	
+    	// the list we will compose to be returned
+    	ArrayList<mgi.frontend.datamodel.Annotation> a = new 
+    		ArrayList<mgi.frontend.datamodel.Annotation>();
+    	
+    	// iterates over the input list
+    	Iterator<mgi.frontend.datamodel.Annotation> it = annotations.iterator();
+    	
+    	// tracks which terms we've seen already
+    	HashMap<String, String> done = new HashMap();
+    	
+    	// which term we are looking at currently
+    	mgi.frontend.datamodel.Annotation annot;
+    	
+    	while (it.hasNext()) {
+    		annot = it.next();
+    		if (!done.containsKey(annot.getTerm())) {
+    			done.put (annot.getTerm(), "");
+    			a.add (annot);
+    		}
+    	}
+    	return a;
+    }
 }
