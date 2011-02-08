@@ -287,6 +287,46 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		All GO classifications: (<a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a> annotations)<br/>
+		
+		<c:if test="${not empty processAnnot1}">
+			<c:if test="${not empty processAnnot3}">
+				Process: ${processAnnot1.term}, ${processAnnot2.term}, ...
+			</c:if>
+			<c:if test="${(empty processAnnot3) and (not empty processAnnot2)}">
+				Process: ${processAnnot1.term}, ${processAnnot2.term}
+			</c:if>
+			<c:if test="${(empty processAnnot3) and (empty processAnnot2)}">
+				Process: ${processAnnot1.term}
+			</c:if>
+		  <br/>
+		</c:if>
+
+		<c:if test="${not empty componentAnnot1}">
+			<c:if test="${not empty componentAnnot3}">
+				Component: ${componentAnnot1.term}, ${componentAnnot2.term}, ...
+			</c:if>
+			<c:if test="${(empty componentAnnot3) and (not empty componentAnnot2)}">
+				Component: ${componentAnnot1.term}, ${componentAnnot2.term}
+			</c:if>
+			<c:if test="${(empty componentAnnot3) and (empty componentAnnot2)}">
+				Component: ${componentAnnot1.term}
+			</c:if>
+		  <br/>
+		</c:if>
+
+		<c:if test="${not empty functionAnnot1}">
+			<c:if test="${not empty functionAnnot3}">
+				Function: ${functionAnnot1.term}, ${functionAnnot2.term}, ...
+			</c:if>
+			<c:if test="${(empty functionAnnot3) and (not empty functionAnnot2)}">
+				Function: ${functionAnnot1.term}, ${functionAnnot2.term}
+			</c:if>
+			<c:if test="${(empty functionAnnot3) and (empty functionAnnot2)}">
+				Function: ${functionAnnot1.term}
+			</c:if>
+		  <br/>
+		</c:if>
+
 		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
 		<c:if test="${not empty funcbaseID}">
 		  External Resources: 
