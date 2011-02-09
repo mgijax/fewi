@@ -443,8 +443,8 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW14 -->
-  <c:set var="interproAnnotations" value="${marker.interproAnnotations}"/>
-  <c:if test="${not empty interproAnnotations}">
+  <c:set var="proteinAnnotations" value="${marker.proteinAnnotations}"/>
+  <c:if test="${not empty proteinAnnotations}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Protein-related<br/>information
@@ -452,8 +452,8 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=rightTdStyles.getNext() %>">
         <table>
         <tr><td>Resource</td><td>ID</td><td>Description</td></tr>
-        <c:forEach var="item" items="${interproAnnotations}">
-          <tr><td>InterPro</td><td>${item.termID}</td><td>${item.term}</td></tr>
+        <c:forEach var="item" items="${proteinAnnotations}">
+          <tr><td>${fn:replace (item.vocabName, " Domains", "")}</td><td>${item.termID}</td><td>${item.term}</td></tr>
         </c:forEach>
         </table>
       </td>
