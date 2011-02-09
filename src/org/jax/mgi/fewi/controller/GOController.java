@@ -133,6 +133,9 @@ public class GOController {
         params.setPaginator(page);
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(query));
+        
+        SearchResults sr = markerFinder.getMarkerByKey(query.getMrkKey());
+        Marker m = (Marker) sr.getResultObjects().get(0);
 
         // perform query, and pull out the requested objects
         SearchResults searchResults
@@ -147,7 +150,7 @@ public class GOController {
             if (annot == null) {
                 logger.debug("--> Null Object");
             }else {
-                summaryRows.add(new GOSummaryRow(annot));
+                summaryRows.add(new GOSummaryRow(annot, m));
             }
         }
 
@@ -189,11 +192,9 @@ public class GOController {
             desc = true;
         }*/
 
-        Sort sort = new Sort("dagName", true);
-        Sort sort2 = new Sort(SortConstants.VOC_TERM, false);
+        Sort sort = new Sort(SortConstants.VOC_BY_DAG_STRUCT, false);
         
         sorts.add(sort);
-        sorts.add(sort2);
 
         logger.debug ("sort: " + sort.toString());
         return sorts;
