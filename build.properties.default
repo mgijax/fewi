@@ -19,7 +19,7 @@ global_config.dir=/usr/local/mgi/live/mgiconfig/web
 
 <!--data sources -->
 datasource=postgresDev-ds.xml
-jdbcdriver=lib/postgresql-8.4-701.jdbc3.jar
+jdbcdriver=lib/postgresql-9.0-801.jdbc4.jar
 
 <!--config files -->
 config.file=wi.config

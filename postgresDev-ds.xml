@@ -38,7 +38,7 @@
 
 	<!-- corresponding type-mapping in the standardjbosscmp-jdbc.xml (optional) -->
 	<metadata>
-	    <type-mapping>PostgreSQL 7.2</type-mapping>
+	    <type-mapping>PostgreSQL 9</type-mapping>
 	</metadata>
     </local-tx-datasource>
 
