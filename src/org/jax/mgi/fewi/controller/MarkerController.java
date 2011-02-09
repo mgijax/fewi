@@ -244,6 +244,22 @@ public class MarkerController {
         		mav.addObject ("polypeptideSource", polypeptideSources.get(0).getStrain());
         	}
         }
+        
+        // determine if we need a KOMP linkout (complex rules, so better in
+        // Java than JSTL); for a link we must have:
+        // 1. marker symbol of only 1 letter or an uppercase letter or number
+        // 2. marker type of Pseudogene or Gene
+        // 3. status not withdrawn
+        
+        String symbol = marker.getSymbol();
+        String markerType = marker.getMarkerType();
+        if ((symbol.length() == 1) || symbol.matches("^[A-Z0-9].*")) {
+        	if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
+        		if (!marker.getStatus().equals("withdrawn")) {
+        			mav.addObject ("needKompLink", "yes");
+        		}
+        	}
+        }
         return mav;
     }
 
