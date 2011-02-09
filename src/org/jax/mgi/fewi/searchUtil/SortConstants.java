@@ -40,6 +40,7 @@ public class SortConstants {
 	public static final String SEQUENCE_LENGTH     = "sequenceLength";
 
 	public static final String VOC_TERM            = "term";
+	public static final String VOC_BY_DAG_STRUCT   = "byDagStruct";
 
     // faux entry;  used by webapp class template
     public static final String FOO_SORT              = "fooSort";
