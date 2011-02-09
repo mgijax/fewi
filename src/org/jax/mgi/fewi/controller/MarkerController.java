@@ -16,6 +16,8 @@ import org.jax.mgi.fewi.summary.MarkerSummaryRow;
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.SequenceSource;
+import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.Reference;
 
 
@@ -190,7 +192,58 @@ public class MarkerController {
         	}
        		mav.addObject ("componentAnnot1", cAnnot.get(0));
         }
-               
+
+        // need to pull out and re-package the expression counts for assays
+        // and results
+        
+        Iterator<MarkerCountSetItem> assayIterator = 
+        	marker.getGxdAssayCountsByType().iterator();
+        Iterator<MarkerCountSetItem> resultIterator = 
+        	marker.getGxdResultCountsByType().iterator();
+        MarkerCountSetItem item;
+        
+        ArrayList<String> gxdAssayTypes = new ArrayList();
+        HashMap<String,String> gxdAssayCounts = new HashMap<String,String>();
+        HashMap<String,String> gxdResultCounts = new HashMap<String,String>();
+        
+        while (assayIterator.hasNext()) {
+        	item = assayIterator.next();
+        	gxdAssayTypes.add(item.getCountType());
+        	gxdAssayCounts.put(item.getCountType(), 
+        		Integer.toString(item.getCount()) );
+        }
+        while (resultIterator.hasNext()) {
+        	item = resultIterator.next();
+        	gxdResultCounts.put(item.getCountType(), 
+        		Integer.toString(item.getCount()) );
+        }
+        
+        mav.addObject ("gxdAssayTypes", gxdAssayTypes);
+        mav.addObject ("gxdAssayCounts", gxdAssayCounts);
+        mav.addObject ("gxdResultCounts", gxdResultCounts);
+
+        // pull out the strain/species for each representative sequence
+        mgi.frontend.datamodel.Sequence repGenomic = marker.getRepresentativeGenomicSequence();
+        if (repGenomic != null) {
+        	List<SequenceSource> genomicSources = repGenomic.getSources();
+        	if ((genomicSources != null) && (genomicSources.size() > 0)) {
+        		mav.addObject ("genomicSource", genomicSources.get(0).getStrain());
+        	}
+        }
+        mgi.frontend.datamodel.Sequence repTranscript = marker.getRepresentativeTranscriptSequence();
+        if (repTranscript != null) {
+        	List<SequenceSource> transcriptSources = repTranscript.getSources();
+        	if ((transcriptSources != null) && (transcriptSources.size() > 0)) {
+        		mav.addObject ("transcriptSource", transcriptSources.get(0).getStrain());
+        	}
+        }
+        mgi.frontend.datamodel.Sequence repPolypeptide = marker.getRepresentativePolypeptideSequence();
+        if (repPolypeptide != null) {
+        	List<SequenceSource> polypeptideSources = repPolypeptide.getSources();
+        	if ((polypeptideSources != null) && (polypeptideSources.size() > 0)) {
+        		mav.addObject ("polypeptideSource", polypeptideSources.get(0).getStrain());
+        	}
+        }
         return mav;
     }
 
