@@ -22,6 +22,7 @@ public class SolrMarkerAnnotationSummaryHunter extends SolrHunter {
          */
         
         sortMap.put(SortConstants.VOC_TERM, new SolrSortMapper(IndexConstants.VOC_TERM));
+        sortMap.put(SortConstants.VOC_BY_DAG_STRUCT, new SolrSortMapper(IndexConstants.VOC_BY_DAG_STRUCT));
         
         /*
          * Setup the property map.  This maps from the properties of the incoming
