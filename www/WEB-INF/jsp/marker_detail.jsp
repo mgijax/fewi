@@ -437,6 +437,10 @@ ${templateBean.templateBodyStartHtml}
 				  check-in. -->
 			<c:forEach var="item" items="${otherIDs}" varStatus="status"><c:if test="${status.first}"><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td>${item.accID}</c:if><c:if test="${not status.first}"><c:if test="${prevLDB == item.logicalDB}">, ${item.accID}</c:if><c:if test="${prevLDB != item.logicalDB}"></td></tr><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td>${item.accID}</c:if></c:if></c:forEach>
 		  </td></tr>
+		  <c:if test="${not empty needKompLink}">
+		  	<tr><td>International Mouse Knockout Project Status</td>
+		  		<td><a href="${fn:replace(externalUrls.KnockoutMouse, '@@@@', marker.primaryID)}">${marker.symbol}</a></td></tr>
+		  </c:if>
 		</table>
       </td>
     </tr>
