@@ -194,7 +194,7 @@ ${templateBean.templateBodyStartHtml}
 		      <td>${marker.representativeGenomicSequence.primaryID}</td>
 		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativeGenomicSequence.length}</td>
-		      <td>source</td>
+		      <td>${genomicSource}</td>
 		      <td>&#177; <input type="text" size="3" name="flank" value="0">&nbsp;Kb</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativeTranscriptSequence}">
@@ -202,14 +202,14 @@ ${templateBean.templateBodyStartHtml}
 		      <td>${marker.representativeTranscriptSequence.primaryID}</td>
 		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativeTranscriptSequence.length}</td>
-		      <td>source</td><td>&nbsp;</td></tr>
+		      <td>${transcriptSource}</td><td>&nbsp;</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativePolypeptideSequence}">
 		    <tr><td><input type="checkbox" name="seq3"></td><td>polypeptide</td>
 		      <td>${marker.representativePolypeptideSequence.primaryID}</td>
 		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativePolypeptideSequence.length}</td>
-		      <td>source</td><td>&nbsp;</td></tr>
+		      <td>${polypeptideSource}</td><td>&nbsp;</td></tr>
 		  </c:if>
 		</table>
 		</form>
@@ -287,46 +287,43 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		All GO classifications: (<a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a> annotations)<br/>
-		
+		<table>
 		<c:if test="${not empty processAnnot1}">
 			<c:if test="${not empty processAnnot3}">
-				Process: ${processAnnot1.term}, ${processAnnot2.term}, ...
+				<tr><td>Process</td><td>${processAnnot1.term}, ${processAnnot2.term}, ...</td></tr>
 			</c:if>
 			<c:if test="${(empty processAnnot3) and (not empty processAnnot2)}">
-				Process: ${processAnnot1.term}, ${processAnnot2.term}
+				<tr><td>Process</td><td>${processAnnot1.term}, ${processAnnot2.term}</td></tr>
 			</c:if>
 			<c:if test="${(empty processAnnot3) and (empty processAnnot2)}">
-				Process: ${processAnnot1.term}
+				<tr><td>Process</td><td>${processAnnot1.term}</td></tr>
 			</c:if>
-		  <br/>
 		</c:if>
 
 		<c:if test="${not empty componentAnnot1}">
 			<c:if test="${not empty componentAnnot3}">
-				Component: ${componentAnnot1.term}, ${componentAnnot2.term}, ...
+				<tr><td>Component</td><td>${componentAnnot1.term}, ${componentAnnot2.term}, ...</td></tr>
 			</c:if>
 			<c:if test="${(empty componentAnnot3) and (not empty componentAnnot2)}">
-				Component: ${componentAnnot1.term}, ${componentAnnot2.term}
+				<tr><td>Component</td><td>${componentAnnot1.term}, ${componentAnnot2.term}</td></tr>
 			</c:if>
 			<c:if test="${(empty componentAnnot3) and (empty componentAnnot2)}">
-				Component: ${componentAnnot1.term}
+				<tr><td>Component</td><td>${componentAnnot1.term}</td></tr>
 			</c:if>
-		  <br/>
 		</c:if>
 
 		<c:if test="${not empty functionAnnot1}">
 			<c:if test="${not empty functionAnnot3}">
-				Function: ${functionAnnot1.term}, ${functionAnnot2.term}, ...
+				<tr><td>Function</td><td>${functionAnnot1.term}, ${functionAnnot2.term}, ...</td></tr>
 			</c:if>
 			<c:if test="${(empty functionAnnot3) and (not empty functionAnnot2)}">
-				Function: ${functionAnnot1.term}, ${functionAnnot2.term}
+				<tr><td>Function</td><td>${functionAnnot1.term}, ${functionAnnot2.term}</td></tr>
 			</c:if>
 			<c:if test="${(empty functionAnnot3) and (empty functionAnnot2)}">
-				Function: ${functionAnnot1.term}
+				<tr><td>Function</td><td>${functionAnnot1.term}</td></tr>
 			</c:if>
-		  <br/>
 		</c:if>
-
+		</table>
 		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
 		<c:if test="${not empty funcbaseID}">
 		  External Resources: 
@@ -364,6 +361,18 @@ ${templateBean.templateBodyStartHtml}
 		  Theiler Stages: 
 		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">${item.countType}<c:if test="${!status.last}">,</c:if></c:forEach>
 		  <br/>
+		</c:if>
+
+		<c:if test="${not empty gxdAssayTypes}">
+		  <table>
+		    <tr><td>Assay Type</td><td>Assays</td><td>Results</td></tr>
+		    <c:forEach var="assayType" items="${gxdAssayTypes}">
+		      <tr><td>${assayType}</td>
+		        <td>${gxdAssayCounts[assayType]}</td>
+		        <td>${gxdResultCounts[assayType]}</td>
+		      </tr>
+		    </c:forEach> 
+		  </table>
 		</c:if>
 		
 		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(${marker.countOfCdnaSources})<br/></c:if>
