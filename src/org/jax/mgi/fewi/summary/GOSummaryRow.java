@@ -6,6 +6,7 @@ import java.util.List;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Marker;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.slf4j.Logger;
@@ -25,6 +26,8 @@ public class GOSummaryRow {
 
 	// encapsulated row object
 	private Annotation annot;
+	
+	private Marker marker;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -37,8 +40,9 @@ public class GOSummaryRow {
 	// hide the default constructor - we NEED a foo to wrap
     private GOSummaryRow () {}
 
-    public GOSummaryRow (Annotation annot) {
+    public GOSummaryRow (Annotation annot, Marker marker) {
     	this.annot = annot;
+    	this.marker = marker;
     	return;
     }
 
@@ -105,7 +109,9 @@ public class GOSummaryRow {
             return refString;
         }
         else {
-            return "" + references.size();            
+            return "<a href='" + fewiUrl + "references/marker/" + marker.getPrimaryID() 
+            	+ "?term="+annot.getTerm()+"&evidence="+annot.getEvidenceCode()+"'>" 
+            	+ references.size() + "</a>";            
         }
         
     }
