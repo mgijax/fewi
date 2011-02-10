@@ -39,6 +39,11 @@ public class SearchConstants {
     public static final String ALL_SYSTEM           = "allele_system";
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
+    
+    // batch query constants
+    public static final String BATCH_TERM              = "batch_term";
+    public static final String BATCH_TYPE              = "batch_type";
+
 
     // Cre Constants
     

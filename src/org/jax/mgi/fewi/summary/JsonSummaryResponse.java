@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.summary;
 
 import java.util.*;
 
+import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
+
 /**
  * JSON Response Object;  the purpose of this object is to be serialized
  * into a JSON response for YUI datatable interaction
@@ -18,6 +20,8 @@ public class JsonSummaryResponse<T> {
 
 	// Total number of possible results
 	protected int totalCount = -1;
+	
+	protected ResultSetMetaData meta;
 
 
 
@@ -53,5 +57,13 @@ public class JsonSummaryResponse<T> {
 	 */
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	public ResultSetMetaData getMeta() {
+		return meta;
+	}
+
+	public void setMeta(ResultSetMetaData meta) {
+		this.meta = meta;
 	}
 }

@@ -18,9 +18,11 @@ public class DBConstants
     public static final String PROVIDER_SWISSPROT         = "SWISS-PROT";
     public static final String PROVIDER_NIA               = "NIA Mouse Gene Index";
     public static final String PROVIDER_REFSEQ            = "RefSeq";
+    public static final String PROVIDER_ENTREZGENE        = "Entrez Gene";
     public static final String PROVIDER_ENSEMBL           = "Ensembl Gene Model";
     public static final String PROVIDER_ENSEMBLPROTEIN    = "Ensembl Protein";
     public static final String PROVIDER_ENSEMBLTRANSCRIPT = "Ensembl Transcript";
+    public static final String PROVIDER_UNIPROT	          = "Ensembl Transcript";
     public static final String PROVIDER_VEGA              = "VEGA Gene Model";
     public static final String PROVIDER_VEGATRANSCRIPT    = "VEGA Transcript";
     public static final String PROVIDER_VEGAPROTEIN       = "VEGA Protein";

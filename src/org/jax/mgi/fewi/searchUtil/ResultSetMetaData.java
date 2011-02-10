@@ -1,15 +1,13 @@
 package org.jax.mgi.fewi.searchUtil;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ResultSetMetaData {
     
     Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>> ();
-    
+    Map<String, Integer> counts = new HashMap<String, Integer> ();
     
     public ResultSetMetaData() {};
     
@@ -38,4 +36,23 @@ public class ResultSetMetaData {
         }
         return outString;
     }
+
+	public Map<String, Integer> getCounts() {
+		return counts;
+	}
+
+	public void setCounts(Map<String, Integer> counts) {
+		this.counts = counts;
+	}
+	
+	public void addCount(String countName, Integer count){
+		counts.put(countName, count);
+	}
+	
+	public Integer getCount(String countName){
+		if (counts.containsKey(countName)) {
+			return counts.get(countName);
+		}
+		else return new Integer(0);
+	}
 }
