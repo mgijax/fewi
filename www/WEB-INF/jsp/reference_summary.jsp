@@ -43,7 +43,7 @@ ${templateBean.templateBodyStartHtml}
 				<TD COLSPAN="2" align="left">
 					<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
 					&nbsp;&nbsp;
-					<INPUT TYPE="reset">
+					<INPUT TYPE="reset" value="Reset">
 				</td>
 			</tr>
 		

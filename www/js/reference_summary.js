@@ -496,3 +496,14 @@ YAHOO.util.Event.onDOMReady(function () {
 	})();
 
 });
+
+var resetQF = function () {
+	var form = YAHOO.util.Dom.get("referenceQueryForm");
+	form.author.value = 'foo';
+	form.journal.value = 'foo';
+	form.year.value = 'foo';
+	form.text.value = 'foo';
+	form.id.value = 'foo';
+};
+
+YAHOO.util.Event.addListener("referenceQueryForm", "reset", resetQF);
