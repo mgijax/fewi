@@ -97,6 +97,8 @@ public class BatchController {
         logger.info(queryForm.toString());
         session.removeAttribute("idSet");
         
+        logger.debug("sessionId: " + session.getId());
+        
         Set<String> idSet = null; 
         
         MultipartFile file = queryForm.getIdFile();
@@ -128,7 +130,7 @@ public class BatchController {
         
 		if (idSet != null && idSet.size() > 0){
 			logger.debug("store parsed ids");
-			session.setAttribute("idSet", idSet);
+			session.setAttribute("idSet", new ArrayList<String>(idSet));
 		}  
         
         ModelAndView mav = new ModelAndView("batch_summary");
@@ -151,10 +153,9 @@ public class BatchController {
             @ModelAttribute Paginator page) {
 
         logger.debug("-> JsonSummaryResponse started");
+        logger.debug("sessionId: " + session.getId());
         
-        List<String> idSet = new ArrayList<String>();
-        idSet.addAll((Set<String>)session.getAttribute("idSet"));
-        
+        List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
         if (idSet != null){
         	logger.debug("ids: " + idSet.size());
         } else {
