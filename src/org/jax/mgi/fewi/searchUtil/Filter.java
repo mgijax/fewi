@@ -259,4 +259,48 @@ public class Filter {
 		filter.setNestedFilters(filters);
 		return filter;
 	}
+
+
+
+    // overriding toString() method to display property values
+	@Override
+	public String toString() {
+
+        String returnString = new String();
+
+        if (this.isBasicFilter()) {
+
+            StringBuffer valueStrings = new StringBuffer();
+            Iterator<String> valueIter = values.iterator();
+
+            while (valueIter.hasNext()) {
+              valueStrings.append(valueIter.next());
+            }
+
+            returnString = "Filter-["
+				+ "property=" + property + " : "
+				+ "values=" + valueStrings + "] ";
+        }
+        else {
+
+            StringBuffer filterStrings = new StringBuffer();
+            Iterator<Filter> filterIter = nestedFilters.iterator();
+
+            filterStrings.append("[[NestedFilters=" + nestedFilters.size() + " -- ");
+            while (filterIter.hasNext()) {
+              filterStrings.append(filterIter.next().toString());
+            }
+            filterStrings.append("]] " );
+
+
+            returnString = filterStrings.toString();
+        }
+
+        return returnString;
+
+	}
+
+
+
+
 }
