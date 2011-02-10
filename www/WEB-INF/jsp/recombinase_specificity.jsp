@@ -271,20 +271,11 @@ ${templateBean.templateBodyStartHtml}
       Tissue Information
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-
-
-
-        <c:forEach var="oAllele" items="${otherAlleles}" >
-
+        <c:forEach var="oAllele" items="${otherAlleles}" varStatus="status">
           <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&systemKey=${oAllele.systemKey}">
-            ${oAllele.otherAlleleID}
+            ${oAllele.otherAlleleID} ${status.index}
           </a>
-          
         </c:forEach>
-
-
-
-      
     </td>
   </tr>
   </c:if>

@@ -171,7 +171,7 @@ function main() {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "structure";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
-        results   = results || 25;
+        results   = results || 50;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };
 
