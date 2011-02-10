@@ -112,7 +112,7 @@ function main() {
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
     	startIndex = startIndex || 0;
-        sortKey   = sortKey || "field1";
+        sortKey   = sortKey || "field1";  // default the sort
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
