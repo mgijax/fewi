@@ -133,6 +133,53 @@ public class FormatHelper
         return plural;
     }
 
+
+    /**
+     * Init cap all words in a given string
+     */
+    public static String initCap(String in) {
+        if (in == null || in.length() == 0)
+            return new String("");
+
+        boolean capitalize = true;
+        char[] data = in.toCharArray();
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == ' ' || Character.isWhitespace(data[i]))
+                capitalize = true;
+            else if (capitalize) {
+                data[i] = Character.toUpperCase(data[i]);
+                capitalize = false;
+            } else
+                data[i] = Character.toLowerCase(data[i]);
+        }
+        return new String(data);
+    }
+
+
+    /**
+     * for a given collection, create a comma delimited string
+     */
+    public static String commaDelimit (Collection c)
+    {
+        String commaDelimString = new String("");
+
+        for (Iterator i = c.iterator(); i.hasNext(); ) {
+            String nextValue = (String)i.next();
+
+            if (nextValue != null) {
+                if (!commaDelimString.equals("")) {
+                        commaDelimString = commaDelimString + ", ";
+                }
+
+            commaDelimString = commaDelimString + nextValue;
+            }
+        }
+
+        return commaDelimString;
+    }
+
+
+
     /** returns value used to forward a sequence to either the sequence
      * retrieval too, or mouse blast select-a-sequence report
      */
