@@ -5,7 +5,11 @@ package org.jax.mgi.fewi.finder;
 /*-------------------------------*/
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.AlleleSystem;
+import mgi.frontend.datamodel.AlleleSystemAssayResult;
 import org.jax.mgi.fewi.hunter.SolrCreSummaryHunter;
+import org.jax.mgi.fewi.hunter.SolrCreAlleleSystemKeyHunter;
+import org.jax.mgi.fewi.hunter.SolrCreAssayResultSummaryHunter;
 
 /*----------------------------------------*/
 /* standard classes, used for all Finders */
@@ -38,28 +42,92 @@ public class RecombinaseFinder {
 		RecombinaseFinder.class);
 
 	@Autowired
-	private SolrCreSummaryHunter hunter;
-	
+	private SolrCreSummaryHunter creSummaryHunter;
+
 	@Autowired
-	private HibernateObjectGatherer<Allele> gatherer;
+	private SolrCreAlleleSystemKeyHunter creAlleleSystemKeyHunter;
+
+	@Autowired
+	private SolrCreAssayResultSummaryHunter creAssayHunter;
+
+	@Autowired
+	private HibernateObjectGatherer<Allele> summaryGatherer;
+
+	@Autowired
+	private HibernateObjectGatherer<AlleleSystem> alleleSystemGatherer;
+
+	@Autowired
+	private HibernateObjectGatherer<AlleleSystemAssayResult> assayResultGatherer;
 
 	/*-------------------------*/
 	/* public instance methods */
 	/*-------------------------*/
 
+	// Recombinase Summary
 	public SearchResults<Allele> searchRecombinases(SearchParams params) {
-		logger.debug ("searchReferences");
+
+		logger.debug ("searchRecombinases");
+
 		SearchResults<Allele> results = new SearchResults<Allele>();
 
 		logger.debug ("hunt");
-		hunter.hunt (params, results);
+		creSummaryHunter.hunt (params, results);
 
 		logger.debug ("gather");
-		gatherer.setType (Allele.class);
+		summaryGatherer.setType (Allele.class);
 
-		List<Allele> alleles = gatherer.get (results.getResultKeys());
+		List<Allele> alleles = summaryGatherer.get (results.getResultKeys());
 
 		results.setResultObjects (alleles);
 		return results;
 	}
+
+
+	// Recombinase Specificity
+	public SearchResults<AlleleSystem> getAlleleSystem(SearchParams params) {
+
+		logger.debug ("getAlleleSystem");
+
+		SearchResults<AlleleSystem> results = new SearchResults<AlleleSystem>();
+
+		logger.debug ("hunt");
+		creAlleleSystemKeyHunter.hunt (params, results);
+
+		logger.debug ("gather");
+		alleleSystemGatherer.setType (AlleleSystem.class);
+
+		List<AlleleSystem> alleleSystem
+		  = alleleSystemGatherer.get (results.getResultKeys());
+
+		results.setResultObjects (alleleSystem);
+		return results;
+	}
+
+
+
+
+	// Recombinase Specificity Assay Summary
+	public SearchResults<AlleleSystemAssayResult> getAssaySummary(SearchParams params) {
+
+		logger.debug ("getAssaySummary");
+
+		SearchResults<AlleleSystemAssayResult> results
+		  = new SearchResults<AlleleSystemAssayResult>();
+
+		logger.debug ("hunt");
+		creAssayHunter.hunt (params, results);
+
+System.out.println("-->" + results.getTotalCount());
+
+		logger.debug ("gather");
+		assayResultGatherer.setType (AlleleSystemAssayResult.class);
+
+		List<AlleleSystemAssayResult> alleleSystem
+		  = assayResultGatherer.get (results.getResultKeys());
+
+		results.setResultObjects (alleleSystem);
+		return results;
+	}
+
+
 }
