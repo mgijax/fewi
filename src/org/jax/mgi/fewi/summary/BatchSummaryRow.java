@@ -1,9 +1,7 @@
 package org.jax.mgi.fewi.summary;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import mgi.frontend.datamodel.Annotation;
@@ -129,23 +127,23 @@ public class BatchSummaryRow {
     	}
     	return "";
     }
-    public Float getStart() {
+    public Double getStart() {
     	if (batchMarkerId.getMarker() != null && query.getLocation()){
     		MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
     		if(loc != null){
     			return loc.getStartCoordinate();
     		}
     	}
-    	return new Float(0);
+    	return new Double(0);
     }
-    public Float getEnd() {
+    public Double getEnd() {
     	if (batchMarkerId.getMarker() != null && query.getLocation()){
     		MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
     		if(loc != null){
     			return loc.getEndCoordinate();
     		}
     	}
-    	return new Float(0);
+    	return new Double(0);
     }
     
     public String getEnsemblIds() {
@@ -179,7 +177,7 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> go = new ArrayList<String>();
     	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGOAnnotations();
+    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
     	}
     	if (goAnnots != null){
     		for (Annotation annotation : goAnnots) {
@@ -196,7 +194,7 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> go = new ArrayList<String>();
     	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGOAnnotations();
+    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
     	}
     	if (goAnnots != null){
     		for (Annotation annotation : goAnnots) {
@@ -213,7 +211,7 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> go = new ArrayList<String>();
     	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGOAnnotations();
+    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
     	}
     	if (goAnnots != null){
     		for (Annotation annotation : goAnnots) {
@@ -351,7 +349,7 @@ public class BatchSummaryRow {
     	if (!query.getExp()){
     		return "";
     	}    	
-    	List<String> structures = new ArrayList<String>();
+    	List<Integer> structures = new ArrayList<Integer>();
     	Marker marker = batchMarkerId.getMarker();
     	
     	if (marker != null  && expCounts == null){
@@ -360,8 +358,8 @@ public class BatchSummaryRow {
 
     	if (expCounts != null){
 	    	for (MarkerTissueCount tissue : expCounts) {
-	    		logger.debug(String.valueOf(tissue.getAllResultCount()));
-	    		structures.add(String.valueOf(tissue.getAllResultCount()));
+	    		logger.debug(tissue.getStructure() + ": " + String.valueOf(tissue.getAllResultCount()));
+	    		structures.add(tissue.getAllResultCount());
 			}
     	}
     	return StringUtils.join(structures, "<br/>");
@@ -425,7 +423,7 @@ public class BatchSummaryRow {
     private List<String> getId(List<String> logicalDb){
     	List<String> idList = new ArrayList<String>();
     	if (batchMarkerId.getMarker() != null){
-    		Set<MarkerID> ids = batchMarkerId.getMarker().getIds();
+    		List<MarkerID> ids = batchMarkerId.getMarker().getIds();
     		if(ids != null){
     			for (MarkerID id : ids) {
     				for (String ldb : logicalDb) {
