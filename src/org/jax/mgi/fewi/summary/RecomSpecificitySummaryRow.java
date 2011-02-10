@@ -5,6 +5,7 @@ import java.util.*;
 import mgi.frontend.datamodel.AlleleSystemAssayResult;
 
 import org.jax.mgi.fewi.util.DBConstants;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.config.ContextLoader;
 
 import javax.persistence.Column;
@@ -68,7 +69,12 @@ public class RecomSpecificitySummaryRow {
     	return alleleSystemAssayResult.getResultNote();
     }
     public String getAllelicComp() {
-    	return alleleSystemAssayResult.getAllelicComposition();
+        String convertedAllComp = new String();
+        try {
+          NotesTagConverter ntc = new NotesTagConverter();
+          convertedAllComp = ntc.convertNotes(alleleSystemAssayResult.getAllelicComposition(), '|');
+		}catch (Exception e) {}
+        return convertedAllComp;
     }
     public String getSex() {
     	return alleleSystemAssayResult.getSex();
