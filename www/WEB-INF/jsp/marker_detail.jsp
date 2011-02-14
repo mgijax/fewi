@@ -93,10 +93,10 @@ ${templateBean.templateBodyStartHtml}
         <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<br/>
         <c:if test="${(marker.preferredCentimorgans.chromosome != 'UN') and (marker.preferredCentimorgans.cmOffset > 0.0)}">
           <c:set var="hasGeneticLocation" value="1"/>
-          Detailed Genetic Map &#177; 1 cM
+          <a href="#">Detailed Genetic Map &#177; 1 cM</a>
         </c:if>
         <p/>
-        Mapping data(${marker.countOfMappingExperiments})
+        Mapping data(<a href="#">${marker.countOfMappingExperiments}</a>)
       </td>
     </tr>
   </c:if>
@@ -159,10 +159,10 @@ ${templateBean.templateBodyStartHtml}
 		    <c:set var="hasHumanOrthology" value="1"/>
 		  </c:if>
 		</c:forEach>
-		&nbsp;&nbsp;&nbsp;(Mammalian Orthology)<br/>
+		&nbsp;&nbsp;&nbsp;(<a href="#">Mammalian Orthology</a>)<br/>
 		
 		<c:if test="${(hasHumanOrthology == 1) and (hasGeneticLocation == 1)}">
-		  Comparative Map (Mouse/Human ${marker.symbol} &#177; 2 cM)<P>
+		  Comparative Map (<a href="#">Mouse/Human ${marker.symbol} &#177; 2 cM</a>)<P>
 		</c:if>
 		
 		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
@@ -225,10 +225,10 @@ ${templateBean.templateBodyStartHtml}
 		  All sequences(<a href="${configBean.FEWI_URL}/sequence/marker/${marker.primaryID}">${marker.countOfSequences}</a>) 
 		</c:if>
 		<c:if test="${marker.countOfRefSeqSequences > 0}">
-		  RefSeq(${marker.countOfRefSeqSequences})
+		  RefSeq(<a href="#">${marker.countOfRefSeqSequences}</a>)
 		</c:if>
 		<c:if test="${marker.countOfUniProtSequences > 0}">
-		  UniProt(${marker.countOfUniProtSequences})
+		  UniProt(<a href="#">${marker.countOfUniProtSequences}</a>)
 		</c:if>
       </td>
     </tr>
@@ -241,9 +241,9 @@ ${templateBean.templateBodyStartHtml}
         Alleles<br/>and<br/>phenotypes
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		All alleles(${marker.countOfAlleles}) : 
+		All alleles(<a href="#">${marker.countOfAlleles}</a>) : 
 		<c:forEach var="item" items="${marker.alleleCountsByType}">
-		  ${item.countType}(${item.count})
+		  ${item.countType}(<a href="#">${item.count}</a>)
 		</c:forEach>
 		<br/>
 		<c:if test="${not empty marker.markerClip}">
@@ -255,10 +255,10 @@ ${templateBean.templateBodyStartHtml}
 		  Associated Human Diseases(<a href="${configBean.FEWI_URL}omim/marker/${marker.primaryID}">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
-		  Alleles Annotated to Human Diseases(${marker.countOfAllelesWithHumanDiseases})&nbsp;&nbsp;&nbsp;
+		  Alleles Annotated to Human Diseases(<a href="#">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
-		  Phenotype Images(${marker.countOfPhenotypeImages})
+		  Phenotype Images(<a href="#">${marker.countOfPhenotypeImages}</a>)
 		</c:if>
       </td>
     </tr>
@@ -272,7 +272,7 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
-		  ${item.countType}(${item.count})
+		  ${item.countType}(<a href="#">${item.count}</a>)
 		  <c:if test="${status.first}">: </c:if>
 		</c:forEach>
       </td>
@@ -341,25 +341,25 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<c:if test="${marker.countOfGxdLiterature > 0}">
-		  Literature Summary: (${marker.countOfGxdLiterature} records)<br/>
+		  Literature Summary: (<a href="#">${marker.countOfGxdLiterature}</a> records)<br/>
 		</c:if>
 		Data Summary:
 		<c:if test="${marker.countOfGxdAssays > 0}">
-		  Assays (${marker.countOfGxdAssays})&nbsp;&nbsp;&nbsp;
+		  Assays (<a href="#">${marker.countOfGxdAssays}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdResults > 0}">
-		  Results (${marker.countOfGxdResults})&nbsp;&nbsp;&nbsp;
+		  Results (<a href="#">${marker.countOfGxdResults}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdTissues > 0}">
-		  Tissues (${marker.countOfGxdTissues})&nbsp;&nbsp;&nbsp;
+		  Tissues (<a href="#">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdImages > 0}">
-		  Images (${marker.countOfGxdImages})
+		  Images (<a href="#">${marker.countOfGxdImages}</a>)
 		</c:if>
 		<br/>
 		<c:if test="${not empty marker.gxdResultCountsByStage}">
 		  Theiler Stages: 
-		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">${item.countType}<c:if test="${!status.last}">,</c:if></c:forEach>
+		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status"><a href="#">${item.countType}</a><c:if test="${!status.last}">,</c:if></c:forEach>
 		  <br/>
 		</c:if>
 
@@ -368,14 +368,14 @@ ${templateBean.templateBodyStartHtml}
 		    <tr><td>Assay Type</td><td>Assays</td><td>Results</td></tr>
 		    <c:forEach var="assayType" items="${gxdAssayTypes}">
 		      <tr><td>${assayType}</td>
-		        <td>${gxdAssayCounts[assayType]}</td>
-		        <td>${gxdResultCounts[assayType]}</td>
+		        <td><a href="#">${gxdAssayCounts[assayType]}</a></td>
+		        <td><a href="#">${gxdResultCounts[assayType]}</a></td>
 		      </tr>
 		    </c:forEach> 
 		  </table>
 		</c:if>
 		
-		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(${marker.countOfCdnaSources})<br/></c:if>
+		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(<a href="#">${marker.countOfCdnaSources}</a>)<br/></c:if>
 		
 		<c:set var="allenID" value="${marker.allenBrainAtlasID.accID}"/>
 		<c:set var="gensatID" value="${marker.gensatID.accID}"/>
@@ -408,14 +408,14 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<c:forEach var="item" items="${marker.molecularReagentCountsByType}">
-		  ${item.countType}(${item.count}) 
+		  ${item.countType}(<a href="#">${item.count}</a>) 
 		</c:forEach>
 		<c:if test="${marker.countOfAntibodies > 0}">
-		  Antibodies(${marker.countOfAntibodies})
+		  Antibodies(<a href="#">${marker.countOfAntibodies}</a>)
 		</c:if>
 		<br/>
 		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
-		  Microarray probesets(${marker.countOfMicroarrayProbesets})
+		  Microarray probesets(<a href="#">${marker.countOfMicroarrayProbesets}</a>)
 		</c:if>
       </td>
     </tr>
@@ -435,7 +435,7 @@ ${templateBean.templateBodyStartHtml}
 				  before the commas, however.  For maintenance, you may want
 				  to put it on separate lines, then combine them again before
 				  check-in. -->
-			<c:forEach var="item" items="${otherIDs}" varStatus="status"><c:if test="${status.first}"><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td>${item.accID}</c:if><c:if test="${not status.first}"><c:if test="${prevLDB == item.logicalDB}">, ${item.accID}</c:if><c:if test="${prevLDB != item.logicalDB}"></td></tr><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td>${item.accID}</c:if></c:if></c:forEach>
+			<c:forEach var="item" items="${otherIDs}" varStatus="status"><c:if test="${status.first}"><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td><a href="#">${item.accID}</a></c:if><c:if test="${not status.first}"><c:if test="${prevLDB == item.logicalDB}">, <a href="#">${item.accID}</a></c:if><c:if test="${prevLDB != item.logicalDB}"></td></tr><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td><a href="#">${item.accID}</a></c:if></c:if></c:forEach>
 		  </td></tr>
 		  <c:if test="${not empty needKompLink}">
 		  	<tr><td>International Mouse Knockout Project Status</td>
@@ -457,7 +457,7 @@ ${templateBean.templateBodyStartHtml}
         <table>
         <tr><td>Resource</td><td>ID</td><td>Description</td></tr>
         <c:forEach var="item" items="${proteinAnnotations}">
-          <tr><td>${fn:replace (item.vocabName, " Domains", "")}</td><td>${item.termID}</td><td>${item.term}</td></tr>
+          <tr><td>${fn:replace (item.vocabName, " Domains", "")}</td><td><a href="#">${item.termID}</a></td><td>${item.term}</td></tr>
         </c:forEach>
         </table>
       </td>
@@ -480,7 +480,7 @@ ${templateBean.templateBodyStartHtml}
 		<c:if test="${not empty latestRef}">(Latest) <a href="${configBean.FEWI_URL}reference/${latestRef.jnumID}">${latestRef.jnumID}</a>
 		  ${latestRef.longCitation}<br/>
 		</c:if>
-		All references(${marker.countOfReferences})<br/>
+		All references(<a href="#">${marker.countOfReferences}</a>)<br/>
       </td>
     </tr>
   </c:if>
