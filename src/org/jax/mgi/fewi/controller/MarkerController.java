@@ -13,6 +13,7 @@ import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
+import org.jax.mgi.fewi.util.ProviderLinker;
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
@@ -34,6 +35,7 @@ import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.ProviderLinker;
 
 // external
 import javax.servlet.http.HttpServletRequest;
@@ -222,13 +224,15 @@ public class MarkerController {
         mav.addObject ("gxdAssayCounts", gxdAssayCounts);
         mav.addObject ("gxdResultCounts", gxdResultCounts);
 
-        // pull out the strain/species for each representative sequence
+        // pull out the strain/species and provider links for each 
+        // representative sequence
         mgi.frontend.datamodel.Sequence repGenomic = marker.getRepresentativeGenomicSequence();
         if (repGenomic != null) {
         	List<SequenceSource> genomicSources = repGenomic.getSources();
         	if ((genomicSources != null) && (genomicSources.size() > 0)) {
         		mav.addObject ("genomicSource", genomicSources.get(0).getStrain());
         	}
+        	mav.addObject ("genomicLink", ProviderLinker.getSeqProviderLinks(repGenomic));
         }
         mgi.frontend.datamodel.Sequence repTranscript = marker.getRepresentativeTranscriptSequence();
         if (repTranscript != null) {
@@ -236,6 +240,7 @@ public class MarkerController {
         	if ((transcriptSources != null) && (transcriptSources.size() > 0)) {
         		mav.addObject ("transcriptSource", transcriptSources.get(0).getStrain());
         	}
+        	mav.addObject ("transcriptLink", ProviderLinker.getSeqProviderLinks(repTranscript));
         }
         mgi.frontend.datamodel.Sequence repPolypeptide = marker.getRepresentativePolypeptideSequence();
         if (repPolypeptide != null) {
@@ -243,6 +248,7 @@ public class MarkerController {
         	if ((polypeptideSources != null) && (polypeptideSources.size() > 0)) {
         		mav.addObject ("polypeptideSource", polypeptideSources.get(0).getStrain());
         	}
+        	mav.addObject ("polypeptideLink", ProviderLinker.getSeqProviderLinks(repPolypeptide));
         }
         
         // determine if we need a KOMP linkout (complex rules, so better in

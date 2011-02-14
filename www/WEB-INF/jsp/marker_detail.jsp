@@ -192,7 +192,7 @@ ${templateBean.templateBodyStartHtml}
 		  <c:if test="${not empty marker.representativeGenomicSequence}">
 		    <tr><td><input type="checkbox" name="seq1"></td><td>genomic</td>
 		      <td>${marker.representativeGenomicSequence.primaryID}</td>
-		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td>${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativeGenomicSequence.length}</td>
 		      <td>${genomicSource}</td>
 		      <td>&#177; <input type="text" size="3" name="flank" value="0">&nbsp;Kb</td></tr>
@@ -200,14 +200,14 @@ ${templateBean.templateBodyStartHtml}
 		  <c:if test="${not empty marker.representativeTranscriptSequence}">
 		    <tr><td><input type="checkbox" name="seq2"></td><td>transcript</td>
 		      <td>${marker.representativeTranscriptSequence.primaryID}</td>
-		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td>${transcriptLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativeTranscriptSequence.length}</td>
 		      <td>${transcriptSource}</td><td>&nbsp;</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativePolypeptideSequence}">
 		    <tr><td><input type="checkbox" name="seq3"></td><td>polypeptide</td>
 		      <td>${marker.representativePolypeptideSequence.primaryID}</td>
-		      <td><a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td>${polypeptideLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativePolypeptideSequence.length}</td>
 		      <td>${polypeptideSource}</td><td>&nbsp;</td></tr>
 		  </c:if>
