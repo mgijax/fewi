@@ -48,6 +48,11 @@ ${templateBean.templateBodyStartHtml}
       ID
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
+
+	  <!-- experimenting -->
+      <c:set var="param2" value="InterPro"/>
+      ${externalUrls[param2]}<br/>
+
       <font size="+2">${marker.symbol}</font><br/>
       ${marker.name}<br/>
       ${marker.primaryID}
@@ -288,41 +293,24 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=rightTdStyles.getNext() %>">
 		All GO classifications: (<a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a> annotations)<br/>
 		<table>
-		<c:if test="${not empty processAnnot1}">
-			<c:if test="${not empty processAnnot3}">
-				<tr><td>Process</td><td>${processAnnot1.term}, ${processAnnot2.term}, ...</td></tr>
-			</c:if>
-			<c:if test="${(empty processAnnot3) and (not empty processAnnot2)}">
-				<tr><td>Process</td><td>${processAnnot1.term}, ${processAnnot2.term}</td></tr>
-			</c:if>
-			<c:if test="${(empty processAnnot3) and (empty processAnnot2)}">
-				<tr><td>Process</td><td>${processAnnot1.term}</td></tr>
-			</c:if>
-		</c:if>
-
-		<c:if test="${not empty componentAnnot1}">
-			<c:if test="${not empty componentAnnot3}">
-				<tr><td>Component</td><td>${componentAnnot1.term}, ${componentAnnot2.term}, ...</td></tr>
-			</c:if>
-			<c:if test="${(empty componentAnnot3) and (not empty componentAnnot2)}">
-				<tr><td>Component</td><td>${componentAnnot1.term}, ${componentAnnot2.term}</td></tr>
-			</c:if>
-			<c:if test="${(empty componentAnnot3) and (empty componentAnnot2)}">
-				<tr><td>Component</td><td>${componentAnnot1.term}</td></tr>
-			</c:if>
-		</c:if>
-
-		<c:if test="${not empty functionAnnot1}">
-			<c:if test="${not empty functionAnnot3}">
-				<tr><td>Function</td><td>${functionAnnot1.term}, ${functionAnnot2.term}, ...</td></tr>
-			</c:if>
-			<c:if test="${(empty functionAnnot3) and (not empty functionAnnot2)}">
-				<tr><td>Function</td><td>${functionAnnot1.term}, ${functionAnnot2.term}</td></tr>
-			</c:if>
-			<c:if test="${(empty functionAnnot3) and (empty functionAnnot2)}">
-				<tr><td>Function</td><td>${functionAnnot1.term}</td></tr>
-			</c:if>
-		</c:if>
+	      <c:if test="${not empty processAnnot1}">
+	    	<tr><td>Process</td>
+	    		<td><a href="#">${processAnnot1.term}</a><c:if test="${not empty processAnnot2}">, </c:if>
+	    			<a href="#">${processAnnot2.term}</a><c:if test="${not empty processAnnot3}">, ...</c:if>
+	    		</td></tr>
+	      </c:if>
+	      <c:if test="${not empty componentAnnot1}">
+	    	<tr><td>Component</td>
+	    		<td><a href="#">${componentAnnot1.term}</a><c:if test="${not empty componentAnnot2}">, </c:if>
+	    			<a href="#">${componentAnnot2.term}</a><c:if test="${not empty componentAnnot3}">, ...</c:if>
+	    		</td></tr>
+	      </c:if>
+	      <c:if test="${not empty functionAnnot1}">
+	    	<tr><td>Function</td>
+	    		<td><a href="#">${functionAnnot1.term}</a><c:if test="${not empty functionAnnot2}">, </c:if>
+	    			<a href="#">${functionAnnot2.term}</a><c:if test="${not empty functionAnnot3}">, ...</c:if>
+	    		</td></tr>
+	      </c:if>
 		</table>
 		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
 		<c:if test="${not empty funcbaseID}">
@@ -457,7 +445,21 @@ ${templateBean.templateBodyStartHtml}
         <table>
         <tr><td>Resource</td><td>ID</td><td>Description</td></tr>
         <c:forEach var="item" items="${proteinAnnotations}">
-          <tr><td>${fn:replace (item.vocabName, " Domains", "")}</td><td><a href="#">${item.termID}</a></td><td>${item.term}</td></tr>
+          <c:set var="url" value=""/>
+          <c:if test="${item.vocabName == 'InterPro Domains'}">
+            <c:set var="url" value="${externalUrls.InterPro}"/>
+          </c:if>
+          <c:if test="${item.vocabName == 'Protein Ontology'}">
+            <c:set var="url" value="${externalUrls.Protein_Ontology}"/>
+          </c:if>
+          <tr><td>${fn:replace (item.vocabName, " Domains", "")}</td>
+            <c:if test="${url != ''}">
+	          <td><a href="${fn:replace(url, '@@@@', item.termID)}">${item.termID}</a></td>
+            </c:if>
+            <c:if test="${url == ''}">
+	          <td>${item.termID}</td>
+            </c:if>
+          <td>${item.term}</td></tr>
         </c:forEach>
         </table>
       </td>
