@@ -15,6 +15,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
+import org.jax.mgi.fewi.util.IDLinker;
+
 @Component
 public class ContextLoader implements ApplicationContextAware, ServletContextAware {
 	
@@ -50,6 +52,10 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 		return externalUrls;
 	}
 
+	public static IDLinker getIDLinker(){
+		return IDLinker.getInstance(externalUrls);
+	}
+	
 	public void setApplicationContext(ApplicationContext ac)
 			throws BeansException {
 		this.ac = ac;
