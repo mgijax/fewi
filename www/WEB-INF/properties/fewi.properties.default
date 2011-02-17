@@ -9,6 +9,10 @@
 #FEWI_URL=http://server.informatics.jax.org/
 #FEWI_URL=http://cardolan.informatics.jax.org:38080/fewi/mgi/
 
+# other MGI product URLs
+MOUSEBLAST_URL=http://mouseblast.informatics.jax.org/
+SEQFETCH_URL=http://www.informatics.jax.org/seqfetch/
+
 # directory in which to find the standard mgi template
 template.dir=/usr/local/mgi/live/mgiconfig/web/
 
