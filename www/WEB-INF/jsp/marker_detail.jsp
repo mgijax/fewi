@@ -1,12 +1,14 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "org.jax.mgi.fewi.util.IDLinker" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<% IDLinker idLinker = (IDLinker)request.getAttribute("idLinker"); %>
     
 ${templateBean.templateHeadHtml}
 
-<title>${marker.symbol} Detail</title>
+<title>${marker.symbol} MGI Mouse ${marker.markerType} Detail - ${marker.primaryID} - ${marker.name}</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -23,14 +25,18 @@ ${templateBean.templateHeadHtml}
 <style type="text/css">
 </style>
 
-<script>
+<script language="Javascript">
+function formatForwardArgs() {
+    document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
+    document.sequenceForm.submit();
+}
 </script>
 
 ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="marker_help.shtml">	
+<div id="titleBarWrapper" userdoc="marker_detail.shtml">	
 	<span class="titleBarMainTitle">${marker.symbol}</span><br/>
 	 ${marker.markerType} Detail
 </div>
@@ -48,11 +54,6 @@ ${templateBean.templateBodyStartHtml}
       ID
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-
-	  <!-- experimenting -->
-      <c:set var="param2" value="InterPro"/>
-      ${externalUrls[param2]}<br/>
-
       <font size="+2">${marker.symbol}</font><br/>
       ${marker.name}<br/>
       ${marker.primaryID}
@@ -120,7 +121,9 @@ ${templateBean.templateBodyStartHtml}
 	  <c:set var="coords" value="${fn:replace(coord2, '<end>', endCoord)}"/>
 
       <td class="<%=rightTdStyles.getNext() %>">
-        Chr${marker.preferredCoordinates.chromosome}:${startCoord}-${endCoord} 
+        <table width="100%">
+        <tr><td>
+        Chr${chromosome}:${startCoord}-${endCoord} 
         ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
         (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/>
         <p/>
@@ -146,6 +149,15 @@ ${templateBean.templateBodyStartHtml}
 		  <c:if test="${foundOne > 0}"> | </c:if>
 		  <a href="${fn:replace(externalUrls.NCBI_Map_Viewer, '@@@@', ncbiID)}" target="_new">NCBI Map Viewer</a>
 		</c:if>
+		</td><td align="right" width="*">
+		  <table><tr><td align="center">
+		  <c:set var="gbrowseLink" value="${configBean.GBROWSE_URL}gbrowse/mouse_current?start=${startCoord};stop=${endCoord};ref=${chromosome}"/>
+		  <a href="${gbrowseLink}"><img border="0" src="${configBean.GBROWSE_URL}gbrowse_img/thumbs_current?abs=1;options=Everything;width=200;name=${chromosome}:${startCoord}..${endCoord}"/></a>
+		  <br/>
+		  <a href="${gbrowseLink}">Mouse Genome Browser</a>
+		  </td></tr></table>
+		</td></tr>
+		</table>
       </td>
     </tr>
   </c:if>
@@ -195,22 +207,28 @@ ${templateBean.templateBodyStartHtml}
 		<table>
 		  <tr><td colspan="4">Representative Sequences</td><td>Length</td><td>Strain/Species</td><td>Flank</td></tr>
 		  <c:if test="${not empty marker.representativeGenomicSequence}">
-		    <tr><td><input type="checkbox" name="seq1"></td><td>genomic</td>
+			<c:set var="seq" value="${marker.representativeGenomicSequence}" scope="request"/>
+			<% Sequence seqDna = (Sequence) request.getAttribute("seq"); %>
+		    <tr><td><input type="checkbox" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td>genomic</td>
 		      <td>${marker.representativeGenomicSequence.primaryID}</td>
 		      <td>${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativeGenomicSequence.length}</td>
 		      <td>${genomicSource}</td>
-		      <td>&#177; <input type="text" size="3" name="flank" value="0">&nbsp;Kb</td></tr>
+		      <td>&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;Kb</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativeTranscriptSequence}">
-		    <tr><td><input type="checkbox" name="seq2"></td><td>transcript</td>
+			<c:set var="seq" value="${marker.representativeTranscriptSequence}" scope="request"/>
+			<% Sequence seqRna = (Sequence) request.getAttribute("seq"); %>
+		    <tr><td><input type="checkbox" name="seq2" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td>transcript</td>
 		      <td>${marker.representativeTranscriptSequence.primaryID}</td>
 		      <td>${transcriptLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativeTranscriptSequence.length}</td>
 		      <td>${transcriptSource}</td><td>&nbsp;</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativePolypeptideSequence}">
-		    <tr><td><input type="checkbox" name="seq3"></td><td>polypeptide</td>
+			<c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
+			<% Sequence seqPoly = (Sequence) request.getAttribute("seq"); %>
+		    <tr><td><input type="checkbox" name="seq3" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td>polypeptide</td>
 		      <td>${marker.representativePolypeptideSequence.primaryID}</td>
 		      <td>${polypeptideLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td>${marker.representativePolypeptideSequence.length}</td>
@@ -221,9 +239,9 @@ ${templateBean.templateBodyStartHtml}
 		<form name="sequenceFormPullDown">
 		  <I>For the selected sequences</I>
 		  <select name="seqPullDown">
-		  <option value="foo" selected> download in FASTA format</option>
-		  <option value="foo2"> forward to MouseBLAST</option>
-		  <input type="button" value="Go" onClick="alert('Not yet implemented')">
+		  <option value="${configBean.SEQFETCH_URL}tofasta.cgi?" selected> download in FASTA format</option>
+		  <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi"> forward to MouseBLAST</option>
+		  <input type="button" value="Go" onClick="formatForwardArgs()">
 		  </select>
 		</form>
 		<c:if test="${marker.countOfSequences > 0}">
@@ -410,25 +428,16 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW13 -->
-  <c:set var="otherIDs" value="${marker.otherIDs}"/>
-  <c:if test="${not empty otherIDs}">
+  <c:if test="${not empty logicalDBs}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Other&nbsp;database<br/>links
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-        <table>
-			<c:set var="lastLogicalDB" value="0"/>
-			<!--  Yes, this loop is ugly.  It is needed to remove the spaces
-				  before the commas, however.  For maintenance, you may want
-				  to put it on separate lines, then combine them again before
-				  check-in. -->
-			<c:forEach var="item" items="${otherIDs}" varStatus="status"><c:if test="${status.first}"><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td><a href="#">${item.accID}</a></c:if><c:if test="${not status.first}"><c:if test="${prevLDB == item.logicalDB}">, <a href="#">${item.accID}</a></c:if><c:if test="${prevLDB != item.logicalDB}"></td></tr><c:set var="prevLDB" value="${item.logicalDB}"/><tr><td>${item.logicalDB}</td><td><a href="#">${item.accID}</a></c:if></c:if></c:forEach>
-		  </td></tr>
-		  <c:if test="${not empty needKompLink}">
-		  	<tr><td>International Mouse Knockout Project Status</td>
-		  		<td><a href="${fn:replace(externalUrls.KnockoutMouse, '@@@@', marker.primaryID)}">${marker.symbol}</a></td></tr>
-		  </c:if>
+		<table>
+		  <c:forEach var="item" items="${logicalDBs}">
+			<tr><td>${item}</td><td>${otherIDs[item]}</td></tr>
+		  </c:forEach>
 		</table>
       </td>
     </tr>
