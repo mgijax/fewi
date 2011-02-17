@@ -14,9 +14,12 @@ import org.jax.mgi.fewi.forms.FooQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
 import org.jax.mgi.fewi.util.ProviderLinker;
+import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.config.ContextLoader;
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.SequenceSource;
 import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.Reference;
@@ -123,7 +126,7 @@ public class MarkerController {
     public ModelAndView markerDetailByID(@PathVariable("markerID") String markerID) {
 
         logger.debug("->markerDetailByID started");
-
+        
         // setup search parameters object
         SearchParams searchParams = new SearchParams();
         Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
@@ -150,6 +153,10 @@ public class MarkerController {
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("marker_detail");
 
+        // add an IDLinker to the mav for use at the JSP level
+        IDLinker idLinker = ContextLoader.getIDLinker();
+        mav.addObject("idLinker", idLinker);
+        
         //pull out the marker, and add to mav
         Marker marker = markerList.get(0);
         mav.addObject("marker", marker);
@@ -250,6 +257,67 @@ public class MarkerController {
         	}
         	mav.addObject ("polypeptideLink", ProviderLinker.getSeqProviderLinks(repPolypeptide));
         }
+
+        // slice and dice the data for the "Other database links" section, to
+        // ease the formatting requirements that would be cumbersome in JSTL
+        
+        ArrayList<String> logicalDBs = new ArrayList<String>();
+        HashMap<String,String> otherIDs = new HashMap<String,String>();
+        
+        Iterator<MarkerID> it = marker.getOtherIDs().iterator();
+        MarkerID myID;
+        String logicaldb;
+        String otherLinks;
+        String vegaGeneModelID = null;
+        String ensemblGeneModelID = null;
+        String entrezGeneID = null;
+        
+        while (it.hasNext()) {
+        	myID = it.next();
+        	logicaldb = myID.getLogicalDB();
+        	
+        	if ("VEGA Gene Model".equals(logicaldb)) {
+        		vegaGeneModelID = myID.getAccID();
+        	} else if ("Ensembl Gene Model".equals(logicaldb)) {
+        		ensemblGeneModelID = myID.getAccID();
+        	} else if ("Entrez Gene".equals(logicaldb)) {
+        		entrezGeneID = myID.getAccID();
+        	}
+        	
+        	if (!otherIDs.containsKey(logicaldb)) {
+        		logicalDBs.add(logicaldb);
+        		otherIDs.put(logicaldb, idLinker.getLink(myID));
+        	} else {
+        		otherLinks = otherIDs.get(logicaldb);
+        		otherIDs.put(logicaldb, otherLinks + ", " + idLinker.getLink(myID));
+        	}
+        }
+        
+        // various tweaks to add evidence links for three logical dbs 
+        if (vegaGeneModelID != null) {
+        	otherIDs.put("VEGA Gene Model", 
+        		otherIDs.get("VEGA Gene Model") + " (" +
+        		idLinker.getLink("VEGA Gene Model Evidence", vegaGeneModelID,
+        				"Evidence") + ")");
+        }
+        if (ensemblGeneModelID != null) {
+        	otherIDs.put("Ensembl Gene Model", 
+        		otherIDs.get("Ensembl Gene Model") + " (" +
+        		idLinker.getLink("Ensembl Gene Model Evidence", 
+        				ensemblGeneModelID,	"Evidence") + ")");
+        }
+        if (entrezGeneID != null) {
+        	MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
+        	if (ncbiEvidenceID != null) {
+        		otherIDs.put("Entrez Gene", otherIDs.get("Entrez Gene") + " (" +
+        			idLinker.getLink("NCBI Gene Model Evidence", entrezGeneID,
+        				"Evidence").replace ("^^^^", ncbiEvidenceID.getAccID())
+        				+ ")");
+        	}
+        }
+        
+        mav.addObject ("otherIDs", otherIDs);
+        mav.addObject ("logicalDBs", logicalDBs);
         
         // determine if we need a KOMP linkout (complex rules, so better in
         // Java than JSTL); for a link we must have:
@@ -263,6 +331,10 @@ public class MarkerController {
         	if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
         		if (!marker.getStatus().equals("withdrawn")) {
         			mav.addObject ("needKompLink", "yes");
+        			otherIDs.put("International Mouse Knockout Project Status", 
+        				idLinker.getLink("KnockoutMouse", marker.getPrimaryID(),
+        						marker.getSymbol()) );
+        			logicalDBs.add("International Mouse Knockout Project Status");
         		}
         	}
         }
