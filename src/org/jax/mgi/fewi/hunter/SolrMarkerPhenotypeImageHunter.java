@@ -39,7 +39,7 @@ public class SolrMarkerPhenotypeImageHunter extends SolrHunter {
         
     }
     
-	@Value("${solr.authors_ac.url}")
+	@Value("${solr.markerPhenotypeImage.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
