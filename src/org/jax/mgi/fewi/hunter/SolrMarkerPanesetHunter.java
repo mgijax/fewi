@@ -35,11 +35,11 @@ public class SolrMarkerPanesetHunter extends SolrHunter {
          * and place into the output.  In this case we want to actually get a 
          * specific field, and return it rather than a list of keys.
          */       
-        otherString = IndexConstants.IMAGE_KEY;
+        otherString = IndexConstants.PANESET_KEY;
         
     }
     
-	@Value("${solr.markerPhenotypeImage.url}")
+	@Value("${solr.markerPaneset.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
