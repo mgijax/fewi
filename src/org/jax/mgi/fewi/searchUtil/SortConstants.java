@@ -33,6 +33,12 @@ public class SortConstants {
     public static final String CRE_BY_SPECIMEN_NOTE             = "bySpecimenNote";
     public static final String CRE_BY_RESULT_NOTE               = "byResultNote";
 
+    // Default sort		
+    public static final String BY_DEFAULT						= "byDefaultSort";
+    
+    // GXD Lit Summary Page
+    public static final String MRK_BY_SYMBOL					= "byMrkSymbol";
+    
 	// Sequence Summary page
 
 	public static final String SEQUENCE_TYPE       = "sequenceType";

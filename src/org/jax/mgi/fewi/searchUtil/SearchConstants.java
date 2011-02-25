@@ -40,6 +40,10 @@ public class SearchConstants {
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
     
+    // Autocomplete
+    
+    public static final String AC_FOR_GXD			= "forGXD";
+    
     // batch query constants
     public static final String BATCH_TERM              = "batch_term";
     public static final String BATCH_TYPE              = "batch_type";
@@ -49,10 +53,20 @@ public class SearchConstants {
     
     public static final String CRE_SYSTEM_KEY       = "system_key";
     
+    // GXD Lit	
+    
+    public static final String GXD_LIT_MRK_NOMEN		= "nomen";
+    public static final String GXD_LIT_AGE		    = "age";
+    public static final String GXD_LIT_ASSAY_TYPE	= "assayType";
+    
     // Vocab Constants
     
     public static final String VOC_VOCAB            = "vocab";
     public static final String VOC_RESTRICTION      = "qualifier";
+    
+    // Images
+    
+    public static final String IMG_KEY				= "imageKey";
 
     // faux entry;  used by webapp class template
     public static final String FOO_ID              = "foo_id";
