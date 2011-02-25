@@ -67,6 +67,7 @@ public class SearchConstants {
     // Images
     
     public static final String IMG_KEY				= "imageKey";
+    public static final String IMG_ID				= "imageID";
 
     // faux entry;  used by webapp class template
     public static final String FOO_ID              = "foo_id";
