@@ -1,7 +1,12 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -39,7 +44,29 @@ public class SolrMarkerPhenotypeImageHunter extends SolrHunter {
         
     }
     
-	@Value("${solr.markerPhenotypeImage.url}")
+	protected SearchParams preProcessSearchParams(SearchParams searchParams) {
+	    
+	    Filter filter = searchParams.getFilter();
+
+	    List<Filter> flist = new ArrayList<Filter> ();
+	    flist.add(filter);
+	    
+	    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Phenotypes", Filter.OP_EQUAL);
+	    
+	    Filter isThumb = new Filter(SearchConstants.IMG_IS_THUMB, "1", Filter.OP_EQUAL);
+	    flist.add(phenotype);
+	    flist.add(isThumb);
+	    
+	    Filter modifiedFilter = new Filter();
+	    modifiedFilter.setNestedFilters(flist);
+	    modifiedFilter.setFilterJoinClause(Filter.FC_AND);
+	    
+	    searchParams.setFilter(modifiedFilter);
+	    return searchParams;
+	    
+	}
+    
+	@Value("${solr.image.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
