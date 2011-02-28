@@ -53,4 +53,8 @@ public class StyleAlternator
       return style;
   }
 
+  public void reset() {
+	  styleIndex = 0;
+  }
+  
 }
