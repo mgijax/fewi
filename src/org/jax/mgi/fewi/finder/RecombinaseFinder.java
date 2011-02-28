@@ -117,8 +117,6 @@ public class RecombinaseFinder {
 		logger.debug ("hunt");
 		creAssayHunter.hunt (params, results);
 
-System.out.println("-->" + results.getTotalCount());
-
 		logger.debug ("gather");
 		assayResultGatherer.setType (AlleleSystemAssayResult.class);
 
