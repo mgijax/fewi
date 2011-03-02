@@ -23,6 +23,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -265,126 +266,7 @@ public class SolrHunter implements Hunter {
         return searchParams;
     }
 
-    /**
-     * packKeys
-     * @param sdl
-     * @return List of keys
-     * This generic method is available to all extending classes.  All
-     * that they need to do to take advantage of it is to set the keyString
-     * variable.  This will then be used to extract a given field from the
-     * returned documents as the key we want to return to the wi.
-     *
-     * If something more complex is requires, the implementer is expected
-     * to override this method with their own version.
-     */
-
-/*    List<String> packKeys(SolrDocumentList sdl) {
-        List<String> keys = new ArrayList<String>();
-
-        logger.debug("Keys: ");
-
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
-        {
-            SolrDocument doc = (SolrDocument) iter.next();
-
-            keys.add((String) doc.getFieldValue(keyString));
-            logger.debug("" + doc.getFieldValue(keyString));
-        }
-
-        return keys;
-    }*/
     
-/*    Map<String, MetaData> packMetadata(SolrDocumentList sdl, QueryResponse rsp) {
-        Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
-        
-        Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
-        
-        for (Iterator iter = sdl.iterator(); iter.hasNext();) {
-            SolrDocument doc = (SolrDocument) iter.next();
-            
-            MetaData tempMeta = new MetaData();
-            tempMeta.setScore("" + doc.getFieldValue("score"));
-            
-            Set<String> highlightKeys = highlights.get(doc.getFieldValue(keyString)).keySet();
-            Map<String, List<String>> highlightsMap = highlights.get(doc.getFieldValue(keyString));
-            for (Iterator iter2 = highlightKeys.iterator(); iter2.hasNext();) {
-                String key = (String) iter2.next();
-                List <String> highlights2 = highlightsMap.get(key);
-                for (String highlightWord: highlights2) {
-                    
-                    Boolean inAHL = Boolean.FALSE; 
-                    String [] fragments = highlightWord.split("!FRAG!");
-                    
-                    for (String frag: fragments) {
-                        if (inAHL) {
-                            tempMeta.addHighlightWords(frag);
-                            inAHL = Boolean.FALSE;
-                        }
-                        else {
-                            inAHL = Boolean.TRUE;
-                        }
-                    }
-                }
-            }
-            metaList.put((String) doc.getFieldValue(keyString), tempMeta);                        
-        }
-        
-        return metaList;
-    }*/
-    
-    /**
-     * packScores
-     * @param sdl
-     * @return List of scores
-     * 
-     * Pack a list of scores that corresponds to the list of keys.
-     */
-
-/*    List<String> packScore(SolrDocumentList sdl) {
-        List<String> keys = new ArrayList<String>();
-
-        logger.info("scores: ");
-
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
-        {
-            SolrDocument doc = (SolrDocument) iter.next();
-
-            keys.add("" + doc.getFieldValue("score"));
-            logger.info("" + doc.getFieldValue("score"));
-        }
-
-        return keys;
-    }*/
-    
-/*    List<String> packExtraInfo(SolrDocumentList sdl) {
-        List<String> info = new ArrayList<String>();
-
-        logger.debug("Other Strings: ");
-
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
-        {
-            SolrDocument doc = (SolrDocument) iter.next();
-
-            info.add((String) doc.getFieldValue(otherString));
-            logger.debug("" + doc.getFieldValue(otherString));
-        }
-
-        return info;
-    }*/
-    
-/*    List<String> packFacet(QueryResponse rsp) {
-        List<String> facet = new ArrayList<String>();
-
-        logger.debug("Facet Strings: ");
-
-        for (Count c: rsp.getFacetField(facetString).getValues()) {
-            facet.add(c.getName());
-            logger.debug(c.getName());
-        }
-
-        return facet;
-    }*/
-
     /**
      * translateFilter
      * @param filter
@@ -525,11 +407,24 @@ public class SolrHunter implements Hunter {
             SolrDocument doc = (SolrDocument) iter.next();
             
             if (sp.includeRowMeta()) {
+            	
                 MetaData tempMeta = new MetaData();
                 if (sp.includeMetaScore()) {
                     tempMeta.setScore("" + doc.getFieldValue("score"));
                 }
-                metaList.put((String) doc.getFieldValue(keyString), tempMeta);
+                if (sp.includeGenerated()) {
+                	if (doc.getFieldValue(IndexConstants.AC_IS_GENERATED).equals(new Integer("1"))) {
+                		tempMeta.setGenerated();
+                	}
+                }
+                if (this.keyString != null) {
+                    metaList.put((String) doc.getFieldValue(keyString), tempMeta);
+                }
+                if (this.otherString != null) {
+                    metaList.put((String) doc.getFieldValue(otherString), tempMeta);
+                }
+
+
             }
             
             if (this.keyString != null) {            
@@ -541,7 +436,6 @@ public class SolrHunter implements Hunter {
 
             if (this.otherString != null) {
                 info.add((String) doc.getFieldValue(otherString));
-                logger.debug("OtherString: " + otherString + " -"+ doc.getFieldValue(otherString));
             }
             
             
@@ -583,10 +477,6 @@ public class SolrHunter implements Hunter {
             sr.setResultKeys(keys);
         }
         
-/*        if (scoreKeys != null) {
-            sr.setResultScores(scoreKeys);
-        }*/
-        
         if (info != null) {
             sr.setResultStrings(info);
         }
@@ -603,9 +493,5 @@ public class SolrHunter implements Hunter {
             sr.setMetaMapping(metaList);
         }
         
-/*        if (!this.highlightFields.isEmpty()) {
-            sr.setMetaMapping(metaList);
-            sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
-        }*/
     }
 }
