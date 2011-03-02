@@ -24,6 +24,7 @@ public class SolrAuthorsACHunter extends SolrHunter {
          */
         
         propertyMap.put(SearchConstants.REF_AUTHOR, new SolrPropertyMapper(IndexConstants.REF_AUTHOR));
+        propertyMap.put(SearchConstants.AC_FOR_GXD, new SolrPropertyMapper(IndexConstants.AC_FOR_GXD));
         
         /*
          * The name of the field we want to iterate through the documents for
