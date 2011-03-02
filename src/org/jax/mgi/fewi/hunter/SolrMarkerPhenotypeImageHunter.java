@@ -40,7 +40,7 @@ public class SolrMarkerPhenotypeImageHunter extends SolrHunter {
          * and place into the output.  In this case we want to actually get a 
          * specific field, and return it rather than a list of keys.
          */       
-        otherString = IndexConstants.IMAGE_KEY;
+        keyString = IndexConstants.IMAGE_KEY;
         
     }
     
