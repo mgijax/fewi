@@ -25,6 +25,7 @@ public class SearchParams {
 	private boolean includeSetMeta = false;
 	private boolean includeMetaScore = false;
 	private boolean includeMetaHighlight = false;
+	private boolean includeGenerated = false;
 
     //////////////////////////////////////////////////////////////////////////
     //  BASIC ACCESSORS
@@ -125,4 +126,11 @@ public class SearchParams {
 		this.includeMetaHighlight = includeMetaHighlight;
 	}
 
+	public boolean includeGenerated () {
+		return includeGenerated;
+	}
+	
+	public void setIncludeGenerated(boolean includeGenerated) {
+		this.includeGenerated = includeGenerated;
+	}
 }

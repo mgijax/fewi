@@ -7,6 +7,7 @@ public class MetaData {
     
     String score;
     Set <String> highlightWords = new HashSet<String> ();
+    Boolean generated = Boolean.FALSE;;
     
     public String getScore() {
         return score;
@@ -14,19 +15,13 @@ public class MetaData {
     public void setScore(String score) {
         this.score = score;
     }
-/*    public Set<String> getHighlightWords() {
-        return highlightWords;
-    }
-    public void setHighlightWords(Set<String> highlightWords) {
-        this.highlightWords = highlightWords;
-    }
-    public void addHighlightWords(String word) {
-        this.highlightWords.add(word);
-    }
-	@Override
-	public String toString() {
-		return "MetaData [highlightWords=" + highlightWords + ", score="
-				+ score + "]";
-	}*/
 
+    public void setGenerated() {
+    	this.generated = Boolean.TRUE;
+    }
+    
+    public Boolean isGenerated() {
+    	return generated;
+    }
+    
 }
