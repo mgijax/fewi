@@ -5,7 +5,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Foo Query</title>
+<title>Foo Search</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
