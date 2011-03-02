@@ -22,6 +22,7 @@ public class SolrJournalsACHunter extends SolrHunter {
          */
         
         propertyMap.put(SearchConstants.REF_JOURNAL, new SolrPropertyMapper(IndexConstants.REF_JOURNAL));
+        propertyMap.put(SearchConstants.AC_FOR_GXD, new SolrPropertyMapper(IndexConstants.AC_FOR_GXD));
         
         /*
          * For this hunter we are not interested in keys, we instead want to pack 
