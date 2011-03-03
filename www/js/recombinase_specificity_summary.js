@@ -8,22 +8,22 @@ function main() {
         {key:"structure", 
             label:"<b>Structure</b>",
             width:112, 
-            sortable:false},
+            sortable:true},
         {key:"assayedAge", 
             label:"<b>Assayed Age</b>",
-            width:76, 
-            sortable:false},
+            width:80, 
+            sortable:true},
         {key:"level", 
             label:"<b>Level</b>",
-            sortable:false,
-            width:55},
+            sortable:true,
+            width:53},
         {key:"pattern", 
             label:"<b>Pattern</b>",
-            sortable:false,
-            width:55},
+            sortable:true,
+            width:53},
         {key:"source", 
             label:"<b>Reference, Source</b>",
-            sortable:false,
+            sortable:true,
             width:120},
         {key:"assayType", 
             label:"<b>Assay Type</b>",
@@ -121,9 +121,10 @@ function main() {
 
     // Define a custom function to route sorting through the Browser History Manager
     var handleSorting = function (oColumn) {
+
         // Calculate next sort direction for given Column
         var sDir = this.getColumnSortDir(oColumn);
-        
+
         // The next state will reflect the new sort values
         // while preserving existing pagination rows-per-page
         // As a best practice, a new sort will reset to page 0
@@ -163,6 +164,12 @@ function main() {
             rowsPerPage: Number(pRequest['results']) || 50,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
+
+        oPayload.sortedBy = {
+            key: pRequest['sort'] || "structure",
+            dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
+        };
+
         return true;
     };
 
@@ -170,7 +177,7 @@ function main() {
     var generateRequest = function(startIndex,sortKey,dir,results) {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "structure";
-        dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
+        dir   = (dir) ? dir.substring(7) : "desc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 50;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };

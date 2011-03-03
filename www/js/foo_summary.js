@@ -106,6 +106,10 @@ function main() {
             rowsPerPage: Number(pRequest['results']) || 25,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
+        oPayload.sortedBy = {
+            key: pRequest['sort'] || "field1",
+            dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
+        };
         return true;
     };
 
@@ -113,7 +117,7 @@ function main() {
     var generateRequest = function(startIndex,sortKey,dir,results) {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "field1";  // default the sort
-        dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
+        dir   = (dir) ? dir.substring(7) : "desc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };

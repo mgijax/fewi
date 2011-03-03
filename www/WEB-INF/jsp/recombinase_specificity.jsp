@@ -102,6 +102,23 @@ a {
 </style>
 
 <script>
+
+function hide (i)
+{
+  var elem = document.getElementById(i);
+  if (elem == null) { return false; }
+  elem.style.display = 'none';
+  return true;
+}
+
+function show (i)
+{
+  var elem = document.getElementById(i);
+  if (elem == null) { return false; }
+  elem.style.display = '';
+  return true;
+}
+
 </script>
 
 
@@ -129,10 +146,30 @@ ${templateBean.templateBodyStartHtml}
 <table class="detailStructureTable">
 
 
+
+  <!-- Table of Contents -->
+  <tr>
+    <td CLASS="data2" COLSPAN="2" ALIGN="center">
+      <div style="font-size: 0.9em;height:2em;" id="toc">
+
+        <a href="#alleleDetails" class="MP">Allele Information</a>&nbsp;
+        <c:if test="${not empty otherAlleles}">
+          | <a href="#tissueInfo" class="MP">Tissue Information</a>&nbsp;
+        </c:if>
+        | <a href="#imageGallery" class="MP">Images</a>&nbsp;
+        | <a href="#recombinaseSpecificity" class="MP">Recombinase Specificity</a>&nbsp;
+        | <a href="#refSection" class="MP">References</a>
+      </div>
+    </td>
+  </tr>
+
+
+
   <!-- Allele Information -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
-      Tissue Information
+      <a name="alleleDetails"></A>
+      Allele Information
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
 
@@ -232,67 +269,219 @@ ${templateBean.templateBodyStartHtml}
       </td>
     </tr>
 
-
     <c:if test="${not empty otherSystems}">
     <tr>
       <td class="rightBorderThinGray" align="right" valign="middle" width="1%" nowrap="nowrap">
         <span class='creDataCat'>Additional Tissues:</span>
       </td>
       <td>
-        <c:forEach var="oSystem" items="${otherSystems}" >
 
+      <%=FormatHelper.superscript(allele.getSymbol())%> activity also observed in: <br>
+
+      <c:choose>
+    
+      <c:when test="${otherSystemsSize < '7'}">
+        <c:forEach var="oSystem" items="${otherSystems}" varStatus="status">
           <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&systemKey=${oSystem.otherSystemKey}">
-            ${oSystem.otherSystem}
-          </a>
-          
+            ${oSystem.otherSystem}</a><c:if test="${not status.last}">,</c:if>
         </c:forEach>
-      </td>
 
+      </c:when>
+      
+      <c:when test="${otherSystemsSize > '6'}">
+        <div id='systemListDefault'>
+          <img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'
+            onClick='show("systemListHidden"); hide("systemListDefault");'
+            style='cursor: pointer;'>
+          <c:forEach var="oSystem" items="${otherSystems}" varStatus="status">
+            <c:if test="${status.count < '5' }">
+              <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&systemKey=${oSystem.otherSystemKey}">
+                ${oSystem.otherSystem}</a><c:if test="${status.count < '4'}">,</c:if>
+              <c:if test="${status.count == '4' }">
+                <span onClick='show("systemListHidden"); hide("systemListDefault");' 
+                style='cursor: pointer; color:blue;' class="small">...(more)
+                </span>
+              </c:if>
+            </c:if>
+          </c:forEach>
+        </div>
+
+        <div id='systemListHidden' style="display:none;">
+          <img src='${configBean.WEBSHARE_URL}images/downArrow.gif'
+            onClick='show("systemListDefault"); hide("systemListHidden");'
+            style='cursor: pointer;'>
+          <c:forEach var="oSystem" items="${otherSystems}" varStatus="status">
+          <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&systemKey=${oSystem.otherSystemKey}">
+            ${oSystem.otherSystem}</a><c:if test="${not status.last}">,</c:if>
+          </c:forEach>
+          <span onClick='show("systemListDefault"); hide("systemListHidden");' 
+            style='cursor: pointer; color:blue;' class="small"> (less)
+          </span>
+        </div>
+
+      </c:when>
+    
+      <c:otherwise>
+        error
+      </c:otherwise>
+      </c:choose>
+
+      </td>
     </tr>
     </c:if>
 
-
-
-
-
-
-
     </table>
-
-      
     </td>
   </tr>
+
 
 
   <!-- Tissue Information -->
   <c:if test="${not empty otherAlleles}">
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
+      <a name="tissueInfo"></A>
       Tissue Information
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
+
+      <table border="0" cellpadding="4" cellspacing="0" width="100%">
+      <tbody>
+      <tr>
+      <td class="rightBorderThinGray" align="right" valign="middle" width="1%" nowrap="nowrap">
+        <b>${systemDisplayStr}</b>
+      </td>
+
+      <td>
+       Other recombinase alleles with activity in ${systemDisplayStr} tissues: <br>
+
+      <c:choose>
+    
+      <c:when test="${otherAllelesSize < '7'}">
         <c:forEach var="oAllele" items="${otherAlleles}" varStatus="status">
+          <% AlleleSystemOtherAllele asoa = (AlleleSystemOtherAllele)pageContext.getAttribute("oAllele"); %>
           <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&systemKey=${oAllele.systemKey}">
-            ${oAllele.otherAlleleID} ${status.index}
-          </a>
+            <%=FormatHelper.superscript(asoa.getOtherAlleleSymbol())%></a><c:if test="${not status.last}">,</c:if>
         </c:forEach>
+      </c:when>
+
+      <c:when test="${otherAllelesSize > '6'}">
+
+        <div id='alleleListDefault'>
+          <img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'
+            onClick='show("alleleListHidden"); hide("alleleListDefault");'
+            style='cursor: pointer;'>
+          <c:forEach var="oAllele" items="${otherAlleles}" varStatus="status">
+            <% AlleleSystemOtherAllele asoa = (AlleleSystemOtherAllele)pageContext.getAttribute("oAllele"); %>
+            <c:if test="${status.count < '5' }">
+              <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&systemKey=${oAllele.systemKey}">
+                <%=FormatHelper.superscript(asoa.getOtherAlleleSymbol())%></a><c:if test="${status.count < '4' }">,</c:if>
+                <c:if test="${status.count == '4' }">
+                  <span onClick='show("alleleListHidden"); hide("alleleListDefault");' 
+                  style='cursor: pointer; color:blue;' class="small">...(more)
+                  </span>
+                </c:if>
+            </c:if>  
+          </c:forEach>
+        </div>
+
+        <div id='alleleListHidden' style="display:none;">
+          <img src='${configBean.WEBSHARE_URL}images/downArrow.gif'
+            onClick='show("alleleListDefault"); hide("alleleListHidden");'
+            style='cursor: pointer;'>
+          <c:forEach var="oAllele" items="${otherAlleles}" varStatus="status">
+            <% AlleleSystemOtherAllele asoa = (AlleleSystemOtherAllele)pageContext.getAttribute("oAllele"); %>
+            <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&systemKey=${oAllele.systemKey}">
+              <%=FormatHelper.superscript(asoa.getOtherAlleleSymbol())%></a><c:if test="${not status.last}">,</c:if>
+          </c:forEach>
+          <span onClick='show("alleleListDefault"); hide("alleleListHidden");' 
+            style='cursor: pointer; color:blue;' class="small"> (less)
+          </span>
+        </div>
+
+      </c:when>
+    
+      <c:otherwise>
+        error
+      </c:otherwise>
+      </c:choose>
+      </td>
+
+      </tr>
+      </tbody>
+      </table>
+
     </td>
   </tr>
   </c:if>
 
 
+
   <!-- Image Gallery -->
-  <c:if test="${not empty galleryImages}">
+  <c:if test="${not empty galleryImagesRows}">
 
-    <tr  valign=top ALIGN=left>
-      <td class="<%=leftTdStyles.getNext() %>" >
-        Images
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>" >
+  <tr  valign=top ALIGN=left>
+    <td class="<%=leftTdStyles.getNext() %>" >
+      <a name="imageGallery"></A>
+      Images
+    </td>
 
-        <c:forEach var="galleryImage" items="${galleryImages}" >
-          <br/>
+    <td class="<%=rightTdStyles.getNext() %>" >
+
+      <div class="sectionIntro">
+        Drag images to compare to others or to data in the table below. Drag corners to resize images for more detail.
+        <span style='' class="resetButton"
+          onClick="window.location.reload();">
+          Reset Images
+        </span>
+      </div>
+
+
+      <% int leftDist = 10; %>
+
+      <c:forEach var="galleryImageRow" items="${galleryImagesRows}" >
+      <div style="position:relative; height:${galleryImageRow.rowHeight}px; padding-top:4px; padding-bottom:4px;">
+
+        <c:forEach var="galleryImage" items="${galleryImageRow.recomImages}" >
+
+          <span class='galImageInfoBox' style='position:absolute;left:<%=(leftDist-3)%>px;' >
+            ${galleryImage.jnumID}<br/>Fig.&nbsp;${galleryImage.figureLabel}
+          </span> 
+
+          <img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=${galleryImage.pixeldbNumericID}' 
+            id='creImg${galleryImage.pixeldbNumericID}' 
+            style='position:absolute; top:32px; left:<%=leftDist%>px; z-index:${galleryImage.indexZ};'> 
+
+          <script>
+            (function() { 
+              var Dom = YAHOO.util.Dom, Event = YAHOO.util.Event;  
+              var resize = new YAHOO.util.Resize(
+                  'creImg${galleryImage.pixeldbNumericID}', 
+                  { handles: 'bl,br,tl,tr',  
+                    knobHandles: true,  
+                    width: '80px',  
+                    height: '${galleryImage.modifiedHeight}px',  
+                    proxy: true,   
+                    ratio: true,   
+                    draggable: true,   
+                    animate: true,   
+                    animateDuration: .75,   
+                    animateEasing: YAHOO.util.Easing.backBoth   
+                  }
+              ); 
+            })(); 
+          </script> 
+          
+          <% leftDist = leftDist + 100; %>
         </c:forEach>
+
+
+        <% leftDist = 10; %>
+
+ 
+      </div>
+      </c:forEach>
+
     
       </td>
     </tr>
@@ -306,6 +495,7 @@ ${templateBean.templateBodyStartHtml}
   <!-- Recombinase Specificity  -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
+      <a name="recombinaseSpecificity"></A>
       Recombinase Specificity 
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
@@ -314,7 +504,7 @@ ${templateBean.templateBodyStartHtml}
 
         <div class="sectionIntro" style="position: absolute; top:3px; left:2px; width:200px;">
           Click heading to resort table.
-          <img src="" id="InfoIcon"
+          <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" id="InfoIcon"
              onMouseOver="return overlib('<em>MGI\'s annotations reflect statements made by the authors or data providers.   Notes contain additional information pertaining to the assay result.</em><br /><br /><strong>Structures:</strong><br />Recombinase specificity results are associated with structures described in the Mouse Anatomical Dictionary (AD).<br /><br /><strong>Assayed Age:</strong><br />Age of the specimen when assayed.  Because recombinase activity is maintained throughout the cell lineage, expression may have occurred at an earlier age.<br /><br /><strong>Levels:</strong><br />Absent, Present*, Ambiguous, Trace, Weak, Moderate, Strong, Very Strong<br /><em>*\'Present\' is used when the author does not describe expression level explicitly.</em><br /><br /><strong>Patterns:</strong><br />Homogeneous, Non-Homogeneous, Diffuse, Graded, Patchy, Regionally Restricted, Scattered, Single cells, Spotted, Ubiquitous, Widespread, Not Specified, Not Applicable', WIDTH, 350, DELAY, 500, CAPTION, 'Structures, Ages, Levels, and Patterns', ANCHOR, 'InfoIcon', ANCHORALIGN, 'UR', 'UL', STICKY, CLOSECLICK, CLOSETEXT, 'close X');" onMouseOut="nd();">
         </div>
 
@@ -360,6 +550,7 @@ ${templateBean.templateBodyStartHtml}
   <!-- Referencecs  -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
+      <a name="refSection"></A>
        References
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
