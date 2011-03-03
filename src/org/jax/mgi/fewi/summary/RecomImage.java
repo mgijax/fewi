@@ -77,11 +77,12 @@ public class RecomImage {
     public int getIndexZ() {
         return 1000 - imageIndex;
     }
+
+    // scaled height, keeping aspect ratio for image with 80px width
     public int getModifiedHeight() {
 		double width = image.getWidth().doubleValue();
 		double height = image.getHeight().doubleValue();
 		int modifiedHeight = (int)((height * 80) / width);
-
         return modifiedHeight;
     }
 

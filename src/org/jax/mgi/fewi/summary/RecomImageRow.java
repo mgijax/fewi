@@ -39,9 +39,25 @@ public class RecomImageRow {
     	recomImages = imageList;
     }
 
-
     public List<RecomImage> getRecomImages() {
     	return recomImages;
     }
+
+
+    // height of the row, taking into account the tallest image in the row
+    public int getRowHeight() {
+
+		int rowHeight = 66; // default
+
+		for (RecomImage image: recomImages) {
+			if (image.getModifiedHeight() > rowHeight) {
+				rowHeight = image.getModifiedHeight();
+			}
+		}
+        rowHeight = rowHeight + 30; //adding space for header
+
+    	return rowHeight;
+    }
+
 
 }
