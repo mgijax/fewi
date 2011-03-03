@@ -50,11 +50,23 @@ public class ReferenceQueryForm {
 	public boolean isInTitle() {
 		return inTitle;
 	}
+	public String getInTitle(){
+		if (this.inTitle){
+			return "true";
+		}
+		return "false";
+	}
 	public void setInTitle(boolean inTitle) {
 		this.inTitle = inTitle;
 	}
 	public boolean isInAbstract() {
 		return inAbstract;
+	}
+	public String getInAbstract(){
+		if (this.inAbstract){
+			return "true";
+		}
+		return "false";
 	}
 	public void setInAbstract(boolean inAbstract) {
 		this.inAbstract = inAbstract;
