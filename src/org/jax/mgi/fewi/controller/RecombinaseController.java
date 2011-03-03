@@ -9,8 +9,11 @@ import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.AlleleSystemAssayResult;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Image;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
+import org.jax.mgi.fewi.summary.RecomImage;
+import org.jax.mgi.fewi.summary.RecomImageRow;
 import org.jax.mgi.fewi.summary.RecombinaseSummary;
 import org.jax.mgi.fewi.summary.RecomSpecificitySummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
@@ -173,15 +176,17 @@ public class RecombinaseController {
         }
 
         // gather required data objects, and place into the mav
+		mav.addObject("queryString", request.getQueryString());
         AlleleSystem alleleSystem = alleleSystems.get(0);
         Allele allele = alleleSystem.getAllele();
         mav.addObject("alleleSystem", alleleSystem);
         mav.addObject("allele", allele);
         mav.addObject("systemDisplayStr",
           FormatHelper.initCap(alleleSystem.getSystem()));
-        mav.addObject("galleryImages", alleleSystem.getImages());
         mav.addObject("otherAlleles", alleleSystem.getOtherAlleles());
+        mav.addObject("otherAllelesSize", alleleSystem.getOtherAlleles().size());
         mav.addObject("otherSystems", alleleSystem.getOtherSystems());
+        mav.addObject("otherSystemsSize", alleleSystem.getOtherSystems().size());
 
         // pre-gen comma-delimitted synonym list
 		List<String> synonymList = new ArrayList<String> ();
@@ -193,9 +198,33 @@ public class RecombinaseController {
         mav.addObject("synonymsString",
           FormatHelper.superscript(FormatHelper.commaDelimit(synonymList)));
 
-		// add query string
-		mav.addObject("queryString", request.getQueryString());
 
+        // pre-form image gallery rows
+        int imageIndex = 0;
+        Image thisImage;
+        List<RecomImage> recomImages = new ArrayList<RecomImage>();
+        List<RecomImageRow> recomImageRows = new ArrayList<RecomImageRow>();
+        Iterator<Image> imageIter = alleleSystem.getImages().iterator();
+//System.out.println("***alleleSystem.getImages().size--" + alleleSystem.getImages().size());
+
+
+		while (imageIter.hasNext()) {
+			imageIndex++;
+			thisImage = imageIter.next();
+//System.out.println("***thisImage--" + thisImage.getHeight() + "--" + thisImage.getWidth());
+
+			RecomImage thisRecomImage
+			  = new RecomImage(thisImage, imageIndex);
+            recomImages.add(thisRecomImage);
+
+            if ( ((imageIndex % 8 ) == 0) || !imageIter.hasNext() ) {
+				RecomImageRow thisRow = new RecomImageRow();
+				thisRow.setRecomImages(recomImages);
+				recomImageRows.add(thisRow);
+				recomImages = new ArrayList<RecomImage>();
+			}
+		}
+        mav.addObject("galleryImagesRows", recomImageRows);
 
         return mav;
     }
@@ -216,7 +245,7 @@ public class RecombinaseController {
         // generate search parms object;  add pagination, sorts, and filters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
-//        params.setSorts(this.genSorts(request));
+        params.setSorts(this.genRecomSummarySorts(request));
         params.setFilter(this.genFilters(query));
 
         // perform query, and pull out the requested objects
@@ -290,6 +319,48 @@ public class RecombinaseController {
 		sorts.add(sort);
 		return sorts;
 	}
+
+    // generate the sorts for assay summary on recombinase detail
+    private List<Sort> genRecomSummarySorts(HttpServletRequest request) {
+
+        logger.debug("->genRecomSummarySorts started");
+
+        List<Sort> sorts = new ArrayList<Sort>();
+
+        // retrieve requested sort order; set default if not supplied
+        String sortRequested = request.getParameter("sort");
+
+        // empty
+        if (sortRequested == null) {
+            return sorts;
+        }
+
+		// expected sort values
+		if ("structure".equalsIgnoreCase(sortRequested)){
+			sortRequested = SortConstants.CRE_BY_STRUCTURE;
+		} else if ("assayedAge".equalsIgnoreCase(sortRequested)){
+			sortRequested = SortConstants.CRE_BY_AGE;
+		} else if ("level".equalsIgnoreCase(sortRequested)){
+			sortRequested = SortConstants.CRE_BY_LEVEL;
+		} else if ("source".equalsIgnoreCase(sortRequested)){
+			sortRequested = SortConstants.CRE_BY_JNUM_ID;
+		} else if ("pattern".equalsIgnoreCase(sortRequested)){
+			sortRequested = SortConstants.CRE_BY_PATTERN;
+		}
+
+        String dirRequested  = request.getParameter("dir");
+        boolean desc = false;
+        if("desc".equalsIgnoreCase(dirRequested)){
+            desc = true;
+        }
+
+        Sort sort = new Sort(sortRequested, desc);
+        sorts.add(sort);
+
+        logger.debug ("sort: " + sort.toString());
+        return sorts;
+    }
+
 
 	private Filter parseRecombinaseQueryForm(RecombinaseQueryForm query){
 		// start filter list to add filters to
