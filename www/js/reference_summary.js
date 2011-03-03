@@ -9,44 +9,49 @@ var numConfig = {thousandsSeparator: ','};
 // Integrate with Browser History Manager
 var History = YAHOO.util.History;
 
+
+
 var populateFilterSummary = function () {
     // add filters to summary
-	var fsList = new YAHOO.util.Element('fsList');
-    var el;
-    
-    var brItems = YAHOO.util.Dom.getChildren('fsList');
-    for (b in brItems){
-    	fsList.removeChild(brItems[b]);
-    }
-
+	var filterList = new YAHOO.util.Element('filterList');
+	while (filterList.hasChildNodes()) {
+		filterList.removeChild(filterList.get('firstChild'));
+	}
+	
     var vis = false;
     for (k in facets) {
     	var inner = facets[k];
+    	var brTag = false;
 		for(v in inner) {
     		vis = true;
+    		brTag = true;
             el = document.createElement("a");
-            el.setAttribute('class', 'fsItem');
+            el.setAttribute('class', 'filterItem');
             el.setAttribute('id', k + ':' + inner[v]);
             var val = k.charAt(0).toUpperCase() + k.slice(1);
-            el.textContent = val.replace('Filter', '') + ': ' + inner[v];
+            val = val.replace('Filter', '') + ': ' + inner[v];
+            setText(el, val);
+            filterList.appendChild(el);
             YAHOO.util.Event.addListener(el, "click", clearFilter);
-
-            fsList.appendChild(el);
+            
+            filterList.appendChild(document.createTextNode(' '));
 		}
-		el = document.createElement("br");
-		YAHOO.util.Dom.insertAfter(el, YAHOO.util.Dom.getLastChild(fsList));    		
+		
+		if (brTag){
+			filterList.appendChild(document.createElement("br"));
+		}
     }
 
 	var fSum = YAHOO.util.Dom.get('filterSummary');
 	if (vis){
 		YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 	} else {
-
 		YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
 	}
 };
 
 var clearFilter = function () {
+	
 	kv = this.id.split(":");		
 	var items = facets[kv[0]];	
 	var val = this.id.slice(this.id.indexOf(":")+1);
@@ -54,7 +59,6 @@ var clearFilter = function () {
 	if(idx != -1) {
 		items.splice(idx, 1);
 	}
-	populateFilterSummary();
 	var state = myDataTable.getState();
 	var newState = generateRequest(0, 
 			state.sortedBy.key, 
@@ -201,7 +205,7 @@ var clearFilter = function () {
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
         
         updateCount(oPayload.totalRecords);
-
+        setText(YAHOO.util.Dom.get('filterCount'), YAHOO.util.Number.format(oPayload.totalRecords));
         oPayload.pagination = {
             rowsPerPage: Number(pRequest['results']) || 25,
             recordOffset: Number(pRequest['startIndex']) || 0
@@ -211,9 +215,8 @@ var clearFilter = function () {
             dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
         };
         
-        var abstractToggle = YAHOO.util.Dom.get('toggleAbstract');
         var txt = 'Show All Abstracts';
-        abstractToggle.innerText ? abstractToggle.innerText=txt : abstractToggle.textContent=txt;
+        setText(YAHOO.util.Dom.get('toggleAbstract'), txt);
         populateFilterSummary();
         return true;
     };
@@ -222,8 +225,9 @@ var clearFilter = function () {
 		var countEl = YAHOO.util.Dom.get("totalCount");
 		if (!YAHOO.lang.isNull(countEl)){
 	    	if(parseInt(totalCount) < parseInt(newCount)){
-	    		totalCount = YAHOO.util.Number.format(newCount, numConfig);   		
-	    		countEl.textContent = totalCount + " items match your unfiltered query.";
+	    		totalCount = YAHOO.util.Number.format(newCount, numConfig);
+	    		var text = totalCount + " item(s) match your unfiltered query.";
+	    		setText(countEl, text);    		
 	    	}
 		}
 	};

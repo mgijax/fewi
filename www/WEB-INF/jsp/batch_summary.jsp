@@ -9,25 +9,16 @@ ${templateBean.templateHeadHtml}
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<style type="text/css">
-</style>
-
-<script>
-</script>
-
 ${templateBean.templateBodyStartHtml}
-
 
 <!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
-
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="foo_help.shtml">	
 	<span class="titleBarMainTitle">Batch Summary</span>
 </div>
-
 
 <div id="summDiv">
 	<div id="querySummary">
@@ -51,7 +42,6 @@ ${templateBean.templateBodyStartHtml}
 
 	</div>
 </div>	
-
 
 <!-- paginator -->
 <table style="width:100%;">

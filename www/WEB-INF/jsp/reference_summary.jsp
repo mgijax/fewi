@@ -26,183 +26,91 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
-
-<div id="outer">
-	<div id="inner">
-		
-		<div class="buttons">	
-			<a id="toggleQF" class="filterButton qfExpand">Modify Query</a>
-		</div>
-		<div class="qfTitle">Query Form</div>
-	</div>
+<div id="outer"  class="bluebar">
+	<span id="toggleImg" class="qfExpand"></span>
+	<div id="toggleQF">Click to modify search</div>
 	<div id="qwrap" style="display:none;">
-		<form:form method="GET" commandName="referenceQueryForm" action="${configBean.FEWI_URL}reference/summary">		
-		<!-- query form table -->
-		<TABLE WIDTH="100%" class="qf pad5 borderedTable">
-			<TR>
-				<TD COLSPAN="2" align="left">
-					<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
-					&nbsp;&nbsp;
-					<INPUT TYPE="reset" value="Reset">
-				</td>
-			</tr>
-		
-			<TR CLASS="stripe1">
-				<TD CLASS="cat1">Author</TD>
-				<TD>
-					<div>
-						<div style="float:left; width:300px;text-align:left;">
-							<div id="authorAutoComplete" style="position:relative; z-index:100;">
-								<form:input id="author" path="author"></form:input>
-								<div id="authorContainer"></div>
-							</div>
-						</div>
-						<div style="float:left; text-align:left;">
-							<form:radiobutton id="authorScope1" path="authorScope" value="any" checked="checked"/> Any Author(s)<br/>
-				    		<form:radiobutton id="authorScope2" path="authorScope" value="first"/> First Author<br/>
-				    		<form:radiobutton id="authorScope3" path="authorScope" value="last"/> Last Author
-						</div>
-		    		</div>
-				</TD>
-			</TR>
-		
-			<TR CLASS="stripe2">
-				<TD CLASS="cat2">Journal</TD>
-				<TD>
-					<div>
-						<div>
-							<div id="journalAutoComplete">
-								<form:input id="journal" path="journal"></form:input>
-								<div id="journalContainer"></div>
-							</div>
-						</div>
-		    		</div>
-				</TD>
-			</TR>
-			<tr  CLASS="stripe1">
-				<td CLASS="cat1">Year</td>
-				<td>
-					<div style="height:4em;">
-						<div style="float:left;width:300px;text-align:left;">
-							<form:input id="year" path="year" class="formWidth"></form:input>
-						</div>
-						<div style="height:4em;" class="example">
-							<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
-								Examples:
-							</div>
-							<div style="text-align:left;" class="example">
-								2008<br/>
-								1990-2004<br/>
-								-2007 (from the earliest reference through 2007)<br/>
-								2009- (from 2009 through the present)
-							</div>
-						</div>
-		    		</div>
-				</td>
-			</tr>
-			<tr  CLASS="stripe2">
-				<td CLASS="cat2">Text</td>
-				<td>
-					<div style="height:5em;">
-						<div style="float:left;width:300px;text-align:left;">
-							<form:textarea id="text" path="text" class="formWidth"></form:textarea><br/>
-							<form:checkbox id="inTitle1" path="inTitle" /> In Title
-							<form:checkbox id="inAbstract1" path="inAbstract" /> In Abstract
-						</div>
-						<div style="height:4em;" class="example">
-							<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
-								Examples:
-							</div>
-							<div style="text-align:left;" class="example">
-								oocyte, spermatocyte<br/>
-								"telomeres in meiocytes"<br/>
-								5-bromo-2'-deoxyuridine-positive cells<br/>
-							spastic paraplegia spinocerabellar ataxia cerebellum
-							</div>
-						</div>
-		    		</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div style="width:800px; text-align: center; font-weight: bold;">OR</div>
-				</td>
-			</tr>
-			<tr  CLASS="stripe1">
-				<td  CLASS="cat1">
-					PubMed ID or<br/>
-					MGI Reference ID
-				</td>
-				<td  CLASS="data1">
-					<div style="height:3em;">
-						<div style="float:left; width:300px;text-align:left;">
-							<form:input id="id" path="id" class="formWidth" value="" maxlength="256"></form:input>
-						</div>
-						<div style="height:4em;" class="example">
-							<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
-								Examples:
-							</div>
-							<div style="text-align:left;" class="example">
-							20339075 (PubMed)<br/>
-							J:159210 (MGI reference ID)<br/>
-							18989690; 18192873; J:159210 (List)
-							</div>
-						</div>
-		
-		    		</div>
-				</td>
-			</tr>
-		    <TR>
-				<TD COLSPAN="3" align="left">
-					<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
-					&nbsp;&nbsp;
-					<INPUT TYPE="reset">
-				</TD>
-		    </TR>
-		</TABLE>
-		</form:form>
+		<%@ include file="/WEB-INF/jsp/reference_form.jsp" %>
 	</div>
-
 </div>
 
-<div id="summDiv">
+<div id="resultbar" class="bluebar">Results</div>
+
+<div id="summary">
+
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" style="display:none;" class="filters">
+					<span class="label">Filters:</span>
+					<span id="filterList"></span><br/>
+					<span id="fCount"><span id="filterCount">0</span> item(s) match after applying filter(s).</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="querySummary">
-		<span class="title">You searched for:</span><br/>
-		<span id="totalCount" class="count"></span><br/>
-		<c:if test="${not empty referenceQueryForm.author}">
-			<span class="label">Author:</span> 
-			${referenceQueryForm.author}<br/></c:if>
-		<c:if test="${not empty referenceQueryForm.journal}">
-			<span class="label">Journal:</span>
-			${referenceQueryForm.journal}<br/></c:if>
-		<c:if test="${not empty referenceQueryForm.year}">
-			<span class="label">Year:</span> 
-			${referenceQueryForm.year}<br/></c:if>
-		<c:if test="${not empty referenceQueryForm.text}">
-			<span class="label">Text:</span> 
-			${referenceQueryForm.text}<br/></c:if>
-		<c:if test="${not empty referenceQueryForm.id}">
-			<span class="label">ID:</span> 
-			${referenceQueryForm.id}<br/></c:if>
+		<div class="innertube">
+			<span class="title">You searched for:</span><br/>
+			<span id="totalCount" class="count"></span><br/>
+			<c:if test="${not empty referenceQueryForm.author}">
+				<c:if test="${referenceQueryForm.authorScope eq 'any'}">
+					<span class="label">Any Author:</span></c:if>
+				<c:if test="${referenceQueryForm.authorScope eq 'first'}">
+					<span class="label">First Author:</span></c:if>
+				<c:if test="${referenceQueryForm.authorScope eq 'last'}">
+					<span class="label">Last Author:</span></c:if>					
+				${referenceQueryForm.author}<br/></c:if>
+			<c:if test="${not empty referenceQueryForm.journal}">
+				<span class="label">Journal:</span>
+				${referenceQueryForm.journal}<br/></c:if>
+			<c:if test="${not empty referenceQueryForm.year}">
+				<span class="label">Year:</span> 
+				${referenceQueryForm.year}<br/></c:if>
+			<c:if test="${not empty referenceQueryForm.text}">
+				<span class="label">Text 
+				<c:choose>
+					<c:when test="${referenceQueryForm.inTitle}">
+						 in Title 				
+						<c:if test="${referenceQueryForm.inAbstract}">
+							 or Abstract </c:if>
+					</c:when>
+					<c:when test="${referenceQueryForm.inAbstract}">
+						 in Abstract
+					</c:when>				
+				</c:choose>
+				:</span>
+				${referenceQueryForm.text}<br/>
+			</c:if>	
+			<c:if test="${not empty referenceQueryForm.id}">
+				<span class="label">ID:</span> 
+				${referenceQueryForm.id}<br/></c:if>
+		</div>
 	</div>
-	<div id="filterSummary" style="display:none;" class="filters">
-		<span class="label">Filters:</span>
-		<span id="fsList"></span>
-	</div>	
-	<div class="paginator">
-		<div id="paginationTop">&nbsp;</div>
-	</div>
-</div>	
-<div>
-<div id="filterDiv" class="filters">
-	<a id="authorFilter" class="filterButton">Author Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
-	<a id="journalFilter" class="filterButton">Journal Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
-	<a id="yearFilter" class="filterButton">Year Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
-	<a id="curatedDataFilter" class="filterButton">Data Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a>
-	<a id="toggleAbstract" class="filterButton">Show All Abstracts</a>
-</div>
-</div>
 
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
+	
+<div id="toolbar" class="bluebar">
+	<div id="filterDiv">
+		Filter by: 
+		<a id="authorFilter" class="filterButton">Author <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+		<a id="journalFilter" class="filterButton">Journal <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+		<a id="yearFilter" class="filterButton">Year <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+		<a id="curatedDataFilter" class="filterButton">Data <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+	</div>
+	<div id="otherDiv">
+		<a id="toggleAbstract" class="filterButton">Show All Abstracts</a> 
+	</div>
+	<div id="downloadDiv">
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="8" height="8" /> Text File</a> 
+	</div>
+</div>
 
 <div id="dynamicdata"></div>
 
@@ -279,22 +187,25 @@ var journalAutocomplete = function() {
 <script type="text/javascript">
 	var qDisplay = true;
 	var toggleQF = function() {
-
         var qf = YAHOO.util.Dom.get('qwrap');
         var toggleLink = YAHOO.util.Dom.get('toggleQF');
-
+        var toggleImg = YAHOO.util.Dom.get('toggleImg');
+        
         var attributes = { height: { to: 375 }};
+        var height = '';
 
         if (!qDisplay){
-        	attributes = { height: { to: 0 }};
-        	YAHOO.util.Dom.removeClass(toggleLink, 'qfCollapse');
-        	YAHOO.util.Dom.addClass(toggleLink, 'qfExpand');
+        	attributes = { height: { to: 0  }};
+        	setText(toggleLink, "Click to modify search");
+        	YAHOO.util.Dom.removeClass(toggleImg, 'qfCollapse');
+        	YAHOO.util.Dom.addClass(toggleImg, 'qfExpand');
         	qDisplay = true;
-        } else {
+        } else {            
         	YAHOO.util.Dom.setStyle(qf, 'height', '0px');
         	YAHOO.util.Dom.setStyle(qf, 'display', 'none');
-        	YAHOO.util.Dom.removeClass(toggleLink, 'qfExpand');
-        	YAHOO.util.Dom.addClass(toggleLink, 'qfCollapse');
+        	YAHOO.util.Dom.removeClass(toggleImg, 'qfExpand');
+        	YAHOO.util.Dom.addClass(toggleImg, 'qfCollapse');
+        	setText(toggleLink, "Click to hide search");
         	qDisplay = false;
         	changeVisibility('qwrap');
         }
