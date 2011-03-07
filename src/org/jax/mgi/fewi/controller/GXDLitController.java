@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.GxdLitAssayTypeAgePair;
 import mgi.frontend.datamodel.GxdLitIndexRecord;
+import mgi.frontend.datamodel.Marker;
 
 import org.jax.mgi.fewi.finder.FooFinder;
 import org.jax.mgi.fewi.finder.GxdLitFinder;
@@ -22,6 +23,8 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.summary.GxdLitAgeAssayTypePairTable;
+import org.jax.mgi.fewi.summary.GxdLitAssayTypeSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitGeneSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitReferenceSummaryRow;
 import org.jax.mgi.fewi.util.StyleAlternator;
@@ -85,7 +88,44 @@ public class GXDLitController {
         return mav;
     }
 
+    //--------------------//
+    // GXD Lit Detail By Key
+    //--------------------//
+/*    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
+    public ModelAndView fooDetailByKey(@PathVariable("dbKey") String dbKey) {
 
+        logger.debug("->fooDetailByKey started");
+
+        // find the requested foo
+        SearchResults searchResults
+          = fooFinder.getFooByKey(dbKey);
+        List<Marker> fooList = searchResults.getResultObjects();
+
+        // there can be only one...
+        if (fooList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Foo Found");
+            return mav;
+        }// success
+
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("foo_detail");
+
+        //pull out the foo, and add to mav
+        Marker foo = fooList.get(0);
+        mav.addObject("foo", foo);
+
+        // package referenes; gather via object traversal
+        List<Reference> references = foo.getReferences();
+        if (!references.isEmpty()) {
+            mav.addObject("references", references);
+        }
+
+        return mav;
+    }*/
+
+    
+    
     //-------------------------//
     // GXD Lit Query Form Summary
     //-------------------------//
@@ -115,8 +155,6 @@ public class GXDLitController {
         // create/load the list of SummaryRow wrapper objects
         List<GxdLitGeneSummaryRow> summaryRows = new ArrayList<GxdLitGeneSummaryRow> ();
         
-
-
         String symbol = "";
         Boolean first = Boolean.TRUE;
         GxdLitGeneSummaryRow row = null;
@@ -153,17 +191,19 @@ public class GXDLitController {
         // Add in the last record found before the loop kicked out. Assuming it has a count associate
         // with it. 
         
-		Boolean hasACount = Boolean.FALSE;
-		for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
-			if (new Integer(refRow.getCount()) > 0) {
-				hasACount = Boolean.TRUE;
+	    if (row != null) {
+			Boolean hasACount = Boolean.FALSE;
+			for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
+				if (new Integer(refRow.getCount()) > 0) {
+					hasACount = Boolean.TRUE;
+				}
 			}
-		}
-		
-		if (hasACount) {
-			// Add in the last record
-			summaryRows.add(row);
-		}
+			
+			if (hasACount) {
+				// Add in the last record
+				summaryRows.add(row);
+			}
+        }
 		
 		HashSet <String> references = new HashSet<String>();
 		int totalCount = 0;
@@ -175,7 +215,7 @@ public class GXDLitController {
 				totalCount ++;
 			}
 		}
-                
+		
 		totalReferences = references.size();
 		
         ModelAndView mav = new ModelAndView("gxdlit_summary");
@@ -186,6 +226,7 @@ public class GXDLitController {
         mav.addObject("queryForm", queryForm);
         mav.addObject("refCount", totalReferences);
         mav.addObject("totalCount", totalCount);
+        mav.addObject("pairTable", parseAgeAssay(summaryRows));
 
         return mav;
     }
@@ -195,7 +236,136 @@ public class GXDLitController {
     // private methods
     //--------------------------------------------------------------------//
 
-    // generate the sorts
+    private GxdLitAgeAssayTypePairTable parseAgeAssay (List<GxdLitGeneSummaryRow> rows) {
+		
+		Map <String, Boolean> hasAgeMap = new HashMap<String, Boolean> ();
+		Map <String, Boolean> hasAssayTypeMap = new HashMap<String, Boolean> ();
+		
+		Map<String, Map<String, Integer>> countMap = new HashMap<String, Map<String, Integer>> ();
+		
+		List <String> ages = new ArrayList<String>();
+		ages.add("0.5");
+		ages.add("1");
+		ages.add("1.5");
+		ages.add("2");
+		ages.add("2.5");
+		ages.add("3");
+		ages.add("3.5");
+		ages.add("4");
+		ages.add("4.5");
+		ages.add("5");
+		ages.add("5.5");
+		ages.add("6");
+		ages.add("6.5");
+		ages.add("7");
+		ages.add("7.5");
+		ages.add("8");
+		ages.add("8.5");
+		ages.add("9");
+		ages.add("9.5");
+		ages.add("10");
+		ages.add("10.5");
+		ages.add("11");
+		ages.add("11.5");
+		ages.add("12");
+		ages.add("12.5");
+		ages.add("13");
+		ages.add("13.5");
+		ages.add("14");
+		ages.add("14.5");
+		ages.add("15");
+		ages.add("15.5");
+		ages.add("16");
+		ages.add("16.5");
+		ages.add("17");
+		ages.add("17.5");
+		ages.add("18");
+		ages.add("18.5");
+		ages.add("19");
+		ages.add("19.5");
+		ages.add("20");
+		ages.add("E");
+		ages.add("A");
+		
+		for (String age: ages) {
+			hasAgeMap.put(age, Boolean.FALSE);
+		}
+		
+		List<String> assayTypes = new ArrayList<String> ();
+		assayTypes.add("In situ protein (section)");
+		assayTypes.add("In situ RNA (section)");
+		assayTypes.add("In situ protein (whole mount)");
+		assayTypes.add("In situ RNA (whole mount)");
+		assayTypes.add("In situ reporter (knock in)");
+		assayTypes.add("Northern blot");
+		assayTypes.add("Western");
+		assayTypes.add("Western blot");
+		assayTypes.add("RT-PCR");
+		assayTypes.add("cDNA clones");
+		assayTypes.add("RNase protection");
+		assayTypes.add("Nuclease S1");
+		assayTypes.add("Primer Extension");
+	
+		for (String type: assayTypes) {
+			hasAssayTypeMap.put(type, Boolean.FALSE);
+		}
+		
+		for (GxdLitGeneSummaryRow row: rows) {
+			for (GxdLitReferenceSummaryRow refRows: row.getReferenceRecords()) {
+				for (GxdLitAssayTypeAgePair pair: refRows.getValidPairs()) {
+					String curAge = pair.getAge();
+					String curType = pair.getAssayType().trim();
+					hasAgeMap.put(curAge, Boolean.TRUE);
+					hasAssayTypeMap.put(curType, Boolean.TRUE);
+					if (! countMap.containsKey(curType)) {
+						Map <String, Integer> newAgeMap = new HashMap<String, Integer> ();
+						countMap.put(curType, newAgeMap);
+					}
+					
+					if (! countMap.get(curType).containsKey(curAge)) {
+						countMap.get(curType).put(curAge, 1);
+					}
+					else {
+						countMap.get(curType).put(curAge, countMap.get(curType).get(curAge) + 1);
+					}
+				}
+			}
+		} 
+		
+	    // Setup the table itself
+	    
+	    List <String> allAges = new ArrayList <String>();
+	    
+	    for (String key: ages) {
+	    	if (hasAgeMap.get(key)) {
+	    		allAges.add(key);
+	    	}
+	    }
+
+	    List<GxdLitAssayTypeSummaryRow> allTypes = new ArrayList <GxdLitAssayTypeSummaryRow> ();
+	    
+	    for (String key: assayTypes) {
+	    	if (hasAssayTypeMap.get(key)) {
+	    		GxdLitAssayTypeSummaryRow row = new GxdLitAssayTypeSummaryRow(key);
+	    		for (String age: ages) {
+	    			if (hasAgeMap.get(age)) {
+	    				if (countMap.get(key).containsKey(age)) {
+	    					row.addCount("" + countMap.get(key).get(age));
+	    				}
+	    				else {
+	    					row.addCount("");
+	    				}
+	    			}
+	    		}
+	    		allTypes.add(row);
+	    	}
+	    }
+	    
+	    return new GxdLitAgeAssayTypePairTable(allAges, allTypes);
+	}
+    
+
+	// generate the sorts
     private List<Sort> genSorts(HttpServletRequest request) {
 
         logger.debug("->genSorts started");
@@ -205,6 +375,9 @@ public class GXDLitController {
         Sort sort = new Sort(SortConstants.MRK_BY_SYMBOL, Boolean.FALSE);
         sorts.add(sort);
 
+        Sort sort2 = new Sort(SortConstants.REF_BY_AUTHOR, Boolean.FALSE);
+        sorts.add(sort2);
+        
         logger.debug ("sort: " + sort.toString());
         return sorts;
     }
@@ -405,84 +578,6 @@ public class GXDLitController {
 			}
 		}
 		return items;
-	}
-    
-
-	private void parseAgeAssay (List<GxdLitIndexRecord> recordList) {
-		
-		Map <String, Boolean> hasAgeMap = new HashMap<String, Boolean> ();
-		Map <String, Boolean> hasAssayTypeMap = new HashMap<String, Boolean> ();
-		
-		Map<String, Map<String, Integer>> countMap = new HashMap<String, Map<String, Integer>> ();
-		
-		List <String> ages = new ArrayList<String>();
-		ages.add("0.5");
-    	ages.add("1");
-    	ages.add("1.5");
-    	ages.add("2");
-    	ages.add("2.5");
-    	ages.add("3");
-    	ages.add("3.5");
-    	ages.add("4");
-    	ages.add("4.5");
-    	ages.add("5");
-    	ages.add("5.5");
-    	ages.add("6");
-    	ages.add("6.5");
-    	ages.add("7");
-    	ages.add("7.5");
-    	ages.add("8");
-    	ages.add("8.5");
-    	ages.add("9");
-    	ages.add("9.5");
-    	ages.add("10");
-    	ages.add("10.5");
-    	ages.add("11");
-    	ages.add("11.5");
-    	ages.add("12");
-    	ages.add("12.5");
-    	ages.add("13");
-    	ages.add("13.5");
-    	ages.add("14");
-    	ages.add("14.5");
-    	ages.add("15");
-    	ages.add("15.5");
-    	ages.add("16");
-    	ages.add("16.5");
-    	ages.add("17");
-    	ages.add("17.5");
-    	ages.add("18");
-    	ages.add("18.5");
-    	ages.add("19");
-    	ages.add("19.5");
-    	ages.add("20");
-    	ages.add("E");
-    	ages.add("A");
-    	
-    	for (String age: ages) {
-    		hasAgeMap.put(age, Boolean.FALSE);
-    	}
-		
-    	List<String> assayTypes = new ArrayList<String> ();
-    	assayTypes.add("Prot-sxn");
-    	assayTypes.add("RNA-sxn");
-    	assayTypes.add("Prot-WM");
-    	assayTypes.add("RNA-WM");
-    	assayTypes.add("Knock in");
-    	assayTypes.add("Northern");
-    	assayTypes.add("Western");
-    	assayTypes.add("RT-PCR");
-    	assayTypes.add("cDNA");
-    	assayTypes.add("RNAse prot");
-    	assayTypes.add("S1 nuc");
-    	assayTypes.add("Primer ex");
-    
-    	for (GxdLitIndexRecord row: recordList) {
-    		for (GxdLitAssayTypeAgePair pair: row.getPairs()) {
-
-    		}
-    	}
-    	
 	}
 	
 }
