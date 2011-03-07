@@ -31,6 +31,19 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <div id="summary">
+
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" style="display:none;" class="filters">
+					<span class="label">Filters:</span>
+					<span id="filterList"></span><br/>
+					<span id="fCount"><span id="filterCount">0</span> item(s) match after applying filter(s).</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="querySummary">
 		<div class="innertube">
 			<span class="title">You searched for:</span><br>
@@ -60,6 +73,13 @@ ${templateBean.templateBodyStartHtml}
 				${queryForm.text}<br/></c:if>
 		</div>
 	</div>
+	
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+	
 </div>
 
 <div style="clear:left">
