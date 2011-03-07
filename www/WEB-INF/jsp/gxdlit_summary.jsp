@@ -7,7 +7,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Literature Summary</title>
+<title>Gene Expression Literature Results</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -27,45 +27,67 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
+	<span class="titleBarMainTitle">Gene Expression Literature Results</span>
 </div>
 
-<h2><b>You searched for:</b></h2>
-<c:if test="${not empty queryForm.nomen}">
-	<span class="label">Marker Symbol/Name:</span> 
-	${queryForm.nomen}<br/></c:if>
-<c:if test="${not empty queryForm.assayTypesSelected}">
-	<span class="label">Assay Type(s):</span> 
-	${queryForm.assayTypesSelected}<br/></c:if>
-<c:if test="${not empty queryForm.agesSelected}">
-	<span class="label">Ages:</span> 
-	${queryForm.agesSelected}<br/></c:if>	
-<c:if test="${not empty queryForm.author}">
-	<span class="label">Author:</span> 
-	${queryForm.author}<br/></c:if>
-<c:if test="${not empty queryForm.journal}">
-	<span class="label">Journal:</span>
-	${queryForm.journal}<br/></c:if>
-<c:if test="${not empty queryForm.year}">
-	<span class="label">Year:</span> 
-	${queryForm.year}<br/></c:if>
-<c:if test="${not empty queryForm.text}">
-	<span class="label">Text:</span> 
-	${queryForm.text}<br/></c:if>
+<div id="summary">
+	<div id="querySummary">
+		<div class="innertube">
+			<span class="title">You searched for:</span><br>
+			<span class="count">${totalCount} 
+		    <c:if test="${totalCount == '1000'}"> of 1000+ </c:if> 
+			matching records from ${refCount} references.</span><br>
+			<c:if test="${not empty queryForm.nomen}">
+				<span class="label">Marker Symbol/Name:</span> 
+				${queryForm.nomen}<br/></c:if>
+			<c:if test="${not empty queryForm.assayTypesSelected}">
+				<span class="label">Assay Type(s):</span> 
+				${queryForm.assayTypesSelected}<br/></c:if>
+			<c:if test="${not empty queryForm.agesSelected}">
+				<span class="label">Ages:</span> 
+				${queryForm.agesSelected}<br/></c:if>	
+			<c:if test="${not empty queryForm.author}">
+				<span class="label">Author:</span> 
+				${queryForm.author}<br/></c:if>
+			<c:if test="${not empty queryForm.journal}">
+				<span class="label">Journal:</span>
+				${queryForm.journal}<br/></c:if>
+			<c:if test="${not empty queryForm.year}">
+				<span class="label">Year:</span> 
+				${queryForm.year}<br/></c:if>
+			<c:if test="${not empty queryForm.text}">
+				<span class="label">Text:</span> 
+				${queryForm.text}<br/></c:if>
+		</div>
+	</div>
+</div>
 
+<div style="clear:left">
+<span class="extraLarge">Summary by Age and Assay:</span><i> Numbers in the table indicate the number of results matching the search criteria.</i><br>
 
-<div>
-<hr>
-${totalCount} matching records from ${refCount} references
-<hr><br>
-
-<h1><b>Summary by Age and Assay:</b></h1> 
-<i>Numbers in the table indicate the number of 
-results matching the search criteria.</i>
-<br><br>
-
-<h1><b>Summary by Gene and Reference:</b></h1> Number indicates the number of results matching the search criteria recorded for each reference.<br>
-<b>* Indicates detailed expression data entries available</b><br><br>
+<c:if test="${not empty pairTable}">
+	<table class="outline">
+	<tr class="outline stripe3">
+	<!-- Setup the age header -->
+	<td class="outline"><a href="${configBean.USERHELP_URL}gxdindex_help.shtml#irbaa">Age</a></td>
+	<c:forEach var="age" items="${pairTable.ages}">
+		<td class="outline"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
+	</c:forEach>
+	</tr>
+	<!-- Setup the x access header -->
+	<c:forEach var="type" items="${pairTable.assayTypes}">
+		<tr class="outline">
+		<td class="outline">${type.assayType}</td>
+			<c:forEach var="count" items="${type.counts}">
+			<td class="outline">${count}</td>
+			</c:forEach>
+	    </tr>
+	</c:forEach>
+	</table>
+</c:if>
+<br>
+<span class="extraLarge">Summary by Gene and Reference:</span><i> Number indicates the number of results matching the search criteria recorded for each reference.</i><br>
+<b>* Indicates detailed expression data entries available</b><br>
 
        <c:if test="${not empty summaryRows}">
          <table class="outline" width="100%">

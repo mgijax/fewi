@@ -5,7 +5,7 @@ ${templateBean.templateHeadHtml}
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<title>${configBean.NAME} - Gene Expression Literature Search</title>
+<title>Gene Expression Literature Search</title>
 
 ${templateBean.templateBodyStartHtml}
 
