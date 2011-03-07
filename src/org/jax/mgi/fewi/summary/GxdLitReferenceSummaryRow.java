@@ -47,6 +47,68 @@ public class GxdLitReferenceSummaryRow {
     }
 
 
+    public List<GxdLitAssayTypeAgePair> getValidPairs() {
+    	Boolean anyAges = Boolean.FALSE;
+    	Boolean anyAssayTypes = Boolean.FALSE;
+    	int count = 0;
+    	
+    	for (String age: ages) {
+    		if (age.endsWith("ANY")) {
+    			anyAges = Boolean.TRUE;
+    		}
+    	}
+    	
+    	for (String type: assayTypes) {
+    		if (type.equals("ANY")) {
+    			anyAssayTypes = Boolean.TRUE;
+    		}
+    	}
+    	
+    	// No Restrictions on Ages or AssayTypes, count everything
+    	if (anyAssayTypes && anyAges) {
+        	return record.getPairs();    		
+    	}
+    	
+    	else if (anyAssayTypes) {
+    		List <GxdLitAssayTypeAgePair> outList = new ArrayList<GxdLitAssayTypeAgePair> ();
+    		for (GxdLitAssayTypeAgePair pair: record.getPairs()) {
+    			for (String age: ages) {
+    				if (pair.getAge().equals(age)) {
+    					outList.add(pair);
+    				}
+    			}
+    		}
+    		return outList;
+    	}
+
+    	else if (anyAges) {
+    		List <GxdLitAssayTypeAgePair> outList = new ArrayList<GxdLitAssayTypeAgePair> ();
+    		for (GxdLitAssayTypeAgePair pair: record.getPairs()) {
+    			for (String type: assayTypes) {
+    				if (pair.getAssayType().equals(type)) {
+    					outList.add(pair);
+    				}
+    			}
+    		}
+    		return outList;
+    	}
+    	
+    	else {
+    		List <GxdLitAssayTypeAgePair> outList = new ArrayList<GxdLitAssayTypeAgePair> ();
+    		for (GxdLitAssayTypeAgePair pair: record.getPairs()) {
+    			for (String type: assayTypes) {
+    				for (String age: ages) {
+    					if (pair.getAssayType().equals(type) && pair.getAge().equals(age)) {
+    						outList.add(pair);
+    					}
+    				}
+    			}
+    		}
+    		return outList;
+    	}
+    	
+    }
+    
     //------------------------------------------------------------------------
     // public instance methods;  JSON serializer will call all public methods
     //------------------------------------------------------------------------
