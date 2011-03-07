@@ -51,6 +51,7 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(SearchConstants.SEQ_KEY, new SolrPropertyMapper(IndexConstants.SEQ_KEY));
         propertyMap.put(SearchConstants.ALL_KEY, new SolrPropertyMapper(IndexConstants.ALL_KEY));
+        propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
         
         ArrayList <String> titleList = new ArrayList <String> ();
         titleList.add(IndexConstants.REF_TITLE_STEMMED);
