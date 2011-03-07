@@ -84,18 +84,18 @@ public class GxdLitQueryForm {
     	age.add("ANY");
     	
     	assayTypes.put("ANY", "ANY");
-    	assayTypes.put("Prot-sxn", "In situ protein (section)");
-    	assayTypes.put("RNA-sxn", "In situ RNA (section)");
-    	assayTypes.put("Prot-WM", "In situ protein (whole mount)");
-    	assayTypes.put("RNA-WM", "In situ RNA (whole mount)");
-    	assayTypes.put("Knock in", "In situ reporter (knock in)");
-    	assayTypes.put("Northern", "Northern blot");
-    	assayTypes.put("Western", "Western blot");
+    	assayTypes.put("In situ protein (section)", "In situ protein (section)");
+    	assayTypes.put("In situ RNA (section)", "In situ RNA (section)");
+    	assayTypes.put("In situ protein (whole mount)", "In situ protein (whole mount)");
+    	assayTypes.put("In situ RNA (whole mount)", "In situ RNA (whole mount)");
+    	assayTypes.put("In situ reporter (knock in)", "In situ reporter (knock in)");
+    	assayTypes.put("Northern blot", "Northern blot");
+    	assayTypes.put("Western blot", "Western blot");
     	assayTypes.put("RT-PCR", "RT-PCR");
-    	assayTypes.put("cDNA", "cDNA Clones");
-    	assayTypes.put("RNAse prot", "RNase protection");
-    	assayTypes.put("S1 nuc", "Nuclease S1");
-    	assayTypes.put("Primer ex", "Primer Extension");
+    	assayTypes.put("cDNA clones", "cDNA clones");
+    	assayTypes.put("RNase protection", "RNase protection");
+    	assayTypes.put("Nuclease S1", "Nuclease S1");
+    	assayTypes.put("Primer Extension", "Primer Extension");
     	
     	assayType.add("ANY");
     	
