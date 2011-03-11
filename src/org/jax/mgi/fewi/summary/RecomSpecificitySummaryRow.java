@@ -89,28 +89,21 @@ public class RecomSpecificitySummaryRow {
         while (imagePanesIter.hasNext() ){
             thisImagePane = (AlleleSystemAssayResultImagePane)imagePanesIter.next();
 
+            thisImage = thisImagePane.getImage();
+
             // figure lables
             figureLables.append("Fig. ");
-            figureLables.append(thisImagePane.getPaneLabel());
+            figureLables.append(thisImage.getFigureLabel());
             figureLables.append(" ");
 
-            List<Image> images = thisImagePane.getImages();
-            Iterator imageIter = images.iterator();
-            while (imageIter.hasNext() ){
-                thisImage = (Image)imageIter.next();
-                imageTags.append("<br/><span class='summaryDataCell'>PixelID=");
-                imageTags.append(thisImage.getPixeldbNumericID());
-                imageTags.append("</span> ");
-			}
-
-
+            // image tags
+            imageTags.append("<img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
+            imageTags.append(thisImage.getPixeldbNumericID());
+            imageTags.append("' width='30' style='border:3px; cursor: pointer;'> ");
 		}
 
-
         return "<span class='summaryDataCell'>" + refLink + " "
-          + figureLables.toString() + "</span> " + imageTags.toString();
-
-
+          + figureLables.toString() + "</span><br/>" + imageTags.toString();
 
     }
 
