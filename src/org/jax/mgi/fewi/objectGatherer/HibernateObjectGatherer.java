@@ -1,11 +1,14 @@
 package org.jax.mgi.fewi.objectGatherer;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.metadata.ClassMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,20 +56,45 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	 */
 	@Transactional(readOnly = true)
 	public List<T> get(List<String> keys) {
-
+		
+		logger.debug("get(List<String> keys)");
+		
+		// get necessary Hibernate objects
 		Session s = sessionFactory.getCurrentSession();
+		ClassMetadata meta = sessionFactory.getClassMetadata(type);
 		
-		List<T> results = new ArrayList<T>();		
-		List<Integer> k = new ArrayList<Integer>();
+		// collections to process results
+		List<T> queryResults = new ArrayList<T>();
+		Map<String, T> resultsMap = new LinkedHashMap<String, T>();
+		List<T> orderedResults = new ArrayList<T>();
 		
-		long start = System.nanoTime();
+		List<Integer> keyInts = new ArrayList<Integer>();
+		
+		// convert keys to Integers
 		for (String key : keys) {
-			results.add(this.get(key));
+			keyInts.add(new Integer(key));
 		}
-		//results = s.createCriteria(type).add(Restrictions.in("id", k)).list();
-		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
+		
+		// get results
+		long start = System.nanoTime();
+		queryResults = s.createCriteria(type).add(Restrictions.in("id", keyInts)).list();
+		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));		
+		
+		// load results into Map keyed by id
+		String id;
+		for (T r : queryResults) {
+			id = meta.getIdentifier(r, s.getEntityMode()).toString();
+			resultsMap.put(id, r);
+		}
+		// kill queryResults 
+		queryResults = null;
+		
+		// reorder results
+		for (String t : keys) {
+			orderedResults.add(resultsMap.get(t));
+		}
 
-		return results;
+		return orderedResults;
 	}
 
 	/**
