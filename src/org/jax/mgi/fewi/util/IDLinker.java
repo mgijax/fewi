@@ -1,14 +1,21 @@
 package org.jax.mgi.fewi.util;
 
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
 import mgi.frontend.datamodel.AccessionID;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.summary.GOSummaryRow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** An IDLinker is an object devoted to making links for accession IDs, using
  * a properties file to map from a logical database to its various actual
@@ -27,16 +34,21 @@ public class IDLinker {
 	// maps from a given logical database to a List of ActualDB objects
 	private HashMap<String,List<ActualDB>> ldbToAdb = new HashMap<String,List<ActualDB>> ();
 	
+	private Configuration config = null;
+		
+	private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
+	
 	//--- Constructors ---
-	
-	/** hide default constructor
-	 */
-	private IDLinker() {}
-	
+		
 	/** construct our IDLinker using data from externalUrls.properties file
 	 */
-	private IDLinker (Properties externalUrls) {
+	private IDLinker () {
 
+		try {
+			config = new PropertiesConfiguration("../properties/externalUrls.properties");
+		} catch (Exception e) {};
+		
 		// used to iterate through properties in externalUrls:
 		String name;	// property name
 		String value;	// property value
@@ -50,11 +62,10 @@ public class IDLinker {
 		
 		// For each logical database, collect and populate a List of ActualDB
 		// objects:
-		
-		Enumeration<String> e = (Enumeration<String>) externalUrls.propertyNames();
-		while (e.hasMoreElements()) {
-			name = e.nextElement();
-			value = externalUrls.getProperty(name);
+		for (Iterator iter =  config.getKeys(); iter.hasNext();) {
+			name = (String) iter.next();
+			value = config.getString(name);
+
 			prefix = name.replaceAll("\\..*", "");
 
 			if (allAdbs.containsKey(prefix)) {
@@ -78,7 +89,7 @@ public class IDLinker {
 				adb.setOrderVal(value);
 			} else {
 				adb.setUrl(value);
-			}
+			}			
 		}
 		
 		// Now go through and duplicate each logical database's entry with a
@@ -226,7 +237,7 @@ public class IDLinker {
 		if (instances.containsKey(key)) {
 			return instances.get(key);
 		}
-		IDLinker linker = new IDLinker(externalUrls);
+		IDLinker linker = new IDLinker();
 		instances.put(key, linker);
 		return linker;
 	}
