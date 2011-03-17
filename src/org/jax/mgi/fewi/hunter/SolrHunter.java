@@ -219,7 +219,6 @@ public class SolrHunter implements Hunter {
          */
 
         QueryResponse rsp = null;
-        logger.debug("Got here, right before the try loop.");
         
         try {
         rsp = server.query( query );
@@ -428,10 +427,8 @@ public class SolrHunter implements Hunter {
             }
             
             if (this.keyString != null) {            
-                keys.add((String) doc.getFieldValue(keyString));
-                
+                keys.add((String) doc.getFieldValue(keyString));                
                 scoreKeys.add("" + doc.getFieldValue("score"));
-                logger.debug("key: " + doc.getFieldValue(keyString));
             }
 
             if (this.otherString != null) {
