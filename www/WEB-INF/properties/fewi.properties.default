@@ -16,6 +16,9 @@ SEQFETCH_URL=http://www.informatics.jax.org/seqfetch/
 # directory in which to find the standard mgi template
 template.dir=/usr/local/mgi/live/mgiconfig/web/
 
+# Gxd Lit
+gxdLit.limit=30000
+
 # data sources
 hibernate.generate_statistics=false
 hibernate.show_sql=false
