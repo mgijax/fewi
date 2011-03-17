@@ -8,6 +8,7 @@ import mgi.frontend.datamodel.Image;
 
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.config.ContextLoader;
 
 import javax.persistence.Column;
@@ -124,7 +125,10 @@ public class RecomSpecificitySummaryRow {
           NotesTagConverter ntc = new NotesTagConverter();
           convertedAllComp = ntc.convertNotes(alleleSystemAssayResult.getAllelicComposition(), '|');
         }catch (Exception e) {}
-        return "<span class='summaryDataCell'>" + convertedAllComp + "</span>";
+
+        convertedAllComp = FormatHelper.newline2HTMLBR(convertedAllComp);
+        return "<div style='padding-top:6px;'></div><span class='summaryDataCell'>"
+          + convertedAllComp + "</span>";
     }
 
     // sex

@@ -177,7 +177,7 @@ function main() {
     var generateRequest = function(startIndex,sortKey,dir,results) {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "structure";
-        dir   = (dir) ? dir.substring(7) : "desc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
+        dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 50;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };
@@ -224,6 +224,7 @@ function parseRequest(request){
 	return reply;
 }
 
+// functions for hiding/showing of columns
 var showResultNotes = function(e) {
   recomDataTable.showColumn("resultNotes");
   recomDataTable.hideColumn("allelicComp");

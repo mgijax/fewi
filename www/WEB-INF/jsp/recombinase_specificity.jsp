@@ -156,7 +156,9 @@ ${templateBean.templateBodyStartHtml}
         <c:if test="${not empty otherAlleles}">
           | <a href="#tissueInfo" class="MP">Tissue Information</a>&nbsp;
         </c:if>
-        | <a href="#imageGallery" class="MP">Images</a>&nbsp;
+        <c:if test="${not empty galleryImagesRows}">
+          | <a href="#imageGallery" class="MP">Images</a>&nbsp;
+        </c:if>
         | <a href="#recombinaseSpecificity" class="MP">Recombinase Specificity</a>&nbsp;
         | <a href="#refSection" class="MP">References</a>
       </div>
@@ -564,7 +566,7 @@ ${templateBean.templateBodyStartHtml}
         </td>
         <td>
           <a href="${configBean.FEWI_URL}reference/${allele.primaryID}">
-            ${allele.countOfReferences}
+            ${allele.countOfReferences} reference(s)
           </a>
         </td>
       </tr>

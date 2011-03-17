@@ -60,6 +60,30 @@ public class FormatHelper
         return sb.toString();
     }
 
+
+    /** convert newline characters in a string to an html br markup.
+     * @param str The string that needs newlines coverted to html line breaks
+     * @return the original string with all newline characters converted to
+     *         html line breaks.
+     * @assumes this assumes that it is a unix new line '\n' that is being
+     *          converted.  Also assumes that you don't want trailing newlines,
+     *          and these are trimmed off.
+     * @effects nothing
+     * @throws nothing
+     */
+    public static String newline2HTMLBR(String str)
+    {
+        // In many cases there was trailing whitespace that had newlines in it.
+        //  I'm trimming them off now.
+        String newStr = "";
+        if (str != null) {
+            newStr = str.trim();
+            newStr = newStr.replaceAll("\\n","<br>");
+        }
+        return newStr;
+    }
+
+
     /** convert all 'start' and 'stop' pair in 's' to be HTML
      *    superscript tags.
      * @param s the source String

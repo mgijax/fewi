@@ -42,6 +42,29 @@ ${templateBean.templateBodyStartHtml}
 <table class="detailStructureTable">
 
 
+  <!-- REFERENCE -->
+  <tr >
+    <td class="<%=leftTdStyles.getNext() %>">
+       <div style="padding-top:7px;">Reference</div>
+       <div style="padding-top:3px;">Figure</div>
+       <div style="padding-top:2px;">ID</div>
+    </td>
+    <td class="<%=rightTdStyles.getNext() %>">
+       <div style="padding-top:7px;">
+         <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">
+           ${reference.jnumID}
+         </a>
+       </div>
+       <div style="padding-top:3px;">
+         ${image.figureLabel}
+       </div>
+       <div style="padding-top:2px;">
+         NEED ID
+       </div>
+    </td>
+  </tr>
+
+
   <!-- IMAGE -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
@@ -71,9 +94,6 @@ ${templateBean.templateBodyStartHtml}
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${image.copyright}
-      <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">
-        ${reference.jnumID}
-      </a>
     </td>
   </tr>
 

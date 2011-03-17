@@ -1,6 +1,7 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
+<%@ page import = "org.jax.mgi.fewi.util.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
@@ -18,6 +19,8 @@ ${templateBean.templateHeadHtml}
       = new StyleAlternator("detailCat1","detailCat2");
     StyleAlternator rightTdStyles 
       = new StyleAlternator("detailData1","detailData2");
+
+    NotesTagConverter ntc = new NotesTagConverter();
 %>
 
 <style type="text/css">
@@ -68,6 +71,9 @@ ${templateBean.templateBodyStartHtml}
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${image.copyright}
+      <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">
+        ${reference.jnumID}
+      </a>
     </td>
   </tr>
 
@@ -90,7 +96,6 @@ ${templateBean.templateBodyStartHtml}
 	    </td>
 	  </tr>
 
-
           <c:forEach var="imageAllele" items="${imageAlleleList}" >
 
               <% // pull to scriptlet context
@@ -100,7 +105,9 @@ ${templateBean.templateBodyStartHtml}
 
             <tr class="stripe1">
               <td class="">
+                <a href="${configBean.FEWI_URL}allele/${imageAllele.alleleID}">
                 <%=FormatHelper.superscript(imageAllele.getAlleleSymbol())%>
+                </a>
               </td>
               <td class="">
                 ${imageAllele.alleleName}
@@ -113,6 +120,7 @@ ${templateBean.templateBodyStartHtml}
     </tr>
  
   </c:if>
+
 
   <!-- ASSOC GENOTYPES -->
   <c:if test="${not empty genotypeList}">
@@ -136,13 +144,17 @@ ${templateBean.templateBodyStartHtml}
 
           <c:forEach var="genotype" items="${genotypeList}" >
 
+              <% // pull to scriptlet context
+                Genotype genotype 
+                  = (Genotype)pageContext.getAttribute("genotype"); 
+              %>
 
             <tr class="stripe1">
               <td class="">
-                Allelic Comp
+                <%=ntc.convertNotes(genotype.getCombination1(), '|')%>
               </td>
               <td class="">
-                GenBackground
+                ${genotype.backgroundStrain}
               </td>
             </tr>
 
