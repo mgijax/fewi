@@ -60,6 +60,8 @@ public class GxdLitFinder {
         SearchResults<GxdLitIndexRecord> searchResults = 
         		new SearchResults<GxdLitIndexRecord>();
         
+        logger.debug("REMOVE ME");
+        
         // ask the hunter to identify which objects to return
         gxdLitSummaryHunter.hunt(searchParams, searchResults);
 
@@ -82,6 +84,24 @@ public class GxdLitFinder {
         return searchResults;
     }
 
+	/*-----------------------------------------------------*/
+	/* Retrieval of a GxdLitIndexRecord, for a given db key
+	/*-----------------------------------------------------*/
+
+    public SearchResults<GxdLitIndexRecord> getGxdLitByKey(String dbKey) {
+
+        logger.debug("->getGxdLitByKey()");
+
+        // result object to be returned
+        SearchResults<GxdLitIndexRecord> searchResults = new SearchResults<GxdLitIndexRecord>();
+
+        // gather objects, add them to the results
+        gxdLitIndexGatherer.setType(GxdLitIndexRecord.class);
+        GxdLitIndexRecord indexRecord = gxdLitIndexGatherer.get( dbKey );
+        searchResults.addResultObjects(indexRecord);
+
+        return searchResults;
+    }
 
 
 }
