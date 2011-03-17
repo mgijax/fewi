@@ -1,14 +1,14 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
-import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.util.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +28,8 @@ public class GOSummaryRow {
 	private Annotation annot;
 	
 	private Marker marker;
+	
+	private IDLinker  linker = ContextLoader.getIDLinker();
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -69,13 +71,10 @@ public class GOSummaryRow {
             
             for (AnnotationInferredFromID aifi: inferred) {
                 if (first) {
-                    inferredString = "<a href='" + fewiUrl + "accession/" + aifi.getAccID() 
-                    + "'>" + aifi.getAccID() + "</a>";
-                    first = Boolean.FALSE;
+                	inferredString = linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
                 }
                 else {
-                    inferredString = inferredString + "|<a href='" + fewiUrl + "accession/" + aifi.getAccID() 
-                    + "'>" + aifi.getAccID() + "</a>";
+                	inferredString = inferredString + "|" + linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
                 }
             }
             

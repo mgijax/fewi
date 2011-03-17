@@ -43,25 +43,38 @@ public class GxdLitReferenceSummaryRow {
     	this.ages = queryForm.getAge();
     	this.assayTypes = queryForm.getAssayType();
     	this.record = record;
+    	
     	return;
     }
 
 
+    
+    
     public List<GxdLitAssayTypeAgePair> getValidPairs() {
     	Boolean anyAges = Boolean.FALSE;
     	Boolean anyAssayTypes = Boolean.FALSE;
     	int count = 0;
     	
-    	for (String age: ages) {
-    		if (age.endsWith("ANY")) {
-    			anyAges = Boolean.TRUE;
-    		}
+    	if (!ages.isEmpty()) {
+	    	for (String age: ages) {
+	    		if (age.endsWith("ANY")) {
+	    			anyAges = Boolean.TRUE;
+	    		}
+	    	}
+    	}
+    	else {
+    		anyAges = Boolean.TRUE;
     	}
     	
-    	for (String type: assayTypes) {
-    		if (type.equals("ANY")) {
-    			anyAssayTypes = Boolean.TRUE;
-    		}
+    	if (! assayTypes.isEmpty()) {
+	    	for (String type: assayTypes) {
+	    		if (type.equals("ANY")) {
+	    			anyAssayTypes = Boolean.TRUE;
+	    		}
+	    	}
+    	}
+    	else {
+    		anyAssayTypes = Boolean.TRUE;
     	}
     	
     	// No Restrictions on Ages or AssayTypes, count everything
@@ -186,6 +199,22 @@ public class GxdLitReferenceSummaryRow {
     
     public Boolean getIsFullyCoded () {
     	return record.isFullyCoded();
+    }
+    
+    public Integer getFullyCodedAssayCount() {
+    	return record.getFullCodedAssayCount();
+    }
+    
+    public Integer getFullyCodedResultCount() {
+    	return record.getFullCodedResultCount();
+    }
+    
+    public String getIndexKey() {
+    	return "" + record.getIndexKey();
+    }
+    
+    public String getComments() {
+    	return record.getComments();
     }
     
 }

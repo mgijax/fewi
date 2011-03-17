@@ -24,7 +24,7 @@ public class GxdLitAssayTypeSummaryRow {
     private Logger logger = LoggerFactory.getLogger(GxdLitAssayTypeSummaryRow.class);
 
 	// encapsulated row object
-	private List<String> counts = new ArrayList<String> ();
+	private List<GxdLitAgeAssayTypePairTableCount> counts = new ArrayList<GxdLitAgeAssayTypePairTableCount> ();
 	private String assayType;
 
 	// config values
@@ -43,7 +43,7 @@ public class GxdLitAssayTypeSummaryRow {
     	return;
     }
 
-    public void addCount(String count) {
+    public void addCount(GxdLitAgeAssayTypePairTableCount count) {
     	counts.add(count);
     }
 
@@ -54,7 +54,7 @@ public class GxdLitAssayTypeSummaryRow {
     public String getAssayType() {
     	return this.assayType;
     }
-    public List<String> getCounts() {
+    public List<GxdLitAgeAssayTypePairTableCount> getCounts() {
     	return counts;
     }
 

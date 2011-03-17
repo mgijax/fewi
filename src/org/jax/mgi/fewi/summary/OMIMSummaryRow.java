@@ -44,7 +44,7 @@ public class OMIMSummaryRow {
     //------------------------------------------------------------------------
 
     public String getId () {
-        return "<a href='" +ncbiOmim + annot.getTermID() +" target='new'> " + annot.getTermID() + "</a>";
+        return "<a href='" +ncbiOmim + annot.getTermID() +"' target='new'> " + annot.getTermID() + "</a>";
     }
     
     public String getTerm () {
