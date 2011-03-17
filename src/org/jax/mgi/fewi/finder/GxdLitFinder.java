@@ -60,8 +60,6 @@ public class GxdLitFinder {
         SearchResults<GxdLitIndexRecord> searchResults = 
         		new SearchResults<GxdLitIndexRecord>();
         
-        logger.debug("REMOVE ME");
-        
         // ask the hunter to identify which objects to return
         gxdLitSummaryHunter.hunt(searchParams, searchResults);
 
