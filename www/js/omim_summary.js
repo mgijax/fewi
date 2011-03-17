@@ -10,7 +10,7 @@ function main() {
         {key:"term", 
             label:"<b>Human Disease</b>",
             width:240, 
-            sortable:true}
+            sortable:false}
     ];
 
     // DataSource instance
