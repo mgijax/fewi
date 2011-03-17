@@ -3,22 +3,28 @@ var myDataSource;
 var myDataTable;
 var generateRequest;
 var totalCount = 0;
-var facets = new Array();
+var facets = {};
 var numConfig = {thousandsSeparator: ','};
 
 // Integrate with Browser History Manager
 var History = YAHOO.util.History;
 
-
-
+// this function populates the 'breadbox' with current filters
 var populateFilterSummary = function () {
-    // add filters to summary
 	var filterList = new YAHOO.util.Element('filterList');
+	// clear state
 	while (filterList.hasChildNodes()) {
 		filterList.removeChild(filterList.get('firstChild'));
 	}
-	
+    clear = document.createElement("a");
+    clear.setAttribute('class', 'filterItem');
+    clear.setAttribute('id', 'clearFilter');
+    setText(clear, 'Remove All Filters');
+    filterList.appendChild(clear);
+    YAHOO.util.Event.addListener(clear, "click", clearFilter);
+
     var vis = false;
+    
     for (k in facets) {
     	var inner = facets[k];
     	var brTag = false;
@@ -50,14 +56,19 @@ var populateFilterSummary = function () {
 	}
 };
 
+// removes a filter
 var clearFilter = function () {
-	
 	kv = this.id.split(":");		
 	var items = facets[kv[0]];	
 	var val = this.id.slice(this.id.indexOf(":")+1);
-	var idx = items.indexOf(val); // Find the index
-	if(idx != -1) {
-		items.splice(idx, 1);
+
+	if (val == 'clearFilter'){
+		facets = {};
+	} else {			
+		var idx = items.indexOf(val); // Find the index
+		if(idx != -1) {
+			items.splice(idx, 1);
+		}
 	}
 	var state = myDataTable.getState();
 	var newState = generateRequest(0, 
@@ -65,23 +76,12 @@ var clearFilter = function () {
 			state.sortedBy.dir, 
 			myDataTable.get("paginator").getRowsPerPage()
 	);
-	
+
 	History.navigate("myDataTable", newState);
 };
 
 
 (function () {	
-	// this function formats the id cell
-    this.idFormatter = function(elLiner, oRecord, oColumn, oData) {
-        var url = '${externalUrls.PubMed}';
-        var link = '';
-        var id = oRecord.getData("pubMedID");
-        if (id){        
-            url = url.replace('@@@@', id);
-            link = '<a href="' + url + '" target="new" class="extUrl">' + id + '</a><br/>';
-        }       
-		elLiner.innerHTML= link + oRecord.getData("jnumID");
-    };
 
     this.titleForm = function(elLiner, oRecord, oColumn, oData) {      
         YAHOO.util.Dom.addClass( elLiner.parentNode, "yui-dt-expandablerow-trigger" );
@@ -90,14 +90,12 @@ var clearFilter = function () {
         elLiner.innerHTML = oRecord.getData("title");
     };
     
-    // Adds the formatters above to the to the symbol col
-    YAHOO.widget.DataTable.Formatter.id = this.idFormatter;
+    // Add formatter above to the title col
     YAHOO.widget.DataTable.Formatter.tForm = this.titleForm;
     
     // Column definitions
     var myColumnDefs = [ // sortable:true enables sorting       
-        {key:"idFormatter", label:"PubMed ID<br/>MGI Ref. ID", sortable:false, 
-            formatter:"id", width:75},
+        {key:"id", label:"PubMed ID<br/>MGI Ref. ID", sortable:false, width:75},
         {key:"authors", label:"Author(s)", sortable:true, width:200},
         {key:"titleForm", label:"Title", sortable:false, formatter:"tForm"},  
         {key:"journal", label:"Journal", sortable:true, width:100},
@@ -108,14 +106,13 @@ var clearFilter = function () {
     ];
 
     // DataSource instance
-    myDataSource = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/json?${queryString}&");
+    myDataSource = new YAHOO.util.XHRDataSource(fewiurl + "reference/json?" + querystring + "&");
     myDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     myDataSource.responseSchema = {
         resultsList: "summaryRows",
         fields: [
             {key:"score"},
-			{key:"jnumID"},
-			{key:"pubMedID"},
+			{key:"id"},
             {key:"journal"},
             {key:"title"},
             {key:"authors"},
@@ -140,7 +137,7 @@ var clearFilter = function () {
         template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
-        containers   : ["paginationTop"],
+        containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 25,
         pageLinks: 5,
         recordOffset: 1
@@ -201,19 +198,34 @@ var clearFilter = function () {
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
         var meta = oResponse.meta;
-
+        
+        facets = {};
+        for (k in pRequest){
+        	if(k.indexOf("Filter") != -1){
+        		facets[k] = pRequest[k];
+        	}
+        }
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
         
+        if (totalCount == 0){
+        	totalCount = oPayload.totalRecords;
+        }
+        
         updateCount(oPayload.totalRecords);
-        setText(YAHOO.util.Dom.get('filterCount'), YAHOO.util.Number.format(oPayload.totalRecords));
+        setText(YAHOO.util.Dom.get('filterCount'), YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
         oPayload.pagination = {
-            rowsPerPage: Number(pRequest['results']) || 25,
-            recordOffset: Number(pRequest['startIndex']) || 0
+            rowsPerPage: Number(pRequest['results'][0]) || 25,
+            recordOffset: Number(pRequest['startIndex'][0]) || 0
         };
         oPayload.sortedBy = {
-            key: pRequest['sort'] || "year",
-            dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
+            key: pRequest['sort'][0] || "year",
+            dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc" // Convert from server value to DataTable format
         };
+        
+        reportButton = YAHOO.util.Dom.get('textDownload');
+        facetQuery = generateRequest(0, oPayload.sortedBy['sort'], 
+        		oPayload.sortedBy['dir'], totalCount);
+        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
         
         var txt = 'Show All Abstracts';
         setText(YAHOO.util.Dom.get('toggleAbstract'), txt);
@@ -224,10 +236,9 @@ var clearFilter = function () {
 	updateCount = function (newCount) {
 		var countEl = YAHOO.util.Dom.get("totalCount");
 		if (!YAHOO.lang.isNull(countEl)){
-	    	if(parseInt(totalCount) < parseInt(newCount)){
-	    		totalCount = YAHOO.util.Number.format(newCount, numConfig);
-	    		var text = totalCount + " item(s) match your unfiltered query.";
-	    		setText(countEl, text);    		
+	    	if(totalCount == 0 || totalCount < parseInt(newCount)){
+	    		totalCount = newCount;
+	    		setText(countEl, YAHOO.util.Number.format(newCount, numConfig));    		
 	    	}
 		}
 	};
@@ -262,7 +273,7 @@ var clearFilter = function () {
 
     // Calculate the first request
     var initialRequest = History.getBookmarkedState("myDataTable") || // Passed in via URL
-                       generateRequest(0, "${defaultSort}", "yui-dt-desc", 25); // Get default values
+                       generateRequest(0, defaultSort, "yui-dt-desc", 25); // Get default values
 
     // Register the module
     History.register("myDataTable", initialRequest, handleHistoryNavigation);
@@ -280,11 +291,14 @@ var clearFilter = function () {
 })();
 
 function parseRequest(request){
-	var reply = [];
+	var reply = {};
 	var kvPairs = request.split('&');
 	for (pair in kvPairs) {
 		var kv = kvPairs[pair].split('=');
-		reply[kv[0]] = kv[1];
+		if(!reply[kv[0]]){
+			reply[kv[0]] = [];
+		}
+		reply[kv[0]].push(kv[1]);
 	}
 	return reply;
 };
@@ -333,7 +347,7 @@ YAHOO.util.Event.onDOMReady(function () {
 		alert('submitEvent');
 	};
 
-	// Instantiate the Dialog
+	// Instantiate the filter Dialog
 	facetDialog = new YAHOO.widget.Dialog("facetDialog", 
 		{ visible : false, 
 		  context:["filterDiv","tl","bl", ["beforeShow"]],
@@ -350,22 +364,22 @@ YAHOO.util.Event.onDOMReady(function () {
 	facetDialog.render();
 
 	// facet DataSource instances
-	var facetAuthorDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/author?${queryString}");
+	var facetAuthorDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/author?" + querystring);
 	facetAuthorDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetAuthorDS.responseSchema = {resultsList: "resultFacets"};
 	facetAuthorDS.maxCacheEntries = 3;
 
-	var facetJournalDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/journal?${queryString}");
+	var facetJournalDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/journal?" + querystring);
 	facetJournalDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetJournalDS.responseSchema = {resultsList: "resultFacets"};
 	facetJournalDS.maxCacheEntries = 3;
 
-	var facetYearDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/year?${queryString}");
+	var facetYearDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/year?" + querystring);
 	facetYearDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetYearDS.responseSchema = {resultsList: "resultFacets"};
 	facetYearDS.maxCacheEntries = 3;
 
-	var facetDataDS = new YAHOO.util.DataSource("${configBean.FEWI_URL}reference/facet/data?${queryString}");
+	var facetDataDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/data?" + querystring);
 	facetDataDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetDataDS.responseSchema = {resultsList: "resultFacets"};
 	facetDataDS.maxCacheEntries = 3;
@@ -422,7 +436,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	var dataCallback = {success:parseFacetResponse,
 			failure:handleError,
 			scope:this,
-			argument:{name:'curatedDataFilter', title:'Curated Data'}
+			argument:{name:'dataFilter', title:'Data'}
 		};
 
 	var populateAuthorDialog = function () {
@@ -441,10 +455,11 @@ YAHOO.util.Event.onDOMReady(function () {
 	};
 
 	var populateDataDialog = function () {
-		facetDataDS.sendRequest(genFacetQuery("curatedDataFilter"), dataCallback);		
+		facetDataDS.sendRequest(genFacetQuery("dataFilter"), dataCallback);		
 		facetDialog.show();
 	};
 	
+	// function to generate the querystring for the facet parameters
 	var genFacetQuery = function(exclude) {
         var facetParams = '';
         for (key in facets){
@@ -457,11 +472,13 @@ YAHOO.util.Event.onDOMReady(function () {
         return facetParams;
 	};
 	
+	// add listeners to the filter buttons
 	YAHOO.util.Event.addListener("authorFilter", "click", populateAuthorDialog, true);
 	YAHOO.util.Event.addListener("journalFilter", "click", populateJournalDialog, true);
 	YAHOO.util.Event.addListener("yearFilter", "click", populateYearDialog, true);
 	YAHOO.util.Event.addListener("curatedDataFilter", "click", populateDataDialog, true);
 	
+	// this function toggles the display of the abstract cell & updates button text
 	var toggleAbstract = function() {	
         var txt;
         this.innerText ? txt=this.innerText : txt=this.textContent;
@@ -489,6 +506,7 @@ YAHOO.util.Event.onDOMReady(function () {
         }
 	};
 
+	// add toggleAbstract functio to the UI button
 	YAHOO.util.Event.addListener("toggleAbstract", "click", toggleAbstract);
 	
 	(function() {
@@ -502,6 +520,7 @@ YAHOO.util.Event.onDOMReady(function () {
 });
 
 var resetQF = function () {
+	alert('reset');
 	var form = YAHOO.util.Dom.get("referenceQueryForm");
 	form.author.value = 'foo';
 	form.journal.value = 'foo';

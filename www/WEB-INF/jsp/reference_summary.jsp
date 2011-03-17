@@ -53,7 +53,6 @@ ${templateBean.templateBodyStartHtml}
 	<div id="querySummary">
 		<div class="innertube">
 			<span class="title">You searched for:</span><br/>
-			<span id="totalCount" class="count"></span><br/>
 			<c:if test="${not empty referenceQueryForm.author}">
 				<c:if test="${referenceQueryForm.authorScope eq 'any'}">
 					<span class="label">Any Author:</span></c:if>
@@ -86,6 +85,7 @@ ${templateBean.templateBodyStartHtml}
 			<c:if test="${not empty referenceQueryForm.id}">
 				<span class="label">ID:</span> 
 				${referenceQueryForm.id}<br/></c:if>
+			<span id="totalCount" class="count">0</span> item(s) match your unfiltered query.<br/>
 		</div>
 	</div>
 
@@ -108,11 +108,14 @@ ${templateBean.templateBodyStartHtml}
 		<a id="toggleAbstract" class="filterButton">Show All Abstracts</a> 
 	</div>
 	<div id="downloadDiv">
-		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="8" height="8" /> Text File</a> 
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
 	</div>
 </div>
 
 <div id="dynamicdata"></div>
+<div id="paginationWrap">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
 
 <div class="facetFilter">
 	<div id="facetDialog">
@@ -126,63 +129,14 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <script type="text/javascript">
-	<%@ include file="/js/reference_summary.js" %>
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
+	var defaultSort = "${defaultSort}";
 </script>
 
-<script type="text/javascript">
-var authorAutocomplete = function() {
-    // Use an XHRDataSource
-    var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/author");
-    // Set the responseType
-    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
-    // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList : "resultStrings"};
-    oDS.maxCacheEntries = 10;
-    oDS.connXhrMode = "cancelStaleRequests";
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_summary.js"></script>
 
-    // Instantiate the AutoComplete
-    var oAC = new YAHOO.widget.AutoComplete("author", "authorContainer", oDS);
-    // Throttle requests sent
-    oAC.queryDelay = .3;
-    oAC.minQueryLength = 2;
-    oAC.maxResultsDisplayed = 5000;
-    oAC.forceSelection = true;
-    oAC.delimChar = ";";
-
-    return {
-        oDS: oDS,
-        oAC: oAC
-    };
-}();
-</script>
-
-<script type="text/javascript">
-var journalAutocomplete = function() {
-    // Use an XHRDataSource
-    var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/journal");
-    // Set the responseType
-    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
-    // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList : "resultStrings"};
-    oDS.maxCacheEntries = 10;
-    oDS.connXhrMode = "cancelStaleRequests";
-
-    // Instantiate the AutoComplete
-    var oAC = new YAHOO.widget.AutoComplete("journal", "journalContainer", oDS);
-    // Throttle requests sent
-    oAC.queryDelay = .3;
-    oAC.minQueryLength = 2;
-    oAC.maxResultsDisplayed = 5000;
-    oAC.forceSelection = false;
-    oAC.delimChar = ";";
-
-    return {
-        oDS: oDS,
-        oAC: oAC
-    };
-}();
-
-</script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_query.js"></script>
 
 <script type="text/javascript">
 	var qDisplay = true;

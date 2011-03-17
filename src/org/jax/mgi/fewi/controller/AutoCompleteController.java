@@ -3,13 +3,17 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
+import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +60,7 @@ public class AutoCompleteController {
 	 * are returned as JSON.
 	 */
 	@RequestMapping("/author")
-	public @ResponseBody SearchResults<String> authorAutoComplete(
+	public @ResponseBody JsonSummaryResponse<AutocompleteAuthorResult> authorAutoComplete(
 			@RequestParam("query") String query) {
 		// split input on any non-alpha and non-apostrophe characters
 		List<String> words = 
@@ -64,8 +68,21 @@ public class AutoCompleteController {
 		logger.debug("author query:" + words.toString());
 		//build SearchParams for author auto complete query
 		SearchParams params = buildACQuery(SearchConstants.REF_AUTHOR, words, false);
+		params.setIncludeRowMeta(true);
+		params.setIncludeGenerated(true);
+		
+		JsonSummaryResponse<AutocompleteAuthorResult> r = new JsonSummaryResponse<AutocompleteAuthorResult>();
+		List<AutocompleteAuthorResult> retResults = new ArrayList<AutocompleteAuthorResult>();
+		SearchResults<String> qResults = autocompleteFinder.getAuthorAutoComplete(params);
+		
+		Map<String, MetaData> meta = qResults.getMetaMapping();
+		for (String s: qResults.getResultStrings()) {
+			retResults.add(new AutocompleteAuthorResult(s, meta.get(s).isGenerated()));
+			logger.debug(s + ": " + meta.get(s).isGenerated());
+		}
+		r.setSummaryRows(retResults);
 		// return results
-		return autocompleteFinder.getAuthorAutoComplete(params);
+		return r;
 	}
 	
 	/*

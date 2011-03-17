@@ -17,11 +17,12 @@ public class ReferenceQueryForm {
 	
 	private Integer seqKey;
 	private Integer alleleKey;
+	private Integer markerKey;
 	
 	private List<String> authorFilter = new ArrayList<String>();
 	private List<String> journalFilter = new ArrayList<String>();
 	private List<Integer> yearFilter = new ArrayList<Integer>();
-	private List<String> curatedDataFilter = new ArrayList<String>();
+	private List<String> dataFilter = new ArrayList<String>();
 	
 	public String getAuthor() {
 		return author;
@@ -101,11 +102,11 @@ public class ReferenceQueryForm {
 	public void setYearFilter(List<Integer> yearFilter) {
 		this.yearFilter = yearFilter;
 	}
-	public List<String> getCuratedDataFilter() {
-		return curatedDataFilter;
+	public List<String> getDataFilter() {
+		return dataFilter;
 	}
-	public void setCuratedDataFilter(List<String> curatedDateFilter) {
-		this.curatedDataFilter = curatedDateFilter;
+	public void setDataFilter(List<String> dateFilter) {
+		this.dataFilter = dateFilter;
 	}
 	public Integer getSeqKey() {
 		return seqKey;
@@ -124,11 +125,17 @@ public class ReferenceQueryForm {
 		return "ReferenceQueryForm [Journal=" + Journal + ", alleleKey="
 				+ alleleKey + ", author=" + author + ", authorFilter="
 				+ authorFilter + ", authorScope=" + authorScope
-				+ ", curatedDataFilter=" + curatedDataFilter + ", id=" + id
+				+ ", curatedDataFilter=" + dataFilter + ", id=" + id
 				+ ", inAbstract=" + inAbstract + ", inTitle=" + inTitle
 				+ ", journalFilter=" + journalFilter + ", seqKey=" + seqKey
 				+ ", text=" + text + ", year=" + year + ", yearFilter="
 				+ yearFilter + "]";
+	}
+	public Integer getMarkerKey() {
+		return markerKey;
+	}
+	public void setMarkerKey(Integer markerKey) {
+		this.markerKey = markerKey;
 	}
 	
 }

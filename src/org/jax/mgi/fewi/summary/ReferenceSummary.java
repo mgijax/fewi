@@ -8,6 +8,7 @@ import org.jax.mgi.fewi.util.Highlighter;
 public class ReferenceSummary {
 	private Reference reference;
 	private String score;
+	private String url = ContextLoader.getExternalUrls().getProperty("PubMed");
 	private Highlighter titleHL = new Highlighter(null);
 	private Highlighter abstractHL = new Highlighter(null);
 	private Highlighter authorHL = new Highlighter(null);
@@ -44,12 +45,17 @@ public class ReferenceSummary {
 		return sb.toString();
 	}
 
-	public String getPubMedID() {
-		return reference.getPubMedID();
-	}
-
-	public String getJnumID() {
-		return reference.getJnumID();
+	public String getId() {		
+		StringBuffer sb = new StringBuffer();
+		
+		String pId = reference.getPubMedID();
+		if(pId != null && !"".equals(pId)){
+			String p = url.replace("@@@@", pId);
+			sb.append(String.format("<a href=\"%s\" target=\"new\" class=\"extUrl\">%s</a><br/>", 
+					p, pId));			
+		}
+		sb.append(reference.getJnumID());
+		return sb.toString();
 	}
 
 	public String getAuthors() {
@@ -106,7 +112,7 @@ public class ReferenceSummary {
         	sb.append(String.format(" results: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDResults()));
         }
         if (reference.getCountOfGXDIndex() > 0){
-        	sb.append(String.format("<li>Expression literature records: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
+        	sb.append(String.format("<li>Expression literature records: <a href=\"%sgxdlit/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
         }
         if(reference.getCountOfMarkers() > 0){
         	sb.append(String.format("<li>Genome features: <a href=\"%smarker/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfMarkers()));

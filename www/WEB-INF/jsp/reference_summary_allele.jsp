@@ -30,36 +30,50 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
+<%@ include file="/WEB-INF/jsp/allele_header.jsp" %>
 
-<table id="objHeader" class="pad5 borderedTable">
-	<tr>
-		<td class="label">
-			Symbol:<br/>
-			Name:<br/>
-			ID:<br/>
-		</td>
-		<td class="text">
-			<% Allele myAllele = (Allele)request.getAttribute("allele"); %>
-			<%=FormatHelper.superscript(myAllele.getSymbol())%><br/>
-			${allele.name}<br/>
-			${allele.primaryID}
-		</td>
-	</tr>
-</table>
+<div id="summary">
 
-<table style="width:100%;">
-	<tr>
-	<td class="filters">
-		<a id="authorFilter" class="filterButton">Author Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
-		<a id="journalFilter" class="filterButton">Journal Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
-		<a id="yearFilter" class="filterButton">Year Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a> 
-		<a id="curatedDataFilter" class="filterButton">Data Filter <img src="${configBean.FEWI_URL}images/filter.png" width="8" height="8" /></a>
-	</td>
-	<td class="paginator">
-		<div id="paginationTop">&nbsp;</div>
-	</td>
-	</tr>
-</table>
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" style="display:none;" class="filters">
+					<span class="label">Filters:</span>
+					<span id="filterList"></span><br/>
+					<span id="fCount"><span id="filterCount">0</span> item(s) match after applying filter(s).</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="querySummary">
+		<div class="innertube">
+			<span id="totalCount" class="count">0</span> references associated with this allele.<br/>
+		</div>
+	</div>
+
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
+	
+<div id="toolbar" class="bluebar">
+	<div id="filterDiv">
+		Filter by: 
+		<a id="authorFilter" class="filterButton">Author <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+		<a id="journalFilter" class="filterButton">Journal <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+		<a id="yearFilter" class="filterButton">Year <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+		<a id="curatedDataFilter" class="filterButton">Data <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+	</div>
+	<div id="otherDiv">
+		<a id="toggleAbstract" class="filterButton">Show All Abstracts</a> 
+	</div>
+	<div id="downloadDiv">
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+	</div>
+</div>
 
 <div id="dynamicdata"></div>
 
@@ -72,6 +86,13 @@ ${templateBean.templateBodyStartHtml}
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
+	var defaultSort = "${defaultSort}";
+</script>
+
 
 <script type="text/javascript">
 	<%@ include file="/js/reference_summary.js" %>

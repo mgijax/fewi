@@ -16,61 +16,18 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
-<%@ include file="/WEB-INF/jsp/reference_form.jsp" %>
+<div id="outer"  class="bluebar">
+	<div id="toggleQF">Search Form</div>
+	<div id="qwrap">
+		<%@ include file="/WEB-INF/jsp/reference_form.jsp" %>
+	</div>
+</div>
 
 <script type="text/javascript">
-var authorAutocomplete = function() {
-    // Use an XHRDataSource
-    var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/author");
-    // Set the responseType
-    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
-    // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList : "resultStrings"};
-    oDS.maxCacheEntries = 10;
-    oDS.connXhrMode = "cancelStaleRequests";
-
-    // Instantiate the AutoComplete
-    var oAC = new YAHOO.widget.AutoComplete("author", "authorContainer", oDS);
-    // Throttle requests sent
-    oAC.queryDelay = .3;
-    oAC.minQueryLength = 2;
-    oAC.maxResultsDisplayed = 5000;
-    oAC.forceSelection = true;
-    oAC.delimChar = ";";
-
-    return {
-        oDS: oDS,
-        oAC: oAC
-    };
-}();
+	var fewiurl = "${configBean.FEWI_URL}";
 </script>
 
-<script type="text/javascript">
-var journalAutocomplete = function() {
-    // Use an XHRDataSource
-    var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}reference/autocomplete/journal");
-    // Set the responseType
-    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
-    // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList : "resultStrings"};
-    oDS.maxCacheEntries = 10;
-    oDS.connXhrMode = "cancelStaleRequests";
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_query.js"></script>
 
-    // Instantiate the AutoComplete
-    var oAC = new YAHOO.widget.AutoComplete("journal", "journalContainer", oDS);
-    // Throttle requests sent
-    oAC.queryDelay = .3;
-    oAC.minQueryLength = 2;
-    oAC.maxResultsDisplayed = 5000;
-    oAC.forceSelection = false;
-    oAC.delimChar = ";";
-
-    return {
-        oDS: oDS,
-        oAC: oAC
-    };
-}();
-
-</script>
 
 ${templateBean.templateBodyStopHtml}

@@ -30,7 +30,7 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
-<%@ include file="/WEB-INF/jsp/sequence_header.jsp" %>
+<%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
 
 <div id="summary">
 
@@ -48,7 +48,7 @@ ${templateBean.templateBodyStartHtml}
 
 	<div id="querySummary">
 		<div class="innertube">
-			<span id="totalCount" class="count"></span> references associated with this sequence.<br/>
+			<span id="totalCount" class="count">0</span> references associated with this marker.<br/>
 		</div>
 	</div>
 
@@ -71,7 +71,7 @@ ${templateBean.templateBodyStartHtml}
 		<a id="toggleAbstract" class="filterButton">Show All Abstracts</a> 
 	</div>
 	<div id="downloadDiv">
-		<a id="textDownload" class="filterButton" src="${configBean.WEBSHARE_URL}reference/report.txt"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
 	</div>
 </div>
 
