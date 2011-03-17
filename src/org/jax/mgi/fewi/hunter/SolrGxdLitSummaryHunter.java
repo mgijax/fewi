@@ -54,6 +54,9 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
         
         propertyMap.put(SearchConstants.REF_TEXT_TITLE_ABSTRACT, new SolrReferenceTextSearchPropertyMapper(titleAbstractList, "OR"));
         
+        propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
+        propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
+        
         /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want the standard list of
