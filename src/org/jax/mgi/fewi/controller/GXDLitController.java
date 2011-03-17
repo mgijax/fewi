@@ -8,11 +8,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+// Datamodel Classes
+
 import mgi.frontend.datamodel.GxdLitAssayTypeAgePair;
 import mgi.frontend.datamodel.GxdLitIndexRecord;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Reference;
 
-import org.jax.mgi.fewi.finder.FooFinder;
+
+import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.GxdLitFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
@@ -24,18 +28,24 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.GxdLitAgeAssayTypePairTable;
+import org.jax.mgi.fewi.summary.GxdLitAgeAssayTypePairTableCount;
 import org.jax.mgi.fewi.summary.GxdLitAssayTypeSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitGeneSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitReferenceSummaryRow;
+
 import org.jax.mgi.fewi.util.StyleAlternator;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
 
 /**
  * GXDLitController
@@ -60,13 +70,16 @@ public class GXDLitController {
       = LoggerFactory.getLogger(GXDLitController.class);
 
     @Autowired
-    private FooFinder fooFinder;
+    private MarkerFinder markerFinder;
     
     @Autowired
     private GxdLitFinder gxdLitFinder;
 
     @Autowired
     private ReferenceFinder referenceFinder;
+    
+    @Value("${gxdLit.limit}")
+    private Integer gxdLimit; 
 
 
     //--------------------------------------------------------------------//
@@ -91,40 +104,284 @@ public class GXDLitController {
     //--------------------//
     // GXD Lit Detail By Key
     //--------------------//
-/*    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView fooDetailByKey(@PathVariable("dbKey") String dbKey) {
+    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
+    public ModelAndView gxdLitDetailByKey(@PathVariable("dbKey") String dbKey) {
 
-        logger.debug("->fooDetailByKey started");
+        logger.debug("->gxdLitDetailByKey started");
 
-        // find the requested foo
+        // find the requested Lit Detail
         SearchResults searchResults
-          = fooFinder.getFooByKey(dbKey);
-        List<Marker> fooList = searchResults.getResultObjects();
+          = gxdLitFinder.getGxdLitByKey(dbKey);
+        List<GxdLitIndexRecord> indexRecordList = searchResults.getResultObjects();
 
         // there can be only one...
-        if (fooList.size() < 1) { // none found
+        if (indexRecordList.size() < 1) { // none found
             ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Foo Found");
+            mav.addObject("errorMsg", "No GxdLitIndexRecord Found");
             return mav;
         }// success
 
         // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("foo_detail");
+        ModelAndView mav = new ModelAndView("gxdlit_detail");
 
-        //pull out the foo, and add to mav
-        Marker foo = fooList.get(0);
-        mav.addObject("foo", foo);
-
-        // package referenes; gather via object traversal
-        List<Reference> references = foo.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
-        }
+        GxdLitQueryForm queryForm = new GxdLitQueryForm();
+        
+        GxdLitGeneSummaryRow record = new GxdLitGeneSummaryRow(indexRecordList.get(0), queryForm);
+        List <GxdLitGeneSummaryRow> detailList = new ArrayList<GxdLitGeneSummaryRow> ();
+        detailList.add(record);
+        
+        mav.addObject("record", record.getReferenceRecords().get(0));
+        mav.addObject("pairTable", parseAgeAssay(detailList, Boolean.TRUE, queryForm));
+        mav.addObject("reference", indexRecordList.get(0).getReference());
+        mav.addObject("marker", indexRecordList.get(0).getMarker());
 
         return mav;
-    }*/
+    }
 
     
+    
+    //---------------------------------------------//
+    // GXD Lit Query Form Summary by marker
+    //---------------------------------------------//
+    @RequestMapping("/marker/{markerID}")
+    public ModelAndView gxdLitSummaryByMarker(HttpServletRequest request,
+            @ModelAttribute GxdLitQueryForm queryForm,
+            @PathVariable("markerID") String markerID) {
+
+        logger.debug("->gxdLitSummary by Marker started");
+        logger.debug("getting marker for id: " + markerID);
+
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
+        searchParams.setFilter(markerIdFilter);
+        
+        // find the requested marker
+        SearchResults searchResults
+          = markerFinder.getMarkerByID(searchParams);
+        List<Marker> markerList = searchResults.getResultObjects();
+        
+        // there can be only one...
+        if (markerList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Foo Found");
+            return mav;
+        }
+        if (markerList.size() > 1) { // dupe found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        
+        
+        SearchParams params = new SearchParams();
+        
+        Marker marker = markerList.get(0);
+        
+        Filter markerKeyFilter = new Filter(SearchConstants.MRK_KEY, ""+marker.getMarkerKey());
+        
+        logger.debug(markerKeyFilter.toString());
+        
+        params.setFilter(markerKeyFilter);
+        params.setSorts(this.genSorts(request));
+        params.setPageSize(gxdLimit);
+        
+        logger.debug("Hitting the finder 2.");
+        
+        SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+        
+        logger.debug("Building the summary rows");
+        
+        List<GxdLitIndexRecord> recordList = results.getResultObjects();
+
+        logger.debug("Got the record list");
+        
+        // create/load the list of SummaryRow wrapper objects for the gene section
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
+        
+        // Get the total count of references and records.
+        
+		HashSet <String> references = new HashSet<String>();
+		int totalCount = 0;
+		int totalReferences = 0;
+		
+		for (GxdLitGeneSummaryRow outRow: summaryRows) {
+			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
+				references.add(ref.getJnum());
+				totalCount ++;
+			}
+		}
+		
+		totalReferences = references.size();
+		
+        ModelAndView mav = new ModelAndView("gxdlit_summary_by_marker");
+        mav.addObject("marker", marker);
+        mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
+        mav.addObject("geneResult", new StyleAlternator("","stripe3"));
+        mav.addObject("summaryRows", summaryRows);
+        mav.addObject("queryString", request.getQueryString());
+        mav.addObject("queryForm", queryForm);
+        mav.addObject("refCount", totalReferences);
+        mav.addObject("totalCount", totalCount);
+        mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
+        mav.addObject("age", queryForm.getAge().get(0));
+        mav.addObject("assayType", queryForm.getAssayType().get(0));
+        mav.addObject("limit", gxdLimit);
+
+        return mav;
+    }
+    
+    //---------------------------------------------//
+    // GXD Lit Query Form Summary by reference
+    //---------------------------------------------//
+    @RequestMapping("/reference/{refID}")
+    public ModelAndView gxdLitSummaryByReference(HttpServletRequest request,
+            @ModelAttribute GxdLitQueryForm queryForm,
+            @PathVariable("refID") String refID) {
+
+        logger.debug("->gxdLitSummary by Reference started");
+        logger.debug("getting reference for id: " + refID);
+
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter referenceIdFilter = new Filter(SearchConstants.REF_ID, refID);
+        searchParams.setFilter(referenceIdFilter);
+        
+        // find the requested marker
+        SearchResults searchResults
+          = referenceFinder.searchReferences(searchParams);
+        List<Reference> referenceList = searchResults.getResultObjects();
+        
+        // there can be only one...
+        if (referenceList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Foo Found");
+            return mav;
+        }
+        if (referenceList.size() > 1) { // dupe found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        
+        
+        SearchParams params = new SearchParams();
+        
+        Reference reference = referenceList.get(0);
+        
+        Filter referenceKeyFilter = new Filter(SearchConstants.REF_KEY, ""+reference.getReferenceKey());
+        
+        logger.debug(referenceKeyFilter.toString());
+        
+        params.setFilter(referenceKeyFilter);
+        params.setSorts(this.genSorts(request));
+        params.setPageSize(gxdLimit);
+        
+        logger.debug("Hitting the finder 2.");
+        
+        SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+        
+        logger.debug("Building the summary rows");
+        
+        List<GxdLitIndexRecord> recordList = results.getResultObjects();
+
+        logger.debug("Got the record list");
+        
+        // create/load the list of SummaryRow wrapper objects for the gene section
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
+        
+        // Get the total count of references and records.
+        
+		HashSet <String> references = new HashSet<String>();
+		int totalCount = 0;
+		int totalReferences = 0;
+		
+		for (GxdLitGeneSummaryRow outRow: summaryRows) {
+			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
+				references.add(ref.getJnum());
+				totalCount ++;
+			}
+		}
+		
+		totalReferences = references.size();
+		
+        ModelAndView mav = new ModelAndView("gxdlit_summary_by_reference");
+        mav.addObject("reference", reference);
+        mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
+        mav.addObject("geneResult", new StyleAlternator("","stripe3"));
+        mav.addObject("summaryRows", summaryRows);
+        mav.addObject("queryString", request.getQueryString());
+        mav.addObject("queryForm", queryForm);
+        mav.addObject("refCount", totalReferences);
+        mav.addObject("totalCount", totalCount);
+        mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
+        mav.addObject("age", queryForm.getAge().get(0));
+        mav.addObject("assayType", queryForm.getAssayType().get(0));
+        mav.addObject("limit", gxdLimit);
+
+        return mav;
+    }
+    
+    
+    //---------------------------------------------//
+    // GXD Lit Query Form Summary by age and assay
+    //---------------------------------------------//
+    @RequestMapping("/summary/ageAssay")
+    public ModelAndView gxdLitSummaryByAgeAndAssay(HttpServletRequest request,
+            @ModelAttribute GxdLitQueryForm queryForm) {
+
+        logger.debug("->gxdLitSummary By Age and Assay started");
+        logger.debug("queryString: " + request.getQueryString());
+
+        SearchParams params = new SearchParams();
+        
+        params.setSorts(this.genSorts(request));
+        params.setFilter(this.genFilters(queryForm));
+        params.setPageSize(gxdLimit);
+        
+        logger.debug("Hitting the finder.");
+        
+        SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+        
+        logger.debug("Building the summary rows");
+        
+        List<GxdLitIndexRecord> recordList = results.getResultObjects();
+
+        logger.debug("Got the record list");
+        
+        // create/load the list of SummaryRow wrapper objects for the gene section
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
+        
+        // Get the total count of references and records.
+        
+		HashSet <String> references = new HashSet<String>();
+		int totalCount = 0;
+		int totalReferences = 0;
+		
+		for (GxdLitGeneSummaryRow outRow: summaryRows) {
+			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
+				references.add(ref.getJnum());
+				totalCount ++;
+			}
+		}
+		
+		totalReferences = references.size();
+		
+        ModelAndView mav = new ModelAndView("gxdlit_summary_by_age_assay");
+        mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
+        mav.addObject("geneResult", new StyleAlternator("","stripe3"));
+        mav.addObject("summaryRows", summaryRows);
+        mav.addObject("queryString", request.getQueryString());
+        mav.addObject("queryForm", queryForm);
+        mav.addObject("refCount", totalReferences);
+        mav.addObject("totalCount", totalCount);
+        mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
+        mav.addObject("age", queryForm.getAge().get(0));
+        mav.addObject("assayType", queryForm.getAssayType().get(0));
+        mav.addObject("limit", gxdLimit);
+
+        return mav;
+    }
     
     //-------------------------//
     // GXD Lit Query Form Summary
@@ -140,7 +397,7 @@ public class GXDLitController {
         
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(queryForm));
-        params.setPageSize(1000);
+        params.setPageSize(gxdLimit);
         
         logger.debug("Hitting the finder.");
         
@@ -152,59 +409,11 @@ public class GXDLitController {
 
         logger.debug("Got the record list");
         
-        // create/load the list of SummaryRow wrapper objects
-        List<GxdLitGeneSummaryRow> summaryRows = new ArrayList<GxdLitGeneSummaryRow> ();
+        // create/load the list of SummaryRow wrapper objects for the gene section
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
         
-        String symbol = "";
-        Boolean first = Boolean.TRUE;
-        GxdLitGeneSummaryRow row = null;
+        // Get the total count of references and records.
         
-        for (GxdLitIndexRecord record: recordList) {
-        		if (first || !symbol.equals(record.getMarkerSymbol())) {
-        			
-        			if (!first) {
-        				        				
-        				// Has a result count
-        				Boolean hasACount = Boolean.FALSE;
-        				for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
-        					if (new Integer(refRow.getCount()) > 0) {
-        						hasACount = Boolean.TRUE;
-        					}
-        				}
-        				
-        				if (hasACount) {
-	        				// Add in the last record
-	        				summaryRows.add(row);
-        				}
-        			}
-        			
-        			row = new GxdLitGeneSummaryRow(record, queryForm);
-        			symbol = record.getMarkerSymbol();
-        			first = Boolean.FALSE;
-        		}
-        		else {
-        			row.addRecord(record);
-        		}
-        		
-        }
-        
-        // Add in the last record found before the loop kicked out. Assuming it has a count associate
-        // with it. 
-        
-	    if (row != null) {
-			Boolean hasACount = Boolean.FALSE;
-			for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
-				if (new Integer(refRow.getCount()) > 0) {
-					hasACount = Boolean.TRUE;
-				}
-			}
-			
-			if (hasACount) {
-				// Add in the last record
-				summaryRows.add(row);
-			}
-        }
-		
 		HashSet <String> references = new HashSet<String>();
 		int totalCount = 0;
 		int totalReferences = 0;
@@ -226,7 +435,8 @@ public class GXDLitController {
         mav.addObject("queryForm", queryForm);
         mav.addObject("refCount", totalReferences);
         mav.addObject("totalCount", totalCount);
-        mav.addObject("pairTable", parseAgeAssay(summaryRows));
+        mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
+        mav.addObject("limit", gxdLimit);
 
         return mav;
     }
@@ -236,12 +446,69 @@ public class GXDLitController {
     // private methods
     //--------------------------------------------------------------------//
 
-    private GxdLitAgeAssayTypePairTable parseAgeAssay (List<GxdLitGeneSummaryRow> rows) {
+    private List<GxdLitGeneSummaryRow> generateGeneSection(List<GxdLitIndexRecord> recordList, GxdLitQueryForm queryForm) {
+	    
+    	List<GxdLitGeneSummaryRow> summaryRows = new ArrayList<GxdLitGeneSummaryRow> ();
+    	
+    	String symbol = "";
+	    Boolean first = Boolean.TRUE;
+	    GxdLitGeneSummaryRow row = null;
+	    
+	    for (GxdLitIndexRecord record: recordList) {
+	    		if (first || !symbol.equals(record.getMarkerSymbol())) {
+	    			
+	    			if (!first) {
+	    				        				
+	    				// Has a result count
+	    				Boolean hasACount = Boolean.FALSE;
+	    				for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
+	    					if (new Integer(refRow.getCount()) > 0) {
+	    						hasACount = Boolean.TRUE;
+	    					}
+	    				}
+	    				
+	    				if (hasACount) {
+	        				// Add in the last record
+	        				summaryRows.add(row);
+	    				}
+	    			}
+	    			
+	    			row = new GxdLitGeneSummaryRow(record, queryForm);
+	    			symbol = record.getMarkerSymbol();
+	    			first = Boolean.FALSE;
+	    		}
+	    		else {
+	    			row.addRecord(record);
+	    		}
+	    		
+	    }
+	    
+	    // Add in the last record found before the loop kicked out. Assuming it has a count associate
+	    // with it. 
+	    
+	    if (row != null) {
+			Boolean hasACount = Boolean.FALSE;
+			for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
+				if (new Integer(refRow.getCount()) > 0) {
+					hasACount = Boolean.TRUE;
+				}
+			}
+			
+			if (hasACount) {
+				// Add in the last record
+				summaryRows.add(row);
+			}
+	    }
+	    
+	    return summaryRows;
+	}
+
+	private GxdLitAgeAssayTypePairTable parseAgeAssay (List<GxdLitGeneSummaryRow> rows, Boolean includeAllTypes, GxdLitQueryForm queryForm) {
 		
 		Map <String, Boolean> hasAgeMap = new HashMap<String, Boolean> ();
 		Map <String, Boolean> hasAssayTypeMap = new HashMap<String, Boolean> ();
 		
-		Map<String, Map<String, Integer>> countMap = new HashMap<String, Map<String, Integer>> ();
+		Map<String, Map<String, GxdLitAgeAssayTypePairTableCount>> countMap = new HashMap<String, Map<String, GxdLitAgeAssayTypePairTableCount>> ();
 		
 		List <String> ages = new ArrayList<String>();
 		ages.add("0.5");
@@ -306,8 +573,16 @@ public class GXDLitController {
 		assayTypes.add("Nuclease S1");
 		assayTypes.add("Primer Extension");
 	
+		// Initialize the maps default inclusion values, if we have requested all assay types
+		// we default to all true, if not we default to all false.
+		
 		for (String type: assayTypes) {
-			hasAssayTypeMap.put(type, Boolean.FALSE);
+			if (includeAllTypes) {
+				hasAssayTypeMap.put(type, Boolean.TRUE);
+			}
+			else {
+				hasAssayTypeMap.put(type, Boolean.FALSE);
+			}
 		}
 		
 		for (GxdLitGeneSummaryRow row: rows) {
@@ -318,15 +593,17 @@ public class GXDLitController {
 					hasAgeMap.put(curAge, Boolean.TRUE);
 					hasAssayTypeMap.put(curType, Boolean.TRUE);
 					if (! countMap.containsKey(curType)) {
-						Map <String, Integer> newAgeMap = new HashMap<String, Integer> ();
+						Map<String, GxdLitAgeAssayTypePairTableCount> newAgeMap = new HashMap<String, GxdLitAgeAssayTypePairTableCount> ();
 						countMap.put(curType, newAgeMap);
 					}
 					
 					if (! countMap.get(curType).containsKey(curAge)) {
-						countMap.get(curType).put(curAge, 1);
+						countMap.get(curType).put(curAge, new GxdLitAgeAssayTypePairTableCount(pair, queryForm));
 					}
 					else {
-						countMap.get(curType).put(curAge, countMap.get(curType).get(curAge) + 1);
+						GxdLitAgeAssayTypePairTableCount temp = countMap.get(curType).get(curAge);
+						temp.addCount();
+						countMap.get(curType).put(curAge, temp);
 					}
 				}
 			}
@@ -344,16 +621,17 @@ public class GXDLitController {
 
 	    List<GxdLitAssayTypeSummaryRow> allTypes = new ArrayList <GxdLitAssayTypeSummaryRow> ();
 	    
+	    
 	    for (String key: assayTypes) {
 	    	if (hasAssayTypeMap.get(key)) {
 	    		GxdLitAssayTypeSummaryRow row = new GxdLitAssayTypeSummaryRow(key);
 	    		for (String age: ages) {
 	    			if (hasAgeMap.get(age)) {
-	    				if (countMap.get(key).containsKey(age)) {
-	    					row.addCount("" + countMap.get(key).get(age));
+	    				if (countMap.containsKey(key) && countMap.get(key).containsKey(age)) {
+	    					row.addCount(countMap.get(key).get(age));
 	    				}
 	    				else {
-	    					row.addCount("");
+	    					row.addCount(null);
 	    				}
 	    			}
 	    		}
