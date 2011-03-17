@@ -448,6 +448,8 @@ public class GXDLitController {
 
     private List<GxdLitGeneSummaryRow> generateGeneSection(List<GxdLitIndexRecord> recordList, GxdLitQueryForm queryForm) {
 	    
+    	logger.debug("Generating the Gene Section");
+    	
     	List<GxdLitGeneSummaryRow> summaryRows = new ArrayList<GxdLitGeneSummaryRow> ();
     	
     	String symbol = "";
@@ -455,7 +457,10 @@ public class GXDLitController {
 	    GxdLitGeneSummaryRow row = null;
 	    
 	    for (GxdLitIndexRecord record: recordList) {
+	    		    		
 	    		if (first || !symbol.equals(record.getMarkerSymbol())) {
+	    			
+	    			//logger.debug("Either this is the first, or its a new symbol.");
 	    			
 	    			if (!first) {
 	    				        				
