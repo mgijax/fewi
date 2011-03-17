@@ -75,11 +75,33 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 			keyInts.add(new Integer(key));
 		}
 		
-		// get results
-		long start = System.nanoTime();
-		queryResults = s.createCriteria(type).add(Restrictions.in("id", keyInts)).list();
-		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));		
+		// get results chunking if needed.
 		
+		long start = System.nanoTime();
+
+		int step = 10000;
+		
+		if (keyInts.size() > 10000) {
+			int begin = 0;
+			int end = step;
+			
+			while (begin < keyInts.size()) {
+				if (end > keyInts.size()) {
+					end = keyInts.size();
+				}
+				
+				List inList = keyInts.subList(begin, end);
+				
+				queryResults.addAll(s.createCriteria(type).add(Restrictions.in("id", inList)).list());
+				begin += step;
+				end += step;
+			}
+			
+		}
+		else {
+			queryResults = s.createCriteria(type).add(Restrictions.in("id", keyInts)).list();
+		}
+				
 		// load results into Map keyed by id
 		String id;
 		for (T r : queryResults) {
@@ -93,6 +115,8 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		for (String t : keys) {
 			orderedResults.add(resultsMap.get(t));
 		}
+		
+		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
 
 		return orderedResults;
 	}
