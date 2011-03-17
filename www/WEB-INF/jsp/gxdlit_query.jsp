@@ -142,7 +142,9 @@ ${templateBean.templateBodyStartHtml}
 						Examples:
 					</div>
 					<div style="text-align:left;" class="example">
-						TBD
+						gastrulation, morphogenesis<br>
+						"pattern formation"<br>
+						epidermal differentiation
 					</div>
 				</div>
     		</div>

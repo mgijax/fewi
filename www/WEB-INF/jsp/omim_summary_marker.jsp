@@ -25,7 +25,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="foo_help.shtml">	
+<div id="titleBarWrapper" userdoc="associated_human_diseases_help.shtm">	
 	<span class="titleBarMainTitle">Associated Human Diseases</span>
 </div>
 

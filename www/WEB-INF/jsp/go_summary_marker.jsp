@@ -27,19 +27,19 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="foo_help.shtml">	
+<div id="titleBarWrapper" userdoc="go_classifications_help.shtml">	
 	<span class="titleBarMainTitle">Gene Ontology Classifications</span>
 </div>
 
 <jsp:include page="marker_header.jsp"></jsp:include><br>
 
 <div class="GO">
-<a name="text"></a><h3><b>Go Annotations as Summary Text</b> <a href="#tabular">(Tabular View)</a></h3>
+<a name="text"></a><h3 class="extraLarge"><b>Go Annotations as Summary Text</b> <a href="#tabular" class="GO">(Tabular View)</a></h3>
 
 <%=ntc.convertNotes(marker.getGOText(), '|')%><br><hr><br>
 </div>
 
-<a name="tabular"></a><h3><b>Go Annotations in Tabular Form</b> <a href="#text">(Text View)</a></h3>
+<a name="tabular"></a><h3 class="larger"><b>Go Annotations in Tabular Form</b> <a href="#text" class="GO">(Text View)</a></h3>
 <!-- paginator -->
 <table style="width:100%;">
   <tr>

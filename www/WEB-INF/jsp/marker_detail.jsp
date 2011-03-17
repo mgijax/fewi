@@ -347,7 +347,7 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<c:if test="${marker.countOfGxdLiterature > 0}">
-		  Literature Summary: (<a href="#">${marker.countOfGxdLiterature}</a> records)<br/>
+		  Literature Summary: (<a href="${configBean.FEWI_URL}/gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a> records)<br/>
 		</c:if>
 		Data Summary:
 		<c:if test="${marker.countOfGxdAssays > 0}">

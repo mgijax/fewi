@@ -7,15 +7,15 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Literature Results</title>
+<title>Gene Expression Literature Associated With This Reference</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
+<% Reference reference = (Reference)request.getAttribute("reference"); %>
 
 <style type="text/css">
 </style>
 
-<script>
-</script>
 
 ${templateBean.templateBodyStartHtml}
 
@@ -26,62 +26,24 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Literature Results</span>
+	<span class="titleBarMainTitle">Gene Expression Literature Associated With This Reference</span>
 </div>
 
+<!-- header table -->
+<table class="summaryHeader">
+<tbody><tr>
+  <td class="summaryHeaderCat1">
+       <div>Reference</div>
+  </div></td>
+  <td class="summaryHeaderData1">
+	<a href="${configBean.FEWI_URL}/reference/${reference.jnumID}">${reference.jnumID}</a> ${reference.longCitation}
+  </td>
+</tr>
+</tbody></table><br>
 
-
-<div id="summary">
-
-	<div id="breadbox">
-		<div id="contentcolumn">
-			<div class="innertube">
-				<div id="filterSummary" style="display:none;" class="filters">
-					<span class="label">Filters:</span>
-					<span id="filterList"></span><br/>
-					<span id="fCount"><span id="filterCount">0</span> item(s) match after applying filter(s).</span>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="querySummary">
-		<div class="innertube">
-			<span class="title">You searched for:</span><br>
-			<span class="count">${totalCount} 
-		    <c:if test="${totalCount == limit}"> of ${limit}+ </c:if> 
-			matching records from ${refCount} references.</span><br>
-			<c:if test="${not empty queryForm.nomen}">
-				<span class="label">Marker Symbol/Name:</span> 
-				${queryForm.nomen}<br/></c:if>
-			<c:if test="${not empty queryForm.assayTypesSelected}">
-				<span class="label">Assay Type(s):</span> 
-				${queryForm.assayTypesSelected}<br/></c:if>
-			<c:if test="${not empty queryForm.agesSelected}">
-				<span class="label">Ages:</span> 
-				${queryForm.agesSelected}<br/></c:if>	
-			<c:if test="${not empty queryForm.author}">
-				<span class="label">Author:</span> 
-				${queryForm.author}<br/></c:if>
-			<c:if test="${not empty queryForm.journal}">
-				<span class="label">Journal:</span>
-				${queryForm.journal}<br/></c:if>
-			<c:if test="${not empty queryForm.year}">
-				<span class="label">Year:</span> 
-				${queryForm.year}<br/></c:if>
-			<c:if test="${not empty queryForm.text}">
-				<span class="label">Text:</span> 
-				${queryForm.text}<br/></c:if>
-		</div>
-	</div>
-	
-	<div id="rightcolumn">
-		<div class="innertube">
-			<div id="paginationTop">&nbsp;</div>
-		</div>
-	</div>
-	
-</div>
+<span class="count">${totalCount} 
+<c:if test="${totalCount == limit}"> of ${limit}+ </c:if> 
+matching records from ${refCount} references.</span><br><br>
 
 <div style="clear:left">
 <span class="extraLarge">Summary by Age and Assay:</span><i> Numbers in the table indicate the number of results matching the search criteria.</i><br>
