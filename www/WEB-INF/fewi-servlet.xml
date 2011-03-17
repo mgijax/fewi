@@ -32,10 +32,32 @@
 
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
-
-
-	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
+	
+	 <bean id="contentNegotiatingViewResolver" 
+	 		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="1" />
+        <property name="ignoreAcceptHeader" value="true" />
+        <property name="mediaTypes">
+            <map>
+                <entry key="xls"  value="application/vnd.ms-excel"/>
+                <entry key="txt"  value="text/plain"/>
+            </map>
+        </property>
+        <property name="viewResolvers">
+        	<list>
+				<bean id="excelBundleResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+					<property name="basename" value="excelviews" />
+				</bean>
+				<bean id="textBundleResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+					<property name="basename" value="textviews" />
+				</bean>
+			</list>
+        </property>
+    </bean>
+	
+      	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2" />
 		<property name="prefix" value="/WEB-INF/jsp/"/>
 		<property name="suffix" value=".jsp"/>
 		<property name="exposedContextBeanNames">
@@ -45,6 +67,8 @@
 	        </list>
 	    </property>
 	</bean>
+
+
 	
 	<!-- allows file uploading to work and sets max size -->
 	<bean id="multipartResolver"

@@ -42,7 +42,9 @@
 
         <!--war -->
         <target name="war" depends="compile">
-                <echo>Build war file</echo>        
+                <echo>Build war file</echo>
+        		<copy file="./www/WEB-INF/properties/excelviews.properties" todir="./www/WEB-INF/classes" overwrite="true"/>
+        		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true"/>
                 <war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
                         <fileset dir="www"/>
                 </war>
