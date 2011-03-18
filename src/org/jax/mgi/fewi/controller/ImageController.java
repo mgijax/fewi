@@ -12,6 +12,7 @@ import org.jax.mgi.fewi.finder.ImageFinder;
 // data model objects
 import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.ImageAllele;
+import mgi.frontend.datamodel.ImagePane;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Genotype;
 
@@ -174,10 +175,10 @@ public class ImageController {
         mav.addObject("reference", reference);
 
         // package associated alleles
-//        List<ImageAllele> imageAlleleList = image.getImageAlleles();
-//        if (!imageAlleleList.isEmpty()) {
-//            mav.addObject("imageAlleleList", imageAlleleList);
-//        }
+        List<ImagePane> imagePaneList = image.getImagePanes();
+        if (!imagePaneList.isEmpty()) {
+            mav.addObject("imagePaneList", imagePaneList);
+        }
 
 
         return mav;
