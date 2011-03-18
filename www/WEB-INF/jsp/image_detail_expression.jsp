@@ -59,7 +59,7 @@ ${templateBean.templateBodyStartHtml}
          ${image.figureLabel}
        </div>
        <div style="padding-top:2px;">
-         NEED ID
+         ToDo - Oops, need MGI:ID, not pixID
        </div>
     </td>
   </tr>
@@ -98,39 +98,35 @@ ${templateBean.templateBodyStartHtml}
   </tr>
 
   <!-- ASSOC ASSAYS -->
-  <c:if test="${not empty imageAlleleList}">
+  <c:if test="${not empty imagePaneList}">
 
     <tr  valign=top ALIGN=left>
       <td class="<%=leftTdStyles.getNext() %>" >
-        Associated<br/>Alleles
+        Associated<br/>Assays
       </td>
       <td class="<%=rightTdStyles.getNext() %>" >
 
 	<table class="mgitable">
 	  <tr class="stripe2">
 	    <td class="resultsHeader" style="background-color:#D0E0F0">
-	      Symbol
+	      Label
 	    </td>
 	    <td class="resultsHeader" style="background-color:#D0E0F0">
-	      Name
+	       Assay & Result Details (Gene Symbol)
 	    </td>
 	  </tr>
 
-          <c:forEach var="imageAllele" items="${imageAlleleList}" >
-
-              <% // pull to scriptlet context
-                ImageAllele imageAllele 
-                  = (ImageAllele)pageContext.getAttribute("imageAllele"); 
-              %>
+          <c:forEach var="imagePane" items="${imagePaneList}" >
 
             <tr class="stripe1">
               <td class="">
-                <a href="${configBean.FEWI_URL}allele/${imageAllele.alleleID}">
-                <%=FormatHelper.superscript(imageAllele.getAlleleSymbol())%>
-                </a>
+                ${imagePane.paneLabel}
               </td>
               <td class="">
-                ${imageAllele.alleleName}
+                <c:forEach var="imagePaneDetails" items="${imagePane.details}" >
+                  <a href="${configBean.FEWI_URL}expression/${imagePaneDetails.assayID}">${imagePaneDetails.assayID}</a>
+                  <a href="${configBean.FEWI_URL}marker/${imagePaneDetails.markerID}">(${imagePaneDetails.markerSymbol})</a>
+                </c:forEach>
               </td>
             </tr>
 
