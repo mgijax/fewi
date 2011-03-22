@@ -131,7 +131,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="TODO.shtml">	
+<div id="titleBarWrapper" userdoc="cre_summary_help">	
   <span class="titleBarMainTitle">
     <%=FormatHelper.superscript(allele.getSymbol())%> - ${systemDisplayStr}
   </span>
@@ -193,8 +193,9 @@ ${templateBean.templateBodyStartHtml}
             </a>
             <br>
             <span class="small">
-
-              <!-- TODO Marker Name - display if it's not the same as allele name -->
+              <c:if test="${allele.geneName!=allele.name}">
+                ${allele.geneName};
+              </c:if>
               ${allele.name}
             </span>
           </td>
@@ -251,21 +252,26 @@ ${templateBean.templateBodyStartHtml}
       <td>
 
         Mouse Strains:
-       <c:if test="${empty allele.imsrStrainCount}">
+       <c:if test="${empty allele.imsrStrainCount or allele.imsrStrainCount=='0'}">
           0 lines available
        </c:if>
-       <c:if test="${not empty allele.imsrStrainCount}">
+       <c:if test="${not empty allele.imsrStrainCount and allele.imsrStrainCount!='0'}">
+          <a href='${configBean.IMSRURL}fetch?page=imsrSummary&gaccid=${allele.primaryID}&state=LM&state=OV&state=EM&state=SP' 
+            target="_blank">
           ${allele.imsrStrainCount} lines available
+          </a>
        </c:if>
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
         Cell Lines:
-       <c:if test="${empty allele.imsrCellLineCount}">
+       <c:if test="${empty allele.imsrCellLineCount or allele.imsrCellLineCount=='0'}">
           0 lines available
        </c:if>
-       <c:if test="${not empty allele.imsrCellLineCount}">
+       <c:if test="${not empty allele.imsrCellLineCount and allele.imsrCellLineCount!='0'}">
+          <a href='${configBean.IMSRURL}fetch?page=imsrSummary&gaccid=${allele.primaryID}&state=ES' target="_blank">
           ${allele.imsrCellLineCount} lines available
+          </a>
        </c:if>
 
       </td>
@@ -452,6 +458,7 @@ ${templateBean.templateBodyStartHtml}
 
           <img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=${galleryImage.pixeldbNumericID}' 
             id='creImg${galleryImage.pixeldbNumericID}' 
+            ${galleryImage.mouseUp}
             style='position:absolute; top:32px; left:<%=leftDist%>px; z-index:${galleryImage.indexZ};'> 
 
           <script>
@@ -477,10 +484,8 @@ ${templateBean.templateBodyStartHtml}
           <% leftDist = leftDist + 100; %>
         </c:forEach>
 
-
         <% leftDist = 10; %>
 
- 
       </div>
       </c:forEach>
 
@@ -492,8 +497,6 @@ ${templateBean.templateBodyStartHtml}
 
 
 
-
-
   <!-- Recombinase Specificity  -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
@@ -502,7 +505,7 @@ ${templateBean.templateBodyStartHtml}
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
 
-      <div style="position: relative; height:40px;">
+      <div style="position: relative; height:52px;">
 
         <div class="sectionIntro" style="position: absolute; top:3px; left:2px; width:200px;">
           Click heading to resort table.
@@ -514,7 +517,7 @@ ${templateBean.templateBodyStartHtml}
           class="creResultButton creActiveButton"
           onMouseOver="return overlib('Show columns containing the assay type, detection method, reporter gene, probe or antibody, and notes about the assay.', WIDTH, 225, DELAY, 750, ANCHOR, 'showAssayInfoButton', ANCHORALIGN, 0,0,0,1.05, STICKY, TIMEOUT, 3000, FGCOLOR, '#FFFFFF');"
           onMouseOut="nd();"
-          style="position: absolute; top:20px; left:534px">
+          style="position: absolute; top:27px; left:574px">
           Assays
         </span>
 
@@ -522,7 +525,7 @@ ${templateBean.templateBodyStartHtml}
           class="creResultButton"
           onMouseOver="return overlib('Show columns containing the allelic composition, genetic strain background, sex, and notes about the specimen', WIDTH, 225, DELAY, 750, ANCHOR, 'showGenoTypeButton', ANCHORALIGN, 0,0,0,1.05, STICKY, TIMEOUT, 3000, FGCOLOR, '#FFFFFF');"
           onMouseOut="nd();"
-          style="position: absolute; top:20px; left:608px">
+          style="position: absolute; top:27px; left:648px">
           Genotypic Background
         </span>
 
@@ -530,12 +533,13 @@ ${templateBean.templateBodyStartHtml}
           class="creResultButton"
           onMouseOver="return overlib('Show a column containing additional information recorded by MGI curators about the assay result.', WIDTH, 225, DELAY, 750, ANCHOR, 'showResultNotesButton', ANCHORALIGN, 0,0,0,1.05, STICKY, TIMEOUT, 3000, FGCOLOR, '#FFFFFF');"
           onMouseOut="nd();"
-          style="position: absolute; top:20px; left:784px">
+          style="position: absolute; top:27px; left:824px">
           Result Notes
         </span>
 
-      </div>
+        <span id="paginationTop" style="position: absolute; top:-2px; left:260px">&nbsp;</span>
 
+      </div>
 
       <!-- data table div: filled by YUI, called via js below -->
       <div id="dynamicdata"></div>
