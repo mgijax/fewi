@@ -59,7 +59,7 @@ ${templateBean.templateBodyStartHtml}
          ${image.figureLabel}
        </div>
        <div style="padding-top:2px;">
-         ToDo - Oops, need MGI:ID, not pixID
+         ${image.pixeldbNumericID}
        </div>
     </td>
   </tr>
