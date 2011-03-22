@@ -88,19 +88,29 @@ public class RecomSpecificitySummaryRow {
 
         Iterator imagePanesIter = imagePanes.iterator();
         while (imagePanesIter.hasNext() ){
-            thisImagePane = (AlleleSystemAssayResultImagePane)imagePanesIter.next();
 
+            thisImagePane = (AlleleSystemAssayResultImagePane)imagePanesIter.next();
             thisImage = thisImagePane.getImage();
 
             // figure lables
             figureLables.append("Fig. ");
             figureLables.append(thisImage.getFigureLabel());
+            if (thisImagePane.getPaneLabel() != null) {
+              figureLables.append(thisImagePane.getPaneLabel());
+			}
             figureLables.append(" ");
 
-            // image tags
-            imageTags.append("<img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
-            imageTags.append(thisImage.getPixeldbNumericID());
-            imageTags.append("' width='30' style='border:3px; cursor: pointer;'> ");
+            if (thisImage.getPixeldbNumericID() == null) {
+              imageTags.append("<span class='small italic' ");
+              imageTags.append("onMouseOver='return overlib('This annotation is based on text statements in the cited reference.', WIDTH, 250);");
+              imageTags.append("onMouseOut='nd();'>No figure available<br></span>");
+            }
+            else {
+              // image tags
+              imageTags.append("<img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
+              imageTags.append(thisImage.getPixeldbNumericID());
+              imageTags.append("' width='30' style='border:3px; cursor: pointer;'> ");
+		    }
 		}
 
         return "<span class='summaryDataCell'>" + refLink + " "
