@@ -95,6 +95,7 @@ function main() {
         template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
+        containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 50,
         pageLinks: 5,
         recordOffset: 1
