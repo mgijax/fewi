@@ -81,16 +81,18 @@ public class RecomImage {
     }
 
     public String getCaption() {
+		String cleanCaption = image.getCaption();
+		if (cleanCaption==null) {return "";}
         return image.getCaption().trim().replaceAll("[\\r\\n]", "").replaceAll("[']", "\'");
     }
 
 	public String getCopyright() {
-		String cleanCopyright = new String();
+		String cleanCopyright = image.getCopyright();
+		if (cleanCopyright==null) {return "";}
         try {
           NotesTagConverter ntc = new NotesTagConverter();
-          cleanCopyright = ntc.convertNotes(image.getCopyright(), '|');
+          cleanCopyright = ntc.convertNotes(cleanCopyright, '|');
         }catch (Exception e) {}
-
         return cleanCopyright.trim().replaceAll("[\\r\\n]", "<br/>").replaceAll("[\"]", "\\\\'");
     }
 
@@ -107,17 +109,23 @@ public class RecomImage {
     }
 
     public String getMouseUp() {
-        return "onMouseUp=\"return overlib('"
-          + this.getCaption() + "<br/><br/>"
-          + this.getCopyright() + "<br/><br/>"
-          + "<em>Drag image to compare to others or to data in the table below. "
-          + "Drag corners to resize image for more detail.</em>', CAPTION, '"
-          + this.getJnumID() + "&nbsp;Fig.&nbsp; "
-          + this.getFigureLabel() + "<br />"
-          + "<em>Drag image, resize at corners.</em>', WIDTH, 350, ANCHOR, "
-          + "'creImg" + this.getPixeldbNumericID()
-          + "', ANCHORALIGN, 1.05,0,0,0, STICKY, CLOSECLICK, CLOSETEXT, 'close X');\"";
 
+        StringBuffer onMouseUpStr = new StringBuffer();
+
+        onMouseUpStr.append("onMouseUp=\"return overlib('");
+        onMouseUpStr.append(this.getCaption());
+        onMouseUpStr.append("<br/><br/>");
+        onMouseUpStr.append(this.getCopyright());
+        onMouseUpStr.append("<br/><br/>");
+        onMouseUpStr.append("<em>Drag image to compare to others or to data in the table below. ");
+        onMouseUpStr.append("Drag corners to resize image for more detail.</em>', CAPTION, '");
+        onMouseUpStr.append(this.getJnumID() + "&nbsp;Fig.&nbsp; ");
+        onMouseUpStr.append(this.getFigureLabel() + "<br />");
+        onMouseUpStr.append("<em>Drag image, resize at corners.</em>', WIDTH, 350, ANCHOR, ");
+        onMouseUpStr.append("'creImg" + this.getPixeldbNumericID());
+        onMouseUpStr.append("', ANCHORALIGN, 1.05,0,0,0, STICKY, CLOSECLICK, CLOSETEXT, 'close X');\"");
+
+        return onMouseUpStr.toString();
     }
 
 
