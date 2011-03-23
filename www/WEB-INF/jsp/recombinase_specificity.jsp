@@ -456,7 +456,7 @@ ${templateBean.templateBodyStartHtml}
             ${galleryImage.jnumID}<br/>Fig.&nbsp;${galleryImage.figureLabel}
           </span> 
 
-          <img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=${galleryImage.pixeldbNumericID}' 
+          <img src='${configBean.PIXELDB_URL}${galleryImage.pixeldbNumericID}' 
             id='creImg${galleryImage.pixeldbNumericID}' 
             ${galleryImage.mouseUp}
             style='position:absolute; top:32px; left:<%=leftDist%>px; z-index:${galleryImage.indexZ};'> 
@@ -569,7 +569,7 @@ ${templateBean.templateBodyStartHtml}
           <span class='creDataCat'>All for this allele: </span>
         </td>
         <td>
-          <a href="${configBean.FEWI_URL}reference/${allele.primaryID}">
+          <a href="${configBean.FEWI_URL}reference/allele/${allele.primaryID}">
             ${allele.countOfReferences} reference(s)
           </a>
         </td>
