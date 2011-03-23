@@ -33,6 +33,7 @@ public class RecomSpecificitySummaryRow {
 
     // config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+    String pixUrl  = ContextLoader.getConfigBean().getProperty("PIXELDB_URL");
 
 
     //-------------
@@ -107,8 +108,8 @@ public class RecomSpecificitySummaryRow {
             }
             else {
               // image tags
-              imageTags.append("<img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
-              imageTags.append(thisImage.getPixeldbNumericID());
+              imageTags.append("<img src='");
+              imageTags.append(pixUrl + thisImage.getPixeldbNumericID());
               imageTags.append("' width='30' style='border:3px; cursor: pointer;'> ");
 		    }
 		}
@@ -130,13 +131,19 @@ public class RecomSpecificitySummaryRow {
 
     // allelic comp
     public String getAllelicComp() {
-        String convertedAllComp = new String();
+
+        String convertedAllComp = alleleSystemAssayResult.getAllelicComposition();
+
+        // html-ize with superscript and new lines
+        convertedAllComp = FormatHelper.superscript(convertedAllComp);
+        convertedAllComp = FormatHelper.newline2HTMLBR(convertedAllComp);
+
+        // convert predefined tags within the notes
         try {
           NotesTagConverter ntc = new NotesTagConverter();
-          convertedAllComp = ntc.convertNotes(alleleSystemAssayResult.getAllelicComposition(), '|');
+          convertedAllComp = ntc.convertNotes(convertedAllComp, '|');
         }catch (Exception e) {}
 
-        convertedAllComp = FormatHelper.newline2HTMLBR(convertedAllComp);
         return "<div style='padding-top:6px;'></div><span class='summaryDataCell'>"
           + convertedAllComp + "</span>";
     }
