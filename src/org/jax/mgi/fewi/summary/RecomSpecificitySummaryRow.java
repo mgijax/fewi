@@ -135,8 +135,9 @@ public class RecomSpecificitySummaryRow {
         String convertedAllComp = alleleSystemAssayResult.getAllelicComposition();
 
         // html-ize with superscript and new lines
-        convertedAllComp = FormatHelper.superscript(convertedAllComp);
-        convertedAllComp = FormatHelper.newline2HTMLBR(convertedAllComp);
+        convertedAllComp = convertedAllComp.replaceAll("[\\r\\n]", "<br/>");
+        convertedAllComp = convertedAllComp.replaceAll("<br/><br/>", "<br/>");
+        convertedAllComp = convertedAllComp.replace("<+>", "<sup>+</sup>");
 
         // convert predefined tags within the notes
         try {
