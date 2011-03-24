@@ -26,7 +26,7 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Associated With This Genome Feature</span>
+	<span class="titleBarMainTitle">Gene Expression Literature Associated With This Genome Feature</span>
 </div>
 
 <jsp:include page="marker_header.jsp"></jsp:include><br>
