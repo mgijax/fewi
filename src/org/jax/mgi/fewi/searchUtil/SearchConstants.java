@@ -40,6 +40,10 @@ public class SearchConstants {
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
     
+    // Accession
+    
+    public static final String ACC_ID				= "acc_id";
+    
     // Autocomplete
     
     public static final String AC_FOR_GXD			= "forGXD";
