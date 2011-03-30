@@ -71,7 +71,7 @@ public class AccessionSummaryRow {
     	else {
     		baseUrl =  feLinker.getFewiKeyLink(acc.getObjectType(), "" + acc.getObjectKey());
     	}
-    	return "<a href=\"" + baseUrl + "\">" + "MGI " + acc.getObjectType() + " Detail" +  s"</a>"; 
+    	return "<a href=\"" + baseUrl + "\">" + "MGI " + acc.getObjectType() + " Detail" +  "</a>"; 
     }
     public String getDisplayType() {
     	return acc.getDisplayType();
