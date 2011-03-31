@@ -2,18 +2,16 @@
 # Applied by <context:property-placeholder/> from application context XML file
 #-------------------------------------------------------------------------------
 
-# Use this setion to override values set in GlobalConfig.properties per the
+# URL to the fewi
+# Use this entry to override values set in GlobalConfig.properties per the
 # the example below.  GlobalConfig naming conventions use all caps with 
 # underscores between words.  
-#
 #FEWI_URL=http://server.informatics.jax.org/
-#FEWI_URL=http://cardolan.informatics.jax.org:38080/fewi/mgi/
+#FEWI_URL=http://cardolan.informatics.jax.org:8080/fewi/mgi/
 
 # directory in which to find the standard mgi template
+#template.dir=/home/<user>/devwi/mgiconfig/web/
 template.dir=/usr/local/mgi/live/mgiconfig/web/
-
-# Gxd Lit
-gxdLit.limit=30000
 
 # data sources
 hibernate.generate_statistics=false
@@ -21,22 +19,23 @@ hibernate.show_sql=false
 hibernate.dialect=org.hibernate.dialect.ProgressDialect
 jndi.datasource=java:fe_frontend
 
-# solr global config
-solr.soTimeout=30000
-solr.connectionTimeout=30000
-solr.maxConnectionsPerHost=100
-solr.maxTotalConnections=100
-solr.maxRetries=1
+# gxd lit result limit
+gxdLit.limit=30000
 
-# Filter and Results default maximums
-solr.resultsDefault=5000
-solr.factetNumberDefault=501
+#-------------------------------------------------------------------------------
+#----- SOLR CONFIGURATION
+#-------------------------------------------------------------------------------
 
+# Weekly Proto
+solr.server1.url=http://cardolan:8995/solr/
 
-#solr urls
-# note: nested property resolution only works when used with 
-# <context:property-placeholder/> and @Value injection 
-solr.server1.url=http://cardolan:8985/solr/
+# Front-end development indexes
+#solr.server1.url=http://cardolan:8985/solr/
+
+# Back-end development indexes
+#solr.server1.url=http://cardolan:8983/solr/
+
+#solr index-specific urls
 solr.reference.url=${solr.server1.url}reference/
 solr.authors_ac.url=${solr.server1.url}authorsAC/
 solr.cre.url=${solr.server1.url}cre/
@@ -51,3 +50,12 @@ solr.markerAnnotation.url=${solr.server1.url}markerAnnotation/
 solr.creAlleleSystem.url=${solr.server1.url}creAlleleSystem/
 solr.creAssayResult.url=${solr.server1.url}creAssayResult/
 solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
+
+# solr config parameters
+solr.soTimeout=30000
+solr.connectionTimeout=30000
+solr.maxConnectionsPerHost=100
+solr.maxTotalConnections=100
+solr.maxRetries=1
+solr.resultsDefault=5000
+solr.factetNumberDefault=501
