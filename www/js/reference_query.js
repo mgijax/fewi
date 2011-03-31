@@ -5,7 +5,7 @@
     // Set the responseType
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList: "summaryRows", fields:["author"]};
+    oDS.responseSchema = {resultsList: "summaryRows", fields:["author", "isGenerated"]};
     //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
 
@@ -17,6 +17,18 @@
     oAC.maxResultsDisplayed = 5000;
     oAC.forceSelection = true;
     oAC.delimChar = ";";
+    
+    oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
+    	   var sKey = sResultMatch;
+    	 
+    	   // some other piece of data defined by schema
+    	   var isGenerated = oResultData[1];
+    	   if (isGenerated){
+    		   sKey = sKey + " <span class='autocompleteHighlight'>(all)</span>";
+    	   }
+
+    	  return (sKey);
+    	}; 
 
     return {
         oDS: oDS,

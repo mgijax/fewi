@@ -1,11 +1,13 @@
 <!-- query form table -->
 <form:form method="GET" commandName="referenceQueryForm" action="${configBean.FEWI_URL}reference/summary">
-<TABLE WIDTH="100%" class="pad5 borderedTable">
-	<TR>
+<TABLE WIDTH="100%" class="pad5 borderedTable"  style="font-weight: normal;">
+	<TR class="queryControls">
 		<TD COLSPAN="2" align="left">
 			<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
 			&nbsp;&nbsp;
 			<INPUT TYPE="reset">
+			&nbsp;&nbsp;
+			<form:errors cssClass="qfError"/>
 		</td>
 	</tr>
 
@@ -32,7 +34,7 @@
 		<TD CLASS="cat2">Journal</TD>
 		<TD>
 			<div>
-				<div>
+				<div style="width:300px;text-align:left;">
 					<div id="journalAutoComplete">
 						<form:input id="journal" path="journal"></form:input>
 						<div id="journalContainer"></div>
@@ -46,7 +48,8 @@
 		<td>
 			<div style="height:4em;">
 				<div style="float:left;width:300px;text-align:left;">
-					<form:input id="year" path="year" class="formWidth"></form:input>
+					<form:input id="year" path="year" class="formWidth"></form:input><br/>
+					<form:errors path="year" cssClass="qfError"/>
 				</div>
 				<div style="height:4em;" class="example">
 					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
@@ -98,7 +101,8 @@
 		<td  CLASS="data1">
 			<div style="height:3em;">
 				<div style="float:left; width:300px;text-align:left;">
-					<form:input id="id" path="id" class="formWidth" value="" maxlength="256"></form:input>
+					<form:input id="id" path="id" class="formWidth" value="" maxlength="256"></form:input><br/>
+					<form:errors path="id" cssClass="qfError"/>
 				</div>
 				<div style="height:4em;" class="example">
 					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
@@ -114,11 +118,13 @@
     		</div>
 		</td>
 	</tr>
-    <TR>
+    <TR class="queryControls">
 		<TD COLSPAN="3" align="left">
 			<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
 			&nbsp;&nbsp;
 			<INPUT TYPE="reset">
+			&nbsp;&nbsp;
+			<form:errors cssClass="qfError"/>
 		</TD>
     </TR>
 </TABLE>

@@ -11,48 +11,52 @@ var History = YAHOO.util.History;
 
 // this function populates the 'breadbox' with current filters
 var populateFilterSummary = function () {
-	var filterList = new YAHOO.util.Element('filterList');
-	// clear state
-	while (filterList.hasChildNodes()) {
-		filterList.removeChild(filterList.get('firstChild'));
-	}
-    clear = document.createElement("a");
-    clear.setAttribute('class', 'filterItem');
-    clear.setAttribute('id', 'clearFilter');
-    setText(clear, 'Remove All Filters');
-    filterList.appendChild(clear);
-    YAHOO.util.Event.addListener(clear, "click", clearFilter);
-
-    var vis = false;
-    
-    for (k in facets) {
-    	var inner = facets[k];
-    	var brTag = false;
-		for(v in inner) {
-    		vis = true;
-    		brTag = true;
-            el = document.createElement("a");
-            el.setAttribute('class', 'filterItem');
-            el.setAttribute('id', k + ':' + inner[v]);
-            var val = k.charAt(0).toUpperCase() + k.slice(1);
-            val = val.replace('Filter', '') + ': ' + inner[v];
-            setText(el, val);
-            filterList.appendChild(el);
-            YAHOO.util.Event.addListener(el, "click", clearFilter);
-            
-            filterList.appendChild(document.createTextNode(' '));
-		}
-		
-		if (brTag){
-			filterList.appendChild(document.createElement("br"));
-		}
-    }
-
 	var fSum = YAHOO.util.Dom.get('filterSummary');
-	if (vis){
-		YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
-	} else {
-		YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
+	
+	// clear state
+	if (!YAHOO.lang.isNull(fSum)){
+		var filterList = new YAHOO.util.Element('filterList');
+		while (filterList.hasChildNodes()) {
+			filterList.removeChild(filterList.get('firstChild'));
+		}
+	    clear = document.createElement("a");
+	    clear.setAttribute('class', 'filterItem');
+	    clear.setAttribute('id', 'clearFilter');
+	    setText(clear, 'Remove All Filters');
+	    filterList.appendChild(clear);
+	    YAHOO.util.Event.addListener(clear, "click", clearFilter);
+	
+	    var vis = false;
+	    
+	    for (k in facets) {
+	    	var inner = facets[k];
+	    	var brTag = false;
+			for(v in inner) {
+	    		vis = true;
+	    		brTag = true;
+	            el = document.createElement("a");
+	            el.setAttribute('class', 'filterItem');
+	            el.setAttribute('id', k + ':' + inner[v]);
+	            var val = k.charAt(0).toUpperCase() + k.slice(1);
+	            val = val.replace('Filter', '') + ': ' + inner[v];
+	            setText(el, val);
+	            filterList.appendChild(el);
+	            YAHOO.util.Event.addListener(el, "click", clearFilter);
+	            
+	            filterList.appendChild(document.createTextNode(' '));
+			}
+			
+			if (brTag){
+				filterList.appendChild(document.createElement("br"));
+			}
+	    }
+	
+		
+		if (vis){
+			YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
+		} else {
+			YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
+		}
 	}
 };
 
@@ -82,7 +86,6 @@ var clearFilter = function () {
 
 
 (function () {	
-
     this.titleForm = function(elLiner, oRecord, oColumn, oData) {      
         YAHOO.util.Dom.addClass( elLiner.parentNode, "yui-dt-expandablerow-trigger" );
         YAHOO.util.Dom.setStyle( elLiner, "margin-top", "1.5em" );
@@ -193,7 +196,6 @@ var clearFilter = function () {
     myPaginator.unsubscribe("changeRequest", myDataTable.onPaginatorChangeRequest);
     // ...then we hook up our custom function
     myPaginator.subscribe("changeRequest", handlePagination, myDataTable, true);
-
     // Update payload data on the fly for tight integration with latest values from server 
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
@@ -206,13 +208,13 @@ var clearFilter = function () {
         	}
         }
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
-        
-        if (totalCount == 0){
-        	totalCount = oPayload.totalRecords;
+
+        updateCount(oPayload.totalRecords);
+        var filterCount = YAHOO.util.Dom.get('filterCount');
+        if (!YAHOO.lang.isNull(filterCount)){
+        	setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
         }
         
-        updateCount(oPayload.totalRecords);
-        setText(YAHOO.util.Dom.get('filterCount'), YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
         oPayload.pagination = {
             rowsPerPage: Number(pRequest['results'][0]) || 25,
             recordOffset: Number(pRequest['startIndex'][0]) || 0
@@ -222,17 +224,38 @@ var clearFilter = function () {
             dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc" // Convert from server value to DataTable format
         };
         
-        reportButton = YAHOO.util.Dom.get('textDownload');
-        facetQuery = generateRequest(0, oPayload.sortedBy['sort'], 
-        		oPayload.sortedBy['dir'], totalCount);
-        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
+        var reportButton = YAHOO.util.Dom.get('textDownload');
+        if (!YAHOO.lang.isNull(reportButton)){
+	        facetQuery = generateRequest(0, oPayload.sortedBy['sort'], oPayload.sortedBy['dir'], totalCount);
+	        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
+        }
         
         var txt = 'Show All Abstracts';
-        setText(YAHOO.util.Dom.get('toggleAbstract'), txt);
+        var toggle = YAHOO.util.Dom.get('toggleAbstract');
+        if (!YAHOO.lang.isNull(toggle)){
+        	setText(toggle, txt);
+        }
+
         populateFilterSummary();
+        
         return true;
     };
     
+    myDataTable.subscribe("postRenderEvent", function() {
+    	var threshold = 1;
+    	if(totalCount <= threshold){
+    		i = 0;
+            var toggle = YAHOO.util.Dom.get('toggleAbstract');
+            if (!YAHOO.lang.isNull(toggle)){
+            	setText(toggle, 'Hide All Abstracts');
+            }
+    		while (i <= threshold){   			
+    			myDataTable.expandRow(i);
+    			i = i + 1;
+    		}
+    	}
+    });
+
 	updateCount = function (newCount) {
 		var countEl = YAHOO.util.Dom.get("totalCount");
 		if (!YAHOO.lang.isNull(countEl)){
@@ -242,7 +265,7 @@ var clearFilter = function () {
 	    	}
 		}
 	};
-    
+	
     // Returns a request string for consumption by the DataSource
     generateRequest = function(startIndex,sortKey,dir,results) {
         startIndex = startIndex || 0;
@@ -258,7 +281,7 @@ var clearFilter = function () {
         }
         return stateParams + facetParams;
     };
-
+    
     // Called by Browser History Manager to trigger a new state
     handleHistoryNavigation = function (request) {
     	myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);   
@@ -289,6 +312,8 @@ var clearFilter = function () {
     YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");
 
 })();
+
+
 
 function parseRequest(request){
 	var reply = {};
@@ -520,7 +545,6 @@ YAHOO.util.Event.onDOMReady(function () {
 });
 
 var resetQF = function () {
-	alert('reset');
 	var form = YAHOO.util.Dom.get("referenceQueryForm");
 	form.author.value = 'foo';
 	form.journal.value = 'foo';

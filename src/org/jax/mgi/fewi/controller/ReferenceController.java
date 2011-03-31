@@ -37,6 +37,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,9 +91,16 @@ public class ReferenceController {
 	 */
 	@RequestMapping("/summary")
 	public String referenceSummary(HttpServletRequest request, Model model,
-			@ModelAttribute ReferenceQueryForm queryForm) {
+			@ModelAttribute ReferenceQueryForm queryForm,
+			BindingResult result) {
 
-		//model.addAttribute("referenceQueryForm", queryForm);
+		parseReferenceQueryForm(queryForm, result);		
+		model.addAttribute("referenceQueryForm", queryForm);
+		
+		if (result.hasErrors()) {
+			return "reference_query";
+		}
+		
 		model.addAttribute("queryString", request.getQueryString());
 		
 
@@ -115,15 +126,22 @@ public class ReferenceController {
 	public String referenceSummaryReport(
 			HttpServletRequest request, Model model,
 			@ModelAttribute ReferenceQueryForm query,
-			@ModelAttribute Paginator page) {
+			@ModelAttribute Paginator page,
+			BindingResult result) {
 				
 		logger.debug("summaryReport");
 		
-		SearchResults<Reference> searchResults =  this.getSummaryResults(request, query, page);
+		SearchResults<Reference> searchResults;
+		try {
+			searchResults = this.getSummaryResults(request, query, page, result);
+	        model.addAttribute("results", searchResults.getResultObjects());
 
-        model.addAttribute("results", searchResults.getResultObjects());
+			return "referenceSummaryReport";			
+		} catch (BindException be) {
+			logger.debug("bind error");
+			return "reference_query";
+		}
 
-		return "referenceSummaryReport";
 	}
 	
 	/* 
@@ -135,10 +153,11 @@ public class ReferenceController {
 	public @ResponseBody JsonSummaryResponse<ReferenceSummary> referenceSummaryJson(
 			HttpServletRequest request, 
 			@ModelAttribute ReferenceQueryForm query,
-			@ModelAttribute Paginator page) {
+			@ModelAttribute Paginator page,
+			BindingResult result) throws BindException {
 					
 		logger.debug("json");
-		SearchResults<Reference> searchResults = this.getSummaryResults(request, query, page);
+		SearchResults<Reference> searchResults = this.getSummaryResults(request, query, page, result);
 		
         List<Reference> refList = searchResults.getResultObjects();
         
@@ -197,7 +216,8 @@ public class ReferenceController {
 	private SearchResults<Reference> getSummaryResults(
 			HttpServletRequest request, 
 			@ModelAttribute ReferenceQueryForm query,
-			@ModelAttribute Paginator page){
+			@ModelAttribute Paginator page,
+			BindingResult result) throws BindException{
 		
 		logger.debug("getSummaryResults query: " + query.toString());
 		
@@ -209,12 +229,17 @@ public class ReferenceController {
 		params.setIncludeMetaScore(true);
 		params.setPaginator(page);		
 		params.setSorts(this.parseSorts(request));
-		params.setFilter(this.parseReferenceQueryForm(query));
-
-		// perform query and return results as json
-		logger.debug("params parsed");
+		params.setFilter(this.parseReferenceQueryForm(query, result));
 		
-        return referenceFinder.searchSummaryReferences(params);
+		// perform query and return results as json
+		logger.debug("params parsed");		
+		
+		if (result.hasErrors()){
+			logger.debug("bind error");
+			throw new BindException(result);
+		} else {
+			return referenceFinder.searchSummaryReferences(params);
+		}
 	}
 	
 	/*
@@ -227,7 +252,7 @@ public class ReferenceController {
 			HttpServletRequest request, Model model) {
 		
 		model.addAttribute("queryString", "id=" + refID);		
-		return "reference_summary";		
+		return "reference_detail";		
 	}
 	
 	/* 
@@ -361,7 +386,7 @@ public class ReferenceController {
 	 * This method parses the ReferenceQueryForm bean and constructs a Filter 
 	 * object to represent the query.  
 	 */
-	private Filter parseReferenceQueryForm(ReferenceQueryForm query){
+	private Filter parseReferenceQueryForm(ReferenceQueryForm query, BindingResult result){
 		// start filter list for query filters
 		List<Filter> queryList = new ArrayList<Filter>();
 		// start filter list to store facet filters
@@ -373,9 +398,10 @@ public class ReferenceController {
 		// are added to queryList.  
 		
 		//build author query filter
-		if(query.getAuthor() != null && !"".equals(query.getAuthor())){
+		String authorText = query.getAuthor().trim();
+		if(authorText != null && !"".equals(authorText)){
 
-			List<String> authors = this.parseList(query.getAuthor().trim(), ";");
+			List<String> authors = this.parseList(authorText, ";");
 
 			String scope = query.getAuthorScope();
 			
@@ -392,9 +418,10 @@ public class ReferenceController {
 		}
 
 		// build journal query filter
-		if(query.getJournal() != null && !"".equals(query.getJournal())){
+		String journalText = query.getJournal().trim();
+		if(journalText != null && !"".equals(journalText)){
 			
-			List<String> journals = this.parseList(query.getJournal().trim(), ";");
+			List<String> journals = this.parseList(journalText, ";");
 
 			queryList.add(new Filter(SearchConstants.REF_JOURNAL, 
 					journals, Filter.OP_IN));
@@ -405,23 +432,32 @@ public class ReferenceController {
 		if(year != null && !"".equals(year)){
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){
-				// TODO validate years are numbers	
-				
 				List<String> years = this.parseList(year, "-");
-
-				if (years.size() == 2){
+				if (years.size() > 2){
+					result.addError(
+							new FieldError("referenceQueryForm", 
+									"year", 
+									"* Invalid range format"));
+				} else if (years.size() == 2){
 					logger.debug("year range: " + years.get(0) + "-" + years.get(1));
-					Integer one = new Integer(years.get(0));
-					Integer two = new Integer(years.get(1));
-					
-					if (one > two){
-						years.set(0, two.toString());
-						years.set(1, one.toString());
+					try{
+						Integer one = new Integer(years.get(0));
+						Integer two = new Integer(years.get(1));
+						
+						if (one > two){
+							years.set(0, two.toString());
+							years.set(1, one.toString());
+						}
+						queryList.add(new Filter(SearchConstants.REF_YEAR, 
+								years.get(0), Filter.OP_GREATER_OR_EQUAL));
+						queryList.add(new Filter(SearchConstants.REF_YEAR, 
+								years.get(1), Filter.OP_LESS_OR_EQUAL));
+					} catch (NumberFormatException nfe){
+						result.addError(
+								new FieldError("referenceQueryForm", 
+										"year", 
+										"* Invalid number format"));
 					}
-					queryList.add(new Filter(SearchConstants.REF_YEAR, 
-							years.get(0), Filter.OP_GREATER_OR_EQUAL));
-					queryList.add(new Filter(SearchConstants.REF_YEAR, 
-							years.get(1), Filter.OP_LESS_OR_EQUAL));
 				} else {
 					if (rangeLoc == 0){
 						logger.debug("year <= " + years.get(0));
@@ -433,26 +469,34 @@ public class ReferenceController {
 								years.get(0), Filter.OP_GREATER_OR_EQUAL));
 					}
 				}
-				// TODO error: too many years entered
 			} else {
-				queryList.add(new Filter(SearchConstants.REF_YEAR, 
-						year, Filter.OP_EQUAL));
+				try{
+					// only used to validate number format
+					Integer one = new Integer(year);
+					queryList.add(new Filter(SearchConstants.REF_YEAR, 
+							year, Filter.OP_EQUAL));
+				} catch (NumberFormatException nfe){
+					result.addError(
+							new FieldError("referenceQueryForm", 
+									"year", 
+									"* Invalid number format"));
+				}
 			}
 		}
 		
 		// build text query filter
-		if(query.getText() != null && !"".equals(query.getText())){
+		String textField = query.getText().trim();
+		if(textField != null && !"".equals(textField)){
 			Filter tf = new Filter();
 			List<Filter> textFilters = new ArrayList<Filter>();
-			
-			String text = query.getText();
+
 			if(query.isInAbstract()){
 				textFilters.add(new Filter(SearchConstants.REF_TEXT_ABSTRACT, 
-						text, Filter.OP_CONTAINS));
+						textField, Filter.OP_CONTAINS));
 			}
 			if(query.isInTitle()){
 				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE, 
-						text, Filter.OP_CONTAINS));
+						textField, Filter.OP_CONTAINS));
 			}
 			if (textFilters.size() == 1) {
 				queryList.add(textFilters.get(0));
@@ -523,18 +567,27 @@ public class ReferenceController {
 		
 		logger.debug("build params");
 		
-		// TODO id invalid case where ID param and others entered
-		// valid parameters entered, build and return Filter 
+		List<String> ids = new ArrayList<String>();
+		String idtext = query.getId().trim();
+		if (idtext != null && !"".equals(idtext)){
+			ids = this.parseList(idtext, ";");
+		}
+		
 		if (queryList.size() > 0){
-			Filter f = new Filter();
-			f.setFilterJoinClause(Filter.FC_AND);
-			queryList.addAll(facetList);
-			f.setNestedFilters(queryList);
-			return f;
+			if (ids.size() > 0){
+				result.addError(
+						new FieldError("referenceQueryForm", 
+								"id", 
+								"* Invalid with other parameters"));
+			} else {
+				Filter f = new Filter();
+				f.setFilterJoinClause(Filter.FC_AND);
+				queryList.addAll(facetList);
+				f.setNestedFilters(queryList);
+				return f;
+			}
 		// none yet, so check the id query and build it
-		} else if (query.getId() != null && !"".equals(query.getId())){
-			
-			List<String> ids = this.parseList(query.getId().trim(), ";");
+		} else if (ids.size() > 0){			
 			List<String> cleanIds = new ArrayList<String>();
 			for (String id : ids) {
 				if (id.toLowerCase().startsWith("pmid:")){
@@ -551,7 +604,9 @@ public class ReferenceController {
 			f.setNestedFilters(facetList);
 			return f;
 		} else {
-			//TODO no query params
+			result.addError(
+				new ObjectError("referenceQueryForm", 
+						"* Please enter some search parameters"));
 		}
 		
 		return new Filter();
@@ -609,12 +664,13 @@ public class ReferenceController {
 	 */
 	@RequestMapping("/facet/author")
 	public @ResponseBody Map<String, List<String>> facetAuthor(
-			@ModelAttribute ReferenceQueryForm query) {
+			@ModelAttribute ReferenceQueryForm query,
+			BindingResult result) {
 			
 		logger.debug(query.toString());
 		
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseReferenceQueryForm(query));
+		params.setFilter(this.parseReferenceQueryForm(query, result));
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
@@ -628,12 +684,13 @@ public class ReferenceController {
 	 */
 	@RequestMapping("/facet/journal")
 	public @ResponseBody Map<String, List<String>> facetJournal(
-			@ModelAttribute ReferenceQueryForm query) {
+			@ModelAttribute ReferenceQueryForm query,
+			BindingResult result) {
 			
 		logger.debug(query.toString());
 		
 		SearchParams params = new SearchParams();		
-		params.setFilter(this.parseReferenceQueryForm(query));
+		params.setFilter(this.parseReferenceQueryForm(query, result));
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
@@ -646,12 +703,13 @@ public class ReferenceController {
 	 */
 	@RequestMapping("/facet/year")
 	public @ResponseBody Map<String, List<String>> facetYear(
-			@ModelAttribute ReferenceQueryForm query) {
+			@ModelAttribute ReferenceQueryForm query,
+			BindingResult result) {
 			
 		logger.debug(query.toString());
 		
 		SearchParams params = new SearchParams();		
-		params.setFilter(this.parseReferenceQueryForm(query));
+		params.setFilter(this.parseReferenceQueryForm(query, result));
 	
 		// perform query and return results as json
 		logger.debug("params parsed");
@@ -664,12 +722,13 @@ public class ReferenceController {
 	 */
 	@RequestMapping("/facet/data")
 	public @ResponseBody Map<String, List<String>> facetData(
-			@ModelAttribute ReferenceQueryForm query) {
+			@ModelAttribute ReferenceQueryForm query,
+			BindingResult result) {
 			
 		logger.debug(query.toString());
 		
 		SearchParams params = new SearchParams();		
-		params.setFilter(this.parseReferenceQueryForm(query));
+		params.setFilter(this.parseReferenceQueryForm(query, result));
 	
 		// perform query and return results as json
 		logger.debug("params parsed");

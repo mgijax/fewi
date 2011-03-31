@@ -166,7 +166,6 @@ ${templateBean.templateBodyStartHtml}
 		var myAnim = new YAHOO.util.Anim('qwrap', attributes);
 		myAnim.duration = 0.5;
 		myAnim.animate();
-
 	};
 
 	YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
