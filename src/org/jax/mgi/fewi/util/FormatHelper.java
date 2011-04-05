@@ -290,6 +290,44 @@ public class FormatHelper
 		return providerForward;
 	}
 
-
+    /** examine s, and upon finding an <a href> tag, set its target to be
+     * that given in the parameter.
+     */
+	public static String setTarget (String s, String target) {
+		StringBuffer t = new StringBuffer();
+		String sLower = s.toLowerCase();
+		
+		int ltPos = sLower.indexOf("<a href");
+		int gtPos = sLower.indexOf(">", ltPos);
+		int targetPos = sLower.indexOf("target=");
+		
+		// Did we find a proper <a href...> set of angle brackets?  If not, bail.
+		if ((ltPos < 0) || (gtPos < ltPos)) {
+			return s;
+		}
+		
+		// if we don't already have a target, then we can just insert one
+		if ((targetPos < 0) || (targetPos > gtPos)) {
+			t.append(s.substring(0, gtPos));
+			t.append(" target='" + target + "'");
+			t.append(s.substring(gtPos));
+			return t.toString();
+		}
+		
+		// otherwise, we need to modify an existing target
+		t.append (s.substring(0, targetPos));
+		t.append (s.substring(targetPos).replaceFirst(
+			"[tT][Aa][rR][gG][eE][tT]= *['\"][^'\"]*['\"]", 
+			"target='" + target + "'"));
+		return t.toString();
+    }
+    
+    /** examine s, and upon finding an <a href> tag, set its target to be a
+     * new window
+     */
+    public static String setNewWindow (String s) {
+    	return setTarget(s, "_new");
+    }
+    
 } // end of class FormatHelper
 
