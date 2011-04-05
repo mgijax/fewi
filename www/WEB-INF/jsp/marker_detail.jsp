@@ -54,12 +54,27 @@ ${templateBean.templateBodyStartHtml}
       ID
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      <font size="+2">${marker.symbol}</font><br/>
-      ${marker.name}<br/>
+      <font size="+2"><B>${marker.symbol}</B><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
+      </font><br/>
+      <B>${marker.name}</B><br/>
       ${marker.primaryID}
     </td>
   </tr>
 
+  <!-- ROW1a -->
+  <c:if test="${not empty marker.aliases}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        <c:if test="${marker.markerType == 'Gene'}">STS</c:if>
+        <c:if test="${marker.markerType != 'Gene'}">STS for</c:if>
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+        <c:forEach var="alias" items="${marker.aliases}" varStatus="status">
+          <a href="${configBean.FEWI_URL}marker/${alias.aliasID}">${alias.aliasSymbol}</a><c:if test="${!status.last}">, </c:if>
+        </c:forEach>
+      </td>
+    </tr>
+  </c:if>
 
   <!-- ROW2 -->
   <c:if test="${not empty marker.synonyms}">
@@ -89,20 +104,43 @@ ${templateBean.templateBodyStartHtml}
 
   <!-- ROW4 -->
   <c:set var="hasGeneticLocation" value="0"/>
-  <c:if test="${not empty marker.preferredCentimorgans}">
-    <tr >
+  <c:if test="${(not empty marker.preferredCentimorgans) 
+  		or (not empty marker.preferredCytoband) 
+  		or (marker.countOfMappingExperiments > 0)}">
+    <tr>
       <td class="<%=leftTdStyles.getNext() %>">
         Genetic&nbsp;Map
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-        Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
-        <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<br/>
-        <c:if test="${(marker.preferredCentimorgans.chromosome != 'UN') and (marker.preferredCentimorgans.cmOffset > 0.0)}">
-          <c:set var="hasGeneticLocation" value="1"/>
-          <a href="#">Detailed Genetic Map &#177; 1 cM</a>
+        <c:if test="${not empty marker.preferredCentimorgans}">
+          <c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
+            Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
+            <c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
+              <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<br/>
+              <c:set var="hasGeneticLocation" value="1"/>
+              <a href="#">Detailed Genetic Map &#177; 1 cM</a>
+            </c:if>
+            <c:if test="${marker.preferredCentimorgans.cmOffset == -1.0}">
+			  Syntenic
+            </c:if>
+          </c:if>
+          <c:if test="${marker.preferredCentimorgans.chromosome == 'UN'}">
+            Chromosome Unknown<br/>
+          </c:if>
+        </c:if>
+        <c:if test="${(empty marker.preferredCentimorgans) and (not empty marker.preferredCytoband)}">
+          <c:if test="${marker.preferredCytoband.chromosome != 'UN'}">
+            Chromosome ${marker.preferredCytoband.chromosome}<br/>
+          </c:if>
+          <c:if test="${marker.preferredCytoband.chromosome == 'UN'}">
+            Chromosome Unknown<br/>
+          </c:if>
+          cytoband ${marker.preferredCytoband.cytogeneticOffset}<br/>
         </c:if>
         <p/>
-        Mapping data(<a href="#">${marker.countOfMappingExperiments}</a>)
+        <c:if test="${marker.countOfMappingExperiments > 0}">
+          Mapping data(<a href="#">${marker.countOfMappingExperiments}</a>)
+        </c:if>
       </td>
     </tr>
   </c:if>
@@ -123,8 +161,13 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=rightTdStyles.getNext() %>">
         <table width="100%">
         <tr><td>
-        Chr${chromosome}:${startCoord}-${endCoord} 
-        ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
+        Chr${chromosome}:${startCoord}-${endCoord}
+        <c:if test="${not empty marker.preferredCoordinates}"> 
+          ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
+        </c:if>
+        <c:if test="${empty marker.preferredCoordinates}"> 
+          ${marker.preferredCoordinates.mapUnits}<br/>
+        </c:if>
         (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/>
         <p/>
         <c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
@@ -258,7 +301,7 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW8 -->
-  <c:if test="${not empty marker.alleleAssociations}">
+  <c:if test="${(not empty marker.alleleAssociations) and (marker.countOfAlleles > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Alleles<br/>and<br/>phenotypes
@@ -486,10 +529,10 @@ ${templateBean.templateBodyStartHtml}
         <c:set var="earliestRef" value="${marker.earliestReference}"/>
         <c:set var="latestRef" value="${marker.latestReference}"/>
 	    <c:if test="${not empty earliestRef}">(Earliest) <a href="${configBean.FEWI_URL}reference/${earliestRef.jnumID}">${earliestRef.jnumID}</a>
-		  ${earliestRef.longCitation}<br/>
+		  ${earliestRef.shortCitation}<br/>
 		</c:if>
 		<c:if test="${not empty latestRef}">(Latest) <a href="${configBean.FEWI_URL}reference/${latestRef.jnumID}">${latestRef.jnumID}</a>
-		  ${latestRef.longCitation}<br/>
+		  ${latestRef.shortCitation}<br/>
 		</c:if>
 		All references(<a href="#">${marker.countOfReferences}</a>)<br/>
       </td>
