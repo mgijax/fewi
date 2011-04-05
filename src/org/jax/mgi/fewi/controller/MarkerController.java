@@ -13,6 +13,7 @@ import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.ProviderLinker;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -20,9 +21,12 @@ import org.jax.mgi.fewi.config.ContextLoader;
 // data model objects
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
+import mgi.frontend.datamodel.MarkerLocation;
+import mgi.frontend.datamodel.MarkerSequenceAssociation;
 import mgi.frontend.datamodel.SequenceSource;
 import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.MarkerIDOtherMarker;
 
 
 /*--------------------------------------*/
@@ -38,6 +42,7 @@ import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.ProviderLinker;
 
 // external
@@ -266,78 +271,98 @@ public class MarkerController {
         
         Iterator<MarkerID> it = marker.getOtherIDs().iterator();
         MarkerID myID;
+        String myLink;
         String logicaldb;
         String otherLinks;
-        String vegaGeneModelID = null;
-        String ensemblGeneModelID = null;
-        String entrezGeneID = null;
+    	MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
+    	boolean isGeneModelID = false;
         
         while (it.hasNext()) {
         	myID = it.next();
         	logicaldb = myID.getLogicalDB();
+        	myLink = idLinker.getLink(myID);
+        	
+        	// for gene model sequences, we need to add evidence links where possible
         	
         	if ("VEGA Gene Model".equals(logicaldb)) {
-        		vegaGeneModelID = myID.getAccID();
+        		myLink = myLink + " (" + FormatHelper.setNewWindow(
+        				idLinker.getLink("VEGA Gene Model Evidence", 
+        						myID.getAccID(), "Evidence")) + ")";
+        		isGeneModelID = true;
         	} else if ("Ensembl Gene Model".equals(logicaldb)) {
-        		ensemblGeneModelID = myID.getAccID();
-        	} else if ("Entrez Gene".equals(logicaldb)) {
-        		entrezGeneID = myID.getAccID();
+        		myLink = myLink + " (" + FormatHelper.setNewWindow( 
+        				idLinker.getLink("Ensembl Gene Model Evidence", 
+        						myID.getAccID(), "Evidence")) + ")";
+        		isGeneModelID = true;
+        	} else if ("Entrez Gene".equals(logicaldb) && (ncbiEvidenceID != null)) {
+           		myLink = myLink + " (" + FormatHelper.setNewWindow( 
+           			idLinker.getLink("NCBI Gene Model Evidence", 
+           				myID.getAccID(), "Evidence").replace ("^^^^",
+           				ncbiEvidenceID.getAccID())) + ")";
+        		isGeneModelID = true;
+        	}
+
+        	// special note about gene model IDs which overlap other markers, if needed
+        	
+    		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+        	if (isGeneModelID) {
+        		List<MarkerIDOtherMarker> otherMarkers = myID.getOtherMarkers();
+        		MarkerIDOtherMarker otherMarker;
+        		
+        		if ((otherMarkers != null) && (otherMarkers.size() > 0)) {
+        			myLink = myLink + " (also overlaps ";
+        			Iterator<MarkerIDOtherMarker> markerIterator = otherMarkers.iterator();
+        			while (markerIterator.hasNext()) {
+        				otherMarker = markerIterator.next();
+        				
+        				myLink = myLink + "<a href='" + fewiUrl + "marker/" 
+        					+ otherMarker.getPrimaryID() + "'>" 
+        					+ otherMarker.getSymbol() + "</a>";
+        				
+        				if (markerIterator.hasNext()) {
+        					myLink = myLink + ", ";
+        				}
+        			}
+        			myLink = myLink + ") ";
+        		}
         	}
         	
         	if (!otherIDs.containsKey(logicaldb)) {
         		logicalDBs.add(logicaldb);
-        		otherIDs.put(logicaldb, idLinker.getLink(myID));
+        		otherIDs.put(logicaldb, myLink);
         	} else {
         		otherLinks = otherIDs.get(logicaldb);
-        		otherIDs.put(logicaldb, otherLinks + ", " + idLinker.getLink(myID));
+        		otherIDs.put(logicaldb, otherLinks + ", " + myLink);
         	}
-        }
-        
-        // various tweaks to add evidence links for three logical dbs 
-        if (vegaGeneModelID != null) {
-        	otherIDs.put("VEGA Gene Model", 
-        		otherIDs.get("VEGA Gene Model") + " (" +
-        		idLinker.getLink("VEGA Gene Model Evidence", vegaGeneModelID,
-        				"Evidence") + ")");
-        }
-        if (ensemblGeneModelID != null) {
-        	otherIDs.put("Ensembl Gene Model", 
-        		otherIDs.get("Ensembl Gene Model") + " (" +
-        		idLinker.getLink("Ensembl Gene Model Evidence", 
-        				ensemblGeneModelID,	"Evidence") + ")");
-        }
-        if (entrezGeneID != null) {
-        	MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
-        	if (ncbiEvidenceID != null) {
-        		otherIDs.put("Entrez Gene", otherIDs.get("Entrez Gene") + " (" +
-        			idLinker.getLink("NCBI Gene Model Evidence", entrezGeneID,
-        				"Evidence").replace ("^^^^", ncbiEvidenceID.getAccID())
-        				+ ")");
-        	}
-        }
+        }        
         
         mav.addObject ("otherIDs", otherIDs);
         mav.addObject ("logicalDBs", logicalDBs);
         
         // determine if we need a KOMP linkout (complex rules, so better in
-        // Java than JSTL); for a link we must have:
-        // 1. marker symbol of only 1 letter or an uppercase letter or number
-        // 2. marker type of Pseudogene or Gene
-        // 3. status not withdrawn
+        // Java than JSTL); for a link we must have (new per TR10311):
+        // 1. has marker type of Pseudogene or Gene
+        // 2. has bp coordinates
+        // 3. has a strand
+        // 4. has at least one sequence
         
-        String symbol = marker.getSymbol();
         String markerType = marker.getMarkerType();
-        if ((symbol.length() == 1) || symbol.matches("^[A-Z0-9].*")) {
-        	if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
-        		if (!marker.getStatus().equals("withdrawn")) {
-        			mav.addObject ("needKompLink", "yes");
-        			otherIDs.put("International Mouse Knockout Project Status", 
-        				idLinker.getLink("KnockoutMouse", marker.getPrimaryID(),
-        						marker.getSymbol()) );
-        			logicalDBs.add("International Mouse Knockout Project Status");
-        		}
-        	}
-        }
+       	MarkerLocation location = marker.getPreferredCoordinates();
+       	List<MarkerSequenceAssociation> seqs = marker.getSequenceAssociations();
+       	
+        if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
+       		if ((location != null) &&
+       				(location.getStartCoordinate() != null) &&
+       				(location.getEndCoordinate() != null) &&
+       				(location.getStrand() != null) &&
+       				(seqs != null) && (seqs.size() > 0)	) {
+       			mav.addObject ("needKompLink", "yes");
+       			otherIDs.put("International Mouse Knockout Project Status", 
+       				idLinker.getLink("KnockoutMouse", marker.getPrimaryID(),
+       						marker.getSymbol()) );
+       			logicalDBs.add("International Mouse Knockout Project Status");
+       		}
+       	}
         return mav;
     }
 
@@ -544,7 +569,8 @@ public class MarkerController {
     }
 
     /** return a List comparable to 'annotations' but with the duplicate
-     * terms stripped out.
+     * terms stripped out.  Also strip out any annotations with a NOT
+     * qualifier.
      */
     private List<mgi.frontend.datamodel.Annotation> noDuplicates (
     		List<mgi.frontend.datamodel.Annotation> annotations) {
@@ -565,8 +591,13 @@ public class MarkerController {
     	while (it.hasNext()) {
     		annot = it.next();
     		if (!done.containsKey(annot.getTerm())) {
-    			done.put (annot.getTerm(), "");
-    			a.add (annot);
+    			// if we have no qualifier or we have a qualifier that's 
+    			// not "NOT" then we ca use this term
+    			if ((annot.getQualifier() == null) || 
+    				(!annot.getQualifier().toLowerCase().equals("not"))) {
+    					done.put (annot.getTerm(), "");
+    					a.add (annot);
+    			}
     		}
     	}
     	return a;
