@@ -5,19 +5,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-
-// Datamodel Classes
 
 import mgi.frontend.datamodel.GxdLitAssayTypeAgePair;
 import mgi.frontend.datamodel.GxdLitIndexRecord;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
-
-import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.GxdLitFinder;
+import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -32,9 +30,8 @@ import org.jax.mgi.fewi.summary.GxdLitAgeAssayTypePairTableCount;
 import org.jax.mgi.fewi.summary.GxdLitAssayTypeSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitGeneSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitReferenceSummaryRow;
-
+import org.jax.mgi.fewi.util.Highlighter;
 import org.jax.mgi.fewi.util.StyleAlternator;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +123,7 @@ public class GXDLitController {
 
         GxdLitQueryForm queryForm = new GxdLitQueryForm();
         
-        GxdLitGeneSummaryRow record = new GxdLitGeneSummaryRow(indexRecordList.get(0), queryForm);
+        GxdLitGeneSummaryRow record = new GxdLitGeneSummaryRow(indexRecordList.get(0), queryForm, null);
         List <GxdLitGeneSummaryRow> detailList = new ArrayList<GxdLitGeneSummaryRow> ();
         detailList.add(record);
         
@@ -197,7 +194,7 @@ public class GXDLitController {
         logger.debug("Got the record list");
         
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
         
         // Get the total count of references and records.
         
@@ -288,7 +285,7 @@ public class GXDLitController {
         logger.debug("Got the record list");
         
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
         
         // Get the total count of references and records.
         
@@ -350,7 +347,7 @@ public class GXDLitController {
         logger.debug("Got the record list");
         
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
         
         // Get the total count of references and records.
         
@@ -397,11 +394,25 @@ public class GXDLitController {
         
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(queryForm));
+		params.setIncludeSetMeta(true);
+		params.setIncludeMetaHighlight(true);
+		params.setIncludeRowMeta(true);
+		params.setIncludeMetaScore(true);
         params.setPageSize(gxdLimit);
         
         logger.debug("Hitting the finder.");
         
         SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+
+        Map<String, Set<String>> highlighting = results.getResultSetMeta().getSetHighlights();
+        
+        Highlighter textHl = null;
+        
+        logger.debug("Checking highlighting.");
+        
+        if (highlighting.containsKey(SearchConstants.GXD_LIT_LONG_CITATION)){
+        	textHl = new Highlighter(highlighting.get(SearchConstants.GXD_LIT_LONG_CITATION));
+        }
         
         logger.debug("Building the summary rows");
         
@@ -410,7 +421,7 @@ public class GXDLitController {
         logger.debug("Got the record list");
         
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm);
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, textHl);
         
         // Get the total count of references and records.
         
@@ -446,7 +457,7 @@ public class GXDLitController {
     // private methods
     //--------------------------------------------------------------------//
 
-    private List<GxdLitGeneSummaryRow> generateGeneSection(List<GxdLitIndexRecord> recordList, GxdLitQueryForm queryForm) {
+    private List<GxdLitGeneSummaryRow> generateGeneSection(List<GxdLitIndexRecord> recordList, GxdLitQueryForm queryForm, Highlighter textHl) {
 	    
     	logger.debug("Generating the Gene Section");
     	
@@ -478,7 +489,7 @@ public class GXDLitController {
 	    				}
 	    			}
 	    			
-	    			row = new GxdLitGeneSummaryRow(record, queryForm);
+	    			row = new GxdLitGeneSummaryRow(record, queryForm, textHl);
 	    			symbol = record.getMarkerSymbol();
 	    			first = Boolean.FALSE;
 	    		}
