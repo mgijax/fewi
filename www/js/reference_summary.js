@@ -228,7 +228,13 @@ var clearFilter = function () {
         
         var reportButton = YAHOO.util.Dom.get('textDownload');
         if (!YAHOO.lang.isNull(reportButton)){
-	        facetQuery = generateRequest(0, oPayload.sortedBy['sort'] || 'score', oPayload.sortedBy['dir'] || 'desc', totalCount);
+        	var sort = 'score';
+        	var dir = 'desc';
+        	if (!YAHOO.lang.isUndefined(oPayload.sortedBy)){
+        		sort = oPayload.sortedBy['sort'];
+        		dir = oPayload.sortedBy['dir'];
+        	}
+	        facetQuery = generateRequest(0, sort, dir, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
         }
         
