@@ -26,12 +26,12 @@ public class AlleleFinder {
 
 
     /////////////////////////////////////////////////////////////////////////
-    //  Retrieval of a sequence, for a given ID
+    //  Retrieval of an allele, for a given ID
     /////////////////////////////////////////////////////////////////////////
 
 	public SearchResults<Allele> getAlleleByID(SearchParams searchParams) {
 
-		logger.info("SequenceFinder.getSequenceByID()");
+		logger.info("AlleleFinder.getAlleleByID()");
 
 		// result object to be returned
 		SearchResults<Allele> searchResults = new SearchResults<Allele>();
