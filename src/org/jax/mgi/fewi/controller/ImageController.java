@@ -5,9 +5,10 @@ import java.util.*;
 /*------------------------------*/
 /* controller specific
 /*------------------------------*/
-import org.jax.mgi.fewi.forms.FooQueryForm;
+
 // fewi
 import org.jax.mgi.fewi.finder.ImageFinder;
+import org.jax.mgi.fewi.finder.AlleleFinder;
 
 // data model objects
 import mgi.frontend.datamodel.Image;
@@ -15,6 +16,8 @@ import mgi.frontend.datamodel.ImageAllele;
 import mgi.frontend.datamodel.ImagePane;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.AlleleSynonym;
 
 
 /*--------------------------------------*/
@@ -68,10 +71,62 @@ public class ImageController {
     @Autowired
     private ImageFinder imageFinder;
 
+    @Autowired
+    private AlleleFinder alleleFinder;
 
     //--------------------------------------------------------------------//
     // public methods
     //--------------------------------------------------------------------//
+
+    //-------------------------------//
+    // Pheno Image Summary by Allele
+    //-------------------------------//
+    @RequestMapping(value="/phenoSummary/allele/{alleleID}")
+    public ModelAndView phenoImageSummeryByAllele(
+ 		                   @PathVariable("alleleID") String alleleID)
+    {
+        logger.debug("->phenoImageSummeryByAllele started");
+
+        ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
+
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter alleleIdFilter = new Filter(SearchConstants.ALL_ID, alleleID);
+        searchParams.setFilter(alleleIdFilter);
+
+        // find the requested allele for header
+        SearchResults<Allele> searchResults
+          = alleleFinder.getAlleleByID(searchParams);
+
+        List<Allele> alleleList = searchResults.getResultObjects();
+
+        // there can be only one...
+        if (alleleList.size() < 1) { // none found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Allele Found");
+            return mav;
+        }
+        if (alleleList.size() > 1) { // dupe found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        // success - we have a single object
+
+        // pull out the allele, and place into the mav
+        Allele allele = alleleList.get(0);
+        mav.addObject("allele", allele);
+
+        // derive the synonym list, if the allele has any
+        mav.addObject("synonyms", allele.getSynonyms());
+
+//        Set<AlleleSynonym> alleleSynonyms = allele.getSynonyms();
+
+
+
+        return mav;
+    }
+
 
 
     //--------------------//
@@ -87,7 +142,7 @@ public class ImageController {
         Filter imageIdFilter = new Filter(SearchConstants.IMG_ID, imageID);
         searchParams.setFilter(imageIdFilter);
 
-        // find the requested foo
+        // find the requested image
         SearchResults searchResults
           = imageFinder.getImageByID(searchParams);
         List<Image> imageList = searchResults.getResultObjects();
@@ -145,7 +200,7 @@ public class ImageController {
         Filter imageIdFilter = new Filter(SearchConstants.IMG_ID, imageID);
         searchParams.setFilter(imageIdFilter);
 
-        // find the requested foo
+        // find the requested image
         SearchResults searchResults
           = imageFinder.getImageByID(searchParams);
         List<Image> imageList = searchResults.getResultObjects();
