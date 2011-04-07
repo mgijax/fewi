@@ -104,8 +104,7 @@ var clearFilter = function () {
         {key:"journal", label:"Journal", sortable:true, width:100},
         {key:"year", label:"Year", sortable:true, width:30},     
         {key:"curatedData", label:"Curated Data", sortable:false, width:225},
-        {key:"vol", label:"Vol(Iss)Pg", sortable:false, width:85},
-        {key:"score", label:"Rank", sortable:true, width:75}
+        {key:"vol", label:"Vol(Iss)Pg", sortable:false, width:85}
     ];
 
     // DataSource instance
@@ -114,7 +113,6 @@ var clearFilter = function () {
     myDataSource.responseSchema = {
         resultsList: "summaryRows",
         fields: [
-            {key:"score"},
 			{key:"id"},
             {key:"journal"},
             {key:"title"},
@@ -173,7 +171,7 @@ var clearFilter = function () {
         // while preserving existing pagination rows-per-page
         // As a best practice, a new sort will reset to page 0
         var newState = generateRequest(0, oColumn.key, sDir, this.get("paginator").getRowsPerPage());
-
+        
         // Pass the state along to the Browser History Manager
         History.navigate("myDataTable", newState);
     };
@@ -219,14 +217,18 @@ var clearFilter = function () {
             rowsPerPage: Number(pRequest['results'][0]) || 25,
             recordOffset: Number(pRequest['startIndex'][0]) || 0
         };
-        oPayload.sortedBy = {
-            key: pRequest['sort'][0] || "year",
-            dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc" // Convert from server value to DataTable format
-        };
+        
+        if (pRequest['sort'][0] != 'score'){       	
+	        oPayload.sortedBy = {
+	            key: pRequest['sort'][0] || "year",
+	            dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc" // Convert from server value to DataTable format
+	        };
+        }
+
         
         var reportButton = YAHOO.util.Dom.get('textDownload');
         if (!YAHOO.lang.isNull(reportButton)){
-	        facetQuery = generateRequest(0, oPayload.sortedBy['sort'], oPayload.sortedBy['dir'], totalCount);
+	        facetQuery = generateRequest(0, oPayload.sortedBy['sort'] || 'score', oPayload.sortedBy['dir'] || 'desc', totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
         }
         
@@ -365,10 +367,6 @@ YAHOO.util.Event.onDOMReady(function () {
 	var handleFailure = function(o) {
 		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">';
 		alert("Submission failed: " + o.status);
-	};
-	
-	var handleCancel = function(o) {
-		alert('cancelEvent');
 	};
 
 	// Instantiate the filter Dialog
