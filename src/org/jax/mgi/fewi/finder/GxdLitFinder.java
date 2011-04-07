@@ -73,7 +73,9 @@ public class GxdLitFinder {
         
         logger.debug("Right before the request");
         
-        recordList = gxdLitIndexGatherer.get(searchResults.getResultKeys());
+        if (! searchResults.getResultKeys().isEmpty()) {
+        	recordList = gxdLitIndexGatherer.get(searchResults.getResultKeys());
+        }
         
         logger.debug("Got past the hibernate request");
               
