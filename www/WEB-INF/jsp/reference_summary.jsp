@@ -132,43 +132,14 @@ ${templateBean.templateBodyStartHtml}
 	var fewiurl = "${configBean.FEWI_URL}";
 	var querystring = "${queryString}";
 	var defaultSort = "${defaultSort}";
+	var qDisplay = true;
 </script>
-
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_summary.js"></script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_query.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_summary.js"></script>
 
-<script type="text/javascript">
-	var qDisplay = true;
-	var toggleQF = function() {
-        var qf = YAHOO.util.Dom.get('qwrap');
-        var toggleLink = YAHOO.util.Dom.get('toggleQF');
-        var toggleImg = YAHOO.util.Dom.get('toggleImg');
-        
-        var attributes = { height: { to: 375 }};
-        var height = '';
 
-        if (!qDisplay){
-        	attributes = { height: { to: 0  }};
-        	setText(toggleLink, "Click to modify search");
-        	YAHOO.util.Dom.removeClass(toggleImg, 'qfCollapse');
-        	YAHOO.util.Dom.addClass(toggleImg, 'qfExpand');
-        	qDisplay = true;
-        } else {            
-        	YAHOO.util.Dom.setStyle(qf, 'height', '0px');
-        	YAHOO.util.Dom.setStyle(qf, 'display', 'none');
-        	YAHOO.util.Dom.removeClass(toggleImg, 'qfExpand');
-        	YAHOO.util.Dom.addClass(toggleImg, 'qfCollapse');
-        	setText(toggleLink, "Click to hide search");
-        	qDisplay = false;
-        	changeVisibility('qwrap');
-        }
-		var myAnim = new YAHOO.util.Anim('qwrap', attributes);
-		myAnim.duration = 0.5;
-		myAnim.animate();
-	};
 
-	YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
-</script>
+
 
 ${templateBean.templateBodyStopHtml}

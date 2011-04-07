@@ -314,7 +314,6 @@ var clearFilter = function () {
 })();
 
 
-
 function parseRequest(request){
 	var reply = {};
 	var kvPairs = request.split('&');
@@ -353,8 +352,7 @@ YAHOO.util.Event.onDOMReady(function () {
 				myDataTable.get("paginator").getRowsPerPage()
 		);
 		
-		History.navigate("myDataTable", newState);
-		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">';	
+		History.navigate("myDataTable", newState);	
 		this.submit();
 	};
 
@@ -365,11 +363,12 @@ YAHOO.util.Event.onDOMReady(function () {
 	};
 	
 	var handleFailure = function(o) {
+		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">';
 		alert("Submission failed: " + o.status);
 	};
 	
-	var handleSubmitEvent = function(o) {
-		alert('submitEvent');
+	var handleCancel = function(o) {
+		alert('cancelEvent');
 	};
 
 	// Instantiate the filter Dialog
@@ -380,6 +379,10 @@ YAHOO.util.Event.onDOMReady(function () {
 		  buttons : [{ text:"Go", handler:handleSubmit, isDefault:true } ]
 		}
 	);
+	
+	facetDialog.hideEvent.subscribe(function(){ 
+		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">'; });
+
 
 	// Wire up the success and failure handlers
 	facetDialog.callback = { success: handleSuccess,
@@ -554,3 +557,6 @@ var resetQF = function () {
 };
 
 YAHOO.util.Event.addListener("referenceQueryForm", "reset", resetQF);
+
+YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
+YAHOO.util.Event.addListener("toggleImg", "click", toggleQF);

@@ -26,7 +26,7 @@ ${templateBean.templateBodyStartHtml}
 <!-- begin header bar -->
 <div id="titleBarWrapper" userdoc="reference_help.shtml">	
 	<!--myTitle -->
-	<span class="titleBarMainTitle">References</span>
+	<span class="titleBarMainTitle">References Associated With This Genome Feature</span>
 </div>
 <!-- end header bar -->
 
@@ -48,7 +48,7 @@ ${templateBean.templateBodyStartHtml}
 
 	<div id="querySummary">
 		<div class="innertube">
-			<span id="totalCount" class="count">0</span> references associated with this marker.<br/>
+			<span id="totalCount" class="count">0</span> references associated with this genome feature.<br/>
 		</div>
 	</div>
 
@@ -76,6 +76,9 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <div id="dynamicdata"></div>
+<div id="paginationWrap">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
 
 <div class="facetFilter">
 	<div id="facetDialog">

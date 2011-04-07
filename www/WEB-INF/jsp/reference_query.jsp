@@ -25,6 +25,7 @@ ${templateBean.templateBodyStartHtml}
 
 <script type="text/javascript">
 	var fewiurl = "${configBean.FEWI_URL}";
+	var qDisplay = false;
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_query.js"></script>
