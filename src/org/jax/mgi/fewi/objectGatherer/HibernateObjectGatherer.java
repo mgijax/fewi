@@ -68,6 +68,11 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		Map<String, T> resultsMap = new LinkedHashMap<String, T>();
 		List<T> orderedResults = new ArrayList<T>();
 		
+		// if no keys to lookup, return empty list
+		if (keys.size() == 0){
+			return orderedResults;
+		}
+		
 		List<Integer> keyInts = new ArrayList<Integer>();
 		
 		// convert keys to Integers
