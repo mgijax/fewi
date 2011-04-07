@@ -63,6 +63,13 @@ public class SearchConstants {
     public static final String GXD_LIT_AGE		    = "age";
     public static final String GXD_LIT_ASSAY_TYPE	= "assayType";
     
+    // GXD Lit special param
+    // This is used to highlight the long citation in the GXD Lit Summaries.
+    // We are mapping all of the reference query parameters which highlighting makes sense for
+    // to this singular parameter that only exists for the display layer.
+    
+    public static final String GXD_LIT_LONG_CITATION= "longCitation";
+    
     // Vocab Constants
     
     public static final String VOC_VOCAB            = "vocab";
