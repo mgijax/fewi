@@ -628,10 +628,10 @@ public class ReferenceController {
 			s = SortConstants.REF_AUTHORS;
 		} else if ("journal".equalsIgnoreCase(s)){
 			s = SortConstants.REF_JOURNAL;
-		} else if ("score".equalsIgnoreCase(s)){
-			// null op
-		} else {
+		} else if ("year".equalsIgnoreCase(s)){
 			s = SortConstants.REF_YEAR;
+		} else {
+			s = "score";
 		}
 		
 		if("desc".equalsIgnoreCase(d)){
