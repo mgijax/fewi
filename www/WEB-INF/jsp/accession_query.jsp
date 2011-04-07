@@ -5,7 +5,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Foo Search</title>
+<title>Accession Search</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -19,8 +19,8 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="foo_help.shtml">	
-	<span class="titleBarMainTitle">Foo Query</span>
+<div id="titleBarWrapper" userdoc="accession_report_help.shtml">	
+	<span class="titleBarMainTitle">Accession Search</span>
 </div>
 
 
