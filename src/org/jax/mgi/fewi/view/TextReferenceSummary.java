@@ -22,7 +22,8 @@ public class TextReferenceSummary extends AbstractTextView {
 		
 		for (Reference ref : references) {
 			writer.write(ref.getLongCitation()); 
-			writer.newLine();
+			writer.write("\r\n");
+			//writer.newLine();
 		}
 
 	}
