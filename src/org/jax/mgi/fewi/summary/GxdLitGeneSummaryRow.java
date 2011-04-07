@@ -7,6 +7,7 @@ import mgi.frontend.datamodel.GxdLitIndexRecord;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
+import org.jax.mgi.fewi.util.Highlighter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ public class GxdLitGeneSummaryRow {
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
+    Highlighter textHL = null;
 
 	//-------------
 	// constructors
@@ -41,11 +43,11 @@ public class GxdLitGeneSummaryRow {
 	// hide the default constructor - we NEED a foo to wrap
     private GxdLitGeneSummaryRow () {}
 
-    public GxdLitGeneSummaryRow (GxdLitIndexRecord record, GxdLitQueryForm queryForm) {
+    public GxdLitGeneSummaryRow (GxdLitIndexRecord record, GxdLitQueryForm queryForm, Highlighter textHL) {
     	this.record = record;
-    	
+    	this.textHL = textHL;
     	this.queryForm = queryForm;
-    	GxdLitReferenceSummaryRow refRecord = new GxdLitReferenceSummaryRow(record, queryForm);
+    	GxdLitReferenceSummaryRow refRecord = new GxdLitReferenceSummaryRow(record, queryForm, textHL);
     	if (new Integer(refRecord.getCount()) > 0) {
     		referenceRecords.add(refRecord); 
     	}
@@ -55,7 +57,8 @@ public class GxdLitGeneSummaryRow {
 
 
     public void addRecord(GxdLitIndexRecord record) {
-    	GxdLitReferenceSummaryRow refRecord = new GxdLitReferenceSummaryRow(record, queryForm);
+    	GxdLitReferenceSummaryRow refRecord = new GxdLitReferenceSummaryRow(record, queryForm, textHL);
+    	
     	if (new Integer(refRecord.getCount()) > 0) {
     		referenceRecords.add(refRecord); 
     	}

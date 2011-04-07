@@ -8,6 +8,7 @@ import mgi.frontend.datamodel.GxdLitIndexRecord;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
+import org.jax.mgi.fewi.util.Highlighter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,8 @@ public class GxdLitReferenceSummaryRow {
     private List<String> ages = new  ArrayList <String> ();
     private List<String> assayTypes = new  ArrayList <String> ();
 
+    private Highlighter textHL = new Highlighter(null);
+    
 	//-------------
 	// constructors
 	//-------------
@@ -39,7 +42,8 @@ public class GxdLitReferenceSummaryRow {
 	// hide the default constructor - we NEED a foo to wrap
     private GxdLitReferenceSummaryRow () {}
 
-    public GxdLitReferenceSummaryRow (GxdLitIndexRecord record, GxdLitQueryForm queryForm) {
+    public GxdLitReferenceSummaryRow (GxdLitIndexRecord record, GxdLitQueryForm queryForm, Highlighter textHL) {
+    	this.textHL = textHL;
     	this.ages = queryForm.getAge();
     	this.assayTypes = queryForm.getAssayType();
     	this.record = record;
@@ -194,7 +198,16 @@ public class GxdLitReferenceSummaryRow {
     }
     
     public String getLongCitation () {
-    	return record.getLongCitation();
+    	
+    	// Check to see if a highlighter was created.
+    	
+    	if (textHL == null) {
+    		return record.getLongCitation();
+    	}
+    	
+    	// Otherwise return a highlighted version of long citation
+    	
+    	return textHL.highLight(record.getLongCitation());
     }
     
     public Boolean getIsFullyCoded () {
@@ -216,5 +229,9 @@ public class GxdLitReferenceSummaryRow {
     public String getComments() {
     	return record.getComments();
     }
+    
+	public void setTextHL(Highlighter highlighter) {
+		this.textHL = highlighter;
+	}
     
 }
