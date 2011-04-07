@@ -61,7 +61,12 @@ ${templateBean.templateBodyStartHtml}
 				<span class="label">Ages:</span> 
 				${queryForm.agesSelected}<br/></c:if>	
 			<c:if test="${not empty queryForm.author}">
-				<span class="label">Author:</span> 
+				<c:if test="${queryForm.authorScope eq 'any'}">
+					<span class="label">Any Author:</span></c:if>
+				<c:if test="${queryForm.authorScope eq 'first'}">
+					<span class="label">First Author:</span></c:if>
+				<c:if test="${queryForm.authorScope eq 'last'}">
+					<span class="label">Last Author:</span></c:if>					
 				${queryForm.author}<br/></c:if>
 			<c:if test="${not empty queryForm.journal}">
 				<span class="label">Journal:</span>
@@ -70,9 +75,20 @@ ${templateBean.templateBodyStartHtml}
 				<span class="label">Year:</span> 
 				${queryForm.year}<br/></c:if>
 			<c:if test="${not empty queryForm.text}">
-				<span class="label">Text:</span> 
-				${queryForm.text}<br/></c:if>
-		</div>
+				<span class="label">Text 
+				<c:choose>
+					<c:when test="${queryForm.inTitle}">
+						 in Title 				
+						<c:if test="${queryForm.inAbstract}">
+							 or Abstract </c:if>
+					</c:when>
+					<c:when test="${queryForm.inAbstract}">
+						 in Abstract
+					</c:when>				
+				</c:choose>
+				:</span>
+				${queryForm.text}<br/>
+			</c:if>		</div>
 	</div>
 	
 	<div id="rightcolumn">
@@ -84,8 +100,8 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <div style="clear:left">
+<c:if test="${totalCount != 0}">
 <span class="extraLarge">Summary by Age and Assay:</span><i> Numbers in the table indicate the number of results matching the search criteria.</i><br>
-
 <c:if test="${not empty pairTable}">
 	<table class="outline">
 	<tr class="outline stripe3">
@@ -129,7 +145,7 @@ ${templateBean.templateBodyStartHtml}
          </c:forEach>
          </table>
        </c:if>
-
+</c:if>
 </div>
 
 
