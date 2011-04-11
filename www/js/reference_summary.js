@@ -78,7 +78,6 @@ var clearFilter = function () {
 	var sort = 'score';
 	var dir = 'desc';
 	if (!YAHOO.lang.isNull(state.sortedBy)){
-		alert('hi');
 		sort = state.sortedBy['sort'];
 		dir = state.sortedBy['dir'];
 	}
