@@ -50,8 +50,7 @@ var populateFilterSummary = function () {
 				filterList.appendChild(document.createElement("br"));
 			}
 	    }
-	
-		
+			
 		if (vis){
 			YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 		} else {
@@ -75,10 +74,16 @@ var clearFilter = function () {
 		}
 	}
 	var state = myDataTable.getState();
+	
+	var sort = 'score';
+	var dir = 'desc';
+	if (!YAHOO.lang.isNull(state.sortedBy)){
+		alert('hi');
+		sort = state.sortedBy['sort'];
+		dir = state.sortedBy['dir'];
+	}
 	var newState = generateRequest(0, 
-			state.sortedBy.key, 
-			state.sortedBy.dir, 
-			myDataTable.get("paginator").getRowsPerPage()
+			sort, dir, myDataTable.get("paginator").getRowsPerPage()
 	);
 
 	History.navigate("myDataTable", newState);
@@ -156,8 +161,7 @@ var clearFilter = function () {
     myDataTable = new YAHOO.widget.RowExpansionDataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
 
     //Subscribe to a click event to bind to
-    myDataTable.subscribe( 'cellClickEvent', myDataTable.onEventToggleRowExpansion );
-
+    myDataTable.subscribe( 'cellClickEvent', myDataTable.onEventToggleRowExpansion )
 
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);    
@@ -278,8 +282,10 @@ var clearFilter = function () {
     generateRequest = function(startIndex,sortKey,dir,results) {
         startIndex = startIndex || 0;
         sortKey   = sortKey || "year";
+        
         dir   = (dir) ? dir.substring(7) : "desc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
+        
         var stateParams = "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
         var facetParams = '';
         for (key in facets){
@@ -352,15 +358,23 @@ YAHOO.util.Event.onDOMReady(function () {
 		for (i in selections){
 			facets[i] = selections[i];
 		}
-		
+
 		var state = myDataTable.getState();
+
+    	var sort = 'score';
+    	var dir = 'desc';
+    	if (!YAHOO.lang.isNull(state.sortedBy)){
+
+    		sort = state.sortedBy['sort'];
+    		dir = state.sortedBy['dir'];
+    	}
+
 		var newState = generateRequest(0, 
-				state.sortedBy.key, 
-				state.sortedBy.dir, 
+				sort, dir, 
 				myDataTable.get("paginator").getRowsPerPage()
 		);
-		
-		History.navigate("myDataTable", newState);	
+
+		YAHOO.util.History.navigate("myDataTable", newState);	
 		this.submit();
 	};
 
