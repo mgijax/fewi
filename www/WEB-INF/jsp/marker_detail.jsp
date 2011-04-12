@@ -390,7 +390,7 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<c:if test="${marker.countOfGxdLiterature > 0}">
-		  Literature Summary: (<a href="${configBean.FEWI_URL}/gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a> records)<br/>
+		  Literature Summary: (<a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a> records)<br/>
 		</c:if>
 		Data Summary:
 		<c:if test="${marker.countOfGxdAssays > 0}">
@@ -400,7 +400,7 @@ ${templateBean.templateBodyStartHtml}
 		  Results (<a href="#">${marker.countOfGxdResults}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdTissues > 0}">
-		  Tissues (<a href="#">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
+		  Tissues (<a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdImages > 0}">
 		  Images (<a href="#">${marker.countOfGxdImages}</a>)
