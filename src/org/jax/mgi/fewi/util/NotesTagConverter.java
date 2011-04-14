@@ -1,32 +1,16 @@
 package org.jax.mgi.fewi.util;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// standard java
+import java.util.*;
+import java.util.regex.*;
+import java.io.IOException;
+
+// internal
 import org.jax.mgi.fewi.config.ContextLoader;
 
-/*import org.jax.mgi.shr.datafactory.ActualDBMap;
-import org.jax.mgi.shr.datafactory.AlleleFactory;
-import org.jax.mgi.shr.datafactory.LookupCache;
-import org.jax.mgi.shr.datafactory.DBConstants;
-import org.jax.mgi.shr.dbutils.SQLDataManager;
-import org.jax.mgi.shr.dto.DTO;
-import org.jax.mgi.shr.dto.DTOConstants;
-import org.jax.mgi.shr.log.Logger;
-import org.jax.mgi.shr.stringutil.Sprintf;
-import org.jax.mgi.shr.webapp.WebAppLogger;*/
-
-/**
-* @module NotesTagConverter.java
-* @author pf
-* @author mhall
-*/
+//external
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**  The NotesTagConverter class contains methods which encapsulate
 *   knowledge of the note tags found in note fields.  They allow for easy
@@ -36,32 +20,23 @@ import org.jax.mgi.shr.webapp.WebAppLogger;*/
 *   expanded HTML anchor equivalents
 * @has knowledge of all tags found within note fields
 * @does converts the found tags
-*
-*    Public methods include:  (parameters not listed here)
-*    <OL>
-*    <LI> convertNotes(notes, delimiter) -- returns a string containing
-*       the notes, with converted tags
-*    </OL>
-*    
-*    This has been converted for use with the fewi.  As new tags are needed
-*    they will be added into this class.
 */
 public class NotesTagConverter
 {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /////////////////////
     // instance variables
     /////////////////////
 
-    // Maps the tag pattern to it's converted replacement string.
-    // This is used to gather all tags expected in notes, and pre-build
-    // their replacement strings
+    // This is used to map a tag pattern to it's converted replacement string.
     private HashMap tagConversions = new HashMap();
 
     // maps from MGI ID to its corresponding allele symbol, to save looking
     // up the same symbol multiple times for the same page
     private HashMap alleleSymbols = new HashMap();
+
+    // logger for this class
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     /* -------------------------------------------------------------------- */
     ///////////////
@@ -112,23 +87,20 @@ public class NotesTagConverter
     */
     public String convertNotes (String notes, char delimiter)
     {
-        
+
         String      parmStr             = "";
         String      convertedTag        = "";
         String      matchStr            = "";
         Iterator    matchStrIter;
         Set         matchStrSet;
 
-        // first, handle the non-standard \AlleleSymbol() tag
-        ///////////////////////////notes = this.doAlleleSymbolTag (notes, null);
-
         // Create iterator for pattern matching, from the pre-built
         // HashMap of searchPatterns
         matchStrSet         = tagConversions.keySet();
         matchStrIter        = matchStrSet.iterator();
 
-        
-        
+
+
         // for each tag we are lookin for...
         while (matchStrIter.hasNext())
         {
@@ -154,6 +126,9 @@ public class NotesTagConverter
                 m = p.matcher(notes);
             }
         }
+
+        // update for wild type
+        notes = notes.replace("<+>", "<sup>+</sup>");
 
         return notes;
     }
