@@ -27,7 +27,7 @@ import mgi.frontend.datamodel.SequenceSource;
 import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.MarkerIDOtherMarker;
-
+import mgi.frontend.datamodel.MarkerLocation;
 
 /*--------------------------------------*/
 /* standard imports for all controllers */
@@ -363,6 +363,153 @@ public class MarkerController {
        			logicalDBs.add("International Mouse Knockout Project Status");
        		}
        	}
+        
+        // links to genome browsers (complex rules so put them here and
+        // keep the JSP simple)
+        
+        String vegaGenomeBrowserUrl = null;
+        String ensemblGenomeBrowserUrl = null;
+        String ucscGenomeBrowserUrl = null;
+        String ncbiMapViewerUrl = null;
+        String gbrowseUrl = null;
+        String gbrowseThumbnailUrl = null;
+        
+        MarkerID vegaID = marker.getVegaGeneModelID();
+        MarkerID ensemblID = marker.getEnsemblGeneModelID();
+        MarkerID refseqID = marker.getRefSeqID();
+        MarkerID entrezGeneID = marker.getEntrezGeneID();
+        MarkerLocation coords = marker.getPreferredCoordinates();
+        
+        boolean isGene = markerType.equals("Gene");
+        boolean isPseudogene = markerType.equals("Pseudogene");
+        boolean isQTL = markerType.equals("QTL");
+        boolean isMiRNA = markerType.equals("miRNA");
+        boolean isMITMarker = false;
+        
+        String startCoordinate = null;
+        String endCoordinate = null;
+        String chromosome = null;
+        
+        if (coords != null) {
+        	startCoordinate = Long.toString(coords.getStartCoordinate().longValue());
+        	endCoordinate = Long.toString(coords.getEndCoordinate().longValue());
+        	chromosome = coords.getChromosome();
+        }
+        
+        if ((coords != null) && "DNA Segment".equals(markerType)) {
+        	if ("UniSTS".equals(coords.getProvider())) {
+        		isMITMarker = true;
+        	}
+        }
+        
+        Properties externalUrls = ContextLoader.getExternalUrls();
+        
+        // only genes & pseudogenes with a Vega Gene Model ID get a Vega link
+        if (isGene || isPseudogene) {
+        	if (vegaID != null) {
+        		vegaGenomeBrowserUrl = externalUrls.getProperty(
+        			"VEGA_Genome_Browser").replace("@@@@", vegaID.getAccID());
+        	}
+        }
+        
+       	// Ensembl Genome Browser -- prefer Ensembl ID for genes, then
+        // coordinates for several marker types, then RefSeq ID for genes
+        if (isGene && (ensemblID != null)) {
+       		ensemblGenomeBrowserUrl = externalUrls.getProperty(
+       			"Ensembl_Genome_Browser").replace("@@@@", ensemblID.getAccID());
+        } else if ((isGene || isPseudogene || isQTL || isMiRNA || isMITMarker) && (coords != null)) {
+       		ensemblGenomeBrowserUrl = externalUrls.getProperty("Ensembl_Genome_Browser").replace("g=@@@@", "r=@@@@:@@@@-@@@@");
+       		ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replaceFirst("@@@@", chromosome);
+       		ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replaceFirst("@@@@", startCoordinate);
+       		ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replaceFirst("@@@@", endCoordinate);
+        } else if (isGene && (refseqID != null)) {
+       		ensemblGenomeBrowserUrl = externalUrls.getProperty(
+       			"Ensembl_Genome_Browser").replace("@@@@", refseqID.getAccID());
+        }
+        
+        // UCSC Genome Browser -- prefer coordinates, then RefSeq ID for genes
+        // genes and pseudogenes share a URL; the others are different
+        if ((isGene || isPseudogene || isQTL || isMiRNA || isMITMarker) && (coords != null)) {
+        	if (isGene || isPseudogene) {
+        		ucscGenomeBrowserUrl = externalUrls.getProperty("UCSC_Genome_Browser");
+        	} else if (isQTL) {
+        		ucscGenomeBrowserUrl = externalUrls.getProperty("UCSC_Genome_Browser_QTL");
+        	} else if (isMiRNA) {
+        		ucscGenomeBrowserUrl = externalUrls.getProperty("UCSC_Genome_Browser_miRNA");
+        	} else if (isMITMarker) {
+        		ucscGenomeBrowserUrl = externalUrls.getProperty("UCSC_Genome_Browser_MIT");
+        	}
+       		ucscGenomeBrowserUrl = ucscGenomeBrowserUrl.replaceFirst("@@@@", chromosome);
+       		ucscGenomeBrowserUrl = ucscGenomeBrowserUrl.replaceFirst("@@@@", startCoordinate);
+       		ucscGenomeBrowserUrl = ucscGenomeBrowserUrl.replaceFirst("@@@@", endCoordinate);
+        } else if (isGene && (refseqID != null)) {
+        	ucscGenomeBrowserUrl = externalUrls.getProperty("UCSC_Genome_Browser_RefSeq").replace("@@@@", refseqID.getAccID());
+        }
+        
+        // NCBI Map Viewer -- prefer Entrez IDs for genes and pseudogenes,
+        // then coordinates (except for miRNAs), then RefSeq IDs for genes
+        if ((isGene || isPseudogene) && (entrezGeneID != null)) {
+       		ncbiMapViewerUrl = externalUrls.getProperty(
+       			"NCBI_Map_Viewer_by_Entrez").replace("@@@@", entrezGeneID.getAccID());
+        } else if ((isGene || isPseudogene) && (coords != null)) {
+       		ncbiMapViewerUrl = externalUrls.getProperty("NCBI_Map_Viewer_by_Coordinates");
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", chromosome);
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", startCoordinate);
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", endCoordinate);
+        } else if (isQTL && (coords != null)) {
+       		ncbiMapViewerUrl = externalUrls.getProperty("NCBI_Map_Viewer_by_Coordinates_QTL");
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", chromosome);
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", startCoordinate);
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", endCoordinate);
+        } else if (isMITMarker && (coords != null)) {
+       		ncbiMapViewerUrl = externalUrls.getProperty("NCBI_Map_Viewer_by_Coordinates_MIT");
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", chromosome);
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", startCoordinate);
+       		ncbiMapViewerUrl = ncbiMapViewerUrl.replaceFirst("@@@@", endCoordinate);
+        } else if (isGene && (refseqID != null)) {
+       		ncbiMapViewerUrl = externalUrls.getProperty(
+       			"NCBI_Map_Viewer_by_RefSeq").replace("@@@@", refseqID.getAccID());
+        }
+        
+        // GBrowse -- coordinates for three marker types, thumbnail for genes
+        if ((isPseudogene || isQTL || isMITMarker) && (coords != null)) {
+        	gbrowseUrl = externalUrls.getProperty("GBrowse_by_Other");
+        	gbrowseUrl = gbrowseUrl.replaceFirst("@@@@", chromosome);
+        	gbrowseUrl = gbrowseUrl.replaceFirst("@@@@", startCoordinate);
+        	gbrowseUrl = gbrowseUrl.replaceFirst("@@@@", endCoordinate);
+        } else if (isGene && (coords != null)) {
+        	gbrowseUrl = externalUrls.getProperty("GBrowse_by_Gene");
+        	gbrowseUrl = gbrowseUrl.replaceFirst("@@@@", startCoordinate);
+        	gbrowseUrl = gbrowseUrl.replaceFirst("@@@@", endCoordinate);
+        	gbrowseUrl = gbrowseUrl.replaceFirst("@@@@", chromosome);
+        	
+        	gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail");
+        	gbrowseThumbnailUrl = gbrowseThumbnailUrl.replaceFirst("@@@@", chromosome);
+        	gbrowseThumbnailUrl = gbrowseThumbnailUrl.replaceFirst("@@@@", startCoordinate);
+        	gbrowseThumbnailUrl = gbrowseThumbnailUrl.replaceFirst("@@@@", endCoordinate);
+        }
+        
+        // whichever genome browser URLs we found, fill them in the mav
+        
+        if (vegaGenomeBrowserUrl != null) {
+        	mav.addObject ("vegaGenomeBrowserUrl", vegaGenomeBrowserUrl);
+        }
+        if (ensemblGenomeBrowserUrl != null) {
+        	mav.addObject ("ensemblGenomeBrowserUrl", ensemblGenomeBrowserUrl);
+        }
+        if (ucscGenomeBrowserUrl != null) {
+        	mav.addObject ("ucscGenomeBrowserUrl", ucscGenomeBrowserUrl);
+        }
+        if (ncbiMapViewerUrl != null) {
+        	mav.addObject ("ncbiMapViewerUrl", ncbiMapViewerUrl);
+        }
+        if (gbrowseUrl != null) {
+        	mav.addObject ("gbrowseUrl", gbrowseUrl);
+        }
+        if (gbrowseThumbnailUrl != null) {
+        	mav.addObject ("gbrowseThumbnailUrl", gbrowseThumbnailUrl);
+        }
+        
         return mav;
     }
 
