@@ -116,6 +116,9 @@ ${templateBean.templateBodyStartHtml}
           <c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
             Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
             <c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
+			  <c:if test="${marker.markerType == 'QTL'}">
+			    cM position of peak correlated region/marker: 
+			  </c:if>
               <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<br/>
               <c:set var="hasGeneticLocation" value="1"/>
               <a href="#">Detailed Genetic Map &#177; 1 cM</a>
@@ -168,37 +171,43 @@ ${templateBean.templateBodyStartHtml}
         <c:if test="${empty marker.preferredCoordinates}"> 
           ${marker.preferredCoordinates.mapUnits}<br/>
         </c:if>
+        <c:if test="${not empty marker.qtlNote}">
+          ${marker.qtlNote}<br/>
+        </c:if>
         (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/>
         <p/>
         <c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
         <c:set var="ensemblID" value="${marker.ensemblGeneModelID.accID}"/>
         <c:set var="ncbiID" value="${marker.ncbiGeneModelID.accID}"/>
         <c:set var="foundOne" value="0"/>
-		<c:if test="${not empty vegaID}">
-		  <a href="${fn:replace(externalUrls.VEGA_Genome_Browser, '@@@@', vegaID)}" target="_new">VEGA Genome Browser</a>
+		<c:if test="${not empty vegaGenomeBrowserUrl}">
+		  <a href="${vegaGenomeBrowserUrl}" target="_new">VEGA Genome Browser</a>
 		  <c:set var="foundOne" value="1"/>
 		</c:if>
-		<c:if test="${not empty ensemblID}">
+		<c:if test="${not empty ensemblGenomeBrowserUrl}">
 		  <c:if test="${foundOne > 0}"> | </c:if>
-		  <a href="${fn:replace(externalUrls.Ensembl_Genome_Browser, '@@@@', ensemblID)}" target="_new">Ensembl Genome Browser</a>
+		  <a href="${ensemblGenomeBrowserUrl}" target="_new">Ensembl Genome Browser</a>
 		  <c:set var="foundOne" value="1"/>
 		</c:if>
-		<c:if test="${not empty coords}">
+		<c:if test="${not empty ucscGenomeBrowserUrl}">
 		  <c:if test="${foundOne > 0}"> | </c:if>
-		  <a href="${fn:replace(externalUrls.UCSC_Genome_Browser, '@@@@', coords)}" target="_new">UCSC Browser</a>
+		  <a href="${ucscGenomeBrowserUrl}" target="_new">UCSC Browser</a>
 		  <c:set var="foundOne" value="1"/>
 		</c:if>
-		<c:if test="${not empty ncbiID}">
+		<c:if test="${not empty ncbiMapViewerUrl}">
 		  <c:if test="${foundOne > 0}"> | </c:if>
-		  <a href="${fn:replace(externalUrls.NCBI_Map_Viewer, '@@@@', ncbiID)}" target="_new">NCBI Map Viewer</a>
+		  <a href="${ncbiMapViewerUrl}" target="_new">NCBI Map Viewer</a>
 		</c:if>
 		</td><td align="right" width="*">
-		  <table><tr><td align="center">
-		  <c:set var="gbrowseLink" value="${configBean.GBROWSE_URL}gbrowse/mouse_current?start=${startCoord};stop=${endCoord};ref=${chromosome}"/>
-		  <a href="${gbrowseLink}"><img border="0" src="${configBean.GBROWSE_URL}gbrowse_img/thumbs_current?abs=1;options=Everything;width=200;name=${chromosome}:${startCoord}..${endCoord}"/></a>
-		  <br/>
-		  <a href="${gbrowseLink}">Mouse Genome Browser</a>
+		  <c:if test="${not empty gbrowseUrl}">
+		    <table><tr><td align="center">
+		    <c:if test="${not empty gbrowseThumbnailUrl}">
+		    <a href="${gbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}"/></a>
+		    <br/>
+		    </c:if>
+		    <a href="${gbrowseUrl}">Mouse Genome Browser</a>
 		  </td></tr></table>
+		  </c:if>
 		</td></tr>
 		</table>
       </td>
@@ -227,7 +236,7 @@ ${templateBean.templateBodyStartHtml}
 		
 		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
 		<c:if test="${not empty pirsf}">
-		  Protein SuperFamily: <a href="${fn:replace(externalUrls.PIRSF, '@@@@', pirsf.termID)}">${pirsf.term}</a><br/>
+		  Protein SuperFamily: <a href="#">${pirsf.term}</a><br/>
 		</c:if>
 
 		<c:set var="treeFamDisplayID" value="${marker.treeFamDisplayID.accID}"/>
@@ -450,7 +459,7 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW12 -->
-  <c:if test="${(not empty marker.molecularReagentCountsByType) || (marker.countOfMicroarrayProbesets > 0) || (marker.countOfAntibodies > 0)}">
+  <c:if test="${(not empty marker.molecularReagentCountsByType) || (marker.countOfMicroarrayProbesets > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Molecular<br/>reagents
@@ -459,9 +468,6 @@ ${templateBean.templateBodyStartHtml}
 		<c:forEach var="item" items="${marker.molecularReagentCountsByType}">
 		  ${item.countType}(<a href="#">${item.count}</a>) 
 		</c:forEach>
-		<c:if test="${marker.countOfAntibodies > 0}">
-		  Antibodies(<a href="#">${marker.countOfAntibodies}</a>)
-		</c:if>
 		<br/>
 		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
 		  Microarray probesets(<a href="#">${marker.countOfMicroarrayProbesets}</a>)
