@@ -21,11 +21,9 @@ public class FormatHelper
 
     /** convert 'verbatimString' to its HTML equivalent
     * @param verbatimString string of data in verbatim format (where what
-    *        should display on the web is exactly what is typed, so HTML-relevant
-    *        characters must be escaped)
+    *        should display on the web is exactly what is typed, so
+    *        HTML-relevant characters must be escaped)
     * @return String
-    * @notes Currently, we only translate '<', '>', and '&' to their HTML
-    *        equivalents.  ("&lt;", "&gt;", and "&amp;")
     */
     public static String formatVerbatim (String verbatimString)
     {
@@ -40,10 +38,12 @@ public class FormatHelper
         int vsLength = verbatimString.length();
         char c;
 
+        // loop over each character
         for (int i = 0; i < vsLength; i++){
 
             c = verbatimString.charAt (i);
 
+            // translate the relevant chars
             if (c == '<'){
                 sb.append ("&lt;");
             }
@@ -99,22 +99,26 @@ public class FormatHelper
      * @throws nothing
      */
     public static String superscript (String s, String start, String stop) {
+
         // if any of the input parameters are null, just bail out
         if ((s == null) || (start == null) || (stop == null)) { return s; }
 
-        // Otherwise, find the first instance of 'start' and 'stop' in 's'.
-        // If either does not appear, then short-circuit and just return 's'
-        // as-is.
+        // revert existing <sup></sup> tags;  this is done incase there is
+        // a mixture of existing sup tags and others that need conversion
+        s = s.replaceAll("<sup>", start);
+        s = s.replaceAll("</sup>", stop);
 
+        // find the first instance of 'start' and 'stop' in 's'.
         int startPos = s.indexOf(start);
-        if (startPos == -1)    { return s; }
-
         int stopPos = s.indexOf(stop);
-        if (stopPos == -1) { return s; }
+        int startLen = start.length();    // chars to cut out for start
+        int stopLen = stop.length();      // chars to cut out for stop
+        int sectionStart = 0;             // position of char starting section
 
-        int startLen = start.length();    // how many chars to cut out for start
-        int stopLen = stop.length();    // how many chars to cut out for stop
-        int sectionStart = 0;        // position of char starting section
+        // if either start/stop value does not appear, then short-circuit
+        if (startPos == -1 || stopPos == -1) {
+            return s;
+        }
 
         StringBuffer sb = new StringBuffer();
 
@@ -138,6 +142,7 @@ public class FormatHelper
     public static String superscript (String s) {
         return superscript(s, "<", ">");
     }
+
 
     /** returns the correct plural/singular form of the given 'singular'
      * string, based on the given 'count'.
@@ -253,81 +258,81 @@ public class FormatHelper
     }
 
 
-	public static String getSeqProviderForward(Sequence seq)
-	{
-		// the primary key identifying the logical database
-		String seqProvider = seq.getProvider();
-		String providerForward = "";
+    public static String getSeqProviderForward(Sequence seq)
+    {
+        // the primary key identifying the logical database
+        String seqProvider = seq.getProvider();
+        String providerForward = "";
 
         if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {
-			providerForward = "genbank";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_SWISSPROT)) {
-			providerForward = "swissprot";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_TREMBL)) {
-			providerForward = "trembl";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
-			providerForward = "refseq";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_DOTS)) {
-			providerForward = "dotsm";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
-			providerForward = "dfcimgi";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_NIA)) {
-			providerForward = "niamgi";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
-			providerForward = "vega_mus_prot";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
-			providerForward = "vega_mus_cdna";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLPROTEIN)) {
-			providerForward = "ensembl_mus_prot";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
-			providerForward = "ensembl_mus_cdna";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
+            providerForward = "genbank";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_SWISSPROT)) {
+            providerForward = "swissprot";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_TREMBL)) {
+            providerForward = "trembl";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
+            providerForward = "refseq";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_DOTS)) {
+            providerForward = "dotsm";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
+            providerForward = "dfcimgi";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_NIA)) {
+            providerForward = "niamgi";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
+            providerForward = "vega_mus_prot";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
+            providerForward = "vega_mus_cdna";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLPROTEIN)) {
+            providerForward = "ensembl_mus_prot";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
+            providerForward = "ensembl_mus_cdna";
+        }else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
           seqProvider.equals(DBConstants.PROVIDER_ENSEMBL) ||
           seqProvider.equals(DBConstants.PROVIDER_VEGA)) {
             providerForward = "mousegenome";
-		}
+        }
 
-		return providerForward;
-	}
+        return providerForward;
+    }
 
     /** examine s, and upon finding an <a href> tag, set its target to be
      * that given in the parameter.
      */
-	public static String setTarget (String s, String target) {
-		StringBuffer t = new StringBuffer();
-		String sLower = s.toLowerCase();
-		
-		int ltPos = sLower.indexOf("<a href");
-		int gtPos = sLower.indexOf(">", ltPos);
-		int targetPos = sLower.indexOf("target=");
-		
-		// Did we find a proper <a href...> set of angle brackets?  If not, bail.
-		if ((ltPos < 0) || (gtPos < ltPos)) {
-			return s;
-		}
-		
-		// if we don't already have a target, then we can just insert one
-		if ((targetPos < 0) || (targetPos > gtPos)) {
-			t.append(s.substring(0, gtPos));
-			t.append(" target='" + target + "'");
-			t.append(s.substring(gtPos));
-			return t.toString();
-		}
-		
-		// otherwise, we need to modify an existing target
-		t.append (s.substring(0, targetPos));
-		t.append (s.substring(targetPos).replaceFirst(
-			"[tT][Aa][rR][gG][eE][tT]= *['\"][^'\"]*['\"]", 
-			"target='" + target + "'"));
-		return t.toString();
+    public static String setTarget (String s, String target) {
+        StringBuffer t = new StringBuffer();
+        String sLower = s.toLowerCase();
+
+        int ltPos = sLower.indexOf("<a href");
+        int gtPos = sLower.indexOf(">", ltPos);
+        int targetPos = sLower.indexOf("target=");
+
+        // Did we find a proper <a href...> set of angle brackets?  If not, bail.
+        if ((ltPos < 0) || (gtPos < ltPos)) {
+            return s;
+        }
+
+        // if we don't already have a target, then we can just insert one
+        if ((targetPos < 0) || (targetPos > gtPos)) {
+            t.append(s.substring(0, gtPos));
+            t.append(" target='" + target + "'");
+            t.append(s.substring(gtPos));
+            return t.toString();
+        }
+
+        // otherwise, we need to modify an existing target
+        t.append (s.substring(0, targetPos));
+        t.append (s.substring(targetPos).replaceFirst(
+            "[tT][Aa][rR][gG][eE][tT]= *['\"][^'\"]*['\"]",
+            "target='" + target + "'"));
+        return t.toString();
     }
-    
+
     /** examine s, and upon finding an <a href> tag, set its target to be a
      * new window
      */
     public static String setNewWindow (String s) {
-    	return setTarget(s, "_new");
+        return setTarget(s, "_new");
     }
-    
+
 } // end of class FormatHelper
 
