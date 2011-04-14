@@ -1,5 +1,3 @@
-<%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
-<%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -59,7 +57,7 @@ ${templateBean.templateBodyStartHtml}
          ${image.figureLabel}
        </div>
        <div style="padding-top:2px;">
-         ${image.pixeldbNumericID}
+         ${image.mgiID}
        </div>
     </td>
   </tr>
@@ -97,6 +95,7 @@ ${templateBean.templateBodyStartHtml}
     </td>
   </tr>
 
+
   <!-- ASSOC ASSAYS -->
   <c:if test="${not empty imagePaneList}">
 
@@ -114,6 +113,9 @@ ${templateBean.templateBodyStartHtml}
 	    <td class="resultsHeader" style="background-color:#D0E0F0">
 	       Assay & Result Details (Gene Symbol)
 	    </td>
+	    <td class="resultsHeader" style="background-color:#D0E0F0">
+	      Spatial Mapping
+	    </td>
 	  </tr>
 
           <c:forEach var="imagePane" items="${imagePaneList}" >
@@ -128,6 +130,9 @@ ${templateBean.templateBodyStartHtml}
                   <a href="${configBean.FEWI_URL}marker/${imagePaneDetails.markerID}">(${imagePaneDetails.markerSymbol})</a>
                 </c:forEach>
               </td>
+              <td class="">
+                <!-- spatial mapping -->
+              </td>
             </tr>
 
           </c:forEach>
@@ -136,6 +141,39 @@ ${templateBean.templateBodyStartHtml}
     </tr>
  
   </c:if>
+
+
+  <!-- OTHER DB LINKS -->
+  <c:if test="${not empty otherIdLinks}">
+
+    <tr  valign=top ALIGN=left>
+      <td class="<%=leftTdStyles.getNext() %>" >
+        Other Database<br/>Links
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>" >
+
+        <c:forEach var="otherId" items="${otherIdLinks}" >
+          ${otherId}
+        </c:forEach>
+
+      </td>
+    </tr>
+ 
+  </c:if>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- close structural table and page template-->

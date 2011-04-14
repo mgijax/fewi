@@ -6,19 +6,14 @@ import java.util.*;
 /* controller specific
 /*------------------------------*/
 
+// data model objects
+import mgi.frontend.datamodel.*;
+
 // fewi
 import org.jax.mgi.fewi.finder.ImageFinder;
 import org.jax.mgi.fewi.finder.AlleleFinder;
-
-// data model objects
-import mgi.frontend.datamodel.Image;
-import mgi.frontend.datamodel.ImageAllele;
-import mgi.frontend.datamodel.ImagePane;
-import mgi.frontend.datamodel.Reference;
-import mgi.frontend.datamodel.Genotype;
-import mgi.frontend.datamodel.Allele;
-import mgi.frontend.datamodel.AlleleSynonym;
-
+import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.config.ContextLoader;
 
 /*--------------------------------------*/
 /* standard imports for all controllers */
@@ -235,6 +230,22 @@ public class ImageController {
             mav.addObject("imagePaneList", imagePaneList);
         }
 
+        // other IDs;  used in 'other DB links" section
+        List<ImageID> otherIDs = image.getOtherIds();
+        if (otherIDs.size() > 0) {
+
+            ImageID thisOtherID;
+            IDLinker idLinker = ContextLoader.getIDLinker();
+            List<String> otherIdLinks = new ArrayList<String>();
+
+            // for each 'otherID', generate the anchor to external resource
+            Iterator otherIDsIter = otherIDs.iterator();
+            while (otherIDsIter.hasNext() ){
+              thisOtherID = (ImageID)otherIDsIter.next();
+              otherIdLinks.add(idLinker.getLinks(thisOtherID));
+            }
+            mav.addObject("otherIdLinks", otherIdLinks);
+        }
 
         return mav;
     }
