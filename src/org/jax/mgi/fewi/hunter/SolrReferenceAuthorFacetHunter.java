@@ -14,20 +14,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrReferenceAuthorFacetHunter extends SolrReferenceSummaryBaseHunter {
+public class SolrReferenceAuthorFacetHunter 
+	extends SolrReferenceSummaryBaseHunter {
     
     /***
-     * The constructor sets up this hunter so that it is specific to reference
-     * summary pages.  Each item in the constructor sets a value that it has 
-     * inherited from its superclass, and then relies on the superclass to 
-     * perform all of the needed work via the hunt() method.
+     * The constructor sets up this hunter to gather the author
+     * facet for references.
      */
     public SolrReferenceAuthorFacetHunter() {        
         
-        /*
-         * Setup the property map.  This maps from the properties of the incoming
-         * filter list to the corresponding field names in the Solr implementation.
-         * This property mapping is only what is specific to the Author Facet Hunter
+        /**
+         * This hunter only needs facet information, in order to 
+         * populate the summaries filters.
          */
         
         facetString = IndexConstants.REF_AUTHOR_FACET;

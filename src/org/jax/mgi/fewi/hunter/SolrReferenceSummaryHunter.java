@@ -19,15 +19,16 @@ import org.springframework.stereotype.Component;
 public class SolrReferenceSummaryHunter extends SolrReferenceSummaryBaseHunter {
     
     /***
-     * The constructor sets up this hunter so that it is specific to sequence
-     * summary pages.  Each item in the constructor sets a value that it has 
-     * inherited from its superclass, and then relies on the superclass to 
-     * perform all of the needed work via the hunt() method.
+     * The constructor sets up this hunter so that it is specific 
+     * to reference summary pages.  Each item in the constructor 
+     * sets a value that it has inherited from its superclass, and 
+     * then relies on the superclass to perform all of the needed 
+     * work via the hunt() method.
      */
 	
     public SolrReferenceSummaryHunter() {        
                 
-        /*
+        /**
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to pack it into the 
          * keys collection in the response.
