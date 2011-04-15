@@ -37,8 +37,15 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="marker_detail.shtml">	
-	<span class="titleBarMainTitle">${marker.symbol}</span><br/>
-	 ${marker.markerType} Detail
+	<div class="yourInputButton">
+		<form name="YourInputForm">
+			<input class="searchToolButton" value="Your Input Welcome" name="yourInputButton" onclick='alert("Not implemented")' onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
+		</form>
+	</div>
+    <div name="centeredTitle">
+	  <span class="titleBarMainTitle">${marker.symbol}</span><br/>
+	  ${marker.markerType} Detail
+	</div>
 </div>
 
 
@@ -124,6 +131,9 @@ ${templateBean.templateBodyStartHtml}
               <a href="#">Detailed Genetic Map &#177; 1 cM</a>
             </c:if>
             <c:if test="${marker.preferredCentimorgans.cmOffset == -1.0}">
+			  <c:if test="${marker.markerType == 'QTL'}">
+			    cM position of peak correlated region/marker: 
+			  </c:if>
 			  Syntenic
             </c:if>
           </c:if>
@@ -310,17 +320,19 @@ ${templateBean.templateBodyStartHtml}
   </c:if>
 
   <!-- ROW8 -->
-  <c:if test="${(not empty marker.alleleAssociations) and (marker.countOfAlleles > 0)}">
+  <c:if test="${(marker.countOfAlleles > 0) or (not empty marker.markerClip) or (marker.countOfHumanDiseases > 0) or (marker.countOfAllelesWithHumanDiseases > 0) or (marker.countOfPhenotypeImages > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Alleles<br/>and<br/>phenotypes
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		All alleles(<a href="#">${marker.countOfAlleles}</a>) : 
-		<c:forEach var="item" items="${marker.alleleCountsByType}">
-		  ${item.countType}(<a href="#">${item.count}</a>)
-		</c:forEach>
-		<br/>
+        <c:if test="${marker.countOfAlleles > 0}">
+		  All alleles(<a href="#">${marker.countOfAlleles}</a>) : 
+		  <c:forEach var="item" items="${marker.alleleCountsByType}">
+		    ${item.countType}(<a href="#">${item.count}</a>)
+		  </c:forEach>
+		  <br/>
+		</c:if>
 		<c:if test="${not empty marker.markerClip}">
 		  &nbsp;<br/>
 		  <blockquote>${marker.markerClip}</blockquote>
@@ -520,6 +532,13 @@ ${templateBean.templateBodyStartHtml}
           <td>${item.term}</td></tr>
         </c:forEach>
         </table>
+        <c:if test="${not empty marker.representativePolypeptideSequence}">
+		  <c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
+		  <c:if test="${seq.provider == 'SWISS-PROT'}">
+            <c:set var="url" value="${externalUrls.InterPro_ISpy}"/>
+		    <a href="${fn:replace(url, '@@@@', seq.primaryID)}" target="_new">Graphical View of Protein Domain Structure</a>
+		  </c:if>
+        </c:if>
       </td>
     </tr>
   </c:if>
@@ -540,7 +559,9 @@ ${templateBean.templateBodyStartHtml}
 		<c:if test="${not empty latestRef}">(Latest) <a href="${configBean.FEWI_URL}reference/${latestRef.jnumID}">${latestRef.jnumID}</a>
 		  ${latestRef.shortCitation}<br/>
 		</c:if>
-		All references(<a href="#">${marker.countOfReferences}</a>)<br/>
+		<c:if test="${marker.countOfReferences > 0}">
+		  All references(<a href="#">${marker.countOfReferences}</a>)<br/>
+		</c:if>
       </td>
     </tr>
   </c:if>
