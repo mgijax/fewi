@@ -31,7 +31,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_image_detail.shtml">	
+<div id="titleBarWrapper" userdoc="gxd_query_results.shtml">	
   <span class="titleBarMainTitle">Gene Expression Image Detail </span>
 </div>
 
@@ -50,8 +50,8 @@ ${templateBean.templateBodyStartHtml}
     <td class="<%=rightTdStyles.getNext() %>">
        <div style="padding-top:7px;">
          <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">
-           ${reference.jnumID}
-         </a>
+           ${reference.jnumID}</a>
+         ${reference.miniCitation}
        </div>
        <div style="padding-top:3px;">
          ${image.figureLabel}
@@ -91,10 +91,9 @@ ${templateBean.templateBodyStartHtml}
       Copyright
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      ${image.copyright}
+      <%=ntc.convertNotes(image.getCopyright(), '|')%>
     </td>
   </tr>
-
 
   <!-- ASSOC ASSAYS -->
   <c:if test="${not empty imagePaneList}">
