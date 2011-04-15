@@ -155,7 +155,7 @@ function main() {
     	// Sends a new request to the DataSource
         myDataSource.sendRequest(request,{
             success : myDataTable.onDataReturnSetRows,
-            failure : bombed,
+            failure : myDataTable.onDataReturnSetRows,
             scope : myDataTable,
             argument : {} // Pass in container for population at runtime via doBeforeLoadData
         });
@@ -191,10 +191,4 @@ function parseRequest(request){
 	}
 	return reply;
 }
-
-function bombed(){
- alert("bombed");
-}
-
-
 
