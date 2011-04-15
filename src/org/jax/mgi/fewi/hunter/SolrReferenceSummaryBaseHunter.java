@@ -62,11 +62,14 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         		new SolrPropertyMapper(refList, "OR"));
         
         propertyMap.put(SearchConstants.REF_AUTHOR_ANY, 
-        		new SolrPropertyMapper(IndexConstants.REF_AUTHOR_FORMATTED));
+        		new SolrPropertyMapper(
+        				IndexConstants.REF_AUTHOR_FORMATTED));
         propertyMap.put(SearchConstants.REF_AUTHOR_FIRST, 
-        		new SolrPropertyMapper(IndexConstants.REF_FIRST_AUTHOR));
+        		new SolrPropertyMapper(
+        				IndexConstants.REF_FIRST_AUTHOR));
         propertyMap.put(SearchConstants.REF_AUTHOR_LAST, 
-        		new SolrPropertyMapper(IndexConstants.REF_LAST_AUTHOR));
+        		new SolrPropertyMapper(
+        				IndexConstants.REF_LAST_AUTHOR));
         propertyMap.put(SearchConstants.REF_JOURNAL, 
         		new SolrPropertyMapper(IndexConstants.REF_JOURNAL));
         propertyMap.put(SearchConstants.REF_YEAR, 
@@ -87,7 +90,8 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         abstractList.add(IndexConstants.REF_ABSTRACT_UNSTEMMED);
         
         propertyMap.put(SearchConstants.REF_TEXT_ABSTRACT, 
-        		new SolrReferenceTextSearchPropertyMapper(abstractList, "OR"));
+        		new SolrReferenceTextSearchPropertyMapper(
+        				abstractList, "OR"));
 
         /*
          * This is a 1->N Relationship from QF to index fields
@@ -99,7 +103,8 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         
         // The 1->N Mapping should be joined with OR's
         propertyMap.put(SearchConstants.REF_TEXT_TITLE, 
-        		new SolrReferenceTextSearchPropertyMapper(titleList, "OR"));
+        		new SolrReferenceTextSearchPropertyMapper(
+        				titleList, "OR"));
         
         /*
          * This is a 1->N Relationship from QF to index fields
@@ -111,12 +116,15 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         
         // The 1->N Mapping should be joined with OR's
         propertyMap.put(SearchConstants.REF_TEXT_TITLE_ABSTRACT, 
-        		new SolrReferenceTextSearchPropertyMapper(titleAbstractList, "OR"));
+        		new SolrReferenceTextSearchPropertyMapper(
+        				titleAbstractList, "OR"));
                 
         propertyMap.put(FacetConstants.REF_AUTHORS, 
-        		new SolrPropertyMapper(IndexConstants.REF_AUTHOR_FACET));
+        		new SolrPropertyMapper(
+        				IndexConstants.REF_AUTHOR_FACET));
         propertyMap.put(FacetConstants.REF_JOURNALS, 
-        		new SolrPropertyMapper(IndexConstants.REF_JOURNAL_FACET));
+        		new SolrPropertyMapper(
+        				IndexConstants.REF_JOURNAL_FACET));
         propertyMap.put(FacetConstants.REF_YEAR, 
         		new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(FacetConstants.REF_CURATED_DATA, 
@@ -178,8 +186,9 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
      * This private method is unique to the reference grouping of hunters.
      * Its responsible to create a new query field if both title and abstract
      * searches are present.
-     * This DEPENDS on the fact that the abstract and title fields are going to 
-     * be found in a nested filter.  If that ever changes this code will break.
+     * This DEPENDS on the fact that the abstract and title fields are 
+     * going to be found in a nested filter.  If that ever changes this 
+     * code will break.
      */
     
 	private void checkFilter (Filter filter) {
@@ -199,18 +208,22 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
 	        String textToSearch = "";
 	        
 	        /**
-	         * Iterate through the nested filters.  The two text filters that we
-	         * are interested in should be at the same level.
+	         * Iterate through the nested filters.  The two text filters 
+	         * that we are interested in should be at the same level.
 	         */
 	        
 	        for (Filter f: flist) {
 	            if (f.isBasicFilter()) {
-	                if (f.getProperty().equals(SearchConstants.REF_TEXT_ABSTRACT)) {
+	                if (f.getProperty().equals(
+	                		SearchConstants.REF_TEXT_ABSTRACT)) {
+	                	
 	                    textToSearch = f.getValue();
 	                    foundAbstract = Boolean.TRUE;
 	                }
-                    if (f.getProperty().equals(SearchConstants.REF_TEXT_TITLE)) {
-                        textToSearch = f.getValue();
+                    if (f.getProperty().equals(
+                    		SearchConstants.REF_TEXT_TITLE)) {
+                        
+                    	textToSearch = f.getValue();
                         foundTitle = Boolean.TRUE;
                     }	                
 	                
@@ -221,10 +234,12 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
 	            }
 	        }
 	        
-	        // Found what we are looking for, make a new filter and replace.
+	        // Found what we are looking for, make a new filter and 
+	        // replace.
 	        
 	        if (foundTitle && foundAbstract) {
-	            filter.setProperty(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+	            filter.setProperty(
+	            		SearchConstants.REF_TEXT_TITLE_ABSTRACT);
 	            filter.setValue(textToSearch);
 	            filter.setOperator(Filter.OP_CONTAINS);
 	            filter.setNestedFilters(new ArrayList<Filter> ());
@@ -242,7 +257,8 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
 	 * 
 	 */
 	
-	protected SearchParams preProcessSearchParams(SearchParams searchParams) {
+	protected SearchParams preProcessSearchParams(
+			SearchParams searchParams) {
 	    
 	    Filter filter = searchParams.getFilter();
 	    if (!filter.isBasicFilter()) {

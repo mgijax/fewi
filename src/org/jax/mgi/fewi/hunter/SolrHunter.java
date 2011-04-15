@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -30,10 +31,10 @@ import org.springframework.beans.factory.annotation.Value;
 
 /**
  * This is the Solr specific hunter.  It is responsible for mapping the higher
- *  level join type queries that are coming from the WI and translating them
- *  into something that Solr can understand.  It is also responsible for
- *  mapping the fe's idea of an in or not in clause to something that makes
- *  sense for solr.
+ * level join type queries that are coming from the WI and translating them
+ * into something that Solr can understand.  It is also responsible for
+ * mapping the fe's idea of an in or not in clause to something that makes
+ * sense for solr.
  *
  * @author mhall
  *
@@ -83,6 +84,10 @@ public class SolrHunter implements Hunter {
     protected List <String> highlightFields = new ArrayList<String> ();
     
     public Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    // Setup the highlight token once.
+    
+    private final String highlightToken = "!FRAG!";
 
     /**
      * Here we map the higher level join clauses to their
@@ -117,18 +122,25 @@ public class SolrHunter implements Hunter {
     @Override
     public void hunt(SearchParams searchParams, SearchResults searchResults) {
 
+
+    	/**
+    	 * Invoke the hook, editing the search params as needed.
+    	 */
+        searchParams = this.preProcessSearchParams(searchParams);
+
         /**
-         * Setup our interface into solr.  Some of these values might be better
-         * off in a configuration object somewhere.
+         * Setup our interface into solr.  These are auto injected by spring
+         * at load time.  The solrUrl is provided by the implementing classes.
          */
 
-        searchParams = this.preProcessSearchParams(searchParams);
         
         CommonsHttpSolrServer server = null;
-
+        
         try { server = new CommonsHttpSolrServer(solrUrl);}
-        catch (Exception e) {System.out.println("THERE IS AN ERROR.  PLEASE TO FIND IT.");
-            e.printStackTrace();}
+        catch (Exception e) {
+        	System.out.println("Cannot reach the Solr server.");
+            e.printStackTrace();
+            }
 
         logger.info("SolrTimeout:" + solrSoTimeout);
         
@@ -147,38 +159,53 @@ public class SolrHunter implements Hunter {
         logger.info(queryString);
         query.setQuery(queryString);
 
-        
-        
-        /**
-         * Tear apart the sort objects and add them to the query string.  This currently
-         * maps to a sorMapper object, which can turn a conceptual single column sort
-         * from the wi's perspective to its multiple column sort in the indexes.
-         */
-
         query.setFields("score"); // Always pack the score
         
+        /**
+         * Tear apart the sort objects and add them to the query string.  
+         * This currently maps to a sortMapper object, which can turn a 
+         * conceptual single column sort from the wi's perspective to its
+         *  multiple column sort in the indexes.
+         */
+        
+        ORDER currentSort = null;
+        
         for (Sort sort: searchParams.getSorts()) {
-            if (sort.isDesc()) {
-                if (sortMap.containsKey(sort.getSort())) {
-                    for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
-                        query.addSortField(ssm, SolrQuery.ORDER.desc);
-                    }
-                }
-                else {
-                	query.addSortField(sort.getSort(), SolrQuery.ORDER.desc);
-                }
+
+        	// Determine the direction of the sort.
+        	
+        	if (sort.isDesc()) {
+            	currentSort = SolrQuery.ORDER.desc;
             }
             else {
-                if (sortMap.containsKey(sort.getSort())) {
-                    for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
-                        query.addSortField(ssm, SolrQuery.ORDER.asc);
-                    }
-                }
-                else {
-                	query.addSortField(sort.getSort(), SolrQuery.ORDER.asc);
+            	currentSort = SolrQuery.ORDER.asc;
+            }
+            
+        	/**
+        	 * Is this a configured sort?  If so check the sort map
+        	 * for 1->N Mappings.
+             */
+            
+            if (sortMap.containsKey(sort.getSort())) {
+                for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
+                    query.addSortField(ssm, currentSort);
                 }
             }
+            
+            /**
+             * Otherwise just add the sort in as is, Solr will ignore invalid
+             * sorts. 
+             */
+            
+            else {
+              	query.addSortField(sort.getSort(), currentSort);
+            }
         }
+        
+        /**
+         * Do we want to highlight?  If so setup the highlighter with
+         * known tokens so we can use regex to extract them later on.
+         */
         
         if (! highlightFields.isEmpty()) {
             for (String field: highlightFields) {
@@ -187,8 +214,8 @@ public class SolrHunter implements Hunter {
             query.setHighlight(Boolean.TRUE);
             query.setHighlightFragsize(30000);
             query.setHighlightRequireFieldMatch(Boolean.TRUE);
-            query.setParam("hl.simple.pre", "!FRAG!");
-            query.setParam("hl.simple.post", "!FRAG!");
+            query.setParam("hl.simple.pre", highlightToken);
+            query.setParam("hl.simple.post", highlightToken);
 
         }
         
@@ -204,6 +231,12 @@ public class SolrHunter implements Hunter {
         else {
             query.setStart(resultsDefault);
         }
+
+        /**
+         *  We only ever ask for a single facet, if its set in 
+         *  the implementing class, set it in the Solr request.
+         */
+        
         
         if (facetString != null) {
             query.addFacetField(facetString);
@@ -232,7 +265,8 @@ public class SolrHunter implements Hunter {
         packInformation(rsp, searchResults, searchParams);
 
         
-        logger.debug("metaMapping: " + searchResults.getResultSetMeta().toString());
+        logger.debug("metaMapping: " 
+        		+ searchResults.getResultSetMeta().toString());
         
         /**
          * Set the total number found.
@@ -241,9 +275,8 @@ public class SolrHunter implements Hunter {
         searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
 
         /**
-         * TODO: Set the metadata.
-         * This will be handles in a similar way as the packKeys method, making
-         * this entire process generic.
+         * This will be handles in a similar way as the packKeys 
+         * method, making this entire process generic.
          *
          */
 
@@ -255,8 +288,8 @@ public class SolrHunter implements Hunter {
     }
     
     /**
-     * This is a hook, any class that needs to modify the searchParams before doing its work will
-     * override this method.
+     * This is a hook, any class that needs to modify the searchParams before
+     * doing its work will override this method.
      * 
      * @param searchParams
      * @return
@@ -281,7 +314,8 @@ public class SolrHunter implements Hunter {
      *
      */
 
-    protected String translateFilter(Filter filter, HashMap<String, PropertyMapper> propertyMap) {
+    protected String translateFilter(Filter filter, HashMap<String, 
+    		PropertyMapper> propertyMap) {
 
         /**
          * This is the end case for the recursion.  If we are at a node in the
@@ -299,7 +333,9 @@ public class SolrHunter implements Hunter {
             // Check to see if the property is null or an empty string,
             // if it is, return an empty string
 
-            if (filter.getProperty() == null || filter.getProperty().equals("")) {
+            if (filter.getProperty() == null || 
+            		filter.getProperty().equals("")) {
+            	
                 return "";
             }
 
@@ -307,11 +343,13 @@ public class SolrHunter implements Hunter {
 
             if (filter.getOperator() != Filter.OP_IN
                     && filter.getOperator() != Filter.OP_NOT_IN) {
-                return propertyMap.get(filter.getProperty()).getClause(filter.getValue(), filter.getOperator());
+                return propertyMap.get(filter.getProperty())
+                	.getClause(filter.getValue(), filter.getOperator());
             }
 
-            // If its an IN or NOT IN, break the query down further, joining the
-            // subclauses by OR.
+            /** If its an IN or NOT IN, break the query down further, joining 
+             * thesubclauses by OR or AND as appropriate
+             */
 
             else {
 
@@ -325,25 +363,35 @@ public class SolrHunter implements Hunter {
                     operator = Filter.OP_EQUAL;
                     joinClause = " OR ";
                 }
+                
+                // Create the subclause, surround it in parens
+                
                 String output = "(";
                 int first = 1;
                 for (String value: filter.getValues()) {
                     if (first == 1) {
-                        output += propertyMap.get(filter.getProperty()).getClause(value, operator);
+                        output += propertyMap.get(filter.getProperty())
+                        	.getClause(value, operator);
+                        
                         first = 0;
                     }
                     else {
-                        output += joinClause + propertyMap.get(filter.getProperty()).getClause(value, operator);
+                        output += joinClause 
+                        	+ propertyMap.get(filter.getProperty())
+                        		.getClause(value, operator);
                     }
                 }
                 return output + ")";
             }
         }
 
-        // We do not have a simple filter, so recurse.
-        // When we get the return value join it appropriately
-        // into the query string using AND's or OR's
-        // as specified by the filterClause.
+        /** 
+         * We do not have a simple filter, so recurse.
+         * When we get the return value join it appropriately
+         * into the query string using AND's or OR's
+         * as specified by the filterClause.
+         * 
+         */
 
         else {
             
@@ -361,7 +409,9 @@ public class SolrHunter implements Hunter {
                     resultsString.add(tempString);
                 }
             }
-            return "(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")";
+            return "(" + StringUtils.join(resultsString, 
+            		filterClauseMap.get(filter.getFilterJoinClause())) 
+            		+ ")";
         }
     }
 
@@ -378,21 +428,29 @@ public class SolrHunter implements Hunter {
      * to override this method with their own version.
      */
     
-    void packInformation(QueryResponse rsp, SearchResults sr, SearchParams sp) {
+    void packInformation(QueryResponse rsp, SearchResults sr, 
+    		SearchParams sp) {
+    	
         List<String> keys = new ArrayList<String>();
         List<String> scoreKeys = new ArrayList<String>();
         List<String> info = new ArrayList<String>();
         List<String> facet = new ArrayList<String>();
                 
-        Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>> ();
+        Map<String, Set<String>> setHighlights = 
+        	new HashMap<String, Set<String>> ();
         
         Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
         
-        Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
+        Map<String, Map<String, List<String>>> highlights = 
+        	rsp.getHighlighting();
         
         SolrDocumentList sdl = rsp.getResults();
     
-        logger.debug("We are in the pack information section.");
+        logger.debug("Packing information.");
+        
+        /**
+         * Check for facets, if found pack them.
+         */
         
         if (this.facetString != null) {
             for (Count c: rsp.getFacetField(facetString).getValues()) {
@@ -401,9 +459,20 @@ public class SolrHunter implements Hunter {
             }
         }
         
+        /**
+         * Iterate through the response documents, extracting the information 
+         * that was configured at the implementing class level.
+         */
+        
         for (Iterator iter = sdl.iterator(); iter.hasNext();)
         {
             SolrDocument doc = (SolrDocument) iter.next();
+            
+            /**
+             * Calculate the row level metadata.  Currently this only 
+             * applies to score, and whether or not a row is generated for 
+             * autocomplete purposes.
+             */
             
             if (sp.includeRowMeta()) {
             	
@@ -412,22 +481,36 @@ public class SolrHunter implements Hunter {
                     tempMeta.setScore("" + doc.getFieldValue("score"));
                 }
                 if (sp.includeGenerated()) {
-                	if (doc.getFieldValue(IndexConstants.AC_IS_GENERATED).equals(new Integer("1"))) {
+                	if (doc.getFieldValue(IndexConstants.AC_IS_GENERATED)
+                			.equals(new Integer("1"))) {
                 		tempMeta.setGenerated();
                 	}
                 }
+                
+                /**
+                 * Store the metadata into a mapping based on whatever unique
+                 * key that we can find.
+                 */
+                
                 if (this.keyString != null) {
-                    metaList.put((String) doc.getFieldValue(keyString), tempMeta);
+                    metaList.put((String) doc.getFieldValue(keyString), 
+                    		tempMeta);
                 }
                 if (this.otherString != null) {
-                    metaList.put((String) doc.getFieldValue(otherString), tempMeta);
+                    metaList.put((String) doc.getFieldValue(otherString), 
+                    		tempMeta);
                 }
 
 
             }
             
+            /**
+             * In order to support older pages we pack the score directly as
+             * well as in the metadata.
+             */
+            
             if (this.keyString != null) {            
-                keys.add((String) doc.getFieldValue(keyString));                
+                keys.add((String) doc.getFieldValue(keyString));
                 scoreKeys.add("" + doc.getFieldValue("score"));
             }
 
@@ -435,41 +518,77 @@ public class SolrHunter implements Hunter {
                 info.add((String) doc.getFieldValue(otherString));
             }
             
+            /**
+             * If we have highlighted fields, and we've requested highlighting
+             * AND we have asked for result set meta.  Include it.
+             * We are also translating from the Solr specific highlighting
+             * format to a simpler list of strings.
+             * The issue however is that we need to store this list so that 
+             * its both document (or singular) result centric, as well as 
+             * field centric.  So we need to build a reasonably 
+             * complicated map.
+             */
             
-            if (!this.highlightFields.isEmpty() && sp.includeMetaHighlight() && sp.includeSetMeta()) {
+            if (!this.highlightFields.isEmpty() && sp.includeMetaHighlight() 
+            		&& sp.includeSetMeta()) {
             
-            Set<String> highlightKeys = highlights.get(doc.getFieldValue(keyString)).keySet();
-            Map<String, List<String>> highlightsMap = highlights.get(doc.getFieldValue(keyString));
-            for (Iterator iter2 = highlightKeys.iterator(); iter2.hasNext();) {
-                String key = (String) iter2.next();
-
-                List <String> highlights2 = highlightsMap.get(key);
-                for (String highlightWord: highlights2) {
-                    
-                    Boolean inAHL = Boolean.FALSE; 
-                    String [] fragments = highlightWord.split("!FRAG!");
-                    
-                    for (String frag: fragments) {
-                        if (inAHL) {
-                            if (setHighlights.containsKey(fieldToParamMap.get(key))) {
-                                setHighlights.get(fieldToParamMap.get(key)).add(frag);
-                            }
-                            else {
-                                setHighlights.put(fieldToParamMap.get(key), new HashSet <String> ());
-                                setHighlights.get(fieldToParamMap.get(key)).add(frag);
-                            }
-                            inAHL = Boolean.FALSE;
-                        }
-                        else {
-                            inAHL = Boolean.TRUE;
-                        }
-                    }
-                }
-            } 
-        }
-
+	            Set<String> highlightKeys = 
+	            	highlights.get(doc.getFieldValue(keyString)).keySet();
+	            Map<String, List<String>> highlightsMap = 
+	            	highlights.get(doc.getFieldValue(keyString));
+	            
+	            for (Iterator iter2 = highlightKeys.iterator();
+	            	iter2.hasNext();) {
+	            	
+	                String key = (String) iter2.next();
+	
+	                List <String> solrHighlights = highlightsMap.get(key);
+	                for (String highlightWord: solrHighlights) {
+	                    
+	                    Boolean inAHL = Boolean.FALSE;
+	                    /**
+	                     * Our solr highlights are surrounded by an 
+	                     * impossible token, so split based on that.
+	                     */
+	                    String [] fragments = 
+	                    	highlightWord.split(highlightToken);
+	                    
+	                    /**
+	                     * Every other fragment will be a highlighted word
+	                     * setup a loop that iterates through the results
+	                     * grabbing it.  Once we have it place it into 
+	                     * the highlight mapping.
+	                     */
+	                    
+	                    for (String frag: fragments) {
+	                        if (inAHL) {
+	                            if (setHighlights.containsKey(
+	                            		fieldToParamMap.get(key))) {
+	                            	
+	                                setHighlights.get(fieldToParamMap
+	                                	.get(key)).add(frag);
+	                            }
+	                            else {
+	                                setHighlights.put(fieldToParamMap
+	                                	.get(key), 
+	                                	new HashSet <String> ());
+	                                
+	                                setHighlights.get(fieldToParamMap
+	                                	.get(key)).add(frag);
+	                            }
+	                            inAHL = Boolean.FALSE;
+	                        }
+	                        else {
+	                            inAHL = Boolean.TRUE;
+	                        }
+	                    }
+	                }
+	            } 
+	        }
         }
     
+        // Include the information that was asked for.
+        
         if (keys != null) {
             sr.setResultKeys(keys);
         }
