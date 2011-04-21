@@ -39,7 +39,7 @@ ${templateBean.templateBodyStartHtml}
 <%=ntc.convertNotes(marker.getGOText(), '|')%><br><hr><br>
 </div>
 
-<a name="tabular"></a><h3 class="larger"><b>Go Annotations in Tabular Form</b> <a href="#text" class="GO">(Text View)</a></h3>
+<a name="tabular"></a><h3 class="extraLarge"><b>Go Annotations in Tabular Form</b> <a href="#text" class="GO">(Text View)</a></h3>
 <!-- paginator -->
 <table style="width:100%;">
   <tr>
