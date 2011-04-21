@@ -12,30 +12,30 @@ import org.apache.commons.lang.StringUtils;
 
 public class GxdLitQueryForm {
 
+	private List<String> age = new ArrayList<String>();
+
 	private Map<String, String> ages = new LinkedHashMap<String, String>();
-
-	private Map<String, String> assayTypes = new LinkedHashMap<String, String>();
-	private String author = "";
-	private String authorScope = "any";
+	private Integer alleleKey;
+	private List<String> assayType = new ArrayList<String>();
 	
-    private String Journal = "";
-	private String year = "";
-	private String text = "";
-    private boolean inTitle = true;
-    private boolean inAbstract = true;
-    private String id = "";
-    private String nomen = "";
-    private List<String> age = new ArrayList<String>();
-    private List<String> assayType = new ArrayList<String>();
-    private Integer seqKey;
-    private Integer alleleKey;
-    private List<String> authorFilter = new ArrayList<String>();
-    private List<String> journalFilter = new ArrayList<String>();
-
-    private List<Integer> yearFilter = new ArrayList<Integer>();
+    private Map<String, String> assayTypes = new LinkedHashMap<String, String>();
+	private String author = "";
+	private List<String> authorFilter = new ArrayList<String>();
+    private String authorScope = "any";
     private List<String> curatedDataFilter = new ArrayList<String>();
-
-    public GxdLitQueryForm() {
+    private String id = "";
+    private boolean inAbstract = true;
+    private boolean inTitle = true;
+    private String Journal = "";
+    private List<String> journalFilter = new ArrayList<String>();
+    private Integer marker_key;
+    private String nomen = "";
+    private Integer reference_key;
+    private Integer seqKey;
+	private String text = "";
+	private String year = "";
+	private List<Integer> yearFilter = new ArrayList<Integer>();
+	public GxdLitQueryForm() {
     	
     	ages.put("ANY", "ANY");
     	ages.put("0.5", "0.5");
@@ -103,43 +103,45 @@ public class GxdLitQueryForm {
     public List<String> getAge() {
         return age;
     }
-    
+
+    public Map<String, String> getAges() {
+		return ages;
+	}
     public String getAgesSelected () {
     	if (! age.contains("ANY")) {
     		return StringUtils.join(age, " or ");
     	}
     	return null;
     }
-    public Map<String, String> getAges() {
-		return ages;
-	}
+
     public Integer getAlleleKey() {
         return alleleKey;
     }
-
     public List<String> getAssayType() {
         return assayType;
     }
-
+    
+    public Map<String, String> getAssayTypes() {
+		return assayTypes;
+	}
     public String getAssayTypesSelected() {
     	if (!assayType.contains("ANY")) {
     		return StringUtils.join(assayType, " or ");
     	}
     	return null;
     }
-    
-    public Map<String, String> getAssayTypes() {
-		return assayTypes;
-	}
     public String getAuthor() {
         return author;
     }
+
     public List<String> getAuthorFilter() {
         return authorFilter;
     }
+
     public String getAuthorScope() {
         return authorScope;
     }
+    
     public List<String> getCuratedDataFilter() {
         return curatedDataFilter;
     }
@@ -152,9 +154,15 @@ public class GxdLitQueryForm {
     public List<String> getJournalFilter() {
         return journalFilter;
     }
+    public Integer getMarker_key() {
+		return marker_key;
+	}
     public String getNomen() {
         return nomen;
     }
+    public Integer getReference_key() {
+		return reference_key;
+	}
     public Integer getSeqKey() {
         return seqKey;
     }
@@ -215,9 +223,15 @@ public class GxdLitQueryForm {
     public void setJournalFilter(List<String> journalFilter) {
         this.journalFilter = journalFilter;
     }
+    public void setMarker_key(Integer marker_key) {
+		this.marker_key = marker_key;
+	}
     public void setNomen(String nomen) {
         this.nomen = nomen;
     }
+    public void setReference_key(Integer reference_key) {
+		this.reference_key = reference_key;
+	}
     public void setSeqKey(Integer seqKey) {
         this.seqKey = seqKey;
     }
@@ -232,14 +246,17 @@ public class GxdLitQueryForm {
     }
     @Override
 	public String toString() {
-		return "GxdLitQueryForm [author=" + author + ", authorScope="
-				+ authorScope + ", Journal=" + Journal + ", year=" + year
-				+ ", text=" + text + ", inTitle=" + inTitle + ", inAbstract="
-				+ inAbstract + ", id=" + id + ", nomen=" + nomen + ", age="
-				+ age + ", assayType=" + assayType + ", seqKey=" + seqKey
-				+ ", alleleKey=" + alleleKey + ", authorFilter=" + authorFilter
-				+ ", journalFilter=" + journalFilter + ", yearFilter="
-				+ yearFilter + ", curatedDataFilter=" + curatedDataFilter + "]";
+		return "GxdLitQueryForm [age=" + age + ", ages=" + ages
+				+ ", alleleKey=" + alleleKey + ", assayType=" + assayType
+				+ ", assayTypes=" + assayTypes + ", author=" + author
+				+ ", authorFilter=" + authorFilter + ", authorScope="
+				+ authorScope + ", curatedDataFilter=" + curatedDataFilter
+				+ ", id=" + id + ", inAbstract=" + inAbstract + ", inTitle="
+				+ inTitle + ", Journal=" + Journal + ", journalFilter="
+				+ journalFilter + ", marker_key=" + marker_key + ", nomen="
+				+ nomen + ", reference_key=" + reference_key + ", seqKey="
+				+ seqKey + ", text=" + text + ", year=" + year
+				+ ", yearFilter=" + yearFilter + "]";
 	}
 
 }
