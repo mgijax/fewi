@@ -175,6 +175,8 @@ public class GXDLitController {
         
         Marker marker = markerList.get(0);
         
+        queryForm.setMarker_key(marker.getMarkerKey());
+        
         Filter markerKeyFilter = new Filter(SearchConstants.MRK_KEY, ""+marker.getMarkerKey());
         
         logger.debug(markerKeyFilter.toString());
@@ -244,7 +246,7 @@ public class GXDLitController {
         Filter referenceIdFilter = new Filter(SearchConstants.REF_ID, refID);
         searchParams.setFilter(referenceIdFilter);
         
-        // find the requested marker
+        // find the requested reference
         SearchResults searchResults
           = referenceFinder.searchReferences(searchParams);
         List<Reference> referenceList = searchResults.getResultObjects();
@@ -283,6 +285,8 @@ public class GXDLitController {
         List<GxdLitIndexRecord> recordList = results.getResultObjects();
 
         logger.debug("Got the record list");
+        
+        queryForm.setReference_key(reference.getReferenceKey());
         
         // create/load the list of SummaryRow wrapper objects for the gene section
         List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
@@ -849,6 +853,18 @@ public class GXDLitController {
 			}
 		}
         
+		// Reference Key Filter
+		if (query.getReference_key() != null && !query.getReference_key().equals("")) {
+			Filter rkf = new Filter(SearchConstants.REF_KEY, "" + query.getReference_key(), Filter.OP_EQUAL);
+			filterList.add(rkf);
+		}
+
+		// Marker Key Filter
+		if (query.getMarker_key() != null && !query.getMarker_key().equals("")) {
+			Filter mkf = new Filter(SearchConstants.MRK_KEY, "" + query.getMarker_key(), Filter.OP_EQUAL);
+			filterList.add(mkf);
+		}
+		
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){

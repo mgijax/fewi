@@ -25,6 +25,7 @@ import mgi.frontend.datamodel.Reference;
 
 // internal
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.ObjectTypes;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -116,11 +117,35 @@ public class AccessionController {
         
         SearchResults searchResults = accessionFinder.getAccessions(params);
         
+        logger.debug("About to check the size");
+        
         if (searchResults.getResultObjects().size() == 1) {
+        	logger.debug("Found only 1, should be forwarding.");
         	// We only have one object, seamlessly forward it!
         	FewiLinker linker = FewiLinker.getInstance();
         	Accession acc = (Accession) searchResults.getResultObjects().get(0);
-        	String url = linker.getFewiIDLink(acc.getObjectType(), acc.getDisplayID());
+        	String url = "";
+        	
+        	String objectType = acc.getObjectType();
+        	
+        	// Handle the Vocabulary Cases
+        	
+        	if (objectType.equals("Vocabulary Term")) { 
+        		logger.debug("This is a vocab match, should be a forward");
+        		url = linker.getFewiIDLink(acc.getDisplayType(), acc.getDisplayID());        		
+        	}
+        	
+        	// Handle the old wi cases.
+        	
+        	else if (objectType.equals(ObjectTypes.PROBECLONE)) {
+        		logger.debug("Old WI Case");
+        		url = linker.getFewiKeyLink(objectType, "" + acc.getObjectKey());
+        	}
+        	else {
+        		logger.debug("Base case.");
+            	url = linker.getFewiIDLink(acc.getObjectType(), acc.getDisplayID());        			
+        	}
+
         	return new ModelAndView("redirect:" + url);
         }
 
@@ -135,7 +160,7 @@ public class AccessionController {
     // JSON summary results
     //----------------------//
     @RequestMapping("/json")
-    public @ResponseBody JsonSummaryResponse<AccessionSummaryRow> seqSummaryJson(
+    public @ResponseBody JsonSummaryResponse<AccessionSummaryRow> accessionSummaryJson(
             HttpServletRequest request,
 			@ModelAttribute AccessionQueryForm query,
             @ModelAttribute Paginator page) {
