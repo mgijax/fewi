@@ -46,13 +46,13 @@ ${templateBean.templateBodyStartHtml}
        <div>Reference</div>
   </div></td>
   <td class="summaryHeaderData1">
-	<a href="${configBean.FEWI_URL}/reference/${reference.jnumID}">${reference.jnumID}</a> ${reference.longCitation}
+	<a href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a> ${reference.longCitation}
   </td>
 </tr>
 </tbody></table><br>
 <c:if test="${record.isFullyCoded}"> <b>Detailed expression data for these assays:</b> 
-${record.fullyCodedResultCount} <a href="${configBean.FEWI_URL}/gxd/result/key/${record.indexKey}">result<c:if test="${record.fullyCodedResultCount > 1}">s</c:if></a> in 
-${record.fullyCodedAssayCount} <a href="${configBean.FEWI_URL}/gxd/assay/key/${record.indexKey}">assay <c:if test="${record.fullyCodedAssayCount > 1}">s</c:if></a><br><br></c:if>
+${record.fullyCodedResultCount} <a href="${configBean.FEWI_URL}gxd/result/key/${record.indexKey}">result<c:if test="${record.fullyCodedResultCount > 1}">s</c:if></a> in 
+${record.fullyCodedAssayCount} <a href="${configBean.FEWI_URL}gxd/assay/key/${record.indexKey}">assay<c:if test="${record.fullyCodedAssayCount > 1}">s</c:if></a><br><br></c:if>
 <img src="${configBean.WEBSHARE_URL}/images/redball.gif" alt="red ball"> Indicates gene expression was analyzed but not necessarily detected.
 <c:if test="${not empty pairTable}">
 	<table class="outline">
