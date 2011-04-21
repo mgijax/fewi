@@ -64,14 +64,25 @@ public class AccessionSummaryRow {
     public String getMgiLink() {
     	
     	String baseUrl = "";
+
+    	// Figure out which object type to pass to the linker, so we can 
+    	// reduce our overall if complexity.
+    	String type = "";
     	
-    	if (! useKeyUrl) {
-    		baseUrl =  feLinker.getFewiIDLink(acc.getObjectType(), acc.getDisplayID());
+    	if (acc.getObjectType().equals("Vocabulary Term")) {
+    		type = acc.getDisplayType();
     	}
     	else {
-    		baseUrl =  feLinker.getFewiKeyLink(acc.getObjectType(), "" + acc.getObjectKey());
+    		type = acc.getObjectType();
     	}
-    	return "<a href=\"" + baseUrl + "\">" + "MGI " + acc.getObjectType() + " Detail" +  "</a>"; 
+
+    	if (! useKeyUrl) {
+    		baseUrl =  feLinker.getFewiIDLink(type, acc.getDisplayID());
+    	}
+    	else {
+    		baseUrl =  feLinker.getFewiKeyLink(type, "" + acc.getObjectKey());
+    	}
+    	return "<a href=\"" + baseUrl + "\">" + "MGI " + type + " Detail" +  "</a>"; 
     }
     public String getDisplayType() {
     	return acc.getDisplayType();

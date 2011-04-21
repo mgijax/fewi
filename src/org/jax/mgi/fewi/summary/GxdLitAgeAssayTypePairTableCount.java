@@ -60,10 +60,10 @@ public class GxdLitAgeAssayTypePairTableCount {
 
     public String getCountUrl () {
     	if (this.count.equals(1)) {
-    		return "<a href=\""+ fewiUrl+"/gxdlit/key/"+this.firstPair.getIndexKey()+"\">" + count + "</a>";
+    		return "<a href=\""+ fewiUrl+"gxdlit/key/"+this.firstPair.getIndexKey()+"\">" + count + "</a>";
     	}
     	else {
-    		String queryUrl = fewiUrl + "/gxdlit/summary/ageAssay?";
+    		String queryUrl = fewiUrl + "gxdlit/summary/ageAssay?";
     		queryUrl += "age=" + this.firstPair.getAge();
     		queryUrl += "&assayType=" + this.firstPair.getAssayType();
     		queryUrl += "&year=" + queryForm.getYear();
@@ -74,7 +74,14 @@ public class GxdLitAgeAssayTypePairTableCount {
     		queryUrl += "&inTitle=" + queryForm.isInTitle();
     		queryUrl += "&author=" + queryForm.getAuthor();
     		queryUrl += "&authorScope=" + queryForm.getAuthorScope();
-    		return "<a href=\""+ queryUrl+"\">" + count + "</a>";
+    		if (queryForm.getReference_key() != null) {
+    			queryUrl += "&reference_key=" + queryForm.getReference_key();
+    		}
+    		if (queryForm.getMarker_key() != null) {
+    			queryUrl += "&marker_key=" + queryForm.getMarker_key();
+    		}
+    		
+    		return "<a href=\""+ queryUrl.replaceAll("\"", "%22") +"\">" + count + "</a>";
     	}
     }
 
