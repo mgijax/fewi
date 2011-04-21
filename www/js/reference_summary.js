@@ -31,15 +31,19 @@ var populateFilterSummary = function () {
 	    for (k in facets) {
 	    	var inner = facets[k];
 	    	var brTag = false;
-			for(v in inner) {
+        	list = facets[key];
+
+			for(v=0; v < inner.length; v++) {
+				YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 	    		vis = true;
 	    		brTag = true;
-	            el = document.createElement("a");
+	            var el = document.createElement("a");
 	            el.setAttribute('class', 'filterItem');
 	            el.setAttribute('id', k + ':' + inner[v]);
 	            var val = k.charAt(0).toUpperCase() + k.slice(1);
 	            val = val.replace('Filter', '') + ': ' + inner[v];
 	            setText(el, val);
+
 	            filterList.appendChild(el);
 	            YAHOO.util.Event.addListener(el, "click", clearFilter);
 	            
@@ -73,16 +77,7 @@ var clearFilter = function () {
 			items.splice(idx, 1);
 		}
 	}
-	var state = myDataTable.getState();
-	
-	var sort = 'score';
-	var dir = 'desc';
-	if (!YAHOO.lang.isNull(state.sortedBy)){
-		sort = state.sortedBy['sort'];
-		dir = state.sortedBy['dir'];
-	}
-	var newState = generateRequest(0, 
-			sort, dir, myDataTable.get("paginator").getRowsPerPage()
+	var newState = generateRequest(myDataTable.getState().sortedBy, 0, myDataTable.get("paginator").getRowsPerPage()
 	);
 
 	History.navigate("myDataTable", newState);
@@ -167,16 +162,12 @@ var clearFilter = function () {
     
     // Define a custom function to route sorting through the Browser History Manager
     var handleSorting = function (oColumn) {
-        // Calculate next sort direction for given Column
-        var sDir = this.getColumnSortDir(oColumn);
-        
         // The next state will reflect the new sort values
         // while preserving existing pagination rows-per-page
         // As a best practice, a new sort will reset to page 0
-        var newState = generateRequest(0, oColumn.key, sDir, this.get("paginator").getRowsPerPage());
-        
+        var sortedBy = {dir: this.getColumnSortDir(oColumn), key: oColumn.key};
         // Pass the state along to the Browser History Manager
-        History.navigate("myDataTable", newState);
+        History.navigate("myDataTable", generateRequest(sortedBy, 0, 25));
     };
     myDataTable.sortColumn = handleSorting;
 
@@ -184,12 +175,8 @@ var clearFilter = function () {
     var handlePagination = function(state) {
         // The next state will reflect the new pagination values
         // while preserving existing sort values
-        // Note that the sort direction needs to be converted from DataTable format to server value
-        var sortedBy  = this.get("sortedBy"),
-            newState = generateRequest(
-            state.recordOffset, sortedBy.key, sortedBy.dir, state.rowsPerPage
-        );
-        myPaginator.setState(state);
+        var newState = generateRequest(this.get("sortedBy"), state.recordOffset, state.rowsPerPage);
+        //myPaginator.setState(newState);
         // Pass the state along to the Browser History Manager
         History.navigate("myDataTable", newState);
     };
@@ -227,17 +214,10 @@ var clearFilter = function () {
 	            dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc" // Convert from server value to DataTable format
 	        };
         }
-
         
         var reportButton = YAHOO.util.Dom.get('textDownload');
-        if (!YAHOO.lang.isNull(reportButton)){
-        	var sort = 'score';
-        	var dir = 'desc';
-        	if (!YAHOO.lang.isUndefined(oPayload.sortedBy)){
-        		sort = oPayload.sortedBy['sort'];
-        		dir = oPayload.sortedBy['dir'];
-        	}
-	        facetQuery = generateRequest(0, sort, dir, totalCount);
+        if (!YAHOO.lang.isNull(reportButton)){      	
+	        facetQuery = generateRequest(myDataTable.getState().sortedBy, 0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
         }
         
@@ -278,19 +258,25 @@ var clearFilter = function () {
 	};
 	
     // Returns a request string for consumption by the DataSource
-    generateRequest = function(startIndex,sortKey,dir,results) {
-        startIndex = startIndex || 0;
-        sortKey   = sortKey || "year";
-        
-        dir   = (dir) ? dir.substring(7) : "desc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
+    generateRequest = function(sortedBy, startIndex, results) {
+    	var sort = 'score';
+    	var dir = 'desc';
+    	if (!YAHOO.lang.isUndefined(sortedBy) && !YAHOO.lang.isNull(sortedBy)){
+    		sort = sortedBy['key'];
+    		dir = sortedBy['dir'];
+    	}
+    	
+    	// Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
+        dir   = (dir) ? dir.substring(7) : "desc"; 
         results   = results || 25;
         
-        var stateParams = "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
+        var stateParams = "results="+results+"&startIndex="+startIndex+"&sort="+sort+"&dir="+dir;
         var facetParams = '';
         for (key in facets){
-			for (item in facets[key]){
-				facetParams = facetParams + '&' + key + '=' + facets[key][item];
-			}
+        	list = facets[key];
+        	for(i=0; i < list.length; i++){
+        		facetParams = facetParams + '&' + key + '=' + list[i];
+        	}
         }
         return stateParams + facetParams;
     };
@@ -309,7 +295,7 @@ var clearFilter = function () {
 
     // Calculate the first request
     var initialRequest = History.getBookmarkedState("myDataTable") || // Passed in via URL
-                       generateRequest(0, defaultSort, "yui-dt-desc", 25); // Get default values
+                       generateRequest(myDataTable.getState().sortedBy, 0, 25); // Get default values
 
     // Register the module
     History.register("myDataTable", initialRequest, handleHistoryNavigation);
@@ -354,25 +340,12 @@ YAHOO.util.Event.onDOMReady(function () {
 	// Define various event handlers for Dialog
 	var handleSubmit = function() {	
 		var selections = this.getData();
+		var list = [];
 		for (i in selections){
 			facets[i] = selections[i];
 		}
-
 		var state = myDataTable.getState();
-
-    	var sort = 'score';
-    	var dir = 'desc';
-    	if (!YAHOO.lang.isNull(state.sortedBy)){
-
-    		sort = state.sortedBy['sort'];
-    		dir = state.sortedBy['dir'];
-    	}
-
-		var newState = generateRequest(0, 
-				sort, dir, 
-				myDataTable.get("paginator").getRowsPerPage()
-		);
-
+		var newState = generateRequest(state.sortedBy, 0, myDataTable.get("paginator").getRowsPerPage());
 		YAHOO.util.History.navigate("myDataTable", newState);	
 		this.submit();
 	};
@@ -508,11 +481,10 @@ YAHOO.util.Event.onDOMReady(function () {
 	var genFacetQuery = function(exclude) {
         var facetParams = '';
         for (key in facets){
-        	if (key != exclude){
-				for (item in facets[key]){
-					facetParams = facetParams + '&' + key + '=' + facets[key][item];
-				}
-        	}
+        	list = facets[key];
+			for (i=0; i < list.length; i++){
+				facetParams = facetParams + '&' + key + '=' + list[i];
+			}
         }
         return facetParams;
 	};
@@ -564,13 +536,17 @@ YAHOO.util.Event.onDOMReady(function () {
 
 });
 
-var resetQF = function () {
+var resetQF = function (e) {
+	YAHOO.util.Event.preventDefault(e); 
 	var form = YAHOO.util.Dom.get("referenceQueryForm");
-	form.author.value = 'foo';
-	form.journal.value = 'foo';
-	form.year.value = 'foo';
-	form.text.value = 'foo';
-	form.id.value = 'foo';
+	form.author.value = "";
+	form.authorScope1.checked="checked";
+	form.journal.value = "";
+	form.year.value = "";
+	form.text.value = "";
+	form.inTitle1.checked="checked"
+	form.inAbstract1.checked="checked"
+	form.id.value = "";
 };
 
 YAHOO.util.Event.addListener("referenceQueryForm", "reset", resetQF);
