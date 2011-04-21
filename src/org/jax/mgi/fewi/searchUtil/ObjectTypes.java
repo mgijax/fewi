@@ -1,5 +1,13 @@
 package org.jax.mgi.fewi.searchUtil;
 
+/**
+ * This class encapsulates all object types found in the accession table and
+ * in some cases sub object types.  For example GO is a sub object type to 
+ * VOC_TERM
+ * @author mhall
+ *
+ */
+
 public class ObjectTypes {
 	
 	public static String REFERENCE = "Reference";
@@ -10,5 +18,13 @@ public class ObjectTypes {
 	public static String IMAGE = "Image";
 	public static String ASSAY = "Assay";
 	public static String ORTHOLOGY = "Orthology";
-
+	public static String ANTIBODY = "Antibody";
+	public static String ANTIGEN = "Antigen";
+	public static String MAPPING = "Experiment";
+	public static String OMIM = "OMIM";
+	public static String GO = "Molecular Function";
+	public static String MP = "Mammalian Phenotype";
+	public static String PIRSF = "PIR Superfamily";
+	public static String INTERPRO = "InterPro Domains";
+	
 }
