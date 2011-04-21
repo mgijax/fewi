@@ -196,9 +196,19 @@ public class ReferenceController {
 					row.setTitleHL(new Highlighter(textHl));
 				}
 				if (query.getAuthor() != null && !"".equals(query.getAuthor())){					
-					authorHL = highlighting.get(SearchConstants.REF_AUTHOR);
+					for (String auth: highlighting.get(SearchConstants.REF_AUTHOR)) {
+						authorHL.add(auth.replace(" ", "[\\s\\-']"));
+					}
 					row.setAuthorHL(new Highlighter(authorHL));
-				}				
+				}
+//				if  (query.getAuthorFilter() != null && query.getAuthorFilter().size() > 0){
+//					logger.debug("get authorFilter highlighting");
+//					for(String auth: highlighting.get(FacetConstants.REF_AUTHORS)){
+//						authorHL.add(auth.replace(" ", "[\\s\\-']"));
+//					}
+//					logger.debug("done");
+//					row.setAuthorHL(new Highlighter(authorHL));
+//				}
 				summaryRows.add(row);
 			} else {
 				logger.debug("--> Null Object");

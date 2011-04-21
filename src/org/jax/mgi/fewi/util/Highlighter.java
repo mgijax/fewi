@@ -20,7 +20,7 @@ public class Highlighter {
 	    String patternStr;	    
     		
     	if (toFind != null){
-    		patternStr = "\\b(" + StringUtils.join(toFind, "|") + ")\\b";
+    		patternStr = "\\b(" + StringUtils.join(toFind, "|") + ")";
     	    pattern = Pattern.compile( patternStr, Pattern.CASE_INSENSITIVE);
     	}
     }
