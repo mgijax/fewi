@@ -147,6 +147,7 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
         highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
         highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
+        highlightFields.add(IndexConstants.REF_AUTHOR_FACET);
         
         /* A reverse Mapping of Highlightable fields in the index to what 
          * parameter it came from.  This supports the N->1 Mapping 
@@ -170,6 +171,8 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         fieldToParamMap.put(IndexConstants.REF_FIRST_AUTHOR, 
         		SearchConstants.REF_AUTHOR);
         fieldToParamMap.put(IndexConstants.REF_LAST_AUTHOR, 
+        		SearchConstants.REF_AUTHOR);
+        fieldToParamMap.put(IndexConstants.REF_AUTHOR_FACET, 
         		SearchConstants.REF_AUTHOR);
         
         
