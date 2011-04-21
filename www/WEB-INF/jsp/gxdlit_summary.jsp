@@ -138,7 +138,7 @@ ${templateBean.templateBodyStartHtml}
            <c:if test="${not empty row.referenceRecords}">
          	<c:forEach var="innerrow" items="${row.referenceRecords}" >
          		<tr class="${stripe.next}">
-         		<td width="20px" style="vertical-align:text-top;"><a href="${configBean.FEWI_URL}/gxdlit/key/${innerrow.indexKey}">${innerrow.count}</a><c:if test="${innerrow.isFullyCoded}">*</c:if></td><td><b>${innerrow.jnum}</b>  ${innerrow.longCitation} </td></tr>
+         		<td width="20px" style="vertical-align:text-top;"><a href="${configBean.FEWI_URL}gxdlit/key/${innerrow.indexKey}">${innerrow.count}</a><c:if test="${innerrow.isFullyCoded}">*</c:if></td><td><b>${innerrow.jnum}</b>  ${innerrow.longCitation} </td></tr>
          	</c:forEach>  
            </c:if>
            </table>
