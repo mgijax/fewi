@@ -135,9 +135,19 @@ public class AccessionController {
         		url = linker.getFewiIDLink(acc.getDisplayType(), acc.getDisplayID());        		
         	}
         	
+        	// Handle the old wi cases, but with ID
+        	
+        	else if (objectType.equals(ObjectTypes.ORTHOLOGY)) {
+        		url = linker.getFewiIDLink(objectType, acc.getDisplayID());
+        	}
+        	
         	// Handle the old wi cases.
         	
-        	else if (objectType.equals(ObjectTypes.PROBECLONE)) {
+        	else if (objectType.equals(ObjectTypes.PROBECLONE) || 
+        			objectType.equals(ObjectTypes.ASSAY) ||
+        			objectType.equals(ObjectTypes.GO) ||
+        			objectType.equals(ObjectTypes.ANTIBODY) ||
+        			objectType.equals(ObjectTypes.ANTIGEN)) {
         		logger.debug("Old WI Case");
         		url = linker.getFewiKeyLink(objectType, "" + acc.getObjectKey());
         	}
