@@ -68,13 +68,17 @@ var clearFilter = function () {
 	kv = this.id.split(":");		
 	var items = facets[kv[0]];	
 	var val = this.id.slice(this.id.indexOf(":")+1);
-
 	if (val == 'clearFilter'){
 		facets = {};
-	} else {			
-		var idx = items.indexOf(val); // Find the index
-		if(idx != -1) {
-			items.splice(idx, 1);
+	} else {
+		for (var i = 0; i < items.length; i++) {
+		  if (items[i] == val) {
+		    found = i;
+		    break;
+		  }
+		}
+		if(i != -1) {
+			items.splice(i, 1);
 		}
 	}
 	var newState = generateRequest(myDataTable.getState().sortedBy, 0, myDataTable.get("paginator").getRowsPerPage()
