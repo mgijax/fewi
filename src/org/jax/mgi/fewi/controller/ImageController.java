@@ -12,6 +12,7 @@ import mgi.frontend.datamodel.*;
 // fewi
 import org.jax.mgi.fewi.finder.ImageFinder;
 import org.jax.mgi.fewi.finder.AlleleFinder;
+import org.jax.mgi.fewi.summary.ImageSummaryRow;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.jax.mgi.fewi.config.ContextLoader;
 
@@ -84,16 +85,16 @@ public class ImageController {
 
         ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
 
-        // setup search parameters object
-        SearchParams searchParams = new SearchParams();
+        // setup search parameters to get allele object
+        SearchParams alleleSearchParams = new SearchParams();
         Filter alleleIdFilter = new Filter(SearchConstants.ALL_ID, alleleID);
-        searchParams.setFilter(alleleIdFilter);
+        alleleSearchParams.setFilter(alleleIdFilter);
 
         // find the requested allele for header
-        SearchResults<Allele> searchResults
-          = alleleFinder.getAlleleByID(searchParams);
+        SearchResults<Allele> alleleSearchResults
+          = alleleFinder.getAlleleByID(alleleSearchParams);
 
-        List<Allele> alleleList = searchResults.getResultObjects();
+        List<Allele> alleleList = alleleSearchResults.getResultObjects();
 
         // there can be only one...
         if (alleleList.size() < 1) { // none found
@@ -115,9 +116,31 @@ public class ImageController {
         // derive the synonym list, if the allele has any
         mav.addObject("synonyms", allele.getSynonyms());
 
-//        Set<AlleleSynonym> alleleSynonyms = allele.getSynonyms();
+        // setup search parameters to get the image objects
+        SearchParams imageSearchParams = new SearchParams();
+        Integer alleleKey = new Integer(allele.getAlleleKey());
+        Filter alleleKeyFilter = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
+        imageSearchParams.setFilter(alleleKeyFilter);
 
+        // find the requested images for this allele
+        SearchResults<Image> imageSearchResults
+          = imageFinder.getImagesByAlleleKey(imageSearchParams);
 
+        // generate summary row objects
+        Image thisImage;
+        List<ImageSummaryRow> imageSummaryRows
+        List<Image> imageList = imageSearchResults.getResultObjects();
+          = new ArrayList<ImageSummaryRow>();
+        Iterator<Image> imageIter = imageList.iterator();
+        while (imageIter.hasNext())
+        {
+          thisImage = imageIter.next();
+          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
+            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage);
+            imageSummaryRows.add(imageSummaryRow);
+	      }
+        }
+        mav.addObject("imageSummaryRows", imageSummaryRows);
 
         return mav;
     }

@@ -8,6 +8,7 @@ import java.util.*;
 
 import mgi.frontend.datamodel.Image;
 import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
+import org.jax.mgi.fewi.hunter.SolrImageSummaryHunter;
 
 /*----------------------------------------*/
 /* standard classes, used for all Finders */
@@ -46,6 +47,9 @@ public class ImageFinder {
     private SolrImageKeyHunter imageKeyHunter;
 
     @Autowired
+    private SolrImageSummaryHunter imageSummaryHunter;
+
+    @Autowired
     private HibernateObjectGatherer<Image> imageGatherer;
 
 
@@ -75,25 +79,38 @@ public class ImageFinder {
     }
 
 
-	/*--------------------------------------------*/
-	/* Retrieval of a foo, for a given db key
-	/*--------------------------------------------*/
+    /*-----------------------------------------*/
+    /* Retrieval images, for a given allele
+    /*-----------------------------------------*/
 
-/*    public SearchResults<Marker> getFooByKey(String dbKey) {
+    public SearchResults<Image> getImagesByAlleleKey(SearchParams searchParams) {
 
-        logger.debug("->getFooByKey()");
+        logger.debug("->getImagesByAlleleKey()");
 
         // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+        SearchResults<Image> searchResults = new SearchResults<Image>();
 
-        // gather objects, add them to the results
-        fooGatherer.setType(Marker.class);
-        Marker foo = fooGatherer.get( dbKey );
-        searchResults.addResultObjects(foo);
+        // ask the hunter to identify which objects to return
+        imageSummaryHunter.hunt(searchParams, searchResults);
+        logger.debug("->hunter found these resultKeys - "
+          + searchResults.getResultKeys());
+
+        // gather objects identified by the hunter, add them to the results
+        imageGatherer.setType(Image.class);
+        List<Image> imageList
+          = imageGatherer.get( searchResults.getResultKeys() );
+        searchResults.setResultObjects(imageList);
 
         return searchResults;
     }
-*/
+
+
+
+
+
+
+
+
 
     /*---------------------------------*/
     /* Retrieval of multiple foos

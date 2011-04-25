@@ -33,7 +33,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_image_detail.shtml">	
+<div id="titleBarWrapper" userdoc="pheno_image_detail_help.shtml">	
   <span class="titleBarMainTitle">Phenotype Image Detail </span>
 </div>
 
@@ -151,10 +151,10 @@ ${templateBean.templateBodyStartHtml}
 
             <tr class="stripe1">
               <td class="">
-                <%=ntc.convertNotes(genotype.getCombination1(), '|')%>
+                <%=FormatHelper.newline2HTMLBR(ntc.convertNotes(genotype.getCombination1(), '|'))%>
               </td>
               <td class="">
-                ${genotype.backgroundStrain}
+                <%=FormatHelper.superscript(genotype.getBackgroundStrain())%>
               </td>
             </tr>
 
