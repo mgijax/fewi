@@ -128,8 +128,8 @@ public class ImageController {
 
         // generate summary row objects
         Image thisImage;
-        List<ImageSummaryRow> imageSummaryRows
         List<Image> imageList = imageSearchResults.getResultObjects();
+        List<ImageSummaryRow> imageSummaryRows
           = new ArrayList<ImageSummaryRow>();
         Iterator<Image> imageIter = imageList.iterator();
         while (imageIter.hasNext())

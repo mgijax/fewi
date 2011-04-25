@@ -28,7 +28,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_images_help.shtml ">	
+<div id="titleBarWrapper" userdoc="pheno_images_help.shtml ">    
   <span class="titleBarMainTitle">
     Phenotype Images Associated With This Allele 
   </span>
@@ -47,6 +47,7 @@ ${templateBean.templateBodyStartHtml}
     <td class="<%=rightTdStyles.getNext() %>">
 
       <table width="100%">
+
       <tr>
         <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap">
            <span class="smallLabel">Symbol: </span>
@@ -59,6 +60,7 @@ ${templateBean.templateBodyStartHtml}
           </span>
         </td>
       </tr>
+
       <tr>
         <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap">
          <span class="smallLabel">Name: </span>
@@ -69,6 +71,7 @@ ${templateBean.templateBodyStartHtml}
           </span>
         </td>
       </tr>
+
       <tr>
         <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap">
           <span class="smallLabel">MGI ID: </span>
@@ -80,20 +83,13 @@ ${templateBean.templateBodyStartHtml}
         </td>
       </tr>
 
-
-
-
-
-
-
-  <c:if test="${not empty synonyms}">
+      <c:if test="${not empty synonyms}">
       <tr>
         <td class="rightBorderThinGray" align="right" width="1%" >
           <span class="smallLabel">Synonyms: </span>
         </td>
         <td nowrap="nowrap">
-         <span class="small">
-
+          <span class="small">
           <c:forEach var="alleleSynonym" items="${synonyms}" varStatus="status">
               <% // pull to scriptlet context
                 AlleleSynonym alleleSynonym
@@ -101,30 +97,84 @@ ${templateBean.templateBodyStartHtml}
               %>
               <%=FormatHelper.superscript(alleleSynonym.getSynonym())%><c:if test="${not status.last}">,</c:if>
           </c:forEach>
-
          </span>
         </td>
       </tr>
-  </c:if>
-
-
-
-
-
-
+      </c:if>
 
       </table>
     </td>
   </tr>
 
 
-  <!-- image -->
+  <!-- images -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
       Image for <br> Allele
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      <em>Click images for details </em><br>
+
+      <div style="font-style: italic; padding-bottom:0.5em;">
+        Click images for details 
+      </div>
+
+      <table class="borderedTable" width="100%">
+      <tr>
+        <td rowspan=2 class="resultsHeader">
+          Image
+        </td>
+        <td rowspan=2 class="resultsHeader">
+          Caption
+        </td>
+        <td colspan=2 class="resultsHeader">
+          Genotypes involving this allele
+        </td>
+      </tr>
+      <tr>
+        <td class="resultsHeader">
+          Allelic Composition
+        </td>
+        <td class="resultsHeader">
+          Genetic Background
+        </td>
+      </tr>
+
+
+
+      <c:forEach var="imageSummaryRow" items="${imageSummaryRows}" >
+
+        <tr>
+          <td>
+            <a href="${configBean.FEWI_URL}image/pheno/${imageSummaryRow.mgiID}">
+            <img width="150" height="${imageSummaryRow.modifiedHeight}" 
+              src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=${imageSummaryRow.pixeldbNumericID}'>
+            </a>
+          </td>
+          <td>
+            ${imageSummaryRow.caption}
+          </td>
+          <td>
+            AllComp
+          </td>
+          <td>
+            GenBak
+          </td>
+        </tr>
+
+      </c:forEach>
+
+      </table>
+
+
+
+
+
+
+
+
+
+
+
     </td>
   </tr>
 
