@@ -67,7 +67,10 @@ ${templateBean.templateBodyStartHtml}
         </td>
         <td nowrap="nowrap" >
           <span class="small">
-             ${allele.name}
+            <c:if test="${allele.geneName!=allele.name}">
+              ${allele.geneName};
+            </c:if>
+            ${allele.name}
           </span>
         </td>
       </tr>
@@ -120,7 +123,7 @@ ${templateBean.templateBodyStartHtml}
 
       <table class="borderedTable" width="100%">
       <tr>
-        <td rowspan=2 class="resultsHeader">
+        <td rowspan=2 class="resultsHeader" width="1%">
           Image
         </td>
         <td rowspan=2 class="resultsHeader">
@@ -139,51 +142,16 @@ ${templateBean.templateBodyStartHtml}
         </td>
       </tr>
 
-
-
       <c:forEach var="imageSummaryRow" items="${imageSummaryRows}" >
-
-        <tr>
-          <td>
-            <a href="${configBean.FEWI_URL}image/pheno/${imageSummaryRow.mgiID}">
-            <img width="150" height="${imageSummaryRow.modifiedHeight}" 
-              src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=${imageSummaryRow.pixeldbNumericID}'>
-            </a>
-          </td>
-          <td>
-            ${imageSummaryRow.caption}
-          </td>
-          <td>
-            AllComp
-          </td>
-          <td>
-            GenBak
-          </td>
-        </tr>
-
+        ${imageSummaryRow.row}
       </c:forEach>
 
       </table>
-
-
-
-
-
-
-
-
-
-
 
     </td>
   </tr>
 
 
-
 </table>
-
-
-
-
 ${templateBean.templateBodyStopHtml}
 
