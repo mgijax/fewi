@@ -200,8 +200,7 @@ public class AccessionController {
         	Accession acc = it.next();
             if (acc == null) {
                 logger.debug("--> Null Object");
-            }else {
-            	logger.debug("Made a new row for ID: " + acc.getDisplayID());
+            } else {
             	if (!typeCount.containsKey(acc.getObjectType())) {
             		typeCount.put(acc.getObjectType(), 0);
             	}
@@ -228,12 +227,30 @@ public class AccessionController {
     }
 
 
+    
 
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
 
-    // generate the sorts
+    //-----------------------------//
+	// Accession By ID
+	//-----------------------------//
+    @RequestMapping("/{accID}")
+	public ModelAndView accessionSummary(@PathVariable("accID") String accID,
+			HttpServletRequest request,
+	        @ModelAttribute AccessionQueryForm queryForm) {
+	
+	    logger.debug("->accessionSummary started");
+	    logger.debug("queryString: " + request.getQueryString());
+	    
+	    queryForm.setId(accID);
+	   	
+	    return accessionSummary(request, queryForm);
+	}
+
+
+	// generate the sorts
     private List<Sort> genSorts(HttpServletRequest request) {
 
         logger.debug("->genSorts started");
