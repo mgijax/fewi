@@ -20,7 +20,7 @@ hibernate.dialect=org.hibernate.dialect.ProgressDialect
 jndi.datasource=java:fe_frontend
 
 # gxd lit result limit
-gxdLit.limit=30000
+gxdLit.limit=20000
 
 #-------------------------------------------------------------------------------
 #----- SOLR CONFIGURATION
@@ -52,8 +52,8 @@ solr.creAssayResult.url=${solr.server1.url}creAssayResult/
 solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
 
 # solr config parameters
-solr.soTimeout=30000
-solr.connectionTimeout=30000
+solr.soTimeout=70000
+solr.connectionTimeout=70000
 solr.maxConnectionsPerHost=100
 solr.maxTotalConnections=100
 solr.maxRetries=1
