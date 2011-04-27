@@ -89,13 +89,21 @@ public class HibernateAccessionSummaryHunter<T> {
     	
     	hql.append(StringUtils.join(clauses, " and "));
     	
+    	
     	// Add in the default ordering
     	
     	hql.append(" order by sequence_num desc");
     	
+    	int pageSize = searchParams.getPageSize();
+    	int startIndex = searchParams.getStartIndex();
+    	
+    	
         Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());
-        logger.debug("This is the query: " + hql.toString());
+//        query.setFirstResult(startIndex);
+//        query.setMaxResults(pageSize);
         
+        logger.debug("This is the query: " + hql.toString());
+
 /*		if(idSet != null && idSet.size() > 0) { 
 			query.setParameterList("ids", idSet);
 		}*/
@@ -114,15 +122,18 @@ public class HibernateAccessionSummaryHunter<T> {
         Set<Integer> accessionID = new HashSet<Integer>();
         logger.debug("-> query complete" );
         int bTerm;
+        int start = 0;
         for (T item: qr){
 
-           	bm.add(item);
-        	        	
+        	if ((start >= startIndex) && (start < (startIndex + pageSize))) {
+        		bm.add(item);
+        	}
+        	start ++;        	
         }
         
         logger.debug("-> results parsed" );
                
-        searchResults.setTotalCount(bm.size());
+        searchResults.setTotalCount(qr.size());
         //searchResults.getResultSetMeta().addCount("accession", markerKey.size());
         
         int endIndex = searchParams.getStartIndex() + searchParams.getPageSize();
