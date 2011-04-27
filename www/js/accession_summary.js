@@ -4,7 +4,7 @@ function main() {
 
     var myColumnDefs = [
         {key:"accId", 
-            label:"<b>AccId</b>",
+            label:"<b>Accession ID</b>",
             width:220, 
             sortable:false},
         {key:"logicalDb", 
