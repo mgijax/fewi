@@ -22,6 +22,7 @@ public class ObjectTypes {
 	public static String ANTIGEN = "Antigen";
 	public static String MAPPING = "Experiment";
 	public static String OMIM = "OMIM";
+	public static String GENE = "Gene";
 	public static String GO = "Molecular Function";
 	public static String MP = "Mammalian Phenotype";
 	public static String PIRSF = "PIR Superfamily";
