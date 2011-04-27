@@ -5,8 +5,13 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Accession ID Results</title>
+<title>Accession ID Results - MGI</title>
 
+<meta name="description" content="Search Mouse Genome Informatics for genes, genome features, sequences, alleles, human disease, references, ES cell lines, SNPs, probes, clones, and other genomic data using accession ids"> 
+<meta name="keywords" content="MGI, mouse, genes, genome features, sequence, allele, disease, reference, cell lines, SNP, ortholog, probe, clone, phenotype, anatomy, gene ontology, GO, MP, anatomical dictionary, AD"> 
+<meta name="robots" content="NOODP"/>
+<meta name="robots" content="NOYDIR"/>
+ 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <style type="text/css">
