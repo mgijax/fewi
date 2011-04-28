@@ -103,7 +103,7 @@ public class AccessionController {
     public ModelAndView accessionSummary(HttpServletRequest request,
             @ModelAttribute AccessionQueryForm queryForm) {
 
-        logger.debug("->accessionSummary started");
+        logger.debug("->accessionSummary main started");
         logger.debug("queryString: " + request.getQueryString());
         
         // For accession we need to search twice, once before the summary
@@ -160,7 +160,13 @@ public class AccessionController {
         }
 
         ModelAndView mav = new ModelAndView("accession_summary");
-        mav.addObject("queryString", request.getQueryString());
+        
+        String queryString = request.getQueryString();
+        if (queryString == null || queryString.equals("")) {
+        	queryString = "id=" + queryForm.getId();
+        }
+        
+        mav.addObject("queryString", queryString);
         mav.addObject("queryForm", queryForm);
 
         return mav;
@@ -172,7 +178,7 @@ public class AccessionController {
     @RequestMapping("/json")
     public @ResponseBody JsonSummaryResponse<AccessionSummaryRow> accessionSummaryJson(
             HttpServletRequest request,
-			@ModelAttribute AccessionQueryForm query,
+			@ModelAttribute AccessionQueryForm queryForm,
             @ModelAttribute Paginator page) {
 
         logger.debug("->JsonSummaryResponse started");
@@ -181,7 +187,7 @@ public class AccessionController {
         SearchParams params = new SearchParams();
         params.setPaginator(page);
         params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(query));
+        params.setFilter(this.genFilters(queryForm));
 
         // perform query, and pull out the requested objects
         SearchResults searchResults
@@ -237,14 +243,17 @@ public class AccessionController {
 	// Accession By ID
 	//-----------------------------//
     @RequestMapping("/{accID}")
-	public ModelAndView accessionSummary(@PathVariable("accID") String accID,
+	public ModelAndView accessionSummaryByID(@PathVariable("accID") String accID,
 			HttpServletRequest request,
 	        @ModelAttribute AccessionQueryForm queryForm) {
 	
-	    logger.debug("->accessionSummary started");
+	    logger.debug("->accessionSummary by ID started");
 	    logger.debug("queryString: " + request.getQueryString());
 	    
 	    queryForm.setId(accID);
+	   	logger.debug("Modified Query Form: " + queryForm.toString());
+	   	
+	   	request.setAttribute("queryString", "id=" + accID);
 	   	
 	    return accessionSummary(request, queryForm);
 	}
