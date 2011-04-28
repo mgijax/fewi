@@ -276,7 +276,7 @@ public class MarkerController {
         String otherLinks;
     	MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
     	boolean isGeneModelID = false;
-        
+
         while (it.hasNext()) {
         	myID = it.next();
         	logicaldb = myID.getLogicalDB();
