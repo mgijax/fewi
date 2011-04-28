@@ -30,20 +30,13 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.ALLELE, baseUrl +"allele/%s");
 		idUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/%s");
 		idUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/%s");
-		idUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/%s");  // Old WI Instead
-		idUrlMap.put(ObjectTypes.ORTHOLOGY, baseUrl +"orthology/%s");  // Old WI Instead
-		idUrlMap.put(ObjectTypes.ANTIBODY, baseUrl +"antibody/%s"); // Old WI Instead
-		idUrlMap.put(ObjectTypes.ANTIGEN, baseUrl +"antigen/%s"); // Old WI Instead
-		idUrlMap.put(ObjectTypes.MAPPING, baseUrl +"mapping/%s"); // Old WI Instead
+		idUrlMap.put(ObjectTypes.ORTHOLOGY, pythonWiUrl +"searches/homology_report.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.OMIM, baseUrl +"omim/%s");  
-		idUrlMap.put(ObjectTypes.GO, baseUrl +"go/%s");  // Old WI Instead
-		idUrlMap.put(ObjectTypes.INTERPRO, baseUrl +"interpro/%s");  // Check wi
-		idUrlMap.put(ObjectTypes.PIRSF, baseUrl +"pirsf/%s");  // Old WI Instead
-		idUrlMap.put(ObjectTypes.MP, baseUrl +"mp/%s");  // Old WI Instead
+		idUrlMap.put(ObjectTypes.GENE, javaWiUrl +"?page=markerDetail&id=%s");
+		idUrlMap.put(ObjectTypes.GO, pythonWiUrl +"searches/GO.cgi?id=%s");
+		idUrlMap.put(ObjectTypes.MP, pythonWiUrl +"searches/Phat.cgi?id=%s");
 		
-		// SNP // Old WI Instead
-		// SUBSNP // Old WI Instead
-		// AMA // Old WI Instead
+		// Mapping that is key based
 		
 		keyUrlMap.put(ObjectTypes.MARKER,  baseUrl +"marker/key/%s");
 		keyUrlMap.put(ObjectTypes.REFERENCE, baseUrl +"reference/key/%s");
@@ -51,16 +44,11 @@ public class FewiLinker {
 		keyUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/key/%s");
 		keyUrlMap.put(ObjectTypes.PROBECLONE, pythonWiUrl +"searches/probe.cgi?%s");
 		keyUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/key/%s");
-		keyUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/key/%s");
-		keyUrlMap.put(ObjectTypes.ORTHOLOGY, baseUrl +"orthology/key/%s");
-		keyUrlMap.put(ObjectTypes.ANTIBODY, baseUrl +"antibody/key/%s");
-		keyUrlMap.put(ObjectTypes.ANTIGEN, baseUrl +"antigen/key/%s");
+		keyUrlMap.put(ObjectTypes.ASSAY, pythonWiUrl +"searches/expression.cgi?%s");
+		keyUrlMap.put(ObjectTypes.ANTIBODY, pythonWiUrl +"searches/antibody.cgi?%s");
+		keyUrlMap.put(ObjectTypes.ANTIGEN, pythonWiUrl +"searches/antigen.cgi?%s");
 		keyUrlMap.put(ObjectTypes.MAPPING, baseUrl +"mapping/key/%s");
 		keyUrlMap.put(ObjectTypes.OMIM, baseUrl +"omim/key/%s");
-		keyUrlMap.put(ObjectTypes.GO, baseUrl +"go/key/%s");
-		keyUrlMap.put(ObjectTypes.INTERPRO, baseUrl +"interpro/key/%s");
-		keyUrlMap.put(ObjectTypes.PIRSF, baseUrl +"pirsf/key/%s");
-		keyUrlMap.put(ObjectTypes.MP, baseUrl +"mp/key/%s");
 		
 	}
 	
