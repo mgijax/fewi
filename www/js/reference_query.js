@@ -114,3 +114,18 @@ YAHOO.util.Event.addListener("referenceQueryForm", "submit", interceptSubmit);
     };
 })();
 
+var resetQF = function (e) {
+	YAHOO.util.Event.preventDefault(e); 
+	var form = YAHOO.util.Dom.get("referenceQueryForm");
+	form.author.value = "";
+	form.authorScope1.checked="checked";
+	form.journal.value = "";
+	form.year.value = "";
+	form.text.value = "";
+	form.inTitle1.checked="checked"
+	form.inAbstract1.checked="checked"
+	form.id.value = "";
+};
+
+YAHOO.util.Event.addListener("referenceQueryForm", "reset", resetQF);
+

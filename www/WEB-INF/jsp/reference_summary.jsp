@@ -98,7 +98,7 @@ ${templateBean.templateBodyStartHtml}
 	
 <div id="toolbar" class="bluebar">
 	<div id="filterDiv">
-		Filter by: 
+		Filter results by: 
 		<a id="authorFilter" class="filterButton">Author <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="journalFilter" class="filterButton">Journal <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="yearFilter" class="filterButton">Year <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
@@ -137,9 +137,5 @@ ${templateBean.templateBodyStartHtml}
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_summary.js"></script>
-
-
-
-
 
 ${templateBean.templateBodyStopHtml}

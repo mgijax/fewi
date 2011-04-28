@@ -98,7 +98,7 @@
 			PubMed ID or<br/>
 			MGI Reference ID
 		</td>
-		<td  CLASS="data1">
+		<td>
 			<div style="height:3em;">
 				<div style="float:left; width:300px;text-align:left;">
 					<form:input id="id" path="id" class="formWidth" value="" maxlength="256"></form:input><br/>

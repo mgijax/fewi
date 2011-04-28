@@ -107,7 +107,8 @@ var clearFilter = function () {
         {key:"journal", label:"Journal", sortable:true, width:100},
         {key:"year", label:"Year", sortable:true, width:30},     
         {key:"curatedData", label:"Curated Data", sortable:false, width:225},
-        {key:"vol", label:"Vol(Iss)Pg", sortable:false, width:85}
+        {key:"vol", label:"Vol(Iss)Pg", sortable:false, width:85},
+        {key:"score", label:"Rank", sortable:true, hidden:true}
     ];
 
     // DataSource instance
@@ -123,7 +124,8 @@ var clearFilter = function () {
             {key:"abstract"},
             {key:"year"},
             {key:"vol"},
-            {key:"curatedData"}
+            {key:"curatedData"},
+            {key:"score"}
         ],
         metaFields: {
             totalRecords: "totalCount",
@@ -152,7 +154,9 @@ var clearFilter = function () {
         paginator : myPaginator,
         rowExpansionTemplate : '<div class="refAbstract">{abstract}</div>',
         dynamicData : true,
-        initialLoad : false
+        initialLoad : false,
+        MSG_LOADING:  '<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...',
+        MSG_EMPTY:    'No results found'
     };  
     
     // DataTable instance
@@ -207,21 +211,19 @@ var clearFilter = function () {
         	setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
         }
         
+        oPayload.sortedBy = {
+                key: pRequest['sort'][0] || "year",
+                dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc" // Convert from server value to DataTable format
+        };
+        
         oPayload.pagination = {
             rowsPerPage: Number(pRequest['results'][0]) || 25,
             recordOffset: Number(pRequest['startIndex'][0]) || 0
         };
-        
-        if (pRequest['sort'][0] != 'score'){       	
-	        oPayload.sortedBy = {
-	            key: pRequest['sort'][0] || "year",
-	            dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc" // Convert from server value to DataTable format
-	        };
-        }
-        
+     
         var reportButton = YAHOO.util.Dom.get('textDownload');
         if (!YAHOO.lang.isNull(reportButton)){      	
-	        facetQuery = generateRequest(myDataTable.getState().sortedBy, 0, totalCount);
+	        facetQuery = generateRequest(oPayload.sortedBy, 0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
         }
         
@@ -263,17 +265,18 @@ var clearFilter = function () {
 	
     // Returns a request string for consumption by the DataSource
     generateRequest = function(sortedBy, startIndex, results) {
-    	var sort = 'score';
+    	var sort = defaultSort;
     	var dir = 'desc';
+
     	if (!YAHOO.lang.isUndefined(sortedBy) && !YAHOO.lang.isNull(sortedBy)){
     		sort = sortedBy['key'];
     		dir = sortedBy['dir'];
     	}
-    	
     	// Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
-        dir   = (dir) ? dir.substring(7) : "desc"; 
+        if (dir.length > 7){
+        	dir = dir.substring(7);
+        }
         results   = results || 25;
-        
         var stateParams = "results="+results+"&startIndex="+startIndex+"&sort="+sort+"&dir="+dir;
         var facetParams = '';
         for (key in facets){
@@ -423,7 +426,7 @@ YAHOO.util.Event.onDOMReady(function () {
 					}
 				}
 			}
-			options[x] = '<input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"' + checked + '> ' + res[x];
+			options[x] = '<label><input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"' + checked + '> ' + res[x] + '</label>';
 		}
 		populateFacetDialog(oPayload.title, options.join('<br/>'));
 	};
@@ -431,10 +434,18 @@ YAHOO.util.Event.onDOMReady(function () {
 	var populateFacetDialog = function (title, body) {
 		facetDialog.setHeader('Filter by ' + title);
 		facetDialog.form.innerHTML = body;
+		//facetDialog.getButtons()[0].set('disabled', false);
 	}
 
 	var handleError = function (oRequest, oResponse, oPayload) {
-		populateFacetDialog(oPayload.title, 'Too many ' + oPayload.title + 's in the matching references to display');
+		buttons = facetDialog.getButtons();
+//		for (k in buttons){
+//			alert(buttons[k].isActive());
+//			buttons[k].set('disabled', true);
+//		}
+
+		populateFacetDialog(oPayload.title, 'Too many ' + oPayload.title + 
+				' to filter. Modify your your search first.');
 	};
 
 	var authorCallback = {success:parseFacetResponse,
@@ -500,13 +511,12 @@ YAHOO.util.Event.onDOMReady(function () {
 	YAHOO.util.Event.addListener("curatedDataFilter", "click", populateDataDialog, true);
 	
 	// this function toggles the display of the abstract cell & updates button text
-	var toggleAbstract = function() {	
-        var txt;
-        this.innerText ? txt=this.innerText : txt=this.textContent;
-        
+	var toggleAbstract = function() {
+		var txt = "";
+        this.innerText ? txt=this.innerText: txt=this.textContent;
         var expand = true;
-        
-        if (txt == 'Hide All Abstracts'){
+           
+        if (txt == 'Hide All Abstracts'){       	
         	expand = false;
         	myDataTable.collapseAllRows();
         	txt = 'Show All Abstracts';
@@ -514,15 +524,16 @@ YAHOO.util.Event.onDOMReady(function () {
         	txt = 'Hide All Abstracts';
         }
         
-        this.innerText ? this.innerText=txt : this.textContent=txt;
+        setText(this, txt);
+        
         var state = myDataTable.getState();
         var pagination = state.pagination;
 
         if (expand){
-        	var i = pagination.recordOffset;
-        	while(i < i + pagination.rowsPerPage){
-        		myDataTable.expandRow(i);
-        		i = i+1;
+        	var i = pagination.recordOffset ;
+        	var rows = pagination.rowsPerPage + i;
+        	while(i < rows){
+        		myDataTable.expandRow(i++);
         	}
         }
 	};
@@ -539,21 +550,6 @@ YAHOO.util.Event.onDOMReady(function () {
 	})();
 
 });
-
-var resetQF = function (e) {
-	YAHOO.util.Event.preventDefault(e); 
-	var form = YAHOO.util.Dom.get("referenceQueryForm");
-	form.author.value = "";
-	form.authorScope1.checked="checked";
-	form.journal.value = "";
-	form.year.value = "";
-	form.text.value = "";
-	form.inTitle1.checked="checked"
-	form.inAbstract1.checked="checked"
-	form.id.value = "";
-};
-
-YAHOO.util.Event.addListener("referenceQueryForm", "reset", resetQF);
 
 YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
 YAHOO.util.Event.addListener("toggleImg", "click", toggleQF);
