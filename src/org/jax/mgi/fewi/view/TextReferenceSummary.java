@@ -17,12 +17,13 @@ public class TextReferenceSummary extends AbstractTextView {
 			throws Exception {
 		
 		response.setHeader("Content-Disposition","attachment; filename=\"referenceReport.txt\"");
+		System.out.println(response.getCharacterEncoding());
 		
 		List<Reference> references = (List<Reference>) model.get("results");
 		
 		for (Reference ref : references) {
 			writer.write(ref.getLongCitation()); 
-			writer.write("\r\n");
+			writer.write("\n\r");
 			//writer.newLine();
 		}
 

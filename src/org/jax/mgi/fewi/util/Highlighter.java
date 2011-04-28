@@ -31,7 +31,7 @@ public class Highlighter {
 	    // Highlighting is putting text between <b>...</b>
 	    //   someone who knows CSS could probably do this w/ color or something
 	    // Could imagine several highLight methods for diff flavors of highlighting	
-	    if (pattern == null){
+	    if (pattern == null || inputText == null){
 	    	return inputText;
 	    } 
 	    Matcher matcher = pattern.matcher(inputText);

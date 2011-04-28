@@ -73,10 +73,10 @@ public class ReferenceSummary {
 			if(this.reference.getBookTitle() != null){
 				sb.append(String.format("<span class=\"ital\">Chapter</span>: %s<br/><br/>", titleHL.highLight(this.reference.getTitle())));
 				sb.append(String.format("<span class=\"ital\">Book</span>: %s", titleHL.highLight(this.reference.getBookTitle())));
-			} else {
+			} else if(this.reference.getTitle() != null) {
 				sb.append(String.format("<span class=\"ital\">Book</span>: %s", titleHL.highLight(this.reference.getTitle())));
 			}
-		} else {
+		} else if(this.reference.getTitle() != null) {
 			sb.append(titleHL.highLight(this.reference.getTitle()));
 		}
 		return sb.toString();

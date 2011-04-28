@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -201,14 +202,6 @@ public class ReferenceController {
 					}
 					row.setAuthorHL(new Highlighter(authorHL));
 				}
-//				if  (query.getAuthorFilter() != null && query.getAuthorFilter().size() > 0){
-//					logger.debug("get authorFilter highlighting");
-//					for(String auth: highlighting.get(FacetConstants.REF_AUTHORS)){
-//						authorHL.add(auth.replace(" ", "[\\s\\-']"));
-//					}
-//					logger.debug("done");
-//					row.setAuthorHL(new Highlighter(authorHL));
-//				}
 				summaryRows.add(row);
 			} else {
 				logger.debug("--> Null Object");
@@ -439,6 +432,8 @@ public class ReferenceController {
 		
 		// build year query filter
 		String year = query.getYear().trim();
+		Integer minYear = new Integer(1800);
+		Integer maxYear = Calendar.getInstance().get(Calendar.YEAR);
 		if(year != null && !"".equals(year)){
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){
@@ -453,6 +448,14 @@ public class ReferenceController {
 					try{
 						Integer one = new Integer(years.get(0));
 						Integer two = new Integer(years.get(1));
+						
+						if (one > minYear && one < maxYear && 
+								two > minYear && two < maxYear) {
+							result.addError(
+									new FieldError("referenceQueryForm", 
+											"year", 
+											"* Invalid year"));
+						}
 						
 						if (one > two){
 							years.set(0, two.toString());
@@ -483,6 +486,14 @@ public class ReferenceController {
 				try{
 					// only used to validate number format
 					Integer one = new Integer(year);
+					
+					if (one > minYear && one < maxYear) {
+						result.addError(
+								new FieldError("referenceQueryForm", 
+										"year", 
+										"* Invalid year"));
+					}
+					
 					queryList.add(new Filter(SearchConstants.REF_YEAR, 
 							year, Filter.OP_EQUAL));
 				} catch (NumberFormatException nfe){
@@ -638,10 +649,10 @@ public class ReferenceController {
 			s = SortConstants.REF_AUTHORS;
 		} else if ("journal".equalsIgnoreCase(s)){
 			s = SortConstants.REF_JOURNAL;
-		} else if ("year".equalsIgnoreCase(s)){
-			s = SortConstants.REF_YEAR;
-		} else {
+		} else if ("score".equalsIgnoreCase(s)){
 			s = "score";
+		} else {
+			s = SortConstants.REF_YEAR;
 		}
 		
 		if("desc".equalsIgnoreCase(d)){
