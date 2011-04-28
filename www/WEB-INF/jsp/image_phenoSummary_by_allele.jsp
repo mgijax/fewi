@@ -19,6 +19,13 @@ ${templateBean.templateHeadHtml}
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <style type="text/css">
+table.nomenInfo td{
+  padding:3px;
+  font-size:12px;
+  font-family:Verdana,Arial,Helvetica;
+  color:#000001;
+  vertical-align:top;
+}
 </style>
 
 <script>
@@ -46,7 +53,7 @@ ${templateBean.templateBodyStartHtml}
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
 
-      <table width="100%">
+      <table width="100%" class='nomenInfo'>
 
       <tr>
         <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap">
@@ -130,15 +137,15 @@ ${templateBean.templateBodyStartHtml}
           Caption
         </td>
         <td colspan=2 class="resultsHeader">
-          Genotypes involving this allele
+          Genotypes&nbsp;involving&nbsp;this&nbsp;allele
         </td>
       </tr>
       <tr>
         <td class="resultsHeader">
-          Allelic Composition
+          Allelic&nbsp;Composition
         </td>
         <td class="resultsHeader">
-          Genetic Background
+          Genetic&nbsp;Background
         </td>
       </tr>
 
