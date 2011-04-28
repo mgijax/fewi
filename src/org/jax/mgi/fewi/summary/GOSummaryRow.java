@@ -57,7 +57,11 @@ public class GOSummaryRow {
     	return annot.getDagName();
     }
     public String getTerm() {
-        return "<a href='"+ fewiUrl +"go/" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
+    	String termText = "<a href='"+ fewiUrl +"go/" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
+    	if (annot.getQualifier() != null && annot.getQualifier().equals("NOT")) {
+    		return "<b>NOT</b> " + termText;
+    	}
+        return termText;
     }
     public String getEvidence() {
     	return annot.getEvidenceCode();
