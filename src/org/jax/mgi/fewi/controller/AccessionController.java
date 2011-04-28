@@ -290,7 +290,7 @@ public class AccessionController {
 
         // There can ONLY be accession at present, add it in.
         if ((param1 != null) && (!"".equals(param1))) {
-            filterList.add(new Filter (SearchConstants.ACC_ID, param1,
+            filterList.add(new Filter (SearchConstants.ACC_ID, param1.trim(),
                 Filter.OP_EQUAL));
         }
 
