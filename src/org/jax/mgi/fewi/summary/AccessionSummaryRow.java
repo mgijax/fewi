@@ -55,11 +55,11 @@ public class AccessionSummaryRow {
     	return acc.getDisplayID();
     }
     public String getLogicalDb() {
-    	if (! acc.getLogicalDB().equals("MGI")) {
-    		return linker.getLinks(acc.getLogicalDB(), acc.getDisplayID());
+    	if (acc.getLogicalDB().equals("MGI") || acc.getLogicalDB().equals("BayGenomics")) {
+    		return acc.getLogicalDB();
     	}
-    	else {
-    		return "MGI";
+    	else  {
+    		return linker.getLinks(acc.getLogicalDB(), acc.getDisplayID());
     	}
     }
     public String getMgiLink() {
