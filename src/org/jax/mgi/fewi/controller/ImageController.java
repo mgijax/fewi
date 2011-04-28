@@ -74,77 +74,17 @@ public class ImageController {
     // public methods
     //--------------------------------------------------------------------//
 
-    //-------------------------------//
-    // Pheno Image Summary by Allele
-    //-------------------------------//
-    @RequestMapping(value="/phenoSummary/allele/{alleleID}")
-    public ModelAndView phenoImageSummeryByAllele(
- 		                   @PathVariable("alleleID") String alleleID)
-    {
-        logger.debug("->phenoImageSummeryByAllele started");
+    @RequestMapping(value="/{imageID:.+}", method = RequestMethod.GET)
+    public ModelAndView detailByID(@PathVariable("imageID") String imageID) {
 
-        ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
+        // ModelAndView object to be returned
+        ModelAndView mav = new ModelAndView();
 
-        // setup search parameters to get allele object
-        SearchParams alleleSearchParams = new SearchParams();
-        Filter alleleIdFilter = new Filter(SearchConstants.ALL_ID, alleleID);
-        alleleSearchParams.setFilter(alleleIdFilter);
 
-        // find the requested allele for header
-        SearchResults<Allele> alleleSearchResults
-          = alleleFinder.getAlleleByID(alleleSearchParams);
 
-        List<Allele> alleleList = alleleSearchResults.getResultObjects();
-
-        // there can be only one...
-        if (alleleList.size() < 1) { // none found
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Allele Found");
-            return mav;
-        }
-        if (alleleList.size() > 1) { // dupe found
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate ID");
-            return mav;
-        }
-        // success - we have a single object
-
-        // pull out the allele, and place into the mav
-        Allele allele = alleleList.get(0);
-        mav.addObject("allele", allele);
-
-        // derive the synonym list, if the allele has any
-        mav.addObject("synonyms", allele.getSynonyms());
-
-        // setup search parameters to get the image objects
-        SearchParams imageSearchParams = new SearchParams();
-        Integer alleleKey = new Integer(allele.getAlleleKey());
-        Filter alleleKeyFilter = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
-        imageSearchParams.setFilter(alleleKeyFilter);
-
-        // find the requested images for this allele
-        SearchResults<Image> imageSearchResults
-          = imageFinder.getImagesByAlleleKey(imageSearchParams);
-
-        // generate summary row objects
-        Image thisImage;
-        List<Image> imageList = imageSearchResults.getResultObjects();
-        List<ImageSummaryRow> imageSummaryRows
-          = new ArrayList<ImageSummaryRow>();
-        Iterator<Image> imageIter = imageList.iterator();
-        while (imageIter.hasNext())
-        {
-          thisImage = imageIter.next();
-          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
-            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage);
-            imageSummaryRows.add(imageSummaryRow);
-	      }
-        }
-        mav.addObject("imageSummaryRows", imageSummaryRows);
 
         return mav;
     }
-
 
 
     //--------------------//
@@ -274,153 +214,75 @@ public class ImageController {
     }
 
 
-    //--------------------//
-    // Foo Detail By Key
-    //--------------------//
-/*    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView fooDetailByKey(@PathVariable("dbKey") String dbKey) {
+    //-------------------------------//
+    // Pheno Image Summary by Allele
+    //-------------------------------//
+    @RequestMapping(value="/phenoSummary/allele/{alleleID}")
+    public ModelAndView phenoImageSummeryByAllele(
+                           @PathVariable("alleleID") String alleleID)
+    {
+        logger.debug("->phenoImageSummeryByAllele started");
 
-        logger.debug("->fooDetailByKey started");
+        ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
 
-        // find the requested foo
-        SearchResults searchResults
-          = fooFinder.getFooByKey(dbKey);
-        List<Marker> fooList = searchResults.getResultObjects();
+        // setup search parameters to get allele object
+        SearchParams alleleSearchParams = new SearchParams();
+        Filter alleleIdFilter = new Filter(SearchConstants.ALL_ID, alleleID);
+        alleleSearchParams.setFilter(alleleIdFilter);
+
+        // find the requested allele for header
+        SearchResults<Allele> alleleSearchResults
+          = alleleFinder.getAlleleByID(alleleSearchParams);
+
+        List<Allele> alleleList = alleleSearchResults.getResultObjects();
 
         // there can be only one...
-        if (fooList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Foo Found");
+        if (alleleList.size() < 1) { // none found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Allele Found");
             return mav;
-        }// success
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("foo_detail");
-
-        //pull out the foo, and add to mav
-        Marker foo = fooList.get(0);
-        mav.addObject("foo", foo);
-
-        // package referenes; gather via object traversal
-        List<Reference> references = foo.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
         }
+        if (alleleList.size() > 1) { // dupe found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        // success - we have a single object
+
+        // pull out the allele, and place into the mav
+        Allele allele = alleleList.get(0);
+        mav.addObject("allele", allele);
+
+        // derive the synonym list, if the allele has any
+        mav.addObject("synonyms", allele.getSynonyms());
+
+        // setup search parameters to get the image objects
+        SearchParams imageSearchParams = new SearchParams();
+        Integer alleleKey = new Integer(allele.getAlleleKey());
+        Filter alleleKeyFilter = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
+        imageSearchParams.setFilter(alleleKeyFilter);
+
+        // find the requested images for this allele
+        SearchResults<Image> imageSearchResults
+          = imageFinder.getImagesByAlleleKey(imageSearchParams);
+
+        // generate summary row objects
+        Image thisImage;
+        List<Image> imageList = imageSearchResults.getResultObjects();
+        List<ImageSummaryRow> imageSummaryRows
+          = new ArrayList<ImageSummaryRow>();
+        Iterator<Image> imageIter = imageList.iterator();
+        while (imageIter.hasNext())
+        {
+          thisImage = imageIter.next();
+          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
+            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage);
+            imageSummaryRows.add(imageSummaryRow);
+          }
+        }
+        mav.addObject("imageSummaryRows", imageSummaryRows);
 
         return mav;
     }
-*/
-
-    //-------------------------------//
-    // Foo Summary by Reference
-    //-------------------------------//
-/*    @RequestMapping(value="/reference/{refID}")
-    public ModelAndView fooSummeryByRef(@PathVariable("refID") String refID) {
-
-        logger.debug("->fooSummeryByRef started");
-
-        ModelAndView mav = new ModelAndView("foo_summary_reference");
-
-        // setup search parameters object to gather the requested object
-        SearchParams searchParams = new SearchParams();
-        Filter refIdFilter = new Filter(SearchConstants.REF_ID, refID);
-        searchParams.setFilter(refIdFilter);
-
-        // find the requested reference
-        SearchResults searchResults
-          = referenceFinder.searchReferences(searchParams);
-        List<Reference> refList = searchResults.getResultObjects();
-
-        // there can be only one...
-        if (refList.size() < 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No reference found for " + refID);
-            return mav;
-        }
-        if (refList.size() > 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe references found for " + refID);
-            return mav;
-        }
-
-        // pull out the reference, and place into the mav
-        Reference reference = refList.get(0);
-        mav.addObject("reference", reference);
-
-        // pre-generate query string
-        mav.addObject("queryString", "refKey=" + reference.getReferenceKey());
-
-        return mav;
-    }
-
-*/
-
-    //--------------------------------------------------------------------//
-    // private methods
-    //--------------------------------------------------------------------//
-/*
-    // generate the sorts
-    private List<Sort> genSorts(HttpServletRequest request) {
-
-        logger.debug("->genSorts started");
-
-        List<Sort> sorts = new ArrayList<Sort>();
-
-        // retrieve requested sort order; set default if not supplied
-        String sortRequested = request.getParameter("sort");
-        if (sortRequested == null) {
-            sortRequested = SortConstants.FOO_SORT;
-        }
-
-        String dirRequested  = request.getParameter("dir");
-        boolean desc = false;
-        if("desc".equalsIgnoreCase(dirRequested)){
-            desc = true;
-        }
-
-        Sort sort = new Sort(sortRequested, desc);
-        sorts.add(sort);
-
-        logger.debug ("sort: " + sort.toString());
-        return sorts;
-    }
-
-    // generate the filters
-    private Filter genFilters(FooQueryForm query){
-
-        logger.debug("->genFilters started");
-        logger.debug("QueryForm -> " + query);
-
-
-        // start filter list to add filters to
-        List<Filter> filterList = new ArrayList<Filter>();
-
-        String param1 = query.getParam1();
-        String param2 = query.getParam2();
-
-        //
-        if ((param1 != null) && (!"".equals(param1))) {
-            filterList.add(new Filter (SearchConstants.FOO_ID, param1,
-                Filter.OP_EQUAL));
-        }
-
-        //
-        if ((param2 != null) && (!"".equals(param2))) {
-            filterList.add(new Filter (SearchConstants.FOO_ID, param2,
-                Filter.OP_EQUAL));
-        }
-
-        // if we have filters, collapse them into a single filter
-        Filter containerFilter = new Filter();
-        if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
-            containerFilter.setNestedFilters(filterList);
-        }
-
-        return containerFilter;
-    }
-*/
 
 }

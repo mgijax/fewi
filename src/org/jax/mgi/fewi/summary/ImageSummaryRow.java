@@ -138,14 +138,14 @@ public class ImageSummaryRow {
         // allelic composition
         summaryRow.append("<td>");
         if (genotypes.size() != 0){
-            summaryRow.append(this.getAllelicComp(genotypes.get(0)));
+          summaryRow.append(this.getAllelicComp(genotypes.get(0)));
         }
         summaryRow.append("</td>");
 
         // genetic background
         summaryRow.append("<td>");
         if (genotypes.size() != 0){
-            summaryRow.append(this.getGenBackground(genotypes.get(0)));
+          summaryRow.append(this.getGenBackground(genotypes.get(0)));
         }
         summaryRow.append("</td>");
 
