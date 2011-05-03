@@ -32,10 +32,9 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	@Transactional(readOnly = true)
 	public T get(String keyStr) {
 
+        logger.debug("gathering object for keys - " + keyStr);
+
         Integer key = new Integer(keyStr);
-
-
-        //logger.debug("gatherer get key: " + key);
 		if (sessionFactory != null && type != null){
 			Session s = sessionFactory.getCurrentSession();
 			return (T)s.get(type, key);
@@ -51,80 +50,98 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		return null;
 	}
 
+
+    /**
+     * Get a list of objects;  doesn't use Criteria query, and instead
+     * gathers the objects individually.  Useful to see which object
+     * is throwing an exception during instantiation
+     */
+    @Transactional(readOnly = true)
+    public List<T> getIndividually(List<String> keys) {
+
+        logger.debug("gathering objects for keys - " + keys);
+
+        List<T> results = new ArrayList<T>();
+
+        for (String key : keys) {
+            results.add(this.get(key));
+        }
+        return results;
+    }
+
+
 	/**
 	 * Get a list of objects
 	 */
 	@Transactional(readOnly = true)
 	public List<T> get(List<String> keys) {
-		
-		logger.debug("get(List<String> keys)");
-		
+
+		logger.debug("gathering objects for keys - " + keys);
+
 		// get necessary Hibernate objects
 		Session s = sessionFactory.getCurrentSession();
 		ClassMetadata meta = sessionFactory.getClassMetadata(type);
-		
+
 		// collections to process results
 		List<T> queryResults = new ArrayList<T>();
 		Map<String, T> resultsMap = new LinkedHashMap<String, T>();
 		List<T> orderedResults = new ArrayList<T>();
-		
+
 		// if no keys to lookup, return empty list
 		if (keys.size() == 0){
 			return orderedResults;
 		}
-		
+
 		List<Integer> keyInts = new ArrayList<Integer>();
-		
+
 		// convert keys to Integers
 		for (String key : keys) {
 			keyInts.add(new Integer(key));
 		}
-		
-		// get results chunking if needed.
-		
-		long start = System.nanoTime();
 
+		// get results chunking if needed.
+		long start = System.nanoTime();
 		int step = 10000;
-		
 		if (keyInts.size() > 10000) {
 			int begin = 0;
 			int end = step;
-			
+
 			while (begin < keyInts.size()) {
 				if (end > keyInts.size()) {
 					end = keyInts.size();
 				}
-				
+
 				List inList = keyInts.subList(begin, end);
-				
+
 				queryResults.addAll(s.createCriteria(type).add(Restrictions.in("id", inList)).list());
 				begin += step;
 				end += step;
 			}
-			
+
 		}
 		else {
 			queryResults = s.createCriteria(type).add(Restrictions.in("id", keyInts)).list();
 		}
-				
+
 		// load results into Map keyed by id
 		String id;
 		for (T r : queryResults) {
 			id = meta.getIdentifier(r, s.getEntityMode()).toString();
 			resultsMap.put(id, r);
 		}
-		// kill queryResults 
+		// kill queryResults
 		queryResults = null;
-		
+
 		// reorder results
 		for (String t : keys) {
 			orderedResults.add(resultsMap.get(t));
 		}
-		
+
 		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
 
 		return orderedResults;
 	}
+
 
 	/**
 	 * Set the type of object for retrieval
