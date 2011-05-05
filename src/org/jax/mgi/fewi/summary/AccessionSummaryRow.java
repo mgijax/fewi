@@ -85,7 +85,9 @@ public class AccessionSummaryRow {
     	
     	else if (objectType.equals(ObjectTypes.PROBECLONE) || 
     			objectType.equals(ObjectTypes.ASSAY) ||
-    			objectType.equals(ObjectTypes.GO) ||
+    			objectType.equals(ObjectTypes.GO_CC) ||
+    			objectType.equals(ObjectTypes.GO_BP) ||
+    			objectType.equals(ObjectTypes.GO_MF) ||
     			objectType.equals(ObjectTypes.ANTIBODY) ||
     			objectType.equals(ObjectTypes.ANTIGEN)) {
     		logger.debug("Old WI Case");

@@ -23,7 +23,9 @@ public class ObjectTypes {
 	public static String MAPPING = "Experiment";
 	public static String OMIM = "OMIM";
 	public static String GENE = "Gene";
-	public static String GO = "Molecular Function";
+	public static String GO_MF = "Molecular Function";
+	public static String GO_BP = "Biological Process";
+	public static String GO_CC = "Cellular Component";
 	public static String MP = "Mammalian Phenotype";
 	public static String PIRSF = "PIR Superfamily";
 	public static String INTERPRO = "InterPro Domains";
