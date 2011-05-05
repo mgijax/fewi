@@ -95,15 +95,14 @@ public class ReferenceController {
 			@ModelAttribute ReferenceQueryForm queryForm,
 			BindingResult result) {
 
-		parseReferenceQueryForm(queryForm, result);		
 		model.addAttribute("referenceQueryForm", queryForm);
+		parseReferenceQueryForm(queryForm, result);
 		
 		if (result.hasErrors()) {
 			return "reference_query";
 		}
 		
-		model.addAttribute("queryString", request.getQueryString());
-		
+		model.addAttribute("queryString", request.getQueryString());		
 
 		String text = request.getParameter("text");
 		String sort = "year";
@@ -112,7 +111,6 @@ public class ReferenceController {
 		}
 		
 		model.addAttribute("defaultSort", sort);
-		model.addAttribute("referenceQueryForm", queryForm);
 		logger.debug("queryString: " + request.getQueryString());
 
 		return "reference_summary";
@@ -442,15 +440,15 @@ public class ReferenceController {
 					result.addError(
 							new FieldError("referenceQueryForm", 
 									"year", 
-									"* Invalid range format"));
+									"* Invalid year range"));
 				} else if (years.size() == 2){
 					logger.debug("year range: " + years.get(0) + "-" + years.get(1));
 					try{
 						Integer one = new Integer(years.get(0));
 						Integer two = new Integer(years.get(1));
 						
-						if (one > minYear && one < maxYear && 
-								two > minYear && two < maxYear) {
+						if ( (one < minYear || one > maxYear) || 
+								(two < minYear || two > maxYear) ) {
 							result.addError(
 									new FieldError("referenceQueryForm", 
 											"year", 
@@ -469,7 +467,7 @@ public class ReferenceController {
 						result.addError(
 								new FieldError("referenceQueryForm", 
 										"year", 
-										"* Invalid number format"));
+										"* Invalid year"));
 					}
 				} else {
 					if (rangeLoc == 0){
@@ -487,7 +485,7 @@ public class ReferenceController {
 					// only used to validate number format
 					Integer one = new Integer(year);
 					
-					if (one > minYear && one < maxYear) {
+					if (one < minYear || one > maxYear) {
 						result.addError(
 								new FieldError("referenceQueryForm", 
 										"year", 
@@ -591,7 +589,7 @@ public class ReferenceController {
 		List<String> ids = new ArrayList<String>();
 		String idtext = query.getId().trim();
 		if (idtext != null && !"".equals(idtext)){
-			ids = this.parseList(idtext, ";");
+			ids = this.parseList(idtext, "[;,\\s]");
 		}
 		
 		if (queryList.size() > 0){
