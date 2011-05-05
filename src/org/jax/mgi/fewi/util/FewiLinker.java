@@ -33,7 +33,9 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.ORTHOLOGY, pythonWiUrl +"searches/homology_report.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.OMIM, baseUrl +"omim/%s");  
 		idUrlMap.put(ObjectTypes.GENE, javaWiUrl +"?page=markerDetail&id=%s");
-		idUrlMap.put(ObjectTypes.GO, pythonWiUrl +"searches/GO.cgi?id=%s");
+		idUrlMap.put(ObjectTypes.GO_BP, pythonWiUrl +"searches/GO.cgi?id=%s");
+		idUrlMap.put(ObjectTypes.GO_MF, pythonWiUrl +"searches/GO.cgi?id=%s");
+		idUrlMap.put(ObjectTypes.GO_CC, pythonWiUrl +"searches/GO.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.MP, pythonWiUrl +"searches/Phat.cgi?id=%s");
 		
 		// Mapping that is key based
