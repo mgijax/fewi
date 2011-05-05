@@ -16,6 +16,8 @@ var populateFilterSummary = function () {
 	// clear state
 	if (!YAHOO.lang.isNull(fSum)){
 		var filterList = new YAHOO.util.Element('filterList');
+		var fCount = new YAHOO.util.Element('fCount');
+		var defaultText = new YAHOO.util.Element('defaultText');
 		while (filterList.hasChildNodes()) {
 			filterList.removeChild(filterList.get('firstChild'));
 		}
@@ -56,9 +58,13 @@ var populateFilterSummary = function () {
 	    }
 			
 		if (vis){
-			YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
+			YAHOO.util.Dom.setStyle(fCount, 'display', 'block');
+			YAHOO.util.Dom.setStyle(clear, 'display', 'inline');
+			YAHOO.util.Dom.setStyle(defaultText, 'display', 'none');
 		} else {
-			YAHOO.util.Dom.setStyle(fSum, 'display', 'none');
+			YAHOO.util.Dom.setStyle(fCount, 'display', 'none');
+			YAHOO.util.Dom.setStyle(clear, 'display', 'none');
+			YAHOO.util.Dom.setStyle(defaultText, 'display', 'inline');
 		}
 	}
 };
@@ -140,8 +146,8 @@ var clearFilter = function () {
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
-        template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-        pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
+        template : "{PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+        pageReportTemplate : "Showing reference(s) {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
         containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 25,
@@ -156,7 +162,7 @@ var clearFilter = function () {
         dynamicData : true,
         initialLoad : false,
         MSG_LOADING:  '<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...',
-        MSG_EMPTY:    'No results found'
+        MSG_EMPTY:    'No references found.'
     };  
     
     // DataTable instance
@@ -256,7 +262,8 @@ var clearFilter = function () {
 	updateCount = function (newCount) {
 		var countEl = YAHOO.util.Dom.get("totalCount");
 		if (!YAHOO.lang.isNull(countEl)){
-	    	if(totalCount == 0 || totalCount < parseInt(newCount)){
+			var count = parseInt(newCount);
+	    	if((totalCount == 0 || totalCount < count) && count > 0){
 	    		totalCount = newCount;
 	    		setText(countEl, YAHOO.util.Number.format(newCount, numConfig));    		
 	    	}
@@ -439,13 +446,18 @@ YAHOO.util.Event.onDOMReady(function () {
 
 	var handleError = function (oRequest, oResponse, oPayload) {
 		buttons = facetDialog.getButtons();
+
+		for (k in oPayload){
+			alert(k + ': ' + oPayload[k]);
+		}
+
 //		for (k in buttons){
 //			alert(buttons[k].isActive());
 //			buttons[k].set('disabled', true);
 //		}
 
 		populateFacetDialog(oPayload.title, 'Too many ' + oPayload.title + 
-				' to filter. Modify your your search first.');
+				' to filter. Modify your search or use another filter first.');
 	};
 
 	var authorCallback = {success:parseFacetResponse,

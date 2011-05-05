@@ -41,10 +41,12 @@ ${templateBean.templateBodyStartHtml}
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
-				<div id="filterSummary" style="display:none;" class="filters">
+				<div id="filterSummary" class="filters">
 					<span class="label">Filters:</span>
+					&nbsp;<span id="defaultText"  style="display:none;">No filters selected. Filter these references below.</span>
 					<span id="filterList"></span><br/>
-					<span id="fCount"><span id="filterCount">0</span> item(s) match after applying filter(s).</span>
+					
+					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> reference(s) match after applying filter(s)</span>
 				</div>
 			</div>
 		</div>
@@ -85,7 +87,7 @@ ${templateBean.templateBodyStartHtml}
 			<c:if test="${not empty referenceQueryForm.id}">
 				<span class="label">ID:</span> 
 				${referenceQueryForm.id}<br/></c:if>
-			<span id="totalCount" class="count">0</span> item(s) match your unfiltered query.<br/>
+			<span id="totalCount" class="count">0</span> reference(s) match your unfiltered search.<br/>
 		</div>
 	</div>
 
@@ -98,7 +100,7 @@ ${templateBean.templateBodyStartHtml}
 	
 <div id="toolbar" class="bluebar">
 	<div id="filterDiv">
-		Filter results by: 
+		Filter references by: 
 		<a id="authorFilter" class="filterButton">Author <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="journalFilter" class="filterButton">Journal <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="yearFilter" class="filterButton">Year <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 

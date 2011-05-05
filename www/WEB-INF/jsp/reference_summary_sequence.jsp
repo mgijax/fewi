@@ -26,7 +26,7 @@ ${templateBean.templateBodyStartHtml}
 <!-- begin header bar -->
 <div id="titleBarWrapper" userdoc="reference_help.shtml">	
 	<!--myTitle -->
-	<span class="titleBarMainTitle">References Associated With This Sequence</span>
+	<span class="titleBarMainTitle">References associated with this Sequence</span>
 </div>
 <!-- end header bar -->
 
@@ -37,10 +37,10 @@ ${templateBean.templateBodyStartHtml}
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
-				<div id="filterSummary" style="display:none;" class="filters">
+				<div id="filterSummary" class="filters">
 					<span class="label">Filters:</span>
 					<span id="filterList"></span><br/>
-					<span id="fCount"><span id="filterCount">0</span> item(s) match after applying filter(s).</span>
+					<span id="fCount" style="display:none;"><span id="filterCount">0</span> reference(s) match after applying filter(s)</span>
 				</div>
 			</div>
 		</div>
@@ -48,7 +48,7 @@ ${templateBean.templateBodyStartHtml}
 
 	<div id="querySummary">
 		<div class="innertube">
-			<span id="totalCount" class="count"></span> references associated with this sequence.<br/>
+			<span id="totalCount" class="count">0</span> reference(s)<br/>
 		</div>
 	</div>
 
@@ -61,7 +61,7 @@ ${templateBean.templateBodyStartHtml}
 	
 <div id="toolbar" class="bluebar">
 	<div id="filterDiv">
-		Filter results by: 
+		Filter references by: 
 		<a id="authorFilter" class="filterButton">Author <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="journalFilter" class="filterButton">Journal <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
 		<a id="yearFilter" class="filterButton">Year <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
