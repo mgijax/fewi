@@ -50,7 +50,7 @@ ${templateBean.templateBodyStartHtml}
 			<span class="title">You searched for:</span><br>
 			<span class="count">${totalCount} 
 		    <c:if test="${totalCount == limit}"> of ${limit}+ </c:if> 
-			matching record<c:if test="${totalCount != 1}">s</c:if> from ${refCount} reference<c:if test="${totalCount != 1}">s</c:if>.</span><br>
+			matching record<c:if test="${totalCount != 1}">s</c:if> from ${refCount} reference<c:if test="${refCount != 1}">s</c:if>.</span><br>
 			<c:if test="${not empty queryForm.nomen}">
 				<span class="label">Marker Symbol/Name:</span> 
 				${queryForm.nomen}<br/></c:if>
