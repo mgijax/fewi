@@ -21,7 +21,14 @@ public class TextReferenceSummary extends AbstractTextView {
 		
 		List<Reference> references = (List<Reference>) model.get("results");
 		
+		String pubmedId = "";
+		
 		for (Reference ref : references) {
+			if (ref.getPubMedID() != null){
+				pubmedId = ref.getPubMedID();
+			}
+			
+			writer.write(pubmedId + "\t");
 			writer.write(ref.getLongCitation()); 
 			writer.write("\n\r");
 			//writer.newLine();
