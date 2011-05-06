@@ -5,9 +5,14 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Tissue Results By Genome Feature</title>
+<title>Gene Expression Tissue Results By Genome Feature - MGI</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
+<meta name="description" content="Gene Expression tissue results associated with genome feature {gene symbol}">
+<meta name="keywords" content="MGI, mouse, gene, expression, GXD, tissue, MGI gene, MGI expression, GXD tissue, expression tissue, GXD gene tissue, MGI gene expression, MGI gene expression tissue"> 
+<meta name="robots" content="NOODP"/>
+<meta name="robots" content="NOYDIR"/> 
 
 <style type="text/css">
 </style>
