@@ -21,7 +21,7 @@ function main() {
             sortable:false},
         {key:"references", 
             label:"<b>Reference(s)</b>",
-            width:150, 
+            width:200, 
             sortable:false}
     ];
 
