@@ -94,28 +94,32 @@ public class GOSummaryRow {
             return "";
         }
         
-        if (references.size() >= 1 && references.size() < 5)
-        {
-            String refString = "";
-            Boolean first = Boolean.TRUE;
-            for (Reference ref: references) {
-                if (first) {
-                    refString = "<a href='" + fewiUrl + "reference/" + ref.getJnumID() 
-                                + "'>" + ref.getJnumID() + "</a>";
-                    first = Boolean.FALSE;
-                }
-                else {
-                    refString = refString + ", <a href='" + fewiUrl + "reference/" + ref.getJnumID() 
-                                + "'>" + ref.getJnumID() + "</a>";
-                }
+        //deferred code to check the number of references.
+        //if (references.size() >= 1 && references.size() < 5)
+        //{
+        String refString = "";
+        Boolean first = Boolean.TRUE;
+        for (Reference ref: references) {
+            if (first) {
+                refString = "<a href='" + fewiUrl + "reference/" + ref.getJnumID() 
+                            + "'>" + ref.getJnumID() + "</a>";
+                first = Boolean.FALSE;
             }
-            return refString;
+            else {
+                refString = refString + ", <a href='" + fewiUrl + "reference/" + ref.getJnumID() 
+                            + "'>" + ref.getJnumID() + "</a>";
+            }
         }
-        else {
+        
+        return refString;
+        //}
+        // Old requirement to list a number for cases where we have more than 5 references.  This 
+        // is currently being deferred.
+/*        else {
             return "<a href='" + fewiUrl + "references/marker/" + marker.getPrimaryID() 
             	+ "?term="+annot.getTerm()+"&evidence="+annot.getEvidenceCode()+"'>" 
             	+ references.size() + "</a>";            
-        }
+        }*/
         
     }
 
