@@ -39,6 +39,7 @@ ${templateBean.templateBodyStartHtml}
 			<div class="innertube">
 				<div id="filterSummary" class="filters">
 					<span class="label">Filters:</span>
+					&nbsp;<span id="defaultText"  style="display:none;">No filters selected. Filter these references below.</span>
 					<span id="filterList"></span><br/>
 					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> reference(s) match after applying filter(s)</span>
 				</div>

@@ -14,7 +14,7 @@ var populateFilterSummary = function () {
 	var fSum = YAHOO.util.Dom.get('filterSummary');
 	
 	// clear state
-	if (!YAHOO.lang.isNull(fSum)){
+	if (!YAHOO.lang.isUndefined(fSum)){
 		var filterList = new YAHOO.util.Element('filterList');
 		var fCount = new YAHOO.util.Element('fCount');
 		var defaultText = new YAHOO.util.Element('defaultText');
@@ -29,7 +29,6 @@ var populateFilterSummary = function () {
 	    YAHOO.util.Event.addListener(clear, "click", clearFilter);
 	
 	    var vis = false;
-	    
 	    for (k in facets) {
 	    	var inner = facets[k];
 	    	var brTag = false;
@@ -51,12 +50,10 @@ var populateFilterSummary = function () {
 	            
 	            filterList.appendChild(document.createTextNode(' '));
 			}
-			
 			if (brTag){
 				filterList.appendChild(document.createElement("br"));
 			}
 	    }
-			
 		if (vis){
 			YAHOO.util.Dom.setStyle(fCount, 'display', 'block');
 			YAHOO.util.Dom.setStyle(clear, 'display', 'inline');
@@ -232,15 +229,13 @@ var clearFilter = function () {
 	        facetQuery = generateRequest(oPayload.sortedBy, 0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
         }
-        
+
         var txt = 'Show All Abstracts';
         var toggle = YAHOO.util.Dom.get('toggleAbstract');
-        if (!YAHOO.lang.isNull(toggle)){
+        if (!YAHOO.lang.isUndefined(toggle)){
         	setText(toggle, txt);
         }
-
         populateFilterSummary();
-        
         return true;
     };
     
@@ -446,11 +441,6 @@ YAHOO.util.Event.onDOMReady(function () {
 
 	var handleError = function (oRequest, oResponse, oPayload) {
 		buttons = facetDialog.getButtons();
-
-		for (k in oPayload){
-			alert(k + ': ' + oPayload[k]);
-		}
-
 //		for (k in buttons){
 //			alert(buttons[k].isActive());
 //			buttons[k].set('disabled', true);
@@ -563,5 +553,12 @@ YAHOO.util.Event.onDOMReady(function () {
 
 });
 
-YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
-YAHOO.util.Event.addListener("toggleImg", "click", toggleQF);
+var toggleQF = YAHOO.util.Dom.get("toggleQF");
+if (!YAHOO.lang.isUndefined(toggleQF)){
+	YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
+}
+var toggleImg = YAHOO.util.Dom.get("toggleImg");
+if (!YAHOO.lang.isUndefined(toggleImg)){
+	YAHOO.util.Event.addListener("toggleImg", "click", toggleQF);
+}
+
