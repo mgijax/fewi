@@ -114,10 +114,6 @@ function main() {
             rowsPerPage: Number(pRequest['results']) || 25,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
-        oPayload.sortedBy = {
-            key: pRequest['sort'] || "field1",
-            dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
-        };
         return true;
     };
 
