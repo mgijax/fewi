@@ -43,7 +43,7 @@ public class AutoCompleteController {
 	 * are returned as JSON.
 	 */
 	@RequestMapping("/author/gxd")
-	public @ResponseBody SearchResults<String> authorAutoCompleteForGXD(
+	public @ResponseBody JsonSummaryResponse<AutocompleteAuthorResult> authorAutoCompleteForGXD(
 			@RequestParam("query") String query) {
 		// split input on any non-alpha and non-apostrophe characters
 		List<String> words = 
@@ -51,8 +51,21 @@ public class AutoCompleteController {
 		logger.debug("author query:" + words.toString());
 		//build SearchParams for author auto complete query
 		SearchParams params = buildACQuery(SearchConstants.REF_AUTHOR, words, true);
+		params.setIncludeRowMeta(true);
+		params.setIncludeGenerated(true);
+		
+		JsonSummaryResponse<AutocompleteAuthorResult> r = new JsonSummaryResponse<AutocompleteAuthorResult>();
+		List<AutocompleteAuthorResult> retResults = new ArrayList<AutocompleteAuthorResult>();
+		SearchResults<String> qResults = autocompleteFinder.getAuthorAutoComplete(params);
+		
+		Map<String, MetaData> meta = qResults.getMetaMapping();
+		for (String s: qResults.getResultStrings()) {
+			retResults.add(new AutocompleteAuthorResult(s, meta.get(s).isGenerated()));
+			logger.debug(s + ": " + meta.get(s).isGenerated());
+		}
+		r.setSummaryRows(retResults);
 		// return results
-		return autocompleteFinder.getAuthorAutoComplete(params);
+		return r;
 	}
 	
 	/*
