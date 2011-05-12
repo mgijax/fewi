@@ -14,7 +14,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Phenotype Images Associated With This Allele </title>
+<title> ${pageTitle} </title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -31,13 +31,21 @@ table.nomenInfo td{
 <script>
 </script>
 
+<meta name="description" content="Mouse phenotype images associated with this allele.">
+<meta name="keywords" content="MGI, mouse, phenotype, allele, mutant, image, picture, mutant image, allele image, phenotype image, MGI mouse images"> 
+
+<meta name="robots" content="NOODP"/>
+<meta name="robots" content="NOYDIR"/> 
+
+
+
 ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="pheno_images_help.shtml ">    
   <span class="titleBarMainTitle">
-    Phenotype Images Associated With This Allele 
+    ${pageHeading}
   </span>
 </div>
 
@@ -150,7 +158,7 @@ ${templateBean.templateBodyStartHtml}
       </tr>
 
       <c:forEach var="imageSummaryRow" items="${imageSummaryRows}" >
-        ${imageSummaryRow.row}
+        ${imageSummaryRow.phenoByAlleleRow}
       </c:forEach>
 
       </table>
