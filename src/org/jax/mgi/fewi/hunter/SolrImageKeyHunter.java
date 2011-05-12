@@ -11,7 +11,7 @@ public class SolrImageKeyHunter extends SolrHunter {
 
     /***
      * The constructor sets up this hunter so that it is specific to finding
-     * a sequence key given any possible sequence id.
+     * an image key given an image ID.
      */
     public SolrImageKeyHunter() {
 
