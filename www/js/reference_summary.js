@@ -12,22 +12,22 @@ var History = YAHOO.util.History;
 // this function populates the 'breadbox' with current filters
 var populateFilterSummary = function () {
 	var fSum = YAHOO.util.Dom.get('filterSummary');
-	
 	// clear state
 	if (!YAHOO.lang.isUndefined(fSum)){
 		var filterList = new YAHOO.util.Element('filterList');
-		var fCount = new YAHOO.util.Element('fCount');
-		var defaultText = new YAHOO.util.Element('defaultText');
-		while (filterList.hasChildNodes()) {
-			filterList.removeChild(filterList.get('firstChild'));
+		var fCount = YAHOO.util.Dom.get('fCount');
+		var defaultText = YAHOO.util.Dom.get('defaultText');
+		if(!YAHOO.lang.isNull(YAHOO.util.Dom.get('filterList'))){
+			while (filterList.hasChildNodes()) {
+				filterList.removeChild(filterList.get('firstChild'));
+			}
+		    clear = document.createElement("a");
+		    clear.setAttribute('class', 'filterItem');
+		    clear.setAttribute('id', 'clearFilter');
+		    setText(clear, 'Remove All Filters');
+		    filterList.appendChild(clear);
+		    YAHOO.util.Event.addListener(clear, "click", clearFilter);	
 		}
-	    clear = document.createElement("a");
-	    clear.setAttribute('class', 'filterItem');
-	    clear.setAttribute('id', 'clearFilter');
-	    setText(clear, 'Remove All Filters');
-	    filterList.appendChild(clear);
-	    YAHOO.util.Event.addListener(clear, "click", clearFilter);
-	
 	    var vis = false;
 	    for (k in facets) {
 	    	var inner = facets[k];
@@ -55,13 +55,22 @@ var populateFilterSummary = function () {
 			}
 	    }
 		if (vis){
-			YAHOO.util.Dom.setStyle(fCount, 'display', 'block');
-			YAHOO.util.Dom.setStyle(clear, 'display', 'inline');
-			YAHOO.util.Dom.setStyle(defaultText, 'display', 'none');
+			if(!YAHOO.lang.isNull(fCount)){
+				YAHOO.util.Dom.setStyle(fCount, 'display', 'block');
+				YAHOO.util.Dom.setStyle(clear, 'display', 'inline');
+			}
+			if(!YAHOO.lang.isNull(defaultText)){
+				YAHOO.util.Dom.setStyle(defaultText, 'display', 'none');
+			}
+			
 		} else {
-			YAHOO.util.Dom.setStyle(fCount, 'display', 'none');
-			YAHOO.util.Dom.setStyle(clear, 'display', 'none');
-			YAHOO.util.Dom.setStyle(defaultText, 'display', 'inline');
+			if(!YAHOO.lang.isNull(fCount)){
+				YAHOO.util.Dom.setStyle(fCount, 'display', 'none');
+				YAHOO.util.Dom.setStyle(clear, 'display', 'none');
+			}		
+			if(!YAHOO.lang.isNull(defaultText)){
+				YAHOO.util.Dom.setStyle(defaultText, 'display', 'inline');
+			}
 		}
 	}
 };
@@ -196,10 +205,10 @@ var clearFilter = function () {
     // ...then we hook up our custom function
     myPaginator.subscribe("changeRequest", handlePagination, myDataTable, true);
     // Update payload data on the fly for tight integration with latest values from server 
+    
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
         var meta = oResponse.meta;
-        
         facets = {};
         for (k in pRequest){
         	if(k.indexOf("Filter") != -1){
@@ -223,17 +232,17 @@ var clearFilter = function () {
             rowsPerPage: Number(pRequest['results'][0]) || 25,
             recordOffset: Number(pRequest['startIndex'][0]) || 0
         };
-     
+
         var reportButton = YAHOO.util.Dom.get('textDownload');
         if (!YAHOO.lang.isNull(reportButton)){      	
 	        facetQuery = generateRequest(oPayload.sortedBy, 0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'reference/report.txt?' + querystring + '&' + facetQuery);
         }
-
+        
         var txt = 'Show All Abstracts';
-        var toggle = YAHOO.util.Dom.get('toggleAbstract');
-        if (!YAHOO.lang.isUndefined(toggle)){
-        	setText(toggle, txt);
+        var toggleAbs = YAHOO.util.Dom.get('toggleAbstract');
+        if (!YAHOO.lang.isNull(toggleAbs)){
+        	setText(toggleAbs, txt);
         }
         populateFilterSummary();
         return true;
@@ -553,12 +562,5 @@ YAHOO.util.Event.onDOMReady(function () {
 
 });
 
-var toggleQF = YAHOO.util.Dom.get("toggleQF");
-if (!YAHOO.lang.isUndefined(toggleQF)){
-	YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
-}
-var toggleImg = YAHOO.util.Dom.get("toggleImg");
-if (!YAHOO.lang.isUndefined(toggleImg)){
-	YAHOO.util.Event.addListener("toggleImg", "click", toggleQF);
-}
+
 

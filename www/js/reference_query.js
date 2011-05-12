@@ -40,6 +40,15 @@ var toggleQF = function(oCallback) {
 	myAnim.animate();
 };
 
+var toggleLink = YAHOO.util.Dom.get("toggleQF");
+if (!YAHOO.lang.isUndefined(toggleLink)){
+	YAHOO.util.Event.addListener("toggleQF", "click", toggleQF);
+}
+var toggleImg = YAHOO.util.Dom.get("toggleImg");
+if (!YAHOO.lang.isUndefined(toggleImg)){
+	YAHOO.util.Event.addListener("toggleImg", "click", toggleQF);
+}
+
 var interceptSubmit = function(e) {
 	YAHOO.util.Event.preventDefault(e);	
 	toggleQF(function(){
