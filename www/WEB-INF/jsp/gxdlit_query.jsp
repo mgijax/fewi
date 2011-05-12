@@ -161,14 +161,20 @@ ${templateBean.templateBodyStartHtml}
 </form:form>
 
 <script type="text/javascript">
-var authorAutocomplete = function() {
+	var fewiurl = "${configBean.FEWI_URL}";
+	var qDisplay = false;
+</script>
+
+
+<script type="text/javascript">
+(function() {
     // Use an XHRDataSource
-    var oDS = new YAHOO.util.XHRDataSource("${configBean.FEWI_URL}autocomplete/author/gxd");
+    var oDS = new YAHOO.util.XHRDataSource(fewiurl + "autocomplete/author/gxd");
     // Set the responseType
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList : "resultStrings"};
-    oDS.maxCacheEntries = 10;
+    oDS.responseSchema = {resultsList: "summaryRows", fields:["author", "isGenerated"]};
+    //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
 
     // Instantiate the AutoComplete
@@ -179,12 +185,25 @@ var authorAutocomplete = function() {
     oAC.maxResultsDisplayed = 5000;
     oAC.forceSelection = true;
     oAC.delimChar = ";";
+    
+    oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
+    	   var sKey = sResultMatch;
+    	 
+    	   // some other piece of data defined by schema
+    	   var isGenerated = oResultData[1];
+    	   if (isGenerated){
+    		   sKey = sKey + " <span class='autocompleteHighlight'>(all)</span>";
+    	   }
+
+    	  return (sKey);
+    	}; 
 
     return {
         oDS: oDS,
         oAC: oAC
     };
-}();
+})();
+
 </script>
 
 <script type="text/javascript">
