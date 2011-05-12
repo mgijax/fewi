@@ -119,6 +119,11 @@ public class AccessionController {
         
         logger.debug("About to check the size");
         
+        /**
+         * This is a special case.  If only a single object comes back, go ahead and 
+         * forward to the proper page.
+         */
+        
         if (searchResults.getResultObjects().size() == 1) {
         	logger.debug("Found only 1, should be forwarding.");
         	// We only have one object, seamlessly forward it!
