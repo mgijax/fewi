@@ -8,7 +8,8 @@ import java.util.*;
 
 import mgi.frontend.datamodel.Image;
 import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
-import org.jax.mgi.fewi.hunter.SolrImageSummaryHunter;
+import org.jax.mgi.fewi.hunter.SolrAlleleImagesHunter;
+import org.jax.mgi.fewi.hunter.SolrAlleleImagesByMrkHunter;
 
 /*----------------------------------------*/
 /* standard classes, used for all Finders */
@@ -47,7 +48,10 @@ public class ImageFinder {
     private SolrImageKeyHunter imageKeyHunter;
 
     @Autowired
-    private SolrImageSummaryHunter imageSummaryHunter;
+    private SolrAlleleImagesHunter alleleImagesHunter;
+
+    @Autowired
+    private SolrAlleleImagesByMrkHunter alleleImagesByMrkHunter;
 
     @Autowired
     private HibernateObjectGatherer<Image> imageGatherer;
@@ -79,11 +83,11 @@ public class ImageFinder {
     }
 
 
-    /*-----------------------------------------*/
-    /* Retrieval images, for a given allele
-    /*-----------------------------------------*/
+    /*-----------------------------------------------*/
+    /* Retrieval of pheno images, for a given allele
+    /*-----------------------------------------------*/
 
-    public SearchResults<Image> getImagesByAlleleKey(SearchParams searchParams) {
+    public SearchResults<Image> getPhenoImagesByAlleleKey(SearchParams searchParams) {
 
         logger.debug("->getImagesByAlleleKey()");
 
@@ -91,7 +95,7 @@ public class ImageFinder {
         SearchResults<Image> searchResults = new SearchResults<Image>();
 
         // ask the hunter to identify which objects to return
-        imageSummaryHunter.hunt(searchParams, searchResults);
+        alleleImagesHunter.hunt(searchParams, searchResults);
         logger.debug("->hunter found these resultKeys - "
           + searchResults.getResultKeys());
 
@@ -106,6 +110,30 @@ public class ImageFinder {
 
 
 
+    /*-----------------------------------------------*/
+    /* Retrieval of pheno images, for a given marker
+    /*-----------------------------------------------*/
+
+    public SearchResults<Image> getPhenoImagesByMarkerKey(SearchParams searchParams) {
+
+        logger.debug("->getImagesByMarkerKey()");
+
+        // result object to be returned
+        SearchResults<Image> searchResults = new SearchResults<Image>();
+
+        // ask the hunter to identify which objects to return
+        alleleImagesByMrkHunter.hunt(searchParams, searchResults);
+        logger.debug("->hunter found these resultKeys - "
+          + searchResults.getResultKeys());
+
+        // gather objects identified by the hunter, add them to the results
+        imageGatherer.setType(Image.class);
+        List<Image> imageList
+          = imageGatherer.getIndividually( searchResults.getResultKeys() );
+        searchResults.setResultObjects(imageList);
+
+        return searchResults;
+    }
 
 
 
