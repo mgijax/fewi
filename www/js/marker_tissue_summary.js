@@ -55,7 +55,7 @@ function main() {
     var myConfigs = {
         paginator : myPaginator,
         dynamicData : true,
-        draggableColumns : true,
+        draggableColumns : false,
         initialLoad : false
     };  
     
