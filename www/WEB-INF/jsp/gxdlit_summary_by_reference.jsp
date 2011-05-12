@@ -36,7 +36,7 @@ ${templateBean.templateBodyStartHtml}
        <div>Reference</div>
   </div></td>
   <td class="summaryHeaderData1">
-	<a href="${configBean.FEWI_URL}/reference/${reference.jnumID}">${reference.jnumID}</a> ${reference.longCitation}
+	<a href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a> ${reference.longCitation}
   </td>
 </tr>
 </tbody></table><br>
