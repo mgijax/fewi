@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.summary;
 import java.util.*;
 
 import mgi.frontend.datamodel.Image;
+import mgi.frontend.datamodel.ImageAllele;
 import mgi.frontend.datamodel.Genotype;
 
 import org.jax.mgi.fewi.util.DBConstants;
@@ -23,9 +24,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ImageSummaryRow {
 
-  //-------------------
+  //--------------------
   // instance variables
-  //-------------------
+  //--------------------
 
   // logger & config values
   private Logger logger = LoggerFactory.getLogger(ImageSummaryRow.class);
@@ -38,10 +39,12 @@ public class ImageSummaryRow {
   // converter for curator 'tags' in the data
   private NotesTagConverter ntc;
 
+  public int imageDisplayWidth = 150;
 
-  //-------------
+
+  //--------------
   // constructors
-  //-------------
+  //--------------
 
   // hide the default constructor - we NEED an image to wrap
   private ImageSummaryRow () {}
@@ -60,8 +63,70 @@ public class ImageSummaryRow {
   // public methods
   //------------------------------------------------------------------------
 
-  // functionality to generate a single summary row
-  public String getRow() {
+
+  // display width of image
+  public int getImageDisplayWidth() {
+    return imageDisplayWidth;
+  }
+  public void setImageDisplayWidth(int imageDisplayWidth) {
+    this.imageDisplayWidth = imageDisplayWidth;
+  }
+
+  // image ID
+  public String getImageId() {
+    return this.image.getMgiID();
+  }
+
+  // alleles for this image
+  public List<ImageAllele> getAlleles() {
+    return this.image.getImageAlleles();
+  }
+
+  // img tag
+  public String getImgTag() {
+    StringBuffer imgTag = new StringBuffer();
+    imgTag.append("<a href='" + fewiUrl);
+    imgTag.append("image/pheno/" + this.image.getMgiID() + "'>");
+    imgTag.append("<img width='" + this.getImageDisplayWidth());
+    imgTag.append("' height='" + this.getModifiedHeight() + "'");
+    imgTag.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
+    imgTag.append(image.getPixeldbNumericID() + "'>");
+    return imgTag.toString();
+  }
+
+  // caption
+  public String getCaption() {
+    String cleanCaption = image.getCaption();
+    if (cleanCaption==null) {return "";}
+    cleanCaption = cleanCaption.trim().replaceAll("[\\r\\n]", "").replaceAll("[']", "\'");
+    cleanCaption = FormatHelper.superscript(cleanCaption);
+    return cleanCaption;
+  }
+
+  // copyright
+  public String getCopyright() {
+    return image.getCopyright();
+  }
+
+  // alleleic composition
+  public String getAllelicComp(Genotype thisGenotype) {
+    String cleanAllelicComp = thisGenotype.getCombination1();
+    if (cleanAllelicComp==null) {return "";}
+    return FormatHelper.newline2HTMLBR(ntc.convertNotes(cleanAllelicComp, '|'));
+  }
+
+  // genetic background
+  public String getGenBackground(Genotype thisGenotype) {
+    String cleanGenBackground = thisGenotype.getBackgroundStrain();
+    if (cleanGenBackground==null) {return "";}
+    return FormatHelper.superscript(cleanGenBackground);
+  }
+
+
+  //------------------------------------------------------------------------
+  // pheno summary by allele
+  //------------------------------------------------------------------------
+  public String getPhenoByAlleleRow() {
 
     // collection of formatted display strings to be returned
     StringBuffer summaryRow = new StringBuffer();
@@ -84,11 +149,7 @@ public class ImageSummaryRow {
 
             // image
             summaryRow.append("<td rowspan=" + genotypes.size() + ">");
-            summaryRow.append("<a href='" + fewiUrl);
-            summaryRow.append("image/pheno/" + image.getMgiID() + "'>");
-            summaryRow.append("<img width='150' height='" + this.getModifiedHeight() + "'");
-            summaryRow.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
-            summaryRow.append(image.getPixeldbNumericID() + "'>");
+            summaryRow.append(this.getImgTag());
             summaryRow.append("</td>");
 
             // caption
@@ -164,32 +225,12 @@ public class ImageSummaryRow {
   // private methods
   //------------------------------------------------------------------------
 
-  private String getCaption() {
-      String cleanCaption = image.getCaption();
-      if (cleanCaption==null) {return "";}
-      cleanCaption = cleanCaption.trim().replaceAll("[\\r\\n]", "").replaceAll("[']", "\'");
-      cleanCaption = FormatHelper.superscript(cleanCaption);
-      return cleanCaption;
-  }
 
-  private String getAllelicComp(Genotype thisGenotype) {
-      String cleanAllelicComp = thisGenotype.getCombination1();
-      if (cleanAllelicComp==null) {return "";}
-      return FormatHelper.newline2HTMLBR(ntc.convertNotes(cleanAllelicComp, '|'));
-  }
-
-  private String getGenBackground(Genotype thisGenotype) {
-      String cleanGenBackground = thisGenotype.getBackgroundStrain();
-      if (cleanGenBackground==null) {return "";}
-      return FormatHelper.superscript(cleanGenBackground);
-  }
-
-
-  // scaled height, keeping aspect ratio for image with 150px width
+  // scaled height, keeping aspect ratio for image with imageDisplayWidth
   private int getModifiedHeight() {
       double width = image.getWidth().doubleValue();
       double height = image.getHeight().doubleValue();
-      int modifiedHeight = (int)((height * 150) / width);
+      int modifiedHeight = (int)((height * imageDisplayWidth) / width);
       return modifiedHeight;
   }
 
