@@ -95,7 +95,12 @@ public class AccessionSummaryRow {
     	}
     	else {
     		logger.debug("Base case.");
-        	url = feLinker.getFewiIDLink(objectType, acc.getDisplayID());        			
+    		if (! this.useKeyUrl) {
+    			url = feLinker.getFewiIDLink(objectType, acc.getDisplayID());
+    		}
+    		else {
+    			url = feLinker.getFewiKeyLink(objectType, "" + acc.getObjectKey());
+    		}
     	}
     	if (! objectType.equals(ObjectTypes.INTERPRO)) {
     		return "<a href=\"" + url + "\">" + "MGI " + objectType + " Detail" +  "</a>";
