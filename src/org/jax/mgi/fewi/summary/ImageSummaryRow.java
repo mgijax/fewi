@@ -5,6 +5,7 @@ import java.util.*;
 import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.ImageAllele;
 import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -81,6 +82,14 @@ public class ImageSummaryRow {
   public List<ImageAllele> getAlleles() {
     return this.image.getImageAlleles();
   }
+
+  // allele's reference
+  public Reference getReference() {
+    return this.image.getReference();
+  }
+
+
+
 
   // img tag
   public String getImgTag() {

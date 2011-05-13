@@ -86,6 +86,10 @@ Click on allele symbol for full phenotype details.
 
         <div class='small' style='padding-top:8px; padding-bottom:4px;'>
           <b>Copyright:</b> ${imageSummaryRow.copyright} 
+          <a href="${configBean.FEWI_URL}reference/${imageSummaryRow.reference.jnumID}">
+            ${imageSummaryRow.reference.jnumID}
+          </a>
+
         </div>
 
       </td>
