@@ -35,7 +35,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_images_help.shtml ">    
+<div id="titleBarWrapper" userdoc="pheno_image_summary_help.shtml">    
   <span class="titleBarMainTitle">
     Phenotype Images Associated With This Gene 
   </span>
