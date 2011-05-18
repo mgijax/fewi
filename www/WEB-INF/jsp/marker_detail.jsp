@@ -407,7 +407,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- ROW11 -->
-  <c:if test="${not empty marker.gxdAssayCountsByType}">
+  <c:if test="${not (empty marker.gxdAssayCountsByType and (marker.countOfGxdLiterature < 1) and (marker.countOfCdnaSources < 1))}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Expression
@@ -416,6 +416,7 @@ td.padded { padding:4px; }
 		<c:if test="${marker.countOfGxdLiterature > 0}">
 		  Literature Summary: (<a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a> records)<br/>
 		</c:if>
+		<c:if test="${not empty gxdAssayTypes}">
 		Data Summary:
 		<c:if test="${marker.countOfGxdAssays > 0}">
 		  Assays (<a href="#">${marker.countOfGxdAssays}</a>)&nbsp;&nbsp;&nbsp;
@@ -434,6 +435,7 @@ td.padded { padding:4px; }
 		  Theiler Stages: 
 		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status"><a href="#">${item.countType}</a><c:if test="${!status.last}">,</c:if></c:forEach>
 		  <br/>
+		</c:if>
 		</c:if>
 
 		<c:if test="${not empty gxdAssayTypes}">
