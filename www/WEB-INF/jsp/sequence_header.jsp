@@ -2,12 +2,12 @@
 <table class="summaryHeader">
 <tr >
   <td class="summaryHeaderCat1">
-       <b>ID</b><br>
-       <b>Provider</b><br>
+       <span class="label">ID</span><br/>
+       <span class="label">Provider</span>
   </td>
   <td class="summaryHeaderData1">
-  	${sequence.primaryID}<br/>
-    ${sequence.provider}
+  	<span>${sequence.primaryID}</span><br/>
+    <span>${sequence.provider}</span>
   </td>
 </tr>
 </table>

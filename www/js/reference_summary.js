@@ -152,12 +152,12 @@ var clearFilter = function () {
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
-        template : "{PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+        template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing reference(s) {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
         containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 25,
-        pageLinks: 5,
+        pageLinks: 3,
         recordOffset: 1
     });
 
@@ -389,7 +389,10 @@ YAHOO.util.Event.onDOMReady(function () {
 	);
 	
 	facetDialog.hideEvent.subscribe(function(){ 
-		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">'; });
+		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">'; 
+		for (k in buttons){
+			buttons[k].set('disabled', false);
+		}});
 
 
 	// Wire up the success and failure handlers
@@ -402,22 +405,34 @@ YAHOO.util.Event.onDOMReady(function () {
 	// facet DataSource instances
 	var facetAuthorDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/author?" + querystring);
 	facetAuthorDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
-	facetAuthorDS.responseSchema = {resultsList: "resultFacets"};
+	facetAuthorDS.responseSchema = {resultsList: "resultFacets",         
+		metaFields: {
+	        error: "error"}
+	};
 	facetAuthorDS.maxCacheEntries = 3;
 
 	var facetJournalDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/journal?" + querystring);
 	facetJournalDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
-	facetJournalDS.responseSchema = {resultsList: "resultFacets"};
+	facetJournalDS.responseSchema = {resultsList: "resultFacets",         
+			metaFields: {
+        error: "error"}
+	};
 	facetJournalDS.maxCacheEntries = 3;
 
 	var facetYearDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/year?" + querystring);
 	facetYearDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
-	facetYearDS.responseSchema = {resultsList: "resultFacets"};
+	facetYearDS.responseSchema = {resultsList: "resultFacets",         
+			metaFields: {
+        error: "error"}
+	};
 	facetYearDS.maxCacheEntries = 3;
 
 	var facetDataDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/data?" + querystring);
 	facetDataDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
-	facetDataDS.responseSchema = {resultsList: "resultFacets"};
+	facetDataDS.responseSchema = {resultsList: "resultFacets",         
+			metaFields: {
+        error: "error"}
+	};
 	facetDataDS.maxCacheEntries = 3;
 
 	var parseFacetResponse = function (oRequest, oResponse, oPayload) {
@@ -445,15 +460,14 @@ YAHOO.util.Event.onDOMReady(function () {
 	var populateFacetDialog = function (title, body) {
 		facetDialog.setHeader('Filter by ' + title);
 		facetDialog.form.innerHTML = body;
-		//facetDialog.getButtons()[0].set('disabled', false);
+		buttons = facetDialog.getButtons();
 	}
 
 	var handleError = function (oRequest, oResponse, oPayload) {
 		buttons = facetDialog.getButtons();
-//		for (k in buttons){
-//			alert(buttons[k].isActive());
-//			buttons[k].set('disabled', true);
-//		}
+		for (k in buttons){
+			buttons[k].set('disabled', true);
+		}
 
 		populateFacetDialog(oPayload.title, 'Too many ' + oPayload.title + 
 				' to filter. Modify your search or use another filter first.');
@@ -543,7 +557,9 @@ YAHOO.util.Event.onDOMReady(function () {
         if (expand){
         	var i = pagination.recordOffset ;
         	var rows = pagination.rowsPerPage + i;
+        	alert(i + ': ' + rows);
         	while(i < rows){
+        		alert(i);
         		myDataTable.expandRow(i++);
         	}
         }

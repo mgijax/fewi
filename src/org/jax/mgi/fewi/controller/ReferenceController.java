@@ -470,14 +470,22 @@ public class ReferenceController {
 										"* Invalid year"));
 					}
 				} else {
-					if (rangeLoc == 0){
-						logger.debug("year <= " + years.get(0));
-						queryList.add(new Filter(SearchConstants.REF_YEAR, 
-								years.get(0), Filter.OP_LESS_OR_EQUAL));
+					Integer y = new Integer(years.get(0));
+					if ( (y < minYear || y > maxYear) ) {
+						result.addError(
+								new FieldError("referenceQueryForm", 
+										"year", 
+										"* Invalid year"));
 					} else {
-						logger.debug("year >= " + years.get(0));
-						queryList.add(new Filter(SearchConstants.REF_YEAR, 
-								years.get(0), Filter.OP_GREATER_OR_EQUAL));
+						if (rangeLoc == 0){
+							logger.debug("year <= " + years.get(0));
+							queryList.add(new Filter(SearchConstants.REF_YEAR, 
+									years.get(0), Filter.OP_LESS_OR_EQUAL));
+						} else {
+							logger.debug("year >= " + years.get(0));
+							queryList.add(new Filter(SearchConstants.REF_YEAR, 
+									years.get(0), Filter.OP_GREATER_OR_EQUAL));
+						}
 					}
 				}
 			} else {
@@ -498,7 +506,7 @@ public class ReferenceController {
 					result.addError(
 							new FieldError("referenceQueryForm", 
 									"year", 
-									"* Invalid number format"));
+									"* Invalid year"));
 				}
 			}
 		}
@@ -761,9 +769,11 @@ public class ReferenceController {
 		List<String> l = new ArrayList<String>();
 		
 		if (facetResults.getResultFacets().size() >= facetLimit){
+			logger.debug("too many facet results");
 			l.add("Too many filter values to display.");
 			m.put("error", l);
 		} else if (facetResults.getResultFacets().size() == 0) {
+			logger.debug("no facet results");
 			l.add("Zero filter values to display.");
 			m.put("error", l);
 		} else {
