@@ -127,7 +127,8 @@ td.padded { padding:4px; }
 			  <c:if test="${marker.markerType == 'QTL'}">
 			    cM position of peak correlated region/marker: 
 			  </c:if>
-              <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<br/>
+              <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<c:if test="${not empty marker.preferredCytoband}">, cytoband ${marker.preferredCytoband.cytogeneticOffset}</c:if>
+              <br/>
               <c:set var="hasGeneticLocation" value="1"/>
               <a href="#">Detailed Genetic Map &#177; 1 cM</a>
             </c:if>
