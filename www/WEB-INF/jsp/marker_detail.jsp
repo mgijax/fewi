@@ -22,9 +22,6 @@ ${templateBean.templateHeadHtml}
     
 %>
 
-<style type="text/css">
-</style>
-
 <script language="Javascript">
 function formatForwardArgs() {
     document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
@@ -33,6 +30,10 @@ function formatForwardArgs() {
 </script>
 
 ${templateBean.templateBodyStartHtml}
+
+<style type="text/css">
+td.padded { padding:4px; } 
+</style>
 
 
 <!-- header bar -->
@@ -266,38 +267,39 @@ ${templateBean.templateBodyStartHtml}
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<form name="sequenceForm" method="GET">
-		<table>
-		  <tr><td colspan="4">Representative Sequences</td><td>Length</td><td>Strain/Species</td><td>Flank</td></tr>
+		<table class="padded">
+		  <tr><td class="padded" colspan="4">Representative Sequences</td><td class="padded">Length</td><td class="padded">Strain/Species</td><td class="padded">Flank</td></tr>
 		  <c:if test="${not empty marker.representativeGenomicSequence}">
 			<c:set var="seq" value="${marker.representativeGenomicSequence}" scope="request"/>
 			<% Sequence seqDna = (Sequence) request.getAttribute("seq"); %>
-		    <tr><td><input type="checkbox" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td>genomic</td>
-		      <td>${marker.representativeGenomicSequence.primaryID}</td>
-		      <td>${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
-		      <td>${marker.representativeGenomicSequence.length}</td>
-		      <td>${genomicSource}</td>
-		      <td>&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;Kb</td></tr>
+		    <tr><td class="padded"><input type="checkbox" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td>genomic</td>
+		      <td class="padded">${marker.representativeGenomicSequence.primaryID}</td>
+		      <td class="padded">${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td class="padded">${marker.representativeGenomicSequence.length}</td>
+		      <td class="padded">${genomicSource}</td>
+		      <td class="padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;Kb</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativeTranscriptSequence}">
 			<c:set var="seq" value="${marker.representativeTranscriptSequence}" scope="request"/>
 			<% Sequence seqRna = (Sequence) request.getAttribute("seq"); %>
-		    <tr><td><input type="checkbox" name="seq2" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td>transcript</td>
-		      <td>${marker.representativeTranscriptSequence.primaryID}</td>
-		      <td>${transcriptLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
-		      <td>${marker.representativeTranscriptSequence.length}</td>
-		      <td>${transcriptSource}</td><td>&nbsp;</td></tr>
+		    <tr><td class="padded"><input type="checkbox" name="seq2" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td>transcript</td>
+		      <td class="padded">${marker.representativeTranscriptSequence.primaryID}</td>
+		      <td class="padded">${transcriptLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td class="padded">${marker.representativeTranscriptSequence.length}</td>
+		      <td class="padded">${transcriptSource}</td><td>&nbsp;</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativePolypeptideSequence}">
 			<c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
 			<% Sequence seqPoly = (Sequence) request.getAttribute("seq"); %>
-		    <tr><td><input type="checkbox" name="seq3" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td>polypeptide</td>
-		      <td>${marker.representativePolypeptideSequence.primaryID}</td>
-		      <td>${polypeptideLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
-		      <td>${marker.representativePolypeptideSequence.length}</td>
-		      <td>${polypeptideSource}</td><td>&nbsp;</td></tr>
+		    <tr><td class="padded"><input type="checkbox" name="seq3" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td>polypeptide</td>
+		      <td class="padded">${marker.representativePolypeptideSequence.primaryID}</td>
+		      <td class="padded">${polypeptideLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td class="padded">${marker.representativePolypeptideSequence.length}</td>
+		      <td class="padded">${polypeptideSource}</td><td>&nbsp;</td></tr>
 		  </c:if>
 		</table>
 		</form>
+		<p>
 		<form name="sequenceFormPullDown">
 		  <I>For the selected sequences</I>
 		  <select name="seqPullDown">
