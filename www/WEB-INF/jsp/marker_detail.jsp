@@ -347,7 +347,7 @@ td.padded { padding:4px; }
 		  Alleles Annotated to Human Diseases(<a href="#">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
-		  Phenotype Images(<a href="#">${marker.countOfPhenotypeImages}</a>)
+		  Phenotype Images(<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a>)
 		</c:if>
       </td>
     </tr>
@@ -562,7 +562,7 @@ td.padded { padding:4px; }
 		  ${latestRef.shortCitation}<br/>
 		</c:if>
 		<c:if test="${marker.countOfReferences > 0}">
-		  All references(<a href="#">${marker.countOfReferences}</a>)<br/>
+		  All references(<a href="${configBean.FEWI_URL}reference/marker/${marker.primaryID}">${marker.countOfReferences}</a>)<br/>
 		</c:if>
       </td>
     </tr>
