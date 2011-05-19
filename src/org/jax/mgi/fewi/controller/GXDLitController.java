@@ -421,7 +421,7 @@ public class GXDLitController {
         logger.debug("Building the summary rows");
         
         List<GxdLitIndexRecord> recordList = results.getResultObjects();
-
+                
         logger.debug("Got the record list");
         
         // create/load the list of SummaryRow wrapper objects for the gene section
@@ -433,10 +433,15 @@ public class GXDLitController {
 		int totalCount = 0;
 		int totalReferences = 0;
 		
+        Boolean hasFullyCoded = Boolean.FALSE;
+		
 		for (GxdLitGeneSummaryRow outRow: summaryRows) {
 			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
 				references.add(ref.getJnum());
 				totalCount ++;
+				if (!hasFullyCoded && ref.getIsFullyCoded()) {
+				    hasFullyCoded = Boolean.TRUE;
+				}
 			}
 		}
 		
@@ -452,6 +457,7 @@ public class GXDLitController {
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("limit", gxdLimit);
+        mav.addObject("hasFullyCoded", hasFullyCoded);
 
         return mav;
     }
