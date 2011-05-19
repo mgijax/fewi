@@ -6,7 +6,6 @@ import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,13 +86,14 @@ public class BatchController {
     // Foo Query Form Summary
     //-------------------------//
     @RequestMapping("/summary")
-    public ModelAndView fooSummary(MultipartHttpServletRequest request,
+    public ModelAndView batchSummary(MultipartHttpServletRequest request,
     		HttpSession session,
             @ModelAttribute BatchQueryForm queryForm) {
 
         logger.debug("-> batchSummary started");
         
-        logger.debug("queryString: " + request.getQueryString());
+		logger.debug("queryString: " + request.getQueryString());
+
         logger.info(queryForm.toString());
         session.removeAttribute("idSet");
         
@@ -140,6 +140,66 @@ public class BatchController {
 
         return mav;
     }
+    
+    //-------------------------//
+    // Foo Query Form Summary
+    //-------------------------//
+    @RequestMapping("/summary2")
+    public ModelAndView batchSummary(HttpServletRequest request,
+    		HttpSession session,
+            @ModelAttribute BatchQueryForm queryForm) {
+
+        logger.debug("-> batchSummary2 started");        
+        logger.debug("queryString: " + request.getQueryString());
+        logger.info(queryForm.toString());
+        
+        session.removeAttribute("idSet");        
+        logger.debug("sessionId: " + session.getId());
+        
+        Set<String> idSet = null; 
+        MultipartFile file = queryForm.getIdFile();
+
+        if (file != null && !file.isEmpty()){        	
+            String sep = "";
+            String fileType = queryForm.getFileType();
+            if (fileType != null && "".equals("cvs")) {
+            	sep = ",";             
+            } else {
+                sep = "\t";
+            }
+            
+            Integer col = queryForm.getIdColumn();
+
+            InputStream idStream;
+            StringWriter writer = new StringWriter();
+            try {
+            	idStream = (InputStream) file.getInputStream();
+    			IOUtils.copy(idStream , writer);
+    			idSet = parseColumn(writer.toString(), col, sep);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}        	    	
+        } else {
+        	logger.debug("no file");      	
+        	idSet = parseIds(queryForm.getIds());
+        }
+
+        logger.debug("set ids: " + idSet.size());
+		if (idSet != null && idSet.size() > 0){
+			logger.debug("store parsed ids: " + idSet.size());
+			session.setAttribute("idSet", new ArrayList<String>(idSet));
+		}  
+        logger.debug("mav");
+        ModelAndView mav = new ModelAndView("batch_summary");
+        mav.addObject("queryString", queryForm.toQueryString());
+        logger.debug("qs");
+        mav.addObject("batchQueryForm", queryForm);
+        logger.debug("bqf");
+        mav.addObject("inputIdCount", idSet.size());
+        logger.debug("idset");
+        return mav;
+    }
 
 
     //----------------------//
@@ -173,15 +233,13 @@ public class BatchController {
         List<BatchMarkerId> markerList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
-        List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>();
-        Iterator<BatchMarkerId> it = markerList.iterator();
-        while (it.hasNext()) {
-        	BatchMarkerId foo = it.next();
-            if (foo == null) {
+        List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>();        
+        for (BatchMarkerId marker: markerList){
+            if (marker == null) {
                 logger.debug("--> Null Object");
             }else {
-                summaryRows.add(new BatchSummaryRow(foo, query));
-            }
+                summaryRows.add(new BatchSummaryRow(marker, query));
+            } 	
         }
 
         // The JSON return object will be serialized to a JSON response.
@@ -327,7 +385,7 @@ public class BatchController {
 	            	s = s.substring(0, ( s.length() - 1) );
 	            }
 				if (s != null && !s.trim().equals("")) {
-					parsedIds.add(s.trim().toLowerCase());
+					parsedIds.add(s.trim());
 				}
 			}
 		} catch (IOException e) {

@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.summary;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.BatchMarkerAllele;
@@ -22,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * wrapper around a foo;  represents on row in summary
+ * wrapper around a Marker;  represents on row in summary
  */
 public class BatchSummaryRow {
 
@@ -52,9 +51,6 @@ public class BatchSummaryRow {
 	//-------------
 	// constructors
 	//-------------
-
-	// hide the default constructor - we NEED a foo to wrap
-    private BatchSummaryRow () {}
 
     public BatchSummaryRow (BatchMarkerId batchMarkerId, BatchQueryForm query) {
     	this.batchMarkerId = batchMarkerId;
@@ -114,6 +110,8 @@ public class BatchSummaryRow {
     		MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
     		if(loc != null){
     			return loc.getChromosome();
+    		} else {
+    			return "UN";
     		}
     	}
     	return "";
@@ -134,7 +132,7 @@ public class BatchSummaryRow {
     			return loc.getStartCoordinate();
     		}
     	}
-    	return new Double(0);
+    	return null;
     }
     public Double getEnd() {
     	if (batchMarkerId.getMarker() != null && query.getLocation()){
@@ -143,7 +141,7 @@ public class BatchSummaryRow {
     			return loc.getEndCoordinate();
     		}
     	}
-    	return new Double(0);
+    	return null;
     }
     
     public String getEnsemblIds() {

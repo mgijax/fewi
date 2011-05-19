@@ -86,7 +86,7 @@ public class BatchFinder {
 
         // ask the hunter to identify which objects to return
         batchMarkerHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
+        logger.debug("->hunter found these resultKeys - " + searchResults.getResultObjects().size());
 
         return searchResults;
     }

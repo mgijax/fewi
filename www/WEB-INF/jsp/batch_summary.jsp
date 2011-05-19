@@ -20,8 +20,32 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitle">Batch Summary</span>
 </div>
 
-<div id="summDiv">
+<div id="outer"  class="bluebar">
+	<span id="toggleImg" class="qfExpand"></span>
+	<div id="toggleQF">Click to modify search</div>
+	<div id="qwrap" style="display:none;">
+		<%@ include file="/WEB-INF/jsp/batch_form.jsp" %>
+	</div>
+</div>
+
+<div id="resultbar" class="bluebar">Results</div>
+
+<div id="summary">
+
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" class="filters">
+					&nbsp;<span id="defaultText"  style="display:none;">No filters selected. Filter these references below.</span>
+					<span id="filterList"></span><br/>					
+					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> reference(s) match after applying filter(s)</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="querySummary">
+		<div class="innertube">
 		<span class="title">You searched for:</span><br/>
 		<span class="label">Number of IDs/symbols entered:</span> 
 			${inputIdCount}<br/>
@@ -37,23 +61,31 @@ ${templateBean.templateBodyStartHtml}
 		</c:if>
 		<span class="label">Output options:</span> 
 			${batchQueryForm.outputOptions}<br/>
-		<span class="title">Your results:</span> <span id="totalCount"></span> matching rows, 
-		<span id="markerCount"></span> matching genes/markers found.<br/>
-
+		<span id="totalCount"></span> matching rows<br/> 
+		<span id="markerCount"></span> matching genes/markers found.
+		</div>
 	</div>
-</div>	
 
-<!-- paginator -->
-<table style="width:100%;">
-  <tr>
-    <td class="paginator">
-      <div id="paginationTop">&nbsp;</div>
-    </td>
-  </tr>
-</table>
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
+	
+<div id="toolbar" class="bluebar">
+	<div id="filterDiv"></div>
+	<div id="otherDiv"></div>
+	<div id="downloadDiv">
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+	</div>
+</div>
 
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
+<div id="paginationWrap">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
 
 <script type="text/javascript">
 	// attribute columns
@@ -72,12 +104,16 @@ ${templateBean.templateBodyStartHtml}
 	var refsnp = ${batchQueryForm.refsnp};	
 	var refseq = ${batchQueryForm.refseq};
 	var uniprot = ${batchQueryForm.uniprot};
+
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
+	var qDisplay = true;
+
 </script>
 
 <!-- including this file will start the data injection -->
-<script type="text/javascript">
-  <%@ include file="/js/batch_summary.js" %>
-</script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_query.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_summary.js"></script>
 
 ${templateBean.templateBodyStopHtml}
 

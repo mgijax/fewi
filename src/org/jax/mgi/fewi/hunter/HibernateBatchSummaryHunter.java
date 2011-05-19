@@ -64,6 +64,7 @@ public class HibernateBatchSummaryHunter<T> {
         type = BatchMarkerId.class;
         
     	List<String> idSet = new ArrayList<String>();
+    	List<String> idSetLower = new ArrayList<String>();
     	List<String> termTypes = new ArrayList<String>();   	
     	
     	StringBuffer hql = new StringBuffer("FROM BatchMarkerId WHERE ");
@@ -76,7 +77,10 @@ public class HibernateBatchSummaryHunter<T> {
     			prop = f.getProperty();
     			if (prop != null && !"".equals(prop)){
     				if (SearchConstants.BATCH_TERM.equals(prop)){
-    					idSet = f.getValues();			
+    					idSet = f.getValues();
+    					for (String id: idSet) {
+							idSetLower.add(id.toLowerCase());
+						}
     					clause = "lower(term) in (:ids) ";
     				} else if (SearchConstants.BATCH_TYPE.equals(prop)) {
     					if (typeMap.containsKey(f.getValue())){
@@ -102,7 +106,7 @@ public class HibernateBatchSummaryHunter<T> {
         Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());
         
 		if(idSet != null && idSet.size() > 0) { 
-			query.setParameterList("ids", idSet);
+			query.setParameterList("ids", idSetLower);
 		}
        
         logger.debug("-> filter parsed" );   
@@ -121,6 +125,7 @@ public class HibernateBatchSummaryHunter<T> {
         for (T item: qr){
         	markerKey.add(((BatchMarkerId)item).getMarker().getMarkerKey());
         	bTerm = ((BatchMarkerId)item).getTerm().toLowerCase();
+        	logger.debug("bTerm: " + bTerm);
         	if (qResults.containsKey(bTerm)) {
         		bResults = qResults.get(bTerm);
         	} else {
@@ -132,11 +137,17 @@ public class HibernateBatchSummaryHunter<T> {
         logger.debug("-> results parsed" );
         
         for (String id: idSet) {
-        	if (qResults.containsKey(id)){
-        		bResults = qResults.get(id);
+        	logger.debug("if res: " + id);
+        	if (qResults.containsKey(id.toLowerCase())){
+        		logger.debug("yes");
+        		bResults = qResults.get(id.toLowerCase());
+        		logger.debug("get: " + bResults.size());
         		for (BatchMarkerId b : bResults) {
+        			logger.debug("loop");
+        			b.setTerm(id);
 					bm.add((T)b);
 				}
+        		logger.debug("added");
         	} else {
     			tmp = new BatchMarkerId();
     			tmp.setTerm(id);

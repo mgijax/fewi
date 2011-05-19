@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class BatchQueryForm {
-	private String idType;
+	private String idType = "auto";
 	private Map<String, String> idTypes = new LinkedHashMap<String, String>();
 	private String ids;
 	private MultipartFile idFile = null;
@@ -101,7 +101,7 @@ public class BatchQueryForm {
 		this.idFile = idFile;
 	}
 	public boolean getHasFile(){
-		if (idFile.isEmpty()){
+		if (idFile == null || idFile.isEmpty()){
 			return false;
 		}
 		return true;
