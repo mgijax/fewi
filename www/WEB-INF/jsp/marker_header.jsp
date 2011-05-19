@@ -1,3 +1,5 @@
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
 <!-- header table -->
 <table class="summaryHeader">
 <tr>
