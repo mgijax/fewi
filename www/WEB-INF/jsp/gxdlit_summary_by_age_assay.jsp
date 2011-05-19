@@ -55,7 +55,7 @@ matching records from ${refCount} references.</span><br><br>
 
 <div style="clear:left">
 <span class="extraLarge">Summary by Gene and Reference:</span><i> Number indicates the number of results matching the search criteria recorded for each reference.</i><br>
-<b>* Indicates detailed expression data entries available</b><br>
+<c:if test="hasFullyCoded"><b>* Indicates detailed expression data entries available</b><br></c:if>
 
        <c:if test="${not empty summaryRows}">
          <table class="outline" width="100%">
