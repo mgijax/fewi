@@ -204,9 +204,14 @@ public class GXDLitController {
 		int totalCount = 0;
 		int totalReferences = 0;
 		
+		Boolean hasFullyCoded = Boolean.FALSE;
+		
 		for (GxdLitGeneSummaryRow outRow: summaryRows) {
 			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
 				references.add(ref.getJnum());
+				if (!hasFullyCoded && ref.getIsFullyCoded()) {
+				    hasFullyCoded = Boolean.TRUE;
+				}
 				totalCount ++;
 			}
 		}
@@ -226,6 +231,7 @@ public class GXDLitController {
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
+        mav.addObject("hasFullyCoded", hasFullyCoded);
 
         return mav;
     }
@@ -297,9 +303,14 @@ public class GXDLitController {
 		int totalCount = 0;
 		int totalReferences = 0;
 		
+		Boolean hasFullyCoded = Boolean.FALSE;
+		
 		for (GxdLitGeneSummaryRow outRow: summaryRows) {
 			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
 				references.add(ref.getJnum());
+				if (!hasFullyCoded && ref.getIsFullyCoded()) {
+				    hasFullyCoded = Boolean.TRUE;
+				}
 				totalCount ++;
 			}
 		}
@@ -319,6 +330,7 @@ public class GXDLitController {
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
+        mav.addObject("hasFullyCoded", hasFullyCoded);
 
         return mav;
     }
@@ -359,9 +371,14 @@ public class GXDLitController {
 		int totalCount = 0;
 		int totalReferences = 0;
 		
+		Boolean hasFullyCoded = Boolean.FALSE;
+		
 		for (GxdLitGeneSummaryRow outRow: summaryRows) {
 			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
 				references.add(ref.getJnum());
+				if (!hasFullyCoded && ref.getIsFullyCoded()) {
+				    hasFullyCoded = Boolean.TRUE;
+				}
 				totalCount ++;
 			}
 		}
@@ -380,6 +397,7 @@ public class GXDLitController {
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
+        mav.addObject("hasFullyCoded", hasFullyCoded);
 
         return mav;
     }
