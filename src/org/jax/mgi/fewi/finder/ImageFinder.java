@@ -8,7 +8,7 @@ import java.util.*;
 
 import mgi.frontend.datamodel.Image;
 import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
-import org.jax.mgi.fewi.hunter.SolrAlleleImagesHunter;
+import org.jax.mgi.fewi.hunter.SolrAlleleImagesByAlleleHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByMrkHunter;
 
 /*----------------------------------------*/
@@ -48,7 +48,7 @@ public class ImageFinder {
     private SolrImageKeyHunter imageKeyHunter;
 
     @Autowired
-    private SolrAlleleImagesHunter alleleImagesHunter;
+    private SolrAlleleImagesByAlleleHunter alleleImagesHunter;
 
     @Autowired
     private SolrAlleleImagesByMrkHunter alleleImagesByMrkHunter;
