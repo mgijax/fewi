@@ -60,7 +60,7 @@ ${record.fullyCodedAssayCount} <a href="${configBean.FEWI_URL}gxd/assay/key/${re
 	<!-- Setup the age header -->
 	<td class="outline"><a href="${configBean.USERHELP_URL}gxdindex_help.shtml#irbaa" onClick='openUserhelpWindow("gxdindex_help.shtml#irbaa"); return false;'">Age</a></td>
 	<c:forEach var="age" items="${pairTable.ages}">
-		<td class="outline"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
+		<td class="outline" style="text-align:center"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
 	</c:forEach>
 	</tr>
 	<!-- Setup the x access header -->
@@ -68,7 +68,7 @@ ${record.fullyCodedAssayCount} <a href="${configBean.FEWI_URL}gxd/assay/key/${re
 		<tr class="outline">
 		<td class="outline">${type.assayType}</td>
 			<c:forEach var="count" items="${type.counts}">
-				<td class="outline"><c:if test="${not empty count}"><img src="${configBean.WEBSHARE_URL}/images/redball.gif" alt="red ball"></c:if></td>
+				<td class="outline"><c:if test="${not empty count}"><img style="display: block; margin-left: auto; margin-right: auto" src="${configBean.WEBSHARE_URL}/images/redball.gif" alt="red ball"></c:if></td>
 			</c:forEach>
 	    </tr>
 	</c:forEach>

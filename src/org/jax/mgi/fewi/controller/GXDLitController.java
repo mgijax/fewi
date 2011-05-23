@@ -609,7 +609,6 @@ public class GXDLitController {
 		assayTypes.add("In situ RNA (whole mount)");
 		assayTypes.add("In situ reporter (knock in)");
 		assayTypes.add("Northern blot");
-		assayTypes.add("Western");
 		assayTypes.add("Western blot");
 		assayTypes.add("RT-PCR");
 		assayTypes.add("cDNA clones");

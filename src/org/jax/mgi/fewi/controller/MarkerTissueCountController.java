@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerTissueCount;
+import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.MarkerTissueCountFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -23,6 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +61,43 @@ public class MarkerTissueCountController {
 
     @Autowired
     private MarkerFinder markerFinder;
+    
+    
+    /* 
+     * This method maps ajax requests from the reference summary page.  It 
+     * parses the ReferenceQueryForm, generates SearchParams object, and issues
+     * the query to the ReferenceFinder.  The results are returned as JSON
+     */
+    @RequestMapping("/marker/report*")
+    public String tissueSummaryReport(
+            HttpServletRequest request, Model model,
+            @ModelAttribute Paginator page) {
+                
+        logger.debug("summaryReportText");
+        
+
+            SearchParams params = new SearchParams();
+            
+            String mrkKey = request.getParameter("mrkKey");
+            
+            if (mrkKey != null) {
+                params.setFilter(new Filter(SearchConstants.MRK_KEY, mrkKey));
+            }
+            
+            //params.setPaginator(page);
+            params.setPageSize(5000);
+            
+            // perform query, and pull out the requested objects
+            SearchResults searchResults
+              = tFinder.getTissues(params);
+
+            model.addAttribute("results", searchResults.getResultObjects());
+
+            return "tissueSummaryReport";            
+
+
+    }
+
     
     //--------------------------------//
     // Tissue Count Summary by Marker
@@ -106,7 +148,7 @@ public class MarkerTissueCountController {
     // JSON summary results
     //----------------------//
     @RequestMapping("/json")
-    public @ResponseBody JsonSummaryResponse<MarkerTissueCountSummaryRow> seqSummaryJson(
+    public @ResponseBody JsonSummaryResponse<MarkerTissueCountSummaryRow> tissueSummaryJson(
             HttpServletRequest request,
             @ModelAttribute Paginator page) {
 

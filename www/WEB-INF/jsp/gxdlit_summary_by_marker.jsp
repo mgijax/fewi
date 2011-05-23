@@ -7,7 +7,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Literature Associated With This Genome Feature</title>
+<title>Gene Expression Literature Summary - MGI</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -26,7 +26,7 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Literature Associated With This Genome Feature</span>
+	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
 </div>
 
 <jsp:include page="marker_header.jsp"></jsp:include><br>
@@ -44,7 +44,7 @@ matching records from ${refCount} references.</span><br><br>
 	<!-- Setup the age header -->
 	<td class="outline"><a href="${configBean.USERHELP_URL}gxdindex_help.shtml#irbaa" onClick='openUserhelpWindow("gxdindex_help.shtml#irbaa"); return false;'">Age</a></td>
 	<c:forEach var="age" items="${pairTable.ages}">
-		<td class="outline"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
+		<td class="outline" style="text-align: center"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
 	</c:forEach>
 	</tr>
 	<!-- Setup the x access header -->
@@ -52,7 +52,7 @@ matching records from ${refCount} references.</span><br><br>
 		<tr class="outline">
 		<td class="outline">${type.assayType}</td>
 			<c:forEach var="count" items="${type.counts}">
-			<td class="outline">
+			<td class="outline" style="text-align: center">
 				<c:if test="${not empty count}">${count.countUrl}</c:if>
 			</td>
 			</c:forEach>
@@ -62,7 +62,7 @@ matching records from ${refCount} references.</span><br><br>
 </c:if>
 <br>
 <span class="extraLarge">Summary by Gene and Reference:</span><i> Number indicates the number of results matching the search criteria recorded for each reference.</i><br>
-<c:if test="hasFullyCoded"><b>* Indicates detailed expression data entries available</b><br></c:if>
+<c:if test="${hasFullyCoded}"><b>* Indicates detailed expression data entries available</b><br></c:if>
 
        <c:if test="${not empty summaryRows}">
          <table class="outline" width="100%">

@@ -7,7 +7,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Literature Associated With Age &amp; Assay</title>
+<title>Gene Expression Literature Summary - MGI</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -27,7 +27,7 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Literature Associated With Age &amp; Assay</span>
+	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
 </div>
 
 <!-- header table -->
@@ -55,7 +55,7 @@ matching records from ${refCount} references.</span><br><br>
 
 <div style="clear:left">
 <span class="extraLarge">Summary by Gene and Reference:</span><i> Number indicates the number of results matching the search criteria recorded for each reference.</i><br>
-<c:if test="hasFullyCoded"><b>* Indicates detailed expression data entries available</b><br></c:if>
+<c:if test="${hasFullyCoded}"><b>* Indicates detailed expression data entries available</b><br></c:if>
 
        <c:if test="${not empty summaryRows}">
          <table class="outline" width="100%">

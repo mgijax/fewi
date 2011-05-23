@@ -5,7 +5,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Tissue Results By Genome Feature - MGI</title>
+<title>Gene Expression Tissue Summary - MGI</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -17,7 +17,9 @@ ${templateBean.templateHeadHtml}
 <style type="text/css">
 </style>
 
-<script>
+<script type="text/javascript">
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
 </script>
 
 <% Marker marker = (Marker)request.getAttribute("marker"); %>
@@ -32,24 +34,54 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxd_tissue_result_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Tissue Results By Genome Feature </span>
+	<span class="titleBarMainTitle">Gene Expression Tissue Summary</span>
 </div>
 
 
 <jsp:include page="marker_header.jsp"></jsp:include><br>
 
+<div id="summary">
 
-<!-- paginator -->
-<table style="width:100%;">
-  <tr>
-    <td class="paginator">
-      <div id="paginationTop">&nbsp;</div>
-    </td>
-  </tr>
-</table>
+	<div id="breadbox" style="width: 480px">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" class="filters">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="querySummary">
+		<div class="innertube">
+		</div>
+	</div>
+
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
+
+<div id="toolbar" class="bluebar" style="width:444px; min-width: 400px">
+	<div id="filterDiv">
+	</div>
+	<div id="otherDiv"> 
+	</div>
+	<div id="downloadDiv">
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+	</div>
+</div>
+
+
 
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
+
+<div id="paginationWrap" style="width: 468px">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
+
 
 <!-- including this file will start the data injection -->
 <script type="text/javascript">

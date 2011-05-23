@@ -7,7 +7,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Literature Results</title>
+<title>Gene Expression Literature Summary - MGI</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -26,7 +26,7 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Literature Results</span>
+	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
 </div>
 
 
@@ -48,9 +48,6 @@ ${templateBean.templateBodyStartHtml}
 	<div id="querySummary">
 		<div class="innertube">
 			<span class="title">You searched for:</span><br>
-			<span class="count">${totalCount} 
-		    <c:if test="${totalCount == limit}"> of ${limit}+ </c:if> 
-			matching record<c:if test="${totalCount != 1}">s</c:if> from ${refCount} reference<c:if test="${refCount != 1}">s</c:if>.</span><br>
 			<c:if test="${not empty queryForm.nomen}">
 				<span class="label">Marker Symbol/Name:</span> 
 				${queryForm.nomen}<br/></c:if>
@@ -88,7 +85,11 @@ ${templateBean.templateBodyStartHtml}
 				</c:choose>
 				:</span>
 				${queryForm.text}<br/>
-			</c:if>		</div>
+			</c:if>		
+			<span class="count">${totalCount} 
+		    <c:if test="${totalCount == limit}"> of ${limit}+ </c:if> 
+			matching record<c:if test="${totalCount != 1}">s</c:if> from ${refCount} reference<c:if test="${refCount != 1}">s</c:if>.</span>
+			</div>
 	</div>
 	
 	<div id="rightcolumn">
@@ -108,7 +109,7 @@ ${templateBean.templateBodyStartHtml}
 	<!-- Setup the age header -->
 	<td class="outline"><a href="${configBean.USERHELP_URL}gxdindex_help.shtml#irbaa" onClick='openUserhelpWindow("gxdindex_help.shtml#irbaa"); return false;'">Age</a></td>
 	<c:forEach var="age" items="${pairTable.ages}">
-		<td class="outline"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
+		<td class="outline" style="text-align: center"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
 	</c:forEach>
 	</tr>
 	<!-- Setup the x access header -->
@@ -116,7 +117,7 @@ ${templateBean.templateBodyStartHtml}
 		<tr class="outline">
 		<td class="outline">${type.assayType}</td>
 			<c:forEach var="count" items="${type.counts}">
-			<td class="outline">
+			<td class="outline" style="text-align: center">
 				<c:if test="${not empty count}">${count.countUrl}</c:if>
 			</td>
 			</c:forEach>
@@ -126,7 +127,7 @@ ${templateBean.templateBodyStartHtml}
 </c:if>
 <br>
 <span class="extraLarge">Summary by Gene and Reference:</span><i> Number indicates the number of results matching the search criteria recorded for each reference.</i><br>
-<c:if test="hasFullyCoded"><b>* Indicates detailed expression data entries available</b><br></c:if>
+<c:if test="${hasFullyCoded}"><b>* Indicates detailed expression data entries available</b><br></c:if>
 
        <c:if test="${not empty summaryRows}">
          <table class="outline" width="100%">
