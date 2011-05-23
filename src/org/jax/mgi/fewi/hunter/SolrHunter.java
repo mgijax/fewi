@@ -52,25 +52,26 @@ public class SolrHunter implements Hunter {
     protected String facetString;    
     
     // Gather the solr server settings from configuration
-    
+
+    protected CommonsHttpSolrServer server = null;
     @Value("${solr.soTimeout}")
-    private Integer solrSoTimeout;
+    protected Integer solrSoTimeout;
     @Value("${solr.connectionTimeout}")
-    private Integer connectionTimeout;
+    protected Integer connectionTimeout;
     @Value("${solr.maxConnectionsPerHost}")
-    private Integer maxConnectionsPerHost;
+    protected Integer maxConnectionsPerHost;
     @Value("${solr.maxTotalConnections}")
-    private Integer maxTotalConnections; 
+    protected Integer maxTotalConnections; 
     @Value("${solr.maxRetries}")
-    private Integer maxRetries; 
+    protected Integer maxRetries; 
     
     // Gather the default sizes for facets and results.  We will use these
     // unless they are overidden by the request
     
     @Value("${solr.resultsDefault}")
-    private Integer resultsDefault; 
+    protected Integer resultsDefault; 
     @Value("${solr.factetNumberDefault}")
-    private Integer factetNumberDefault; 
+    protected Integer factetNumberDefault; 
 
     protected HashMap <String, PropertyMapper> propertyMap =
         new HashMap<String, PropertyMapper>();
@@ -85,13 +86,17 @@ public class SolrHunter implements Hunter {
     
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    // Setup the highlight token once.
+    // This is the unique token that will be used
+    // for highlighting.  Since this shouldn't ever
+    // appear in our corpus, it should be safe to use in 
+    // a regular expression.
     
     private final String highlightToken = "!FRAG!";
 
     /**
      * Here we map the higher level join clauses to their
-     * respective Solr values.
+     * respective Solr values. So FC_AND will goto " AND "
+     * etc and so forth.
      */
 
     private static HashMap<Integer, String> filterClauseMap =
@@ -108,116 +113,55 @@ public class SolrHunter implements Hunter {
     }
 
     /**
+     * hunt
+     * @param SearchParams, SearchResults
+     * @return none
      * Classes of the hunter interface must implement the hunt method.
      * This method is primarily responsible for breaking down a Filter
      * object into its component parts.  Once we are at that lowest level
      * we then invoke the SolrProperyMapper to get back the lowest level
      * query clauses.  These will then in turn be joined together by this
      * class, with the result being a query to place against solr.
-     *
+     * 
      * This method then runs the query, packages the results and exits.
-     *
+     * This method is designed with the template methodology in mind, so
+     * nearly all of the steps in the algorithm can be overwritten by 
+     * implementing classes.
      */
 
     @Override
     public void hunt(SearchParams searchParams, SearchResults searchResults) {
 
 
-    	/**
-    	 * Invoke the hook, editing the search params as needed.
-    	 */
+    	// Invoke the hook, editing the search params as needed.
+    	
         searchParams = this.preProcessSearchParams(searchParams);
 
-        /**
-         * Setup our interface into solr.  These are auto injected by spring
-         * at load time.  The solrUrl is provided by the implementing classes.
-         */
-
+        // Setup our interface into solr. 
+         
+        setupSolrConnection();
         
-        CommonsHttpSolrServer server = null;
-        
-        try { server = new CommonsHttpSolrServer(solrUrl);}
-        catch (Exception e) {
-        	System.out.println("Cannot reach the Solr server.");
-            e.printStackTrace();
-            }
-
-        logger.info("SolrTimeout:" + solrSoTimeout);
-        
-        server.setSoTimeout(solrSoTimeout);  // socket read timeout
-        server.setConnectionTimeout(connectionTimeout);
-        server.setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
-        server.setMaxTotalConnections(maxTotalConnections);
-        server.setFollowRedirects(false);  // defaults to false
-        server.setAllowCompression(true);
-        server.setMaxRetries(maxRetries);
+        // Create the query string by invoking the translate filter method.
 
         SolrQuery query = new SolrQuery();
 
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
-        logger.info(queryString);
+        logger.info("Solr Query String: " + queryString);
         query.setQuery(queryString);
 
-        query.setFields("score"); // Always pack the score
+        // Always pack the score
         
-        /**
-         * Tear apart the sort objects and add them to the query string.  
-         * This currently maps to a sortMapper object, which can turn a 
-         * conceptual single column sort from the wi's perspective to its
-         *  multiple column sort in the indexes.
-         */
+        query.setFields("score"); 
         
-        ORDER currentSort = null;
+        // Add in the Sorts from the search parameters.
         
-        for (Sort sort: searchParams.getSorts()) {
+        addSorts(searchParams, query);
 
-        	// Determine the direction of the sort.
-        	
-        	if (sort.isDesc()) {
-            	currentSort = SolrQuery.ORDER.desc;
-            }
-            else {
-            	currentSort = SolrQuery.ORDER.asc;
-            }
-            
-        	/**
-        	 * Is this a configured sort?  If so check the sort map
-        	 * for 1->N Mappings.
-             */
-            
-            if (sortMap.containsKey(sort.getSort())) {
-                for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
-                    query.addSortField(ssm, currentSort);
-                }
-            }
-            
-            /**
-             * Otherwise just add the sort in as is, Solr will ignore invalid
-             * sorts. 
-             */
-            
-            else {
-              	query.addSortField(sort.getSort(), currentSort);
-            }
-        }
+        // Perform highlighting, assuming its needed.  This method will take
+        // care of determining that.
         
-        /**
-         * Do we want to highlight?  If so setup the highlighter with
-         * known tokens so we can use regex to extract them later on.
-         */
-        
-        if (! highlightFields.isEmpty()) {
-            for (String field: highlightFields) {
-                query.addHighlightField(field);
-            }
-            query.setHighlight(Boolean.TRUE);
-            query.setHighlightFragsize(30000);
-            query.setHighlightRequireFieldMatch(Boolean.TRUE);
-            query.setParam("hl.simple.pre", highlightToken);
-            query.setParam("hl.simple.post", highlightToken);
-
-        }
+        addHighlightingFields(searchParams, query);
         
         /**
          * Set the pagination parameters.
@@ -232,20 +176,11 @@ public class SolrHunter implements Hunter {
             query.setStart(resultsDefault);
         }
 
-        /**
-         *  We only ever ask for a single facet, if its set in 
-         *  the implementing class, set it in the Solr request.
-         */
+        // Add the facets, can be overwritten.
         
-        
-        if (facetString != null) {
-            query.addFacetField(facetString);
-            query.setFacetMinCount(1);
-            query.setFacetSort("lex");
-            query.setFacetLimit(factetNumberDefault);
-        }
+        addFacets(query);
 
-        logger.info("This is the Solr query:" + query + "\n");
+        logger.info("This is the final Solr query:" + query + "\n");
 
         /**
          * Run the query.
@@ -274,12 +209,6 @@ public class SolrHunter implements Hunter {
 
         searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
 
-        /**
-         * This will be handles in a similar way as the packKeys 
-         * method, making this entire process generic.
-         *
-         */
-
         }
         catch (Exception e) {e.printStackTrace();}
 
@@ -288,11 +217,13 @@ public class SolrHunter implements Hunter {
     }
     
     /**
+     * preprocessSearchParams 
+     * @param SearchParams
+     * @return SearchParams
+     * 
      * This is a hook, any class that needs to modify the searchParams before
      * doing its work will override this method.
      * 
-     * @param searchParams
-     * @return
      */
     protected SearchParams preProcessSearchParams(SearchParams searchParams) {
         return searchParams;
@@ -367,13 +298,13 @@ public class SolrHunter implements Hunter {
                 // Create the subclause, surround it in parens
                 
                 String output = "(";
-                int first = 1;
+                Boolean first = Boolean.TRUE;
                 for (String value: filter.getValues()) {
-                    if (first == 1) {
+                    if (first) {
                         output += propertyMap.get(filter.getProperty())
                         	.getClause(value, operator);
                         
-                        first = 0;
+                        first = Boolean.FALSE;
                     }
                     else {
                         output += joinClause 
@@ -395,9 +326,6 @@ public class SolrHunter implements Hunter {
 
         else {
             
-            String queryString = "";
-            queryString = "(";
-            int first = 1;
             List<Filter> filters = filter.getNestedFilters();
 
             List<String> resultsString = new ArrayList<String>();
@@ -416,6 +344,126 @@ public class SolrHunter implements Hunter {
     }
 
     /**
+     * setupSolrConnection
+     * @param none
+     * @return none
+     * This default implementation is responsible for setting up the 
+     * connection to the configured Solr Index.  Implementing classes
+     * can override this template method in order to do special actions
+     * as needed.
+     */
+    
+    protected void setupSolrConnection() {
+        
+        try { server = new CommonsHttpSolrServer(solrUrl);}
+        catch (Exception e) {
+            System.out.println("Cannot reach the Solr server.");
+            e.printStackTrace();
+            }
+
+        logger.debug("SolrTimeout:" + solrSoTimeout);
+        
+        server.setSoTimeout(solrSoTimeout);  // socket read timeout
+        server.setConnectionTimeout(connectionTimeout);
+        server.setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
+        server.setMaxTotalConnections(maxTotalConnections);
+        server.setFollowRedirects(false);  // defaults to false
+        server.setAllowCompression(true);
+        server.setMaxRetries(maxRetries);
+        
+        return;
+    }
+    
+    /**
+     * addHighlightingFields
+     * @param SearchParams, SolrQuery
+     * @return none
+     * This method checks to see whether or not the highlightFields variable
+     * has had any information placed into it.
+     * 
+     *  If so, we go ahead and modify the Solr query to ask for these fields to be 
+     *  highlighted, assuming the search itself asked for this to occur.
+     *  
+     *  This is done for performance reasons, as asking for highlighting actually
+     *  add to the workload that Solr is performing, as well as adds the the amount
+     *  of information that we need to pack and process.
+     */
+    
+    protected void addHighlightingFields(SearchParams searchParams, SolrQuery query) {
+        if (! highlightFields.isEmpty() && searchParams.includeMetaHighlight()) {
+            for (String field: highlightFields) {
+                query.addHighlightField(field);
+            }
+            query.setHighlight(Boolean.TRUE);
+            query.setHighlightFragsize(30000);
+            query.setHighlightRequireFieldMatch(Boolean.TRUE);
+            query.setParam("hl.simple.pre", highlightToken);
+            query.setParam("hl.simple.post", highlightToken);
+
+        }
+    }
+    
+    protected void addFacets(SolrQuery query) {
+        if (facetString != null) {
+            query.addFacetField(facetString);
+            query.setFacetMinCount(1);
+            query.setFacetSort("lex");
+            query.setFacetLimit(factetNumberDefault);
+        }
+    }
+    
+    /**
+     * addSorts
+     * @param SearchParams, SolrQuery
+     * @return none
+     * Tear apart the sort objects and add them to the query string.  
+     * This currently maps to a sortMapper object, which can turn a 
+     * conceptual single column sort from the wi's perspective to its
+     * multiple column sort in the indexes.
+     * 
+     * We modify the query directly, so once this method completes we 
+     * are ready to continue processing.
+     */
+    
+    protected void addSorts(SearchParams searchParams, SolrQuery query) {
+        
+        ORDER currentSort = null;
+        
+        for (Sort sort: searchParams.getSorts()) {
+
+            // Determine the direction of the sort.
+            
+            if (sort.isDesc()) {
+                currentSort = SolrQuery.ORDER.desc;
+            }
+            else {
+                currentSort = SolrQuery.ORDER.asc;
+            }
+            
+            /**
+             * Is this a configured sort?  If so check the sort map
+             * for 1->N Mappings.
+             */
+            
+            if (sortMap.containsKey(sort.getSort())) {
+                for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
+                    query.addSortField(ssm, currentSort);
+                }
+            }
+            
+            /**
+             * Otherwise just add the sort in as is, Solr will ignore invalid
+             * sorts. 
+             */
+            
+            else {
+                query.addSortField(sort.getSort(), currentSort);
+            }
+        }
+        
+    }
+    
+    /**
      * packInformation
      * @param sdl
      * @return List of keys
@@ -424,26 +472,42 @@ public class SolrHunter implements Hunter {
      * variable.  This will then be used to extract a given field from the
      * returned documents as the key we want to return to the wi.
      *
-     * If something more complex is requires, the implementer is expected
+     * If something more complex is required, the implementer is expected
      * to override this method with their own version.
      */
     
-    void packInformation(QueryResponse rsp, SearchResults sr, 
+    protected void packInformation(QueryResponse rsp, SearchResults sr, 
     		SearchParams sp) {
     	
+    	// A list of all the primary keys in the document
         List<String> keys = new ArrayList<String>();
+        
+        // A list of the documents scores.
         List<String> scoreKeys = new ArrayList<String>();
+        
+        // A listing of "otherStrings" for the documents.
+        // These are used when the key isn't what we are 
+        // trying to get out of the document.
         List<String> info = new ArrayList<String>();
+        
+        // A listing of all of the facets.  This is used 
+        // at the set level.
         List<String> facet = new ArrayList<String>();
                 
+
+        // A mapping of field -> set of highlighted words
+        // for the result set.
         Map<String, Set<String>> setHighlights = 
-        	new HashMap<String, Set<String>> ();
-        
-        Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
-        
+            new HashMap<String, Set<String>> ();
+
+        // A mapping of documentKey -> Mapping of FieldName 
+        // -> list of highlighted words.
         Map<String, Map<String, List<String>>> highlights = 
-        	rsp.getHighlighting();
+            rsp.getHighlighting();
         
+        // A mapping of documentKey -> Row level Metadata objects.
+        Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
+                
         SolrDocumentList sdl = rsp.getResults();
     
         logger.debug("Packing information.");
@@ -557,11 +621,20 @@ public class SolrHunter implements Hunter {
 	                     * Every other fragment will be a highlighted word
 	                     * setup a loop that iterates through the results
 	                     * grabbing it.  Once we have it place it into 
-	                     * the highlight mapping.
+	                     * the highlight mapping.  The highlighted sections
+	                     * will be surrounded by our impossible token.  As 
+	                     * such when the string is split the highlighted
+	                     * tokens will be every other set of words.
 	                     */
 	                    
 	                    for (String frag: fragments) {
-	                        if (inAHL) {
+	                        
+	                    	/**
+	                    	 * We are in a highlighted section, parse out the
+	                    	 * matching word(s).
+	                    	 */
+	                    	
+	                    	if (inAHL) {
 	                            if (setHighlights.containsKey(
 	                            		fieldToParamMap.get(key))) {
 	                            	
@@ -578,6 +651,11 @@ public class SolrHunter implements Hunter {
 	                            }
 	                            inAHL = Boolean.FALSE;
 	                        }
+	                    	
+	                    	/**
+	                    	 * This is a non highlighted section, move on.
+	                    	 */
+	                    	
 	                        else {
 	                            inAHL = Boolean.TRUE;
 	                        }

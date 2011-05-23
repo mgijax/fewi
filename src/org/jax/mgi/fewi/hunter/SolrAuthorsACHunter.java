@@ -30,7 +30,8 @@ public class SolrAuthorsACHunter extends SolrHunter {
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to actually get a 
          * specific field, and return it rather than a list of keys.
-         */       
+         */  
+        
         otherString = IndexConstants.REF_AUTHOR_SORT;
         
     }
