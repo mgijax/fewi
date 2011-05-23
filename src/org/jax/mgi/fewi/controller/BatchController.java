@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.Reference;
 
 import org.apache.commons.io.IOUtils;
 import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
+import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -31,6 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -90,67 +95,25 @@ public class BatchController {
     		HttpSession session,
             @ModelAttribute BatchQueryForm queryForm) {
 
-        logger.debug("-> batchSummary started");
-        
-		logger.debug("queryString: " + request.getQueryString());
-
-        logger.info(queryForm.toString());
-        session.removeAttribute("idSet");
-        
-        logger.debug("sessionId: " + session.getId());
-        
-        Set<String> idSet = null; 
-        
-        MultipartFile file = queryForm.getIdFile();
-        if (file.isEmpty()){
-        	logger.debug("no file");      	
-        	idSet = parseIds(queryForm.getIds());
-        } else {
-            String sep = "";
-            String fileType = queryForm.getFileType();
-            if (fileType != null && "".equals("cvs")) {
-            	sep = ",";             
-            } else {
-                sep = "\t";
-            }
-            
-            Integer col = queryForm.getIdColumn();
-
-            InputStream idStream;
-            StringWriter writer = new StringWriter();
-            try {
-            	idStream = (InputStream) file.getInputStream();
-    			IOUtils.copy(idStream , writer);
-    			idSet = parseColumn(writer.toString(), col, sep);
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}        	    	
-        }
-        
-		if (idSet != null && idSet.size() > 0){
-			logger.debug("store parsed ids");
-			session.setAttribute("idSet", new ArrayList<String>(idSet));
-		}  
-        
-        ModelAndView mav = new ModelAndView("batch_summary");
-        mav.addObject("queryString", queryForm.toQueryString());
-        mav.addObject("batchQueryForm", queryForm);
-        mav.addObject("inputIdCount", idSet.size());
-
-        return mav;
+        logger.debug("-> batchSummary POST started");       
+		logger.debug("queryString: " + request.getQueryString());		
+		return processSummary(session, queryForm);
     }
     
     //-------------------------//
     // Foo Query Form Summary
     //-------------------------//
-    @RequestMapping("/summary2")
-    public ModelAndView batchSummary(HttpServletRequest request,
-    		HttpSession session,
+    @RequestMapping(value="/summary", method=RequestMethod.GET)
+    public ModelAndView batchSummaryGet(HttpSession session,
             @ModelAttribute BatchQueryForm queryForm) {
 
-        logger.debug("-> batchSummary2 started");        
-        logger.debug("queryString: " + request.getQueryString());
+        logger.debug("-> batchSummary GET started");        
+        return processSummary(session, queryForm);
+    }
+    
+    private ModelAndView processSummary (HttpSession session,
+            BatchQueryForm queryForm){
+
         logger.info(queryForm.toString());
         
         session.removeAttribute("idSet");        
@@ -180,25 +143,19 @@ public class BatchController {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
     		}        	    	
-        } else {
-        	logger.debug("no file");      	
+        } else {     	
         	idSet = parseIds(queryForm.getIds());
         }
 
-        logger.debug("set ids: " + idSet.size());
 		if (idSet != null && idSet.size() > 0){
-			logger.debug("store parsed ids: " + idSet.size());
 			session.setAttribute("idSet", new ArrayList<String>(idSet));
 		}  
-        logger.debug("mav");
         ModelAndView mav = new ModelAndView("batch_summary");
         mav.addObject("queryString", queryForm.toQueryString());
-        logger.debug("qs");
         mav.addObject("batchQueryForm", queryForm);
-        logger.debug("bqf");
         mav.addObject("inputIdCount", idSet.size());
-        logger.debug("idset");
         return mav;
+    	
     }
 
 
@@ -209,27 +166,14 @@ public class BatchController {
     public @ResponseBody JsonSummaryResponse<BatchSummaryRow> batchSummaryJson(
     		HttpSession session,
     		HttpServletRequest request,
-			@ModelAttribute BatchQueryForm query,
+			@ModelAttribute BatchQueryForm queryForm,
             @ModelAttribute Paginator page) {
 
         logger.debug("-> JsonSummaryResponse started");
-        logger.debug("sessionId: " + session.getId());
-        
-        List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
-        if (idSet != null){
-        	logger.debug("ids: " + idSet.size());
-        } else {
-        	logger.debug("no idSet");
-        }
-
-        // generate search parms object;  add pagination, sorts, and filters
-        SearchParams params = new SearchParams();
-        params.setPaginator(page);
-        params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(query, idSet));
 
         // perform query, and pull out the requested objects
-        SearchResults<BatchMarkerId> searchResults = batchFinder.getBatch(params);
+        SearchResults<BatchMarkerId> searchResults = 
+        	getSummaryResults(session, request, queryForm, page);
         List<BatchMarkerId> markerList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
@@ -238,7 +182,7 @@ public class BatchController {
             if (marker == null) {
                 logger.debug("--> Null Object");
             }else {
-                summaryRows.add(new BatchSummaryRow(marker, query));
+                summaryRows.add(new BatchSummaryRow(marker, queryForm));
             } 	
         }
 
@@ -255,7 +199,43 @@ public class BatchController {
         return jsonResponse;
     }
 
+	@RequestMapping("/report*")
+	public ModelAndView batchSummaryReport(
+			HttpServletRequest request,
+			HttpSession session,
+			@ModelAttribute BatchQueryForm queryForm,
+            @ModelAttribute Paginator page) {
+				
+		logger.debug("batchSummaryReport");		
+		ModelAndView mav = new ModelAndView("batchSummaryReport");
+		mav.addObject("results", getSummaryResults(session, request, queryForm, page).getResultObjects());
+		return mav;
+	}
+	
+	private SearchResults<BatchMarkerId> getSummaryResults(    		
+			HttpSession session,
+    		HttpServletRequest request,
+			BatchQueryForm query,
+            Paginator page){
 
+        logger.debug("sessionId: " + session.getId());
+        
+        List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
+        if (idSet != null){
+        	logger.debug("ids: " + idSet.size());
+        } else {
+        	logger.debug("no idSet");
+        }
+
+        // generate search parms object;  add pagination, sorts, and filters
+        SearchParams params = new SearchParams();
+        params.setPaginator(page);
+        params.setSorts(this.genSorts(request));
+        params.setFilter(this.genFilters(query, idSet));
+
+        // perform query, and pull out the requested objects
+         return batchFinder.getBatch(params);
+	}
 
     //--------------------------------------------------------------------//
     // private methods

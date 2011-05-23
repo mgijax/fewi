@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.jboss.xnio.log.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 public class BatchQueryForm {
@@ -139,7 +140,8 @@ public class BatchQueryForm {
 			params.add("idType=" + idType);
 		}
 		if (ids != null && !"".equals(ids)){
-			params.add("ids=" + ids);
+			String s = ids.replaceAll("\r\n", " ");
+			params.add("ids=" + s);
 		}
 		return StringUtils.join(params, "&");
 	}
