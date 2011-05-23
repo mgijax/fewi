@@ -6,8 +6,9 @@ function main() {
         {key:"structure", 
             label:"<b>Structure</b>",
             sortable:false,
-            width:750},
+            width:350},
         {label:"Results",
+            key:"markerTissueResults",
             sortable:false,
             children: [{key:"all", 
                 label:"<b>All</b>",
@@ -45,8 +46,9 @@ function main() {
     var myPaginator = new YAHOO.widget.Paginator({
         template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
-        rowsPerPageOptions : [10,25,50,100],
-        rowsPerPage : 25,
+        rowsPerPageOptions : [50,100,250,500],
+        containers   : ["paginationTop", "paginationBottom"],
+        rowsPerPage : 50,
         pageLinks: 5,
         recordOffset: 1
     });
@@ -111,9 +113,15 @@ function main() {
 
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
         oPayload.pagination = {
-            rowsPerPage: Number(pRequest['results']) || 25,
+            rowsPerPage: Number(pRequest['results']) || 50,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
+        
+        var reportButton = YAHOO.util.Dom.get('textDownload');
+        if (!YAHOO.lang.isNull(reportButton)){
+        		reportButton.setAttribute('href', fewiurl + 'tissue/marker/report.txt?' + querystring);
+        }
+        
         return true;
     };
 
@@ -122,7 +130,7 @@ function main() {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "structure";  // default the sort
         dir   = (dir) ? dir.substring(7) : "desc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
-        results   = results || 25;
+        results   = results || 50;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };
 
