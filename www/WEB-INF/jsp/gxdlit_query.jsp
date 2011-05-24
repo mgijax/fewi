@@ -110,12 +110,12 @@ ${templateBean.templateBodyStartHtml}
 	<tr  CLASS="stripe2">
 		<td CLASS="cat2">Year</td>
 		<td>
-			<div style="height:4em;">
+			<div style="height:5.5em;">
 				<div style="float:left;width:300px;text-align:left;">
 					<form:input id="year" path="year" class="formWidth"></form:input>
 				</div>
-				<div style="height:4em;" class="example">
-					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
+				<div style="height:5.5em;" class="example">
+					<div style="height:5.5em;float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
 						Examples:
 					</div>
 					<div style="text-align:left;" class="example">
@@ -185,6 +185,7 @@ ${templateBean.templateBodyStartHtml}
     oAC.maxResultsDisplayed = 5000;
     oAC.forceSelection = true;
     oAC.delimChar = ";";
+    oAc.allowBrowserAutocomplete = true;
     
     oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
     	   var sKey = sResultMatch;
