@@ -128,7 +128,7 @@ ${templateBean.templateBodyStartHtml}
   <!-- images -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
-      Image for <br> Allele
+      Images for <br> Allele
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
 
