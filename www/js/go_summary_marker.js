@@ -36,7 +36,7 @@ function main() {
             {key:"term"},
             {key:"evidence"},
             {key:"inferred"},
-            {key:"references"},
+            {key:"references"}
         ],
         metaFields: {
             totalRecords: "totalCount"
@@ -107,7 +107,7 @@ function main() {
 
     // Update payload data on the fly for tight integration with latest values from server 
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
-
+    	
         var pRequest = parseRequest(oRequest);
         var meta = oResponse.meta;
 
@@ -122,7 +122,7 @@ function main() {
     // Returns a request string for consumption by the DataSource
     var generateRequest = function(startIndex,sortKey,dir,results) {
     	startIndex = startIndex || 0;
-        sortKey   = sortKey || "field1";
+        sortKey   = sortKey || "term";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
         results   = results || 25;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
