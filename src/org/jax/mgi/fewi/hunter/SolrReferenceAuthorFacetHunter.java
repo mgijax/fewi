@@ -13,6 +13,12 @@ import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+/**
+ * SolrReferenceAuthorFacetHunter
+ * @author mhall
+ * This hunter gathers the autor facet information for the filter.
+ * Most of its configuration items are set in the base hunter.
+ */
 @Repository
 public class SolrReferenceAuthorFacetHunter 
 	extends SolrReferenceSummaryBaseHunter {

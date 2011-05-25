@@ -24,6 +24,16 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
      * perform all of the needed work via the hunt() method.
      * 
      * This class is the base for all of the other reference summary hunters.
+     * The reason that this needed to be created was mostly for maintenence reasons.
+     * 
+     * The reference hunters have spawned at least 7 different hunters to date.  Each
+     * of these hunters share 95%+ common configuration.  By abstracting this 
+     * configuration information out to this base hunter, it allows us to have a 
+     * single point of change for most reference changes.
+     * 
+     * Also, since this is a base class, any of the specific settings can be
+     * overwritten in the extending classes.  Allowing them to be customized
+     * at need.
      */
 	
     public SolrReferenceSummaryBaseHunter() {        

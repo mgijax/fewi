@@ -44,11 +44,17 @@ public class SolrHunter implements Hunter {
 
     /**
      * These strings all have their values set in the extending classes.
+     * These are the basic strings used to determine which information we 
+     * want to pull back from the Solr documents.
      */
 
+    // Which solr index?
     protected String solrUrl;
+    // Which field is the document key?
     protected String keyString;
+    // Which other field do we want to use as a key? (This could be collapsed)
     protected String otherString;
+    // What is the name of the facet that we want to pull out
     protected String facetString;    
     
     // Gather the solr server settings from configuration
@@ -73,15 +79,22 @@ public class SolrHunter implements Hunter {
     @Value("${solr.factetNumberDefault}")
     protected Integer factetNumberDefault; 
 
+    // Mapping variables.  These primarily concern the 1->N mappings
+    // between the front end, and the backing technologies.
+    
+    // Front end fields -> PropertyMappers, can be 1->N
     protected HashMap <String, PropertyMapper> propertyMap =
         new HashMap<String, PropertyMapper>();
-    
+
+    // Solr Fields -> Front end field mappings.  Can be 1->N 
     protected HashMap <String, String> fieldToParamMap = 
         new HashMap<String, String>();
     
+    // Front end sorts -> backend fields, can be 1->N
     protected HashMap <String, SolrSortMapper> sortMap =
         new HashMap<String, SolrSortMapper>();
 
+    // Fields to highlight
     protected List <String> highlightFields = new ArrayList<String> ();
     
     public Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -147,7 +160,7 @@ public class SolrHunter implements Hunter {
 
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
-        logger.info("Solr Query String: " + queryString);
+        logger.info("Incoming Transformed String: " + queryString);
         query.setQuery(queryString);
 
         // Always pack the score
