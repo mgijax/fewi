@@ -80,7 +80,7 @@ public class HibernateAccessionSummaryHunter<T> {
     			if (prop != null && !"".equals(prop)){
     				logger.debug("Property: " + prop);
     				if (SearchConstants.ACC_ID.equals(prop)) {
-    					clauses.add(" lower(search_id) = '" + f.getValue() + "' ");
+    					clauses.add(" lower(search_id) = '" + f.getValue().toLowerCase() + "' ");
     				}
     			}
     			
