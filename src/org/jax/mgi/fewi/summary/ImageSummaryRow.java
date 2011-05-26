@@ -40,7 +40,7 @@ public class ImageSummaryRow {
   // converter for curator 'tags' in the data
   private NotesTagConverter ntc;
 
-  public int imageDisplayWidth = 150;
+//  public int imageDisplayWidth = 150;
 
 
   //--------------
@@ -64,13 +64,14 @@ public class ImageSummaryRow {
   // public methods
   //------------------------------------------------------------------------
 
-
-  // display width of image
-  public int getImageDisplayWidth() {
-    return imageDisplayWidth;
+  // image height
+  public String getImageHeight() {
+    return this.image.getHeight().toString();
   }
-  public void setImageDisplayWidth(int imageDisplayWidth) {
-    this.imageDisplayWidth = imageDisplayWidth;
+
+  // image width
+  public String getImageWidth() {
+    return this.image.getWidth().toString();
   }
 
   // image ID
@@ -96,8 +97,8 @@ public class ImageSummaryRow {
     StringBuffer imgTag = new StringBuffer();
     imgTag.append("<a href='" + fewiUrl);
     imgTag.append("image/pheno/" + this.image.getMgiID() + "'>");
-    imgTag.append("<img width='" + this.getImageDisplayWidth());
-    imgTag.append("' height='" + this.getModifiedHeight() + "'");
+    imgTag.append("<img width='" + this.getImageWidth());
+    imgTag.append("' height='" + this.getImageHeight() + "'");
     imgTag.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
     imgTag.append(image.getPixeldbNumericID() + "'>");
     return imgTag.toString();
@@ -195,7 +196,7 @@ public class ImageSummaryRow {
         // image
         summaryRow.append("<td>");
         summaryRow.append("<a href='" + fewiUrl + "image/pheno/" + image.getMgiID() + "'>");
-        summaryRow.append("<img width='150' height='" + this.getModifiedHeight() + "'");
+        summaryRow.append("<img width='" + this.getImageHeight() +"' height='" + this.getImageHeight() + "'");
         summaryRow.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
         summaryRow.append(image.getPixeldbNumericID() + "'>");
         summaryRow.append("</td>");
@@ -236,11 +237,11 @@ public class ImageSummaryRow {
 
 
   // scaled height, keeping aspect ratio for image with imageDisplayWidth
-  private int getModifiedHeight() {
-      double width = image.getWidth().doubleValue();
-      double height = image.getHeight().doubleValue();
-      int modifiedHeight = (int)((height * imageDisplayWidth) / width);
-      return modifiedHeight;
-  }
+//  private int getModifiedHeight() {
+//      double width = image.getWidth().doubleValue();
+//      double height = image.getHeight().doubleValue();
+//      int modifiedHeight = (int)((height * imageDisplayWidth) / width);
+//      return modifiedHeight;
+//  }
 
 }

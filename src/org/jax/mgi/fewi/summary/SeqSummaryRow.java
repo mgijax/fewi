@@ -172,7 +172,7 @@ public class SeqSummaryRow {
         if (markerIter.hasNext()) {
 			marker = markerIter.next();
             markerLinks.append("<a href='" + fewiUrl + "marker/"
-              + marker.getSymbol() + "'>" + marker.getSymbol() + "</a></br>");
+              + marker.getPrimaryID() + "'>" + marker.getSymbol() + "</a></br>");
 		}
     	return markerLinks.toString();
     }

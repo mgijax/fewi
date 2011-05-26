@@ -10,6 +10,7 @@ import mgi.frontend.datamodel.Image;
 import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByAlleleHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByMrkHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdImagesByMrkHunter;
 
 /*----------------------------------------*/
 /* standard classes, used for all Finders */
@@ -38,133 +39,130 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ImageFinder {
 
-    /*--------------------*/
-    /* instance variables */
-    /*--------------------*/
+  /*--------------------*/
+  /* instance variables */
+  /*--------------------*/
 
-    private Logger logger = LoggerFactory.getLogger(ImageFinder.class);
+  private Logger logger = LoggerFactory.getLogger(ImageFinder.class);
 
-    @Autowired
-    private SolrImageKeyHunter imageKeyHunter;
+  @Autowired
+  private SolrImageKeyHunter imageKeyHunter;
 
-    @Autowired
-    private SolrAlleleImagesByAlleleHunter alleleImagesHunter;
+  @Autowired
+  private SolrAlleleImagesByAlleleHunter alleleImagesHunter;
 
-    @Autowired
-    private SolrAlleleImagesByMrkHunter alleleImagesByMrkHunter;
+  @Autowired
+  private SolrAlleleImagesByMrkHunter alleleImagesByMrkHunter;
 
-    @Autowired
-    private HibernateObjectGatherer<Image> imageGatherer;
+  @Autowired
+  private SolrGxdImagesByMrkHunter gxdImagesByMrkHunter;
 
-
-    /*-----------------------------------------*/
-    /* Retrieval of a image, for a given ID
-    /*-----------------------------------------*/
-
-    public SearchResults<Image> getImageByID(SearchParams searchParams) {
-
-        logger.debug("->getImageByID()");
-
-        // result object to be returned
-        SearchResults<Image> searchResults = new SearchResults<Image>();
-
-        // ask the hunter to identify which objects to return
-        imageKeyHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
-
-        // gather objects identified by the hunter, add them to the results
-        imageGatherer.setType(Image.class);
-        List<Image> imageList
-          = imageGatherer.get( searchResults.getResultKeys() );
-        searchResults.setResultObjects(imageList);
-
-        return searchResults;
-    }
+  @Autowired
+  private HibernateObjectGatherer<Image> imageGatherer;
 
 
-    /*-----------------------------------------------*/
-    /* Retrieval of pheno images, for a given allele
-    /*-----------------------------------------------*/
+  /*-----------------------------------------*/
+  /* Retrieval of a image, for a given ID
+  /*-----------------------------------------*/
 
-    public SearchResults<Image> getPhenoImagesByAlleleKey(SearchParams searchParams) {
+  public SearchResults<Image> getImageByID(SearchParams searchParams) {
 
-        logger.debug("->getImagesByAlleleKey()");
+    logger.debug("->getImageByID()");
 
-        // result object to be returned
-        SearchResults<Image> searchResults = new SearchResults<Image>();
+    // result object to be returned
+    SearchResults<Image> searchResults = new SearchResults<Image>();
 
-        // ask the hunter to identify which objects to return
-        alleleImagesHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
+    // ask the hunter to identify which objects to return
+    imageKeyHunter.hunt(searchParams, searchResults);
+    logger.debug("->hunter found these resultKeys - "
+      + searchResults.getResultKeys());
 
-        // gather objects identified by the hunter, add them to the results
-        imageGatherer.setType(Image.class);
-        List<Image> imageList
-          = imageGatherer.get( searchResults.getResultKeys() );
-        searchResults.setResultObjects(imageList);
+    // gather objects identified by the hunter, add them to the results
+    imageGatherer.setType(Image.class);
+    List<Image> imageList
+      = imageGatherer.get( searchResults.getResultKeys() );
+    searchResults.setResultObjects(imageList);
 
-        return searchResults;
-    }
+    return searchResults;
+  }
 
 
+  /*-----------------------------------------------*/
+  /* Retrieval of pheno images, for a given allele
+  /*-----------------------------------------------*/
 
-    /*-----------------------------------------------*/
-    /* Retrieval of pheno images, for a given marker
-    /*-----------------------------------------------*/
+  public SearchResults<Image> getPhenoImagesByAlleleKey(SearchParams searchParams) {
 
-    public SearchResults<Image> getPhenoImagesByMarkerKey(SearchParams searchParams) {
+    logger.debug("->getPhenoImagesByAlleleKey()");
 
-        logger.debug("->getImagesByMarkerKey()");
+    // result object to be returned
+    SearchResults<Image> searchResults = new SearchResults<Image>();
 
-        // result object to be returned
-        SearchResults<Image> searchResults = new SearchResults<Image>();
+    // ask the hunter to identify which objects to return
+    alleleImagesHunter.hunt(searchParams, searchResults);
+    logger.debug("->hunter found these resultKeys - "
+      + searchResults.getResultKeys());
 
-        // ask the hunter to identify which objects to return
-        alleleImagesByMrkHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
+    // gather objects identified by the hunter, add them to the results
+    imageGatherer.setType(Image.class);
+    List<Image> imageList
+      = imageGatherer.get( searchResults.getResultKeys() );
+    searchResults.setResultObjects(imageList);
 
-        // gather objects identified by the hunter, add them to the results
-        imageGatherer.setType(Image.class);
-        List<Image> imageList
-          = imageGatherer.getIndividually( searchResults.getResultKeys() );
-        searchResults.setResultObjects(imageList);
-
-        return searchResults;
-    }
+    return searchResults;
+  }
 
 
 
+  /*-----------------------------------------------*/
+  /* Retrieval of pheno images, for a given marker
+  /*-----------------------------------------------*/
 
+  public SearchResults<Image> getPhenoImagesByMarkerKey(SearchParams searchParams) {
 
+    logger.debug("->getPhenoImagesByMarkerKey()");
 
-    /*---------------------------------*/
-    /* Retrieval of multiple foos
-    /*---------------------------------*/
-/*
-    public SearchResults<Marker> getFoos(SearchParams searchParams) {
+    // result object to be returned
+    SearchResults<Image> searchResults = new SearchResults<Image>();
 
-        logger.debug("->getFoos");
+    // ask the hunter to identify which objects to return
+    alleleImagesByMrkHunter.hunt(searchParams, searchResults);
+    logger.debug("->hunter found these resultKeys - "
+      + searchResults.getResultKeys());
 
-        // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+    // gather objects identified by the hunter, add them to the results
+    imageGatherer.setType(Image.class);
+    List<Image> imageList
+      = imageGatherer.get( searchResults.getResultKeys() );
+    searchResults.setResultObjects(imageList);
 
-        // ask the hunter to identify which objects to return
-        fooSummaryHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
+    return searchResults;
+  }
 
-        // gather objects identified by the hunter, add them to the results
-        fooGatherer.setType(Marker.class);
-        List<Marker> fooList
-          = fooGatherer.get( searchResults.getResultKeys() );
-        searchResults.setResultObjects(fooList);
+  /*-----------------------------------------------*/
+  /* Retrieval of GXD images, for a given marker
+  /*-----------------------------------------------*/
 
-        return searchResults;
-    }
-*/
+  public SearchResults<Image> getGxdImagesByMarkerKey(SearchParams searchParams) {
+
+    logger.debug("->getGxdImagesByMarkerKey()");
+
+    // result object to be returned
+    SearchResults<Image> searchResults = new SearchResults<Image>();
+
+    // ask the hunter to identify which objects to return
+    gxdImagesByMrkHunter.hunt(searchParams, searchResults);
+    logger.debug("->hunter found these resultKeys - "
+      + searchResults.getResultKeys());
+
+    // gather objects identified by the hunter, add them to the results
+    imageGatherer.setType(Image.class);
+    List<Image> imageList
+      = imageGatherer.get( searchResults.getResultKeys() );
+    searchResults.setResultObjects(imageList);
+
+    return searchResults;
+  }
 
 
 }

@@ -81,9 +81,10 @@ public class ImageController {
     // public detail page methods
     //--------------------------------------------------------------------//
 
-    //-----------------------------------------//
-    // handler for multiple image detail types
-    //-----------------------------------------//
+    //-------------------------------------------------------------//
+    // Handler for any image detail type;
+    // 'allele' and 'marker' not in URL
+    //-------------------------------------------------------------//
     @RequestMapping(value="/{imageID:.+}", method = RequestMethod.GET)
     public ModelAndView detailByID(@PathVariable("imageID") String imageID) {
 
@@ -328,6 +329,80 @@ public class ImageController {
 
         return mav;
     }
+
+
+    //-------------------------------//
+    // GXD Image Summary by Marker
+    //-------------------------------//
+    @RequestMapping(value="/gxdSummary/marker/{markerID}")
+    public ModelAndView gxdImageSummeryByMarker(
+                           @PathVariable("markerID") String markerID)
+    {
+        logger.debug("->gxdImageSummeryByMarker started");
+
+        ModelAndView mav = new ModelAndView("image_gxdSummary_by_marker");
+
+        // setup search parameters to get allele object
+        SearchParams markerSearchParams = new SearchParams();
+        Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
+        markerSearchParams.setFilter(markerIdFilter);
+
+        // find the requested allele for header
+        SearchResults<Marker> markerSearchResults
+          = markerFinder.getMarkerByID(markerSearchParams);
+
+        List<Marker> markerList = markerSearchResults.getResultObjects();
+
+        // there can be only one...
+        if (markerList.size() < 1) { // none found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        }
+        if (markerList.size() > 1) { // dupe found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        // success - we have a single object
+
+        // pull out the marker, and place into the mav
+        Marker marker = markerList.get(0);
+        mav.addObject("marker", marker);
+
+        // setup search parameters to get the image objects
+        SearchParams imageSearchParams = new SearchParams();
+        Integer markerKey = new Integer(marker.getMarkerKey());
+        Filter markerKeyFilter
+          = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
+        imageSearchParams.setFilter(markerKeyFilter);
+
+        // find the requested images for this allele
+        SearchResults<Image> imageSearchResults
+          = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
+
+        // generate summary row objects
+        Image thisImage;
+        List<Image> imageList = imageSearchResults.getResultObjects();
+        List<ImageSummaryRow> imageSummaryRows
+          = new ArrayList<ImageSummaryRow>();
+        Iterator<Image> imageIter = imageList.iterator();
+        while (imageIter.hasNext())
+        {
+          thisImage = imageIter.next();
+          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
+            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage);
+            imageSummaryRows.add(imageSummaryRow);
+          }
+        }
+        mav.addObject("imageSummaryRows", imageSummaryRows);
+
+        // total counts of alleles
+        mav.addObject("totalImages", imageSearchResults.getTotalCount());
+
+        return mav;
+    }
+
 
 
     //--------------------------------------------------------------------//
