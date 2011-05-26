@@ -268,7 +268,7 @@ ${templateBean.templateBodyStartHtml}
     <c:forEach var="marker" items="${markers}" >
       <tr>
       <td valign=top>${marker.markerType}</td>
-      <td valign=top><a href="${configBean.FEWI_URL}marker/${marker.symbol}">${marker.symbol}</a></td>
+      <td valign=top><a href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a></td>
       <td valign=top>${marker.name}</td>
       <td valign=top>${marker.countOfGOTerms}</td>
       <td valign=top>${marker.countOfGxdAssays}</td>
