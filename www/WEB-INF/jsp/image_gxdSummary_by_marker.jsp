@@ -14,7 +14,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Phenotype Images Associated With This Gene </title>
+<title>Gene Expression Images Associated With This Gene  </title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -35,9 +35,9 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_image_summary_help.shtml">    
+<div id="titleBarWrapper" userdoc="expression_images_help.shtml">    
   <span class="titleBarMainTitle">
-    Phenotype Images Associated With This Gene 
+    Gene Expression Images Associated With This Gene 
   </span>
 </div>
 
@@ -49,9 +49,7 @@ ${totalImages} phenotype image(s) for ${marker.symbol}<br>
 Showing image(s) 1 to ${totalImages}
 
 <hr>
-Click on thumbnail to view full size image with links to phenotype annotations.
-<br>
-Click on allele symbol for full phenotype details.
+Click on thumbnail or figure label to view full size image with links to expression annotations. 
 <br>
 <br>
 
