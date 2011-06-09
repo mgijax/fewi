@@ -1,6 +1,6 @@
 <!-- query form table -->
 <form:form method="GET" commandName="referenceQueryForm" action="${configBean.FEWI_URL}reference/summary">
-<TABLE WIDTH="100%" class="pad5 borderedTable"  style="font-weight: normal;">
+<TABLE WIDTH="100%" class="pad5 borderedTable">
 	<TR class="queryControls">
 		<TD COLSPAN="2" align="left">
 			<INPUT CLASS="buttonLabel" VALUE="Search" TYPE="submit">
