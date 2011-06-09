@@ -137,17 +137,12 @@ public class HibernateBatchSummaryHunter<T> {
         logger.debug("-> results parsed" );
         
         for (String id: idSet) {
-        	logger.debug("if res: " + id);
         	if (qResults.containsKey(id.toLowerCase())){
-        		logger.debug("yes");
         		bResults = qResults.get(id.toLowerCase());
-        		logger.debug("get: " + bResults.size());
         		for (BatchMarkerId b : bResults) {
-        			logger.debug("loop");
         			b.setTerm(id);
 					bm.add((T)b);
 				}
-        		logger.debug("added");
         	} else {
     			tmp = new BatchMarkerId();
     			tmp.setTerm(id);
@@ -158,6 +153,7 @@ public class HibernateBatchSummaryHunter<T> {
         logger.debug("-> results sorted" );
         
         searchResults.setTotalCount(bm.size());
+        logger.debug("markers: " + markerKey.size());
         searchResults.getResultSetMeta().addCount("marker", markerKey.size());
         
         int endIndex = searchParams.getStartIndex() + searchParams.getPageSize();

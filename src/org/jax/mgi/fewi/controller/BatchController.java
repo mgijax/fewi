@@ -13,13 +13,17 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import mgi.frontend.datamodel.Annotation;
+import mgi.frontend.datamodel.BatchMarkerAllele;
 import mgi.frontend.datamodel.BatchMarkerId;
-import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.ExpressionAssay;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerAlleleAssociation;
+import mgi.frontend.datamodel.MarkerTissueCount;
 
 import org.apache.commons.io.IOUtils;
 import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
-import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -33,9 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -177,13 +178,51 @@ public class BatchController {
         List<BatchMarkerId> markerList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
-        List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>();        
+        List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>();
+        BatchSummaryRow row;
+        List<BatchSummaryRow> rows = new ArrayList<BatchSummaryRow>();
+        Marker m;
         for (BatchMarkerId marker: markerList){
-            if (marker == null) {
-                logger.debug("--> Null Object");
-            }else {
-                summaryRows.add(new BatchSummaryRow(marker, queryForm));
-            } 	
+        	logger.debug("marker: " + marker.getTerm());
+        	m = marker.getMarker();
+
+        	if (queryForm.getAllele() && m.getBatchMarkerAlleles().size() > 0) {
+        		for (BatchMarkerAllele a:
+        			m.getBatchMarkerAlleles()){
+        			row = new BatchSummaryRow(marker, queryForm);
+        			row.setMarkerAllele(a);
+        			rows.add(row);
+        		}
+        	} else if (queryForm.getGo() && m.getGoAnnotations().size() > 0) {
+        		for (Annotation a: m.getGoAnnotations()){
+        			row = new BatchSummaryRow(marker, queryForm);
+        			row.setGoAnnot(a);
+        			rows.add(row);
+        		}
+        	} else if (queryForm.getOmim() && m.getOMIMAnnotations().size() > 0) {
+        		for (Annotation omim: m.getOMIMAnnotations()){
+        			row = new BatchSummaryRow(marker, queryForm);
+        			row.setOmimAnnot(omim);
+        			rows.add(row);
+        		}
+        	} else if (queryForm.getMp() && m.getMPAnnotations().size() > 0) {
+        		for (Annotation mp: m.getMPAnnotations()){
+        			row = new BatchSummaryRow(marker, queryForm);
+        			row.setMpAnnot(mp);
+        			rows.add(row);
+        		}
+        	} else if (queryForm.getExp() && m.getMarkerTissueCounts().size() > 0) {
+        		for (MarkerTissueCount ex: m.getMarkerTissueCounts()){
+        			row = new BatchSummaryRow(marker, queryForm);
+        			row.setExpCount(ex);
+        			rows.add(row);
+        		}
+        	} else {
+        		row = new BatchSummaryRow(marker, queryForm);
+        		rows.add(row);
+        	}
+            summaryRows.addAll(rows);
+ 	
         }
 
         // The JSON return object will be serialized to a JSON response.

@@ -42,11 +42,11 @@ public class BatchSummaryRow {
     
     private static String urlPattern = "<a href='%s'>%s</a>";
     
-    private List<Annotation> goAnnots = null;
-    private List<Annotation> mpAnnots = null;
-    private List<Annotation> omimAnnots = null;
-    private List<BatchMarkerAllele> markerAlleles = null;
-    private List<MarkerTissueCount> expCounts = null;
+    private Annotation goAnnot = null;
+    private Annotation mpAnnot = null;
+    private Annotation omimAnnot = null;
+    private BatchMarkerAllele markerAllele = null;
+    private MarkerTissueCount expCount = null;
 
 	//-------------
 	// constructors
@@ -169,236 +169,112 @@ public class BatchSummaryRow {
     }
     
     public String getGoIds(){
-    	if (!query.getGo()){
+    	if (!query.getGo() || goAnnot == null){
     		return "";
+    	} else {
+    		return goAnnot.getTermID();
     	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> go = new ArrayList<String>();
-    	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
-    	}
-    	if (goAnnots != null){
-    		for (Annotation annotation : goAnnots) {
-    			go.add(annotation.getTermID());
-			}
-    	}
-    	return StringUtils.join(go, "<br/>");
     } 
     
     public String getGoTerms(){
-    	if (!query.getGo()){
+    	if (!query.getGo() || goAnnot == null){
     		return "";
+    	} else {
+    		return goAnnot.getTerm();
     	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> go = new ArrayList<String>();
-    	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
-    	}
-    	if (goAnnots != null){
-    		for (Annotation annotation : goAnnots) {
-    			go.add(annotation.getTerm());
-			}
-    	}
-    	return StringUtils.join(go, "<br/>");
     } 
     
     public String getGoCodes(){
-    	if (!query.getGo()){
+    	if (!query.getGo() || goAnnot == null){
     		return "";
+    	} else {
+    		return goAnnot.getEvidenceCode();
     	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> go = new ArrayList<String>();
-    	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
-    	}
-    	if (goAnnots != null){
-    		for (Annotation annotation : goAnnots) {
-    			go.add(annotation.getEvidenceCode());
-			}
-    	}
-    	return StringUtils.join(go, "<br/>");
     } 
     
     public String getMpIds(){
-    	if (!query.getMp()){
+    	if (!query.getMp() || mpAnnot == null){
     		return "";
+    	} else {
+    		return mpAnnot.getTermID();
     	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> mp = new ArrayList<String>();
-    	if (marker != null && mpAnnots == null){
-    		mpAnnots = batchMarkerId.getMarker().getMPAnnotations();
-    	}
-    	if (mpAnnots != null){
-    		for (Annotation annotation : mpAnnots) {
-    			mp.add(annotation.getTermID());
-			}
-    	}
-    	return StringUtils.join(mp, "<br/>");
     }
     
     public String getMpTerms(){
-    	if (!query.getMp()){
+    	if (!query.getMp() || mpAnnot == null){
     		return "";
+    	} else {
+			String text = mpAnnot.getTerm() + " (%s)"; 
+			String url = fewiUrl + "mp/" + mpAnnot.getTermID();
+			return String.format(text, String.format(urlPattern, url, "details"));
     	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> mp = new ArrayList<String>();
-    	if (marker != null && mpAnnots == null){
-    		mpAnnots = batchMarkerId.getMarker().getMPAnnotations();
-    	}
-    	String text, url;
-    	if (mpAnnots != null){
-    		for (Annotation annotation : mpAnnots) {
-    			text = annotation.getTerm() + " (%s)"; 
-    			url = fewiUrl + "mp/" + annotation.getTermID();
-    			mp.add(String.format(text, String.format(urlPattern, url, "details")));
-			}
-    	}
-    	return StringUtils.join(mp, "<br/>");
     }
     
     public String getOmimIds(){
-    	if (!query.getOmim()){
+    	if (!query.getOmim() || omimAnnot == null){
     		return "";
+    	} else {
+    		return omimAnnot.getTermID();
     	}
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> omim = new ArrayList<String>();
-    	if (marker != null  && omimAnnots == null){
-    		logger.debug("get omim");
-    		omimAnnots = batchMarkerId.getMarker().getOMIMAnnotations();
-    	}
-    	if (omimAnnots != null){
-    		for (Annotation annotation : omimAnnots) {
-    			logger.debug(annotation.getTermID());
-    			omim.add(annotation.getTermID());
-			}
-    	}
-    	return StringUtils.join(omim, "<br/>");
     }
     
     public String getOmimTerms(){
-    	Marker marker = batchMarkerId.getMarker();
-    	List<String> omim = new ArrayList<String>();
-    	if (marker != null  && omimAnnots == null){
-    		omimAnnots = batchMarkerId.getMarker().getOMIMAnnotations();
+    	if (!query.getOmim() || omimAnnot == null){
+    		return "";
+    	} else {
+			String url = fewiUrl + "omim/" + omimAnnot.getTermID();
+			return String.format(urlPattern, url, omimAnnot.getTerm());
     	}
-    	if (omimAnnots != null){
-    		String url;
-    		for (Annotation annotation : omimAnnots) {
-    			url = fewiUrl + "omim/" + annotation.getTermID();
-    			omim.add(String.format(urlPattern, url, annotation.getTerm()));
-			}
-    	}
-    	return StringUtils.join(omim, "<br/>");
     }
     
     public String getAlleleIds(){
-    	List<String> alleleOutput = new ArrayList<String>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if (marker != null){
-    		if (markerAlleles == null){
-    			markerAlleles = marker.getBatchMarkerAlleles();
-    		}
-    		for (BatchMarkerAllele allele : markerAlleles) {
-				alleleOutput.add(allele.getAlleleID());
-			}
+    	if (!query.getAllele() || markerAllele == null){
+    		return "";
+    	} else {
+			return markerAllele.getAlleleID();
     	}
-    	return StringUtils.join(alleleOutput, "<br/>");
     }
     
     public String getAlleleSymbols(){
-    	List<String> alleleOutput = new ArrayList<String>();
-    	Marker marker = batchMarkerId.getMarker();
-
-    	if (marker != null){
-    		if (markerAlleles == null){
-    			markerAlleles = marker.getBatchMarkerAlleles();
-    		}
-    		String url;
-    		for (BatchMarkerAllele allele : markerAlleles) {
-    			url = fewiUrl + "allele/" + allele.getAlleleID();
-				alleleOutput.add(String.format(urlPattern, url,
-						FormatHelper.superscript(allele.getAlleleSymbol())));
-			}
+    	if (!query.getAllele() || markerAllele == null){
+    		return "";
+    	} else {
+			String url = fewiUrl + "allele/" + markerAllele.getAlleleID();
+			return String.format(urlPattern, url,
+					FormatHelper.superscript(markerAllele.getAlleleSymbol()));
     	}
-    	return StringUtils.join(alleleOutput, "<br/>");
     }
     
     public String getExpressionStructure(){
-    	if (!query.getExp()){
+    	if (!query.getExp() || expCount == null){
     		return "";
-    	}    	
-    	List<String> structures = new ArrayList<String>();
-    	Marker marker = batchMarkerId.getMarker();
-    	
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
+    	} else {
+    		return expCount.getStructure();
     	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-	    		structures.add(tissue.getStructure());
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
     }
     
     public String getExpressionResultCount(){
-    	if (!query.getExp()){
+    	if (!query.getExp() || expCount == null){
     		return "";
-    	}    	
-    	List<Integer> structures = new ArrayList<Integer>();
-    	Marker marker = batchMarkerId.getMarker();
-    	
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
+    	} else {
+    		return String.valueOf(expCount.getAllResultCount());
     	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-	    		logger.debug(tissue.getStructure() + ": " + String.valueOf(tissue.getAllResultCount()));
-	    		structures.add(tissue.getAllResultCount());
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
     }
     
     public String getExpressionDetectedCount(){
-    	if (!query.getExp()){
+    	if (!query.getExp() || expCount == null){
     		return "";
-    	}    	
-    	List<Integer> structures = new ArrayList<Integer>();
-    	Marker marker = batchMarkerId.getMarker();
-    	
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
+    	} else {
+    		return String.valueOf(expCount.getDetectedResultCount());
     	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-	    		structures.add(tissue.getDetectedResultCount());
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
     }
     
     public String getExpressionNotDetectedCount(){
-    	if (!query.getExp()){
+    	if (!query.getExp() || expCount == null){
     		return "";
-    	}    	
-    	List<Integer> structures = new ArrayList<Integer>();
-    	Marker marker = batchMarkerId.getMarker();
-    	
-    	if (marker != null  && expCounts == null){
-    		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
+    	} else {
+    		return String.valueOf(expCount.getNotDetectedResultCount());
     	}
-
-    	if (expCounts != null){
-	    	for (MarkerTissueCount tissue : expCounts) {
-	    		structures.add(tissue.getNotDetectedResultCount());
-			}
-    	}
-    	return StringUtils.join(structures, "<br/>");
     }
     
     public String getRefsnpIds(){
@@ -434,5 +310,30 @@ public class BatchSummaryRow {
     	}
     	return idList;
     }
+
+
+	public void setGoAnnot(Annotation goAnnot) {
+		this.goAnnot = goAnnot;
+	}
+
+
+	public void setMpAnnot(Annotation mpAnnot) {
+		this.mpAnnot = mpAnnot;
+	}
+
+
+	public void setOmimAnnot(Annotation omimAnnot) {
+		this.omimAnnot = omimAnnot;
+	}
+
+
+	public void setMarkerAllele(BatchMarkerAllele markerAllele) {
+		this.markerAllele = markerAllele;
+	}
+
+
+	public void setExpCount(MarkerTissueCount expCount) {
+		this.expCount = expCount;
+	}
 
 }

@@ -9,7 +9,20 @@ ${templateBean.templateHeadHtml}
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
+<style type="text/css">
+	.yui-skin-sam .yui-dt td.first {
+		border-top: inset 1px silver;
+	}
+	.yui-skin-sam .yui-dt td.next {
+		/* optional, I did nothing */
+	}
+</style>
+
+
 ${templateBean.templateBodyStartHtml}
+
+
+
 
 <!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
@@ -110,6 +123,7 @@ ${templateBean.templateBodyStartHtml}
 	var qDisplay = true;
 
 </script>
+
 
 <!-- including this file will start the data injection -->
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_query.js"></script>

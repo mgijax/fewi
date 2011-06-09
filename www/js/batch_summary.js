@@ -8,19 +8,73 @@ var numConfig = {thousandsSeparator: ','};
 // Integrate with Browser History Manager
 var History = YAHOO.util.History;
 
-(function () {		
+(function () {
+	// When a cell receives a new value, 
+	var dirty = false;
+	
+	var previousRow = {};
+	
+	// Row always start in a clean state
+	var resetDirty = function (elRow,oRecord) {
+		dirty = false;
+		return true;
+	};
+	
+	// This is the function doing the groupping.  
+	// It is set as a formatter for the DataTable. 
+	// It can be set on any or all columns
+	var grouper = function(elCell, oRecord, oColumn, value) {
+	
+		var k = oColumn.key,
+			// this.getTdEl() doesn't work at this point.  Call it a but or whatever
+			td = YAHOO.util.Dom.getAncestorByTagName(elCell,'td');
+		
+		// if the column should not be grouped, the value is shown 
+		// and the style set according to the current row setting
+		if (oColumn.group === false) {
+			elCell.innerHTML = value;
+			YAHOO.util.Dom.addClass(td,(dirty?'first':'next'));
+			// It is always important to clear any className previously set.
+			YAHOO.util.Dom.removeClass(td,(dirty?'next':'first'));
+		} else {
+			
+			// if the row is dirty (a value changed in a previous column)
+			// or the value changed in this very column
+			if (dirty || previousRow[k] != value) {
+				// mark the remaining columns in the row as dirty
+				dirty = true;
+				// set the corresponding className
+				YAHOO.util.Dom.addClass(td,'first');
+				YAHOO.util.Dom.removeClass(td,'next');
+				// fill the cell with the value
+				elCell.innerHTML = value;
+				// save the now current value
+				previousRow[k] = value;
+			} else {
+				// set the style for repeated cells
+				YAHOO.util.Dom.addClass(td,'next');
+				YAHOO.util.Dom.removeClass(td,'first');
+				//Make sure the cell is empty
+				elCell.innerHTML = '';
+			}
+		}
+	};	
+	
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.
 	
 	// default columns
     var myColumnDefs = [
         {key:"term", 
+        	formatter: grouper,
             label:"Input",
             sortable:false},
         {key:"type", 
+            formatter: grouper,
             label:"Input<br/>Type",
             sortable:false},
-        {key:"markerId", 
+        {key:"markerId",
+            formatter: grouper,
             label:"MGI Gene/Marker ID",
             sortable:false}
     ];
@@ -30,41 +84,53 @@ var History = YAHOO.util.History;
     	myColumnDefs.push({label:"Nomenclature",
             sortable:false,
             children: [{key: "symbol",
-            		label: "Symbol"},
+            		label: "Symbol",
+            		formatter: grouper},
                 {key: "name",
-                	label: "Name"},
+                	label: "Name",
+                	formatter: grouper},
                 {key: "feature",
-                    label: "Feature Type"}]});
+                    label: "Feature Type",
+                    formatter: grouper}]});
     }
     if (loco){
     	myColumnDefs.push({label:"Genome Location",
     	    sortable:false,
     	    children: [{key: "chromosome",
-    	    		label: "Chr"},
+    	    		label: "Chr",
+    	    		formatter: grouper},
     	        {key: "strand",
-    	        	label: "Strand"},
+    	        	label: "Strand",
+    	        	formatter: grouper},
     	        {key: "start",
-    	            label: "Start"},
+    	            label: "Start",
+    	            formatter: grouper},
     	        {key: "end",
-    	        	label: "End"}]});
+    	        	label: "End",
+    	        	formatter: grouper}]});
     }
     if (ensembl){
     	myColumnDefs.push({key:"ensemblIds", 
+    		formatter: grouper,
     	    label:"Ensembl IDs",
     	    sortable:false});
     }
     if (entrez){
-    	myColumnDefs.push({key:"entrezIds", 
+    	myColumnDefs.push({key:"entrezIds",
+    		formatter: grouper,
     	    label:"Entrez Gene IDs",
     	    sortable:false});
     }
     if (vega){
-    	myColumnDefs.push({key:"vegaIds", 
+    	myColumnDefs.push({key:"vegaIds",
+    		formatter: grouper,
     	    label:"Vega IDs",
     	    sortable:false});
     }
     if (go){
     	myColumnDefs.push({label:"GO IDs",
+    		formatter: grouper,
+    		group:false,
     	    sortable:false,
     	    children: [{key: "goIds",
 	    		label: "ID"},
@@ -75,6 +141,8 @@ var History = YAHOO.util.History;
     }
     if (mp){
     	myColumnDefs.push({label:"MP IDs",
+    		formatter: grouper,
+    		group:false,
     	    sortable:false,
     	    children: [{key: "mpIds",
     	    	label: "ID"},
@@ -83,6 +151,8 @@ var History = YAHOO.util.History;
     }
     if (omim){
     	myColumnDefs.push({label:"OMIM IDs",
+    		formatter: grouper,
+    		group:false,
     	    sortable:false,
     	    children: [{key: "omimIds",
 	    		label: "ID"},
@@ -91,6 +161,8 @@ var History = YAHOO.util.History;
     }
     if (allele){
     	myColumnDefs.push({label:"Alleles",
+    		formatter: grouper,
+    		group:false,
     	    sortable:false,
     	    children: [{key: "alleleIds",
 	    		label: "ID"},
@@ -99,6 +171,8 @@ var History = YAHOO.util.History;
     }
     if (exp){
     	myColumnDefs.push({label:"Gene Expression",
+    		formatter: grouper,
+    		group:false,
     	    sortable:false,
     	    children: [{key: "expressionStructure",
 	    		label: "Anatomical Structure"},
@@ -111,12 +185,16 @@ var History = YAHOO.util.History;
     }
     if (refseq){
     	myColumnDefs.push({key:"refseqIds", 
+    		formatter: grouper,
     	    label:"GenBank/RefSeq IDs",
+    	    group:false,
     	    sortable:false});
     }
     if (uniprot){
     	myColumnDefs.push({key:"uniprotIds", 
+    		formatter: grouper,
     	    label:"Uniprot IDs",
+    	    group:false,
     	    sortable:false});
     }
 
@@ -159,7 +237,8 @@ var History = YAHOO.util.History;
         metaFields: {
 	        totalRecords: "totalCount",
 	        paginationRecordOffset : "startIndex",
-	        paginationRowsPerPage : "pageSize"
+	        paginationRowsPerPage : "pageSize",
+	        markers : "meta.counts.marker"
         }
     };
     
@@ -179,6 +258,7 @@ var History = YAHOO.util.History;
 
     // DataTable configurations
     var myConfigs = {
+    	formatRow:resetDirty,
         paginator : myPaginator,
         rowExpansionTemplate : '<div class="refAbstract">{abstract}</div>',
         dynamicData : true,
@@ -194,6 +274,10 @@ var History = YAHOO.util.History;
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);    
 
+    myDataTable.subscribe('renderEvent',function () {
+		previousRow = {};
+	});
+	
     // Define a custom function to route pagination through the Browser History Manager
     var handlePagination = function(state) {
         // The next state will reflect the new pagination values
@@ -216,7 +300,7 @@ var History = YAHOO.util.History;
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
 
         updateCount('totalCount', oPayload.totalRecords);
-        updateCount('markerCount', oPayload.totalRecords);
+        updateCount('markerCount', meta.markers);
         
         var filterCount = YAHOO.util.Dom.get('filterCount');
         if (!YAHOO.lang.isNull(filterCount)){
