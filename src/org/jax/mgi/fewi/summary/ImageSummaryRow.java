@@ -35,13 +35,11 @@ public class ImageSummaryRow {
 
   // encapsulated row object and object data
   private Image image;
+  private Image thumbImage;
   private List<Genotype> genotypes;
 
   // converter for curator 'tags' in the data
   private NotesTagConverter ntc;
-
-//  public int imageDisplayWidth = 150;
-
 
   //--------------
   // constructors
@@ -49,8 +47,9 @@ public class ImageSummaryRow {
 
   // hide the default constructor - we NEED an image to wrap
   private ImageSummaryRow () {}
-  public  ImageSummaryRow (Image image) {
+  public  ImageSummaryRow (Image image, Image thumbImage) {
     this.image = image;
+    this.thumbImage = thumbImage;
     this.genotypes = image.getGenotypes();
     try {
       ntc = new NotesTagConverter();
@@ -66,12 +65,12 @@ public class ImageSummaryRow {
 
   // image height
   public String getImageHeight() {
-    return this.image.getHeight().toString();
+    return this.thumbImage.getHeight().toString();
   }
 
   // image width
   public String getImageWidth() {
-    return this.image.getWidth().toString();
+    return this.thumbImage.getWidth().toString();
   }
 
   // image ID
@@ -100,13 +99,13 @@ public class ImageSummaryRow {
     imgTag.append("<img width='" + this.getImageWidth());
     imgTag.append("' height='" + this.getImageHeight() + "'");
     imgTag.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
-    imgTag.append(image.getPixeldbNumericID() + "'>");
+    imgTag.append(thumbImage.getPixeldbNumericID() + "'>");
     return imgTag.toString();
   }
 
   // caption
   public String getCaption() {
-    String cleanCaption = image.getCaption();
+    String cleanCaption = thumbImage.getCaption();
     if (cleanCaption==null) {return "";}
     cleanCaption = cleanCaption.trim().replaceAll("[\\r\\n]", "").replaceAll("[']", "\'");
     cleanCaption = FormatHelper.superscript(cleanCaption);

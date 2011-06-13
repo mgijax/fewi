@@ -77,48 +77,10 @@ public class ImageController {
     @Autowired
     private MarkerFinder markerFinder;
 
+
     //--------------------------------------------------------------------//
-    // public detail page methods
+    //------------------------------- DETAIL PAGES
     //--------------------------------------------------------------------//
-
-    //-------------------------------------------------------------//
-    // Handler for any image detail type;
-    // 'allele' and 'marker' not in URL
-    //-------------------------------------------------------------//
-    @RequestMapping(value="/{imageID:.+}", method = RequestMethod.GET)
-    public ModelAndView detailByID(@PathVariable("imageID") String imageID) {
-
-        logger.debug("->detailByID started");
-
-        // ModelAndView object to be returned
-        ModelAndView mav = new ModelAndView();
-
-        // find the requested image
-        List<Image> imageList = this.getImageForID(imageID);
-
-        // ensure we found an image
-        if (imageList.size() < 1) { // none found
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Image Found");
-            return mav;
-        }
-
-        //pull out the image
-        Image image = imageList.get(0);
-
-        // derive the correct image detail mav
-        if (image.getImageClass().equals(IndexConstants.IMAGE_CLASS_PHENO)) {
-          // generate mav for pheno detail
-          mav = getPhenoDetailMAV(image);
-        }
-        if (image.getImageClass().equals(IndexConstants.IMAGE_CLASS_GXD)) {
-          // generate and return mav for expression detail
-          mav = getGxdDetailMAV(image);
-        }
-
-        return mav;
-    }
-
 
     //--------------------//
     // Pheno Image Detail
@@ -172,8 +134,46 @@ public class ImageController {
     }
 
 
+    //----------------------------------------------------------//
+    // image detail meta-handler 'allele' and 'marker' not in URL
+    //----------------------------------------------------------//
+    @RequestMapping(value="/{imageID:.+}", method = RequestMethod.GET)
+    public ModelAndView detailByID(@PathVariable("imageID") String imageID) {
+
+        logger.debug("->detailByID started");
+
+        // ModelAndView object to be returned
+        ModelAndView mav = new ModelAndView();
+
+        // find the requested image
+        List<Image> imageList = this.getImageForID(imageID);
+
+        // ensure we found an image
+        if (imageList.size() < 1) { // none found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Image Found");
+            return mav;
+        }
+
+        //pull out the image
+        Image image = imageList.get(0);
+
+        // derive the correct image detail mav
+        if (image.getImageClass().equals(IndexConstants.IMAGE_CLASS_PHENO)) {
+          // generate mav for pheno detail
+          mav = getPhenoDetailMAV(image);
+        }
+        if (image.getImageClass().equals(IndexConstants.IMAGE_CLASS_GXD)) {
+          // generate and return mav for expression detail
+          mav = getGxdDetailMAV(image);
+        }
+
+        return mav;
+    }
+
+
     //--------------------------------------------------------------------//
-    // public summary page methods
+    //------------------------------- SUMMARIES
     //--------------------------------------------------------------------//
 
     //-------------------------------//
@@ -217,11 +217,11 @@ public class ImageController {
 
         // derive displayed title & heading; special handling for allele type
         if (allele.getAlleleType().startsWith("Transgenic")) {
-          mav.addObject("pageTitle", "Phenotype Images Associated With This Transgene - MGI");
-          mav.addObject("pageHeading", "Phenotype Images Associated With This Transgene");
+          mav.addObject("pageTitle", "Phenotype Images associated with this Transgene - MGI");
+          mav.addObject("pageHeading", "Phenotype Images associated with this Transgene");
         } else {
-          mav.addObject("pageTitle", "Phenotype Images Associated With This Allele - MGI");
-          mav.addObject("pageHeading", "Phenotype Images Associated With This Allele");
+          mav.addObject("pageTitle", "Phenotype Images associated with this Allele - MGI");
+          mav.addObject("pageHeading", "Phenotype Images associated with this Allele");
         }
 
         // derive the synonym list, if the allele has any
@@ -234,24 +234,11 @@ public class ImageController {
           = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
         imageSearchParams.setFilter(alleleKeyFilter);
 
-        // find the requested images for this allele
-        SearchResults<Image> imageSearchResults
+        SearchResults<ImageSummaryRow> imageSearchResults
           = imageFinder.getPhenoImagesByAlleleKey(imageSearchParams);
-
-        // generate summary row objects
-        Image thisImage;
-        List<Image> imageList = imageSearchResults.getResultObjects();
         List<ImageSummaryRow> imageSummaryRows
-          = new ArrayList<ImageSummaryRow>();
-        Iterator<Image> imageIter = imageList.iterator();
-        while (imageIter.hasNext())
-        {
-          thisImage = imageIter.next();
-          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
-            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage);
-            imageSummaryRows.add(imageSummaryRow);
-          }
-        }
+          = imageSearchResults.getResultObjects();
+
         mav.addObject("imageSummaryRows", imageSummaryRows);
 
         return mav;
@@ -304,24 +291,11 @@ public class ImageController {
           = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
         imageSearchParams.setFilter(markerKeyFilter);
 
-        // find the requested images for this allele
-        SearchResults<Image> imageSearchResults
+        // gather the images, and generate the summary rows
+        SearchResults<ImageSummaryRow> imageSearchResults
           = imageFinder.getPhenoImagesByMarkerKey(imageSearchParams);
-
-        // generate summary row objects
-        Image thisImage;
-        List<Image> imageList = imageSearchResults.getResultObjects();
         List<ImageSummaryRow> imageSummaryRows
-          = new ArrayList<ImageSummaryRow>();
-        Iterator<Image> imageIter = imageList.iterator();
-        while (imageIter.hasNext())
-        {
-          thisImage = imageIter.next();
-          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
-            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage);
-            imageSummaryRows.add(imageSummaryRow);
-          }
-        }
+          = imageSearchResults.getResultObjects();
         mav.addObject("imageSummaryRows", imageSummaryRows);
 
         // total counts of alleles
@@ -330,7 +304,7 @@ public class ImageController {
         return mav;
     }
 
-
+/*
     //-------------------------------//
     // GXD Image Summary by Marker
     //-------------------------------//
@@ -382,10 +356,11 @@ public class ImageController {
           = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
 
         // generate summary row objects
-        Image thisImage;
-        List<Image> imageList = imageSearchResults.getResultObjects();
         List<ImageSummaryRow> imageSummaryRows
           = new ArrayList<ImageSummaryRow>();
+
+        Image thisImage;
+        List<Image> imageList = imageSearchResults.getResultObjects();
         Iterator<Image> imageIter = imageList.iterator();
         while (imageIter.hasNext())
         {
@@ -402,7 +377,7 @@ public class ImageController {
 
         return mav;
     }
-
+*/
 
 
     //--------------------------------------------------------------------//

@@ -11,6 +11,7 @@ import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByAlleleHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByMrkHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdImagesByMrkHunter;
+import org.jax.mgi.fewi.summary.ImageSummaryRow;
 
 /*----------------------------------------*/
 /* standard classes, used for all Finders */
@@ -91,23 +92,29 @@ public class ImageFinder {
   /* Retrieval of pheno images, for a given allele
   /*-----------------------------------------------*/
 
-  public SearchResults<Image> getPhenoImagesByAlleleKey(SearchParams searchParams) {
+  public SearchResults<ImageSummaryRow> getPhenoImagesByAlleleKey(SearchParams searchParams) {
 
     logger.debug("->getPhenoImagesByAlleleKey()");
 
     // result object to be returned
-    SearchResults<Image> searchResults = new SearchResults<Image>();
+    SearchResults<ImageSummaryRow> searchResults
+      = new SearchResults<ImageSummaryRow>();
 
     // ask the hunter to identify which objects to return
     alleleImagesHunter.hunt(searchParams, searchResults);
     logger.debug("->hunter found these resultKeys - "
       + searchResults.getResultKeys());
 
-    // gather objects identified by the hunter, add them to the results
+    // gather objects identified by the hunter
     imageGatherer.setType(Image.class);
     List<Image> imageList
       = imageGatherer.get( searchResults.getResultKeys() );
-    searchResults.setResultObjects(imageList);
+
+    // list of summary objects to be returned
+    List<ImageSummaryRow> imageSummaryRowList
+      = genSummaryRows (imageList);
+
+    searchResults.setResultObjects(imageSummaryRowList);
 
     return searchResults;
   }
@@ -118,23 +125,29 @@ public class ImageFinder {
   /* Retrieval of pheno images, for a given marker
   /*-----------------------------------------------*/
 
-  public SearchResults<Image> getPhenoImagesByMarkerKey(SearchParams searchParams) {
+  public SearchResults<ImageSummaryRow> getPhenoImagesByMarkerKey(SearchParams searchParams) {
 
     logger.debug("->getPhenoImagesByMarkerKey()");
 
     // result object to be returned
-    SearchResults<Image> searchResults = new SearchResults<Image>();
+    SearchResults<ImageSummaryRow> searchResults
+      = new SearchResults<ImageSummaryRow>();
 
     // ask the hunter to identify which objects to return
     alleleImagesByMrkHunter.hunt(searchParams, searchResults);
     logger.debug("->hunter found these resultKeys - "
       + searchResults.getResultKeys());
 
-    // gather objects identified by the hunter, add them to the results
+    // gather objects identified by the hunter
     imageGatherer.setType(Image.class);
     List<Image> imageList
       = imageGatherer.get( searchResults.getResultKeys() );
-    searchResults.setResultObjects(imageList);
+
+    // list of summary objects to be returned
+    List<ImageSummaryRow> imageSummaryRowList
+      = genSummaryRows (imageList);
+
+    searchResults.setResultObjects(imageSummaryRowList);
 
     return searchResults;
   }
@@ -164,5 +177,38 @@ public class ImageFinder {
     return searchResults;
   }
 
+
+
+    //--------------------------------------------------------------------//
+    // private methods
+    //--------------------------------------------------------------------//
+
+    // generate summary rows for a list of images
+    private List<ImageSummaryRow> genSummaryRows (List<Image> imageList) {
+
+        // list of summary objects to be returned
+        List<ImageSummaryRow> imageSummaryRowList
+          = new ArrayList<ImageSummaryRow>();
+
+        // generate summary rows
+        Image thisImage;
+        Image thisThumbImage;
+        Iterator<Image> imageIter = imageList.iterator();
+        while (imageIter.hasNext())
+        {
+          thisImage = imageIter.next();
+          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
+
+            // gather thumbnail for this image
+            thisThumbImage = imageGatherer.get( thisImage.getThumbnailImageKey().toString() );
+
+            // new row;  add to list
+            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage, thisThumbImage);
+            imageSummaryRowList.add(imageSummaryRow);
+          }
+        }
+
+        return imageSummaryRowList;
+    }
 
 }
