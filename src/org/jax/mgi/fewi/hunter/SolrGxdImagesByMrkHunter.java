@@ -49,7 +49,8 @@ public class SolrGxdImagesByMrkHunter extends SolrHunter {
     filterList.add(searchParams.getFilter());
 
     // additional filter for image class
-    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Expression", Filter.OP_EQUAL);
+//    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Expression", Filter.OP_EQUAL);
+    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Phenotypes", Filter.OP_EQUAL);
     filterList.add(phenotype);
 
     // additional filter thumbnails

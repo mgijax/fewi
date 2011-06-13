@@ -53,7 +53,7 @@ public class SolrAlleleImagesByMrkHunter extends SolrHunter {
     filterList.add(phenotype);
 
     // additional filter thumbnails
-    Filter isThumb = new Filter(SearchConstants.IMG_IS_THUMB, "1", Filter.OP_EQUAL);
+    Filter isThumb = new Filter(SearchConstants.IMG_IS_THUMB, "0", Filter.OP_EQUAL);
     filterList.add(isThumb);
 
     // container filter -- 'AND' the old and new filters together
