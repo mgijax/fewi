@@ -586,7 +586,7 @@ td.padded { padding:4px; }
       </td>
     </tr>
   </c:if>
-
+ 
 <!-- close structural table and page template-->
 </table>
 ${templateBean.templateBodyStopHtml}
