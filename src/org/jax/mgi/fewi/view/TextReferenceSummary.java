@@ -30,7 +30,7 @@ public class TextReferenceSummary extends AbstractTextView {
 			
 			writer.write(pubmedId + "\t");
 			writer.write(ref.getLongCitation()); 
-			writer.write("\n\r");
+			writer.write("\r\n");
 			//writer.newLine();
 		}
 
