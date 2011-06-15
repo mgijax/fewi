@@ -59,4 +59,3 @@ var interceptSubmit = function(e) {
 };
 
 YAHOO.util.Event.addListener("batchQueryForm", "submit", interceptSubmit);
-

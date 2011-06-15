@@ -9,19 +9,9 @@ ${templateBean.templateHeadHtml}
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<style type="text/css">
-	.yui-skin-sam .yui-dt td.first {
-		border-top: inset 1px silver;
-	}
-	.yui-skin-sam .yui-dt td.next {
-		/* optional, I did nothing */
-	}
-</style>
-
-
 ${templateBean.templateBodyStartHtml}
 
-
+<link href="${configBean.FEWI_URL}assets/css/datatablegrouper.css" rel="stylesheet" type="text/css"/>
 
 
 <!-- iframe for history manager's use -->
@@ -91,11 +81,12 @@ ${templateBean.templateBodyStartHtml}
 	<div id="otherDiv"></div>
 	<div id="downloadDiv">
 		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Excel File</a> 
 	</div>
 </div>
 
 <!-- data table div: filled by YUI, called via js below -->
-<div id="dynamicdata"></div>
+<div id="batchdata"></div>
 <div id="paginationWrap">
 	<div id="paginationBottom">&nbsp;</div>
 </div>
@@ -123,7 +114,7 @@ ${templateBean.templateBodyStartHtml}
 	var qDisplay = true;
 
 </script>
-
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/rowgrouper.js"></script>
 
 <!-- including this file will start the data injection -->
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_query.js"></script>

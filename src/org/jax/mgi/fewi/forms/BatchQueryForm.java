@@ -48,7 +48,7 @@ public class BatchQueryForm {
 		attributes.add("Nomenclature");
 		
 		associationList.put("GO", "Gene Ontology (GO)");
-		associationList.put("MP", "Mammalian Phenotype (MP");
+		associationList.put("MP", "Mammalian Phenotype (MP)");
 		associationList.put("omim", "Human Disease (OMIM)");
 		associationList.put("Alleles", "Alleles");
 		associationList.put("exp", "Gene Expression");
