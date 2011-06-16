@@ -73,7 +73,7 @@ var History = YAHOO.util.History;
 	    		label: "Code"}]});
     }
     if (mp){
-    	myColumnDefs.push({label:"Mammalian Phenotype (MP)",
+    	myColumnDefs.push({label:"Mammalian Phenotype (MP) <a onMouseOver='popupHelp(\"mp\");' class='helpLink'>Caveat &amp; Help</a>",
     	    sortable:false,
     	    children: [{key: "mpIds",
     	    	label: "ID"},
@@ -81,7 +81,7 @@ var History = YAHOO.util.History;
 		    		label: "Term"}]});
     }
     if (omim){
-    	myColumnDefs.push({label:"Human Disease (OMIM)",
+    	myColumnDefs.push({label:"Human Disease (OMIM) <a onMouseOver='popupHelp(\"omim\");' class='helpLink'>Caveat &amp; Help</a>",
     	    sortable:false,
     	    children: [{key: "omimIds",
 	    		label: "ID"},
@@ -97,7 +97,7 @@ var History = YAHOO.util.History;
 		    	label: "Symbol"}]});
     }
     if (exp){
-    	myColumnDefs.push({label:"Gene Expression",
+    	myColumnDefs.push({label:"Gene Expression <a onMouseOver='popupHelp(\"exp\");' class='helpLink'>Caveat &amp; Help</a>",
     	    sortable:false,
     	    children: [{key: "expressionStructure",
 	    		label: "Anatomical Structure"},
@@ -334,5 +334,35 @@ YAHOO.util.Event.addListener("batchQueryForm", "reset", resetQF);
 	 var form = YAHOO.util.Dom.get("batchQueryForm");
 	 form.ids.value = form.ids.value.replace(/<br>/g,"\n");
  });
+ 
+function popupHelp(help_cat){	 
+	var omim_help = "<b>Human Disease (OMIM) Annotations</b><ul><li>Human Disease (OMIM) terms appear by gene.</li>\
+	    <li>Each term listed indicates that a mutant allele of this gene is involved in a mouse genotype used as a disease model.</li></ul><b>Caveats</b>\
+	    <ul><li>The term does not necessarily imply that mutations in that gene contribute to or cause the disease.</li>\
+	    <li>Analyzed mice may have causative mutations in other genes.</li>\
+	    <li>Wide variation exists due to homozygotes vs. heterozygotes and different strain backgrounds.</li></ul>\
+	    <b>Click on the disease term ...</b><ul><li>to see the mouse genotypes used as disease models.</li></ul>";
+	// text for mp help popup
+	var mp_help = "<b>Phenotype Annotations</b><ul><li>Mammalian Phenotype (MP) terms appear by gene.</li>\
+	    <li>Each term describes a mouse phenotype with some mutation in that gene.</li></ul><b>Caveats</b>\
+	    <ul><li>The term does not necessarily imply that mutations in that gene contribute to or cause the phenotype.</li>\
+	    <li>Analyzed mice may have causative mutations in other genes.</li>\
+	    <li>Wide phenotypic variation exists due to homozygotes vs. heterozygotes and different strain backgrounds.</li></ul>\
+	    <b>Click (details) after any phenotype term ...</b><ul><li>to see genotypes and additional annotation information.</li></ul>";
+	// text for expression help popup
+	var exp_help = "Please note that some of these results may have been obtained from mutant specimens.";  
+	 
+	var help_text = '';
+	if (help_cat == 'mp') {
+		help_text = mp_help;
+	} else if (help_cat == 'omim'){
+		help_text = omim_help;
+	} else {
+		help_text = exp_help;
+	}
+
+	 // template used to build column popup help
+	 return overlib(help_text, STICKY, CAPTION, 'Caveat &amp; Help', LEFT, BELOW, WIDTH, 300, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X');
 
 
+};
