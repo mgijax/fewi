@@ -129,6 +129,8 @@ public class BatchQueryForm {
 			for (String attr : attributes) {
 				params.add("attributes=" + attr);
 			}	
+		} else {
+			params.add("attributes=");
 		}
 		if (fileType != null && !"".equals(fileType)){
 			params.add("fileType=" + fileType);
@@ -217,7 +219,9 @@ public class BatchQueryForm {
 	}
 	public String getOutputOptions(){
 		List<String> output = new ArrayList<String>();
-		output.addAll(attributes);
+		if (attributes != null && attributes.size() > 0){
+			output.addAll(attributes);
+		}
 		if (!"none".equalsIgnoreCase(association)){
 			output.add(association);
 		}

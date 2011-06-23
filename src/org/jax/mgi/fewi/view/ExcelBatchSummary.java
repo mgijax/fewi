@@ -74,7 +74,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					logger.debug("nomen");
 					row.createCell(col++).setCellValue(m.getSymbol());
 					row.createCell(col++).setCellValue(m.getName());
-					row.createCell(col++).setCellValue(m.getMarkerType());
+					row.createCell(col++).setCellValue(m.getMarkerSubtype());
 				}
 				if(queryForm.getLocation()){
 					logger.debug("loc");

@@ -163,6 +163,7 @@ var History = YAHOO.util.History;
         ],
         metaFields: {
 	        totalRecords: "totalCount",
+	        metaObj: "meta",
 	        paginationRecordOffset : "startIndex",
 	        paginationRowsPerPage : "pageSize"
         }
@@ -221,7 +222,7 @@ var History = YAHOO.util.History;
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
 
         updateCount('totalCount', oPayload.totalRecords);
-        updateCount('markerCount', oPayload.totalRecords);
+        updateCount('markerCount', meta.metaObj.counts.marker);
         
         var filterCount = YAHOO.util.Dom.get('filterCount');
         if (!YAHOO.lang.isNull(filterCount)){

@@ -61,7 +61,7 @@ public class TextBatchSummary extends AbstractTextView {
 					markerInfo.append("\t");
 					markerInfo.append(m.getSymbol() + "\t");
 					markerInfo.append(m.getName() + "\t");
-					markerInfo.append(m.getMarkerType());
+					markerInfo.append(m.getMarkerSubtype());
 				}
 				if(queryForm.getLocation()){
 					markerInfo.append("\t");
@@ -133,23 +133,21 @@ public class TextBatchSummary extends AbstractTextView {
 	    			for (Annotation mpAnnot : m.getMPAnnotations()) {
 	    				mp = new StringBuffer();
 						mp.append(mpAnnot.getTermID() + "\t");
-						mp.append(mpAnnot.getTerm() + "\t");
-						mp.append(mpAnnot.getEvidenceCode());
+						mp.append(mpAnnot.getTerm());
 						mpIds.add(mp.toString());
 					}
 		    		associations.add(mpIds);
 				} else if(queryForm.getOmim()){
 					logger.debug("omim");
-					List<String> mpIds = new ArrayList<String>();
-					StringBuffer mp;
-	    			for (Annotation mpAnnot : m.getMPAnnotations()) {
-	    				mp = new StringBuffer();
-						mp.append(mpAnnot.getTermID() + "\t");
-						mp.append(mpAnnot.getTerm());
-	
-						mpIds.add(mp.toString());
+					List<String> omimIds = new ArrayList<String>();
+					StringBuffer omim;
+	    			for (Annotation omimAnnot : m.getOMIMAnnotations()) {
+	    				omim = new StringBuffer();
+	    				omim.append(omimAnnot.getTermID() + "\t");
+	    				omim.append(omimAnnot.getTerm());
+	    				omimIds.add(omim.toString());
 					}
-		    		associations.add(mpIds);
+		    		associations.add(omimIds);
 				} else if(queryForm.getAllele()){
 					logger.debug("allele");
 					List<String> alleles = new ArrayList<String>();

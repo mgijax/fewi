@@ -102,7 +102,7 @@ public class BatchSummaryRow {
     }
     public String getFeature() {
     	if (batchMarkerId.getMarker() != null && query.getNomenclature()){
-    		return batchMarkerId.getMarker().getMarkerType();
+    		return batchMarkerId.getMarker().getMarkerSubtype();
     	} else {
     		return "";
     	}

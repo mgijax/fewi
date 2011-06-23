@@ -53,6 +53,7 @@
 											<div>
 												<span class="label nowrap"> ID/Symbols column:</span><br>
 												<span>&nbsp;&nbsp;<form:input path="idColumn" size="3"></form:input></span><br>
+												<span class="example">*ID/Symbols parsed from<br/>a single column</span>
 											</div>
 										</div>
 									</div>

@@ -14,13 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.BatchMarkerId;
-import mgi.frontend.datamodel.Reference;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
-import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -34,9 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -156,6 +151,7 @@ public class BatchController {
         mav.addObject("queryString", queryForm.toQueryString());
         mav.addObject("batchQueryForm", queryForm);
         mav.addObject("inputIdCount", idSet.size());
+        logger.debug("processSummary done");
         return mav;
     	
     }
@@ -208,7 +204,9 @@ public class BatchController {
 			@ModelAttribute BatchQueryForm queryForm,
             @ModelAttribute Paginator page) {
 				
-		logger.debug("batchSummaryReport");		
+		logger.debug("batchSummaryReport");
+		logger.debug(queryForm.toString());
+		
 		ModelAndView mav = new ModelAndView("batchSummaryReport");
 		mav.addObject("queryForm", queryForm);
 		mav.addObject("results", getSummaryResults(session, request, queryForm, page).getResultObjects());

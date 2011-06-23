@@ -1,58 +1,43 @@
 package org.jax.mgi.fewi.controller;
 
-import java.text.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
-/*------------------------------*/
-/* to change in each controller */
-/*------------------------------*/
+import javax.servlet.http.HttpServletRequest;
 
-// fewi
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerCountSetItem;
+import mgi.frontend.datamodel.MarkerID;
+import mgi.frontend.datamodel.MarkerIDOtherMarker;
+import mgi.frontend.datamodel.MarkerLocation;
+import mgi.frontend.datamodel.MarkerSequenceAssociation;
+import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.SequenceSource;
+
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
-import org.jax.mgi.fewi.summary.MarkerSummaryRow;
-import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.ProviderLinker;
-import org.jax.mgi.fewi.util.IDLinker;
-import org.jax.mgi.fewi.config.ContextLoader;
-
-// data model objects
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MarkerID;
-import mgi.frontend.datamodel.MarkerLocation;
-import mgi.frontend.datamodel.MarkerSequenceAssociation;
-import mgi.frontend.datamodel.SequenceSource;
-import mgi.frontend.datamodel.MarkerCountSetItem;
-import mgi.frontend.datamodel.Reference;
-import mgi.frontend.datamodel.MarkerIDOtherMarker;
-import mgi.frontend.datamodel.MarkerLocation;
-
-/*--------------------------------------*/
-/* standard imports for all controllers */
-/*--------------------------------------*/
-
-// internal
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.MarkerSummaryRow;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.IDLinker;
 import org.jax.mgi.fewi.util.ProviderLinker;
-
-// external
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -216,7 +201,7 @@ public class MarkerController {
         	marker.getGxdResultCountsByType().iterator();
         MarkerCountSetItem item;
         
-        ArrayList<String> gxdAssayTypes = new ArrayList();
+        ArrayList<String> gxdAssayTypes = new ArrayList<String>();
         HashMap<String,String> gxdAssayCounts = new HashMap<String,String>();
         HashMap<String,String> gxdResultCounts = new HashMap<String,String>();
         
@@ -276,6 +261,8 @@ public class MarkerController {
         String otherLinks;
     	MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
     	boolean isGeneModelID = false;
+    	
+    	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
         while (it.hasNext()) {
         	myID = it.next();
@@ -303,8 +290,6 @@ public class MarkerController {
         	}
 
         	// special note about gene model IDs which overlap other markers, if needed
-        	
-    		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
         	if (isGeneModelID) {
         		List<MarkerIDOtherMarker> otherMarkers = myID.getOtherMarkers();
         		MarkerIDOtherMarker otherMarker;
@@ -730,7 +715,7 @@ public class MarkerController {
     	Iterator<mgi.frontend.datamodel.Annotation> it = annotations.iterator();
     	
     	// tracks which terms we've seen already
-    	HashMap<String, String> done = new HashMap();
+    	HashMap<String, String> done = new HashMap<String, String>();
     	
     	// which term we are looking at currently
     	mgi.frontend.datamodel.Annotation annot;
