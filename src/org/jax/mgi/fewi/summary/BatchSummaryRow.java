@@ -5,7 +5,9 @@ import java.util.List;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.BatchMarkerAllele;
+import mgi.frontend.datamodel.BatchMarkerGoAnnotation;
 import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.BatchMarkerMpAnnotation;
 import mgi.frontend.datamodel.BatchMarkerSnp;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
@@ -44,8 +46,8 @@ public class BatchSummaryRow {
     
     private static String urlPattern = "<a href='%s' target='_blank'>%s</a>";
     
-    private List<Annotation> goAnnots = null;
-    private List<Annotation> mpAnnots = null;
+    private List<BatchMarkerGoAnnotation> goAnnots = null;
+    private List<BatchMarkerMpAnnotation> mpAnnots = null;
     private List<Annotation> omimAnnots = null;
     private List<BatchMarkerAllele> markerAlleles = null;
     private List<MarkerTissueCount> expCounts = null;
@@ -81,7 +83,7 @@ public class BatchSummaryRow {
     			return batchMarkerId.getMarker().getPrimaryID();
     		}
     	} else {
-    		return "";
+    		return "No associated gene";
     	}
     }
     public String getSymbol() {
@@ -177,11 +179,11 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> go = new ArrayList<String>();
     	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
+    		goAnnots = marker.getBatchMarkerGoAnnotations();
     	}
-    	if (goAnnots != null){
-    		for (Annotation annotation : goAnnots) {
-    			go.add(annotation.getTermID());
+    	if (goAnnots.size() > 0){
+    		for (BatchMarkerGoAnnotation annotation : goAnnots) {
+    			go.add(annotation.getGoId());
 			}
     	}
     	return StringUtils.join(go, "<br/>");
@@ -194,11 +196,11 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> go = new ArrayList<String>();
     	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
+    		goAnnots = marker.getBatchMarkerGoAnnotations();
     	}
-    	if (goAnnots != null){
-    		for (Annotation annotation : goAnnots) {
-    			go.add(annotation.getTerm());
+    	if (goAnnots.size() > 0){
+    		for (BatchMarkerGoAnnotation annotation : goAnnots) {
+    			go.add(annotation.getGoTerm());
 			}
     	}
     	return StringUtils.join(go, "<br/>");
@@ -209,12 +211,12 @@ public class BatchSummaryRow {
     		return "";
     	}
     	Marker marker = batchMarkerId.getMarker();
-    	List<String> go = new ArrayList<String>();
     	if (marker != null && goAnnots == null){
-    		goAnnots = batchMarkerId.getMarker().getGoAnnotations();
+    		goAnnots = marker.getBatchMarkerGoAnnotations();
     	}
-    	if (goAnnots != null){
-    		for (Annotation annotation : goAnnots) {
+    	List<String> go = new ArrayList<String>();
+    	if (goAnnots.size() > 0){
+    		for (BatchMarkerGoAnnotation annotation : goAnnots) {
     			go.add(annotation.getEvidenceCode());
 			}
     	}
@@ -228,11 +230,11 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> mp = new ArrayList<String>();
     	if (marker != null && mpAnnots == null){
-    		mpAnnots = batchMarkerId.getMarker().getMPAnnotations();
+    		mpAnnots = marker.getBatchMarkerMpAnnotations();
     	}
-    	if (mpAnnots != null){
-    		for (Annotation annotation : mpAnnots) {
-    			mp.add(annotation.getTermID());
+    	if (mpAnnots.size() > 0){
+    		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
+    			mp.add(annotation.getMpId());
 			}
     	}
     	return StringUtils.join(mp, "<br/>");
@@ -245,14 +247,14 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> mp = new ArrayList<String>();
     	if (marker != null && mpAnnots == null){
-    		mpAnnots = batchMarkerId.getMarker().getMPAnnotations();
+    		mpAnnots = marker.getBatchMarkerMpAnnotations();
     	}
     	String text, url;
     	if (mpAnnots != null){
-    		for (Annotation annotation : mpAnnots) {
-    			text = annotation.getTerm() + " (%s)"; 
+    		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
+    			text = annotation.getMpTerm() + " (%s)"; 
     			url = javawiUrl + String.format("WIFetch?page=mpAnnotSummary&markerKey=%d&id=%s", 
-    					marker.getMarkerKey(), annotation.getTermID());
+    					marker.getMarkerKey(), annotation.getMpId());
     			mp.add(String.format(text, String.format(urlPattern, url, "details")));
 			}
     	}
@@ -266,12 +268,10 @@ public class BatchSummaryRow {
     	Marker marker = batchMarkerId.getMarker();
     	List<String> omim = new ArrayList<String>();
     	if (marker != null  && omimAnnots == null){
-    		logger.debug("get omim");
     		omimAnnots = batchMarkerId.getMarker().getOMIMAnnotations();
     	}
     	if (omimAnnots != null){
     		for (Annotation annotation : omimAnnots) {
-    			logger.debug(annotation.getTermID());
     			omim.add(annotation.getTermID());
 			}
     	}
@@ -360,8 +360,6 @@ public class BatchSummaryRow {
     	if (expCounts != null){
     		String url;
 	    	for (MarkerTissueCount tissue : expCounts) {
-	    		logger.debug(tissue.getStructure() + ": " + String.valueOf(tissue.getAllResultCount()));
-	    		
     			url = wiUrl + String.format("searches/expression_report.cgi?Anatomical structure&returnType=assay results&_Marker_key=%d&_Structure_key=%d", 
     					marker.getMarkerKey(), tissue.getStructureKey());
     			structures.add(String.format(urlPattern, url, tissue.getAllResultCount()));
@@ -442,16 +440,13 @@ public class BatchSummaryRow {
     		if(ids != null){
     			for (MarkerID id : ids) {
     				for (String ldb : logicalDb) {
-    					logger.debug(ldb + ": " + id.getAccID() + ": " + id.getLogicalDB());
     					if (id.getLogicalDB().equals(ldb)){
-    						logger.debug("add");
     						idList.add(id.getAccID());
     					}	
 					}					
 				}
     		}
     	}
-    	logger.debug("ids: " + idList.size());
     	return idList;
     }
 
