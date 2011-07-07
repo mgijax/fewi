@@ -209,7 +209,13 @@ public class BatchController {
 		
 		ModelAndView mav = new ModelAndView("batchSummaryReport");
 		mav.addObject("queryForm", queryForm);
-		mav.addObject("results", getSummaryResults(session, request, queryForm, page).getResultObjects());
+		
+		SearchResults<BatchMarkerId> searchResults = 
+			getSummaryResults(session, request, queryForm, page);
+		
+		mav.addObject("totalCount", searchResults.getTotalCount());
+		mav.addObject("markerCount", searchResults.getResultSetMeta().getCount("marker"));		
+		mav.addObject("results", searchResults.getResultObjects());
 		return mav;
 	}
 	
@@ -282,7 +288,8 @@ public class BatchController {
         	filterList.add(new Filter(SearchConstants.BATCH_TERM, idSet, Filter.OP_IN));
         }
         String idType = query.getIdType();
-        if (idType != null && !"".equals(idType) && !"auto".equals(idType)){
+        if (idType != null && !"".equals(idType) && !"auto".equalsIgnoreCase(idType)){
+        	logger.debug(idType);
         	filterList.add(new Filter(SearchConstants.BATCH_TYPE, query.getIdType().trim(), Filter.OP_EQUAL));
         }
         
