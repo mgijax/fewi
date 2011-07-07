@@ -49,7 +49,7 @@ public class BatchQueryForm {
 		
 		associationList.put("GO", "Gene Ontology (GO)");
 		associationList.put("MP", "Mammalian Phenotype (MP)");
-		associationList.put("omim", "Human Disease (OMIM)");
+		associationList.put("OMIM", "Human Disease (OMIM)");
 		associationList.put("Alleles", "Alleles");
 		associationList.put("exp", "Gene Expression");
 		associationList.put("RefSNP", "RefSNP ID");
@@ -188,7 +188,7 @@ public class BatchQueryForm {
 		this.associationList = associationList;
 	}
 	private boolean hasAssociation(String ass){
-		if (association != null && association.equals(ass)){
+		if (association != null && association.equalsIgnoreCase(ass)){
 			return true;			
 		}
 		return false;
