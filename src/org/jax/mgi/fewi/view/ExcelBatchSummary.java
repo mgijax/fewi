@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.BatchMarkerAllele;
-import mgi.frontend.datamodel.BatchMarkerSnp;
 import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.BatchMarkerSnp;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
@@ -20,6 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellRangeAddress;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ public class ExcelBatchSummary extends AbstractExcelView {
 	
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(ExcelReferenceSummary.class);
+	
+	private int totalCols = 2;
 
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, 
@@ -50,6 +53,15 @@ public class ExcelBatchSummary extends AbstractExcelView {
 		Marker m;
 		List<MarkerID> ids;
 		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
+		
+		row = sheet.createRow(rownum);
+		row.createCell(0).setCellValue(String.format(
+				"%d matching rows, %d matching genes/markers displayed.", model.get("totalCount"),
+				model.get("markerCount")));
+		
+		sheet.addMergedRegion(new CellRangeAddress(rownum, rownum, 0, totalCols));
+
+		rownum++;
 
 		for (BatchMarkerId id : results) {
 			associations = new ArrayList<List<List<String>>>();
@@ -275,12 +287,18 @@ public class ExcelBatchSummary extends AbstractExcelView {
 							addlRow = sheet.createRow(rownum++);
 							for (int i = 0; i < col; i++) {
 								logger.debug("copy cell: " + i);
-								if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
-									addlRow.createCell(i).setCellValue(row.getCell(i).getNumericCellValue());
-								} else if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_STRING){
-									addlRow.createCell(i).setCellValue(row.getCell(i).getStringCellValue());
+								if (row.getCell(i) != null){
+									logger.debug("non-null");
+									if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
+										addlRow.createCell(i).setCellValue(row.getCell(i).getNumericCellValue());
+									} else if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_STRING){
+										addlRow.createCell(i).setCellValue(row.getCell(i).getStringCellValue());
+									}
+								} else {
+									logger.debug("null");
+									addlRow.createCell(i);
 								}
-								
+							logger.debug("post copy");
 								
 							}
 							row = addlRow;
@@ -320,13 +338,13 @@ public class ExcelBatchSummary extends AbstractExcelView {
 			headerRow.createCell(i++).setCellValue("End");
 		}
 		if(queryForm.getEnsembl()){
-			headerRow.createCell(i++).setCellValue("Ensembl IDs");
+			headerRow.createCell(i++).setCellValue("Ensembl ID");
 		}
 		if(queryForm.getEntrez()){
-			headerRow.createCell(i++).setCellValue("Entrez Gene IDs");
+			headerRow.createCell(i++).setCellValue("Entrez Gene ID");
 		}
 		if(queryForm.getVega()){
-			headerRow.createCell(i++).setCellValue("Vega IDs");
+			headerRow.createCell(i++).setCellValue("VEGA ID");
 		}
 		
 		if(queryForm.getGo()){
@@ -348,12 +366,13 @@ public class ExcelBatchSummary extends AbstractExcelView {
 			headerRow.createCell(i++).setCellValue("Detected");
 			headerRow.createCell(i++).setCellValue("Not Detected");
 		} else if(queryForm.getRefsnp()){
-			headerRow.createCell(i++).setCellValue("RefSNP IDs");
+			headerRow.createCell(i++).setCellValue("RefSNP ID");
 		} else if(queryForm.getRefseq()){
-			headerRow.createCell(i++).setCellValue("GenBank/RefSeq IDs");
+			headerRow.createCell(i++).setCellValue("GenBank/RefSeq ID");
 		} else if(queryForm.getUniprot()){
-			headerRow.createCell(i++).setCellValue("Uniprot IDs");
+			headerRow.createCell(i++).setCellValue("Uniprot ID");
 		}
+		totalCols = i;
 		return headerRow;
 	}
 	

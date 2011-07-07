@@ -17,6 +17,7 @@ import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -42,14 +43,18 @@ public class TextBatchSummary extends AbstractTextView {
 		StringBuffer markerInfo;
 		List<List<String>> associations;
 		
+		writer.write(this.genHeader(queryForm));
+		writer.write("\r\n");
+		writer.write(String.format(
+				"%d matching rows, %d matching genes/markers displayed.", model.get("totalCount"),
+				model.get("markerCount")));
+		writer.write("\r\n");
+		
 		for (BatchMarkerId id : results) {
 			markerInfo = new StringBuffer();
 			associations = new ArrayList<List<String>>();
 			m = id.getMarker();
-			
-			
 
-			
 			markerInfo.append(id.getTerm() + "\t");
 			markerInfo.append(id.getTermType() + "\t");
 			
@@ -234,6 +239,62 @@ public class TextBatchSummary extends AbstractTextView {
 				}
 			}
 		}
+	}
+	
+	private String genHeader(BatchQueryForm queryForm){
+		StringBuffer header = new StringBuffer();
+
+		header.append("Input");
+		header.append("\tInput Type");
+		header.append("\tMGI Gene/Marker ID");
+		 
+		if(queryForm.getNomenclature()){
+			header.append("\tSymbol");
+			header.append("\tName");
+			header.append("\tFeature Type");
+		}
+		if(queryForm.getLocation()){
+			header.append("\tChr");
+			header.append("\tStrand");
+			header.append("\tStart");
+			header.append("\tEnd");
+		}
+		if(queryForm.getEnsembl()){
+			header.append("\tEnsembl ID");
+		}
+		if(queryForm.getEntrez()){
+			header.append("\tEntrez Gene ID");
+		}
+		if(queryForm.getVega()){
+			header.append("\tVEGA ID");
+		}
+		
+		if(queryForm.getGo()){
+			header.append("\tGO ID");
+			header.append("\tTerm");
+			header.append("\tCode");
+		} else if(queryForm.getMp()){
+			header.append("\tMP ID");
+			header.append("\tTerm");
+		} else if(queryForm.getOmim()){
+			header.append("\tOMIM ID");
+			header.append("\tTerm");
+		} else if(queryForm.getAllele()){
+			header.append("\tAllele ID");
+			header.append("\tSymbol");
+		} else if(queryForm.getExp()){
+			header.append("\tAnatomical Structure");
+			header.append("\tAssay Results");
+			header.append("\tDetected");
+			header.append("\tNot Detected");
+		} else if(queryForm.getRefsnp()){
+			header.append("\tRefSNP ID");
+		} else if(queryForm.getRefseq()){
+			header.append("\tGenBank/RefSeq ID");
+		} else if(queryForm.getUniprot()){
+			header.append("\tUniprot ID");
+		}
+		return header.toString();
 	}
 	
 	private List<String> combineSets (List<String> listA, List<String> listB){
