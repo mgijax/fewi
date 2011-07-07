@@ -53,7 +53,7 @@ ${templateBean.templateBodyStartHtml}
 		<span class="label">Number of IDs/symbols entered:</span> 
 			${inputIdCount}<br/>
 		<span class="label">Input Type:</span>
-			${batchQueryForm.idType}<br/>
+			${batchQueryForm.idTypeSelection}<br/>
 		<c:if test="${batchQueryForm.hasFile}">
 			<span class="label">Input File Name: </span> 
 				${batchQueryForm.fileName}<br/>
