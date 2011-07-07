@@ -51,7 +51,7 @@ public class BatchQueryForm {
 		associationList.put("MP", "Mammalian Phenotype (MP)");
 		associationList.put("OMIM", "Human Disease (OMIM)");
 		associationList.put("Alleles", "Alleles");
-		associationList.put("exp", "Gene Expression");
+		associationList.put("Expression", "Gene Expression");
 		associationList.put("RefSNP", "RefSNP ID");
 		associationList.put("GenBankRefSeq", "GenBank/RefSeq ID");
 		associationList.put("UniProt", "UniProt ID");
@@ -206,7 +206,7 @@ public class BatchQueryForm {
 		return this.hasAssociation("Alleles");
 	}
 	public boolean getExp(){
-		return this.hasAssociation("exp");
+		return this.hasAssociation("Expression");
 	}
 	public boolean getRefsnp(){
 		return this.hasAssociation("RefSNP");
@@ -217,6 +217,11 @@ public class BatchQueryForm {
 	public boolean getUniprot(){
 		return this.hasAssociation("UniProt");
 	}
+	
+	public String getIdTypeSelection(){
+		return idTypes.get(idType);
+	}
+	
 	public String getOutputOptions(){
 		List<String> output = new ArrayList<String>();
 		if (attributes != null && attributes.size() > 0){

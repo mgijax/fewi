@@ -69,8 +69,6 @@ public class HibernateBatchSummaryHunter<T> {
 		typeMap.put("GenBank", genbankItems);
 	}
 
-
-
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
 
         logger.debug("-> hunt");         
