@@ -43,11 +43,24 @@ public class HibernateBatchSummaryHunter<T> {
 		uniprotItems.add("TrEMBL");
 		typeMap.put("UniProt", uniprotItems);
 		
+		List<String> vegaItems = new ArrayList<String>();
+		vegaItems.add("VEGA Gene Model");
+		vegaItems.add("VEGA Protein");
+		vegaItems.add("VEGA Transcript");
+		typeMap.put("VEGA", vegaItems);
+		
+		List<String> ensemblItems = new ArrayList<String>();
+		ensemblItems.add("Ensembl Gene Model");
+		ensemblItems.add("Ensembl Protein");
+		ensemblItems.add("Ensembl Transcript");
+		typeMap.put("Ensembl", ensemblItems);
+		
 		List<String> nomenItems = new ArrayList<String>();
 		nomenItems.add("old symbol");
 		nomenItems.add("%synonym");
 		nomenItems.add("%ortholog symbol");
 		nomenItems.add("current name");
+		nomenItems.add("current symbol");
 		typeMap.put("nomen", nomenItems);
 		
 		List<String> genbankItems = new ArrayList<String>();
@@ -146,7 +159,7 @@ public class HibernateBatchSummaryHunter<T> {
         	} else {
     			tmp = new BatchMarkerId();
     			tmp.setTerm(id);
-    			tmp.setTermType("unknown");
+    			tmp.setTermType("");
     			bm.add((T)tmp);
         	}
         }
