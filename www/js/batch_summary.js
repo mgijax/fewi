@@ -36,7 +36,7 @@ var History = YAHOO.util.History;
                     label: "Feature Type"}]});
     }
     if (loco){
-    	myColumnDefs.push({label:"Genome Location",
+    	myColumnDefs.push({label:"Genome Location - NCBI Build " + ncbiBuild,
     	    sortable:false,
     	    children: [{key: "chromosome",
     	    		label: "Chr"},
@@ -171,6 +171,8 @@ var History = YAHOO.util.History;
     
     myDataSource.maxCacheEntries = 3;
     myDataSource.connXhrMode = "cancelStaleRequests";
+    myDataSource.connMethodPost = true;
+    myDataSource.connTimeout = 60000;
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({

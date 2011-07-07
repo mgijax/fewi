@@ -92,6 +92,8 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <script type="text/javascript">
+	var ncbiBuild = "${configBean.ASSEMBLY_VERSION}";
+
 	// attribute columns
 	var nomenclature = ${batchQueryForm.nomenclature};
 	var loco = ${batchQueryForm.location};
