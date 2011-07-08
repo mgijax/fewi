@@ -280,19 +280,21 @@ public class BatchController {
         logger.debug("->genFilters started");
         logger.debug("QueryForm -> " + query);
 
-
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
         
+        logger.debug("set ids");
         if (idSet.size() > 0){
         	filterList.add(new Filter(SearchConstants.BATCH_TERM, idSet, Filter.OP_IN));
         }
+        logger.debug("set type");
         String idType = query.getIdType();
         if (idType != null && !"".equals(idType) && !"auto".equalsIgnoreCase(idType)){
         	logger.debug(idType);
         	filterList.add(new Filter(SearchConstants.BATCH_TYPE, query.getIdType().trim(), Filter.OP_EQUAL));
         }
         
+        logger.debug("build");
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
@@ -300,6 +302,7 @@ public class BatchController {
             containerFilter.setNestedFilters(filterList);
         }
 
+        logger.debug("done");
         return containerFilter;
     }
 
@@ -335,7 +338,7 @@ public class BatchController {
                     }
                     // ignore blank cell
                     if (!col.equals("")) {
-                    	parsedIds.add(col.toLowerCase());
+                    	parsedIds.add(col);
                     }
                 }
             }

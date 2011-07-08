@@ -45,6 +45,7 @@ public class BatchSummaryRow {
     private String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
     
     private static String urlPattern = "<a href='%s' target='_blank'>%s</a>";
+    private static String noWrap = "<span style='white-space:nowrap;'>%s</span>";
     
     private List<BatchMarkerGoAnnotation> goAnnots = null;
     private List<BatchMarkerMpAnnotation> mpAnnots = null;
@@ -181,9 +182,9 @@ public class BatchSummaryRow {
     	if (marker != null && goAnnots == null){
     		goAnnots = marker.getBatchMarkerGoAnnotations();
     	}
-    	if (goAnnots.size() > 0){
+    	if (goAnnots!= null && goAnnots.size() > 0){
     		for (BatchMarkerGoAnnotation annotation : goAnnots) {
-    			go.add(annotation.getGoId());
+    			go.add(String.format(noWrap, annotation.getGoId()));
 			}
     	}
     	return StringUtils.join(go, "<br/>");
@@ -198,9 +199,9 @@ public class BatchSummaryRow {
     	if (marker != null && goAnnots == null){
     		goAnnots = marker.getBatchMarkerGoAnnotations();
     	}
-    	if (goAnnots.size() > 0){
+    	if (goAnnots!= null && goAnnots.size() > 0){
     		for (BatchMarkerGoAnnotation annotation : goAnnots) {
-    			go.add(annotation.getGoTerm());
+    			go.add(String.format(noWrap, annotation.getGoTerm()));
 			}
     	}
     	return StringUtils.join(go, "<br/>");
@@ -215,9 +216,9 @@ public class BatchSummaryRow {
     		goAnnots = marker.getBatchMarkerGoAnnotations();
     	}
     	List<String> go = new ArrayList<String>();
-    	if (goAnnots.size() > 0){
+    	if (goAnnots!= null && goAnnots.size() > 0){
     		for (BatchMarkerGoAnnotation annotation : goAnnots) {
-    			go.add(annotation.getEvidenceCode());
+    			go.add(String.format(noWrap, annotation.getEvidenceCode()));
 			}
     	}
     	return StringUtils.join(go, "<br/>");
@@ -232,9 +233,9 @@ public class BatchSummaryRow {
     	if (marker != null && mpAnnots == null){
     		mpAnnots = marker.getBatchMarkerMpAnnotations();
     	}
-    	if (mpAnnots.size() > 0){
+    	if (mpAnnots != null && mpAnnots.size() > 0){
     		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
-    			mp.add(annotation.getMpId());
+    			mp.add(String.format(noWrap, annotation.getMpId()));
 			}
     	}
     	return StringUtils.join(mp, "<br/>");
@@ -250,12 +251,12 @@ public class BatchSummaryRow {
     		mpAnnots = marker.getBatchMarkerMpAnnotations();
     	}
     	String text, url;
-    	if (mpAnnots != null){
+    	if (mpAnnots != null && mpAnnots.size() > 0){
     		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
     			text = annotation.getMpTerm() + " (%s)"; 
     			url = javawiUrl + String.format("WIFetch?page=mpAnnotSummary&markerKey=%d&id=%s", 
     					marker.getMarkerKey(), annotation.getMpId());
-    			mp.add(String.format(text, String.format(urlPattern, url, "details")));
+    			mp.add(String.format(noWrap, String.format(text, String.format(urlPattern, url, "details"))));
 			}
     	}
     	return StringUtils.join(mp, "<br/>");
@@ -272,7 +273,7 @@ public class BatchSummaryRow {
     	}
     	if (omimAnnots != null){
     		for (Annotation annotation : omimAnnots) {
-    			omim.add(annotation.getTermID());
+    			omim.add(String.format(noWrap, annotation.getTermID()));
 			}
     	}
     	return StringUtils.join(omim, "<br/>");
@@ -288,7 +289,7 @@ public class BatchSummaryRow {
     		String url;
     		for (Annotation annotation : omimAnnots) {
     			url = javawiUrl + "WIFetch?page=humanDisease&id=" + annotation.getTermID();
-    			omim.add(String.format(urlPattern, url, annotation.getTerm()));
+    			omim.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
 			}
     	}
     	return StringUtils.join(omim, "<br/>");
@@ -303,7 +304,7 @@ public class BatchSummaryRow {
     			markerAlleles = marker.getBatchMarkerAlleles();
     		}
     		for (BatchMarkerAllele allele : markerAlleles) {
-				alleleOutput.add(allele.getAlleleID());
+    			alleleOutput.add(String.format(noWrap, allele.getAlleleID()));
 			}
     	}
     	return StringUtils.join(alleleOutput, "<br/>");
@@ -320,8 +321,8 @@ public class BatchSummaryRow {
     		String url;
     		for (BatchMarkerAllele allele : markerAlleles) {
     			url = fewiUrl + "allele/" + allele.getAlleleID();
-				alleleOutput.add(String.format(urlPattern, url,
-						FormatHelper.superscript(allele.getAlleleSymbol())));
+    			alleleOutput.add(String.format(noWrap, String.format(urlPattern, url,
+						FormatHelper.superscript(allele.getAlleleSymbol()))));
 			}
     	}
     	return StringUtils.join(alleleOutput, "<br/>");
@@ -340,7 +341,7 @@ public class BatchSummaryRow {
 
     	if (expCounts != null){
 	    	for (MarkerTissueCount tissue : expCounts) {
-	    		structures.add(tissue.getStructure());
+	    		structures.add(String.format(noWrap, tissue.getStructure()));
 			}
     	}
     	return StringUtils.join(structures, "<br/>");
