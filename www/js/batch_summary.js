@@ -20,7 +20,7 @@ var History = YAHOO.util.History;
             label:"Input<br/>Type",
             sortable:false},
         {key:"markerId", 
-            label:"MGI Gene/Marker ID",
+            label:"MGI Gene/<br/>Marker ID",
             sortable:false}
     ];
     
