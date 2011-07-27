@@ -154,7 +154,7 @@ td.padded { padding:4px; }
         </c:if>
         <p/>
         <c:if test="${marker.countOfMappingExperiments > 0}">
-          Mapping data(<a href="#">${marker.countOfMappingExperiments}</a>)
+          Mapping data(<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a>)
         </c:if>
       </td>
     </tr>
@@ -240,7 +240,7 @@ td.padded { padding:4px; }
 		    <c:set var="hasHumanOrthology" value="1"/>
 		  </c:if>
 		</c:forEach>
-		&nbsp;&nbsp;&nbsp;(<a href="#">Mammalian Orthology</a>)<br/>
+		&nbsp;&nbsp;&nbsp;(<a href="${configBean.WI_URL}searches/homology_report.cgi?_Marker_key=${marker.markerKey}">Mammalian Orthology</a>)<br/>
 		
 		<c:if test="${(hasHumanOrthology == 1) and (hasGeneticLocation == 1)}">
 		  Comparative Map (<a href="#">Mouse/Human ${marker.symbol} &#177; 2 cM</a>)<P>
@@ -330,7 +330,7 @@ td.padded { padding:4px; }
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
         <c:if test="${marker.countOfAlleles > 0}">
-		  All alleles(<a href="#">${marker.countOfAlleles}</a>) : 
+		  All alleles(<a href="${configBean.WI_URL}searches/allele_report.cgi?_Marker_key=${marker.markerKey}">${marker.countOfAlleles}</a>) : 
 		  <c:forEach var="item" items="${marker.alleleCountsByType}">
 		    ${item.countType}(<a href="#">${item.count}</a>)
 		  </c:forEach>
@@ -345,7 +345,7 @@ td.padded { padding:4px; }
 		  Associated Human Diseases(<a href="${configBean.FEWI_URL}omim/marker/${marker.primaryID}">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
-		  Alleles Annotated to Human Diseases(<a href="#">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
+		  Alleles Annotated to Human Diseases(<a href="${configBean.WI_URL}searches/allele_report.cgi?_Marker_key=${marker.markerKey}&omimOnly=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
 		  Phenotype Images(<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a>)
@@ -380,20 +380,20 @@ td.padded { padding:4px; }
 		<table>
 	      <c:if test="${not empty processAnnot1}">
 	    	<tr><td>Process</td>
-	    		<td><a href="#">${processAnnot1.term}</a><c:if test="${not empty processAnnot2}">, </c:if>
-	    			<a href="#">${processAnnot2.term}</a><c:if test="${not empty processAnnot3}">, ...</c:if>
+	    		<td><a href="${configBean.WI_URL}searches/GO.cgi?id=${processAnnot1.termID}">${processAnnot1.term}</a><c:if test="${not empty processAnnot2}">, </c:if>
+	    			<a href="${configBean.WI_URL}searches/GO.cgi?id=${processAnnot2.termID}">${processAnnot2.term}</a><c:if test="${not empty processAnnot3}">, ...</c:if>
 	    		</td></tr>
 	      </c:if>
 	      <c:if test="${not empty componentAnnot1}">
 	    	<tr><td>Component</td>
-	    		<td><a href="#">${componentAnnot1.term}</a><c:if test="${not empty componentAnnot2}">, </c:if>
-	    			<a href="#">${componentAnnot2.term}</a><c:if test="${not empty componentAnnot3}">, ...</c:if>
+	    		<td><a href="${configBean.WI_URL}searches/GO.cgi?id=${componentAnnot1.termID}">${componentAnnot1.term}</a><c:if test="${not empty componentAnnot2}">, </c:if>
+	    			<a href="${configBean.WI_URL}searches/GO.cgi?id=${componentAnnot2.termID}">${componentAnnot2.term}</a><c:if test="${not empty componentAnnot3}">, ...</c:if>
 	    		</td></tr>
 	      </c:if>
 	      <c:if test="${not empty functionAnnot1}">
 	    	<tr><td>Function</td>
-	    		<td><a href="#">${functionAnnot1.term}</a><c:if test="${not empty functionAnnot2}">, </c:if>
-	    			<a href="#">${functionAnnot2.term}</a><c:if test="${not empty functionAnnot3}">, ...</c:if>
+	    		<td><a href="${configBean.WI_URL}searches/GO.cgi?id=${functionAnnot1.termID}">${functionAnnot1.term}</a><c:if test="${not empty functionAnnot2}">, </c:if>
+	    			<a href="${configBean.WI_URL}searches/GO.cgi?id=${functionAnnot2.termID}">${functionAnnot2.term}</a><c:if test="${not empty functionAnnot3}">, ...</c:if>
 	    		</td></tr>
 	      </c:if>
 		</table>
@@ -419,21 +419,21 @@ td.padded { padding:4px; }
 		<c:if test="${not empty gxdAssayTypes}">
 		Data Summary:
 		<c:if test="${marker.countOfGxdAssays > 0}">
-		  Assays (<a href="#">${marker.countOfGxdAssays}</a>)&nbsp;&nbsp;&nbsp;
+		  Assays (<a href="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assays&sort=Assay%20type">${marker.countOfGxdAssays}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdResults > 0}">
-		  Results (<a href="#">${marker.countOfGxdResults}</a>)&nbsp;&nbsp;&nbsp;
+		  Results (<a href="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure">${marker.countOfGxdResults}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdTissues > 0}">
 		  Tissues (<a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdImages > 0}">
-		  Images (<a href="#">${marker.countOfGxdImages}</a>)
+		  Images (<a href="${configBean.JAVAWI_URL}WIFetch?page=imageSummaryByMrk&key=${marker.markerKey}&imageType=8">${marker.countOfGxdImages}</a>)
 		</c:if>
 		<br/>
 		<c:if test="${not empty marker.gxdResultCountsByStage}">
 		  Theiler Stages: 
-		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status"><a href="#">${item.countType}</a><c:if test="${!status.last}">,</c:if></c:forEach>
+		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status"><a href="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure&_Stage_key=${item.countType}">${item.countType}</a><c:if test="${!status.last}">,</c:if></c:forEach>
 		  <br/>
 		</c:if>
 		</c:if>
@@ -450,7 +450,7 @@ td.padded { padding:4px; }
 		  </table>
 		</c:if>
 		
-		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(<a href="#">${marker.countOfCdnaSources}</a>)<br/></c:if>
+		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(<a href="${configBean.WI_URL}searches/estclone_report.cgi?_Marker_key=${marker.markerKey}&sort=Tissue">${marker.countOfCdnaSources}</a>)<br/></c:if>
 		
 		<c:set var="allenID" value="${marker.allenBrainAtlasID.accID}"/>
 		<c:set var="gensatID" value="${marker.gensatID.accID}"/>
@@ -487,7 +487,7 @@ td.padded { padding:4px; }
 		</c:forEach>
 		<br/>
 		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
-		  Microarray probesets(<a href="#">${marker.countOfMicroarrayProbesets}</a>)
+		  Microarray probesets(<a href="${configBean.JAVAWI_URL}WIFetch?page=AffySummary&key=${marker.markerKey}">${marker.countOfMicroarrayProbesets}</a>)
 		</c:if>
       </td>
     </tr>
