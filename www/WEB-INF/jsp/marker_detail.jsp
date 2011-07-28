@@ -130,7 +130,8 @@ td.padded { padding:4px; }
               <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<c:if test="${not empty marker.preferredCytoband}">, cytoband ${marker.preferredCytoband.cytogeneticOffset}</c:if>
               <br/>
               <c:set var="hasGeneticLocation" value="1"/>
-              <a href="#">Detailed Genetic Map &#177; 1 cM</a>
+              <c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
+              <a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
             </c:if>
             <c:if test="${marker.preferredCentimorgans.cmOffset == -1.0}">
 			  <c:if test="${marker.markerType == 'QTL'}">
@@ -243,7 +244,8 @@ td.padded { padding:4px; }
 		&nbsp;&nbsp;&nbsp;(<a href="${configBean.WI_URL}searches/homology_report.cgi?_Marker_key=${marker.markerKey}">Mammalian Orthology</a>)<br/>
 		
 		<c:if test="${(hasHumanOrthology == 1) and (hasGeneticLocation == 1)}">
-		  Comparative Map (<a href="#">Mouse/Human ${marker.symbol} &#177; 2 cM</a>)<P>
+          <c:set var="comparativemapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=2&dsegments=0&syntenics=0&species=2&format=Web+Map&source=MGD"/>
+		  Comparative Map (<a href="${comparativemapUrl}">Mouse/Human ${marker.symbol} &#177; 2 cM</a>)<P>
 		</c:if>
 		
 		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
@@ -330,9 +332,10 @@ td.padded { padding:4px; }
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
         <c:if test="${marker.countOfAlleles > 0}">
-		  All alleles(<a href="${configBean.WI_URL}searches/allele_report.cgi?_Marker_key=${marker.markerKey}">${marker.countOfAlleles}</a>) : 
+		  <c:set var="alleleUrl" value="${configBean.WI_URL}searches/allele_report.cgi?_Marker_key=${marker.markerKey}"/>
+		  All alleles(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) : 
 		  <c:forEach var="item" items="${marker.alleleCountsByType}">
-		    ${item.countType}(<a href="#">${item.count}</a>)
+		    ${item.countType}(<a href="${alleleUrl}&alleleSet=${item.countType}">${item.count}</a>)
 		  </c:forEach>
 		  <br/>
 		</c:if>
