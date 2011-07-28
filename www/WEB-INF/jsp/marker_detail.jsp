@@ -250,7 +250,7 @@ td.padded { padding:4px; }
 		
 		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
 		<c:if test="${not empty pirsf}">
-		  Protein SuperFamily: <a href="#">${pirsf.term}</a><br/>
+		  Protein SuperFamily: <a href="${configBean.JAVAWI_URL}WIFetch?page=pirsfDetail&id=${pirsf.termID}">${pirsf.term}</a><br/>
 		</c:if>
 
 		<c:set var="treeFamDisplayID" value="${marker.treeFamDisplayID.accID}"/>
@@ -311,14 +311,15 @@ td.padded { padding:4px; }
 		  <input type="button" value="Go" onClick="formatForwardArgs()">
 		  </select>
 		</form>
+		<c:set var="seqUrl" value="${configBean.FEWI_URL}/sequence/marker/${marker.primaryID}"/>
 		<c:if test="${marker.countOfSequences > 0}">
-		  All sequences(<a href="${configBean.FEWI_URL}/sequence/marker/${marker.primaryID}">${marker.countOfSequences}</a>) 
+		  All sequences(<a href="${seqUrl}">${marker.countOfSequences}</a>) 
 		</c:if>
 		<c:if test="${marker.countOfRefSeqSequences > 0}">
-		  RefSeq(<a href="#">${marker.countOfRefSeqSequences}</a>)
+		  RefSeq(<a href="${seqUrl}?provider=RefSeq">${marker.countOfRefSeqSequences}</a>)
 		</c:if>
 		<c:if test="${marker.countOfUniProtSequences > 0}">
-		  UniProt(<a href="#">${marker.countOfUniProtSequences}</a>)
+		  UniProt(<a href="${seqUrl}?provider=UniProt">${marker.countOfUniProtSequences}</a>)
 		</c:if>
       </td>
     </tr>
@@ -365,7 +366,18 @@ td.padded { padding:4px; }
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
-		  ${item.countType}(<a href="#">${item.count}</a>)
+		  <c:set var="polyUrl" value="${configBean.WI_URL}searches/polymorphism_report.cgi?_Marker_key=${marker.markerKey}"/>
+		  <c:set var="polyExtra" value=""/>
+		  <c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
+		    <c:set var="polyUrl" value="${polyUrl}&search=${item.countType}"/>
+		  </c:if>
+		  <c:if test="${fn:startsWith(item.countType, 'SNP')}">
+		    <c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
+		    <c:if test="${not empty configBean.SNP_BUILD}">
+		      <c:set var="polyExtra" value=" from ${configBean.SNP_BUILD}"/>
+		    </c:if>
+		  </c:if>
+		  ${item.countType}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
 		  <c:if test="${status.first}">: </c:if>
 		</c:forEach>
       </td>
@@ -442,12 +454,14 @@ td.padded { padding:4px; }
 		</c:if>
 
 		<c:if test="${not empty gxdAssayTypes}">
+ 	      <c:set var="gxdAssayUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assays&sort=Assay%20type&assayType="/>
+		  <c:set var="gxdResultUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure&assayType="/>
 		  <table>
 		    <tr><td>Assay Type</td><td>Assays</td><td>Results</td></tr>
 		    <c:forEach var="assayType" items="${gxdAssayTypes}">
 		      <tr><td>${assayType}</td>
-		        <td><a href="#">${gxdAssayCounts[assayType]}</a></td>
-		        <td><a href="#">${gxdResultCounts[assayType]}</a></td>
+		        <td><a href="${gxdAssayUrl}${assayType}">${gxdAssayCounts[assayType]}</a></td>
+		        <td><a href="${gxdResultUrl}${assayType}">${gxdResultCounts[assayType]}</a></td>
 		      </tr>
 		    </c:forEach> 
 		  </table>
@@ -485,8 +499,19 @@ td.padded { padding:4px; }
         Molecular<br/>reagents
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
+        <c:set var="reagentUrl" value="${configBean.WI_URL}searches/probe_report.cgi?_Marker_key=${marker.markerKey}"/>
 		<c:forEach var="item" items="${marker.molecularReagentCountsByType}">
-		  ${item.countType}(<a href="#">${item.count}</a>) 
+		  <c:set var="reagentType" value="&DNAtypes=${item.countType}"/>
+		  <c:if test="${fn:startsWith(item.countType, 'Primer')}">
+		    <c:set var="reagentType" value="&DNAtypes=primer"/>
+		  </c:if>
+		  <c:if test="${item.countType == 'Other'}">
+		    <c:set var="reagentType" value="&notDNAtypes=genomic,primer,cDNA"/>
+		  </c:if>
+		  <c:if test="${fn:startsWith(item.countType, 'All')}">
+		    <c:set var="reagentType" value=""/>
+		  </c:if>
+		  ${item.countType}(<a href="${reagentUrl}${reagentType}">${item.count}</a>) 
 		</c:forEach>
 		<br/>
 		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
