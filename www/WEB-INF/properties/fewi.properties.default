@@ -9,6 +9,9 @@
 #FEWI_URL=http://server.informatics.jax.org/
 #FEWI_URL=http://cardolan.informatics.jax.org:8080/fewi/mgi/
 
+# SNP build identifier
+SNP_BUILD=dbSNP Build 128
+
 # directory in which to find the standard mgi template
 #template.dir=/home/<user>/devwi/mgiconfig/web/
 template.dir=/usr/local/mgi/live/mgiconfig/web/
