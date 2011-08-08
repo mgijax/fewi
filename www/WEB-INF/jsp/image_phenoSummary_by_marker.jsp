@@ -14,7 +14,9 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Phenotype Images Associated With This Gene </title>
+<title>
+  Phenotype Images associated with this ${marker.markerType}
+</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -37,7 +39,7 @@ ${templateBean.templateBodyStartHtml}
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="pheno_image_summary_help.shtml">    
   <span class="titleBarMainTitle">
-    Phenotype Images Associated With This Gene 
+    Phenotype Images associated with this ${marker.markerType} 
   </span>
 </div>
 
