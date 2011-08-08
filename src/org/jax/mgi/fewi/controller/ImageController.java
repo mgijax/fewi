@@ -304,7 +304,7 @@ public class ImageController {
         return mav;
     }
 
-/*
+
     //-------------------------------//
     // GXD Image Summary by Marker
     //-------------------------------//
@@ -351,6 +351,21 @@ public class ImageController {
           = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
         imageSearchParams.setFilter(markerKeyFilter);
 
+
+
+
+        SearchResults<ImageSummaryRow> imageSearchResults
+          = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
+        List<ImageSummaryRow> imageSummaryRows
+          = imageSearchResults.getResultObjects();
+
+        mav.addObject("imageSummaryRows", imageSummaryRows);
+
+        return mav;
+
+
+
+/*
         // find the requested images for this allele
         SearchResults<Image> imageSearchResults
           = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
@@ -376,8 +391,9 @@ public class ImageController {
         mav.addObject("totalImages", imageSearchResults.getTotalCount());
 
         return mav;
-    }
 */
+
+    }
 
 
     //--------------------------------------------------------------------//

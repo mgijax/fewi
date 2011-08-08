@@ -49,12 +49,11 @@ public class SolrGxdImagesByMrkHunter extends SolrHunter {
     filterList.add(searchParams.getFilter());
 
     // additional filter for image class
-//    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Expression", Filter.OP_EQUAL);
-    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Phenotypes", Filter.OP_EQUAL);
-    filterList.add(phenotype);
+    Filter classFilter = new Filter(SearchConstants.IMG_CLASS, "Expression", Filter.OP_EQUAL);
+    filterList.add(classFilter);
 
     // additional filter thumbnails
-    Filter isThumb = new Filter(SearchConstants.IMG_IS_THUMB, "1", Filter.OP_EQUAL);
+    Filter isThumb = new Filter(SearchConstants.IMG_IS_THUMB, "0", Filter.OP_EQUAL);
     filterList.add(isThumb);
 
     // container filter -- 'AND' the old and new filters together

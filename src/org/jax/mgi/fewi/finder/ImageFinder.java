@@ -156,12 +156,13 @@ public class ImageFinder {
   /* Retrieval of GXD images, for a given marker
   /*-----------------------------------------------*/
 
-  public SearchResults<Image> getGxdImagesByMarkerKey(SearchParams searchParams) {
+  public SearchResults<ImageSummaryRow> getGxdImagesByMarkerKey(SearchParams searchParams) {
 
     logger.debug("->getGxdImagesByMarkerKey()");
 
     // result object to be returned
-    SearchResults<Image> searchResults = new SearchResults<Image>();
+    SearchResults<ImageSummaryRow> searchResults
+      = new SearchResults<ImageSummaryRow>();
 
     // ask the hunter to identify which objects to return
     gxdImagesByMrkHunter.hunt(searchParams, searchResults);
@@ -172,7 +173,12 @@ public class ImageFinder {
     imageGatherer.setType(Image.class);
     List<Image> imageList
       = imageGatherer.get( searchResults.getResultKeys() );
-    searchResults.setResultObjects(imageList);
+
+    // list of summary objects to be returned
+    List<ImageSummaryRow> imageSummaryRowList
+      = genSummaryRows (imageList);
+
+    searchResults.setResultObjects(imageSummaryRowList);
 
     return searchResults;
   }
@@ -199,12 +205,15 @@ public class ImageFinder {
           thisImage = imageIter.next();
           if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
 
+logger.debug("----->BEFORE THUMB IMAGE GENERATION");
             // gather thumbnail for this image
             thisThumbImage = imageGatherer.get( thisImage.getThumbnailImageKey().toString() );
+logger.debug("----->AFTER THUMB IMAGE GENERATION");
 
             // new row;  add to list
             ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage, thisThumbImage);
             imageSummaryRowList.add(imageSummaryRow);
+
           }
         }
 
