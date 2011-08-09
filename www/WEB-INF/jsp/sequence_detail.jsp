@@ -302,7 +302,7 @@ ${templateBean.templateBodyStartHtml}
       <% Probe myProbe = (Probe)pageContext.getAttribute("probe"); %>
       <tr>
         <td>
-          <a href="${configBean.FEWI_URL}probe/key/${probe.probeKey}">
+          <a href="${configBean.WI_URL}searches/probe.cgi?${probe.probeKey}">
           <%=FormatHelper.formatVerbatim(myProbe.getName())%>
           </a>
         </td>
