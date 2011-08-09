@@ -22,6 +22,11 @@ ${templateBean.templateHeadHtml}
     
 %>
 
+<style>
+.bioMismatch td { text-align: center; border-style: solid; border-width: 1px; }
+.bioMismatch .header { font-weight: bold; color:#002255; background-color:#aaaaaa; }
+</style>
+
 <script language="Javascript">
 function formatForwardArgs() {
     document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
@@ -55,17 +60,30 @@ td.padded { padding:4px; }
 
 
   <!-- ROW1 -->
-  <tr >
+  <tr>
     <td class="<%=leftTdStyles.getNext() %>">
       <font size="+2">&nbsp;</font>Symbol<br/>
       Name<br/>
       ID
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      <font size="+2"><B>${marker.symbol}</B><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
-      </font><br/>
-      <B>${marker.name}</B><br/>
-      ${marker.primaryID}
+      <table style='width: 100%'>
+        <tr style='width: 100%'><td style="text-align: left; vertical-align: top;">
+          <font size="+2"><B>${marker.symbol}</B><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
+          </font><br/>
+          <B>${marker.name}</B><br/>
+          ${marker.primaryID}
+      </td><td style="text-align: right; vertical-align: middle;">
+        <c:if test="${not empty biotypeConflictTable}">
+          <a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'UL', 'UR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img src="${configBean.WEBSHARE_URL}images/warning2.gif" height="26" width="26" id="warning" border="0"></a>
+          <a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'UL', 'UR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>BioType Conflict</a>
+        </c:if>
+        <c:if test="${not empty strainSpecificNote}">
+          <a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'UL', 'UR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img src="${configBean.WEBSHARE_URL}images/mice.jpg" height="38" width="38" id="mice" border="0"></a>
+          <a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'UL', 'UR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>Strain-Specific Marker</a>
+        </c:if>
+      </td></tr>
+      </table>
     </td>
   </tr>
 
@@ -443,7 +461,7 @@ td.padded { padding:4px; }
 		  Tissues (<a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdImages > 0}">
-		  Images (<a href="${configBean.JAVAWI_URL}WIFetch?page=imageSummaryByMrk&key=${marker.markerKey}&imageType=8">${marker.countOfGxdImages}</a>)
+		  Images (<a href="${configBean.FEWI_URL}image/gxdSummary/marker/${marker.primaryID}">${marker.countOfGxdImages}</a>)
 		</c:if>
 		<br/>
 		<c:if test="${not empty marker.gxdResultCountsByStage}">

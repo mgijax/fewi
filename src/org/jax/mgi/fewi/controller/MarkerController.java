@@ -9,6 +9,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerBiotypeConflict;
 import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerIDOtherMarker;
@@ -493,6 +494,47 @@ public class MarkerController {
         }
         if (gbrowseThumbnailUrl != null) {
         	mav.addObject ("gbrowseThumbnailUrl", gbrowseThumbnailUrl);
+        }
+        
+        // add data for biotype conflicts
+        
+        List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
+        if ((conflicts != null) && (conflicts.size() > 0)) {
+        	StringBuffer conflictTable = new StringBuffer();
+        	conflictTable.append ("<table class=bioMismatch>");
+        	conflictTable.append ("<tr class=header><td>Source</td><td>BioType</td><td>Gene ID</td></tr>");
+        	conflictTable.append ("<tr><td>MGI</td><td>" + marker.getMarkerType() + "</td><td>"
+        		+ marker.getPrimaryID() + "</td></tr>");
+            for (MarkerBiotypeConflict conflict : conflicts) {
+            	conflictTable.append ("<tr>");
+            	conflictTable.append ("<td>" + conflict.getLogicalDB() + "</td>");
+            	conflictTable.append ("<td>" + conflict.getBiotype() + "</td>");
+            	conflictTable.append ("<td>" + conflict.getAccID() + "</td>");
+            	conflictTable.append ("</tr>");
+            }
+            conflictTable.append ("</table>");
+            mav.addObject ("biotypeConflictTable", conflictTable.toString());
+        }
+        
+        // add data for strain-specific markers
+        
+        String ssNote = marker.getStrainSpecificNote();
+        if (ssNote != null) {
+        	List<Reference> ssRefs = marker.getStrainSpecificReferences();
+        	boolean isFirst = true;
+        	
+        	if ((ssRefs != null) && (ssRefs.size() > 0)) {
+        		ssNote = ssNote + "(";
+        		for (Reference ref : ssRefs) {
+        			if (!isFirst) { ssNote = ssNote + ", "; }
+        			else { isFirst = false; }
+        			
+        			ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_new>"
+        				+ ref.getJnumID() + "</a>";
+        		}
+        		ssNote = ssNote + ")";
+        	}
+        	mav.addObject ("strainSpecificNote", ssNote);
         }
         
         return mav;
