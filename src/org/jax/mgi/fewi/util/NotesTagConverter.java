@@ -169,6 +169,7 @@ public class NotesTagConverter
 
         // Base URLs used in creating the replacement string patterns
         String fewiURL          = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+        String javawiURL        = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
         String mgihomeURL       = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
         String ipURL            = ContextLoader.getExternalUrls().getProperty("InterPro");
         String ecURL            = ContextLoader.getExternalUrls().getProperty("EC");
@@ -208,8 +209,8 @@ public class NotesTagConverter
 
         // Allele
         tags.put("\\\\Allele\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A style='white-space: normal; 'class=\"%s\" HREF=\"%sallele/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
+            String.format("<A style='white-space: normal; 'class=\"%s\" HREF=\"%sWIFetch?page=alleleDetail&id=%s\" %s>%s</A>",
+            cssAnchorClass, javawiURL, "%s", "%s", "%s"));
 
         // AMA
         tags.put("\\\\AMA\\((.*?[|].*?[|].*?)\\)",
