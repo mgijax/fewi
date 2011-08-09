@@ -125,7 +125,7 @@ ${templateBean.templateBodyStartHtml}
               </td>
               <td class="">
                 <c:forEach var="imagePaneDetails" items="${imagePane.details}" >
-                  <a href="${configBean.FEWI_URL}expression/${imagePaneDetails.assayID}">${imagePaneDetails.assayID}</a>
+                  <a href="${configBean.WI_URL}searches/expression.cgi?${imagePaneDetails.assayKey}">${imagePaneDetails.assayID}</a>
                   <a href="${configBean.FEWI_URL}marker/${imagePaneDetails.markerID}">(${imagePaneDetails.markerSymbol})</a>
                 </c:forEach>
               </td>
