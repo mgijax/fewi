@@ -103,31 +103,29 @@ public class ReferenceSummary {
 		StringBuffer sb = new StringBuffer();
 		
 		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+		String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
 		
         sb.append("<ul class=\"curatedData\">");
         
         int expTotal = reference.getCountOfGXDAssays() + reference.getCountOfGXDResults() + reference.getCountOfGXDStructures();
         if (expTotal > 0){
-        	sb.append(String.format("<li>Expression assays: <a href=\"%sexpression/reference/%s\">%,d</a>,", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDAssays()));
-        	sb.append(String.format(" results: <a href=\"%sexpression/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDResults()));
+        	sb.append(String.format("<li>Expression assays: <a href=\"%ssearches/expression_report.cgi?_Refs_key=%s&returnType=assays&sort=Gene%20symbol\">%,d</a>,", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfGXDAssays()));
+        	sb.append(String.format(" results: <a href=\"%ssearches/expression_report.cgi?_Refs_key=%s&returnType=assay%20results&sort=Gene%20symbol\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfGXDResults()));
         }
         if (reference.getCountOfGXDIndex() > 0){
         	sb.append(String.format("<li>Expression literature records: <a href=\"%sgxdlit/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
         }
         if(reference.getCountOfMarkers() > 0){
-        	sb.append(String.format("<li>Genome features: <a href=\"%smarker/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfMarkers()));
+        	sb.append(String.format("<li>Genome features: <a href=\"%ssearches/marker_report_by_reference.cgi?%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfMarkers()));
         }
         if(reference.getCountOfAlleles() > 0){
-        	sb.append(String.format("<li>Phenotypic alleles: <a href=\"%sallele/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfAlleles()));
-        }
-        if(reference.getCountOfOrthologs() > 0){
-        	sb.append(String.format("<li>Mamallian orthologs: <a href=\"%sorthalog/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfOrthologs()));
+        	sb.append(String.format("<li>Phenotypic alleles: <a href=\"%ssearches/allele_report.cgi?_Refs_key=%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfAlleles()));
         }
         if(reference.getCountOfMappingResults() > 0){
-        	sb.append(String.format("<li>Mapping data: <a href=\"%smapping/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfMappingResults()));
+        	sb.append(String.format("<li>Mapping data: <a href=\"%ssearches/mapdata_report_by_reference.cgi?%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfMappingResults()));
         }
         if(reference.getCountOfProbes() > 0){
-        	sb.append(String.format("<li>Molecular probes and clones: <a href=\"%sprobe/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfProbes()));
+        	sb.append(String.format("<li>Molecular probes and clones: <a href=\"%ssearches/probe_report.cgi?_Refs_key=%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfProbes()));
         }
         if(reference.getCountOfSequenceResults() >0){
         	sb.append(String.format("<li>Sequences: <a href=\"%ssequence/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfSequenceResults()));  
