@@ -45,10 +45,6 @@ public class TextBatchSummary extends AbstractTextView {
 		
 		writer.write(this.genHeader(queryForm));
 		writer.write("\r\n");
-		writer.write(String.format(
-				"%d matching rows, %d matching genes/markers displayed.", model.get("totalCount"),
-				model.get("markerCount")));
-		writer.write("\r\n");
 		
 		for (BatchMarkerId id : results) {
 			markerInfo = new StringBuffer();

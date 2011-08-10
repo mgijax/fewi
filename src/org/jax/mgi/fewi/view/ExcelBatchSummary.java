@@ -55,13 +55,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
 		
 		row = sheet.createRow(rownum);
-		row.createCell(0).setCellValue(String.format(
-				"%d matching rows, %d matching genes/markers displayed.", model.get("totalCount"),
-				model.get("markerCount")));
-		
-		sheet.addMergedRegion(new CellRangeAddress(rownum, rownum, 0, totalCols));
-
-		rownum++;
 
 		for (BatchMarkerId id : results) {
 			associations = new ArrayList<List<List<String>>>();
@@ -69,27 +62,21 @@ public class ExcelBatchSummary extends AbstractExcelView {
 			
 			row = sheet.createRow(rownum++);
 			col = 0;
-			logger.debug("input: " + id.getTerm());
 			row.createCell(col++).setCellValue(id.getTerm());
-			logger.debug("type: " + id.getTermType());
 			row.createCell(col++).setCellValue(id.getTermType());
 			
 			m = id.getMarker();			
 			
-			if (m != null){
-				
+			if (m != null){				
 				ids = m.getIds();
-				
 				row.createCell(col++).setCellValue(m.getPrimaryID());
 
 				if(queryForm.getNomenclature()){
-					logger.debug("nomen");
 					row.createCell(col++).setCellValue(m.getSymbol());
 					row.createCell(col++).setCellValue(m.getName());
 					row.createCell(col++).setCellValue(m.getMarkerSubtype());
 				}
 				if(queryForm.getLocation()){
-					logger.debug("loc");
 					MarkerLocation loc = m.getPreferredCoordinates();
 					if (loc != null) {
 						row.createCell(col++).setCellValue(loc.getChromosome());
@@ -104,7 +91,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 				
 				// build associations matrix
 				if(queryForm.getEnsembl()){
-					logger.debug("ensembl");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> eIds;
 	        		if(ids != null){
@@ -119,7 +105,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 	        		associations.add(wrapper);
 				}
 				if(queryForm.getEntrez()){
-					logger.debug("entrez");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> eIds;
 		    		if(ids != null){
@@ -134,7 +119,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 		    		associations.add(wrapper);
 				}
 				if(queryForm.getVega()){
-					logger.debug("vega");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> vIds;
 		    		if(ids != null){
@@ -150,7 +134,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 				}
 				
 				if(queryForm.getGo()){
-					logger.debug("go");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> goIds;
 	    			for (Annotation goAnnot : m.getGoAnnotations()) {
@@ -162,7 +145,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					}		    		
 		    		associations.add(wrapper);
 				} else if(queryForm.getMp()){
-					logger.debug("mp");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> mpIds;
 	    			for (Annotation mpAnnot : m.getMPAnnotations()) {
@@ -173,7 +155,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					}		    		
 		    		associations.add(wrapper);
 				} else if(queryForm.getOmim()){
-					logger.debug("omim");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> mpIds;
 	    			for (Annotation omimAnnot : m.getOMIMAnnotations()) {
@@ -184,7 +165,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					}		
 		    		associations.add(wrapper);
 				} else if(queryForm.getAllele()){
-					logger.debug("allele");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> alleles;
 	    			for (BatchMarkerAllele bma : m.getBatchMarkerAlleles()) {
@@ -195,7 +175,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					}
 		    		associations.add(wrapper);
 				} else if(queryForm.getExp()){
-					logger.debug("exp");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> expression;
 	    			for (MarkerTissueCount tissue : m.getMarkerTissueCounts()) {
@@ -208,7 +187,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					}
 		    		associations.add(wrapper);
 				} else if(queryForm.getRefsnp()){
-					logger.debug("refsnp");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> refSnpIds;
         			for (BatchMarkerSnp snp : m.getBatchMarkerSnps()) {
@@ -218,7 +196,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
     				}
 		    		associations.add(wrapper);
 				} else if(queryForm.getRefseq()){
-					logger.debug("refseq");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> refSeqIds;
 	        		if(ids != null){
@@ -233,7 +210,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 	        		}
 		    		associations.add(wrapper);
 				} else if(queryForm.getUniprot()){
-					logger.debug("uniprot");
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> uniProtIds;
 	        		if(ids != null){
@@ -249,7 +225,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 		    		associations.add(wrapper);
 				}
 				
-				logger.debug("assoc");
 				for (List<List<String>> assoc: associations) {
 					if (assoc.size() == 0) {
 						List<String> empty = new ArrayList<String>();
@@ -257,7 +232,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 						assoc.add(empty);
 					}
 				}
-				logger.debug("combine");
 				List<List<String>> combineResults = new ArrayList<List<String>>();
 				if (associations.size() > 0) {
 					List<String> l;
@@ -274,7 +248,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 						}				
 					}
 				}
-				logger.debug("combineResults: " + combineResults.size());
 				
 				int curRow = rownum - 1;
 				if (combineResults.size() > 0){
@@ -282,24 +255,18 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					int storeCol = col;
 					
 					for (List<String> ls: combineResults) {
-						logger.debug("combineCols: " + ls.size());
 						if (newRow) {
 							addlRow = sheet.createRow(rownum++);
 							for (int i = 0; i < col; i++) {
-								logger.debug("copy cell: " + i);
 								if (row.getCell(i) != null){
-									logger.debug("non-null");
 									if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
 										addlRow.createCell(i).setCellValue(row.getCell(i).getNumericCellValue());
 									} else if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_STRING){
 										addlRow.createCell(i).setCellValue(row.getCell(i).getStringCellValue());
 									}
 								} else {
-									logger.debug("null");
 									addlRow.createCell(i);
 								}
-							logger.debug("post copy");
-								
 							}
 							row = addlRow;
 						}
@@ -383,12 +350,10 @@ public class ExcelBatchSummary extends AbstractExcelView {
 			for (List<String> list: add) {
 				newList = new ArrayList<String>();
 				newList.addAll(a);
-				logger.debug("pre: " + newList.size());
 				for (String s: list) {
 					logger.debug(s);
 					newList.add(s);
 				}
-				logger.debug("post: " + newList.size());
 				newResults.add(newList);
 			}
 		}

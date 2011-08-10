@@ -39,9 +39,9 @@ ${templateBean.templateBodyStartHtml}
 		<div id="contentcolumn">
 			<div class="innertube">
 				<div id="filterSummary" class="filters">
-					&nbsp;<span id="defaultText"  style="display:none;">No filters selected. Filter these references below.</span>
+					&nbsp;<span id="defaultText"  style="display:none;">No filters selected. Filter results below.</span>
 					<span id="filterList"></span><br/>					
-					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> reference(s) match after applying filter(s)</span>
+					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> result(s) match after applying filter(s)</span>
 				</div>
 			</div>
 		</div>
@@ -64,7 +64,6 @@ ${templateBean.templateBodyStartHtml}
 		</c:if>
 		<span class="label">Output options:</span> 
 			${batchQueryForm.outputOptions}<br/>
-		<span id="totalCount"></span> matching rows<br/> 
 		<span id="markerCount"></span> matching genes/markers found.
 		</div>
 	</div>
