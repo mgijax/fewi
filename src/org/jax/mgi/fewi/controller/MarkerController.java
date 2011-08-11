@@ -503,13 +503,13 @@ public class MarkerController {
         	StringBuffer conflictTable = new StringBuffer();
         	conflictTable.append ("<table class=bioMismatch>");
         	conflictTable.append ("<tr class=header><td>Source</td><td>BioType</td><td>Gene ID</td></tr>");
-        	conflictTable.append ("<tr><td>MGI</td><td>" + marker.getMarkerType() + "</td><td>"
-        		+ marker.getPrimaryID() + "</td></tr>");
+        	conflictTable.append ("<tr><td>MGI</td><td>" + marker.getMarkerSubtype() + "</td><td>"
+        		+ "<a href=" + fewiUrl + "marker/" + marker.getPrimaryID() + ">" + marker.getPrimaryID() + "</a></td></tr>");
             for (MarkerBiotypeConflict conflict : conflicts) {
             	conflictTable.append ("<tr>");
             	conflictTable.append ("<td>" + conflict.getLogicalDB() + "</td>");
             	conflictTable.append ("<td>" + conflict.getBiotype() + "</td>");
-            	conflictTable.append ("<td>" + conflict.getAccID() + "</td>");
+            	conflictTable.append ("<td>" + idLinker.getLink(conflict.getLogicalDB(), conflict.getAccID()).replaceAll("'", "") + "</td>");
             	conflictTable.append ("</tr>");
             }
             conflictTable.append ("</table>");
