@@ -420,7 +420,7 @@ public class SolrHunter implements Hunter {
         if (facetString != null) {
             query.addFacetField(facetString);
             query.setFacetMinCount(1);
-            query.setFacetSort("lex");
+            query.setFacetSort("index");
             query.setFacetLimit(factetNumberDefault);
         }
     }
@@ -473,7 +473,6 @@ public class SolrHunter implements Hunter {
                 query.addSortField(sort.getSort(), currentSort);
             }
         }
-        
     }
     
     /**
