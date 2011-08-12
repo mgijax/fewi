@@ -12,6 +12,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -141,6 +142,9 @@ public class AutoCompleteController {
 		params.setPageSize(1000);
 		List<Sort> sorts = new ArrayList<Sort>();
 		Sort s = new Sort(IndexConstants.REF_AUTHOR_SORT, false);
+		if (param.equals(SearchConstants.REF_JOURNAL)) {
+			s = new Sort(SortConstants.REF_JOURNAL_AC, false);
+		}
 		sorts.add(s);
 		params.setSorts(sorts);
 		
