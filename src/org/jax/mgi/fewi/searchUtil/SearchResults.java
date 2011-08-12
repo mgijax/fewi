@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Search Results
@@ -154,6 +156,7 @@ public class SearchResults<T> {
 	 * Get facets
 	 */
 	public List<String> getResultFacets() {
+	Collections.sort (resultFacets, new FacetSorter());
         return resultFacets;
     }
 
@@ -163,9 +166,20 @@ public class SearchResults<T> {
     public void setResultFacets(List<String> resultFacets) {
         this.resultFacets = resultFacets;
     }
+}
 
+class FacetSorter implements Comparator {
+    public FacetSorter() {}
 
+    public int compare (Object a, Object b) {
+	String a1 = a.toString().toLowerCase();
+	String b1 = b.toString().toLowerCase();
 
+	return a1.compareTo(b1);
+    }
 
-
+    public boolean equals (Object c) {
+	if (this == c) { return true; }
+	return false;
+    }
 }
