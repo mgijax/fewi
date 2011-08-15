@@ -97,7 +97,7 @@ ${templateBean.templateBodyStartHtml}
 	<TR CLASS="stripe1">
 		<TD CLASS="cat1">Journal</TD>
 		<TD>
-			<div>
+			<div style="float:left;width:300px;text-align:left;">
 				<div>
 					<div id="journalAutoComplete">
 						<form:input id="journal" path="journal"></form:input>
@@ -105,6 +105,16 @@ ${templateBean.templateBodyStartHtml}
 					</div>
 				</div>
     		</div>
+   			<div style="height:2em;" class="example">
+				<div style="float:left;text-align:left;vertical-align:middle;width:7em;" class="example">
+					Examples:<br/>
+					(See <a href="ftp://ftp.ncbi.nih.gov/pubmed/J_Medline.txt">NLM</a>.)
+				</div>
+				<div style="text-align:left;" class="example">
+					Proc Natl Acad Sci USA<br/>
+					J Cell Mol Med 
+				</div>
+			</div>
 		</TD>
 	</TR>
 	<tr  CLASS="stripe2">
