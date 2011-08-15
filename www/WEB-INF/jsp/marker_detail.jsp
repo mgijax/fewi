@@ -45,7 +45,7 @@ td.padded { padding:4px; }
 <div id="titleBarWrapper" userdoc="marker_detail.shtml">	
 	<div class="yourInputButton">
 		<form name="YourInputForm">
-			<input class="searchToolButton" value="Your Input Welcome" name="yourInputButton" onclick='alert("Not implemented")' onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
+			<input class="searchToolButton" value="Your Input Welcome" name="yourInputButton" onclick='window.open("${configBean.MGIHOME_URL}feedback/feedback_form.cgi?accID=${marker.primaryID}&amp;dataDate=<fmt:formatDate type='date' value='${databaseDate}' dateStyle='short'/>")' onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
 		</form>
 	</div>
     <div name="centeredTitle">
@@ -138,6 +138,10 @@ td.padded { padding:4px; }
         Genetic&nbsp;Map
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
+        <c:if test="${not empty miniMap}">
+        	<div style="float:right;text-align:left;"><a href="${linkmapUrl}"><img src="${miniMap}" border="0"></a></div>
+        </c:if>
+        <div>
         <c:if test="${not empty marker.preferredCentimorgans}">
           <c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
             Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
@@ -149,7 +153,7 @@ td.padded { padding:4px; }
               <br/>
               <c:set var="hasGeneticLocation" value="1"/>
               <c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
-              <a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
+              <a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a><br/>
             </c:if>
             <c:if test="${marker.preferredCentimorgans.cmOffset == -1.0}">
 			  <c:if test="${marker.markerType == 'QTL'}">
@@ -171,10 +175,10 @@ td.padded { padding:4px; }
           </c:if>
           cytoband ${marker.preferredCytoband.cytogeneticOffset}<br/>
         </c:if>
-        <p/>
         <c:if test="${marker.countOfMappingExperiments > 0}">
-          Mapping data(<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a>)
+          <br/></>Mapping data(<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a>)
         </c:if>
+        </div>
       </td>
     </tr>
   </c:if>
