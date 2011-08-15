@@ -1,5 +1,15 @@
 package org.jax.mgi.fewi.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,6 +18,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerBiotypeConflict;
 import mgi.frontend.datamodel.MarkerCountSetItem;
@@ -19,6 +30,7 @@ import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.SequenceSource;
 
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
@@ -67,6 +79,9 @@ public class MarkerController {
 
     @Autowired
     private MarkerFinder MarkerFinder;
+    
+    @Autowired
+    private DbInfoFinder dbInfoFinder;
 
     @Autowired
     private ReferenceFinder referenceFinder;
@@ -151,6 +166,8 @@ public class MarkerController {
         //pull out the marker, and add to mav
         Marker marker = markerList.get(0);
         mav.addObject("marker", marker);
+        
+        this.dbDate(mav);
 
         // We need to pull out the GO terms we want to use as teasers for
         // each ontology.  (This is easier in Java than JSTL, so we do
@@ -537,6 +554,14 @@ public class MarkerController {
         	mav.addObject ("strainSpecificNote", ssNote);
         }
         
+        // add minimap link
+        if (!location.getChromosome().equalsIgnoreCase("UN") && 
+        		(marker.getPreferredCentimorgans().getCmOffset() != null && 
+        			marker.getPreferredCentimorgans().getCmOffset() >= 0)){
+        	mav.addObject ("miniMap", this.getMinimapUrl(marker.getMarkerKey()));
+        } else {
+        	logger.debug("no minimap");
+        }       
         return mav;
     }
 
@@ -573,6 +598,8 @@ public class MarkerController {
         if (!references.isEmpty()) {
             mav.addObject("references", references);
         }
+        
+        this.dbDate(mav);
 
         return mav;
     }
@@ -680,6 +707,47 @@ public class MarkerController {
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
+    
+    private void dbDate(ModelAndView mav) {
+        List<DatabaseInfo> dbInfo = dbInfoFinder.getInfo(new SearchParams()).getResultObjects();
+        for (DatabaseInfo db: dbInfo) {
+        	if (db.getName().equalsIgnoreCase("built from mgd database date")){
+        		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        		try {
+					mav.addObject("databaseDate", df.parse(db.getValue()));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        }
+    }
+    
+    private String getMinimapUrl(int markerKey){
+		String urlString = "";
+		try {
+			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + 
+					"searches/markerMiniMap.cgi?" + markerKey);
+			URLConnection urlConnection = url.openConnection();
+			HttpURLConnection connection = null;
+			
+			if (urlConnection instanceof HttpURLConnection) {
+				connection = (HttpURLConnection) urlConnection;
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream())); 
+				String current;
+				while ((current = in.readLine()) != null) {
+					urlString += current;
+				}
+			} else {
+				logger.debug("miniMap URL not an HTTP URL.");
+			}
+		} catch (MalformedURLException mue) {
+			logger.error(mue.getMessage());
+		} catch (IOException ioe) {
+			logger.error(ioe.getMessage());
+		}
+		return urlString;
+    }
 
     // generate the sorts
     private List<Sort> genSorts(HttpServletRequest request) {
