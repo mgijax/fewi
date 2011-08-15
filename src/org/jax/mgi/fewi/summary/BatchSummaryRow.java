@@ -299,7 +299,7 @@ public class BatchSummaryRow {
     	List<String> alleleOutput = new ArrayList<String>();
     	Marker marker = batchMarkerId.getMarker();
 
-    	if (marker != null){
+    	if (query.getAllele() && marker != null){
     		if (markerAlleles == null){
     			markerAlleles = marker.getBatchMarkerAlleles();
     		}
@@ -314,7 +314,7 @@ public class BatchSummaryRow {
     	List<String> alleleOutput = new ArrayList<String>();
     	Marker marker = batchMarkerId.getMarker();
 
-    	if (marker != null){
+    	if ( query.getAllele() && marker != null){
     		if (markerAlleles == null){
     			markerAlleles = marker.getBatchMarkerAlleles();
     		}
@@ -410,7 +410,7 @@ public class BatchSummaryRow {
     public String getRefsnpIds(){
     	List<String> refSnpIds = new ArrayList<String>();
     	String url = javawiUrl + "WIFetch?page=snpDetail&id=%s";
-    	if (batchMarkerId.getMarker() != null){
+    	if (query.getRefsnp() && batchMarkerId.getMarker() != null){
 			for (BatchMarkerSnp snp : batchMarkerId.getMarker().getBatchMarkerSnps()) {
 				url = String.format(url, snp.getSnpID());
 				String.format(urlPattern, url, snp.getSnpID());

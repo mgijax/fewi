@@ -116,8 +116,21 @@ public class HibernateBatchSummaryHunter<T> {
     	
         Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());
         
-		if(idSet != null && idSet.size() > 0) { 
-			query.setParameterList("ids", idSetLower);
+        List<T> qr = new ArrayList<T>();
+        
+		if(idSetLower != null) { 
+			int start = 0, end = 0, batchSize = 2000;
+			
+			while (start < idSetLower.size()){
+				end = start + batchSize;
+				if (end > idSetLower.size()){
+					end = idSetLower.size();
+				}
+				logger.debug(String.format("batch %d-%d", start, end));
+				query.setParameterList("ids", idSetLower.subList(start, end));
+				qr.addAll(query.list());
+				start = ++end;
+			}
 		}
        
         logger.debug("-> filter parsed" );   
@@ -128,15 +141,13 @@ public class HibernateBatchSummaryHunter<T> {
         Map<String, List<BatchMarkerId>> qResults = 
         	new LinkedHashMap<String, List<BatchMarkerId>>();
         List <BatchMarkerId> bResults;
-        
-        List<T> qr = query.list();
+
         Set<Integer> markerKey = new HashSet<Integer>();
         logger.debug("-> query complete" );
         String bTerm;
         for (T item: qr){
         	markerKey.add(((BatchMarkerId)item).getMarker().getMarkerKey());
         	bTerm = ((BatchMarkerId)item).getTerm().toLowerCase();
-        	logger.debug("bTerm: " + bTerm);
         	if (qResults.containsKey(bTerm)) {
         		bResults = qResults.get(bTerm);
         	} else {

@@ -171,8 +171,8 @@ var History = YAHOO.util.History;
     
     myDataSource.maxCacheEntries = 3;
     myDataSource.connXhrMode = "cancelStaleRequests";
-    myDataSource.connMethodPost = true;
-    myDataSource.connTimeout = 60000;
+    //myDataSource.connMethodPost = true;
+    myDataSource.connTimeout = 0;
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
@@ -215,14 +215,13 @@ var History = YAHOO.util.History;
     myPaginator.unsubscribe("changeRequest", myDataTable.onPaginatorChangeRequest);
     // ...then we hook up our custom function
     myPaginator.subscribe("changeRequest", handlePagination, myDataTable, true);
-
+    
     // Update payload data on the fly for tight integration with latest values from server     
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
         var meta = oResponse.meta;
 
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
-
         updateCount('totalCount', oPayload.totalRecords);
         updateCount('markerCount', meta.metaObj.counts.marker);
         
@@ -230,24 +229,20 @@ var History = YAHOO.util.History;
         if (!YAHOO.lang.isNull(filterCount)){
         	setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
         }
-        
         oPayload.pagination = {
             rowsPerPage: Number(pRequest['results'][0]) || 25,
             recordOffset: Number(pRequest['startIndex'][0]) || 0
         };
-
         var reportButton = YAHOO.util.Dom.get('textDownload');
         if (!YAHOO.lang.isNull(reportButton)){      	
 	        facetQuery = generateRequest(0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'batch/report.txt?' + querystring + '&' + facetQuery);
         }
-        
         reportButton = YAHOO.util.Dom.get('excelDownload');
         if (!YAHOO.lang.isNull(reportButton)){      	
 	        facetQuery = generateRequest(0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'batch/report.xls?' + querystring + '&' + facetQuery);
         }
-
         return true;
     };
     
