@@ -107,10 +107,10 @@ public class ReferenceSummary {
 		
         sb.append("<ul class=\"curatedData\">");
         
-        int expTotal = reference.getCountOfGXDAssays() + reference.getCountOfGXDResults() + reference.getCountOfGXDStructures();
+        int expTotal = reference.getCountOfGXDAssays() + reference.getCountOfGXDResults();
         if (expTotal > 0){
-        	sb.append(String.format("<li>Expression assays: <a href=\"%ssearches/expression_report.cgi?_Refs_key=%s&returnType=assays&sort=Gene%20symbol\">%,d</a>,", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfGXDAssays()));
-        	sb.append(String.format(" results: <a href=\"%ssearches/expression_report.cgi?_Refs_key=%s&returnType=assay%20results&sort=Gene%20symbol\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfGXDResults()));
+        	sb.append(String.format("<li>Expression assays: <a href=\"%ssearches/expression_report.cgi?_Refs_key=%s&returnType=assays&sort=Gene symbol\">%,d</a>,", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfGXDAssays()));
+        	sb.append(String.format(" results: <a href=\"%ssearches/expression_report.cgi?_Refs_key=%s&returnType=assay results&sort=Gene symbol\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfGXDResults()));
         }
         if (reference.getCountOfGXDIndex() > 0){
         	sb.append(String.format("<li>Expression literature records: <a href=\"%sgxdlit/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
