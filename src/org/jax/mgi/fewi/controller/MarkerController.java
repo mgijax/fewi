@@ -555,13 +555,21 @@ public class MarkerController {
         }
         
         // add minimap link
-        if (!location.getChromosome().equalsIgnoreCase("UN") && 
-        		(marker.getPreferredCentimorgans().getCmOffset() != null && 
-        			marker.getPreferredCentimorgans().getCmOffset() >= 0)){
-        	mav.addObject ("miniMap", this.getMinimapUrl(marker.getMarkerKey()));
-        } else {
-        	logger.debug("no minimap");
-        }       
+	MarkerLocation cmPos = marker.getPreferredCentimorgans();
+        if ((cmPos != null) && (!cmPos.getChromosome().equalsIgnoreCase("UN"))) {
+	    if (cmPos != null) {
+		Float cM = cmPos.getCmOffset();
+		if ((cM != null) && (cM.floatValue() >= 0.0)) {
+        	    mav.addObject ("miniMap", this.getMinimapUrl(marker.getMarkerKey()));
+		} else {
+		    logger.debug ("cM offset is null or < 0");
+		}
+	    } else {
+		logger.debug ("no cM location");
+	    }
+	} else {
+	    logger.debug ("Unknown chromosome");
+	}
         return mav;
     }
 
@@ -735,8 +743,10 @@ public class MarkerController {
 				connection = (HttpURLConnection) urlConnection;
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream())); 
 				String current;
-				while ((current = in.readLine()) != null) {
+				current = in.readLine();
+				while (current != null) {
 					urlString += current;
+					current = in.readLine();
 				}
 			} else {
 				logger.debug("miniMap URL not an HTTP URL.");
