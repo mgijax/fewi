@@ -33,7 +33,6 @@ var populateFilterSummary = function () {
 	    	var inner = facets[k];
 	    	var brTag = false;
         	list = facets[key];
-
 			for(v=0; v < inner.length; v++) {
 				YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 	    		vis = true;
@@ -42,7 +41,7 @@ var populateFilterSummary = function () {
 	            el.setAttribute('class', 'filterItem');
 	            el.setAttribute('id', k + ':' + inner[v]);
 	            var val = k.charAt(0).toUpperCase() + k.slice(1);
-	            val = val.replace('Filter', '') + ': ' + inner[v];
+	            val = val.replace('Filter', '') + ': ' + inner[v].replace('*', ',');
 	            setText(el, val);
 
 	            filterList.appendChild(el);
@@ -293,7 +292,7 @@ var clearFilter = function () {
         for (key in facets){
         	list = facets[key];
         	for(i=0; i < list.length; i++){
-        		facetParams = facetParams + '&' + key + '=' + list[i];
+        		facetParams = facetParams + '&' + key + '=' + list[i].replace('*', ',');
         	}
         }
         return stateParams + facetParams;
