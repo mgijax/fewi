@@ -80,7 +80,7 @@ ${templateBean.templateBodyStartHtml}
       Caption
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      ${image.caption}
+      <%=FormatHelper.superscript(image.getCaption())%>
     </td>
   </tr>
 
