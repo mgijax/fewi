@@ -34,7 +34,7 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="gxd_tissue_result_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Tissue Summary</span>
+  <span class="titleBarMainTitle">Gene Expression Tissue Summary</span>
 </div>
 
 
