@@ -170,6 +170,7 @@ public class NotesTagConverter
         // Base URLs used in creating the replacement string patterns
         String fewiURL          = ContextLoader.getConfigBean().getProperty("FEWI_URL");
         String javawiURL        = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
+        String pywiURL          = ContextLoader.getConfigBean().getProperty("WI_URL");
         String mgihomeURL       = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
         String ipURL            = ContextLoader.getExternalUrls().getProperty("InterPro");
         String ecURL            = ContextLoader.getExternalUrls().getProperty("EC");
@@ -219,8 +220,8 @@ public class NotesTagConverter
 
         // GO
         tags.put("\\\\GO\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%sgo/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
+            String.format ("<A class=\"%s\" HREF=\"%ssearches/GO.cgi?id=%s\" %s>%s</A>",
+            cssAnchorClass, pywiURL, "%s", "%s", "%s"));
 
         // Reference
         tags.put("\\\\Ref\\((.*?[|].*?[|].*?)\\)",
