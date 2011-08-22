@@ -55,6 +55,10 @@ public class ReferenceSummary {
 					p, pId));			
 		}
 		sb.append(reference.getJnumID());
+		if (this.reference.getFullTextLink() != null) {
+			sb.append(String.format("<br/><a href=\"%s\" target=\"new\" class=\"extUrl\">Full Text</a>", 
+					this.reference.getFullTextLink()));
+		}
 		return sb.toString();
 	}
 
