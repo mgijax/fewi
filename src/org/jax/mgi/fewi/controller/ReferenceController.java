@@ -163,6 +163,26 @@ public class ReferenceController {
         Map<String, Set<String>> highlighting = searchResults.getResultSetMeta().getSetHighlights();
 		
         Set<String> textHl = new HashSet<String>(), authorHL = new HashSet<String>();
+        
+        if (query.getAuthor() != null && !"".equals(query.getAuthor())){	
+			for (String auth: highlighting.get(SearchConstants.REF_AUTHOR)) {
+				authorHL.add(auth.replace(" ", "[\\s\\-']"));
+			}
+        }
+		if (query.isInAbstract()){
+			if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
+				textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+			} else if (highlighting.containsKey(SearchConstants.REF_TEXT_ABSTRACT)){
+				textHl= highlighting.get(SearchConstants.REF_TEXT_ABSTRACT);
+			}
+		}
+		if (query.isInTitle()){
+			if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
+				textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+			} else if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE)){
+				textHl= highlighting.get(SearchConstants.REF_TEXT_TITLE);
+			}
+		}
 		
 		logger.debug("wrap results");
         List<ReferenceSummary> summaryRows = new ArrayList<ReferenceSummary>();
@@ -179,25 +199,12 @@ public class ReferenceController {
 					row.setScore("0");
 				}
 				if (query.isInAbstract()){
-					if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
-						textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
-					} else if (highlighting.containsKey(SearchConstants.REF_TEXT_ABSTRACT)){
-						textHl= highlighting.get(SearchConstants.REF_TEXT_ABSTRACT);
-					}
 					row.setAbstractHL(new Highlighter(textHl));
 				}
 				if (query.isInTitle()){
-					if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
-						textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
-					} else if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE)){
-						textHl= highlighting.get(SearchConstants.REF_TEXT_TITLE);
-					}
 					row.setTitleHL(new Highlighter(textHl));
 				}
 				if (query.getAuthor() != null && !"".equals(query.getAuthor())){					
-					for (String auth: highlighting.get(SearchConstants.REF_AUTHOR)) {
-						authorHL.add(auth.replace(" ", "[\\s\\-']"));
-					}
 					row.setAuthorHL(new Highlighter(authorHL));
 				}
 				summaryRows.add(row);
