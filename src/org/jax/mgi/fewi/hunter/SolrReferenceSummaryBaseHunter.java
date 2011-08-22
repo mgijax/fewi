@@ -154,10 +154,7 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         highlightFields.add(IndexConstants.REF_TITLE_UNSTEMMED);
         highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
         highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
-        highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
-        highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
         highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
-        highlightFields.add(IndexConstants.REF_AUTHOR_FACET);
         
         /* A reverse Mapping of Highlightable fields in the index to what 
          * parameter it came from.  This supports the N->1 Mapping 

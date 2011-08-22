@@ -409,7 +409,7 @@ public class SolrHunter implements Hunter {
             }
             query.setHighlight(Boolean.TRUE);
             query.setHighlightFragsize(30000);
-            query.setHighlightRequireFieldMatch(Boolean.TRUE);
+            query.setHighlightSnippets(100);
             query.setParam("hl.simple.pre", highlightToken);
             query.setParam("hl.simple.post", highlightToken);
 
@@ -613,14 +613,9 @@ public class SolrHunter implements Hunter {
 	            Map<String, List<String>> highlightsMap = 
 	            	highlights.get(doc.getFieldValue(keyString));
 	            
-	            for (Iterator iter2 = highlightKeys.iterator();
-	            	iter2.hasNext();) {
-	            	
-	                String key = (String) iter2.next();
-	
+	            for (String key: highlightKeys) {
 	                List <String> solrHighlights = highlightsMap.get(key);
 	                for (String highlightWord: solrHighlights) {
-	                    
 	                    Boolean inAHL = Boolean.FALSE;
 	                    /**
 	                     * Our solr highlights are surrounded by an 
