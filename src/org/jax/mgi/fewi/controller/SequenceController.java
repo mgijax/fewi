@@ -229,7 +229,10 @@ public class SequenceController {
      * Sequence Summary by Marker
      */
     @RequestMapping(value="/marker/{mrkID}")
-    public ModelAndView seqSummeryByMarker(@PathVariable("mrkID") String mrkID) {
+    public ModelAndView seqSummeryByMarker(
+		HttpServletRequest request,
+        @PathVariable("mrkID") String mrkID)
+    {
 
         logger.debug("->seqSummeryByMarker started");
 
@@ -240,7 +243,7 @@ public class SequenceController {
         Filter mrkIdFilter = new Filter(SearchConstants.MRK_ID, mrkID);
         searchParams.setFilter(mrkIdFilter);
 
-        // find the requested reference
+        // find the requested marker
         SearchResults searchResults
           = markerFinder.getMarkerByID(searchParams);
         List<Marker> mrkList = searchResults.getResultObjects();
@@ -259,11 +262,18 @@ public class SequenceController {
             return mav;
         }
 
-        // pull out the reference, and place into the mav
+        // pull out the marker, and place into the mav
         Marker marker = mrkList.get(0);
-
-        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey());
         mav.addObject("marker", marker);
+
+        // build JSON querystring
+        String queryString = new String("mrkKey=" + marker.getMarkerKey());
+        String provider = request.getParameter("provider");
+        if ((provider != null) && (!"".equals(provider))) {
+          queryString = queryString + "&provider=" + provider;
+		}
+
+        mav.addObject("queryString", queryString);
 
         return mav;
     }
@@ -285,15 +295,28 @@ public class SequenceController {
         params.setPaginator(page);
 
         // parameter parsing
+        List<Filter> filterList = new ArrayList<Filter>();
         String refKey = request.getParameter("refKey");
         String mrkKey = request.getParameter("mrkKey");
+        String provider = request.getParameter("provider");
 
         if (refKey != null) {
-            params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
+            filterList.add(new Filter(SearchConstants.REF_KEY, refKey));
 	    }
         if (mrkKey != null) {
-            params.setFilter(new Filter(SearchConstants.MRK_KEY, mrkKey));
+            filterList.add(new Filter(SearchConstants.MRK_KEY, mrkKey));
 	    }
+        if (provider != null) {
+            filterList.add(new Filter(SearchConstants.SEQ_PROVIDER, provider));
+	    }
+
+        Filter containerFilter = new Filter();
+        if (filterList.size() > 0){
+            containerFilter.setFilterJoinClause(Filter.FC_AND);
+            containerFilter.setNestedFilters(filterList);
+		}
+        params.setFilter(containerFilter);
+
 
         // perform query, and pull out the sequences requested
         SearchResults searchResults
