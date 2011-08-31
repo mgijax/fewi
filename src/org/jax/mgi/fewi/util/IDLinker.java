@@ -22,33 +22,35 @@ import org.slf4j.LoggerFactory;
  * databases.
  */
 public class IDLinker {
-	
-	//--- Class Variables ---
-	
-	// maps from a given externalUrls.properties file to a cached, 
+
+	/*--- Class Variables ---*/
+
+	// maps from a given externalUrls.properties file to a cached,
 	// pre-generated IDLinker
 	private static HashMap<String,IDLinker> instances = new HashMap();
-	
-	//--- Instance Variables ---
-	
+
+
+	/*--- Instance Variables ---*/
+
 	// maps from a given logical database to a List of ActualDB objects
 	private HashMap<String,List<ActualDB>> ldbToAdb = new HashMap<String,List<ActualDB>> ();
-	
+
 	private Configuration config = null;
-		
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-	
-	//--- Constructors ---
-		
+
+	/*--- Constructors ---*/
+
 	/** construct our IDLinker using data from externalUrls.properties file
 	 */
 	private IDLinker () {
 
 		try {
 			config = new PropertiesConfiguration("../properties/externalUrls.properties");
+			config.addProperty("FEWI_URL", "http://faramir.jax.org/");
 		} catch (Exception e) {};
-		
+
 		// used to iterate through properties in externalUrls:
 		String name;	// property name
 		String value;	// property value
@@ -56,10 +58,10 @@ public class IDLinker {
 		ActualDB adb;	// the ActualDB object for given 'name'
 
 		List<ActualDB> adbs;	// list of ActualDBs for this logical db
-		
+
 		// used to cache our ActualDB objects by actual db name
 		HashMap<String,ActualDB> allAdbs = new HashMap<String,ActualDB>();
-		
+
 		// For each logical database, collect and populate a List of ActualDB
 		// objects:
 		for (Iterator iter =  config.getKeys(); iter.hasNext();) {
@@ -74,7 +76,7 @@ public class IDLinker {
 				adb = new ActualDB(prefix);
 				allAdbs.put(prefix, adb);
 			}
-			
+
 			if (name.endsWith(".ldb")) {
 				if (this.ldbToAdb.containsKey(value)) {
 					adbs = this.ldbToAdb.get(value);
@@ -89,18 +91,18 @@ public class IDLinker {
 				adb.setOrderVal(value);
 			} else {
 				adb.setUrl(value);
-			}			
+			}
 		}
-		
+
 		// Now go through and duplicate each logical database's entry with a
-		// lowercase version of itself to make this more resilient to db 
+		// lowercase version of itself to make this more resilient to db
 		// changes:
-		
+
 		String ldbLower;
 		String ldb;
-		HashMap<String,List<ActualDB>> lowerMap = 
+		HashMap<String,List<ActualDB>> lowerMap =
 			new HashMap<String,List<ActualDB>> ();
-		
+
 		Iterator<String> it = this.ldbToAdb.keySet().iterator();
 		while (it.hasNext()) {
 			ldb = it.next();
@@ -110,7 +112,7 @@ public class IDLinker {
 		}
 		this.ldbToAdb.putAll(lowerMap);
 	}
-	
+
 	//--- Private Instance Methods ---
 
 	/** get the List of ActualDBs for the given logical database
@@ -123,7 +125,7 @@ public class IDLinker {
 		}
 		return null;
 	}
-	
+
 	/** get the first ActualDB for the given logical database
 	 */
 	private ActualDB getActualDB (String ldb) {
@@ -145,9 +147,9 @@ public class IDLinker {
 		sb.append("</a>");
 		return sb.toString();
 	}
-	
+
 	//--- Public Instance Methods ---
-	
+
 	/** get basic link using ID as link text, using first actual db for
 	 * the relevant logical db
 	 */
@@ -155,22 +157,22 @@ public class IDLinker {
 		String accID = id.getAccID();
 		return this.getLink(id.getLogicalDB(), accID, accID);
 	}
-	
-	/** get basic link using given label as link text, using first actual db 
+
+	/** get basic link using given label as link text, using first actual db
 	 * for the relevant logical db
 	 */
 	public String getLink (AccessionID id, String label) {
 		return this.getLink(id.getLogicalDB(), id.getAccID(), label);
 	}
-	
-	/** get basic link using given ID as link text, using first actual db 
+
+	/** get basic link using given ID as link text, using first actual db
 	 * for the specified logical db
 	 */
 	public String getLink (String logicalDB, String id) {
 		return this.getLink(logicalDB, id, id);
 	}
-	
-	/** get basic link using given label as link text, using first actual db 
+
+	/** get basic link using given label as link text, using first actual db
 	 * for the specified logical db
 	 */
 	public String getLink (String logicalDB, String id, String label) {
@@ -187,14 +189,14 @@ public class IDLinker {
 	public String getLinks (AccessionID id) {
 		return this.getLinks (id.getLogicalDB(), id.getAccID(), " | ");
 	}
-	
+
 	/** get a string with links for each available actual database for the
 	 * given id, separated by the given separator
 	 */
 	public String getLinks (AccessionID id, String separator) {
 		return this.getLinks (id.getLogicalDB(), id.getAccID(), " | ");
 	}
-	
+
 	/** get a string with links for each available actual database for the
 	 * given logical database, separated by a pipe symbol
 	 */
@@ -214,7 +216,7 @@ public class IDLinker {
 		StringBuffer sb = new StringBuffer();
 		ActualDB adb;
 		String href;
-		
+
 		while (it.hasNext()) {
 			adb = it.next();
 			href = this.makeLink (adb.getUrl(), id, adb.getDisplayName());
@@ -227,7 +229,7 @@ public class IDLinker {
 	}
 
 	//--- Public Class Methods ---
-	
+
 	/** get an IDLinker for the given externalUrls.properties file; these
 	 * instances are shared to avoid having to slice and dice the properties
 	 * each time we want to instantiate one
@@ -249,40 +251,40 @@ public class IDLinker {
 		private int orderVal = 9999;
 		private String name;
 		private String displayName;
-		
+
 		private ActualDB() {}
-		
+
 		public ActualDB(String name) {
 			this.name = name;
 		}
-		
+
 		public String getDisplayName() {
 			if (this.displayName == null) {
 				return this.name;
 			}
 			return this.displayName;
 		}
-		
+
 		public String getName() {
 			return this.name;
 		}
-		
+
 		public String getUrl () {
 			return this.url;
 		}
-		
+
 		public void setDisplayName (String displayName) {
 			this.displayName = displayName;
 		}
-		
+
 		public void setUrl (String url) {
 			this.url = url;
 		}
-		
+
 		public void setOrderVal (int orderVal) {
 			this.orderVal = orderVal;
 		}
-		
+
 		public void setOrderVal (String orderVal) {
 			try {
 				this.orderVal = Integer.parseInt(orderVal);
@@ -290,7 +292,7 @@ public class IDLinker {
 				this.orderVal = 999;
 			}
 		}
-		
+
 		public int compareTo(Object b) {
 			if (!b.getClass().getName().endsWith("ActualDB")) {
 				return 0;
