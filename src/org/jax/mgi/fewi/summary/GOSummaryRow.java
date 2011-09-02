@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.List;
+import java.util.*;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
@@ -24,22 +24,22 @@ public class GOSummaryRow {
 
     private Logger logger = LoggerFactory.getLogger(GOSummaryRow.class);
 
-	// encapsulated row object
-	private Annotation annot;
-	
-	private Marker marker;
-	
-	private IDLinker  linker = ContextLoader.getIDLinker();
-
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+	// encapsulated row objects
+	private Annotation annot;
+	private Marker marker;
+
+	// object used to generate the AccID anchors
+	private IDLinker  linker = ContextLoader.getIDLinker();
 
 
 	//-------------
 	// constructors
 	//-------------
 
-	// hide the default constructor - we NEED a foo to wrap
+	// hide the default constructor - we NEED a both an annotation and marker
     private GOSummaryRow () {}
 
     public GOSummaryRow (Annotation annot, Marker marker) {
@@ -53,74 +53,77 @@ public class GOSummaryRow {
     // public instance methods;  JSON serializer will call all public methods
     //------------------------------------------------------------------------
 
+    // CATAGORY
     public String getCategory() {
     	return annot.getDagName();
     }
+
+    // CLASSIFICATION
     public String getTerm() {
-    	String termText = "<a href='"+ fewiUrl +"go/" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
+
+    	String termText = "<a href='"+ fewiUrl +"go/" + annot.getTermID()
+    	    + "'> " + annot.getTerm() + "</a>";
+
     	if (annot.getQualifier() != null && annot.getQualifier().equals("NOT")) {
     		return "<b>NOT</b> " + termText;
     	}
         return termText;
     }
+
+    // EVIDENCE
     public String getEvidence() {
     	return annot.getEvidenceCode();
     }
+
+    // INFERRED FROM
     public String getInferred() {
+
         List<AnnotationInferredFromID> inferred = annot.getInferredFromList();
+
         if (inferred.size() >= 1)
         {
             String inferredString = "";
             Boolean first = Boolean.TRUE;
-            
+
             for (AnnotationInferredFromID aifi: inferred) {
                 if (first) {
                 	inferredString = linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
+                	first = Boolean.FALSE;
                 }
                 else {
-                	inferredString = inferredString + "|" + linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
+                	inferredString = inferredString + " | " + linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
                 }
             }
-            
+
             return inferredString;
         }
 
         return "";
     }
+
+    // REFERENCE
     public String getReferences() {
+
         List<Reference> references = annot.getReferences();
-        
         if (references == null || references.size() == 0) {
             return "";
         }
-        
+
         //deferred code to check the number of references.
-        //if (references.size() >= 1 && references.size() < 5)
-        //{
         String refString = "";
         Boolean first = Boolean.TRUE;
         for (Reference ref: references) {
             if (first) {
-                refString = "<a href='" + fewiUrl + "reference/" + ref.getJnumID() 
+                refString = "<a href='" + fewiUrl + "reference/" + ref.getJnumID()
                             + "'>" + ref.getJnumID() + "</a>";
                 first = Boolean.FALSE;
             }
             else {
-                refString = refString + ", <a href='" + fewiUrl + "reference/" + ref.getJnumID() 
+                refString = refString + ", <a href='" + fewiUrl + "reference/" + ref.getJnumID()
                             + "'>" + ref.getJnumID() + "</a>";
             }
         }
-        
         return refString;
-        //}
-        // Old requirement to list a number for cases where we have more than 5 references.  This 
-        // is currently being deferred.
-/*        else {
-            return "<a href='" + fewiUrl + "references/marker/" + marker.getPrimaryID() 
-            	+ "?term="+annot.getTerm()+"&evidence="+annot.getEvidenceCode()+"'>" 
-            	+ references.size() + "</a>";            
-        }*/
-        
     }
 
 
