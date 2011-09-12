@@ -35,7 +35,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="expression_images_help.shtml">    
+<div id="titleBarWrapper" userdoc="EXPRESSION_image_summary_help.shtml">    
   <span class="titleBarMainTitle">
     Gene Expression Images Associated With This Gene 
   </span>
@@ -44,11 +44,6 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- standard marker header -->
 <jsp:include page="marker_header.jsp"></jsp:include><br>
-
-
-
-
-
 
 
 <!-- counts and pagination -->
@@ -103,13 +98,6 @@ ${templateBean.templateBodyStartHtml}
 </tr>
 </table>
 </form:form>
-
-
-
-
-
-
-
 
 
 <hr>

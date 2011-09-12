@@ -43,7 +43,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_images_help.shtml ">    
+<div id="titleBarWrapper" userdoc="ALLELE_pheno_all_images_help.shtml">    
   <span class="titleBarMainTitle">
     ${pageHeading}
   </span>

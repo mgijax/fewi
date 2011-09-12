@@ -33,7 +33,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_image_detail_help.shtml">	
+<div id="titleBarWrapper" userdoc="ALLELE_pheno_image_detail_help.shtml">	
   <span class="titleBarMainTitle">Phenotype Image Detail </span>
 </div>
 

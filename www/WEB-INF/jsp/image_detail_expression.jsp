@@ -31,7 +31,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="gxd_query_results.shtml">	
+<div id="titleBarWrapper" userdoc="EXPRESSION_query_results_help.shtml#images">	
   <span class="titleBarMainTitle">Gene Expression Image Detail </span>
 </div>
 

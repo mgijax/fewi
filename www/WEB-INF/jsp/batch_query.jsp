@@ -14,7 +14,7 @@ ${templateBean.templateBodyStartHtml}
     a { outline:expression(hideFocus='true'); outline:0; }
 </style>
 
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="batch_qf_help.shtml">	
+<div id="titleBarWrapper" style="max-width:1200px" userdoc="BATCH_help.shtml">	
 	<!--myTitle -->
 	<span class="titleBarMainTitle">MGI Batch Query</span>
 </div>

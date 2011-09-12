@@ -25,7 +25,7 @@ ${templateBean.templateBodyStartHtml}
 <input id="yui-history-field" type="hidden">
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
+<div id="titleBarWrapper" userdoc="EXPRESSION_literature_help.shtml">	
 	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
 </div>
 

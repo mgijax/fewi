@@ -19,7 +19,7 @@ ${templateBean.templateBodyStartHtml}
 <input id="yui-history-field" type="hidden">
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="foo_help.shtml">	
+<div id="titleBarWrapper" userdoc="BATCH_help.shtml">	
 	<span class="titleBarMainTitle">Batch Summary</span>
 </div>
 

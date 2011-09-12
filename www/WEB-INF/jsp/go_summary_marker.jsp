@@ -27,7 +27,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="go_classifications_help.shtml">	
+<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml">	
 	<span class="titleBarMainTitle">Gene Ontology Classifications</span>
 </div>
 

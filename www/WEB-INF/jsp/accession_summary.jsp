@@ -29,7 +29,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="accession_summary.shtml">	
+<div id="titleBarWrapper" userdoc="GENE_summary_help.shtml">	
 	<span class="titleBarMainTitle">Accession ID Results</span>
 </div>
 

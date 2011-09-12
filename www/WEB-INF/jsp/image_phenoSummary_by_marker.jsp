@@ -37,7 +37,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="pheno_image_summary_help.shtml">    
+<div id="titleBarWrapper" userdoc="ALLELE_pheno_image_summary_help.shtml">    
   <span class="titleBarMainTitle">
     Phenotype Images associated with this ${marker.markerType} 
   </span>

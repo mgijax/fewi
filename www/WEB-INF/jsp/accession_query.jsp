@@ -19,7 +19,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="accession_report_help.shtml">	
+<div id="titleBarWrapper" userdoc="ACCESSION_ID_help.shtml">	
 	<span class="titleBarMainTitle">Accession Search</span>
 </div>
 

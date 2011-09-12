@@ -10,7 +10,7 @@ ${templateBean.templateHeadHtml}
 ${templateBean.templateBodyStartHtml}
 
 <!-- begin header bar -->
-<div id="titleBarWrapper" userdoc="gxdindex_help.shtml">	
+<div id="titleBarWrapper" userdoc="EXPRESSION_literature_help.shtml">	
 	<!--myTitle -->
 	<span class="titleBarMainTitle">Gene Expression Literature Search</span>
 </div>
