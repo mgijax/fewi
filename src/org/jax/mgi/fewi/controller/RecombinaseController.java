@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.controller;
 /*------------------------------*/
 /* to change in each controller */
 /*------------------------------*/
-
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.AlleleSynonym;
@@ -17,12 +16,10 @@ import org.jax.mgi.fewi.summary.RecomImageRow;
 import org.jax.mgi.fewi.summary.RecombinaseSummary;
 import org.jax.mgi.fewi.summary.RecomSpecificitySummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-import java.util.Iterator;
 
 /*--------------------------------------*/
 /* standard imports for all controllers */
 /*--------------------------------------*/
-
 import java.util.*;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -84,11 +81,10 @@ public class RecombinaseController {
         return "recombinase_query";
     }
 
-    // qf submission.  drop completed ReferenceQueryForm object and query string
-    // into model for summary to use
     //-------------------------------//
     // Query Form Submission
     //-------------------------------//
+
     @RequestMapping("/summary")
     public String recombinaseSummary(HttpServletRequest request, Model model,
             @ModelAttribute RecombinaseQueryForm queryForm) {
@@ -105,7 +101,7 @@ public class RecombinaseController {
     //-------------------------------//
     // JSON Results for Summary
     //-------------------------------//
-    // this is the logic to perform the query and return json results
+
     @RequestMapping("/json")
     public @ResponseBody JsonSummaryResponse<RecombinaseSummary> recombinaseSummaryJson(
             HttpServletRequest request,
@@ -115,20 +111,17 @@ public class RecombinaseController {
         logger.debug(query.toString());
 
         // set up search parameters
-
         SearchParams params = new SearchParams();
         params.setPaginator(page);
         params.setSorts(this.parseSorts(request));
         params.setFilter(this.parseRecombinaseQueryForm(query));
 
         // issue the query and get back the matching Allele objects
-
         SearchResults<Allele> searchResults =
             recombinaseFinder.searchRecombinases(params);
 
         // convert the Alleles to their RecombinaseSummary wrappers, and put
         // them in the JsonSummaryResponse object
-
         List<RecombinaseSummary> summaries = new ArrayList<RecombinaseSummary> ();
         Iterator<Allele> it = searchResults.getResultObjects().iterator();
         while (it.hasNext()) {
@@ -257,7 +250,7 @@ public class RecombinaseController {
 
         // create/load the list of SummaryRow wrapper objects
         List<RecomSpecificitySummaryRow> summaryRows
-          = new ArrayList<RecomSpecificitySummaryRow> ();
+          = new ArrayList<RecomSpecificitySummaryRow>();
         Iterator<AlleleSystemAssayResult> it = assayResultList.iterator();
         while (it.hasNext()) {
             AlleleSystemAssayResult thisAssayResult = it.next();
@@ -295,21 +288,7 @@ public class RecombinaseController {
         String s = request.getParameter("sort");
         String d = request.getParameter("dir");
         boolean desc = false;
-/*
-        if ("symbol".equalsIgnoreCase(s)){
-            s = SortConstants.CRE_SYMBOL;
-        } else if ("alleletype".equalsIgnoreCase(s)){
-            s = SortConstants.CRE_TYPE;
-        } else if ("induciblenote".equalsIgnoreCase(s)){
-            s = SortConstants.CRE_INDUCIBLE;
-        } else if ("countofreferences".equalsIgnoreCase(s)){
-            s = SortConstants.CRE_REF_COUNT;
-        } else if ("inalimentarysystem".equalsIgnoreCase(s)){
-            s = SortConstants.CRE_IN_ALIMENTARY_SYSTEM;
-        } else {
-            s = SortConstants.CRE_DRIVER;
-        }
-*/
+
         if (s == null) { s = SortConstants.CRE_DRIVER; }
 
         if("desc".equalsIgnoreCase(d)){
@@ -363,43 +342,32 @@ public class RecombinaseController {
     }
 
 
+    // method to parse query parameters into filters
     private Filter parseRecombinaseQueryForm(RecombinaseQueryForm query){
+
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
 
-        String driver = query.getDriver();
-        String system = query.getSystem();
-
         // build driver query filter
+        String driver = query.getDriver();
         if ((driver != null) && (!"".equals(driver))) {
             filterList.add(new Filter (SearchConstants.ALL_DRIVER, driver,
                 Filter.OP_EQUAL));
         }
 
         // build system query filter
+        String system = query.getSystem();
         if ((system != null) && (!"".equals(system))) {
             filterList.add(new Filter (SearchConstants.ALL_SYSTEM, system,
                 Filter.OP_EQUAL));
         }
 
-        // we do have some filters, build 'em and add to searchParams
-        if (filterList.size() > 0){
-            Filter f = new Filter();
-            f.setFilterJoinClause(Filter.FC_AND);
-            f.setNestedFilters(filterList);
-            return f;
-        // none yet, so check the id query and build it
-        // } else if (query.getId() != null && !"".equals(query.getId())){
-            //TODO -- do we need an ID query here?
-            //List<String> ids = Arrays.asList(query.getId().split(";"));
-            //return new Filter(SearchConstants.REF_ID, ids, Filter.OP_IN);
-        } else {
-            //TODO no query params
-        }
-        return new Filter();
+        // build container filter and return
+        Filter containerFilter = new Filter();
+        containerFilter.setFilterJoinClause(Filter.FC_AND);
+        containerFilter.setNestedFilters(filterList);
+        return containerFilter;
     }
-
-
 
 
     // generation of filters
