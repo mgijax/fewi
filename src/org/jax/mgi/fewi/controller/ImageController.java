@@ -18,6 +18,7 @@ import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.summary.ImageSummaryRow;
 import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.util.PaginationControls;
 import org.jax.mgi.fewi.config.ContextLoader;
 
 /*--------------------------------------*/
@@ -66,7 +67,7 @@ public class ImageController {
     //--------------------//
 
     private Logger logger
-      = LoggerFactory.getLogger(ImageController.class);
+      = LoggerFactory.getLogger(this.getClass().getName());
 
     @Autowired
     private ImageFinder imageFinder;
@@ -181,7 +182,8 @@ public class ImageController {
     //-------------------------------//
     @RequestMapping(value="/phenoSummary/allele/{alleleID}")
     public ModelAndView phenoImageSummeryByAllele(
-                           @PathVariable("alleleID") String alleleID)
+                @PathVariable("alleleID") String alleleID,
+                @ModelAttribute Paginator page)
     {
         logger.debug("->phenoImageSummeryByAllele started");
 
@@ -310,18 +312,28 @@ public class ImageController {
     //-------------------------------//
     @RequestMapping(value="/gxdSummary/marker/{markerID}")
     public ModelAndView gxdImageSummeryByMarker(
-                           @PathVariable("markerID") String markerID)
+               @PathVariable("markerID") String markerID,
+               @ModelAttribute Paginator page)
     {
         logger.debug("->gxdImageSummeryByMarker started");
 
+        // view object
         ModelAndView mav = new ModelAndView("image_gxdSummary_by_marker");
 
-        // setup search parameters to get allele object
+        // data holders
+        Marker marker;
+        List<ImageSummaryRow> imageSummaryRows;
+
+        /**********************
+        * Gather Marker Object
+        **********************/
+
+        // setup search parameters to get marker object
         SearchParams markerSearchParams = new SearchParams();
         Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
         markerSearchParams.setFilter(markerIdFilter);
 
-        // find the requested allele for header
+        // find the requested marker for header
         SearchResults<Marker> markerSearchResults
           = markerFinder.getMarkerByID(markerSearchParams);
 
@@ -338,60 +350,44 @@ public class ImageController {
             mav.addObject("errorMsg", "Duplicate ID");
             return mav;
         }
-        // success - we have a single object
 
-        // pull out the marker, and place into the mav
-        Marker marker = markerList.get(0);
-        mav.addObject("marker", marker);
+        // success - we have a single object
+        marker = markerList.get(0);
+
+        /**********************
+        * Gather Image Objects
+        **********************/
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
+        page.setResultsDefault(10);
+        imageSearchParams.setPaginator(page);
         Integer markerKey = new Integer(marker.getMarkerKey());
         Filter markerKeyFilter
           = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
         imageSearchParams.setFilter(markerKeyFilter);
 
-
-
-
+        // gather the images, and generate the summary rows
         SearchResults<ImageSummaryRow> imageSearchResults
           = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
-        List<ImageSummaryRow> imageSummaryRows
-          = imageSearchResults.getResultObjects();
+        imageSummaryRows = imageSearchResults.getResultObjects();
 
+
+        /**********************
+        * Fill View Object
+        **********************/
+
+        // data objects
+        mav.addObject("marker", marker);
         mav.addObject("imageSummaryRows", imageSummaryRows);
+
+        // pagination
+        PaginationControls paginationControls = new PaginationControls(page);
+        paginationControls.setResultsTotal(imageSearchResults.getTotalCount());
+        mav.addObject("paginationControls", paginationControls);
 
         return mav;
 
-
-
-/*
-        // find the requested images for this allele
-        SearchResults<Image> imageSearchResults
-          = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
-
-        // generate summary row objects
-        List<ImageSummaryRow> imageSummaryRows
-          = new ArrayList<ImageSummaryRow>();
-
-        Image thisImage;
-        List<Image> imageList = imageSearchResults.getResultObjects();
-        Iterator<Image> imageIter = imageList.iterator();
-        while (imageIter.hasNext())
-        {
-          thisImage = imageIter.next();
-          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
-            ImageSummaryRow imageSummaryRow = new ImageSummaryRow(thisImage);
-            imageSummaryRows.add(imageSummaryRow);
-          }
-        }
-        mav.addObject("imageSummaryRows", imageSummaryRows);
-
-        // total counts of alleles
-        mav.addObject("totalImages", imageSearchResults.getTotalCount());
-
-        return mav;
-*/
 
     }
 
