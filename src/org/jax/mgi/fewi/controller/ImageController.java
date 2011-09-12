@@ -252,18 +252,27 @@ public class ImageController {
     //-------------------------------//
     @RequestMapping(value="/phenoSummary/marker/{markerID}")
     public ModelAndView phenoImageSummeryByMarker(
-                           @PathVariable("markerID") String markerID)
+               @PathVariable("markerID") String markerID,
+               @ModelAttribute Paginator page)
     {
         logger.debug("->phenoImageSummeryByMarker started");
 
         ModelAndView mav = new ModelAndView("image_phenoSummary_by_marker");
 
-        // setup search parameters to get allele object
+        // data holders
+        Marker marker;
+        List<ImageSummaryRow> imageSummaryRows;
+
+        /**********************
+        * Gather Marker Object
+        **********************/
+
+        // setup search parameters to get marker object
         SearchParams markerSearchParams = new SearchParams();
         Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
         markerSearchParams.setFilter(markerIdFilter);
 
-        // find the requested allele for header
+        // find the requested marker for header
         SearchResults<Marker> markerSearchResults
           = markerFinder.getMarkerByID(markerSearchParams);
 
@@ -280,14 +289,18 @@ public class ImageController {
             mav.addObject("errorMsg", "Duplicate ID");
             return mav;
         }
-        // success - we have a single object
 
-        // pull out the marker, and place into the mav
-        Marker marker = markerList.get(0);
-        mav.addObject("marker", marker);
+        // success - we have a single object
+        marker = markerList.get(0);
+
+        /**********************
+        * Gather Image Objects
+        **********************/
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
+        page.setResultsDefault(10);
+        imageSearchParams.setPaginator(page);
         Integer markerKey = new Integer(marker.getMarkerKey());
         Filter markerKeyFilter
           = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
@@ -296,12 +309,20 @@ public class ImageController {
         // gather the images, and generate the summary rows
         SearchResults<ImageSummaryRow> imageSearchResults
           = imageFinder.getPhenoImagesByMarkerKey(imageSearchParams);
-        List<ImageSummaryRow> imageSummaryRows
-          = imageSearchResults.getResultObjects();
+        imageSummaryRows = imageSearchResults.getResultObjects();
+
+        /**********************
+        * Fill View Object
+        **********************/
+
+        // data objects
+        mav.addObject("marker", marker);
         mav.addObject("imageSummaryRows", imageSummaryRows);
 
-        // total counts of alleles
-        mav.addObject("totalImages", imageSearchResults.getTotalCount());
+        // pagination
+        PaginationControls paginationControls = new PaginationControls(page);
+        paginationControls.setResultsTotal(imageSearchResults.getTotalCount());
+        mav.addObject("paginationControls", paginationControls);
 
         return mav;
     }
