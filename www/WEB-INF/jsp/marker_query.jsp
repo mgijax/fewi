@@ -19,7 +19,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="marker_help.shtml">	
+<div id="titleBarWrapper" userdoc="GENE_help.shtml">	
 	<span class="titleBarMainTitle">Marker Query</span>
 </div>
 

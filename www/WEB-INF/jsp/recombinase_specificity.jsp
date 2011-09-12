@@ -131,7 +131,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="cre_summary_help">	
+<div id="titleBarWrapper" userdoc="RECOMBINASE_detail_help.shtml">	
   <span class="titleBarMainTitle">
     <%=FormatHelper.superscript(allele.getSymbol())%> - ${systemDisplayStr}
   </span>

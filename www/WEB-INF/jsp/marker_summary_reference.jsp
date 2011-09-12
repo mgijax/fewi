@@ -25,7 +25,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="Marker_help.shtml">	
+<div id="titleBarWrapper" userdoc="GENE_summary_help.shtml">	
 	<span class="titleBarMainTitle">Marker Summary for Reference</span>
 </div>
 

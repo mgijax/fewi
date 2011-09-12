@@ -97,7 +97,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- begin header bar -->
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="recombinase_alleles_summary_report.shtml">	
+<div id="titleBarWrapper" style="max-width:1200px" userdoc="RECOMBINASE_summary_help.shtml">	
 	<!--myTitle -->
 	<span class="titleBarMainTitle">Recombinase Alleles - Tissue Specificity Summary</span>
 </div>

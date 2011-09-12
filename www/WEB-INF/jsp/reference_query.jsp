@@ -10,7 +10,7 @@ ${templateBean.templateHeadHtml}
 ${templateBean.templateBodyStartHtml}
 
 <!-- begin header bar -->
-<div id="titleBarWrapper" userdoc="marker_help.shtml">	
+<div id="titleBarWrapper" userdoc="reference_help.shtml">	
 	<!--myTitle -->
 	<span class="titleBarMainTitle">References</span>
 </div>
