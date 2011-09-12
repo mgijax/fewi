@@ -48,7 +48,7 @@ public class IDLinker {
 
 		try {
 			config = new PropertiesConfiguration("../properties/externalUrls.properties");
-			config.addProperty("FEWI_URL", "http://faramir.jax.org/");
+            config.addProperty("FEWI_URL", ContextLoader.getConfigBean().getProperty("FEWI_URL"));
 		} catch (Exception e) {};
 
 		// used to iterate through properties in externalUrls:
