@@ -17,7 +17,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="sequence_summary_report.shtml">    
+<div id="titleBarWrapper" userdoc="SEQUENCE_summary_help.shtml">    
   <span class="titleBarMainTitle">Mouse Sequences Summary Report</span>
 </div>
 

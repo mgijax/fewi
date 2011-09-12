@@ -28,7 +28,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="sequence_detail.shtml">    
+<div id="titleBarWrapper" style="max-width:1200px" userdoc="SEQUENCE_detail_help.shtml">    
     <span class="titleBarMainTitle">Sequence Detail</span>
 </div>
 
