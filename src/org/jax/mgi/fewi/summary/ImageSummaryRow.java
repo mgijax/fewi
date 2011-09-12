@@ -95,7 +95,7 @@ public class ImageSummaryRow {
   public String getImgTag() {
     StringBuffer imgTag = new StringBuffer();
     imgTag.append("<a href='" + fewiUrl);
-    imgTag.append("image/pheno/" + this.image.getMgiID() + "'>");
+    imgTag.append("image/" + this.image.getMgiID() + "'>");
     imgTag.append("<img width='" + this.getImageWidth());
     imgTag.append("' height='" + this.getImageHeight() + "'");
     imgTag.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
