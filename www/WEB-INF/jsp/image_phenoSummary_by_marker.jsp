@@ -47,8 +47,60 @@ ${templateBean.templateBodyStartHtml}
 <!-- standard marker header -->
 <jsp:include page="marker_header.jsp"></jsp:include><br>
 
-${totalImages} phenotype image(s) for ${marker.symbol}<br>
-Showing image(s) 1 to ${totalImages}
+<form:form method="GET" commandName="pagination" action="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">
+<input type="hidden" name="startIndex" value="${paginationControls.startIndex}">
+
+<table border=0 cellpadding=1 cellspacing=1 width="100%">
+<tr>
+
+  <td width="40%"><br>
+    ${paginationControls.resultsTotal} phenotype image(s) for ${marker.symbol}<br>
+    Showing image(s) ${paginationControls.startIndexDisplay} 
+    to ${paginationControls.lastResultDisplayed}
+  </td>
+
+  <c:if test="${paginationControls.resultsTotal - paginationControls.results > 0}">
+
+    <td>
+      Show&nbsp; ${paginationControls.dropList} &nbsp;figures&nbsp;per&nbsp;page
+    </td>
+
+    <td width="10%">
+
+      <c:if test="${paginationControls.showStartLink}">
+        <a href='${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}?startIndex=0&results=${paginationControls.results}'>
+          Start</a>
+      </c:if>
+
+      <c:if test="${paginationControls.showPreviousLink}">
+        <a href='${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}?startIndex=${paginationControls.startIndex - paginationControls.results}&results=${paginationControls.results}'>
+          Previous</a>
+      </c:if>
+
+    </td>
+
+    <td width="20%">
+
+      <c:if test="${paginationControls.showNextLink}">
+        <a href='${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}?startIndex=${paginationControls.startIndex + paginationControls.results}&results=${paginationControls.results}'>
+          Next</a>
+      </c:if>
+
+      <c:if test="${paginationControls.showLastLink}">
+        <a href='${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}?startIndex=${paginationControls.resultsTotal - paginationControls.results}&results=${paginationControls.results}'>
+          Last</a>
+      </c:if>
+
+    </td>
+
+  </c:if>
+
+</tr>
+</table>
+</form:form>
+
+
+
 
 <hr>
 Click on thumbnail to view full size image with links to phenotype annotations.
