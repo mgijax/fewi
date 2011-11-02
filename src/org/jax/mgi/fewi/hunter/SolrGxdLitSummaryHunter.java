@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.propertyMapper.SolrReferenceTextSearchPropertyMapper;
@@ -20,8 +19,8 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
      * a sequence key given any possible sequence id.
      */
     public SolrGxdLitSummaryHunter() {
-    	
-    	
+
+
 
         /*
          * Setup the property map.  This maps from the properties of the incoming
@@ -36,27 +35,27 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
 
         propertyMap.put(SearchConstants.GXD_LIT_AGE, new SolrPropertyMapper(IndexConstants.GXD_LIT_AGE));
         propertyMap.put(SearchConstants.GXD_LIT_ASSAY_TYPE, new SolrPropertyMapper(IndexConstants.GXD_LIT_ASSAY_TYPE));
-        
+
         ArrayList <String> titleList = new ArrayList <String> ();
         titleList.add(IndexConstants.REF_TITLE_STEMMED);
         titleList.add(IndexConstants.REF_TITLE_UNSTEMMED);
-        
+
         ArrayList <String> abstractList = new ArrayList <String> ();
         abstractList.add(IndexConstants.REF_ABSTRACT_STEMMED);
         abstractList.add(IndexConstants.REF_ABSTRACT_UNSTEMMED);
-        
+
         propertyMap.put(SearchConstants.REF_TEXT_ABSTRACT, new SolrReferenceTextSearchPropertyMapper(abstractList, "OR"));
         propertyMap.put(SearchConstants.REF_TEXT_TITLE, new SolrReferenceTextSearchPropertyMapper(titleList, "OR"));
-        
+
         ArrayList <String> titleAbstractList = new ArrayList <String> ();
         titleAbstractList.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
         titleAbstractList.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
-        
+
         propertyMap.put(SearchConstants.REF_TEXT_TITLE_ABSTRACT, new SolrReferenceTextSearchPropertyMapper(titleAbstractList, "OR"));
-        
+
         propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
-        
+
         /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want the standard list of
@@ -71,11 +70,11 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
         highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
         highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
         highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
-        
-        /* A reverse Mapping of Highlightable fields in the index to what 
+
+        /* A reverse Mapping of Highlightable fields in the index to what
          * parameter it came from
          */
-        
+
         fieldToParamMap.put(IndexConstants.REF_TITLE_STEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
         fieldToParamMap.put(IndexConstants.REF_TITLE_UNSTEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
         fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_STEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
@@ -83,9 +82,9 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
         fieldToParamMap.put(IndexConstants.REF_AUTHOR_FORMATTED, SearchConstants.GXD_LIT_LONG_CITATION);
         fieldToParamMap.put(IndexConstants.REF_FIRST_AUTHOR, SearchConstants.GXD_LIT_LONG_CITATION);
         fieldToParamMap.put(IndexConstants.REF_LAST_AUTHOR, SearchConstants.GXD_LIT_LONG_CITATION);
-        
+
     }
-    
+
 	private void checkFilter (Filter filter) {
 	    if (filter.isBasicFilter()) {
 	        return;
@@ -95,7 +94,7 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
 	        Boolean foundTitle = Boolean.FALSE;
 	        Boolean foundAbstract = Boolean.FALSE;
 	        String textToSearch = "";
-	        
+
 	        for (Filter f: flist) {
 	            if (f.isBasicFilter()) {
 	                if (f.getProperty().equals(SearchConstants.REF_TEXT_ABSTRACT)) {
@@ -105,14 +104,14 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
                     if (f.getProperty().equals(SearchConstants.REF_TEXT_TITLE)) {
                         textToSearch = f.getValue();
                         foundTitle = Boolean.TRUE;
-                    }	                
-	                
+                    }
+
 	            }
 	            else {
 	                checkFilter(f);
 	            }
 	        }
-	        
+
 	        if (foundTitle && foundAbstract) {
 	            filter.setProperty(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
 	            filter.setValue(textToSearch);
@@ -121,9 +120,9 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
 	        }
 	    }
 	}
-		
+
 	protected SearchParams preProcessSearchParams(SearchParams searchParams) {
-	    
+
 	    Filter filter = searchParams.getFilter();
 	    if (!filter.isBasicFilter()) {
 	        checkFilter(filter);
@@ -131,7 +130,7 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
 	    return searchParams;
 	}
 
-    
+
 
 	@Value("${solr.gxdLitIndex.url}")
 	public void setSolrUrl(String solrUrl) {

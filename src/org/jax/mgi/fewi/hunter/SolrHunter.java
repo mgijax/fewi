@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.hunter;
 import java.util.*;
 
 // mgi classes
-import org.jax.mgi.fewi.propertyMapper.PropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
@@ -11,6 +10,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
+import org.jax.mgi.fewi.propertyMapper.PropertyMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 
 // external classes
@@ -35,8 +35,7 @@ public class SolrHunter implements Hunter {
     public Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-
-	/*----- INSTANCE VARIABLES -----*/
+    /*----- INSTANCE VARIABLES -----*/
 
     /**
      * Values set in the extending classes, determining each
@@ -105,7 +104,7 @@ public class SolrHunter implements Hunter {
 
 
 
-	/*----- CONSTRUCTOR -----*/
+    /*----- CONSTRUCTOR -----*/
 
     public SolrHunter() {
         // Setup the mapping of the logical ands and or to the vendor
@@ -117,7 +116,7 @@ public class SolrHunter implements Hunter {
     }
 
 
-	/*----- PUBLIC METHODS -----*/
+    /*----- PUBLIC METHODS -----*/
 
     /**
      * hunt
@@ -140,7 +139,7 @@ public class SolrHunter implements Hunter {
     public void hunt(SearchParams searchParams, SearchResults searchResults) {
 
 
-    	// Invoke the hook, editing the search params as needed.
+        // Invoke the hook, editing the search params as needed.
         searchParams = this.preProcessSearchParams(searchParams);
 
         // Setup our interface into solr.
@@ -176,32 +175,21 @@ public class SolrHunter implements Hunter {
         logger.info("This is the final Solr query:" + query + "\n");
 
         /**
-         * Run the query.
+         * Run the query & package results & result count
          */
-
         QueryResponse rsp = null;
-
         try {
-        rsp = server.query( query );
-        SolrDocumentList sdl = rsp.getResults();
+            rsp = server.query( query );
+            SolrDocumentList sdl = rsp.getResults();
 
-        /**
-         * Package the results into the searchResults object.
-         * We do this in a generic manner via the packInformation method.
-         */
+            // Package the results into the searchResults object.
+            packInformation(rsp, searchResults, searchParams);
 
-        packInformation(rsp, searchResults, searchParams);
+            // Set the total number found.
+            searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
 
-
-        logger.debug("metaMapping: "
-        		+ searchResults.getResultSetMeta().toString());
-
-        /**
-         * Set the total number found.
-         */
-
-        searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
-
+            logger.debug("metaMapping: "
+                + searchResults.getResultSetMeta().toString());
         }
         catch (Exception e) {e.printStackTrace();}
 
@@ -210,7 +198,7 @@ public class SolrHunter implements Hunter {
     }
 
 
-	/*----- PROTECTED METHODS -----*/
+    /*----- PROTECTED METHODS -----*/
 
     /**
      * preprocessSearchParams
@@ -242,7 +230,7 @@ public class SolrHunter implements Hunter {
      */
 
     protected String translateFilter(Filter filter, HashMap<String,
-    		PropertyMapper> propertyMap) {
+            PropertyMapper> propertyMap) {
 
         /**
          * This is the end case for the recursion.  If we are at a node in the
@@ -261,7 +249,7 @@ public class SolrHunter implements Hunter {
             // if it is, return an empty string
 
             if (filter.getProperty() == null ||
-            		filter.getProperty().equals("")) {
+                    filter.getProperty().equals("")) {
 
                 return "";
             }
@@ -271,7 +259,7 @@ public class SolrHunter implements Hunter {
             if (filter.getOperator() != Filter.OP_IN
                     && filter.getOperator() != Filter.OP_NOT_IN) {
                 return propertyMap.get(filter.getProperty())
-                	.getClause(filter.getValue(), filter.getOperator());
+                    .getClause(filter.getValue(), filter.getOperator());
             }
 
             /** If its an IN or NOT IN, break the query down further, joining
@@ -298,14 +286,14 @@ public class SolrHunter implements Hunter {
                 for (String value: filter.getValues()) {
                     if (first) {
                         output += propertyMap.get(filter.getProperty())
-                        	.getClause(value, operator);
+                            .getClause(value, operator);
 
                         first = Boolean.FALSE;
                     }
                     else {
                         output += joinClause
-                        	+ propertyMap.get(filter.getProperty())
-                        		.getClause(value, operator);
+                            + propertyMap.get(filter.getProperty())
+                                .getClause(value, operator);
                     }
                 }
                 return output + ")";
@@ -334,8 +322,8 @@ public class SolrHunter implements Hunter {
                 }
             }
             return "(" + StringUtils.join(resultsString,
-            		filterClauseMap.get(filter.getFilterJoinClause()))
-            		+ ")";
+                    filterClauseMap.get(filter.getFilterJoinClause()))
+                    + ")";
         }
     }
 
@@ -472,9 +460,9 @@ public class SolrHunter implements Hunter {
      */
 
     protected void packInformation(QueryResponse rsp, SearchResults sr,
-    		SearchParams sp) {
+            SearchParams sp) {
 
-    	// A list of all the primary keys in the document
+        // A list of all the primary keys in the document
         List<String> keys = new ArrayList<String>();
 
         // A list of the documents scores.
@@ -540,10 +528,10 @@ public class SolrHunter implements Hunter {
                     tempMeta.setScore("" + doc.getFieldValue("score"));
                 }
                 if (sp.includeGenerated()) {
-                	if (doc.getFieldValue(IndexConstants.AC_IS_GENERATED)
-                			.equals(new Integer("1"))) {
-                		tempMeta.setGenerated();
-                	}
+                    if (doc.getFieldValue(IndexConstants.AC_IS_GENERATED)
+                            .equals(new Integer("1"))) {
+                        tempMeta.setGenerated();
+                    }
                 }
 
                 /**
@@ -553,11 +541,11 @@ public class SolrHunter implements Hunter {
 
                 if (this.keyString != null) {
                     metaList.put((String) doc.getFieldValue(keyString),
-                    		tempMeta);
+                            tempMeta);
                 }
                 if (this.otherString != null) {
                     metaList.put((String) doc.getFieldValue(otherString),
-                    		tempMeta);
+                            tempMeta);
                 }
 
 
@@ -589,70 +577,70 @@ public class SolrHunter implements Hunter {
              */
 
             if (!this.highlightFields.isEmpty() && sp.includeMetaHighlight()
-            		&& sp.includeSetMeta()) {
+                    && sp.includeSetMeta()) {
 
-	            Set<String> highlightKeys =
-	            	highlights.get(doc.getFieldValue(keyString)).keySet();
-	            Map<String, List<String>> highlightsMap =
-	            	highlights.get(doc.getFieldValue(keyString));
+                Set<String> highlightKeys =
+                    highlights.get(doc.getFieldValue(keyString)).keySet();
+                Map<String, List<String>> highlightsMap =
+                    highlights.get(doc.getFieldValue(keyString));
 
-	            for (String key: highlightKeys) {
-	                List <String> solrHighlights = highlightsMap.get(key);
-	                for (String highlightWord: solrHighlights) {
-	                    Boolean inAHL = Boolean.FALSE;
-	                    /**
-	                     * Our solr highlights are surrounded by an
-	                     * impossible token, so split based on that.
-	                     */
-	                    String [] fragments =
-	                    	highlightWord.split(highlightToken);
+                for (String key: highlightKeys) {
+                    List <String> solrHighlights = highlightsMap.get(key);
+                    for (String highlightWord: solrHighlights) {
+                        Boolean inAHL = Boolean.FALSE;
+                        /**
+                         * Our solr highlights are surrounded by an
+                         * impossible token, so split based on that.
+                         */
+                        String [] fragments =
+                            highlightWord.split(highlightToken);
 
-	                    /**
-	                     * Every other fragment will be a highlighted word
-	                     * setup a loop that iterates through the results
-	                     * grabbing it.  Once we have it place it into
-	                     * the highlight mapping.  The highlighted sections
-	                     * will be surrounded by our impossible token.  As
-	                     * such when the string is split the highlighted
-	                     * tokens will be every other set of words.
-	                     */
+                        /**
+                         * Every other fragment will be a highlighted word
+                         * setup a loop that iterates through the results
+                         * grabbing it.  Once we have it place it into
+                         * the highlight mapping.  The highlighted sections
+                         * will be surrounded by our impossible token.  As
+                         * such when the string is split the highlighted
+                         * tokens will be every other set of words.
+                         */
 
-	                    for (String frag: fragments) {
+                        for (String frag: fragments) {
 
-	                    	/**
-	                    	 * We are in a highlighted section, parse out the
-	                    	 * matching word(s).
-	                    	 */
+                            /**
+                             * We are in a highlighted section, parse out the
+                             * matching word(s).
+                             */
 
-	                    	if (inAHL) {
-	                            if (setHighlights.containsKey(
-	                            		fieldToParamMap.get(key))) {
+                            if (inAHL) {
+                                if (setHighlights.containsKey(
+                                        fieldToParamMap.get(key))) {
 
-	                                setHighlights.get(fieldToParamMap
-	                                	.get(key)).add(frag);
-	                            }
-	                            else {
-	                                setHighlights.put(fieldToParamMap
-	                                	.get(key),
-	                                	new HashSet <String> ());
+                                    setHighlights.get(fieldToParamMap
+                                        .get(key)).add(frag);
+                                }
+                                else {
+                                    setHighlights.put(fieldToParamMap
+                                        .get(key),
+                                        new HashSet <String> ());
 
-	                                setHighlights.get(fieldToParamMap
-	                                	.get(key)).add(frag);
-	                            }
-	                            inAHL = Boolean.FALSE;
-	                        }
+                                    setHighlights.get(fieldToParamMap
+                                        .get(key)).add(frag);
+                                }
+                                inAHL = Boolean.FALSE;
+                            }
 
-	                    	/**
-	                    	 * This is a non highlighted section, move on.
-	                    	 */
+                            /**
+                             * This is a non highlighted section, move on.
+                             */
 
-	                        else {
-	                            inAHL = Boolean.TRUE;
-	                        }
-	                    }
-	                }
-	            }
-	        }
+                            else {
+                                inAHL = Boolean.TRUE;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Include the information that was asked for.
