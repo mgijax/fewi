@@ -76,7 +76,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	@Transactional(readOnly = true)
 	public List<T> get(List<String> keys) {
 
-		logger.debug("gathering objects for keys - " + keys);
+		logger.debug("Started : objects keys - " + keys);
 
 		// get necessary Hibernate objects
 		Session s = sessionFactory.getCurrentSession();
@@ -137,7 +137,8 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 			orderedResults.add(resultsMap.get(t));
 		}
 
-		logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
+		//logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
+		logger.debug("Finished");
 
 		return orderedResults;
 	}
