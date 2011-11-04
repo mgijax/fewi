@@ -240,7 +240,6 @@ public class FormatHelper
           seqForwardValue.append ("!");
           seqForwardValue.append ("+");
           seqForwardValue.append ("!"); // offset may be appended later.
-          logger.debug("seqForwardValue -> " + seqForwardValue.toString());
         }
         else {
           seqForwardValue.append (provider);
@@ -251,7 +250,6 @@ public class FormatHelper
           seqForwardValue.append ("!");
           seqForwardValue.append ("!");
           seqForwardValue.append ("!"); // offset may be appended later.
-          logger.debug("seqForwardValue -> " + seqForwardValue.toString());
        }
 
         return seqForwardValue.toString();

@@ -58,10 +58,6 @@ public class ProviderLinker
         String seqProvider = sequence.getProvider();
         String seqID       = sequence.getPrimaryID();
 
-        logger.debug("getSeqProviderLinks().sequence.seqProvider->"
-          + seqProvider);
-
-
         // all genbank
         if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {
 
