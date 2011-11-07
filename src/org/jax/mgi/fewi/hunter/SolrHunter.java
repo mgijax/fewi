@@ -149,7 +149,7 @@ public class SolrHunter implements Hunter {
         SolrQuery query = new SolrQuery();
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
-        logger.info("Incoming Transformed String: " + queryString);
+        logger.debug("TranslatedFilters: " + queryString);
         query.setQuery(queryString);
 
         // pack the score
@@ -172,13 +172,15 @@ public class SolrHunter implements Hunter {
 
         // Add the facets, can be overwritten.
         addFacets(query);
-        logger.info("This is the final Solr query:" + query + "\n");
+        logger.debug("SolrQuery:" + query);
 
         /**
          * Run the query & package results & result count
          */
         QueryResponse rsp = null;
         try {
+            logger.debug("Running query & packaging searchResults");
+
             rsp = server.query( query );
             SolrDocumentList sdl = rsp.getResults();
 
@@ -188,11 +190,12 @@ public class SolrHunter implements Hunter {
             // Set the total number found.
             searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
 
-            logger.debug("metaMapping: "
-                + searchResults.getResultSetMeta().toString());
+            //logger.debug("metaMapping: "
+            //  + searchResults.getResultSetMeta().toString());
         }
         catch (Exception e) {e.printStackTrace();}
 
+        logger.debug("SolrHunter.hunt finished");
         return ;
 
     }
@@ -345,8 +348,6 @@ public class SolrHunter implements Hunter {
             e.printStackTrace();
             }
 
-        logger.debug("SolrTimeout:" + solrSoTimeout);
-
         server.setSoTimeout(solrSoTimeout);  // socket read timeout
         server.setConnectionTimeout(connectionTimeout);
         server.setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
@@ -492,8 +493,6 @@ public class SolrHunter implements Hunter {
         Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
 
         SolrDocumentList sdl = rsp.getResults();
-
-        logger.debug("Packing information.");
 
         /**
          * Check for facets, if found pack them.
