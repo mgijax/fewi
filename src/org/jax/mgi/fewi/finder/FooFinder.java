@@ -70,9 +70,8 @@ public class FooFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        fooGatherer.setType(Marker.class);
         List<Marker> fooList
-          = fooGatherer.get( searchResults.getResultKeys() );
+          = fooGatherer.get( Marker.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(fooList);
 
         return searchResults;
@@ -91,8 +90,7 @@ public class FooFinder {
         SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
         // gather objects, add them to the results
-        fooGatherer.setType(Marker.class);
-        Marker foo = fooGatherer.get( dbKey );
+        Marker foo = fooGatherer.get( Marker.class, dbKey );
         searchResults.addResultObjects(foo);
 
         return searchResults;
@@ -116,9 +114,8 @@ public class FooFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        fooGatherer.setType(Marker.class);
         List<Marker> fooList
-          = fooGatherer.get( searchResults.getResultKeys() );
+          = fooGatherer.get( Marker.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(fooList);
 
         return searchResults;

@@ -40,8 +40,7 @@ public class AlleleFinder {
 		alleleHunter.hunt(searchParams, searchResults);
 
 		// gather objects identified by the hunter, add them to the results
-		alleleGatherer.setType(Allele.class);
-        List<Allele> alleleList = alleleGatherer.get( searchResults.getResultKeys() );
+        List<Allele> alleleList = alleleGatherer.get( Allele.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(alleleList);
 
 		return searchResults;

@@ -66,15 +66,13 @@ public class GxdLitFinder {
         logger.debug("->hunter found these resultKeys - "
           + searchResults.getResultKeys());
         
-        gxdLitIndexGatherer.setType(GxdLitIndexRecord.class);
-        
         List<GxdLitIndexRecord> recordList =
     		new ArrayList<GxdLitIndexRecord> ();
         
         logger.debug("Right before the request");
         
         if (! searchResults.getResultKeys().isEmpty()) {
-        	recordList = gxdLitIndexGatherer.get(searchResults.getResultKeys());
+        	recordList = gxdLitIndexGatherer.get(GxdLitIndexRecord.class, searchResults.getResultKeys());
         }
         
         logger.debug("Got past the hibernate request");
@@ -96,8 +94,7 @@ public class GxdLitFinder {
         SearchResults<GxdLitIndexRecord> searchResults = new SearchResults<GxdLitIndexRecord>();
 
         // gather objects, add them to the results
-        gxdLitIndexGatherer.setType(GxdLitIndexRecord.class);
-        GxdLitIndexRecord indexRecord = gxdLitIndexGatherer.get( dbKey );
+        GxdLitIndexRecord indexRecord = gxdLitIndexGatherer.get( GxdLitIndexRecord.class, dbKey );
         searchResults.addResultObjects(indexRecord);
 
         return searchResults;

@@ -4,10 +4,8 @@ import java.util.List;
 
 public interface ObjectGathererInterface<T> {
 
-	public T get(String key);
+	public T get(Class<T> modelObj, String key);
 
-	public List<T> get(List<String> keys);
-
-	public void setType(Class<T> type);
+	public List<T> get(Class<T> modelObj, List<String> keys);
 
 }

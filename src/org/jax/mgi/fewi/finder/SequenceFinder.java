@@ -69,8 +69,7 @@ public class SequenceFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        sequenceGatherer.setType(Sequence.class);
-        List<Sequence> seqList = sequenceGatherer.get( searchResults.getResultKeys() );
+        List<Sequence> seqList = sequenceGatherer.get( Sequence.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(seqList);
 
         return searchResults;
@@ -89,8 +88,7 @@ public class SequenceFinder {
         SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
 
         // gather objects, add them to the results
-        sequenceGatherer.setType(Sequence.class);
-        Sequence seq = sequenceGatherer.get( dbKey );
+        Sequence seq = sequenceGatherer.get( Sequence.class, dbKey );
         searchResults.addResultObjects(seq);
 
         return searchResults;
@@ -114,8 +112,7 @@ public class SequenceFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        sequenceGatherer.setType(Sequence.class);
-        List<Sequence> seqList = sequenceGatherer.get( searchResults.getResultKeys() );
+        List<Sequence> seqList = sequenceGatherer.get( Sequence.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(seqList);
 
         return searchResults;

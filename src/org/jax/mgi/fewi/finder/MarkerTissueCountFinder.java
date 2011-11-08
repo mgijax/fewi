@@ -64,9 +64,8 @@ public class MarkerTissueCountFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        tissueGatherer.setType(MarkerTissueCount.class);
         List<MarkerTissueCount> tissueList
-          = tissueGatherer.get( searchResults.getResultKeys() );
+          = tissueGatherer.get( MarkerTissueCount.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(tissueList);
 
         return searchResults;

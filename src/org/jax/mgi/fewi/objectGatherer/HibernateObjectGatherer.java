@@ -20,8 +20,6 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
 	private Logger logger = LoggerFactory.getLogger(HibernateObjectGatherer.class);
 
-	private Class<T> type;
-
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -30,21 +28,21 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
-	public T get(String keyStr) {
+	public T get(Class<T> modelObj, String keyStr) {
 
         logger.debug("gathering object for keys - " + keyStr);
 
         Integer key = new Integer(keyStr);
-		if (sessionFactory != null && type != null){
+		if (sessionFactory != null && modelObj != null){
 			Session s = sessionFactory.getCurrentSession();
-			return (T)s.get(type, key);
+			return (T)s.get(modelObj, key);
 		}
 
 		// problem conditions
 		if (sessionFactory == null){
 			System.out.println("null sessionFactory");
 		}
-		if (type == null){
+		if (modelObj == null){
 			System.out.println("null type");
 		}
 		return null;
@@ -57,14 +55,14 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
      * is throwing an exception during instantiation
      */
     @Transactional(readOnly = true)
-    public List<T> getIndividually(List<String> keys) {
+    public List<T> getIndividually(Class<T> modelObj, List<String> keys) {
 
         logger.debug("gathering objects for keys - " + keys);
 
         List<T> results = new ArrayList<T>();
 
         for (String key : keys) {
-            results.add(this.get(key));
+            results.add(this.get(modelObj, key));
         }
         return results;
     }
@@ -74,13 +72,13 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	 * Get a list of objects
 	 */
 	@Transactional(readOnly = true)
-	public List<T> get(List<String> keys) {
+	public List<T> get(Class<T> modelObj, List<String> keys) {
 
 		logger.debug("Started : objects keys - " + keys);
 
 		// get necessary Hibernate objects
 		Session s = sessionFactory.getCurrentSession();
-		ClassMetadata meta = sessionFactory.getClassMetadata(type);
+		ClassMetadata meta = sessionFactory.getClassMetadata(modelObj);
 
 		// collections to process results
 		List<T> queryResults = new ArrayList<T>();
@@ -113,14 +111,14 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
 				List inList = keyInts.subList(begin, end);
 
-				queryResults.addAll(s.createCriteria(type).add(Restrictions.in("id", inList)).list());
+				queryResults.addAll(s.createCriteria(modelObj).add(Restrictions.in("id", inList)).list());
 				begin += step;
 				end += step;
 			}
 
 		}
 		else {
-			queryResults = s.createCriteria(type).add(Restrictions.in("id", keyInts)).list();
+			queryResults = s.createCriteria(modelObj).add(Restrictions.in("id", keyInts)).list();
 		}
 
 		// load results into Map keyed by id
@@ -141,15 +139,6 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		logger.debug("Finished");
 
 		return orderedResults;
-	}
-
-
-	/**
-	 * Set the type of object for retrieval
-	 */
-	public void setType(Class<T> type) {
-		logger.debug("set type -> " + type);
-		this.type = type;
 	}
 
 }

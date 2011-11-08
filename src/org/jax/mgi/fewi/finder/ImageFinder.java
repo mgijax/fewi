@@ -79,9 +79,8 @@ public class ImageFinder {
       + searchResults.getResultKeys());
 
     // gather objects identified by the hunter, add them to the results
-    imageGatherer.setType(Image.class);
     List<Image> imageList
-      = imageGatherer.get( searchResults.getResultKeys() );
+      = imageGatherer.get( Image.class, searchResults.getResultKeys() );
     searchResults.setResultObjects(imageList);
 
     return searchResults;
@@ -106,9 +105,8 @@ public class ImageFinder {
       + searchResults.getResultKeys());
 
     // gather objects identified by the hunter
-    imageGatherer.setType(Image.class);
     List<Image> imageList
-      = imageGatherer.get( searchResults.getResultKeys() );
+      = imageGatherer.get( Image.class, searchResults.getResultKeys() );
 
     // list of summary objects to be returned
     List<ImageSummaryRow> imageSummaryRowList
@@ -139,9 +137,8 @@ public class ImageFinder {
       + searchResults.getResultKeys());
 
     // gather objects identified by the hunter
-    imageGatherer.setType(Image.class);
     List<Image> imageList
-      = imageGatherer.get( searchResults.getResultKeys() );
+      = imageGatherer.get( Image.class, searchResults.getResultKeys() );
 
     // list of summary objects to be returned
     List<ImageSummaryRow> imageSummaryRowList
@@ -170,9 +167,8 @@ public class ImageFinder {
       + searchResults.getResultKeys());
 
     // gather objects identified by the hunter, add them to the results
-    imageGatherer.setType(Image.class);
     List<Image> imageList
-      = imageGatherer.get( searchResults.getResultKeys() );
+      = imageGatherer.get( Image.class, searchResults.getResultKeys() );
 
     // list of summary objects to be returned
     List<ImageSummaryRow> imageSummaryRowList
@@ -207,7 +203,7 @@ public class ImageFinder {
 
 logger.debug("----->BEFORE THUMB IMAGE GENERATION");
             // gather thumbnail for this image
-            thisThumbImage = imageGatherer.get( thisImage.getThumbnailImageKey().toString() );
+            thisThumbImage = imageGatherer.get( Image.class, thisImage.getThumbnailImageKey().toString() );
 logger.debug("----->AFTER THUMB IMAGE GENERATION");
 
             // new row;  add to list

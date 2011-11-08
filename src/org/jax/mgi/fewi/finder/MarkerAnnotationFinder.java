@@ -79,8 +79,7 @@ public class MarkerAnnotationFinder {
         SearchResults<Annotation> searchResults = new SearchResults<Annotation>();
 
         // gather objects, add them to the results
-        markerAnnotationGatherer.setType(Annotation.class);
-        Annotation foo = markerAnnotationGatherer.get( dbKey );
+        Annotation foo = markerAnnotationGatherer.get( Annotation.class, dbKey );
         searchResults.addResultObjects(foo);
 
         return searchResults;
@@ -104,10 +103,9 @@ public class MarkerAnnotationFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        markerAnnotationGatherer.setType(Annotation.class);
         logger.info("Got here!");
         List<Annotation> annotList
-          = markerAnnotationGatherer.get( searchResults.getResultKeys() );
+          = markerAnnotationGatherer.get( Annotation.class, searchResults.getResultKeys() );
         logger.info("Got here too");
         searchResults.setResultObjects(annotList);
         

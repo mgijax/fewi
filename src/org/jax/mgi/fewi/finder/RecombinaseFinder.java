@@ -74,9 +74,7 @@ public class RecombinaseFinder {
 		creSummaryHunter.hunt (params, results);
 
 		logger.debug ("gather");
-		summaryGatherer.setType (Allele.class);
-
-		List<Allele> alleles = summaryGatherer.get (results.getResultKeys());
+		List<Allele> alleles = summaryGatherer.get (Allele.class, results.getResultKeys());
 
 		results.setResultObjects (alleles);
 		return results;
@@ -94,10 +92,8 @@ public class RecombinaseFinder {
 		creAlleleSystemKeyHunter.hunt (params, results);
 
 		logger.debug ("gather");
-		alleleSystemGatherer.setType (AlleleSystem.class);
-
 		List<AlleleSystem> alleleSystem
-		  = alleleSystemGatherer.get (results.getResultKeys());
+		  = alleleSystemGatherer.get (AlleleSystem.class, results.getResultKeys());
 
 		results.setResultObjects (alleleSystem);
 		return results;
@@ -118,10 +114,8 @@ public class RecombinaseFinder {
 		creAssayHunter.hunt (params, results);
 
 		logger.debug ("gather");
-		assayResultGatherer.setType (AlleleSystemAssayResult.class);
-
 		List<AlleleSystemAssayResult> alleleSystem
-		  = assayResultGatherer.get (results.getResultKeys());
+		  = assayResultGatherer.get (AlleleSystemAssayResult.class, results.getResultKeys());
 
 		results.setResultObjects (alleleSystem);
 		return results;

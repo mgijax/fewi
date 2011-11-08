@@ -62,8 +62,7 @@ public class MarkerFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        mrkGatherer.setType(Marker.class);
-        List<Marker> mrkList = mrkGatherer.get( searchResults.getResultKeys() );
+        List<Marker> mrkList = mrkGatherer.get( Marker.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(mrkList);
 
         return searchResults;
@@ -81,8 +80,7 @@ public class MarkerFinder {
         SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
         // gather objects, add them to the results
-        mrkGatherer.setType(Marker.class);
-        Marker marker = mrkGatherer.get( dbKey );
+        Marker marker = mrkGatherer.get( Marker.class, dbKey );
         searchResults.addResultObjects(marker);
 
         return searchResults;
@@ -106,9 +104,8 @@ public class MarkerFinder {
           + searchResults.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
-        mrkGatherer.setType(Marker.class);
         List<Marker> markerList
-          = mrkGatherer.get( searchResults.getResultKeys() );
+          = mrkGatherer.get( Marker.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(markerList);
 
         return searchResults;

@@ -57,8 +57,7 @@ public class ReferenceFinder {
 		referenceHunter.hunt(params, results);
 		
 		logger.debug("gather");
-		referenceGatherer.setType(Reference.class);
-		for(Reference ref: referenceGatherer.get(results.getResultKeys())){		
+		for(Reference ref: referenceGatherer.get(Reference.class, results.getResultKeys())){		
 			summaryList.add(ref);
 		}
 		return results;
@@ -70,9 +69,7 @@ public class ReferenceFinder {
 			SearchResults<Reference> results = new SearchResults<Reference>();
 			referenceHunter.hunt(params, results);
 			logger.debug("-->searchReferences results.getResultKeys()" + results.getResultKeys());
-			referenceGatherer.setType(Reference.class);
-
-            List<Reference> refList = referenceGatherer.get( results.getResultKeys() );
+            List<Reference> refList = referenceGatherer.get( Reference.class, results.getResultKeys() );
             results.setResultObjects(refList);
 
 			return results;
