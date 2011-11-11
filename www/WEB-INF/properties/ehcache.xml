@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<defaultCache eternal="true" maxElementsInMemory="10000" overflowToDisk="true" statistics="true"/>
+	<cache
+		name="mgi.frontend.datamodel.Marker"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Reference"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Marker.referenceAssociations"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Marker.synonyms"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Marker.annotations"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Marker.countSetItems"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Marker.sequenceAssociations"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Marker.ids"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+	<cache
+		name="mgi.frontend.datamodel.Marker.locations"
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="true"
+		statistics="true" />
+</ehcache>
