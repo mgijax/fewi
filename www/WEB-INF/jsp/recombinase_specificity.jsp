@@ -6,7 +6,7 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>${allele.symbol} - ${systemDisplayStr} Recombinase Specificity Detail MGI Mouse</title>
+<title>${allele.symbol} - ${systemDisplayStr} Recombinase Activity Detail MGI Mouse</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -137,7 +137,7 @@ ${templateBean.templateBodyStartHtml}
   </span>
   <br/>
   <span class="titleBarSubTitle">
-    Recombinase Specificity Detail
+    Recombinase Activity Detail
   </span>
 </div>
 
@@ -159,7 +159,7 @@ ${templateBean.templateBodyStartHtml}
         <c:if test="${not empty galleryImagesRows}">
           | <a href="#imageGallery" class="MP">Images</a>&nbsp;
         </c:if>
-        | <a href="#recombinaseSpecificity" class="MP">Recombinase Specificity</a>&nbsp;
+        | <a href="#recombinaseActivity" class="MP">Recombinase Activity</a>&nbsp;
         | <a href="#refSection" class="MP">References</a>
       </div>
     </td>
@@ -497,11 +497,11 @@ ${templateBean.templateBodyStartHtml}
 
 
 
-  <!-- Recombinase Specificity  -->
+  <!-- Recombinase activity  -->
   <tr >
     <td class="<%=leftTdStyles.getNext() %>">
-      <a name="recombinaseSpecificity"></A>
-      Recombinase Specificity 
+      <a name="recombinaseActivity"></A>
+      Recombinase Activity 
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
 
@@ -510,7 +510,7 @@ ${templateBean.templateBodyStartHtml}
         <div class="sectionIntro" style="position: absolute; top:3px; left:2px; width:200px;">
           Click heading to resort table.
           <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" id="InfoIcon"
-             onMouseOver="return overlib('<em>MGI\'s annotations reflect statements made by the authors or data providers.   Notes contain additional information pertaining to the assay result.</em><br /><br /><strong>Structures:</strong><br />Recombinase specificity results are associated with structures described in the Mouse Anatomical Dictionary (AD).<br /><br /><strong>Assayed Age:</strong><br />Age of the specimen when assayed.  Because recombinase activity is maintained throughout the cell lineage, expression may have occurred at an earlier age.<br /><br /><strong>Levels:</strong><br />Absent, Present*, Ambiguous, Trace, Weak, Moderate, Strong, Very Strong<br /><em>*\'Present\' is used when the author does not describe expression level explicitly.</em><br /><br /><strong>Patterns:</strong><br />Homogeneous, Non-Homogeneous, Diffuse, Graded, Patchy, Regionally Restricted, Scattered, Single cells, Spotted, Ubiquitous, Widespread, Not Specified, Not Applicable', WIDTH, 350, DELAY, 500, CAPTION, 'Structures, Ages, Levels, and Patterns', ANCHOR, 'InfoIcon', ANCHORALIGN, 'UR', 'UL', STICKY, CLOSECLICK, CLOSETEXT, 'close X');" onMouseOut="nd();">
+             onMouseOver="return overlib('<em>MGI\'s annotations reflect statements made by the authors or data providers.   Notes contain additional information pertaining to the assay result.</em><br /><br /><strong>Structures:</strong><br />Recombinase activity results are associated with structures described in the Mouse Anatomical Dictionary (AD).<br /><br /><strong>Assayed Age:</strong><br />Age of the specimen when assayed.  Because recombinase activity is maintained throughout the cell lineage, expression may have occurred at an earlier age.<br /><br /><strong>Levels:</strong><br />Absent, Present*, Ambiguous, Trace, Weak, Moderate, Strong, Very Strong<br /><em>*\'Present\' is used when the author does not describe expression level explicitly.</em><br /><br /><strong>Patterns:</strong><br />Homogeneous, Non-Homogeneous, Diffuse, Graded, Patchy, Regionally Restricted, Scattered, Single cells, Spotted, Ubiquitous, Widespread, Not Specified, Not Applicable', WIDTH, 350, DELAY, 500, CAPTION, 'Structures, Ages, Levels, and Patterns', ANCHOR, 'InfoIcon', ANCHORALIGN, 'UR', 'UL', STICKY, CLOSECLICK, CLOSETEXT, 'close X');" onMouseOut="nd();">
         </div>
 
         <span id="showAssayInfoButton"
