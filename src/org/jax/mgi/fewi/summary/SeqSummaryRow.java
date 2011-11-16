@@ -91,7 +91,10 @@ public class SeqSummaryRow {
 
 
     public String getLength() {
-    	return this.seq.getLength().toString();
+    	if (this.seq.getLength() != null){
+    		return this.seq.getLength().toString();
+    	}
+    	return "";
     }
 
 
