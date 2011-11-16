@@ -25,7 +25,9 @@ import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerIDOtherMarker;
 import mgi.frontend.datamodel.MarkerLocation;
+import mgi.frontend.datamodel.MarkerOrthology;
 import mgi.frontend.datamodel.MarkerSequenceAssociation;
+import mgi.frontend.datamodel.MarkerSynonym;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.SequenceSource;
 
@@ -168,6 +170,28 @@ public class MarkerController {
         mav.addObject("marker", marker);
         
         this.dbDate(mav);
+        
+        // add human orthalog to model if present
+        Marker humanOrthalog = null;
+        if (marker.getOrthologousMarkers().size() > 0){
+        	for (MarkerOrthology mo: marker.getOrthologousMarkers()) {
+        		if (mo.getOtherOrganism().equalsIgnoreCase("human")){
+        	        SearchResults<Marker> orthalogResults
+        	        	= MarkerFinder.getMarkerByKey(String.valueOf(mo.getOtherMarkerKey()));
+        	        if (orthalogResults.getResultObjects().size() > 0) {
+        	        	humanOrthalog = orthalogResults.getResultObjects().get(0);
+        	        	if (humanOrthalog.getSynonyms().size() > 0) {
+        	        		List<String> humanSynonyms = new ArrayList<String>();
+        	        		for (MarkerSynonym syn: humanOrthalog.getSynonyms()){
+        	        			humanSynonyms.add(syn.getSynonym());
+        	        		}
+        	        		mav.addObject("humanSynonyms", humanSynonyms.toArray(new String[humanSynonyms.size()]));
+        	        	}
+        	        	mav.addObject("humanOrthalog", humanOrthalog);
+        	        }       			
+        		}
+        	}
+        }
 
         // We need to pull out the GO terms we want to use as teasers for
         // each ontology.  (This is easier in Java than JSTL, so we do
