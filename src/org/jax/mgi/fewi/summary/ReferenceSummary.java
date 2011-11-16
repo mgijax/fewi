@@ -8,7 +8,8 @@ import org.jax.mgi.fewi.util.Highlighter;
 public class ReferenceSummary {
 	private Reference reference;
 	private String score;
-	private String url = ContextLoader.getExternalUrls().getProperty("PubMed");
+	private String pmUrl = ContextLoader.getExternalUrls().getProperty("PubMed");
+	private String doiUrl = ContextLoader.getExternalUrls().getProperty("DXDOI");
 	private Highlighter titleHL = new Highlighter(null);
 	private Highlighter abstractHL = new Highlighter(null);
 	private Highlighter authorHL = new Highlighter(null);
@@ -50,7 +51,7 @@ public class ReferenceSummary {
 		
 		String pId = reference.getPubMedID();
 		if(pId != null && !"".equals(pId)){
-			String p = url.replace("@@@@", pId);
+			String p = pmUrl.replace("@@@@", pId);
 			sb.append(String.format("<a href=\"%s\" target=\"new\" class=\"extUrl\">%s</a><br/>", 
 					p, pId));			
 		}
@@ -58,6 +59,11 @@ public class ReferenceSummary {
 		if (this.reference.getFullTextLink() != null) {
 			sb.append(String.format("<br/><a href=\"%s\" target=\"new\" class=\"extUrl\">Full Text</a>", 
 					this.reference.getFullTextLink()));
+		}
+		if(!"".equals(this.reference.getDoiId())){
+			String du = doiUrl.replace("@@@@", this.reference.getDoiId());
+			sb.append(String.format("<br/><a href=\"%s\" target=\"new\" class=\"extUrl\">Journal Link</a>", 
+					du));
 		}
 		return sb.toString();
 	}
