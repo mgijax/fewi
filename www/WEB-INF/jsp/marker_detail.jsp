@@ -251,7 +251,7 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
-  <!-- ROW6 -->
+  <!-- Mammalian homology ribbon -->
   <c:if test="${not empty marker.orthologousMarkers}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
@@ -276,80 +276,59 @@ td.padded { padding:4px; }
 		<c:if test="${not empty pirsf}">
 		  Protein SuperFamily: <a href="${configBean.JAVAWI_URL}WIFetch?page=pirsfDetail&id=${pirsf.termID}">${pirsf.term}</a><br/>
 		</c:if>
-
-		<c:set var="treeFamDisplayID" value="${marker.treeFamDisplayID.accID}"/>
-		<c:set var="treeFamLinkID" value="${marker.treeFamLinkID.accID}"/>
-		<c:if test="${not (empty treeFamDisplayID or empty treeFamLinkID)}">
-		  TreeFam: <a href="${fn:replace(externalUrls.TreeFam, '@@@@', treeFamLinkID)}">${treeFamDisplayID}</a><br/>
+		<c:if test="${not empty marker.ensemblGeneModelID}">
+			<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>			
+			<c:set var="genetreeUrl" value="${fn:replace(genetreeUrl, '<model_id>', marker.ensemblGeneModelID.accID)}"/>
+			Gene Tree: <a href="${configBean.GENETREE_URL}${marker.ensemblGeneModelID.accID}">${marker.symbol}</a><br/>
 		</c:if>
       </td>
     </tr>
   </c:if>
-
-  <!-- ROW7 -->
-  <c:if test="${not empty marker.sequenceIDs}">
+  
+  <!-- Human Orthalog ribbon -->
+  <c:if test="${not empty humanOrthalog}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
-        Sequences
+        <img src="${configBean.WEBSHARE_URL}images/new.gif"/> Human<br/>orthalog
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		<form name="sequenceForm" method="GET">
-		<table class="padded">
-		  <tr><td class="padded" colspan="4">Representative Sequences</td><td class="padded">Length</td><td class="padded">Strain/Species</td><td class="padded">Flank</td></tr>
-		  <c:if test="${not empty marker.representativeGenomicSequence}">
-			<c:set var="seq" value="${marker.representativeGenomicSequence}" scope="request"/>
-			<% Sequence seqDna = (Sequence) request.getAttribute("seq"); %>
-		    <tr><td class="padded"><input type="checkbox" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td>genomic</td>
-		      <td class="padded">${marker.representativeGenomicSequence.primaryID}</td>
-		      <td class="padded">${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
-		      <td class="padded">${marker.representativeGenomicSequence.length}</td>
-		      <td class="padded">${genomicSource}</td>
-		      <td class="padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;Kb</td></tr>
-		  </c:if>
-		  <c:if test="${not empty marker.representativeTranscriptSequence}">
-			<c:set var="seq" value="${marker.representativeTranscriptSequence}" scope="request"/>
-			<% Sequence seqRna = (Sequence) request.getAttribute("seq"); %>
-		    <tr><td class="padded"><input type="checkbox" name="seq2" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td>transcript</td>
-		      <td class="padded">${marker.representativeTranscriptSequence.primaryID}</td>
-		      <td class="padded">${transcriptLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
-		      <td class="padded">${marker.representativeTranscriptSequence.length}</td>
-		      <td class="padded">${transcriptSource}</td><td>&nbsp;</td></tr>
-		  </c:if>
-		  <c:if test="${not empty marker.representativePolypeptideSequence}">
-			<c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
-			<% Sequence seqPoly = (Sequence) request.getAttribute("seq"); %>
-		    <tr><td class="padded"><input type="checkbox" name="seq3" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td>polypeptide</td>
-		      <td class="padded">${marker.representativePolypeptideSequence.primaryID}</td>
-		      <td class="padded">${polypeptideLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
-		      <td class="padded">${marker.representativePolypeptideSequence.length}</td>
-		      <td class="padded">${polypeptideSource}</td><td>&nbsp;</td></tr>
-		  </c:if>
-		</table>
-		</form>
-		<p>
-		<form name="sequenceFormPullDown">
-		  <I>For the selected sequences</I>
-		  <select name="seqPullDown">
-		  <option value="${configBean.SEQFETCH_URL}tofasta.cgi?" selected> download in FASTA format</option>
-		  <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi"> forward to MouseBLAST</option>
-		  <input type="button" value="Go" onClick="formatForwardArgs()">
-		  </select>
-		</form>
-		<c:set var="seqUrl" value="${configBean.FEWI_URL}/sequence/marker/${marker.primaryID}"/>
-		<c:if test="${marker.countOfSequences > 0}">
-		  All sequences(<a href="${seqUrl}">${marker.countOfSequences}</a>) 
+		<a href="${fn:replace(externalUrls.NCBI_Gene_Model, '@@@@', humanOrthalog.entrezGeneID.accID)}">${humanOrthalog.symbol}</a> ${humanOrthalog.name}
+			<span class="small">NCBI Gene ID ${humanOrthalog.entrezGeneID.accID}</span><br/>
+		<c:if test="${not empty humanSynonyms}">
+			Human Synonyms: ${fn:join(humanSynonyms, ", ")}<br/>
 		</c:if>
-		<c:if test="${marker.countOfRefSeqSequences > 0}">
-		  RefSeq(<a href="${seqUrl}?provider=RefSeq">${marker.countOfRefSeqSequences}</a>)
+		<c:if test="${not empty humanOrthalog.preferredCoordinates}">
+				<c:set var="humanLoc" value="Human Chr<chr>:<start>-<end> bp, <strand> strand <span class='small'>Reference GRCh37.p2 Primary Assembly</span><br/>"/>
+				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<chr>', humanOrthalog.preferredCoordinates.chromosome)}"/>
+				<fmt:formatNumber value="${humanOrthalog.preferredCoordinates.startCoordinate}" pattern="#0" var="humanStart"/>
+      			<fmt:formatNumber value="${humanOrthalog.preferredCoordinates.endCoordinate}" pattern="#0" var="humanEnd"/>
+				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<start>', humanStart)}"/>
+				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<end>', humanEnd)}"/>
+				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<strand>', humanOrthalog.preferredCoordinates.strand)}"/>			
+			 ${humanLoc}			 
 		</c:if>
-		<c:if test="${marker.countOfUniProtSequences > 0}">
-		  UniProt(<a href="${seqUrl}?provider=UniProt">${marker.countOfUniProtSequences}</a>)
-		</c:if>
-      </td>
-    </tr>
+     
+		Human Diseases Associated with Human ${humanOrthalog.symbol} 
+		(<a href="#" onclick="return overlib( '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'><tr ><th align=\'left\'>Human Disease</th><th width=\'4\'></th>' +
+			'<th width=\'65\'>OMIM ID</th></tr>' +
+			<c:set var="hMessage" value="&nbsp;" />
+			<c:forEach var="annotation" items="${humanOrthalog.OMIMHumanAnnotations}">
+				'<tr align=\'left\' valign=\'top\'>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID} }\'>${annotation.term}</a></td>' +
+				'<td width=\'4\'>'  +
+				<c:forEach var="star" items="${marker.OMIMAnnotations}">
+					<c:if test="${annotation.termID eq star.termID}">
+						<c:set var="hMessage" value="* Disease is associated with mutations in mouse ${marker.symbol}." />
+						'*' +
+					</c:if>
+				</c:forEach>
+				'</td>' +
+				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\'>${annotation.termID}</a></td></tr>' +
+			</c:forEach>
+			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${hMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Human ${humanOrthalog.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${humanOrthalog.countOfHumanDiseases}</a>)
   </c:if>
 
-  <!-- ROW8 -->
+  <!-- Allele ribbon -->
   <c:if test="${(marker.countOfAlleles > 0) or (not empty marker.markerClip) or (marker.countOfHumanDiseases > 0) or (marker.countOfAllelesWithHumanDiseases > 0) or (marker.countOfPhenotypeImages > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
@@ -370,7 +349,24 @@ td.padded { padding:4px; }
 		  &nbsp;<br/>
 		</c:if>
 		<c:if test="${marker.countOfHumanDiseases > 0}">
-		  Associated Human Diseases(<a href="${configBean.FEWI_URL}omim/marker/${marker.primaryID}">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
+		  Human Diseases Modeled Using Mouse ${marker.symbol} (<a onclick="return overlib( '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'>' +
+			'<tr ><th align=\'left\'>Human Disease</th><th width=\'4\'></th>' +
+			'<th width=\'65\'>OMIM ID</th></tr>' +
+			<c:set var="mMessage" value="&nbsp;" />
+			<c:forEach var="annotation" items="${marker.OMIMAnnotations}">
+				'<tr align=\'left\' valign=\'top\'>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID} }\'>${annotation.term}</a></td>' +
+				'<td width=\'4\'>' +
+				<c:forEach var="star" items="${humanOrthalog.OMIMHumanAnnotations}">
+					<c:if test="${annotation.termID eq star.termID}">
+						<c:set var="mMessage" value="* Disease is associated with mutations in human ${humanOrthalog.symbol}." />
+						'*' +
+					</c:if>
+				</c:forEach>
+				'</td>' +
+				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\'>${annotation.termID}</a></td></tr>' +
+			</c:forEach>
+			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${mMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Mouse ${marker.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
 		  Alleles Annotated to Human Diseases(<a href="${configBean.WI_URL}searches/allele_report.cgi?_Marker_key=${marker.markerKey}&omimOnly=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
@@ -378,32 +374,6 @@ td.padded { padding:4px; }
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
 		  Phenotype Images(<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a>)
 		</c:if>
-      </td>
-    </tr>
-  </c:if>
-
-  <!-- ROW9 -->
-  <c:if test="${not empty marker.polymorphismCountsByType}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
-        Polymorphisms
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
-		<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
-		  <c:set var="polyUrl" value="${configBean.WI_URL}searches/polymorphism_report.cgi?_Marker_key=${marker.markerKey}"/>
-		  <c:set var="polyExtra" value=""/>
-		  <c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
-		    <c:set var="polyUrl" value="${polyUrl}&search=${item.countType}"/>
-		  </c:if>
-		  <c:if test="${fn:startsWith(item.countType, 'SNP')}">
-		    <c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
-		    <c:if test="${not empty configBean.SNP_BUILD}">
-		      <c:set var="polyExtra" value=" from ${configBean.SNP_BUILD}"/>
-		    </c:if>
-		  </c:if>
-		  ${item.countType}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
-		  <c:if test="${status.first}">: </c:if>
-		</c:forEach>
       </td>
     </tr>
   </c:if>
@@ -561,6 +531,95 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
+  <!-- Sequences ribbon -->
+  <c:if test="${not empty marker.sequenceIDs}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Sequences
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<form name="sequenceForm" method="GET">
+		<table class="padded">
+		  <tr><td class="padded" colspan="4">Representative Sequences</td><td class="padded">Length</td><td class="padded">Strain/Species</td><td class="padded">Flank</td></tr>
+		  <c:if test="${not empty marker.representativeGenomicSequence}">
+			<c:set var="seq" value="${marker.representativeGenomicSequence}" scope="request"/>
+			<% Sequence seqDna = (Sequence) request.getAttribute("seq"); %>
+		    <tr><td class="padded"><input type="checkbox" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td>genomic</td>
+		      <td class="padded">${marker.representativeGenomicSequence.primaryID}</td>
+		      <td class="padded">${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td class="padded">${marker.representativeGenomicSequence.length}</td>
+		      <td class="padded">${genomicSource}</td>
+		      <td class="padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;Kb</td></tr>
+		  </c:if>
+		  <c:if test="${not empty marker.representativeTranscriptSequence}">
+			<c:set var="seq" value="${marker.representativeTranscriptSequence}" scope="request"/>
+			<% Sequence seqRna = (Sequence) request.getAttribute("seq"); %>
+		    <tr><td class="padded"><input type="checkbox" name="seq2" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td>transcript</td>
+		      <td class="padded">${marker.representativeTranscriptSequence.primaryID}</td>
+		      <td class="padded">${transcriptLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td class="padded">${marker.representativeTranscriptSequence.length}</td>
+		      <td class="padded">${transcriptSource}</td><td>&nbsp;</td></tr>
+		  </c:if>
+		  <c:if test="${not empty marker.representativePolypeptideSequence}">
+			<c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
+			<% Sequence seqPoly = (Sequence) request.getAttribute("seq"); %>
+		    <tr><td class="padded"><input type="checkbox" name="seq3" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td>polypeptide</td>
+		      <td class="padded">${marker.representativePolypeptideSequence.primaryID}</td>
+		      <td class="padded">${polypeptideLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
+		      <td class="padded">${marker.representativePolypeptideSequence.length}</td>
+		      <td class="padded">${polypeptideSource}</td><td>&nbsp;</td></tr>
+		  </c:if>
+		</table>
+		</form>
+		<p>
+		<form name="sequenceFormPullDown">
+		  <I>For the selected sequences</I>
+		  <select name="seqPullDown">
+		  <option value="${configBean.SEQFETCH_URL}tofasta.cgi?" selected> download in FASTA format</option>
+		  <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi"> forward to MouseBLAST</option>
+		  <input type="button" value="Go" onClick="formatForwardArgs()">
+		  </select>
+		</form>
+		<c:set var="seqUrl" value="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}"/>
+		<c:if test="${marker.countOfSequences > 0}">
+		  All sequences(<a href="${seqUrl}">${marker.countOfSequences}</a>) 
+		</c:if>
+		<c:if test="${marker.countOfRefSeqSequences > 0}">
+		  RefSeq(<a href="${seqUrl}?provider=RefSeq">${marker.countOfRefSeqSequences}</a>)
+		</c:if>
+		<c:if test="${marker.countOfUniProtSequences > 0}">
+		  UniProt(<a href="${seqUrl}?provider=UniProt">${marker.countOfUniProtSequences}</a>)
+		</c:if>
+      </td>
+    </tr>
+  </c:if>
+
+  <!-- Polymorphisms ribbon -->
+  <c:if test="${not empty marker.polymorphismCountsByType}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Polymorphisms
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+		  <c:set var="polyUrl" value="${configBean.WI_URL}searches/polymorphism_report.cgi?_Marker_key=${marker.markerKey}"/>
+		  <c:set var="polyExtra" value=""/>
+		  <c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
+		    <c:set var="polyUrl" value="${polyUrl}&search=${item.countType}"/>
+		  </c:if>
+		  <c:if test="${fn:startsWith(item.countType, 'SNP')}">
+		    <c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
+		    <c:if test="${not empty configBean.SNP_BUILD}">
+		      <c:set var="polyExtra" value=" from ${configBean.SNP_BUILD}"/>
+		    </c:if>
+		  </c:if>
+		  ${item.countType}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
+		  <c:if test="${status.first}">: </c:if>
+		</c:forEach>
+      </td>
+    </tr>
+  </c:if>
+  
   <!-- ROW14 -->
   <c:set var="proteinAnnotations" value="${marker.proteinAnnotations}"/>
   <c:if test="${not empty proteinAnnotations}">
