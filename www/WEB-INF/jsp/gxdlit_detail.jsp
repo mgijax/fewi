@@ -50,10 +50,16 @@ ${templateBean.templateBodyStartHtml}
   </td>
 </tr>
 </tbody></table><br>
+
 <c:if test="${record.isFullyCoded}"> <b>Detailed expression data for these assays:</b> 
-${record.fullyCodedResultCount} <a href="${configBean.FEWI_URL}gxd/result/key/${record.indexKey}">result<c:if test="${record.fullyCodedResultCount > 1}">s</c:if></a> in 
-${record.fullyCodedAssayCount} <a href="${configBean.FEWI_URL}gxd/assay/key/${record.indexKey}">assay<c:if test="${record.fullyCodedAssayCount > 1}">s</c:if></a><br><br></c:if>
+${record.fullyCodedResultCount} 
+<a href="${configBean.WI_URL}searches/expression_report.cgi?_Index_key=${record.indexKey}&returnType=assay results&sort=printName">
+  result<c:if test="${record.fullyCodedResultCount > 1}">s</c:if></a> in 
+${record.fullyCodedAssayCount} 
+<a href="${configBean.WI_URL}searches/expression_report.cgi?_Index_key=${record.indexKey}&returnType=assays&sort=assayType">assay<c:if test="${record.fullyCodedAssayCount > 1}">s</c:if></a><br><br></c:if>
+
 <img src="${configBean.WEBSHARE_URL}/images/redball.gif" alt="red ball"> Indicates gene expression was analyzed but not necessarily detected.
+
 <c:if test="${not empty pairTable}">
 	<table class="outline">
 	<tr class="outline stripe3">
