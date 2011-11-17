@@ -26,6 +26,7 @@ public class GOSummaryRow {
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+    String wiUrl   = ContextLoader.getConfigBean().getProperty("WI_URL");
 
 	// encapsulated row objects
 	private Annotation annot;
@@ -61,7 +62,7 @@ public class GOSummaryRow {
     // CLASSIFICATION
     public String getTerm() {
 
-    	String termText = "<a href='"+ fewiUrl +"go/" + annot.getTermID()
+    	String termText = "<a href='"+ wiUrl +"searches/GO.cgi?id=" + annot.getTermID()
     	    + "'> " + annot.getTerm() + "</a>";
 
     	if (annot.getQualifier() != null && annot.getQualifier().equals("NOT")) {
