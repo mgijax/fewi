@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
 
+	<cacheManagerPeerListenerFactory 
+ 		class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory"
+		properties="monitorAddress=cardolan.informatics.jax.org, monitorPort=9889" />
+
 	<defaultCache eternal="true" maxElementsInMemory="10000" overflowToDisk="true" statistics="true"/>
 	<cache
 		name="mgi.frontend.datamodel.Marker"
