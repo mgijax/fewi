@@ -116,6 +116,12 @@ YAHOO.util.Event.addListener("referenceQueryForm", "submit", interceptSubmit);
     oAC.maxResultsDisplayed = 5000;
     oAC.forceSelection = false;
     oAC.delimChar = ";";
+    
+//    oAC.doBeforeExpandContainer = function(elTextbox , elContainer , sQuery , aResults){
+//    	var acBody = YAHOO.util.Dom.getElementsByClassName("yui-ac-bd" , "div", elContainer);
+//    	alert(acBody[0]['firstChild']["scrollTop"]);
+//    	return true;
+//    };
 
     return {
         oDS: oDS,

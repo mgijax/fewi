@@ -171,23 +171,23 @@ public class MarkerController {
         
         this.dbDate(mav);
         
-        // add human orthalog to model if present
-        Marker humanOrthalog = null;
+        // add human ortholog to model if present
+        Marker humanOrtholog = null;
         if (marker.getOrthologousMarkers().size() > 0){
         	for (MarkerOrthology mo: marker.getOrthologousMarkers()) {
         		if (mo.getOtherOrganism().equalsIgnoreCase("human")){
         	        SearchResults<Marker> orthalogResults
         	        	= MarkerFinder.getMarkerByKey(String.valueOf(mo.getOtherMarkerKey()));
         	        if (orthalogResults.getResultObjects().size() > 0) {
-        	        	humanOrthalog = orthalogResults.getResultObjects().get(0);
-        	        	if (humanOrthalog.getSynonyms().size() > 0) {
+        	        	humanOrtholog = orthalogResults.getResultObjects().get(0);
+        	        	if (humanOrtholog.getSynonyms().size() > 0) {
         	        		List<String> humanSynonyms = new ArrayList<String>();
-        	        		for (MarkerSynonym syn: humanOrthalog.getSynonyms()){
+        	        		for (MarkerSynonym syn: humanOrtholog.getSynonyms()){
         	        			humanSynonyms.add(syn.getSynonym());
         	        		}
         	        		mav.addObject("humanSynonyms", humanSynonyms.toArray(new String[humanSynonyms.size()]));
         	        	}
-        	        	mav.addObject("humanOrthalog", humanOrthalog);
+        	        	mav.addObject("humanOrtholog", humanOrtholog);
         	        }       			
         		}
         	}
@@ -579,21 +579,21 @@ public class MarkerController {
         }
         
         // add minimap link
-	MarkerLocation cmPos = marker.getPreferredCentimorgans();
+        MarkerLocation cmPos = marker.getPreferredCentimorgans();
         if ((cmPos != null) && (!cmPos.getChromosome().equalsIgnoreCase("UN"))) {
-	    if (cmPos != null) {
-		Float cM = cmPos.getCmOffset();
-		if ((cM != null) && (cM.floatValue() >= 0.0)) {
-        	    mav.addObject ("miniMap", this.getMinimapUrl(marker.getMarkerKey()));
-		} else {
-		    logger.debug ("cM offset is null or < 0");
-		}
-	    } else {
-		logger.debug ("no cM location");
-	    }
-	} else {
-	    logger.debug ("Unknown chromosome");
-	}
+        	if (cmPos != null) {
+        			Float cM = cmPos.getCmOffset();
+        			if ((cM != null) && (cM.floatValue() >= 0.0)) {
+        					mav.addObject ("miniMap", this.getMinimapUrl(marker.getMarkerKey()));
+        			} else {
+        				logger.debug ("cM offset is null or < 0");
+        			}
+        	} else {
+        		logger.debug ("no cM location");
+        	}
+        } else {
+        	logger.debug ("Unknown chromosome");
+        }
         return mav;
     }
 
