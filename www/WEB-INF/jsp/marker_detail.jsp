@@ -285,36 +285,40 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
   
-  <!-- Human Orthalog ribbon -->
-  <c:if test="${not empty humanOrthalog}">
+  <!-- Human Ortholog ribbon -->
+  <c:if test="${not empty humanOrtholog}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
-        <img src="${configBean.WEBSHARE_URL}images/new.gif"/> Human<br/>orthalog
+        <img src="${configBean.WEBSHARE_URL}images/new.gif"/> Human<br/>ortholog
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		<a href="${fn:replace(externalUrls.NCBI_Gene_Model, '@@@@', humanOrthalog.entrezGeneID.accID)}">${humanOrthalog.symbol}</a> ${humanOrthalog.name}
-			<span class="small">NCBI Gene ID ${humanOrthalog.entrezGeneID.accID}</span><br/>
+		<a href="${fn:replace(externalUrls.NCBI_Gene_Model, '@@@@', humanOrtholog.entrezGeneID.accID)}">${humanOrtholog.symbol}</a> ${humanOrtholog.name}
+			<span class="small">NCBI Gene ID ${humanOrtholog.entrezGeneID.accID}</span><br/>
 		<c:if test="${not empty humanSynonyms}">
 			Human Synonyms: ${fn:join(humanSynonyms, ", ")}<br/>
 		</c:if>
-		<c:if test="${not empty humanOrthalog.preferredCoordinates}">
+		<c:if test="${not empty humanOrtholog.preferredCoordinates}">
 				<c:set var="humanLoc" value="Human Chr<chr>:<start>-<end> bp, <strand> strand <span class='small'>Reference GRCh37.p2 Primary Assembly</span><br/>"/>
-				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<chr>', humanOrthalog.preferredCoordinates.chromosome)}"/>
-				<fmt:formatNumber value="${humanOrthalog.preferredCoordinates.startCoordinate}" pattern="#0" var="humanStart"/>
-      			<fmt:formatNumber value="${humanOrthalog.preferredCoordinates.endCoordinate}" pattern="#0" var="humanEnd"/>
+				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<chr>', humanOrtholog.preferredCoordinates.chromosome)}"/>
+				<fmt:formatNumber value="${humanOrtholog.preferredCoordinates.startCoordinate}" pattern="#0" var="humanStart"/>
+      			<fmt:formatNumber value="${humanOrtholog.preferredCoordinates.endCoordinate}" pattern="#0" var="humanEnd"/>
 				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<start>', humanStart)}"/>
 				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<end>', humanEnd)}"/>
-				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<strand>', humanOrthalog.preferredCoordinates.strand)}"/>			
+				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<strand>', humanOrtholog.preferredCoordinates.strand)}"/>			
 			 ${humanLoc}			 
 		</c:if>
-     
-		Human Diseases Associated with Human ${humanOrthalog.symbol} 
-		(<a href="#" onclick="return overlib( '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'><tr ><th align=\'left\'>Human Disease</th><th width=\'4\'></th>' +
+		<c:if test="${humanOrtholog.countOfHumanDiseases > 0}">
+		Human Diseases Associated with Human ${humanOrtholog.symbol} 
+		(<a href="" onclick="return overlib( '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'><tr ><th align=\'left\'>Human Disease</th><th width=\'4\'></th>' +
 			'<th width=\'65\'>OMIM ID</th></tr>' +
 			<c:set var="hMessage" value="&nbsp;" />
-			<c:forEach var="annotation" items="${humanOrthalog.OMIMHumanAnnotations}">
-				'<tr align=\'left\' valign=\'top\'>' +
-				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID} }\'>${annotation.term}</a></td>' +
+			<c:forEach var="annotation" items="${humanOrtholog.OMIMHumanAnnotations}" varStatus="status">
+				<c:set var="rColor" value="" />
+				<c:if test="${status.count % 2 == 0}">
+					<c:set var="rColor" value="style=\\'background-color:#F8F8F8;\\'" />
+				</c:if>
+				'<tr ${rColor} align=\'left\' valign=\'top\'>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\'>${annotation.term}</a></td>' +
 				'<td width=\'4\'>'  +
 				<c:forEach var="star" items="${marker.OMIMAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
@@ -325,7 +329,8 @@ td.padded { padding:4px; }
 				'</td>' +
 				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\'>${annotation.termID}</a></td></tr>' +
 			</c:forEach>
-			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${hMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Human ${humanOrthalog.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${humanOrthalog.countOfHumanDiseases}</a>)
+			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${hMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Human ${humanOrtholog.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${humanOrtholog.countOfHumanDiseases}</a>)
+  		</c:if>
   </c:if>
 
   <!-- Allele ribbon -->
@@ -349,17 +354,24 @@ td.padded { padding:4px; }
 		  &nbsp;<br/>
 		</c:if>
 		<c:if test="${marker.countOfHumanDiseases > 0}">
-		  Human Diseases Modeled Using Mouse ${marker.symbol} (<a onclick="return overlib( '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'>' +
+		  Human Diseases Modeled Using Mouse ${marker.symbol} (<a href="" onclick="return overlib( '<span style=\'font-size:12px;\'>Diseases ' +
+			  'listed here are those where a mutant allele of this gene is involved in a mouse genotype used as ' +
+			  'a model. This does not mean that mutations in this gene contribute to or are causative of the disease.</span>' +
+			  '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'>' +
 			'<tr ><th align=\'left\'>Human Disease</th><th width=\'4\'></th>' +
 			'<th width=\'65\'>OMIM ID</th></tr>' +
 			<c:set var="mMessage" value="&nbsp;" />
-			<c:forEach var="annotation" items="${marker.OMIMAnnotations}">
-				'<tr align=\'left\' valign=\'top\'>' +
-				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID} }\'>${annotation.term}</a></td>' +
+			<c:forEach var="annotation" items="${marker.OMIMAnnotations}" varStatus="status">
+				<c:set var="rColor" value="" />
+				<c:if test="${status.count % 2 == 0}">
+					<c:set var="rColor" value="style=\\'background-color:#F8F8F8;\\'" />
+				</c:if>
+				'<tr ${rColor} align=\'left\' valign=\'top\'>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\'>${annotation.term}</a></td>' +
 				'<td width=\'4\'>' +
-				<c:forEach var="star" items="${humanOrthalog.OMIMHumanAnnotations}">
+				<c:forEach var="star" items="${humanOrtholog.OMIMHumanAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
-						<c:set var="mMessage" value="* Disease is associated with mutations in human ${humanOrthalog.symbol}." />
+						<c:set var="mMessage" value="* Disease is associated with mutations in human ${humanOrtholog.symbol}." />
 						'*' +
 					</c:if>
 				</c:forEach>
