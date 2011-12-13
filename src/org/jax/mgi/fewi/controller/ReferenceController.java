@@ -169,20 +169,22 @@ public class ReferenceController {
 				authorHL.add(auth.replace(" ", "[\\s\\-']"));
 			}
         }
-		if (query.isInAbstract()){
-			if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
-				textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
-			} else if (highlighting.containsKey(SearchConstants.REF_TEXT_ABSTRACT)){
-				textHl= highlighting.get(SearchConstants.REF_TEXT_ABSTRACT);
+        if (query.getText() != null && !"".equals(query.getText())){
+			if (query.isInAbstract()){
+				if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
+					textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+				} else if (highlighting.containsKey(SearchConstants.REF_TEXT_ABSTRACT)){
+					textHl= highlighting.get(SearchConstants.REF_TEXT_ABSTRACT);
+				}
 			}
-		}
-		if (query.isInTitle()){
-			if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
-				textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
-			} else if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE)){
-				textHl= highlighting.get(SearchConstants.REF_TEXT_TITLE);
+			if (query.isInTitle()){
+				if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
+					textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+				} else if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE)){
+					textHl= highlighting.get(SearchConstants.REF_TEXT_TITLE);
+				}
 			}
-		}
+        }
 		
 		logger.debug("wrap results");
         List<ReferenceSummary> summaryRows = new ArrayList<ReferenceSummary>();
