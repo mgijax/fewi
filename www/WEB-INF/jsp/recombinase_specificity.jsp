@@ -256,7 +256,7 @@ ${templateBean.templateBodyStartHtml}
           0 lines available
        </c:if>
        <c:if test="${not empty allele.imsrStrainCount and allele.imsrStrainCount!='0'}">
-          <a href='${configBean.IMSRURL}fetch?page=imsrSummary&gaccid=${allele.primaryID}&state=LM&state=OV&state=EM&state=SP' 
+          <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=embryo&states=live&states=ovaries&states=sperm' 
             target="_blank">
           ${allele.imsrStrainCount} lines available
           </a>
@@ -269,7 +269,7 @@ ${templateBean.templateBodyStartHtml}
           0 lines available
        </c:if>
        <c:if test="${not empty allele.imsrCellLineCount and allele.imsrCellLineCount!='0'}">
-          <a href='${configBean.IMSRURL}fetch?page=imsrSummary&gaccid=${allele.primaryID}&state=ES' target="_blank">
+          <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=ES+Cell' target="_blank">
           ${allele.imsrCellLineCount} lines available
           </a>
        </c:if>

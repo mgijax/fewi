@@ -239,9 +239,9 @@ public class RecombinaseSummary {
     	StringBuffer sb = new StringBuffer();
     	sb.append("<a href='");
     	sb.append(ContextLoader.getConfigBean().getProperty("IMSRURL"));
-    	sb.append("fetch?page=imsrSummary&gaccid=");
+    	sb.append("summary?gaccid=");
     	sb.append(this.allele.getPrimaryID());
-    	sb.append("&state=LM&state=OV&state=EM&state=SP' target='_new'>");
+    	sb.append("&states=embryo&states=live&states=ovaries&states=sperm' target='_new'>");
     	sb.append(this.allele.getImsrStrainCount());
     	sb.append("</a>");
     	return sb.toString();
