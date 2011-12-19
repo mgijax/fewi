@@ -1,48 +1,32 @@
 package org.jax.mgi.fewi.controller;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-/*------------------------------*/
-/* to change in each controller */
-/*------------------------------*/
+import javax.servlet.http.HttpServletRequest;
 
-// fewi
-import org.jax.mgi.fewi.finder.AccessionFinder;
-import org.jax.mgi.fewi.finder.ReferenceFinder;
-import org.jax.mgi.fewi.forms.FooQueryForm;
-import org.jax.mgi.fewi.forms.AccessionQueryForm;
-import org.jax.mgi.fewi.summary.AccessionSummaryRow;
-
-// data model objects
-import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Accession;
-import mgi.frontend.datamodel.Reference;
 
-
-/*--------------------------------------*/
-/* standard imports for all controllers */
-/*--------------------------------------*/
-
-// internal
+import org.jax.mgi.fewi.finder.AccessionFinder;
+import org.jax.mgi.fewi.forms.AccessionQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.ObjectTypes;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.summary.AccessionSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FewiLinker;
-
-// external
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,9 +55,6 @@ public class AccessionController {
 
     @Autowired
     private AccessionFinder accessionFinder;
-
-    @Autowired
-    private ReferenceFinder referenceFinder;
 
 
     //--------------------------------------------------------------------//
@@ -115,7 +96,7 @@ public class AccessionController {
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(queryForm));
         
-        SearchResults searchResults = accessionFinder.getAccessions(params);
+        SearchResults<Accession> searchResults = accessionFinder.getAccessions(params);
         
         logger.debug("About to check the size");
         
@@ -197,7 +178,7 @@ public class AccessionController {
         params.setFilter(this.genFilters(queryForm));
 
         // perform query, and pull out the requested objects
-        SearchResults searchResults
+        SearchResults<Accession> searchResults
           = accessionFinder.getAccessions(params);
         List<Accession> fooList = searchResults.getResultObjects();
 
