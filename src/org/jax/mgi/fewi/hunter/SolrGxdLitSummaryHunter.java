@@ -16,7 +16,7 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
 
     /***
      * The constructor sets up this hunter so that it is specific to finding
-     * a sequence key given any possible sequence id.
+     * GXD Literature Index data using a variety of query fields.
      */
     public SolrGxdLitSummaryHunter() {
 
@@ -55,6 +55,12 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
 
         propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
+	propertyMap.put(SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS,
+		new SolrPropertyMapper(IndexConstants.GXD_MRK_NOMEN_BEGINS));
+	propertyMap.put(SearchConstants.GXD_LIT_THEILER_STAGE,
+		new SolrPropertyMapper(IndexConstants.GXD_LIT_THEILER_STAGE));
+	propertyMap.put(SearchConstants.GXD_LIT_FC_ASSAY_TYPE,
+		new SolrPropertyMapper(IndexConstants.GXD_LIT_FC_ASSAY_TYPE));
 
         /*
          * The name of the field we want to iterate through the documents for
@@ -63,26 +69,29 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
          */
         keyString = IndexConstants.GXD_LIT_SINGLE_KEY;
 
-        highlightFields.add(IndexConstants.REF_TITLE_STEMMED);
-        highlightFields.add(IndexConstants.REF_TITLE_UNSTEMMED);
-        highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
-        highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
-        highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
-        highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
-        highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
+	/*
+        * highlightFields.add(IndexConstants.REF_TITLE_STEMMED);
+        * highlightFields.add(IndexConstants.REF_TITLE_UNSTEMMED);
+        * highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
+        * highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
+        * highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
+        * highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
+        * highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
+	*/
 
         /* A reverse Mapping of Highlightable fields in the index to what
          * parameter it came from
          */
 
-        fieldToParamMap.put(IndexConstants.REF_TITLE_STEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
-        fieldToParamMap.put(IndexConstants.REF_TITLE_UNSTEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
-        fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_STEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
-        fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
-        fieldToParamMap.put(IndexConstants.REF_AUTHOR_FORMATTED, SearchConstants.GXD_LIT_LONG_CITATION);
-        fieldToParamMap.put(IndexConstants.REF_FIRST_AUTHOR, SearchConstants.GXD_LIT_LONG_CITATION);
-        fieldToParamMap.put(IndexConstants.REF_LAST_AUTHOR, SearchConstants.GXD_LIT_LONG_CITATION);
-
+	/*
+        * fieldToParamMap.put(IndexConstants.REF_TITLE_STEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
+        * fieldToParamMap.put(IndexConstants.REF_TITLE_UNSTEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
+        * fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_STEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
+        * fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED, SearchConstants.GXD_LIT_LONG_CITATION);
+        * fieldToParamMap.put(IndexConstants.REF_AUTHOR_FORMATTED, SearchConstants.GXD_LIT_LONG_CITATION);
+        * fieldToParamMap.put(IndexConstants.REF_FIRST_AUTHOR, SearchConstants.GXD_LIT_LONG_CITATION);
+        * fieldToParamMap.put(IndexConstants.REF_LAST_AUTHOR, SearchConstants.GXD_LIT_LONG_CITATION);
+	*/
     }
 
 	private void checkFilter (Filter filter) {
