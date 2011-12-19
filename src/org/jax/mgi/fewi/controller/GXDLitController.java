@@ -415,10 +415,10 @@ public class GXDLitController {
 
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(queryForm));
-		params.setIncludeSetMeta(true);
-		params.setIncludeMetaHighlight(true);
-		params.setIncludeRowMeta(true);
-		params.setIncludeMetaScore(true);
+//		params.setIncludeSetMeta(true);
+//		params.setIncludeMetaHighlight(true);
+//		params.setIncludeRowMeta(true);
+//		params.setIncludeMetaScore(true);
         params.setPageSize(gxdLimit);
 
         logger.debug("Hitting the finder.");
@@ -429,17 +429,17 @@ public class GXDLitController {
 
         Highlighter textHl = null;
 
-        logger.debug("Checking highlighting.");
+//        logger.debug("Checking highlighting.");
 
-        if (highlighting.containsKey(SearchConstants.GXD_LIT_LONG_CITATION)){
-        	textHl = new Highlighter(highlighting.get(SearchConstants.GXD_LIT_LONG_CITATION));
-        }
+//        if (highlighting.containsKey(SearchConstants.GXD_LIT_LONG_CITATION)){
+//        	textHl = new Highlighter(highlighting.get(SearchConstants.GXD_LIT_LONG_CITATION));
+//        }
 
         logger.debug("Building the summary rows");
 
         List<GxdLitIndexRecord> recordList = results.getResultObjects();
 
-        logger.debug("Got the record list");
+        logger.debug("Got the record list: " + recordList.size() + " records");
 
         // create/load the list of SummaryRow wrapper objects for the gene section
         List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, textHl);
@@ -543,6 +543,7 @@ public class GXDLitController {
 			}
 	    }
 
+	    logger.debug (" --> built " + summaryRows.size() + " summaryRows");
 	    return summaryRows;
 	}
 
@@ -715,16 +716,75 @@ public class GXDLitController {
         String nomen = query.getNomen();
         // Nomen Filter
         if ((nomen != null) && (!"".equals(nomen))) {
-            filterList.add(new Filter (SearchConstants.GXD_LIT_MRK_NOMEN, nomen,
-                Filter.OP_EQUAL));
+	    String field;
+	    if (nomen.length() <= 2) {
+		// for 1-2 characters, do an exact match
+		field = SearchConstants.GXD_LIT_MRK_NOMEN;
+	    } else {
+		// for 3+ characters, do a begins search
+		field = SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS;
+	    }
+            filterList.add(new Filter (field, nomen, Filter.OP_EQUAL));
         }
+
+	// full-coded assay types - for link from expression results.
+	// multiple selections are allowed; should be OR-ed together
+
+	List<String> fcAssayTypes = query.getFullCodedAssayType();
+	if ((fcAssayTypes != null) && (fcAssayTypes.size() > 0)) {
+	    List<Filter> fcatFilters = new ArrayList<Filter>();
+
+	    for (String fcat: fcAssayTypes) {
+		if ((fcat != null) && (!"".equals(fcat))) {
+		    fcatFilters.add (new Filter (
+			SearchConstants.GXD_LIT_FC_ASSAY_TYPE, 
+			fcat, 
+			Filter.OP_EQUAL));
+		}
+	    }
+
+	    if (fcatFilters.size() == 1) {
+		filterList.add (fcatFilters.get(0));
+	    } else {
+		Filter tf = new Filter();
+		tf.setFilterJoinClause(Filter.FC_OR);
+		tf.setNestedFilters(fcatFilters);
+		filterList.add(tf); 
+	    }
+	}
+
+	// full-coded age (Theiler stages) - for link from expression results.
+	// multiple selections are allowed; should be OR-ed together
+
+	List<String> stages = query.getTheilerStages();
+	if ((stages != null) && (stages.size() > 0)) {
+	    List<Filter> tsFilters = new ArrayList<Filter>();
+
+	    for (String stage: stages) {
+		if ((stage != null) && (!"".equals(stage))) {
+		    tsFilters.add (new Filter (
+			SearchConstants.GXD_LIT_THEILER_STAGE, 
+			stage, 
+			Filter.OP_EQUAL));
+		}
+	    }
+
+	    if (tsFilters.size() == 1) {
+		filterList.add (tsFilters.get(0));
+	    } else {
+		Filter tf = new Filter();
+		tf.setFilterJoinClause(Filter.FC_OR);
+		tf.setNestedFilters(tsFilters);
+		filterList.add(tf); 
+	    }
+	}
+
+        // Age Filter
 
         List <String> ageList = query.getAge();
         Boolean ageAnyFound = Boolean.FALSE;
 
         if (ageList != null && ageList.size() != 0) {
-        // Age Filter
-
 	        List <Filter> ageFilters = new ArrayList<Filter>();
 
 	        for (String age: ageList) {
