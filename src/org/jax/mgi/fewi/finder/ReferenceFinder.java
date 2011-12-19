@@ -49,17 +49,12 @@ public class ReferenceFinder {
 	private HibernateObjectGatherer<Reference> referenceGatherer;
 
 	public SearchResults<Reference> searchSummaryReferences(SearchParams params) {
-		logger.debug("searchReferences");
+		logger.debug("searchSummaryReferences");
 		SearchResults<Reference> results = new SearchResults<Reference>();
-		List<Reference> summaryList = results.getResultObjects();
 		
 		logger.debug("hunt");
 		referenceHunter.hunt(params, results);
-		
-		logger.debug("gather");
-		for(Reference ref: referenceGatherer.get(Reference.class, results.getResultKeys())){		
-			summaryList.add(ref);
-		}
+		results.setResultObjects(referenceGatherer.get(Reference.class, results.getResultKeys()));
 		return results;
 	}
 

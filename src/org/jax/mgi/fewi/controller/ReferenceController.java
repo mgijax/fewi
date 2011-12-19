@@ -128,19 +128,16 @@ public class ReferenceController {
 			@ModelAttribute Paginator page,
 			BindingResult result) {
 				
-		logger.debug("summaryReport");
-		
+		logger.debug("summaryReport");		
 		SearchResults<Reference> searchResults;
 		try {
 			searchResults = this.getSummaryResults(request, query, page, result);
 	        model.addAttribute("results", searchResults.getResultObjects());
-
 			return "referenceSummaryReport";			
 		} catch (BindException be) {
 			logger.debug("bind error");
 			return "reference_query";
 		}
-
 	}
 	
 	/* 
@@ -154,39 +151,38 @@ public class ReferenceController {
 			@ModelAttribute ReferenceQueryForm query,
 			@ModelAttribute Paginator page,
 			BindingResult result) throws BindException {
-					
-		logger.debug("json");
-		SearchResults<Reference> searchResults = this.getSummaryResults(request, query, page, result);
-		
+
+		SearchResults<Reference> searchResults = this.getSummaryResults(request, query, page, result);	
         List<Reference> refList = searchResults.getResultObjects();
-        
+
         Map<String, Set<String>> highlighting = searchResults.getResultSetMeta().getSetHighlights();
-		
         Set<String> textHl = new HashSet<String>(), authorHL = new HashSet<String>();
-        
-        if (query.getAuthor() != null && !"".equals(query.getAuthor())){	
-			for (String auth: highlighting.get(SearchConstants.REF_AUTHOR)) {
-				authorHL.add(auth.replace(" ", "[\\s\\-']"));
-			}
-        }
-        if (query.getText() != null && !"".equals(query.getText())){
-			if (query.isInAbstract()){
-				if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
-					textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
-				} else if (highlighting.containsKey(SearchConstants.REF_TEXT_ABSTRACT)){
-					textHl= highlighting.get(SearchConstants.REF_TEXT_ABSTRACT);
+        if (highlighting != null){
+	        if (query.getAuthor() != null && !"".equals(query.getAuthor())){	
+	        	if (highlighting.containsKey(SearchConstants.REF_AUTHOR)){
+					for (String auth: highlighting.get(SearchConstants.REF_AUTHOR)) {
+						authorHL.add(auth.replace(" ", "[\\s\\-']"));
+					}
+	        	}
+
+	        }
+	        if (query.getText() != null && !"".equals(query.getText())){
+				if (query.isInAbstract()){
+					if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
+						textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+					} else if (highlighting.containsKey(SearchConstants.REF_TEXT_ABSTRACT)){
+						textHl= highlighting.get(SearchConstants.REF_TEXT_ABSTRACT);
+					}
 				}
-			}
-			if (query.isInTitle()){
-				if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
-					textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
-				} else if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE)){
-					textHl= highlighting.get(SearchConstants.REF_TEXT_TITLE);
+				if (query.isInTitle()){
+					if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE_ABSTRACT)){
+						textHl = highlighting.get(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
+					} else if (highlighting.containsKey(SearchConstants.REF_TEXT_TITLE)){
+						textHl= highlighting.get(SearchConstants.REF_TEXT_TITLE);
+					}
 				}
-			}
+	        }
         }
-		
-		logger.debug("wrap results");
         List<ReferenceSummary> summaryRows = new ArrayList<ReferenceSummary>();
         ReferenceSummary row;
         MetaData rowMeta;
@@ -214,7 +210,6 @@ public class ReferenceController {
 				logger.debug("--> Null Object");
 			}
 		}
-        
         JsonSummaryResponse<ReferenceSummary> jsonResponse
         		= new JsonSummaryResponse<ReferenceSummary>();
         jsonResponse.setSummaryRows(summaryRows);       
@@ -487,11 +482,9 @@ public class ReferenceController {
 										"* Invalid year"));
 					} else {
 						if (rangeLoc == 0){
-							logger.debug("year <= " + years.get(0));
 							queryList.add(new Filter(SearchConstants.REF_YEAR, 
 									years.get(0), Filter.OP_LESS_OR_EQUAL));
 						} else {
-							logger.debug("year >= " + years.get(0));
 							queryList.add(new Filter(SearchConstants.REF_YEAR, 
 									years.get(0), Filter.OP_GREATER_OR_EQUAL));
 						}
@@ -776,18 +769,16 @@ public class ReferenceController {
 		
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
-		
+		//m.put("resultFacets", facetResults.getResultFacets());
 		if (facetResults.getResultFacets().size() >= facetLimit){
 			logger.debug("too many facet results");
-			l.add("Too many filter values to display.");
+			l.add("Too many results to display. Modify your search or try another filter first.");
 			m.put("error", l);
 		} else if (facetResults.getResultFacets().size() == 0) {
 			logger.debug("no facet results");
-			l.add("Zero filter values to display.");
+			l.add("No values in results to filter.");
 			m.put("error", l);
-		} else {
-			m.put("resultFacets", facetResults.getResultFacets());
-		}
+		} 
 		return m;
 	}
 }
