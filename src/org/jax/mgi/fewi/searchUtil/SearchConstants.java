@@ -58,9 +58,12 @@ public class SearchConstants {
 
     // GXD Lit
 
-    public static final String GXD_LIT_MRK_NOMEN		= "nomen";
-    public static final String GXD_LIT_AGE		    = "age";
+    public static final String GXD_LIT_MRK_NOMEN	= "nomen";
+    public static final String GXD_LIT_MRK_NOMEN_BEGINS	= "nomenBegins";
+    public static final String GXD_LIT_AGE		= "age";
     public static final String GXD_LIT_ASSAY_TYPE	= "assayType";
+    public static final String GXD_LIT_THEILER_STAGE	= "theilerStage";
+    public static final String GXD_LIT_FC_ASSAY_TYPE	= "fullCodedAssayType";
 
     // GXD Lit special param
     // This is used to highlight the long citation in the GXD Lit Summaries.
