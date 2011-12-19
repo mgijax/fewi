@@ -20,6 +20,7 @@
 						<form:input id="author" path="author"></form:input>
 						<div id="authorContainer"></div>
 					</div>
+					<div id="authHelp" style="display:none;" class="example">Continue typing to add another Author.</div>
 				</div>
 				<div style="float:left; text-align:left;">
 					<form:radiobutton id="authorScope1" path="authorScope" value="any" checked="checked"/> Any Author(s)<br/>
@@ -34,13 +35,14 @@
 		<TD CLASS="cat2">Journal</TD>
 		<TD>
 			<div>
-				<div style="float:left;width:300px;text-align:left;">
+				<div style="float:left;width:300px;height:3em;text-align:left;">
 					<div id="journalAutoComplete">
 						<form:input id="journal" path="journal"></form:input>
 						<div id="journalContainer"></div>
 					</div>
+					<div id="journalHelp" style="display:none;" class="example">Continue typing to add another Journal.</div>
 				</div>
-				<div style="height:2em;" class="example">
+				<div style="height:3em;" class="example">
 					<div style="float:left;text-align:left;vertical-align:middle;width:7em;" class="example">
 						Examples:<br/>
 						(See <a href="ftp://ftp.ncbi.nih.gov/pubmed/J_Medline.txt">NLM</a>.)
@@ -57,12 +59,12 @@
 		<td CLASS="cat1">Year</td>
 		<td>
 			<div style="height:4em;">
-				<div style="float:left;width:300px;text-align:left;">
+				<div style="float:left;width:300px;height:4.5em;text-align:left;">
 					<form:input id="year" path="year" class="formWidth"></form:input><br/>
 					<form:errors path="year" cssClass="qfError"/>
 				</div>
 				<div style="height:4em;" class="example">
-					<div style="float:left;text-align:left;line-height:4em;vertical-align:middle;width:7em;" class="example">
+					<div style="float:left;text-align:left;line-height:4.5em;vertical-align:middle;width:7em;" class="example">
 						Examples:
 					</div>
 					<div style="text-align:left;" class="example">
