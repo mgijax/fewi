@@ -90,6 +90,14 @@ YAHOO.util.Event.addListener("referenceQueryForm", "submit", interceptSubmit);
 
     	  return (sKey);
     	}; 
+    	
+    var toggleVis = function(){
+        if (YAHOO.util.Dom.getStyle('authHelp', 'display') == 'none'){
+            YAHOO.util.Dom.setStyle('authHelp', 'display', 'block');
+        }
+    };
+    
+    oAC.itemSelectEvent.subscribe(toggleVis); 
 
     return {
         oDS: oDS,
@@ -117,12 +125,13 @@ YAHOO.util.Event.addListener("referenceQueryForm", "submit", interceptSubmit);
     oAC.forceSelection = false;
     oAC.delimChar = ";";
     
-//    oAC.doBeforeExpandContainer = function(elTextbox , elContainer , sQuery , aResults){
-//    	var acBody = YAHOO.util.Dom.getElementsByClassName("yui-ac-bd" , "div", elContainer);
-//    	alert(acBody[0]['firstChild']["scrollTop"]);
-//    	return true;
-//    };
-
+    var toggleVis = function(){
+        if (YAHOO.util.Dom.getStyle('journalHelp', 'display') == 'none'){
+            YAHOO.util.Dom.setStyle('journalHelp', 'display', 'block');
+        }
+    };
+    
+    oAC.itemSelectEvent.subscribe(toggleVis); 
     return {
         oDS: oDS,
         oAC: oAC

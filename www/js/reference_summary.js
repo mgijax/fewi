@@ -174,7 +174,7 @@ var clearFilter = function () {
     myDataTable = new YAHOO.widget.RowExpansionDataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
 
     //Subscribe to a click event to bind to
-    myDataTable.subscribe( 'cellClickEvent', myDataTable.onEventToggleRowExpansion )
+    myDataTable.subscribe( 'cellClickEvent', myDataTable.onEventToggleRowExpansion );
 
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);    
@@ -404,17 +404,22 @@ YAHOO.util.Event.onDOMReady(function () {
 	// facet DataSource instances
 	var facetAuthorDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/author?" + querystring);
 	facetAuthorDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
-	facetAuthorDS.responseSchema = {resultsList: "resultFacets",         
+	facetAuthorDS.responseSchema = {resultsList: "resultFacets",  
 		metaFields: {
-	        error: "error"}
+			 message: "message"}
 	};
 	facetAuthorDS.maxCacheEntries = 3;
+	
+	facetAuthorDS.doBeforeParseData = function(oRequest , oFullResponse , oCallback){
+		oCallback.argument.error = oFullResponse.error;
+	};
+
 
 	var facetJournalDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/journal?" + querystring);
 	facetJournalDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
-	facetJournalDS.responseSchema = {resultsList: "resultFacets",         
+	facetJournalDS.responseSchema = {resultsList: "resultFacets",   
 			metaFields: {
-        error: "error"}
+				 message: "message"}
 	};
 	facetJournalDS.maxCacheEntries = 3;
 
@@ -422,7 +427,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	facetYearDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetYearDS.responseSchema = {resultsList: "resultFacets",         
 			metaFields: {
-        error: "error"}
+		message: "message"}
 	};
 	facetYearDS.maxCacheEntries = 3;
 
@@ -430,7 +435,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	facetDataDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetDataDS.responseSchema = {resultsList: "resultFacets",         
 			metaFields: {
-        error: "error"}
+        message: "message"}
 	};
 	facetDataDS.maxCacheEntries = 3;
 
@@ -460,16 +465,14 @@ YAHOO.util.Event.onDOMReady(function () {
 		facetDialog.setHeader('Filter by ' + title);
 		facetDialog.form.innerHTML = body;
 		buttons = facetDialog.getButtons();
-	}
+	};
 
 	var handleError = function (oRequest, oResponse, oPayload) {
 		buttons = facetDialog.getButtons();
 		for (k in buttons){
 			buttons[k].set('disabled', true);
 		}
-
-		populateFacetDialog(oPayload.title, 'Too many ' + oPayload.title + 
-				' to filter. Modify your search or use another filter first.');
+		populateFacetDialog(oPayload.title, oPayload.error);
 	};
 
 	var authorCallback = {success:parseFacetResponse,
