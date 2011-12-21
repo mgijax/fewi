@@ -1,16 +1,34 @@
-# Properties file for fewi-specific properties.
-# Applied by <context:property-placeholder/> from application context XML file
+#-------------------------------------------------------------------------------
+#- fewi-specific properties.
+#-
+#- Applied by <context:property-placeholder/> application context XML file
 #-------------------------------------------------------------------------------
 
-# URL to the fewi
-# Use this entry to override values set in GlobalConfig.properties per the
-# the example below.  GlobalConfig naming conventions use all caps with 
-# underscores between words.  
+
+#-------------------------------------------------------------------------------
+#----- BASE URLS
+#-------------------------------------------------------------------------------
+
+
+#----- FEWI_URL -----#
+
+# Overrides value normally set in GlobalConfig.properties.
 #FEWI_URL=http://server.informatics.jax.org/
 #FEWI_URL=http://cardolan.informatics.jax.org:8080/fewi/mgi/
 
-# SNP build identifier
-SNP_BUILD=dbSNP Build 128
+
+#----- solr server urls -----#
+
+# Weekly Proto
+solr.server1.url=http://mgi-fewi1.jax.org:9995/solr/ 
+
+# Front-end development indexes
+#solr.server1.url=http://cardolan:8985/solr/
+
+
+#-------------------------------------------------------------------------------
+#----- INSTALL VALUES
+#-------------------------------------------------------------------------------
 
 # directory in which to find the standard mgi template
 #template.dir=/home/<user>/devwi/mgiconfig/web/
@@ -25,18 +43,12 @@ jndi.datasource=java:fe_frontend
 # gxd lit result limit
 gxdLit.limit=20000
 
+# SNP build identifier
+SNP_BUILD=dbSNP Build 128
+
 #-------------------------------------------------------------------------------
-#----- SOLR CONFIGURATION
+#----- SOLR INDEX URLS
 #-------------------------------------------------------------------------------
-
-# Weekly Proto
-solr.server1.url=http://cardolan:8995/solr/
-
-# Front-end development indexes
-#solr.server1.url=http://cardolan:8985/solr/
-
-# Back-end development indexes
-#solr.server1.url=http://cardolan:8983/solr/
 
 #solr index-specific urls
 solr.reference.url=${solr.server1.url}reference/
