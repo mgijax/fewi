@@ -87,7 +87,7 @@ ${templateBean.templateBodyStartHtml}
       </c:if>
 
       <c:if test="${paginationControls.showLastLink}">
-        <a href='${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}?startIndex=${paginationControls.resultsTotal - paginationControls.results}&results=${paginationControls.results}'>
+        <a href='${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}?startIndex=${paginationControls.resultsTotal - (paginationControls.resultsTotal mod paginationControls.results)}&results=${paginationControls.results}'>
           Last</a>
       </c:if>
 
