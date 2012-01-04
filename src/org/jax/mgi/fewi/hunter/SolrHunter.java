@@ -147,6 +147,7 @@ public class SolrHunter implements Hunter {
 
         // Create the query string by invoking the translate filter method.
         SolrQuery query = new SolrQuery();
+        query.setHighlightRequireFieldMatch(true);
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
         logger.debug("TranslatedFilters: " + queryString);
