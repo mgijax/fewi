@@ -62,7 +62,6 @@ public class AutoCompleteController {
 		Map<String, MetaData> meta = qResults.getMetaMapping();
 		for (String s: qResults.getResultStrings()) {
 			retResults.add(new AutocompleteAuthorResult(s, meta.get(s).isGenerated()));
-			logger.debug(s + ": " + meta.get(s).isGenerated());
 		}
 		r.setSummaryRows(retResults);
 		// return results
@@ -92,7 +91,6 @@ public class AutoCompleteController {
 		Map<String, MetaData> meta = qResults.getMetaMapping();
 		for (String s: qResults.getResultStrings()) {
 			retResults.add(new AutocompleteAuthorResult(s, meta.get(s).isGenerated()));
-			logger.debug(s + ": " + meta.get(s).isGenerated());
 		}
 		r.setSummaryRows(retResults);
 		// return results
