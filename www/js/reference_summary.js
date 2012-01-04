@@ -412,6 +412,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	
 	facetAuthorDS.doBeforeParseData = function(oRequest , oFullResponse , oCallback){
 		oCallback.argument.error = oFullResponse.error;
+		return oFullResponse;
 	};
 
 
@@ -422,6 +423,11 @@ YAHOO.util.Event.onDOMReady(function () {
 				 message: "message"}
 	};
 	facetJournalDS.maxCacheEntries = 3;
+	
+	facetJournalDS.doBeforeParseData = function(oRequest , oFullResponse , oCallback){
+		oCallback.argument.error = oFullResponse.error;
+		return oFullResponse;
+	};
 
 	var facetYearDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/year?" + querystring);
 	facetYearDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -430,6 +436,11 @@ YAHOO.util.Event.onDOMReady(function () {
 		message: "message"}
 	};
 	facetYearDS.maxCacheEntries = 3;
+	
+	facetYearDS.doBeforeParseData = function(oRequest , oFullResponse , oCallback){
+		oCallback.argument.error = oFullResponse.error;
+		return oFullResponse;
+	};
 
 	var facetDataDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/data?" + querystring);
 	facetDataDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -438,6 +449,11 @@ YAHOO.util.Event.onDOMReady(function () {
         message: "message"}
 	};
 	facetDataDS.maxCacheEntries = 3;
+	
+	facetDataDS.doBeforeParseData = function(oRequest , oFullResponse , oCallback){
+		oCallback.argument.error = oFullResponse.error;
+		return oFullResponse;
+	};
 
 	var parseFacetResponse = function (oRequest, oResponse, oPayload) {
 		var res = oResponse.results;

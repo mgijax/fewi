@@ -769,7 +769,7 @@ public class ReferenceController {
 		
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
-		//m.put("resultFacets", facetResults.getResultFacets());
+		
 		if (facetResults.getResultFacets().size() >= facetLimit){
 			logger.debug("too many facet results");
 			l.add("Too many results to display. Modify your search or try another filter first.");
@@ -778,7 +778,9 @@ public class ReferenceController {
 			logger.debug("no facet results");
 			l.add("No values in results to filter.");
 			m.put("error", l);
-		} 
+		} else {
+			m.put("resultFacets", facetResults.getResultFacets());
+		}
 		return m;
 	}
 }
