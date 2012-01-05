@@ -575,9 +575,7 @@ YAHOO.util.Event.onDOMReady(function () {
         if (expand){
         	var i = pagination.recordOffset ;
         	var rows = pagination.rowsPerPage + i;
-        	alert(i + ': ' + rows);
         	while(i < rows){
-        		alert(i);
         		myDataTable.expandRow(i++);
         	}
         }
