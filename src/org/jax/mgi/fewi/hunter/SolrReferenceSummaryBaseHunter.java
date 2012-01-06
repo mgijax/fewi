@@ -65,6 +65,7 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
         
         ArrayList <String> refList = new ArrayList <String> ();
         refList.add(IndexConstants.JNUM_ID);
+        refList.add(IndexConstants.MGI_ID);
         refList.add(IndexConstants.PUBMED_ID);
         
         // The 1->N Mapping should be joined with OR's
