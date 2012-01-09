@@ -320,7 +320,7 @@ public class BatchSummaryRow {
     		}
     		String url;
     		for (BatchMarkerAllele allele : markerAlleles) {
-    			url = fewiUrl + "allele/" + allele.getAlleleID();
+    			url = javawiUrl + "WIFetch?page=alleleDetail&id=" + allele.getAlleleID();
     			alleleOutput.add(String.format(noWrap, String.format(urlPattern, url,
 						FormatHelper.superscript(allele.getAlleleSymbol()))));
 			}
