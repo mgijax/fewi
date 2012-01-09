@@ -6,7 +6,7 @@ var toggleQF = function(oCallback) {
     var toggleLink = YAHOO.util.Dom.get('toggleQF');
     var toggleImg = YAHOO.util.Dom.get('toggleImg');
     
-    var attributes = { height: { to: 375 }};
+    var attributes = { height: { to: 405 }};
     var height = '';
 
     if (!qDisplay){
