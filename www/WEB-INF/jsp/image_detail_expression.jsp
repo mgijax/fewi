@@ -75,14 +75,17 @@ ${templateBean.templateBodyStartHtml}
 
 
   <!-- CAPTION -->
-  <tr >
-    <td class="<%=leftTdStyles.getNext() %>">
-      Caption
-    </td>
-    <td class="<%=rightTdStyles.getNext() %>">
-      <%=FormatHelper.superscript(image.getCaption())%>
-    </td>
-  </tr>
+  <!-- ASSOC ASSAYS -->
+  <c:if test="${not empty image.caption}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Caption
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+        <%=FormatHelper.superscript(image.getCaption())%>
+      </td>
+    </tr>
+  </c:if>
 
 
   <!-- COPYRIGHT -->
