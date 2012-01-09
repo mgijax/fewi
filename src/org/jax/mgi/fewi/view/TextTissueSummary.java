@@ -29,6 +29,8 @@ public class TextTissueSummary extends AbstractTextView {
 		
 		List<MarkerTissueCount> tissues = (List<MarkerTissueCount>) model.get("results");
 		
+		writer.write("Structure\tAll\tDetected\tNot Detected\r\n");
+		
 		for (MarkerTissueCount mtc : tissues) {
 			
 			writer.write("TS" + mtc.getStructure() + "\t");
