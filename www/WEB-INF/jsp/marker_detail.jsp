@@ -186,7 +186,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- ROW5 -->
-  <c:if test="${not empty marker.preferredCoordinates}">
+  <c:if test="${not (empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Sequence&nbsp;Map
@@ -201,18 +201,20 @@ td.padded { padding:4px; }
       <td class="<%=rightTdStyles.getNext() %>">
         <table width="100%">
         <tr><td>
-        Chr${chromosome}:${startCoord}-${endCoord}
         <c:if test="${not empty marker.preferredCoordinates}"> 
+        Chr${chromosome}:${startCoord}-${endCoord}
           ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
-        </c:if>
         <c:if test="${empty marker.preferredCoordinates}"> 
           ${marker.preferredCoordinates.mapUnits}<br/>
+        </c:if>
         </c:if>
         <c:if test="${not empty marker.qtlNote}">
           ${marker.qtlNote}<br/>
         </c:if>
+        <c:if test="${not empty marker.preferredCoordinates}"> 
         (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/>
         <p/>
+        </c:if>
         <c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
         <c:set var="ensemblID" value="${marker.ensemblGeneModelID.accID}"/>
         <c:set var="ncbiID" value="${marker.ncbiGeneModelID.accID}"/>
@@ -428,7 +430,12 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- ROW11 -->
-  <c:if test="${not (empty marker.gxdAssayCountsByType and (marker.countOfGxdLiterature < 1) and (marker.countOfCdnaSources < 1))}">
+  <c:set var="allenID" value="${marker.allenBrainAtlasID.accID}"/>
+  <c:set var="gensatID" value="${marker.gensatID.accID}"/>
+  <c:set var="geoID" value="${marker.geoID.accID}"/>
+  <c:set var="arrayExpressID" value="${marker.arrayExpressID.accID}"/>
+
+  <c:if test="${not (empty marker.gxdAssayCountsByType and (marker.countOfGxdLiterature < 1) and (marker.countOfCdnaSources < 1) and empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Expression
@@ -475,10 +482,6 @@ td.padded { padding:4px; }
 		
 		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(<a href="${configBean.WI_URL}searches/estclone_report.cgi?_Marker_key=${marker.markerKey}&sort=Tissue">${marker.countOfCdnaSources}</a>)<br/></c:if>
 		
-		<c:set var="allenID" value="${marker.allenBrainAtlasID.accID}"/>
-		<c:set var="gensatID" value="${marker.gensatID.accID}"/>
-		<c:set var="geoID" value="${marker.geoID.accID}"/>
-		<c:set var="arrayExpressID" value="${marker.arrayExpressID.accID}"/>
 		<c:if test="${not (empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
 		  External Resources: 
 		  <c:if test="${not empty allenID}">
