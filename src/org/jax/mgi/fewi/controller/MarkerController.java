@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerAlleleAssociation;
+import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.MarkerBiotypeConflict;
 import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.MarkerID;
@@ -38,6 +40,7 @@ import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.ObjectTypes;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -48,6 +51,7 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.util.FewiLinker;
 import org.jax.mgi.fewi.util.ProviderLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,7 +160,35 @@ public class MarkerController {
             mav.addObject("errorMsg", "Duplicate ID");
             return mav;
         }
-        // success - we have a single object
+
+        // success - we have a single object; pull out the marker
+        Marker marker = markerList.get(0);
+
+	// if this marker is a transgene with only one allele, then we should
+	// go to the allele detail page (special case)
+
+	if ("Transgene".equals(marker.getMarkerType()) &&
+	    (marker.getCountOfAlleles() == 1)) {
+		// need to look up the allele ID for this transgene marker
+
+	    try {
+		MarkerAlleleAssociation assoc =
+			marker.getAlleleAssociations().get(0);
+
+		String alleleID = assoc.getAllele().getPrimaryID();
+
+		FewiLinker linker = FewiLinker.getInstance();
+		ModelAndView mav = new ModelAndView(
+			"redirect:" + linker.getFewiIDLink(
+				ObjectTypes.ALLELE, alleleID) );
+		return mav;
+	    } catch (Exception e) {
+		ModelAndView mav = new ModelAndView("error");
+                mav.addObject("errorMsg", 
+			"Could not find allele ID for transgene marker");
+		return mav;
+	    }
+	}
 
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("marker_detail");
@@ -165,8 +197,7 @@ public class MarkerController {
         IDLinker idLinker = ContextLoader.getIDLinker();
         mav.addObject("idLinker", idLinker);
         
-        //pull out the marker, and add to mav
-        Marker marker = markerList.get(0);
+	// add the marker to mav
         mav.addObject("marker", marker);
         
         this.dbDate(mav);
