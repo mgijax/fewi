@@ -470,9 +470,9 @@ td.padded { padding:4px; }
  	      <c:set var="gxdAssayUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assays&sort=Assay%20type&assayType="/>
 		  <c:set var="gxdResultUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure&assayType="/>
 		  <table>
-		    <tr><td>Assay Type</td><td>Assays</td><td>Results</td></tr>
+		    <tr><td>Assay Type</td><td>Assays&nbsp;&nbsp;</td><td>Results</td></tr>
 		    <c:forEach var="assayType" items="${gxdAssayTypes}">
-		      <tr><td>${assayType}</td>
+		      <tr><td>${assayType}&nbsp;</td>
 		        <td><a href="${gxdAssayUrl}${assayType}">${gxdAssayCounts[assayType]}</a></td>
 		        <td><a href="${gxdResultUrl}${assayType}">${gxdResultCounts[assayType]}</a></td>
 		      </tr>
