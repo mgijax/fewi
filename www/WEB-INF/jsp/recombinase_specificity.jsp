@@ -98,6 +98,13 @@ a {
   cursor: pointer;
 }
 
+#alleleInfo td {
+  padding-top:2px;
+  padding-bottom:2px;
+  padding-left:4px;
+  padding-right:4px;
+}
+
 
 </style>
 
@@ -176,7 +183,7 @@ ${templateBean.templateBodyStartHtml}
     <td class="<%=rightTdStyles.getNext() %>">
 
 
-    <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <table id="alleleInfo" border="0" cellpadding="4" cellspacing="0" width="100%" >
     <tr>
 
       <td class="rightBorderThinGray" align="right" valign="middle" width="1%" nowrap="nowrap">
