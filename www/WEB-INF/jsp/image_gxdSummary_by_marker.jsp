@@ -54,9 +54,9 @@ ${templateBean.templateBodyStartHtml}
 <tr>
 
   <td width="40%"><br>
-    ${paginationControls.resultsTotal} expression image(s) for ${marker.symbol}<br>
-    Showing image(s) ${paginationControls.startIndexDisplay} 
-    to ${paginationControls.lastResultDisplayed}
+    ${marker.countOfGxdImages} expression image(s) for ${marker.symbol} in ${paginationControls.resultsTotal} figure(s)
+    <br>
+    Showing figure(s) ${paginationControls.startIndexDisplay} to ${paginationControls.lastResultDisplayed} 
   </td>
 
   <c:if test="${paginationControls.resultsTotal - paginationControls.results > 0}">

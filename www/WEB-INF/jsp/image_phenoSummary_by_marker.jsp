@@ -54,7 +54,8 @@ ${templateBean.templateBodyStartHtml}
 <tr>
 
   <td width="40%"><br>
-    ${paginationControls.resultsTotal} phenotype image(s) for ${marker.symbol}<br>
+    ${paginationControls.resultsTotal} phenotype image(s) for ${marker.symbol} alleles
+    <br>
     Showing image(s) ${paginationControls.startIndexDisplay} 
     to ${paginationControls.lastResultDisplayed}
   </td>
