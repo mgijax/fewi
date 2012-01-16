@@ -381,6 +381,7 @@ public class ImageController {
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
+        imageSearchParams.setSorts(this.genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
         Integer markerKey = new Integer(marker.getMarkerKey());
@@ -416,6 +417,15 @@ public class ImageController {
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
+
+    // generate the sorts
+    private List<Sort> genDefaultSorts() {
+
+        List<Sort> sorts = new ArrayList<Sort>();
+        Sort sort = new Sort(SortConstants.BY_DEFAULT, false);
+        sorts.add(sort);
+        return sorts;
+    }
 
     // retrieves an image list for a given ID
     private List<Image> getImageForID (String imageID) {
