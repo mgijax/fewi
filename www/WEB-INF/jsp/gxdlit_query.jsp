@@ -154,7 +154,6 @@ ${templateBean.templateBodyStartHtml}
 					<div style="text-align:left;" class="example">
 						gastrulation, morphogenesis<br>
 						"pattern formation"<br>
-						epidermal differentiation
 					</div>
 				</div>
     		</div>
