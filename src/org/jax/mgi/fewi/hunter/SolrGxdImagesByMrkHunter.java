@@ -6,6 +6,8 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,10 @@ public class SolrGxdImagesByMrkHunter extends SolrHunter {
    * image keys given an allele key
    */
   public SolrGxdImagesByMrkHunter() {
+
+
+    // adding default sort
+    sortMap.put(SortConstants.BY_DEFAULT, new SolrSortMapper(IndexConstants.BY_DEFAULT));
 
     /*
      * Setup the property map.  This maps from the properties of the incoming
