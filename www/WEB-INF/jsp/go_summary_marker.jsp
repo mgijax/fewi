@@ -34,7 +34,8 @@ ${templateBean.templateBodyStartHtml}
 <jsp:include page="marker_header.jsp"></jsp:include><br>
 
 <div class="GO">
-<a name="text"></a><h3 class="extraLarge"><b>Go Annotations as Summary Text</b> <a href="#tabular" class="GO">(Tabular View)</a></h3>
+<a name="text"></a><h3 class="extraLarge"><b>Go Annotations as Summary Text</b> <a href="#tabular" class="GO">(Tabular View)</a>
+<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOMarkerGraph&id=${marker.primaryID}" class="GO">(GO Graph)</a></c:if></h3>
 
 <%=ntc.convertNotes(marker.getGOText(), '|')%><br><hr><br>
 </div>
