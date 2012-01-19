@@ -485,7 +485,7 @@ td.padded { padding:4px; }
 		<c:if test="${not (empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
 		  External Resources: 
 		  <c:if test="${not empty allenID}">
-		    <a href="${fn:replace (externalUrls.Allen_Brain_Atlas, '@@@@', allenID)}" target="_new">Allen Brain Atlas</a>&nbsp;&nbsp;
+		    <a href="${fn:replace (externalUrls.Allen_Brain_Atlas, '@@@@', allenID)}" target="_new">Allen Institute</a>&nbsp;&nbsp;
 		  </c:if>
 		  <c:if test="${not empty gensatID}">
 		    <a href="${fn:replace (externalUrls.GENSAT, '@@@@', gensatID)}" target="_new">GENSAT</a>&nbsp;&nbsp;
