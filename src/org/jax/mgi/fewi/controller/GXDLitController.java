@@ -727,58 +727,6 @@ public class GXDLitController {
             filterList.add(new Filter (field, nomen, Filter.OP_EQUAL));
         }
 
-	// full-coded assay types - for link from expression results.
-	// multiple selections are allowed; should be OR-ed together
-
-	List<String> fcAssayTypes = query.getFullCodedAssayType();
-	if ((fcAssayTypes != null) && (fcAssayTypes.size() > 0)) {
-	    List<Filter> fcatFilters = new ArrayList<Filter>();
-
-	    for (String fcat: fcAssayTypes) {
-		if ((fcat != null) && (!"".equals(fcat))) {
-		    fcatFilters.add (new Filter (
-			SearchConstants.GXD_LIT_FC_ASSAY_TYPE, 
-			fcat, 
-			Filter.OP_EQUAL));
-		}
-	    }
-
-	    if (fcatFilters.size() == 1) {
-		filterList.add (fcatFilters.get(0));
-	    } else {
-		Filter tf = new Filter();
-		tf.setFilterJoinClause(Filter.FC_OR);
-		tf.setNestedFilters(fcatFilters);
-		filterList.add(tf); 
-	    }
-	}
-
-	// full-coded age (Theiler stages) - for link from expression results.
-	// multiple selections are allowed; should be OR-ed together
-
-	List<String> stages = query.getTheilerStages();
-	if ((stages != null) && (stages.size() > 0)) {
-	    List<Filter> tsFilters = new ArrayList<Filter>();
-
-	    for (String stage: stages) {
-		if ((stage != null) && (!"".equals(stage))) {
-		    tsFilters.add (new Filter (
-			SearchConstants.GXD_LIT_THEILER_STAGE, 
-			stage, 
-			Filter.OP_EQUAL));
-		}
-	    }
-
-	    if (tsFilters.size() == 1) {
-		filterList.add (tsFilters.get(0));
-	    } else {
-		Filter tf = new Filter();
-		tf.setFilterJoinClause(Filter.FC_OR);
-		tf.setNestedFilters(tsFilters);
-		filterList.add(tf); 
-	    }
-	}
-
         // Age Filter
 
         List <String> ageList = query.getAge();

@@ -35,8 +35,6 @@ public class GxdLitQueryForm {
 	private String text = "";
 	private String year = "";
 	private List<Integer> yearFilter = new ArrayList<Integer>();
-    private List<String> fullCodedAssayType = new ArrayList<String>();
-    private List<String> theilerStages = new ArrayList<String>();
 
 	public GxdLitQueryForm() {
     	
@@ -149,10 +147,6 @@ public class GxdLitQueryForm {
         return curatedDataFilter;
     }
 
-    public List<String> getFullCodedAssayType() {
-        return fullCodedAssayType;
-    }
-
     public String getId() {
         return id;
     }
@@ -176,10 +170,6 @@ public class GxdLitQueryForm {
     }
     public String getText() {
         return text;
-    }
-
-    public List<String> getTheilerStages() {
-        return theilerStages;
     }
 
     public String getYear() {
@@ -222,10 +212,6 @@ public class GxdLitQueryForm {
         this.curatedDataFilter = curatedDateFilter;
     }
 
-    public void setFullCodedAssayType(List<String> fullCodedAssayType) {
-        this.fullCodedAssayType = fullCodedAssayType;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -255,10 +241,6 @@ public class GxdLitQueryForm {
     }
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void setTheilerStages(List<String> theilerStages) {
-        this.theilerStages = theilerStages;
     }
 
     public void setYear(String year) {
