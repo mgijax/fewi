@@ -112,12 +112,8 @@ public class BatchSummaryRow {
     }
     public String getChromosome() {
     	if (batchMarkerId.getMarker() != null && query.getLocation()){
-    		MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
-    		if(loc != null){
-    			return loc.getChromosome();
-    		} else {
-    			return "UN";
-    		}
+    		return batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome();
+
     	}
     	return "";
     }
