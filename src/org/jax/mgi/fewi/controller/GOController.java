@@ -1,49 +1,34 @@
 package org.jax.mgi.fewi.controller;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-/*------------------------------*/
-/* to change in each controller */
-/*------------------------------*/
+import javax.servlet.http.HttpServletRequest;
 
-// fewi
+import mgi.frontend.datamodel.Annotation;
+import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.Marker;
+
 import org.jax.mgi.fewi.finder.MarkerAnnotationFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
-import org.jax.mgi.fewi.summary.GOSummaryRow;
-
-// data model objects
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.Reference;
-import mgi.frontend.datamodel.Annotation;
-
-
-/*--------------------------------------*/
-/* standard imports for all controllers */
-/*--------------------------------------*/
-
-// internal
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.summary.GOSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-
-// external
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -163,6 +148,36 @@ public class GOController {
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
         return jsonResponse;
+    }
+    
+    //----------------------//
+    // JSON summary results
+    //----------------------//
+    @RequestMapping("/report*")
+    public ModelAndView seqSummaryExport(
+            HttpServletRequest request,
+			@ModelAttribute MarkerAnnotationQueryForm query,
+            @ModelAttribute Paginator page) {
+
+        logger.debug("->JsonSummaryResponse started");
+
+        // generate search parms object;  add pagination, sorts, and filters
+        SearchParams params = new SearchParams();
+        params.setPaginator(page);
+        params.setSorts(this.genSorts(request));
+        params.setFilter(this.genFilters(query));
+        
+        SearchResults<Marker> sr = markerFinder.getMarkerByKey(query.getMrkKey());
+        Marker m = (Marker) sr.getResultObjects().get(0);
+
+        // perform query, and pull out the requested objects
+        SearchResults<Annotation> searchResults
+          = markerAnnotationFinder.getMarkerAnnotations(params);
+        
+		ModelAndView mav = new ModelAndView("goMarkerSummaryReport");
+		mav.addObject("marker", m);
+		mav.addObject("results", searchResults.getResultObjects());
+		return mav;
     }
 
 
