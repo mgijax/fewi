@@ -41,7 +41,6 @@ ${templateBean.templateBodyStartHtml}
 					</div>
 					<div style="text-align:left;" class="example">
 						one gene&nbsp;&nbsp;<em class="paleText small">e.g., Shh</em><br/>
-						a list of genes&nbsp;&nbsp;<em class="paleText small">e.g., B4galt1, Bax, Cdkn2a, Cryaa</em><br/>
 						a set of genes with similar nomenclature &nbsp;&nbsp;<em class="paleText small">e.g., Hoxa*</em><br/>
 					</div>						
 				</div>
@@ -194,7 +193,6 @@ ${templateBean.templateBodyStartHtml}
     oAC.maxResultsDisplayed = 5000;
     oAC.forceSelection = true;
     oAC.delimChar = ";";
-    oAc.allowBrowserAutocomplete = true;
     
     oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
     	   var sKey = sResultMatch;
@@ -207,6 +205,14 @@ ${templateBean.templateBodyStartHtml}
 
     	  return (sKey);
     	}; 
+    	
+    var toggleVis = function(){
+        if (YAHOO.util.Dom.getStyle('authHelp', 'display') == 'none'){
+            YAHOO.util.Dom.setStyle('authHelp', 'display', 'block');
+        }
+    };
+    
+    oAC.itemSelectEvent.subscribe(toggleVis); 
 
     return {
         oDS: oDS,
