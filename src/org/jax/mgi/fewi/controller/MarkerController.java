@@ -197,7 +197,7 @@ public class MarkerController {
         IDLinker idLinker = ContextLoader.getIDLinker();
         mav.addObject("idLinker", idLinker);
         
-	// add the marker to mav
+        // add the marker to mav
         mav.addObject("marker", marker);
         
         this.dbDate(mav);
@@ -217,6 +217,11 @@ public class MarkerController {
         	        			humanSynonyms.add(syn.getSynonym());
         	        		}
         	        		mav.addObject("humanSynonyms", humanSynonyms.toArray(new String[humanSynonyms.size()]));
+        	        	}
+        	        	if (humanOrtholog.getPreferredCoordinates() != null){
+            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCoordinates());
+        	        	} else if (humanOrtholog.getPreferredCytoband() != null) {
+            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCytoband());
         	        	}
         	        	mav.addObject("humanOrtholog", humanOrtholog);
         	        }       			
