@@ -64,7 +64,7 @@ ${record.fullyCodedAssayCount}
 	<table class="outline">
 	<tr class="outline stripe3">
 	<!-- Setup the age header -->
-	<td class="outline"><a href="${configBean.USERHELP_URL}gxdindex_help.shtml#irbaa" onClick='openUserhelpWindow("gxdindex_help.shtml#irbaa"); return false;'">Age</a></td>
+	<td class="outline"><a href="${configBean.USERHELP_URL}EXPRESSION_literature_help.shtml#irbaa" onClick='openUserhelpWindow("EXPRESSION_literature_help.shtml#irbaa"); return false;'">Age</a></td>
 	<c:forEach var="age" items="${pairTable.ages}">
 		<td class="outline" style="text-align:center"><c:if test="${age != 'E' && age != 'A'}">E</c:if>${age}</td>
 	</c:forEach>
