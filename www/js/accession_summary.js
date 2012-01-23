@@ -36,7 +36,7 @@ function main() {
             {key:"logicalDb"},
             {key:"mgiLink"},
             {key:"displayType"},
-            {key:"description"},
+            {key:"description"}
         ],
         metaFields: {
             totalRecords: "totalCount"
