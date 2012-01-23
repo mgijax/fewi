@@ -2,12 +2,10 @@
 var toggleQF = function(oCallback) {
 
     var qf = YAHOO.util.Dom.get('qwrap');
-    var form = YAHOO.util.Dom.get('referenceQueryForm');
-    var toggleLink = YAHOO.util.Dom.get('toggleQF');
+    var toggleLink = YAHOO.util.Dom.get('toggleLink');
     var toggleImg = YAHOO.util.Dom.get('toggleImg');
     
     var attributes = { height: { to: 405 }};
-    var height = '';
 
     if (!qDisplay){
     	attributes = { height: { to: 0  }};
@@ -36,7 +34,7 @@ var toggleQF = function(oCallback) {
 		myAnim.onComplete.subscribe(oCallback);
 	}
 	
-	myAnim.duration = 0.5;
+	myAnim.duration = 0.75;
 	myAnim.animate();
 };
 
@@ -58,7 +56,6 @@ var interceptSubmit = function(e) {
 };
 
 YAHOO.util.Event.addListener("referenceQueryForm", "submit", interceptSubmit);
-
 
 (function() {
     // Use an XHRDataSource

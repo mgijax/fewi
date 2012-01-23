@@ -1,14 +1,12 @@
 var myTabs = new YAHOO.widget.TabView("batchSource");
 
 var toggleQF = function(oCallback) {
-
+	
     var qf = YAHOO.util.Dom.get('qwrap');
-    var form = YAHOO.util.Dom.get('batchQueryForm');
-    var toggleLink = YAHOO.util.Dom.get('toggleQF');
+    var toggleLink = YAHOO.util.Dom.get('toggleLink');
     var toggleImg = YAHOO.util.Dom.get('toggleImg');
     
-    var attributes = { height: { to: 303 }};
-    var height = '';
+    var attributes = { height: { to: 310 }};
 
     if (!qDisplay){
     	attributes = { height: { to: 0  }};
@@ -36,8 +34,7 @@ var toggleQF = function(oCallback) {
 	if (!YAHOO.lang.isNull(oCallback)){	
 		myAnim.onComplete.subscribe(oCallback);
 	}
-	
-	myAnim.duration = 0.5;
+	myAnim.duration = 0.75;
 	myAnim.animate();
 };
 
@@ -53,7 +50,7 @@ if (!YAHOO.lang.isUndefined(toggleImg)){
 var interceptSubmit = function(e) {
 	YAHOO.util.Event.preventDefault(e);	
 	toggleQF(function(){
-		var form = YAHOO.util.Dom.get('batchQueryForm');
+		var form = YAHOO.util.Dom.get("batchQueryForm");
 		form.submit();
 	});
 };
