@@ -81,7 +81,7 @@ public class RecombinaseSummary {
 
     public String getCountOfReferences() {
     	return "<a href='/reference/allele/" + this.allele.getPrimaryID()
-    		+ "' target='_new'>" + this.allele.getCountOfReferences().toString() + "</a>";
+    		+ "' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
     }
 
     public String getDetectedCount() {
@@ -241,7 +241,7 @@ public class RecombinaseSummary {
     	sb.append(ContextLoader.getConfigBean().getProperty("IMSRURL"));
     	sb.append("summary?gaccid=");
     	sb.append(this.allele.getPrimaryID());
-    	sb.append("&states=embryo&states=live&states=ovaries&states=sperm' target='_new'>");
+    	sb.append("&states=embryo&states=live&states=ovaries&states=sperm' target='_blank'>");
     	sb.append(this.allele.getImsrStrainCount());
     	sb.append("</a>");
     	return sb.toString();
@@ -391,7 +391,7 @@ public class RecombinaseSummary {
 		}
 		sb.append("<br/>");
         sb.append("(<a href='" + javawiUrl + "WIFetch?page=alleleDetail&id=" + this.allele.getPrimaryID()
-				+ "' target='_new'>phenotype data</A>)</span>");
+				+ "' target='_blank'>phenotype data</A>)</span>");
 		return sb.toString();
 	}
 
@@ -532,7 +532,7 @@ public class RecombinaseSummary {
     		sb.append(tooltip);
     	}
 
-    	sb.append("' target='_new'>");
+    	sb.append("' target='_blank'>");
     	sb.append(label);
     	sb.append("</a>");
     	return sb.toString();
