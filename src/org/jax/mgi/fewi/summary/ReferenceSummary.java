@@ -150,12 +150,14 @@ public class ReferenceSummary {
 	}
 	
 	public String getAbstract(){
+		String abs = "";
 		if (this.reference.getAbstract() != null 
 				&& !"".equals(this.reference.getAbstract())){
-			return abstractHL.highLight(this.reference.getAbstract());
+			abs = abstractHL.highLight(this.reference.getAbstract());
 		} else {
-			return abstractHL.highLight("this reference has no abstract");
-		}		
+			abs = abstractHL.highLight("this reference has no abstract");
+		}
+		return abs.replaceAll("\n\n", "<p>");
 	}
 
 	public String getBookEdition() {
