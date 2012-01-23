@@ -299,14 +299,18 @@ td.padded { padding:4px; }
 		<c:if test="${not empty humanSynonyms}">
 			Human Synonyms: ${fn:join(humanSynonyms, ", ")}<br/>
 		</c:if>
-		<c:if test="${not empty humanOrtholog.preferredCoordinates}">
-				<c:set var="humanLoc" value="Human Chr<chr>:<start>-<end> bp, <strand> strand <span class='small'>Reference GRCh37.p2 Primary Assembly</span><br/>"/>
-				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<chr>', humanOrtholog.preferredCoordinates.chromosome)}"/>
-				<fmt:formatNumber value="${humanOrtholog.preferredCoordinates.startCoordinate}" pattern="#0" var="humanStart"/>
-      			<fmt:formatNumber value="${humanOrtholog.preferredCoordinates.endCoordinate}" pattern="#0" var="humanEnd"/>
-				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<start>', humanStart)}"/>
-				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<end>', humanEnd)}"/>
-				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<strand>', humanOrtholog.preferredCoordinates.strand)}"/>			
+		<c:if test="${not empty humanLocation}">
+				<c:set var="humanLoc" value="Human Chr<chr><loc> <span class='small'>Reference GRCh37.p2 Primary Assembly</span><br/>"/>
+				<c:set var="loc" value=":<start>-<end> bp, <strand> strand "/>
+				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<chr>', humanLocation.chromosome)}"/>
+				<c:if test="${not empty humanLocation.startCoordinate}">
+					<fmt:formatNumber value="${humanLocation.startCoordinate}" pattern="#0" var="humanStart"/>
+	      			<fmt:formatNumber value="${humanLocation.endCoordinate}" pattern="#0" var="humanEnd"/>
+					<c:set var="loc" value="${fn:replace(loc, '<start>', humanStart)}"/>
+					<c:set var="loc" value="${fn:replace(loc, '<end>', humanEnd)}"/>
+					<c:set var="loc" value="${fn:replace(loc, '<strand>', humanLocation.strand)}"/>
+					<c:set var="humanLoc" value="${fn:replace(humanLoc, '<loc>', loc)}"/>
+				</c:if>			
 			 ${humanLoc}			 
 		</c:if>
 		<c:if test="${humanOrtholog.countOfHumanDiseases > 0}">
@@ -320,7 +324,7 @@ td.padded { padding:4px; }
 					<c:set var="rColor" value="style=\\'background-color:#F8F8F8;\\'" />
 				</c:if>
 				'<tr ${rColor} align=\'left\' valign=\'top\'>' +
-				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\'>${annotation.term}</a></td>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\' target=\'_blank\'>${annotation.term}</a></td>' +
 				'<td width=\'4\'>'  +
 				<c:forEach var="star" items="${marker.OMIMAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
@@ -369,7 +373,7 @@ td.padded { padding:4px; }
 					<c:set var="rColor" value="style=\\'background-color:#F8F8F8;\\'" />
 				</c:if>
 				'<tr ${rColor} align=\'left\' valign=\'top\'>' +
-				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\'>${annotation.term}</a></td>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\' target=\'_blank\'>${annotation.term}</a></td>' +
 				'<td width=\'4\'>' +
 				<c:forEach var="star" items="${humanOrtholog.OMIMHumanAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
@@ -403,19 +407,19 @@ td.padded { padding:4px; }
 		<table>
 	      <c:if test="${not empty processAnnot1}">
 	    	<tr><td>Process</td>
-	    		<td><a href="${configBean.WI_URL}searches/GO.cgi?id=${processAnnot1.termID}">${processAnnot1.term}</a><c:if test="${not empty processAnnot2}">, </c:if>
+	    		<td style="padding-left:6em;"><a href="${configBean.WI_URL}searches/GO.cgi?id=${processAnnot1.termID}">${processAnnot1.term}</a><c:if test="${not empty processAnnot2}">, </c:if>
 	    			<a href="${configBean.WI_URL}searches/GO.cgi?id=${processAnnot2.termID}">${processAnnot2.term}</a><c:if test="${not empty processAnnot3}">, ...</c:if>
 	    		</td></tr>
 	      </c:if>
 	      <c:if test="${not empty componentAnnot1}">
 	    	<tr><td>Component</td>
-	    		<td><a href="${configBean.WI_URL}searches/GO.cgi?id=${componentAnnot1.termID}">${componentAnnot1.term}</a><c:if test="${not empty componentAnnot2}">, </c:if>
+	    		<td style="padding-left:6em;"><a href="${configBean.WI_URL}searches/GO.cgi?id=${componentAnnot1.termID}">${componentAnnot1.term}</a><c:if test="${not empty componentAnnot2}">, </c:if>
 	    			<a href="${configBean.WI_URL}searches/GO.cgi?id=${componentAnnot2.termID}">${componentAnnot2.term}</a><c:if test="${not empty componentAnnot3}">, ...</c:if>
 	    		</td></tr>
 	      </c:if>
 	      <c:if test="${not empty functionAnnot1}">
 	    	<tr><td>Function</td>
-	    		<td><a href="${configBean.WI_URL}searches/GO.cgi?id=${functionAnnot1.termID}">${functionAnnot1.term}</a><c:if test="${not empty functionAnnot2}">, </c:if>
+	    		<td style="padding-left:6em;"><a href="${configBean.WI_URL}searches/GO.cgi?id=${functionAnnot1.termID}">${functionAnnot1.term}</a><c:if test="${not empty functionAnnot2}">, </c:if>
 	    			<a href="${configBean.WI_URL}searches/GO.cgi?id=${functionAnnot2.termID}">${functionAnnot2.term}</a><c:if test="${not empty functionAnnot3}">, ...</c:if>
 	    		</td></tr>
 	      </c:if>
@@ -470,9 +474,9 @@ td.padded { padding:4px; }
  	      <c:set var="gxdAssayUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assays&sort=Assay%20type&assayType="/>
 		  <c:set var="gxdResultUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure&assayType="/>
 		  <table>
-		    <tr><td>Assay Type</td><td>Assays&nbsp;&nbsp;</td><td>Results</td></tr>
+		    <tr><td style="padding-left:2em;">Assay Type</td><td>Assays</td><td>Results</td></tr>
 		    <c:forEach var="assayType" items="${gxdAssayTypes}">
-		      <tr><td>${assayType}&nbsp;</td>
+		      <tr><td style="padding-left:4em;padding-right:1em;">${assayType}</td>
 		        <td><a href="${gxdAssayUrl}${assayType}">${gxdAssayCounts[assayType]}</a></td>
 		        <td><a href="${gxdResultUrl}${assayType}">${gxdResultCounts[assayType]}</a></td>
 		      </tr>
