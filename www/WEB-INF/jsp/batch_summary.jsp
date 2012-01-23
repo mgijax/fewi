@@ -25,7 +25,7 @@ ${templateBean.templateBodyStartHtml}
 
 <div id="outer"  class="bluebar">
 	<span id="toggleImg" class="qfExpand"></span>
-	<div id="toggleQF">Click to modify search</div>
+	<div id="toggleQF"><span id="toggleLink" class="filterButton">Click to hide search</span></div>
 	<div id="qwrap" style="display:none;">
 		<%@ include file="/WEB-INF/jsp/batch_form.jsp" %>
 	</div>
@@ -76,12 +76,13 @@ ${templateBean.templateBodyStartHtml}
 </div>
 	
 <div id="toolbar" class="bluebar">
-	<div id="filterDiv"></div>
-	<div id="otherDiv"></div>
 	<div id="downloadDiv">
+		<span class="label">Export:</span> 
 		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
 		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a> 
 	</div>
+	<div id="filterDiv"></div>
+	<div id="otherDiv"></div>
 </div>
 
 <!-- data table div: filled by YUI, called via js below -->

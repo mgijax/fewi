@@ -114,10 +114,10 @@ var clearFilter = function () {
     var myColumnDefs = [ // sortable:true enables sorting       
         {key:"id", label:"PubMed ID<br/>MGI Ref. ID", sortable:false, width:75},
         {key:"authors", label:"Author(s)", sortable:true, width:200},
-        {key:"titleForm", label:"Title", sortable:false, formatter:"tForm"},  
+        {key:"titleForm", label:"Title", sortable:false, formatter:"tForm", minWidth:300},
+        {key:"curatedData", label:"Curated Data", sortable:false, width:225},
         {key:"journal", label:"Journal", sortable:true, width:100},
         {key:"year", label:"Year", sortable:true, width:30},     
-        {key:"curatedData", label:"Curated Data", sortable:false, width:225},
         {key:"vol", label:"Vol(Iss)Pg", sortable:false, width:85},
         {key:"score", label:"Rank", sortable:true, hidden:true}
     ];
@@ -383,7 +383,7 @@ YAHOO.util.Event.onDOMReady(function () {
 		{ visible : false, 
 		  context:["filterDiv","tl","bl", ["beforeShow"]],
 		  constraintoviewport : true,
-		  buttons : [{ text:"Go", handler:handleSubmit, isDefault:true } ]
+		  buttons : [{ text:"Filter", handler:handleSubmit, isDefault:true } ]
 		}
 	);
 	

@@ -41,24 +41,42 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <a name="tabular"></a><h3 class="extraLarge"><b>Go Annotations in Tabular Form</b> <a href="#text" class="GO">(Text View)</a></h3>
-<!-- paginator -->
-<table style="width:100%;">
-  <tr>
-    <td class="paginator">
-      <div id="paginationTop">&nbsp;</div>
-    </td>
-  </tr>
-</table>
 
+<!-- paginator -->
+<div id="summary" style="width:1080px;">
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" class="filters">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="querySummary">
+		<div class="innertube">
+		</div>
+	</div>
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
+
+<div id="toolbar" class="bluebar" style="width:1065px;">
+	<div id="downloadDiv">
+		<span class="label">Export:</span> 
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a> 
+	</div>
+	<div id="filterDiv"></div>
+	<div id="otherDiv"></div>
+</div>
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
-
-<!-- including this file will start the data injection -->
-<script type="text/javascript">
-  <%@ include file="/js/go_summary_marker.js" %>
-</script>
-
-</tbody></table>
+<div id="paginationWrap">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
 
 <div class="GO">
 <br>
@@ -86,6 +104,14 @@ Gene Ontology Evidence Code Abbreviations:</b><br><br>
 </tbody></table>
 <hr>
 </div>
+
+<script type="text/javascript">
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
+</script>
+
+<!-- including this file will start the data injection -->
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/go_summary_marker.js"></script>
 
 ${templateBean.templateBodyStopHtml}
 

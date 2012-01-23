@@ -103,9 +103,7 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
-<script type="text/javascript">
-<%@ include file="/js/recombinase_summary_1.js" %>
-</script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase_summary_1.js"></script>
 
 <div id="checkboxes">
   <table class="checkBoxSelectTable">
@@ -221,25 +219,54 @@ ${templateBean.templateBodyStartHtml}
   </table>
 </div>
 <div>
+
+</div><br/>
+
+
+<div id="summary" style="width:1150px;">
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+			</div>
+		</div>
+	</div>
 	<div id="querySummary">
-		<span class="enhance">You searched for:</span><br/>
+		<div class="innertube">
+				<span class="enhance">You searched for:</span><br/>
 		<c:if test="${not empty recombinaseQueryForm.system}"><span class="label">Anatomical System</span> equals 
 			<span class="label">${fn:replace(recombinaseQueryForm.system,";", ",") }</span><br/>
 			<script type="text/javascript">
-			<%@ include file="/js/recombinase_summary_2.js" %>
-			</script></c:if>
+				YAHOO.mgiData.selectedSystem="${recombinaseQueryForm.system}";
+			</script>		
+			</c:if>
 		<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals 
 			<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
     <span class="pageAdvice" style="height: 20px;">
 	    Click column headings to sort table data.  Drag headings to rearrange columns.
     </span>
+		</div>
 	</div>
-</div><br/>
-<div id="paginationTop"  style="float:right;"></div><br/>
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
+
 <div id="dynamicdata"></div>
 
+<div id="paginationWrap" style="width:1150px;">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
+
+
 <script type="text/javascript">
-<%@ include file="/js/recombinase_summary_3.js" %>
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
 </script>
+
+
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase_summary_3.js"></script>
+
 
 ${templateBean.templateBodyStopHtml}

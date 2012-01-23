@@ -5,14 +5,14 @@
 <% Reference reference = (Reference)request.getAttribute("reference"); %>
 
 ${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-  <title>Mouse Sequences Summary Report</title>
-  <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+<title>Mouse Sequences Summary Report</title>
 
 ${templateBean.templateBodyStartHtml}
 
 <!-- iframe for history manager's use -->
-<iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
+<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
 
@@ -38,20 +38,35 @@ ${templateBean.templateBodyStartHtml}
 </table>
 
 
-<table style="width:100%;">
-  <tr>
-    <td class="paginator">
-      <div id="paginationTop">&nbsp;</div>
-    </td>
-  </tr>
-</table>
+<div id="summary" style="width:1150px;">
+
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+			</div>
+		</div>
+	</div>
+	<div id="querySummary">
+		<div class="innertube">
+		</div>
+	</div>
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
 
 <div id="dynamicdata"></div>
+<div id="paginationWrap" style="width:1150px;">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
 
- 
 <script type="text/javascript">
-  <%@ include file="/js/sequence_summary.js" %>
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
 </script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/sequence_summary.js"></script>
 
 ${templateBean.templateBodyStopHtml}
 

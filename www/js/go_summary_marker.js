@@ -4,29 +4,29 @@ function main() {
 
     var myColumnDefs = [
         {key:"category", 
-            label:"<b>Category</b>",
+            label:"Category",
             width:150, 
             sortable:false},
         {key:"term", 
-            label:"<b>Classification Term</b>",
+            label:"Classification Term",
             width:240, 
             sortable:false},
         {key:"evidence", 
-            label:"<b>Evidence</b>",
+            label:"Evidence",
             width:150, 
             sortable:false},
         {key:"inferred", 
-            label:"<b>Inferred From</b>",
+            label:"Inferred From",
             width:240, 
             sortable:false},
         {key:"references", 
-            label:"<b>Reference(s)</b>",
+            label:"Reference(s)",
             width:200, 
             sortable:false}
     ];
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource("${configBean.FEWI_URL}go/json?${queryString}&");
+    var myDataSource = new YAHOO.util.DataSource(fewiurl + "go/json?" + querystring + "&");
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
     myDataSource.responseSchema = {
@@ -45,11 +45,12 @@ function main() {
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
-        template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+        template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
-        rowsPerPage : 25,
-        pageLinks: 5,
+        rowsPerPage : 100,
+        containers   : ["paginationTop", "paginationBottom"],
+        pageLinks: 3,
         recordOffset: 1
     });
 
@@ -113,9 +114,20 @@ function main() {
 
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
         oPayload.pagination = {
-            rowsPerPage: Number(pRequest['results']) || 25,
+            rowsPerPage: Number(pRequest['results']) || 100,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
+        var reportButton = YAHOO.util.Dom.get('textDownload');
+        if (!YAHOO.lang.isNull(reportButton)){
+        	facetQuery = generateRequest(0, 'term', 'asc', oPayload.totalRecords);
+	        reportButton.setAttribute('href', fewiurl + 'go/report.txt?' + querystring + '&' + facetQuery);
+        }
+        reportButton = YAHOO.util.Dom.get('excelDownload');
+        if (!YAHOO.lang.isNull(reportButton)){
+        	facetQuery = generateRequest(0, 'term', 'asc', oPayload.totalRecords);
+	        reportButton.setAttribute('href', fewiurl + 'go/report.xls?' + querystring + '&' + facetQuery);
+        }
+        
         return true;
     };
 
@@ -124,7 +136,7 @@ function main() {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "term";
         dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
-        results   = results || 25;
+        results   = results || 100;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };
 

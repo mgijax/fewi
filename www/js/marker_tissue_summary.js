@@ -6,7 +6,7 @@ function main() {
         {key:"structure", 
             label:"<b>Structure</b>",
             sortable:false,
-            width:350},
+            width:450},
         {label:"Results",
             key:"markerTissueResults",
             sortable:false,
@@ -44,12 +44,12 @@ function main() {
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
-        template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+        template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [50,100,250,500],
         containers   : ["paginationTop", "paginationBottom"],
-        rowsPerPage : 50,
-        pageLinks: 5,
+        rowsPerPage : 100,
+        pageLinks: 3,
         recordOffset: 1
     });
 
@@ -120,6 +120,11 @@ function main() {
         var reportButton = YAHOO.util.Dom.get('textDownload');
         if (!YAHOO.lang.isNull(reportButton)){
         		reportButton.setAttribute('href', fewiurl + 'tissue/marker/report.txt?' + querystring);
+        }
+        
+        reportButton = YAHOO.util.Dom.get('excelDownload');
+        if (!YAHOO.lang.isNull(reportButton)){
+        		reportButton.setAttribute('href', fewiurl + 'tissue/marker/report.xls?' + querystring);
         }
         
         return true;

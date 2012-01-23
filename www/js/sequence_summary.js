@@ -4,43 +4,43 @@ function main() {
 
     var myColumnDefs = [
         {key:"seqForward", 
-            label:"<b>Select</b>",
+            label:"Select",
             width:90, 
             sortable:false},
         {key:"seqInfo", 
-            label:"<b>Sequence</b>",
+            label:"Sequence",
             width:180, 
             sortable:false},
         {key:"seqType", 
-            label:"<b>Type</b>",
+            label:"Type",
             sortable:false,
             width:80}, 
         {key:"length", 
-            label:"<b>Length</b>", 
+            label:"Length", 
             sortable:false, 
             width:60},
         {key:"strainSpecies", 
-            label:"<b>Strain/Species</b>", 
+            label:"Strain/Species", 
             sortable:false, 
             width:90},
         {key:"description", 
-            label:"<b>Description From<br/>Sequence Provider</b>", 
+            label:"Description From<br/>Sequence Provider", 
             sortable:false, 
             width:300},
         {key:"cloneCollection", 
-            label:"<b>Clone<br/>Collection</b>", 
+            label:"Clone<br/>Collection", 
             sortable:false, 
             width:120},
         {key:"markerSymbol", 
-            label:"<b>Marker<br/>Symbol</b>", 
+            label:"Marker<br/>Symbol", 
             sortable:false, 
             width:80}
     ];
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource("${configBean.FEWI_URL}sequence/json?${queryString}&");
-//var myDataSource = new YAHOO.util.DataSource("http://faramir.informatics.jax.org/sequence/json?refKey=110841&");
-//var myDataSource = new YAHOO.util.DataSource("../json?refKey=110841&");
+    var myDataSource = new YAHOO.util.XHRDataSource(fewiurl + "sequence/json?" + querystring + "&");
+	//var myDataSource = new YAHOO.util.DataSource("http://faramir.informatics.jax.org/sequence/json?refKey=110841&");
+	//var myDataSource = new YAHOO.util.DataSource("../json?refKey=110841&");
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
     myDataSource.responseSchema = {
@@ -62,11 +62,12 @@ function main() {
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
-        template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-        pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
+        template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+        pageReportTemplate : "Showing sequence(s) {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
+        containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 25,
-        pageLinks: 5,
+        pageLinks: 3,
         recordOffset: 1
     });
 

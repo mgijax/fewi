@@ -42,7 +42,7 @@ ${templateBean.templateBodyStartHtml}
 
 <div id="summary">
 
-	<div id="breadbox" style="width: 480px">
+	<div id="breadbox" style="width: 580px">
 		<div id="contentcolumn">
 			<div class="innertube">
 				<div id="filterSummary" class="filters">
@@ -63,13 +63,14 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 </div>
 
-<div id="toolbar" class="bluebar" style="width:444px; min-width: 400px">
+<div id="toolbar" class="bluebar" style="width:544px; min-width: 400px">
+	<div id="downloadDiv">
+		<span class="label">Export:</span> <a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a> 
+	</div>
 	<div id="filterDiv">
 	</div>
 	<div id="otherDiv"> 
-	</div>
-	<div id="downloadDiv">
-		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
 	</div>
 </div>
 

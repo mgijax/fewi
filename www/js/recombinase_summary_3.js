@@ -29,15 +29,15 @@ function main() {
     // These are our actual columns, in the default ordering.
     var myColumnDefs = [
         {key:"driver", 
-            label:"<B>Driver</B>",
+            label:"Driver",
             width:90, 
             sortable:true},
         {key:"nomenclature", 
-            label:"<B>Allele Symbol<br/>Gene; Allele Name</B>",
+            label:"Allele Symbol<br/>Gene; Allele Name",
 			sortable:true,
 			width:245}, 
 		{key:"detectedCount", 
-			label:"<B>Recombinase<br/>Data</B>", 
+			label:"Recombinase<br/>Data", 
 			sortable:true, 
 			width:220},
 	    {key:"inAdiposeTissue", 
@@ -161,31 +161,31 @@ function main() {
 			hidden:true,
 			width:60},
         {key:"synonyms",
-            label:"<B>Allele Synonym</B>",
+            label:"Allele Synonym",
             width:170,
             sortable:false},
    		{key:"alleleType", 
-            label:"<B>Allele<br/>Type</B>",
+            label:"Allele<br/>Type",
             width:60, 
 			hidden:true,
             sortable:true},
         {key:"inducibleNote", 
-            label:"<B>Inducible</B>",
+            label:"Inducible",
             width:58, 
 			hidden:true,
             sortable:true},
         {key:"imsrCount", 
-            label:"<B>Find Mice<br/>(IMSR)</B>",
+            label:"Find Mice<br/>(IMSR)",
             width:60, 
             sortable:true},
         {key:"countOfReferences", 
-            label:"<B>Refs</B>",
+            label:"Refs",
             width:36, 
             sortable:true}
     ];
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource("json?${queryString}&");
+    var myDataSource = new YAHOO.util.DataSource(fewiurl + "recombinase/json?" + querystring + "&");
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
     myDataSource.responseSchema = {
@@ -235,11 +235,12 @@ function main() {
 
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
-        template : "{PreviousPageLink} <strong>{PageLinks}</strong> {NextPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+        template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [10,25,50,100],
+        containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 25,
-        pageLinks: 5,
+        pageLinks: 3,
         recordOffset: 1
     });
 

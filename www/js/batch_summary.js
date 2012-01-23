@@ -26,7 +26,7 @@ var History = YAHOO.util.History;
     
     // optional columns
     if (nomenclature){
-    	myColumnDefs.push({label:"Nomenclature",
+    	myColumnDefs.push({label:"<div class='center'>Nomenclature</div>",
             sortable:false,
             children: [{key: "symbol",
             		label: "Symbol"},
