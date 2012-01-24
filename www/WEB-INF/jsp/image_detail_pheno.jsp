@@ -48,7 +48,7 @@ ${templateBean.templateBodyStartHtml}
       Image
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      <img src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=${image.pixeldbNumericID}'> 
+      <img src='${configBean.PIXELDB_URL}${image.pixeldbNumericID}'> 
     </td>
   </tr>
 
