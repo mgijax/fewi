@@ -3,7 +3,7 @@ project.name=fewi
 <!--jboss directories -->
 jboss.dir=/usr/local/mgi/jboss/
 jbossLib.dir=/usr/local/mgi/jboss/common/lib
-deploy.dir=/usr/local/mgi/jboss/server/proto/deploy
+deploy.dir=/usr/local/mgi/jboss/server/fewi/deploy
 deployLib.dir=/usr/local/mgi/jboss/server/default/lib
 
 <!--fewi product directories -->
