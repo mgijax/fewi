@@ -40,7 +40,9 @@ ${templateBean.templateBodyStartHtml}
 <%=ntc.convertNotes(marker.getGOText(), '|')%><br><hr><br>
 </div>
 
-<a name="tabular"></a><h3 class="extraLarge"><b>Go Annotations in Tabular Form</b> <a href="#text" class="GO">(Text View)</a></h3>
+<a name="tabular"></a><h3 class="extraLarge"><b>Go Annotations in Tabular Form</b> <a href="#text" class="GO">(Text View)</a>
+<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOMarkerGraph&id=${marker.primaryID}" class="GO">(GO Graph)</a></c:if></h3>
+</h3>
 
 <!-- paginator -->
 <div id="summary" style="width:1080px;">
