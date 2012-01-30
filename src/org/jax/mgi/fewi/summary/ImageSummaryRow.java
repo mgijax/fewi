@@ -32,6 +32,7 @@ public class ImageSummaryRow {
   // logger & config values
   private Logger logger = LoggerFactory.getLogger(ImageSummaryRow.class);
   private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+  private String pixeldbUrl = ContextLoader.getConfigBean().getProperty("PIXELDB_URL");
 
   // encapsulated row object and object data
   private Image image;
@@ -98,7 +99,7 @@ public class ImageSummaryRow {
     imgTag.append("image/" + this.image.getMgiID() + "'>");
     imgTag.append("<img width='" + this.getImageWidth());
     imgTag.append("' height='" + this.getImageHeight() + "'");
-    imgTag.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
+    imgTag.append("src='" + pixeldbUrl);
     imgTag.append(thumbImage.getPixeldbNumericID() + "'>");
     return imgTag.toString();
   }
@@ -196,7 +197,7 @@ public class ImageSummaryRow {
         summaryRow.append("<td>");
         summaryRow.append("<a href='" + fewiUrl + "image/pheno/" + image.getMgiID() + "'>");
         summaryRow.append("<img width='" + this.getImageHeight() +"' height='" + this.getImageHeight() + "'");
-        summaryRow.append("src='http://www.informatics.jax.org/pixeldb/fetch_pixels.cgi?id=");
+        summaryRow.append("src='" + pixeldbUrl);
         summaryRow.append(image.getPixeldbNumericID() + "'>");
         summaryRow.append("</td>");
 
