@@ -593,6 +593,3 @@ YAHOO.util.Event.onDOMReady(function () {
 	})();
 
 });
-
-
-

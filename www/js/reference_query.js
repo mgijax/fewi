@@ -136,6 +136,12 @@ YAHOO.util.Event.addListener("referenceQueryForm", "submit", interceptSubmit);
 })();
 
 var resetQF = function (e) {
+	YAHOO.util.Dom.setStyle('authHelp', 'display', 'none');
+	YAHOO.util.Dom.setStyle('journalHelp', 'display', 'none');
+	
+	var errors = YAHOO.util.Dom.getElementsByClassName('qfError');		
+	YAHOO.util.Dom.setStyle ( errors , 'display' , 'none' );
+
 	YAHOO.util.Event.preventDefault(e); 
 	var form = YAHOO.util.Dom.get("referenceQueryForm");
 	form.author.value = "";
