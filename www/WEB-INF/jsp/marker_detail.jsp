@@ -324,7 +324,7 @@ td.padded { padding:4px; }
 					<c:set var="rColor" value="style=\\'background-color:#F8F8F8;\\'" />
 				</c:if>
 				'<tr ${rColor} align=\'left\' valign=\'top\'>' +
-				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\' target=\'_blank\'>${annotation.term}</a></td>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\'>${annotation.term}</a></td>' +
 				'<td width=\'4\'>'  +
 				<c:forEach var="star" items="${marker.OMIMAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
@@ -333,7 +333,7 @@ td.padded { padding:4px; }
 					</c:if>
 				</c:forEach>
 				'</td>' +
-				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\'>${annotation.termID}</a></td></tr>' +
+				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
 			</c:forEach>
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${hMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Human ${humanOrtholog.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${humanOrtholog.countOfHumanDiseases}</a>)
   		</c:if>
@@ -373,7 +373,7 @@ td.padded { padding:4px; }
 					<c:set var="rColor" value="style=\\'background-color:#F8F8F8;\\'" />
 				</c:if>
 				'<tr ${rColor} align=\'left\' valign=\'top\'>' +
-				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\' target=\'_blank\'>${annotation.term}</a></td>' +
+				'<td><a href=\'${configBean.JAVAWI_URL}WIFetch?page=humanDisease&amp;id=${annotation.termID}\'>${annotation.term}</a></td>' +
 				'<td width=\'4\'>' +
 				<c:forEach var="star" items="${humanOrtholog.OMIMHumanAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
@@ -382,7 +382,7 @@ td.padded { padding:4px; }
 					</c:if>
 				</c:forEach>
 				'</td>' +
-				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\'>${annotation.termID}</a></td></tr>' +
+				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
 			</c:forEach>
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${mMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Mouse ${marker.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
@@ -396,7 +396,7 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
-  <!-- ROW10 -->
+  <!-- go classifications -->
   <c:if test="${marker.countOfGOTerms > 0}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
