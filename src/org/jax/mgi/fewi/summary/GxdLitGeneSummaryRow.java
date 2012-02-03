@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mgi.frontend.datamodel.GxdLitIndexRecord;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerSynonym;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
@@ -80,4 +82,15 @@ public class GxdLitGeneSummaryRow {
     	return this.referenceRecords;
     }
     
+    public List<String> getSynonyms() {
+	Marker marker = record.getMarker();
+	List<MarkerSynonym> markerSynonyms = marker.getSynonyms();
+	List<String> synonyms = new ArrayList();
+
+	for (MarkerSynonym markerSynonym: markerSynonyms) {
+		synonyms.add(markerSynonym.getSynonym());
+	}
+
+	return synonyms;
+    }
 }
