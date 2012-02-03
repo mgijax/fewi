@@ -1,63 +1,111 @@
-<%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
-<%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    
-${templateBean.templateHeadHtml}
 
-<title>Foo Query Summary</title>
+${templateBean.templateHeadHtml}
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<style type="text/css">
-</style>
+<title>Foo Summary</title>
 
-<script>
+<script type="text/javascript">
+	document.documentElement.className = "yui-pe";
 </script>
 
 ${templateBean.templateBodyStartHtml}
 
-
-<!-- iframe for history manager's use -->
-<iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
+<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
-
-<!-- header bar -->
+<!-- begin header bar -->
 <div id="titleBarWrapper" userdoc="foo_help.shtml">	
-	<span class="titleBarMainTitle">Foo Query Summary</span>
+	<!--myTitle -->
+	<span class="titleBarMainTitle">Foo Summary</span>
+</div>
+<!-- end header bar -->
+
+<div id="outer"  class="bluebar">
+	<span id="toggleImg" class="qfExpand"></span>
+	<div id="toggleQF"><span id="toggleLink" class="filterButton">Click to modify search</span></div>
+	<div id="qwrap" style="display:none;">
+		<%@ include file="/WEB-INF/jsp/foo_form.jsp" %>
+	</div>
 </div>
 
+<div id="resultbar" class="bluebar">Results</div>
 
-<!-- header table -->
-<table class="summaryHeader">
-<tr >
-  <td class="summaryHeaderCat1">
-      Query Catagory
-  </td>
-  <td class="summaryHeaderData1">
-      Query Info     
-  </td>
-</tr>
-</table>
+<div id="summary">
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" class="filters">
+					<span class="label">Filters:</span>
+					&nbsp;<span id="defaultText"  style="display:none;">No filters selected. Filter these foo below.</span>
+					<span id="filterList"></span><br/>					
+					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> foo(s) match after applying filter(s)</span>
+				</div>
+			</div>
+		</div>
+	</div>
 
+	<div id="querySummary">
+		<div class="innertube">
+			<span class="title">You searched for:</span><br/>
+			<c:if test="${not empty queryForm.param1}">
+				<span class="label">Param 1:</span>			
+				${queryForm.param1}<br/></c:if>
+			<c:if test="${not empty queryForm.param2}">
+				<span class="label">Param 2:</span>			
+				${queryForm.param2}<br/></c:if>
+			<c:if test="${not empty queryForm.param3}">
+				<span class="label">Param 3:</span>			
+				${queryForm.param3}<br/></c:if>
+			<span id="totalCount" class="count">0</span> foo(s) match your unfiltered search.<br/>
+		</div>
+	</div>
 
-<!-- paginator -->
-<table style="width:100%;">
-  <tr>
-    <td class="paginator">
-      <div id="paginationTop">&nbsp;</div>
-    </td>
-  </tr>
-</table>
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
+	
+<div id="toolbar" class="bluebar">
+	<div id="downloadDiv">
+		<span class="label">Export:</span> <a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
+	</div>
+	<div id="filterDiv">
+		<span class="label">Filter foo by:</span> 
+		<a id="fooFilter" class="filterButton">Foo <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
+	</div>
+	<div id="otherDiv">
+		
+	</div>
+</div>
 
-<!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
+<div id="paginationWrap">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
 
-<!-- including this file will start the data injection -->
+<div class="facetFilter">
+	<div id="facetDialog">
+		<div class="hd">Filter</div>	
+		<div class="bd">
+			<form:form method="GET" action="${configBean.FEWI_URL}reference/summary">
+			<img src="/fewi/mgi/assets/images/loading.gif">	
+			</form:form>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
-  <%@ include file="/js/foo_summary.js" %>
+	var fewiurl = "${configBean.FEWI_URL}";
+	var querystring = "${queryString}";
+	var qDisplay = true;
 </script>
 
-${templateBean.templateBodyStopHtml}
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/foo_query.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/foo_summary.js"></script>
 
+${templateBean.templateBodyStopHtml}

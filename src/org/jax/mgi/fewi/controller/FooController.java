@@ -10,6 +10,7 @@ import java.util.*;
 import org.jax.mgi.fewi.finder.FooFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
+import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.summary.FooSummaryRow;
 
 // data model objects
@@ -39,6 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,7 +73,9 @@ public class FooController {
 
     @Autowired
     private ReferenceFinder referenceFinder;
-
+    
+    @Value("${solr.factetNumberDefault}")
+    private Integer facetLimit; 
 
     //--------------------------------------------------------------------//
     // public methods
@@ -251,15 +256,8 @@ public class FooController {
 
         logger.debug("->JsonSummaryResponse started");
 
-        // generate search parms object;  add pagination, sorts, and filters
-        SearchParams params = new SearchParams();
-        params.setPaginator(page);
-        params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(query));
-
         // perform query, and pull out the requested objects
-        SearchResults searchResults
-          = fooFinder.getFoos(params);
+        SearchResults<Marker> searchResults = this.getSummaryResults(request, query, page);
         List<Marker> fooList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
@@ -285,11 +283,90 @@ public class FooController {
         return jsonResponse;
     }
 
+    /*
+     * This method handles requests various reports; txt, xls.  It is intended 
+     * to perform the same query as the json method above, but only place the 
+     * result obljects list on the model.  It returns a string to indicate the
+     * view name to look up in the view class in the excel or text.properties
+     */
+	@RequestMapping("/report*")
+	public String referenceSummaryReport(
+			HttpServletRequest request, Model model,
+			@ModelAttribute FooQueryForm query,
+			@ModelAttribute Paginator page) {
+				
+		logger.debug("fooSummaryReport");		
+		SearchResults<Marker> searchResults = this.getSummaryResults(request, query, page);
+        model.addAttribute("results", searchResults.getResultObjects());
+		return "fooSummaryReport";			
+	}
+	
+	/*
+	 * This method maps requests for the foo facet list.  The results are
+	 * returned as JSON.  
+	 */
+	@RequestMapping("/facet/foo")
+	public @ResponseBody Map<String, List<String>> facetAuthor(
+			@ModelAttribute FooQueryForm query) {
+		// perform query and return results as json
+		logger.debug("get filter facets here");
+		
+		SearchResults<String> results = new SearchResults<String>();
+		// hard-coded results for example purposes
+		List<String> foos = new ArrayList<String>();
+		foos.add("foo 1");
+		foos.add("foo 2");
+		foos.add("foo 3");
+		results.setResultFacets(foos);
 
+		return this.parseFacetResponse(results);
+	}
 
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
+	
+	/*
+	 * This is a convenience method to handle packing the SearchParams object
+	 * and return the SearchResults from the finder.
+	 */
+	private SearchResults<Marker> getSummaryResults( HttpServletRequest request, 
+			@ModelAttribute FooQueryForm query,
+			@ModelAttribute Paginator page){
+		
+        SearchParams params = new SearchParams();
+        params.setPaginator(page);
+        params.setSorts(this.genSorts(request));
+        params.setFilter(this.genFilters(query));
+
+        // perform query, return SearchResults 
+        return fooFinder.getFoos(params);
+	}
+	
+	/*
+	 * This is a convenience method to parse the facet response from the 
+	 * SearchResults object, inspect it for error conditions, and return a 
+	 * map that the ui is expecting.
+	 */
+	private Map<String, List<String>> parseFacetResponse(
+			SearchResults<String> facetResults) {
+		
+		Map<String, List<String>> m = new HashMap<String, List<String>>();
+		List<String> l = new ArrayList<String>();
+		
+		if (facetResults.getResultFacets().size() >= facetLimit){
+			logger.debug("too many facet results");
+			l.add("Too many results to display. Modify your search or try another filter first.");
+			m.put("error", l);
+		} else if (facetResults.getResultFacets().size() == 0) {
+			logger.debug("no facet results");
+			l.add("No values in results to filter.");
+			m.put("error", l);
+		} else {
+			m.put("resultFacets", facetResults.getResultFacets());
+		}
+		return m;
+	}
 
     // generate the sorts
     private List<Sort> genSorts(HttpServletRequest request) {
