@@ -69,7 +69,13 @@ matching records from ${refCount} references.</span><br><br>
          <c:forEach var="row" items="${summaryRows}" >
            <% stripe.reset(); %>
            <table class="outline" width="100%">
-           <tr class="${geneResult.next}"><td colspan="2"><b>${row.symbol}&nbsp;&nbsp;${row.name}</b></td></tr>
+           <tr class="${geneResult.next}"><td colspan="2"><b>${row.symbol}&nbsp;&nbsp;${row.name}</b>&nbsp;&nbsp;
+	<c:if test="${not empty row.synonyms}">
+             (Synonyms:
+             <c:forEach var="synonym" items="${row.synonyms}" varStatus="status"
+>${synonym}<c:if test="${!status.last}">, </c:if></c:forEach>)
+           </c:if>
+</td></tr>
            <tr class="${geneResult.next}"><td><b>Results&nbsp;&nbsp;</b></td><td><b>Reference</b></td></tr>
            <c:if test="${not empty row.referenceRecords}">
          	<c:forEach var="innerrow" items="${row.referenceRecords}" >
