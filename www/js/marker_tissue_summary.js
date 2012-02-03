@@ -113,7 +113,7 @@ function main() {
 
         oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
         oPayload.pagination = {
-            rowsPerPage: Number(pRequest['results']) || 50,
+            rowsPerPage: Number(pRequest['results']) || 100,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
         
@@ -135,7 +135,7 @@ function main() {
     	startIndex = startIndex || 0;
         sortKey   = sortKey || "structure";  // default the sort
         dir   = (dir) ? dir.substring(7) : "desc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
-        results   = results || 50;
+        results   = results || 100;
         return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };
 
