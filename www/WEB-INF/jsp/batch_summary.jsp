@@ -25,7 +25,7 @@ ${templateBean.templateBodyStartHtml}
 
 <div id="outer"  class="bluebar">
 	<span id="toggleImg" class="qfExpand"></span>
-	<div id="toggleQF"><span id="toggleLink" class="filterButton">Click to hide search</span></div>
+	<div id="toggleQF"><span id="toggleLink" class="filterButton">Click to modify search</span></div>
 	<div id="qwrap" style="display:none;">
 		<%@ include file="/WEB-INF/jsp/batch_form.jsp" %>
 	</div>

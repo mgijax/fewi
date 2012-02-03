@@ -1,5 +1,5 @@
 
-	<form:form enctype="multipart/form-data" method="post" action="${configBean.FEWI_URL}batch/summary" commandName="batchQueryForm">
+	<form:form commandName="batchQueryForm" enctype="multipart/form-data" method="post" action="${configBean.FEWI_URL}batch/summary">
 		<table class="borderedTable pad0">
 			<tr class="queryControls">
 				<td colspan="2" align="left" style="padding:5px;">

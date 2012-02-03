@@ -49,9 +49,9 @@ if (!YAHOO.lang.isUndefined(toggleImg)){
 
 var interceptSubmit = function(e) {
 	YAHOO.util.Event.preventDefault(e);	
-	toggleQF(function(){
-		var form = YAHOO.util.Dom.get("batchQueryForm");
-		form.submit();
+	var form = YAHOO.util.Dom.get("batchQueryForm");
+	toggleQF(function(form){
+		document.forms["batchQueryForm"].submit();
 	});
 };
 
