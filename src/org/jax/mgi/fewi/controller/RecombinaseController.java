@@ -151,6 +151,14 @@ public class RecombinaseController {
 
         ModelAndView mav = new ModelAndView("recombinase_specificity");
 
+        Image thisImage;
+        Iterator<Image> imageIter;
+        List<Image> validatedImages   = new ArrayList<Image>();
+
+        /*
+         * Lookup AlleleSystem object
+         */
+
         // setup search parameters object to gather the requested object
         SearchParams searchParams = new SearchParams();
         searchParams.setFilter(this.genFilters(query));
@@ -160,18 +168,23 @@ public class RecombinaseController {
             recombinaseFinder.getAlleleSystem(searchParams);
         List<AlleleSystem> alleleSystems = searchResults.getResultObjects();
 
-        // ensure we found something...
+        // ensure we found allele system
         if (alleleSystems.size() < 1) {
             // forward to error page
             mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Allele/System not available");
             return mav;
         }
-
-        // gather required data objects, and place into the mav
-        mav.addObject("queryString", request.getQueryString());
         AlleleSystem alleleSystem = alleleSystems.get(0);
+
+        /*
+         * Remove sub-objects from AlleleSystem, and fill ModelAndView
+         * with display data
+         */
+
         Allele allele = alleleSystem.getAllele();
+
+        mav.addObject("queryString", request.getQueryString());
         mav.addObject("alleleSystem", alleleSystem);
         mav.addObject("allele", allele);
         mav.addObject("systemDisplayStr",
@@ -181,7 +194,7 @@ public class RecombinaseController {
         mav.addObject("otherSystems", alleleSystem.getOtherSystems());
         mav.addObject("otherSystemsSize", alleleSystem.getOtherSystems().size());
 
-        // pre-gen comma-delimitted synonym list
+        // allele synonyms; pre-gen comma-delimitted list
         List<String> synonymList = new ArrayList<String> ();
         Iterator<AlleleSynonym> synonymIter = allele.getSynonyms().iterator();
         while (synonymIter.hasNext()) {
@@ -191,32 +204,37 @@ public class RecombinaseController {
         mav.addObject("synonymsString",
           FormatHelper.superscript(FormatHelper.commaDelimit(synonymList)));
 
-        // pre-form image gallery rows
+        // remove images with 'null' values
+        imageIter = alleleSystem.getImages().iterator();
+        while (imageIter.hasNext()) {
+          thisImage = imageIter.next();
+          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
+			validatedImages.add(thisImage);
+		  }
+	    }
+
+        // iterate over the validated images; pre-gen image gallery rows
         int imageIndex = 0;
-        Image thisImage;
         List<RecomImage> recomImages = new ArrayList<RecomImage>();
         List<RecomImageRow> recomImageRows = new ArrayList<RecomImageRow>();
-
-        Iterator<Image> imageIter = alleleSystem.getImages().iterator();
+        imageIter = validatedImages.iterator();
         while (imageIter.hasNext()) {
 
           thisImage = imageIter.next();
-          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
 
-            imageIndex++;
-            RecomImage thisRecomImage
-              = new RecomImage(thisImage, imageIndex);
-            recomImages.add(thisRecomImage);
+          imageIndex++;
+          RecomImage thisRecomImage
+            = new RecomImage(thisImage, imageIndex);
+          recomImages.add(thisRecomImage);
 
-            // if we have enough images to fill a row, of if this is our last
-            // image, create the row and add to row list
-            if ( ((imageIndex % 8 ) == 0) || !imageIter.hasNext() ) {
-                RecomImageRow thisRow = new RecomImageRow();
-                thisRow.setRecomImages(recomImages);
-                recomImageRows.add(thisRow);
-                recomImages = new ArrayList<RecomImage>();
-            }
-	      }
+          // if we have enough images to fill a row, of if this is our last
+          // image, create the row and add to row list
+          if ( ((imageIndex % 8 ) == 0) || !imageIter.hasNext() ) {
+            RecomImageRow thisRow = new RecomImageRow();
+            thisRow.setRecomImages(recomImages);
+            recomImageRows.add(thisRow);
+            recomImages = new ArrayList<RecomImage>();
+          }
         }
         mav.addObject("galleryImagesRows", recomImageRows);
 
