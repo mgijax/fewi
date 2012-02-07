@@ -49,6 +49,8 @@ public class ImageSummaryRow {
   // hide the default constructor - we NEED an image to wrap
   private ImageSummaryRow () {}
   public  ImageSummaryRow (Image image, Image thumbImage) {
+
+    //set instance variables
     this.image = image;
     this.thumbImage = thumbImage;
     this.genotypes = image.getGenotypes();
@@ -94,6 +96,7 @@ public class ImageSummaryRow {
 
   // img tag
   public String getImgTag() {
+
     StringBuffer imgTag = new StringBuffer();
     imgTag.append("<a href='" + fewiUrl);
     imgTag.append("image/" + this.image.getMgiID() + "'>");
@@ -109,7 +112,6 @@ public class ImageSummaryRow {
     String cleanCaption = thumbImage.getCaption();
     if (cleanCaption==null) {return "";}
     cleanCaption = cleanCaption.trim().replaceAll("[\\r\\n]", "").replaceAll("[']", "\'");
-    cleanCaption = FormatHelper.superscript(cleanCaption);
     return cleanCaption;
   }
 
@@ -195,10 +197,7 @@ public class ImageSummaryRow {
 
         // image
         summaryRow.append("<td>");
-        summaryRow.append("<a href='" + fewiUrl + "image/pheno/" + image.getMgiID() + "'>");
-        summaryRow.append("<img width='" + this.getImageHeight() +"' height='" + this.getImageHeight() + "'");
-        summaryRow.append("src='" + pixeldbUrl);
-        summaryRow.append(image.getPixeldbNumericID() + "'>");
+        summaryRow.append(this.getImgTag());
         summaryRow.append("</td>");
 
         // caption
