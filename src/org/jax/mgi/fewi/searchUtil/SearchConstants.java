@@ -60,6 +60,7 @@ public class SearchConstants {
 
     public static final String GXD_LIT_MRK_NOMEN	= "nomen";
     public static final String GXD_LIT_MRK_NOMEN_BEGINS	= "nomenBegins";
+    public static final String GXD_LIT_MRK_SYMBOL	= "symbolAndSynonyms";
     public static final String GXD_LIT_AGE		= "age";
     public static final String GXD_LIT_ASSAY_TYPE	= "assayType";
 

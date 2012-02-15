@@ -57,6 +57,8 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
 	propertyMap.put(SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS,
 		new SolrPropertyMapper(IndexConstants.GXD_MRK_NOMEN_BEGINS));
+	propertyMap.put(SearchConstants.GXD_LIT_MRK_SYMBOL,
+		new SolrPropertyMapper(IndexConstants.GXD_MRK_SYMBOL));
 
         /*
          * The name of the field we want to iterate through the documents for
