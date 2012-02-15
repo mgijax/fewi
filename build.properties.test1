@@ -22,4 +22,4 @@ datasource=postgresDev-ds.xml
 jdbcdriver=lib/postgresql-9.0-801.jdbc4.jar
 
 <!--config files -->
-config.file=fewi.properties.testFewi1
+config.file=fewi.properties.mgi-fewi1
