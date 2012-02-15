@@ -134,8 +134,8 @@ ${templateBean.templateBodyStartHtml}
         <form name="seqPullDownForm" method="get">
         <i>For this sequence</i>
         <select name='seqPullDown'>
-          <option value="http://www.informatics.jax.org/seqfetch/tofasta.cgi?" selectED>download in FASTA format
-          <option value="http://mouseblast.informatics.jax.org/seqSelect.cgi">forward to MouseBLAST
+          <option value="${configBean.SEQFETCH_URL}" selectED>download in FASTA format
+          <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi">forward to MouseBLAST
         </select>
         <input type=button value="Go" onClick=formatForwardArgs()><br>
         </form>
