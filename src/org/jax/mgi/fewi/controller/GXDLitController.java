@@ -714,17 +714,64 @@ public class GXDLitController {
         List<Filter> filterList = new ArrayList<Filter>();
 
         String nomen = query.getNomen();
+
         // Nomen Filter
-        if ((nomen != null) && (!"".equals(nomen))) {
+        if ((nomen != null) && (!"".equals(nomen.trim()))) {
 	    String field;
+
 	    if (nomen.length() <= 2) {
-		// for 1-2 characters, do an exact match
+		// for 1-2 characters, do an exact match against only symbols
+		// and synonyms
+		field = SearchConstants.GXD_LIT_MRK_SYMBOL;
+        	filterList.add(new Filter (field, nomen.trim(),
+			Filter.OP_EQUAL));
+
+	    } else if (nomen.contains("\"")) {
+		// for 3+ characters with quotes, do a contains search
+
+		// replace substrings of any non-alphanumeric characters with
+		// a space, but leave double-quotes alone
+		nomen = nomen.replaceAll("[^A-Za-z0-9\"]+", " ");
+
 		field = SearchConstants.GXD_LIT_MRK_NOMEN;
+        	filterList.add(new Filter (field, nomen.trim(), 
+			Filter.OP_CONTAINS));
+
 	    } else {
-		// for 3+ characters, do a begins search
+		// for 3+ characters with no quotes, do a begins search
+		// where we must match ALL tokens
+
 		field = SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS;
+
+		// replace substrings of any non-alphanumeric characters with
+		// a space
+		nomen = nomen.replaceAll("[^A-Za-z0-9]+", " ");
+
+		// separate tokens on one or more consecutive spaces
+		String[] tokens = nomen.split(" +");
+
+		// collect a filter for each token
+
+		List<Filter> nomenFilters = new ArrayList<Filter>();
+
+		for (String token: tokens) {
+			nomenFilters.add (new Filter (field, token,
+				Filter.OP_EQUAL) );
+		} 
+
+		// If we only found one filter, just add it.
+		// Otherwise, AND them together under a grouping filter and
+		// add that one.
+
+		if (nomenFilters.size() == 1) {
+    			filterList.add(nomenFilters.get(0));
+		} else {
+    			Filter tf = new Filter();
+    			tf.setFilterJoinClause(Filter.FC_AND);
+			tf.setNestedFilters(nomenFilters);
+			filterList.add(tf);
+    		}
 	    }
-            filterList.add(new Filter (field, nomen, Filter.OP_EQUAL));
         }
 
         // Age Filter
