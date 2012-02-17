@@ -4,6 +4,7 @@ import java.util.*;
 
 import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.ImageAllele;
+import mgi.frontend.datamodel.ImagePane;
 import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Reference;
 
@@ -38,6 +39,7 @@ public class ImageSummaryRow {
   private Image image;
   private Image thumbImage;
   private List<Genotype> genotypes;
+  private Reference reference;
 
   // converter for curator 'tags' in the data
   private NotesTagConverter ntc;
@@ -54,6 +56,7 @@ public class ImageSummaryRow {
     this.image = image;
     this.thumbImage = thumbImage;
     this.genotypes = image.getGenotypes();
+    this.reference = image.getReference();
     try {
       ntc = new NotesTagConverter();
     }catch (Exception e) {}
@@ -65,6 +68,11 @@ public class ImageSummaryRow {
   //------------------------------------------------------------------------
   // public methods
   //------------------------------------------------------------------------
+
+  // image
+  public Image getImage() {
+    return this.image;
+  }
 
   // image height
   public String getImageHeight() {
@@ -88,15 +96,11 @@ public class ImageSummaryRow {
 
   // allele's reference
   public Reference getReference() {
-    return this.image.getReference();
+    return this.reference;
   }
-
-
-
 
   // img tag
   public String getImgTag() {
-
     StringBuffer imgTag = new StringBuffer();
     imgTag.append("<a href='" + fewiUrl);
     imgTag.append("image/" + this.image.getMgiID() + "'>");
@@ -133,6 +137,43 @@ public class ImageSummaryRow {
     if (cleanGenBackground==null) {return "";}
     return FormatHelper.superscript(cleanGenBackground);
   }
+
+
+  // abbreviated list of authors
+  public String getShortAuthor(){
+    String authors = this.reference.getAuthors();
+    // one author
+    if (authors.indexOf(';') == -1){return authors;}
+    // more than 1 author
+    return authors.substring(0, authors.indexOf(';')) + ", et al.";
+  }
+
+  // assay types in image panes
+  public String getAssayTypesInPage(){
+    ImagePane currentPane;
+    List<String> uniqueAssayTypes = new ArrayList<String>();
+    Iterator<ImagePane> imagePaneIter = this.image.getImagePanes().iterator();
+    while (imagePaneIter.hasNext()) {
+        currentPane = imagePaneIter.next();
+	}
+
+
+
+//if(!uniqueAssayTypes.contains(value)) {
+//    uniqueAssayTypes.add(value);
+//}
+
+
+
+    StringBuffer assayTypes = new StringBuffer();
+//    Set<String> assayTypes = new
+//    if (imagePanes.size() > 1) {
+
+
+    assayTypes.append("foo");
+    return assayTypes.toString();
+  }
+
 
 
   //------------------------------------------------------------------------

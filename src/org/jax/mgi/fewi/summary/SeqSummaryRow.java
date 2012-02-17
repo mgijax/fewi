@@ -172,10 +172,11 @@ public class SeqSummaryRow {
 
         // for each marker, make a marker link
         Marker marker;
-        if (markerIter.hasNext()) {
+        while (markerIter.hasNext()) {
 			marker = markerIter.next();
-            markerLinks.append("<a href='" + fewiUrl + "marker/"
-              + marker.getPrimaryID() + "'>" + marker.getSymbol() + "</a></br>");
+            markerLinks.append("<div><a href='" + fewiUrl + "marker/"
+              + marker.getPrimaryID() + "'>" + marker.getSymbol()
+              + "</a></br></div>");
 		}
     	return markerLinks.toString();
     }
