@@ -142,7 +142,7 @@ public class IDLinker {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<a href='");
 		sb.append(url.replace("@@@@", id));
-		sb.append("'>");
+		sb.append("' target='_blank'>");
 		sb.append(label);
 		sb.append("</a>");
 		return sb.toString();
