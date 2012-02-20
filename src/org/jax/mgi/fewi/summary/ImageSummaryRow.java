@@ -5,6 +5,7 @@ import java.util.*;
 import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.ImageAllele;
 import mgi.frontend.datamodel.ImagePane;
+import mgi.frontend.datamodel.ImagePaneSet;
 import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Reference;
 
@@ -150,27 +151,27 @@ public class ImageSummaryRow {
 
   // assay types in image panes
   public String getAssayTypesInPage(){
-    ImagePane currentPane;
+    ImagePaneSet currentSet;
     List<String> uniqueAssayTypes = new ArrayList<String>();
-    Iterator<ImagePane> imagePaneIter = this.image.getImagePanes().iterator();
-    while (imagePaneIter.hasNext()) {
-        currentPane = imagePaneIter.next();
+    Iterator<ImagePaneSet> setIter = this.image.getImagePaneSets().iterator();
+
+    // get a unique list
+    while (setIter.hasNext()) {
+        currentSet = setIter.next();
+        if(!uniqueAssayTypes.contains(currentSet.getAssayType())) {
+          uniqueAssayTypes.add(currentSet.getAssayType());
+        }
+	}
+
+
+    StringBuffer assayTypes = new StringBuffer();
+    if (uniqueAssayTypes.size() == 1) {
+		String uniqueType = uniqueAssayTypes.iterator().next();
+		assayTypes.append(uniqueType);
 	}
 
 
 
-//if(!uniqueAssayTypes.contains(value)) {
-//    uniqueAssayTypes.add(value);
-//}
-
-
-
-    StringBuffer assayTypes = new StringBuffer();
-//    Set<String> assayTypes = new
-//    if (imagePanes.size() > 1) {
-
-
-    assayTypes.append("foo");
     return assayTypes.toString();
   }
 
