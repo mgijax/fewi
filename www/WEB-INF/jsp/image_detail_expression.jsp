@@ -82,7 +82,7 @@ ${templateBean.templateBodyStartHtml}
         Caption
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-        <%=FormatHelper.superscript(image.getCaption())%>
+        ${image.caption}
       </td>
     </tr>
   </c:if>
@@ -133,7 +133,12 @@ ${templateBean.templateBodyStartHtml}
                 </c:forEach>
               </td>
               <td class="">
-                <!-- spatial mapping -->
+                <c:forEach var="imagePaneId" items="${imagePane.imagePaneIds}" >
+                  <a target='_blank'
+                    href='http://www.emouseatlas.org/emagewebapp/router?id=${imagePaneId.accID}'>
+                    ${imagePaneId.accID}
+                  </a>
+                </c:forEach>
               </td>
             </tr>
 

@@ -109,40 +109,35 @@ Click on thumbnail or figure label to view full size image with links to express
 
   <c:forEach var="imageSummaryRow" items="${imageSummaryRows}" >
     <tr>
-      <td style="border: 1px solid black;" width="1%">
-        ${imageSummaryRow.imgTag}
-      </td>
-      <td style="border: 1px solid black;">
 
-        <div class='small' style='padding-top:4px; padding-bottom:4px;'>
-          <b>Caption:</b> ${imageSummaryRow.caption} 
-          <a href='${configBean.FEWI_URL}image/${imageSummaryRow.imageId}'>(details)</a>
+    <!-- LEFT CELL: Linked Image -->
+    <td style="background-color:#F0F0F0; border: 1px solid black;" width="1%">
+      ${imageSummaryRow.imgTag}
+    </td>
+
+    <!-- RIGHT CELL: Linked Image -->  
+    <td class="<%=rightTdStyles.getNext() %>" style="border: 1px solid black;">
+
+      <div class='' style='padding-top:4px; padding-bottom:4px;'>
+
+        <b>Reference:</b> 
+        ${imageSummaryRow.reference.jnumID}
+        ${imageSummaryRow.reference.shortCitation}
+
+      </div>
+
+
+      <div class='' style='padding-top:4px; padding-bottom:4px;'>
+        <a href='${configBean.FEWI_URL}image/${imageSummaryRow.image.mgiID}'>
+          Figure  ${imageSummaryRow.image.figureLabel} 
+        </a>
+        <div class='' style='padding-top:4px;padding-left:14px;'>
+          ${imageSummaryRow.assayTypesInPage}
         </div>
+      </div>
 
-        <c:if test="${not empty imageSummaryRow.alleles}">
-          <div class='small'><b>Represented Alleles:</b></div>
-          <c:forEach var="imageAllele" items="${imageSummaryRow.alleles}" >
-              <% // pull to scriptlet context
-                ImageAllele imageAllele 
-                  = (ImageAllele)pageContext.getAttribute("imageAllele"); 
-              %>
-              <div style='padding-top:2px; padding-bottom:2px;'>
-              <a href="${configBean.FEWI_URL}allele/${imageAllele.alleleID}">
-              <%=FormatHelper.superscript(imageAllele.getAlleleSymbol())%></a>,
-              ${imageAllele.alleleName}
-              </div>
-          </c:forEach>
-        </c:if>
 
-        <div class='small' style='padding-top:8px; padding-bottom:4px;'>
-          <b>Copyright:</b> ${imageSummaryRow.copyright} 
-          <a href="${configBean.FEWI_URL}reference/${imageSummaryRow.reference.jnumID}">
-            ${imageSummaryRow.reference.jnumID}
-          </a>
-
-        </div>
-
-      </td>
+    </td>
     </tr>
   </c:forEach>
 
