@@ -42,6 +42,9 @@ public class ImageSummaryRow {
   private List<Genotype> genotypes;
   private Reference reference;
 
+  // optional - key to object (marker/allele etc) of this summary
+  private int summaryObjectKey;
+
   // converter for curator 'tags' in the data
   private NotesTagConverter ntc;
 
@@ -152,29 +155,73 @@ public class ImageSummaryRow {
   // assay types in image panes
   public String getAssayTypesInPage(){
     ImagePaneSet currentSet;
-    List<String> uniqueAssayTypes = new ArrayList<String>();
-    Iterator<ImagePaneSet> setIter = this.image.getImagePaneSets().iterator();
-
-    // get a unique list
-    while (setIter.hasNext()) {
-        currentSet = setIter.next();
-        if(!uniqueAssayTypes.contains(currentSet.getAssayType())) {
-          uniqueAssayTypes.add(currentSet.getAssayType());
-        }
-	}
-
-
     StringBuffer assayTypes = new StringBuffer();
-    if (uniqueAssayTypes.size() == 1) {
-		String uniqueType = uniqueAssayTypes.iterator().next();
-		assayTypes.append(uniqueType);
-	}
+    List<String> uniqueAssayTypes = new ArrayList<String>();
+    List<ImagePaneSet> filteredSetList= new ArrayList<ImagePaneSet>();
+    Iterator<ImagePaneSet> setIter;
+
+    // first, remove pane sets NOT for given marker
+    setIter = this.image.getImagePaneSets().iterator();
+    while (setIter.hasNext()) {
+      currentSet = setIter.next();
+      if (currentSet.getMarkerKey() == summaryObjectKey) {
+          filteredSetList.add(currentSet);
+      }
+    }
+
+    // display is determined by uniqueness of assay types in remaining sets
+    if (this.multiAssayTypesInImage(filteredSetList)) { //multiple types of assays
+      setIter = filteredSetList.iterator();
+      while (setIter.hasNext()) {
+          currentSet = setIter.next();
+          assayTypes.append(currentSet.getPaneLabels());
+          assayTypes.append(" : ");
+          assayTypes.append(currentSet.getAssayType());
+          assayTypes.append("<br/>");
+      }
+    }
+    else {
+      setIter = filteredSetList.iterator();
+      while (setIter.hasNext()) {
+          currentSet = setIter.next();
+          if (currentSet.getPaneLabels() != null && !currentSet.getPaneLabels().equals(" ")) {
+            assayTypes.append(currentSet.getPaneLabels());
+            assayTypes.append(" : ");
+          }
+          assayTypes.append(currentSet.getAssayType());
+          assayTypes.append("<br/>");
+      }
+    }
+
+
+
+
+//    if (uniqueAssayTypes.size() == 1) {
+//        String uniqueType = uniqueAssayTypes.iterator().next();
+//        assayTypes.append(uniqueType);
+//    }
+//    else {
+//        setIter = this.image.getImagePaneSets().iterator();
+//        while (setIter.hasNext()) {
+//            currentSet = setIter.next();
+//            assayTypes.append(currentSet.getPaneLabels());
+//            assayTypes.append(" ");
+//            assayTypes.append(currentSet.getAssayType());
+//            assayTypes.append(" ");
+//            assayTypes.append(currentSet.getSequenceNum());
+//            assayTypes.append("<br/>");
+//        }
+//    }
 
 
 
     return assayTypes.toString();
   }
 
+  // some summarys will set this value
+  public void setSummaryObjectKey(int keyValue) {
+    this.summaryObjectKey = keyValue;
+  }
 
 
   //------------------------------------------------------------------------
@@ -278,11 +325,25 @@ public class ImageSummaryRow {
 
 
   // scaled height, keeping aspect ratio for image with imageDisplayWidth
-//  private int getModifiedHeight() {
-//      double width = image.getWidth().doubleValue();
-//      double height = image.getHeight().doubleValue();
-//      int modifiedHeight = (int)((height * imageDisplayWidth) / width);
-//      return modifiedHeight;
-//  }
+  private boolean multiAssayTypesInImage(List<ImagePaneSet> inputSetList) {
+
+    ImagePaneSet currentSet;
+    List<String> uniqueAssayTypes = new ArrayList<String>();
+    Iterator<ImagePaneSet> setIter = inputSetList.iterator();
+
+    // get a unique list of assay types
+    while (setIter.hasNext()) {
+        currentSet = setIter.next();
+        if(!uniqueAssayTypes.contains(currentSet.getAssayType())) {
+          uniqueAssayTypes.add(currentSet.getAssayType());
+        }
+    }
+
+    // act accordingly
+    if (uniqueAssayTypes.size() > 1) {
+      return true;
+    }
+    return false;
+  }
 
 }
