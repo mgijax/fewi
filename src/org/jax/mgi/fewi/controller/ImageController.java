@@ -343,7 +343,9 @@ public class ImageController {
 
         // data holders
         Marker marker;
+        Integer markerKey;
         List<ImageSummaryRow> imageSummaryRows;
+        ImageSummaryRow thisRow;
 
         /**********************
         * Gather Marker Object
@@ -384,7 +386,7 @@ public class ImageController {
         imageSearchParams.setSorts(this.genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
-        Integer markerKey = new Integer(marker.getMarkerKey());
+        markerKey = new Integer(marker.getMarkerKey());
         Filter markerKeyFilter
           = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
         imageSearchParams.setFilter(markerKeyFilter);
@@ -393,6 +395,13 @@ public class ImageController {
         SearchResults<ImageSummaryRow> imageSearchResults
           = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
         imageSummaryRows = imageSearchResults.getResultObjects();
+
+        // add marker key to each row (it needs to know the marker)
+        Iterator<ImageSummaryRow> rowIter = imageSummaryRows.iterator();
+        while (rowIter.hasNext()) {
+          thisRow = rowIter.next();
+          thisRow.setSummaryObjectKey(markerKey.intValue());
+	    }
 
 
         /**********************
