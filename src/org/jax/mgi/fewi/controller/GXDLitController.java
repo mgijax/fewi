@@ -719,22 +719,38 @@ public class GXDLitController {
         if ((nomen != null) && (!"".equals(nomen.trim()))) {
 	    String field;
 
-	    if (nomen.length() <= 2) {
+	    // remember if the query string was quoted
+	    boolean wasQuoted = false;
+	    if (nomen.contains("\"")) { wasQuoted = true; }
+
+	    // then strip the quotes
+	    nomen = nomen.replaceAll("\"", "");
+
+	    // convert any substrings of non-alphanumeric characters with a
+	    // space
+	    nomen = nomen.replaceAll("[^A-Za-z0-9]+", " "); 
+
+	    // then remove any leading and trailing spaces
+	    nomen = nomen.trim();
+
+	    if (nomen.length() < 1) {
+		// if we have no search string left after cleanup, do not add
+		// a filter for nomenclature
+
+	    } else if (nomen.length() <= 2) {
 		// for 1-2 characters, do an exact match against only symbols
-		// and synonyms
+		// and synonyms.  if it was quoted, just ignore the quotes.
+
 		field = SearchConstants.GXD_LIT_MRK_SYMBOL;
         	filterList.add(new Filter (field, nomen.trim(),
 			Filter.OP_EQUAL));
 
-	    } else if (nomen.contains("\"")) {
-		// for 3+ characters with quotes, do a contains search
-
-		// replace substrings of any non-alphanumeric characters with
-		// a space, but leave double-quotes alone
-		nomen = nomen.replaceAll("[^A-Za-z0-9\"]+", " ");
+	    } else if (wasQuoted) {
+		// for 3+ characters with quotes, do a contains search for the
+		// quoted string
 
 		field = SearchConstants.GXD_LIT_MRK_NOMEN;
-        	filterList.add(new Filter (field, nomen.trim(), 
+        	filterList.add(new Filter (field, "\"" + nomen + "\"", 
 			Filter.OP_CONTAINS));
 
 	    } else {
@@ -742,10 +758,6 @@ public class GXDLitController {
 		// where we must match ALL tokens
 
 		field = SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS;
-
-		// replace substrings of any non-alphanumeric characters with
-		// a space
-		nomen = nomen.replaceAll("[^A-Za-z0-9]+", " ");
 
 		// separate tokens on one or more consecutive spaces
 		String[] tokens = nomen.split(" +");
