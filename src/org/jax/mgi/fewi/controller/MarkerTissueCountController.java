@@ -8,12 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerTissueCount;
-import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.MarkerTissueCountFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
-import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -26,11 +24,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -55,9 +52,6 @@ public class MarkerTissueCountController {
 
     @Autowired
     private MarkerTissueCountFinder tFinder;
-    
-    @Autowired
-    private ReferenceFinder referenceFinder;
 
     @Autowired
     private MarkerFinder markerFinder;
@@ -104,11 +98,8 @@ public class MarkerTissueCountController {
     //--------------------------------//
     
     @RequestMapping(value="/marker/{markerID}")
-    public ModelAndView tissueSummeryByMarker(@PathVariable("markerID") String markerID) {
-
-        logger.debug("->markerTissueCountSummary started");
-
-        ModelAndView mav = new ModelAndView("marker_tissue_summary");
+    public ModelAndView tissueSummeryByMarkerId(@PathVariable("markerID") String markerID) {
+        logger.debug("->tissueSummeryByMarkerId started");
 
         // setup search parameters object to gather the requested object
         SearchParams searchParams = new SearchParams();
@@ -116,24 +107,42 @@ public class MarkerTissueCountController {
         searchParams.setFilter(markerKeyFilter);
 
         // find the requested reference
-        SearchResults searchResults
+        SearchResults<Marker> searchResults
           = markerFinder.getMarkerByID(searchParams);
         List<Marker> markerList = searchResults.getResultObjects();
+
+        return tissueSummeryByMarker(markerList, markerID);
+    }
+    
+    @RequestMapping(value="/marker")
+    public ModelAndView tissueSummeryByMarkerKey(@RequestParam("key") String markerKey) {
+        logger.debug("->tissueSummeryByMarkerKey started: " + markerKey);
+
+        // find the requested reference
+        SearchResults<Marker> searchResults
+          = markerFinder.getMarkerByKey(markerKey);
+        List<Marker> markerList = searchResults.getResultObjects();
+
+        return tissueSummeryByMarker(markerList, markerKey);
+    }
+    
+    private ModelAndView tissueSummeryByMarker(List<Marker> markerList, String mrk){
+    	
+    	ModelAndView mav = new ModelAndView("marker_tissue_summary");
 
         // there can be only one...
         if (markerList.size() < 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No reference found for " + markerID);
+            mav.addObject("errorMsg", "No marker found for " + mrk);
             return mav;
         }
         if (markerList.size() > 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe references found for " + markerID);
+            mav.addObject("errorMsg", "Dupe marker found for " + mrk);
             return mav;
         }
-
         // pull out the reference, and place into the mav
         Marker marker = markerList.get(0);
         mav.addObject("marker", marker);

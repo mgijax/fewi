@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.BatchMarkerId;
 import mgi.frontend.datamodel.Marker;
 
 import org.jax.mgi.fewi.finder.MarkerAnnotationFinder;
@@ -29,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -61,11 +61,8 @@ public class GOController {
     // go Summary by Marker
     //-------------------------------//
     @RequestMapping(value="/marker/{markerID}")
-    public ModelAndView goSummeryByMarker(@PathVariable("markerID") String markerID) {
-
-        logger.debug("->goSummeryByMarker started");
-
-        ModelAndView mav = new ModelAndView("go_summary_marker");
+    public ModelAndView goSummeryByMarkerId(@PathVariable("markerID") String markerID) {
+        logger.debug("->goSummeryByMarkerId started");
 
         // setup search parameters object to gather the requested object
         SearchParams searchParams = new SearchParams();
@@ -73,34 +70,51 @@ public class GOController {
         searchParams.setFilter(markerIDFilter);
 
         // find the requested reference
-        SearchResults searchResults
+        SearchResults<Marker> searchResults
           = markerFinder.getMarkerByID(searchParams);
-        List<Marker> mrkList = searchResults.getResultObjects();
+        List<Marker> markerList = searchResults.getResultObjects();
+
+        return goSummeryByMarker(markerList, markerID);
+    }
+
+    @RequestMapping(value="/marker")
+    public ModelAndView goSummeryByMarkerKey(@RequestParam("key") String markerKey) {
+        logger.debug("->goSummeryByMarkerrKey started: " + markerKey);
+
+        // find the requested reference
+        SearchResults<Marker> searchResults
+          = markerFinder.getMarkerByKey(markerKey);
+        List<Marker> markerList = searchResults.getResultObjects();
+
+        return goSummeryByMarker(markerList, markerKey);
+    }
+    
+    private ModelAndView goSummeryByMarker(List<Marker> markerList, String mrk){
+    	
+    	ModelAndView mav = new ModelAndView("go_summary_marker");
 
         // there can be only one...
-        if (mrkList.size() < 1) {
+        if (markerList.size() < 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No marker found for " + markerID);
+            mav.addObject("errorMsg", "No marker found for " + mrk);
             return mav;
         }
-        if (mrkList.size() > 1) {
+        if (markerList.size() > 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe marker found for " + markerID);
+            mav.addObject("errorMsg", "Dupe marker found for " + mrk);
             return mav;
         }
-
         // pull out the reference, and place into the mav
-        Marker marker = mrkList.get(0);
+        Marker marker = markerList.get(0);
         mav.addObject("marker", marker);
-
+                
         // pre-generate query string
-        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey() + "&vocab=GO");
+        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey());
 
         return mav;
     }
-
 
     //----------------------//
     // JSON summary results
@@ -119,11 +133,11 @@ public class GOController {
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(query));
         
-        SearchResults sr = markerFinder.getMarkerByKey(query.getMrkKey());
+        SearchResults<Marker> sr = markerFinder.getMarkerByKey(query.getMrkKey());
         Marker m = (Marker) sr.getResultObjects().get(0);
 
         // perform query, and pull out the requested objects
-        SearchResults searchResults
+        SearchResults<Annotation> searchResults
           = markerAnnotationFinder.getMarkerAnnotations(params);
         List<Annotation> annotList = searchResults.getResultObjects();
 
