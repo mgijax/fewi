@@ -1,4 +1,4 @@
-<project name="fewi" default="war" basedir=".">
+<project name="fewi" default="deploy" basedir=".">
 
 
         <!--pull in values from the properties file -->
@@ -57,7 +57,8 @@
         <!--deploy -->
         <target name="deploy" depends="war">
                 <echo>Deploy war</echo>
-                <copy file="${project.name}.war" todir="${deploy.dir}" overwrite="true"/>
+                <copy file="${project.name}.war" todir="${project.name}.war.bak" overwrite="true"/>
+                <move file="${project.name}.war" todir="${deploy.dir}" overwrite="true"/>
         </target>        
 
 
