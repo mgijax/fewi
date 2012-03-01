@@ -3,7 +3,7 @@
 
         <!--pull in values from the properties file -->
         <property file="build.properties"/>
-
+		<property environment="env"/>
 
         <!--libs -->
         <path id="libs">
@@ -12,6 +12,10 @@
                 <fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
                 <fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
         </path>
+	
+		<target name="isServer" unless="config.file">
+			<property name="config.file" value="fewi.properties.${env.SERVER_NAME}"/>
+		</target>
 
 
         <!--clean -->
@@ -22,10 +26,11 @@
 
 
         <!--prepare -->
-        <target name="prepare" depends="clean">
+        <target name="prepare" depends="clean, isServer">
                 <echo>Creating build directory</echo>
                 <mkdir dir="${compile.dir}"/>
                 <copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
+        		<echo>Use ${config.dir}\${config.file}</echo>
 	    		<copy file="${config.dir}\${config.file}" 
 	    			tofile="./www/WEB-INF/properties/fewi.properties" overwrite="true"/>
                 <copy file="${lib_java_fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
