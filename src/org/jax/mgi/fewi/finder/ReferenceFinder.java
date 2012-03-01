@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.finder;
 
 import java.util.List;
 
+import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
@@ -69,6 +70,20 @@ public class ReferenceFinder {
 
 			return results;
 	}
+	
+    public SearchResults<Reference> getReferenceByKey(String dbKey) {
+
+        logger.debug("->getReferenceByKey()");
+
+        // result object to be returned
+        SearchResults<Reference> searchResults = new SearchResults<Reference>();
+
+        // gather objects, add them to the results
+        Reference ref = referenceGatherer.get(Reference.class, dbKey);
+        searchResults.addResultObjects(ref);
+
+        return searchResults;
+    }
 
 	public SearchResults<String> getAuthorAutoComplete(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();

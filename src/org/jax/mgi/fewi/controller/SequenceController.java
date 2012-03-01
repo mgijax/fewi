@@ -1,53 +1,41 @@
 package org.jax.mgi.fewi.controller;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-/*------------------------------*/
-/* to change in each controller */
-/*------------------------------*/
+import javax.servlet.http.HttpServletRequest;
 
-// fewi
-import org.jax.mgi.fewi.finder.SequenceFinder;
-import org.jax.mgi.fewi.finder.ReferenceFinder;
-import org.jax.mgi.fewi.finder.MarkerFinder;
-import org.jax.mgi.fewi.summary.SeqSummaryRow;
-
-// data model objects
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Probe;
+import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceID;
 import mgi.frontend.datamodel.SequenceLocation;
-import mgi.frontend.datamodel.Reference;
-import mgi.frontend.datamodel.Probe;
-import mgi.frontend.datamodel.Marker;
 
-
-/*--------------------------------------*/
-/* standard imports for all controllers */
-/*--------------------------------------*/
-
-// internal
+import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.finder.SequenceFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import org.jax.mgi.fewi.util.StyleAlternator;
-
-// external
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -185,33 +173,47 @@ public class SequenceController {
      * Sequence Summary by Reference
      */
     @RequestMapping(value="/reference/{refID}")
-    public ModelAndView seqSummeryByRef(@PathVariable("refID") String refID) {
-
+    public ModelAndView seqSummeryByRefId(@PathVariable("refID") String refID) {
         logger.debug("->seqSummeryByRef started");
-
-        ModelAndView mav = new ModelAndView("sequence_summary_reference");
 
         // setup search parameters object to gather the requested reference
         SearchParams searchParams = new SearchParams();
         Filter refIdFilter = new Filter(SearchConstants.REF_ID, refID);
-        searchParams.setFilter(refIdFilter);
-
+        searchParams.setFilter(refIdFilter);        
+        
         // find the requested reference
-        SearchResults searchResults
+        SearchResults<Reference> searchResults
           = referenceFinder.searchReferences(searchParams);
-        List<Reference> refList = searchResults.getResultObjects();
+
+        return seqSummaryByRef(searchResults.getResultObjects(), refID);
+    }
+
+    @RequestMapping(value="/reference")
+    public ModelAndView seqSummeryByRefKey(@RequestParam("_Refs_key") String dbKey,
+    		HttpServletRequest request) {
+        logger.debug("->referenceSummaryByMarkerKey started: " + dbKey);       
+        
+        // find the requested reference
+        SearchResults<Reference> searchResults
+        	= referenceFinder.getReferenceByKey(dbKey);
+
+        return seqSummaryByRef(searchResults.getResultObjects(), dbKey);
+    }
+    
+    private ModelAndView seqSummaryByRef(List<Reference> refList, String refKey){
+        ModelAndView mav = new ModelAndView("sequence_summary_reference");
 
         // there can be only one...
         if (refList.size() < 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No reference found for " + refID);
+            mav.addObject("errorMsg", "No reference found for " + refKey);
             return mav;
         }
         if (refList.size() > 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe references found for " + refID);
+            mav.addObject("errorMsg", "Dupe references found for " + refKey);
             return mav;
         }
 
@@ -224,19 +226,16 @@ public class SequenceController {
         return mav;
     }
 
-
     /*
      * Sequence Summary by Marker
      */
     @RequestMapping(value="/marker/{mrkID}")
-    public ModelAndView seqSummeryByMarker(
+    public ModelAndView seqSummeryByMarkerId(
 		HttpServletRequest request,
         @PathVariable("mrkID") String mrkID)
     {
 
         logger.debug("->seqSummeryByMarker started");
-
-        ModelAndView mav = new ModelAndView("sequence_summary_marker");
 
         // setup search parameters object to gather the requested marker
         SearchParams searchParams = new SearchParams();
@@ -246,38 +245,57 @@ public class SequenceController {
         // find the requested marker
         SearchResults searchResults
           = markerFinder.getMarkerByID(searchParams);
-        List<Marker> mrkList = searchResults.getResultObjects();
+        
+        String provider = request.getParameter("provider");
 
+        return seqSummeryByMarker(searchResults.getResultObjects(), mrkID, provider);
+    }
+
+    @RequestMapping(value="/marker")
+    public ModelAndView seqSummeryByMarkerKey(@RequestParam("_Marker_key") String markerKey,
+    		HttpServletRequest request) {
+        logger.debug("->referenceSummaryByMarkerKey started: " + markerKey);
+
+        // find the requested reference
+        SearchResults<Marker> searchResults
+          = markerFinder.getMarkerByKey(markerKey);
+        
+        String provider = request.getParameter("provider");
+
+        return seqSummeryByMarker(searchResults.getResultObjects(), markerKey, provider);
+    }
+    
+    private ModelAndView seqSummeryByMarker(List<Marker> markerList, String markerKey, String provider){
+        ModelAndView mav = new ModelAndView("sequence_summary_marker");
+        
         // there can be only one...
-        if (mrkList.size() < 1) {
+        if (markerList.size() < 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No marker found for " + mrkID);
+            mav.addObject("errorMsg", "No marker found for " + markerKey);
             return mav;
         }
-        if (mrkList.size() > 1) {
+        if (markerList.size() > 1) {
             // forward to error page
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe marker ID found for " + mrkID);
+            mav.addObject("errorMsg", "Dupe marker ID found for " + markerKey);
             return mav;
         }
 
         // pull out the marker, and place into the mav
-        Marker marker = mrkList.get(0);
+        Marker marker = markerList.get(0);
         mav.addObject("marker", marker);
 
         // build JSON querystring
         String queryString = new String("mrkKey=" + marker.getMarkerKey());
-        String provider = request.getParameter("provider");
         if ((provider != null) && (!"".equals(provider))) {
           queryString = queryString + "&provider=" + provider;
 		}
 
         mav.addObject("queryString", queryString);
 
-        return mav;
+        return mav;	
     }
-
 
     /*
      * JSON summary results
