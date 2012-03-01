@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.finder;
 import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Image;
 
 import org.jax.mgi.fewi.hunter.SolrAlleleKeyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -45,6 +46,21 @@ public class AlleleFinder {
 
 		return searchResults;
 	}
+	
+	  public SearchResults<Allele> getAlleleByKey(String dbKey) {
+
+		    logger.debug("->getAlleleByKey()");
+
+		    // result object to be returned
+		    SearchResults<Allele> searchResults = new SearchResults<Allele>();
+
+		    // gather objects identified by the hunter, add them to the results
+		    Allele allele = alleleGatherer.get(Allele.class, dbKey);
+
+		    searchResults.addResultObjects(allele);
+
+		    return searchResults;
+		  }
 
 
 }

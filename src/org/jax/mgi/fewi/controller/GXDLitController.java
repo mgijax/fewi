@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -106,19 +107,33 @@ public class GXDLitController {
         logger.debug("->gxdLitDetailByKey started");
 
         // find the requested Lit Detail
-        SearchResults searchResults
+        SearchResults<GxdLitIndexRecord> searchResults
           = gxdLitFinder.getGxdLitByKey(dbKey);
-        List<GxdLitIndexRecord> indexRecordList = searchResults.getResultObjects();
 
+        return gxdLitDetail(searchResults.getResultObjects(), dbKey);
+    }
+    
+    @RequestMapping(value="/key")
+    public ModelAndView gxdLitDetailByKeyParam(@RequestParam("_Index_key") String dbKey) {
+        logger.debug("->referenceSummaryByAlleleKey started: " + dbKey);
+       
+        // find the requested Lit Detail
+        SearchResults<GxdLitIndexRecord> searchResults
+          = gxdLitFinder.getGxdLitByKey(dbKey);
+
+        return gxdLitDetail(searchResults.getResultObjects(), dbKey);
+    }
+    
+    private ModelAndView gxdLitDetail(List<GxdLitIndexRecord> indexRecordList, String allele){
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("gxdlit_detail");
+    	
         // there can be only one...
         if (indexRecordList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "No GxdLitIndexRecord Found");
             return mav;
         }// success
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("gxdlit_detail");
 
         GxdLitQueryForm queryForm = new GxdLitQueryForm();
 
@@ -131,7 +146,7 @@ public class GXDLitController {
         mav.addObject("reference", indexRecordList.get(0).getReference());
         mav.addObject("marker", indexRecordList.get(0).getMarker());
 
-        return mav;
+        return mav;  	
     }
 
 

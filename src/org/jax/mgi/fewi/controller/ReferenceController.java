@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -268,7 +269,7 @@ public class ReferenceController {
 	 * will return the results to populate the data table.
 	 */
 	@RequestMapping("/allele/{alleleID}")
-	public String referenceSummaryForAllele(			
+	public ModelAndView referenceSummaryByAlleleId(			
 			@PathVariable("alleleID") String alleleID,
 			HttpServletRequest request, Model model) {		
 		
@@ -280,26 +281,41 @@ public class ReferenceController {
         // find the requested sequence
         SearchResults<Allele> searchResults
           = alleleFinder.getAlleleByID(searchParams);
-        
-        List<Allele> alleleList = searchResults.getResultObjects();
 
+        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleID);
+	}
+	
+    @RequestMapping(value="/allele")
+    public ModelAndView referenceSummaryByAlleleKey(@RequestParam("_Allele_key") String alleleKey) {
+        logger.debug("->referenceSummaryByAlleleKey started: " + alleleKey);
+       
+        // find the requested reference
+        SearchResults<Allele> searchResults
+        	= alleleFinder.getAlleleByKey(alleleKey);
+
+        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleKey);
+    }
+    
+    private ModelAndView referenceSummaryByAllele(List<Allele> alleleList, String allele){
+    	ModelAndView mav = new ModelAndView("reference_summary_allele");
+    	
         if (alleleList.size() < 1) {
             // forward to error page
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "No Allele Found");
-            return "error";
+            return mav;
         } else if (alleleList.size() > 1) {
             // forward to error page
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Duplicate ID");
-            return "error";
+            return mav;
         }
         
-        model.addAttribute("allele", alleleList.get(0));
-		model.addAttribute("queryString", "alleleKey=" + alleleList.get(0).getAlleleKey());
-		
-		return "reference_summary_allele";
-	}
+        mav.addObject("allele", alleleList.get(0));
+		mav.addObject("queryString", "alleleKey=" + alleleList.get(0).getAlleleKey());
+    	
+    	return mav;   	
+    }
 	
 	/*
 	 * This method maps requests for the reference summary for a sequence. 
@@ -352,11 +368,11 @@ public class ReferenceController {
 	 * will return the results to populate the data table.
 	 */
 	@RequestMapping("/marker/{markerID}")
-	public String referenceSummaryForMarker(
+	public ModelAndView referenceSummaryByMarkerId(
 			@PathVariable("markerID") String markerID,
 			HttpServletRequest request, Model model) {
 		
-		logger.debug("reference_summary_marker");
+		logger.debug("->referenceSummaryByMarkerId started: " + markerID);
 		
         // setup search parameters object
         SearchParams searchParams = new SearchParams();
@@ -366,26 +382,45 @@ public class ReferenceController {
         // find the requested sequence
         SearchResults<Marker> searchResults
           = markerFinder.getMarkerByID(searchParams);
-        
+
+        return referenceSummaryByMarker(searchResults.getResultObjects(), markerID);
+	}
+	
+    @RequestMapping(value="/marker")
+    public ModelAndView referenceSummaryByMarkerKey(@RequestParam("_Marker_key") String markerKey) {
+        logger.debug("->referenceSummaryByMarkerKey started: " + markerKey);
+
+        // find the requested reference
+        SearchResults<Marker> searchResults
+          = markerFinder.getMarkerByKey(markerKey);
         List<Marker> markerList = searchResults.getResultObjects();
 
+        return referenceSummaryByMarker( markerList, markerKey);
+    }
+    
+    private ModelAndView referenceSummaryByMarker(List<Marker> markerList, String markerKey){
+    	ModelAndView mav = new ModelAndView("reference_summary_marker");
+    	
         if (markerList.size() < 1) {
             // forward to error page
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "No Marker Found");
-            return "error";
+            return mav;
         } else if (markerList.size() > 1) {
             // forward to error page
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Duplicate ID");
-            return "error";
+            return mav;
         }
-
-        model.addAttribute("marker", markerList.get(0));
-		model.addAttribute("queryString", "markerKey=" + markerList.get(0).getMarkerKey());
-		
-		return "reference_summary_marker";
-	}
+        
+        Marker marker = markerList.get(0);
+        mav.addObject("marker", marker);
+                
+        // pre-generate query string
+        mav.addObject("queryString", "markerKey=" + marker.getMarkerKey());
+    	
+    	return mav;   	
+    }
 	
 	/*
 	 * This method parses the ReferenceQueryForm bean and constructs a Filter 
