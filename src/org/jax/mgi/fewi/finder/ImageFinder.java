@@ -87,6 +87,42 @@ public class ImageFinder {
   }
 
 
+
+
+
+
+
+  /*-----------------------------------------*/
+  /* Retrieval of a image, for a image db key
+  /*-----------------------------------------*/
+
+  public SearchResults<Image> getImageByKey(String dbKey) {
+
+    logger.debug("->getImageByKey()");
+
+    // result object to be returned
+    SearchResults<Image> searchResults = new SearchResults<Image>();
+
+    // gather objects identified by the hunter, add them to the results
+    Image image = imageGatherer.get( Image.class, dbKey);
+
+    searchResults.addResultObjects(image);
+
+    return searchResults;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
   /*-----------------------------------------------*/
   /* Retrieval of pheno images, for a given allele
   /*-----------------------------------------------*/

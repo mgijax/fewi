@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -86,6 +87,8 @@ public class ImageController {
     //--------------------//
     // Pheno Image Detail
     //--------------------//
+
+    // Access Via Image ID
     @RequestMapping(value="/pheno/{imageID:.+}", method = RequestMethod.GET)
     public ModelAndView phenoImageDetailByID(@PathVariable("imageID") String imageID) {
 
@@ -109,12 +112,63 @@ public class ImageController {
     }
 
 
+    // Access Via Image DB Key
+    @RequestMapping(value="/pheno/key/{dbKey:.+}", method = RequestMethod.GET)
+    public ModelAndView phenoImageDetailByKey(@PathVariable("dbKey") String dbKey) {
+
+        logger.debug("->phenoImageDetailByKey started");
+
+        // find the requested image
+        SearchResults searchResults
+          = imageFinder.getImageByKey(dbKey);
+
+        List<Image> imageList = searchResults.getResultObjects();
+
+        // ensure we found an image
+        if (imageList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Image Found");
+            return mav;
+        }
+
+        //pull out the image
+        Image image = imageList.get(0);
+
+        // generate and return mav for pheno detail
+        return getPhenoDetailMAV(image);
+    }
+
+    @RequestMapping(value="/pheno")
+    public ModelAndView phenoImageDetailByKeyParam(@RequestParam("key") String dbKey) {
+        logger.debug("->phenoImageDetailByKeyParam started: " + dbKey);
+
+        logger.debug("->phenoImageDetailByKey started");
+
+        // find the requested image
+        SearchResults searchResults
+          = imageFinder.getImageByKey(dbKey);
+
+        List<Image> imageList = searchResults.getResultObjects();
+
+        // ensure we found an image
+        if (imageList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Image Found");
+            return mav;
+        }
+
+        //pull out the image
+        Image image = imageList.get(0);
+
+        // generate and return mav for pheno detail
+        return getPhenoDetailMAV(image);
+    }
+
     //------------------------//
     // Expression Image Detail
     //------------------------//
     @RequestMapping(value="/expression/{imageID:.+}", method = RequestMethod.GET)
     public ModelAndView expressionImageDetailByID(@PathVariable("imageID") String imageID) {
-
         logger.debug("->expressionImageDetailByID started");
 
         // find the requested image
@@ -134,6 +188,31 @@ public class ImageController {
         return getGxdDetailMAV(image);
     }
 
+
+    // Access Via Image DB Key
+    @RequestMapping(value="/expression/key/{dbKey:.+}", method = RequestMethod.GET)
+    public ModelAndView expressionImageDetailByKey(@PathVariable("dbKey") String dbKey) {
+        logger.debug("->expressionImageDetailByKey started");
+
+        // find the requested image
+        SearchResults searchResults
+          = imageFinder.getImageByKey(dbKey);
+
+        List<Image> imageList = searchResults.getResultObjects();
+
+        // ensure we found an image
+        if (imageList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Image Found");
+            return mav;
+        }
+
+        //pull out the image
+        Image image = imageList.get(0);
+
+        // generate and return mav for pheno detail
+        return getGxdDetailMAV(image);
+    }
 
     //----------------------------------------------------------//
     // image detail meta-handler 'allele' and 'marker' not in URL
