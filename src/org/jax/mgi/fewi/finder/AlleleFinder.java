@@ -63,4 +63,23 @@ public class AlleleFinder {
 		  }
 
 
+    /////////////////////////////////////////////////////////////////////////
+    //  Retrieval of an allele, for a database key
+    /////////////////////////////////////////////////////////////////////////
+
+    public SearchResults<Allele> getAlleleByKey(String dbKey) {
+
+        logger.debug("->getAlleleByKey()");
+
+        // result object to be returned
+        SearchResults<Allele> searchResults = new SearchResults<Allele>();
+
+        // gather objects, add them to the results
+        Allele allele = alleleGatherer.get( Allele.class, dbKey );
+        searchResults.addResultObjects(allele);
+
+        return searchResults;
+    }
+
+
 }
