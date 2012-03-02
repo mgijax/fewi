@@ -326,6 +326,69 @@ public class ImageController {
     }
 
 
+    //-----------------------------------//
+    // Pheno Image Summary by Allele Key
+    //-----------------------------------//
+    @RequestMapping(value="/phenoSummary/allele")
+    public ModelAndView phenoImageSummeryByAlleleKey(@RequestParam("key") String dbKey) {
+        logger.debug("->phenoImageSummeryByAlleleKey started");
+
+        ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
+        Paginator page = new Paginator();
+
+        // find the requested allele for header
+        SearchResults<Allele> alleleSearchResults
+          = alleleFinder.getAlleleByKey(dbKey);
+
+        List<Allele> alleleList = alleleSearchResults.getResultObjects();
+
+        // there can be only one...
+        if (alleleList.size() < 1) { // none found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Allele Found");
+            return mav;
+        }
+        if (alleleList.size() > 1) { // dupe found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        // success - we have a single object
+
+        // pull out the allele, and place into the mav
+        Allele allele = alleleList.get(0);
+        mav.addObject("allele", allele);
+
+        // derive displayed title & heading; special handling for allele type
+        if (allele.getAlleleType().startsWith("Transgenic")) {
+          mav.addObject("pageTitle", "Phenotype Images associated with this Transgene - MGI");
+          mav.addObject("pageHeading", "Phenotype Images associated with this Transgene");
+        } else {
+          mav.addObject("pageTitle", "Phenotype Images associated with this Allele - MGI");
+          mav.addObject("pageHeading", "Phenotype Images associated with this Allele");
+        }
+
+        // derive the synonym list, if the allele has any
+        mav.addObject("synonyms", allele.getSynonyms());
+
+        // setup search parameters to get the image objects
+        SearchParams imageSearchParams = new SearchParams();
+        Integer alleleKey = new Integer(allele.getAlleleKey());
+        Filter alleleKeyFilter
+          = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
+        imageSearchParams.setFilter(alleleKeyFilter);
+
+        SearchResults<ImageSummaryRow> imageSearchResults
+          = imageFinder.getPhenoImagesByAlleleKey(imageSearchParams);
+        List<ImageSummaryRow> imageSummaryRows
+          = imageSearchResults.getResultObjects();
+
+        mav.addObject("imageSummaryRows", imageSummaryRows);
+
+        return mav;
+    }
+
+
     //-------------------------------//
     // Pheno Image Summary by Marker
     //-------------------------------//
@@ -354,6 +417,80 @@ public class ImageController {
         // find the requested marker for header
         SearchResults<Marker> markerSearchResults
           = markerFinder.getMarkerByID(markerSearchParams);
+
+        List<Marker> markerList = markerSearchResults.getResultObjects();
+
+        // there can be only one...
+        if (markerList.size() < 1) { // none found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        }
+        if (markerList.size() > 1) { // dupe found
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+
+        // success - we have a single object
+        marker = markerList.get(0);
+
+        /**********************
+        * Gather Image Objects
+        **********************/
+
+        // setup search parameters to get the image objects
+        SearchParams imageSearchParams = new SearchParams();
+        page.setResultsDefault(10);
+        imageSearchParams.setPaginator(page);
+        Integer markerKey = new Integer(marker.getMarkerKey());
+        Filter markerKeyFilter
+          = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
+        imageSearchParams.setFilter(markerKeyFilter);
+
+        // gather the images, and generate the summary rows
+        SearchResults<ImageSummaryRow> imageSearchResults
+          = imageFinder.getPhenoImagesByMarkerKey(imageSearchParams);
+        imageSummaryRows = imageSearchResults.getResultObjects();
+
+        /**********************
+        * Fill View Object
+        **********************/
+
+        // data objects
+        mav.addObject("marker", marker);
+        mav.addObject("imageSummaryRows", imageSummaryRows);
+
+        // pagination
+        PaginationControls paginationControls = new PaginationControls(page);
+        paginationControls.setResultsTotal(imageSearchResults.getTotalCount());
+        mav.addObject("paginationControls", paginationControls);
+
+        return mav;
+    }
+
+
+    //----------------------------------//
+    // Pheno Image Summary by Marker Key
+    //----------------------------------//
+    @RequestMapping(value="/phenoSummary/marker")
+    public ModelAndView phenoImageSummeryByMarkerKey(@RequestParam("key") String dbKey) {
+        logger.debug("->phenoImageSummeryByMarker started");
+
+        ModelAndView mav = new ModelAndView("image_phenoSummary_by_marker");
+        Paginator page = new Paginator();
+
+        // data holders
+        Marker marker;
+        List<ImageSummaryRow> imageSummaryRows;
+
+        /**********************
+        * Gather Marker Object
+        **********************/
+
+        // find the requested marker for header - using db key passed in
+        SearchResults<Marker> markerSearchResults
+          = markerFinder.getMarkerByKey(dbKey);
 
         List<Marker> markerList = markerSearchResults.getResultObjects();
 
@@ -510,32 +647,23 @@ public class ImageController {
 
     @RequestMapping(value="/gxdSummary/marker")
     public ModelAndView gxdImageSummeryByMarkerKey(@RequestParam("key") String dbKey) {
-//    public ModelAndView gxdImageSummeryByMarker(
-//               @PathVariable("markerID") String markerID,
-//               @ModelAttribute Paginator page)
-//    {
         logger.debug("->gxdImageSummeryByMarker started");
 
-        // view object
+        // view object & paginator
         ModelAndView mav = new ModelAndView("image_gxdSummary_by_marker");
+        Paginator page = new Paginator();
 
         // data holders
         Marker marker;
         Integer markerKey;
         List<ImageSummaryRow> imageSummaryRows;
         ImageSummaryRow thisRow;
-        Paginator page = new Paginator();
 
         /**********************
         * Gather Marker Object
         **********************/
 
-        // setup search parameters to get marker object
-//        SearchParams markerSearchParams = new SearchParams();
-//        Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
-//        markerSearchParams.setFilter(markerIdFilter);
-
-        // find the requested marker for header
+        // find the requested marker for header - using db key passed in
         SearchResults<Marker> markerSearchResults
           = markerFinder.getMarkerByKey(dbKey);
 
@@ -549,7 +677,7 @@ public class ImageController {
         }
         if (markerList.size() > 1) { // dupe found
             mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate ID");
+            mav.addObject("errorMsg", "Duplicate Key");
             return mav;
         }
 
