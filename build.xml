@@ -62,7 +62,6 @@
         <!--deploy -->
         <target name="deploy" depends="war">
                 <echo>Deploy war</echo>
-                <copy file="${project.name}.war" todir="${project.name}.war.bak" overwrite="true"/>
                 <move file="${project.name}.war" todir="${deploy.dir}" overwrite="true"/>
         </target>        
 
