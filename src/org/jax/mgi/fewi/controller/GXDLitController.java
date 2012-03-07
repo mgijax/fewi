@@ -155,7 +155,7 @@ public class GXDLitController {
     // GXD Lit Query Form Summary by marker
     //---------------------------------------------//
     @RequestMapping("/marker/{markerID}")
-    public ModelAndView gxdLitSummaryByMarker(HttpServletRequest request,
+    public ModelAndView gxdLitSummaryByMarkerId(HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm,
             @PathVariable("markerID") String markerID) {
 
@@ -168,23 +168,40 @@ public class GXDLitController {
         searchParams.setFilter(markerIdFilter);
 
         // find the requested marker
-        SearchResults searchResults
+        SearchResults<Marker> searchResults
           = markerFinder.getMarkerByID(searchParams);
-        List<Marker> markerList = searchResults.getResultObjects();
 
+        return gxdLitSummaryByMarker(request, searchResults.getResultObjects(), queryForm);
+    }
+    
+    @RequestMapping(value="/summary",  params={"_Marker_key"})
+    public ModelAndView gxdLitSummaryByMarkerKey(@RequestParam("_Marker_key") String markerKey,
+    		HttpServletRequest request,
+            @ModelAttribute GxdLitQueryForm queryForm){
+        // find the requested reference
+        SearchResults<Marker> searchResults
+          = markerFinder.getMarkerByKey(markerKey);
+
+        return gxdLitSummaryByMarker(request, searchResults.getResultObjects(), queryForm);
+    }
+    
+    private ModelAndView gxdLitSummaryByMarker(HttpServletRequest request,
+    		List<Marker> markerList, 
+    		GxdLitQueryForm queryForm){
+        ModelAndView mav = new ModelAndView("gxdlit_summary_by_marker");
+        
         // there can be only one...
         if (markerList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "No Foo Found");
             return mav;
         }
         if (markerList.size() > 1) { // dupe found
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Duplicate ID");
             return mav;
         }
-
-
+        
         SearchParams params = new SearchParams();
 
         Marker marker = markerList.get(0);
@@ -201,7 +218,7 @@ public class GXDLitController {
 
         logger.debug("Hitting the finder 2.");
 
-        SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+        SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
 
         logger.debug("Building the summary rows");
 
@@ -231,8 +248,7 @@ public class GXDLitController {
 		}
 
 		totalReferences = references.size();
-
-        ModelAndView mav = new ModelAndView("gxdlit_summary_by_marker");
+                
         mav.addObject("marker", marker);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
@@ -248,13 +264,14 @@ public class GXDLitController {
         mav.addObject("hasFullyCoded", hasFullyCoded);
 
         return mav;
+    	
     }
 
     //---------------------------------------------//
     // GXD Lit Query Form Summary by reference
     //---------------------------------------------//
     @RequestMapping("/reference/{refID}")
-    public ModelAndView gxdLitSummaryByReference(HttpServletRequest request,
+    public ModelAndView gxdLitSummaryByReferenceId(HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm,
             @PathVariable("refID") String refID) {
 
@@ -267,22 +284,39 @@ public class GXDLitController {
         searchParams.setFilter(referenceIdFilter);
 
         // find the requested reference
-        SearchResults searchResults
+        SearchResults<Reference> searchResults
           = referenceFinder.searchReferences(searchParams);
-        List<Reference> referenceList = searchResults.getResultObjects();
 
+        return gxdLitSummaryByReference(request, searchResults.getResultObjects(), queryForm);
+    }
+    
+    @RequestMapping(value="/summary",  params={"_Refs_key"})
+    public ModelAndView gxdLitSummaryByReferenceKey(@RequestParam("_Refs_key") String referenceKey,
+    		HttpServletRequest request,
+            @ModelAttribute GxdLitQueryForm queryForm){
+        // find the requested reference
+        SearchResults<Reference> searchResults
+        = referenceFinder.getReferenceByKey(referenceKey);
+
+        return gxdLitSummaryByReference(request, searchResults.getResultObjects(), queryForm);
+    }
+    
+    private ModelAndView gxdLitSummaryByReference(HttpServletRequest request,
+    		List<Reference> referenceList, 
+    		GxdLitQueryForm queryForm){
+    	ModelAndView mav = new ModelAndView("gxdlit_summary_by_reference");
+    	
         // there can be only one...
         if (referenceList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "No Foo Found");
             return mav;
         }
         if (referenceList.size() > 1) { // dupe found
-            ModelAndView mav = new ModelAndView("error");
+            mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Duplicate ID");
             return mav;
         }
-
 
         SearchParams params = new SearchParams();
 
@@ -298,7 +332,7 @@ public class GXDLitController {
 
         logger.debug("Hitting the finder 2.");
 
-        SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+        SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
 
         logger.debug("Building the summary rows");
 
@@ -329,9 +363,8 @@ public class GXDLitController {
 			}
 		}
 
-		totalReferences = references.size();
-
-        ModelAndView mav = new ModelAndView("gxdlit_summary_by_reference");
+		totalReferences = references.size();    	
+    	
         mav.addObject("reference", reference);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
@@ -346,7 +379,7 @@ public class GXDLitController {
         mav.addObject("limit", gxdLimit);
         mav.addObject("hasFullyCoded", hasFullyCoded);
 
-        return mav;
+        return mav;    	
     }
 
 
@@ -354,7 +387,7 @@ public class GXDLitController {
     // GXD Lit Query Form Summary by age and assay
     //---------------------------------------------//
     @RequestMapping("/summary/ageAssay")
-    public ModelAndView gxdLitSummaryByAgeAndAssay(HttpServletRequest request,
+    public ModelAndView gxdLitSummaryByAgeAndAssayType(HttpServletRequest request,
             @ModelAttribute GxdLitQueryForm queryForm) {
 
         logger.debug("->gxdLitSummary By Age and Assay started");
@@ -368,14 +401,17 @@ public class GXDLitController {
 
         logger.debug("Hitting the finder.");
 
-        SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+        SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
 
-        logger.debug("Building the summary rows");
+        return gxdLitSummaryByAgeAndAssay(request, results.getResultObjects(), queryForm);
+    }
 
-        List<GxdLitIndexRecord> recordList = results.getResultObjects();
-
-        logger.debug("Got the record list");
-
+    
+    private ModelAndView gxdLitSummaryByAgeAndAssay(HttpServletRequest request,
+    		List<GxdLitIndexRecord> recordList, 
+    		GxdLitQueryForm queryForm){
+        ModelAndView mav = new ModelAndView("gxdlit_summary_by_age_assay");
+         
         // create/load the list of SummaryRow wrapper objects for the gene section
         List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
 
@@ -398,8 +434,7 @@ public class GXDLitController {
 		}
 
 		totalReferences = references.size();
-
-        ModelAndView mav = new ModelAndView("gxdlit_summary_by_age_assay");
+       
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
         mav.addObject("summaryRows", summaryRows);
@@ -412,7 +447,6 @@ public class GXDLitController {
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
         mav.addObject("hasFullyCoded", hasFullyCoded);
-
         return mav;
     }
 
@@ -438,7 +472,7 @@ public class GXDLitController {
 
         logger.debug("Hitting the finder.");
 
-        SearchResults results = gxdLitFinder.getGxdLitRecords(params);
+        SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
 
         Map<String, Set<String>> highlighting = results.getResultSetMeta().getSetHighlights();
 

@@ -243,7 +243,7 @@ public class SequenceController {
         searchParams.setFilter(mrkIdFilter);
 
         // find the requested marker
-        SearchResults searchResults
+        SearchResults<Marker> searchResults
           = markerFinder.getMarkerByID(searchParams);
         
         String provider = request.getParameter("provider");
@@ -251,7 +251,7 @@ public class SequenceController {
         return seqSummeryByMarker(searchResults.getResultObjects(), mrkID, provider);
     }
 
-    @RequestMapping(value="/marker")
+    @RequestMapping(value={"/marker", "/summary"})
     public ModelAndView seqSummeryByMarkerKey(@RequestParam("_Marker_key") String markerKey,
     		HttpServletRequest request) {
         logger.debug("->referenceSummaryByMarkerKey started: " + markerKey);
@@ -337,7 +337,7 @@ public class SequenceController {
 
 
         // perform query, and pull out the sequences requested
-        SearchResults searchResults
+        SearchResults<Sequence> searchResults
           = sequenceFinder.getSequences(params);
         List<Sequence> seqList = searchResults.getResultObjects();
 
@@ -373,7 +373,7 @@ public class SequenceController {
         logger.debug("->seqDetailByKey started");
 
         // find the requested sequence
-        SearchResults searchResults
+        SearchResults<Sequence> searchResults
           = sequenceFinder.getSequenceByKey(dbKey);
         List<Sequence> seqList = searchResults.getResultObjects();
 

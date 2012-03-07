@@ -285,7 +285,7 @@ public class ReferenceController {
         return referenceSummaryByAllele(searchResults.getResultObjects(), alleleID);
 	}
 	
-    @RequestMapping(value="/allele")
+    @RequestMapping(value="/summary",  params={"_Allele_key"})
     public ModelAndView referenceSummaryByAlleleKey(@RequestParam("_Allele_key") String alleleKey) {
         logger.debug("->referenceSummaryByAlleleKey started: " + alleleKey);
        
@@ -370,8 +370,7 @@ public class ReferenceController {
 	@RequestMapping("/marker/{markerID}")
 	public ModelAndView referenceSummaryByMarkerId(
 			@PathVariable("markerID") String markerID,
-			HttpServletRequest request, Model model) {
-		
+			HttpServletRequest request, Model model) {		
 		logger.debug("->referenceSummaryByMarkerId started: " + markerID);
 		
         // setup search parameters object
@@ -386,7 +385,7 @@ public class ReferenceController {
         return referenceSummaryByMarker(searchResults.getResultObjects(), markerID);
 	}
 	
-    @RequestMapping(value="/marker")
+    @RequestMapping(value="/summary",  params={"_Marker_key"})
     public ModelAndView referenceSummaryByMarkerKey(@RequestParam("_Marker_key") String markerKey) {
         logger.debug("->referenceSummaryByMarkerKey started: " + markerKey);
 
