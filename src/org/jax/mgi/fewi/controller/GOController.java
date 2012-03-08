@@ -111,7 +111,7 @@ public class GOController {
         mav.addObject("marker", marker);
                 
         // pre-generate query string
-        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey());
+        mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey() + "&vocab=GO");
 
         return mav;
     }
