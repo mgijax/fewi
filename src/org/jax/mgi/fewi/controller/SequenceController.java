@@ -188,7 +188,7 @@ public class SequenceController {
         return seqSummaryByRef(searchResults.getResultObjects(), refID);
     }
 
-    @RequestMapping(value="/reference")
+    @RequestMapping(value={"/reference", "/summary"})
     public ModelAndView seqSummeryByRefKey(@RequestParam("_Refs_key") String dbKey,
     		HttpServletRequest request) {
         logger.debug("->referenceSummaryByMarkerKey started: " + dbKey);       
