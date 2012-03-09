@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+#  Install
+###########################################################################
+#
+#  Purpose:  This script invokes the Ant utility to perform the build for
+#            this product.
+#
+#  Usage:  Install
+#
+###########################################################################
+
+cd `dirname $0`
+
+#
+#  If the MGICONFIG environment variable does not have a local override,
+#  use the default "live" settings.
+#
+if [ "${MGICONFIG}" = "" ]
+then
+    MGICONFIG=/usr/local/mgi/live/mgiconfig
+    export MGICONFIG
+fi
+
+. ${MGICONFIG}/master.config.sh
+
+cp build.properties.default build.properties
+
+$ANT
