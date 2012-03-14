@@ -361,6 +361,4 @@ function popupHelp(help_cat){
 
 	 // template used to build column popup help
 	 return overlib(help_text, STICKY, CAPTION, 'Caveat &amp; Help', LEFT, BELOW, WIDTH, 300, DELAY, 600, CLOSECLICK, CLOSETEXT, 'Close X');
-
-
 };
