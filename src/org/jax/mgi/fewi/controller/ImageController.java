@@ -441,6 +441,7 @@ public class ImageController {
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
+        imageSearchParams.setSorts(this.genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
         Integer markerKey = new Integer(marker.getMarkerKey());
@@ -515,6 +516,7 @@ public class ImageController {
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
+        imageSearchParams.setSorts(this.genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
         Integer markerKey = new Integer(marker.getMarkerKey());
