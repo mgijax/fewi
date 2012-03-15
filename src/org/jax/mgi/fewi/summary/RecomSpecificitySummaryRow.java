@@ -110,7 +110,7 @@ public class RecomSpecificitySummaryRow {
               // image tags
               imageTags.append("<img src='");
               imageTags.append(pixUrl + thisImage.getPixeldbNumericID());
-              imageTags.append("' width='30' style='border:3px; cursor: pointer;'> ");
+              imageTags.append("' width='30' style='border:3px;'> ");
 		    }
 		}
 
