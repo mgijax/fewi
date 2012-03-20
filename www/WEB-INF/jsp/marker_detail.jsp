@@ -254,7 +254,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- Mammalian homology ribbon -->
-  <c:if test="${not empty marker.orthologousMarkers}">
+  <c:if test="${(not empty marker.orthologousMarkers) or (not empty marker.ensemblGeneModelID)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Mammalian<br/>homology
@@ -267,8 +267,9 @@ td.padded { padding:4px; }
 		    <c:set var="hasHumanOrthology" value="1"/>
 		  </c:if>
 		</c:forEach>
+		<c:if test="${not empty marker.orthologousMarkers}">
 		&nbsp;&nbsp;&nbsp;(<a href="${configBean.WI_URL}searches/homology_report.cgi?_Marker_key=${marker.markerKey}">Mammalian Orthology</a>)<br/>
-		
+		</c:if>
 		<c:if test="${(hasHumanOrthology == 1) and (hasGeneticLocation == 1)}">
           <c:set var="comparativemapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=2&dsegments=0&syntenics=0&species=2&format=Web+Map&source=MGD"/>
 		  Comparative Map (<a href="${comparativemapUrl}">Mouse/Human ${marker.symbol} &#177; 2 cM</a>)<P>
