@@ -628,14 +628,20 @@ td.padded { padding:4px; }
 		    <c:set var="polyUrl" value="${polyUrl}&search=${item.countType}"/>
 		  </c:if>
 		  <c:set var="isSnp" value=""/>
+		  <c:set var="pad" value=""/>
 		  <c:if test="${fn:startsWith(item.countType, 'SNP')}">
 		    <c:set var="isSnp" value="1"/>
 		    <c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
 		    <c:if test="${not empty configBean.SNP_BUILD}">
 		      <c:set var="polyExtra" value=" from ${configBean.SNP_BUILD}"/>
 		    </c:if>
+		    <c:if test="${fn:contains(item.countType, 'multiple')}">
+		      <c:set var="polyUrl" value="${polyUrl}&includeMultiples=1"/>
+		      <c:set var="polyExtra" value=""/>
+		      <c:set var="pad" value="&nbsp;&nbsp;&nbsp;"/>
+		    </c:if>
 		  </c:if>
-		  ${item.countType}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
+		  ${pad}${item.countType}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
 		  <c:if test="${status.first and (empty isSnp)}">: </c:if>
 		</c:forEach>
       </td>
