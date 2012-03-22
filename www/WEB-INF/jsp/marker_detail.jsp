@@ -254,7 +254,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- Mammalian homology ribbon -->
-  <c:if test="${(not empty marker.orthologousMarkers) or (not empty marker.ensemblGeneModelID)}">
+  <c:if test="${(not empty marker.orthologousMarkers) or (marker.hasOneEnsemblGeneModelID)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Mammalian<br/>homology
@@ -279,7 +279,7 @@ td.padded { padding:4px; }
 		<c:if test="${not empty pirsf}">
 		  Protein SuperFamily: <a href="${configBean.JAVAWI_URL}WIFetch?page=pirsfDetail&id=${pirsf.termID}">${pirsf.term}</a><br/>
 		</c:if>
-		<c:if test="${not empty marker.ensemblGeneModelID}">
+		<c:if test="${marker.hasOneEnsemblGeneModelID}">
 			<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>			
 			<c:set var="genetreeUrl" value="${fn:replace(genetreeUrl, '<model_id>', marker.ensemblGeneModelID.accID)}"/>
 			Gene Tree: <a href="${configBean.GENETREE_URL}${marker.ensemblGeneModelID.accID}">${marker.symbol}</a><br/>
@@ -398,7 +398,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- go classifications -->
-  <c:if test="${marker.countOfGOTerms > 0}">
+  <c:if test="${(marker.countOfGOTerms > 0) or (marker.isInReferenceGenome > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Gene&nbsp;Ontology<br/>(GO)<br/>classifications
@@ -425,6 +425,9 @@ td.padded { padding:4px; }
 	    		</td></tr>
 	      </c:if>
 		</table>
+		<c:if test="${marker.isInReferenceGenome > 0}">
+		  This is a <a href="${referenceGenomeURL}">GO Consortium Reference Genome Project</a> gene.<br>
+		</c:if>
 		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
 		<c:if test="${not empty funcbaseID}">
 		  External Resources: 
