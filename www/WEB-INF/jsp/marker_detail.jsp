@@ -334,7 +334,7 @@ td.padded { padding:4px; }
 					</c:if>
 				</c:forEach>
 				'</td>' +
-				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\' target="_blank">${annotation.termID}</a></td></tr>' +
+				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
 			</c:forEach>
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${hMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Human ${humanOrtholog.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${humanOrtholog.countOfHumanDiseases}</a>)
   		</c:if>
