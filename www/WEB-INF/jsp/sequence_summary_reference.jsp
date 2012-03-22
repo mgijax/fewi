@@ -29,9 +29,14 @@ ${templateBean.templateBodyStartHtml}
        <b>Reference</b>
   </td>
   <td class="summaryHeaderData1">
-    <a style="font-size:x-large;  font-weight: bold;" 
-      href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
-    <br/>
+    
+    <a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;" 
+      href="${configBean.FEWI_URL}reference/${reference.jnumID}">
+      ${reference.jnumID}
+    </a>
+    
+    <div style="padding:4px;"> </div>
+    
     ${reference.shortCitation}
   </td>
 </tr>
