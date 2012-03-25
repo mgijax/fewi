@@ -125,7 +125,7 @@ public class ImageSummaryRow {
 
   // copyright
   public String getCopyright() {
-    return image.getCopyright();
+    return ntc.convertNotes(image.getCopyright(), '|');
   }
 
   // alleleic composition
