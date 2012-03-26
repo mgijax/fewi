@@ -52,17 +52,17 @@ public class ReferenceSummary {
 		String pId = reference.getPubMedID();
 		if(pId != null && !"".equals(pId)){
 			String p = pmUrl.replace("@@@@", pId);
-			sb.append(String.format("<a href=\"%s\" target=\"new\" class=\"extUrl\">%s</a><br/>", 
+			sb.append(String.format("<a href=\"%s\" target=\"_blank\" class=\"extUrl\">%s</a><br/>", 
 					p, pId));			
 		}
 		sb.append(reference.getJnumID());
 		if (this.reference.getFullTextLink() != null) {
-			sb.append(String.format("<br/><a href=\"%s\" target=\"new\" class=\"extUrl\">Full Text</a>", 
+			sb.append(String.format("<br/><a href=\"%s\" target=\"_blank\" class=\"extUrl\">Full Text</a>", 
 					this.reference.getFullTextLink()));
 		}
 		if(!"".equals(this.reference.getDoiId())){
 			String du = doiUrl.replace("@@@@", this.reference.getDoiId());
-			sb.append(String.format("<br/><a href=\"%s\" target=\"new\" class=\"extUrl\">Journal Link</a>", 
+			sb.append(String.format("<br/><a href=\"%s\" target=\"_blank\" class=\"extUrl\">Journal Link</a>", 
 					du));
 		}
 		return sb.toString();
