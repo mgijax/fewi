@@ -399,6 +399,15 @@ public class MarkerController {
         	}
         }        
         
+    	String refGenomeUrl = ContextLoader.getConfigBean().getProperty(
+		"MGIHOME_URL");
+
+	if (!refGenomeUrl.endsWith("/")) {
+		refGenomeUrl = refGenomeUrl + "/";
+	}
+	refGenomeUrl = refGenomeUrl + "GO/reference_genome_project.shtml";
+	mav.addObject ("referenceGenomeURL", refGenomeUrl);
+
         mav.addObject ("otherIDs", otherIDs);
         mav.addObject ("logicalDBs", logicalDBs);
         
