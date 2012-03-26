@@ -1,4 +1,6 @@
-TAG: fewi-5-0-0-2
-DATE: 12/19/2011
-STAFF: jsb
-CHANGES: revisions to GXD Literature Index search
+TAG: fewi-5-0-0-x
+DATE: 12/2011  --> 1/2012
+STAFF: pf/jsb
+CHANGES: 5.0 Alpha updates
+ -revisions to GXD Literature Index search
+ -update to config files for DBM
