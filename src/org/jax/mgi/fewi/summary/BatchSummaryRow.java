@@ -111,9 +111,12 @@ public class BatchSummaryRow {
     	}
     }
     public String getChromosome() {
-    	if (batchMarkerId.getMarker() != null && query.getLocation()){
-    		return batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome();
-
+    	if (batchMarkerId.getMarker() != null && 
+    			batchMarkerId.getMarker().getPreferredCentimorgans() != null){
+    		if (batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome() != null){
+    			return batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome();
+    		}
+    		
     	}
     	return "";
     }
