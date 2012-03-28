@@ -75,7 +75,6 @@ table.checkBoxSelectTable{
     border-collapse:collapse;
     border:1px solid #AAA;
     border-spacing:2px;
-    padding:2px;
     white-space:nowrap;
     width:auto;
     line-height:1.1;
@@ -84,6 +83,8 @@ table.checkBoxSelectTable{
 table.checkBoxSelectTable td{
     font-size:11px;
     white-space:nowrap;
+    border-spacing:4px;
+    padding:4px;
 }
 </style>
 

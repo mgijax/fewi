@@ -524,7 +524,7 @@ ${templateBean.templateBodyStartHtml}
           class="creResultButton creActiveButton"
           onMouseOver="return overlib('Show columns containing the assay type, detection method, reporter gene, probe or antibody, and notes about the assay.', WIDTH, 225, DELAY, 750, ANCHOR, 'showAssayInfoButton', ANCHORALIGN, 0,0,0,1.05, STICKY, TIMEOUT, 3000, FGCOLOR, '#FFFFFF');"
           onMouseOut="nd();"
-          style="position: absolute; top:27px; left:574px">
+          style="position: absolute; top:24px; left:574px">
           Assays
         </span>
 
@@ -532,7 +532,7 @@ ${templateBean.templateBodyStartHtml}
           class="creResultButton"
           onMouseOver="return overlib('Show columns containing the allelic composition, genetic strain background, sex, and notes about the specimen', WIDTH, 225, DELAY, 750, ANCHOR, 'showGenoTypeButton', ANCHORALIGN, 0,0,0,1.05, STICKY, TIMEOUT, 3000, FGCOLOR, '#FFFFFF');"
           onMouseOut="nd();"
-          style="position: absolute; top:27px; left:648px">
+          style="position: absolute; top:24px; left:648px">
           Genotypic Background
         </span>
 
@@ -540,7 +540,7 @@ ${templateBean.templateBodyStartHtml}
           class="creResultButton"
           onMouseOver="return overlib('Show a column containing additional information recorded by MGI curators about the assay result.', WIDTH, 225, DELAY, 750, ANCHOR, 'showResultNotesButton', ANCHORALIGN, 0,0,0,1.05, STICKY, TIMEOUT, 3000, FGCOLOR, '#FFFFFF');"
           onMouseOut="nd();"
-          style="position: absolute; top:27px; left:824px">
+          style="position: absolute; top:24px; left:824px">
           Result Notes
         </span>
 
