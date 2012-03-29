@@ -24,7 +24,7 @@ ${templateBean.templateBodyStartHtml}
 <input id="yui-history-field" type="hidden">
 
 <!-- begin header bar -->
-<div id="titleBarWrapper" userdoc="reference_help.shtml">	
+<div id="titleBarWrapper" userdoc="reference_help.shtml#results_refqf ">	
 	<!--myTitle -->
 	<span class="titleBarMainTitle">References associated with this Allele</span>
 </div>
