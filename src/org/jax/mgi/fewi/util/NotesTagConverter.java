@@ -182,7 +182,8 @@ public class NotesTagConverter
         String jbcURL           = ContextLoader.getExternalUrls().getProperty("JBiolChem");
         String jlrURL           = ContextLoader.getExternalUrls().getProperty("JLipidRes");
         String dxdoiURL         = ContextLoader.getExternalUrls().getProperty("DXDOI");
-
+        String pantherURL       = ContextLoader.getExternalUrls().getProperty("PTHR");
+        
         // Pre-build all anchor replacement strings for each known tag
 
         ///////////////////
@@ -308,14 +309,15 @@ public class NotesTagConverter
         jlrRepStr = jlrRepStr.concat("%s>%s</A>");
         tags.put("\\\\JLipidRes\\((.*?[|].*?[|].*?)\\)",jlrRepStr);
 
-
         // DXDOI
         String dxdoiStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, dxdoiURL.replaceAll("@@@@","%s"));
         dxdoiStr = dxdoiStr.concat("%s>%s</A>");
         tags.put("\\\\DXDOI\\((.*?[|].*?[|].*?)\\)",dxdoiStr);
-
-
-
+        
+        // Panther Classification System
+        String pantherRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, pantherURL.replaceAll("@@@@","%s"));
+        pantherRepStr = pantherRepStr.concat("%s>%s</A>");
+        tags.put("\\\\PANTHER\\((.*?[|].*?[|].*?)\\)",pantherRepStr);
 
         return tags;
     }
