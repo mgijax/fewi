@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
 
-	<!-- EHCACHE MONITOR -->
+	<!-- EHCACHE MONITOR 
 	<cacheManagerPeerListenerFactory 
  		class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory"
 		properties="monitorAddress=cardolan.informatics.jax.org, monitorPort=9889" />
+        -->
 
 	<!-- DEFAULT CACHE -->
 	<defaultCache 
