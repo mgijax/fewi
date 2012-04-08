@@ -23,65 +23,73 @@ import org.springframework.web.context.ServletContextAware;
 
 @Component
 public class ContextLoader implements ApplicationContextAware, ServletContextAware {
-	
-	private ApplicationContext ac;
-	private ServletContext sc;
-	
-	private static Properties properties = null;
-	private static Properties externalUrls = null;
 
-	private static Configuration propertiesConfig = null;
-	
-	private Logger logger = LoggerFactory.getLogger(ContextLoader.class);
+    private ApplicationContext ac;
+    private ServletContext sc;
+
+    private static Properties properties = null;
+    private static Properties externalUrls = null;
+
+    private static Configuration propertiesConfig = null;
+
+    private Logger logger = LoggerFactory.getLogger(ContextLoader.class);
 
     @Autowired
     private WebTemplate webTemplate;
 
 
-	@PostConstruct
+    @PostConstruct
     public void init() {
+        System.out.println("---ContextLoader.init() PostConstruct");
         sc.setAttribute("templateBean", webTemplate);
         logger.debug("configs loaded");
-		if(ac.containsBean("configBean")){
-			properties =  (Properties)ac.getBean("configBean");
-		}
-		if(ac.containsBean("externalUrls")){
-			externalUrls =  (Properties)ac.getBean("externalUrls");
-		}
+        if(ac.containsBean("configBean")){
+            properties =  (Properties)ac.getBean("configBean");
+        }
+        if(ac.containsBean("externalUrls")){
+            externalUrls =  (Properties)ac.getBean("externalUrls");
+        }
 
-		try {
-			propertiesConfig = new PropertiesConfiguration((File) ac.getResource("fewi.properties").getFile());
-		} catch (ConfigurationException e) {
-			logger.error("Error with the configuration file.");
-		} catch (IOException e) {
-			logger.error("File not found.");
-		}
+        try {
+            propertiesConfig = new PropertiesConfiguration((File) ac.getResource("fewi.properties").getFile());
+        } catch (ConfigurationException e) {
+            logger.error("Error with the configuration file.");
+        } catch (IOException e) {
+            logger.error("File not found.");
+        }
 
     }
-	
-	public static Properties getConfigBean(){
-		return properties;
-	}
-	
-	public static Properties getExternalUrls(){
-		return externalUrls;
-	}
 
-	public static Configuration getPropertiesConfig() {
-		return propertiesConfig;
-	}
-	
-	public static IDLinker getIDLinker(){
-		return IDLinker.getInstance(externalUrls);
-	}
-	
-	public void setApplicationContext(ApplicationContext ac)
-			throws BeansException {
-		this.ac = ac;
-		
-	}
+    public static Properties getConfigBean(){
 
-	public void setServletContext(ServletContext sc) {
-		this.sc = sc;
-	}
+        // defensive programming to avoid call before init() PostConstruct-ed
+        if (properties==null) {
+            System.out.println("---ContextLoader Error: Uninitialized getConfigBean");
+            return new Properties();
+        }
+
+        return properties;
+    }
+
+    public static Properties getExternalUrls(){
+        return externalUrls;
+    }
+
+    public static Configuration getPropertiesConfig() {
+        return propertiesConfig;
+    }
+
+    public static IDLinker getIDLinker(){
+        return IDLinker.getInstance(externalUrls);
+    }
+
+    public void setApplicationContext(ApplicationContext ac)
+            throws BeansException {
+        this.ac = ac;
+
+    }
+
+    public void setServletContext(ServletContext sc) {
+        this.sc = sc;
+    }
 }
