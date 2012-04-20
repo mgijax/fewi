@@ -161,8 +161,14 @@ public class MarkerController {
             return mav;
         }
 
-        // success - we have a single object; pull out the marker
-        Marker marker = markerList.get(0);
+	return this.prepareMarker(markerList.get(0));
+    }
+
+    /* look up a bunch of extra data and toss it in the MAV; a convenience
+     * method for use by the individual methods to render markers by ID or
+     * by key
+     */
+    private ModelAndView prepareMarker(Marker marker) {
 
 	// if this marker is a transgene with only one allele, then we should
 	// go to the allele detail page (special case)
@@ -663,22 +669,7 @@ public class MarkerController {
             return mav;
         }// success
 
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("marker_detail");
-
-        //pull out the marker, and add to mav
-        Marker marker = markerList.get(0);
-        mav.addObject("marker", marker);
-
-        // package referenes; gather via object traversal
-        List<Reference> references = marker.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
-        }
-        
-        this.dbDate(mav);
-
-        return mav;
+	return this.prepareMarker(markerList.get(0));
     }
 
 
