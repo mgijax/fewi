@@ -132,6 +132,7 @@ public class HibernateBatchSummaryHunter<T> {
 				start = ++end;
 			}
 		}
+		idSetLower = null;
        
         logger.debug("-> filter parsed" );   
 
@@ -156,6 +157,7 @@ public class HibernateBatchSummaryHunter<T> {
         	}
         	bResults.add((BatchMarkerId)item);
         }
+        qr = null;
         logger.debug("-> results parsed" );
         
         for (String id: idSet) {
@@ -172,6 +174,9 @@ public class HibernateBatchSummaryHunter<T> {
     			bm.add((T)tmp);
         	}
         }
+        idSet = null;
+        qResults = null;
+        
         logger.debug("-> results sorted" );
         
         searchResults.setTotalCount(bm.size());
@@ -183,6 +188,8 @@ public class HibernateBatchSummaryHunter<T> {
         	endIndex = bm.size();
         }
         searchResults.setResultObjects(bm.subList(searchParams.getStartIndex(), 
-        		endIndex));        
+        		endIndex));
+        // suggest garbage collection to clean up       
+        System.gc();
     }
 }
