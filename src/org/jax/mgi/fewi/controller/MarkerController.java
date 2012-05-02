@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -75,6 +77,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/marker")
 public class MarkerController {
 
+
+    //--------------------//
+    // static variables
+    //--------------------//
+
+    // maps from marker key to the URL for the minimap image
+    private static HashMap<Integer,String> minimaps = 
+	    new HashMap<Integer,String>();
 
     //--------------------//
     // instance variables
@@ -629,22 +639,56 @@ public class MarkerController {
         	mav.addObject ("strainSpecificNote", ssNote);
         }
         
-        // add minimap link
-        MarkerLocation cmPos = marker.getPreferredCentimorgans();
-        if ((cmPos != null) && (!cmPos.getChromosome().equalsIgnoreCase("UN"))) {
-        	if (cmPos != null) {
-        			Float cM = cmPos.getCmOffset();
-        			if ((cM != null) && (cM.floatValue() >= 0.0)) {
-        					mav.addObject ("miniMap", this.getMinimapUrl(marker.getMarkerKey()));
-        			} else {
-        				logger.debug ("cM offset is null or < 0");
-        			}
-        	} else {
-        		logger.debug ("no cM location");
+	// if we have not yet looked up the full suite of marker minimaps that
+	// have already been generated, then do so
+
+	if (minimaps.size() == 0) {
+	    String returnedString = this.getAllMinimapUrls();
+	    String[] allMinimaps = returnedString.split("\n");
+
+	    logger.debug ("Got " + allMinimaps.length + " minimap URL lines");
+
+	    Pattern findKey = Pattern.compile("@([0-9]+).gif");
+	    Matcher matcher = null;
+
+	    for (String url : allMinimaps) {
+		    matcher = findKey.matcher(url);
+		    if (matcher.find()) {
+			minimaps.put (new Integer(matcher.group(1)), url);
+		    }
+	    }
+	}
+
+	// if we already know what the minimap URL needs to be for this
+	// marker, then just put it in.
+	
+	String minimapUrl = null;
+	Integer markerKey = new Integer(marker.getMarkerKey());
+
+	if (minimaps.containsKey(markerKey)) {
+	    minimapUrl = minimaps.get(markerKey);
+	} else {
+	    // otherwise, if this marker has a cM location, we can request the
+	    // URL for its minimap individually
+
+            MarkerLocation cmPos = marker.getPreferredCentimorgans();
+	    if (cmPos != null) {
+		if (!cmPos.getChromosome().equalsIgnoreCase("UN")) {
+        	    Float cM = cmPos.getCmOffset();
+		    if ((cM != null) && (cM.floatValue() >= 0.0)) {
+       			minimapUrl = this.getMinimapUrl(markerKey);
+			minimaps.put (markerKey, minimapUrl);
+        	    }
         	}
-        } else {
-        	logger.debug ("Unknown chromosome");
-        }
+            }
+	}
+
+	// finally, add the minimap URL to the mav
+
+	if (minimapUrl != null) {
+	    mav.addObject ("miniMap", minimapUrl);
+	}
+
         return mav;
     }
 
@@ -791,11 +835,30 @@ public class MarkerController {
         }
     }
     
-    private String getMinimapUrl(int markerKey){
+    /** get a String containing URLs to all currently rendered minimaps; they
+     * will be delimited by line-breaks
+     */
+    private String getAllMinimapUrls() {
+	return this.getMinimapUrl("all");
+    }
+
+    /** get a String containing the URL to the minimap for the marker with the
+     * given markerKey
+     */
+    private String getMinimapUrl(Integer markerKey){
+	return this.getMinimapUrl(markerKey.toString());
+    }
+
+    /** get a String containing one or more URLs for minimaps.  If parm
+     * contains an integer, then it will be the URL for a single marker.  If
+     * parm is "all", then it will be a line break-delimited string containing
+     * the URLs for all minimaps currently rendered.
+     */
+    private String getMinimapUrl(String parm){
 		String urlString = "";
 		try {
 			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + 
-					"searches/markerMiniMap.cgi?" + markerKey);
+					"searches/markerMiniMap.cgi?" + parm);
 			URLConnection urlConnection = url.openConnection();
 			HttpURLConnection connection = null;
 			
@@ -805,6 +868,9 @@ public class MarkerController {
 				String current;
 				current = in.readLine();
 				while (current != null) {
+					if (urlString.length() > 0) {
+					    urlString += "\n";
+					}
 					urlString += current;
 					current = in.readLine();
 				}
