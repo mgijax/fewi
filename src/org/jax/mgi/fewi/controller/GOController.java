@@ -221,7 +221,7 @@ public class GOController {
             desc = true;
         }*/
 
-        Sort sort = new Sort(SortConstants.VOC_BY_DAG_STRUCT, false);
+        Sort sort = new Sort(SortConstants.VOC_BY_DAG_TERM, false);
         
         sorts.add(sort);
 
