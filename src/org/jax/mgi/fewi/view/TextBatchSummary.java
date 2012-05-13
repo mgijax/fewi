@@ -17,7 +17,6 @@ import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -50,7 +49,7 @@ public class TextBatchSummary extends AbstractTextView {
 			markerInfo = new StringBuffer();
 			associations = new ArrayList<List<String>>();
 			m = id.getMarker();
-
+			
 			markerInfo.append(id.getTerm() + "\t");
 			markerInfo.append(id.getTermType() + "\t");
 			
@@ -213,7 +212,7 @@ public class TextBatchSummary extends AbstractTextView {
 				}
 				
 				List<String> combineResults = new ArrayList<String>();
-				if (associations.size() > 0) {
+				if (associations.size() > 0) {					
 					combineResults = associations.get(0);
 					
 					if (associations.size() > 1) {				
@@ -222,19 +221,27 @@ public class TextBatchSummary extends AbstractTextView {
 						}				
 					}
 				}
-				if (combineResults.size() > 0){
-					for (String s: combineResults) {
-						logger.debug(s + ".");
-						writer.write(markerInfo.toString());
-						writer.write("\t" + s);		
-						writer.write("\r\n");
-					}
-				} else {
-					writer.write(markerInfo.toString());		
-					writer.write("\r\n");
+
+				for (String s: combineResults) {
+					writer.write(markerInfo.toString());
+					markerInfo.append("\t" + s);
 				}
+				markerInfo.append("\r\n");
+				combineResults = null;
 			}
+			else {
+				markerInfo.append("No associated gene");
+				markerInfo.append("\r\n");
+			}
+			writer.write(markerInfo.toString());	
 		}
+		queryForm = null;
+		results = null;
+		
+		m = null;
+		ids = null;
+		markerInfo = null;
+		associations = null;
 	}
 	
 	private String genHeader(BatchQueryForm queryForm){

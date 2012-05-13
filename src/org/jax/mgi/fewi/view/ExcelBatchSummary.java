@@ -278,12 +278,21 @@ public class ExcelBatchSummary extends AbstractExcelView {
 						col = storeCol;
 					} 
 					workbook.setRepeatingRowsAndColumns(0,0,0,curRow,curRow + combineResults.size());
+					combineResults = null;
 				}
+			} else {
+				row.createCell(col++).setCellValue("No associated gene");
 			}
 		}
+		queryForm = null;
+		results = null;
+		
+		m = null;
+		ids = null;
+		associations = null;
+		
 		for (int i = 0; i < 20; i++) {
-			sheet.autoSizeColumn(i);
-			
+			sheet.autoSizeColumn(i);	
 		}
 	}
 	
