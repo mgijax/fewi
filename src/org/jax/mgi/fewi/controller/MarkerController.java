@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerAlleleAssociation;
-import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.MarkerBiotypeConflict;
 import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.MarkerID;
@@ -51,9 +50,9 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
+import org.jax.mgi.fewi.util.FewiLinker;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDLinker;
-import org.jax.mgi.fewi.util.FewiLinker;
 import org.jax.mgi.fewi.util.ProviderLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -874,6 +873,8 @@ public class MarkerController {
 					urlString += current;
 					current = in.readLine();
 				}
+				in.close();
+				connection.disconnect();
 			} else {
 				logger.debug("miniMap URL not an HTTP URL.");
 			}
