@@ -114,7 +114,7 @@ Click on allele symbol for full phenotype details.
 
   <c:forEach var="imageSummaryRow" items="${imageSummaryRows}" >
     <tr>
-      <td style="border: 1px solid black;" width="1%">
+      <td align='center' style="border: 1px solid black;" width="1%">
         ${imageSummaryRow.imgTag}
       </td>
       <td style="border: 1px solid black;">

@@ -249,7 +249,7 @@ public class ImageSummaryRow {
           if (firstRowInColumn) {
 
             // image
-            summaryRow.append("<td rowspan=" + genotypes.size() + ">");
+            summaryRow.append("<td align='center' rowspan=" + genotypes.size() + ">");
             summaryRow.append(this.getImgTag());
             summaryRow.append("</td>");
 
@@ -285,7 +285,7 @@ public class ImageSummaryRow {
         summaryRow.append("<tr>");
 
         // image
-        summaryRow.append("<td>");
+        summaryRow.append("<td align='center'>");
         summaryRow.append(this.getImgTag());
         summaryRow.append("</td>");
 
