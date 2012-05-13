@@ -118,7 +118,8 @@ public class BatchController {
         Set<String> idSet = null; 
         MultipartFile file = queryForm.getIdFile();
 
-        if (file != null && !file.isEmpty()){        	
+        if (file != null && !file.isEmpty()){
+        	logger.debug("process file");
             String sep = "";
             String fileType = queryForm.getFileType();
             if (fileType != null && "".equals("cvs")) {
@@ -135,6 +136,10 @@ public class BatchController {
             	idStream = (InputStream) file.getInputStream();
     			IOUtils.copy(idStream , writer);
     			idSet = parseColumn(writer.toString(), col, sep);
+    			
+    			writer.close();
+    			idStream.close();
+    			
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
@@ -144,6 +149,7 @@ public class BatchController {
         }
 
 		if (idSet != null && idSet.size() > 0){
+			logger.debug("new id set: " + idSet.iterator().next());
 			session.setAttribute("idSet", new ArrayList<String>(idSet));
 			queryForm.setIds(StringUtils.join(idSet, "<br>"));
 		}  
@@ -175,7 +181,8 @@ public class BatchController {
         List<BatchMarkerId> markerList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
-        List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>();        
+        List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>(); 
+        logger.debug("json results: " + markerList.size());
         for (BatchMarkerId marker: markerList){
             if (marker == null) {
                 logger.debug("--> Null Object");
@@ -183,7 +190,7 @@ public class BatchController {
                 summaryRows.add(new BatchSummaryRow(marker, queryForm));
             } 	
         }
-
+        logger.debug("total: " + searchResults.getTotalCount());
         // The JSON return object will be serialized to a JSON response.
         // Client-side JavaScript expects this object
         JsonSummaryResponse<BatchSummaryRow> jsonResponse
@@ -206,13 +213,15 @@ public class BatchController {
 				
 		logger.debug("batchSummaryReport");
 		logger.debug(queryForm.toString());
+
+        // perform query, and pull out the requested objects
+        SearchResults<BatchMarkerId> searchResults = 
+        	getSummaryResults(session, request, queryForm, page);
+		
+		logger.debug("results: " + searchResults.getResultObjects().size());
 		
 		ModelAndView mav = new ModelAndView("batchSummaryReport");
 		mav.addObject("queryForm", queryForm);
-		
-		SearchResults<BatchMarkerId> searchResults = 
-			getSummaryResults(session, request, queryForm, page);
-		
 		mav.addObject("totalCount", searchResults.getTotalCount());
 		mav.addObject("markerCount", searchResults.getResultSetMeta().getCount("marker"));		
 		mav.addObject("results", searchResults.getResultObjects());
@@ -227,21 +236,23 @@ public class BatchController {
 
         logger.debug("sessionId: " + session.getId());
         
+        SearchParams params = new SearchParams();
+        
+        logger.debug("page: " + page);
+        
         List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
         if (idSet != null){
         	logger.debug("ids: " + idSet.size());
+        	// generate params object;  add pagination, sorts, and filters
+            params.setPaginator(page);
+            params.setSorts(this.genSorts(request));
+            params.setFilter(this.genFilters(query, idSet));
+            // perform query, and pull out the requested objects
+            return batchFinder.getBatch(params);
         } else {
         	logger.debug("no idSet");
-        }
-
-        // generate search parms object;  add pagination, sorts, and filters
-        SearchParams params = new SearchParams();
-        params.setPaginator(page);
-        params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(query, idSet));
-
-        // perform query, and pull out the requested objects
-         return batchFinder.getBatch(params);
+        }        
+         return new SearchResults<BatchMarkerId>();
 	}
 
     //--------------------------------------------------------------------//
