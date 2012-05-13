@@ -1,28 +1,19 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.*;
-
-/*-------------------------------*/
-/* finder specific classes       */
-/*-------------------------------*/
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import mgi.frontend.datamodel.Image;
-import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
+
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByAlleleHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByMrkHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdImagesByMrkHunter;
-import org.jax.mgi.fewi.summary.ImageSummaryRow;
-
-/*----------------------------------------*/
-/* standard classes, used for all Finders */
-/*----------------------------------------*/
-
-// fewi
+import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-
-// external libs
+import org.jax.mgi.fewi.summary.ImageSummaryRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

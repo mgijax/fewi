@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.finder;
 
 import java.util.List;
 
-import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
