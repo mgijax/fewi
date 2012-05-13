@@ -227,39 +227,61 @@ public class ReferenceController {
 		
 		logger.debug("getSummaryResults query: " + query.toString());
 		
-		// parse the various query parameter to generate SearchParams object
-		SearchParams params = new SearchParams();
-		params.setIncludeSetMeta(true);
-		params.setIncludeMetaHighlight(true);
-		params.setIncludeRowMeta(true);
-		params.setIncludeMetaScore(true);
-		params.setPaginator(page);		
-		params.setSorts(this.parseSorts(request));
-		params.setFilter(this.parseReferenceQueryForm(query, result));
+		String refKey = query.getKey();
 		
-		// perform query and return results as json
-		logger.debug("params parsed");		
-		
-		if (result.hasErrors()){
-			logger.debug("bind error");
-			throw new BindException(result);
+		if (refKey != null && !"".equalsIgnoreCase(refKey)) {
+			return  referenceFinder.getReferenceByKey(refKey);
 		} else {
-			return referenceFinder.searchSummaryReferences(params);
+			// parse the various query parameter to generate SearchParams object
+			SearchParams params = new SearchParams();
+			params.setIncludeSetMeta(true);
+			params.setIncludeMetaHighlight(true);
+			params.setIncludeRowMeta(true);
+			params.setIncludeMetaScore(true);
+			params.setPaginator(page);		
+			params.setSorts(this.parseSorts(request));
+			params.setFilter(this.parseReferenceQueryForm(query, result));
+			
+			// perform query and return results as json
+			logger.debug("params parsed");		
+			
+			if (result.hasErrors()){
+				logger.debug("bind error");
+				throw new BindException(result);
+			} else {
+				return referenceFinder.searchSummaryReferences(params);
+			}
 		}
+	}
+	
+	@RequestMapping("/key")
+	public String referenceByKeyParam( HttpServletRequest request, Model model) {		
+		String query = request.getQueryString();
+		logger.info("referenceByKeyParam: " + query);
+		model.addAttribute("queryString", "key=" + query);		
+		return "reference_detail";		
+	}
+	
+	@RequestMapping("/key/{refKey}")
+	public String referenceByKey(@PathVariable("refKey") String refKey, 
+			Model model) {		
+		logger.info("referenceByKey: " + refKey);
+		model.addAttribute("queryString", "key=" + refKey);		
+		return "reference_detail";		
 	}
 	
 	/*
 	 * This method maps requests for a reference detail page by id.
 	 */
 	@RequestMapping("/{refID}")
-	public String referenceById(
-			@PathVariable("refID") String refID,
-			@ModelAttribute ReferenceQueryForm query,
-			HttpServletRequest request, Model model) {
-		
+	public String referenceById(@PathVariable("refID") String refID, 
+			Model model) {
+		logger.info("ref by id: " + refID);
 		model.addAttribute("queryString", "id=" + refID);		
 		return "reference_detail";		
 	}
+	
+
 	
 	/* 
 	 * This method maps requests for the reference summary for an allele.  
