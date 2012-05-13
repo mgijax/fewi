@@ -2,20 +2,13 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import mgi.frontend.datamodel.BatchMarkerId;
 import mgi.frontend.datamodel.Accession;
 
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
@@ -58,74 +51,43 @@ public class HibernateAccessionSummaryHunter<T> {
 	}
 
 
-
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
 
         logger.debug("-> hunt");         
-        type = Accession.class;
-        
-    	List<String> keySet = new ArrayList<String>();
-    	
-    	List<String> termTypes = new ArrayList<String>();   	
+        type = Accession.class;   	
     	
     	StringBuffer hql = new StringBuffer("FROM Accession WHERE");
+    	logger.debug("parse id"); 
+    	String accId = searchParams.getFilter().getValue();
     	
-    	List<String> clauses = new ArrayList<String>();
-    	String clause = null;
-    	List<Filter> fList = searchParams.getFilter().getNestedFilters();
-    	String prop;
-    	if (fList != null) { 		    		
-    		for (Filter f : fList) {
-    			prop = f.getProperty();
-    			if (prop != null && !"".equals(prop)){
-    				logger.debug("Property: " + prop);
-    				if (SearchConstants.ACC_ID.equals(prop)) {
-    					clauses.add(" lower(search_id) = '" + f.getValue().toLowerCase() + "' ");
-    				}
-    			}
-    			
-			}
+    	if (accId != null && !"".equals(accId.trim())) { 
+    		hql.append(" lower(search_id) = '" + accId.trim() + "'");
+    	} else {
+    		logger.debug("return empty"); 
+    		return;
     	}
-    	
-    	hql.append(StringUtils.join(clauses, " and "));
-    	
-    	
-    	// Add in the default ordering
-    	
+ 	
+    	logger.debug("run query");
+    	// Add in the default ordering   	
     	hql.append(" order by sequence_num desc");
     	
     	int pageSize = searchParams.getPageSize();
     	int startIndex = searchParams.getStartIndex();
-    	
-    	
-        Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());
-//        query.setFirstResult(startIndex);
-//        query.setMaxResults(pageSize);
-        
+   	
+        Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());       
         logger.debug("This is the query: " + hql.toString());
-
-/*		if(idSet != null && idSet.size() > 0) { 
-			query.setParameterList("ids", idSet);
-		}*/
        
         logger.debug("-> filter parsed" );   
 
         List<T> bm = new ArrayList<T>();
-        Accession tmp;
         
-        Map<String, Accession> qResults = 
-        	new LinkedHashMap<String, Accession>();
-        Accession bResults;
-        
-        List<T> qr = query.list();
+        List<T> qr = (List<T>)query.list();
         logger.debug("This is the size of the results: " + qr.size());
-        Set<Integer> accessionID = new HashSet<Integer>();
         logger.debug("-> query complete" );
-        int bTerm;
+
         int start = 0;
         for (T item: qr){
-
-        	if ((start >= startIndex) && (start < (startIndex + pageSize))) {
+        	if (start >= startIndex && start < (startIndex + pageSize) ) {
         		bm.add(item);
         	}
         	start ++;        	
@@ -134,12 +96,6 @@ public class HibernateAccessionSummaryHunter<T> {
         logger.debug("-> results parsed" );
                
         searchResults.setTotalCount(qr.size());
-        //searchResults.getResultSetMeta().addCount("accession", markerKey.size());
-        
-        int endIndex = searchParams.getStartIndex() + searchParams.getPageSize();
-        if (endIndex > bm.size()){
-        	endIndex = bm.size();
-        }
         searchResults.setResultObjects(bm);        
     }
 }

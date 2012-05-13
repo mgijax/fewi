@@ -56,11 +56,9 @@ public class AccessionController {
     @Autowired
     private AccessionFinder accessionFinder;
 
-
     //--------------------------------------------------------------------//
     // public methods
     //--------------------------------------------------------------------//
-
 
     //--------------------//
     // Accession Query Form
@@ -75,7 +73,6 @@ public class AccessionController {
         mav.addObject(new AccessionQueryForm());
         return mav;
     }
-
 
     //-----------------------------//
     // Accession Query Form Summary
@@ -92,20 +89,20 @@ public class AccessionController {
         // single object, we want to go directly to the object page.
         
         SearchParams params = new SearchParams();
-        
+        params.setFilter( this.genFilters(queryForm));       
         params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(queryForm));
-        
-        SearchResults<Accession> searchResults = accessionFinder.getAccessions(params);
-        
+
+        SearchResults<Accession> searchResults = accessionFinder.getAccessions(params);        
         logger.debug("About to check the size");
         
-        /**
-         * This is a special case.  If only a single object comes back, go ahead and 
-         * forward to the proper page.
-         */
-        
-        if (searchResults.getResultObjects().size() == 1) {
+        ModelAndView mav;
+        if (searchResults.getResultObjects().size() == 0){
+	        mav = new ModelAndView("error");
+	        mav.addObject("errorMsg", "No accession id found.  Please verify " +
+	        		"that your request contains an id parameter.");
+
+        } else if (searchResults.getResultObjects().size() == 1) {
+            // If only a single object comes back, forward to the proper page.
         	logger.debug("Found only 1, should be forwarding.");
         	// We only have one object, seamlessly forward it!
         	FewiLinker linker = FewiLinker.getInstance();
@@ -114,21 +111,18 @@ public class AccessionController {
         	
         	String objectType = acc.getObjectType();
         	
-        	// Handle the Vocabulary Cases
-        	
+        	// Handle the Vocabulary Cases        	
         	if (objectType.equals("Vocabulary Term")) { 
         		logger.debug("This is a vocab match, should be a forward");
         		url = linker.getFewiIDLink(acc.getDisplayType(), acc.getDisplayID());        		
         	}
         	
-        	// Handle the old wi cases, but with ID
-        	
+        	// Handle the old wi cases, but with ID        	
         	else if (objectType.equals(ObjectTypes.ORTHOLOGY)) {
         		url = linker.getFewiIDLink(objectType, acc.getDisplayID());
         	}
         	
-        	// Handle the old wi cases.
-        	
+        	// Handle the old wi cases.        	
         	else if (objectType.equals(ObjectTypes.PROBECLONE) || 
         			objectType.equals(ObjectTypes.ASSAY) ||
         			objectType.equals(ObjectTypes.GO_CC) ||
@@ -145,18 +139,16 @@ public class AccessionController {
         	}
 
         	return new ModelAndView("redirect:" + url);
+        } else {
+	        mav = new ModelAndView("accession_summary");
+	        
+	        String queryString = request.getQueryString();
+	        if (queryString == null || queryString.equals("")) {
+	        	queryString = "id=" + queryForm.getId();
+	        }	        
+	        mav.addObject("queryString", queryString);
+	        mav.addObject("queryForm", queryForm);
         }
-
-        ModelAndView mav = new ModelAndView("accession_summary");
-        
-        String queryString = request.getQueryString();
-        if (queryString == null || queryString.equals("")) {
-        	queryString = "id=" + queryForm.getId();
-        }
-        
-        mav.addObject("queryString", queryString);
-        mav.addObject("queryForm", queryForm);
-
         return mav;
     }
 
@@ -219,14 +211,7 @@ public class AccessionController {
         jsonResponse.setTotalCount(searchResults.getTotalCount());
         return jsonResponse;
     }
-
-
     
-
-    //--------------------------------------------------------------------//
-    // private methods
-    //--------------------------------------------------------------------//
-
     //-----------------------------//
 	// Accession By ID
 	//-----------------------------//
@@ -246,6 +231,9 @@ public class AccessionController {
 	    return accessionSummary(request, queryForm);
 	}
 
+    //--------------------------------------------------------------------//
+    // private methods
+    //--------------------------------------------------------------------//
 
 	// generate the sorts
     private List<Sort> genSorts(HttpServletRequest request) {
@@ -275,31 +263,14 @@ public class AccessionController {
 
     // generate the filters
     private Filter genFilters(AccessionQueryForm query){
-
         logger.debug("->genFilters started");
         logger.debug("QueryForm -> " + query);
-
-
-        // start filter list to add filters to
-        List<Filter> filterList = new ArrayList<Filter>();
-
-        String param1 = query.getId();
-
+        
+        String accId = query.getId().trim();
         // There can ONLY be accession at present, add it in.
-        if ((param1 != null) && (!"".equals(param1))) {
-            filterList.add(new Filter (SearchConstants.ACC_ID, param1.trim(),
-                Filter.OP_EQUAL));
+        if (accId != null && !"".equals(accId)) {
+            return new Filter(SearchConstants.ACC_ID, accId, Filter.OP_EQUAL);
         }
-
-        // if we have filters, collapse them into a single filter
-        Filter containerFilter = new Filter();
-        if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
-            containerFilter.setNestedFilters(filterList);
-        }
-
-        return containerFilter;
+        return new Filter();
     }
-
-
 }
