@@ -21,7 +21,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- iframe for history manager's use -->
-<iframe id="yui-history-iframe" src="/fewi/js/blank.html"></iframe>
+<iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
 <!-- header bar -->
