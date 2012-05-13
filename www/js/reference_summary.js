@@ -389,9 +389,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	
 	facetDialog.hideEvent.subscribe(function(){ 
 		this.form.innerHTML = '<img src="/fewi/mgi/assets/images/loading.gif">'; 
-		for (k in buttons){
-			buttons[k].set('disabled', false);
-		}});
+	});
 
 
 	// Wire up the success and failure handlers
@@ -474,13 +472,18 @@ YAHOO.util.Event.onDOMReady(function () {
 			}
 			options[x] = '<label><input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"' + checked + '> ' + res[x] + '</label>';
 		}
-		populateFacetDialog(oPayload.title, options.join('<br/>'));
+		populateFacetDialog(oPayload.title, options.join('<br/>'), false);
 	};
 
-	var populateFacetDialog = function (title, body) {
+	var populateFacetDialog = function (title, body, error) {
 		facetDialog.setHeader('Filter by ' + title);
 		facetDialog.form.innerHTML = body;
 		buttons = facetDialog.getButtons();
+
+		for (k in buttons){
+			//alert('button: ' + error);
+			buttons[k].set('disabled', error);
+		}
 	};
 
 	var handleError = function (oRequest, oResponse, oPayload) {
@@ -488,7 +491,7 @@ YAHOO.util.Event.onDOMReady(function () {
 		for (k in buttons){
 			buttons[k].set('disabled', true);
 		}
-		populateFacetDialog(oPayload.title, oPayload.error);
+		populateFacetDialog(oPayload.title, oPayload.error, true);
 	};
 
 	var authorCallback = {success:parseFacetResponse,
