@@ -3,10 +3,6 @@ package org.jax.mgi.fewi.finder;
 import java.util.ArrayList;
 import java.util.List;
 
-import mgi.frontend.datamodel.GxdLitGeneRecord;
-import mgi.frontend.datamodel.GxdLitReferenceRecord;
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.GxdLitIndexRecord;
 
 import org.jax.mgi.fewi.hunter.SolrGxdLitSummaryHunter;

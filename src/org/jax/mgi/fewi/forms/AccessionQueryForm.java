@@ -6,7 +6,6 @@ package org.jax.mgi.fewi.forms;
 
 public class AccessionQueryForm {
 
-
     //--------------------//
     // instance variables
     //--------------------//
@@ -15,8 +14,6 @@ public class AccessionQueryForm {
     //--------------------//
     // accessors
     //--------------------//
-
-    // parameter 1
     public String getId() {
         return id;
     }
