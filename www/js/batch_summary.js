@@ -125,9 +125,9 @@ var History = YAHOO.util.History;
     }
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.DataSource(fewiurl + "batch/json?" + querystring + "&");
+    var myDataSource = new YAHOO.util.XHRDataSource(fewiurl + "batch/json?" + querystring + "&");
 
-    myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+    myDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     myDataSource.responseSchema = {
         resultsList: "summaryRows",
         fields: [
@@ -171,7 +171,7 @@ var History = YAHOO.util.History;
     
     myDataSource.maxCacheEntries = 3;
     myDataSource.connXhrMode = "cancelStaleRequests";
-    //myDataSource.connMethodPost = true;
+    myDataSource.connMethodPost = true;
     myDataSource.connTimeout = 0;
 
     // Create the Paginator
@@ -234,13 +234,12 @@ var History = YAHOO.util.History;
             recordOffset: Number(pRequest['startIndex'][0]) || 0
         };
         var reportButton = YAHOO.util.Dom.get('textDownload');
+        var facetQuery = generateRequest(0, oPayload.totalRecords);
         if (!YAHOO.lang.isNull(reportButton)){      	
-	        facetQuery = generateRequest(0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'batch/report.txt?' + querystring + '&' + facetQuery);
         }
         reportButton = YAHOO.util.Dom.get('excelDownload');
         if (!YAHOO.lang.isNull(reportButton)){      	
-	        facetQuery = generateRequest(0, totalCount);
 	        reportButton.setAttribute('href', fewiurl + 'batch/report.xls?' + querystring + '&' + facetQuery);
         }
         return true;
