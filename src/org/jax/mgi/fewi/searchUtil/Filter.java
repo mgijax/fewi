@@ -1,6 +1,8 @@
 package org.jax.mgi.fewi.searchUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A Filter is used to restrict a result set to be returned
@@ -111,7 +113,10 @@ public class Filter {
 
 	// value
 	public String getValue() {
-		return values.get(0);
+		if (values.size() > 0){
+			return values.get(0);
+		} 
+		return null;
 	}
 	public List<String> getValues() {
 		return values;
