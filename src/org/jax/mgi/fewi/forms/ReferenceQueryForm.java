@@ -14,6 +14,7 @@ public class ReferenceQueryForm {
 	private boolean inTitle = true;
 	private boolean inAbstract = true;
 	private String id = "";
+	private String key = "";
 	
 	private Integer seqKey;
 	private Integer alleleKey;
@@ -120,22 +121,28 @@ public class ReferenceQueryForm {
 	public void setAlleleKey(Integer alleleKey) {
 		this.alleleKey = alleleKey;
 	}
-	@Override
-	public String toString() {
-		return "ReferenceQueryForm [Journal=" + Journal + ", alleleKey="
-				+ alleleKey + ", author=" + author + ", authorFilter="
-				+ authorFilter + ", authorScope=" + authorScope
-				+ ", curatedDataFilter=" + dataFilter + ", id=" + id
-				+ ", inAbstract=" + inAbstract + ", inTitle=" + inTitle
-				+ ", journalFilter=" + journalFilter + ", seqKey=" + seqKey
-				+ ", text=" + text + ", year=" + year + ", yearFilter="
-				+ yearFilter + "]";
-	}
 	public Integer getMarkerKey() {
 		return markerKey;
 	}
 	public void setMarkerKey(Integer markerKey) {
 		this.markerKey = markerKey;
+	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	@Override
+	public String toString() {
+		return "ReferenceQueryForm [author=" + author + ", authorScope="
+				+ authorScope + ", Journal=" + Journal + ", year=" + year
+				+ ", text=" + text + ", inTitle=" + inTitle + ", inAbstract="
+				+ inAbstract + ", id=" + id + ", key=" + key + ", seqKey="
+				+ seqKey + ", alleleKey=" + alleleKey + ", markerKey="
+				+ markerKey + ", authorFilter=" + authorFilter
+				+ ", journalFilter=" + journalFilter + ", yearFilter="
+				+ yearFilter + ", dataFilter=" + dataFilter + "]";
 	}
 	
 }

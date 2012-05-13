@@ -5,6 +5,7 @@ public class RecombinaseQueryForm {
 
 	private String driver;
 	private String id;
+	private String alleleKey;
 	private String system;
 	private String systemKey;
 
@@ -32,13 +33,17 @@ public class RecombinaseQueryForm {
 	public void setSystemKey(String systemKey) {
 		this.systemKey = systemKey;
 	}
-
+	public String getAlleleKey() {
+		return alleleKey;
+	}
+	public void setAlleleKey(String alleleKey) {
+		this.alleleKey = alleleKey;
+	}
 	@Override
 	public String toString() {
-		return "RecombinaseQueryForm ["
-				+ (driver != null ? "driver=" + driver + ", " : "")
-				+ (id != null ? "id=" + id + ", " : "")
-				+ (systemKey != null ? "systemKey=" + systemKey + ", " : "")
-				+ (system != null ? "system=" + system : "") + "]";
+		return "RecombinaseQueryForm [driver=" + driver + ", id=" + id
+				+ ", alleleKey=" + alleleKey + ", system=" + system
+				+ ", systemKey=" + systemKey + "]";
 	}
+	
 }

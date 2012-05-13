@@ -3,24 +3,21 @@ package org.jax.mgi.fewi.controller;
 /*------------------------------*/
 /* to change in each controller */
 /*------------------------------*/
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import mgi.frontend.datamodel.Allele;
-import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.AlleleSynonym;
+import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.AlleleSystemAssayResult;
-import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Image;
+
+import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
-import org.jax.mgi.fewi.summary.RecomImage;
-import org.jax.mgi.fewi.summary.RecomImageRow;
-import org.jax.mgi.fewi.summary.RecombinaseSummary;
-import org.jax.mgi.fewi.summary.RecomSpecificitySummaryRow;
-import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-
-/*--------------------------------------*/
-/* standard imports for all controllers */
-/*--------------------------------------*/
-import java.util.*;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -28,18 +25,18 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.RecomImage;
+import org.jax.mgi.fewi.summary.RecomImageRow;
+import org.jax.mgi.fewi.summary.RecomSpecificitySummaryRow;
+import org.jax.mgi.fewi.summary.RecombinaseSummary;
 import org.jax.mgi.fewi.util.FormatHelper;
-
-// external
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,6 +65,9 @@ public class RecombinaseController {
     // get the finder to use for various methods
     @Autowired
     private RecombinaseFinder recombinaseFinder;
+    
+    @Autowired
+    private AlleleFinder alleleFinder;
 
     /*-------------------------*/
     /* public instance methods */
@@ -143,8 +143,7 @@ public class RecombinaseController {
     // Cre Specificity
     //-------------------------------//
     @RequestMapping("/specificity")
-    public ModelAndView creSpecificity(
-            HttpServletRequest request,
+    public ModelAndView creSpecificity( HttpServletRequest request,
             @ModelAttribute RecombinaseQueryForm query) {
 
         logger.debug("->creSpecificity() started");
@@ -154,90 +153,112 @@ public class RecombinaseController {
         Image thisImage;
         Iterator<Image> imageIter;
         List<Image> validatedImages   = new ArrayList<Image>();
-
+        
+        Allele allele = null;
+        List<AlleleSystem> alleleSystems = new ArrayList<AlleleSystem>();
+        AlleleSystem alleleSystem = null;
+        
         /*
          * Lookup AlleleSystem object
          */
+        String alleleKey = query.getAlleleKey();
+        if (alleleKey != null && !"".equals(alleleKey)) {
+        	SearchResults<Allele> alleleResults = alleleFinder.getAlleleByKey(alleleKey);
+        	if (alleleResults.getResultObjects().size() == 1) {
+        		allele = alleleResults.getResultObjects().get(0);
+        		logger.debug("found allele: " + allele.getSymbol());
+        		alleleSystems = allele.getAlleleSystems();
+        		logger.debug("Systems for allele: " + alleleSystems.size());
+        		for (AlleleSystem sys: alleleSystems) {
+        			logger.debug("system: " + sys.getSystemKey().toString());
+        			if (query.getSystemKey().equals(sys.getSystemKey().toString())) {
+        				alleleSystem = sys;
+        				break;
+        			}
+        		}
+        	}
+        } else {
+            // setup search parameters object to gather the requested object
+            SearchParams searchParams = new SearchParams();
+            searchParams.setFilter(this.genFilters(query));
 
-        // setup search parameters object to gather the requested object
-        SearchParams searchParams = new SearchParams();
-        searchParams.setFilter(this.genFilters(query));
+            // find the requested allele/system object
+            SearchResults<AlleleSystem> searchResults =
+                recombinaseFinder.getAlleleSystem(searchParams);
+            alleleSystems = searchResults.getResultObjects();
+	
+            if (alleleSystems.size() == 1) {            
+		        alleleSystem = alleleSystems.get(0);
+		        allele = alleleSystem.getAllele();
+            }
+        }
 
-        // find the requested allele/system object
-        SearchResults<AlleleSystem> searchResults =
-            recombinaseFinder.getAlleleSystem(searchParams);
-        List<AlleleSystem> alleleSystems = searchResults.getResultObjects();
-
+        
         // ensure we found allele system
-        if (alleleSystems.size() < 1) {
+        if (allele == null || alleleSystem == null) {
             // forward to error page
             mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Allele/System not available");
-            return mav;
+        } else {
+
+	        /*
+	         * Remove sub-objects from AlleleSystem, and fill ModelAndView
+	         * with display data
+	         */
+	        mav.addObject("queryString", request.getQueryString());
+	        mav.addObject("alleleSystem", alleleSystem);
+	        mav.addObject("allele", allele);
+	        mav.addObject("systemDisplayStr",
+	          FormatHelper.initCap(alleleSystem.getSystem()));
+	        mav.addObject("otherAlleles", alleleSystem.getOtherAlleles());
+	        mav.addObject("otherAllelesSize", alleleSystem.getOtherAlleles().size());
+	        mav.addObject("otherSystems", alleleSystem.getOtherSystems());
+	        mav.addObject("otherSystemsSize", alleleSystem.getOtherSystems().size());
+	
+	        // allele synonyms; pre-gen comma-delimitted list
+	        List<String> synonymList = new ArrayList<String> ();
+	        Iterator<AlleleSynonym> synonymIter = allele.getSynonyms().iterator();
+	        while (synonymIter.hasNext()) {
+	            AlleleSynonym thisSynonym = synonymIter.next();
+	            synonymList.add(thisSynonym.getSynonym());
+	        }
+	        mav.addObject("synonymsString",
+	          FormatHelper.superscript(FormatHelper.commaDelimit(synonymList)));
+	
+	        // remove images with 'null' values
+	        imageIter = alleleSystem.getImages().iterator();
+	        while (imageIter.hasNext()) {
+	          thisImage = imageIter.next();
+	          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
+				validatedImages.add(thisImage);
+			  }
+		    }
+	
+	        // iterate over the validated images; pre-gen image gallery rows
+	        int imageIndex = 0;
+	        List<RecomImage> recomImages = new ArrayList<RecomImage>();
+	        List<RecomImageRow> recomImageRows = new ArrayList<RecomImageRow>();
+	        imageIter = validatedImages.iterator();
+	        while (imageIter.hasNext()) {
+	
+	          thisImage = imageIter.next();
+	
+	          imageIndex++;
+	          RecomImage thisRecomImage
+	            = new RecomImage(thisImage, imageIndex);
+	          recomImages.add(thisRecomImage);
+	
+	          // if we have enough images to fill a row, of if this is our last
+	          // image, create the row and add to row list
+	          if ( ((imageIndex % 8 ) == 0) || !imageIter.hasNext() ) {
+	            RecomImageRow thisRow = new RecomImageRow();
+	            thisRow.setRecomImages(recomImages);
+	            recomImageRows.add(thisRow);
+	            recomImages = new ArrayList<RecomImage>();
+	          }
+	        }
+	        mav.addObject("galleryImagesRows", recomImageRows);
         }
-        AlleleSystem alleleSystem = alleleSystems.get(0);
-
-        /*
-         * Remove sub-objects from AlleleSystem, and fill ModelAndView
-         * with display data
-         */
-
-        Allele allele = alleleSystem.getAllele();
-
-        mav.addObject("queryString", request.getQueryString());
-        mav.addObject("alleleSystem", alleleSystem);
-        mav.addObject("allele", allele);
-        mav.addObject("systemDisplayStr",
-          FormatHelper.initCap(alleleSystem.getSystem()));
-        mav.addObject("otherAlleles", alleleSystem.getOtherAlleles());
-        mav.addObject("otherAllelesSize", alleleSystem.getOtherAlleles().size());
-        mav.addObject("otherSystems", alleleSystem.getOtherSystems());
-        mav.addObject("otherSystemsSize", alleleSystem.getOtherSystems().size());
-
-        // allele synonyms; pre-gen comma-delimitted list
-        List<String> synonymList = new ArrayList<String> ();
-        Iterator<AlleleSynonym> synonymIter = allele.getSynonyms().iterator();
-        while (synonymIter.hasNext()) {
-            AlleleSynonym thisSynonym = synonymIter.next();
-            synonymList.add(thisSynonym.getSynonym());
-        }
-        mav.addObject("synonymsString",
-          FormatHelper.superscript(FormatHelper.commaDelimit(synonymList)));
-
-        // remove images with 'null' values
-        imageIter = alleleSystem.getImages().iterator();
-        while (imageIter.hasNext()) {
-          thisImage = imageIter.next();
-          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
-			validatedImages.add(thisImage);
-		  }
-	    }
-
-        // iterate over the validated images; pre-gen image gallery rows
-        int imageIndex = 0;
-        List<RecomImage> recomImages = new ArrayList<RecomImage>();
-        List<RecomImageRow> recomImageRows = new ArrayList<RecomImageRow>();
-        imageIter = validatedImages.iterator();
-        while (imageIter.hasNext()) {
-
-          thisImage = imageIter.next();
-
-          imageIndex++;
-          RecomImage thisRecomImage
-            = new RecomImage(thisImage, imageIndex);
-          recomImages.add(thisRecomImage);
-
-          // if we have enough images to fill a row, of if this is our last
-          // image, create the row and add to row list
-          if ( ((imageIndex % 8 ) == 0) || !imageIter.hasNext() ) {
-            RecomImageRow thisRow = new RecomImageRow();
-            thisRow.setRecomImages(recomImages);
-            recomImageRows.add(thisRow);
-            recomImages = new ArrayList<RecomImage>();
-          }
-        }
-        mav.addObject("galleryImagesRows", recomImageRows);
-
         return mav;
     }
 
@@ -253,40 +274,49 @@ public class RecombinaseController {
             @ModelAttribute Paginator page) {
 
         logger.debug("->specificitySummaryJson started");
-
-        // generate search parms object;  add pagination, sorts, and filters
-        SearchParams params = new SearchParams();
-        params.setPaginator(page);
-        params.setSorts(this.genRecomSummarySorts(request));
-        params.setFilter(this.genFilters(query));
-
-        // perform query, and pull out the requested objects
-        SearchResults<AlleleSystemAssayResult> searchResults =
-            recombinaseFinder.getAssaySummary(params);
-        List<AlleleSystemAssayResult> assayResultList
-          = searchResults.getResultObjects();
+        
+        List<AlleleSystemAssayResult> assayResultList = new ArrayList<AlleleSystemAssayResult>();
+        SearchResults<AlleleSystemAssayResult> searchResults;
+        
+        // The JSON return object will be serialized to a JSON response.
+        // Client-side JavaScript expects this object
+        JsonSummaryResponse<RecomSpecificitySummaryRow> jsonResponse
+        	= new JsonSummaryResponse<RecomSpecificitySummaryRow>();
+        
+        String alleleKey = query.getAlleleKey();
+        if (alleleKey != null && !"".equals(alleleKey)) {
+        	SearchResults<Allele> alleleResults = alleleFinder.getAlleleByKey(alleleKey);
+        	if (alleleResults.getResultObjects().size() == 1) {
+        		Allele allele = alleleResults.getResultObjects().get(0);
+        		query.setId(allele.getPrimaryID());
+		
+		        // generate search parms object;  add pagination, sorts, and filters
+		        SearchParams params = new SearchParams();
+		        params.setPaginator(page);
+		        params.setSorts(this.genRecomSummarySorts(request));
+		        params.setFilter(this.genFilters(query));
+		
+		        // perform query, and pull out the requested objects
+		        searchResults = recombinaseFinder.getAssaySummary(params);
+		        jsonResponse.setTotalCount(searchResults.getTotalCount());
+		        assayResultList = searchResults.getResultObjects();
+        	}
+        }
 
         // create/load the list of SummaryRow wrapper objects
         List<RecomSpecificitySummaryRow> summaryRows
-          = new ArrayList<RecomSpecificitySummaryRow>();
-        Iterator<AlleleSystemAssayResult> it = assayResultList.iterator();
-        while (it.hasNext()) {
-            AlleleSystemAssayResult thisAssayResult = it.next();
+        	= new ArrayList<RecomSpecificitySummaryRow>();
+        
+        for (AlleleSystemAssayResult thisAssayResult: assayResultList) {
             if (thisAssayResult == null) {
                 logger.debug("--> Null Object");
-            }else {
+            } else {
                 summaryRows.add(new RecomSpecificitySummaryRow(thisAssayResult));
             }
         }
 
-        // The JSON return object will be serialized to a JSON response.
-        // Client-side JavaScript expects this object
-        JsonSummaryResponse<RecomSpecificitySummaryRow> jsonResponse
-          = new JsonSummaryResponse<RecomSpecificitySummaryRow>();
-
         // place data into JSON response, and return
-        jsonResponse.setSummaryRows(summaryRows);
-        jsonResponse.setTotalCount(searchResults.getTotalCount());
+        jsonResponse.setSummaryRows(summaryRows);        
         return jsonResponse;
     }
 
@@ -398,8 +428,8 @@ public class RecombinaseController {
         List<Filter> filterList = new ArrayList<Filter>();
 
         String driver = query.getDriver();
-        String system = query.getSystem();
         String id = query.getId();
+        String system = query.getSystem();
         String systemKey = query.getSystemKey();
 
         // build the possible filters
