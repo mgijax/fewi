@@ -22,49 +22,6 @@
 		eternal="true"
 		overflowToDisk="false"
 		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Marker.aliases"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Marker.annotations"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Marker.ids"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Marker.locations"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Marker.notes"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Marker.synonyms"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Marker.references"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-
 
 	<!-- REFERENCE -->
 	<cache
@@ -73,24 +30,5 @@
 		eternal="true"
 		overflowToDisk="false"
 		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Reference.markers"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Reference.ids"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-	<cache
-		name="mgi.frontend.datamodel.Reference.notes"
-		maxElementsInMemory="0"
-		eternal="true"
-		overflowToDisk="false"
-		statistics="true" />
-
 
 </ehcache>
