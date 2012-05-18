@@ -20,7 +20,6 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 public class ExcelBatchSummary extends AbstractExcelView {
 	
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(ExcelReferenceSummary.class);
+	private Logger logger = LoggerFactory.getLogger(ExcelBatchSummary.class);
 	
 	private int totalCols = 2;
 
