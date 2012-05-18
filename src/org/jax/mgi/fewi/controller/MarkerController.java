@@ -101,6 +101,8 @@ public class MarkerController {
     @Autowired
     private ReferenceFinder referenceFinder;
 
+    @Autowired
+    private IDLinker idLinker;
 
     //--------------------------------------------------------------------//
     // public methods
@@ -209,8 +211,12 @@ public class MarkerController {
         ModelAndView mav = new ModelAndView("marker_detail");
 
         // add an IDLinker to the mav for use at the JSP level
-        IDLinker idLinker = ContextLoader.getIDLinker();
+	idLinker.setup();
         mav.addObject("idLinker", idLinker);
+
+	// add a Properties object with URLs for use at the JSP level
+	Properties urls = idLinker.getUrlsAsProperties();
+	mav.addObject("urls", urls);
         
         // add the marker to mav
         mav.addObject("marker", marker);
