@@ -134,7 +134,8 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		for (String t : keys) {
 			orderedResults.add(resultsMap.get(t));
 		}
-
+		resultsMap = new LinkedHashMap<String, T>();
+		
 		//logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
 		logger.debug("Finished");
 

@@ -159,6 +159,7 @@ public class SeqSummaryRow {
 					probeSB.append(ccIter.next());
 				}
 		    }
+			cloneCollections = new HashSet<String>();
 		}
         return probeSB.toString();
     }

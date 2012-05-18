@@ -206,7 +206,8 @@ public class RecombinaseSummary {
     		}
     		div4.append("</div>");
     	}
-
+    	affectedKeys = new HashSet<Integer>();
+    	
     	if (!hasData) {
     		StringBuffer sb = new StringBuffer();
     		sb.append("<span id='");

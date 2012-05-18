@@ -1,8 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mgi.frontend.datamodel.BatchMarkerId;
 
@@ -26,8 +24,6 @@ public class HibernateDbInfoHunter<T> {
 	private SessionFactory sessionFactory;
 	
 	private Class type;
-	
-	private Map<String, List<String>> typeMap = new HashMap<String, List<String>>();
 	
     public HibernateDbInfoHunter() {
 	}

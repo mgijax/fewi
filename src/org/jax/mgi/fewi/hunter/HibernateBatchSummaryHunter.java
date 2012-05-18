@@ -192,7 +192,5 @@ public class HibernateBatchSummaryHunter<T> {
         }
         searchResults.setResultObjects(bm.subList(searchParams.getStartIndex(), 
         		endIndex));
-        // suggest garbage collection to clean up       
-        System.gc();
     }
 }
