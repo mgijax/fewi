@@ -295,7 +295,7 @@ td.padded { padding:4px; }
         <img src="${configBean.WEBSHARE_URL}images/new.gif"/> Human<br/>ortholog
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
-		<a href="${fn:replace(externalUrls.NCBI_Gene_Model, '@@@@', humanOrtholog.entrezGeneID.accID)}">${humanOrtholog.symbol}</a> ${humanOrtholog.name}
+		<a href="${fn:replace(urls.NCBI_Gene_Model, '@@@@', humanOrtholog.entrezGeneID.accID)}">${humanOrtholog.symbol}</a> ${humanOrtholog.name}
 			<span class="small">NCBI Gene ID ${humanOrtholog.entrezGeneID.accID}</span><br/>
 		<c:if test="${not empty humanSynonyms}">
 			Human Synonyms: ${fn:join(humanSynonyms, ", ")}<br/>
@@ -334,7 +334,7 @@ td.padded { padding:4px; }
 					</c:if>
 				</c:forEach>
 				'</td>' +
-				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
+				'<td><a href=\'${fn:replace(urls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
 			</c:forEach>
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${hMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Human ${humanOrtholog.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${humanOrtholog.countOfHumanDiseases}</a>)
   		</c:if>
@@ -383,7 +383,7 @@ td.padded { padding:4px; }
 					</c:if>
 				</c:forEach>
 				'</td>' +
-				'<td><a href=\'${fn:replace(externalUrls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
+				'<td><a href=\'${fn:replace(urls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
 			</c:forEach>
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${mMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Mouse ${marker.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
@@ -431,7 +431,7 @@ td.padded { padding:4px; }
 		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
 		<c:if test="${not empty funcbaseID}">
 		  External Resources: 
-		  <a href="${fn:replace(externalUrls.FuncBase, '@@@@', funcbaseID.accID)}">FuncBase</a><br/>
+		  <a href="${fn:replace(urls.FuncBase, '@@@@', funcbaseID.accID)}">FuncBase</a><br/>
 		</c:if>
       </td>
     </tr>
@@ -493,16 +493,16 @@ td.padded { padding:4px; }
 		<c:if test="${not (empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
 		  External Resources: 
 		  <c:if test="${not empty allenID}">
-		    <a href="${fn:replace (externalUrls.Allen_Brain_Atlas, '@@@@', allenID)}" target="_new">Allen Institute</a>&nbsp;&nbsp;
+		    <a href="${fn:replace (urls.ABA, '@@@@', allenID)}" target="_new">Allen Institute</a>&nbsp;&nbsp;
 		  </c:if>
 		  <c:if test="${not empty gensatID}">
-		    <a href="${fn:replace (externalUrls.GENSAT, '@@@@', gensatID)}" target="_new">GENSAT</a>&nbsp;&nbsp;
+		    <a href="${fn:replace (urls.GENSAT, '@@@@', gensatID)}" target="_new">GENSAT</a>&nbsp;&nbsp;
 		  </c:if>
 		  <c:if test="${not empty geoID}">
-		    <a href="${fn:replace (externalUrls.GEO, '@@@@', geoID)}" target="_new">GEO</a>&nbsp;&nbsp;
+		    <a href="${fn:replace (urls.GEO, '@@@@', geoID)}" target="_new">GEO</a>&nbsp;&nbsp;
 		  </c:if>
 		  <c:if test="${not empty arrayExpressID}">
-		    <a href="${fn:replace (externalUrls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">ArrayExpress</a>
+		    <a href="${fn:replace (urls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">ArrayExpress</a>
 		  </c:if><br/>
 		</c:if>
       </td>
@@ -664,10 +664,10 @@ td.padded { padding:4px; }
         <c:forEach var="item" items="${proteinAnnotations}">
           <c:set var="url" value=""/>
           <c:if test="${item.vocabName == 'InterPro Domains'}">
-            <c:set var="url" value="${externalUrls.InterPro}"/>
+            <c:set var="url" value="${urls.InterPro}"/>
           </c:if>
           <c:if test="${item.vocabName == 'Protein Ontology'}">
-            <c:set var="url" value="${externalUrls.Protein_Ontology}"/>
+            <c:set var="url" value="${urls.Protein_Ontology}"/>
           </c:if>
           <tr><td>${fn:replace (item.vocabName, " Domains", "")}</td>
             <c:if test="${url != ''}">
@@ -682,7 +682,7 @@ td.padded { padding:4px; }
         <c:if test="${not empty marker.representativePolypeptideSequence}">
 		  <c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
 		  <c:if test="${seq.provider == 'SWISS-PROT'}">
-            <c:set var="url" value="${externalUrls.InterPro_ISpy}"/>
+            <c:set var="url" value="${urls.InterPro_ISpy}"/>
 		    <a href="${fn:replace(url, '@@@@', seq.primaryID)}" target="_new">Graphical View of Protein Domain Structure</a>
 		  </c:if>
         </c:if>
