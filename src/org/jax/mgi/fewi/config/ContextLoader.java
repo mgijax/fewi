@@ -37,6 +37,8 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
     @Autowired
     private WebTemplate webTemplate;
 
+    @Autowired
+    private static IDLinker idLinker;
 
     @PostConstruct
     public void init() {
@@ -80,7 +82,10 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
     }
 
     public static IDLinker getIDLinker(){
-        return IDLinker.getInstance(externalUrls);
+	if (idLinker == null) { idLinker = new IDLinker(); }
+	idLinker.setup();
+	return idLinker;
+//	return IDLinker.getInstance();
     }
 
     public void setApplicationContext(ApplicationContext ac)

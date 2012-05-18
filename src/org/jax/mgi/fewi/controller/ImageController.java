@@ -811,7 +811,8 @@ public class ImageController {
         if (otherIDs.size() > 0) {
 
             ImageID thisOtherID;
-            IDLinker idLinker = ContextLoader.getIDLinker();
+//            IDLinker idLinker = ContextLoader.getIDLinker();
+	    IDLinker idLinker = IDLinker.getInstance();
             List<String> otherIdLinks = new ArrayList<String>();
 
             // for each 'otherID', generate the anchor to external resource
