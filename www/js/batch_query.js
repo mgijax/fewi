@@ -56,3 +56,26 @@ var interceptSubmit = function(e) {
 };
 
 YAHOO.util.Event.addListener("batchQueryForm", "submit", interceptSubmit);
+
+var resetQF = function (e) {
+	YAHOO.util.Event.preventDefault(e); 
+	var form = document.forms["batchQueryForm"];
+	form.idType.selectedIndex = 0;
+	form.ids.value = "";
+	
+	form.attributes[0].checked = true ;
+	for (i = 1; i < form.attributes.length; i++){
+		form.attributes[i].checked = false ;
+	}
+	
+	form.association9.checked="checked";
+	
+	form.fileType1.checked="checked";
+	form.idColumn.value = "1";
+	
+	form.attributes.nomenclature.checked="checked";
+	form.association9.checked = "checked";
+
+};
+
+YAHOO.util.Event.addListener("batchQueryForm", "reset", resetQF);

@@ -240,7 +240,7 @@ var History = YAHOO.util.History;
         }
         reportButton = YAHOO.util.Dom.get('excelDownload');
         if (!YAHOO.lang.isNull(reportButton)){      	
-	        reportButton.setAttribute('href', fewiurl + 'batch/report.xls?' + querystring + '&' + facetQuery);
+	        reportButton.setAttribute('href', fewiurl + 'batch/report.xlsx?' + querystring + '&' + facetQuery);
         }
         return true;
     };
@@ -303,35 +303,6 @@ function parseRequest(request){
 	return reply;
 };
 
-var resetQF = function (e) {
-	YAHOO.util.Event.preventDefault(e); 
-	var form = YAHOO.util.Dom.get("batchQueryForm");
-	form.idType.selectedIndex = 0;
-	form.ids.value = "";
-	
-	form.attributes[0].checked = true ;
-	for (i = 1; i < form.attributes.length; i++){
-		form.attributes[i].checked = false ;
-	}
-	
-	form.association9.checked="checked";
-	
-	form.fileType1.checked="checked";
-	form.idColumn.value = "1";
-	
-	form.attributes.nomenclature.checked="checked";
-	form.association9.checked = "checked";
-
-};
-
-YAHOO.util.Event.addListener("batchQueryForm", "reset", resetQF);
-
-
- YAHOO.util.Event.onDOMReady(function() {
-	 var form = YAHOO.util.Dom.get("batchQueryForm");
-	 form.ids.value = form.ids.value.replace(/<br>/g,"\n");
- });
- 
 function popupHelp(help_cat){	 
 	var omim_help = "<b>Human Disease (OMIM) Annotations</b><ul><li>Human Disease (OMIM) terms appear by gene.</li>\
 	    <li>Each term listed indicates that a mutant allele of this gene is involved in a mouse genotype used as a disease model.</li></ul><b>Caveats</b>\

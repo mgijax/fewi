@@ -14,7 +14,7 @@
 	<context:property-placeholder location="classpath:../properties/fewi.properties" />
 
 	<!-- Exposes externalUrls.properties as a property bean. -->
-	<util:properties id="externalUrls" location="classpath:../properties/externalUrls.properties" />
+	<util:properties id="externalUrls" location="file:c:\externalUrls.properties" /> 
 
 	<!-- Exposes GlobalConfig.properties and fewi.properties files as a 
 		property bean.  Values cascade so thast the last one set overrides prior values-->
@@ -39,6 +39,7 @@
         <property name="ignoreAcceptHeader" value="true" />
         <property name="mediaTypes">
             <map>
+            	<entry key="xlsx"  value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                 <entry key="xls"  value="application/vnd.ms-excel"/>
                 <entry key="txt"  value="text/plain"/>
             </map>

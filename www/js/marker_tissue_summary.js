@@ -124,7 +124,7 @@ function main() {
         
         reportButton = YAHOO.util.Dom.get('excelDownload');
         if (!YAHOO.lang.isNull(reportButton)){
-        		reportButton.setAttribute('href', fewiurl + 'tissue/marker/report.xls?' + querystring);
+        		reportButton.setAttribute('href', fewiurl + 'tissue/marker/report.xlsx?' + querystring);
         }
         
         return true;

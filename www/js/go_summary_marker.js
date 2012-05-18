@@ -125,7 +125,7 @@ function main() {
         reportButton = YAHOO.util.Dom.get('excelDownload');
         if (!YAHOO.lang.isNull(reportButton)){
         	facetQuery = generateRequest(0, 'term', 'asc', oPayload.totalRecords);
-	        reportButton.setAttribute('href', fewiurl + 'go/report.xls?' + querystring + '&' + facetQuery);
+	        reportButton.setAttribute('href', fewiurl + 'go/report.xlsx?' + querystring + '&' + facetQuery);
         }
         
         return true;
