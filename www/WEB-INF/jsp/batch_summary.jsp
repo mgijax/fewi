@@ -11,9 +11,6 @@ ${templateBean.templateHeadHtml}
 
 ${templateBean.templateBodyStartHtml}
 
-<link href="${configBean.FEWI_URL}assets/css/datatablegrouper.css" rel="stylesheet" type="text/css"/>
-
-
 <!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html" ></iframe>
 <input id="yui-history-field" type="hidden">
@@ -116,7 +113,6 @@ ${templateBean.templateBodyStartHtml}
 	var qDisplay = true;
 
 </script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/rowgrouper.js"></script>
 
 <!-- including this file will start the data injection -->
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_query.js"></script>
