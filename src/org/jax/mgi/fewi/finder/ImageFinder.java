@@ -239,6 +239,8 @@ logger.debug("----->AFTER THUMB IMAGE GENERATION");
 
           }
         }
+	logger.debug ("Returning list of " + imageSummaryRowList.size() +
+		" images");
 
         return imageSummaryRowList;
     }
