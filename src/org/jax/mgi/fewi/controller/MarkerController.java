@@ -979,6 +979,7 @@ public class MarkerController {
     			}
     		}
     	}
+    	done = new HashMap<String, String>();
     	return a;
     }
 }

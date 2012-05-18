@@ -128,6 +128,8 @@ public class HibernateBatchSummaryHunter<T> {
 				}
 				logger.debug(String.format("batch %d-%d", start, end));
 				query.setParameterList("ids", idSetLower.subList(start, end));
+				logger.debug("ids set");
+				
 				qr.addAll(query.list());
 				start = ++end;
 			}
@@ -175,13 +177,14 @@ public class HibernateBatchSummaryHunter<T> {
         	}
         }
         idSet = null;
-        qResults = null;
+        qResults = new LinkedHashMap<String, List<BatchMarkerId>>();
         
         logger.debug("-> results sorted" );
         
         searchResults.setTotalCount(bm.size());
         logger.debug("markers: " + markerKey.size());
         searchResults.getResultSetMeta().addCount("marker", markerKey.size());
+        markerKey = new HashSet<Integer>();
         
         int endIndex = searchParams.getStartIndex() + searchParams.getPageSize();
         if (endIndex > bm.size()){

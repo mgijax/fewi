@@ -151,7 +151,7 @@ public class BatchController {
 		if (idSet != null && idSet.size() > 0){
 			logger.debug("new id set: " + idSet.iterator().next());
 			session.setAttribute("idSet", new ArrayList<String>(idSet));
-			queryForm.setIds(StringUtils.join(idSet, "<br>"));
+			queryForm.setIds(StringUtils.join(idSet, "\n"));
 		}  
         ModelAndView mav = new ModelAndView("batch_summary");
         mav.addObject("queryString", queryForm.toQueryString());
@@ -210,7 +210,7 @@ public class BatchController {
 			HttpSession session,
 			@ModelAttribute BatchQueryForm queryForm,
             @ModelAttribute Paginator page) {
-				
+
 		logger.debug("batchSummaryReport");
 		logger.debug(queryForm.toString());
 

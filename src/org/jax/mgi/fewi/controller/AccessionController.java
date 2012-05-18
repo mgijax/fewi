@@ -178,7 +178,7 @@ public class AccessionController {
         
         logger.debug("Making the summary rows");
         
-        Map <String, Integer> typeCount = new HashMap<String, Integer> ();
+        Map <String, Integer> typeCount = new HashMap<String, Integer>();
         
         List<AccessionSummaryRow> summaryRows = new ArrayList<AccessionSummaryRow> ();
         Iterator<Accession> it = fooList.iterator();
@@ -200,6 +200,8 @@ public class AccessionController {
         		row.setUseKey();
         	}
         }
+        
+        typeCount = new HashMap<String, Integer>();
         
         // The JSON return object will be serialized to a JSON response.
         // Client-side JavaScript expects this object
@@ -266,10 +268,10 @@ public class AccessionController {
         logger.debug("->genFilters started");
         logger.debug("QueryForm -> " + query);
         
-        String accId = query.getId().trim();
+        String accId = query.getId();
         // There can ONLY be accession at present, add it in.
-        if (accId != null && !"".equals(accId)) {
-            return new Filter(SearchConstants.ACC_ID, accId, Filter.OP_EQUAL);
+        if (accId != null && !"".equals(accId.trim())) {
+            return new Filter(SearchConstants.ACC_ID, accId.trim(), Filter.OP_EQUAL);
         }
         return new Filter();
     }

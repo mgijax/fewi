@@ -248,6 +248,7 @@ public class GXDLitController {
 		}
 
 		totalReferences = references.size();
+		references = new HashSet<String>();
                 
         mav.addObject("marker", marker);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
@@ -364,7 +365,7 @@ public class GXDLitController {
 		}
 
 		totalReferences = references.size();    	
-    	
+		references = new HashSet<String>();
         mav.addObject("reference", reference);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
@@ -434,6 +435,7 @@ public class GXDLitController {
 		}
 
 		totalReferences = references.size();
+		references = new HashSet<String>();
        
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
@@ -512,7 +514,7 @@ public class GXDLitController {
 		}
 
 		totalReferences = references.size();
-
+		references = new HashSet<String>();
         ModelAndView mav = new ModelAndView("gxdlit_summary");
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
@@ -676,12 +678,12 @@ public class GXDLitController {
 				hasAssayTypeMap.put(type, Boolean.FALSE);
 			}
 		}
-
+		String curAge, curType;
 		for (GxdLitGeneSummaryRow row: rows) {
 			for (GxdLitReferenceSummaryRow refRows: row.getReferenceRecords()) {
 				for (GxdLitAssayTypeAgePair pair: refRows.getValidPairs()) {
-					String curAge = pair.getAge();
-					String curType = pair.getAssayType().trim();
+					curAge = pair.getAge();
+					curType = pair.getAssayType().trim();
 					hasAgeMap.put(curAge, Boolean.TRUE);
 					hasAssayTypeMap.put(curType, Boolean.TRUE);
 					if (! countMap.containsKey(curType)) {
@@ -713,10 +715,10 @@ public class GXDLitController {
 
 	    List<GxdLitAssayTypeSummaryRow> allTypes = new ArrayList <GxdLitAssayTypeSummaryRow> ();
 
-
+	    GxdLitAssayTypeSummaryRow row;
 	    for (String key: assayTypes) {
 	    	if (hasAssayTypeMap.get(key)) {
-	    		GxdLitAssayTypeSummaryRow row = new GxdLitAssayTypeSummaryRow(key);
+	    		row = new GxdLitAssayTypeSummaryRow(key);
 	    		for (String age: ages) {
 	    			if (hasAgeMap.get(age)) {
 	    				if (countMap.containsKey(key) && countMap.get(key).containsKey(age)) {
@@ -730,6 +732,9 @@ public class GXDLitController {
 	    		allTypes.add(row);
 	    	}
 	    }
+	    hasAgeMap = new HashMap<String, Boolean>();
+		hasAssayTypeMap = new HashMap<String, Boolean>();
+		countMap = new HashMap<String, Map<String, GxdLitAgeAssayTypePairTableCount>>();
 
 	    return new GxdLitAgeAssayTypePairTable(allAges, allTypes);
 	}
