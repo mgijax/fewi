@@ -14,7 +14,7 @@
 	<context:property-placeholder location="classpath:../properties/fewi.properties" />
 
 	<!-- Exposes externalUrls.properties as a property bean. -->
-	<util:properties id="externalUrls" location="file:c:\externalUrls.properties" /> 
+	<util:properties id="externalUrls" location="classpath:../properties/externalUrls.properties" /> 
 
 	<!-- Exposes GlobalConfig.properties and fewi.properties files as a 
 		property bean.  Values cascade so thast the last one set overrides prior values-->
