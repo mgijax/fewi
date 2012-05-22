@@ -124,7 +124,10 @@ ${templateBean.templateBodyStartHtml}
 
             <tr class="stripe1">
               <td class="">
-                ${imagePane.paneLabel}
+               <% // pull to scriptlet context
+                 ImagePane thisImageAllele = (ImagePane)pageContext.getAttribute("imagePane"); 
+                %>
+               <%=FormatHelper.superscript(thisImageAllele.getPaneLabel())%>
               </td>
               <td class="">
                 <c:forEach var="imagePaneDetails" items="${imagePane.details}" >
