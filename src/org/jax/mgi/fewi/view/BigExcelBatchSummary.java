@@ -16,7 +16,7 @@ import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
-
+import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -57,7 +57,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 
 		for (BatchMarkerId id : results) {
 			associations = new ArrayList<List<List<String>>>();
-
 			
 			row = sheet.createRow(rownum++);
 			col = 0;
@@ -276,7 +275,14 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 						newRow = true;
 						col = storeCol;
 					} 
-					workbook.setRepeatingRowsAndColumns(0,0,0,curRow,curRow + combineResults.size());
+					
+					try {
+						workbook.setRepeatingRowsAndColumns(0,0,col,curRow,curRow + combineResults.size());
+					} catch (FormulaParseException e) {
+						logger.debug( "rowspan: " + curRow + " " + (curRow + combineResults.size()));
+						logger.debug(e.getMessage());
+					}
+					
 					combineResults = null;
 				}
 			} else {
