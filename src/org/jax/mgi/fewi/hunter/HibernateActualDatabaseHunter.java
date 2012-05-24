@@ -57,6 +57,12 @@ public class HibernateActualDatabaseHunter<T> {
     	StringBuffer hql = new StringBuffer("FROM ActualDatabase");
 //        logger.debug(" +---> query: " + hql.toString());
     	
+	if (sessionFactory == null) {
+//		logger.debug ("sessionFactory is null");
+		searchResults.setTotalCount(0);
+		return;
+	}
+
         Query query = sessionFactory.getCurrentSession().createQuery(
 		hql.toString() );
 //	logger.debug(" +---> query finished");

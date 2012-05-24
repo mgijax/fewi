@@ -72,7 +72,6 @@ public class IDLinker {
 
 		if (this.initialized) { return; }
 
-		this.initialized = true;
 		if (cachedLdbToAdb.size() > 0) {
 			this.ldbToAdb = cachedLdbToAdb;
 			return;
@@ -165,6 +164,11 @@ logger.debug (e.toString());
 		// get the logical/actual database info from the database
 		Map<String,List> fromDb = getActualDbsFromDatabase();
 
+		boolean gotSomeFromDb = false;
+		if (fromDb.size() > 0) {
+			gotSomeFromDb = true;
+		}
+
 		Set<String> ldbs = fromDb.keySet();
 		Iterator<String> it = ldbs.iterator();
 		String ldb = null;
@@ -227,7 +231,11 @@ logger.debug (e.toString());
 			lowerMap.put(ldb.toLowerCase(), this.ldbToAdb.get(ldb));
 		}
 		this.ldbToAdb.putAll(lowerMap);
-		cachedLdbToAdb = this.ldbToAdb;
+
+		if (gotSomeFromDb) {
+			cachedLdbToAdb = this.ldbToAdb;
+			this.initialized = true;
+		}
 	}
 	
 	//--- Private Instance Methods ---
