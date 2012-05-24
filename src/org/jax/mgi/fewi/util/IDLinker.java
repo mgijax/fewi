@@ -184,7 +184,11 @@ logger.debug (e.toString());
 				adbName = adb1.getActualDb().replaceAll(
 					" ", "_");
 
-				if (allAdbs.containsKey(adbName)) {
+				// skip updating MGI from the database, as it
+				// is set for production
+				if (adbName.equals("MGI")) {
+					// skip it
+				} else if (allAdbs.containsKey(adbName)) {
 					// update URL for an actual database
 					// that was in the properties file
 
@@ -209,7 +213,16 @@ logger.debug (e.toString());
 					    adbs = new ArrayList<ActualDB>();
 					    this.ldbToAdb.put(ldbName, adbs);
 					}
-					adbs.add(adb);
+					boolean seenIt = false;
+					for (ActualDB a: adbs) {
+					    if (a.getName().equals(adbName)) {
+						seenIt = true;
+					    }
+					    logger.debug ("Compare: *" + adbName + "* and *" + a.getName() + "*");
+					}
+					if (!seenIt) {
+					    adbs.add(adb);
+					}
 				}
 			}
 		}
@@ -301,7 +314,16 @@ logger.debug (e.toString());
 				byLdb.put (ldbName, adbs);
 			} else {
 				adbs = byLdb.get(ldbName);
-				adbs.add (adb);
+
+				boolean seenIt = false;
+				for (ActualDatabase a: adbs) {
+				    if (a.getActualDb().equals(adb.getActualDb() )) {
+					seenIt = true;
+				    }
+				}
+				if (!seenIt) {
+				    adbs.add(adb);
+				}
 			}
 		}
 		logger.debug ("Got info for " + byLdb.size() + " ldbs");
@@ -378,15 +400,22 @@ logger.debug (e.toString());
 		StringBuffer sb = new StringBuffer();
 		ActualDB adb;
 		String href;
+		boolean isFirst = true;
+		HashMap<String,String> done = new HashMap<String,String>();
 		
 		while (it.hasNext()) {
 			adb = it.next();
+			if (!done.containsKey(adb.getName())) {
 			href = this.makeLink (adb.getUrl(), id, adb.getDisplayName());
-			sb.append(href);
-			if (it.hasNext()) {
+			if (!isFirst) {
 				sb.append (separator);
 			}
+			sb.append(href);
+			done.put(adb.getName(),"");
+			}
+			isFirst = false;
 		}
+		done = new HashMap<String,String>();
 		return sb.toString();
 	}
 
