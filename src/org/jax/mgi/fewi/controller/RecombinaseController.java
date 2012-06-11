@@ -200,12 +200,17 @@ public class RecombinaseController {
             mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Allele/System not available");
         } else {
-
 	        /*
 	         * Remove sub-objects from AlleleSystem, and fill ModelAndView
 	         * with display data
 	         */
-	        mav.addObject("queryString", request.getQueryString());
+        	String queryString = request.getQueryString();
+        	if (request.getParameterMap().containsKey("alleleKey")){
+        		logger.debug("hasKey");
+        		queryString = queryString + "&id=" + allele.getPrimaryID();
+        	} 
+        	
+        	mav.addObject("queryString", queryString);
 	        mav.addObject("alleleSystem", alleleSystem);
 	        mav.addObject("allele", allele);
 	        mav.addObject("systemDisplayStr",
@@ -274,7 +279,7 @@ public class RecombinaseController {
             @ModelAttribute Paginator page) {
 
         logger.debug("->specificitySummaryJson started");
-        
+        logger.debug(query.toString());
         List<AlleleSystemAssayResult> assayResultList = new ArrayList<AlleleSystemAssayResult>();
         SearchResults<AlleleSystemAssayResult> searchResults;
         
@@ -282,26 +287,17 @@ public class RecombinaseController {
         // Client-side JavaScript expects this object
         JsonSummaryResponse<RecomSpecificitySummaryRow> jsonResponse
         	= new JsonSummaryResponse<RecomSpecificitySummaryRow>();
-        
-        String alleleKey = query.getAlleleKey();
-        if (alleleKey != null && !"".equals(alleleKey)) {
-        	SearchResults<Allele> alleleResults = alleleFinder.getAlleleByKey(alleleKey);
-        	if (alleleResults.getResultObjects().size() == 1) {
-        		Allele allele = alleleResults.getResultObjects().get(0);
-        		query.setId(allele.getPrimaryID());
-		
-		        // generate search parms object;  add pagination, sorts, and filters
-		        SearchParams params = new SearchParams();
-		        params.setPaginator(page);
-		        params.setSorts(this.genRecomSummarySorts(request));
-		        params.setFilter(this.genFilters(query));
-		
-		        // perform query, and pull out the requested objects
-		        searchResults = recombinaseFinder.getAssaySummary(params);
-		        jsonResponse.setTotalCount(searchResults.getTotalCount());
-		        assayResultList = searchResults.getResultObjects();
-        	}
-        }
+
+        // generate search parms object;  add pagination, sorts, and filters
+        SearchParams params = new SearchParams();
+        params.setPaginator(page);
+        params.setSorts(this.genRecomSummarySorts(request));
+        params.setFilter(this.genFilters(query));
+
+        // perform query, and pull out the requested objects
+        searchResults = recombinaseFinder.getAssaySummary(params);
+        jsonResponse.setTotalCount(searchResults.getTotalCount());
+        assayResultList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
         List<RecomSpecificitySummaryRow> summaryRows
@@ -453,7 +449,6 @@ public class RecombinaseController {
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
-
             containerFilter.setFilterJoinClause(Filter.FC_AND);
             containerFilter.setNestedFilters(filterList);
         }
@@ -461,6 +456,5 @@ public class RecombinaseController {
         logger.debug("genFilters -> " + containerFilter);
         return containerFilter;
     }
-
-
+    
 }
