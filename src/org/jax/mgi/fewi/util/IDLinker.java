@@ -38,32 +38,32 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 public class IDLinker {
-	
+
 	//--- Class Variables ---
-	
+
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	// shared instance of an IDLinker
 	private static IDLinker instance = null;
-	
+
 	private static HashMap<String,List<ActualDB>> cachedLdbToAdb = new HashMap<String,List<ActualDB>> ();
 	//--- Instance Variables ---
-	
+
 	// maps from a given logical database to a List of ActualDB objects
 	private HashMap<String,List<ActualDB>> ldbToAdb = new HashMap<String,List<ActualDB>> ();
-	
+
 	private Configuration config = null;
-		
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	@Autowired
 	private ActualDatabaseFinder actualDatabaseFinder;
-	
+
 	private boolean initialized = false;
 
 	//--- Constructors ---
-		
+
 	/** construct our IDLinker using data from externalUrls.properties file
 	 */
 	public IDLinker() {}
@@ -83,7 +83,7 @@ public class IDLinker {
 			logger.debug ("Failed to read externalUrls.properties");
 logger.debug (e.toString());
 		};
-		
+
 
 		// used to iterate through properties in externalUrls:
 		String name;	// property name
@@ -93,9 +93,9 @@ logger.debug (e.toString());
 
 		List<ActualDB> adbs;	// list of ActualDBs for this
 					// ...logical db
-		
+
 		// used to cache our ActualDB objects by actual db name
-		HashMap<String,ActualDB> allAdbs = 
+		HashMap<String,ActualDB> allAdbs =
 			new HashMap<String,ActualDB>();
 
 		// For precedence, we want the URLs in the database to be
@@ -139,13 +139,14 @@ logger.debug (e.toString());
 				adb = new ActualDB(prefix);
 				allAdbs.put(prefix, adb);
 			}
-			
+
 			if (name.endsWith(".ldb")) {
 				if (this.ldbToAdb.containsKey(value)) {
 					adbs = this.ldbToAdb.get(value);
 				} else {
 					adbs = new ArrayList<ActualDB>();
 					this.ldbToAdb.put(value, adbs);
+					this.ldbToAdb.put(prefix, adbs);
 				}
 				adbs.add(adb);
 			} else if (name.endsWith(".name")) {
@@ -154,7 +155,7 @@ logger.debug (e.toString());
 				adb.setOrderVal(value);
 			} else {
 				adb.setUrl(value);
-			}			
+			}
 		}
 
 		// Now go through those from the database.  If the actual db
@@ -228,14 +229,14 @@ logger.debug (e.toString());
 		}
 
 		// Now go through and duplicate each logical database's entry with a
-		// lowercase version of itself to make this more resilient to db 
+		// lowercase version of itself to make this more resilient to db
 		// changes:
-		
+
 		String ldbLower;
 		ldb = null;
-		HashMap<String,List<ActualDB>> lowerMap = 
+		HashMap<String,List<ActualDB>> lowerMap =
 			new HashMap<String,List<ActualDB>> ();
-		
+
 		it = this.ldbToAdb.keySet().iterator();
 		while (it.hasNext()) {
 			ldb = it.next();
@@ -250,7 +251,7 @@ logger.debug (e.toString());
 			this.initialized = true;
 		}
 	}
-	
+
 	//--- Private Instance Methods ---
 
 	/** get the List of ActualDBs for the given logical database
@@ -263,7 +264,7 @@ logger.debug (e.toString());
 		}
 		return null;
 	}
-	
+
 	/** get the first ActualDB for the given logical database
 	 */
 	private ActualDB getActualDB (String ldb) {
@@ -285,7 +286,7 @@ logger.debug (e.toString());
 		sb.append("</a>");
 		return sb.toString();
 	}
-	
+
 	/** get a mapping from the database where:
 	 * 	{ logical db : [ ActualDatabase objects ] }
 	 */
@@ -304,7 +305,7 @@ logger.debug (e.toString());
 		List<ActualDatabase> adbs = null;
 
 		// bring them into a HashMap
-		
+
 		for (ActualDatabase adb: results) {
 			ldbName = adb.getLogicalDb();
 
@@ -331,7 +332,7 @@ logger.debug (e.toString());
 	}
 
 	//--- Public Instance Methods ---
-	
+
 	/** get basic link using ID as link text, using first actual db for
 	 * the relevant logical db
 	 */
@@ -339,22 +340,22 @@ logger.debug (e.toString());
 		String accID = id.getAccID();
 		return this.getLink(id.getLogicalDB(), accID, accID);
 	}
-	
-	/** get basic link using given label as link text, using first actual db 
+
+	/** get basic link using given label as link text, using first actual db
 	 * for the relevant logical db
 	 */
 	public String getLink (AccessionID id, String label) {
 		return this.getLink(id.getLogicalDB(), id.getAccID(), label);
 	}
-	
-	/** get basic link using given ID as link text, using first actual db 
+
+	/** get basic link using given ID as link text, using first actual db
 	 * for the specified logical db
 	 */
 	public String getLink (String logicalDB, String id) {
 		return this.getLink(logicalDB, id, id);
 	}
-	
-	/** get basic link using given label as link text, using first actual db 
+
+	/** get basic link using given label as link text, using first actual db
 	 * for the specified logical db
 	 */
 	public String getLink (String logicalDB, String id, String label) {
@@ -372,14 +373,14 @@ logger.debug (e.toString());
 	public String getLinks (AccessionID id) {
 		return this.getLinks (id.getLogicalDB(), id.getAccID(), " | ");
 	}
-	
+
 	/** get a string with links for each available actual database for the
 	 * given id, separated by the given separator
 	 */
 	public String getLinks (AccessionID id, String separator) {
 		return this.getLinks (id.getLogicalDB(), id.getAccID(), " | ");
 	}
-	
+
 	/** get a string with links for each available actual database for the
 	 * given logical database, separated by a pipe symbol
 	 */
@@ -402,7 +403,7 @@ logger.debug (e.toString());
 		String href;
 		boolean isFirst = true;
 		HashMap<String,String> done = new HashMap<String,String>();
-		
+
 		while (it.hasNext()) {
 			adb = it.next();
 			if (!done.containsKey(adb.getName())) {
@@ -437,7 +438,7 @@ logger.debug (e.toString());
 	}
 
 	//--- Public Class Methods ---
-	
+
 	/** get a reference to the shared IDLinker; this instance is shared to
 	 * avoid having to slice and dice the properties each time we want to
 	 * instantiate one
@@ -457,40 +458,40 @@ logger.debug (e.toString());
 		private int orderVal = 9999;
 		private String name;
 		private String displayName;
-		
+
 		private ActualDB() {}
-		
+
 		public ActualDB(String name) {
 			this.name = name;
 		}
-		
+
 		public String getDisplayName() {
 			if (this.displayName == null) {
 				return this.name;
 			}
 			return this.displayName;
 		}
-		
+
 		public String getName() {
 			return this.name;
 		}
-		
+
 		public String getUrl () {
 			return this.url;
 		}
-		
+
 		public void setDisplayName (String displayName) {
 			this.displayName = displayName;
 		}
-		
+
 		public void setUrl (String url) {
 			this.url = url;
 		}
-		
+
 		public void setOrderVal (int orderVal) {
 			this.orderVal = orderVal;
 		}
-		
+
 		public void setOrderVal (String orderVal) {
 			try {
 				this.orderVal = Integer.parseInt(orderVal);
@@ -498,7 +499,7 @@ logger.debug (e.toString());
 				this.orderVal = 999;
 			}
 		}
-		
+
 		public int compareTo(Object b) {
 			if (!b.getClass().getName().endsWith("ActualDB")) {
 				return 0;
