@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Accession;
 
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AccessionFinder;
 import org.jax.mgi.fewi.forms.AccessionQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -231,6 +233,37 @@ public class AccessionController {
 	   	request.setAttribute("queryString", "id=" + accID);
 	   	
 	    return accessionSummary(request, queryForm);
+	}
+    
+    @RequestMapping("/doi")
+	public ModelAndView accessionSummaryByDoiParam(@RequestParam("id") String accID,
+			HttpServletRequest request,
+	        @ModelAttribute AccessionQueryForm queryForm) {
+	
+	    logger.debug("-> accessionSummaryByIDParam started");
+	    logger.debug("queryString: " + request.getQueryString());
+	    
+	    queryForm.setId(accID);
+        SearchParams params = new SearchParams();
+        params.setFilter( this.genFilters(queryForm));       
+        params.setSorts(this.genSorts(request));
+
+        SearchResults<Accession> searchResults = accessionFinder.getAccessions(params);
+        
+        ModelAndView mav = new ModelAndView("error");
+        mav.addObject("errorMsg", "No accession id found.  Please verify " +
+        		"that your request contains an id parameter.");
+        if (searchResults.getResultObjects().size() == 1) {
+	        mav = new ModelAndView("reference_summary");
+	        
+	        if (searchResults.getResultObjects().size() == 1){
+	        	String url = String.format("redirect:%sreference/key/%d", 
+	        			ContextLoader.getConfigBean().getProperty("FEWI_URL"),
+	        			searchResults.getResultObjects().get(0).getObjectKey());
+	        	mav = new ModelAndView(url);
+	        }	        
+        }
+	    return mav;
 	}
 
     //--------------------------------------------------------------------//
