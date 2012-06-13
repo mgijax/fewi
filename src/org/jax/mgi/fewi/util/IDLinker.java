@@ -184,10 +184,13 @@ logger.debug (e.toString());
 			for (ActualDatabase adb1: adbs1) {
 				adbName = adb1.getActualDb().replaceAll(
 					" ", "_");
+				ldbName = adb1.getLogicalDb();
 
-				// skip updating MGI from the database, as it
-				// is set for production
+				// skip updating MGI from the database, as 
+				// those entries are set for production
 				if (adbName.equals("MGI")) {
+					// skip it
+				} else if (ldbName.startsWith("MGI")) {
 					// skip it
 				} else if (allAdbs.containsKey(adbName)) {
 					// update URL for an actual database
@@ -204,8 +207,6 @@ logger.debug (e.toString());
 					adb.setDisplayName (adbName);
 					adb.setOrderVal (
 						adb1.getSequenceNum());
-
-					ldbName = adb1.getLogicalDb();
 
 					if (this.ldbToAdb.containsKey (
 					    ldbName)) {
