@@ -71,6 +71,16 @@ ${templateBean.templateBodyStartHtml}
     </td>
   </tr>
 
+  <!-- ROW3 -->
+  <tr >
+    <td class="<%=leftTdStyles.getNext() %>">
+      Caches
+    </td>
+    <td class="<%=rightTdStyles.getNext() %>">
+	    ${minimaps} cached minimap URLs : <A HREF="admin/clear">clear cache</A><BR>
+    </td>
+  </tr>
+
 <!-- close structural table and page template-->
 </table>
 ${templateBean.templateBodyStopHtml}
