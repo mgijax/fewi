@@ -988,4 +988,18 @@ public class MarkerController {
     	done = new HashMap<String, String>();
     	return a;
     }
+
+    /** force the cache of minimap URLs to be cleared, allowing it to be
+     * repopulated from scratch
+     */
+    protected static void clearMinimapCache() {
+	minimaps = new HashMap<Integer,String>();
+	return;
+    }
+
+    /** report how many minimap URLs are currently cacahed
+     */
+    protected static int getMinimapCacheCount() {
+	return minimaps.size();
+    }
 }

@@ -65,6 +65,7 @@ public class AdminController {
     // static variables
     //--------------------//
 
+    // time (in ms) at which we last suggested a garbage collection
     private static long lastGarbageCollection = 0;
 
     //--------------------//
@@ -134,6 +135,23 @@ public class AdminController {
     }
 
     //-------------------------//
+    // Admin Page with Caches cleared
+    //-------------------------//
+    @RequestMapping("/clear")
+    public ModelAndView getAdminPageCleared(HttpServletRequest request) {
+
+        logger.debug("->getAdminPageCleared started");
+
+	MarkerController.clearMinimapCache();
+ 
+        ModelAndView mav = new ModelAndView("admin");
+	mav = this.populateMav(mav);
+        mav.addObject("clear", "clear");
+
+        return mav;
+    }
+
+    //-------------------------//
     // populate mav with standard items
     //-------------------------//
     private ModelAndView populateMav (ModelAndView mav) {
@@ -146,6 +164,8 @@ public class AdminController {
 	mav.addObject ("initialFreeMemory", String.format("%,d",
 		new Long(rt.freeMemory())));
 	mav.addObject ("processors", new Integer(rt.availableProcessors()));
+	mav.addObject ("minimaps",
+		new Integer(MarkerController.getMinimapCacheCount()) );
 
 	return mav;
     }
