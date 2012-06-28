@@ -32,7 +32,6 @@ public class TextBatchSummary extends AbstractTextView {
 			throws Exception {
 		
 		response.setHeader("Content-Disposition","attachment; filename=\"batchReport.txt\"");
-		System.out.println(response.getCharacterEncoding());
 		
 		BatchQueryForm queryForm = (BatchQueryForm)model.get("queryForm");
 		List<BatchMarkerId> results = (List<BatchMarkerId>) model.get("results");
@@ -211,29 +210,25 @@ public class TextBatchSummary extends AbstractTextView {
 					}
 				}
 				
-				List<String> combineResults = new ArrayList<String>();
-				if (associations.size() > 0) {					
-					combineResults = associations.get(0);
-					
-					if (associations.size() > 1) {				
-						for (int i = 1; i < associations.size(); i++) {
-							combineResults = combineSets(combineResults, associations.get(i));
-						}				
+				List<String> combineResults = new ArrayList<String>();				
+				for (List<String> l: associations) {
+					if (combineResults.size() == 0){
+						combineResults = l;
+					} else {
+						combineResults = combineSets(combineResults, l);	
 					}
 				}
 
 				for (String s: combineResults) {
 					writer.write(markerInfo.toString());
-					markerInfo.append("\t" + s);
+					writer.write("\t" + s + "\r\n");
 				}
-				markerInfo.append("\r\n");
+				
 				combineResults = null;
 			}
 			else {
-				markerInfo.append("No associated gene");
-				markerInfo.append("\r\n");
-			}
-			writer.write(markerInfo.toString());	
+				writer.write("No associated gene\r\n");
+			}	
 		}
 		queryForm = null;
 		results = null;
