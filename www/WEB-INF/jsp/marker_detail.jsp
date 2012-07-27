@@ -437,7 +437,7 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
-  <!-- ROW11 -->
+  <!-- expression row -->
   <c:set var="allenID" value="${marker.allenBrainAtlasID.accID}"/>
   <c:set var="gensatID" value="${marker.gensatID.accID}"/>
   <c:set var="geoID" value="${marker.geoID.accID}"/>
@@ -454,11 +454,8 @@ td.padded { padding:4px; }
 		</c:if>
 		<c:if test="${not empty gxdAssayTypes}">
 		Data Summary:
-		<c:if test="${marker.countOfGxdAssays > 0}">
-		  Assays (<a href="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assays&sort=Assay%20type">${marker.countOfGxdAssays}</a>)&nbsp;&nbsp;&nbsp;
-		</c:if>
 		<c:if test="${marker.countOfGxdResults > 0}">
-		  Results (<a href="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure">${marker.countOfGxdResults}</a>)&nbsp;&nbsp;&nbsp;
+		  Results (<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}">${marker.countOfGxdResults}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdTissues > 0}">
 		  Tissues (<a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
@@ -469,20 +466,20 @@ td.padded { padding:4px; }
 		<br/>
 		<c:if test="${not empty marker.gxdResultCountsByStage}">
 		  Theiler Stages: 
-		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status"><a href="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure&_Stage_key=${item.countType}">${item.countType}</a><c:if test="${!status.last}">,</c:if></c:forEach>
+		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">
+		  	<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?theilerStage=${item.countType}">${item.countType}</a><c:if test="${!status.last}">,</c:if>
+		  </c:forEach>
 		  <br/>
 		</c:if>
 		</c:if>
 
 		<c:if test="${not empty gxdAssayTypes}">
- 	      <c:set var="gxdAssayUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assays&sort=Assay%20type&assayType="/>
-		  <c:set var="gxdResultUrl" value="${configBean.WI_URL}searches/expression_report.cgi?_Marker_key=${marker.markerKey}&returnType=assay%20results&sort=Anatomical%20structure&assayType="/>
+		  <c:set var="gxdResultUrl" value="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?assayType="/>
 		  <table>
-		    <tr><td style="padding-left:2em;">Assay Type</td><td>Assays&nbsp;&nbsp;</td><td>Results</td></tr>
+		    <tr><td style="padding-left:2em;">Assay Type</td><td>Results</td></tr>
 		    <c:forEach var="assayType" items="${gxdAssayTypes}">
 		      <tr><td style="padding-left:4em;padding-right:1em;">${assayType}</td>
-		        <td><a href="${gxdAssayUrl}${assayType}">${gxdAssayCounts[assayType]}</a></td>
-		        <td><a href="${gxdResultUrl}${assayType}">${gxdResultCounts[assayType]}</a></td>
+		        <td align="right"><a href="${gxdResultUrl}${assayType}">${gxdResultCounts[assayType]}</a></td>
 		      </tr>
 		    </c:forEach> 
 		  </table>
