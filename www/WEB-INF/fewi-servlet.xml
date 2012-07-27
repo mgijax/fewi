@@ -45,41 +45,41 @@
             </map>
         </property>
         <property name="viewResolvers">
-        	<list>
-				<bean id="excelBundleResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
-					<property name="basename" value="excelviews" />
-				</bean>
-				<bean id="textBundleResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
-					<property name="basename" value="textviews" />
-				</bean>
-			</list>
+            <list>
+                <bean id="excelBundleResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+                    <property name="basename" value="excelviews" />
+                </bean>
+                <bean id="textBundleResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+                    <property name="basename" value="textviews" />
+                </bean>
+            </list>
         </property>
     </bean>
-	
-      	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="order" value="2" />
-		<property name="prefix" value="/WEB-INF/jsp/"/>
-		<property name="suffix" value=".jsp"/>
-		<property name="exposedContextBeanNames">
-	        <list>
-	        	<value>externalUrls</value>
-	        	<value>configBean</value>
-	        </list>
-	    </property>
-	</bean>
+    
+        <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="order" value="2" />
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="exposedContextBeanNames">
+            <list>
+                <value>externalUrls</value>
+                <value>configBean</value>
+            </list>
+        </property>
+    </bean>
 
 
-	
-	<!-- allows file uploading to work and sets max size -->
-	<bean id="multipartResolver"
-		    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">	
-		<!-- one of the properties available; the maximum file size in bytes -->
-	    <property name="maxUploadSize" value="10000000"/>
-	</bean>
-	
-	<mvc:resources mapping="/assets/**" location="/"/>
+    
+    <!-- allows file uploading to work and sets max size -->
+    <bean id="multipartResolver"
+            class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="maxUploadSize" value="10000000"/>
+    </bean>
+    
+    <mvc:resources mapping="/assets/**" location="/"/>
 
-	<!-- Allows static resources to be accessed through the Spring DispatcherServlet -->
-	<mvc:default-servlet-handler />
+    <!-- Allows static resources to be accessed through the Spring DispatcherServlet -->
+    <mvc:default-servlet-handler />
 </beans>
