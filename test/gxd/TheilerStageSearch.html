@@ -1,0 +1,291 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Test Cases for Theiler stage Search</title>
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hide {display:none;}
+</style>
+</head>
+<body>
+
+<div id="maintitle">
+    <h1>Test Cases for Theiler Stage Search</h1>
+    <ul>
+        <li>User story 12, Search for expression results by Theiler Stage</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li> provide Pick List of valid values</li>
+		<li> all expression results associated with matching Theiler Stage(s) are returned</li>
+		<li> uses default sort order (defined below)</li>
+		<li> multiple values are supported, OR'ed together</li>
+		<li> other parameters AND'ed to this</li>
+	</ul>
+	<p>Default sort order is:</p>
+	<ol>
+		<li>Gene Symbol (smart alpha)</li>
+		<li>Assay Type (order as listed on the marker detail page in MGI 5.0)
+			<ol>
+				<li>Immunohistochemistry</li>
+				<li>RNA in situ</li>
+				<li>In situ reporter (knock in)</li>
+				<li>Northern blot</li>
+				<li>Western blot</li>
+				<li>RT-PCR</li>
+				<li>RNase protection</li>
+				<li>Nuclease S1</li>
+			</ol>
+		</li>
+		<li>Age Min</li>
+		<li>Age Max</li>
+		<li>Anatomical Structure (topological)</li>
+		<li>Theiler Stage</li>
+		<li>Detected: 
+			<ol>
+				<li>Yes (in any order)</li>
+				<li>No (in any order)</li>
+				<li>Unk/Ambig (in any order)</li>
+			</ol>
+		</li>
+	</ol>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+		<h3>Manual tests</h3>
+		<p>NOTES: In writing test cases for Concordion...</p>
+		<ul>
+			<li>for "Any developmental stage", use the value "0".</li>  
+			<li>for all theiler stages selected, use the value "All".</li>
+			<li>for a list of specific stages, separate the values with commas (e.g., 1,3,19,26).</li>
+		</ul>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+		<ol>
+    		<li>Verify help icon and popup exists
+			<p concordion:assertTrue="true">Passed. klf 7/17/12</p>
+			<ol>
+				<li>Click on the <b>Help icon</b></li>
+				<li>Verify the help page <b>EXPRESSION_help.shtml</b> opens up in its own window</li>
+				<li>View the page to confirm information exists for searching by <b>theiler stage</b></li>
+			</ol>
+    		</li>
+    		<li>Verify tooltips exist when you hover over each TS
+    		<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+			<ol>
+				<li>Hover over each TS listed in the TS widget</li>
+				<li>Verify tooltips are associated with displayed text shown below: 
+					<table>
+					<tr><th>Displayed text</th><th>Additional tooltip text</th></tr>
+					<tr><td>TS 1 (0.0-2.5 dpc)</td><td>(One cell egg)</td></tr>
+					<tr><td>TS 2 (1.0-2.5 dpc)</td><td>(Beginning of cell division)</td></tr>
+					<tr><td>TS 3 (1.0-3.5 dpc)</td><td>(Morula)</td></tr>
+					<tr><td>TS 4 (2.0-4.0 dpc)</td><td>(Advanced division/segmentation)</td></tr>
+					<tr><td>TS 5 (3.0-5.5 dpc)</td><td>(Blastocyst)</td></tr>
+					<tr><td>TS 6 (4.0-5.5 dpc)</td><td>(Implantation)</td></tr>
+					<tr><td>TS 7 (4.5-6.0 dpc)</td><td>(Formation of egg cylinder)</td></tr>
+					<tr><td>TS 8 (5.0-6.5 dpc)</td><td>(Differentiation of egg cylinder)</td></tr>
+					<tr><td>TS 9 (6.25-7.25 dpc)</td><td>(Advanced endometrial reaction; prestreak)</td></tr>
+					<tr><td>TS 10 (6.5-7.75 dpc)</td><td>(Amnion; midstreak)</td></tr>
+					<tr><td>TS 11 (7.25-8.0 dpc)</td><td>(Neural plate, presomite stage; no allantoic bud)</td></tr>
+					<tr><td>TS 12 (7.5-8.75 dpc)</td><td>(First somites; late head fold)</td></tr>
+					<tr><td>TS 13 (8.0-9.25 dpc)</td><td>(Turning)</td></tr>
+					<tr><td>TS 14 (8.5-9.75 dpc)</td><td>(Formation &amp; closure anterior neuropore)</td></tr>
+					<tr><td>TS 15 (9.0-10.25 dpc)</td><td>(Formation of posterior neuropore, forelimb bud)</td></tr>
+					<tr><td>TS 16 (9.5-10.75 dpc)</td><td>(Closure post. neuropore, hindlimb &amp; tail bud)</td></tr>
+					<tr><td>TS 17 (10.0-11.25 dpc)</td><td>(Deep lens indentation)</td></tr>
+					<tr><td>TS 18 (10.5-11.25 dpc)</td><td>(Closure lens vesicle)</td></tr>
+					<tr><td>TS 19 (11.0-12.25 dpc)</td><td>(Complete separation of lens vesicle)</td></tr>
+					<tr><td>TS 20 (11.5-13.0 dpc)</td><td>(Earliest sign of fingers)</td></tr>
+					<tr><td>TS 21 (12.5-14.0 dpc)</td><td>(Anterior footplate indented, marked pinna)</td></tr>
+					<tr><td>TS 22 (13.5-15.0 dpc)</td><td>(Fingers separate distally)</td></tr>
+					<tr><td>TS 23 (15 dpc)</td><td>(Toes separate)</td></tr>
+					<tr><td>TS 24 (16 dpc)</td><td>(Reposition of umbilical hernia)</td></tr>
+					<tr><td>TS 25 (17 dpc)</td><td>(Fingers and toes joined together)</td></tr>
+					<tr><td>TS 26 (18 dpc)</td><td>(Long whiskers)</td></tr>
+					<tr><td>TS 28 (postnatal)</td><td>(Postnatal development)</td></tr>
+					</table>
+			    </li>
+			</ol>
+    		</li>
+    		<li>Verify behavior that "Any" selection becomes unselected when you choose another option
+			<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Click on the Developmental stage <b>TS3</b></li>
+				<li>Verify only <b>TS3</b> is selected. </li>
+			</ol>
+    		</li>
+    		<li>Verify that if other options are selected and you choose "Any" all other options are deselected
+			<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Click on the Developmental stages <b>TS3, TS7, TS13, and TS27</b></li>
+				<li>Click on the Developmental stage option of <b>Any developmental stage</b></li>
+				<li>Verify That Developmental stages<b>TS3, TS7, TS13, and TS27</b> are deselected and only <b>Any developmental stage</b> in selected. </li>
+			</ol>
+    		</li>
+    		<li>Verify that dpc range is correct for each TS
+			<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>View the Development stages list to verify the dpc ranges conform to this list:
+				<ol>
+					<li>TS1 (0-2.5 dpc)</li>
+					<li>TS2 (1.0-2.5 dpc)</li>
+					<li>TS3 (1.0-3.5 dpc)</li>
+					<li>TS4 (2.0-4.0 dpc)</li>
+					<li>TS5 (3.0-5.5 dpc)</li>
+					<li>TS6 (4.0-5.5 dpc)</li>
+					<li>TS7 (4.5-6.0 dpc)</li>
+					<li>TS8 (5.0-6.5 dpc)</li>
+					<li>TS9 (6.25-7.25 dpc)</li>
+					<li>TS10 (6.5-7.75 dpc)</li> 	
+					<li>TS11 (7.25-8.0 dpc)</li> 	
+					<li>TS12 (7.5-8.75 dpc)</li> 	
+					<li>TS13 (8.0-9.25 dpc)</li> 	
+					<li>TS14 (8.5-9.75 dpc)</li> 	
+					<li>TS15 (9.0-10.25 dpc)</li> 	
+					<li>TS16 (9.5-10.75 dpc)</li> 	
+					<li>TS17 (10.0-11.25 dpc)</li> 	
+					<li>TS18 (10.5-11.25 dpc)</li> 	
+					<li>TS19 (11.0-12.25 dpc)</li> 	 
+					<li>TS20 (11.5-13.0 dpc)</li>
+					<li>TS21 (12.5-14.0 dpc)</li>
+					<li>TS22 (13.5-15.0 dpc)</li>
+					<li>TS23 (15 dpc)</li>
+					<li>TS24 (16 dpc)</li>
+					<li>TS25 (17 dpc)</li>
+					<li>TS26 (18 dpc)</li>
+					<li>TS28 (postnatal)</li>
+				</ol>
+				</li>
+			</ol>
+	    	</li>
+	    	<li>Verify Reset button clears Theiler Stage selections
+			<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Click on the Developmental stages <b>TS3, TS7, TS13, and TS26</b></li>
+				<li>Click on the <b>Reset</b> button</li>
+				<li>Verify that the previously selected Theiler Stages are no longer selected</li>
+				<li>Verify that <b>Any developmental stage</b> (the default) is now selected.</li>
+			</ol>	    	
+	    	</li>
+    		<li>Search for a single TS and verify output sort order
+    		<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+			<ol>
+				<li>Select "TS <b concordion:set="#stage">6</b>(4.0-5.5dpc)" option from the TS widget</li>
+				<li>Verify the sort order is correct (<b>default sort</b>). <i>Note: At TS6, Tdgf1 has a good example of ageMin-structure-present/absent. At TS10, Dab1 has a good example of absent/NS.</i></li>
+			</ol>
+    		</li>
+    		<li>Search for multiple TS and verify output sort order
+    		<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+			<ol>
+				<li>Select "TS <b concordion:set="#stage1">6</b>(4.0-5.5dpc) and TS <b concordion:set="#stage2">7</b>(4.5-6.0dpc) from the TS widget</li>
+				<li>Verify the sort order is correct (<b>default sort</b>).  </li>
+			</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Search for Any TS
+			<ol>
+				<li>Select <b>Any developmental stage</b> (same as <b concordion:set="#stage">0</b>) option from the TS widget</li>
+				<li>Click the "Search" button</li>
+				<li>Verify you return <b>all TS results</b> which currently is <b cc:assertEquals="getGeneCountByTS(#stage)"><b cc:dynamicData="allGenes"></b></b> genes 
+				and <b cc:assertEquals="getResultCountByTS(#stage)"><b cc:dynamicData="allResults"></b></b> assay results</li>
+			</ol>
+    		</li>
+    		<li>Search for a single TS
+			<ol>
+				<li>Select "TS <b concordion:set="#stage">6</b>(4.0-5.5dpc)" option from the TS widget</li>
+				<li>Verify you return <b cc:assertEquals="getResultCountByTS(#stage)"><span cc:dynamicData="ts6ResultCount"></span></b> results</li>
+			</ol>
+    		</li>
+    		<li>Search for multiple TS
+			<ol>
+				<li>Select "TS <b concordion:set="#stage1">6</b>(4.0-5.5dpc) and TS <b concordion:set="#stage2">7</b>(4.5-6.0dpc) from the TS widget</li>
+				<li>Verify you return <b cc:assertEquals="getResultCountByTS(#stage1,#stage2)"><b cc:dynamicData="ts6or7ResultCount"></b></b> results</li>
+			</ol>
+    		</li>
+    		<li>Search for TS 28
+			<ol>
+				<li>Select TS <b concordion:set="#stage">28</b>(postnatal) option from the TS widget</li>
+				<li>Verify you return <b cc:assertEquals="getResultCountByTS(#stage)"><b cc:dynamicData="ts28ResultCount"></b></b> results</li>
+			</ol>
+    		</li>
+    		<li>Selecting all options from TS should function same as selecting the "Any" option
+			<ol>
+				<li>Select <b concordion:set="#stage">All</b> theiler stages from the TS widget (i.e., all stages, TS1-TS28)</li>
+				<li>Click the Search button and record <b concordion:execute="#count = getGeneCountByTS(#stage)">count of genes</b> returned</li>
+				<li>Select <b>Any developmental stage</b> (same as <b concordion:set="#stage">0</b>) from the TS widget (only that one option)</li>
+				<li>Click the Search button and record <b concordion:execute="#count2 = getGeneCountByTS(#stage)">count of genes</b> returned</li>
+				<li>Verify <b concordion:assertTrue="#count2.equals(#count)">count of genes is the same</b></li>
+				<li>Select <b concordion:set="#stage">All</b> theiler stages from the TS widget (i.e., all stages, TS1-TS28)</li>
+				<li>Click the Search button and record <b concordion:execute="#count = getResultCountByTS(#stage)">count of results</b> returned</li>
+				<li>Select <b>Any developmental stage</b> (same as <b concordion:set="#stage">0</b>) from the TS widget (only that one option)</li>
+				<li>Click the Search button and record <b concordion:execute="#count2 = getResultCountByTS(#stage)">count of results</b> returned</li>
+				<li>Verify <b concordion:assertTrue="#count2.equals(#count)">count of results is the same</b></li>
+			</ol>
+    		</li>
+    		<li>Verify that for each Theiler Stage, all results have that theiler stage
+			<table concordion:execute="#results = getTheilerStagesByStage(#stage)">
+			    <tr>
+			        <th concordion:set="#stage">Query By Stage</th>
+			        <th cc:assertAllRowsEqual="#results">All Results Return This Stage</th>
+			    </tr>
+			    <tr><td>1</td><td>1</td></tr>
+			    <tr><td>2</td><td>2</td></tr>
+			    <tr><td>3</td><td>3</td></tr>
+			    <tr><td>4</td><td>4</td></tr>
+			    <tr><td>5</td><td>5</td></tr>
+			    <tr><td>6</td><td>6</td></tr>
+			    <tr><td>7</td><td>7</td></tr>
+			    <tr><td>8</td><td>8</td></tr>
+			    <tr><td>9</td><td>9</td></tr>
+			    <tr><td>10</td><td>10</td></tr>
+			    <tr><td>11</td><td>11</td></tr>
+			    <tr><td>12</td><td>12</td></tr>
+			    <tr><td>13</td><td>13</td></tr>
+			    <tr><td>14</td><td>14</td></tr>
+			    <tr><td>15</td><td>15</td></tr>
+			    <tr><td>16</td><td>16</td></tr>
+			    <tr><td>17</td><td>17</td></tr>
+			    <tr><td>18</td><td>18</td></tr>
+			    <tr><td>19</td><td>19</td></tr>
+			    <tr><td>20</td><td>20</td></tr>
+			    <tr><td>21</td><td>21</td></tr>
+			    <tr><td>22</td><td>22</td></tr>
+			    <tr><td>23</td><td>23</td></tr>
+			    <tr><td>24</td><td>24</td></tr>
+			    <tr><td>25</td><td>25</td></tr>
+			    <tr><td>26</td><td>26</td></tr>
+			    <tr><td>28</td><td>28</td></tr>
+			</table>
+    		</li>
+    		<li>Combined Nomenclature and TS search - moved to test suite for <a href="MultipleParametersSearch.html">Multiple Parameters</a></li>
+		</ol>
+	</div>
+</div>
+ 
+</body>
+</html>

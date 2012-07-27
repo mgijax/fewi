@@ -32,6 +32,7 @@ public class SearchConstants {
     public static final String MRK_KEY              = "marker_key";
     public static final String MRK_ID               = "marker_id";
     public static final String MRK_SYMBOL               = "marker_symbol";
+    public static final String MRK_NOMENCLATURE			= "nomenclature";
 
     // allele constants
     public static final String ALL_KEY              = "allele_key";
@@ -64,6 +65,7 @@ public class SearchConstants {
     public static final String GXD_LIT_AGE		= "age";
     public static final String GXD_LIT_ASSAY_TYPE	= "assayType";
 
+
     // GXD Lit special param
     // This is used to highlight the long citation in the GXD Lit Summaries.
     // We are mapping all of the reference query parameters which highlighting makes sense for
@@ -71,9 +73,12 @@ public class SearchConstants {
 
     public static final String GXD_LIT_LONG_CITATION= "longCitation";
 
+
+
     // Vocab Constants
 
     public static final String VOC_VOCAB            = "vocab";
+    public static final String VOC_TERM				= "term";
     public static final String VOC_RESTRICTION      = "qualifier";
 
     // Images
@@ -84,5 +89,20 @@ public class SearchConstants {
     public static final String IMG_IS_THUMB         = "isThumb";
 
     // faux entry;  used by webapp class template
-    public static final String FOO_ID              = "foo_id";
+    public static final String FOO_ID            = "foo_id";
+
+    // GXD constants
+    public static final String GXD_AGE_MIN = "ageMin";
+    public static final String GXD_AGE_MAX = "ageMax";
+    public static final String GXD_ASSAY_KEY = "assayKey";
+    public static final String GXD_ASSAY_TYPE = "assayType";
+	public static final String GXD_THEILER_STAGE = "stage";
+	public static final String GXD_DETECTED = "detected";
+	public static final String GXD_MUTATED_IN = "mutatedIn";
+	public static final String GXD_IS_WILD_TYPE = "isWildType";
+	public static final String STRUCTURE = "structure";
+	public static final String STRUCTURE_KEY = "structureKey";
+	public static final String STRUCTURE_ID = "structureID";
+
+	public static final String PRIMARY_KEY = "pKey";
 }

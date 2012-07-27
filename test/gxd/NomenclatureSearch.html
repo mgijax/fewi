@@ -1,0 +1,485 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Test Cases for Nomenclature Search</title>
+</head>
+<body>
+
+<div id="maintitle">
+    <h1>Test Cases for Nomenclature Search</h1>
+    <ul>
+        <li>User story 9, Search by gene nomenclature</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li> input text returns all results for matching current public Mouse marker symbol</li>
+		<li> input text returns all results for matching current public Mouse marker synonym</li>
+		<li> input text returns all results for matching current public Mouse marker name</li>
+		<li> input text does not return results for other species nomen matches</li>
+		<li> we accommodate partial text matching (wildcards, etc.)</li>
+		<li> other parameters AND'ed to this</li>
+	</ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Set-up to ensure we are testing only Nomenclature field and only data from the current test.
+    		<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+    		<ol>
+                <li>open GXD query form and make sure all fields are clear</li>
+				<li>Press <b>Reset button</b></li>
+				<li>verify that <b>all form fields are blank</b></li>
+    		</ol>
+    		</li>
+    		<li>Testing to be sure that only MOUSE genes are present. SHH is associated with the Sonic Hedgehog gene in Human and other species.
+    		<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+    		<ol>
+				<li>open GXD query form</li>
+				<li>type <b>Shh</b> in the nomenclature field and press <b>search</b></li>
+				<li>Verify that <b>only mouse genes and no genes from other organisms are returned.</b></li>
+				<li>Press the <b>Reset button</b></li>
+				<li>type <b>ShH</b> in the nomenclature field and press <b>search</b></li>
+				<li>Verify that <b>only mouse genes and no genes from other organisms are returned.</b></li>
+				<li>Press the <b>Reset button</b></li>
+				<li>type <b>SHH</b> in the nomenclature field and press <b>search</b></li>
+				<li>Verify that <b>only mouse genes and no genes from other organisms are returned.</b></li>
+    		</ol>
+    		</li>
+    		<li>Testing the search by gene symbol when the symbol is one character long
+    		<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b>a</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b>the query runs in a reasonable time</b> (we don't restrict results to matching only on symbol, which 5.0 query forms
+				do. this will test if single-characters kill the server.)</li>
+			</ol>
+    		</li>
+			<li>Testing keyboard search operates and returns same results as mouse-click on the Search button
+			<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b>pax6</b> in the nomenclature field and press the <b>Enter</b>key on the keyboard</li>
+				<li>verify that <b>Pax6 and Pax6os1</b> are the only genes returned</li>
+			</ol>
+			</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Testing to see that a match via human synonym are not returned. SMMCI is a synonym for Sonic Hedgehog in Human.
+    		<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">SMMCI</b> (a synonym of sonic hedgehog in human) in to the nomenclature field</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> results are returned</li>
+    		</ol>
+    		</li>
+    		<li>Testing to be sure that only CURRENT mouse genes are present.
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">B930094H20Rik</b> in the nomenclature field</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">D10Bwg1379e</b>, is returned</li>
+			</ol>
+    		</li>
+    		<li>Testing to be sure that only PUBLIC mouse genes are present
+				<ol>
+					<li>open the GXD query form</li>
+					<li>Type <b concordion:set="#query">Aasm1</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getGeneSymbolsByNomen(#query)">Aasm1</b> is not returned</li>
+					<li>return to the GXD query form and clear the nomenclature field</li>
+					<li>Type <b concordion:set="#query">Aasm2</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getGeneSymbolsByNomen(#query)">Aasm2</b> is not returned</li>
+					<li>return to the GXD query form and clear the nomenclature field</li>
+					<li>Type <b concordion:set="#query">Aasm3</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getGeneSymbolsByNomen(#query)">Aasm3</b> is not returned</li>
+					<li>return to the GXD query form and clear the nomenclature field</li>
+					<li>Type <b concordion:set="#query">Glcr</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getGeneSymbolsByNomen(#query)">Glcr</b> is not returned</li>
+				</ol>    		
+    		</li>
+    		<li>Testing to be sure that only genes having expression data are present
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">D1Bir26</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Return to the GXD query form and clear the nomenclature field</li>
+				<li>type <b concordion:set="#query">Xmv10</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li> 
+			</ol>
+    		</li>
+    		<li>Testing to be sure that only genes having expression data which are not excluded as Cre data are present
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type the character <b concordion:set="#query">Gt(ROSA)26Sor</b> in the nomenclature field and press Search</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>type the character <b concordion:set="#query">Ighg1</b> in the nomenclature field and press Search</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+			</ol>   		
+    		</li>
+    		<li>Testing to verify that tokens are combined using AND not OR
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">paired box</b> in the nomenclature field</li>
+				<li>Verify that <b>only Pax1 through Pax9 are returned and not <span cc:assertNoResultsContain="getGeneSymbolsByNomen(#query)">Prrx2</span> or any F-box protein genes (e.g., <span cc:assertNoResultsContain="getGeneSymbolsByNomen(#query)">Fbxo10</span>, <span cc:assertNoResultsContain="getGeneSymbolsByNomen(#query)">Fbxo2</span>) or any others</b>
+					<table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+					    <tr><td>Pax1</td></tr>
+					    <tr><td>Pax2</td></tr>
+					    <tr><td>Pax3</td></tr>
+					    <tr><td>Pax4</td></tr>
+					    <tr><td>Pax5</td></tr>
+					    <tr><td>Pax6</td></tr>
+					    <tr><td>Pax7</td></tr>
+					    <tr><td>Pax8</td></tr>
+					    <tr><td>Pax9</td></tr>
+					</table>
+				</li>
+			</ol>    		
+    		</li>
+    		<li>Testing case insensitivity
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:execute="#count = getGeneCountByNomen(#TEXT)">SHH</b> in the nomenclature field</li>
+				<li>verify that <b>the results set returned for each search is the same</b></li>
+				<li>Return to the GXD query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getGeneCountByNomen(#TEXT)">ShH</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+				<li>Return to the GXD query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getGeneCountByNomen(#TEXT)">sHh</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+				<li>Return to the GXD query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getGeneCountByNomen(#TEXT)">shh</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+				<li>Return to the GXD query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getGeneCountByNomen(#TEXT)">Shh</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+			</ol>    		
+    		</li>
+    		<li>Testing that query does not AND tokens across symbol, synonym or name "fields"
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">Pax6 paired</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+			</ol>    		
+    		</li>
+    		<li>Testing the search by gene symbol feature
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">cdhr1</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Cdhr1</b>, is the only gene returned</li>
+			</ol>    		
+    		</li>
+    		<li>Testing the search by gene name feature
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">sonic hedgehog</b> in the nomenclature field and press the search button</li>
+				<li>Verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Shh</b> is returned and not Dlx6as1. Shh is matched by name. Dlx6as1is matched by old name and should not be returned</li>
+			</ol>    		
+    		</li>
+    		<li>Testing the search by synonym feature
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">Hx</b> in the nomenclature field</li>
+				<li>verify that <b>only <span concordion:assertEquals="getGeneCountByNomen(#query)">2</span> genes, Shh and Hpx, are returned</b> (HX is a synonym of shh and Hpx)
+					<table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+					    <tr><td>Shh</td></tr>
+					    <tr><td>Hpx</td></tr>
+					</table>
+				</li>
+			</ol>    		
+    		</li>
+    		<li>Testing the search by synonym feature for a synonym containing a special character
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">GF-1</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Gata1</b>, is returned, GF-1 is a synonym of gata1</li>
+			</ol>
+    		</li>
+    		<li>Testing that searching by human synonym should fail
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">MRTL</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> results are returned, it should not work since human synonyms are not supported. MRTL is a human synonym of myc</li>
+			</ol>    		
+    		</li>
+			<li>Testing the search by gene symbol when the symbol is two characters long
+			<ol>
+				<li>open the GXD query form</li>
+				<li>type <b concordion:set="#query">F9</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">F9</b>, is returned (we don't restrict results to matching only on symbol, which 5.0 query forms do. this will test if two-characters kill the server.)</li>
+			</ol>
+			</li>
+			<li>Testing the search by wildcard option against symbols,names and synonyms
+			<ol>
+			<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">pax6*</b> in the nomenclature field and press the search button</li>
+				<li>verify that only the genes<b>pax6, Pax60s1</b> are returned
+					<table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+					    <tr><td>Pax6</td></tr>
+					    <tr><td>Pax6os1</td></tr>
+					</table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing a related synonym
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">SERCA2a</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Atp2a2</b>, is returned</li>
+			</ol>
+			</li>			
+			<li>Testing reverse wildcard search
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">*ax1</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">6</b> genes total match:<br /> 
+				    <table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				        <tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+				        <tr><td>Vax1</td></tr>
+				        <tr><td>Pax1</td></tr>
+				        <tr><td>Hax1</td></tr>
+				        <tr><td>Tax1bp1</td></tr>
+				        <tr><td>Nr0b1</td></tr>
+				        <tr><td>Nkx1-2</td></tr>
+				    </table> 
+				    are returned by matching symbol. (Nr0b1 and Nkx1-2 also match by synonym.) 				    
+				</li>
+			</ol>
+			</li>
+			<li>Testing that a gene with no expression results is not returned
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">Aen</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> results are returned</li>
+			</ol>
+			</li>
+			<li>Testing a gene with one of the longest names (or synonyms) that has expression results
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">sema domain, seven thrombospondin repeats (type 1 and type 1-like), transmembrane domain (TM) and short cytoplasmic domain,(semaphorin) 5A</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned and that gene's symbol is <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Sema5a</b></li>
+			</ol>
+			</li>
+			<li>Testing that "not" isn't treated as Stop word or Boolean NOT
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">not</b> in the nomenclature field and press the search button</li>
+				<li>verify that only the genes
+				    <table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				        <tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+				        <tr><td>Noto</td></tr>
+				        <tr><td>Akp3</td></tr>
+				        <tr><td>Cnot1</td></tr>
+				        <tr><td>Cnot2</td></tr>
+				        <tr><td>Cnot3</td></tr>
+				        <tr><td>Cnot4</td></tr>
+				        <tr><td>Cnot6</td></tr>
+				        <tr><td>Cnot6l</td></tr>
+				        <tr><td>Cnot7</td></tr>
+				        <tr><td>Cnot8</td></tr>
+				    </table> 
+				are returned
+				</li>
+			</ol>
+			</li>
+			<li>Testing that "if", "an", "be" are not excluded as Stop words
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">if</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				        <tr><th concordion:assertEquals="#result">verify that only these genes are returned</th></tr>
+				        <tr><td>Myo1f</td></tr>
+				        <tr><td>Mtif2</td></tr>
+				    </table>
+				</li>
+				<li>Type <b concordion:set="#query">an</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Cdk5rap2</b></li>
+				<li>Type <b concordion:set="#query">be</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Pomc</b></li>
+			</ol>
+			</li>
+			<li>Testing Stop word "and" is not excluded, and that Boolean AND is treated literally
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">alanine and arginine rich domain containing protein</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Aard</b></li>
+			</ol>
+			</li>
+			<li>Testing Stop words "of" and "the"
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">of the</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				        <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>Ndufc2</td></tr>
+				        <tr><td>Rapsn</td></tr>
+				        <tr><td>Steap1</td></tr>
+				        <tr><td>Stt3a</td></tr>
+				        <tr><td>Zic1</td></tr>
+				        <tr><td>Zic2</td></tr>
+				        <tr><td>Zic3</td></tr>
+				        <tr><td>Zic4</td></tr>
+				        <tr><td>Zic5</td></tr>
+				    </table>
+			    </li>
+			</ol>
+			</li>
+			<li>Testing that AND, OR, and NOT aren't treated as Booleans
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">pax6 and shh</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">pax6 or shh</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">paired AND box</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">paired OR box</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">paired NOT box</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+			</ol>
+			</li>
+			<li>Testing that punctuation and extraneous wildcards are removed (ignored)
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">Pax!@#$%^&amp;*()_-+={}[]\|`~;':",./&lt;&gt;?6</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Pax6</b></li>
+				<li>Type <b concordion:set="#query">*pax***6*</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Pax6</b></li>
+				<li>Type <b concordion:set="#query">*****</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b cc:assertEquals="getGeneCountByNomen(#query)"><b cc:dynamicData="allGenes"></b></b> (used to be 0?) matching genes are returned</li>
+			</ol>
+			</li>
+			<li>Testing that empty nomenclature search is handled
+			<ol>
+				<li>open the GXD query form </li>
+				<li>enter "<span concordion:set="#query"></span>" (i.e. leave the field blank) then press the search button</li>
+				<li>verify that <b cc:assertEquals="getGeneCountByNomen(#query)"><b cc:dynamicData="allGenes"></b></b> (all) genes are returned</li>
+			</ol>
+			</li>
+			<li>Testing Nonsense: absurdly long input matching nothing in our database
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">sema domain, seven thrombospondin repeats (type 1 and
+				type 1-like), transmembrane domain (TM) and short cytoplasmic domain,
+				(semaphorin) 5AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</b> in the nomenclature field and press the search button</li>
+				<li>verify that the user interface displays properly, <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned, and <b>the page displays a standard "no matches found" message</b> It Should not break the query page</li>
+			</ol>
+			</li>
+			<li>Testing that the same genes are returned regardless of word order
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">paired box</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>Pax1</td></tr>
+				        <tr><td>Pax2</td></tr>
+				        <tr><td>Pax3</td></tr>
+				        <tr><td>Pax4</td></tr>
+				        <tr><td>Pax5</td></tr>
+				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax7</td></tr>
+				        <tr><td>Pax8</td></tr>
+				        <tr><td>Pax9</td></tr>
+				    </table>
+				</li>
+				<li>Type <b concordion:set="#query">box paired</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>Pax1</td></tr>
+				        <tr><td>Pax2</td></tr>
+				        <tr><td>Pax3</td></tr>
+				        <tr><td>Pax4</td></tr>
+				        <tr><td>Pax5</td></tr>
+				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax7</td></tr>
+				        <tr><td>Pax8</td></tr>
+				        <tr><td>Pax9</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing that genes are returned when words are farther apart in the Name string (two tokens are not treated as a phrase query)
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">paired gene</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>Pax1</td></tr>
+				        <tr><td>Pax2</td></tr>
+				        <tr><td>Pax3</td></tr>
+				        <tr><td>Pax4</td></tr>
+				        <tr><td>Pax5</td></tr>
+				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax7</td></tr>
+				        <tr><td>Pax8</td></tr>
+				        <tr><td>Pax9</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing that wildcards work in different places of the string
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">*aired bo*</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>Pax1</td></tr>
+				        <tr><td>Pax2</td></tr>
+				        <tr><td>Pax3</td></tr>
+				        <tr><td>Pax4</td></tr>
+				        <tr><td>Pax5</td></tr>
+				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax7</td></tr>
+				        <tr><td>Pax8</td></tr>
+				        <tr><td>Pax9</td></tr>
+				    </table>
+				</li>
+				<li>Type <b concordion:set="#query">pair* *ne</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>Pax1</td></tr>
+				        <tr><td>Pax2</td></tr>
+				        <tr><td>Pax3</td></tr>
+				        <tr><td>Pax4</td></tr>
+				        <tr><td>Pax5</td></tr>
+				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax7</td></tr>
+				        <tr><td>Pax8</td></tr>
+				        <tr><td>Pax9</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing that stemming is not occurring
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">*airing bo*</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">*airs bo*</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">*air bo*</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
+			</ol>
+			</li>
+			<li>Testing that English possessive (single quote character) doesn't break the query
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">*Dickie's Small Eye"</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Pax6</b></li>
+			</ol>
+			</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

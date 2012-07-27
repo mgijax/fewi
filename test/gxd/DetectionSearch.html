@@ -1,0 +1,143 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Detected/Not detected search</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Detected/Not detected search</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Detected/Not detected search</h1>
+    <ul>
+        <li>User story 19, Search for expression results by specifying detected/not detected</li>
+        <li>User story 105, Change display of Detected? to yes/no</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+		<li>provide radio buttons for 3 options (detected, not detected, either)</li>
+		<li>return all appropriate expression results for selected option</li>
+		<li>other parameters are AND'ed to this</li>
+		<li>accommodate ambiguous results</li>
+		<li>Reset button resets to the default</li>
+		<li>update display user's query parameters</li>
+		<li>update user help</li>
+    </ul>
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Test 1
+<!--            <p concordion:assertTrue="false">new test</p> -->
+            </li>
+            <li>Verify that the radio button retains value after form submit
+            <p concordion:assertTrue="true">passed jeffc 7/17/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Verify <b>either</b> is selected in the Anatomical structure or stage section and press <b>search</b></li>
+                <li>Click <b>click to modify search</b> button and confirm that <b>either</b> is selected in the Anatomical structure or stage section</li>
+                <li>Select <b>detected</b> in the Anatomical structure or stage section and press <b>search</b></li>
+                <li>Click <b>click to modify search</b> button and confirm that <b>detected</b> is selected in the Anatomical structure or stage section</li>
+                <li>Select <b>not detected in</b> in the Anatomical structure or stage section and press <b>search</b></li>
+                <li>Click <b>click to modify search</b> button and confirm that <b>not detected in</b> is selected in the Anatomical structure or stage section</li>                                
+            </ol>
+            </li>
+            <li>Verify that the reset button resets the radio button to default
+            <p concordion:assertTrue="true">passed jeffc 7/17/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Select <b>detected</b> in the Anatomical structure or stage section and press <b>search</b></li>
+                <li>Click <b>click to modify search</b> button and confirm that <b>detected</b> is selected in the Anatomical structure or stage section</li>
+                <li>Click <b>Reset</b> button and confirm that <b>either</b> is selected in the Anatomical structure or stage section</li>
+            </ol>
+            </li>
+            <li>Moved "you searched for" tests to <a href="DisplayQueryParameters.html">Display Query Parameters</a> test suite
+            </li>
+            <li>Verify that the user help is correct
+            <p concordion:assertTrue="true">passed. klf 5/3/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Click on the <b>help icon</b></li>
+                <li>Verify the help document contains correct information about detected/not detected</li>
+            </ol>
+            </li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        <ol>
+            <li>Verify that searching for "<b concordion:set="#detected">either</b>" brings back all assay types as detected yes/no, ambiguous, and not specified
+            <p>Test using nomenclature=<b concordion:set="#nomen">Hhex</b> to narrow results</p>
+            <table
+						concordion:execute="#result = containsDetectionLevelByNomen(#detected,#nomen,#level)">
+						<tr>
+							<th concordion:set="#level">Detection Level</th>
+							<th concordion:assertEquals="#result">Should exist in results?</th>
+						</tr>
+						<tr><td>No</td><td>yes</td></tr>
+						<tr><td>Ambiguous</td><td>yes</td></tr>
+						<tr><td>Yes</td><td>yes</td></tr>
+						<tr><td>Not Applicable</td><td>no</td></tr>
+						<tr><td>Not Specified</td><td>yes</td></tr>
+					</table></li>
+            <li>Verify that searching for "<b concordion:set="#detected">detected</b>" brings back everything but "absent". Detected column should only return Yes results.
+            <p>Test using nomenclature=<b concordion:set="#nomen">Hhex</b> to narrow results</p>
+            <table concordion:execute="#result = containsDetectionLevelByNomen(#detected,#nomen,#level)">
+			    <tr>
+			        <th concordion:set="#level">Detection Level </th>
+			    	<th concordion:assertEquals="#result">Should exist in results?</th>
+			    </tr>
+			    <tr><td>No</td><td>no</td></tr>
+			    <tr><td>Ambiguous</td><td>yes</td></tr>
+			    <tr><td>Yes</td><td>yes</td></tr>
+			    <tr><td>Not Applicable</td><td>no</td></tr>
+			    <tr><td>Not Specified</td><td>yes</td></tr>
+			</table></li>
+            <li>Verify that searching for "<b concordion:set="#detected">not detected</b>" brings back only "absent", "ambiguous", and "not specified". Detected column should only return No, ambiguous, and not specified results.
+            <p>Test using nomenclature=<b concordion:set="#nomen">Hhex</b> to narrow results</p>
+            <table concordion:execute="#result = containsDetectionLevelByNomen(#detected,#nomen,#level)">
+			    <tr>
+			        <th concordion:set="#level">Detection Level</th>
+			    	<th concordion:assertEquals="#result">Should exist in results?</th>
+			    </tr>
+			    <tr><td>No</td><td>yes</td></tr>
+			    <tr><td>Ambiguous</td><td>yes</td></tr>
+			    <tr><td>Yes</td><td>no</td></tr>
+			    <tr><td>Not Applicable</td><td>no</td></tr>
+			    <tr><td>Not Specified</td><td>yes</td></tr>
+			</table></li>
+            <li>See also <a href="MultipleParametersSearch.html">multiple parameter search tests</a></li>
+            
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>

@@ -56,7 +56,17 @@ public class Filter {
 		values.add(value);
 		this.operator = operator;
 	}
-
+	
+	/**
+	 * Creates a basic filter; supply property/value/operator
+	 */
+	public Filter(String property,Integer value, int operator)
+	{
+		this.property = property;
+		values.add(value.toString());
+		this.operator = operator;
+	}
+	
 	/**
 	 * Creates a basic filter; supply property, valueList, and operator
 	 */
@@ -90,6 +100,7 @@ public class Filter {
 
 	// advanced operators
 	public static final int
+		OP_GREEDY_BEGINS = 99,
 		OP_IN = 100,
 		OP_NOT_IN = 101;
 
@@ -142,6 +153,12 @@ public class Filter {
 	}
 	public void setNestedFilters(List<Filter> nestedFilters) {
 		this.nestedFilters = nestedFilters;
+	}
+	
+	public void setNestedFilters(List<Filter> nestedFilters, int filterJoinClause)
+	{
+		this.nestedFilters = nestedFilters;
+		this.filterJoinClause = filterJoinClause;
 	}
 
 	// filter join clause

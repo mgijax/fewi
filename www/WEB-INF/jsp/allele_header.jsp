@@ -1,3 +1,6 @@
+<%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "mgi.frontend.datamodel.*" %>
+
 <!-- header table -->
 <table class="summaryHeader">
 <tr >

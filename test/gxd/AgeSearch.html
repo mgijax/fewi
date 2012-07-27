@@ -1,0 +1,296 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Age search test suite</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Age search test suite</h1>
+    <ul>
+        <li>User story 16, Search for expression results by age</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+		<p>NOTE: assumes already implemented Query by Theiler Stage</p>
+	    <ul>
+		<li>all expression results associated with Theiler Stage(s) matching the selected age(s) are returned</li>
+		<li>multiple values are supported, OR'ed together</li>
+		<li>other parameters AND'ed to this</li>
+		<li>Reset button restores the default value</li>
+		<li>update display user's query parameters</li>
+		<li>update user help</li>
+    </ul>
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Verify that the default selection is "Any"
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            </li>
+            <li>Verify that the second option in the list is "Embryonic"
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            </li>
+            <li>Verify that the third option in the list is "Postnatal"
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            </li>
+            <li>Verify that the remaining options in the list are <b>E0.5 to E20.5</b> <i>(E20.5 is the highest E value we will query. OKed by Connie on 5/2/12)</i> in increments of 0.5
+            </li>
+            <li>Verify that selecting any other options deselects "Any"
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            </li>
+            <li>Verify that selecting "Any" deselects other options
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            </li>
+            <li>Verify that the Reset button clears all existing selections and selects the "Any" option.
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            </li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        <ol>
+            <li>Verify that the "<b concordion:execute="#count = getResultCountByAge(#TEXT)">Embryonic</b>" option is equivalent to selecting 
+            <b concordion:execute="#count2 = getResultCountByTS(#TEXT)">TS1-TS26</b>. 
+            by checking that the count of results are equal. <b concordion:echo="#count"></b>=<b cc:assertEquals="#count"><b concordion:echo="#count2"></b></b>
+            </li>
+            <li>Verify that selecting the <b concordion:execute="#count = getResultCountByAge(#TEXT)">Embryonic,Postnatal</b> 
+            options is equivalent to selecting <b concordion:execute="#count2 = getResultCountByAge(#TEXT)">Any</b>,
+            by checking that the counts of results returned are equal. <b concordion:echo="#count"></b>=<b cc:assertEquals="#count"><b concordion:echo="#count2"></b></b>
+            </li>
+            <li>Verify that selecting the <b concordion:execute="#count = getResultCountByAge(#TEXT)">Embryonic, E2.0, E3.0</b> 
+            options is equivalent to selecting <b concordion:execute="#count2 = getResultCountByAge(#TEXT)">Embryonic</b>
+            by checking that the counts of results returned are equal. <b concordion:echo="#count"></b>=<b cc:assertEquals="#count"><b concordion:echo="#count2"></b></b>
+            </li>
+            <li>Verify that selecting the <b concordion:set="#ages">E2.0,E2.5,E3.0</b> 
+            options returns <b cc:assertEquals="getResultCountByAge(#ages)"><b cc:dynamicData="age2-3ResultCount"></b></b> results.
+            </li>
+            <li>Verify that selecting the <b concordion:set="#ages">E5.0,E6.0,E7.0</b> 
+            options returns <b cc:assertEquals="getResultCountByAge(#ages)"><b cc:dynamicData="age5and6and7ResultCount"></b></b> results.
+            </li>
+            <li>Verify that the Queried age contains at least one object returned of the Results age below
+	            <table concordion:execute="#results = getAgesByAge(#age)">
+						<tr>
+							<th concordion:set="#age">Query</th>
+							<th cc:assertResultsContain="#results">Results</th>
+						</tr>
+						<tr>
+							<td>E0.5</td>
+							<td>E0.0,0.5</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E7.75</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E7.8</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.0</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.1</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.2</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.25</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.3</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.4</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.5</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.6</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.7</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.5-9</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.5-9.0</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.25-8.5</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.0-8.5</td>
+						</tr>
+<!-- 	DATA no longer exists					<tr>
+							<td>E8.5</td>
+							<td>E8-8.5</td>
+						</tr> -->
+						<tr>
+							<td>E8.5</td>
+							<td>E8.5,9.5</td>
+						</tr>
+						<tr>
+							<td>E9.0</td>
+							<td>E8.5,9.5</td>
+						</tr>
+						<tr>
+							<td>E9.5</td>
+							<td>E8.5,9.5</td>
+						</tr>
+						<tr>
+							<td>E6.5</td>
+							<td>E6.3-6.6</td>
+						</tr>
+						<tr>
+							<td>E7.0</td>
+							<td>E7.0-7.3</td>
+						</tr>
+						<tr>
+							<td>E7.5</td>
+							<td>E7.0-7.3</td>
+						</tr>
+					</table>
+				</li>
+            <li>Verify that the Queried age contains NO objects returned of the Results age below
+	            <table concordion:execute="#results = getAgesByAge(#age)">
+						<tr>
+                            <th concordion:set="#age">Query</th>
+                            <th cc:assertNoResultsContain="#results">Results</th>
+						</tr>
+						<tr>
+							<td>E1.0</td>
+							<td>E0.0,0.5</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E7.75</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E7.8</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E7.9</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.0</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.1</td>
+						</tr>
+						<tr>
+							<td>E8.5</td>
+							<td>E8.2</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.25</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.3</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.4</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.5</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.50</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.6</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.7</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.5-9</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.5-9.0</td>
+						</tr>
+						<tr>
+							<td>E8.0</td>
+							<td>E8.25-8.5</td>
+						</tr>
+						<tr>
+							<td>E7.5</td>
+							<td>E8.0-8.5</td>
+						</tr>
+						<tr>
+							<td>E7.5</td>
+							<td>E8-8.5</td>
+						</tr>
+						<tr>
+							<td>E6.0</td>
+							<td>E6.3-6.6</td>
+						</tr>
+						<tr>
+							<td>E7.0</td>
+							<td>E6.3-6.6</td>
+						</tr>
+					</table>
+				</li>
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>

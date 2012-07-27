@@ -1,0 +1,412 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+    <title>Assay Results Summary</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Assay Results Summary</h1>
+    <ul>
+        <li>User story 51, Display correct assay result data</li>
+    </ul>
+    <p>NOTE: MANY OF THESE TESTS NEED TO BE UPDATED SO THAT THEY RUN AUTOMATICALLY.  SEVERAL CAN BE UPDATED TO USE THE DYNAMIC DATA GOOGLE DOC. -klf 6/11/2012</p>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>results summary table displays expression results for the submitted query parameters</li>
+		<li>genes are NOT linked to marker detail pages</li>
+		<li>assays are linked to assay detail pages</li>
+		<li>other links....image detail, reference detail work</li>
+        <li>Results should be in the DEFAULT sort order:<br/>
+			1. Gene Symbol (smart alpha)<br/>
+			2. Assay Type (order as listed on the marker detail page in MGI 5.0)<br/>
+			. . . 2.1. Immunohistochemistry<br/>
+			. . . 2.2. RNA in situ<br/>
+			. . . 2.3. In situ reporter (knock in)<br/>
+			. . . 2.4. Northern blot<br/>
+			. . . 2.5. Western blot<br/>
+			. . . 2.6. RT-PCR<br/>
+			. . . 2.7. RNase protection<br/>
+			. . . 2.8. Nuclease S1<br/>
+			3. Age Min<br/>
+			4. Age Max<br/>
+			5. Anatomical Structure (topological)<br/>
+			6. Theiler Stage<br/>
+			7. Detected: <br/>
+			. . . 7.1. Yes (in any order) - includes results with value "Not Applicable"<br/> 
+			. . . 7.2. No (in any order) = only results with value "Absent"<br/>
+			. . . 7.3. Unk/Ambig (in any order) = only results with value "Not Specified" or "Ambiguous" 
+		</li>
+		<li>Multiple gel band values in a given gel lane should be resolved to a single value in order (first value on the list takes precedence):<br/>
+			1. Yes<br/>
+			2. No<br/>
+			3. Ambiguous<br/>
+			4. Not Specified<br/>
+		</li>
+		
+	</ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Build table layout with a two tabs
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify results table exists with three tabs: Genes, Assays and Assay Results</li>
+    		</ol>
+    		</li>
+    		<li>Assay Results table exists with correct columns
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify columns are: Gene, Result Details, Assay Type, Anatomical System, Age, Structure, Detected?, Figure(s), Mutant Allele(s), Reference</li>
+    		</ol>
+    		</li>
+    		<li>Gene column displays current gene symbol
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify "Gene" column displays current gene symbol: Pax6</li>
+                <li>Reset the GXD query page</li>
+                <li>Search for AEY11</li>
+                <li>Verify "Gene" column displays current gene symbol: Pax6</li>
+    		</ol>
+    		</li>
+    		<li>Result Details column displays data link and MGI ID
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify "Result Details" column displays:
+                <ol>
+					<li>Text "data" for every result</li>
+					<li>Text "data" is hyperlinked to Expression Details page for the displayed MGI ID</li>
+					<li>Text of MGI ID for the assay containing the result in the same row is displayed in parentheses</li>
+				</ol>
+				</li>
+    		</ol>
+    		</li>
+    		<li>Detected? displays "Level" data
+		<p concordion:assertTrue="true">klf 7/23/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>The results for MGI:1859758 display 12 rows with these values (shown with structures above in parentheses here):
+                <ul>
+	                <li>(TS12: embryo) - No</li>
+					<li>(TS12: future prosencephalon) - Yes</li>
+					<li>(TS12: future prosencephalon) - Yes</li>
+	                <li>(TS12: future prosencephalon; floor plate) - Yes</li>
+					<li>(TS12: future prosencephalon; floor plate) - Yes</li>
+					<li>(TS13: future prosencephalon) - Yes</li>
+					<li>(TS13: future prosencephalon) - Yes</li>
+					<li>(TS13: future prosencephalon; floor plate) - No</li>
+					<li>(TS13: future prosencephalon; floor plate) - No</li>
+					<li>(TS15: future forebrain) - Yes</li>
+					<li>(TS15: diencephalon; floor plate) - No</li>
+					<li>(TS15: telencephalon; floor plate) - No</li>
+				</ul>
+				</li>
+    		</ol>
+    		</li>
+    		<li>Figure(s) displays "pane label"
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>1. The results for MGI:2157343 should display figure label text which is hyperlinked to an Image Detail page. Label text and ID for hyperlinked page should be as follows (structures shown in parentheses):
+                <ul>
+					<li>(TS15: lens placode) - Figure 6A - MGI:2156232</li>
+					<li>(TS15: intraretinal space) - Figure 6A - MGI:2156232</li>
+					<li>(TS15: optic cup; outer layer) - Figure 6A - MGI:2156232</li>
+					<li>(TS15: lens placode) - Figure 6C - MGI:2156232</li>
+					<li>(TS15: intraretinal space) - Figure 6C - MGI:2156232</li>
+					<li>(TS15: optic cup; outer layer) - Figure 6C - MGI:2156232</li>
+					<li>(TS17: lens placode) - Figure 6F - MGI:2156232</li>
+					<li>(TS17: intraretinal space) - Figure 6F - MGI:2156232</li>
+					<li>(TS17: optic cup; outer layer) - Figure 6F - MGI:2156232</li>
+		        </ul>
+		        </li>
+				<li>The results for MGI:4461989 should display figure label text which is not hyperlinked. Label text should be as follows (structures shown in parentheses):
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+				<ul>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3B wild type</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3B Tectonic-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3B Ptch-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3B Tectonic-/- Ptch-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3C wild type</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3C Tectonic-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3C Ptch-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3C Tectonic-/- Ptch-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3D wild type</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3D Tectonic-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3D Ptch-/-</li>
+					<li>(TS15: future spinal cord; neural tube) - Figure 3D Tectonic-/- Ptch-/-</li>
+					<li>(TS17: future spinal cord; neural tube) - Figure 3F wild type</li>
+					<li>(TS17: future spinal cord; neural tube) - Figure 3F Tectonic-/-</li>
+					<li>(TS17: future spinal cord; neural tube) - Figure 3F Rab23 opb/opb</li>
+					<li>(TS17: future spinal cord; neural tube) - Figure 3F Tect-/- Rab23 opb/opb</li>
+					<li>(TS19: future spinal cord; neural tube) - Figure S4 wild type</li>
+					<li>(TS19: future spinal cord; neural tube) - Figure S4 Tectonic-/-</li>
+				</ul>
+				</li>
+				<li>The results for MGI:2178971 should display no image pane label for the following structures (in parentheses):
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+				<ul>
+					<li>(TS19: future spinal cord)</li>
+					<li>(TS19: future spinal cord)</li>
+    			</ul>
+    			</li>
+    		</ol>
+			</li>
+    		<li>Mutant Allele(s) displays correct data
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify the results for MGI:2676225 include Nkx2-1&lt;tm1Shk&gt;/Nkx2-1&lt;tm1Shk&gt; where the text between &lt; and &gt; is displayed in superscript and the &lt; and &gt; symbols are not displayed.</li>
+                <li>Repen the GXD query page</li>
+                <li>Search for Atp7a</li>
+                <li>Verify the results for MGI:3799621 include Atp7a&lt;Mo-blo&gt;/Y where the text between &lt; and &gt; is displayed in superscript and the &lt; and &gt; symbols are not displayed.</li>
+                <li>Reopen the GXD query page</li>
+                <li>Search for Eif2s3y</li>
+                <li>Verify the results for MGI:2651871 include X/Sry&lt;dl1Rlb&gt; where the text between &lt; and &gt; is displayed in superscript and the &lt; and &gt; symbols are not displayed.</li>
+                <li>Repen the GXD query page</li>
+                <li>Search for Cdx4</li>
+                <li>Verify the results for MGI:5301588 include 2 rows having the genotype shown below, where each allele pair is on a separate line, the text between &lt; and &gt; is displayed in superscript and the &lt; and &gt; symbols are not displayed:<br/>
+					Cyp26a&lt;1tm1.1Ptk&gt;/Cyp26a1&lt;tm1.1Ptk&gt;<br/>
+					Rarg&lt;tm1Ipc&gt;/Rarg&lt;tm1Ipc&gt;<br/>
+					And include 1 row having the genotype shown below, where each allele pair is on a separate line, the text between &lt; and &gt; is displayed in superscript and the &lt; and &gt; symbols are not displayed:<br/>
+					Cyp26a&lt;1tm1.1Ptk&gt;/Cyp26a1&lt;tm1.1Ptk&gt;<br/>
+					Rarg&lt;tm1Ipc&gt;/Rarg&lt;+&gt;
+				</li>                
+    		</ol>
+    		</li>
+    		<li>Reference displays correct data
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Tssk*</li>
+                <li>References should include multiple instances of only the following:
+                <ul>
+					<li>J:38193 Galili N, Genome Res 1997 Jan;7(1):17-26 -- listed 2 times</li>
+					<li>J:86704 Maynard TM, Proc Natl Acad Sci U S A 2003 Nov 25;100(24):14433-8 -- listed 5 times</li>
+					<li>J:72226 Visconti PE, Genomics 2001 Oct;77(3):163-70 -- listed 4 times</li>
+                </ul>
+				</li>
+    		</ol>
+    		</li>
+    		<li>Gene symbol should not be link on Assay Results tab
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6 in the nomenclature field</li>
+                <li>The gene symbol should not be a link on the Assay Results tab display (only on the Genes tab display)</li>
+    		</ol>
+    		</li>
+    		<li>Test that GENES are sorted correctly
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Cyp* in the nomenclature field</li>
+                <li>The genes listed in the Assay Results tab should be sorted by gene symbol using the MGI Smart Alpha algorithm (e.g., Gene10 follows Gene9, not Gene1).<br/>
+			Order should be MGI:88588, MGI:88589, MGI:88590, MGI:88596, MGI:88597, MGI:105055, MGI:3644957, MGI:88598, MGI:107303, MGI:103238, MGI:1306806, <br/>
+			MGI:1306815, MGI:2385878, MGI:88606, MGI:88602, MGI:88605, MGI:1929474, MGI:1923529, MGI:88607, MGI:88608, MGI:109612, MGI:1270149, MGI:1270148, <br/>
+			MGI:1921769, MGI:2449771, MGI:1921384, MGI:1918769, MGI:88609, MGI:88610, MGI:106099, MGI:1930638, MGI:88611, MGI:88612, MGI:1096550, MGI:103225, <br/>
+			MGI:2158641, MGI:1927669, MGI:2146921, MGI:2142763, MGI:1932403, MGI:104978, MGI:1338044, MGI:88582, MGI:88583, MGI:88584, MGI:88586, MGI:88587, <br/>
+			MGI:1925201, MGI:88591, MGI:88593, MGI:1096359, MGI:2176159, MGI:2679699, MGI:88594, MGI:1098274, MGI:1927096, MGI:1341877, MGI:106040, MGI:1344412, <br/>
+			MGI:97744, MGI:97749, MGI:97750, MGI:1914988, MGI:2145814, MGI:106499, MGI:1916066, MGI:1097156, MGI:98497
+				</li>
+                <li>Reopen the GXD query page</li>
+                <li>Search for Hoxa* in the nomenclature field</li>
+                <li>The genes listed in the Assay Results tab should be sorted by gene symbol using the MGI Smart Alpha algorithm (e.g., Gene10 follows Gene9, not Gene1).<br/>
+                 Order should be Hoxa1, Hoxa2, Hoxa3, Hoxa4, Hoxa5, Hoxa6, Hoxa7, Hoxa9, Hoxa10, Hoxa11, Hoxa11as, Hoxa13
+                 </li>
+    		</ol>
+    		</li>
+    		<li>Test that ASSAY RESULTS are sorted correctly
+		<p concordion:assertTrue="true">klf 7/23/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for abcb1b in the nomenclature field(does not include insitu reporter assay type.</li>
+                <li>Results should be in the DEFAULT sort order:<br/>
+					1. Gene Symbol (smart alpha)<br/>
+					2. Assay Type (order as listed on the marker detail page in MGI 5.0)<br/>
+					. . . 2.1. Immunohistochemistry<br/>
+					. . . 2.2. RNA in situ<br/>
+					. . . 2.3. In situ reporter (knock in)<br/>
+					. . . 2.4. Northern blot<br/>
+					. . . 2.5. Western blot<br/>
+					. . . 2.6. RT-PCR<br/>
+					. . . 2.7. RNase protection<br/>
+					. . . 2.8. Nuclease S1<br/>
+					3. Age Min<br/>
+					4. Age Max<br/>
+					5. Anatomical Structure (topological)<br/>
+					6. Theiler Stage<br/>
+					7. Detected: <br/>
+					. . . 7.1. Yes (in any order)<br/> 
+					. . . 7.2. No (in any order)<br/>
+					. . . 7.3. Unk/Ambig (in any order)<br/>
+					. . . 7.4  Not Specified (in any order) 
+				</li>
+				<li>Reopen the GXD query form</li>
+				<li>Search for msx1 in the nomenclature field(for insitu reporter)</li>
+				<li>Results should be in the DEFAULT sort order</li>
+				<li>Search for acox1 in the nomenclature field(to cover age, anatomical structure, ts and detected)</li>
+				<li>Results should be in the DEFAULT sort order</li>
+    		</ol>
+    		</li>
+    		<li>Test that long marker names/symbols wrap properly
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Search for Sema5a in the nomenclature field</li>
+                <li>Verify that the name sema domain, seven thrombospondin repeats (type 1 and type 1-like), transmembrane domain (TM) and short cytoplasmic domain, (semaphorin) 5A displays and wraps properly</li>
+				<li>Reopen the GXD query form</li>
+				<li>Search for B230118H07Rik in the nomenclature field</li>
+				<li>Verify the symbol returns with proper formatting</li>
+    		</ol>
+    		</li>
+    		<li>Test that marker symbols and names with non-alphanumeric characters don't break the interface
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Search for Mirlet7c-1 in the nomenclature field</li>
+                <li>Verify that mirlet7c-1 data returns with all fields properly formatted</li>
+				<li>Reopen the GXD query form</li>
+				<li>Search for Epb4.1l4a in the nomenclature field</li>
+				<li>Verify that Epb4.1l4a data returns with all fields properly formatted</li>
+                <li>Reopen the GXD query form</li>
+                <li>Search for Dickie's small eye in the nomenclature field</li>
+                <li>Verify that Pax6 data returns with all fields properly formatted</li>
+    		</ol>
+    		</li>
+    		<li>Test that the accordion animation does not activate when using back button from a subsequent page
+		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for shh</li>
+                <li>Click the first image link</li>
+                <li>Click the browser back button</li>
+                <li>Make sure the query form is already closed (without accordion effect)</li>
+    		</ol>
+    		</li>
+            <li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Query returns correct results
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify 1434 results are returned</li>
+    		</ol>
+    		</li>    		
+    		<li>Assay Type column displays correct assay type
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify all results for MGI:1859758 display only the Assay Type "Immunohistochemistry"</li>
+    		</ol>
+    		</li>
+    		<li>Anatomical System column displays correct data
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify the results for MGI:1859758 for TS15: future forebrain displays Nervous System, verify the results for MGI:2157343 for TS15: lens placode displays Sensory Organs</li>
+    		</ol>
+    		</li>
+    		<li>Age displays correct data
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>Verify the results for MGI:1859758 for TS15: future forebrain displays E9.5 and the results for MGI:2157343 for TS15: lens placode displays E9.5</li>
+    		</ol>
+    		</li>
+    		<li>Structure displays correct data
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for Pax6</li>
+                <li>The results for MGI:1859758 display 12 rows with these structures:<br/>
+					TS12: embryo<br/>
+					TS12: future prosencephalon; floor plate<br/>
+					TS12: future prosencephalon<br/>
+					TS12: future prosencephalon; floor plate<br/>
+					TS13: future prosencephalon<br/>
+					TS13: future prosencephalon; floor plate<br/>
+					TS13: future prosencephalon<br/>
+					TS13: future prosencephalon; floor plate<br/>
+					TS15: future forebrain<br/>
+					TS15: diencephalon; floor plate<br/>
+					TS15: telencephalon; floor plate<br/>
+					TS12: future prosencephalon
+				</li>
+    		</ol>
+    		</li>
+    		<li>Assay results values for Gels with multiple Band values in a single Lane are assigned according to order of precedence above
+    		<ol>
+    			<li>Open the GXD query page</li>
+    			<li>Search for <b concordion:set="#nomen">Pecam1</b>, TS<b concordion:set="#stage">28</b>, <b concordion:set="#type">Western blot</b></li>
+    			<li>Verify all results for assay <b concordion:set="#assayId">MGI:2680816</b> are <b cc:assertAllRowsEqual="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">Not Specified</b>
+    				<br/>(Note: all results for this assay have values "Not Specified" and "Absent".)
+    			</li>
+    			<li>Perform a new search for <b concordion:set="#nomen">Dlx1</b>, TS<b concordion:set="#stage">28</b>,  <b concordion:set="#type">RNase protection</b></li>
+    			<li>Verify the result for <b concordion:set="#assayId">MGI:1307083</b> is <b cc:assertAllRowsEqual="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">Yes</b>
+    				<br/>(Note: the result for TS28: brain for this assay has values "Present" and "Weak".)
+   				</li>
+   				<li>Perform a new search for <b concordion:set="#nomen">Smad4</b>, TS<b concordion:set="#stage">17</b>,  <b concordion:set="#type">Northern blot</b></li>
+   				<li>Verify the result for <b concordion:set="#assayId">MGI:1267224</b> is <b cc:assertAllRowsEqual="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">Yes</b>
+   					<br/>(Note: the result for TS17: embryo for this assay has values "Moderate" and "Present".)
+ 				</li>
+ 				<li>Perform a new search for <b>Cbx2, TS28, Western blot</b></li>
+ 				<li>Verify the results for MGI:2678099 are as shown in the table:
+				<p concordion:assertTrue="true">passed manually. klf 7/23/2012</p>
+ 					<table>
+ 						<tr><th>Structure</th><th>Detected?</th></tr>
+ 						<tr><td>TS28: bone marrow</td><td>Yes</td></tr>
+ 						<tr><td>TS28: liver</td><td>Yes</td></tr>
+ 					</table>
+ 				</li>
+ 				<li>Verify that "Ambiguous" takes precedence over "Absent".
+ 					<br/>(There are no data for this case.  kstone 5/22/12)
+ 				</li>
+    		</ol>
+    		</li>
+		</ol>
+        <ul>
+        <li><a href="MultipleParametersSearch.html">See also multiple parameter search tests</a></li>
+        </ul>
+	</div>
+	<p>Verified that all tests from Google docs QA spreadsheet US51 are here.  --klf 6/11/2012</p>
+</div>
+
+</body>
+</html>

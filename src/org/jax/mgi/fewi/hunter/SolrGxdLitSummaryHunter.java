@@ -27,15 +27,20 @@ public class SolrGxdLitSummaryHunter extends SolrHunter {
          * filter list to the corresponding field names in the Solr implementation.
          */
         propertyMap.put(SearchConstants.GXD_LIT_MRK_NOMEN, new SolrPropertyMapper(IndexConstants.GXD_MRK_NOMEN));
+        propertyMap.put(SearchConstants.MRK_ID, new SolrPropertyMapper(IndexConstants.MRK_ID));
         propertyMap.put(SearchConstants.REF_YEAR, new SolrPropertyMapper(IndexConstants.REF_YEAR));
         propertyMap.put(SearchConstants.REF_JOURNAL, new SolrPropertyMapper(IndexConstants.REF_JOURNAL));
         propertyMap.put(SearchConstants.REF_AUTHOR_ANY, new SolrPropertyMapper(IndexConstants.REF_AUTHOR_FORMATTED));
         propertyMap.put(SearchConstants.REF_AUTHOR_FIRST, new SolrPropertyMapper(IndexConstants.REF_FIRST_AUTHOR));
         propertyMap.put(SearchConstants.REF_AUTHOR_LAST, new SolrPropertyMapper(IndexConstants.REF_LAST_AUTHOR));
 
+        propertyMap.put(IndexConstants.GXD_LIT_SINGLE_KEY, new SolrPropertyMapper(IndexConstants.GXD_LIT_SINGLE_KEY));
         propertyMap.put(SearchConstants.GXD_LIT_AGE, new SolrPropertyMapper(IndexConstants.GXD_LIT_AGE));
         propertyMap.put(SearchConstants.GXD_LIT_ASSAY_TYPE, new SolrPropertyMapper(IndexConstants.GXD_LIT_ASSAY_TYPE));
-
+        propertyMap.put(IndexConstants.GXD_LIT_AGE_ASSAY_TYPE_PAIR, new SolrPropertyMapper(IndexConstants.GXD_LIT_AGE_ASSAY_TYPE_PAIR));
+        
+        propertyMap.put(IndexConstants.MRK_TERM_ID, new SolrPropertyMapper(IndexConstants.MRK_TERM_ID));
+        
         ArrayList <String> titleList = new ArrayList <String> ();
         titleList.add(IndexConstants.REF_TITLE_STEMMED);
         titleList.add(IndexConstants.REF_TITLE_UNSTEMMED);

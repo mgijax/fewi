@@ -108,7 +108,7 @@ public class SolrPropertyMapper implements PropertyMapper {
             return field + ":[* TO "+value+"]";
         }
         else if (operand == Filter.OP_NOT_EQUAL) {
-            return "-" + field + ":" + value;
+            return "*:* -" + field + ":" + value;
         }
         else if (operand == Filter.OP_BEGINS) {
             return field + ":" + value + "*";
@@ -118,6 +118,9 @@ public class SolrPropertyMapper implements PropertyMapper {
         }
         else if (operand == Filter.OP_CONTAINS) {
             return field + ":" + "(" + value + ")";
+        }
+        else if (operand == Filter.OP_GREEDY_BEGINS) {
+        	return "("+field + ":" + value + " OR "+field + ":" + value+"* )";
         }
         return "";
     }

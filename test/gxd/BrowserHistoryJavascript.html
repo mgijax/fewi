@@ -1,0 +1,683 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	h3,h4 {margin-bottom:2px;}
+</style>
+<title>Browser history navigation tests</title>
+</head>
+
+<body>
+
+<div id="maintitle">
+    <h1>Browser history navigation tests</h1>
+    <ul>
+        <li>User story 61, Make forward and back browser buttons work better for the GXD QF and results page(s)</li>
+        <li>User story 14, Search by Gene Vocabulary (GO and MP)</li>
+        <li>User story 18, Search by Assay Type</li>
+        <li>User story 19, Search for expression results by specifying detected/not detected</li>
+        <li>User story 16, Search for expression results by age</li>
+        <li>User story 15, Search for expression results by Theiler stage</li>
+        <li>User story 31, Build UI for summary results: Assays page (tab)</li>
+        <li>User story 14, Search by gene-vocabulary annotation (GO and MP)</li>
+        <li>User story 11, Search for expression results by Anatomy term </li>
+        <li>User story 21, Search for expression results by mutant/wildtype </li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <p>GXD query form and summary browser navigation intended Behavior</p>
+	<ul>
+		<li>back button takes you back one event reliably
+		<ul>
+			<li>back button returning to initial query form should display the query form with default values</li>
+		</ul>
+		</li>
+		<li>fwd button takes you forward one event reliably</li>
+	</ul>
+<p>Events are defined as</p>
+<ul>
+<li>pagination change</li>
+<li>tab change</li>
+<li>query form submit</li> 
+</ul>
+</div>
+
+<p>Query form submit behavior</p>
+<ul>
+<li>submits query</li>
+<li>display defaults to Results tab, page 1</li>
+</ul>
+
+<p>Tab change behavior</p>
+<ul>
+<li>display returns to default: to page 1 for the selected tab</li>
+</ul>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->		<h3>Manual tests</h3>
+		<ul>
+		<li><a href="#Nomenclature">Nomenclature</a> parameter</li>
+		<li><a href="#Vocabulary">Vocabulary</a> parameter</li>
+		<li><a href="#TheilerStage">Theiler Stage</a> parameter</li>
+        <li><a href="#AssayTypes">Assay Types</a> parameter</li>
+        <li><a href="#Anatomy">Anatomy</a> parameter</li>
+        <li><a href="#Detection">Detection</a> parameter</li>
+        <li><a href="#Age">Age</a> parameter and Age/Stage Switching</li>
+        <li><a href="#wildtype">Wildtype</a> parameter</li>
+        <li><a href="#Complex">Complex</a> tests and bookmarking</li>
+		</ul>
+		
+		<h4 id="Nomenclature">Nomenclature parameter</h4>
+		<ol>
+    		<li>Test back button after first submit
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Once results display, Click the browser <b>back</b> button</li>
+					<li>Verify the query form displays the initial presentation: input text boxes are empty, selectable values are defaults</li>
+	    		</ol>
+    		</li>
+    		<li>Test forward button after back button after first submit
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Once results display, Click the browser <b>back</b> button</li>
+					<li>Verify the query form displays with a <b>empty</b> nomenclature field</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify results for <b>shh</b> displays</li>
+					<li>Click &quot;Click to hide search&quot; button</li>
+					<li>Verify <b>shh</b> appears in the nomenclature field.</li>
+	    		</ol>
+    		</li>
+    		<li>Test form retains last values entered, and back button resets the form to values of previous query
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Verify results for shh displays. Verify query form contains shh in the Nomenclature field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>gata1</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify results for gata1 displays. Verify query form contains gata1  in the Nomenclature field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>pax6</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify results for pax6 displays. Verify query form contains pax6 in the Nomenclature field.</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify the Gene Nomenclature field has <b>gata1 results</b> displayed. Verify query form contains gata1 in the Nomenclature field.</li>
+					<li>Click the browser <b>back</b> button again</li>
+					<li>Verify the Gene Nomenclature field has <b>shh results</b> displayed. Verify query form contains shh in the Nomenclature field.</li>
+	    		</ol>
+    		</li>
+    		<li>Test  form retains last values entered, and forward button resets the form to values of next most recent query
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Verify results for shh displays. Verify query form contains shh in the Nomenclature field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>gata1</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify results for gata1 displays. Verify query form contains gata1 in the Nomenclature field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>pax6</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify results for pax6 displays. Verify query form contains pax6 in the Nomenclature field.</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify results for gata1 displays. Verify the Gene Nomenclature field has <b>gata1</b> displayed.</li>
+					<li>Click the browser <b>back</b> button again</li>
+					<li>Verify results for shh displays. Verify the Gene Nomenclature field has <b>shh results</b> displayed.</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify results for gata1 displays. Verify the Gene Nomenclature field has <b>gata1</b> displayed.</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify results for pax6 displays. Verify the Gene Nomenclature field has <b>pax6</b> displayed</li>
+	    		</ol>
+    		</li>
+    		<li>Test back button resets tab counts and appropriate summary table to appropriate values of previous query
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Verify results for shh displays with Gene results (<b cc:dynamicData="shhGeneCount"></b>) and Assay results (<b cc:dynamicData="shhResultCount"></b>)</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>gata1</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify results for gata1 displays with Gene results (<b cc:dynamicData="gata1GeneCount"></b>) and Assay results (<b cc:dynamicData="gata1ResultCount"></b>)</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify the results for <b>shh</b> displays with Gene results (<b cc:dynamicData="shhGeneCount"></b>) and Assay results (<b cc:dynamicData="shhResultCount"></b>)</li>
+	    		</ol>
+    		</li>
+    		<li>Test forward button resets tab counts and appropriate summary table to appropriate values of next most recent query
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Verify results for shh displays with Gene results (<b cc:dynamicData="shhGeneCount"></b>) and Assay results (<b cc:dynamicData="shhResultCount"></b>)</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>gata1</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify results for gata1 displays with Gene results (<b cc:dynamicData="gata1GeneCount"></b>) and Assay results (<b cc:dynamicData="gata1ResultCount"></b>)</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify the results for  <b>shh</b> displays with Gene results (<b cc:dynamicData="shhGeneCount"></b>) and Assay results (<b cc:dynamicData="shhResultCount"></b>)</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify the results for <b>gata1</b> displays with Gene results (<b cc:dynamicData="gata1GeneCount"></b>) and Assay results (<b cc:dynamicData="gata1ResultCount"></b>)</li>
+	    		</ol>
+    		</li>
+    		<li>Test back button after tab change changes summary and active tab to previous tab
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Verify <b>results for shh</b> displays</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>gata1</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify <b>results for gata1</b> displays</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>pax6</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify the <b>results for pax6</b> displays</li>
+					<li>Click the <b>Genes</b> tab</li>
+					<li>Click the browser <b>back</b> button 1 time</li>
+					<li>Verify the <b>assay results for pax6</b> displays</li>
+	    		</ol>
+    		</li>
+    		<li>Test forward button after back button tab change changes summary and active tab to next most recent tab 
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Verify <b>results for shh</b> displays</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>gata1</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify <b>results for gata1</b> displays</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>pax6</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify the <b>results for pax6</b> displays</li>
+					<li>Click the <b>Genes</b> tab</li>
+					<li>Click the browser <b>back</b> button 1 time</li>
+					<li>Verify the <b>assay results for pax6</b> displays</li>
+					<li>Click the browser <b>forward</b> button 1 time</li>
+					<li>Verify the <b>Genes for pax6</b> displays</li>
+	    		</ol>
+    		</li>
+    		<li>Test changing tabs returns to Page 1 of selected tab's output, Back button moves backwards reliably.
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+    			<ol>
+	    			<li>Open the GXD query form</li>
+	    			<li>Enter <b>zfp*</b> in the gene nomenclature field and press <b>search</b></li>
+	    			<li>Verify <b>greater than 20000 results</b> are displayed</li>
+	    			<li>Click <b>"Last"</b> pagination control</li>
+	    			<li>Verify <b>last page of results</b> are displayed</li>
+	    			<li>Click <b>Genes</b> tab</li>
+	    			<li>Verify genes <b>1-100</b> are displayed</li>
+	    			<li>Change pagination to display <b>50</b> per page</li>
+	    			<li>Verify genes <b>1-50</b> are displayed</li>
+    				<li>Click <b>"Next"</b> pagination control</li>
+    				<li>Verify genes <b>51-100</b> are displayed</li>
+    				<li>Click <b>Results</b> tab</li>
+    				<li>Verify <b>results 1-100</b> are displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify <b>Genes tab: 51-100</b> are displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify <b>Genes tab: 1-50</b> are displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify <b>Genes tab: 1-100</b> are displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify <b>Results tab: last page</b> are displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify <b>Results tab: 1-100</b> are displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify query form with <b>default settings</b> is displayed</li> 				
+    			</ol>
+    		</li>
+		</ol>
+
+		<h4 id="Vocabulary">Vocabulary parameter</h4>
+		<ol>
+    		<li>Test back button after first submit
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>retrognathia</b> in the gene vocabulary field and press <b>search</b></li>
+					<li>Once results display, Click the browser <b>back</b> button</li>
+					<li>Verify the query form displays with <b>nothing</b> in the gene vocabulary field</li>
+	    		</ol>
+    		</li>
+    		<li>Test forward button after back button after first submit
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>retrognathia</b> in the gene vocabulary field and press <b>search</b></li>
+					<li>Once results display, Click the browser <b>back</b> button</li>
+					<li>Verify the query form displays with a <b>empty</b> nomenclature field</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify results for <b>Mammalian Phenotype: retrognathia</b> displays</li>
+	    		</ol>
+    		</li>
+    		<li>Test form retains last values entered, and back button resets the form to values of previous query
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>uropod</b> in the gene vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function: uropod</b> displays. Verify query form contains <b>uropod</b> in the Vocabulary field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>bleb</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function: bleb</b> displays. Verify query form contains <b>bleb</b>  in the Vocabulary field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>high palate</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Mammalian Phenotype:high palate</b> displays. Verify query form contains <b>high palate</b> in the Vocabulary field.</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify the results are returned for <b>Function: bleb</b></li>
+					<li>Click the browser <b>back</b> button again</li>
+					<li>Verify the results are returned for <b>Function: uropod</b></li>
+	    		</ol>
+    		</li>
+    		<li>Test  form retains last values entered, and forward button resets the form to values of next most recent query
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>uropod</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function: uropod</b> displays. Verify query form contains <b>uropod</b> in the Vocabulary field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>bleb</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function: bleb</b> displays. Verify query form contains <b>bleb</b> in the Vocabulary field.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>high palate</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Mammalian Phenotype:high palate</b> displays. Verify query form contains <b>high palate</b> in the Vocabulary field.</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify results for <b>Function: bleb</b> displays. Verify the Gene Vocabulary field has <b>bleb</b> displayed.</li>
+					<li>Click the browser <b>back</b> button again</li>
+					<li>Verify results for <b>Function: uropod</b> displays. Verify the Gene Vocabulary field has <b>uropod</b> results displayed.</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify results for <b>Function: bleb</b> displays. Verify the Gene Vocabulary field has <b>bleb</b> displayed.</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify results for <b>Mammalian Phenotype:high palate</b> displays. Verify the Gene Vocabulary field has <b>high palate</b> displayed</li>
+	    		</ol>
+    		</li>
+    		<li>Test back button resets tab counts and appropriate summary table to appropriate values of previous query
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+	                <li><i>Note: These counts listed are just example numbers. Just make sure that they stay consistent for each query. The actual numbers aren't important.</i></li>
+					<li>Enter <b>uropod</b> in the gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function: uropod</b> displays with Genes (<b>5</b>) Assays (<b>22</b>) and Assay results (<b>1129</b>)</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>high palate</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Mammalian Phenotype:high palate</b> displays with Genes (<b>1</b>) Assays (<b>3</b>) and Assay results (<b>303</b>)</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify the results for <b>uropod</b> displays with Genes (<b>5</b>) Assays (<b>22</b>) and Assay results (<b>1129</b>)</li>
+	    		</ol>
+    		</li>
+    		<li>Test forward button resets tab counts and appropriate summary table to appropriate values of next most recent query
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li><i>Note: These counts listed are just example numbers. Just make sure that they stay consistent for each query. The actual numbers aren't important.</i></li>
+					<li>Enter <b>high palate</b> in the gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Mammalian Phenotype:high palate</b> displays with Genes (<b>1</b>) Assays (<b>3</b>) and Assay results (<b>303</b>)</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>uropod</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function: uropod</b> displays with Genes (<b>5</b>) Assays (<b>22</b>) and Assay results (<b>1129</b>)</li>
+					<li>Click the browser <b>back</b> button</li>
+					<li>Verify the results for  <b>high palate</b> displays with Genes (<b>1</b>) Assays (<b>3</b>) and Assay results (<b>303</b>)</li>
+					<li>Click the browser <b>forward</b> button</li>
+					<li>Verify the results for <b>uropod</b> displays with Genes (<b>5</b>) Assays (<b>22</b>) and Assay results (<b>1129</b>)</li>
+	    		</ol>
+    		</li>
+    		<li>Test back button after tab change changes summary and active tab to previous tab for Vocabulary queries
+    		<p concordion:assertTrue="true">passed jeffc 7/18/12</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>uropod</b> in the gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function: uropod</b> displays</li>
+					<li>Click the <b>Assays</b> tab</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>high palate</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Mammalian Phenotype:high palate</b> displays</li>
+					<li>Click the <b>Genes</b> tab</li>
+					<li>Click the browser <b>back</b> button 1 time</li>
+					<li>Verify the assay results for <b>Mammalian Phenotype:high palate</b> displays</li>
+					<li>Click the browser <b>back</b> button 1 time</li>
+					<li>Verify the <b>Assays</b> tab for <b>Function: uropod</b> displays</li>
+					<li>Click the browser <b>back</b> button 1 time</li>
+					<li>Verify the <b>Assay Results</b> for <b>Function: uropod</b> displays</li>
+	    		</ol>
+    		</li>
+    		<li>Test forward button after back button tab change changes summary and active tab to next most recent tab 
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>high palate</b> in the Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Mammalian Phenotype:high palate</b> displays</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>uropod</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify results for <b>Function:uropod</b> displays</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>bleb</b> in the Gene Vocabulary field and press <b>search</b></li>
+					<li>Verify the results for <b>Function: bleb</b> displays</li>
+					<li>Click the <b>Genes</b> tab</li>
+					<li>Click the browser <b>back</b> button 1 time</li>
+					<li>Verify the assay results for <b>Function: bleb</b> displays</li>
+					<li>Click the browser <b>forward</b> button 1 time</li>
+					<li>Verify the <b>Genes tab for Function: bleb</b> displays</li>
+	    		</ol>
+    		</li>
+    		<li>Test changing tabs returns to Page 1 of selected tab's output, Back button moves backwards reliably.
+    		<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+    			<ol>
+	    			<li>Open the GXD query form</li>
+	    			<li>Enter <b>translation</b> in the Gene Vocabulary field and press <b>search</b></li>
+	    			<li>Verify <b>results for the first 100 Assay results</b> are displayed</li>
+	    			<li>Click <b>"Last"</b> pagination control</li>
+	    			<li>Verify <b>last page of results</b> are displayed</li>
+	    			<li>Click <b>Genes</b> tab</li>
+	    			<li>Verify the first <b>100 genes</b> are displayed</li>
+	    			<li>Change pagination to display <b>250</b> per page</li>
+	    			<li>Verify the first <b>250 genes</b> are displayed</li>
+    				<li>Click <b>"Next"</b> pagination control</li>
+    				<li>Verify the <b>last page of genes</b> are displayed</li>
+    				<li>Click <b>Assay Results</b> tab</li>
+    				<li>Verify the first <b>100 assays</b> are displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify the Genes tab displays with the <b>last page of genes</b> displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify  the Genes tab displays with the first <b>250 genes</b> displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify  the Genes tab displays with the first <b>100 genes</b> displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify the Assay results tab displays with the <b>last page of assay results</b> displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify the Assay results tab displays with the first <b>100 assay results</b> displayed</li>
+    				<li>Click <b>Back</b></li>
+    				<li>Verify query form with <b>default settings</b> is displayed</li> 				
+    			</ol>
+    		</li>
+		</ol>
+
+		<h4 id="TheilerStage">Theiler Stage parameter</h4>
+		<ol>
+		<li>Verify 1 TS remains selected when the Back button is used
+		<p concordion:assertTrue="true">passed. jeffc 7/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li>Select <b>Theiler Stage 1</b> and submit the query.</li>
+			<li>Click the <b>Back</b> button.</li>
+			<li>Verify query form with <b>default settings</b> is displayed</li> 				
+			</ol>
+		</li>
+		<li>Verify multiple TS remain selected when the Back button is used.
+		<p concordion:assertTrue="true">passed jeffc 7/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li>Select <b>Theiler Stage 1</b>, <b>Theiler Stage 3</b>, and <b>Theiler Stage 7</b> and submit the query.</li>
+			<li>Click the <b>Back</b> button.</li>
+			<li>Verify query form with <b>default settings</b> is displayed</li> 				
+			</ol>
+		</li>
+		<li>Verify TS history is retained over multiple queries.
+		<p concordion:assertTrue="true">passed jeffc 07/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li>Select <b>Theiler Stage 1</b>, <b>Theiler Stage 3</b>, and <b>Theiler Stage 7</b> and submit the query.</li>
+			<li>Open the query form and verify that TS1, TS3 and TS7 are still selected.</li>
+			<li>Select <b>Theiler Stage 2</b> and submit the query.</li>
+			<li>Open the query form and verify that TS2 is still selected.</li>
+			<li>Select <b>Theiler Stage 26</b> and <b>Theiler Stage 28</b> and submit the query.</li>
+			<li>Open the query form and verify that TS26 and TS28 are still selected.</li>
+			<li>Click the <b>Back</b> button.</li>
+			<li>Verify that <b>TS2 is selected</b>.</li>
+			<li>Click the <b>Back</b> button.</li>
+			<li>Verify that <b>TS1, TS3, TS7 are still selected</b>. </li>
+			<li>Click the <b>Forward</b> button.</li>
+			<li>Verify that <b>TS2 is selected</b>.</li>
+			<li>Click the <b>Forward</b> button.</li>
+			<li>Verify that <b>TS26 and TS28 are selected</b>.</li>
+			</ol>
+		</li>
+		</ol>
+
+		<h4 id="AssayTypes">Assay Types parameter</h4>
+		<ol>
+		<li>Verify "All" Assay Types remain selected when the Back button is used
+		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li>Verify that the <b>"Any assay types" checkbox and all 8 sub-option checkboxes are selected</b> and submit the query.</li>
+			<li>Click <b>"Modify query"</b> and verify that <b>all 9 checkboxes remain selected</b>.</li>
+			<li>Click the <b>"Back" button</b> and verify that <b>all 9 checkboxes remain selected</b>.</li>
+			</ol>
+		</li>
+		<li>Verify 1 Assay Type remains selected when the Back button is used
+		<p concordion:assertTrue="true">Passed jeffc 04/30/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li><b>Deselect the "Any assay types"</b> option</li>
+			<li>Verify that <b>all 9 checkboxes are deselected</b>.</li>
+			<li>Select the <b>"Northern blot"</b> option and submit the query.</li>
+			<li>Click <b>"Modify query"</b> and verify that <b>"Northern blot" remains selected</b>.</li>
+			<li><b>Deselect the "Northern blot"</b> option.</li>
+			<li>Select the <b>"RNase protection"</b> option and submit the query.</li>
+			<li>Click <b>"Modify query"</b> and verify that <b>"RNase protection" remains selected</b>.</li>
+			<li>Click <b>"Back"</b> and verify that <b>"Northen blot" is selected</b>.</li>
+			</ol>
+		</li>
+		<li>Verify multiple Assay Types remain selected when the Back button is used
+		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li><b>Deselect the "Any assay types"</b> option</li>
+			<li>Verify that <b>all 9 checkboxes are deselected</b>.</li>
+			<li>Select the <b>"Northern blot" and "Nuclease S1"</b> options and submit the query.</li>
+			<li>Click <b>"Modify query"</b> and verify that <b>"Northern blot" and "Nuclease S1" remain selected</b>.</li>
+			<li><b>Deselect the "Northern blot" and "Nuclease S1"</b> options.</li>
+			<li>Select the <b>"RT-PCR" and "Western Blot"</b> options and submit the query.</li>
+			<li>Click <b>"Modify query"</b> and verify that <b>"RT-PCR" and "Western Blot" remain selected</b>.</li>
+			<li>Click <b>"Back"</b> and verify that <b>"Northern blot" and "Nuclease S1" are selected</b>.</li>
+			</ol>
+		</li>
+		<li>Verify all-deselected, all-selected behavior of Assay Types when the Back button is used
+		<p concordion:assertTrue="true">passed. jeffc 7/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li><b>Deselect the "Any assay types"</b> option</li>
+			<li>Verify that <b>all 9 checkboxes are deselected</b>.</li>
+			<li><b>Submit the query</b>. </li>
+			<li>Select the <b>"RT-PCR" and "Western Blot"</b> options and submit the query.</li>
+			<li>Click <b>"Modify query"</b> and verify that <b>"RT-PCR" and "Western Blot" remain selected</b>.</li>
+			<li>Click <b>"Back"</b> and verify that <b>all 9 options are selected (the default)</b>.</li>
+			</ol>
+		</li>
+		<li>Verify Assay Types history is retained over multiple queries.
+		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li><b>Deselect the "Any assay types"</b> option</li>
+			<li>Verify that <b>all 9 checkboxes are deselected</b>.</li>
+			<li><b>Submit the query</b>. </li>
+			<li>Click <b>"Modify query"</b> and select assay type <b>Immunohistochemistry</b></li>
+			<li><b>Submit the query</b>. </li>
+			<li>Click <b>"Modify query"</b> and select assay type <b>In situ reporter (knock in)</b></li>
+			<li><b>Submit the query</b>. </li>
+			<li>Click <b>"Modify query"</b> and select assay type <b>Northern blot</b></li>
+			<li><b>Submit the query</b>. </li>
+			<li>Click <b>"Modify query"</b> and select assay type <b>Nuclease S1</b></li>
+			<li><b>Submit the query</b>. </li>
+			<li>Click <b>"Back"</b> and verify that assay types data for <b>Immunohistochemistry, In situ reporter (knock in), Northern blot</b> displays.</li>
+			<li>Click <b>"Back"</b> again and verify that assay types data for <b>Immunohistochemistry, In situ reporter (knock in)</b> displays.</li>
+			<li>Click <b>"Back"</b> again and verify that assay types data for <b>Immunohistochemistry</b> displays.</li>
+			<li>Click <b>"Back"</b> again and verify that assay types data for <b>all assay types</b> displays.</li>
+			</ol>
+		</li>
+		</ol>
+
+
+		<h4 id="Anatomy">Anatomy parameter</h4>
+		<ol>
+		<li>Test back button after first submit
+		<p concordion:assertTrue="true">kstone 06/07/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li>Enter <b>abdomen</b> in the Anatomical structure text box and submit the query.</li>
+			<li>Click the <b>Back</b> button.</li>
+			<li>Verify query form with <b>default settings</b> is displayed</li> 				
+			</ol>
+		</li>
+		<li>Verify Anatomy history is retained over multiple queries.
+			<p concordion:assertTrue="true">passed jeffc 07/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li>Enter <b>abdomen</b> in the anatomical structure text box and submit the query.</li>
+			<li>Click the <b>Click to modify search</b> button and verify <b>abdomen</b> is still displayed in the anatomical structure text box.</li>
+			<li>Enter <b>myotome</b> in the anatomical structure text box and submit the query.</li>
+			<li>Click the <b>Click to modify search</b> button and verify <b>myotome</b> is still displayed in the anatomical structure text box.</li>
+            <li>Enter <b>heart cardiac jelly</b> in the anatomical structure text box and submit the query.</li>
+			<li>Click the <b>Click to modify search</b> button and verify <b>heart cardiac jelly</b> is still displayed in the anatomical structure text box.</li>
+			<li>Click the <b>Back</b> button.</li>
+			<li>Verify that <b>myotome</b> results are displayed.</li>
+			<li>Click the <b>Back</b> button.</li>
+			<li>Verify that <b>abdomen</b> results are displayed. </li>
+			<li>Click the <b>Forward</b> button.</li>
+			<li>Verify that <b>myotome</b> results are displayed.</li>
+			<li>Click the <b>Forward</b> button.</li>
+			<li>Verify that <b>heart cardiac jelly</b> results are displayed.</li>
+			</ol>
+		</li>
+		</ol>
+
+        <h4 id="Detection">Detection parameter</h4>
+        <ol>
+        <li>Verify that the correct "Detection" radio button remains selected  when the Back button is used
+        <p concordion:assertTrue="true">passed jeffc 7/18/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Verify <b>either</b> is selected in the Anatomical structure or stage section and press <b>search</b>.</li>
+                <li>Click <b>click to modify search</b> button and <b>verify "either"</b> is selected.</li>
+                <li>Select <b>detected</b> in the Anatomical structure or stage section and press <b>search</b>.</li>
+                <li>Click <b>click to modify search</b> button and <b>verify "detected"</b> is selected.</li>
+                <li>Select <b>not detected in</b> in the Anatomical structure or stage section and press <b>search</b>.</li>
+                <li>Click <b>click to modify search</b> button and <b>verify "not detected"</b> is selected. </li>
+				<li>Select <b>either</b> in the Anatomical structure or stage section and press <b>search</b>.</li>
+                <li>Click <b>click to modify search</b> button and <b>verify "either"</b> is selected. </li>
+				<li>Click <b>"Back"</b> and <b>verify "not detected"</b> is selected. </li>
+				<li>Click <b>"Back"</b> and <b>verify "detected"</b> is selected. </li>
+				<li>Click <b>"Back"</b> and <b>verify "either"</b> is selected. </li>
+            </ol>
+        </li>
+        </ol>
+
+        <h4 id="Age">Age parameter and Age/Stage Switching</h4>
+        <ol>
+        <li>Verify "correct" age options remain selected  when the Back button is used
+        <p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Verify <b>Any developmental stage</b> option is selected from the Theiler Stages multiselect widget</li>
+                <li>Click the <b>Use Ages (dbc)</b> tab to toggle to the Age multiselect widget and select <b>E2, E2.5, and E3</b></li>
+                <li>Submit the query</li>
+                <li>Expand the query form and select <b>E16, E17, and E18</b> from the Age widget</li> 
+                <li>Submit the query</li>
+                <li>Expand the query form, click the <b>Use Theiler Stages</b> tab and select <b>TS23 and TS24</b></li>
+                <li>Submit the query</li>
+                <li>Expand the query form, click the <b>Use Ages (dpc)</b> tab and select <b>Postnatal</b> from the Age widget</li>
+                <li>Submit the query</li>
+                <li>Expand the query form, click the <b>Use Theiler Stages</b> tab and select <b>TS3 and TS4</b></li>
+                <li>Submit the query</li>
+                <li>Click <b>"Back"</b>, expand the query form, and <b>verify Postnatal</b> is selected</li>
+				<li>Click <b>"Back"</b>, expand the query form, and <b>verify TS23 and TS24</b> are selected. </li>
+				<li>Click <b>"Back"</b>, expand the query form, and <b>verify E16, E17 and E18</b> are selected. </li>
+				<li>Click <b>"Back"</b>, expand the query form, and <b>verify E2, E2.5, and E3</b> are selected. </li>
+                <li>Click <b>"Back"</b>, expand the query form, and <b>verify the default presentation of Theiler Stages is displayed and "Any developmental stage" is selected</b></li>
+            </ol>
+        </li>
+        </ol>
+
+		<h4 id="wildtype">mutant/wildtype parameter</h4>
+		<ol>
+		<li>Verify correct Mutant/Wildtype is selected when using the back and forward buttons 
+		<p concordion:assertTrue="true">passed jeffc 7/18/2012</p>
+			<ol>
+			<li>Open the GXD Query Form</li>
+			<li>Select Mutant/Wildtype option <b>Specimens mutated in gene</b> and enter <b>gata1</b> in the text box. Cleck the search button</li>
+			<li>Click the <b>click to modify search</b> button and <b>verify "gata1"</b> is entered in the mutant text box.</li>
+			<li>Remove <b>gata1</b> from the mutant text box and select the <b>Wildtype specimens only</b> option. Click the Search button.</li>
+			<li>Click the <b>click to modify search</b> button and <b>verify Wild type specimens only</b> option is selected in the Mutant/Wildtype section</li>
+			<li>Select the <b>All specimens</b> option. Click the Search button.</li>
+			<li>Click the <b>click to modify search</b> button and <b>verify All specimens</b> option is selected in the Mutant/Wildtype section</li>
+			<li>Click the <b>"Back" button</b> and verify that <b>specimens mutated in gene</b> option is selected in the Mutant/Wildtype section and the text field contains <b>gata1</b>.</li>
+			<li>Click the <b>"Forward" button</b> and verify that <b>Wild type specimens only</b> option is selected in the Mutant/Wildtype section.</li>
+			<li>Click the <b>"Forward" button</b> and verify that <b>All specimens</b> option is selected in the Mutant/Wildtype section.</li>
+			</ol>
+		</li>
+		</ol>
+		       
+        <h4 id="Complex">Complex test and bookmarking</h4>
+        <ol>
+    		<li>Test that query results display of Genes tab can be bookmarked
+    		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+	    		<ol>
+					<li>Open the GXD query form</li>
+					<li>Enter 
+						<ul>
+						<li><b>kit*</b> in the gene nomenclature field</li>
+						<li><b>E10.5, E11.5, E12.5, E13.5</b> in the Ages multiselect</li>
+						<li><b>Immunohistochemistry and RT-PCR</b> in the Assays widget</li>
+						</ul>
+						 <p>and press <b>search</b></p>
+					</li>
+					<li>Verify results display</li>
+					<li>Switch to the Genes output tab</li>
+					<li><b>Bookmark</b> the page while viewing the Genes tab</li>
+					<li><b>Close</b> the browser</li>
+					<li><b>Open</b> a new browser session. Find and click your <b>bookmark</b></li>
+					<li>Verify the <b>Genes results</b> for the query are properly displayed</li>
+					<li>KEEP THESE QUERY RESULTS FOR THE NEXT TEST.</li>
+	    		</ol>
+    		</li>
+    		<li>Test that query results display of Results tab can be bookmarked
+    		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+	    		<ol>
+	                <li>USING THE RESULTS OF THE TEST ABOVE...</li>
+					<li><b>Bookmark</b> the page while viewing the <b>assay results tab</b> for shh</li>
+					<li><b>Close</b> the browser</li>
+					<li><b>Open</b> a new browser session. Find and click your <b>bookmark</b></li>
+					<li>Verify the <b>assay results</b> for the query are properly displayed</li>
+	    		</ol>
+    		</li>
+    		<li>Complex test: Multiple queries, change tabs, change pagination view and use Back and Forward in between.
+    		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+	    		<ol>
+	                <li>Open the GXD query form</li>
+					<li>Enter <b>shh</b> in the gene nomenclature field and press <b>search</b></li>
+					<li>Verify <b>results for shh</b> displays</li>
+					<li>Click the <b>Genes</b> tab.</li>
+					<li>Verify <b>Gene Shh</b> displays.</li>
+					<li>Click <b>Back</b>.</li>
+					<li>Verify <b>results for Shh</b> displays.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>gata1</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify <b>results for gata1</b> displays</li>
+					<li>Click the <b>Genes</b> tab.</li>
+					<li>Verify <b>Gene Gata1</b> displays.</li>
+					<li>Click the <b>Click to modify search</b> and enter <b>pax6</b> in the Gene Nomenclature field and press <b>search</b></li>
+					<li>Verify the <b>results for pax6</b> displays</li>
+					<li>Click <b>Last</b> in the pagination controls.</li>
+					<li>Verify <b>Results 1401-1434</b> are displayed.</li>
+					<li>Click <b>Back</b>.</li>
+					<li>Verify <b>Results 1-100 of 1434 for Pax6</b> are displayed.</li>
+					<li>Click <b>Back</b>.</li>
+					<li>Verify <b>Gene Gata1</b> displays.</li>
+					<li>Click <b>Back</b>.</li>
+					<li>Verify <b>results for gata1</b> displays.</li>
+					<li>Click <b>Back</b>. </li>
+					<li>Verify <b>results for shh</b> displays.  </li>
+					<li>Click <b>Back</b>.</li>
+					<li>Verify query form with <b>blank Nomenclature field</b> appears.</li>
+	    		</ol>
+    		</li>
+        </ol>
+	</div>
+	
+	
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>None</li>
+		</ol>
+	</div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,282 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<title>GXD Query Form and Results</title>
+<style>
+h5 {font-size:1em; font-variant:small-caps;}
+th {background-color:#D0E0F0;}
+</style>
+</head>
+<body>
+
+    <h1>GXD Query Form and Results</h1>
+
+	<div>
+	<h2>Functional Description</h2>
+	<h3>Planned Querying Functionality:</h3>
+	<p>The user may search for expression data for genes by identifying the genes by nomenclature, vocabulary term annotations, or chromosomal location.  The user also may search for expression data associated with particular anatomical structures or developmental stages, in specimens bearing mutations in particular genes, or by the type of expression assay performed.  The user may specify whether they wish to restrict the results only to data where expression was detected, only to data where expression was assayed but was absent, or to include all data.</p>
+	
+	<h3>Planned Results Summary Functionality:</h3>
+	<p>The user may access each of three views of the results set of data using "tab" affordances: Genes, Assays, or Assay Results. Each view contains a data table with particular columns, sorting and filtering requirements. Results will be presented in "paginated" subsets.  The user may download the full results set in tab-delimited or Excel format.	
+	The user may forward the list of returned genes to the Batch Query tool.</p>
+	</div>
+
+	<div>
+	<h2>Test Suites</h2>
+		<table>
+			<tr>
+				<th>Description</th>
+				<th>User story IDs</th>
+				<th>Contains Manual Tests?</th>
+				<th>Notes</th>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>GXD QF &amp; Summary: Basic
+						Functionality</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AssayResults.html">Correct
+						assay results data are returned</a> (Assay Results tab)</td>
+				<td>51</td>
+				<td>Yes</td>
+				<td>Needs automated tests to be automated. -klf 7/13<br/>Manual tests done. 7/12 Jeff.</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AssaySummary.html">Correct
+						assays data are returned</a> (Assays tab)</td>
+				<td>31</td>
+				<td>Yes</td>
+				<td>Done.  7/16 Kim.</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GeneSummary.html">Correct
+						gene results data are returned</a> (Genes tab)</td>
+				<td>22, 23</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>GXD QF &amp; Summary: Query Form
+						Ribbons</h5></td>
+			</tr>
+			<tr>
+				<td colspan="4" style="background-color: #EEEEEE;">Genes</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="NomenclatureSearch.html">Nomenclature search</a></td>
+				<td>9</td>
+				<td>Yes</td>
+				<td>Done. 7/16 Jeff.</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="VocabularyAutocomplete.html">Vocabulary autocomplete</a>
+					(only searched vocabs)</td>
+				<td>13, 50, 91, 85</td>
+				<td>Yes</td><td>Need to verify (or automate) counts in the automated tests.<br/>Need to update 2 search terms since data refresh.<br/>Manual done. 7/17 Jeff. </td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GeneVocabSearch.html">Vocabulary
+						term search</a> (GO and MP and OMIM)</td>
+				<td>14, 85</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="ProhibitNomenVocabSearch.html">Prohibit Nomen + Vocab
+						Search</a></td>
+				<td>59</td>
+				<td>Yes (no Auto)</td>
+				<td>tests run 7/17/2012, some tests might be obsolete jeffc</td>
+			</tr>
+			<tr>
+				<td colspan="4" style="background-color: #EEEEEE;">Anatomical
+					structure or stage</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="DetectionSearch.html">Searching
+						by detected/not detected</a></td>
+				<td>19, 105</td>
+				<td>Yes</td>
+				<td>Manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="AnatomyAutocomplete.html">Anatomy autocomplete</a></td>
+				<td>10</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AnatomySearch.html">Anatomy
+						term search</a></td>
+				<td>11</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="TheilerStageSearch.html">Searching by Theiler stage</a></td>
+				<td>12</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AgeSearch.html">Searching
+						by age</a></td>
+				<td>16</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AgeStageToggle.html">Searching
+						by age -OR- Theiler stage</a> (toggling)</td>
+				<td>15</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td colspan="4" style="background-color: #EEEEEE;">Mutant/wildtype</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="MutantWildtypeSearch.html">Searching by mutant/wildtype
+						genetic background of specimen</a></td>
+				<td>21</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td colspan="4" style="background-color: #EEEEEE;">Assay types</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AssayTypeSearch.html">Searching
+						by assay type</a></td>
+				<td>18</td>
+				<td>Yes</td>
+				<td>manual tests run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>GXD QF &amp; Summary: Other Page
+						Functionality</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="AssayResultsPagination.html">Assay results summary
+						pagination</a></td>
+				<td>24, 80</td>
+				<td>Yes (no Auto)</td>
+				<td>manual test run 7/17/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="DisplayQueryParameters.html">Display query parameters
+						(You Searched For) *</a></td>
+				<td>18, 19, 29</td>
+				<td>Yes (no Auto)</td><td>necessary manual tests run 7/17/2012 klf</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="BrowserHistoryJavascript.html">Browser history manager *</a></td>
+				<td>18, 19, 61</td>
+				<td>Yes (no Auto)</td>
+				<td>manual test run 7/18/2012 jeffc, some tests need updating</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="CollapsingFields.html">Making
+						query form &quot;fully functional&quot;</a><br /> (Query form expands
+					and collapses, retains user's values)</td>
+				<td>25</td>
+				<td>Yes</td>
+				<td>manual tests run 7/18/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="DownloadableReports.html">File download options for Assay
+						Results</a> (text and Excel)</td>
+				<td>26, 65</td>
+				<td>Yes</td>
+				<td>manual tests run 7/18/2012 jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="QueryFormTextChanges.html">Query Form Text Changes</a> (from
+					Sprint 8 + vocab searching chanegs)</td>
+				<td>94, 85</td>
+				<td>Yes (no Auto)</td>
+				<td>Evaluate this test stuff, might not be needed any more jeffc 7/18/12</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="ColumnSortAssayResultsTab.html">Column Sorting, Assay
+						Results Tab</a></td>
+				<td>74</td>
+				<td>Yes (no Auto?)</td>
+				<td>manual tests run jeffc 7/18/2012</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="ColumnSortGeneResultsTab.html">Column Sorting, Gene
+						Results Tab</a></td>
+				<td>28</td>
+				<td>Yes (no Auto?)</td>
+				<td>manual test run jeffc 7/19/2012</td>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>GXD QF &amp; Summary: Input
+						Combinations</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="MultipleParametersSearch.html">Searching by combining
+						multiple search parameters</a><br /> (This test verifies only that
+					correct data are returned.<br /> Other, manual tests are required
+					to verify format and layout.)</td>
+				<td>9, 12, 18</td>
+				<td>No</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>Other Pages</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="MarkerDetailLinkChanges.html">Update links to GXD Results Summary from Marker Detail Page</a><br /> 
+					(includes building new Summary Page to support these)</td>
+				<td>96</td>
+				<td>Yes (no Auto)</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="LitIndexLinksFromQueryOrMarker.html">Update links to GXD Lit Index from Query Results Summary Page<br/>and Expression Results for Marker Page</a></td>
+				<td>30</td>
+				<td>Yes (no Auto)</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="ReferencesPageLinkChanges.html">Update links to GXD Results Summary from References Page</a><br /> 
+					(includes building new Summary Page to support these)</td>
+				<td>97</td>
+				<td>Yes (no Auto)</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="ADBrowserLinkChanges.html">Change links from AD Browser to GXD Summary</a></td>
+				<td>111</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="QuickSearchLinkChanges.html">Change links from Quick Search to GXD Summary</a></td>
+				<td>116</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+<p>* means tests must be  updated for all newly added functionality</p>
+<p>Dynamic Data spreadsheet used for some automated tests is located at <a target="_blank" href="https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0">https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0</a>.</p>
+<p>Product Backlog spreadsheet is located at <a target="_blank" href="https://docs.google.com/spreadsheet/ccc?key=0AuNTuUFIDheUdG1KSVRwMWV0VUhGY1FuSDZFeFV0THc#gid=17">https://docs.google.com/spreadsheet/ccc?key=0AuNTuUFIDheUdG1KSVRwMWV0VUhGY1FuSDZFeFV0THc#gid=17</a>.</p>
+<p>Cardolan's Postgres database (Pub - MGD schema) is located at <a target="_blank" href="http://rohan.informatics.jax.org/phpPgAdmin/">PhP Admin Page</a></p>
+</body>
+</html>

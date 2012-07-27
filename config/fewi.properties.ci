@@ -1,0 +1,80 @@
+#-------------------------------------------------------------------------------
+#- fewi-specific properties.
+#-
+#- Applied by <context:property-placeholder/> application context XML file
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+#----- BASE URLS
+#-------------------------------------------------------------------------------
+
+
+#----- FEWI_URL -----#
+
+# Overrides value normally set in GlobalConfig.properties.
+#FEWI_URL=http://server.informatics.jax.org/
+#FEWI_URL=http://cardolan.informatics.jax.org:8080/fewi/mgi/
+
+
+#----- solr server urls -----#
+
+# Weekly Proto
+solr.server1.url=http://cardolan.informatics.jax.org:8991/solr/
+
+# Front-end development indexes
+#solr.server1.url=http://cardolan:8985/solr/
+
+
+#-------------------------------------------------------------------------------
+#----- INSTALL VALUES
+#-------------------------------------------------------------------------------
+
+# directory in which to find the standard mgi template
+# in CI, this is replaced at build time (ENDING SLASH MUST BE INCLUDED)
+#template.dir=/home/<user>/devwi/mgiconfig/web/
+template.dir=@TEMPLATE_DIR@/
+
+# data sources
+hibernate.generate_statistics=false
+hibernate.show_sql=false
+hibernate.dialect=org.hibernate.dialect.ProgressDialect
+jndi.datasource=java:fe_frontend
+
+# gxd lit result limit
+gxdLit.limit=20000
+
+# SNP build identifier
+SNP_BUILD=dbSNP Build 128
+
+#-------------------------------------------------------------------------------
+#----- SOLR INDEX URLS
+#-------------------------------------------------------------------------------
+
+#solr index-specific urls
+solr.reference.url=${solr.server1.url}reference/
+solr.authors_ac.url=${solr.server1.url}authorsAC/
+solr.cre.url=${solr.server1.url}cre/
+solr.journals_ac.url=${solr.server1.url}journalsAC/
+solr.sequence.url=${solr.server1.url}sequence/
+solr.allele.url=${solr.server1.url}allele/
+solr.marker.url=${solr.server1.url}marker/
+solr.image.url=${solr.server1.url}image/
+solr.markerPaneset.url=${solr.server1.url}markerPaneset/
+solr.markerTissue.url=${solr.server1.url}markerTissue/
+solr.markerAnnotation.url=${solr.server1.url}markerAnnotation/
+solr.creAlleleSystem.url=${solr.server1.url}creAlleleSystem/
+solr.creAssayResult.url=${solr.server1.url}creAssayResult/
+solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
+solr.structure_ac.url=${solr.server1.url}structureAC/
+solr.vocab_term_ac.url=${solr.server1.url}vocabTermAC/
+solr.gxd_result.url=${solr.server1.url}gxdResult/
+
+# solr config parameters
+solr.soTimeout=70000
+solr.connectionTimeout=70000
+solr.maxConnectionsPerHost=100
+solr.maxTotalConnections=100
+solr.maxRetries=1
+solr.resultsDefault=5000
+solr.factetNumberDefault=501

@@ -1,0 +1,239 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hide {display: none;}
+</style>
+
+    <title>Anatomy Term Search</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Anatomy Term Search</h1>
+    <ul>
+        <li>User story 11, Search for expression results by Anatomy term</li>
+        <li>User story 88, Implement stop word list to anatomy search</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>user may select only one option from autocomplete list, and this text may be a Term or a Synonym text string from the AD</li>
+		<li>selected input text tokens are matched against Structure Name (ANDing tokens)</li>
+		<li>selected input text tokens are also matched against Synonyms (ANDing tokens) in order to find associated Structure Names</li>
+		<li>all expression results associated with all matching Structure Names and their child structures are returned </li>
+		<li>other parameters AND'ed to this</li>
+		<li>reset button clears the widget</li>
+		<li>update display user's query parameters</li>
+		<li>update user help</li>
+		<li>DO NOT update the autocomplete handling of synonyms to be like the vocab autocomplete
+			<ul>
+				<li>for each synonym, DO NOT display the structure name in square brackets</li>
+			</ul>
+		</li>
+		<li>the autocomplete will continue to display both Terms and Synonyms, undistinguished from one another, which match to the user's typed text</li>
+		<li>Employ a Stop Words list (and,from,of,or,the,their,to)<i>(as of 7/06/12)</i></li>
+		<li>DO NOT perform stemming</li>
+		<li>treat special characters (ampersand, at symbol, hyphen, apostrophe, slash, etc.) as if they were whitespace</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>The selected text is placed in the input box (this is a change)
+			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p> 
+    		<ol>
+    			<li>Begin typing <b>myocardium</b> in the input text box</li>
+    			<li>Select <b>myocardium</b> from the autocomplete list</li>
+    			<li>Verify the input text box is populated with the text <b>myocardium</b> and not <b>cardiac muscle</b></li>
+    		</ol>
+    		</li>
+    		<li>The selected text tokens are AND'ed and search against both Terms and Synonyms
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p> 
+    		<ol>
+    			<li>Begin typing <b>myoc</b> in the input text box</li>
+    			<li>Verify that <b>myocoele</b> appears in the autocomplete list (a Structure Name Term)</li>
+    			<li>Verify that <b>myocardium</b> appears in the autocomplete list (a Synonym)</li>
+    			<li>Continue typing... add a space and then <b>som</b></li>
+    			<li>Verify that all displayed terms are <b>somite 05 myocoele</b> through <b>somite 60 myocoele</b></li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>The query returns all results in every stage where the Term or the Synonym contains the selected text, and all results associated with all descendant Terms
+<!-- OLD EXAMPLE FROM KEVIN'S EMAIL OF 5/25/2012
+				<ol>
+					<li><span class="hide" concordion:execute="#stage6Count = get(#TEXT)">ts6ResultCount</span>
+					Select "TS <b concordion:set="#stage">6</b>(4.0-5.5dpc)" option from the TS widget</li>
+					<li>Verify you return <b cc:assertEquals="getResultCountByTS(#stage)"><span concordion:echo="#stage6Count"></span></b> results</li>
+				</ol>
+ -->    		
+ <!--  UPDATED EXAMPLE FROM TEST CASE AT END OF THIS DOCUMENT 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 			<ol>
+ 				<li>
+ 				Query for <b concordion:set="#structure">cornea</b> should return
+ 				<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForCorneaResults"></b></b> assay results,
+ 				<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countForCorneaAssays"></b></b> assays, and
+ 				<b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countForCorneaGenes"></b></b> genes.
+    			</li>
+    			<li>Query for <b concordion:set="#structure">abdominal muscle</b> 
+    			should return <b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForAbdominalMuscleResults"></b></b> assay results.</li>
+			</ol>
+    		</li>
+    		<li>Text matching a Synonym which maps to 2 or more different Terms in different Stages returns all results for all such Terms and all their descendant Terms in all Stages
+    		<ol>
+ 				<li>
+ 				Query for the Synonym <b concordion:set="#structure">blastocyst</b> should return
+ 				<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForBlastocystResults"></b></b> assay results,
+ 				<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countForBlastocystAssays"></b></b> assays, and
+ 				<b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countForBlastocystGenes"></b></b> genes.
+    			</li>
+    			<li>Query for the Synonym <b concordion:set="#structure">blastocyst</b> should return data ONLY for the following Terms and child Terms:
+    				<table cc:verifySubsetOf="#results : getTSStructures(#structure)">
+    				<tr><th cc:assertEquals="#results">Term</th></tr>
+    				<tr><td>TS4: inner cell mass</td></tr>
+    				<tr><td>TS5: embryo</td></tr>
+    				<tr><td>TS5: inner cell mass</td></tr>
+    				</table>
+    			</li>
+    		</ol>
+    		</li>
+    		<li>The query does not stem (remove common suffixes like plurals, -ing, and -ed, to use only the root word) the selected Term or Synonym text tokens or the Terms or Synonyms in the results.
+    		<ol>
+    			<li><i>(No terms end in '-ed' and also appear in 'present tense' form. klf 5/29/12)</i></li>
+    			<li>Query for <b concordion:set="#structure">mature nephron</b> should return <b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForMatureNephronResults"></b></b> assay results.
+    			</li>
+    			<li>Query for <b concordion:set="#structure">maturing nephron</b> should return <b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForMaturingNephronResults"></b></b> assay results.
+    			</li>
+    			<li>Query for <b concordion:execute="#count1 = getResultCount(#TEXT)">mature nephron</b> and for <b concordion:execute="#count2 = getResultCount(#TEXT)">maturing nephron</b> should return different number of assay results.
+    			<b cc:assertNotEquals="#count2"><b concordion:echo="#count1"></b></b>. 
+    			</li>
+    			<li>Query for <b concordion:set="#structure">extraembryonic cavity</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">extraembryonic cavities</b>.
+    			</li>
+    			<li>Query for <b concordion:set="#structure">capillaries</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">capillary</b>.
+    			</li>
+    			<li>Query for <b concordion:set="#structure">column</b> (not a real Term) should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">future spinal cord basal columns</b> (a real Term)
+    			</li>
+    			<li>Query for <b concordion:set="#structure">columns</b> (not a real Term) should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">vertebral column</b> (a real Term)
+    			</li>
+    		</ol>
+    		</li>
+    		<li>Tokens must be AND'ed within a Term or within a Synonym but cannot match across both
+    		<ol>
+    			<li>Query for <b concordion:set="#structure">amygdala nucleus</b> should not bring back <b cc:assertNoResultsContain="getStructures(#structure)">amygdala</b>. (<i>amygdala has synonym amygdaloid nucleus</i>)</li>
+    		</ol>
+    		</li>
+    		<li>Token order does not matter. 
+    		<ol>
+    			<li>Query for <b concordion:set="#structure">head pancreas</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">pancreas head</b> in the return set</li>
+    		</ol>
+    		</li>
+    		<li>Tokens are AND'ed but query is not limited to a phrase search
+    		<ol>
+    			<li>Query for <b concordion:set="#structure">abdomen</b> also includes results for <b cc:assertResultsContain="getStructures(#structure)">abdomen muscle</b>.</li>
+    			<li>Query for <b concordion:set="#structure">incisor epithelium</b> also includes results for <b cc:assertResultsContain="getStructures(#structure)">lower jaw incisor epithelium</b></li>
+    			<li>Query for <b concordion:set="#structure">B-lymphocyte</b> includes results ONLY for <i>(not sure all have data, but no other terms should be present in results)</i> 
+    			<table cc:verifySubsetOf="#result : getStructures(#structure)">
+	    			<tr><th cc:assertEquals="#result">Term</th></tr>
+	    			<tr><td>B-lymphocyte</td></tr>
+	    			<tr><td>pro-B-lymphocyte</td></tr>
+	    			<tr><td>pre-B-lymphocyte</td></tr>
+	    			<tr><td>immature B-lymphocyte</td></tr>
+	    			<tr><td>memory B-lymphocyte</td></tr>
+	    			<tr><td>antibody secreting B-lymphocyte</td></tr>
+    			</table>
+    			</li>
+    		</ol>
+    		</li>
+    		<li><!-- Stop Words are ignored and do not affect results (e.g., choosing a Term or Synonym containing "in" or "of" should also match Terms and Synonyms with the remaining tokens but do not contain "in" or "of") -->
+    		A Stop Words list IS in effect.  Stop Words ("and","from","of","or","the","their","to") are ignored by the search algorithm.<br/>
+    		<ol>
+    		<!-- I used SQL to hunt for terms containing "of" or "in" then I hunted for terms cotaining some of the same words until I found these by inspection -->
+     			<li>Query for <b concordion:set="#structure">mature renal corpuscle</b> should return results for <b cc:assertResultsContain="getStructures(#structure)">Bowman's capsule of mature renal corpuscle</b> 
+     			and <b cc:assertResultsContain="getStructures(#structure)">mature renal corpuscle Bowman's capsule</b>.</li>
+    			<li>Query for <b concordion:set="#structure">Bowman's capsule of mature renal corpuscle</b> should return results including <b cc:assertResultsContain="getStructures(#structure)">mature renal corpuscle Bowman's capsule</b></li>
+    			<!-- THERE ARE NO RESULTS WITH THIS TERM <li>Query for <b concordion:set="#structure">mesenchyme derived from neural crest</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">neural crest-derived mesenchyme in lateral migration pathway</b></li> -->
+     			<li>Query for <b concordion:execute="#count1 = getResultCount(#TEXT)">s-shaped body medial segment</b></li>
+    			<li>Query for <b  concordion:execute="#count2 = getResultCount(#TEXT)">medial segment of s-shaped body</b></li>
+    			<li>Result count should be same, which is <b cc:assertEquals="#count1"><b concordion:echo="#count2"></b></b></li>
+    			<li>Query for <b concordion:execute="#count1 = getResultCount(#TEXT)">visceral epithelium of capillary loop renal corpuscle</b></li>
+    			<li>Query for <b concordion:execute="#count2 = getResultCount(#TEXT)">capillary loop renal corpuscle visceral epithelium</b></li>
+    			<li>Result count should be same, which is <b cc:assertEquals="#count1"><b concordion:echo="#count2"></b></b></li>
+    			<li>Query for <b concordion:set="#structure">and from of or the their to brain</b> should return results for <b cc:assertResultsContain="getStructures(#structure)">brain</b></li>
+    		</ol>
+    		</li>
+    		<li>Terms which involve single-character tokens should return correctly (e.g., "s-shaped body", "rhombomere A", "T-lymphocyte", "pro-B-lymphocyte") <i>(NOTE: Is this test necessary? Why wouldn't they return correctly?)</i>
+    		<ol>
+    			<li>test case goes here</li>
+    		</ol>
+    		</li>
+    		<li>Non-alphanumeric characters in the input text and in the AD Terms and Synonym should be ignored by queries (ampersand, at symbol, number sign, hyphen, slash, etc.)
+    		<ol>
+    			<li>Query for <b concordion:set="#structure">body wall</b> should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
+    			<li>Query for <b concordion:execute="#count1 = getResultCount(#TEXT)">caudate-putamen</b> (a term) should return same results set as query for <b concordion:execute="#count2 = getResultCount(#TEXT)">caudate putamen</b> (its synonym),
+    			 which is <b cc:assertEquals="#count1"><b concordion:echo="#count2"></b></b></li>
+    			<li>Query for <b concordion:set="#structure">body mesenchyme</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
+    			<li>Query for <b concordion:set="#structure">wall mesenchyme</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
+    			<li>Query for <b concordion:set="#structure">cranial facial</b> (modified from actual synonym) should include <b cc:assertResultsContain="getStructures(#structure)">cranio-facial muscle</b> in the return set</li>
+    			<li>Query for <b concordion:set="#structure">cranial&amp;facial</b> (modified from actual synonym) should include <b cc:assertResultsContain="getStructures(#structure)">cranio-facial muscle</b> in the return set</li>
+    			<li>Query for <b concordion:set="#structure">cranial/facial</b> (modified from actual synonym) should include <b cc:assertResultsContain="getStructures(#structure)">cranio-facial muscle</b> in the return set</li>
+    			<li>See tests including <i>Bowman's capsule</i>, above, for apostrophe.</li>
+    		</ol>
+    		</li>
+    		<li>Terms containing numeric symbols (4-cell, 4th ventricle) should be returned properly
+    		<ol>
+    			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+    			<li>Query for <b concordion:set="#structure">4-8 cell stage embryo</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4-8CellStageEmbryoResults"></b></b> assay results.</li>
+    			<li>Query for <b concordion:set="#structure">3rd branchial arch</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor3rdBranchialArchResults"></b></b> assay results.</li>
+    			<li>Query for <b concordion:set="#structure">2nd arch branchial groove</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor2ndArchBranchialGrooveResults"></b></b> assay results.</li>
+    			<li>Query for <b concordion:set="#structure">digit 1 metacarpus</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForDigit1MetacarpusResults"></b></b> assay results.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

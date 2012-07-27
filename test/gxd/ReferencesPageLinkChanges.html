@@ -1,0 +1,124 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>References Page Link Changes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>References Page Link Changes</h1>
+    <ul>
+        <li>User story #97, Change links to GXD summaries from reference detail/summary page (in fewi)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<p>Reimplement gxd summary links from:</p>
+	<ul>
+	<li>reference detail/summary page</li>
+	<li>landing page type = C (see <a href="ReferencesPageLinkChanges.html">note at right</a>)</li>
+	</ul>
+	<p>General note for linking to expression results. There will be three style of landing page:</p>
+	<ul>
+	<li>(A) page has result tabs at bottom and collapsed query form at top.</li>
+	<li>(B) page has result tabs at bottom and nothing at top.</li>
+	<li>(C) page has result tabs at bottom and custom header at top.</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>References page includes link to Expression Results for papers with up to 1,000 expression results, as in current public version.
+ 			<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+    		<ol>
+                <li>Open the References Query Form</li>
+                <li>Query for the journal <i>Dev Biol</i>, the year <i>2005</i>. Then filter the results set for <i>Data: Expression: Assay Results</i>. There should be about 5 references.</li>
+                <li>Verify that each of these references <b>includes an active link</b> to an Expression Results page.</li>
+    		</ol>
+    		</li>
+    		<li>References page no longer includes link to Expression Assays for any papers, a change from current public version.
+ 			<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+    		<ol>
+                <li>Open the References Query Form</li>
+                <li>Query for the journal <i>Dev Biol</i>, the year <i>2005</i>. Then filter the results set for <i>Data: Expression: Assay Results</i>. There should be about 5 references.</li>
+                <li>Verify that each of these references <b>does not include</b> an active link to an Expression Assays page.</li>
+    		</ol>
+    		</li>
+    		<li>References page now includes link to Expression Results for papers with over 1,000 results, a change from current public version.
+ 			<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+    		<ol>
+                <li>Open the References Query Form</li>
+                <li>Query for  the <b>following J-numbers</b> (copy and paste into the query input field):<br/>
+                J:122989 J:153498 J:46439 J:80501 J:91257 J:93300</li>
+                <li>Verify that each of these references <b>includes an active link</b> to an Expression Results page.</li>
+                <li>Verify that each of these references <b>does not include</b> an active link to an Expression Assays page.</li>
+    		</ol>
+    		</li>
+    		<li>Expression Summary for a Reference includes the right page elements:
+ 			<p concordion:assertTrue="true">passed kstone 07/19/2012</p>
+    		<ul> 
+    			<li>includes page title: <b>Gene Expression Data</b></li>
+    			<li>does not include the query form section above the data summary table</li>
+    			<li>includes a page banner identifying the Reference like the Sequence Summary for a Reference currently on public
+	    		<ul>
+	    			<li>J-number is linked to References page.</li>
+	    			<li>Short citation is displayed below J-number.</li>
+	    		</ul>
+    			</li>
+    			<li>does not include text in the "You Searched For area"</li>
+    			<li>includes 3 tabs for Genes, Assays and Assay Results with correct counts on the tabs</li>
+    			<li>includes pagination widget above and below data summary table</li>
+    			<li>columns are sortable by clicking headers, as on the query results summary we have built</li> 
+    		</ul>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+<title>Assay Results Pagination Test Suite</title>
+</head>
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Assay Results Pagination Test Suite</h1>
+    <ul>
+        <li>User story 24, Build pagination for Assay Results data</li>
+        <li>User story 80, Change pagination default and picklist values</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>pagination controls exist and follow MGI standard behaviors</li>
+		<li>default sort</li>
+		<li>when clicked, displayed results set repopulates with appropriate values</li>
+		<li>changing results tab-view sets new summary to Page 1 of its data</li>
+		<li>US80: set default value to 100 rows per paginated "page"</li> 
+		<li>US80: set picklist values to 50, 100, 250, and 500 (was 10, 25, 50, 100)</li>
+		<li>US80: applies to Genes and Assay Results tabs</li>
+		<li>US80: Assays tab is being set to these values during Sprint 6</li>
+	</ul>
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Pagination controls appear and conform to MGI standard
+    		<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+    		<ol>
+				<li>Open the GXD query form</li>
+				<li>Enter <b>zfp*</b> in the gene nomenclature field and press <b>search</b></li>
+				<li>Verify Pagination controls appear. The <b>first</b> and <b>previous</b> links should be inactive, the <b>next</b> and <b>last</b> links should be active</li>
+    		</ol>
+    		</li>
+			<li>Verify that paging forward one page works
+			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Enter <b>zfp*</b> in the gene nomenclature field and press <b>search</b></li>
+				<li>Click the <b>next</b> page control in the pagination</li>
+				<li>Verify the <b>second page</b> of gene results should appear and the <b>first</b> and <b>previous</b> pagination controls should be active and the <b>next</b> and <b>last</b> pagination controls should be inactive</li>
+			</ol>
+			</li>
+			<li>Verify that paging backward one page works
+			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Enter <b>zfp*</b> in the gene nomenclature field and press <b>search</b></li>
+				<li>Click the <b>next</b> page control in the pagination</li>
+				<li>Click the <b>previous</b> page control in the pagination</li>
+				<li>The <b>first page</b> of gene results should appear and the <b>first</b> and <b>previous</b> pagination controls should be inactive and the <b>next</b> and <b>last</b> pagination controls should be active</li>
+			</ol>
+			</li>
+			<li>Verify that paging to the beginning of the results works
+			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Enter <b>zfp*</b> in the gene nomenclature field and press <b>search</b></li>
+				<li>Click the <b>next</b> page control in the pagination</li>
+				<li>Click the <b>first</b> page control in the pagination</li>
+				<li>The <b>first page</b> of gene results should appear and the <b>first</b> and <b>previous</b> pagination controls should be inactive and the <b>next</b> and <b>last</b> pagination controls should be active</li>
+			</ol>
+			</li>
+			<li>Verify that paging to the end of the results works
+			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Enter <b>zfp*</b> in the gene nomenclature field and press <b>search</b></li>
+				<li>Click the <b>last</b> page control in the pagination</li>
+				<li>Verify the <b>last page</b> of gene results should appear and the <b>first</b> and <b>previous</b> pagination controls should be active and the <b>next</b> and <b>last</b> pagination controls should be inactive</li>
+			</ol>
+			</li>
+			<li>Verify that page size (i.e. results per page) control works on the Assay Results tab
+			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Enter <b>zfp*</b> in the gene nomenclature field and press <b>search</b></li>
+				<li>Change the page size to <b>50</b> and page back and forth through the Assay Results data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+				<li>Change the page size to <b>100</b> and page back and forth through the Assay Results data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+				<li>Change the page size to <b>250</b> and page back and forth through the Assay Results data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+				<li>Change the page size to <b>500</b> and page back and forth through the Assay Results data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+			</ol>
+			</li>
+			<li>Verify that page size (i.e. results per page) control works on the Genes tab
+			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+			<ol>
+				<li>Open the GXD query form</li>
+				<li>Enter <b>c*</b> in the gene nomenclature field and press <b>search</b></li>
+				<li>Change the page size to <b>50</b> and page back and forth through the Genes data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+				<li>Change the page size to <b>100</b> and page back and forth through the Genes data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+				<li>Change the page size to <b>250</b> and page back and forth through the Genes data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+				<li>Change the page size to <b>500</b> and page back and forth through the Genes data</li>
+				<li>Verify the <b>results per page</b> match the selected option, except for the last page where the results end</li>
+			</ol>
+			</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>None</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

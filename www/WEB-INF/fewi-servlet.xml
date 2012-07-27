@@ -68,7 +68,26 @@
             </list>
         </property>
     </bean>
+<<<<<<< fewi-servlet.xml
 
+
+    
+    <!-- allows file uploading to work and sets max size -->
+    <bean id="multipartResolver"
+            class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="maxUploadSize" value="10000000"/>
+    </bean>
+    
+    <mvc:resources mapping="/assets/**" location="/"/>
+=======
+>>>>>>> 1.14.2.4
+
+<<<<<<< fewi-servlet.xml
+    <!-- Allows static resources to be accessed through the Spring DispatcherServlet -->
+    <mvc:default-servlet-handler />
+</beans>
+=======
 
     
     <!-- allows file uploading to work and sets max size -->
@@ -82,4 +101,4 @@
 
     <!-- Allows static resources to be accessed through the Spring DispatcherServlet -->
     <mvc:default-servlet-handler />
-</beans>
+</beans>>>>>>>> 1.14.2.4

@@ -40,7 +40,7 @@ public class SolrCreSummaryHunter extends SolrHunter {
         
         // Set the url for the solr instance.
         
-        solrUrl = ContextLoader.getConfigBean().getProperty("solr.cre.url");
+        //solrUrl = ContextLoader.getConfigBean().getProperty("solr.cre.url");
         
         /*
          * The name of the field we want to iterate through the documents for

@@ -1,0 +1,238 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Prohibit Search by Nomen + Vocab</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Prohibit Search by Nomen + Vocab</h1>
+    <ul>
+        <li>User story 59, Don't do query if user enters gene nomen and gene vocab term</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <p>When user starts typing in the second field,</p>
+		<ul>
+		<li> an error message pops up, ideally spanning both sides of the &quot;OR&quot;</li>
+		<li> the message tells them that they cannot enter something in both fields</li>
+		<li> but keeps their characters/selection in both fields</li>
+		<li> Also, the "search" buttons grey out when the message is displayed</li>
+		<li> disallow submitting the query by button or by hitting &lt;return&gt; until the user clears one or both fields</li>
+		<li> when either or both fields are cleared by the user, the error msg goes away and the &quot;search&quot; button is un-greyed-out</li>
+		</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>When text exists in the Nomen input field, an error message appears in the Genes ribbon after 1 character is typed in the Vocab input field
+ 			<p concordion:assertTrue="true">passed jeffc  07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature text field</li>
+                <li>Enter <b>a</b> in the vocabulary text field</li>
+                <li>Verify the warning message <b>*Input not allowed in both Gene fields. Please clear one field before submitting your query.</b> displays in the Genes section of the form</li>
+    		</ol>
+    		</li>
+    		<li>When text exists in the Vocab input field, an error message appears in the Genes ribbon after 1 character is typed in the Nomen input field
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>s</b> in the nomenclature text field</li>
+                <li>Verify the warning message <b>*Input not allowed in both Gene fields. Please clear one field before submitting your query.</b> displays in the Genes section of the form</li>
+    		</ol>
+    		</li>
+    		<li>When text exists in the Vocab input field, and the user selects from a browser-supplied select list in the Nomen field (this occurs in Firefox, Safari, and IE, depending on user's custom settings, but not in Chrome when user types characters from a prior search or by double-clicking), an error message appears.
+    		<p style="background-color:yellow;">IE has problems.  This test applies only to Chrome until we get to a story on IE and/or Firefox bug fixes. See special case test below. (klf 6/7/12)</p> 
+ 			<p concordion:assertTrue="true">Pass on Chrome/FF.  jeffc 7/17/12. this test might not be need now?</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+				<li>Enter <b>Pax1</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: enter <b>Pax2</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: enter <b>Pax3</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>P</b> in the nomenclature text field</li>
+                <li>Select <b>Pax1</b> from the browser-supplied select list</li>
+                <li>Verify the warning message <b>*Input not allowed in both Gene fields. Please clear one field before submitting your query.</b> displays in the Genes section of the form</li>
+    		</ol>
+    		</li>
+    		<li>The error message spans both sides of the &quot;OR&quot;. 
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>s</b> in the nomenclature text field</li>
+                <li>Verify the warning message <b>*Input not allowed in both Gene fields. Please clear one field before submitting your query.</b> displays in the Genes section of the form</li>
+                <li>Verify the warning text is centered under the OR text</li>
+    		</ol>
+    		</li>
+    		<li>The user's text is retained in both the Nomen and Vocab input fields until the user deletes it
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>s</b> in the nomenclature text field</li>
+                <li>Verify the warning message <b>*Input not allowed in both Gene fields. Please clear one field before submitting your query.</b> displays in the Genes section of the form</li>
+                <li>Verify the vocabulary text field holds <b>obese</b> and the nomenclature field holds <b>s</b> until the user deletes one of them</li>
+    		</ol>
+    		</li>
+    		<li>When text exists in the Vocab input field, the Search button is disabled after 1 character is typed in the Nomen input field
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>s</b> in the nomenclature text field</li>
+                <li>Verify the Search buttons are disabled</li>
+    		</ol>
+    		</li>
+    		<li>When text exists in the Nomen input field, the Search button is disabled after 1 character is typed in the Vocab input field
+ 			<p concordion:assertTrue="true">passed jeffc 06/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature text field</li>
+                <li>Enter <b>a</b> in the vocabulary text field</li>
+                <li>Verify the Search buttons are disabled</li>
+    		</ol>
+    		</li>
+    		<li>When text exists in the Vocab input field, and the user selects from a browser-supplied select list in the Nomen field (this occurs in Firefox, Safari, and IE, depending on user's custom settings, but not in Chrome when user types characters from a prior search or by double-clicking), the Search button is disabled. 
+    		<p style="background-color:yellow;">IE has problems. Firefox has similar problems.  This test applies only to Chrome until we get to a story on IE and/or Firefox bug fixes. See special case test below. (klf 6/7/12)</p> 
+ 			<p concordion:assertTrue="true">Pass on Chrome.  klf 6/7/12 This appears to be a repeat of test #3</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+				<li>Enter <b>Pax1</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: enter <b>Pax2</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: enter <b>Pax3</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>P</b> in the nomenclature text field</li>
+                <li>Select <b>Pax1</b> from the browser-supplied select list</li>
+                <li>Verify the Search buttons are disabled</li>
+    		</ol>
+    		</li>
+    		<li>SPECIAL CASE FOR INTERNET EXPLORER and FIREFOX 12.0 OR 13.0 (6/8/2012): When text exists in the Vocab input field, and the user selects from a browser-supplied select list in the Nomen field in IE, the user is not permitted to submit the query, and the error message appears when they try.
+ 			<p concordion:assertTrue="true">This test is no longer needed? jeffc</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+				<li>Enter <b>Pax1</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: enter <b>Pax2</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: enter <b>Pax3</b> in the Nomen field and submit the query</li>
+				<li>Modify the query: Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>P</b> in the nomenclature text field</li>
+                <li>Select <b>Pax1</b> from the browser-supplied select list</li>
+                <li>Click the <b>Search</b> button to submit the query</li>
+                <li>Verify the warning message <b>*Input not allowed in both Gene fields. Please clear one field before submitting your query.</b> displays in the Genes section of the form</li>
+                <li>Verify the <b>query is not submitted</b> (no results appear)</li>
+                <li>Note: the warning and disabling the Search button also occur in Firefox when the Nomenclature field "loses focus" (the user clicks anywhere else on the page). SME and PO said this is acceptable on 6/7/2012.</li>
+    		</ol>
+    		</li>
+    		<li>When the Search button is disabled, removing text in the Vocab field causes the Search button to be re-enabled and removes the error message.
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature text field</li>
+                <li>Enter <b>a</b> in the vocabulary text field</li>
+                <li>Verify the Search buttons are disabled</li>
+                <li>Delete <b>a</b> from the vocabulary text field</li>
+                <li>Verify the Search buttons are re-enabled</li>
+                <li>Verify the error message no longer appears</li>
+    		</ol>
+    		</li>
+    		<li>When the Search button is disabled, removing text in the Nomen field causes the Search button to be re-enabled and removes the error message.
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+ 			<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>s</b> in the nomenclature text field</li>
+                <li>Verify the Search buttons are disabled</li>
+                <li>Delete <b>s</b> from the nomenclature text field</li>
+                <li>Verify the Search buttons are re-enabled</li>
+                <li>Verify the error message no longer appears</li>
+ 			</ol>
+			</li>
+    		<li>When text exists in the Vocab input field, the Search cannot be submitted by pressing &lt;Enter&gt; or &lt;Return&gt; on the keyboard after 1 character is typed in the Nomen input field
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>s</b> in the nomenclature text field</li>
+                <li>Verify pressing the keyboard's Enter/Return key does not execute a search</li>
+    		</ol>
+    		</li>
+    		<li>When text exists in the Nomen input field, the Search cannot be submitted by pressing &lt;Enter&gt; or &lt;Return&gt; on the keyboard after 1 character is typed in the Vocab input field
+ 			<p concordion:assertTrue="true">passed 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature text field</li>
+                <li>Enter <b>a</b> in the vocabulary text field</li>
+                <li>Verify pressing the keyboard's Enter/Return key does not execute a search</li>
+    		</ol>
+    		</li>
+    		<li>When &lt;Enter&gt; or &lt;Return&gt; on the keyboard are disabled from submitting the query, removing text in the Vocab field causes &lt;Enter&gt; or &lt;Return&gt; on the keyboard to be re-enabled to submit the query and removes the error message.
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature text field</li>
+                <li>Enter <b>a</b> in the vocabulary text field</li>
+                <li>Verify pressing the keyboard's Enter/Return key does NOT execute a search</li>
+                <li>Delete <b>a</b> from the vocabulary text field</li>
+                <li>Verify pressing the keyboard's Enter/Return key DOES EXECUTE a search</li>
+                <li>Verify the error message no longer appears</li>
+    		</ol>
+    		</li>
+    		<li>When &lt;Enter&gt; or &lt;Return&gt; on the keyboard are disabled from submitting the query, removing text in the Nomen field causes &lt;Enter&gt; or &lt;Return&gt; on the keyboard to be re-enabled to submit the query and removes the error message.
+ 			<p concordion:assertTrue="true">passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>obese</b> in the vocabulary text field</li>
+                <li>Enter <b>s</b> in the nomenclature text field</li>
+                <li>Verify pressing the keyboard's Enter/Return key does not execute a search</li>
+                <li>Delete <b>s</b> from the nomenclature text field</li>
+                <li>Verify pressing the keyboard's Enter/Return key DOES EXECUTE a search</li>
+                <li>Verify the error message no longer appears</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+	   		</ol>
+    		</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

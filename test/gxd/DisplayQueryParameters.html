@@ -1,0 +1,412 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Display query parameters (You Searched For)</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Display query parameters (You Searched For)</h1>
+    <ul>
+        <li>User Story 29: Display user's query parameters</li>
+        <li>User story 14, Search by Gene Vocabulary (GO and MP)</li>
+        <li>User story 18, Search by Assay Type</li>
+        <li>User story 21, Search by mutant / wild type</li>
+        <li>User Story 19: Search for expression results by specifying detected/not detected</li>
+        <li>User Story 16: Search for expression results by specifying age</li>
+        <li>User story 15, Search for expression results by Theiler stage</li>
+        <li>User story 31, Build UI for summary results: Assays page (tab)</li>
+        <li>User story 14, Search by gene-vocabulary annotation (GO and MP)</li>
+        <li>User story 11, Search for expression results by Anatomy term </li>
+        <li>User story 94, Fix test in gene section of query form(mutant / Wild type changes only)</li>
+    </ul>
+<p>Description: The user is presented with a concise summary of the query form values that were submitted to reach a results page</p>
+<p><i>Note: on Expression Data Summary pages that are NOT generated from a user query, the heading for this area sometimes says &quot;Data Summary&quot; instead of &quot;Your searched for:&quot;.</i></p> 
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+		<li> all submitted parameters are reiterated above the results set (as they appear on 5.0 Public website as of April 2012 or as modified by requirements doc for TR 10269)</li>
+		<li> address whatever Stories come in same Sprint as points in their individual User Stories</li>
+    </ul>
+</div>
+
+<div>
+<h3>Example</h3>
+<p>The general form is shown below.  The display depends on the user's submitted values.  Some lines are optional; they display only if the user submits a values for the parameter. &quot;Gene nomenclature&quot; and &quot;Genes annotated to&quot; are not allowed to appear at the same time.</p>
+<p>
+	Gene nomenclature: <b>Ab*</b> <span style="font-size:0.85em; color:#777777;">current symbol, name, synonyms</span>  <i>(Optional first line)</i><br/>
+	Genes annotated to: <b>Function: ovum development [oogenesis]</b> <span style="font-size:0.85em; color:#777777;">includes  synonyms &amp; subterms</span> <i>(Optional first line)</i><br/>
+	<b>Assayed</b>  in <b>any structures</b> <span style="font-size:0.85em; color:#777777;">includes synonyms &amp; substructures</span> <br/>
+	at Developmental stage(s): <b>(TS:26 or TS:28)</b> <br/>
+	at age(s): <b>(E6.5 or E7 or E7.5)</b> <i>(Alternative to Developmental stages line above)</i> <br/>
+	Assayed by: <b>(Immunohistochemistry or Northern blot)</b> <i>(Optional last line)</i><br/>
+	Mutant / Wild type: <b>Mutated in shh</b> <span style="font-size:0.85em; color:#777777;">current symbol, name, synonyms</span> <i>(Optional last line)</i><br/>
+</p>
+<p>Note: In the tests and results below, the characters "//" indicate a line break.</p>
+</div>
+
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+<div id="tests">
+    <h2>Tests</h2>
+    <div id="manual">
+        <h3>Manual tests </h3>
+        <ol>
+            <!--  Nomenclature or Vocabulary parameter tests -->
+            <li>Test gene nomenclature search result display
+            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>Pax*</b> into the nomenclature search box and click search</li>
+                    <li>Verify the display of the text &quot;Gene nomenclature: <b>Pax*</b> <span style="font-size:0.85em; color:#777777;">current symbol, name, synonyms</span>&quot;</li>
+                </ol>
+            </li>
+            <li>Test missing gene nomenclature search display
+            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Verify that no text is in the nomenclature search box and click search</li>
+                    <li>Verify the display of the text &quot;<b>Gene nomenclature:</b>&quot; is not present</li>
+                </ol>
+            </li>
+            <li>Test gene vocabulary search result display (MP)
+            <p concordion:assertTrue="true">Passed klf 7/17/12</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>brain tumor</b> into the gene vocabulary search box</li>
+                    <li>Select <b>brain tumor</b> from the autocomplete and click search</li>
+                    <li>Verify the display of the text &quot;Genes annotated to <b>Mammalian Phenotype: brain tumor</b> <span style="font-size:0.85em; color:#777777;">includes subterms</span>&quot;</li>
+                </ol>
+            </li>
+            <li>Test gene vocabulary search result display (GO)
+            <p concordion:assertTrue="true">Passed klf 7/17/12</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>response to fungus</b> into the gene vocabulary search box and click search</li>
+                    <li>Select <b>response to fungi [response to fungus]</b> from the autocomplete and click search</li>
+                    <li>Verify the display of the text &quot;Genes annotated to <b>Function: response to fungi [response to fungus]</b> <span style="font-size:0.85em; color:#777777;">includes subterms</span>&quot;</li>
+                </ol>
+            </li>
+
+            <!--  Developmental Stage parameter tests -->
+            <li>Test display of developmental stage when no stage is selected
+            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>Pax*</b> into the nomenclature search box and click search</li>
+                    <li>Verify the display of the text &quot;at Developmental stage(s): <b>Any&quot;</b></li>
+                </ol>
+            </li>
+            <li>Test display of developmental stage when a single stage is selected
+            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select <b>TS 3 (1.0-3.5 dpc)</b> from the Stage selection list and click search</li>
+                    <li>Verify the display of the text &quot;at Developmental stage(s): <b>(TS:3)</b>&quot;</li>
+                </ol>
+            </li>
+            <li>Test display of developmental stage when multiple stages are selected
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select <b>TS 3 (1.0-3.5 dpc)</b> and <b>TS 4 (2.0-4.0 dpc)</b> from the Stage selection list and click search</li>
+                    <li>Verify the display of the text &quot;at Developmental stage(s): <b>(TS:3 or TS:4)</b>&quot;</li>
+                </ol>
+            </li>
+
+			<!--  Anatomical Structures tests -->
+            <li>Test anatomy search result display
+			<p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>myocardium</b> in the anatomical input text box </li>
+					<li>Select myocardium from the autocomplete list  and click search</li>
+                    <li>Verify the display of the text <b>Assayed</b> in <b>myocardium</b> <span style="font-size:0.85em; color:#777777;">includes synonyms &amp; substructures</span></li>
+                </ol>
+            </li>
+            <li>Test anatomy search result display of a synonym
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>distal endoderm</b> in the anatomical input text box <i>(synonym for parietal endoderm)</i></li>
+					<li>Select distal endoderm from the autocomplete list  and click search</li>
+                    <li>Verify the display of the text <b>Assayed</b> in <b>distal endoderm</b> <span style="font-size:0.85em; color:#777777;">includes synonyms &amp; substructures</span></li>
+                </ol>
+            </li>
+            <li>Test anatomy search result display with Detected
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select the <b>detected in</b> option in the Anatomical structure section</li>
+                    <li>Enter <b>myocardium</b> in the anatomical input text box</li>
+					<li>Select myocardium from the autocomplete list  and click search</li>
+                    <li>Verify the display of the text <b>Detected</b> in <b>myocardium</b> <span style="font-size:0.85em; color:#777777;">includes synonyms &amp;  substructures</span></li>
+                </ol>	
+            </li>    
+            <li>Test anatomy search result display with Not Detected
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select the <b>not detected in</b> option in the Anatomical structure section</li>
+                    <li>Enter <b>myocardium</b> in the anatomical input text box</li>
+					<li>Select myocardium from the autocomplete list  and click search</li>
+                    <li>Verify the display of the text <b>Not detected</b> in <b>myocardium</b> <span style="font-size:0.85em; color:#777777;">includes synonyms &amp; substructures</span></li>
+                </ol>	
+            </li>
+                		
+            <!--  Assay Type parameter tests -->
+            <li>Test assay type search result display
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select only <b>Immunohistochemistry</b> from the assay type select list and click search</li>
+                    <li>Verify the display of the text <b>Assayed by: (Immunohistochemistry)</b></li>
+                </ol>
+            </li>
+            <li>Test assay type search result display for multiple options selected
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select <b>Immunohistochemistry and In situ reporter (knock in)</b> from the assay type select list and click search</li>
+                    <li>Verify the display of the text <b>Assayed by: (Immunohistochemistry or In situ reporter (knock in))</b></li>
+                </ol>
+            </li>
+            <li>Test assay type search result display for all options selected
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select <b>Find expression data in any assay type</b> from the assay type select list</li>
+                    <li>Verify that all sub-options are selected, click search</li>
+                    <li>Verify that the text <b>"Assayed by:" is not displayed</b></li>
+                </ol>
+            </li>
+            <li>Test assay type search result display for no options selected
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Deselect <b>Find expression data in any assay type</b> from the assay type select list</li>
+                    <li>Verify that no sub-options are selected, click search</li>
+                    <li>Verify that the text <b>"Assayed by:" is not displayed</b></li>
+                </ol>
+            </li>
+                		
+            <!--  Mutant / wild type parameter tests -->
+            <li>Test all specimens search result display
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select <b>all specimens</b> from the Mutant / wild type section and click search</li>
+                    <li>Verify the You searched for... section shows no entry for specimens</li>
+                </ol>
+            </li>
+            <li>Test Mutant / wild type search for wild type specimens only option
+                        <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select <b>wild type specimens only</b> from the Mutant / wild type section and click search</li>
+                    <li>Verify the display of the text Specimens: <b>Wild type only</b></li>
+                </ol>
+            </li>
+            <li>Test Mutant / wild type search for specimens mutated in gene option
+               <p concordion:assertTrue="true">klf 7/17/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select <b>Specimens mutated in gene:</b> from the Mutant / wild type section</li>
+                    <li>Enter <b>gata1</b>in the text box after Specimens mutated in gene: and click search</li>
+                    <li>Verify the display of the text specimens: <b>Mutated in gata1</b> <span style="font-size:0.85em; color:#777777;">current symbol, name, synonyms</span></li>
+                </ol>
+            </li>            
+            <!--  Detection parameter tests -->
+            <li>Test detected/not detected parameter search result display for each option selected
+            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Verify <b>either</b> is selected in the Anatomical structure or stage section and press <b>search</b></li>
+                <li>Verify that "You searched for:" says &quot;<b>Assayed</b> in <b>any structures</b>&quot;</li>
+                <li>Click <b>click to modify search</b> button and select <b>detected</b> in the Anatomical structure or stage section and press <b>search</b></li>
+                <li>Verify that "You searched for:" says &quot;<b>Detected</b> in <b>any structures</b>&quot;</li>
+                <li>Click <b>click to modify search</b> button and select <b>not detected in</b> in the Anatomical structure or stage section and press <b>search</b></li>
+                <li>Verify that "You searched for:" says &quot;<b>Not detected</b> in <b>any structures</b>&quot;</li>
+            </ol>
+            </li>
+
+            <!--  Age parameter tests -->
+            <li>Test age parameter search result display for default option selected
+            <p concordion:assertTrue="true">klf 7/17/12</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Click <b>Use Ages (dbc)</b> to toggle to the Ages widget</li>
+                    <li>Ensure that the <b>Any</b> option is selected</li>
+                    <li>click search</li>
+                    <li>Verify that the text &quot;at age(s): <b>Any</b>&quot; is displayed.</li>
+                    <li>Click <b>click to modify search</b> and select <b>Embryonic</b> from the Ages widget.</li>
+                    <li>Verify that the text &quot;at age(s): <b>(Embryonic)</b>&quot; is displayed.</li>
+                    <li>Click <b>click to modify search</b> and select <b>Postnatal</b> from the Ages widget.</li>
+                    <li>Verify that the text &quot;at age(s): <b>(Postnatal)</b>&quot; is displayed.</li>
+                    <li>Click <b>click to modify search</b> and select <b>Embryonic</b> and <b>Postnatal</b> from the Ages widget.</li>
+                    <li>Verify that the text &quot;at age(s): <b>(Embryonic or Postnatal)</b>&quot; is displayed.</li>
+                    <li>Click <b>click to modify search</b> and select <b>2.5</b> from the Ages widget.</li>
+                    <li>Verify that the text &quot;at age(s): <b>(E2.5)</b>&quot; is displayed.</li>
+                    <li>Click <b>click to modify search</b> and select <b>2.5</b>, <b>3.5</b>, and <b>5</b> from the Ages widget.</li>
+                    <li>Verify that the text &quot;at age(s): <b>(E2.5 or E3.5 or E5)</b>&quot; is displayed.</li>
+                </ol>
+            </li>
+
+			<li id="MultiParam">MUTLIPLE PARAMETER TESTS...<br/>
+			Verify the "You searched for" text updates appropriately when the user submits a subsequent query (using Gene Nomenclature)(multiple parameters)
+            <p concordion:assertTrue="true">kstone 06/07/2012</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>Pax*</b> into the nomenclature search box and click search</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Pax*</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b></li>
+                    <li>Expand the query form and select  only <b>Immunohistochemistry</b> from the assay type select list and click search</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Pax*</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                    <li>Expand the query form, delete Pax* and enter <b>Kit</b> into the nomenclature search box and click search</li>
+                    <li>Verify the display of the text updates to say <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                    <li>Expand the query form and also select <b>RT-PCR</b> from the assay type select list and click search</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b></li>
+                    <li>Expand the query form and select <b>TS2, TS3 and TS4</b> from the Theiler Stage list and click search</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+					<li>Expand the query form and select <b>not detected in</b> from the Detected/Not detected radio buttons and click search</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Not detected in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+					<li>Expand the query form and select <b>detected in</b> from the Detected/Not detected radio buttons and click search</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Detected in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+ 					<li>Expand the query form and select <b>either</b> from the Detected/Not detected radio buttons and click search</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                    <li>Expand the query form and select <b>E10.5,  E11.5,  E12.5, and  E13.5</b> from the Ages widget.</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at age(s): (E10.5 or E11.5 or E12.5 or E13.5)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                    <li>Expand the query form and select <b>Detected</b> from the Anatomical structures section and enter <b>skin</b> in the anatomical text box</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Detected in skin includes synonyms &amp; substructures</b>// <b>Assayed in any structures</b>// <b>at age(s): (E10.5 or E11.5 or E12.5 or E13.5)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>                    <li>NOTE: DO NOT RESET QUERY FORM.  USE THESE QUERIES IN THE FOLLOWING TESTS.</li>
+                </ol>
+            </li>
+            <li>Verify the "You searched for" text updates appropriately when the user presses the back button (using Gene Nomenclature)(after performing multiple queries) and forward button
+            <p concordion:assertTrue="true">kstone 06/07/2012</p>
+                <ol>
+                	<li>AFTER HAVING PERFORMED THE QUERIES IN THE PREVIOUS TEST...</li>
+                	<li>Click the back button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                	<li>Click the back button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Detected in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                	<li>Click the back button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Not detected in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                	<li>Click the back button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                	<li>Click the back button</li>
+                	<li>Verify the display of the text updates to say <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b></li>
+                	<li>Click the back button</li>
+                	<li>Verify the display of the text updates to say <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                	<li>Click the back button</li>
+                	<li>Verify the display of the text updates to text <b>Gene nomenclature: Pax*</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                	<li>Click the back button</li>
+                	<li>Verify the display of the text updates to text <b>Gene nomenclature: Pax*</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b></li>
+                	<li>Click the back button</li>
+                	<li>Verify the query form is displayed open in the default presentation (all input fields are blank or default values)</li>
+                	<li>Click the forward button</li>
+                	<li>Verify the display of the text updates to text <b>Gene nomenclature: Pax*</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b></li>
+                	<li>Click the forward button</li>
+                	<li>Verify the display of the text updates to text <b>Gene nomenclature: Pax*</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                	<li>Click the forward button</li>
+                	<li>Verify the display of the text updates to say <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                	<li>Click the forward button</li>
+                	<li>Verify the display of the text updates to say <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b></li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Not detected in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Detected in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:2 or TS:3 or TS:4)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Gene nomenclature: Kit</b> current symbol, name, synonyms// <b>Assayed in any structures</b>// <b>at age(s): (E10.5 or E11.5 or E12.5 or E13.5)</b>// <b>Assayed by: (Immunohistochemistry or RT-PCR)</b> </li>
+                </ol>
+            </li>
+            
+			<li>Verify the "You searched for" text updates appropriately when the user submits a subsequent query(using Gene Vocabulary) (multiple parameters)
+            <p concordion:assertTrue="true">Passed kstone 5/21/12</p><p><b>NEED to add anatomy search to this test when automating</b></p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Enter <b>Embryo development</b> into the gene vocabulary search box and click search</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b></li>
+                    <li>Expand the query form and select  only <b>Immunohistochemistry</b> from the assay type select list and click search</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                    <li>Expand the query form and select <b>TS11, TS20 and TS23</b> from the Theiler Stage list and click search</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+					<li>Expand the query form and select <b>not detected in</b> from the Detected/Not detected radio buttons and click search</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Not detected in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+					<li>Expand the query form and select <b>detected in</b> from the Detected/Not detected radio buttons and click search</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Detected in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry or)</b> </li>
+ 					<li>Expand the query form and select <b>either</b> from the Detected/Not detected radio buttons and click search</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                    <li>Expand the query form and select <b>E10.5,  E11.5,  E12.5, and  E13.5</b> from the Ages widget.</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at age(s): (E10.5 or E11.5 or E12.5 or E13.5)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>                   
+                    <li>Expand the query form and select <b>Wild type specimens only</b> from the Mutant/Wildtype widget.</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at age(s): (E10.5 or E11.5 or E12.5 or E13.5)</b>// <b>Mutant/Wildtype: Wild type specimens</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                    <li>NOTE: DO NOT RESET QUERY FORM.  USE THESE QUERIES IN THE FOLLOWING TESTS.</li>
+                </ol>
+            </li>
+            <li>Verify the "You searched for" text updates appropriately when the user presses the back button (using Gene Vocabulary)(after performing multiple queries) and forward button
+            <p concordion:assertTrue="true">Passed kstone 5/21/12</p><p><b>NEED to add anatomy search to this test when automating</b></p>
+                <ol>
+                	<li>AFTER HAVING PERFORMED THE QUERIES IN THE PREVIOUS TEST...</li>                	
+                	<li>Click the back button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>//  <b>at age(s): (E10.5 or E11.5 or E12.5 or E13.5)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>                	
+                	<li>Click the back button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                	<li>Click the back button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Detected in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                	<li>Click the back button</li>
+                	<li>Verify the display of the text updates to say <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                	<li>Click the back button</li>
+                	<li>Verify the display of the text updates to say <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                	<li>Click the back button</li>
+                	<li>Verify the display of the text updates to text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b></li>
+                	<li>Click the back button</li>
+                	<li>Verify the query form is displayed open in the default presentation (all input fields are blank or default values)</li>
+                	<li>Click the forward button</li>
+                	<li>Verify the display of the text updates to text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b></li>
+                	<li>Click the forward button</li>
+                	<li>Verify the display of the text updates to text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): Any</b>// <b>Assayed by: (Immunohistochemistry)</b></li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                    <li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Not Detected in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Detected in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at Developmental Stage(s): (TS:11 or TS:20 or TS:23)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                	<li>Click the forward button</li>
+                    <li>Verify the display of the text <b>Genes annotated to Function: embryo development</b>// <b>Assayed in any structures</b>// <b>at age(s): (E10.5 or E11.5 or E12.5 or E13.5)</b>// <b>Assayed by: (Immunohistochemistry)</b> </li>
+                </ol>
+            </li>          
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        <ol>
+            <li>None</li>
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>

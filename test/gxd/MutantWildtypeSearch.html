@@ -1,0 +1,328 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hide{display:none;}
+</style>
+
+    <title>Mutant/Wildtype Search Test Suite</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Mutant/Wildtype Search Test Suite</h1>
+    <ul>
+        <li>User story 21, Search by genetic background of expression specimen</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+	<li> provide radio buttons for 3 options, one of which has assoc text box (wild type, associated with specific mutant gene(s), all/either)</li>
+	<li> Current thinking: semantics for selecting genes is identical to the gene query box at top of form
+		<ul>
+		<li> any entered tokens are matched against symbol, name, synonyms (ANDed), and wild cards supported</li>
+		<li> so a set of genes can be matched</li>
+		<li> return expr results whose specimen genotypes includes alleles for any of the matching genes</li>
+		<li> if user enters "hox*", return results for all hox mutants</li>
+		<li> error handling if user clicks "Specimens mutated in gene:" but does not enter any text in the box</li>
+		</ul>
+	</li>
+	<li> wild type definition has been expanded so even more complex:
+		<ul>
+		<li>no allele pairs are present (the previous definition)  -- OR ALL of the following are true</li>
+		<li>(the expanded definition) assay type = "in situ reporter (knock in)" AND</li>
+		<li>only 1 allele pair is present AND</li>
+		<li>allele pair is heterozygous for the assayed gene:
+			<ul>
+			<li>has one wild-type allele and one other allele, usually a targeted reporter AND</li>
+			<li>they are both alleles of the assayed gene</li>
+			</ul>
+		</li>
+		</ul>
+	</li>
+	<li> return all expression results associated with selected option</li>
+	<li> other parameters are AND'ed to this</li>
+	<li> Reset button clears the widget</li>
+	<li> update display user's query parameters</li>
+	<li> update user help</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+			<li>Ribbon label (on blue background) is "Mutant / wild type" (Text wrapping is OK. Spaces and case must be as given here.)
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p> </li>
+			<li>Text introducing the section is "Find expression data in..."
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p> </li>
+ 			<li>Three radio buttons exist with labels...
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p>
+ 			<ul>
+ 				<li>Specimens mutated in gene:</li>
+ 				<li>Wild type specimens only</li>
+ 				<li>All specimens</li>
+ 			</ul>
+ 			</li>
+ 			<li>The radio button labeled "Specimens mutated in gene:" has an associated input text field
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/2012</p>
+ 			</li>
+			<li>"All specimens" is selected by default
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p> 
+			<ol>
+				<li>Open GXD Query Form</li>
+				<li>Verify that "All specimens" is the option selected by default </li>
+			</ol>
+			</li>
+    		<li>Three options function properly as radio buttons
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p> 
+    		<ol>
+                <li>Open GXD Query Form</li>
+                <li>Select "Wild type specimens only"</li>
+                <li>Verify "All specimens" is deselected</li>
+                <li>Select "Specimens mutated in gene:"</li>
+                <li>Verify "All specimens" and "Wild type specimens only" are both deselected</li>
+                <li>Select "All specimens"</li>
+                <li>Verify "Wild type specimens only" and "Specimens mutated in gene:" are both deselected</li> 
+    		</ol>
+    		</li>
+    		<li>Typing in the input field selects the associated option
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p>
+ 			<ol>
+    			<li>Open the GXD query form</li>
+    			<li>Type in the "Specimens mutated in gene:" input field</li>
+    			<li>Verify that the "Specimens mutated in gene:" option becomes selected</li>
+    		</ol>
+    		</li>
+    		<li>Error message appears and query is prevented if "Specimens mutated in gene:" is selected but input field is blank. Error message disappears if user corrects error state.
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p> 
+    		<ol>
+    			<li>Open the GXD query form.</li>
+    			<li>Select "Specimens mutated in gene:" </li>
+    			<li>Click "Search".</li>
+    			<li>Verify that error message appears: "You have selected &quot;Specimens mutated in gene&quot;.  Please enter a gene."</li>
+    			<li>Verify that the query was not submitted.</li>
+    			<li>Select "Wild type specimens only".</li>
+    			<li>Verify that the error message disappears.</li>
+    			<li>Select "Specimens mutated in gene:" </li>
+    			<li>Click "Search".</li>
+    			<li>Verify that error message appears: "You have selected &quot;Specimens mutated in gene&quot;.  Please enter a gene."</li>
+    			<li>Verify that the query was not submitted.</li>
+    			<li>Type in the "Specimens mutated in gene:" input field.</li>
+    			<li>Verify that the error message disappears when the first character is typed.</li>
+    		</ol>
+    		</li>
+    		<li>Error message appears and query is prevented if input field has text, but "Specimens mutated in gene:" is not selected. Error message disappears if user corrects error state.
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/12</p>
+    		<ol>
+    			<li>Open the GXD query form</li>
+    			<li>Type in the "Specimens mutated in gene:" input field</li>
+    			<li>Select "Wild type specimens only"</li>
+    			<li>Verify that error message appears immediately: "Please clarify your search by either selecting the &quot;Specimens mutated in&quot; button or clearing its gene box."</li>
+				<li>Select "Specimens mutated in gene:"</li>    			
+    			<li>Verify that the error message disappears.</li>
+    			<li>Select "All specimens"</li>
+    			<li>Verify that error message appears immediately: "Please clarify your search by either selecting the &quot;Specimens mutated in&quot; button or clearing its gene box."</li>
+				<li>Select "Specimens mutated in gene:"</li>    			
+    			<li>Verify that the error message disappears.</li>
+    			<li>Select "All specimens"</li>
+    			<li>Verify that error message appears immediately: "Please clarify your search by either selecting the &quot;Specimens mutated in&quot; button or clearing its gene box."</li>
+    			<li>Delete characters in the "Specimens mutated in gene:" input field</li>
+    			<li>Verify that the error message disappears when the last character is deleted.</li>
+    		</ol>
+    		</li>
+			<li>Return both kinds of "wild type results" and exclude "non-wild type" results for any gene, verify mutant gene = assayed gene
+			<p> <span concordion:assertTrue="true">PASS kstone 6/21/12</span> - verified in database. don't need to repeat this test again.</p>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Querying for "All specimens" should return mutant genotypes, and both kinds of wildtype genotypes
+    		<ol>
+                <li>Open the GXD Query Form</li>
+                <li>Enter <b concordion:set="#symbol">Ascl3</b> in the Nomen input field (Note: that's a lower-case "L", not a "1".)</li>
+                <li>Verify that <b>the following assays and result counts appear</b>
+                	<table cc:execute="#count = getCountByMutatedGeneAndAssayId(#symbol,#assayId)">
+		                	<tr><th concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+		                	<tr cc:dynamicData="resultCountMutantAscl3GroupByAssayId"></tr>
+		                	</table>
+                <ul>
+	                <li>See notes about assays in table above:
+	                <table>
+	                	<tr><th>Assay ID</th><th>Note</th></tr>
+                	<tr><td>MGI:5014320</td><td>Is "In situ reporter (knock-in)" and contains 2 "wild type" and one multi-gene genotypes<br/>(multi-gene does not count as "wild type" expression)</td></tr>
+                	<tr><td>MGI:5014307</td><td>Is "In situ reporter (knock-in)" and contains 3 "wild type" and one multi-gene genotypes<br/>(multi-gene does not count as "wild type" expression)</td></tr>
+                	<tr><td>MGI:5052724</td><td>Is "RNA in situ" (this assay type does not count as "wild type" expression) but has no mutant genotype</td></tr>
+                	<tr><td>MGI:5051832</td><td>Is "RNA in situ" with 1 "wild type" genotype</td></tr>
+	                </table>
+	                </li>
+	            </ul>
+	            </li>
+    		</ol>
+    		</li>
+    		<li>Querying for "Specimens mutated in..." should return the assays and results associated with specimens having alleles for the queried genes, matching to nomenclature for the mutant gene as defined above
+    			<ol>
+    			<li>Make sure all result contain the mutant gene in the genotype.</li>
+    			<li>Make sure all genotypes of any kind containing the mutant gene are returned.</li>
+    			<li>Make sure we're not excluding results satisfying the new "expanded" definition of wild type.</li>
+    			</ol>
+    			<ul>
+    			<li>Case 1: Genotypes with single allele pair but not matching expanded definition of wild type -- CAN DELETE THIS TEST. THE "ascl3" TEST BELOW COVERS THIS AND MORE.
+		    		<ol>
+		                <li>Open GXD Query Form</li>
+		                <li>Enter <b concordion:set="#symbol">Pax4</b> in the "Specimens mutated in" input field</li>
+		                <li>Verify that <b>the following assays and result counts appear</b>
+		                	<table cc:execute="#count = getCountByMutatedGeneAndAssayId(#symbol,#assayId)">
+		                	<tr><th concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+		                	<tr cc:dynamicData="resultCountMutantPax4GroupByAssayId"></tr>
+		                	</table>
+		                </li>
+		    		</ol>
+		    	</li>
+    			<li>Case 2: Nomenclature matches current mouse symbol
+    			<ol>
+	    			<li>Open the GXD Query Form</li>
+	    			<li>Enter <b concordion:set="#nomen">Ascl3</b> in the Nomen input field</li>
+	    			<li>Enter <b concordion:set="#symbol">Ascl3</b> in the "Specimens mutated in gene:" input field</li>
+	                <li>Verify that <b>exactly the following assays and result counts appear</b>
+		                <table cc:execute="#count = getCountByNomenAndMutatedGeneAndAssayId(#nomen,#symbol,#assayId)">
+		                <tr><th  concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+	                	<tr cc:dynamicData="resultCountMutantAscl3NomenAscl3GroupByAssayId"></tr>
+	                	</table>
+	                </li>
+    			</ol>
+    			</li>
+				<li>Case 3: Genotypes including multiple allele pairs, no allele pairs matching expanded definition of wild type
+		    		<ol>
+		                <li>Open GXD Query Form</li>
+		                <li>Enter <b concordion:set="#symbol">Pax1</b> in the "Specimens mutated in" input field</li>
+		                <li>Verify that <b>only the following assays with associated count of results appear</b>
+		                	<table cc:execute="#count = getCountByMutatedGeneAndAssayId(#symbol,#assayId)">
+		                	<tr><th  concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+							<tr cc:dynamicData="resultCountMutantPax1GroupByAssayId"></tr>		                	
+							</table>
+		                </li>
+		    		</ol>
+	    		</li>
+				<li>Case 4: Genotype with single allele pairs, including matches to expanded definition of wild type
+		    		<ol>
+		                <li>Open GXD Query Form</li>
+		                <li>Enter <b  concordion:set="#symbol">Pax2</b> in the "Specimens mutated in" input field</li>
+		                <li>Verify that <b>the following assays and result counts appear</b>
+		                	<table cc:execute="#count = getCountByMutatedGeneAndAssayId(#symbol,#assayId)">
+		                	<tr><th  concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+		                	<tr cc:dynamicData="resultCountMutantPax2GroupByAssayId"></tr>
+		                	</table>
+		                </li>
+		    		</ol>
+	    		</li>
+				<li>Case 6: Nomenclature matches current mouse name
+		    		<ol>
+	    			<li>Open the GXD Query Form</li>
+	    			<li>Enter <b concordion:set="#gene">beta catenin</b> in the "Specimens mutated in gene:" input field</li>
+	    			<li>Verify that <b>all results have allele pairs involving at least one of the following markers</b>:
+	    				<table cc:verifySubsetOf="#results : getMutatedGenes(#gene)">
+	    				<tr><th cc:assertEquals="#results">Marker</th></tr>
+	    				<tr><td>Ctnnb1</td></tr>
+	    				<tr><td>Ctnnbip1</td></tr>
+	    				<tr><td>Ctnnbl1</td></tr>
+	    				<tr><td>Dact1</td></tr>
+	    				<tr><td>Dact2</td></tr>
+	    				<tr><td>Dact3</td></tr>
+	    				</table>
+	    			</li>
+	                <li>Verify that <b>exactly the following assays and result counts appear</b>
+	                	<table cc:execute="#count = getCountByMutatedGeneAndAssayId(#gene,#assayId)">
+		                	<tr><th  concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+		                	<tr cc:dynamicData="resultCountByMutantBetaCateninGroupByAssayId"></tr>
+		                	</table>
+	                </li>
+		    		</ol>
+	    		</li>
+				<li>Case 7: Nomenclature matches current mouse synonym
+		    		<ol>
+	    			<li>Open the GXD Query Form</li>
+	    			<li>Enter <b concordion:set="#symbol">Krox-20</b> in the "Specimens mutated in gene:" input field</li>
+	    			<li>Verify that all results have allele pairs involving the marker <b cc:assertAllResultsContainText="getGenotypes(#symbol)">Egr2</b>.</li>
+	                <li>Verify that <b>the following assays and result counts appear</b> (among others)
+	                	<table cc:execute="#count = getCountByMutatedGeneAndAssayId(#symbol,#assayId)">
+		                	<tr><th  concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+		                	<tr cc:dynamicData="resultCountByMutantKrox-20GroupByAssayId"></tr>
+		                	</table>
+	                </li>
+		    		</ol>
+	    		</li>
+    			</ul>
+    		</li>
+    		<li>Querying for "Wild type specimens only" should return the assays and results associated with wild type genotypes as defined above
+    			<ol>
+    			<li>Make sure we're returning both kinds of wild type genotypes: those with no allele pair (no genotype) AND those with the specific mutant genotype and assay type combination defined above.</li>
+    			<li>Make sure no other mutant genotypes are returned:
+    				<ol>
+    				<li>No multi-gene genotypes.</li>
+    				<li>No homozygous, hemizygous, or mixed-heterozygous genotypes.</li>
+    				<li>No assay types except "in situ reporter (knock in)".</li>
+    				<li>Gene in the allowed mutant genotype must match gene assayed.</li>
+    				</ol>
+    			</li>
+    			</ol>
+    			<ul>
+    			<li>Case 1: Return both kinds of "wild type results" and exclude "non-wild type" results for a specific gene
+		    		<ol>
+		                <li>Open GXD Query Form</li>
+		                <li>Enter <b concordion:set="#nomen">Ascl3</b> in the Nomenclature input field</li>
+		                <li>Select "Wild type specimens only"</li>
+		                <li>Verify that <b>the following assays and result counts appear</b> (No mutant alleles, or meets all other criteria)`
+		                	<table cc:execute="#count = getWildTypeCountByNomenAndAssayId(#nomen,#assayId)">
+		                	<tr><th  concordion:set="#assayId">Assay ID</th><th cc:assertEquals="#count">Count of results</th></tr>
+		                	<tr cc:dynamicData="wildtypeCountForAscl3GroupByAssayId"></tr>
+		                	</table>
+	                	</li>
+		                <li>Verify that <b>exactly the following assays DO NOT appear</b> (wrong assay type)
+		                	<table cc:execute="#results = getWildTypeAssayIdsByNomen(#nomen)">
+		                	<tr><th cc:assertNoResultsContain="#results">Assay ID</th></tr>
+		                	<tr><td>MGI:5051832</td></tr>
+							</table>
+		                </li>
+		    		</ol>
+    			</li>
+    			</ul>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

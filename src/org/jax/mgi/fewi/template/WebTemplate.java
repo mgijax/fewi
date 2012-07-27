@@ -103,7 +103,6 @@ public class WebTemplate {
     @PostConstruct
     public void init (){
     	
-    	System.out.println("init template");
         // preload all relevant template files
         try {
             headHtml = setTemplate("templateHead.html");

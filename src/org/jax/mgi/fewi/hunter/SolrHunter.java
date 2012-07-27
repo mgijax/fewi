@@ -17,14 +17,20 @@ import org.jax.mgi.shr.fe.IndexConstants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
+import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.response.Group;
+import org.apache.solr.client.solrj.response.GroupCommand;
+import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.params.GroupParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.terracotta.ehcachedx.org.mortbay.log.Log;
 
 /**
  * This is the Solr specific hunter.  It is responsible for translating
@@ -100,9 +106,14 @@ public class SolrHunter implements Hunter {
     protected List <String> highlightFields = new ArrayList<String> ();
 
     // unique token used for highlighting
-    private final String highlightToken = "!FRAG!";
-
-
+    protected final String highlightToken = "!FRAG!";
+    
+    /**
+     * Field Grouping
+     */
+    // Fields that can be grouped on
+    protected Map<String,String> groupFields = new HashMap<String,String>();
+    
 
     /*----- CONSTRUCTOR -----*/
 
@@ -137,7 +148,20 @@ public class SolrHunter implements Hunter {
 
     @Override
     public void hunt(SearchParams searchParams, SearchResults searchResults) {
+    	hunt(searchParams,searchResults, null);
+    }
 
+    /**
+     * hunt
+     * @param SearchParams, SearchResults, groupField
+     * @return none
+     * 
+     * An alternative implementation of the hunt() method.
+     * Allows specification of a "group by" field.
+     * 
+     */
+
+    public void hunt(SearchParams searchParams, SearchResults searchResults, String groupField) {
 
         // Invoke the hook, editing the search params as needed.
         searchParams = this.preProcessSearchParams(searchParams);
@@ -174,6 +198,17 @@ public class SolrHunter implements Hunter {
         // Add the facets, can be overwritten.
         addFacets(query);
         logger.debug("SolrQuery:" + query);
+        
+        // Add group field, if passed in.
+        boolean doGrouping = false;
+        if(groupField!=null && this.groupFields.containsKey(groupField))
+        {
+        	query.set(GroupParams.GROUP, true); 
+        	// ensure that the count of groups is included.
+        	query.set(GroupParams.GROUP_TOTAL_COUNT, true);
+        	query.set(GroupParams.GROUP_FIELD, groupFields.get(groupField));
+        	doGrouping = true;
+        }
 
         /**
          * Run the query & package results & result count
@@ -182,14 +217,22 @@ public class SolrHunter implements Hunter {
         try {
             logger.debug("Running query & packaging searchResults");
 
-            rsp = server.query( query );
+            rsp = server.query( query, METHOD.POST );
             SolrDocumentList sdl = rsp.getResults();
 
-            // Package the results into the searchResults object.
-            packInformation(rsp, searchResults, searchParams);
+            if(doGrouping)
+            {
+                // Package the results into the searchResults object by traversing GroupResponse object.
+                packInformationByGroup(rsp, searchResults, searchParams);
+            }
+            else
+            {
+                // Package the results into the searchResults object.
+                packInformation(rsp, searchResults, searchParams);
 
-            // Set the total number found.
-            searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
+                // Set the total number found.
+                searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
+            }
 
             //logger.debug("metaMapping: "
             //  + searchResults.getResultSetMeta().toString());
@@ -200,7 +243,6 @@ public class SolrHunter implements Hunter {
         return ;
 
     }
-
 
     /*----- PROTECTED METHODS -----*/
 
@@ -246,9 +288,8 @@ public class SolrHunter implements Hunter {
          * allows us to handle any special cases for properties using a single
          * interface.
          */
-
+    	
         if (filter.isBasicFilter()) {
-
             // Check to see if the property is null or an empty string,
             // if it is, return an empty string
 
@@ -259,13 +300,12 @@ public class SolrHunter implements Hunter {
             }
 
             // If its not an IN or NOT IN, get the query clause and return it
-
             if (filter.getOperator() != Filter.OP_IN
                     && filter.getOperator() != Filter.OP_NOT_IN) {
                 return propertyMap.get(filter.getProperty())
                     .getClause(filter.getValue(), filter.getOperator());
             }
-
+            
             /** If its an IN or NOT IN, break the query down further, joining
              * thesubclauses by OR or AND as appropriate
              */
@@ -652,6 +692,107 @@ public class SolrHunter implements Hunter {
         if (info != null) {
             sr.setResultStrings(info);
         }
+
+        if (facet != null) {
+            sr.setResultFacets(facet);
+        }
+
+        if (sp.includeSetMeta()) {
+            sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
+        }
+
+        if (sp.includeRowMeta()) {
+            sr.setMetaMapping(metaList);
+        }
+
+    }
+    
+    /**
+     * packInformation
+     * @param sdl
+     * @return List of keys
+     * This generic method is available to all extending classes.  All
+     * that they need to do to take advantage of it is to set the keyString
+     * variable.  This will then be used to extract a given field from the
+     * returned documents as the key we want to return to the wi.
+     *
+     * If something more complex is required, the implementer is expected
+     * to override this method with their own version.
+     * 
+     * This method traverses the GroupResponse object, assuming that a group query was done.
+     */
+
+    protected void packInformationByGroup(QueryResponse rsp, SearchResults sr,
+            SearchParams sp) {
+    	
+    	GroupResponse gr = rsp.getGroupResponse();
+    	// get the group command. In our case, there should only be one.
+    	GroupCommand gc = gr.getValues().get(0);
+    	
+    	// total count of groups
+    	int groupCount = gc.getNGroups();
+    	sr.setTotalCount(groupCount);
+    	
+        // A list of all the primary keys in the document
+        List<String> keys = new ArrayList<String>();
+
+        // A listing of all of the facets.  This is used
+        // at the set level.
+        List<String> facet = new ArrayList<String>();
+
+        // A mapping of field -> set of highlighted words
+        // for the result set.
+        Map<String, Set<String>> setHighlights =
+            new HashMap<String, Set<String>> ();
+
+        // A mapping of documentKey -> Mapping of FieldName
+        // -> list of highlighted words.
+        Map<String, Map<String, List<String>>> highlights =
+            rsp.getHighlighting();
+
+        // A mapping of documentKey -> Row level Metadata objects.
+        Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
+
+        List<Group> groups = gc.getValues();
+
+        /**
+         * Check for facets, if found pack them.
+         */
+
+        if (this.facetString != null) {
+            for (Count c: rsp.getFacetField(facetString).getValues()) {
+                facet.add(c.getName());
+                logger.debug(c.getName());
+            }
+        }
+
+        /**
+         * Iterate through the response documents, extracting the information
+         * that was configured at the implementing class level.
+         */
+
+        for (Group g : groups)
+        {
+        	String key = g.getGroupValue();
+        	int numFound = (int) g.getResult().getNumFound();
+
+            /**
+             * In order to support older pages we pack the score directly as
+             * well as in the metadata.
+             */
+
+            if (this.keyString != null) {
+                keys.add(key);
+                //scoreKeys.add("" + doc.getFieldValue("score"));
+            }
+        }
+
+        // Include the information that was asked for.
+
+        if (keys != null) {
+            sr.setResultKeys(keys);
+        }
+
 
         if (facet != null) {
             sr.setResultFacets(facet);

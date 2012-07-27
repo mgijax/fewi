@@ -1,0 +1,289 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Downloadable Reports Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Downloadable Reports Test Suite</h1>
+    <ul>
+        <li>User story 26, Build download options for assay results data</li>
+        <li>User story 65, Build download options for Gene results data</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>download controls exist (text and Excel format)</li>
+		<li>results set gets downloaded</li>
+		<li>downloaded report opens properly in target application</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests Assay Results data</h3>
+		<ol>
+    		<li>Excel and Text download buttons appear on assay results output
+ 			<p concordion:assertTrue="true">passed. klf 5/3/2012</p> 
+    		<ol>
+                <li>Open GXD QF</li>
+                <li>Submit a query</li>
+                <li>Verify "excel" button appears in "Table Toolbar" above column header row and below output tabs (see requirements)</li>
+                <li>Verify "text" button appears in "Table Toolbar" above column header row and below output tabs (see requirements)</li>
+    		</ol>
+    		</li>
+    		<li>Excel button downloads results set as Excel file
+ 			<p concordion:assertTrue="true">Passed jeffc 7/18/2012</p> 
+    		<ol>
+    			<li>Open GXD QF</li>
+    			<li>Enter <b>Pax1</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Record number of results returned.</li>
+    			<li>Press the <b>Excel button</b></li>
+    			<li>Verify <b>a file downloads</b></li>
+    			<li>Verify downloaded file <b>opens successfully in Excel by default</b></li>
+    			<li>Verify downloaded file <b>has same number of output rows as number of results in query summary output</b>(first row has column headers so total is plus 1)</li>
+    		</ol>
+			</li>
+    		<li>Text button downloads results set as tab-delimited file
+ 			<p concordion:assertTrue="true">Passed jeffc 7/18/2012</p> 
+    		<ol>
+    			<li>Open GXD QF</li>
+    			<li>Enter <b>Pax1</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Record number of results returned.</li>
+    			<li>Press the <b>Text button</b></li>
+    			<li>Verify <b>a file downloads</b></li>
+    			<li>Verify downloaded file <b>opens successfully in a text editor</b></li>
+    			<li>Verify downloaded file <b>has same number of output rows as number of results in query summary output</b></li>
+    			<li>Verify values in the first couple of rows are separated by tabs</li>
+    		</ol>
+			</li>
+    		<li>Excel file has correct output columns
+ 			<p concordion:assertTrue="true">passed jeffc 7/18/2012</p> 
+    		<ol>
+                <li>Open GXD QF</li>
+    			<li>Enter <b>Pax1</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Press the <b>Excel button</b></li>
+                <li>Open the downloaded file and verify columns in order:
+                <ol>
+					<li>Marker ID as MGI Gene ID (not in web results summary)</li>
+					<li>Marker symbol as Gene Symbol</li>
+					<li>Marker name as Gene Name  (not in web results summary)</li>
+					<li>Assay ID as MGI Assay ID</li>
+					<li>Assay type</li>
+					<li>Anatomical System</li> 
+					<li>Age (displaying data as we have it: E9.5 or whatever)</li>
+					<li>Theiler Stage (displaying only numeric value as done in BioMart)</li>
+					<li>Structure</li>
+					<li>Detected (displays "Level")</li>
+					<li>Figure(s)</li>
+					<li>Mutant Allele(s) (display superscripted text inside angle brackets as we store in the DB)</li>
+					<li>Reference (contains just the J:# ID)</li>
+					<li>PubMed ID  (not in web results summary)</li>
+					<li>Citation (contains the short-form reference citation data displayed in the HTML output)</li>
+                </ol>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Text file has correct output columns
+            <p concordion:assertTrue="true">passed jeffc 7/18/2012</p> 
+    		<ol>
+                <li>Open GXD QF</li>
+    			<li>Enter <b>Pax1</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Press the <b>Text button</b></li>
+                <li>Open the downloaded file and verify columns in order:
+                <ol>
+					<li>Marker ID as MGI Gene ID (not in web results summary)</li>
+					<li>Marker symbol as Gene Symbol</li>
+					<li>Marker name as Gene Name  (not in web results summary)</li>
+					<li>Assay ID as MGI Assay ID</li>
+					<li>Assay type</li>
+					<li>Anatomical System</li> 
+					<li>Age (displaying data as we have it: E9.5 or whatever)</li>
+					<li>Theiler Stage (displaying only numeric value as done in BioMart)</li>
+					<li>Structure</li>
+					<li>Detected (displays "Level")</li>
+					<li>Figure(s)</li>
+					<li>Mutant Allele(s) (display superscripted text inside angle brackets as we store in the DB)</li>
+					<li>Reference (contains just the J:# ID)</li>
+					<li>PubMed ID  (not in web results summary)</li>
+					<li>Citation (contains the short-form reference citation data displayed in the HTML output)</li>
+                </ol>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Excel file has correct data
+ 			<p concordion:assertTrue="true">passed jeffc 7/18/12</p> 
+    			<ol>
+	                <li>Open GXD QF</li>
+		    		<li>Enter <b>Pax1</b> in the Nomenclature field and <b>submit the query</b>.</li>    			
+	    			<li>Press the <b>Excel button</b></li>
+	                <li>Open the downloaded file</li>
+	                <li>Verify several of the rows in the downloaded file <b>contain the same data</b> as the results summary output</li>
+	                <li>Verify data in the download file is <b>in the correct columns</b></li>
+    			</ol>
+    		</li>
+    		<li>Text file has correct data
+ 			<p concordion:assertTrue="true">passed jeffc 7/18/12</p> 
+    			<ol>
+	                <li>Open GXD QF</li>
+		    		<li>Enter <b>Pax1</b> in the Nomenclature field and <b>submit the query</b>.</li>    			
+	    			<li>Press the <b>Text button</b></li>
+	                <li>Open the downloaded file</li>
+	                <li>Verify several of the rows in the downloaded file <b>contain the same data</b> as the results summary output</li>
+	                <li>Verify data in the download file is <b>in the correct columns</b></li>
+    			</ol>
+    		</li>
+    		<li>Excel and Text files have correct file names
+ 			<p concordion:assertTrue="true">Passed jeffc 7/18/2012</p> 
+    		<ol>
+    			<li>Verify Excel file is named "MGIgeneExpressionQuery_YYYYMMDD_HHmm.xls" where YYYY is the year, MM is the month, DD is the date, HH is the hour (military), mm is the minutes</li>
+    			<li>Verify Text file is named "MGIgeneExpressionQuery_YYYYMMDD_HHmm.txt" where YYYY is the year, MM is the month, DD is the date, HH is the hour (military), mm is the minutes</li>  
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	
+	
+			<h3>Manual tests Genes Data</h3>
+		<ol>
+    		<li>Excel and Text download buttons appear on assay results output
+ 			<p concordion:assertTrue="true">passed. jeffc 7/10/2012</p> 
+    		<ol>
+                <li>Open GXD QF</li>
+                <li>Submit a query</li>
+                <li>Verify "excel" button appears in "Table Toolbar" above column header row and below output tabs (see requirements)</li>
+                <li>Verify "text" button appears in "Table Toolbar" above column header row and below output tabs (see requirements)</li>
+    		</ol>
+    		</li>
+    		<li>Excel button downloads results set as Excel file
+ 			<p concordion:assertTrue="true">Passed jeffc 7/10/2012</p> 
+    		<ol>
+    			<li>Open GXD QF</li>
+    			<li>Enter <b>Pax*</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Record number of results returned.</li>
+    			<li>Press the <b>Excel button</b></li>
+    			<li>Verify <b>a file downloads</b></li>
+    			<li>Verify downloaded file <b>opens successfully in Excel by default</b></li>
+    			<li>Verify downloaded file <b>has same number of output rows as number of results in query summary output</b>(first row has column headers so total is plus 1)</li>
+    		</ol>
+			</li>
+    		<li>Text button downloads results set as tab-delimited file
+ 			<p concordion:assertTrue="true">Passed jeffc 7/10/2012</p> 
+    		<ol>
+    			<li>Open GXD QF</li>
+    			<li>Enter <b>Pax*</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Record number of results returned.</li>
+    			<li>Press the <b>Text button</b></li>
+    			<li>Verify <b>a file downloads</b></li>
+    			<li>Verify downloaded file <b>opens successfully in a text editor</b></li>
+    			<li>Verify downloaded file <b>has same number of output rows as number of results in query summary output</b></li>
+    			<li>Verify values in the first couple of rows are separated by tabs</li>
+    		</ol>
+			</li>
+    		<li>Excel file has correct output columns
+ 			<p concordion:assertTrue="true">passed jeffc 7/10/2012</p> 
+    		<ol>
+                <li>Open GXD QF</li>
+    			<li>Enter <b>Pax*</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Press the <b>Excel button</b></li>
+                <li>Open the downloaded file and verify columns in order:
+                <ol>
+					<li>Marker ID as MGI Gene ID (not in web results summary)</li>
+					<li>Marker symbol as Gene Symbol</li>
+					<li>Marker name as Gene Name  (not in web results summary)</li>
+					<li>type</li>
+					<li>Chr</li> 
+					<li>Genome Location-NCBI Build 37</li>
+					<li>cM</li>
+					<li>Strand</li>
+                </ol>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Text file has correct output columns
+            <p concordion:assertTrue="true">passed jeffc 7/10/2012</p> 
+    		<ol>
+                <li>Open GXD QF</li>
+    			<li>Enter <b>Pax*</b> in the Nomenclature field and <b>submit the query</b>.</li>
+    			<li>Press the <b>Text button</b></li>
+                <li>Open the downloaded file and verify columns in order:
+                <ol>
+					<li>Marker ID as MGI Gene ID (not in web results summary)</li>
+					<li>Marker symbol as Gene Symbol</li>
+					<li>Marker name as Gene Name  (not in web results summary)</li>
+					<li>Type</li>
+					<li>Chr</li> 
+					<li>Genome Location-NCBI build 37</li>
+					<li>cM</li>
+					<li>Strand</li>
+                </ol>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Excel file has correct data
+ 			<p concordion:assertTrue="true">passed. jeffc 7/10/2012</p> 
+    			<ol>
+	                <li>Open GXD QF</li>
+		    		<li>Enter <b>Pax*</b> in the Nomenclature field and <b>submit the query</b>.</li>    			
+	    			<li>Press the <b>Excel button</b></li>
+	                <li>Open the downloaded file</li>
+	                <li>Verify several of the rows in the downloaded file <b>contain the same data</b> as the results summary output</li>
+	                <li>Verify data in the download file is <b>in the correct columns</b></li>
+    			</ol>
+    		</li>
+    		<li>Text file has correct data
+ 			<p concordion:assertTrue="true">passed. jeffc 7/10/2012</p> 
+    			<ol>
+	                <li>Open GXD QF</li>
+		    		<li>Enter <b>Pax*</b> in the Nomenclature field and <b>submit the query</b>.</li>    			
+	    			<li>Press the <b>Text button</b></li>
+	                <li>Open the downloaded file</li>
+	                <li>Verify several of the rows in the downloaded file <b>contain the same data</b> as the results summary output</li>
+	                <li>Verify data in the download file is <b>in the correct columns</b></li>
+    			</ol>
+    		</li>
+    		<li>Excel and Text files have correct file names
+ 			<p concordion:assertTrue="true">Passed jeffc 7/10/2012</p> 
+    		<ol>
+    			<li>Verify Excel file is named "MGIgeneExpressionQuery_markers_YYYYMMDD_HHmm.xls" where YYYY is the year, MM is the month, DD is the date, HH is the hour (military), mm is the minutes</li>
+    			<li>Verify Text file is named "MGIgeneExpressionQuery_markers_YYYYMMDD_HHmm.txt" where YYYY is the year, MM is the month, DD is the date, HH is the hour (military), mm is the minutes</li>  
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1</li>
+		</ol>
+	</div>
+
+</body>
+</html>

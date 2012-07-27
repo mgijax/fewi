@@ -1,0 +1,181 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+		table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+		table, th, td {border: 1px solid #CCCCCC;}
+		td, th {padding:2px;}
+		.man {background-color:#FFFFCC;}
+		ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+		ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+		li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+		p {margin:2px 0px;}
+		.hide {display:none;}
+	</style>
+    <title>Assay Type Search</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Assay Type Search</h1>
+    <ul>
+        <li>User story 18, Search by Assay Type</li>
+    </ul>
+</div>
+
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+        <li>provide checkboxes for "All" and for individual values</li>
+        <li>multiple values are OR'ed together</li>
+        <li>all expression results associated with matching Assay Types are returned</li>
+        <li>other parameters are AND'ed to this</li>
+        <li>Reset button restores the default</li>
+        <li>Looks like the mockup in the requirments document</li>
+        <li>update display user's query parameters</li>
+        <li>User help updated</li>
+    </ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+    <div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+         <h3>Manual tests</h3>
+        <ol>
+            <li>Make sure that the sub-options display properly in two columns
+		    <p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Verify two columns of assay type checkboxes appear:
+                <p>Column 1</p>
+                <ul>
+                	<li>Immunohistochemistry</li>
+                	<li>In situ reporter (knock in)</li>
+                	<li>Northern blot</li>
+                	<li>Nuclease S1</li>
+                </ul>
+                <p>Column 2</p>
+                <ul>
+                	<li>RNA in situ</li>
+                	<li>RNase protection</li>
+                	<li>RT-PCR</li>
+                	<li>Western blot</li>
+                </ul>
+                </li>
+            </ol>
+            	</li>
+        		<li>Verify default checkbox status
+		    	<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+            <ol>
+            <li>Open the GXD query form and verify all 9 assay type checkboxes are checked
+            <p concordion:assertTrue="true">Passed jeffc 7/17/2012</p></li>
+            </ol>
+        		</li>
+            	<li>Make sure the "all" option deselects and selects all sub-options
+		    	<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Click the "all" option</li>
+                <li>verify that all the sub-options are deselected</li>
+                <li>Click the "all" option again</li>
+                <li>verify that all the sub-options are selected</li>
+            </ol>
+           		</li>
+            	<li>Make sure that selecting each individual (and groups of) sub-option(s) de-selects the "all" option
+				<p concordion:assertTrue="true">Passed jeffc 7/17/2012</p>
+            <ol>
+                <li>Open the GXD query form and verify all assay type checkboxes are checked</li>
+                <li>Click one sub-option, deselecting it</li>
+                <li>Verify that the "all" option is de-selected along with the option you selected</li>
+                <li>Click every individual sub-option</li>
+                <li>Verify that the "all" option does not become selected when de-selecting any sub-option</li>
+                <li>When complete, verify that all assay type options are de-selected</li>
+                <li>When complete, verify that the "all" option is not selected</li>            
+            </ol>
+            	</li>
+            	<li>Make sure that pressing Reset puts the Assay Types section back to its default
+				<p concordion:assertTrue="true">Passed on IE 8.0.7601.17514 and FF 13.0.1. klf 7/17/2012</p>
+            <ol>
+                <li>Open the GXD query form and verify all assay type checkboxes are checked</li>
+                <li>Click one sub-option de-selecting it</li>
+                <li>Verify that the "all" option is de-selected along with the option you selected</li>
+                <li>Click the Reset button</li>
+                <li>verify that the "all" option and all other assay types are again selected</li>
+            </ol>
+            	</li>
+            	<li>Verify that the user help is correct
+            	<p concordion:assertTrue="true">Passed. klf 5/3/2012</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Click on the <b>help icon</b></li>
+                <li>Verify the help document contains correct information about assay types</li>
+            </ol>
+            	</li>
+            	<li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        <ol>
+            <li>Test that for each assay type, all returned assay results are of the specified type
+                <table concordion:execute="#results = getTypesByAssayType(#type)">
+			    <tr>
+			        <th concordion:set="#type">Query By Assay Type</th>
+			        <th cc:assertAllRowsEqual="#results">All Results Return This Assay Type</th>
+			    </tr>
+			    <tr><td>Immunohistochemistry</td><td>Immunohistochemistry</td></tr>
+			    <tr><td>In situ reporter (knock in)</td><td>In situ reporter (knock in)</td></tr>
+			    <tr><td>Northern blot</td><td>Northern blot</td></tr>
+			    <tr><td>Nuclease S1</td><td>Nuclease S1</td></tr>
+			    <tr><td>RNA in situ</td><td>RNA in situ</td></tr>
+			    <tr><td>RNase protection</td><td>RNase protection</td></tr>
+			    <tr><td>RT-PCR</td><td>RT-PCR</td></tr>
+			    <tr><td>Western blot</td><td>Western blot</td></tr>
+                </table>
+            </li>
+            <li>Test that for each assay type, the count of returned assay results is correct (multiple combinations)
+            	<table cc:execute="#count = getAssayResultsCountByAssayType(#type)">
+            		<tr><th concordion:set="#type">Query By Assay Type</th>
+            			<th cc:assertEquals="#count">Returns This Count of Results</th></tr>
+            			<tr class="hide"><td>test</td><td>0</td></tr>
+            		<tr><td>RNase protection</td><td><b cc:dynamicData="RNaseProtectionResultCount"></b></td></tr>
+            		<tr><td>Western blot</td><td><b cc:dynamicData="WesternBlotResultCount"></b></td></tr>
+            		<tr><td>Northern blot</td><td><b cc:dynamicData="NorthernBlotResultCount"></b></td></tr>
+            		<tr><td>Nuclease S1</td><td><b cc:dynamicData="NucleaseS1ResultCount"></b></td></tr>
+            		<tr><td>RT-PCR</td><td><b cc:dynamicData="RT-PCRResultCount"></b></td></tr>
+            		<tr><td>In situ reporter (knock in)</td><td><b cc:dynamicData="InSituKnockInResultCount"></b></td></tr>
+            		<tr><td>Immunohistochemistry</td><td><b cc:dynamicData="ImmunohistochemistryResultCount"></b></td></tr>
+            		<tr><td>RNA in situ</td><td><b cc:dynamicData="RNAInSituResultCount"></b></td></tr>
+            	</table>
+            </li>
+            <li>Test that the "all" checkbox returns the same result set as checking all 8 suboptions and also the same as deselecting everything
+				<ol>
+				<li>Select <b concordion:set="#assayType">All</b> assay types from the assay type widget</li>
+				<li>Click the Search button and record <b concordion:execute="#count = getAssayResultsCountByAssayType(#assayType)">count of assay results</b> returned</li>
+				<li>Select <b>No assay type (i.e. de-select everything)</b> <span concordion:set="#assayType"></span>) from the assay type widget</li>
+				<li>Click the Search button and record <b concordion:execute="#count2 = getAssayResultsCountByAssayType(#assayType)">count of assay results</b> returned</li>
+				<li>Verify <b concordion:assertTrue="#count2.equals(#count)">count of genes is the same</b></li>
+				<li>Select <b concordion:set="#assayType">Immunohistochemistry,In situ reporter (knock in),Northern Blot,Nuclease S1,RNA in situ,RNase protection,RT-PCR,Western blot</b> assay types from the assay type widget</li>
+				<li>Click the Search button and record <b concordion:execute="#count3 = getAssayResultsCountByAssayType(#assayType)">count of assay results</b> returned</li>
+				<li>Verify <b concordion:assertTrue="#count3.equals(#count)">count of results is the same as selecting the "all" option</b></li>
+				</ol>
+            </li>
+        </ol>
+        <ul>
+        <li><a href="MultipleParametersSearch.html">See also multiple parameter search tests</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

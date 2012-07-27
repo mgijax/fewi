@@ -1,0 +1,427 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+    <title>Assay Summary</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Assay Summary</h1>
+    <ul>
+        <li>User story 31, Display correct assay data</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+        <li>a web page exists and displays a list of assays matching the query</li>
+        <li>columns are: Gene, Assay Details, Assay Type, Reference</li>
+        <li>the results may be accessed via what looks like a "tab"</li>
+        <li>the results page contains all working "tabs" (genes, assays, assay results)</li>
+        <li>tab labels include a count of appropriate data</li>
+        <li>camera icon appears for appropriate assays</li>
+        <li>camera icon has a tooltip on mouseover</li>
+        <li>default is 100 rows per page</li>
+        <li>default sort is 1. gene, 2. assay type, 3. author surname</li>
+        <li>browser back/forward works reliably (tested in BrowserHistoryjavascript test)</li>
+        <li>pagination control works reliably (tested in ????? test)</li>
+        <li>tab switching works reliably (tested in ??? test)</li>
+        <li>update user help</li>
+    </ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Output is displayed in three "tabs"
+            <p concordion:assertTrue="true">passed klf 7/16/2012</p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>Pax6</b></li>
+                <li>Verify the output returned has the tabs (in order): <b>Genes, Assays, Assay Results</b></li>
+            </ol>
+            </li>
+            <li>Each tab displays the count of data returned for the given output type
+            <p><span concordion:assertTrue="true">passed kstone 7/16/2012</span></p>
+<!-- 
+GET COUNT FOR GENES TAB
+select count(distinct gx._marker_key)
+from gxd_expression gx, mrk_marker m
+where gx._marker_key = m._marker_key
+and gx.isforgxd = 1
+and m.symbol like 'Pax6%'
+
+GET COUNT FOR ASSAYS TAB
+select count(distinct gx._assay_key)
+from gxd_expression gx, mrk_marker m
+where gx._marker_key = m._marker_key
+and gx.isforgxd = 1
+and m.symbol like 'Pax6%'
+
+GET COUNT FOR ASSAY RESULTS TAB
+select count(gx._assay_key)
+from gxd_expression gx, mrk_marker m
+where gx._marker_key = m._marker_key
+and gx.isforgxd = 1
+and m.symbol like 'Pax6%'
+ -->
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
+                <li>Verify the Genes tab displays a count of <b cc:dynamicData="pax6GeneCount"></b> </li> 
+                <li>Verify the Assays tab displays a count of <b cc:dynamicData="pax6AssayCount"></b> </li>
+                <li>Verify the Assay Results tab displays a count of <b cc:dynamicData="pax6ResultCount"></b> </li>
+            </ol>
+            </li>
+            <li>Assay table exists with correct columns
+        	<p concordion:assertTrue="true">passed klf 7/16/2012</p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
+                <li>Click on the Assays tab</li>
+                <li>Verify the columns of the table are (in order): <b>Gene, Assay Details, Assay Type, Reference</b></li>
+            </ol>
+            </li>
+            <li>Assay Details column displays data link and MGI ID
+        	<p concordion:assertTrue="true">passed klf 7/16/2012</p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
+                <li>Click on the Assays tab</li>
+                <li>Verify "Assay Details" column displays:
+                <ol>
+                    <li>Text <b>data</b> for every result</li>
+                    <li>Text "data" is <b>hyperlinked to Expression Details page</b> for the displayed MGI ID</li>
+                    <li>Text of <b>MGI ID for the assay</b> containing the result in the same row is displayed in parentheses</li>
+                </ol>
+                </li>
+            </ol>
+            </li>
+            <li>Verify that the camera icon appears when the assay detail page contains figures linked to image detail pages 
+            <p><span concordion:assertTrue="true">passed kstone 7/16/2012</span></p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>me1</b> in the gene nomenclature field</li>
+                <li>Click on the <b>Assays</b> tab</li>
+                <li>Verify a <b>camera icon</b> is displayed to the right of the assay MGI ID for <b>12</b> of the 21 assays</li>
+                <li>Search for <b>Pax6</b> and <b>RNA in situ</b></li>
+                <li>Look for assay <b>MGI:5423882</b> which should have author <b>Visel</b></li>
+                <li>Verify a <b>camera icon</b> is displayed to the right of the assay MGI ID</li>
+            </ol>
+            </li>
+
+            <li>Verify that the camera icons have a tooltip 
+            <p concordion:assertTrue="true">passed klf 7/16/2012</p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>me1</b> in the gene nomenclature field</li>
+                <li>Click on the <b>Assays</b> tab</li>
+                <li>Verify when you hover over a <b>camera icon</b> it displays a tooltip saying <b>Images(s) available. Follow data link.</b></li>
+            </ol>
+            </li>
+            
+            <li>Default row count is 100 for Assays tab
+        <p concordion:assertTrue="true">Passed klf 7/16/2012</p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
+                <li>Click on the Assays tab</li>
+                <li>Verify the number of rows returned is <b>100</b></li>
+            </ol>
+            </li>
+            
+            <li>Gene symbol should not be linked on Assays tab
+        	<p concordion:assertTrue="true">passed klf 7/16/2012</p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
+                <li>Click on the Assays tab</li>
+                <li>The gene symbols <b>should not be a link</b> in the Gene column</li>
+            </ol>
+            </li>
+            <li>Test that GENES are sorted correctly
+        	<p concordion:assertTrue="true">passed klf 7/16/2012</p>
+            <ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b>Hoxa*</b> in the nomenclature field</li>
+                <li>The genes listed in the Assay Results tab should be sorted by gene symbol using the MGI Smart Alpha algorithm (e.g., Gene10 follows Gene9, not Gene1).<br/>
+                 Order should be Hoxa1, Hoxa2, Hoxa3, Hoxa4, Hoxa5, Hoxa6, Hoxa7, Hoxa9, Hoxa10, Hoxa11, Hoxa11as, Hoxa13
+                 </li>
+            </ol>
+            </li>
+            <li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        		<ol>
+    		<li>Query returns correct results and Assay Type column displays correct assay type
+<!-- 
+select count(distinct gx._assay_key), ga.assaytype 
+from gxd_expression gx, mrk_marker m, gxd_assaytype ga
+where gx._marker_key = m._marker_key
+and gx._assaytype_key = ga._assaytype_key
+and gx.isforgxd = 1
+and m.symbol like 'Tssk%'
+group by ga.assaytype
+ -->
+    		<ol>
+                <li>Open the GXD query page</li>
+                <li>Search for <b concordion:set="#nomen">Tssk*</b> in the gene nomenclature field</li>
+                <li>Click on the Assays tab</li>
+                <li>Assay Type column should include only the following:
+                <table concordion:execute="#result = getAssayCountByTypeAndNomen(#nomen,#assayType)">
+	                <tr><th concordion:set="#assayType">Assay Type</th>
+	                <th cc:assertEquals="#result">Count</th></tr>
+	                <tr><td>RT-PCR</td><td>11</td></tr>
+	                <tr><td>Northern blot</td><td>3</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+            <li>Assays Tab displays correct assays for the query, in the correct order:
+            <ul>
+            	<li>gene symbol (smart alpha)</li>
+            	<li>assay type
+            		<ol>
+                    	<li>Immunohistochemistry</li>
+                    	<li>RNA in situ</li>
+                    	<li>In situ reporter (knock in)</li>
+                    	<li>Northern blot</li>
+                    	<li>Western blot</li>
+                    	<li>RT-PCR</li>
+                    	<li>RNase protection</li>
+                    	<li>Nuclease S1</li>
+            		</ol>
+            	</li>
+            	<li>reference, alpha by author</li>            
+            </ul>
+<!-- NOTE: CITATION HERE DOES NOT INCLUDE AUTHOR et al., 
+NOTE: SUBSTITUTE DESIRED GENE SYMBOL FOR SUBSEQUENT TEST CASES
+select distinct m.symbol, ga.assaytype, aa.accid, b.jnumid, b.short_citation, gx._assay_key, gx._refs_key,
+  case when ga.assaytype = 'Immunohistochemistry' then 1
+    when ga.assaytype = 'RNA in situ' then 2
+    when ga.assaytype = 'In situ reporter (knock in)' then 3
+    when ga.assaytype = 'Northern blot' then 4
+    when ga.assaytype = 'Western blot' then 5
+    when ga.assaytype = 'RT-PCR' then 6
+    when ga.assaytype = 'RNase protection' then 7
+    when ga.assaytype = 'Nuclease S1' then 8
+    else 9
+    end as sortValue
+from gxd_expression gx, mrk_marker m, bib_citation_cache b, gxd_assaytype ga, acc_accession aa
+where gx._marker_key = m._marker_key
+and gx.isforgxd = 1
+and gx._refs_key = b._refs_key
+and gx._assaytype_key = ga._assaytype_key
+and gx._assay_key = aa._object_key
+and aa._mgitype_key = 8
+and m.symbol like 'Afp'
+order by m.symbol, sortValue, b.short_citation
+ -->
+            <ol>
+            	<li><i>Note: This test has not been updated during the last database refresh. We are not sure how necessary these sorting tests are to automate. They are difficult to maintain -kstone</i></li>
+            	<li><i>Note 2: The list of IDs is incorrect. The table is correct. <span concordion:assertTrue="true">passed klf 7/16/2012</span> </i></li>
+                <li>Open the GXD query page</li>
+                <li>Search for <b concordion:set="#nomen">Afp</b> in the gene nomenclature field (Note: includes all assay types except in situ reporter (knock in))</li>
+                <li>Click on the Assays tab</li>
+                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">36 </b> rows.</li>
+                <li>Data returned should include only the following, in this order (human-readable table of all values below, NOTE author does not include &quot;et al.,&quot;)<br/>
+                <b concordion:set="#orderedAssays">MGI:1327427,MGI:1329127, MGI:1329285, MGI:1337757, MGI:1342462, MGI:1346814, MGI:1351510, MGI:2155932, MGI:2179335, MGI:2180048, MGI:2655508, MGI:2662328, MGI:2662507, MGI:2667400, MGI:2667409, MGI:2668385, MGI:3037857, MGI:3038241, MGI:3041567, MGI:3056175, MGI:3056664, MGI:3512985, MGI:3513150, MGI:3531440, MGI:3617232, MGI:3653926, MGI:3713266, MGI:3714322, MGI:3825861, MGI:4410515, MGI:4823022, MGI:4823023, MGI:4949093, MGI:5292373, MGI:5305345, MGI:5319681
+                </b><br/>
+                Corrected 7/16/2012: <b concordion:set="#orderedAssays">MGI:1337757, MGI:1327427, MGI:3056664, MGI:1351510, MGI:4823022, MGI:4823023, MGI:3825861, MGI:2180048, MGI:5305345, MGI:1346814, MGI:3653926, MGI:5319681, MGI:2155932, MGI:3713266, MGI:3531440, MGI:2662507, MGI:2662328, MGI:2655508, MGI:2667400, MGI:3617232, MGI:3056175, MGI:3714322, MGI:2667409, MGI:1329285, MGI:5292373, MGI:3513150, MGI:2668385, MGI:3512985, MGI:4410515, MGI:4949093, MGI:2179335, MGI:1329127, MGI:1342462, MGI:3037857, MGI:3038241, MGI:3041567
+                </b>
+               <!--  TURNED OFF AUTOMATED SORTING TEST <p concordion:assertTrue="getAssaysInOrder(#nomen, #orderedAssays)">Assays are in the same order</p> -->
+				<table>
+					<tr><th>symbol</th><th>assaytype</th><th>accid</th><th>jnumid</th><th>short_citation</th><th>_assay_key</th><th>_refs_key</th></tr>
+					<tr><td>Afp</td><td>Immunohistochemistry</td><td>MGI:1337757</td><td>J:47784</td><td>Dragatsis I, Development 1998 Apr;125(8):1529-39</td><td>3361</td><td>48105</td></tr>
+					<tr><td>Afp</td><td>Immunohistochemistry</td><td>MGI:1327427</td><td>J:51595</td><td>Xu C, Development 1999 Feb;126(3):483-94</td><td>2138</td><td>52046</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:3056664</td><td>J:90291</td><td>Bohnsack BL, Genes Dev 2004 Jun 1;18(11):1345-58</td><td>15776</td><td>91276</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:1351510</td><td>J:56972</td><td>Constam DB, Development 2000 Jan;127(2):245-54</td><td>4320</td><td>59848</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:4823022</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>41021</td><td>154591</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:4823023</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>41022</td><td>154591</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:3825861</td><td>J:139177</td><td>Hoffman BG, Genome Biol 2008;9(6):R99</td><td>34115</td><td>140270</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:2180048</td><td>J:75946</td><td>Kanai-Azuma M, Development 2002 May;129(10):2367-79</td><td>6520</td><td>76904</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:5305345</td><td>J:38354</td><td>Marhaug G, Clin Exp Immunol 1997 Feb;107(2):425-34</td><td>60047</td><td>38519</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:1346814</td><td>J:57676</td><td>McGratd KE, Dev Biol 1999 Sep 15;213(2):442-56</td><td>4162</td><td>58555</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:3653926</td><td>J:87222</td><td>Morkel M, Development 2003 Dec;130(25):6283-94</td><td>25351</td><td>88204</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:5319681</td><td>J:1977</td><td>Ott MO, Mech Dev 1991 Dec;36(1-2):47-58</td><td>60785</td><td>1977</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:2155932</td><td>J:71998</td><td>Tremblay KD, Development 2001 Sep;128(18):3609-21</td><td>6015</td><td>72950</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:3713266</td><td>J:9912</td><td>Vaessen MJ, Differentiation 1989 May;40(2):99-105</td><td>28089</td><td>9900</td></tr>
+					<tr><td>Afp</td><td>RNA in situ</td><td>MGI:3531440</td><td>J:67263</td><td>Watt AJ, Mech Dev 2001 Feb;100(2):205-15</td><td>20166</td><td>68213</td></tr>
+					<tr><td>Afp</td><td>Nortdern blot</td><td>MGI:2662507</td><td>J:19957</td><td>Heller DL, Mol Cell Biol 1988 Jul;8(7):2797-803</td><td>9050</td><td>20127</td></tr>
+					<tr><td>Afp</td><td>Nortdern blot</td><td>MGI:2662328</td><td>J:54660</td><td>Kamiya A, EMBO J 1999 Apr 15;18(8):2127-36</td><td>8997</td><td>55224</td></tr>
+					<tr><td>Afp</td><td>Nortdern blot</td><td>MGI:2655508</td><td>J:14784</td><td>Kotdary R, Dev Biol 1987 Jun;121(2):342-8</td><td>8187</td><td>14711</td></tr>
+					<tr><td>Afp</td><td>Western blot</td><td>MGI:2667400</td><td>J:79924</td><td>Greene ND, J Biol Chem 2002 Nov 1;277(44):41645-51</td><td>10079</td><td>80885</td></tr>
+					<tr><td>Afp</td><td>Western blot</td><td>MGI:3617232</td><td>J:103128</td><td>Machka C, Gene Expr Patterns 2005 Dec;6(1):94-101</td><td>23786</td><td>104197</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:3056175</td><td>J:90291</td><td>Bohnsack BL, Genes Dev 2004 Jun 1;18(11):1345-58</td><td>15658</td><td>91276</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:3714322</td><td>J:120667</td><td>Bouzin C, J Immunol 2003 Aug 1;171(3):1297-303</td><td>28142</td><td>121758</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:2667409</td><td>J:79924</td><td>Greene ND, J Biol Chem 2002 Nov 1;277(44):41645-51</td><td>10081</td><td>80885</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:1329285</td><td>J:34056</td><td>Gualdi R, Genes Dev 1996 Jul 1;10(13):1670-82</td><td>2323</td><td>34190</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:5292373</td><td>J:138863</td><td>Hayhurst GP, J Hepatol 2008 Sep;49(3):384-95</td><td>58705</td><td>139956</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:3513150</td><td>J:89458</td><td>Jochheim A, Int J Dev Biol 2004 Feb;48(1):23-9</td><td>19148</td><td>90443</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:2668385</td><td>J:77742</td><td>Lin X, Gastroenterology 2002 Jul;123(1):345-51</td><td>10237</td><td>78702</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:3512985</td><td>J:94197</td><td>Long L, Mol Cell Biol 2004 Nov;24(21):9601-9</td><td>19101</td><td>95188</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:4410515</td><td>J:154021</td><td>Naidu S, Gene 2010 Jan 1;449(1-2):95-102</td><td>38695</td><td>155114</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:4949093</td><td>J:170493</td><td>Pfister S, Int J Dev Biol 2011;55(1):45-58</td><td>52612</td><td>171589</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:2179335</td><td>J:76367</td><td>Ratdjen J, Development 2002 Jun;129(11):2649-61</td><td>6439</td><td>77325</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:1329127</td><td>J:27458</td><td>Robb L, Proc Natl Acad Sci U S A 1995 Jul 18;92(15):7075-9</td><td>2296</td><td>27390</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:1342462</td><td>J:23061</td><td>Shivdasani RA, Nature 1995 Feb 2;373(6513):432-4</td><td>3808</td><td>23041</td></tr>
+					<tr><td>Afp</td><td>RT-PCR</td><td>MGI:3037857</td><td>J:73291</td><td>Torres-Padilla ME, Mech Dev 2001 Dec;109(2):183-93</td><td>14063</td><td>74243</td></tr>
+					<tr><td>Afp</td><td>RNase protection</td><td>MGI:3038241</td><td>J:20408</td><td>Spear BT, Mol Cell Biol 1994 Oct;14(10):6497-505</td><td>14096</td><td>20578</td></tr>
+					<tr><td>Afp</td><td>Nuclease S1</td><td>MGI:3041567</td><td>J:23790</td><td>tdarun S, Nucleic Acids Res 1995 Feb 25;23(4):641-6</td><td>14472</td><td>23784</td></tr>
+				</table>
+				</li>
+				<li><i>Note 3: Removing test cases here and substituting one that includes the missing Assay Type: in situ reporter (knock in). The gene 'Aatf' includes this assay type as well as the 2 that should be before and after it so it's a great test case. -klf 7/16/2012.</i></li>
+				
+				<li>Click <b>Click to modify search</b></li>
+                <li>Search for <b concordion:set="#nomen">Aatf</b> in the gene nomenclature field (Note: includes all assay types except RNase protection and Nuclease S1)</li>
+                <li>Click on the Assays tab</li>
+                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">10</b> rows.</li>
+                <li>Data returned should include only the following, in this order (human-readable table of all values below, NOTE author does not include &quot;et al.,&quot;)<br/>
+				<b concordion:set="#orderedAssays">MGI:4822857, MGI:3508576, MGI:3509925, MGI:5052586, MGI:4945737, MGI:3036524, MGI:5421932, MGI:3036523, MGI:3036522, MGI:3816397</b>
+				<table>
+					<tr>
+						<th>symbol</th><th>assaytype</th><th>accid</th><th>jnumid</th><th>short_citation</th><th>_assay_key</th><th>_refs_key</th><th>sortvalue</th>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RNA in situ</td><td>MGI:4822857</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>40856</td><td>154591</td><td>2</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RNA in situ</td><td>MGI:3508576</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>17064</td><td>92242</td><td>2</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RNA in situ</td><td>MGI:3509925</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>18413</td><td>92242</td><td>2</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RNA in situ</td><td>MGI:5052586</td><td>J:171409</td><td>GUDMAP: the GenitoUrinary Development Molecular Anatomy Proj, http://www.gudmap.org 2004;():</td><td>53348</td><td>172505</td><td>2</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RNA in situ</td><td>MGI:4945737</td><td>J:162220</td><td>Magdaleno S, PLoS Biol 2006 Apr;4(4):e86</td><td>51998</td><td>163316</td><td>2</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RNA in situ</td><td>MGI:3036524</td><td>J:65741</td><td>Thomas T, Dev Biol 2000 Nov 15;227(2):324-42</td><td>13929</td><td>66688</td><td>2</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RNA in situ</td><td>MGI:5421932</td><td>J:122989</td><td>Visel A, Nucleic Acids Res 2004 Jan 1;32(Database issue):D552-6</td><td>61827</td><td>124081</td><td>2</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>In situ reporter (knock in)</td><td>MGI:3036523</td><td>J:65741</td><td>Thomas T, Dev Biol 2000 Nov 15;227(2):324-42</td><td>13928</td><td>66688</td><td>3</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>Northern blot</td><td>MGI:3036522</td><td>J:65741</td><td>Thomas T, Dev Biol 2000 Nov 15;227(2):324-42</td><td>13927</td><td>66688</td><td>4</td>
+					</tr>
+					<tr>
+						<td>Aatf</td><td>RT-PCR</td><td>MGI:3816397</td><td>J:140465</td><td>Guo G, Dev Cell 2010 Apr 20;18(4):675-85</td><td>32816</td><td>141558</td><td>6</td>
+					</tr>
+				</table>
+				</li>
+<!-- 
+				<li>Click <b>Click to modify search</b></li>
+                <li>Search for <b concordion:set="#nomen">Hhex</b> in the gene nomenclature field (Note: includes all assay types except RNase protection and Nuclease S1)</li>
+                <li>Click on the Assays tab</li>
+                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">30</b> rows.</li>
+                <li>Data returned should include only the following, in this order (human-readable table of all values below, NOTE author does not include &quot;et al.,&quot;)<br/>
+				<b concordion:set="#orderedAssays">MGI:4462695, MGI:3529579, MGI:5288741, MGI:4825370, MGI:3795404, MGI:4462792, MGI:3507633, MGI:3507634, MGI:3508843, MGI:3508844, MGI:4438434, MGI:3825718, MGI:2180036, MGI:3590576, MGI:3052989, MGI:4945303, MGI:5053738, MGI:5053739, MGI:4943179, MGI:2183486, MGI:1346303, MGI:1930274, MGI:1306925, MGI:4849074, MGI:4420280, MGI:3590572, MGI:4462694, MGI:3795415, MGI:3816588, MGI:3826488
+				</b>
+                OLD COMMENT: TURNED OFF AUTOMATED SORTING TEST <p concordion:assertTrue="getAssaysInOrder(#nomen, #orderedAssays)">Assays are in the same order</p> 
+				<table>
+					<tr><th>symbol</th><th>assaytype</th><th>accid</th><th>jnumid</th><th>short_citation</th><th>_assay_key</th><th>_refs_key</th></tr>
+					<tr><td>Hhex</td><td>Immunohistochemistry</td><td>MGI:4462695</td><td>J:74064</td><td>Ghosh B, Pediatr Res 2000 Nov;48(5):634-8</td><td>40342</td><td>75018</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3529579</td><td>J:79514</td><td>Burke Z, Mech Dev 2002 Oct;118(1-2):147</td><td>20088</td><td>80475</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:5288741</td><td>J:168654</td><td>Chung YC, Gene Expr Patterns 2011 Jan-Feb;11(1-2):84-92</td><td>57883</td><td>169750</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4825370</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>43369</td><td>154591</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3795404</td><td>J:134429</td><td>Flagg AE, Dev Biol 2007 Apr 1;304(1):308-16</td><td>31356</td><td>135522</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4462792</td><td>J:74064</td><td>Ghosh B, Pediatr Res 2000 Nov;48(5):634-8</td><td>40348</td><td>75018</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3507633</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>16121</td><td>92242</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3507634</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>16122</td><td>92242</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3508843</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>17331</td><td>92242</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3508844</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>17332</td><td>92242</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4438434</td><td>J:158268</td><td>Hassan AS, Gene Expr Patterns 2010 Feb 12;10(2-3):127-34</td><td>39345</td><td>159361</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3825718</td><td>J:139177</td><td>Hoffman BG, Genome Biol 2008;9(6):R99</td><td>33972</td><td>140270</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:2180036</td><td>J:75946</td><td>Kanai-Azuma M, Development 2002 May;129(10):2367-79</td><td>6510</td><td>76904</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3590576</td><td>J:47803</td><td>Keng VW, FEBS Lett 1998 Apr 17;426(2):183-6</td><td>22354</td><td>48124</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3052989</td><td>J:91216</td><td>Kolterud A, Gene Expr Patterns 2004 Sep;4(5):521-8</td><td>15085</td><td>92201</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4945303</td><td>J:162220</td><td>Magdaleno S, PLoS Biol 2006 Apr;4(4):e86</td><td>51564</td><td>163316</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:5053738</td><td>J:171409</td><td>McMahon AP, J Am Soc Nephrol 2008 Apr;19(4):667-71</td><td>54500</td><td>172505</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:5053739</td><td>J:171409</td><td>McMahon AP, J Am Soc Nephrol 2008 Apr;19(4):667-71</td><td>54501</td><td>172505</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4943179</td><td>J:90402</td><td>Merrill BJ, Development 2004 Jan;131(2):263-74</td><td>50773</td><td>91387</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:2183486</td><td>J:77125</td><td>Norris DP, Development 2002 Jul;129(14):3455-68</td><td>6639</td><td>78085</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:1346303</td><td>J:53656</td><td>Perea-Gomez A, Development 1999 Oct;126(20):4499-511</td><td>4052</td><td>58318</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:1930274</td><td>J:67152</td><td>Perea-Gomez A, Development 2001 Mar;128(5):753-65</td><td>4978</td><td>68101</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:1306925</td><td>J:45579</td><td>Thomas PQ, Development 1998 Jan;125(1):85-94</td><td>1930</td><td>45863</td></tr>
+					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4849074</td><td>J:156017</td><td>Yokoyama S, Dev Cell 2009 Dec;17(6):836-48</td><td>49296</td><td>157110</td></tr>
+					<tr><td>Hhex</td><td>In situ reporter (knock in)</td><td>MGI:4420280</td><td>J:149792</td><td>Morrison GM, Cell Stem Cell 2008 Oct 9;3(4):402-15</td><td>38954</td><td>150885</td></tr>
+					<tr><td>Hhex</td><td>Northern blot</td><td>MGI:3590572</td><td>J:47803</td><td>Keng VW, FEBS Lett 1998 Apr 17;426(2):183-6</td><td>22353</td><td>48124</td></tr>
+					<tr><td>Hhex</td><td>Western blot</td><td>MGI:4462694</td><td>J:74064</td><td>Ghosh B, Pediatr Res 2000 Nov;48(5):634-8</td><td>40341</td><td>75018</td></tr>
+					<tr><td>Hhex</td><td>RT-PCR</td><td>MGI:3795415</td><td>J:134429</td><td>Flagg AE, Dev Biol 2007 Apr 1;304(1):308-16</td><td>31366</td><td>135522</td></tr>
+					<tr><td>Hhex</td><td>RT-PCR</td><td>MGI:3816588</td><td>J:140465</td><td>Guo G, Dev Cell 2010 Apr 20;18(4):675-85</td><td>33007</td><td>141558</td></tr>
+					<tr><td>Hhex</td><td>RT-PCR</td><td>MGI:3826488</td><td>J:139177</td><td>Hoffman BG, Genome Biol 2008;9(6):R99</td><td>34560</td><td>140270</td></tr>				
+				</table>
+                </li>
+				<li>Click <b>Click to modify search</b></li>
+                <li>Search for <b concordion:set="#nomen">Mib*</b> in the gene nomenclature field (Note: includes three genes, several assay types)</li>
+                <li>Click on the Assays tab</li>
+                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">23</b> rows.</li>
+                <li>Data returned should include only the following, in this order (human-readable table of all values below, NOTE author does not include &quot;et al.,&quot;)<br/>
+                <b concordion:set="#orderedAssays">MGI:4825381, MGI:3507897, MGI:3509067, MGI:3511959, MGI:5053748, MGI:4848573, MGI:3652956, MGI:3652842, MGI:4826195, MGI:3776837, MGI:3652832, MGI:3776828, MGI:3652840, MGI:3652946, MGI:3776839, MGI:3773868, MGI:3776821, MGI:3776825, MGI:3773859, MGI:3773860, MGI:3773863, MGI:3773865, MGI:3773866
+                </b>
+                <p concordion:assertTrue="getAssaysInOrder(#nomen, #orderedAssays)">Assays are in the same order</p>
+                <table>
+					<tr><th>symbol</th><th>assaytype</th><th>accid</th><th>jnumid</th><th>short_citation</th><th>_assay_key</th><th>_refs_key</th></tr>
+					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:4825381</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>43380</td><td>154591</td></tr>
+					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:3507897</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>16385</td><td>92242</td></tr>
+					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:3509067</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>17555</td><td>92242</td></tr>
+					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:3511959</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>18899</td><td>92242</td></tr>
+					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:5053748</td><td>J:171409</td><td>McMahon AP, J Am Soc Nephrol 2008 Apr;19(4):667-71</td><td>54510</td><td>172505</td></tr>
+					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:4848573</td><td>J:156017</td><td>Yokoyama S, Dev Cell 2009 Dec;17(6):836-48</td><td>48795</td><td>157110</td></tr>
+					<tr><td>Mib1</td><td>Immunohistochemistry</td><td>MGI:3652956</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25194</td><td>103646</td></tr>
+					<tr><td>Mib1</td><td>RNA in situ</td><td>MGI:3652842</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25184</td><td>103646</td></tr>
+					<tr><td>Mib1</td><td>RNA in situ</td><td>MGI:4826195</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>44194</td><td>154591</td></tr>
+					<tr><td>Mib1</td><td>RNA in situ</td><td>MGI:3776837</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30583</td><td>101291</td></tr>
+					<tr><td>Mib1</td><td>Northern blot</td><td>MGI:3652832</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25182</td><td>103646</td></tr>
+					<tr><td>Mib1</td><td>Northern blot</td><td>MGI:3776828</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30582</td><td>101291</td></tr>
+					<tr><td>Mib1</td><td>Western blot</td><td>MGI:3652840</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25183</td><td>103646</td></tr>
+					<tr><td>Mib1</td><td>RT-PCR</td><td>MGI:3652946</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25192</td><td>103646</td></tr>
+					<tr><td>Mib2</td><td>RNA in situ</td><td>MGI:3776839</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30584</td><td>101291</td></tr>
+					<tr><td>Mib2</td><td>In situ reporter (knock in)</td><td>MGI:3773868</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30383</td><td>130196</td></tr>
+					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3776821</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30580</td><td>101291</td></tr>
+					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3776825</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30581</td><td>101291</td></tr>
+					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3773859</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30378</td><td>130196</td></tr>
+					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3773860</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30379</td><td>130196</td></tr>
+					<tr><td>Mib2</td><td>RT-PCR</td><td>MGI:3773863</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30380</td><td>130196</td></tr>
+					<tr><td>Mib2</td><td>RT-PCR</td><td>MGI:3773865</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30381</td><td>130196</td></tr>
+					<tr><td>Mib2</td><td>RT-PCR</td><td>MGI:3773866</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30382</td><td>130196</td></tr>                
+                </table>
+                </li>
+ -->
+            </ol>
+            </li>
+		</ol>
+
+        <ul>
+        <li><a href="MultipleParametersSearch.html">See also multiple parameter search tests</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

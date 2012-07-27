@@ -2,8 +2,19 @@ package org.jax.mgi.fewi.searchUtil;
 
 public class SortConstants {
 
-	// reference summary page
+	// GXD assay & marker summary page
+	public static final String GXD_GENE         = "gene";
+	public static final String GXD_ASSAY_ID     = "assayID";
+	public static final String GXD_ASSAY_TYPE   = "assayType";
+	public static final String GXD_SYSTEM       = "anatomicalSystem";
+	public static final String GXD_AGE          = "age";
+	public static final String GXD_STRUCTURE    = "structure";
+	public static final String GXD_DETECTION    = "detectionLevel";
+	public static final String GXD_GENOTYPE     = "genotype";
+	public static final String GXD_REFERENCE    = "reference";
+	public static final String GXD_LOCATION     = "location";
 
+	// reference summary page
 	public static final String REF_JOURNAL         = "journal";
 	public static final String REF_AUTHORS         = "authors";
 	public static final String REF_BY_AUTHOR       = "authorSort";
@@ -11,16 +22,14 @@ public class SortConstants {
 	public static final String REF_YEAR            = "year";
 
 	// recombinase summary page
-
 	public static final String CRE_DRIVER          = "driver";
 	public static final String CRE_SYMBOL          = "nomenclature";
 	public static final String CRE_TYPE            = "alleleType";
 	public static final String CRE_INDUCIBLE       = "inducibleNote";
 	public static final String CRE_REF_COUNT       = "countOfReferences";
 	public static final String CRE_DETECTED_COUNT  = "detectedCount";
-	
+
     // Cre sorting strings, for the detail page
-    
     public static final String CRE_BY_STRUCTURE                 = "byStructure";
     public static final String CRE_BY_AGE                       = "byAge";
     public static final String CRE_BY_LEVEL                     = "byLevel";
@@ -35,18 +44,18 @@ public class SortConstants {
     public static final String CRE_BY_SPECIMEN_NOTE             = "bySpecimenNote";
     public static final String CRE_BY_RESULT_NOTE               = "byResultNote";
 
-    // Default sort		
+    // Default sort
     public static final String BY_DEFAULT						= "byDefaultSort";
-    
+
     // GXD Lit Summary Page
     public static final String MRK_BY_SYMBOL					= "byMrkSymbol";
-    
-	// Sequence Summary page
 
+	// Sequence Summary page
 	public static final String SEQUENCE_TYPE       = "sequenceType";
 	public static final String SEQUENCE_PROVIDER   = "sequenceProvider";
 	public static final String SEQUENCE_LENGTH     = "sequenceLength";
 
+	// Vocab
 	public static final String VOC_TERM            = "term";
 	public static final String VOC_BY_DAG_STRUCT   = "byDagStruct";
 	public static final String VOC_BY_DAG_TERM      = "byDagTerm";

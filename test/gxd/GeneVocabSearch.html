@@ -1,0 +1,495 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Gene Vocabulary Search (GO and MP)</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Gene Vocabulary Search (GO and MP)</h1>
+    <ul>
+        <li>User story 14, Search by gene-vocabulary annotation (GO and MP only)</li>
+        <li>User story 85, Search for genes by OMIM annotation</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+        <li>user may search by a term or synonym</li>
+        <li>all expression results associated with all genes annotated to the selected term and child terms are returned</li>
+        <li>inappropriate results are excluded (e.g., "not", "normal", GO "ND terms")</li>
+        <li>multiple values are not supported</li>
+        <li>GO and MP vocabularies only (down the DAG)</li>
+        <li>US85: add OMIM searches to the gene vocab search box semantics</li>
+        <li>US85: remove vocabs not actually searched from the example text on the QF</li>
+        <li>US85: remove vocabs not actually searched from the autocomplete functionality</li>
+        <li>other parameters AND'ed to this</li>
+        <li>Help text in the help popup is accurate and any links in the text work</li>
+        <li>Reset button clears the widget</li>
+        <li>update display user's query parameters</li>
+        <li>update user help</li>
+    </ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Selecting a term that is the same in multiple vocabularies should return only the genes annotated to the selected term
+            <p concordion:assertTrue="true">Passed jeffc 7/17/2012</p> 
+            <ol>
+                <li>Select the term '<b>bleb - Function</b>'</li>
+                <li>Verify that 3 genes returned</li>
+                <li>Select the term '<b>bleb - Mammalian phenotype</b>'</li>
+                <li>Verify that 7 genes returned</li>
+            </ol>
+            </li>
+            <li>Changing the text after selecting a term should blank the input box.
+            <p concordion:assertTrue="true">Passed jeffc 7/17/2012</p> 
+            <ol>
+                <li>Select the term '<b>brachypodia</b>'</li> 
+                <li>Click in the box and type 'a'</li>
+                <li>The box should be cleared except for the letter 'a'</li>
+            </ol>
+            </li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+<!--
+Test data suggested by curators.  Counts are relative to live Production data, our database lags behind.
+ 
+from Cindy Smith 5/9/2012
+terms with no children:
+1) MP:0004160 “retroesophageal right subclavian artery” is annotated to genotypes representing 35 markers, including 27 protein coding genes. In particular, Tfap2a , transcription factor AP-2, alpha, has expression data associated with both this gene and the allele Tfap2a<tm1Will> (also annotated to MP:0004160).  Same is true for gene Tll1 and allele Tll1<tm1Dgr>.  There are probably more.
+2) MP:0008461 “left atrial isomerism” is annotated to genotypes representing 5 protein coding genes.  Invs and allele Invs<inv> have expression data. Dnahc11 and allele    Dnahc11<iv> have expression data.
+
+terms with a few children:
+1) abnormal conotruncal ridge morphology [MP:0010585] has a few children, with total 32 markers (incl. 29 protein coding genes) annotated to it or to its children.  Fgfr2 and allele Fgfr2<tm3Dsn> have expression data, as do Rxra and Rxra<tm1Rev> (probably more)
+2) abnormal atrioventricular cushion morphology [MP:0000297] has a few children, total 88 markers (incl. 76 protein coding genes) annotated to it or to its children. Pkd1 and allele Pkd1<tm1Rsa>, Hhex and Hhex<tm1Cwb>, probably more.
+
+from Harold Drabkin 5/9/2012
+GO:0030913 paranodal junction assembly
+No children; has 5 genes annotated, several via IMP (mutant allele)
+
+GO:0032292  peripheral nervous system axon ensheathment
+Has two children (one of which itself has children
+15 genes 15  annotations
+-->
+<!-- 
+Jon's code 5/13/2012
+
+Markers for an MP term and children where are also present in the GXD Index:
+
+select distinct gag._Marker_key, m.symbol
+from VOC_Term parent,
+  MRK_Marker m,
+  GXD_AlleleGenotype gag,
+  DAG_Closure dc,
+  VOC_Annot va,
+  VOC_Term qualifier,
+  VOC_AnnotType t
+where parent.term = 'abnormal forelimb zeugopod morphology'
+  and va._Object_key = gag._Genotype_key
+  and gag._Marker_key = m._Marker_key
+  and parent._Term_key = dc._AncestorObject_key
+  and (dc._DescendentObject_key = va._Term_key
+    or parent._Term_key = va._Term_key)
+  and va._Qualifier_key = qualifier._Term_key
+  and qualifier.term is null
+  and va._AnnotType_key = t._AnnotType_key
+  and t.name = 'Mammalian Phenotype/Genotype'
+  and exists (select 1 from GXD_Expression ge
+    where ge._Marker_key = gag._Marker_key)
+order by 2
+
+
+Markers for a GO term and children where are also present in the GXD Index:
+
+select distinct va._Object_key as _Marker_key, m.symbol
+from VOC_Term parent,
+  MRK_Marker m,
+  DAG_Closure dc,
+  VOC_Annot va,
+  VOC_Term qualifier,
+  VOC_AnnotType t
+where parent.term = 'cell aging'
+  and va._Object_key = m._Marker_key
+  and parent._Term_key = dc._AncestorObject_key
+  and (dc._DescendentObject_key = va._Term_key
+    or parent._Term_key = va._Term_key)
+  and va._Qualifier_key = qualifier._Term_key
+  and (qualifier.term is null or qualifier.term not like 'NOT%')
+  and va._AnnotType_key = t._AnnotType_key
+  and t.name = 'GO/Marker'
+  and exists (select 1 from GXD_Index ge
+    where ge._Marker_key = va._Object_key)
+order by 2
+
+
+
+ -->
+        <ol>
+            <li>Selecting an MP term without children returns only the annotated genes which have expression data
+            <ol>
+            <!-- 
+markers annotated to MP terms (parent) with expression & not 'recombinase reporter':
+
+select distinct v._marker_key, m.symbol
+from mgd.acc_accession a , mgd.voc_marker_cache v, mgd.mrk_marker m, mgd.voc_term t, gxd_expression e
+where a.accid = 'MP:0004160'
+and a._object_key = v._term_key
+and v._marker_key = m._marker_key
+and v._term_key = t._term_key
+and v.annotType = 'Mammalian Phenotype/Genotype'
+and v._marker_key = e._marker_key
+and e._assaytype_key != 11
+and e.isforgxd = 1
+order by m.symbol
+;     
+             -->
+            	<li>Select the term 'retroesophageal right subclavian artery' (<b concordion:set="#query">MP:0004160</b>) </li>
+            	<li>Return the following markers:
+            		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
+            			<tr><th concordion:assertEquals="#results">Marker</th></tr>
+            			<tr><td>Acvr1</td></tr>
+						<tr><td>Chrd</td></tr>
+						<tr><td>Eya1</td></tr>
+						<tr><td>Fbln1</td></tr>
+						<tr><td>Fgf8</td></tr>
+						<tr><td>Foxg1</td></tr>
+						<tr><td>Gata6</td></tr>
+						<tr><td>Gbx2</td></tr>
+						<tr><td>Hand2</td></tr>
+						<tr><td>Hoxa1</td></tr>						
+						<tr><td>Hprt</td></tr>
+						<tr><td>Itga5</td></tr>
+						<tr><td>Itgav</td></tr>
+						<tr><td>Jag1</td></tr>
+						<tr><td>Pax3</td></tr>
+						<tr><td>Pdgfra</td></tr>
+						<tr><td>Pdgfrb</td></tr>
+						<tr><td>Prrx1</td></tr>
+						<tr><td>Prrx2</td></tr>
+						<tr><td>Six1</td></tr>
+						<tr><td>Tbx1</td></tr>
+						<tr><td>Tfap2a</td></tr>
+						<tr><td>Tgfbr2</td></tr>
+						<tr><td>Vangl1</td></tr>
+						<tr><td>Vangl2</td></tr>
+						<tr><td>Vegfa</td></tr>
+            		</table>
+            	<!-- SELECT V._term_key, V._marker_key, V.annottype, M.symbol FROM mgd.voc_marker_cache V, mgd.mrk_marker M WHERE V._term_key = '1671269' and V._marker_key = M._marker_key -->
+            	<!-- SELECT distinct V._marker_key, V.annottype, M.symbol FROM mgd.voc_marker_cache V, mgd.mrk_marker M WHERE V._marker_key = M._marker_key and M._marker_key in (8726, 9027, 9936, 10498, 10502, 12181, 12242, 12243, 12559, 13300, 13762, 14103, 15433, 18737, 23133, 24907, 28691, 31369, 33109, 33682, 37270, 38210, 40822, 43537, 64487, 67204, 91436, 93329, 307082) and V.annottype like 'AD' -->
+            	<!-- COMBINED SQL:
+            	SELECT distinct V._marker_key, M.symbol
+				FROM mgd.voc_marker_cache V, mgd.mrk_marker M
+				WHERE V._marker_key = M._marker_key
+				AND V.annottype like '%AD%'
+				AND V._marker_key in 
+					(SELECT V._marker_key 
+					FROM mgd.voc_marker_cache V, mgd.mrk_marker M, mgd.voc_term VT
+					WHERE VT.term = 'retroesophageal right subclavian artery' 
+					and V._marker_key = M._marker_key 
+					and VT._term_key = V._term_key)
+            	 -->
+            	</li>
+            	<li>Do not return the following markers:
+            		<table concordion:execute="#results = getGeneSymbolsByTermId(#query)">
+            		<tr><th cc:assertNoResultsContain="#results">Marker</th></tr>
+            		<tr><td>Del(16Dgcr2-Hira)1Rak</td></tr>
+            		<tr><td>Del(16Es2el-Ufd1l)217Bld</td></tr>
+            		<tr><td>Gt(ROSA)26Sor</td></tr>
+            		<tr><td>Sec24b</td></tr>
+            		</table>
+            	</li>
+            </ol>
+            </li>
+            <li>Selecting an MP term with children returns only the annotated genes which have expression data for the term and its child terms
+            <ol>
+            	<li>Select the term 'abnormal conotruncal ridge morphology' (<b concordion:set="#query">MP:0010585</b>) </li>
+            	<li>Return the following markers:
+            		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
+						<tr><th concordion:assertEquals="#results">Marker</th></tr>
+						<tr><td>Acvr1</td></tr>
+						<tr><td>Aldh1a2</td></tr>
+						<tr><td>Bmp10</td></tr>
+						<tr><td>Bmp4</td></tr>
+						<tr><td>Fgf8</td></tr>
+						<tr><td>Fgfr2</td></tr>
+						<tr><td>Foxp1</td></tr>
+						<tr><td>Gata4</td></tr>
+						<tr><td>Gata5</td></tr>
+						<tr><td>Hey1</td></tr>
+						<tr><td>Heyl</td></tr>
+						<tr><td>Hhex</td></tr>
+						<tr><td>Hspg2</td></tr>
+						<tr><td>Isl1</td></tr>
+						<tr><td>Kras</td></tr>
+						<tr><td>Meox2</td></tr>
+						<tr><td>Nkx2-5</td></tr>
+						<tr><td>Pds5a</td></tr>
+						<tr><td>Pds5b</td></tr>
+						<tr><td>Pkd1</td></tr>
+						<tr><td>Rxra</td></tr>
+						<tr><td>Sox4</td></tr>
+						<tr><td>Sox9</td></tr>
+						<tr><td>Ssr1</td></tr>
+						<tr><td>Tbx2</td></tr>
+						<tr><td>Tll1</td></tr>
+						<tr><td>Vcan</td></tr>
+					</table>
+				</li>
+				<li>Do not return the following markers:
+					<table  concordion:execute="#results = getGeneSymbolsByTermId(#query)">
+						<tr><th cc:assertNoResultsContain="#results">Marker</th></tr>
+						<tr><td>Tg(CAG-cat,-Ptpn11*Q97R)1Rbns</td></tr>
+						<tr><td>Tg(Prrx1-cre)1Cjt</td></tr>
+						<tr><td>Tg(Tek-cre)12Flv</td></tr>
+						<tr><td>Tg(Tek-cre)1Ywa</td></tr>
+						<tr><td>Tg(Wnt1-cre)11Rth</td></tr>
+					</table>
+            	</li>
+            </ol>
+            </li>
+            <li>Selecting a GO term without children returns only the annotated genes which have expression data
+            <!-- 
+            select distinct v._marker_key, m.symbol
+from mgd.acc_accession a , mgd.voc_marker_cache v, mgd.mrk_marker m, mgd.voc_term t, gxd_expression e
+where a.accid = 'GO:0001527'
+and a._object_key = v._term_key
+and v._marker_key = m._marker_key
+and v._term_key = t._term_key
+and v.annotType = 'GO/Marker'
+and v._marker_key = e._marker_key
+and e._assaytype_key != 11
+and e.isforgxd = 1
+order by m.symbol
+;
+             -->
+            <ol>
+            	<li>Select the term 'microfibril' (<b concordion:set="#query">GO:0001527</b>) </li>
+            	<li>Return the following markers:
+            		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
+            			<tr><th concordion:assertEquals="#results">Marker</th></tr>
+            		 	 <tr><td>Adamts10</td></tr>            			
+            		 	 <tr><td>Fbn1</td></tr>
+						 <tr><td>Fbn2</td></tr>
+						 <tr><td>Mfap2</td></tr>
+						 <tr><td>Mfap5</td></tr>
+						 <tr><td>Thsd4</td></tr>
+            		</table>
+            	</li>
+            </ol>
+            </li>
+            <li>Selecting a GO term with children returns only the annotated genes which have expression data for the term and its child terms
+            <ol>
+            	<li>Select the term 'peripheral nervous system axon ensheathment' (<b concordion:set="#query">GO:0032292</b>) </li>
+            	<li>Return the following markers:
+            		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
+            			<tr><th concordion:assertEquals="#results">Marker</th></tr>
+            		 	<tr><td>Adam22</td></tr>
+            		 	<tr><td>Akt1</td></tr>
+            		 	<tr><td>Akt2</td></tr>
+						 <tr><td>Arhgef10</td></tr>
+						 <tr><td>Dag1</td></tr>
+						 <tr><td>Lgi4</td></tr>
+						 <tr><td>Mpp5</td></tr>
+						 <tr><td>Ndrg1</td></tr>
+						 <tr><td>Nf1</td></tr>
+						 <tr><td>Pou3f1</td></tr>
+						 <tr><td>Pou3f2</td></tr>
+						 <tr><td>Ski</td></tr>
+						 <tr><td>Sod1</td></tr>
+            		</table>
+jjj            	</li>
+            </ol>
+            </li>
+            <li>Selecting a GO term that has a gene with only NOT annotations
+            <ol>
+            	<li>Select the term 'cholesterol efflux' (<b concordion:set="#query">GO:0033344</b>) </li>
+            	<li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Abcg4</b> should not be returned.</li>
+                <li>Select the term 'ubiquitin-protein ligase activity' (<b concordion:set="#query">GO:0004842</b>) ("not colocalizes with") </li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Pcgf2</b> should not be returned.</li>
+                <li>Select the term '???' (There is no annotation with this qualifier: kstone 05/17/2012) ("not contributes to") </li>
+            </ol>
+            </li>
+            <li>Selecting a GO term that has a gene with both NOT annotations and positive annotations
+            <!-- select m._marker_key, m.symbol, t._term_key, t.term 
+            from mrk_marker m, voc_term t,voc_annot va 
+            where m._marker_key=va._object_key and 
+            va._term_key=t._term_key and 
+            va._qualifier_key in (1614151,1614153,1614155) and 
+            exists (select 1 from voc_annot va2 where va2._object_key=m._marker_key and va2._term_key=t._term_key and va2._qualifier_key in (1614152,1614154,1614156)) and 
+            exists (select 1 from gxd_expression ge where ge.isforgxd=1 and ge._marker_key=m._marker_key) limit 20; -->
+            <ol>
+                <li>Select the term 'axon cargo transport' (<b concordion:set="#query">GO:0008088</b>) </li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">App</b> should be returned.</li>
+            </ol>
+            </li>
+            <li>Selecting an MP term that has a gene with only Normal annotations
+            <ol>
+            	<li>Select the term '???' (<b concordion:set="#query">???</b>) </li>
+            	<li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">???</b> should not be returned.
+            	</li>
+            </ol>
+            </li>
+            <li>Selecting an MP term that has a gene with Normal annotations and abnormal annotations
+            <!-- select m._marker_key, m.symbol, t._term_key, t.term 
+            from mrk_marker m, voc_term t,voc_annot va 
+            where m._marker_key=va._object_key and va._term_key=t._term_key 
+            and va._qualifier_key =2181424 and 
+            exists (select 1 from voc_annot va2 where va2._object_key=m._marker_key and va2._term_key=t._term_key and va2._qualifier_key =2181423) and 
+            exists (select 1 from gxd_expression ge where ge.isforgxd=1 and ge._marker_key=m._marker_key) limit 20; -->
+            <ol>
+                <li>Select the term '???' (There are no cases that fit these criteria: kstone 05/17/2012) </li>
+            </ol>
+            </li>
+            <li>Selecting an MP synonym returns the genes which have expression data and are annotated to the correct term for the selected synonym
+            <ol>
+                <li>Enter the term '<b>abnormal adipogenesis</b>'</li>
+                <li>Select the term '<b>abnormal adipogenesis [abnormal adipose tissue development]</b>' (<b concordion:set="#query">MP:0011167</b>) </li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Carm1</b> should be returned.</li>
+                <li>The marker <b cc:assertnoResultsContain="getGeneSymbolsByTermId(#query)">Bscl2</b> should not be returned.<br/>
+                (This marker is associated with 'abnormal adipogenesis [abnormal fat cell differentiation]' MP:0011168.)
+                </li>
+            </ol>
+            </li>
+            <li>Selecting a GO synonym returns the genes which have expression data and are annotated to the correct term for the selected synonym
+            <ol>
+                <li>Ener the term '<b>malic enzyme</b>'</li>
+                <li>Select the term &quot;<b>'malic' enzyme [malate dehydrogenase (decarboxylating) activity]</b>&quot; (<b concordion:set="#query">GO:0004471</b>) </li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Me1</b> should be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Me2</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Me3</b> should not be returned.<br/>
+                (Me2 and Me3 are associated with different terms having the same &quot;'malic' enzyme&quot; synonym.)</li>
+            </ol>
+            </li>
+            <li>Selecting a GO term where genes annotated to that term appear in the GXD lit index, but do not have fully coded assay results, should not be returned
+            <ol>
+                <li>Select the term '<b>cell killing</b>' (<b concordion:set="#query">GO:0001906</b>) </li>
+                <li>The following markers should not be returned:
+<!-- Jon's SQL modified to include marker is in GXD_Index but absent from GXD_Expression
+select distinct va._object_key as _marker_key, m.symbol
+from mgd.voc_term parent,
+  mgd.mrk_marker m,
+  mgd.dag_closure dc,
+  mgd.voc_annot va,
+  mgd.voc_term qualifier,
+  mgd.voc_annottype t
+where parent.term = 'cell killing'
+  and va._object_key = m._marker_key
+  and parent._term_key = dc._ancestorobject_key
+  and (dc._descendentobject_key = va._term_key
+    or parent._term_key = va._term_key)
+  and va._qualifier_key = qualifier._term_key
+  and (qualifier.term is null or qualifier.term not like 'NOT%')
+  and va._annottype_key = t._annottype_key
+  and t.name = 'GO/Marker'
+  and exists (select 1 from mgd.gxd_index ge
+    where ge._marker_key = va._object_key)
+  and not exists (select 1 from mgd.gxd_expression gx
+    where gx._marker_key = va._object_key)
+order by 2
+ -->
+					<table  concordion:execute="#results = getGeneSymbolsByTermId(#query)">
+						<tr><th cc:assertNoResultsContain="#results">Marker</th></tr>
+						<tr><td>Fcgr1</td></tr>
+						<tr><td>Ighg2a</td></tr>
+						<tr><td>Klrk1</td></tr>
+						<tr><td>Muc4</td></tr>
+						<tr><td>Pvr</td></tr>
+               		</table>
+                </li>
+            </ol>
+            </li>
+            <li>Selecting a GO term returns only those genes which have at least one positive annotation and expression data
+            <ol>
+                <li>Select the term '<b>kinase activity</b>' (<b concordion:set="#query">GO:0016301</b>) </li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Abl2</b> should be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Fgr</b> should not be returned.</li>
+            </ol>
+            </li>
+            <li>Selecting a GO term that is 'molecular_function', 'biological_process', or 'cellular_component' returns only genes annotated to child terms  which have expression data
+            (excludes 'ND' annotations).<br/>
+            (Note: if a gene has both an 'ND' to a high-level term and positive annotations to child terms, the 'ND' should be ignored. As of May 2012, this can happen only via Electronic annotations to child terms. Curation policy forbids literature annotations to child terms.)
+            <ol>
+                <li>Select the molecular_function term '<b>molecular_function</b>' (<b concordion:set="#query">GO:0003674</b>) </li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Commd3</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Cyp2d13</b> should not be returned.</li>
+                <li>Select the biological_process term '<b>biological_process</b>' (<b concordion:set="#query">GO:0008150</b>) </li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Commd3</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Cyp2d13</b> should not be returned.</li>
+                <li>Select the cellular_component term '<b>cellular_component</b>' (<b concordion:set="#query">GO:0005575</b>) </li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Commd3</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Cyp2d13</b> should not be returned.</li>
+            </ol>
+            </li>
+            <li>Selecting a GO term that is 'molecular_function', 'biological_process', or 'cellular_component' should not return genes annotated directly to the term which have expression data unless there is at least one annotated child term.
+<!-- GENES WHICH HAVE BOTH 'ND' ANNOTATIONS TO AT LEAST 1 TOP-LEVEL GO TERM AND ALSO CHILD ANNOTATIONS TO A TOP-LEVEL GO TERM AND HAVE EXPRESSION DATA
+select distinct mm.symbol, gx._marker_key
+from gxd_expression gx, mrk_marker mm, voc_marker_cache vm1,voc_marker_cache vm2 
+where vm1._marker_key = mm._marker_key
+and vm2._marker_key = mm._marker_key
+and mm._marker_key = gx._marker_key
+and gx.isforgxd = 1
+and vm1._term_key in (6113,120,1098)
+and vm2._term_key not in (6113,120,1098)
+and vm1.annottype like 'GO%'
+and vm2.annottype like 'GO%'
+ -->
+            <ol>
+                <li>Select the molecular_function term '<b>molecular_function</b>' (<b concordion:set="#query">GO:0003674</b>) </li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should not be returned.</li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Ctla2a</b> should be returned (it has IEA annotations to child terms).</li>
+                <li>Select the biological_process term '<b>biological_process</b>' (<b concordion:set="#query">GO:0008150</b>) </li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should not be returned.</li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Bglap-rs1</b> should be returned (it has IEA annotations to child terms).</li>
+                <li>Select the cellular_component term '<b>cellular_component</b>' (<b concordion:set="#query">GO:0005575</b>) </li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Agfg2</b> should not be returned.</li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should be returned  (it has IEA annotations to child terms).</li>
+            </ol>
+            </li>
+            <li>Selecting an OMIM term returns only those genes which have at least one positive annotation and expression data, and does not return genes having only a NOT annotation
+            <ol>
+                <li>Select the term '<b>Achondroplasia; ACH</b>' (<b concordion:set="#query">100800</b>) </li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Npr2</b> should be returned (has only positive annotations).</li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Fgfr3</b> should be returned (has positive and NOT annotations).</li>
+                
+                <li>Select the term '<b>Pituitary Adenoma, Growth Hormone-Secreting</b>' (<b concordion:set="#query">102200</b>) </li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Men1</b> should be returned (has only positive annotations).</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Fbn1</b> should not be returned (has only NOT annotations).</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Gnas</b> should not be returned (is ortholog of associated Human gene but has no positive annotations itself).</li>
+            </ol>
+            </li>
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>

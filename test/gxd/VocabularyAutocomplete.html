@@ -1,0 +1,569 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Vocabulary Autocomplete test suite</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Vocabulary Autocomplete test suite</h1>
+    <ul>
+        <li>User story 13, Build autocomplete for vocabulary annotation search</li>
+        <li>User story 50, Remove PRO from vocab query</li>
+        <li>User story 91, fix wording in error message you get when selecting vocab terms whose annotated genes do not have expression data</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>input text causes a dropdown list to appear with matching vocabulary terms and synonyms</li>
+		<li>Sorted by solr score, matched text length, smart alpha on matched, smart alpha on original term</li>
+		<li>when the user selects a term or synonym, the input box is populated with the selected text</li>
+		<li>support string tokens (i.e., "le lo" includes "left lobe")</li>
+		<li>does not support selecting multiple choices</li>
+		<li>add all Q1 unit tests and as many Q2 tests as can be automated</li>
+		<li>US50: remove PRO from vocab tooltip</li>
+		<li>US50: remove PRO terms from autocomplete</li>
+		<li>US50: add QA tests to verify PRO is removed</li>
+		<li>US91: Shortened text to "The genes annotated with the vocabulary term you selected (X) do not have any gene expression data associated with them."</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+     		<li>Verify that matching characters are bolded wherever they occur in every term or synonym in the list
+     		<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+				<li>Type <b>venom</b> slowly in the vocabulary field, pausing after each character to verify the display</li>
+				<li>Verify after each character input that the synonyms and terms have those letters bolded, and case is preserved (i.e. term could start with ve,Ve, or VE)</li>
+    		</ol>
+    		</li>
+    		<li>Verify that text is grayed out when none of the annotated genes have expression data
+ 			<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>leucine catabolic process</b> in the vocabulary field</li>
+                <li>verify that the GO term "leucine catabolic process" is grey, with a marker count of 1</li>
+    		</ol>
+    		</li>
+    		<li>Verify that if a no-expression-data term is selected, the error message appears and that user-input text remains in the text box and the fonts, colors and other appearance is similar to MGI's other pop-up messages
+ 			<p concordion:assertTrue="true">passed kstone 7/18/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>golgi reassembly</b> in the vocabulary field and click on it</li>
+                <li>make sure error message appears: <b>Warning. Invalid Selection The genes annotated with the vocabulary term you selected (leucine catabolic process) - Function do not have any gene expression data associated with them.</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify behavior of clicking a term with 0 genes associated to it
+ 			<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>pexophagy</b> in the vocabulary field</li>
+                <li>Confirm nothing happens when you select it</li>
+    		</ol>
+    		</li>
+    		<li>Verify that autocomplete begins working on the 2nd character
+ 			<p concordion:assertTrue="true">Passed jeffc 7/16/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>an</b> in the vocabulary field</li>
+                <li>Verify the autocomplete list appears after the "n" is entered</li>
+    		</ol>
+    		</li>
+    		<li>Verify that font sizes are correct
+ 			<p concordion:assertTrue="true">Passed jeffc 7/16/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type any term in the vocabulary field</li>
+                <li>Verify the term and synonym text are normal font size and gene count and vocabulary name are a smaller font size</li>
+    		</ol>
+    		</li>
+    		<li>Verify that Vocab names are correct in the drop-down list.
+    		<p concordion:assertTrue="true">Passed klf 5/21/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>leukocyte adhesion</b> in the vocabulary field</li>
+                <li>Verify:
+                <ul>
+                	<li> <b>leukocyte adhesion [leukocyte cell-cell adhesion]</b> says <b>Function</b></li>
+                	<li><b>abnormal leukocyte adhesion</b> says <b>Mammalian Phenotype</b></li>
+                	<li><b>Leukocyte Adhesion Deficiency, Type I; LAD</b> says <b>OMIM</b></li>
+                </ul>
+                </li>
+                <li>Type <b>pax</b> in the vocabulary field</li>
+                <li>Verify <b>paired box protein PAX</b> says <b>PIR Superfamily</b>, <b>PAX-interacting protein 1</b> is not returned (a PRO term, excluded),  <b>Paxillin</b> says <b>InterPro Domains</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify that very long input strings don't break the interface somehow
+ 			<p concordion:assertTrue="true">Passed jeffc 07/16/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Generate 10000 digits and copy/paste them into the vocabulary field, then hit enter</li>
+                <li>Verify the interface doesn't break</li>
+    		</ol>
+    		</li>
+    		<li>Verify that the input box is populated with the term (and synonym) and Vocab of the selected option
+ 			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>type a synonym, like <b>obesity</b> into the vocabulary field and click the synonym</li>
+                <li>Verify that <b>obesity [obese] - Mammalian Phenotype</b> is put in the input box</li>
+    		</ol>
+    		</li>
+    		<li>Verify that text copied-and-pasted into the input box returns proper results
+ 			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Copy some text matching a term or synonym, then paste it into the vocabulary field, hit the space bar</li>
+                <li>Verify that the autocomplete functions and that the matching term or synonym is displayed</li>
+    		</ol>
+    		</li>
+    		<li>Verify that the browser's native "autofill" functionality is disabled by this Auto-Complete functionality
+ 			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Confirm the browser's "autofill" functionality is turned on</li>
+                <li>Enter some text in a different input text box (e.g., another query form like the Quick Search)</li>
+                <li>Clear the field and verify that entering the first few characters of the text from the previous step to reappear as a suggestion</li>
+                <li>Enter the same first few characters in the Vocabulary field and verify that the text from the previous step does not reappear as a suggestion</li>
+                <li>Repeat these steps for supported browsers, versions, and OSes.</li>
+    		</ol>
+    		</li>
+    		<li>Verify long lists scroll properly
+ 			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>an</b> and scroll back and forth through the auto list</li>
+                <li>Verify the user can scroll up and down the list using a mouse or keyboard interaction</li>
+    		</ol>
+    		</li>
+    		<li>Verify long lists do not get cut off by some other piece of the UI
+ 			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>an</b> in the vocabulary field</li>
+                <li>Verify the full dimensions of the drop-down list are visible</li>
+    		</ol>
+    		</li>
+    		<li>Verify that any term appears just once in the list per vocabulary
+ 			<p concordion:assertTrue="true">pass kstone 7/18/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type <b>cartilage condensation</b> in the vocabulary field</li>
+                <li>Verify the term appears just once</li>
+                <li>Type <b>bleb</b> in the vocabulary field</li>
+                <li>Verify the term appears 2 times (Functon, Mammalian Phenotype)</li>
+    		</ol>
+    		</li>
+    		<li>Verify that fast typing gives the proper list of terms when typing ceases (THIS IS A Q4 TEST. CANNOT VERIFY FROM WITHIN THE FIREWALL)
+ 			<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Type a long term very quickly in the vocabulary field</li>
+                <li>Verify that the autocomplete function displays as expected</li>
+                <li>NOTE: Cindy Smith typed some long terms very quickly. After a moment, the autocomplete list appeared and displayed the correct terms.</li>
+    		</ol>
+    		</li>
+			<li>Verify that the longest term appears properly wrapped and not cut off (NOTE: also an automated test of the autocomplete data returned)
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/2012</p>
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b>oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, 2-oxoglutarate as one donor, and incorporation of one atom each of oxygen</b> in the Vocabulary field</li>
+				<li>Verify that <b>oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, 2-oxoglutarate as one donor, and incorporation of one atom each of oxygen into both donors   44 genes, Function</b> is the only value that appears in the autocomplete list</li>
+				<li>Verify that the number of terms returned in the autocomplete list is <b>1</b></li>
+				</ol>
+			</li>
+			<li>Verify that the longest term-synonym pair appears properly wrapped and not cut off (NOTE: also an automated test of the autocomplete data returned)
+ 			<p concordion:assertTrue="true">passed jeffc 7/17/2012</p>
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b>oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced iron-sulphur protein as one donor, and incorporation of one atom of oxygen</b> in the Vocabulary field</li>
+				<li>Verify that <b>oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced iron-sulphur protein as one donor, and incorporation of one atom of oxygen [oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced iron-sulfur protein as one donor, and incorporation of one atom of oxygen]   8 genes, Function</b> is the only value that appears in the autocomplete list</li>
+				<li>Verify that the number of terms returned in the autocomplete list is <b>1</b></li>
+				</ol>
+			</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<h4>GO tests</h4>
+		<ol>
+   		<li>Verify that a GO term from each of the ontologies appears in the list 
+			<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">SNARE binding</b>, a Molecular Function term, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">SNARE binding</b> appears in  the dropdown list and the domain is <b>Function</b></li>
+<!-- 
+Tried adding the following to see if it would clear up this "failed" test. It did not. -klf 7/13/2012
+ 				<li>select that term</li>
+				<li>verify that the text in the input box is: <b cc:assertResultsContain="getFormattedTerms(#query)">SNARE binding - Function</b></li>
+ -->
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">saliva secretion</b>, a Biological Process term, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">saliva secretion</b> appears in  the dropdown list and the domain is <b>Function</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">clathrin coat</b>, a Cellular Component term, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">clathrin coat</b> appears in  the dropdown list and the domain is <b>Function</b></li>
+			</ol>
+    	</li>
+    		<li>Verify that a GO term-synonym pair from each of the 3 vocabs appears in the list (term in brackets) when a synonym is entered.
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">SNAP receptor binding</b>, a Molecular Function synonym, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">SNAP receptor binding</b> appears in  the dropdown list with the term <b>SNARE binding</b> in brackets and the domain is <b>Function</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">salivation</b>, a Biological Process synonym, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">salivation</b> appears in  the dropdown list with the term <b>saliva secretion</b> in brackets and and the domain is <b>Function</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">clathrin cage</b>, a Cellular Component synonym, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">clathrin cage</b> appears in  the dropdown list with the term <b>clathrin coat</b> in brackets and the domain is <b>Function</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify GO Term count excludes all flavors of NOT.
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">ubiquitin-protein ligase activity</b> in the Vocabulary field.  This term has a 'NOT contributes to' annotation to Pcgf2.</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">ubiquitin-protein ligase activity</b> appears in  the dropdown list with a count of <b>204</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">activation of JUN kinase activity</b> in the Vocabulary field.  This term has 'NOT' annotations to Ins2 and Bcl10.</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">activation of JUN kinase activity</b> appears in  the dropdown list and has a count of <b>25</b></li>
+				<li>At this time there are no annoations using 'NOT colocates with' in the database.  (6/14/2012)</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify GO Term count excludes NOT annotations to children.
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">small conjugating protein ligase activity</b> in the Vocabulary field.  This term has a child term with a 'NOT contributes to' annotation to Pcgf2.</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">small conjugating protein ligase activity</b> appears in  the dropdown list with a count of <b>219</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">activation of MAPK activity</b> in the Vocabulary field.  This term has a child term with a 'NOT' annotation to Bcl10.  There is also a 'NOT' annotation to Ins2, but that marker is counted because there is a 'positive' annotation to Ins2 as well. </li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">activation of MAPK activity</b> appears in  the dropdown list and has a count of <b>87</b></li>
+				<li>At this time there are no annoations using 'NOT colocates with' in the database (6/14/2012)</li>
+    		</ol>
+    		</li>
+    		<li>Verify marker count of GO terms with and without children for each ontology
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">hyaluronic acid binding</b>, a Molecular Function term with no children, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">hyaluronic acid binding</b> appears in  the dropdown list and returns a count of <b>16</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">glycosaminoglycan binding</b>, a Molecular Function term with child terms, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">glycosaminoglycan binding</b> appears in  the dropdown list and returns a count of <b>149</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">aspartate transport</b>, a Biological Process term with no children, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">aspartate transport</b> appears in  the dropdown list and returns a count of <b>8</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">amino acid transport</b>, a Biological Process term with child terms, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">amino acid transport</b> appears in  the dropdown list and returns a count of <b>110</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">polysomal ribosome</b>, a Cellular Component term with no children, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">polysomal ribosome</b> appears in  the dropdown list and returns a count of <b>5</b></li>
+    		    <li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">polysome</b>, a Cellular Component term with child terms, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">polysome</b> appears in  the dropdown list and returns a count of <b>23</b></li>
+    		</ol>
+    		</li>
+    	    <li>Verify that obsolete GO terms and synonyms do not appear in the autocomplete list.
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">acrosin activity</b> in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">alpha-acrosin</b> in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+			</ol>
+    		</li>
+    		<li>Verify that marker counts for GO top-level terms and synonyms exclude markers only associated to that top-level term.  Per policy the annotations to the top-level terms are ND (i.e. no data) and should be ignored.  (True?)
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type the term <b concordion:set="#query">molecular_function</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">molecular_function</b> appears in  the dropdown list and returns a count of <b>nnnn</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type the term <b concordion:set="#query">biological_process</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">biological_process</b> appears in  the dropdown list and returns a count of <b>nnnn</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type the term <b concordion:set="#query">cellular_component</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">cellular_component</b> appears in  the dropdown list and returns a count of <b>nnnn</b></li>
+				<li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type the synonym<b concordion:set="#query">molecular function unknown</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">molecular function unknown</b> appears in  the dropdown list and returns a count of <b>nnnn</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type the synonym <b concordion:set="#query">biological process unknown</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">biological process unknown</b> appears in  the dropdown list and returns a count of <b>nnnn</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type the synonym <b concordion:set="#query">cellular component unknown</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">cellular component unknown</b> appears in  the dropdown list and returns a count of <b>nnnn</b></li>
+    		</ol>
+    		</li>
+    		
+    		<li><h4>MP tests</h4>Verify that a MP term appears in the list 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">absent mandible</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">absent mandible</b> appears in  the dropdown list and the domain is <b>Mammalian Phenotype</b></li>
+			</ol>
+    	</li>
+    		<li>Verify that a MP term-synonym pair appears in the list (term in brackets) when a synonym is entered.
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">agnathia</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">agnathia</b> appears in  the dropdown list with the term <b>absent mandible</b> in brackets and the domain is <b>Mammalian Phenotype</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify MP Term count excludes all flavors of &quot;normal&quot; annotations to the term and/or annotations to the children of the term.<ol>
+                <li>Not sure if there are any examples of &quot;norm&quot; being used on any terms other than top level term (see test #12).  If so, add'l tests may be desired.</li>
+    		</ol>
+    		</li>
+    		
+    		
+    		<li>Verify marker count of MP terms with and without children.
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">abnormal gustatory papillae taste bud morphology</b>, a term with no children, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">abnormal gustatory papillae taste bud morphology</b> appears in  the dropdown list and returns a count of <b>3</b></li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">abnormal olfaction</b>, a term with child terms, in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">abnormal olfaction</b> appears in  the dropdown list and returns a count of <b>39</b></li>
+    		</ol>
+    		</li>
+    	    
+    		<li>Verify that marker counts for MP top-level terms and synonyms exclude markers with annotations only to that top-level term that have a &quot;Norm&quot; qualifier.<ol>
+    		<li>open GXD query form and make sure vocabulary field is clear</li>
+    		<li>type the term <b concordion:set="#query">taste/olfaction phenotype</b> in the Vocabulary field</li>
+    		<li>verify that <b cc:assertResultsContain="getTerms(#query)">taste/olfaction phenotype</b> appears in  the dropdown list and returns a count of <b>nnn</b></li>
+    		<li>make sure vocabulary field is clear</li>
+    		<li>type the synonym <b concordion:set="#query">taste/olfaction</b> in the Vocabulary field</li>
+    		<li>verify that <b cc:assertResultsContain="getTerms(#query)">taste/olfaction</b> appears in  the dropdown list and returns a count of <b>nnn</b></li>
+            </ol>
+    		</li>
+    		
+     		<li><h4>OMIM tests</h4>Verify that an OMIM term appears in the list with the count of assoicated markers.
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">Achondroplasia; ACH</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">Achondroplasia; ACH</b> appears in  the dropdown list, the domain is <b>OMIM</b>, and the count is <b>5</b>.</li>
+			</ol>
+    	</li>
+    		<li>Verify that a OMIM term-synonym pair appears in the list (term in brackets) when a synonym is entered with the count of associated markers
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">Arginase Deficiency</b> in the Vocabulary field</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">Arginase Deficiency</b> appears in  the dropdown list with the term <b>Argininemia</b> in brackets,  a  domain of <b>OMIM</b>, and a count of <b>1</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify that the OMIM marker counts do not include markers that are associated to the term only via a NOT annotation. 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">Sea-Blue Histiocyte Disease</b> in the Vocabulary field.  This disease has a single NOT annotation to Apoe and should return a count of zero.</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">Sea-Blue Histiocyte Disease</b> appears in  the dropdown list, displays a domain of <b>OMIM</b>, and a count of <b>0</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify that the OMIM marker counts include markers that have both a NOT annotation and a regular annotation. 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">Creutzfeldt-Jakob Disease; CJD</b> in the Vocabulary field.  This disease has both   NOT  and normal annotations  to Prnp.</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">Creutzfeldt-Jakob Disease; CJD</b> appears in  the dropdown list, displays a domain of <b>OMIM</b>, and a count of <b>3</b>.</li>
+    		</ol>
+    		</li>
+
+    		<li><h4>Other Vocabs tests</h4>Verify that PIRSF (PIR Superfamily) terms no longer appear in the autocomplete list 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">Tyrosine-protein kinase, CSF-1/PDGF receptor type</b> in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+			</ol>
+    	</li>
+    		<li>Verify that InterPro terms no longer appear in the autocomplete list 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">Serine-threonine/tyrosine-protein kinase catalytic domain</b> in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+			</ol>
+    	</li>
+    	<li>Verify that MouseCyc terms no longer appear in the autocomplete list 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">flavin biosynthesis I</b> in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+			</ol>
+    	</li>
+    	<li>Verify that Anatomical Dictionary term or synonyms do not appear in the vocabulary autocomplete list 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">liver blood vessel</b>, an AD term, in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+				<li>make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">dorsal mesentery of heart</b>, an AD synonym, in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+			</ol>
+    	</li>
+    	
+    	<li><h4>Special character tests</h4>Test commas
+				(include a comma at the beginning of the query string that should be ignored, in addition don't include the comma where it is expected within the term)
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">,programmed cell death neurons</b> in the Vocabulary field (this is a synonym for a GO term)</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">programmed cell death, neurons</b> is present in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Test that special characters in the query string are ignored
+			<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">ceramide biosynthesis`~!@#$%^&amp;*()_+-=[{]}\\|;:'\"/?.&gt;,&lt;</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">ceramide biosynthesis</b> is present in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Test that terms with parens are returned
+			<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">acid-ammonia (or amide) ligase activity</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">acid-ammonia (or amide) ligase activity</b> is present in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Test that terms with underscores are returned
+			<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">cellular_component</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">cellular_component</b> is present in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Verify order of tokens does not matter
+			<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">biosynthesis ceramide</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">ceramide biosynthesis</b> is present in the autocomplete list</li>
+				<li>Type <b concordion:set="#query">ceramide biosynthesis</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">ceramide biosynthesis</b> is present in the autocomplete list (should be the same list as the first query)</li>
+				</ol>
+			</li>
+			<li>Verify that stemming is not being done 
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">SNARE binded</b> in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+			</ol>
+    	    </li>
+    	    <li>Verify alphanumeric tokenization is not occurring (example: Pax6os1 should be a single token, not 4 separate tokens)
+    		<ol>
+                <li>open GXD query form and make sure vocabulary field is clear</li>
+				<li>type <b concordion:set="#query">12 atg 5 16</b> in the Vocabulary field</li>
+				<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.  (The GO term &quot;Atg12-Atg5-Atg16 complex&quot; should not appear)</li>
+			</ol>
+    	    </li>
+		</ol>
+		<p>TESTS KIM ADDED 6/11/2012 BELOW HERE. FOLD THE LIST BELOW INTO THE LIST ABOVE WHEN DOING THE FINAL MERGE-AND-COMMIT ON THIS FILE.</p>
+		<ol>
+			<li>Verify that words are not tokenized upon case changes.
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">di geor</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertNoResultsContain="getTerms(#query)">DiGeorge Syndrome; DGS</b> does not appear in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Verify that words are not concatenated when a slash or dash is encountered.
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">factors</b> in the Vocabulary field</li>
+				<li>Verify that neither <b cc:assertNoResultsContain="getTerms(#query)">factor-synthesis</b> nor <b cc:assertNoResultsContain="getTerms(#query)">factor/Scygonadin</b> appear in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Verify that any term-synonym pair appears only once in the autocomplete 
+				(not once for the term and once for the synonym)<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">forebrain dorsal-ventral pattern formation</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertValueAppearsOnlyOnce="getFormattedTerms(#query)">forebrain dorsal-ventral pattern formation [forebrain dorsal/ventral pattern formation] - Function</b> appears only once in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Verify that term-synonym pairs appear only when matching text appears in the synonym (synonyms do not appear when matching text is only in the term)
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">biosynthesis vaculole</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertEquals="getTermCount(#query)">0</b> results appear in the autocomplete list</li>
+				</ol> 
+			</li>
+			<li>Verify that 2-word searching is not matching across term and synonym fields (match may occur either in Term field alone or Synonym field alone)
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">fungal cell</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertNoResultsContain="getTerms(#query)">fungal-type vacuole</b> (which has the synonym <i>vacuole, cell cycle-correlated morphology</i>)</li>
+				</ol>
+			</li>
+			<li>Verify that non-alphanumeric characters in the middle of the string are treated as whitespace
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">ceramide,`~!@#$%^&amp;*()_+-=[{]}\\|;:'\&quot;/?.&gt;,&lt; biosynthesis`~!@#$%^&amp;*()_+-=[{]}\\|;:'\&quot;/?.&gt;,&lt; `~!@#$%^&amp;*()_+-=[{]}\\|;:'\&quot;/?.&gt;,&lt;</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">ceramide biosynthesis</b> appears in the autocomplete</li>
+				</ol>
+			</li>
+			<li>Verify that special characters at the beginning of the string are removed
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">,`~!@#$%^&amp;*()_+-=[{]}\\|;:'\&quot;/?.&gt;,&lt;ceramide biosynthesis</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">ceramide biosynthesis</b> appears in the autocomplete</li>
+				</ol>
+			</li>
+			<li>Verify that nonsense terms do not trigger the dropdown to appear
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">asdf</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertEquals="getTermCount(#query)">0</b> results appear in the autocomplete list</li>
+				</ol>
+			</li>
+			<li>Verify that the longest term appears properly (NOTE: also a manual test of the autocomplete display)
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, 2-oxoglutarate as one donor, and incorporation of one atom each of oxygen</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, 2-oxoglutarate as one donor, and incorporation of one atom each of oxygen into both donors</b> is the only value that appears in the autocomplete list</li>
+				<li>Verify that the number of terms returned in the autocomplete list is <b cc:assertEquals="getTermCount(#query)">1</b></li>
+				</ol>
+			</li>
+			<li>Verify that the longest term-synonym pair appears properly (NOTE: also a manual test of the autocomplete display)
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced iron-sulphur protein as one donor, and incorporation of one atom of oxygen</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getFormattedTerms(#query)">oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced iron-sulphur protein as one donor, and incorporation of one atom of oxygen [oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced iron-sulfur protein as one donor, and incorporation of one atom of oxygen] - Function</b> is the only value that appears in teh autocomplete list</li>
+				<li>Verify that the number of terms returned in the autocomplete list is <b cc:assertEquals="getTermCount(#query)">1</b></li>
+				</ol>
+			</li>
+			<li>Verify that multiple partial tokens are supported.
+				<ol>
+				<li>Open the GXD query form.</li>
+				<li>Type <b concordion:set="#query">synd aper</b> in the Vocabulary field</li>
+				<li>Verify that <b cc:assertResultsContain="getTerms(#query)">Apert Syndrome</b> is returned in the autocomplete list</li>
+				</ol>
+			</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

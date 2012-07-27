@@ -2,17 +2,22 @@ package org.jax.mgi.fewi.searchUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.jax.mgi.fewi.searchUtil.entities.UniqueableObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Search Results
  */
 public class SearchResults<T> {
 
-
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
     //////////////////////////////////////////////////////////////////////////
     //  INTERNAL FIELDS
     //////////////////////////////////////////////////////////////////////////
@@ -165,6 +170,39 @@ public class SearchResults<T> {
 	 */
     public void setResultFacets(List<String> resultFacets) {
         this.resultFacets = resultFacets;
+    }
+    
+    /**
+     * uniques the list of result objects, and preserves order
+     * result object must implement UniqueableObject interface
+     */
+    public void uniqueifyResultObjects()
+    {
+    	// No reason to unique a list of less than 2 items.
+    	// also, objects need to implement the correct interface
+    	if(this.resultObjects.size() > 1)
+    	{
+    		if(this.resultObjects.get(0) instanceof UniqueableObject)
+    		{
+    			HashSet<Object> uniqueKeys = new HashSet<Object>();
+    			List<T> uniqueResultObjects = new ArrayList<T>();
+    			for(T result : this.resultObjects)
+    			{
+    				Object uniqueKey = ((UniqueableObject) result).getUniqueKey();
+    				if(!uniqueKeys.contains(uniqueKey))
+    				{
+    					uniqueResultObjects.add(result);
+    					uniqueKeys.add(uniqueKey);
+    				}
+    			}
+    			this.setResultObjects(uniqueResultObjects);
+    		}
+    		else
+    		{
+    			logger.warn("Result Object ["+this.resultObjects.get(0).getClass()+"] does not implement "+
+    					UniqueableObject.class+" interface. Cannot uniqueify original result set.");
+    		}
+    	}
     }
 }
 

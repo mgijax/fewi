@@ -1,0 +1,279 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Lit Index Links from Query Page</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Lit Index Links from Query Page</h1>
+    <ul>
+        <li>User story 30, Build GXD Lit Index query and results count and link <i>(from query expression results summary and marker expression summary)</i></li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+	<li>works for summaries from QF AND from other summary links (marker detail)</li>
+	<li>this count and link appears only when the query parameters submitted are also supported by the GXD Lit Index query
+		<ul>
+		<li>only gene nomen, assay type, stage/age, or gene ID</li>
+		<li><i>Note that gene-vocab is also included but was not listed on the Acc Criteria</i></li>
+		</ul>
+	</li>
+	<li>link appears on all implemented summaries (when appropriate)</li>
+	<li>update user help</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Queries using any combination of the following parameters <b>should generate a link</b> to the Lit Index data:
+    		<ul>
+    			<li>Nomenclature</li>
+    			<li>Vocabulary</li>
+    			<li>Theiler Stage</li>
+    			<li>Age</li>
+    			<li>Assay type</li>
+    		</ul> 
+ 			<p concordion:assertTrue="true">passed using selenium 07/20/2012</p>
+    		<ol>
+                <li><i>Kevin has set up these permutations in Selenium.</i></li>
+    		</ol>
+    		</li>
+    		<li>Queries using any of the following parameters, even if combined with &quot;allowed&quot; parameters <b>should NOT</b> generate a link to the Lit Index data:
+    		<ul>
+    			<li>Detected in / not detected in</li>
+    			<li>Anatomical structure</li>
+    			<li>Mutant / wild type</li>
+    		</ul> 
+ 			<p concordion:assertTrue="true">passed using selenium 07/20/2012</p>
+    		<ol>
+                <li><i>Kevin has set up these permutations in Selenium.</i></li>
+    		</ol>
+    		</li>
+    		<li>Selecting the following Assay Types on the Expression Query should map to the indicated assay types in the Lit Index data:
+ 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+ 			<table>
+ 			<tr><th>Expression Query Assay Type</th><th>Maps to Lit Index Assay Type</th></tr>
+ 			<tr><td>Immunohistochemistry</td><td>In situ protein (section) - OR - In situ protein (whole mount)</td></tr>
+ 			<tr><td>RNA in situ</td><td>In situ RNA (section) - OR - In situ RNA (whole mount)</td></tr>
+ 			<tr><td>others</td><td>same value</td></tr>
+ 			<tr><td>none</td><td>cDNA clones - OR  - primer extension<br/><i>we can ignore these</i></td></tr>
+ 			</table>
+    		<ol>
+                <li>Open the GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>Immunohistochemistry</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b> In situ protein (section) or In situ protein (whole mount)</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>RNA in situ</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b> In situ RNA (section) or In situ RNA (whole mount)</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>In situ reporter (knock-in)</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>In situ reporter (knock-in)</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>Northern blot</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Northern blot</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>Nuclease S1</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Nuclease S1</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>RNase protection</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>RNase protection</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>RT-PCR</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>RT-PCR</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>Western blot</b> and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Western blot</b></li>
+    		</ol>
+    		</li>
+    		<li>Selecting the following Age values on the Expression Query should map to the indicated age values in the Lit Index data:
+ 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+ 			<table>
+ 			<tr><th>Expression Query Age</th><th>Maps to Lit Index Age</th></tr>
+ 			<tr><td>Embryonic</td><td>0.5-20</td></tr>
+ 			<tr><td>Postnatal</td><td>&quot;A&quot;</td></tr>
+ 			<tr><td>&quot;E&quot;-numeric value<br/><i>e.g., E2.5</i></td><td>same value<br/><i>e.g., 2.5</i></td></tr>
+ 			<tr><td>none</td><td>&quot;E&quot;<br/><i>we can ignore these</i></td></tr>
+ 			</table>
+    		<ol>
+                <li>Open the GXD Query Form</li>
+                <li>Click the "Use Ages (dbc)" tab above the Stage/Age widget</li>
+                <li>Select the <b>Embryonic</b> option and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Ages: 0.5 or 1 or 1.5 or 2 or 2.5 or 3 or 3.5 or 4 or 4.5 or 5 or 5.5 or 6 or 6.5 or 7 or 7.5 or 8 or 8.5 or 9 or 9.5 or 10 or 10.5 or 11 or 11.5 or 12 or 12.5 or 13 or 13.5 or 14 or 14.5 or 15 or 15.5 or 16 or 16.5 or 17 or 17.5 or 18 or 18.5 or 19 or 19.5 or 20 or E</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Click the "Use Ages (dbc)" tab above the Stage/Age widget</li>
+                <li>Select the <b>Postnatal</b> option and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Ages: A</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Click the "Use Ages (dbc)" tab above the Stage/Age widget</li>
+                <li>Select the <b>E0.5, E1.0, E1.5, E2.0</b> options and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Ages: 0.5, 1.0, 1.5, 2.0</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Click the "Use Ages (dbc)" tab above the Stage/Age widget</li>
+                <li>Select the <b>E0.5, E1.0, E1.5, E2.0</b> options and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Ages: 0.5, 1, 1.5, 2</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Click the "Use Ages (dbc)" tab above the Stage/Age widget</li>
+                <li>Select the <b>E20.5</b> option and submit the query</li>
+                <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Ages: 20.5</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Click the "Use Ages (dbc)" tab above the Stage/Age widget</li>
+                <li>Select the <b>Any</b> option and submit the query</li>
+                <li>Scroll to the  bottom of the data table and verify that the  Gene Expression Literature Summary link <b>does not appear</b></li>
+                <li><i>Note: the GXD Lit Index Query does not permit a query with no parameters because the output summary page is not paginated.</i></li>
+    		</ol>
+    		</li>
+    		<li>Selecting Theiler Stage values on the Expression Query should map to the age values given as reference on the query form.<br/>
+    		<i>Note that some Theiler Stages begin or end with .25 and .75 values. In the Lit Index, these are always rounded up to the nearest .5 or .0.</i>
+ 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>acta1</b> in the gene field, Select <b>TS24</b> in the theiler stage field and select only the assay type <b>RNA in Situ</b> then click the search button</li>
+                <li>Verify you return just one assay result for gene acta1 with an age of E16.0 and the refrence J:16215</li>
+                <li>Click the Gene expression literature record link at the bottom of the page</li>
+                <li>Verify the result displayed is for acta1, E16 and reference J:16215</li>
+                <li>Return to a blank GXD query form</li>
+                <li>Enter <b>1600029D21Rik</b> in the gene field, Select <b>TS11</b> in the theiler stage field and select only the assay type <b>RNA in Situ</b> then click the search button</li>
+                <li>Verify you return just 14 assay result for gene 1600029D21Rik with ages of E7.5, E7.75, E8.0 and the 5 references</li>
+                <li>Click the Gene expression literature record link at the bottom of the page</li>
+                <li>Verify the results displayed are for 1600029D21Rik but, the ages are just E7.5 and E8.0 and you get 3 references (you don't see 7.75 because they get rounded up to 8.0 and 2 references are missing because they do not have GXD literature information)</li>
+    		</ol>
+    		</li>
+    		<li>Selecting a Vocabulary term on the Expression Query should return a count and link to Lit Index records for all genes annotated to the term (excluding the various types of NOT annotations for the 3 vocabularies), for which there are GXD Lit Index records (not just fully-coded Expression Results Data).
+ 			VERIFY LIT INDEX RESULTS CONTAIN OR EXCLUDE CORRECT GENES.<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+    		<ol>
+                <li>Open the GXD Query Form</li>
+                <li>Query for Vocabulary term <b>cmdd</b> select the disease:  <b>Craniometaphyseal Dysplasia, Autosomal Dominant; CMDD</b></li>
+                <li>You should get nothing back except the Literature link so scroll to the Literature Index link at the bottom of the data table and follow the link</li>
+                <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Genes annotated to Craniometaphyseal Dysplasia, Autosomal Dominant; CMDD- OMIM includes subterms</b> and you see 5 literature results for marker Ank</li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Vocabulary term <b>ubiquitin-protein ligase activity</b></li>
+                <li>Go to the bottom of the results page and click on the literature link</li>
+                <li>Verify the list of marker references returned does not include the marker <b>Pcgf2</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Vocabulary term <b>cholesterol efflux</b></li>
+                <li>Go to the bottom of the results page and click on the literature link</li>
+                <li>Verify the list of marker references returned does not include the marker <b>Abcg4</b></li>
+                <li>Return to a blank GXD Query Form</li>
+                <li>Query for Vocabulary term <b>Pituitary Adenoma, Growth Hormone-Secreting</b></li>
+                <li>Go to the bottom of the results page and click on the literature link</li>
+                <li>Verify the list of marker references returned does not include the marker <b>Fbn1(has only NOT annotations) or Gnas (is ortholog of associated Human gene but has no positive annotations itself)</b></li>
+    		</ol>
+    		</li>
+    		<li>Expression data summary pages linked from Marker Detail Page should have a Lit Index link appropriate to the gene and assay type (if any) or Theiler Stage (if any).
+ 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p>
+    		<ol>
+    		    <li>Open the GXD Query Form</li>
+                <li>Query for Nomenclature term <b>Myf6</b></li>
+                <li>Click on the <b>Genes tab</b> and then the link <b>Myf6</b></li>
+                <li>Scroll to the <b>Expression section</b> and click on the link <b>Results</b></li>
+                <li>Go to the bottom of the results page and click on the literature link</li>
+                <li>Verify the Gene Expression Literature page displays</li>
+                <li>Return to the marker detail page for Myf6 and click on the link for Theiler stage <b>20</b></li>
+                <li>Go to the bottom of the results page and click on the literature link</li>
+                <li>Verify the "You searched for..." says <b>Ages: 11.5 or 12 or 12.5 or 13</b></li>
+                <li>Return to the marker detail page for Myf6 and click on the link for RT-PCR <b>results</b></li>
+                <li>Go to the bottom of the results page and click on the literature link</li>
+                <li>Verify the "You searched for..." says <b>Assay Type(s): RT-PCR</b></li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Verify that Nomen search generates correct count
+    		<ol>
+                <li>Query by <b concordion:set="#query">pax1</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByNomen(#query)"><b cc:dynamicData="gxdlitPax1Count"></b></b></li>
+    		</ol>
+    		</li>
+    		<li>Verify that Theiler Stage search generates correct count
+    		<ol>
+                <li>Query by <b concordion:set="#query">TS9</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByTS(#query)"><b cc:dynamicData="gxdlitTS9Count"></b></b></li>
+    		</ol>
+    		</li>
+    		<li>Verify that Assay Type search generates correct count
+    		<ol>
+                <li>Query by <b concordion:set="#query">Immunohistochemistry</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByAssayType(#query)"><b cc:dynamicData="gxdlitImmunohistochemistryCount"></b></b></li>
+                	<li>Query by <b concordion:set="#query">RNA in situ</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByAssayType(#query)"><b cc:dynamicData="gxdlitRNAInSituCount"></b></b></li>
+    		</ol>
+    		</li>
+    		<li>Verify that Age search generates correct count, and translates Postnatal and Embryonic correctly
+    		<ol>
+                <li>Query by <b concordion:set="#query">E2</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByAge(#query)"><b cc:dynamicData="gxdlitAge2Count"></b></b></li>
+                <li>Query by <b concordion:set="#query">Embryonic</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByAge(#query)"><b cc:dynamicData="gxdlitEmbryonicCount"></b></b></li>
+                <li>Query by <b concordion:set="#query">Postnatal</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByAge(#query)"><b cc:dynamicData="gxdlitPostnatalCount"></b></b></li>
+    		</ol>
+    		</li>
+    		<li>Verify that doing a combined search generates the correct count
+    		<ol>
+                <li>Query by <b concordion:set="#nomen">Pax2</b> and
+                	<b concordion:set="#age">Postnatal</b> and 
+                	<b concordion:set="#type">Northern blot</b> should return a link with count: 
+                	<b cc:assertEquals="getCountByNomenAgeAndAssayType(#nomen,#age,#type)"><b cc:dynamicData="gxdlitCombinedCount"></b></b></li>
+    		</ol>
+    		</li>
+
+    		
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

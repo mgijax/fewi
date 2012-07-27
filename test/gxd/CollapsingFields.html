@@ -1,0 +1,91 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Collapsible Form Tests</title>
+</head>
+
+<body>
+
+<div id="maintitle">
+    <h1>Making combined QF-Results Summary page fully functional ("collapsible form" tests)</h1>
+    <ul>
+        <li>User story 25, Making combined QF-Results Summary page fully functional</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Query section collapses or expands  when required</li>
+		<li>Query form retains user's submitted values</li>
+	</ul>
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify that the form accordian-style transition works when the form is submitted
+    		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+    		<ol>
+                <li>Click the submit button</li>
+                <li>Verify the query section collapses</li>
+    		</ol>
+    		</li>
+    		<li>Verify that on the results page, the form is initially closed, and it can be toggled open and closed
+    		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+    		<ol>
+                <li>Click the submit button</li>
+                <li>Verify the query section collapses</li>
+                <li>Click the <b>Click to modify search</b> button</li>
+                <li>Verify the query section expands</li>
+   			</ol>
+    		</li>                
+    		<li>Verify that the submitted form value is retained
+    		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter Pax6 in the nomenclature field and click search</li>
+                <li>Verify the query results</li>
+                <li>Click the <b>Click to modify search</b> button</li>
+                <li>Verify that the term Pax6 displays in the nomenclature field</li>
+   			</ol>
+    		</li>
+    		<li>Verify that the submitted form value is retained even if it has non-alphanumeric characters
+    		<p concordion:assertTrue="true">Passed jeffc 07/18/2012</p>
+    		<ol>
+                <li>Open the GXD query form</li>
+                <li>Enter Pax!*6 in the nomenclature field and click search</li>
+                <li>Verify the query results are the same as for Pax-6</li>
+                <li>Click the <b>Click to modify search</b> button</li>
+                <li>Verify that the string Pax!*6 displays in the nomenclature field</li> 
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<p>None.</p>
+	</div>
+	<p>Verified that all tests from Google docs QA spreadsheet US25 are here.  --klf 6/11/2012</p></div>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+    <title>Marker Detail GXD Link Changes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Marker Detail GXD Link Changes</h1>
+    <ul>
+        <li>User story 96, Change links to GXD from the Marker Detail page</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+        <li>Assays links from Expression section of marker detail are removed</li>
+        <li>Results links from Expression section of marker detail go to unique GXD Assay Results page</li>
+        <li>TS links from Expression section of marker detail go to unique GXD Assay Results page</li>
+        <li>Unique GXD Assay Results page has no modify search section</li>
+        <li>Unique GXD Assay Results page has the standard Marker heading ribbon</li>
+        <li>Unique GXD Assay Results page has You searched for.. section with text appropriate to the referring link</li>
+    </ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Verify the Assay links have been removed from Expression section of Marker detail
+            <p concordion:assertTrue="true">lec 06/26/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Verify the <b>Assays link found in the Data summary line</b> of the Expression section has been removed</li>
+                <li>Verify the <b>Assays links found for each assay type</b> in the Expression section have been removed</li>
+            </ol>
+            </li>
+            <li>Verify the Results links from the Expression section of the Marker detail now go to a unique GXD Assay Results page
+            <p concordion:assertTrue="true">lec 06/26/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Verify the <b>Results link found in the Data summary line</b> of the Expression section now goes to the unique GXD Assay Results page</li>
+                <li>Verify the <b>Results links found for each assay type</b> in the Expression section now go to the unique GXD Assay Results page</li>
+            </ol>
+            </li>
+            <li>Verify TS links from Expression section of marker detail go to unique GXD Assay Results page
+        	<p concordion:assertTrue="true">lec 06/26/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Verify the <b>TS links found in the Theiler Stages line</b> of the Expression section now go to the unique GXD Assay Results page</li>
+            </ol>
+            </li>
+            <li>Verify the Unique GXD Assay Results page has no modify search section
+        	<p concordion:assertTrue="true">marka 06/26/12</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the <b>Results</b> link found in the Data summary line of the Expression section</li>
+                <li>Verify when the unique GXD Assay Results page displays and it has <b>no Modify search section</b></li>
+            </ol>
+            </li>
+            <li>Verify the Unique GXD Assay Results page has the standard Marker heading ribbon
+            <p concordion:assertTrue="true">marka 06/26/12</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the <b>Results</b> link found in the Data summary line of the Expression section</li>
+                <li>Verify the standard <b>Marker header ribbon for Pax6</b> displays at the top of the unique GXD Assay Results page</li>
+            </ol>
+            </li>
+            <li>Verify the Unique GXD Assay Results page has You searched for.. section with gene nomenclature and default text displayed
+            <p concordion:assertTrue="true">Passed. klf 6/26/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the <b>Results</b> link found in the Data summary line of the Expression section</li>
+                <li>Verify <b>no text</b> appears just below the standard Marker header ribbon for Pax6</li>
+            </ol>
+            </li>
+            <li>Verify the Unique GXD Assay Results page has You searched for.. section with data for assay type displayed
+            <p concordion:assertTrue="true">Passed. klf 6/26/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the individual <b>Results links</b> found for each assay type in the Expression section</li>
+                <li>Verify text <b>Data summary:</b> appears below the standard Marker header ribbon for Pax6</li>
+                <li>Verify text <b>Assayed by (xxx)</b>  appears below the header text, where "xxx" is the assay type whose link was clicked, with correct formatting:<br/>
+                Assayed by: <b>(Immunohistochemistry)</b>
+                 </li>
+            </ol>
+            </li>
+            <li>Verify the Unique GXD Assay Results page has You searched for.. section with data for Theiler stage displayed
+            <p concordion:assertTrue="true">Passed. klf 6/26/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on a <b>TS</b> link found in the Theiler stage summary line of the Expression section</li>
+                <li>Verify text <b>Data summary:</b> appears below the standard Marker header ribbon for Pax6</li>
+                <li>Verify text <b>at Developmental stage(s): (xxx)</b>  appears below the header text, where "xxx" is the Theiler Stage "TS" value whose link was clicked, with correct formatting:<br/>
+                at Developmental Stage(s): <b>(TS12)</b>
+                </li>
+            </ol>
+            </li>
+       </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+       		<ol>
+    		<li>none</li>
+			</ol>
+    </div>
+</div>
+
+</body>
+</html>

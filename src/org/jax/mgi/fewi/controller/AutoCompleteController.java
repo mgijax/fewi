@@ -2,8 +2,13 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+
+import mgi.frontend.datamodel.GxdAssayResult;
 
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -13,8 +18,13 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
+import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
+import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.VocabACSummaryRow;
+import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +57,7 @@ public class AutoCompleteController {
 	public @ResponseBody JsonSummaryResponse<AutocompleteAuthorResult> authorAutoCompleteForGXD(
 			@RequestParam("query") String query) {
 		// split input on any non-alpha and non-apostrophe characters
-		List<String> words = 
-			Arrays.asList(query.trim().split("[^a-zA-Z0-9']+"));
+		List<String> words = Arrays.asList(query.trim().split("[^a-zA-Z0-9']+"));
 		logger.debug("author query:" + words.toString());
 		//build SearchParams for author auto complete query
 		SearchParams params = buildACQuery(SearchConstants.REF_AUTHOR, words, true);
@@ -154,8 +163,7 @@ public class AutoCompleteController {
 				fItem = new Filter(param, q, Filter.OP_WORD_BEGINS);
 				fList.add(fItem);
 			}
-			f.setNestedFilters(fList);
-			f.setFilterJoinClause(Filter.FC_AND);
+			f.setNestedFilters(fList,Filter.FC_AND);
 		} else {
 			f = new Filter(param, queries.get(0), Filter.OP_WORD_BEGINS);
 		}
@@ -167,8 +175,7 @@ public class AutoCompleteController {
 			finalList.add(gxdClause);
 			
 			Filter outerFilter = new Filter();
-			outerFilter.setNestedFilters(finalList);
-			outerFilter.setFilterJoinClause(Filter.FC_AND);
+			outerFilter.setNestedFilters(finalList,Filter.FC_AND);
 			
 			params.setFilter(outerFilter);
 		}
@@ -180,5 +187,138 @@ public class AutoCompleteController {
 		
 		return params;
 	}
+
 	
+	/*
+	 * This method maps requests for structure auto complete results. The results
+	 * are returned as JSON.
+	 */
+	@RequestMapping("/structure")
+	public @ResponseBody SearchResults<StructureACResult> structureAutoComplete(
+			@RequestParam("query") String query) {
+		// split input on any non-alpha characters
+		Collection<String> words = QueryParser.parseAutoCompleteSearch(query);
+		logger.debug("structure query:" + words.toString());
+		
+		if(words.size() == 0)
+		{
+			// return an empty result set;
+			SearchResults<StructureACResult> sr = new SearchResults<StructureACResult>();
+			sr.setTotalCount(0);
+			return sr;
+		}
+
+		SearchParams params = new SearchParams();
+		params.setPageSize(1000);
+		
+		Filter f = new Filter();
+		List<Filter> fList = new ArrayList<Filter>();
+		for (String q : words) {
+			Filter wordFilter = new Filter(SearchConstants.STRUCTURE,q,Filter.OP_GREEDY_BEGINS);
+			fList.add(wordFilter);
+		}
+		f.setNestedFilters(fList,Filter.FC_AND);
+		
+		params.setFilter(f);
+		
+		// default sorts are "score","autocomplete text"
+		List<Sort> sorts = new ArrayList<Sort>();
+		
+		sorts.add(new Sort("score",true));
+		sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM,false));
+		params.setSorts(sorts);
+		
+		SearchResults<StructureACResult> results = autocompleteFinder.getStructureAutoComplete(params);
+		// need a unique list of terms. 
+		results.uniqueifyResultObjects();
+		return results;
+	}
+	
+	/*
+	 * This method maps requests for vocab term auto complete results. The results
+	 * are returned as JSON.
+	 */
+	@RequestMapping("/vocabTerm")
+	public @ResponseBody JsonSummaryResponse<VocabACSummaryRow> vocabAutoComplete(
+			@RequestParam("query") String query) {
+		
+		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query);
+		List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
+		
+        for (VocabACResult result : results.getResultObjects()) {
+			if (result != null){
+				VocabACSummaryRow row = new VocabACSummaryRow(result,query);
+				summaryRows.add(row);
+			} else {
+				logger.debug("--> Null Object");
+			}
+		}
+		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = makeJsonResponse(results,query);
+		return jsonResponse;
+	}
+
+	
+	public @ResponseBody SearchResults<VocabACResult> getVocabAutoCompleteResults(
+			@RequestParam("query") String query) {
+		
+		// split input on any non-alpha characters
+		Collection<String> words = QueryParser.parseAutoCompleteSearch(query);
+		logger.debug("vocab term query:" + words.toString());
+
+		SearchParams params = new SearchParams();
+		params.setPageSize(500);
+		
+		Filter f = new Filter();
+		List<Filter> fList = new ArrayList<Filter>();
+		for (String q : words) {
+			Filter termFilter = new Filter(SearchConstants.VOC_TERM,q,Filter.OP_GREEDY_BEGINS);
+			fList.add(termFilter);
+		}
+		f.setNestedFilters(fList,Filter.FC_AND);
+		
+		params.setFilter(f);
+		
+		// default sorts are "score","termLength","term"
+		List<Sort> sorts = new ArrayList<Sort>();
+		
+		sorts.add(new Sort("score",true));
+		sorts.add(new Sort(IndexConstants.VOCABAC_TERM_LENGTH,false));
+		sorts.add(new Sort(IndexConstants.VOCABAC_BY_TERM,false));
+		sorts.add(new Sort(IndexConstants.VOCABAC_BY_ORIGINAL_TERM,false));
+		params.setSorts(sorts);
+		
+		return autocompleteFinder.getVocabAutoComplete(params);
+		
+	}
+	
+	/*
+	 * precompiles the regex pattern matchers and then builds the html formatted responses
+	 */
+	public JsonSummaryResponse<VocabACSummaryRow> makeJsonResponse(SearchResults<VocabACResult> results,String query)
+	{
+		List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
+		
+		// compile the regex patterns
+		List<String> queryTokens = QueryParser.parseAutoCompleteSearch(query);
+		List<Pattern> ps = new ArrayList<Pattern>();
+		for(String token : queryTokens)
+		{
+			if(!token.equals("")) ps.add(Pattern.compile(token,Pattern.CASE_INSENSITIVE));
+		}
+		
+		// build the html formatted summary objects
+        for (VocabACResult result : results.getResultObjects()) {
+			if (result != null){
+				VocabACSummaryRow row = new VocabACSummaryRow(result,ps);
+				summaryRows.add(row);
+			} else {
+				logger.debug("--> Null Object");
+			}
+		}
+		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = new JsonSummaryResponse<VocabACSummaryRow>();
+		jsonResponse.setSummaryRows(summaryRows);       
+		jsonResponse.setTotalCount(results.getTotalCount());
+		
+		return jsonResponse;
+	}
 }

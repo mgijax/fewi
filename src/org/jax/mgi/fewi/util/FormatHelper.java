@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.util;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 import org.jax.mgi.fewi.util.DBConstants;
@@ -83,6 +85,15 @@ public class FormatHelper
         return newStr;
     }
 
+    public static String newline2Comma(String str)
+    {
+    	 String newStr = "";
+         if (str != null) {
+             newStr = str.trim();
+             newStr = newStr.replaceAll("\\n",",");
+         }
+         return newStr;
+    }
 
     /** convert all 'start' and 'stop' pair in 's' to be HTML
      *    superscript tags.
@@ -332,5 +343,18 @@ public class FormatHelper
         return setTarget(s, "_new");
     }
 
+    /**
+     * formats location coordinates
+     */
+    public static String formatCoordinates(Double start, Double end)
+    {
+    	if(start==null && end == null) return "";
+    	NumberFormat nf = new DecimalFormat("#0");
+    	String s,e = "";
+    	if(start!=null) s = nf.format(start);
+    	if(end!=null) e = nf.format(end);
+    	return nf.format(start)+"-"+nf.format(end);
+    }
+    
 } // end of class FormatHelper
 

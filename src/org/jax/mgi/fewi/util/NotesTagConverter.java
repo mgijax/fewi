@@ -37,7 +37,6 @@ public class NotesTagConverter
     // logger for this class
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     /* -------------------------------------------------------------------- */
     ///////////////
     // Constructor
@@ -81,11 +80,20 @@ public class NotesTagConverter
     /** convert all known tags in notes to HTML anchors.
     * @param notes; the notes string
     * @param delimiter; delimiter used to seperate tag parameters
+    * @param noLink: (optional) does not generate an <a> tag if true
     * @assumes nothing
     * @effects notes parameter
     * @throws
     */
     public String convertNotes (String notes, char delimiter)
+    {
+    	return convertNotes(notes,delimiter,false);
+    }
+    public String convertNotes (String notes, char delimiter, boolean noLink)
+    {
+    	return convertNotes(notes,delimiter,noLink,false);
+    }
+    public String convertNotes (String notes, char delimiter,boolean noLink,boolean noSuperscript)
     {
 
         String      parmStr             = "";
@@ -119,7 +127,8 @@ public class NotesTagConverter
                 // Replace the tag with the new string
                 convertedTag = convertTag(parmStr,
                                 delimiter,
-                                (String)tagConversions.get(matchStr));
+                                (String)tagConversions.get(matchStr),
+                                noLink,noSuperscript);
                 notes = m.replaceFirst(convertedTag);
 
                 // reset the matcher for the next search
@@ -328,11 +337,20 @@ public class NotesTagConverter
     * @param string; parms - parameters of the found tag
     * @param char; delimiter - character used to delimit parms
     * @param string; replaceStr - pre-build replacement string for this tag
+    * @param boolean; noLink - (optional) does not generate <a> tag if true
     * @assumes nothing
     * @effects nothing
     * @throws
     */
     private String convertTag (String parms, char delimiter, String replaceStr)
+    {
+    	return convertTag(parms,delimiter,replaceStr,false);
+    }
+    private String convertTag (String parms,char delimiter, String replaceStr,boolean noLink)
+    {
+    	return convertTag(parms,delimiter,replaceStr,noLink,false);
+    }
+    private String convertTag (String parms, char delimiter, String replaceStr,boolean noLink,boolean noSuperscript)
     {
         String      convertedTag    = "";
         String      id              = "";
@@ -365,12 +383,17 @@ public class NotesTagConverter
             }
         }
 
-        // Markup superscripts is any are found
-        display = superscript(display);
-
+        // Markup superscripts if any are found
+        if(!noSuperscript)
+        {
+        	display = superscript(display);
+        }
         // Apply parms to replacement string
         convertedTag = String.format(replaceStr, id, target, display);
 
+        //HACK: escape route for times when stake-holders don't want to display a link.
+        if(noLink) return display;
+        
         return convertedTag;
     }
 

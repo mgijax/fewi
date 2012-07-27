@@ -1,0 +1,121 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Multiple query parameters</title>
+</head>
+
+<body>
+
+<div id="maintitle">
+    <h1>Multiple query parameters</h1>
+    <ul>
+        <li>All stories related to searching</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>See individual stories for actual acceptance criteria</h2>
+    <ul>
+        <li>Ensure that all searching combining multiple search parameters return correct results</li> 
+        <li><a href="NomenclatureSearch.html">User story 9 - search by nomenclature</a></li>
+        <li><a href="TheilerStageSearch.html">User story 12 - search by theiler stage</a></li>
+        <li><a href="AssayTypeSearch.html">User story 18 - search by assay type</a></li>
+        <li><a href="DetectionSearch.html">User story 19 - Search by specifying detected/not detected</a></li>
+        <li><a href="AgeSearch.html">User story 16 - Search by specifying age</a></li>
+        <li><a href="MutantWildtypeSearch.html">User story 21 - Search by mutant/wildtype</a></li>
+    </ul>
+</div>
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+<div id="tests">
+    <h2>Tests</h2>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>None</li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        <ol>
+    		<li>Combined Nomenclature and TS search
+			<ol>
+				<li>Enter "<b concordion:set="#nomen">shh</b>" in the nomenclature field</li>
+				<li>Select TS <b concordion:set="#stage">26</b>(18 dpc) option from the TS widget</li>
+				<li>Verify you return <b concordion:assertEquals="getResultCountByNomenAndTS(#nomen,#stage)">9</b> results and <b concordion:assertEquals="getGeneCountByNomenAndTS(#nomen,#stage)">1</b> gene</li>
+				<li>Return to the query form</li>
+				<li>Enter "<b concordion:set="#nomen">shh</b>" in the nomenclature field</li>
+				<li>Select TS <b concordion:set="#stage">21</b>(12.5-14.0 dpc) option from the TS widget</li>
+				<li>Verify you return <b cc:assertEquals="getResultCountByNomenAndTS(#nomen,#stage)"><b cc:dynamicData="resultCountShhTS21"></b></b> results and <b cc:assertEquals="getGeneCountByNomenAndTS(#nomen,#stage)">1</b> gene</li>
+				<li>Return to the query form</li>
+				<li>Enter "<b concordion:set="#nomen">Pax*</b>" in the nomenclature field</li>
+				<li>Select TS <b concordion:set="#stage">26</b>(18 dpc) option from the TS widget</li>
+				<li>Verify you return <b concordion:assertEquals="getResultCountByNomenAndTS(#nomen,#stage)">86</b> results and <b concordion:assertEquals="getGeneCountByNomenAndTS(#nomen,#stage)">6</b> gene</li>
+			</ol>
+    		</li>
+            <li>Verify that searching for nomenclature and assay type returns correct results
+            <ol>
+                <li>search for <b concordion:set="#nomen">Pax*</b> and assay type <b concordion:set="#assayType">Immunohistochemistry</b></li>
+                <li>should return <b cc:assertEquals="getResultCountByNomenAndAssayType(#nomen,#assayType)"><b cc:dynamicData="resultCountPax*Immunohistochemistry"></b></b> assay results and <b cc:assertEquals="getGeneCountByNomenAndAssayType(#nomen,#assayType)"><b cc:dynamicData="geneCountPax*Immunohistochemistry"></b></b> genes</li>
+            </ol>
+            </li>
+            <li>Verify that searching for nomen, age and detected returns correct results
+            <ol>
+                <li>search for <b concordion:set="#nomen">Pax1</b>, <b concordion:set="#age">E9</b>, and detected <b concordion:set="#detected">Yes</b></li>
+                <li>should return <b concordion:assertEquals="getResultCountByNomenAndAgeAndDetection(#nomen,#age,#detected)">4</b> assay results and <b concordion:assertEquals="getGeneCountByNomenAndAgeAndDetection(#nomen,#age,#detected)">1</b> gene</li>
+            </ol>
+            </li>
+            <li>Verify that searching for theiler stage and assay type returns correct results
+            <ol>
+                <li>search for theiler stage<b concordion:set="#stage">14</b> and assay type <b concordion:set="#assayType">Northern blot</b></li>
+                <li>should return <b cc:assertEquals="getResultCountByTSAndAssayType(#stage,#assayType)"><b cc:dynamicData="resultCountTS14NorthernBlot"></b></b> assay results and <b cc:assertEquals="getGeneCountByTSAndAssayType(#stage,#assayType)"><b cc:dynamicData="geneCountTS14NorthernBlot"></b></b> genes</li>
+            </ol>
+            </li>
+            <li>Verify that searching for nomenclature and theiler stage and assay type returns correct results
+            <ol>
+                <li>search for <b concordion:set="#nomen">Pax1</b> and theiler stage <b concordion:set="#stage">28</b> assay type <b concordion:set="#assayType">Northern blot</b></li>
+                <li>should return <b concordion:assertEquals="getResultCountByNomenAndTSAndAssayType(#nomen,#stage,#assayType)">9</b> assay results and <b concordion:assertEquals="getGeneCountByNomenAndTSAndAssayType(#nomen,#stage,#assayType)">1</b> genes</li>
+            </ol>
+            </li>
+
+            <!--  detection parameter -->
+            <li>Verify that searching for nomenclature, theiler stage, assay type, and detected returns correct results
+            <ol>
+                <li>search for nomenclature <b concordion:set="#nomen">Hox*</b>, theiler stage <b concordion:set="#stage">21</b>, assay type <b concordion:set="#assayType">Western blot</b>, and detected <b concordion:set="#detected">Yes</b></li>
+                <li>should return <b concordion:assertEquals="getResultCountByNomenAndTSAndAssayTypeAndDetected(#nomen,#stage,#assayType,#detected)">2</b> assay results and <b concordion:assertEquals="getGeneCountByNomenAndTSAndAssayTypeAndDetected(#nomen,#stage,#assayType,#detected)">1</b> gene</li>
+                <li>search for nomenclature <b concordion:set="#nomen">Zfp2*</b>, theiler stage <b concordion:set="#stage">28</b>, assay type <b concordion:set="#assayType">RT-PCR</b>, and detected <b concordion:set="#detected">No</b></li>
+                <li>should return <b concordion:assertEquals="getResultCountByNomenAndTSAndAssayTypeAndDetected(#nomen,#stage,#assayType,#detected)">28</b> assay results and <b concordion:assertEquals="getGeneCountByNomenAndTSAndAssayTypeAndDetected(#nomen,#stage,#assayType,#detected)">10</b> genes</li>
+            </ol>
+            </li>
+            <li>Verify that searching for nomenclature, age, assay type, and detected returns correct results
+            <ol>
+                <li>search for nomenclature <b concordion:set="#nomen">Ttn</b>, age <b concordion:set="#age">E15.5</b>, assay type <b concordion:set="#assayType">RT-PCR</b>, and detected <b concordion:set="#detected">Yes</b></li>
+                <li>should return <b concordion:assertEquals="getResultCountByNomenAndAgeAndAssayTypeAndDetected(#nomen,#age,#assayType,#detected)">2</b> assay results and <b concordion:assertEquals="getGeneCountByNomenAndAgeAndAssayTypeAndDetected(#nomen,#age,#assayType,#detected)">1</b> gene</li>
+            </ol>
+            </li>
+            <!--  adding Mutant/Wildtype parameter -->
+            <li>Verify that searching for nomenclature, age, assay type,  detected  and mutant/wildtype returns correct results
+            <ol>
+                <li>search for nomenclature <b concordion:set="#nomen">Ttn</b>, age <b concordion:set="#age">E15.5</b>, assay type <b concordion:set="#assayType">RT-PCR</b>, and detected <b concordion:set="#detected">Yes</b>, and selecting <b>Wildtype specimens only</b></li>
+                <li>should return <b concordion:assertEquals="getWildTypeResultCountByNomenAndAgeAndAssayTypeAndDetected(#nomen,#age,#assayType,#detected)">1</b> assay result and <b concordion:assertEquals="getGeneCountByNomenAndAgeAndAssayTypeAndDetected(#nomen,#age,#assayType,#detected)">1</b> gene</li>
+            </ol>
+            </li>
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>

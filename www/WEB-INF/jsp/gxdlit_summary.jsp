@@ -12,6 +12,7 @@ ${templateBean.templateHeadHtml}
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <style type="text/css">
+span.smallGrey { font-size: 75%; color: #999999; }
 </style>
 
 <script>
@@ -28,7 +29,10 @@ ${templateBean.templateBodyStartHtml}
 <div id="titleBarWrapper" userdoc="EXPRESSION_literature_help.shtml">	
 	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
 </div>
-
+<c:if test="${not empty queryForm.markerId}">
+<% Marker marker = (Marker)request.getAttribute("marker"); %>
+<jsp:include page="marker_header.jsp"></jsp:include><br>
+</c:if>
 
 
 <div id="summary">
@@ -51,6 +55,9 @@ ${templateBean.templateBodyStartHtml}
 			<c:if test="${not empty queryForm.nomen}">
 				<span class="label">Marker Symbol/Name:</span> 
 				${queryForm.nomen}<br/></c:if>
+				<c:if test="${not empty queryForm.vocabTerm}">
+				<span>Genes annotated to <b>${queryForm.vocabTerm}</b><span class="smallGrey"> includes subterms</span></span>
+				<br/></c:if>
 			<c:if test="${not empty queryForm.assayTypesSelected}">
 				<span class="label">Assay Type(s):</span> 
 				${queryForm.assayTypesSelected}<br/></c:if>

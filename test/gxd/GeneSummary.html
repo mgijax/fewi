@@ -1,0 +1,312 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+		table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+		table, th, td {border: 1px solid #CCCCCC;}
+		td, th {padding:2px;}
+		.man {background-color:#FFFFCC;}
+		ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+		ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+		li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+		p {margin:2px 0px;}
+	</style>
+    <title>Gene Summary</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Gene Summary</h1>
+    <ul>
+        <li>User story 22: Build UI for summary results: Genes page (incl. pop-ups)</li>
+        <li>User story 23: Display correct Genes data in Results Summary table</li> 
+        <li>User story 31: Build UI for summary results: Assays results page</li>
+    </ul>
+</div>
+
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+        <li>a web page exists</li>
+        <li>standard header and footer are present (incl. navigation and quick search)</li>
+        <li>query form "ribbon" can open/close (refactor the query form JSP)</li>
+        <li>build tabbed layout with a single tab (Genes)</li>
+        <li>includes wired-up button for Help doc</li>
+        <li>includes Tool Tips if there are any</li>
+        <li>results summary table displays genes results set for the submitted query parameters</li>
+        <li>genes are linked to marker detail pages (which are in the FeWi now!)</li>
+        <li>build table layout</li>
+        <li>output is sorted by "smart alpha" on Symbol</li>
+        <li>the results may be accessed via what looks like a "tab" on the Genes results</li>
+        <li>made Tool Tips (pop-ups from column headers) a separate User Story</li>
+        <li>User help updated</li>
+    </ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+    <div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+         <h3>Manual tests</h3>
+        <ol>
+            <li>A Genes summary page exists
+		    <p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
+                <li>Verify the results page is returned and the correct results for Pax6 appear below the table (in the temporary list)</li>
+            </ol>
+            	</li>
+        	<li>Standard header and footer are present (incl. navigation and quick search)
+            <p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+            	<li>Open the GXD query form</li>
+            	<li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
+            	<li>Verify the page header and footer exist and are correct</li>
+			</ol>
+				</li>
+			<li>User Help document file is updated to include info about this page(includes wired-up button for Help doc)           
+            <p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+            	<li>Open the GXD query form</li>
+           	 	<li>Click the help icon</li>
+           	 	<li>Verify the help document pops up in its own window and has the correct text</li>
+            </ol>
+        		</li>
+            <li>Query form "ribbon" can open/close (refactor the query form JSP)
+            <p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
+                <li>Click the <b>Click to modify search</b> button</li>
+                <li>Verify that the ribbon expands to reveal the standard query form</li>
+                <li>Verify that the text of the button text changes to <b>Click to hide search</b></li>
+            </ol>
+           		</li>
+            	<li>Verify Tool Tips (if there are any)
+				<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
+                <li>Click the <b>Click to modify search</b> button</li>
+                <li>Check that the tool tips on the query form are correct</li>           
+            </ol>
+            	</li>
+            	<li>Verify that tabs exist for genes and assay results
+				<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
+                <li>Verify that there are two tabs <b>Genes</b> and <b>Assay Results</b></li>
+            </ol>
+            	</li>
+            	<li>Verify that the user help is correct
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Click on the <b>help icon</b></li>
+                <li>Verify the help document contains correct information about assay types</li>
+            </ol>
+            	</li>
+            	<li>Verify the Gene summary table exists with correct columns
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Pax6</b> in the nomenclature field and press Search</li>
+                <li>Select the Genes tab</li>
+                <li>Verify the columns MGI ID, Gene, Gene name, Type, Chr, Genome location-NCBI Build 37, cM, Strand appear</li>
+            </ol>
+            	</li>
+            	<li>Verify that tokens are combined using AND not OR
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>paired box</b> in the nomenclature field and press Search</li>
+                <li>Verify that only Pax1 through Pax9 are returned and not Prrx2 or any Fbxo genes or any others</li>
+            </ol>
+            	</li>
+            	<li>Verify that the gene symbol links to the correct marker detail page
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax6</b> in the nomenclature field and press Search</li>
+                <li>After the Gene summary page displays, click on the marker symbol <b>pax6</b></li>
+                <li>Verify the marker detail page for pax6 displays</li>
+            </ol>
+            	</li>
+            	<li>Verify that gene summary results are sorted correctly
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>pax*</b> in the nomenclature field and press Search</li>
+                <li>Verify that the results are displayed in "smart alpha" order</li>
+            </ol>
+            	</li>
+            	<li>Verify that long marker names/symbols wrap properly
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Sema5a</b> in the nomenclature field and press Search</li>
+                <li>Verify that the name sema domain, seven thrombospondin repeats (type 1 and type 1-like), transmembrane domain (TM) and short cytoplasmic domain,
+(semaphorin) 5A displays and wraps properly</li>
+				<li>Click the <b>Click to modify search</b> button and Enter <b>B230118H07Rik</b> in the nomenclature field and press Search</li>
+				<li>Verify the symbol returns with proper formatting</li>
+            </ol>
+            	</li>
+            	<li>Verify that marker symbols and names with weird characters don't break the interface
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Mirlet7c-1</b> in the nomenclature field and press Search</li>
+                <li>Verify that mirlet7c-1 data returns with all fields properly formatted</li>
+                <li>Click the <b>Click to modify search</b> button and Enter <b>Epb4.1l4a</b> in the nomenclature field and press Search</li>
+                <li>Verify that Epb4.1l4a data returns with all fields properly formatted</li>
+                <li>Click the <b>Click to modify search</b> button and Enter <b>Dickie's small eye</b> in the nomenclature field and press Search</li>
+                <li>Verify that Pax6 data returns with all fields properly formatted</li>
+            </ol>
+            	</li>
+            	<li>Test that X, Y, XY, MT, UN chromosome display correctly
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Ace2</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned is for chromosome X and displays correctly</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>kdm5d</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned is for chromosome Y and displays correctly</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>sts</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned is for chromosome XY and displays correctly</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>mt-co1</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned is for chromosome MT and displays correctly</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>erdr1</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned is for chromosome UN and displays correctly</li>                                                
+            </ol>
+            	</li>
+            	<li>Verify that markers with chromosome but without coordinates work
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>cryg</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has a chromosome AND DISPLAYS THE CYTOBAND</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>Amy</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has a chromosome but no cM or coordinates AND DISPLAYS "syntenic"</li>
+            </ol>
+            	</li>
+            	<li>Verify that no invalid cM data appears when CM is : -1, or -999
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Gcap8</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has the  CM field blank, instead of displaying <b>-1</b></li>
+                <li>Cannot find an example of cM = -999 that also has expression data</li>
+            </ol>
+            	</li>   
+            	<li>Verify that the word "syntenic" is displayed when no coordinates, cM or cytoband data exist for chromosomes other than UN
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Gcap8</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has <b>syntenic</b> in the Genome Location field</li>
+            </ol>
+            	</li> 
+            	<li>Verify that nothing appears in the "Location" column when the chromosome is UN
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Labx</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has <b>UN</b> in the Chromosome field and the Genome Location field is blank</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>Spry3</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has <b>UN</b> in the Chromosome field and the Genome Location field is blank</li>
+            </ol>
+            	</li> 
+            	<li>Verify that the correct marker type is displaying: SHOULD BE DISPLAYING THE "FEATURE TYPE" VALUE
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Hba</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has the Type of complex/cluster/region</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>Gcna1</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has the Type of unclassified other genome feature</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>Cdk3-ps</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has the Type of polymorphic pseudogene</li>
+                <li>Click the <b>Click to modify search</b> button and enter <b>Gata1</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene information returned has the Type of protein coding gene</li>
+            </ol>
+            	</li> 
+            	<li>Verify Build of table layout with a single tab
+            	<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+            <ol>
+                <li>Open the GXD query form</li>
+                <li>Enter <b>Hba</b> in the nomenclature field and press Search</li>
+                <li>Verify the Gene summary table displays with correct column headings</li>
+                
+            </ol>
+            	</li>             	            	         	            	            	            	            	
+            	<li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        <ol>
+            <li>Test that for each assay type, all returned assay results are of the specified type. <i>Kim commented out the Concordion test and table.</i>
+<!--                <table concordion:execute="#results = getTypesByAssayType(#type)">
+			    <tr>
+			        <th concordion:set="#type">Query By Assay Type</th>
+			        <th cc:assertAllRowsEqual="#results">All Results Return This Assay Type</th>
+			    </tr>
+			    <tr><td>Immunohistochemistry</td><td>Immunohistochemistry</td></tr>
+			    <tr><td>In situ reporter (knock in)</td><td>In situ reporter (knock in)</td></tr>
+			    <tr><td>Northern blot</td><td>Northern blot</td></tr>
+			    <tr><td>Nuclease S1</td><td>Nuclease S1</td></tr>
+			    <tr><td>RNA in situ</td><td>RNA in situ</td></tr>
+			    <tr><td>RNase protection</td><td>RNase protection</td></tr>
+			    <tr><td>RT-PCR</td><td>RT-PCR</td></tr>
+			    <tr><td>Western blot</td><td>Western blot</td></tr>
+                </table>
+-->
+            </li>
+            <li>Test that for each assay type, the count of returned assay results is correct (multiple combinations). <i>Kim commented out the Concordion test and table.</i>
+<!--             	<table concordion:execute="#count = getAssayResultsCountByAssayType(#type)">
+            		<tr><th concordion:set="#type">Query By Assay Type</th>
+            			<th concordion:assertEquals="#count">Returns This Count of Results</th></tr>
+            		<tr><td>RNase protection</td><td>4259</td></tr>
+            		<tr><td>Western blot</td><td>12343</td></tr>
+            		<tr><td>Northern blot</td><td>34958</td></tr>
+            		<tr><td>Nuclease S1</td><td>545</td></tr>
+            		<tr><td>RT-PCR</td><td>139178</td></tr>
+            		<tr><td>In situ reporter (knock in)</td><td>14159</td></tr>
+            		<tr><td>Immunohistochemistry</td><td>25362</td></tr>
+            		<tr><td>RNA in situ</td><td>903301</td></tr>
+            	</table>
+ -->
+             </li>
+            <li>Test that the "all" checkbox returns the same result set as checking all 8 suboptions and also the same as deselecting everything. <i>Kim commented out the Concordion test and table.</i>
+<!-- 				<ol>
+				<li>Select <b concordion:set="#assayType">All</b> assay types from the assay type widget</li>
+				<li>Click the Search button and record <b concordion:execute="#count = getAssayResultsCountByAssayType(#assayType)">count of assay results</b> returned</li>
+				<li>Select <b>No assay type (i.e. de-select everything)</b> <span concordion:set="#assayType"></span>) from the assay type widget</li>
+				<li>Click the Search button and record <b concordion:execute="#count2 = getAssayResultsCountByAssayType(#assayType)">count of assay results</b> returned</li>
+				<li>Verify <b concordion:assertTrue="#count2.equals(#count)">count of genes is the same</b></li>
+				<li>Select <b concordion:set="#assayType">Immunohistochemistry,In situ reporter (knock in),Northern Blot,Nuclease S1,RNA in situ,RNase protection,RT-PCR,Western blot</b> assay types from the assay type widget</li>
+				<li>Click the Search button and record <b concordion:execute="#count3 = getAssayResultsCountByAssayType(#assayType)">count of assay results</b> returned</li>
+				<li>Verify <b concordion:assertTrue="#count3.equals(#count)">count of results is the same as selecting the "all" option</b></li>
+				</ol>
+ -->
+            </li>
+        </ol>
+        <ul>
+        <li><a href="MultipleParametersSearch.html">See also multiple parameter search tests</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

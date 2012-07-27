@@ -4,9 +4,13 @@ import java.util.List;
 
 import mgi.frontend.datamodel.Marker;
 
+import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.hunter.SolrMarkerIDHunter;
 import org.jax.mgi.fewi.hunter.SolrMarkerKeyHunter;
 import org.jax.mgi.fewi.hunter.SolrMarkerSummaryHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
@@ -36,10 +40,10 @@ public class MarkerFinder {
     private SolrMarkerKeyHunter mrkKeyHunter;
     
     @Autowired
+    private SolrMarkerIDHunter mrkIDHunter;
+    
+    @Autowired
     private SolrMarkerSummaryHunter markerSummaryHunter;
-
-//    @Autowired
-//    private SolrMarkerSummaryHunter mrkSummaryHunter;
 
     @Autowired
     private HibernateObjectGatherer<Marker> mrkGatherer;
@@ -66,6 +70,12 @@ public class MarkerFinder {
         searchResults.setResultObjects(mrkList);
 
         return searchResults;
+    }
+    // convenience wrapper
+    public SearchResults<Marker> getMarkerByID(String id) {
+        SearchParams searchParams = new SearchParams();
+        searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.OP_EQUAL));
+        return getMarkerByID(searchParams);
     }
 
     /*--------------------------------------------*/
@@ -107,6 +117,21 @@ public class MarkerFinder {
         List<Marker> markerList
           = mrkGatherer.get( Marker.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(markerList);
+
+        return searchResults;
+    }
+    
+    /*
+     * Retrieval of just marker IDs
+     */
+    public SearchResults<String> getMarkerIDs(SearchParams searchParams)
+    {
+    	logger.debug("->getMarkerIDs()");
+
+        // result object to be returned
+        SearchResults<String> searchResults = new SearchResults<String>();
+
+        mrkIDHunter.hunt(searchParams,searchResults);
 
         return searchResults;
     }

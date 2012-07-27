@@ -1,0 +1,157 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Quick Search Link Changes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Quick Search Link Changes</h1>
+    <ul>
+        <li>User story 116, Change links from Quick Search to GXD Summary</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>users of the Quick Search should land on new results summary page when they click on "xxx expression results".<i>Note: copied this A.C. from <a href="ADBrowserLinkChanges.html">AD Browser Link Changes</a>, story 111.</i></li>
+		<li>landing page type = B (see <a href="ReferencesPageLinkChanges.html">notes for story 97</a>)</li>
+	</ul>
+	<p>General note for linking to expression results. There will be three style of landing page:</p>
+	<ul>
+	<li>(A) page has result tabs at bottom and collapsed query form at top.</li>
+	<li>(B) page has result tabs at bottom and nothing at top.</li>
+	<li>(C) page has result tabs at bottom and custom header at top.</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Quick Search should display correct number of results for the AD term and its descendants within that Theiler Stage.  Following the link from the AD Term on the Quick Search page to the corresponding Expression Results Summary page should display the same number of results.
+<!-- modified SQL from Dynamic Data spreadsheet example, finds count of results for term and all children (the term must have children for SQL to work):
+WITH 
+struct AS (SELECT DISTINCT _Structure_key FROM gxd_structure WHERE printname ilike 'forelimb bud' and _stage_key=15),
+syn AS (SELECT DISTINCT clo._Descendent_key FROM gxd_structureclosure clo WHERE EXISTS (SELECT 1 FROM struct s WHERE clo._Structure_key = s._Structure_key) AND NOT EXISTS (SELECT 1 FROM struct s WHERE clo._Descendent_key = s._Structure_key)),
+closure AS (SELECT * from struct UNION ALL SELECT * FROM syn) 
+SELECT COUNT(*) FROM gxd_expression e, closure s WHERE e._Structure_key = s._Structure_key AND e.isForGXD = 1
+ -->
+    		<ol>
+                <li>Open the Quick Search.</li>
+                <li>Verify the count of expression results shown for each term below.</li>
+                <li>Follow the "(n) gene expression results" link and verify the results set in the Expression Summary table has the same count: <br/>
+                <i>NOTE: the Quick Search count (n) in the link always seems to be slightly greater than the number of results displayed when you follow the link.  Since the number of results displayed matches the number coming from the AD Browser, we think this is because the Quick Search index data was generated separately and is newer than the vocab index data.  --klf 7/26/12</i>
+					<table>
+								<tr>
+									<th>Stage: Structure</th>
+									<th>results count</th>
+									<th>Note</th>
+									<td>Test Passes</td>
+								</tr>
+								<tr>
+									<td>TS15: forelimb bud</td>
+									<td>384</td>
+									<td>a mid-level term having directly-annotated genes</td>
+									<td><p concordion:assertTrue="true">klf 7/26/2012</p></td>
+								</tr>
+								<tr>
+									<td>TS26: haemolymphoid system</td>
+									<td>289</td>
+									<td>a mid-level term having a no directly-annotated genes,
+										but having child terms with annotated genes</td>
+									<td><p concordion:assertTrue="false">changed test data</p></td>
+								</tr>
+								<tr>
+									<td>TS7: extraembryonic cavity<br/>	TS6: cavity or cavity lining</td>
+									<td>no count, no text, no link<br/>no count, no text, no link</td>
+									<td>a mid-level term having no directly-annotated genes,
+										and having a child term with no annotated genes</td>
+									<td><p concordion:assertTrue="false">changed test data</p></td>
+								</tr>
+								<tr>
+									<td>TS2: second polar body</td>
+									<td>25</td>
+									<td>a bottom-level term having directly-annotated genes</td>
+									<td><p concordion:assertTrue="true">klf 7/26/2012</p></td>
+								</tr>
+								<tr>
+									<td>TS4: mural trophectoderm<br/>TS20: adenohypophysis
+										pars tuberalis<br/>TS6: blastocoelic cavity
+									</td>
+									<td>no count, no text, no link<br/>no count, no text, no link<br/>no count, no text, no link
+									</td>
+									<td>a bottom-level term having no directly-annotated genes</td>
+									<td><p concordion:assertTrue="true">klf 7/26/2012</p></td>
+								</tr>
+							</table>
+						</li>
+    		</ol>
+    		</li>
+    		<li>Expression Summary page reached from Quick Search link "(n) gene expression results" should display:
+    		<ul> 
+    			<li>no page "banner"</li>
+    			<li>no Query Form</li>
+    			<li>no "You searched for"-area text</li>
+    			<li>no link to GXD Lit Index records below data table</li>
+    		</ul>
+ 			<p concordion:assertTrue="true">klf 7/26/2012</p>
+    		<ol>
+                <li>Open the MGI Front Page.</li>
+                <li>Search for for <b>TS15: forelimb bud</b>.</li>
+                <li>Follow the "(n) gene expression results" link to open the <b>new Expression Summary page format</b>.</li>
+                <li>Verify that <b>no "banner"</b> is displayed.</li>
+                <li>Verify that <b>no Query Form</b> is displayed.</li>
+                <li>Verify that the <b>"You searched for" area is empty</b>.</li>
+                <li>Verify that a <b>link to GXD Lit Index records does not appear</b>.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Age Stage toggle</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Age Stage toggle</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Age Stage toggle</h1>
+    <ul>
+        <li>User story 15, Search for expression results by theiler stage/age</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+        <li>only the visible parameter (Age or Theiler Stage) is submitted to the query</li>
+		<li>user can choose to query either by Theiler Stage or by Age of specimen, but not both</li>
+		<li>provide Pick List of valid age values, can select multiple ages</li>
+		<li>Browser forward/back button works reliably (only query submit)</li>
+		<li>Reset button displays the TS widget</li>
+		<li>update display user's query parameters</li>
+		<li>update user help</li>
+    </ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+        <h3>Manual tests</h3>
+        <ol>
+            <li>User can toggle between age and theiler stage multiselect widgets 
+            on the Query Form<p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            <ol>
+	            <li>Open GXD QF</li>
+	            <li>Verify that Theiler Stage multiselect widget is displayed</li>
+	            <li>Verify that Age widget affordance is displayed</li>
+	            <li>Click Age widget affordance</li>
+	            <li>Verify Age multiselect widget is displayed</li>
+	            <li>Verify that Theiler Stage affordance is displayed</li>
+	            <li>Click Theiler Stage widget affordance</li>
+	            <li>Verify that Theiler Stage multiselect widget is displayed</li>
+            </ol>
+            </li>
+            <li>Reset button toggles widget to display theiler stage with the "Any" option selected
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            <ol>
+            	<li>Open GXD QF</li>
+            	<li>Select several Theiler Stage options</li>
+            	<li>Click Age widget affordance</li>
+            	<li>Select several Age options</li>
+            	<li>Click "Reset" button</li>
+            	<li>Verify  that Theiler Stage multiselect widget is displayed and that the "Any developmental stage" options is selected</li>
+            </ol>
+            </li>
+            <li>Verify that only the visible parameter is submitted with the user's query
+            <p concordion:assertTrue="true">Passed jeffc 07/17/2012</p>
+            <ol>
+	            <li>Open GXD QF</li>
+	            <li>Toggle the age widget and <b>select E5</b>.</li>
+<!-- 
+select count(*) 
+from gxd_expression 
+where isforgxd=1 
+and ((agemin >= 4.75 and ageMax <= 5.2) 
+	or (agemin >= 4.75 and agemin <= 5.2) 
+	or (agemax >= 4.75 and agemax <= 5.2) 
+	or (agemin <= 5.2 and agemax >= 4.75)) 
+. . . This will find "exact matches" for E5, ranges that begin with E5, ranges that end with E5, and ranges that contain E5 . . .
+-->
+	            <li>Submit form</li>
+	            <li>Verify that <b>105</b> assay results are returned.</li>
+	            <li>Click the "click to modify search" button to expand the query form</li>
+	            <li>Toggle to the TS widget and <b>select TS6</b>.</li>
+	            <li>Submit the form</li>
+	            <li>Verify that <b>283</b> assay results are returned.</li>
+	            <li>Click the "click to modify search" button to expand the query form</li>
+	            <li>Toggle to the age widget and <b>select age 5</b>.</li>
+	            <li>Verify that <b>105</b> results are returned.</li>
+            </ol>
+            </li>
+            <li>Verify that the users submitted values are retained (and displayed) and that the other widget values are not retained
+            <p concordion:assertTrue="true">passed jeffc 7/17/2012</p>
+            <ol>
+	            <li>Open GXD QF</li>
+	            <li>Select <b>TS22, TS23, TS24 and TS25</b> but do not submit the query</li>
+	            <li>Toggle the age widget and select <b>E1 and E4</b></li>
+	            <li>Submit form</li>
+	            <li>Verify that <b cc:dynamicData="age1and4ResultCount"></b> results are returned.</li> 
+	            <li>Click the "click to modify search" button to expand the query form</li>
+	            <li>Verify that the <b>Age widget is displayed and E1 and E4 remain selected</b></li>
+	            <li>Toggle the Theiler Stage widget and <b>verify that the default value "Any developmental stage" is selected</b></li>
+            </ol>
+            </li>
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+        <ol>
+            <li>Test 1</li>
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>

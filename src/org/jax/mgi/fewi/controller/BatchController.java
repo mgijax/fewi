@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -101,8 +102,20 @@ public class BatchController {
     //-------------------------//
     @RequestMapping(value="/summary", method=RequestMethod.GET)
     public ModelAndView batchSummaryGet(HttpSession session,
-            @ModelAttribute BatchQueryForm queryForm) {
+            @ModelAttribute BatchQueryForm queryForm,Model model) {
 
+    	logger.debug(model.toString());
+        logger.debug("-> batchSummary GET started");        
+        return processSummary(session, queryForm);
+    }
+    
+    //-------------------------//
+    // Forward from other page/form
+    //-------------------------//
+    @RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
+    public ModelAndView batchSummary2Get(HttpSession session,HttpServletRequest request) {
+
+    	BatchQueryForm queryForm = (BatchQueryForm) request.getAttribute("queryForm");
         logger.debug("-> batchSummary GET started");        
         return processSummary(session, queryForm);
     }
@@ -233,7 +246,6 @@ public class BatchController {
     		HttpServletRequest request,
 			BatchQueryForm query,
             Paginator page){
-
         logger.debug("sessionId: " + session.getId());
         
         SearchParams params = new SearchParams();

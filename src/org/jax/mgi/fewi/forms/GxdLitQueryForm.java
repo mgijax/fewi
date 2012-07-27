@@ -29,12 +29,17 @@ public class GxdLitQueryForm {
     private String Journal = "";
     private List<String> journalFilter = new ArrayList<String>();
     private Integer marker_key;
-    private String nomen = "";
+	private String nomen = "";
     private Integer reference_key;
     private Integer seqKey;
 	private String text = "";
 	private String year = "";
 	private List<Integer> yearFilter = new ArrayList<Integer>();
+	
+	// Added these for GXD query form links
+    private String markerId;
+    private String vocabTerm="";
+	private String termId;
 
 	public GxdLitQueryForm() {
     	
@@ -249,6 +254,24 @@ public class GxdLitQueryForm {
     public void setYearFilter(List<Integer> yearFilter) {
         this.yearFilter = yearFilter;
     }
+	public String getMarkerId() {
+		return markerId;
+	}
+	public void setMarkerId(String markerId) {
+		this.markerId = markerId;
+	}
+    public String getVocabTerm() {
+		return vocabTerm;
+	}
+	public void setVocabTerm(String vocabTerm) {
+		this.vocabTerm = vocabTerm;
+	}
+	public String getTermId() {
+		return termId;
+	}
+	public void setTermId(String termId) {
+		this.termId = termId;
+	}
     @Override
 	public String toString() {
 		return "GxdLitQueryForm [age=" + age + ", ages=" + ages
