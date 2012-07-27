@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +15,9 @@ import mgi.frontend.datamodel.GxdLitIndexRecord;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.GxdLitFinder;
+import org.jax.mgi.fewi.finder.MarkerBatchIDFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
@@ -31,7 +34,9 @@ import org.jax.mgi.fewi.summary.GxdLitAssayTypeSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitGeneSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitReferenceSummaryRow;
 import org.jax.mgi.fewi.util.Highlighter;
+import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.StyleAlternator;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +47,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -219,36 +225,21 @@ public class GXDLitController {
         logger.debug("Hitting the finder 2.");
 
         SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
-
+        Integer totalCount = results.getTotalCount();
+        
+        
         logger.debug("Building the summary rows");
 
         List<GxdLitIndexRecord> recordList = results.getResultObjects();
 
         logger.debug("Got the record list");
 
+        // This is admittedly a bad solution to getting data by side effect. However, the design of this class was poor to begin with, and we have limited time to refactor.
+        Map<String,Object> analysisData = new HashMap<String,Object>();
+        analysisData.put("refCount", 0);
+        analysisData.put("hasFullyCoded", false);
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
-
-        // Get the total count of references and records.
-
-		HashSet <String> references = new HashSet<String>();
-		int totalCount = 0;
-		int totalReferences = 0;
-
-		Boolean hasFullyCoded = Boolean.FALSE;
-
-		for (GxdLitGeneSummaryRow outRow: summaryRows) {
-			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
-				references.add(ref.getJnum());
-				if (!hasFullyCoded && ref.getIsFullyCoded()) {
-				    hasFullyCoded = Boolean.TRUE;
-				}
-				totalCount ++;
-			}
-		}
-
-		totalReferences = references.size();
-		references = new HashSet<String>();
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null,analysisData);
                 
         mav.addObject("marker", marker);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
@@ -256,13 +247,13 @@ public class GXDLitController {
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", totalReferences);
+        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", hasFullyCoded);
+        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
 
         return mav;
     	
@@ -334,6 +325,7 @@ public class GXDLitController {
         logger.debug("Hitting the finder 2.");
 
         SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
+        Integer totalCount = results.getTotalCount();
 
         logger.debug("Building the summary rows");
 
@@ -343,42 +335,26 @@ public class GXDLitController {
 
         queryForm.setReference_key(reference.getReferenceKey());
 
+        // This is admittedly a bad solution to getting data by side effect. However, the design of this class was poor to begin with, and we have limited time to refactor.
+        Map<String,Object> analysisData = new HashMap<String,Object>();
+        analysisData.put("refCount", 0);
+        analysisData.put("hasFullyCoded", false);
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null,analysisData);
 
-        // Get the total count of references and records.
-
-		HashSet <String> references = new HashSet<String>();
-		int totalCount = 0;
-		int totalReferences = 0;
-
-		Boolean hasFullyCoded = Boolean.FALSE;
-
-		for (GxdLitGeneSummaryRow outRow: summaryRows) {
-			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
-				references.add(ref.getJnum());
-				if (!hasFullyCoded && ref.getIsFullyCoded()) {
-				    hasFullyCoded = Boolean.TRUE;
-				}
-				totalCount ++;
-			}
-		}
-
-		totalReferences = references.size();    	
-		references = new HashSet<String>();
         mav.addObject("reference", reference);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", totalReferences);
+        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", hasFullyCoded);
+        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
 
         return mav;    	
     }
@@ -414,45 +390,32 @@ public class GXDLitController {
         ModelAndView mav = new ModelAndView("gxdlit_summary_by_age_assay");
          
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null);
 
-        // Get the total count of references and records.
-
-		HashSet <String> references = new HashSet<String>();
-		int totalCount = 0;
-		int totalReferences = 0;
-
-		Boolean hasFullyCoded = Boolean.FALSE;
-
-		for (GxdLitGeneSummaryRow outRow: summaryRows) {
-			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
-				references.add(ref.getJnum());
-				if (!hasFullyCoded && ref.getIsFullyCoded()) {
-				    hasFullyCoded = Boolean.TRUE;
-				}
-				totalCount ++;
-			}
-		}
-
-		totalReferences = references.size();
-		references = new HashSet<String>();
+		Integer totalCount = recordList.size();
+        // This is admittedly a bad solution to getting data by side effect. However, the design of this class was poor to begin with, and we have limited time to refactor.
+        Map<String,Object> analysisData = new HashMap<String,Object>();
+        analysisData.put("refCount", 0);
+        analysisData.put("hasFullyCoded", false);
+        // create/load the list of SummaryRow wrapper objects for the gene section
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null,analysisData);
        
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", totalReferences);
+        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", hasFullyCoded);
+        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
         return mav;
     }
 
-    //-------------------------//
+
+	//-------------------------//
     // GXD Lit Query Form Summary
     //-------------------------//
     @RequestMapping("/summary")
@@ -476,6 +439,7 @@ public class GXDLitController {
 
         SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
 
+		int totalCount = results.getTotalCount();
         Map<String, Set<String>> highlighting = results.getResultSetMeta().getSetHighlights();
 
         Highlighter textHl = null;
@@ -492,50 +456,74 @@ public class GXDLitController {
 
         logger.debug("Got the record list: " + recordList.size() + " records");
 
+        // This is admittedly a bad solution to getting data by side effect. However, the design of this class was poor to begin with, and we have limited time to refactor.
+        Map<String,Object> analysisData = new HashMap<String,Object>();
+        analysisData.put("refCount", 0);
+        analysisData.put("hasFullyCoded", false);
         // create/load the list of SummaryRow wrapper objects for the gene section
-        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, textHl);
+        List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, textHl,analysisData);
 
-        // Get the total count of references and records.
+        logger.debug("ref count after = "+(Integer)analysisData.get("refCount"));
 
-		HashSet <String> references = new HashSet<String>();
-		int totalCount = 0;
-		int totalReferences = 0;
-
-        Boolean hasFullyCoded = Boolean.FALSE;
-
-		for (GxdLitGeneSummaryRow outRow: summaryRows) {
-			for (GxdLitReferenceSummaryRow ref: outRow.getReferenceRecords()) {
-				references.add(ref.getJnum());
-				totalCount ++;
-				if (!hasFullyCoded && ref.getIsFullyCoded()) {
-				    hasFullyCoded = Boolean.TRUE;
-				}
-			}
-		}
-
-		totalReferences = references.size();
-		references = new HashSet<String>();
         ModelAndView mav = new ModelAndView("gxdlit_summary");
+        //if a markerID is in the query resolve it to a marker object
+        String markerID = queryForm.getMarkerId();
+        if(markerID!=null && !markerID.equals(""))
+        {
+        	SearchResults<Marker> sr = markerFinder.getMarkerByID(markerID);
+        	if (sr.getTotalCount()>0)
+        	{
+        		mav.addObject("marker",sr.getResultObjects().get(0));
+        	}
+        }
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
         mav.addObject("geneResult", new StyleAlternator("","stripe3"));
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", totalReferences);
+        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", hasFullyCoded);
+        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
 
         return mav;
     }
+    
+    @RequestMapping("/forward/summary")
+    public ModelAndView gxdLitSummary(HttpServletRequest request) {
+    	return gxdLitSummary(request,(GxdLitQueryForm)request.getAttribute("gxdLitQueryForm"));
+    }
 
+    //-------------------------//
+    // Total Count of GXD Lit Records
+    //-------------------------//
+    public Integer getGxdLitCount(GxdLitQueryForm queryForm) {
 
+        logger.debug("->gxdLitCount started");
+
+        SearchParams params = new SearchParams();
+
+        params.setFilter(this.genFilters(queryForm));
+        params.setPageSize(0);
+
+        logger.debug("Hitting the finder.");
+
+        SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
+        int totalCount = results.getTotalCount();
+        
+        logger.debug("found "+totalCount+" gxd lit records");
+
+        return totalCount;
+    }
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
-
-    private List<GxdLitGeneSummaryRow> generateGeneSection(List<GxdLitIndexRecord> recordList, GxdLitQueryForm queryForm, Highlighter textHl) {
+    
+    /*
+     * additional return values are set in the analysisData parameter vie side effect.
+     */
+    private List<GxdLitGeneSummaryRow> generateGeneSection(List<GxdLitIndexRecord> recordList, GxdLitQueryForm queryForm, Highlighter textHl,Map<String,Object> analysisData) {
 
     	logger.debug("Generating the Gene Section");
 
@@ -545,37 +533,44 @@ public class GXDLitController {
 	    Boolean first = Boolean.TRUE;
 	    GxdLitGeneSummaryRow row = null;
 
+	    Set<String> uniqueReferences = new HashSet<String>();
+	    
 	    for (GxdLitIndexRecord record: recordList) {
+	    	// count nmber of unique references
+			uniqueReferences.add(record.getJnumId());
+			// flag if any records have fully coded data
+			if(!(Boolean)analysisData.get("hasFullyCoded") && record.getFullCodedResultCount()>0) analysisData.put("hasFullyCoded", true);
+			record.getFullCodedResultCount();
+    		if (first || !symbol.equals(record.getMarkerSymbol())) {
 
-	    		if (first || !symbol.equals(record.getMarkerSymbol())) {
+    			//logger.debug("Either this is the first, or its a new symbol.");
 
-	    			//logger.debug("Either this is the first, or its a new symbol.");
+    			if (!first) {
 
-	    			if (!first) {
+    				// Has a result count
+    				Boolean hasACount = Boolean.FALSE;
+    				for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
+    					if (new Integer(refRow.getCount()) > 0) {
+    						hasACount = Boolean.TRUE;
+    					}
+    				}
 
-	    				// Has a result count
-	    				Boolean hasACount = Boolean.FALSE;
-	    				for (GxdLitReferenceSummaryRow refRow: row.getReferenceRecords()) {
-	    					if (new Integer(refRow.getCount()) > 0) {
-	    						hasACount = Boolean.TRUE;
-	    					}
-	    				}
+    				if (hasACount) {
+        				// Add in the last record
+        				summaryRows.add(row);
+    				}
+    			}
 
-	    				if (hasACount) {
-	        				// Add in the last record
-	        				summaryRows.add(row);
-	    				}
-	    			}
-
-	    			row = new GxdLitGeneSummaryRow(record, queryForm, textHl);
-	    			symbol = record.getMarkerSymbol();
-	    			first = Boolean.FALSE;
-	    		}
-	    		else {
-	    			row.addRecord(record);
-	    		}
+    			row = new GxdLitGeneSummaryRow(record, queryForm, textHl);
+    			symbol = record.getMarkerSymbol();
+    			first = Boolean.FALSE;
+    		}
+    		else {
+    			row.addRecord(record);
+    		}
 
 	    }
+	    
 
 	    // Add in the last record found before the loop kicked out. Assuming it has a count associate
 	    // with it.
@@ -594,6 +589,8 @@ public class GXDLitController {
 			}
 	    }
 
+	    // set the return value of the referenceCount
+	    analysisData.put("refCount",uniqueReferences.size());
 	    logger.debug (" --> built " + summaryRows.size() + " summaryRows");
 	    return summaryRows;
 	}
@@ -767,141 +764,190 @@ public class GXDLitController {
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
 
-        String nomen = query.getNomen();
-
-        // Nomen Filter
-        if ((nomen != null) && (!"".equals(nomen.trim()))) {
-	    String field;
-
-	    // remember if the query string was quoted
-	    boolean wasQuoted = false;
-	    if (nomen.contains("\"")) { wasQuoted = true; }
-
-	    // then strip the quotes
-	    nomen = nomen.replaceAll("\"", "");
-
-	    // convert any substrings of non-alphanumeric characters with a
-	    // space
-	    nomen = nomen.replaceAll("[^A-Za-z0-9]+", " "); 
-
-	    // then remove any leading and trailing spaces
-	    nomen = nomen.trim();
-
-	    if (nomen.length() < 1) {
-		// if we have no search string left after cleanup, do not add
-		// a filter for nomenclature
-
-	    } else if (nomen.length() <= 2) {
-		// for 1-2 characters, do an exact match against only symbols
-		// and synonyms.  if it was quoted, just ignore the quotes.
-
-		field = SearchConstants.GXD_LIT_MRK_SYMBOL;
-        	filterList.add(new Filter (field, nomen.trim(),
-			Filter.OP_EQUAL));
-
-	    } else if (wasQuoted) {
-		// for 3+ characters with quotes, do a contains search for the
-		// quoted string
-
-		field = SearchConstants.GXD_LIT_MRK_NOMEN;
-        	filterList.add(new Filter (field, "\"" + nomen + "\"", 
-			Filter.OP_CONTAINS));
-
-	    } else {
-		// for 3+ characters with no quotes, do a begins search
-		// where we must match ALL tokens
-
-		field = SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS;
-
-		// separate tokens on one or more consecutive spaces
-		String[] tokens = nomen.split(" +");
-
-		// collect a filter for each token
-
-		List<Filter> nomenFilters = new ArrayList<Filter>();
-
-		for (String token: tokens) {
-			nomenFilters.add (new Filter (field, token,
-				Filter.OP_EQUAL) );
-		} 
-
-		// If we only found one filter, just add it.
-		// Otherwise, AND them together under a grouping filter and
-		// add that one.
-
-		if (nomenFilters.size() == 1) {
-    			filterList.add(nomenFilters.get(0));
-		} else {
-    			Filter tf = new Filter();
-    			tf.setFilterJoinClause(Filter.FC_AND);
-			tf.setNestedFilters(nomenFilters);
-			filterList.add(tf);
-    		}
-	    }
+        String nomenclature = query.getNomen();
+        //Nomen filter
+        if(nomenclature!=null && !nomenclature.equals("")) {
+			Filter nomenFilter = generateNomenFilter(SearchConstants.GXD_LIT_MRK_NOMEN, nomenclature);
+			if(nomenFilter != null) filterList.add(nomenFilter);
+		}
+        // vocab term => marker IDs
+        String termId = query.getTermId();
+        if(termId!=null && !termId.equals(""))
+        {
+        	filterList.add(new Filter(IndexConstants.MRK_TERM_ID,termId,Filter.OP_EQUAL));
+        	// COMMENTING OUT THIS STRATEGY, BECAUSE IT IS SLOW AND TIES UP SOLR's RESOURCES
+//        	// In order to do get the marker IDs associated with a termID search, we will have to 
+//			// query the marker index and iterate the markers
+//			SearchParams params = new SearchParams();
+//			params.setFilter(new Filter(IndexConstants.MRK_TERM_ID_FOR_GXD,termId,Filter.OP_EQUAL));
+//			MarkerBatchIDFinder markerBatchIDFinder = new MarkerBatchIDFinder(markerFinder,params);
+//			markerBatchIDFinder.batchSize = 5000;
+//			
+//			// gather marker id strings in batches
+//			List<String> markerIds = new ArrayList<String>();
+//			while(markerBatchIDFinder.hasNextResults())
+//			{
+//				SearchResults<String> searchResults = markerBatchIDFinder.getNextResults();
+//				//add each marker ID to the ids list
+//		        for (String mgiid: searchResults.getResultKeys()) {
+//		        	if(mgiid != null && !mgiid.equals("")) markerIds.add(mgiid);
+//				}
+//			}
+//			logger.debug("termID = "+termId+" resolves to the following marker IDs = "+StringUtils.join(markerIds,","));
+//			if(markerIds.size()>0)
+//			{
+//	        	List<Filter> markerIdFilters = new ArrayList<Filter>();
+//	        	for(String markerId : markerIds)
+//	        	{
+//	        		if(markerId!=null && !markerId.equals(""))
+//	        		{
+//	        			markerIdFilters.add(new Filter(SearchConstants.MRK_ID,markerId,Filter.OP_EQUAL));
+//	        		}
+//	        	}
+//	        	if(markerIdFilters.size()>0)
+//	        	{
+//	        		// We OR a list of marker IDs
+//	        		Filter markerIdFilter = new Filter();
+//	        		markerIdFilter.setFilterJoinClause(Filter.FC_OR);
+//	        		markerIdFilter.setNestedFilters(markerIdFilters);
+//	        		filterList.add(markerIdFilter);
+//	        	}
+//			}
         }
+        // marker MGI Id
+        String markerId = query.getMarkerId();
+        if(markerId!=null && !markerId.equals(""))
+        {
+        	filterList.add(new Filter(SearchConstants.MRK_ID,markerId,Filter.OP_EQUAL));
+        }
+//       WE REMOVED THIS SECTION TO BRING IN LINE WITH 5.x GXD FORM QUERYING
+//		 THIS CODE REMAINS AS A REFERENCE IN CASE WE MISSED SOMETHING
+//       // Nomen Filter
+//        if ((nomen != null) && (!"".equals(nomen.trim()))) {
+//	    String field;
+//
+//	    // remember if the query string was quoted
+//	    boolean wasQuoted = false;
+//	    if (nomen.contains("\"")) { wasQuoted = true; }
+//
+//	    // then strip the quotes
+//	    nomen = nomen.replaceAll("\"", "");
+//
+//	    // convert any substrings of non-alphanumeric characters with a
+//	    // space
+//	    nomen = nomen.replaceAll("[^A-Za-z0-9]+", " "); 
+//
+//	    // then remove any leading and trailing spaces
+//	    nomen = nomen.trim();
+//
+//	    if (nomen.length() < 1) {
+//		// if we have no search string left after cleanup, do not add
+//		// a filter for nomenclature
+//
+//	    } else if (nomen.length() <= 2) {
+//		// for 1-2 characters, do an exact match against only symbols
+//		// and synonyms.  if it was quoted, just ignore the quotes.
+//
+//		field = SearchConstants.GXD_LIT_MRK_SYMBOL;
+//        	filterList.add(new Filter (field, nomen.trim(),
+//			Filter.OP_EQUAL));
+//
+//	    } else if (wasQuoted) {
+//		// for 3+ characters with quotes, do a contains search for the
+//		// quoted string
+//
+//		field = SearchConstants.GXD_LIT_MRK_NOMEN;
+//        	filterList.add(new Filter (field, "\"" + nomen + "\"", 
+//			Filter.OP_CONTAINS));
+//
+//	    } else {
+//		// for 3+ characters with no quotes, do a begins search
+//		// where we must match ALL tokens
+//
+//		field = SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS;
+//
+//		// separate tokens on one or more consecutive spaces
+//		String[] tokens = nomen.split(" +");
+//
+//		// collect a filter for each token
+//
+//		List<Filter> nomenFilters = new ArrayList<Filter>();
+//
+//		for (String token: tokens) {
+//			nomenFilters.add (new Filter (field, token,
+//				Filter.OP_EQUAL) );
+//		} 
+//
+//		// If we only found one filter, just add it.
+//		// Otherwise, AND them together under a grouping filter and
+//		// add that one.
+//
+//		if (nomenFilters.size() == 1) {
+//    			filterList.add(nomenFilters.get(0));
+//		} else {
+//    			Filter tf = new Filter();
+//    			tf.setFilterJoinClause(Filter.FC_AND);
+//			tf.setNestedFilters(nomenFilters);
+//			filterList.add(tf);
+//    		}
+//	    }
+//        }
 
-        // Age Filter
+        // Age AND Assay Type Filters
 
         List <String> ageList = query.getAge();
-        Boolean ageAnyFound = Boolean.FALSE;
+        ageList.remove(null); ageList.remove("");
+        boolean doAgeSearch = ageList != null && ageList.size() > 0 && !(ageList.contains("ANY"));
 
-        if (ageList != null && ageList.size() != 0) {
-	        List <Filter> ageFilters = new ArrayList<Filter>();
-
-	        for (String age: ageList) {
-		        if ((age != null) && (!"".equals(age))) {
-
-		        	if (age.equals("ANY")) {
-		        		ageAnyFound = Boolean.TRUE;
-		        	}
+        List<String> assayTypeList = query.getAssayType();
+        assayTypeList.remove(null); assayTypeList.remove("");
+        boolean doAssayTypeSearch = assayTypeList != null && assayTypeList.size() > 0 && !(assayTypeList.contains("ANY"));
+        
+        // If we are both both and age and an assay type search, use the combined field for greater precision
+        if(doAgeSearch && doAssayTypeSearch)
+        {
+        	List<Filter> ageAssayTypeFilters = new ArrayList<Filter>();
+        	for(String age : ageList)
+        	{
+        		for(String assayType : assayTypeList)
+        		{
+        			ageAssayTypeFilters.add(new Filter(IndexConstants.GXD_LIT_AGE_ASSAY_TYPE_PAIR,
+        					age+"-"+assayType,
+        					Filter.OP_EQUAL));
+        		}
+        	}
+        	Filter tf = new Filter();
+			tf.setFilterJoinClause(Filter.FC_OR);
+			tf.setNestedFilters(ageAssayTypeFilters);
+			filterList.add(tf);
+        }
+        else
+        {
+	        if (doAgeSearch) {
+		        List <Filter> ageFilters = new ArrayList<Filter>();
+	
+		        for (String age: ageList) {
 		        	ageFilters.add(new Filter (SearchConstants.GXD_LIT_AGE , age,
 			                Filter.OP_EQUAL));
 		        }
+				Filter tf = new Filter();
+				tf.setFilterJoinClause(Filter.FC_OR);
+				tf.setNestedFilters(ageFilters);
+				filterList.add(tf);
 	        }
-
-	        if (!ageAnyFound) {
-				if (ageFilters.size() == 1) {
-					filterList.add(ageFilters.get(0));
-				} else {
-					Filter tf = new Filter();
-					tf.setFilterJoinClause(Filter.FC_OR);
-					tf.setNestedFilters(ageFilters);
-					filterList.add(tf);
-				}
-	        }
-        }
-
-        // Assay Type Filter
-
-        List<String> assayTypeList = query.getAssayType();
-        Boolean assayTypeAnyFound = Boolean.FALSE;
-
-        if (assayTypeList != null && assayTypeList.size() != 0) {
-
-    	        List <Filter> assayTypeFilters = new ArrayList<Filter>();
-
-    	        for (String assayType: assayTypeList) {
-    		        if ((assayType != null) && (!"".equals(assayType))) {
-
-    		        	if (assayType.equals("ANY")) {
-    		        		assayTypeAnyFound = Boolean.TRUE;
-    		        	}
+	        else if (doAssayTypeSearch) {
+	    	        List <Filter> assayTypeFilters = new ArrayList<Filter>();
+	
+	    	        for (String assayType: assayTypeList) {
     		        	assayTypeFilters.add(new Filter (SearchConstants.GXD_LIT_ASSAY_TYPE , assayType,
     			                Filter.OP_EQUAL));
-    		        }
-    	        }
-
-    	        if (!assayTypeAnyFound) {
-    				if (assayTypeFilters.size() == 1) {
-    					filterList.add(assayTypeFilters.get(0));
-    				} else {
-    					Filter tf = new Filter();
-    					tf.setFilterJoinClause(Filter.FC_OR);
-    					tf.setNestedFilters(assayTypeFilters);
-    					filterList.add(tf);
-    				}
-    	        }
-            }
+	    	        }
+					Filter tf = new Filter();
+					tf.setFilterJoinClause(Filter.FC_OR);
+					tf.setNestedFilters(assayTypeFilters);
+					filterList.add(tf);
+	    	}
+        }
 
 
 		//build author query filter
@@ -1014,6 +1060,11 @@ public class GXDLitController {
             containerFilter.setFilterJoinClause(Filter.FC_AND);
             containerFilter.setNestedFilters(filterList);
         }
+        else
+        {
+        	// default to a query that will bring no results back
+        	containerFilter = new Filter(IndexConstants.GXD_LIT_SINGLE_KEY,"-1",Filter.OP_EQUAL);
+        }
 
         logger.debug("Got past the filter construction.");
 
@@ -1031,6 +1082,50 @@ public class GXDLitController {
 			}
 		}
 		return items;
+	}
+	
+	/**
+	 * This was copied directly from the GXDController to make the nomenclature queries in line with each other.
+	 * Be aware of this when modifying.
+	 * @param property
+	 * @param query
+	 * @return
+	 */
+	private Filter generateNomenFilter(String property, String query){
+		logger.debug("splitting nomenclature query into tokens");
+		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query);
+		Filter nomenFilter = new Filter();
+		List<Filter> nomenFilters = new ArrayList<Filter>();
+		// we want to group all non-wildcarded tokens into one solr phrase search
+		List<String> nomenTokens = new ArrayList<String>();
+		String phraseSearch = "";
+
+		for(String nomen : nomens) {
+			if(nomen.endsWith("*") || nomen.startsWith("*")) {
+				nomenTokens.add(nomen);
+			} else {
+				phraseSearch += nomen+" ";
+			}
+		}
+
+		if(!phraseSearch.trim().equals("")) {
+			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
+			nomenTokens.add("\""+phraseSearch+"\"~100");
+		}
+
+		for(String nomenToken : nomenTokens) {
+			logger.debug("token="+nomenToken);
+			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
+			nomenFilters.add(nFilter);
+		}
+
+		if(nomenFilters.size() > 0) {
+			nomenFilter.setNestedFilters(nomenFilters,Filter.FC_AND);
+			// add the nomenclature search filter
+			return nomenFilter;
+		}
+		// We don't want to return an empty filter object, because it screws up Solr.
+		return null;
 	}
 
 }
