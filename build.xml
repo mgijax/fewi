@@ -1,69 +1,121 @@
 <project name="fewi" default="deploy" basedir=".">
 
+	<!--pull in values from the properties file -->
+	<property file="build.properties" />
+	<property name="test.dir" location="test" />
+	<property name="TALK" value="false" />
 
-        <!--pull in values from the properties file -->
-        <property file="build.properties"/>
-		<property environment="env"/>
-
-        <!--libs -->
-        <path id="libs">
-                <fileset includes="*.jar" dir="www/WEB-INF/lib" />
-                <fileset includes="*.jar" dir="${jbossLib.dir}" />
-                <fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
-                <fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
-        </path>
+	<!--libs -->
+	<path id="libs">
+		<fileset includes="*.jar" dir="www/WEB-INF/lib" />
+		<fileset includes="*.jar" dir="${jbossLib.dir}" />
+		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
+		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
+	</path>
 	
-		<target name="isServer" unless="config.file">
-			<property name="config.file" value="fewi.properties.${env.SERVER_NAME}"/>
-		</target>
+	<path id="tests.path">
+		<fileset includes="*.jar" dir="${lib.dir}" />
+		<fileset includes="*.jar" dir="${jboss.dir}/common/lib" />
+		<fileset includes="*.jar" dir="${jboss.dir}/lib" />
+		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
+		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
+		<pathelement location="${compile.dir}" />
+	</path>
+	
+	<target name="isServer" unless="config.file">
+		<property name="config.file" value="fewi.properties.${env.SERVER_NAME}"/>
+	</target>
+
+	<!--clean -->
+	<target name="clean">
+		<delete dir="${compile.dir}" />
+		<delete file="${project.name}.war" />
+        <delete dir="${testoutput.dir}"/>
+	</target>
 
 
-        <!--clean -->
-        <target name="clean">
-                <delete dir="${compile.dir}"/>
-                <delete file="${project.name}.war"/>
-        </target>
+	<!--prepare -->
+	<target name="prepare" depends="clean, isServer">
+		<echo>Creating build directory</echo>
+		<mkdir dir="${compile.dir}" />
+		<copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true" />
+		<copy file="${lib_java_fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true" />
+		<copy file="${global_config.dir}/GlobalConfig.properties" todir="./www/WEB-INF/properties" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/ehcache.xml" todir="./www/WEB-INF/classes" overwrite="true" />
+		<echo>Use ${config.dir}\${config.file}</echo>
+		<copy file="${config.dir}/${config.file}" tofile="./www/WEB-INF/properties/fewi.properties" overwrite="false" />
+		<replace file="./www/WEB-INF/properties/fewi.properties" token="@TEMPLATE_DIR@" value="${template.dir}" />
+	</target>
 
 
-        <!--prepare -->
-        <target name="prepare" depends="clean, isServer">
-                <echo>Creating build directory</echo>
-                <mkdir dir="${compile.dir}"/>
-                <copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
-        		<echo>Use ${config.dir}\${config.file}</echo>
-	    		<copy file="${config.dir}\${config.file}" 
-	    			tofile="./www/WEB-INF/properties/fewi.properties" overwrite="true"/>
-                <copy file="${lib_java_fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true"/>
-                <copy file="${global_config.dir}/GlobalConfig.properties" todir="./www/WEB-INF/properties" overwrite="true"/>
-                <copy file="./www/WEB-INF/properties/ehcache.xml" todir="./www/WEB-INF/classes" overwrite="true"/>
-        </target>
+	<!--compile -->
+	<target name="compile" depends="prepare">
+		<echo>Compile source</echo>
+		<javac srcdir="${src.dir}" destdir="${compile.dir}" debug="on" debuglevel="lines,vars,source">
+			<classpath refid="libs" />
+		</javac>
+	</target>
+
+	
+	<!-- Index test - copies the index html files to test output -->
+	<target name="index-test">
+        <mkdir dir="${testoutput.dir}"/>
+		<copy todir="${testoutput.dir}" overwrite="true">
+		  <fileset dir="${test.dir}">
+		    <include name="**/*.html"/>
+		  </fileset>
+		</copy>
+	</target>
+		  	
+	<!-- Compile tests -->
+	<target name="compile-test" depends="compile,index-test">
+		<copy file="./www/WEB-INF/properties/applicationContext-ci.xml" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/fewi.properties" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/GlobalConfig.properties" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/externalUrls.properties" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy todir="${compile.dir}" overwrite="true">
+			<fileset dir="${test.dir}">
+				<include name="**/*.html"/>
+			</fileset>
+		</copy>
+		<javac srcdir="${test.dir}" destdir="${compile.dir}" verbose="${TALK}">
+			<classpath refid="tests.path" />
+		</javac>
+	</target>
+
+    <!-- run tests -->
+	<target name="test" depends="compile-test">
+		<junit fork="yes" forkmode="once" failureproperty="junit.failure">
+			<jvmarg value="-Dconcordion.output.dir=${testoutput.dir}"/>
+			<classpath>
+				<path refid="tests.path" />
+			</classpath>
+			<formatter type="xml" usefile="true" />
+			<batchtest todir="${testoutput.dir}">
+				<fileset dir="${compile.dir}" includes="**/*Test.class">
+					<exclude name="**/FooTest.class" />
+					<exclude name="**/BaseConcordionTest.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<!--war -->
+	<target name="war" depends="compile">
+		<echo>Build war file</echo>
+		<copy file="./www/WEB-INF/properties/excelviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
+		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
+		<war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
+			<fileset dir="www" />
+		</war>
+	</target>
 
 
-        <!--compile -->
-        <target name="compile" depends="prepare">
-                <echo>Compile source</echo>
-                <javac srcdir="${src.dir}" destdir="${compile.dir}">
-                        <classpath refid="libs"/>
-                </javac>
-        </target>
-
-
-        <!--war -->
-        <target name="war" depends="compile">
-                <echo>Build war file</echo>
-        		<copy file="./www/WEB-INF/properties/excelviews.properties" todir="./www/WEB-INF/classes" overwrite="true"/>
-        		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true"/>
-                <war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
-                        <fileset dir="www"/>
-                </war>
-        </target>
-
-
-        <!--deploy -->
-        <target name="deploy" depends="war">
-                <echo>Deploy war</echo>
-                <move file="${project.name}.war" todir="${deploy.dir}" overwrite="true"/>
-        </target>        
+	<!--deploy -->
+	<target name="deploy" depends="war">
+		<echo>Deploy war</echo>
+		<move file="${project.name}.war" todir="${deploy.dir}" overwrite="true" />
+	</target>
 
 
         <!--deploy-ds -->
@@ -72,6 +124,5 @@
                 <copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
                 <copy file="${jdbcdriver}" todir="${deployLib.dir}" overwrite="true"/>
         </target>
-
 
 </project>
