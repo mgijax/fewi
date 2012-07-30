@@ -32,6 +32,7 @@
     <h2>Acceptance Criteria</h2>
 	<ul>
 		<li>users of the AD browser should land on new results summary page when they click on "xxx expression results"</li>
+		<li><i>Note: no change to our default sort. -Connie 7/27/12</i></li>
 		<li>landing page type = B (see <a href="ReferencesPageLinkChanges.html">notes for story 97</a>)</li>
 	</ul>
 	<p>General note for linking to expression results. There will be three style of landing page:</p>
@@ -86,22 +87,26 @@ SELECT COUNT(*) FROM gxd_expression e, closure s WHERE e._Structure_key = s._Str
 									<td><p concordion:assertTrue="true">klf 7/26/2012</p></td>
 								</tr>
 								<tr>
-									<td>TS14: conceptus</td>
-									<td>3,478</td>
+									<td><i>this case does not exist<br/>-klf 7/27/2012</i></td>
+									<td>x</td>
 									<td>a top-level term having a no directly-annotated
-										genes(?), but having child terms with annotated genes<br />may
-										have 3 direct annotations???
+										genes, but having child terms with annotated genes
 									</td>
-									<td><p concordion:assertTrue="true">klf 7/26/2012</p></td>
+									<td>x</td>
 								</tr>
 								<tr>
-									<td>TS26: conceptus</td>
-									<td>12,564</td>
-									<td>a top-level term having a no directly-annotated
-										genes(?), but having child terms with annotated genes</td>
-									<td><p concordion:assertTrue="false">AD Browser count=12,564.<br/>
-									Results set=12,574 records.<br/>
-									Probably due to <i>TS26: enteric nervous system</i> problem (10 results). klf 7/26/2012</p></td>
+									<td>TS26: haemolymphoid system</td>
+									<td>289</td>
+									<td>a mid-level term having a no directly-annotated genes,
+										but having child terms with annotated genes</td>
+									<td><p concordion:assertTrue="false">new test</p></td>
+								</tr>
+								<tr>
+									<td>TS7: extraembryonic cavity<br/>	TS6: cavity or cavity lining</td>
+									<td>0<br/>0</td>
+									<td>a mid-level term having no directly-annotated genes,
+										and having a child term with no annotated genes</td>
+									<td><p concordion:assertTrue="false">new test</p></td>
 								</tr>
 								<tr>
 									<td>TS26: integumental system</td>
