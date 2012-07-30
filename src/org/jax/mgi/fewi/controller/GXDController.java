@@ -770,25 +770,28 @@ public class GXDController {
 
 		// is detected section
 		String detected = query.getDetected();
-		if(detected.equals("Yes") || detected.equals("No") || detected.equals("Explicit-No") || detected.equals("Explicit-Yes"))
+		if(detected.equalsIgnoreCase("yes") 
+				|| detected.equalsIgnoreCase("no") 
+				|| detected.equalsIgnoreCase("explicit-no") 
+				|| detected.equalsIgnoreCase("explicit-yes"))
 		{
 			List<Filter> dFilters = new ArrayList<Filter>();
 			// all searches from the form bring back the ambiguous results
-			if(detected.equalsIgnoreCase("Yes"))
+			if(detected.equalsIgnoreCase("yes"))
 			{
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
 			}
-			else if (detected.equalsIgnoreCase("No"))
+			else if (detected.equalsIgnoreCase("no"))
 			{
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
 			}
-			else if (detected.equalsIgnoreCase("Explicit-Yes"))
+			else if (detected.equalsIgnoreCase("explicit-yes"))
 			{
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
 			}
-			else if (detected.equalsIgnoreCase("Explicit-No"))
+			else if (detected.equalsIgnoreCase("explicit-no"))
 			{
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
 			}
