@@ -1,0 +1,121 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Tissue Summary Link Changes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Tissue Summary Link Changes</h1>
+    <ul>
+        <li>User story 120, Change links to GXD summaries from tissue summary</li>
+		<li><i>Note: no change to our default sort. -Connie 7/27/12</i></li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <p>This page is reached via a link on the Marker Detail Page</p>
+	<ul>
+		<li>"All Results" link should show count and connect to our new Expression Summary page showing all results for the gene and stage+structure</li>
+		<li>"+ Results" link should show count and connect to our new Expression Summary page showing all results for the gene and stage+structure for the following:
+			<ul>
+				<li>Detected = "Yes"</li>
+				<li>Detected = "Ambiguous"</li>
+				<li>Detected = "Not specified"</li>
+			</ul>
+		</li> 
+		<li>"- Results" link should show count and connect to our new Expression Summary page showing all results for the gene and stage+structure for the following:
+			<ul>
+				<li>Detected = "No"</li>
+			</ul>
+		</li>  
+		<li>landing page type = B (see <a href="ReferencesPageLinkChanges.html">notes for story 97</a>)</li>
+	</ul>
+	<p>General note for linking to expression results. There will be three style of landing page:</p>
+	<ul>
+	<li>(A) page has result tabs at bottom and collapsed query form at top.</li>
+	<li>(B) page has result tabs at bottom and nothing at top.</li>
+	<li>(C) page has result tabs at bottom and custom header at top.</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Tissue Summary should display correct number of results for the  gene, AD term, and detection level.  <br/>Following the link from the AD Term results count on the Tissue Summary page to the corresponding Expression Results Summary page should display the same number of results.
+<!-- 			<p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Navigate to the specified  Marker Detail Page.</li>
+                <li>Follow the link to the Tissue Summary Page for the gene.</li>
+                <li>Verify the count of expression results shown for each item below.</li>
+                <li>Spot-check 10 rows or so to verify that the count of "Results: All" is equal to the sum of the counts in "Results: +" and "Results: -"</li>
+                <li>Follow the results count links and verify the results set in the Expression Summary table has the same count: <br/>
+	                <table>
+	                <tr><th>Gene</th><th>AD Term</th><th>Results: All</th><th>Results: +</th><th>Results: -</th><th>Test passes?</th></tr>
+	                <tr><td>Pax2</td><td>TS3: 4-cell stage embryo</td><td>25</td><td>0</td><td>25</td><td><p concordion:assertTrue="false">new test</p></td></tr>
+	                <tr><td>Pax2</td><td>TS12: future midbrain</td><td>9</td><td>9</td><td>0</td><td><p concordion:assertTrue="false">new test</p></td></tr>
+	                <tr><td>Pax2</td><td>TS17: central nervous system</td><td>1</td><td>1</td><td>0</td><td><p concordion:assertTrue="false">new test</p></td></tr>
+	                <tr><td>Pax2</td><td>TS28: reproductive system</td><td>3</td><td>3</td><td>0</td><td><p concordion:assertTrue="false">new test</p></td></tr>
+	                <tr><td>Shh</td><td>TS2: two-cell stage embryo</td><td>12</td><td>10</td><td>2</td><td><p concordion:assertTrue="false">new test</p></td></tr>
+	                <tr><td>Shh</td><td>TS13: hindgut diverticulum endoderm</td><td>9</td><td>6</td><td>3</td><td><p concordion:assertTrue="false">new test</p></td></tr>
+	                </table>
+                <p>KLF: Add the following as test cases and then verify results set includes the proper "Detected?" values (and check on the "Detected?" values expected for test cases above too):</p>
+                <ul>
+		    		<li>Pax2 TS28: reproductive system - 3 N/S</li>
+		    		<li>Pax2 TS17: central nervous system - 1 Ambi</li>
+		    		<li>Shh TS2: two-cell stage embryo - 9 Yes, 2 No, 1 N/S</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>
