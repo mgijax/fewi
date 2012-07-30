@@ -49,6 +49,8 @@ public class RecombinaseSummary {
 	private static String downArrow = "<img src='"
 		+ ContextLoader.getConfigBean().getProperty("WEBSHARE_URL")
 		+ "images/downArrow.gif' alt='down arrow'>";
+	
+	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
 	//-------------
 	// constructors
@@ -80,7 +82,7 @@ public class RecombinaseSummary {
     }
 
     public String getCountOfReferences() {
-    	return "<a href='/reference/allele/" + this.allele.getPrimaryID()
+    	return "<a href='"+fewiUrl+"/reference/allele/" + this.allele.getPrimaryID()
     		+ "' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
     }
 
@@ -516,11 +518,11 @@ public class RecombinaseSummary {
      * given alleleID and systemKey, and with the given label as the text
      * of the link
      */
-    private static String specificityLink (String alleleID, Integer systemKey,
+    private  String specificityLink (String alleleID, Integer systemKey,
     		String label, String tooltip) {
     	if (systemKey == null) { return label; }
     	StringBuffer sb = new StringBuffer();
-    	sb.append("<a href='/recombinase/specificity?id=");
+    	sb.append("<a href='"+fewiUrl+"/recombinase/specificity?id=");
     	sb.append(alleleID);
     	sb.append("&systemKey=");
     	sb.append(systemKey.toString());
@@ -539,10 +541,11 @@ public class RecombinaseSummary {
     	return sb.toString();
     }
 
-    /** wrapper for convenience of using an int systemKey
-     */
-    private static String specificityLink (String alleleID, int systemKey,
-    		String label, String tooltip) {
-    	return specificityLink (alleleID, new Integer(systemKey), label, tooltip);
-    }
+    // kstone: COMMENTED OUT. P.S. What is so much more convenient about int over Integer? Java does automatic conversions.
+//    /** wrapper for convenience of using an int systemKey
+//     */
+//    private  String specificityLink (String alleleID, int systemKey,
+//    		String label, String tooltip) {
+//    	return specificityLink (alleleID, new Integer(systemKey), label, tooltip);
+//    }
 }
