@@ -47,38 +47,37 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Verify the <b>Results</b> link on the GXD Literature detail page goes to the new FEWI GXD summary page via lit summary age and assay section
+    		<li>Verify the <b>Results</b> link on the GXD Literature detail page reached via GXD Expression Query goes to the new FEWI GXD summary page for lit summary age and assay section
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Pax6</b> in the Nomenclature field and press the Search button</li>
                 <li>Click on the Gene Expression Literature records link</li>
-                <li>Click on the In Situ RNA link for Age E6.5</li>
+                <li>Click on the <b>In Situ RNA link for Age E6.5</b></li>
                 <li>Click on the <b>Results</b> link on the GXD Lit detail page</li>
                 <li>Verify the link takes you to a FEWI version of the GXD Summary</li>
                 <li>Verify this GXD summary page has no header and defaults to the Assay Results tab</li>
                 <li>Verify the <b>Assays</b> link that used to follow the results link has been removed</li>
     		</ol>
     		</li>
-    		<li>Verify the Results link on the GXD Literature detail page goes to the new FEWI GXD summary page via lit summary gene and reference section
+    		<li>Verify the Results link on the GXD Literature detail page reached via GXD Expression Query Form goes to the new FEWI GXD summary page for lit summary gene and reference section
 			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>trp53</b> in the Nomenclature field and press the Search button</li>
                 <li>Click on the Gene Expression Literature records link</li>
-                <li>Click on the results link for J:148991</li>
+                <li>Click on the results link for <b>J:148991</b></li>
                 <li>Click on the <b>Results</b> link on the GXD Lit detail page</li>
                 <li>Verify the link takes you to a FEWI version of the GXD Summary</li>
                 <li>Verify this GXD summary page has no header and defaults to the Assay Results tab</li>
                 <li>Verify the <b>Assays</b> link that used to follow the results link has been removed</li>
     		</ol>
     		</li>
-    		<li>Verify the Results link on the GXD Literature detail page goes to the new FEWI GXD summary page via GXD Lit query form
+    		<li>Verify the Results link on the GXD Literature detail page reached via GXD Lit query form goes to the new FEWI GXD summary page
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the GXD Literature query form</li>
                 <li>Select <b>Age 3</b> in the Age section and press the Search button</li>
-                <li>Click on the Gene Expression Literature records link</li>
                 <li>Click on the results link for J:140465</li>
                 <li>Click on the <b>Results</b> link on the GXD Lit detail page</li>
                 <li>Verify the link takes you to a FEWI version of the GXD Summary</li>
