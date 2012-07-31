@@ -54,7 +54,8 @@ public class MarkerTissueCountSummaryRow {
   // count of ALL tissues
   public String getAll() {
     if (mtc.getAllResultCount() > 0) {
-      return "<a href=\"" + pywiUrl + "searches/expression_report.cgi?sort=Anatomical structure&returnType=assay results&_Marker_key=" + mtc.getMarkerKey()+ "&_Structure_key=" + mtc.getStructureKey()+ "\">" + mtc.getAllResultCount() + "</a>";
+      //return "<a href=\"" + pywiUrl + "searches/expression_report.cgi?sort=Anatomical structure&returnType=assay results&_Marker_key=" + mtc.getMarkerKey()+ "&_Structure_key=" + mtc.getStructureKey()+ "\">" + mtc.getAllResultCount() + "</a>";
+      return "<a href=\""+fewiUrl+"/gxd/summary?markerMgiId="+mtc.getMarkerId()+"&structureKey="+mtc.getStructureKey()+"\">"+mtc.getAllResultCount() +"</a>";
     }
     else {
       return "0";
@@ -65,7 +66,8 @@ public class MarkerTissueCountSummaryRow {
   // count of tissues which this gene were detected
   public String getDetected() {
     if (mtc.getDetectedResultCount() > 0) {
-      return "<a href=\"" + pywiUrl + "searches/expression_report.cgi?sort=Anatomical%20structure&expressed=1&returnType=assay%20results&_Marker_key=" + mtc.getMarkerKey()+ "&_Structure_key=" + mtc.getStructureKey() + "\">" + mtc.getDetectedResultCount() + "</a>";
+      //return "<a href=\"" + pywiUrl + "searches/expression_report.cgi?sort=Anatomical%20structure&expressed=1&returnType=assay%20results&_Marker_key=" + mtc.getMarkerKey()+ "&_Structure_key=" + mtc.getStructureKey() + "\">" + mtc.getDetectedResultCount() + "</a>";
+      return "<a href=\""+fewiUrl+"/gxd/summary?markerMgiId="+mtc.getMarkerId()+"&structureKey="+mtc.getStructureKey()+"&detected=Yes\">"+mtc.getDetectedResultCount() +"</a>";
     }
     else {
       return "0";
@@ -76,7 +78,8 @@ public class MarkerTissueCountSummaryRow {
   // count of tissues which this gene were NOT detected
   public String getNotDetected() {
     if (mtc.getNotDetectedResultCount() > 0) {
-      return "<a href=\"" + pywiUrl + "searches/expression_report.cgi?sort=Anatomical%20structure&expressed=0&returnType=assay%20results&_Marker_key=" + mtc.getMarkerKey()+ "&_Structure_key=" + mtc.getStructureKey() + "\">" + mtc.getNotDetectedResultCount() + "</a>";
+      //return "<a href=\"" + pywiUrl + "searches/expression_report.cgi?sort=Anatomical%20structure&expressed=0&returnType=assay%20results&_Marker_key=" + mtc.getMarkerKey()+ "&_Structure_key=" + mtc.getStructureKey() + "\">" + mtc.getNotDetectedResultCount() + "</a>";
+      return "<a href=\""+fewiUrl+"/gxd/summary?markerMgiId="+mtc.getMarkerId()+"&structureKey="+mtc.getStructureKey()+"&detected=Explicit-No\">"+mtc.getNotDetectedResultCount() +"</a>";
     }
     else {
       return "0";
