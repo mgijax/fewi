@@ -36,17 +36,17 @@ public class BatchSummaryRow {
 
 	// encapsulated row object
 	private BatchMarkerId batchMarkerId;
-	
+
 	private BatchQueryForm query = null;
 
 	// config values
     private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
     private String javawiUrl = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
     private String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
-    
+
     private static String urlPattern = "<a href='%s' target='_blank'>%s</a>";
     private static String noWrap = "<span style='white-space:nowrap;'>%s</span>";
-    
+
     private List<BatchMarkerGoAnnotation> goAnnots = null;
     private List<BatchMarkerMpAnnotation> mpAnnots = null;
     private List<Annotation> omimAnnots = null;
@@ -77,9 +77,9 @@ public class BatchSummaryRow {
     public String getMarkerId() {
     	if (batchMarkerId.getMarker() != null){
     		if (query != null && !query.getNomenclature()){
-        		return String.format(urlPattern, 
-        				fewiUrl + "marker/" + batchMarkerId.getMarker().getPrimaryID(), 
-        				batchMarkerId.getMarker().getPrimaryID());   			
+        		return String.format(urlPattern,
+        				fewiUrl + "marker/" + batchMarkerId.getMarker().getPrimaryID(),
+        				batchMarkerId.getMarker().getPrimaryID());
     		} else {
     			return batchMarkerId.getMarker().getPrimaryID();
     		}
@@ -89,8 +89,8 @@ public class BatchSummaryRow {
     }
     public String getSymbol() {
     	if (batchMarkerId.getMarker() != null && query.getNomenclature()){
-    		return String.format(urlPattern, 
-    				fewiUrl + "marker/" + batchMarkerId.getMarker().getPrimaryID(), 
+    		return String.format(urlPattern,
+    				fewiUrl + "marker/" + batchMarkerId.getMarker().getPrimaryID(),
     				batchMarkerId.getMarker().getSymbol());
     	} else {
     		return "";
@@ -111,12 +111,12 @@ public class BatchSummaryRow {
     	}
     }
     public String getChromosome() {
-    	if (batchMarkerId.getMarker() != null && 
+    	if (batchMarkerId.getMarker() != null &&
     			batchMarkerId.getMarker().getPreferredCentimorgans() != null){
     		if (batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome() != null){
     			return batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome();
     		}
-    		
+
     	}
     	return "";
     }
@@ -147,7 +147,7 @@ public class BatchSummaryRow {
     	}
     	return null;
     }
-    
+
     public String getEnsemblIds() {
     	List<String> l = new ArrayList<String>();
     	if (query.getEnsembl()){
@@ -155,7 +155,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(this.getId(l), "<br/>");
     }
-    
+
     public String getEntrezIds() {
     	List<String> l = new ArrayList<String>();
     	if (query.getEntrez()){
@@ -163,7 +163,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(this.getId(l), "<br/>");
     }
-    
+
     public String getVegaIds() {
     	List<String> l = new ArrayList<String>();
     	if (query.getVega()){
@@ -171,7 +171,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(this.getId(l), "<br/>");
     }
-    
+
     public String getGoIds(){
     	if (!query.getGo()){
     		return "";
@@ -187,8 +187,8 @@ public class BatchSummaryRow {
 			}
     	}
     	return StringUtils.join(go, "<br/>");
-    } 
-    
+    }
+
     public String getGoTerms(){
     	if (!query.getGo()){
     		return "";
@@ -204,8 +204,8 @@ public class BatchSummaryRow {
 			}
     	}
     	return StringUtils.join(go, "<br/>");
-    } 
-    
+    }
+
     public String getGoCodes(){
     	if (!query.getGo()){
     		return "";
@@ -221,8 +221,8 @@ public class BatchSummaryRow {
 			}
     	}
     	return StringUtils.join(go, "<br/>");
-    } 
-    
+    }
+
     public String getMpIds(){
     	if (!query.getMp()){
     		return "";
@@ -239,7 +239,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(mp, "<br/>");
     }
-    
+
     public String getMpTerms(){
     	if (!query.getMp()){
     		return "";
@@ -252,15 +252,15 @@ public class BatchSummaryRow {
     	String text, url;
     	if (mpAnnots != null && mpAnnots.size() > 0){
     		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
-    			text = annotation.getMpTerm() + " (%s)"; 
-    			url = javawiUrl + String.format("WIFetch?page=mpAnnotSummary&markerKey=%d&id=%s", 
+    			text = annotation.getMpTerm() + " (%s)";
+    			url = javawiUrl + String.format("WIFetch?page=mpAnnotSummary&markerKey=%d&id=%s",
     					marker.getMarkerKey(), annotation.getMpId());
     			mp.add(String.format(noWrap, String.format(text, String.format(urlPattern, url, "details"))));
 			}
     	}
     	return StringUtils.join(mp, "<br/>");
     }
-    
+
     public String getOmimIds(){
     	if (!query.getOmim()){
     		return "";
@@ -277,7 +277,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(omim, "<br/>");
     }
-    
+
     public String getOmimTerms(){
     	Marker marker = batchMarkerId.getMarker();
     	List<String> omim = new ArrayList<String>();
@@ -293,7 +293,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(omim, "<br/>");
     }
-    
+
     public String getAlleleIds(){
     	List<String> alleleOutput = new ArrayList<String>();
     	Marker marker = batchMarkerId.getMarker();
@@ -308,7 +308,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(alleleOutput, "<br/>");
     }
-    
+
     public String getAlleleSymbols(){
     	List<String> alleleOutput = new ArrayList<String>();
     	Marker marker = batchMarkerId.getMarker();
@@ -326,14 +326,14 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(alleleOutput, "<br/>");
     }
-    
+
     public String getExpressionStructure(){
     	if (!query.getExp()){
     		return "";
-    	}    	
+    	}
     	List<String> structures = new ArrayList<String>();
     	Marker marker = batchMarkerId.getMarker();
-    	
+
     	if (marker != null  && expCounts == null){
     		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
     	}
@@ -345,36 +345,36 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(structures, "<br/>");
     }
-    
+
     public String getExpressionResultCount(){
     	if (!query.getExp()){
     		return "";
-    	}    	
+    	}
     	List<String> structures = new ArrayList<String>();
     	Marker marker = batchMarkerId.getMarker();
-    	
+
     	if (marker != null  && expCounts == null){
     		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
     	}
-    	
+
     	if (expCounts != null){
     		String url;
 	    	for (MarkerTissueCount tissue : expCounts) {
-    			url = wiUrl + String.format("searches/expression_report.cgi?Anatomical structure&returnType=assay results&_Marker_key=%d&_Structure_key=%d", 
-    					marker.getMarkerKey(), tissue.getStructureKey());
+    			url = fewiUrl + String.format("gxd/summary?markerMgiId=%s&structureKey=%d",
+    					marker.getPrimaryID(), tissue.getStructureKey());
     			structures.add(String.format(urlPattern, url, tissue.getAllResultCount()));
 			}
     	}
     	return StringUtils.join(structures, "<br/>");
     }
-    
+
     public String getExpressionDetectedCount(){
     	if (!query.getExp()){
     		return "";
-    	}    	
+    	}
     	List<Integer> structures = new ArrayList<Integer>();
     	Marker marker = batchMarkerId.getMarker();
-    	
+
     	if (marker != null  && expCounts == null){
     		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
     	}
@@ -386,14 +386,14 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(structures, "<br/>");
     }
-    
+
     public String getExpressionNotDetectedCount(){
     	if (!query.getExp()){
     		return "";
-    	}    	
+    	}
     	List<Integer> structures = new ArrayList<Integer>();
     	Marker marker = batchMarkerId.getMarker();
-    	
+
     	if (marker != null  && expCounts == null){
     		expCounts = batchMarkerId.getMarker().getMarkerTissueCounts();
     	}
@@ -405,7 +405,7 @@ public class BatchSummaryRow {
     	}
     	return StringUtils.join(structures, "<br/>");
     }
-    
+
     public String getRefsnpIds(){
     	List<String> refSnpIds = new ArrayList<String>();
     	String url = javawiUrl + "WIFetch?page=snpDetail&id=%s";
@@ -417,22 +417,22 @@ public class BatchSummaryRow {
 			}
     	}
     	return StringUtils.join(refSnpIds, "<br/>");
-    }    
-    
+    }
+
     public String getRefseqIds(){
     	List<String> l = new ArrayList<String>();
     	l.add(DBConstants.PROVIDER_REFSEQ);
-    	l.add("Sequence DB");   	
+    	l.add("Sequence DB");
     	return StringUtils.join(this.getId(l), "<br/>");
     }
-    
+
     public String getUniprotIds(){
     	List<String> l = new ArrayList<String>();
     	l.add(DBConstants.PROVIDER_SWISSPROT);
     	l.add(DBConstants.PROVIDER_TREMBL);
     	return StringUtils.join(this.getId(l), "<br/>");
     }
-    
+
     private List<String> getId(List<String> logicalDb){
     	List<String> idList = new ArrayList<String>();
     	if (batchMarkerId.getMarker() != null){
@@ -442,8 +442,8 @@ public class BatchSummaryRow {
     				for (String ldb : logicalDb) {
     					if (id.getLogicalDB().equals(ldb)){
     						idList.add(id.getAccID());
-    					}	
-					}					
+    					}
+					}
 				}
     		}
     	}
