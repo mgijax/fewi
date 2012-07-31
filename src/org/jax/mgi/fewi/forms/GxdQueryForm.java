@@ -33,7 +33,8 @@ public class GxdQueryForm {
     private String structure = "";
     private String structureID = "";
     private String structureKey = "";
-    private String location = "";
+    private String annotatedStructureKey = "";
+	private String location = "";
     private String detected = ANY_DETECTED;
     private String annotationId = "";
     private String isWildType = "";
@@ -265,6 +266,12 @@ public class GxdQueryForm {
 	}
 	public void setIsWildType(String isWildType) {
 		this.isWildType = isWildType;
+	}
+    public String getAnnotatedStructureKey() {
+		return annotatedStructureKey;
+	}
+	public void setAnnotatedStructureKey(String annotatedStructureKey) {
+		this.annotatedStructureKey = annotatedStructureKey;
 	}
 	@Override
 	public String toString() {

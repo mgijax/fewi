@@ -103,6 +103,10 @@ public class SolrGxdResultHunter extends SolrHunter
          propertyMap.put(SearchConstants.STRUCTURE_KEY,
            		new SolrPropertyMapper(GxdResultFields.STRUCTURE_KEY));
 
+         // annotated structure key (does not include children)
+         propertyMap.put(GxdResultFields.ANNOTATED_STRUCTURE_KEY,
+           		new SolrPropertyMapper(GxdResultFields.ANNOTATED_STRUCTURE_KEY));
+         
          // structure ID
          propertyMap.put(SearchConstants.STRUCTURE_ID,
            		new SolrPropertyMapper(GxdResultFields.STRUCTURE_ID));

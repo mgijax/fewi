@@ -594,7 +594,11 @@ public class GXDController {
 		if (!query.getDetected().equals(GxdQueryForm.ANY_DETECTED)
 				|| query.getIsWildType().equals("true")
 				|| (query.getMutatedIn()!=null && !query.getMutatedIn().equals(""))
-				|| (query.getStructure()!=null && !query.getStructure().equals("")))
+				|| (query.getStructure()!=null && !query.getStructure().equals(""))
+				|| (query.getStructureKey()!=null && !query.getStructureKey().equals(""))
+				|| (query.getStructureID()!=null && !query.getStructureID().equals(""))
+				|| (query.getAnnotatedStructureKey()!=null && !query.getAnnotatedStructureKey().equals(""))
+				|| (query.getJnum()!=null && !query.getJnum().equals("")))
 		{
 			logger.debug("Form fields have been entered that do not apply to gxd lit query.");
 			// return null if we have no valid mapped query to make
@@ -735,11 +739,10 @@ public class GXDController {
 		// are added to queryList.
 
 		// prep form parameter variables
-		String nomenclature = query.getNomenclature();
-		String annotationId = query.getAnnotationId();
 		String markerMgiId = query.getMarkerMgiId();
 		String jnum = query.getJnum();
 		String structureKey = query.getStructureKey();
+		String annotatedStructureKey = query.getAnnotatedStructureKey();
 		String structureID = query.getStructureID();
 
 		if(structureKey !=null && !structureKey.equals("")) {
@@ -750,6 +753,10 @@ public class GXDController {
 			Filter structureIdFilter = new Filter(SearchConstants.STRUCTURE_ID, structureID);
 			queryFilters.add(structureIdFilter);
 		}
+		if(annotatedStructureKey !=null && !annotatedStructureKey.equals("")) {
+			Filter annotatedStructureKeyFilter = new Filter(GxdResultFields.ANNOTATED_STRUCTURE_KEY, annotatedStructureKey);
+			queryFilters.add(annotatedStructureKeyFilter);
+		}
 		if(jnum !=null && !jnum.equals("")) {
 			Filter jnumFilter = new Filter(SearchConstants.REF_ID, jnum);
 			queryFilters.add(jnumFilter);
@@ -758,6 +765,9 @@ public class GXDController {
 			Filter markerIDFilter = new Filter(SearchConstants.MRK_ID, markerMgiId);
 			queryFilters.add(markerIDFilter);
 		}
+
+		String nomenclature = query.getNomenclature();
+		String annotationId = query.getAnnotationId();
 		if(nomenclature!=null && !nomenclature.equals("")) {
 			Filter nomenFilter = generateNomenFilter(SearchConstants.MRK_NOMENCLATURE, nomenclature);
 			if(nomenFilter != null) queryFilters.add(nomenFilter);
