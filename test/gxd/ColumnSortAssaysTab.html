@@ -1,0 +1,228 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Column Sort Assay Results Tab</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Column Sort Assays Tab</h1>
+    <ul>
+        <li>User story 86, Column Sort Assays Tab</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+	<li>data are sortable by:
+	<ul>
+		<li>assay type</li>
+		<li>gene</li>
+		<li>reference</li>
+	</ul>
+	(each has more layers)
+	</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+	<h2>Info</h2>
+	<p>Default sort order for results set on the "Assays" tab is:
+	<ul>
+		<li>Gene symbol
+		<ul>
+			<li>Assay Type
+			<ul>
+				<li>Reference</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+	</ul>
+	</p>
+	<p>All Assay Type sorting occurs in this order:</p>
+ 	<ol>
+		<li>Immunohistochemistry</li>
+		<li>RNA in situ</li>
+		<li>In situ reporter (knock in)</li>
+		<li>Northern blot</li>
+		<li>Western blot</li>
+		<li>RT-PCR</li>
+		<li>RNase protection</li>
+		<li>Nuclease S1</li>
+	</ol>
+	<p>Gene symbol is always sorted by MGI's "smart-alpha" algorithm (where embedded numbers are treated numerically, not ASCII-sorted).</p>
+	<p>Reference is always sorted alphabetically by the mini-citation text and disregards J# in the sort algorithm.</p>
+
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+			<li>Sorting icons appear in the column headers for Gene, Assay Type and Reference.
+    		<p concordion:assertTrue="false">new test</p>
+	    		<ol>
+	                <li>Open GXD Query Form</li>
+	                <li>Search for <b>Afp</b></li>
+	                <li>Click the &quot;Assays&quot; tab</li>
+	                <li>Verify the "Genes" column header displays a black, down-pointing triangle icon.</li>
+	                <li>Verify the "Assay Type" and "Reference" column headers display gray up-pointing and down-pointing triangle icons.</li>
+				</ol>
+			</li>
+    		<li>Clicking "Assay Type" header performs multi-column sort:
+    		<p concordion:assertTrue="false">new test</p>
+    			<ul>
+    				<li>Assay Type
+    				<ul>
+    					<li>Gene symbol
+    					<ul>
+    						<li>Reference</li>
+    					</ul>
+    					</li>
+    				</ul>
+    				</li>
+    			</ul>
+	    		<ol>
+	                <li>Open GXD Query Form</li>
+	                <li>Search for <b>Afp</b></li>
+	                <li>Click the &quot;Assays&quot; tab</li>
+	                <li>Click <b>"Assay Type"</b> header</li>
+	                <li>Verify <b>data are returned in the order above</b>.</li>
+	    		</ol>
+    		</li>
+    		<li>Clicking "Assay Type" header a second time reverses the multi-column sort such that the entire results table is reversed (the bottom row becomes the top row, etc.).
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+    			<li>With the results set above still displayed, <b>navigate to the last page of results</b>.</li>
+    			<li>Click the <b>"Assay Type"</b> header</li>
+    			<li>Verify that the <b>first rows of the table are now the last rows</b> of the table</li>
+    			<li>Verify that the <b>last rows of the table are now the first rows</b> of the table</li>
+    		</ol>
+    		</li>
+    		<li>Clicking "Reference" header performs multi-column sort:
+    		<p concordion:assertTrue="false">new test</p>
+    			<ul>
+    				<li>Reference
+    				<ul>
+    					<li>Gene symbol
+    					<ul>
+    						<li>Assay Type</li>
+    					</ul>
+    					</li>
+    				</ul>
+    				</li>
+    			</ul>
+	    		<ol>
+	                <li>Open GXD Query Form</li>
+	                <li>Search for <b>Pax*</b> in the gene field <i>(Tests multiple genes in same reference.)</i></li>
+	                <li>Click the &quot;Assays&quot; tab</li>
+	                <li>Click <b>"Reference"</b> header</li>
+	                <li>Verify <b>data are returned in the following order</b>
+	    			<ul>
+	    				<li>Reference
+	    				<ul>
+	    					<li>Gene symbol
+	    					<ul>
+	    						<li>Assay Type</li>
+	    					</ul>
+	    					</li>
+	    				</ul>
+	    				</li>
+	    			</ul>
+	                </li>
+	                <li>Open GXD Query Form</li>
+	                <li>Search for <b>agouti</b> in the gene field <i>(Necessary for testing multiple assay types in same reference.)</i></li>
+	                <li>Click the &quot;Assays&quot; tab</li>
+	                <li>Click <b>"Reference"</b> header</li>
+	                <li>Verify <b>data are returned in the following order</b>
+	    			<ul>
+	    				<li>Reference
+	    				<ul>
+	    					<li>Gene symbol
+	    					<ul>
+	    						<li>Assay Type</li>
+	    					</ul>
+	    					</li>
+	    				</ul>
+	    				</li>
+	    			</ul>
+	                </li>
+	    		</ol>
+    		</li>
+    		<li>Clicking "Gene" header returns to default sort:
+    		<p concordion:assertTrue="false">new test</p>
+	    		<ol>
+	                <li>Open GXD Query Form</li>
+	                <li>Search for <b>Pax*</b> in the gene field <i>(Necessary for testing multiple assay types in same gene.)</i></li>
+	                <li>Click the &quot;Assays&quot; tab</li>
+	                <li>Click <b>"Reference"</b> header</li>
+	                <li>Verify <b>data are returned in the same order described in the test above</b></li>
+	                <li>Click <b>"Gene"</b> header</li>
+	                <li>Verify <b>data are returned in the following order</b>
+	    			<ul>
+	    				<li>Gene symbol
+	    				<ul>
+	    					<li>Assay Type
+	    					<ul>
+	    						<li>Reference</li>
+	    					</ul>
+	    					</li>
+	    				</ul>
+	    				</li>
+	    			</ul>
+	                </li>
+	    		</ol>
+    		</li>
+    		<li>Clicking "Assay Details" column header does not resort the data.
+    		<p concordion:assertTrue="false">new test</p>
+	    		<ol>
+	                <li>Open GXD Query Form</li>
+	                <li>Search for <b>Pax2</b></li>
+	                <li>Click the &quot;Assays&quot; tab</li>
+	                <li>Click <b>"Assay Details"</b> header</li>
+	                <li>Verify the sort order for the table has not changed</li>
+	    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>None
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>
