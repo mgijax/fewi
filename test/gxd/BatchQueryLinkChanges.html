@@ -12,7 +12,7 @@
 	p {margin:2px 0px;}
 </style>
 
-    <title>Tissue Summary Link Changes</title>
+    <title>Batch Query Link Changes</title>
 </head>
 
 <body>
@@ -21,17 +21,15 @@
 	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
-<div id="maintitle">
-    <h1>Tissue Summary Link Changes</h1>
+<h1>Batch Query Link Changes</h1>
     <ul>
-        <li>User story 120, Change links to GXD summaries from tissue summary</li>
+        <li>User story 95, Change links to GXD summaries from batch query</li>
 		<li><i>Note: no change to our default sort. -Connie 7/27/12</i></li>
     </ul>
-</div>
+
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
-    <p>This page is reached via a link on the Marker Detail Page</p>
 	<ul>
 		<li>"All Results" link should show count and connect to our new Expression Summary page showing all results for the gene and stage+structure</li>
 		<li>"+ Results" link should show count for the following:
@@ -68,13 +66,16 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Tissue Summary should display correct number of results for the  gene, AD term, and detection level.  <br/>Following the link from the AD Term results count on the Tissue Summary page to the corresponding Expression Results Summary page should display the same number of results.
+    		<li><i>(Note: these structure counts should NOT include child terms.) </i>
+    		Batch Query summary should display correct number of results for the gene, AD term, and detection level.  <br/>Following the link from the AD Term results count on the Batch Query summary page to the corresponding Expression Results Summary page should display the same number of results.
 <!-- 			<p concordion:assertTrue="false">new test</p> -->
     		<ol>
-                <li>Navigate to the specified  Marker Detail Page.</li>
-                <li>Follow the link to the Tissue Summary Page for the gene.</li>
+                <li>Open the Batch Query.</li>
+                <li>Enter <b>Pax2, Shh</b> in the ID/Symbols input field and select <b>Gene Expression</b> in the Additional Output options and submit the query.</li>
                 <li>Verify the count of expression results shown for each item below.</li>
-                <li>Spot-check 10 rows or so to verify that the count of "Results: All" is equal to the sum of the counts in "Results: +" and "Results: -"</li>
+                <li>Spot-check 10 rows or so to verify that the count of "Results: All" is equal to the sum of the counts in "Results: +" and "Results: -"<br/>
+                <p concordion:assertTrue="false">new test</p>
+                </li>
                 <li>Follow the results count links and verify the results set in the Expression Summary table has the same count: <br/>
 	                <table>
 								<tr>
