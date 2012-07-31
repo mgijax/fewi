@@ -318,7 +318,7 @@ function popupHelp(help_cat){
 	    <li>Wide phenotypic variation exists due to homozygotes vs. heterozygotes and different strain backgrounds.</li></ul>\
 	    <b>Click (details) after any phenotype term ...</b><ul><li>to see genotypes and additional annotation information.</li></ul>";
 	// text for expression help popup
-	var exp_help = "Please note that some of these results may have been obtained from mutant specimens.";  
+	var exp_help = "Please note that some of these results may have been obtained from mutant specimens.  The detected counts include also specimens for which detected = ambiguous or not specified (as well as present). ";  
 	 
 	var help_text = '';
 	if (help_cat == 'mp') {

@@ -360,7 +360,7 @@ public class BatchSummaryRow {
     	if (expCounts != null){
     		String url;
 	    	for (MarkerTissueCount tissue : expCounts) {
-    			url = fewiUrl + String.format("gxd/summary?markerMgiId=%s&structureKey=%d",
+    			url = fewiUrl + String.format("gxd/summary?markerMgiId=%s&annotatedStructureKey=%d",
     					marker.getPrimaryID(), tissue.getStructureKey());
     			structures.add(String.format(urlPattern, url, tissue.getAllResultCount()));
 			}
