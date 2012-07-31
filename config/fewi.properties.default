@@ -31,7 +31,7 @@ solr.server1.url=http://mgi-fewi1.jax.org:9995/solr/
 #-------------------------------------------------------------------------------
 
 # directory in which to find the standard mgi template
-#template.dir=/home/<user>/devwi/mgiconfig/web/
+#template.dir=/Users/kstone/dev/mgiconfig/web/
 template.dir=/usr/local/mgi/live/mgiconfig/web/
 
 # data sources
@@ -65,6 +65,9 @@ solr.markerAnnotation.url=${solr.server1.url}markerAnnotation/
 solr.creAlleleSystem.url=${solr.server1.url}creAlleleSystem/
 solr.creAssayResult.url=${solr.server1.url}creAssayResult/
 solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
+solr.structure_ac.url=${solr.server1.url}structureAC/
+solr.vocab_term_ac.url=${solr.server1.url}vocabTermAC/
+solr.gxd_result.url=${solr.server1.url}gxdResult/
 
 # solr config parameters
 solr.soTimeout=70000
