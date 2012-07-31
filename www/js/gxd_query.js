@@ -731,7 +731,7 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
     // Set the responseType
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
-    oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym"]};
+    oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym"]};
     //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
 
@@ -762,8 +762,9 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
     	 
     	   // some other piece of data defined by schema
     	   var synonym = oResultData[1];
-
+    	   var isStrictSynonym = oResultData[2];
     	  var value = synonym;
+    	  if(isStrictSynonym) value += " <span style=\"font-size:1em; font-style:normal;\">[synonym]</span>";
     	  return (value);
     	}; 
     	
