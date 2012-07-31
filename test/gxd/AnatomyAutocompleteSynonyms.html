@@ -1,0 +1,99 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Synonyms-handling in Anatomy Automplete List</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Synonyms-handling in Anatomy Automplete List</h1>
+    <ul>
+        <li>User story 48, Change anatomy autocomplete handling of synonyms</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>For synonyms in the autocomplete, display the text of the synonym and "[synonym]" after it</li>
+		<li>Do this if it is only a synonym. If the text is a real term somewhere in the anatomy and a synonym elsewhere, don't display "[synonym]"</li>
+		<li>If the user selects a synonym in the autocomplete, display the synonym in the query field and search for terms/synonyms that contain all the tokens from that synonym. (Do not display the text "[synonym]".)</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Text in the autocomplete list that corresponds to one or more synonyms but no primary terms should display [synonym] next to the text.
+<!-- 			<p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Open the GXD Query Form.</li>
+                <li>In the Anatomical Structures field, enter <b>heart muscle</b>.</li>
+                <li>Verify that <b>[synonym]</b> appears next to the text &quot;heart muscle&quot;.</li>
+    		</ol>
+    		</li>
+    		<li>Text in the autocomplete list that corresponds to one or more synonyms and also one or more primary terms should NOT display [synonym] next to the text.
+<!-- 			<p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Open the GXD Query Form.</li>
+                <li>In the Anatomical Structures field, enter <b>kidney</b>.</li>
+                <li>Verify that <b>[synonym] DOES NOT appear</b> next to the text &quot;kidney&quot;. <i>(A primary term in TS 28 but a synonym in other Stages.)</i></li>
+    		</ol>
+    		</li>
+    		<li>Text in the autocomplete list that corresponds to one or more primary terms should NOT display [synonym] next to the text.
+<!-- 			<p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Open the GXD Query Form.</li>
+                <li>In the Anatomical Structures field, enter <b>cardiac muscle</b>.</li>
+                <li>Verify that <b>[synonym] DOES NOT appear</b> next to the text &quot;cardiac muscle&quot;.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>
