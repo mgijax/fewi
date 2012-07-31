@@ -72,6 +72,9 @@
     		<ol>
                 <li>Open the Batch Query.</li>
                 <li>Enter <b>Pax2, Shh</b> in the ID/Symbols input field and select <b>Gene Expression</b> in the Additional Output options and submit the query.</li>
+                <li>Verify the &quot;Caveat  &amp; Help&quot; tooltip now says: &quot;Please note that some of these results may have been obtained from mutant specimens.  The detected counts include also specimens for which detected = ambiguous or not specified (as well as present).&quot;<br/>
+                <p concordion:assertTrue="false">new test</p>
+                </li>
                 <li>Verify the count of expression results shown for each item below.</li>
                 <li>Spot-check 10 rows or so to verify that the count of "Results: All" is equal to the sum of the counts in "Results: +" and "Results: -"<br/>
                 <p concordion:assertTrue="false">new test</p>
