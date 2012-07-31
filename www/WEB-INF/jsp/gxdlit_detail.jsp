@@ -39,25 +39,27 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 <jsp:include page="marker_header.jsp"></jsp:include><br>
-<!-- header table -->
-<table class="summaryHeader">
-<tbody><tr>
+
+<table class="summaryHeader"><tbody>
+  <tr>
   <td class="summaryHeaderCat1">
        <div>Reference</div>
   </div></td>
   <td class="summaryHeaderData1">
 	<a href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a> ${reference.longCitation}
   </td>
-</tr>
-</tbody></table><br>
+  </tr></tbody>
+</table><br>
 
-<c:if test="${record.isFullyCoded}"> <b>Detailed expression data for these assays:</b> 
-${record.fullyCodedResultCount} 
-<a href="${configBean.WI_URL}searches/expression_report.cgi?_Index_key=${record.indexKey}&returnType=assay results&sort=printName">
-  result<c:if test="${record.fullyCodedResultCount > 1}">s</c:if></a> in 
-${record.fullyCodedAssayCount} 
-<a href="${configBean.WI_URL}searches/expression_report.cgi?_Index_key=${record.indexKey}&returnType=assays&sort=assayType">assay<c:if test="${record.fullyCodedAssayCount > 1}">s</c:if></a><br><br></c:if>
+<c:if test="${record.isFullyCoded}"> 
+  <b>Detailed expression data for these assays:</b> 
+  ${record.fullyCodedResultCount} 
+  <a href="${configBean.FEWI_URL}gxd/summary?markerMgiId=${marker.primaryID}&jnum=${reference.jnumID}">
+    result<c:if test="${record.fullyCodedResultCount > 1}">s</c:if>
+  </a>
+</c:if>
 
+<br><br>
 <img src="${configBean.WEBSHARE_URL}/images/redball.gif" alt="red ball"> Indicates gene expression was analyzed but not necessarily detected.
 
 <c:if test="${not empty pairTable}">
@@ -81,6 +83,9 @@ ${record.fullyCodedAssayCount}
 	</table>
 </c:if>
 <br>
-<c:if test="${not empty record.comments}"><b>Comments:</b> ${record.comments}</c:if>
+
+<c:if test="${not empty record.comments}">
+  <b>Comments:</b> ${record.comments}
+</c:if>
 
 ${templateBean.templateBodyStopHtml}
