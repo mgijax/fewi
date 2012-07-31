@@ -12,12 +12,14 @@ public class StructureACResult implements UniqueableObject
 {
 	private String structure;
 	private String synonym;
+	private boolean isStrictSynonym;
 	
 	public StructureACResult(){}
-	public StructureACResult(String structure,String synonym)
+	public StructureACResult(String structure,String synonym,boolean isStrictSynonym)
 	{
 		this.structure=structure;
 		this.synonym=synonym;
+		this.isStrictSynonym=isStrictSynonym;
 	}
 	
 	public String getStructure()
@@ -32,6 +34,14 @@ public class StructureACResult implements UniqueableObject
 	public void setSynonym(String synonym)
 	{ this.synonym = synonym; }
 	
+	public boolean getIsStrictSynonym()
+	{
+		return isStrictSynonym;
+	}
+	public void setIsStrictSynonym(boolean isStrictSynonym)
+	{
+		this.isStrictSynonym=isStrictSynonym;
+	}
 	public Object getUniqueKey()
 	{
 		return this.synonym.trim();
