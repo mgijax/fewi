@@ -1046,13 +1046,13 @@ public class GXDController {
 
         // expected sort values
         if ("gene".equalsIgnoreCase(sortRequested)){
-            sortRequested = SortConstants.GXD_GENE;
+            sortRequested = GxdResultFields.A_BY_SYMBOL;
         } else if ("assayType".equalsIgnoreCase(sortRequested)){
             sortRequested = GxdResultFields.A_BY_ASSAY_TYPE;
         } else if ("reference".equalsIgnoreCase(sortRequested)){
             sortRequested = SortConstants.GXD_REFERENCE;
         } else {
-            sortRequested = SortConstants.GXD_GENE;
+            sortRequested = GxdResultFields.A_BY_SYMBOL;
 		}
 
         String dirRequested  = request.getParameter("dir");
