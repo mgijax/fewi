@@ -151,6 +151,7 @@
 	    					</li>
 	    				</ul>
 	    				</li>
+
 	    			</ul>
 	                </li>
 	                <li>Open GXD Query Form</li>
@@ -206,6 +207,15 @@
 	                <li>Verify the sort order for the table has not changed</li>
 	    		</ol>
     		</li>
+    	    <li>Verify proper sort of assay type when searching an anatomy term
+	    	<p concordion:assertTrue="false">new test</p>		
+	    		 <ol>
+	                <li>Open GXD Query Form</li>
+	                <li>Search for <b>limb</b> in the Anatomical Structures field</li>
+	                <li>Click the &quot;Assays&quot; tab</li>
+	                <li>Click the <b>"Assay Type"</b> header</li>
+	                <li>Verify <b>data are returned in the order above</b>. Look at the marker entries for <b>Bglap</b> to confirm the authors are sorted correctly</li>
+	    		 </ol>
 		</ol>
 	</div>
 	<div id="auto">
