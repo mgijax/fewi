@@ -780,9 +780,9 @@ public class GXDController {
 
 		// is detected section
 		String detected = query.getDetected();
-		if(detected.equalsIgnoreCase("yes") 
-				|| detected.equalsIgnoreCase("no") 
-				|| detected.equalsIgnoreCase("explicit-no") 
+		if(detected.equalsIgnoreCase("yes")
+				|| detected.equalsIgnoreCase("no")
+				|| detected.equalsIgnoreCase("explicit-no")
 				|| detected.equalsIgnoreCase("explicit-yes"))
 		{
 			List<Filter> dFilters = new ArrayList<Filter>();
@@ -1032,33 +1032,41 @@ public class GXDController {
 	 */
 	private List<Sort> parseAssaySorts(HttpServletRequest request) {
 
-		List<Sort> sorts = new ArrayList<Sort>();
+        logger.debug("->parseAssayResultsSorts started");
 
-		String s = request.getParameter("sort");
-		String d = request.getParameter("dir");
-		boolean desc = false;
+        List<Sort> sorts = new ArrayList<Sort>();
 
-		if ("location".equalsIgnoreCase(s)){
-			// TODO: Add location sort
-			s = SortConstants.BY_DEFAULT;
-		} else if ("type".equalsIgnoreCase(s)){
-			// TODO: Add marker type sort
-			s = SortConstants.BY_DEFAULT;
-		} else if ("score".equalsIgnoreCase(s)){
-			s = "score";
-		} else {
-			s = GxdResultFields.A_BY_SYMBOL;
+        // retrieve requested sort order; set default if not supplied
+        String sortRequested = request.getParameter("sort");
+
+        // empty
+        if (sortRequested == null) {
+            return sorts;
+        }
+
+        // expected sort values
+        if ("gene".equalsIgnoreCase(sortRequested)){
+            sortRequested = SortConstants.GXD_GENE;
+        } else if ("assayType".equalsIgnoreCase(sortRequested)){
+            sortRequested = SortConstants.GXD_ASSAY_TYPE;
+        } else if ("reference".equalsIgnoreCase(sortRequested)){
+            sortRequested = SortConstants.GXD_REFERENCE;
+        } else {
+            sortRequested = SortConstants.GXD_GENE;
 		}
 
-		if("desc".equalsIgnoreCase(d)){
-			desc = true;
-		}
+        String dirRequested  = request.getParameter("dir");
+        boolean desc = false;
+        if("desc".equalsIgnoreCase(dirRequested)){
+            desc = true;
+        }
 
-		logger.debug("sort: " + s + " " + d);
-		Sort sort = new Sort(s, desc);
+        Sort sort = new Sort(sortRequested, desc);
+        sorts.add(sort);
 
-		sorts.add(sort);
-		return sorts;
+        logger.debug ("sort: " + sort.toString());
+        return sorts;
+
 	}
 
 	/*

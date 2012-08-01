@@ -484,8 +484,8 @@ var gxdAssaysTable = function() {
 		// sortable:true enables sorting
 		{key: "gene", label: "Gene", sortable: true },
 		{key: "assayID", label: "Assay Details", sortable: false },
-		{key: "assayType", label: "Assay Type", sortable: false },
-		{key: "reference",label: "Reference",sortable: false},
+		{key: "assayType", label: "Assay Type", sortable: true },
+		{key: "reference",label: "Reference",sortable: true},
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];
 	
