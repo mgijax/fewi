@@ -128,7 +128,9 @@ public class SolrGxdResultHunter extends SolrHunter
          * Setup the sort mapping.
          */
         sortMap.put(SortConstants.GXD_GENE, new SolrSortMapper(GxdResultFields.R_BY_MRK_SYMBOL));
+        sortMap.put(GxdResultFields.M_BY_MRK_SYMBOL, new SolrSortMapper(GxdResultFields.M_BY_MRK_SYMBOL));
         sortMap.put(SortConstants.GXD_ASSAY_TYPE, new SolrSortMapper(GxdResultFields.R_BY_ASSAY_TYPE));
+        sortMap.put(GxdResultFields.A_BY_ASSAY_TYPE, new SolrSortMapper(GxdResultFields.A_BY_ASSAY_TYPE));
         sortMap.put(SortConstants.GXD_SYSTEM, new SolrSortMapper(GxdResultFields.R_BY_ANATOMICAL_SYSTEM));
         sortMap.put(SortConstants.GXD_AGE, new SolrSortMapper(GxdResultFields.R_BY_AGE));
         sortMap.put(SortConstants.GXD_STRUCTURE, new SolrSortMapper(GxdResultFields.R_BY_STRUCTURE));

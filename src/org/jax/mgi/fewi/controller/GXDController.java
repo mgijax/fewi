@@ -1003,7 +1003,7 @@ public class GXDController {
 
         // expected sort values
         if ("gene".equalsIgnoreCase(sortRequested)){
-            sortRequested = SortConstants.GXD_GENE;
+            sortRequested = GxdResultFields.M_BY_MRK_SYMBOL;
         } else if ("chr".equalsIgnoreCase(sortRequested)){
             sortRequested = SortConstants.GXD_LOCATION;
         } else if ("location".equalsIgnoreCase(sortRequested)){
@@ -1011,7 +1011,7 @@ public class GXDController {
         } else if ("cm".equalsIgnoreCase(sortRequested)){
             sortRequested = SortConstants.GXD_LOCATION;
         } else {
-            sortRequested = SortConstants.GXD_GENE;
+            sortRequested = GxdResultFields.M_BY_MRK_SYMBOL;
 		}
 
         String dirRequested  = request.getParameter("dir");
@@ -1048,7 +1048,7 @@ public class GXDController {
         if ("gene".equalsIgnoreCase(sortRequested)){
             sortRequested = SortConstants.GXD_GENE;
         } else if ("assayType".equalsIgnoreCase(sortRequested)){
-            sortRequested = SortConstants.GXD_ASSAY_TYPE;
+            sortRequested = GxdResultFields.A_BY_ASSAY_TYPE;
         } else if ("reference".equalsIgnoreCase(sortRequested)){
             sortRequested = SortConstants.GXD_REFERENCE;
         } else {
