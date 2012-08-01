@@ -764,7 +764,7 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
     	   var synonym = oResultData[1];
     	   var isStrictSynonym = oResultData[2];
     	  var value = synonym;
-    	  if(isStrictSynonym) value += " <span style=\"font-size:1em; font-style:normal;\">[synonym]</span>";
+    	  if(isStrictSynonym) value += " <span style=\"color:#222; font-size:0.8em; font-style:normal;\">[synonym]</span>";
     	  return (value);
     	}; 
     	
