@@ -41,6 +41,7 @@ public class GxdQueryForm {
     private String mutatedIn = "";
     private String markerMgiId = "";
     private String jnum = "";
+    private String alleleId = "";
 
 	public GxdQueryForm() {
 
@@ -272,6 +273,12 @@ public class GxdQueryForm {
 	}
 	public void setAnnotatedStructureKey(String annotatedStructureKey) {
 		this.annotatedStructureKey = annotatedStructureKey;
+	}
+	public String getAlleleId() {
+		return alleleId;
+	}
+	public void setAlleleId(String alleleId) {
+		this.alleleId = alleleId;
 	}
 	@Override
 	public String toString() {

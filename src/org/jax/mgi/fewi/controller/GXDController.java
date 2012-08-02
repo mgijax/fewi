@@ -744,6 +744,7 @@ public class GXDController {
 		String structureKey = query.getStructureKey();
 		String annotatedStructureKey = query.getAnnotatedStructureKey();
 		String structureID = query.getStructureID();
+		String alleleId = query.getAlleleId();
 
 		if(structureKey !=null && !structureKey.equals("")) {
 			Filter structureKeyFilter = new Filter(SearchConstants.STRUCTURE_KEY, structureKey);
@@ -756,6 +757,10 @@ public class GXDController {
 		if(annotatedStructureKey !=null && !annotatedStructureKey.equals("")) {
 			Filter annotatedStructureKeyFilter = new Filter(GxdResultFields.ANNOTATED_STRUCTURE_KEY, annotatedStructureKey);
 			queryFilters.add(annotatedStructureKeyFilter);
+		}
+		if(alleleId !=null && !alleleId.equals("")) {
+			Filter alleleIdFilter = new Filter(SearchConstants.ALL_ID, alleleId);
+			queryFilters.add(alleleIdFilter);
 		}
 		if(jnum !=null && !jnum.equals("")) {
 			Filter jnumFilter = new Filter(SearchConstants.REF_ID, jnum);

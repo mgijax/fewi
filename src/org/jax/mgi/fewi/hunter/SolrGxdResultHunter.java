@@ -111,7 +111,9 @@ public class SolrGxdResultHunter extends SolrHunter
          propertyMap.put(SearchConstants.STRUCTURE_ID,
            		new SolrPropertyMapper(GxdResultFields.STRUCTURE_ID));
 
-
+         // allele ID
+         propertyMap.put(SearchConstants.ALL_ID,
+           		new SolrPropertyMapper(GxdResultFields.ALLELE_ID));
 
 
          propertyMap.put(SearchConstants.PRIMARY_KEY,
