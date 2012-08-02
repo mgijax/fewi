@@ -1,0 +1,95 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Allele Detail Page Link Changes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Detail Page Link Changes</h1>
+    <ul>
+        <li>User story 108, Change links to GXD summaries from allele detail</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li><i>KLF added: </i> Allele Detail Page Expression link "(n) assay results" goes to new Expression Summary</li>
+		<li>landing page type = C (see <a href="ReferencesPageLinkChanges.html">notes for story 97</a>)</li>
+	</ul>
+	<p>General note for linking to expression results. There will be three style of landing page:</p>
+	<ul>
+	<li>(A) page has result tabs at bottom and collapsed query form at top.</li>
+	<li>(B) page has result tabs at bottom and nothing at top.</li>
+	<li>(C) page has result tabs at bottom and custom header at top.</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Links to expression data from Allele Detail pages go to the new Expression Summary page format.
+ 			<p concordion:assertTrue="false">new test</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Ascl3<sup>tm1(EGFP/cre)Ovi</sup></b> <i>Note: this allele was selected because it also has Cre results which should be excluded from counts and results.</i></li>
+                <li>Verify that the Expression ribbon link says <b>14 assay results</b></li>
+                <li>Verify that following the Expression ribbon link results in a <b>new-format Expression Summary Page</b></li>
+                <li>Verify that all rows in the Expression Summary contain <b>Ascl3<sup>tm1(EGFP/cre)Ovi</sup> in the Mutant Allele(s) column</b></li>
+    		</ol>
+    		</li>
+    		<li>The Expression Summary page linked from an Allele Detail page contains the Allele Banner above the results set.
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+    			<li>Still viewing the Expression Summary results page from the test above, verify that an Allele Banner appears above the results set as on the page displaying "References associated with this Allele" (reached from the count of references at the bottom of the Allele Detail page).</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>
