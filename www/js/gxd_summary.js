@@ -275,7 +275,8 @@ handleNavigation = function (request, calledLocally) {
 	else
 	{
 		// Update the "you searched for" text
-		updateQuerySummary();
+		if (typeof updateQuerySummary == 'function')
+			updateQuerySummary();
 
 		if (typeof openSummaryControl == 'function')
 			openSummaryControl();

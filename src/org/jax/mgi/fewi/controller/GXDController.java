@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 // MGI classes
+import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.GxdAssayResult;
 import mgi.frontend.datamodel.GxdMarker;
@@ -22,6 +23,7 @@ import mgi.frontend.datamodel.Reference;
 
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
@@ -94,6 +96,8 @@ public class GXDController {
 
 	@Autowired
 	private ReferenceFinder referenceFinder;
+	
+	@Autowired AlleleFinder alleleFinder;
 
 	@Autowired
 	private GxdFinder gxdFinder;
@@ -230,6 +234,40 @@ public class GXDController {
         mav.addObject("reference", reference);
 
         logger.debug("summeryByRefId routing to view ");
+		return mav;
+    }
+    
+    /*
+	 * Summary by Allele
+	 */
+    @RequestMapping(value="/allele/{allID}")
+    public ModelAndView summeryByAllId(
+		  HttpServletRequest request,
+		  @PathVariable("allID") String allID) {
+
+        logger.debug("->summeryByallId started");
+
+        // setup view object
+        ModelAndView mav = new ModelAndView("gxd_summary_by_allele");
+
+        List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
+        // there can be only one...
+        if (alleleList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No allele found for " + allID);
+            return mav;
+        }
+        if (alleleList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Dupe reference found for " + allID);
+            return mav;
+        }
+        Allele allele = alleleList.get(0);
+        mav.addObject("allele", allele);
+
+        logger.debug("summeryByAllId routing to view ");
 		return mav;
     }
 
