@@ -96,7 +96,7 @@ public class GXDController {
 
 	@Autowired
 	private ReferenceFinder referenceFinder;
-	
+
 	@Autowired AlleleFinder alleleFinder;
 
 	@Autowired
@@ -236,7 +236,8 @@ public class GXDController {
         logger.debug("summeryByRefId routing to view ");
 		return mav;
     }
-    
+
+
     /*
 	 * Summary by Allele
 	 */
@@ -250,7 +251,17 @@ public class GXDController {
         // setup view object
         ModelAndView mav = new ModelAndView("gxd_summary_by_allele");
 
-        List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
+
+		// setup search parameters object to gather the requested marker
+        SearchParams alleleSearchParams = new SearchParams();
+        Filter alleleIdFilter = new Filter(SearchConstants.ALL_ID, allID);
+        alleleSearchParams.setFilter(alleleIdFilter);
+
+        // find the requested marker
+        SearchResults<Allele> alleleSearchResults
+          = alleleFinder.getAlleleByID(alleleSearchParams);
+
+        List<Allele> alleleList = alleleSearchResults.getResultObjects();
         // there can be only one...
         if (alleleList.size() < 1) {
             // forward to error page
@@ -270,7 +281,6 @@ public class GXDController {
         logger.debug("summeryByAllId routing to view ");
 		return mav;
     }
-
 
 
 	/*
