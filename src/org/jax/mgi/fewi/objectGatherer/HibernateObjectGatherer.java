@@ -70,20 +70,9 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
 	/**
 	 * Get a list of objects
-	 * default is by primary key
 	 */
 	@Transactional(readOnly = true)
 	public List<T> get(Class<T> modelObj, List<String> keys) {
-
-		return get(modelObj,keys,"id");
-	}
-	
-	/**
-	 * Get a list of objects
-	 * by specified field name
-	 */
-	@Transactional(readOnly = true)
-	public List<T> get(Class<T> modelObj, List<String> keys, String fieldName) {
 
 		logger.debug("Started : objects keys - " + keys);
 
@@ -101,48 +90,42 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 			return orderedResults;
 		}
 
-		// format the keys to Integer objects if possible
-		List<Object> keyObjs = formatKeys(keys);
-		
+		List<Integer> keyInts = new ArrayList<Integer>();
+
+		// convert keys to Integers
+		for (String key : keys) {
+			keyInts.add(new Integer(key));
+		}
+
 		// get results chunking if needed.
 		long start = System.nanoTime();
 		int step = 10000;
-		if (keyObjs.size() > 10000) {
+		if (keyInts.size() > 10000) {
 			int begin = 0;
 			int end = step;
 
-			while (begin < keyObjs.size()) {
-				if (end > keyObjs.size()) {
-					end = keyObjs.size();
+			while (begin < keyInts.size()) {
+				if (end > keyInts.size()) {
+					end = keyInts.size();
 				}
 
-				List inList = keyObjs.subList(begin, end);
+				List inList = keyInts.subList(begin, end);
 
-				queryResults.addAll(s.createCriteria(modelObj).add(Restrictions.in(fieldName, inList)).list());
+				queryResults.addAll(s.createCriteria(modelObj).add(Restrictions.in("id", inList)).list());
 				begin += step;
 				end += step;
 			}
 
 		}
 		else {
-			queryResults = s.createCriteria(modelObj).add(Restrictions.in(fieldName, keyObjs)).list();
+			queryResults = s.createCriteria(modelObj).add(Restrictions.in("id", keyInts)).list();
 		}
 
 		// load results into Map keyed by id
-		if(fieldName.equals("id"))
-		{
 		String id;
-			for (T r : queryResults) {
-				id = meta.getIdentifier(r, s.getEntityMode()).toString();
-				resultsMap.put(id, r);
-			}
-		}
-		else
-		{
-			for (T r : queryResults) {
-				String key = meta.getPropertyValue(r, fieldName, s.getEntityMode()).toString();
-				resultsMap.put(key, r);
-			}
+		for (T r : queryResults) {
+			id = meta.getIdentifier(r, s.getEntityMode()).toString();
+			resultsMap.put(id, r);
 		}
 		// kill queryResults
 		queryResults = null;
@@ -157,30 +140,6 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		logger.debug("Finished");
 
 		return orderedResults;
-	}
-	
-	/*
-	 * Formats keys to Integer if they parse as ints, else return the original list
-	 */
-	public List<Object> formatKeys(List<String> keys)
-	{
-		List<Object> keyObjs = new ArrayList<Object>();
-		try
-		{
-			// convert keys to Integers
-			for (String key : keys) {
-				keyObjs.add(new Integer(key));
-			}
-			return keyObjs;
-		}
-		catch (NumberFormatException ne)
-		{
-			for(String key : keys)
-			{
-				keyObjs.add(key);
-			}
-			return keyObjs;
-		}
 	}
 
 }
