@@ -5,8 +5,8 @@
 <table class="summaryHeader">
 <tr >
   <td class="summaryHeaderCat1">
-       <span class="label">Symbol</span><br/>
-       <span class="label">Name</span><br/>
+       <span class="label">Allele Symbol</span><br/>
+       <span class="label">Allele Name</span><br/>
        <span class="label">ID</span>
   </td>
   <td class="summaryHeaderData1">
