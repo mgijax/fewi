@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.Arrays;
 import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
@@ -45,6 +46,14 @@ public class AlleleFinder {
         searchResults.setResultObjects(alleleList);
 
 		return searchResults;
+	}
+	public List<Allele> getAlleleByID(String alleleID)
+	{
+		return getAlleleByID(Arrays.asList(alleleID));
+	}
+	public List<Allele> getAlleleByID(List<String> alleleID)
+	{
+		return alleleGatherer.get( Allele.class, alleleID, "primaryID" );
 	}
 
 
