@@ -2,6 +2,7 @@
 
 	<!--pull in values from the properties file -->
 	<property file="build.properties" />
+	<property environment="env"/>
 	<property name="test.dir" location="test" />
 	<property name="TALK" value="false" />
 
