@@ -80,7 +80,7 @@
     		</ol>
     		</li>
     		<li>Selecting the following Assay Types on the Expression Query should map to the indicated assay types in the Lit Index data:
- 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+ 			<p concordion:assertTrue="true">jeffc 8/10/2012</p> 
  			<table>
  			<tr><th>Expression Query Assay Type</th><th>Maps to Lit Index Assay Type</th></tr>
  			<tr><td>Immunohistochemistry</td><td>In situ protein (section) - OR - In situ protein (whole mount)</td></tr>
@@ -106,15 +106,15 @@
                 <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
                 <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Northern blot</b></li>
                 <li>Return to a blank GXD Query Form</li>
-                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>Nuclease S1</b> and submit the query</li>
+                <li>Query for Nomenclature:<b>Alad</b> and Assay Type: <b>Nuclease S1</b> and submit the query</li>
                 <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
                 <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>Nuclease S1</b></li>
                 <li>Return to a blank GXD Query Form</li>
-                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>RNase protection</b> and submit the query</li>
+                <li>Query for Nomenclature:<b>Alad</b> and Assay Type: <b>RNase protection</b> and submit the query</li>
                 <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
                 <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>RNase protection</b></li>
                 <li>Return to a blank GXD Query Form</li>
-                <li>Query for Nomenclature:<b>Abcb1b</b> and Assay Type: <b>RT-PCR</b> and submit the query</li>
+                <li>Query for Nomenclature:<b>Alad</b> and Assay Type: <b>RT-PCR</b> and submit the query</li>
                 <li>Scroll to the Literature Index link at the bottom of the data table and follow the link</li>
                 <li>Verify that the Gene Expression Literature Summary page "You searched for" section says <b>RT-PCR</b></li>
                 <li>Return to a blank GXD Query Form</li>
@@ -124,7 +124,7 @@
     		</ol>
     		</li>
     		<li>Selecting the following Age values on the Expression Query should map to the indicated age values in the Lit Index data:
- 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+ 			<p concordion:assertTrue="false">jeffc 8/10/2012 showing lit link as zero for E20.5, this is a bug</p> 
  			<table>
  			<tr><th>Expression Query Age</th><th>Maps to Lit Index Age</th></tr>
  			<tr><td>Embryonic</td><td>0.5-20</td></tr>
@@ -167,7 +167,7 @@
     		</li>
     		<li>Selecting Theiler Stage values on the Expression Query should map to the age values given as reference on the query form.<br/>
     		<i>Note that some Theiler Stages begin or end with .25 and .75 values. In the Lit Index, these are always rounded up to the nearest .5 or .0.</i>
- 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+ 			<p concordion:assertTrue="true">jeffc 8/10/2012</p> 
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>acta1</b> in the gene field, Select <b>TS24</b> in the theiler stage field and select only the assay type <b>RNA in Situ</b> then click the search button</li>
@@ -182,7 +182,7 @@
     		</ol>
     		</li>
     		<li>Selecting a Vocabulary term on the Expression Query should return a count and link to Lit Index records for all genes annotated to the term (excluding the various types of NOT annotations for the 3 vocabularies), for which there are GXD Lit Index records (not just fully-coded Expression Results Data).
- 			VERIFY LIT INDEX RESULTS CONTAIN OR EXCLUDE CORRECT GENES.<p concordion:assertTrue="true">passed kstone 07/23/2012</p> 
+ 			VERIFY LIT INDEX RESULTS CONTAIN OR EXCLUDE CORRECT GENES.<p concordion:assertTrue="true">jeffc 8/10/2012</p> 
     		<ol>
                 <li>Open the GXD Query Form</li>
                 <li>Query for Vocabulary term <b>cmdd</b> select the disease:  <b>Craniometaphyseal Dysplasia, Autosomal Dominant; CMDD</b></li>
@@ -203,7 +203,7 @@
     		</ol>
     		</li>
     		<li>Expression data summary pages linked from Marker Detail Page should have a Lit Index link appropriate to the gene and assay type (if any) or Theiler Stage (if any).
- 			<p concordion:assertTrue="true">passed kstone 07/23/2012</p>
+ 			<p concordion:assertTrue="true">jeffc 8/10/2012</p>
     		<ol>
     		    <li>Open the GXD Query Form</li>
                 <li>Query for Nomenclature term <b>Myf6</b></li>
