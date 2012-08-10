@@ -70,8 +70,8 @@
 	<div id="manual">
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Build table layout with a two tabs
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<li>Build table layout with a three tabs
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -79,7 +79,7 @@
     		</ol>
     		</li>
     		<li>Assay Results table exists with correct columns
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -87,7 +87,7 @@
     		</ol>
     		</li>
     		<li>Gene column displays current gene symbol
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -97,12 +97,12 @@
                 <li>Verify "Gene" column displays current gene symbol: Pax6</li>
     		</ol>
     		</li>
-    		<li>Result Details column displays data link and MGI ID
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+    		<li>Assay Results Tab Assay Details column displays data link and MGI ID
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
-                <li>Verify "Result Details" column displays:
+                <li>Verify "Assay Details" column displays:
                 <ol>
 					<li>Text "data" for every result</li>
 					<li>Text "data" is hyperlinked to Expression Details page for the displayed MGI ID</li>
@@ -112,7 +112,7 @@
     		</ol>
     		</li>
     		<li>Detected? displays "Level" data
-		<p concordion:assertTrue="true">klf 7/23/2012</p>
+		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -135,7 +135,7 @@
     		</ol>
     		</li>
     		<li>Figure(s) displays "pane label"
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -153,7 +153,7 @@
 		        </ul>
 		        </li>
 				<li>The results for MGI:4461989 should display figure label text which is not hyperlinked. Label text should be as follows (structures shown in parentheses):
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
 				<ul>
 					<li>(TS15: future spinal cord; neural tube) - Figure 3B wild type</li>
 					<li>(TS15: future spinal cord; neural tube) - Figure 3B Tectonic-/-</li>
@@ -176,7 +176,7 @@
 				</ul>
 				</li>
 				<li>The results for MGI:2178971 should display no image pane label for the following structures (in parentheses):
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
 				<ul>
 					<li>(TS19: future spinal cord)</li>
 					<li>(TS19: future spinal cord)</li>
@@ -185,7 +185,7 @@
     		</ol>
 			</li>
     		<li>Mutant Allele(s) displays correct data
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -208,7 +208,7 @@
     		</ol>
     		</li>
     		<li>Reference displays correct data
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Tssk*</li>
@@ -222,7 +222,7 @@
     		</ol>
     		</li>
     		<li>Gene symbol should not be link on Assay Results tab
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6 in the nomenclature field</li>
@@ -230,7 +230,7 @@
     		</ol>
     		</li>
     		<li>Test that GENES are sorted correctly
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Cyp* in the nomenclature field</li>
@@ -250,7 +250,7 @@
     		</ol>
     		</li>
     		<li>Test that ASSAY RESULTS are sorted correctly
-		<p concordion:assertTrue="true">klf 7/23/2012</p>
+		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for abcb1b in the nomenclature field(does not include insitu reporter assay type.</li>
@@ -283,7 +283,7 @@
     		</ol>
     		</li>
     		<li>Test that long marker names/symbols wrap properly
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Search for Sema5a in the nomenclature field</li>
@@ -294,7 +294,7 @@
     		</ol>
     		</li>
     		<li>Test that marker symbols and names with non-alphanumeric characters don't break the interface
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Search for Mirlet7c-1 in the nomenclature field</li>
@@ -308,7 +308,7 @@
     		</ol>
     		</li>
     		<li>Test that the accordion animation does not activate when using back button from a subsequent page
-		<p concordion:assertTrue="true">Passed jeffc 07/12/2012</p>
+		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for shh</li>
