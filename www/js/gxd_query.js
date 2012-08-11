@@ -872,7 +872,7 @@ var getQueryString = function(form) {
 			}
 			else if (element.tagName=="SELECT")
 			{
-				if (element.parentNode.className != "yui-hidden") {
+				if (element.parentNode.className != "inactive-content") {
 					for(var key in element.children)
 					{
 						if(element[key].selected)
