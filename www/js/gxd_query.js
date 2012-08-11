@@ -59,8 +59,8 @@ YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
 var tabView = new YAHOO.widget.TabView('expressionSearch');
 
 //GXD age/stage tab control
-YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
-var ageStageTabs = new YAHOO.widget.TabView('ageStage');
+//YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
+//var ageStageTabs = new YAHOO.widget.TabView('ageStage');
 
 // Updates the "You searched for" section
 var updateQuerySummary = function() {
@@ -794,7 +794,7 @@ var resetQF = function (e) {
 	form.structure.value = "";
 	form.theilerStage.selectedIndex = 0;
 	form.age.selectedIndex = 0;
-	ageStageTabs.selectTab(0);
+	selectTheilerStage();
 	allAssayTypesBox.checked = true;
 	for(var key in assayTypesBoxes)
 	{
@@ -970,7 +970,7 @@ function reverseEngineerFormInput(request)
 				{
 					if (input.name == "age") {
 						// open the age tab
-						ageStageTabs.selectTab(1);
+						selectAge();
 					}
 					foundParams = true;
 					var options = [];

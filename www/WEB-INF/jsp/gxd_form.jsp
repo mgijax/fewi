@@ -20,7 +20,122 @@ span.smallGrey { font-size: 75%; color: #999999; }
 #ageStageDiv {width:21em;}
 #theilerStage, #age {margin-left:7px;margin-right:7px;height:9.5em}
 #ageStageTd {height:12em;}
+.yui-navset, .yui-nav, .yui-content
+{
+position: static;
+}
+.yui-skin-sam .yui-navset .yui-navset-top .yui-nav A
+{
+position: static;
+}
+.yui-skin-sam .yui-navset .yui-navset-top .yui-nav A EM
+{
+position:static;
+}
 <![endif]-->
+</style>
+
+<!-- jquery library -->
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+
+<script type="text/javascript">
+        
+        function selectTheilerStage()
+        {
+        	changeTab($('#ageStage .tab-nav')[0],"ageStage");
+        }
+        function selectAge()
+        {
+        	changeTab($('#ageStage .tab-nav')[1],"ageStage");
+        }
+        // general purpose function for changing tabs
+        function changeTab(tabElement,parentId)
+        {
+            var eSelector = '#'+parentId;
+             // remove the active-tab and place it on current object;
+            $(eSelector+' .active-tab').removeClass("active-tab").
+				addClass("inactive-tab");
+            $(tabElement).removeClass("inactive-tab")
+				.addClass("active-tab");
+            
+            // remove active content
+            $(eSelector+' .active-content').removeClass("active-content")
+                .addClass("inactive-content");
+            
+            // use tab index to find matching content and set it to active
+            var tab_index = $(tabElement).index();
+            $(eSelector+' .inactive-content').eq(tab_index).removeClass("inactive-content")
+                .addClass("active-content");
+        }
+        function ageStageChange(e)
+        {
+            if(!$(this).hasClass("active-tab"))
+            {
+                changeTab(this,"ageStage");
+            }
+        }
+        
+        $(function()
+        {
+            // Handler for .ready() called.
+            $('#ageStage .tab-nav').click(ageStageChange);
+        });
+</script>
+
+<style>
+        .tab-nav
+        {
+            float: left;
+            //margin-right: 2px;
+			padding: 5px 10px;
+			cursor: pointer;
+        }
+        .tab-content
+        {
+            clear: both;
+            text-align:center;
+            border: 1px solid gray;
+			border-top-width: 0;
+			padding: .25em .5em;
+        }
+		.inactive-tab
+		{
+			border: 1px solid #A3A3A3;
+			border-bottom-color: black;
+			background: #D8D8D8 url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x;
+			margin-top: 4px;
+		}
+		.inactive-tab:hover
+		{
+			background:#bfdaff url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x left -1300px;
+			outline:0;
+		}
+        .active-tab, .active-tab a:hover
+        {
+            border: 1px solid gray;
+			border-top-color: black;
+			border-bottom-width: 0;
+			padding-bottom: 10px;
+        }
+        .active-content
+        {
+            display: block;
+        }
+        .inactive-content
+        {
+            display: none;
+        }
+        
+        #ageStage
+        {
+            display: inline-block;
+            <!--[if IE ]>
+                display: inline-block;
+                *display: inline;
+                zoom: 1;
+            <![endif]-->
+            min-width: 100px;
+        }
 </style>
 <form:form commandName="gxdQueryForm">
 <!-- query form table -->
@@ -128,24 +243,24 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 			<td>&nbsp;</td>
 			<td valign="top" id="ageStageTd">
-		        <div id="ageStage" class="yui-navset">
-		            <ul class="yui-nav">
-		                <li class="selected"><a id="stagesTab" href="#stage"><em>Use Theiler Stages</em></a></li>
-                        <li><a id="agesTab" href="#age"><em>Use Ages (dpc)</em></a></li>
-		            </ul>
-		            <div class="yui-content" id="ageStageDiv">
-	                    <div style="text-align:center;">
-	                        <form:select multiple="true" path="theilerStage" size="7" items="${gxdQueryForm.theilerStages}">
+		        <div id="ageStage">
+					<div class="tab-header">
+						<div class="tab-nav active-tab" id="stagesTab">Use Theiler Stages</div>
+						<div class="tab-nav inactive-tab" id="agesTab">Use Ages (dpc)</div>
+					</div>
+					<div id="ageStageDiv" class="tab-content">
+						<div class="active-content">
+							<form:select multiple="true" path="theilerStage" size="7" items="${gxdQueryForm.theilerStages}">
 	                        <form:options items="${theilerStages}" />
 	                        </form:select>
-	                    </div>
-	                    <div style="text-align:center;">
-	                        <form:select multiple="true" path="age" size="7" items="${gxdQueryForm.ages}">
+						</div>
+						<div class="inactive-content">
+							 <form:select multiple="true" path="age" size="7" items="${gxdQueryForm.ages}">
 	                        <form:options items="${ages}" />
 	                        </form:select>
-	                    </div>
-		            </div>
-		        </div>                
+						</div>
+					</div>
+		        </div>                            
 			</td>
 			</tr>
 			</table>
