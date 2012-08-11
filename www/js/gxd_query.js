@@ -198,7 +198,7 @@ var updateQuerySummary = function() {
 	// otherwise show the TS display as default
 	var age = YAHOO.util.Dom.get('age');
 
-	if (age.parentNode.className != "yui-hidden") {
+	if (age.parentNode.className != "inactive-content") {
 
 		// do age
 		var ages="";
