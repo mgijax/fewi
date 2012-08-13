@@ -1,3 +1,6 @@
+<!-- jquery library (for the ageStage tab widget) -->
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+
 <style>
 #gxdQueryForm table tr td table tr td ul li span { font-size: 10px; font-style: italic; }
 #gxdQueryForm table tr td table tr td span { font-size: 10px; font-style: italic; }
@@ -16,29 +19,13 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	margin-right: 3px;
 }
 #theilerStage, #age {width:75%;}
-<!--[if IE]> -->
-#ageStageDiv {width:21em;}
-#theilerStage, #age {margin-left:7px;margin-right:7px;height:9.5em}
-#ageStageTd {height:12em;}
-.yui-navset, .yui-nav, .yui-content
-{
-position: static;
-}
-.yui-skin-sam .yui-navset .yui-navset-top .yui-nav A
-{
-position: static;
-}
-.yui-skin-sam .yui-navset .yui-navset-top .yui-nav A EM
-{
-position:static;
-}
-<![endif]-->
 
-// style for ageStage tab widget (+ some extra stuff to make it look like a YUI tabView)
+/* style for ageStage tab widget (+ some extra stuff to make it look like a YUI tabView) */
+
 .tab-nav
 {
 	float: left;
-	//margin-right: 2px;
+	/*margin-right: 2px; */
 	padding: 5px 10px;
 	cursor: pointer;
 }
@@ -87,14 +74,15 @@ position:static;
     <![endif]-->
     min-width: 100px;
 }
+<!--[if IE]> -->
+#ageStageDiv {width:21em;}
+#theilerStage, #age {margin-left:7px;margin-right:7px;height:9.5em}
+#ageStageTd {height:12em;}
+<![endif]-->
+
 </style>
 
-<!-- jquery library (for the ageStage tab widget) -->
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
 
-<style>
-
-</style>
 <form:form commandName="gxdQueryForm">
 <!-- query form table -->
 <table class="pad5 borderedTable" width="100%">
