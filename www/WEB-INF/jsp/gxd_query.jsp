@@ -106,7 +106,7 @@ ${templateBean.templateBodyStartHtml}
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
 </script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_query2.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 
 

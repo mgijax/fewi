@@ -59,8 +59,48 @@ YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
 var tabView = new YAHOO.widget.TabView('expressionSearch');
 
 //GXD age/stage tab control
+// COMMENTING OUT THE YUI2 way of doing this, because it breaks in IE on windows 7
 //YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
-//var ageStageTabs = new YAHOO.widget.TabView('ageStage');
+//var Tabs = new YAHOO.widget.TabView('ageStage');
+// Script to set up and control the ageStage tab widget (using jquery)
+var ageStageID = "ageStage";
+function selectTheilerStage()
+{
+	changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID);
+}
+function selectAge()
+{
+	changeTab($('#'+ageStageID+' .tab-nav')[1],ageStageID);
+}
+// general purpose function for changing tabs
+function changeTab(tabElement,parentId)
+{
+    var eSelector = '#'+parentId;
+     // remove the active-tab and place it on current object;
+    $(eSelector+' .active-tab').removeClass("active-tab").
+		addClass("inactive-tab");
+    $(tabElement).removeClass("inactive-tab")
+		.addClass("active-tab");
+    
+    // remove active content
+    $(eSelector+' .active-content').removeClass("active-content")
+        .addClass("inactive-content");
+    
+    // use tab index to find matching content and set it to active
+    var tab_index = $(tabElement).index();
+    $(eSelector+' .inactive-content').eq(tab_index).removeClass("inactive-content")
+        .addClass("active-content");
+}
+function ageStageChange(e)
+{
+    if(!$(this).hasClass("active-tab"))
+    {
+        changeTab(this,ageStageID);
+    }
+}
+// Init the event listener for clicking tabs
+$('#'+ageStageID+' .tab-nav').click(ageStageChange);
+
 
 // Updates the "You searched for" section
 var updateQuerySummary = function() {

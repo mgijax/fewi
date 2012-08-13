@@ -33,109 +33,67 @@ position: static;
 position:static;
 }
 <![endif]-->
+
+// style for ageStage tab widget (+ some extra stuff to make it look like a YUI tabView)
+.tab-nav
+{
+	float: left;
+	//margin-right: 2px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+.tab-content
+{
+	clear: both;
+	text-align:center;
+	border: 1px solid gray;
+	border-top-width: 0;
+	padding: .25em .5em;
+}
+.inactive-tab
+{
+	border: 1px solid #A3A3A3;
+	border-bottom-color: black;
+	background: #D8D8D8 url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x;
+	margin-top: 4px;
+}
+.inactive-tab:hover
+{
+	background:#bfdaff url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x left -1300px;
+	outline:0;
+}
+.active-tab, .active-tab a:hover
+{
+	border: 1px solid gray;
+	border-top-color: black;
+	border-bottom-width: 0;
+	padding-bottom: 10px;
+}
+.active-content
+{
+    display: block;
+}
+.inactive-content
+{
+    display: none;
+}
+#ageStage
+{
+    display: inline-block;
+    <!--[if IE ]>
+        display: inline-block;
+        *display: inline;
+        zoom: 1;
+    <![endif]-->
+    min-width: 100px;
+}
 </style>
 
-<!-- jquery library -->
+<!-- jquery library (for the ageStage tab widget) -->
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
 
-<script type="text/javascript">
-        
-        function selectTheilerStage()
-        {
-        	changeTab($('#ageStage .tab-nav')[0],"ageStage");
-        }
-        function selectAge()
-        {
-        	changeTab($('#ageStage .tab-nav')[1],"ageStage");
-        }
-        // general purpose function for changing tabs
-        function changeTab(tabElement,parentId)
-        {
-            var eSelector = '#'+parentId;
-             // remove the active-tab and place it on current object;
-            $(eSelector+' .active-tab').removeClass("active-tab").
-				addClass("inactive-tab");
-            $(tabElement).removeClass("inactive-tab")
-				.addClass("active-tab");
-            
-            // remove active content
-            $(eSelector+' .active-content').removeClass("active-content")
-                .addClass("inactive-content");
-            
-            // use tab index to find matching content and set it to active
-            var tab_index = $(tabElement).index();
-            $(eSelector+' .inactive-content').eq(tab_index).removeClass("inactive-content")
-                .addClass("active-content");
-        }
-        function ageStageChange(e)
-        {
-            if(!$(this).hasClass("active-tab"))
-            {
-                changeTab(this,"ageStage");
-            }
-        }
-        
-        $(function()
-        {
-            // Handler for .ready() called.
-            $('#ageStage .tab-nav').click(ageStageChange);
-        });
-</script>
-
 <style>
-        .tab-nav
-        {
-            float: left;
-            //margin-right: 2px;
-			padding: 5px 10px;
-			cursor: pointer;
-        }
-        .tab-content
-        {
-            clear: both;
-            text-align:center;
-            border: 1px solid gray;
-			border-top-width: 0;
-			padding: .25em .5em;
-        }
-		.inactive-tab
-		{
-			border: 1px solid #A3A3A3;
-			border-bottom-color: black;
-			background: #D8D8D8 url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x;
-			margin-top: 4px;
-		}
-		.inactive-tab:hover
-		{
-			background:#bfdaff url(http://yui.yahooapis.com/2.8.2r1/build/assets/skins/sam/sprite.png) repeat-x left -1300px;
-			outline:0;
-		}
-        .active-tab, .active-tab a:hover
-        {
-            border: 1px solid gray;
-			border-top-color: black;
-			border-bottom-width: 0;
-			padding-bottom: 10px;
-        }
-        .active-content
-        {
-            display: block;
-        }
-        .inactive-content
-        {
-            display: none;
-        }
-        
-        #ageStage
-        {
-            display: inline-block;
-            <!--[if IE ]>
-                display: inline-block;
-                *display: inline;
-                zoom: 1;
-            <![endif]-->
-            min-width: 100px;
-        }
+
 </style>
 <form:form commandName="gxdQueryForm">
 <!-- query form table -->
