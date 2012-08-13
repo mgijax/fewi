@@ -26,28 +26,28 @@ import mgi.frontend.datamodel.GxdAssayResult;
 import mgi.frontend.datamodel.ImagePane;
 import mgi.frontend.datamodel.Reference;
 
-public class TextGxdMarkersSummary extends AbstractTextView 
+public class TextGxdMarkersSummary extends AbstractTextView
 {
-	
+
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
+
 		String filename = "MGIgeneExpressionQuery_markers_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 		System.out.println(response.getCharacterEncoding());
-		
+
 		GxdBatchFinder finder = (GxdBatchFinder) model.get("markerFinder");
 
 		// set the batchSize
 		int batchSize = 5000;
 		finder.batchSize = batchSize;
-		
+
 		// write the headers
 		String[] headerTitles = {"MGI Gene ID",
-				"Gene Symbol", 
-				"Gene Name", 
+				"Gene Symbol",
+				"Gene Name",
 				"Type",
 				"Chr",
 				"Genome Location-NCBI Build 37",
@@ -62,8 +62,8 @@ public class TextGxdMarkersSummary extends AbstractTextView
 		while(finder.hasNextMarkers())
 		{
 			SearchResults<SolrGxdMarker> markers = finder.getNextMarkers();
-			for (SolrGxdMarker m : markers.getResultObjects()) 
-			{	
+			for (SolrGxdMarker m : markers.getResultObjects())
+			{
 				// use the Marker Summary row to get the correct Genome Location text
 				GxdMarkerSummaryRow mr = new GxdMarkerSummaryRow(m);
 				// for now we will steal logic from the summary row class
@@ -71,25 +71,28 @@ public class TextGxdMarkersSummary extends AbstractTextView
 				writer.write(m.getSymbol() + "\t");
 				writer.write(mr.getName()+"\t");
 				writer.write(mr.getType()+"\t");
-				writer.write(mr.getChr() + "\t"); 
-				writer.write(format(mr.getLocation())+ "\t"); 
-				writer.write(format(mr.getCM()) + "\t"); 
-				writer.write(format(mr.getStrand()) + "\t"); 
-				
+				writer.write(mr.getChr() + "\t");
+				writer.write(format(mr.getLocation())+ "\t");
+				writer.write(format(mr.getCM()) + "\t");
+				writer.write(format(mr.getStrand()) + "\t");
+
 				writer.write("\r\n");
 			}
 		}
 	}
-	
+
 	private String format(String str)
 	{
 		if(str == null) return "";
 		return str;
 	}
-	
-	private  final static String getCurrentDate()   {  
-        DateFormat df = new SimpleDateFormat( "yyyyMMdd_kkmmss" ) ;  
-        df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;  
-        return ( df.format( new Date(  )  )  ) ;  
+
+	private  final static String getCurrentDate()   {
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat( "yyyyMMdd_HHmmss" ) ;
+		//df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;
+        String formattedDate = df.format(date);
+        return (formattedDate);
 	}
+
 }

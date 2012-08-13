@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
 public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 {
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(ExcelReferenceSummary.class);
+	private Logger logger = LoggerFactory.getLogger(ExcelGxdMarkersSummary.class);
 
-	@Override 
+	@Override
 	public void buildExcelDocument(
 			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 	{
@@ -47,15 +47,15 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 			response.setHeader("Content-Disposition","attachment; filename=\""+filename+".xlsx\"");
 
 			GxdBatchFinder finder = (GxdBatchFinder) model.get("markerFinder");
-	
+
 			// set the batchSize
 			int batchSize = 5000;
 			finder.batchSize = batchSize;
-			
+
 			Sheet sheet = workbook.createSheet();
 			String[] headerTitles = {"MGI Gene ID",
-					"Gene Symbol", 
-					"Gene Name", 
+					"Gene Symbol",
+					"Gene Name",
 					"Type",
 					"Chr",
 					"Genome Location-NCBI Build 37",
@@ -67,10 +67,10 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 			{
 				header.createCell(i).setCellValue(headerTitles[i]);
 			}
-			
+
 			Row row;
 			int rownum = 1;
-			
+
 			try
 			{
 			// need this for processing genotype;
@@ -81,7 +81,7 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 				for (SolrGxdMarker m: markers.getResultObjects()) {
 					// use the Marker Summary row to get the correct Genome Location text
 					GxdMarkerSummaryRow mr = new GxdMarkerSummaryRow(m);
-					
+
 					row = sheet.createRow(rownum++);
 
 					// for now we will steal logic from the summary row class
@@ -89,10 +89,10 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 					row.createCell(1).setCellValue(m.getSymbol());
 					row.createCell(2).setCellValue(mr.getName());
 					row.createCell(3).setCellValue(mr.getType());
-					row.createCell(4).setCellValue(mr.getChr()); 
-					row.createCell(5).setCellValue(mr.getLocation()); 
-					row.createCell(6).setCellValue(mr.getCM()); 
-					row.createCell(7).setCellValue(mr.getStrand()); 
+					row.createCell(4).setCellValue(mr.getChr());
+					row.createCell(5).setCellValue(mr.getLocation());
+					row.createCell(6).setCellValue(mr.getCM());
+					row.createCell(7).setCellValue(mr.getStrand());
 				}
 			}
 			}
@@ -100,12 +100,14 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 			{
 				// meh
 			}
-	
+
 		}
-	
-	private  final static String getCurrentDate()   {  
-        DateFormat df = new SimpleDateFormat( "yyyyMMdd_kkmmss" ) ;  
-        df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;  
-        return ( df.format( new Date(  )  )  ) ;  
+
+	private  final static String getCurrentDate()   {
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat( "yyyyMMdd_HHmmss" ) ;
+		//df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;
+        String formattedDate = df.format(date);
+        return (formattedDate);
 	}
 }

@@ -24,29 +24,29 @@ import mgi.frontend.datamodel.GxdAssayResult;
 import mgi.frontend.datamodel.ImagePane;
 import mgi.frontend.datamodel.Reference;
 
-public class TextGxdResultsSummary extends AbstractTextView 
+public class TextGxdResultsSummary extends AbstractTextView
 {
-	
+
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
+
 		String filename = "MGIgeneExpressionQuery_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 		System.out.println(response.getCharacterEncoding());
-		
+
 		GxdBatchFinder finder = (GxdBatchFinder) model.get("resultFinder");
 
 		// set the batchSize
 		int batchSize = 1000;
 		finder.batchSize = batchSize;
-		
+
 		// write the headers
-		String[] headerTitles = {"MGI Gene ID", 
+		String[] headerTitles = {"MGI Gene ID",
 				"Gene Symbol",
-				"Gene Name", 
-				"MGI Assay ID", 
+				"Gene Name",
+				"MGI Assay ID",
 				"Assay Type",
 				"Anatomical System",
 				"Age",
@@ -69,20 +69,20 @@ public class TextGxdResultsSummary extends AbstractTextView
 		while(finder.hasNextResults())
 		{
 			SearchResults<SolrAssayResult> results = finder.getNextResults();
-			for (SolrAssayResult r : results.getResultObjects()) 
-			{	
+			for (SolrAssayResult r : results.getResultObjects())
+			{
 				// for now we will steal logic from the summary row class
 				writer.write(r.getMarkerMgiid()+"\t");
 				writer.write(r.getMarkerSymbol() + "\t");
 				writer.write(r.getMarkerName()+"\t");
 				writer.write(r.getAssayMgiid()+"\t");
-				writer.write(r.getAssayType() + "\t"); 
-				writer.write(r.getAnatomicalSystem() + "\t"); 
-				writer.write(r.getAge() + "\t"); 
-				writer.write(r.getTheilerStage() + "\t"); 
-				writer.write(r.getPrintname() + "\t"); 
-				writer.write(format(r.getDetectionLevel()) + "\t"); 
-				
+				writer.write(r.getAssayType() + "\t");
+				writer.write(r.getAnatomicalSystem() + "\t");
+				writer.write(r.getAge() + "\t");
+				writer.write(r.getTheilerStage() + "\t");
+				writer.write(r.getPrintname() + "\t");
+				writer.write(format(r.getDetectionLevel()) + "\t");
+
 				// generate the figure text
 				String figureText = "";
 				List<String> formattedFigures = new ArrayList<String>(0);
@@ -108,10 +108,10 @@ public class TextGxdResultsSummary extends AbstractTextView
 					genotypeText = FormatHelper.newline2Comma(ntc.convertNotes(r.getGenotype(), '|',true,true));
 				}
 				writer.write(genotypeText+"\t");
-				writer.write(r.getJNum() + "\t"); 
+				writer.write(r.getJNum() + "\t");
 				writer.write(format(r.getPubmedId()) + "\t"); //pub med id
 				writer.write(r.getShortCitation());
-				
+
 				writer.write("\r\n");
 			}
 		}
@@ -121,10 +121,13 @@ public class TextGxdResultsSummary extends AbstractTextView
 		if(str == null) return "";
 		return str;
 	}
-	
-	private  final static String getCurrentDate()   {  
-        DateFormat df = new SimpleDateFormat( "yyyyMMdd_kkmmss" ) ;  
-        df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;  
-        return ( df.format( new Date(  )  )  ) ;  
+
+	private  final static String getCurrentDate()   {
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat( "yyyyMMdd_HHmmss" ) ;
+		//df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;
+        String formattedDate = df.format(date);
+        return (formattedDate);
 	}
+
 }

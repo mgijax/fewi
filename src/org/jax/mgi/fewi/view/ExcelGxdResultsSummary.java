@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
 public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 {
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(ExcelReferenceSummary.class);
+	private Logger logger = LoggerFactory.getLogger(ExcelGxdResultsSummary.class);
 
-	@Override 
+	@Override
 	public void buildExcelDocument(
 			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 	{
@@ -45,16 +45,16 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 			response.setHeader("Content-Disposition","attachment; filename=\""+filename+".xlsx\"");
 
 			GxdBatchFinder finder = (GxdBatchFinder) model.get("resultFinder");
-	
+
 			// set the batchSize
 			int batchSize = 1000;
 			finder.batchSize = batchSize;
-			
+
 			Sheet sheet = workbook.createSheet();
-			String[] headerTitles = {"MGI Gene ID", 
+			String[] headerTitles = {"MGI Gene ID",
 					"Gene Symbol",
-					"Gene Name", 
-					"MGI Assay ID", 
+					"Gene Name",
+					"MGI Assay ID",
 					"Assay Type",
 					"Anatomical System",
 					"Age",
@@ -72,10 +72,10 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 			{
 				header.createCell(i).setCellValue(headerTitles[i]);
 			}
-			
+
 			Row row;
 			int rownum = 1;
-			
+
 			try
 			{
 			// need this for processing genotype;
@@ -121,11 +121,11 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 						genotypeText = FormatHelper.newline2Comma(ntc.convertNotes(r.getGenotype(), '|',true,true));
 					}
 					row.createCell(11).setCellValue(genotypeText); // mutant alleles
-					
+
 					row.createCell(12).setCellValue(r.getJNum());
 
 					row.createCell(13).setCellValue(r.getPubmedId()); //pub med id
-					
+
 					row.createCell(14).setCellValue(r.getShortCitation());
 				}
 			}
@@ -134,12 +134,15 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 			{
 				// meh
 			}
-	
+
 		}
-	
-	private  final static String getCurrentDate()   {  
-        DateFormat df = new SimpleDateFormat( "yyyyMMdd_kkmmss" ) ;  
-        df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;  
-        return ( df.format( new Date(  )  )  ) ;  
+
+	private  final static String getCurrentDate()   {
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat( "yyyyMMdd_HHmmss" ) ;
+		//df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;
+        String formattedDate = df.format(date);
+        return (formattedDate);
 	}
+
 }
