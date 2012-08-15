@@ -85,7 +85,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_help.shtml#assaytab">	
+<div id="titleBarWrapper" userdoc="EXPRESSION_help.shtml#summary">	
 	<span class="titleBarMainTitle">Gene Expression Data</span>
 </div>
 
