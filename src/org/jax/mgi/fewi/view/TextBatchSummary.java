@@ -224,16 +224,18 @@ public class TextBatchSummary extends AbstractTextView {
 
 				for (String s: combineResults) {
 					writer.write(markerInfo.toString());
-					markerInfo.append("\t" + s);
+					//markerInfo.append("\t" + s);
+					writer.write("\t" + s + "\r\n");
 				}
 				markerInfo.append("\r\n");
 				combineResults = null;
+				// make sure that maker info is still printed out if there are no combined results
+				if( associations.size() == 0) writer.write(markerInfo.toString());	
 			}
 			else {
 				markerInfo.append("No associated gene");
 				markerInfo.append("\r\n");
 			}
-			writer.write(markerInfo.toString());	
 		}
 		queryForm = null;
 		results = null;
