@@ -123,6 +123,7 @@ ${templateBean.templateBodyStartHtml}
     var searchedStage = "${theilerStage}";
     var searchedAssayType = "${assayType}";
     var querystring = "jnum=${reference.jnumID}";
+    var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_by_marker_query.js">

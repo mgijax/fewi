@@ -150,8 +150,8 @@ public class RecomSpecificitySummaryRow {
           convertedAllComp = ntc.convertNotes(convertedAllComp, '|');
         }catch (Exception e) {}
 
-        return "<div style='padding-top:6px;'></div><span class='summaryDataCell'>"
-          + convertedAllComp + "</span>";
+        return String.format("<div style='padding-top:6px;'></div><span class='summaryDataCell'>%s<br/>%s</span>", 
+        		convertedAllComp, alleleSystemAssayResult.getBackgroundStrain());
     }
 
     // sex

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
@@ -29,6 +30,8 @@ import mgi.frontend.datamodel.Reference;
 public class TextGxdMarkersSummary extends AbstractTextView
 {
 
+	String assemblyBuild = ContextLoader.getConfigBean().getProperty("ASSEMBLY_VERSION");
+	
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
 			HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +53,7 @@ public class TextGxdMarkersSummary extends AbstractTextView
 				"Gene Name",
 				"Type",
 				"Chr",
-				"Genome Location-NCBI Build 37",
+				"Genome Location-" + assemblyBuild,
 				"cM",
 				"Strand"};
 		for(int i=0;i<headerTitles.length;i++)

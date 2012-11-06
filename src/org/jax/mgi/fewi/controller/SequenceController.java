@@ -427,15 +427,11 @@ public class SequenceController {
         if (!ids.isEmpty() & ids.size() > 1) {
 
             List<SequenceID> otherIDs = new ArrayList<SequenceID>();
-            Iterator<SequenceID> it = ids.iterator();
-
-            // first is the primary ID;  skip it - we only want secondary IDs
-            it.next();
-
-            // make list of secondary IDs
-            while (it.hasNext()) {
-              SequenceID secondaryID = it.next();
-              otherIDs.add(secondaryID);
+            
+            for (SequenceID otherId: sequence.getIds()) {
+            	if (!otherId.getAccID().equalsIgnoreCase(sequence.getPrimaryID())) {
+            		otherIDs.add(otherId);
+            	}
             }
 
             // package other IDs

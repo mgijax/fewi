@@ -36,7 +36,7 @@ var History = YAHOO.util.History;
                     label: "Feature Type"}]});
     }
     if (loco){
-    	myColumnDefs.push({label:"Genome Location - NCBI Build " + ncbiBuild,
+    	myColumnDefs.push({label:"Genome Location - " + ncbiBuild,
     	    sortable:false,
     	    children: [{key: "chromosome",
     	    		label: "Chr"},

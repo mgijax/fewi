@@ -2,9 +2,7 @@ project.name=fewi
 
 <!--jboss directories -->
 jboss.dir=/usr/local/mgi/jboss/
-jbossLib.dir=/usr/local/mgi/jboss/common/lib
-deploy.dir=/usr/local/mgi/jboss/server/fewi/deploy
-deployLib.dir=/usr/local/mgi/jboss/server/default/lib
+deploy.dir=/usr/local/mgi/jboss/standalone/deployments
 
 <!--fewi product directories -->
 lib.dir=www/WEB-INF/lib
@@ -19,7 +17,7 @@ global_config.dir=/usr/local/mgi/live/mgiconfig/web
 
 <!--data sources -->
 datasource=postgresDev-ds.xml
-jdbcdriver=lib/postgresql-9.0-801.jdbc4.jar
+jdbcdriver=/usr/local/mgi/live/lib/java/postgresql-9.0-801.jdbc4.jar
 
 <!--config files -->
 #config.file=fewi.properties.default

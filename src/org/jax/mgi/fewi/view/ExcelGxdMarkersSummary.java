@@ -23,6 +23,7 @@ import mgi.frontend.datamodel.ImagePane;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
@@ -37,6 +38,8 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 {
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(ExcelGxdMarkersSummary.class);
+	
+	String assemblyBuild = ContextLoader.getConfigBean().getProperty("ASSEMBLY_VERSION");
 
 	@Override
 	public void buildExcelDocument(
@@ -58,7 +61,7 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 					"Gene Name",
 					"Type",
 					"Chr",
-					"Genome Location-NCBI Build 37",
+					"Genome Location-" + assemblyBuild,
 					"cM",
 					"Strand"};
 			Row header = sheet.createRow(0);

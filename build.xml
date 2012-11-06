@@ -8,8 +8,7 @@
 
 	<!--libs -->
 	<path id="libs">
-		<fileset includes="*.jar" dir="www/WEB-INF/lib" />
-		<fileset includes="*.jar" dir="${jbossLib.dir}" />
+		<fileset includes="*.jar" dir="${lib.dir}" />
 		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
 		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
 	</path>
@@ -31,7 +30,7 @@
 	<target name="clean">
 		<delete dir="${compile.dir}" />
 		<delete file="${project.name}.war" />
-        <delete dir="${testoutput.dir}"/>
+        	<delete dir="${testoutput.dir}"/>
 	</target>
 
 
@@ -123,7 +122,7 @@
         <target name="deploy-ds" >
                 <echo>Deploy datasource</echo>
                 <copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
-                <copy file="${jdbcdriver}" todir="${deployLib.dir}" overwrite="true"/>
+                <copy file="${jdbcdriver}" todir="${deploy.dir}" overwrite="true"/>
         </target>
 
 </project>

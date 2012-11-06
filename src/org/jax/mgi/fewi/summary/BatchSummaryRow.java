@@ -111,13 +111,27 @@ public class BatchSummaryRow {
     	}
     }
     public String getChromosome() {
-    	if (batchMarkerId.getMarker() != null &&
-    			batchMarkerId.getMarker().getPreferredCentimorgans() != null){
-    		if (batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome() != null){
-    			return batchMarkerId.getMarker().getPreferredCentimorgans().getChromosome();
-    		}
+    	if (batchMarkerId.getMarker() != null) {
 
-    	}
+	    // first attempt to get the chromosome from the coordinates
+
+    	    MarkerLocation loc = 
+		batchMarkerId.getMarker().getPreferredCoordinates();
+    	    if (loc != null){
+		if (loc.getChromosome() != null) {
+		    return loc.getChromosome();
+		} // if coordinate's chromosome is non-null
+    	    } // if coordinates exist
+
+	    // fall back on chromosome from a cM location
+
+	    loc = batchMarkerId.getMarker().getPreferredCentimorgans();
+	    if (loc != null){
+    		if (loc.getChromosome() != null){
+    			return loc.getChromosome();
+    		} // if cM location's chromosome is non-null
+	    } // if cM location exists
+    	} // if batchMarkerId.getMarker() != null
     	return "";
     }
     public String getStrand() {

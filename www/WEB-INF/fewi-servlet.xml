@@ -11,18 +11,18 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
         
     <!-- Exposes fewi.properties to be used in @Value annotations -->
-    <context:property-placeholder location="classpath:../properties/fewi.properties" />
+    <context:property-placeholder location="WEB-INF/properties/fewi.properties" />
 
     <!-- Exposes externalUrls.properties as a property bean. -->
-    <util:properties id="externalUrls" location="classpath:../properties/externalUrls.properties" />
+    <util:properties id="externalUrls" location="WEB-INF/properties/externalUrls.properties" />
 
     <!-- Exposes GlobalConfig.properties and fewi.properties files as a 
         property bean.  Values cascade so thast the last one set overrides prior values-->
     <bean id="configBean" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>classpath:../properties/GlobalConfig.properties</value>
-                <value>classpath:../properties/fewi.properties</value>
+                <value>WEB-INF/properties/GlobalConfig.properties</value>
+                <value>WEB-INF/properties/fewi.properties</value>
             </list>
         </property>
     </bean>

@@ -12,35 +12,21 @@
 <!--  Datasource config for Postgres                                      -->
 <!-- ==================================================================== -->
 
-
 <datasources>
-<local-tx-datasource>
-<jndi-name>fe_frontend</jndi-name>
-<connection-url>jdbc:postgresql://mgi-fedb1:5432/fe</connection-url>
-<driver-class>org.postgresql.Driver</driver-class>
-<user-name>mgd_public</user-name>
-<password>mgdpub</password>
-
-<!-- The minimum connections in a pool/sub-pool. Pools are lazily constructed on first use -->
-<min-pool-size>5</min-pool-size>
-
-<!-- The maximum connections in a pool/sub-pool -->
-<max-pool-size>5</max-pool-size>
-
-<idle-timeout-minutes>10</idle-timeout-minutes>
-<!-- sql to call when connection is created.  Can be anything, select 1 is valid for PostgreSQL
-<new-connection-sql>select 1</new-connection-sql>
-    -->
-
-<!-- sql to call on an existing pooled connection when it is obtained from pool.  Can be anything, select 1 is valid for PostgreSQL
-<check-valid-connection-sql>select 1</check-valid-connection-sql>
-    -->
-
-<!-- corresponding type-mapping in the standardjbosscmp-jdbc.xml (optional) -->
-<metadata>
-<type-mapping>PostgreSQL 7.2</type-mapping>
-</metadata>
-</local-tx-datasource>
+   <datasource jndi-name="java:jboss/datasources/fe" pool-name="fe">
+      <connection-url>jdbc:postgresql://mgi-testdb3.jax.org:5432/fe</connection-url>
+         <driver>postgresql-9.0-801.jdbc4.jar</driver>
+      <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+      <pool>
+        <min-pool-size>5</min-pool-size>
+        <max-pool-size>5</max-pool-size>
+        <prefill>true</prefill>
+      </pool>
+      <security>
+        <user-name>mgd_public</user-name>
+        <password>mgdpub</password>
+      </security>
+    </datasource>
 
 </datasources>
 

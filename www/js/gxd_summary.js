@@ -351,7 +351,7 @@ var gxdGenesTable = function (oCallback) {
 		{key:"name", label:"Gene Name", sortable:false, minWidth:400},
 		{key:"type", label:"Type", sortable:false, minWidth:200},
 		{key:"chr", label:"Chr", sortable:true, width:40},
-		{key:"location", label:"Genome Location-NCBI Build 37", sortable:false, minWidth:300},     
+		{key:"location", label:"Genome Location - " + assemblyBuild, sortable:false, minWidth:300},     
 		{key:"cm", label:"cM", sortable:false, width:50},
 		{key:"strand", label:"Strand", sortable:false},
 		{key:"score", label:"score", sortable:false, hidden:true}

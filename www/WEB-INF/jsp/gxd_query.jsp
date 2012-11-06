@@ -105,6 +105,7 @@ ${templateBean.templateBodyStartHtml}
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
+    var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>

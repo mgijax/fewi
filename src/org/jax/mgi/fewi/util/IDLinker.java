@@ -1,36 +1,25 @@
 package org.jax.mgi.fewi.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import mgi.frontend.datamodel.AccessionID;
 import mgi.frontend.datamodel.ActualDatabase;
 
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ActualDatabaseFinder;
-import org.jax.mgi.fewi.summary.GOSummaryRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Component;
-import javax.annotation.PostConstruct;
-import org.springframework.transaction.annotation.Transactional;
 
 /** An IDLinker is an object devoted to making links for accession IDs, using
  * a properties file to map from a logical database to its various actual
@@ -41,8 +30,6 @@ public class IDLinker {
 
 	//--- Class Variables ---
 
-	@Autowired
-	private SessionFactory sessionFactory;
 
 	// shared instance of an IDLinker
 	private static IDLinker instance = null;
@@ -53,7 +40,7 @@ public class IDLinker {
 	// maps from a given logical database to a List of ActualDB objects
 	private HashMap<String,List<ActualDB>> ldbToAdb = new HashMap<String,List<ActualDB>> ();
 
-	private Configuration config = null;
+	private Properties config = null;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -78,10 +65,11 @@ public class IDLinker {
 		}
 
 		try {
-			config = new PropertiesConfiguration("../properties/externalUrls.properties");
+			config = ContextLoader.getExternalUrls();
+					// new PropertiesConfiguration("properties/externalUrls.properties");
 		} catch (Exception e) {
 			logger.debug ("Failed to read externalUrls.properties");
-logger.debug (e.toString());
+			logger.debug (e.toString());
 		};
 
 
@@ -116,9 +104,9 @@ logger.debug (e.toString());
 
 		Properties configBean = ContextLoader.getConfigBean();
 
-		for (Iterator iter =  config.getKeys(); iter.hasNext();) {
-			name = (String) iter.next();
-			value = config.getString(name);
+		for (Object key: config.keySet()){
+			name = (String)key;
+			value = config.getProperty(name);
 
 			hasNameMatcher = hasName.matcher(value);
 			if (hasNameMatcher.find()) {
@@ -158,6 +146,48 @@ logger.debug (e.toString());
 			}
 		}
 
+//		for (Iterator iter =  config.getKeys(); iter.hasNext();) {
+//			name = (String) iter.next();
+//			value = config.getString(name);
+//
+//			hasNameMatcher = hasName.matcher(value);
+//			if (hasNameMatcher.find()) {
+//				configValue = configBean.getProperty(
+//					hasNameMatcher.group(1));
+//				if (configValue != null) {
+//					value = value.replaceFirst(
+//						"\\$\\{([A-Za-z0-9_]+)\\}",
+//						configValue);
+//				}
+//			}
+//
+//			prefix = name.replaceAll("\\..*", "");
+//
+//			if (allAdbs.containsKey(prefix)) {
+//				adb = allAdbs.get(prefix);
+//			} else {
+//				adb = new ActualDB(prefix);
+//				allAdbs.put(prefix, adb);
+//			}
+//
+//			if (name.endsWith(".ldb")) {
+//				if (this.ldbToAdb.containsKey(value)) {
+//					adbs = this.ldbToAdb.get(value);
+//				} else {
+//					adbs = new ArrayList<ActualDB>();
+//					this.ldbToAdb.put(value, adbs);
+//					this.ldbToAdb.put(prefix, adbs);
+//				}
+//				adbs.add(adb);
+//			} else if (name.endsWith(".name")) {
+//				adb.setDisplayName(value);
+//			} else if (name.endsWith(".order")) {
+//				adb.setOrderVal(value);
+//			} else {
+//				adb.setUrl(value);
+//			}
+//		}
+
 		// Now go through those from the database.  If the actual db
 		// wasn't in the file, add an entry for it.  If it was in the
 		// file, then update the URL specified in the file.
@@ -186,7 +216,7 @@ logger.debug (e.toString());
 					" ", "_");
 				ldbName = adb1.getLogicalDb();
 
-				// skip updating MGI from the database, as 
+				// skip updating MGI from the database, as
 				// those entries are set for production
 				if (adbName.equals("MGI")) {
 					// skip it

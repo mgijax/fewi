@@ -28,9 +28,43 @@ ${templateBean.templateHeadHtml}
 </style>
 
 <script language="Javascript">
+function isIntegerFlank(flank) {
+    // error if non-numeric flank
+    if (isNaN(flank)) {
+        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer.");
+        return 0;
+    }
+
+    // error if flank is a float, not an integer
+    if (flank.indexOf('.') != -1) {
+        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer -- without a decimal point.");
+        return 0
+    }
+
+    // error if flank has extra spaces
+    if (flank.indexOf(' ') != -1) {
+        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer -- without extra spaces.");
+        return 0
+    }
+    return 1;
+}
+
 function formatForwardArgs() {
     document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
+
+    // ensure we have a valid value for Flank before proceeding
+    if (!isIntegerFlank(document.sequenceForm.flank1.value)) {
+        return 1;
+    }
     document.sequenceForm.submit();
+}
+
+function formatFastaArgs() {
+    // ensure we have a valid value for Flank before proceeding
+    if (!isIntegerFlank(document.markerCoordForm.flank1.value)) {
+        return 1;
+    }
+    document.markerCoordForm.submit();
 }
 </script>
 
@@ -165,8 +199,9 @@ td.padded { padding:4px; }
             </c:if>
           </c:if>
           <c:if test="${marker.preferredCentimorgans.chromosome == 'UN'}">
-            Chromosome Unknown<br/>
+            Chromosome Unknown
           </c:if>
+          <br/>
         </c:if>
         <c:if test="${(empty marker.preferredCentimorgans) and (not empty marker.preferredCytoband)}">
           <c:if test="${marker.preferredCytoband.chromosome != 'UN'}">
@@ -176,6 +211,13 @@ td.padded { padding:4px; }
             Chromosome Unknown<br/>
           </c:if>
           cytoband ${marker.preferredCytoband.cytogeneticOffset}<br/>
+        </c:if>
+        <c:if test="${not empty qtlIDs}">
+        	Download data from the QTL Archive: 
+			<c:forEach var="qtlID" items="${qtlIDs}" varStatus="status">
+			  ${qtlID}<c:if test="${!status.last}">, </c:if>
+			</c:forEach>
+			<br/>
         </c:if>
         <c:if test="${marker.countOfMappingExperiments > 0}">
           <br/></>Mapping data(<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a>)
@@ -203,7 +245,7 @@ td.padded { padding:4px; }
         <tr><td>
         <c:if test="${not empty marker.preferredCoordinates}"> 
         Chr${chromosome}:${startCoord}-${endCoord}
-          ${marker.preferredCoordinates.mapUnits}, ${marker.preferredCoordinates.strand} strand<br/>
+          ${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if><br/>
         <c:if test="${empty marker.preferredCoordinates}"> 
           ${marker.preferredCoordinates.mapUnits}<br/>
         </c:if>
@@ -212,9 +254,31 @@ td.padded { padding:4px; }
           ${marker.qtlNote}<br/>
         </c:if>
         <c:if test="${not empty marker.preferredCoordinates}"> 
-        (From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier})<br/>
-        <p/>
+        From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br/>
+	<p/>
         </c:if>
+
+        <c:if test="${not empty marker.preferredCoordinates}"> 
+	    <form name="markerCoordForm" method="GET" action="${configBean.SEQFETCH_URL}">
+	    <c:set var="length" value="${marker.preferredCoordinates.endCoordinate - marker.preferredCoordinates.startCoordinate + 1}"/>
+	    <c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${startCoord}!${endCoord}!!"/>
+
+	    <!-- handle end < start, which is very atypical -->
+	    <c:if test="${length < 0}">
+	        <c:set var="length" value="${marker.preferredCoordinates.startCoordinate - marker.preferredCoordinates.endCoordinate + 1}"/>
+	        <c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${endCoord}!${startCoord}!!"/>
+	    </c:if>
+
+      	    <fmt:formatNumber value="${length}" pattern="#0" var="lengthStr"/>
+
+	    <input type="hidden" name="seq1" value="${seqfetchParms}">
+	    <input type="button" value="Get FASTA" onClick="formatFastaArgs()">
+	    &nbsp;&nbsp;${lengthStr} bp 
+	    &nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb flank
+	    </form>
+	    <p/>
+	</c:if>
+
         <c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
         <c:set var="ensemblID" value="${marker.ensemblGeneModelID.accID}"/>
         <c:set var="ncbiID" value="${marker.ncbiGeneModelID.accID}"/>
@@ -303,6 +367,9 @@ td.padded { padding:4px; }
 		<c:if test="${not empty humanLocation}">
 				<c:set var="humanLoc" value="Human Chr<chr><loc> <span class='small'>Reference GRCh37.p2 Primary Assembly</span><br/>"/>
 				<c:set var="loc" value=":<start>-<end> bp, <strand> strand "/>
+				<c:if test="${empty humanLocation.strand}">
+				    <c:set var="loc" value=":<start>-<end> bp "/>
+				</c:if>
 				<c:set var="humanLoc" value="${fn:replace(humanLoc, '<chr>', humanLocation.chromosome)}"/>
 				<c:if test="${not empty humanLocation.startCoordinate}">
 					<fmt:formatNumber value="${humanLocation.startCoordinate}" pattern="#0" var="humanStart"/>
@@ -506,7 +573,7 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
-  <!-- ROW12 -->
+  <!-- Molecular reagents -->
   <c:if test="${(not empty marker.molecularReagentCountsByType) || (marker.countOfMicroarrayProbesets > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
@@ -535,7 +602,7 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
-  <!-- ROW13 -->
+  <!-- Other database links -->
   <c:if test="${not empty logicalDBs}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
@@ -552,7 +619,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- Sequences ribbon -->
-  <c:if test="${not empty marker.sequenceIDs}">
+  <c:if test="${marker.countOfSequences > 0}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Sequences
@@ -569,7 +636,7 @@ td.padded { padding:4px; }
 		      <td class="padded">${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
 		      <td class="padded">${marker.representativeGenomicSequence.length}</td>
 		      <td class="padded">${genomicSource}</td>
-		      <td class="padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;Kb</td></tr>
+		      <td class="padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb</td></tr>
 		  </c:if>
 		  <c:if test="${not empty marker.representativeTranscriptSequence}">
 			<c:set var="seq" value="${marker.representativeTranscriptSequence}" scope="request"/>
@@ -595,7 +662,7 @@ td.padded { padding:4px; }
 		<form name="sequenceFormPullDown">
 		  <I>For the selected sequences</I>
 		  <select name="seqPullDown">
-		  <option value="${configBean.SEQFETCH_URL}tofasta.cgi?" selected> download in FASTA format</option>
+		  <option value="${configBean.SEQFETCH_URL}" selected> download in FASTA format</option>
 		  <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi"> forward to MouseBLAST</option>
 		  <input type="button" value="Go" onClick="formatForwardArgs()">
 		  </select>
@@ -622,6 +689,7 @@ td.padded { padding:4px; }
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
 		<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+		  <c:set var="countText" value="${item.countType}"/>
 		  <c:set var="polyUrl" value="${configBean.WI_URL}searches/polymorphism_report.cgi?_Marker_key=${marker.markerKey}"/>
 		  <c:set var="polyExtra" value=""/>
 		  <c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
@@ -630,6 +698,15 @@ td.padded { padding:4px; }
 		  <c:set var="isSnp" value=""/>
 		  <c:set var="pad" value=""/>
 		  <c:if test="${fn:startsWith(item.countType, 'SNP')}">
+		    <c:choose>
+  				<c:when test="${configBean.BUILDS_IN_SYNC == '0'}">
+  					<c:set var="countText" value="SNPs"/>
+  				</c:when>
+  				<c:otherwise>
+  					<c:set var="countText" value="${item.countType}"/>
+  				</c:otherwise>
+  			</c:choose>
+  			
 		    <c:set var="isSnp" value="1"/>
 		    <c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
 		    <c:if test="${not empty configBean.SNP_BUILD}">
@@ -641,7 +718,8 @@ td.padded { padding:4px; }
 		      <c:set var="pad" value="&nbsp;&nbsp;&nbsp;"/>
 		    </c:if>
 		  </c:if>
-		  ${pad}${item.countType}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
+		  
+		  ${pad}${countText}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
 		  <c:if test="${status.first and (empty isSnp)}">: </c:if>
 		</c:forEach>
       </td>
@@ -687,8 +765,7 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
-  <!-- ROW15 -->
-
+  <!-- References -->
   <c:if test="${not empty marker.references}">
     <tr  valign=top ALIGN=left>
       <td class="<%=leftTdStyles.getNext() %>" >
@@ -711,7 +788,6 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- ROW16 -->
-
   <c:set var="otherMgiIDs" value="${marker.otherMgiIDs}"/>
   <c:if test="${not empty otherMgiIDs}">
     <tr  valign=top ALIGN=left>

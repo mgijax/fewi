@@ -1,16 +1,10 @@
 package org.jax.mgi.fewi.util;
 
-import org.jax.mgi.fewi.util.DBConstants;
-
-import java.util.*;
-import java.io.IOException;
-import java.io.InputStream;
-
 import mgi.frontend.datamodel.Sequence;
+import mgi.frontend.datamodel.SequenceID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.annotation.PostConstruct;
 
 /**
 * provides static methods to generate links to external providers
@@ -60,10 +54,17 @@ public class ProviderLinker
 
         // all genbank
         if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {
+        	String genbankID = seqID;
+        	for (SequenceID otherId: sequence.getIds()){
+        		if (otherId.getLogicalDB().equalsIgnoreCase("Sequence DB")
+        				&& !otherId.getAccID().equalsIgnoreCase(seqID)) {
+        			genbankID = otherId.getAccID();
+        		}
+        	}
 
-			links.append("<a href='" + genBankUrl + seqID + "'>GenBank</a> | ");
-			links.append("<a href='" + emblUrl + seqID + "'>EMBL</a> | ");
-			links.append("<a href='" + ddbjUrl + seqID + "'>DDBJ</a>");
+			links.append("<a href='" + genBankUrl + genbankID + "'>GenBank</a> | ");
+			links.append("<a href='" + emblUrl + genbankID + "'>EMBL</a> | ");
+			links.append("<a href='" + ddbjUrl + genbankID + "'>DDBJ</a>");
 		}
         // DFCI
         else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
