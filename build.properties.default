@@ -2,7 +2,7 @@ project.name=fewi
 
 <!--jboss directories -->
 jboss.dir=/usr/local/mgi/jboss/
-deploy.dir=/usr/local/mgi/jboss/standalone/deployments
+deploy.dir=/usr/local/mgi/jboss/fewi/deployments
 
 <!--fewi product directories -->
 lib.dir=www/WEB-INF/lib
