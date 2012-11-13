@@ -38,7 +38,7 @@ template.dir=/usr/local/mgi/live/mgiconfig/web/
 hibernate.generate_statistics=false
 hibernate.show_sql=false
 hibernate.dialect=org.hibernate.dialect.ProgressDialect
-jndi.datasource=java:fe_frontend
+jndi.datasource=java:jboss/datasources/fe
 
 # gxd lit result limit
 gxdLit.limit=20000
