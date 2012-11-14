@@ -51,6 +51,10 @@
 			org.springframework.web.context.ContextLoaderListener
 		</listener-class>
 	</listener>
+	
+	<session-config>
+		<path>/</path>
+	</session-config>
 
 	<!-- WELCOME -->
 	<welcome-file-list>
