@@ -53,7 +53,9 @@
 	</listener>
 	
 	<session-config>
-		<path>/</path>
+		<cookie-config>
+            <path>/</path>
+		</cookie-config>
 	</session-config>
 
 	<!-- WELCOME -->
