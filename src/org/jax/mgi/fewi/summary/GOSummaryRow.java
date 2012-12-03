@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 /**
  * wrapper around an Annotation;  represents on row in summary
  */
-@Component
 public class GOSummaryRow {
 
 	//-------------------
