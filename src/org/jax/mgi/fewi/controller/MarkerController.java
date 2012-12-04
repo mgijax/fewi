@@ -876,9 +876,11 @@ public class MarkerController {
      */
     private String getMinimapUrl(String parm){
 		String urlString = "";
+		logger.debug("get minimap: " + parm);
 		try {
 			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + 
 					"searches/markerMiniMap.cgi?" + parm);
+			logger.debug("open connection");
 			URLConnection urlConnection = url.openConnection();
 			HttpURLConnection connection = null;
 			
@@ -886,6 +888,7 @@ public class MarkerController {
 				connection = (HttpURLConnection) urlConnection;
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream())); 
 				String current;
+				logger.debug("read input");
 				current = in.readLine();
 				while (current != null) {
 					if (urlString.length() > 0) {
@@ -894,6 +897,7 @@ public class MarkerController {
 					urlString += current;
 					current = in.readLine();
 				}
+				logger.debug("close connection");
 				in.close();
 				connection.disconnect();
 			} else {
@@ -904,6 +908,7 @@ public class MarkerController {
 		} catch (IOException ioe) {
 			logger.error(ioe.getMessage());
 		}
+		logger.debug("done");
 		return urlString;
     }
 
