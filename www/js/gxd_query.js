@@ -245,7 +245,7 @@ var updateQuerySummary = function() {
 		var _ages = [];
 		for(var key in age.children)
 		{
-			if(age[key].selected)
+			if(age[key]!=undefined && age[key].selected)
 			{
 				// set to "Any" if stage "ANY" appears anywhere in the list
 				if(age[key].value=="ANY") ages = "Any";
@@ -285,7 +285,7 @@ var updateQuerySummary = function() {
 		var _stages = [];
 		for(var key in ts.children)
 		{
-			if(ts[key].selected)
+			if(ts[key]!=undefined && ts[key].selected)
 			{
 				// set to "Any" if stage "0" appears anywhere in the list
 				if(ts[key].value=="0") stages = "Any";
@@ -915,7 +915,7 @@ var getQueryString = function(form) {
 				if (element.parentNode.className != "inactive-content") {
 					for(var key in element.children)
 					{
-						if(element[key].selected)
+						if(element[key]!=undefined && element[key].selected)
 						{
 							_qs.push(element.name+"="+element[key].value);
 						}
@@ -1022,19 +1022,22 @@ function reverseEngineerFormInput(request)
 					// find which options need to be selected, and select them.
 					for(var key in input.children)
 					{
-						var selected = false;
-						for(var j=0;j<options.length;j++)
+						if(input[key]!=undefined)
 						{
-							if(options[j] == input[key].value)
+							var selected = false;
+							for(var j=0;j<options.length;j++)
 							{
-								selected = true;
-								input[key].selected = true;
-								break;
+								if(options[j] == input[key].value)
+								{
+									selected = true;
+									input[key].selected = true;
+									break;
+								}
 							}
-						}
-						if(!selected)
-						{
-							input[key].selected = false;
+							if(!selected)
+							{
+								input[key].selected = false;
+							}
 						}
 					}
 				}
