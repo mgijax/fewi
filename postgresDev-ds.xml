@@ -14,18 +14,27 @@
 
 <datasources>
    <datasource jndi-name="java:jboss/datasources/fe" pool-name="fe">
-      <connection-url>jdbc:postgresql://mgi-testdb3.jax.org:5432/fe</connection-url>
+      <connection-url>jdbc:postgresql://mgi-someserver.jax.org:5432/fe</connection-url>
          <driver>postgresql-9.0-801.jdbc4.jar</driver>
       <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
       <pool>
-        <min-pool-size>5</min-pool-size>
-        <max-pool-size>5</max-pool-size>
+        <min-pool-size>40</min-pool-size>
+        <max-pool-size>40</max-pool-size>
         <prefill>true</prefill>
       </pool>
       <security>
         <user-name>mgd_public</user-name>
         <password>mgdpub</password>
       </security>
+      <timeout>
+        <idle-timeout-minutes>2</idle-timeout-minutes>
+      </timeout>
+      <validation>
+          <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+          <background-validation>true</background-validation>
+          <useFastFail>true</useFastFail>
+      </validation>
+
     </datasource>
 
 </datasources>
