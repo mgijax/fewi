@@ -3,7 +3,6 @@ package gxd;
 import java.util.ArrayList;
 import java.util.List;
 
-import mgi.frontend.datamodel.Marker;
 
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -14,12 +13,8 @@ import org.jax.mgi.fewi.test.mock.MockGxdControllerQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
 import org.jax.mgi.fewi.test.mock.MockJSONGXDMarker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 public class NomenclatureSearchTest extends BaseConcordionTest {
-
-    @Autowired
-    private AnnotationMethodHandlerAdapter handler;
 
     // The class being tested is autowired via spring's DI
     @Autowired
@@ -30,14 +25,14 @@ public class NomenclatureSearchTest extends BaseConcordionTest {
 	 */
 	public SearchResults<SolrGxdMarker> getGenesByNomen(String nomen) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
     	mq.setNomenclature(nomen);
     	return mq.getGenes();
 	}
 	
 	public JsonSummaryResponse<MockJSONGXDMarker> mockResultQuery(String nomen) throws Exception
     {
-    	MockGxdHttpQuery mq = new MockGxdHttpQuery(handler, gxdController);
+    	MockGxdHttpQuery mq = getMockQuery().gxdHttp();
     	mq.setNomenclature(nomen);
     	return mq.getGenes();
     }

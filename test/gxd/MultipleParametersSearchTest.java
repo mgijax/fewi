@@ -5,22 +5,12 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdQueryParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 
 public class MultipleParametersSearchTest extends BaseConcordionTest {
-
-    @Autowired
-    protected GXDController gxdController;
-    
-    @Autowired
-    protected AnnotationMethodHandlerAdapter handler;
-
 	/*
 	 * Helper functions for mocking queries
 	 */
@@ -63,7 +53,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
 
     public Integer getGeneCountByNomenAndAssayType(String nomen, String assayTypeStr) throws Exception {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
     	m.setAssayType(assayTypes);
 		return m.getGenes().getTotalCount();
@@ -71,7 +61,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
     public Integer getResultCountByNomenAndAssayType(String nomen, String assayTypeStr) throws Exception
     {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
     	m.setAssayType(assayTypes);
 		return m.getAssayResults().getTotalCount();
@@ -83,13 +73,13 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
      *  - theiler stage
      */
     public Integer getGeneCountByNomenAndTS(String nomen, Integer ts) throws Exception {
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
     	m.setTheilerStage(ts);
 		return m.getGenes().getTotalCount();
 	}
     public Integer getResultCountByNomenAndTS(String nomen, Integer ts) throws Exception {
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
     	m.setTheilerStage(ts);
 		return m.getAssayResults().getTotalCount();
@@ -102,7 +92,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
      */
     public Integer getGeneCountByTSAndAssayType(Integer ts, String assayTypeStr) throws Exception {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setTheilerStage(ts);
     	m.setAssayType(assayTypes);
 		return m.getGenes().getTotalCount();
@@ -110,7 +100,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
     public Integer getResultCountByTSAndAssayType(Integer ts, String assayTypeStr) throws Exception
     {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setTheilerStage(ts);
     	m.setAssayType(assayTypes);
 		return m.getAssayResults().getTotalCount();
@@ -123,7 +113,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
      *  - detection level
      */
     public Integer getGeneCountByNomenAndAgeAndDetection(String nomen, String ageStr, String detected) throws Exception {
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
 		m.setAge(MockGxdQueryParser.parseAgeString(ageStr));
 		m.setDetected(detected);
@@ -131,7 +121,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
 	}
     public Integer getResultCountByNomenAndAgeAndDetection(String nomen, String ageStr, String detected) throws Exception
     {
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
 		m.setAge(MockGxdQueryParser.parseAgeString(ageStr));
 		m.setDetected(detected);
@@ -146,7 +136,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
      */
     public Integer getGeneCountByNomenAndTSAndAssayType(String nomen, Integer ts,String assayTypeStr) throws Exception {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
     	m.setTheilerStage(ts);
     	m.setAssayType(assayTypes);
@@ -155,7 +145,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
     public Integer getResultCountByNomenAndTSAndAssayType(String nomen, Integer ts, String assayTypeStr) throws Exception
     {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
 		m.setNomenclature(nomen);
     	m.setTheilerStage(ts);
     	m.setAssayType(assayTypes);
@@ -171,7 +161,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
      */
     public Integer getGeneCountByNomenAndTSAndAssayTypeAndDetected(String nomen, Integer ts, String assayTypeStr, String detected) throws Exception {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
     	m.setNomenclature(nomen);
     	m.setTheilerStage(ts);
     	m.setAssayType(assayTypes);
@@ -181,7 +171,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
     public Integer getResultCountByNomenAndTSAndAssayTypeAndDetected(String nomen, Integer ts, String assayTypeStr, String detected) throws Exception
     {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
     	m.setNomenclature(nomen);
     	m.setTheilerStage(ts);
     	m.setAssayType(assayTypes);
@@ -199,7 +189,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
      */
     public Integer getGeneCountByNomenAndAgeAndAssayTypeAndDetected(String nomen, String ageStr, String assayTypeStr, String detected) throws Exception {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
     	m.setNomenclature(nomen);
     	m.setAge(MockGxdQueryParser.parseAgeString(ageStr));
     	m.setAssayType(assayTypes);
@@ -209,7 +199,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
     public Integer getResultCountByNomenAndAgeAndAssayTypeAndDetected(String nomen, String ageStr, String assayTypeStr, String detected) throws Exception
     {
 		List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m = getMockQuery().gxdHttp();
     	m.setNomenclature(nomen);
     	m.setAge(MockGxdQueryParser.parseAgeString(ageStr));
     	m.setAssayType(assayTypes);
@@ -220,7 +210,7 @@ public class MultipleParametersSearchTest extends BaseConcordionTest {
     public Integer getWildTypeResultCountByNomenAndAgeAndAssayTypeAndDetected(String nomen, String ageStr, String assayTypeStr, String detected) throws Exception
     {
     	List<String> assayTypes = convertStringToAssayTypes(assayTypeStr);
-		MockGxdHttpQuery m = new MockGxdHttpQuery(handler, gxdController);
+		MockGxdHttpQuery m =getMockQuery().gxdHttp();
 		m.setIsWildType(true);
     	m.setNomenclature(nomen);
     	m.setAge(MockGxdQueryParser.parseAgeString(ageStr));

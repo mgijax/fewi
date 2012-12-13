@@ -1,0 +1,195 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	span.hilite {background-color:#FFFF00;}
+</style>
+
+    <title>Genotype Popup: Part 2, Images and Diseases</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Genotype Popup Page Tests</h1>
+    <ul>
+        <li>User story 41, WI: Images and Disease models in genotype popup<br/></li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>The thumbnail image should display in the top right corner of the popup page</li>
+		<li>The image caption should display below the thumbnail image </li>
+		<li>The disease table should display in the lower left corner of the popup page</li>
+		<li>The disease table should display the correct diseases, references and OMIM links</li>
+		<li>The Disease table should display NOTs correctly</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify the thumbnail image  associated with the genotype as &quot;Primary&quot; is being displayed
+ 			<p concordion:assertTrue="true">Passed - kstone 9-24-2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Fbn1</b> (<b>MGI:1857348</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3619520</b>  allele Pair: <i>Tsk/+</i> with genetype: <i>ht3</i></li>
+                <li>Verify the correct image is displaying in the upper right corner<i>(verify the image against public)</i></li>
+    		</ol>
+    		</li>
+    		<li>Verify the image caption displayed is for the  &quot;Primary&quot; thumbnail image associated with the genotype
+			<p concordion:assertTrue="true">Passed - kstone 9-24-2012</p>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Fbn1</b> (<b>MGI:1857348</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3619520</b>  allele Pair: <i>Tsk/+</i> with genetype: <i>ht3</i></li>
+                <li>Verify the caption below the image is correct<i>(verify the image caption against public)</i></li>
+    		</ol>
+    		</li>
+    		<li>Verify the disease table is displayed in the lower left corner of the page
+ 			<p concordion:assertTrue="true">Passed - kstone 9-25-2012</p>
+			<ol>
+			    <li>Open the test Web Interface</li>
+			    <li>Navigate to the Allele Detail Page for <b>Fbn1</b> (<b>MGI:1857348</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3619520</b>  allele Pair: <i>Tsk/+</i> with genetype: <i>ht3</i></li>
+                <li>Verify the Disease table  displays A header with the columns <b>Mouse Models of Human Disease, OMIM ID, and Ref(S)</b></li>
+                <li>Verify the correct diseases, omim ids and references are returned.
+    		For this Genotype the results should look like this:(order of J# not important?)
+    		<table>
+    		<tr>
+    		<th>Mouse Models of Human Disease</th>
+    		<th>OMIM ID</th>
+    		<th>Ref(s)</th>
+    		</tr>
+    		
+    		<tr>
+			<td>Marfan Syndrome;MFS</td>
+			<td>154700</td>
+			<td>J:30961</td>
+			</tr>
+			
+			<tr>
+			<td>Emphysema, Hereditary Pulmonary</td>
+			<td>130700</td>
+			<td>J:1326, J:15018, J:30961, J:6566, J:68448</td>
+			</tr>
+			
+			<tr>
+			<td>Scleroderma, Familial Progressive</td>
+			<td>181750</td>
+			<td>J:21987, J:7057, J:7185, J:8047</td>
+			</tr>
+			
+			</table>
+			</li>
+    		</ol>
+    		</li>
+    		<li>Verify the disease table is displaying NOT diseases correctly
+ 			<p concordion:assertTrue="true">Passed - kstone 9-25-2012</p>
+			<ol>
+			    <li>Open the test Web Interface</li>
+			    <li>Navigate to the Allele Detail Page for <b>Fbn1</b> (<b>MGI:1857348</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3604814</b>  allele Pair: <i>Tsk/+</i> with genetype: <i>ht2</i></li>
+                <li>Verify the second Human Disease(Pituitary Adenoma, Growth Hormone-Secreting) is preceded by the work <b>NOT</b></li>
+            </ol>
+    		</li>
+    		<li>Verify that the image links to the correct image detail page
+    		<p concordion:assertTrue="true">Passed - kstone 9-24-2012</p>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Fbn1</b> (<b>MGI:1857348</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3619520</b>  allele Pair: <i>Tsk/+</i> with genetype: <i>ht3</i></li>
+                <li>Click on the Image in the right upper corner</li>
+                <li>Verify the correct Image detail page displays.</li>
+    		</ol>
+    		</li>
+    		<li>Verify the OMIM links
+ 			<p concordion:assertTrue="true">Passed - kstone 9-25-2012</p>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Fbn1</b> (<b>MGI:1857348</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3619520</b>  allele Pair: <i>Tsk/+</i> with genetype: <i>ht3</i></li>
+                <li>Click on the OMIM link <b>154700</b> found in the disease table</li>
+                <li>Verify that the link takes you to the correct disease page on the OMIM.org website</li>
+                <li>Click on the OMIM link <b>130700</b> found in the disease table</li>
+                <li>Verify that the link takes you to the correct disease page on the OMIM.org website</li>
+                <li>Click on the OMIM link <b>181750</b> found in the disease table</li>
+                <li>Verify that the link takes you to the correct disease page on the OMIM.org website</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<li>Verify the thumbnail image  associated with the genotype as &quot;Primary&quot; is being displayed
+    		<ol>
+                <li>For genotype with ID <b concordion:set="#gid">MGI:3619520</b>  allele Pair: <i>Tsk/+</i> with genetype: <i>ht3</i></li>
+                <li>Verify the image with MGIID <b concordion:assertEquals="getImageMGIID(#gid)">MGI:3806585</b>
+                	and has thumbnail with PixelDB ID <b concordion:assertEquals="getThumbnailPixelDBID(#gid)">71267</b></li>
+                <li>Also verify that the following thumbnail caption is displayed: 
+                	"<b cc:assertEqualsCI="getThumbnailCaption(#gid)">Fbn1&lt;sup&gt;Tsk&lt;/sup&gt;/Fbn1&lt;sup&gt;+&lt;/sup&gt; skin exhibits abnormal organization and distribution of microfibrillar arrays</b>"
+                	</li>
+    		</ol>
+    		</li>
+			<li>Verify that only distinct disease models for the genotype are being displayed
+    		<ol>
+            	<li>For genotype with ID <b concordion:set="#gid">MGI:3606114</b></li>
+               	<li>Verify that the following disease model(s) is displayed:
+               	<table concordion:verifyRows="#disease : getDiseases(#gid)">
+	               	<tr><th concordion:assertEquals="#disease.term">Disease Model</th>
+	               	<th concordion:assertEquals="#disease.termID">OMIM ID</th></tr>
+	               	<tr><td>D-Bifunctional Protein Deficiency</td><td>261515</td></tr>
+               	</table></li>
+               	<li>Also verify that disease with OMIM ID <b concordion:set="#omim">261515</b> has the following jnums:
+               	<table cc:verifyRowsUnordered="#jnum : getJnumsForDisease(#gid,#omim)">
+               	<tr><th concordion:assertEquals="#jnum">Jnum ID</th></tr>
+               	<tr><td>J:89945</td></tr>
+               	<tr><td>J:99925</td></tr>
+               	</table></li>
+               	<!-- Another example with many disease models to show sorting -->
+               	<li>(Verify sorting is correct) For genotype with ID <b concordion:set="#gid">MGI:5009321</b></li>
+               	<li>Verify that the following disease model(s) is displayed:
+               	<table concordion:verifyRows="#disease : getDiseases(#gid)">
+	               	<tr><th concordion:assertEquals="#disease.term">Disease Model</th>
+	               	<th concordion:assertEquals="#disease.termID">OMIM ID</th></tr>
+	               	<tr><td>Hyperparathyroidism 1; HRPT1</td><td>145000</td></tr>
+	               	<tr><td>Multiple Endocrine Neoplasia, Type I; MEN1</td><td>131100</td></tr>
+	               	<tr><td>Pituitary Adenoma, Growth Hormone-Secreting</td><td>102200</td></tr>
+	               	<tr><td>Pituitary Adenoma, Prolactin-Secreting</td><td>600634</td></tr>
+	               	<tr><td>Thyroid Carcinoma, Follicular; FTC</td><td>188470</td></tr>
+               	</table></li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

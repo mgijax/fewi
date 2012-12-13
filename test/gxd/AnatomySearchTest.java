@@ -13,12 +13,8 @@ import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdControllerQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 public class AnatomySearchTest extends BaseConcordionTest {
-
-	@Autowired
-    private AnnotationMethodHandlerAdapter handler;
 
     // The class being tested is autowired via spring's DI
     @Autowired
@@ -26,26 +22,26 @@ public class AnatomySearchTest extends BaseConcordionTest {
 	    
 	public int getResultCount(String structure) throws Exception
 	{
-		MockGxdHttpQuery mq = new MockGxdHttpQuery(handler,gxdController);
+		MockGxdHttpQuery mq = getMockQuery().gxdHttp();
 		mq.setStructure(structure);
 		return mq.getAssayResults().getTotalCount();
 	}
 	public int getAssayCount(String structure) throws Exception
 	{
-		MockGxdHttpQuery mq = new MockGxdHttpQuery(handler,gxdController);
+		MockGxdHttpQuery mq = getMockQuery().gxdHttp();
 		mq.setStructure(structure);
 		return mq.getAssays().getTotalCount();
 	}
 	public int getGeneCount(String structure) throws Exception
 	{
-		MockGxdHttpQuery mq = new MockGxdHttpQuery(handler,gxdController);
+		MockGxdHttpQuery mq = getMockQuery().gxdHttp();
 		mq.setStructure(structure);
 		return mq.getGenes().getTotalCount();
 	}
 	
 	public List<String> getGeneSymbols(String structure) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setStructure(structure);
 		List<String> symbols = new ArrayList<String>();
 		SearchResults<SolrGxdMarker> results = mq.getGenes();
@@ -59,7 +55,7 @@ public class AnatomySearchTest extends BaseConcordionTest {
 	
 	public Set<String> getStructures(String structure) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setStructure(structure);
 		Set<String> structures = new HashSet<String>();
 		SearchResults<SolrAssayResult> results = mq.getAssayResults();
@@ -74,7 +70,7 @@ public class AnatomySearchTest extends BaseConcordionTest {
 	// Returns the structures for each result combined with their TS e.g. "TS4: inner cell mass"
 	public Set<String> getTSStructures(String structure) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setStructure(structure);
 		Set<String> structures = new HashSet<String>();
 		SearchResults<SolrAssayResult> results = mq.getAssayResults();

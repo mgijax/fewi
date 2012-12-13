@@ -5,6 +5,7 @@ import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Image;
+import mgi.frontend.datamodel.AllelePhenoSummary;
 
 import org.jax.mgi.fewi.hunter.SolrAlleleKeyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -18,43 +19,51 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AlleleFinder {
 
-	private Logger logger = LoggerFactory.getLogger(AlleleFinder.class);
+    private Logger logger = LoggerFactory.getLogger(AlleleFinder.class);
 
-	@Autowired
-	private SolrAlleleKeyHunter alleleHunter;
+    @Autowired
+    private SolrAlleleKeyHunter alleleHunter;
 
-	@Autowired
-	private HibernateObjectGatherer<Allele> alleleGatherer;
+    @Autowired
+    private HibernateObjectGatherer<Allele> alleleGatherer;
+
+    @Autowired
+    private HibernateObjectGatherer<AllelePhenoSummary> phenoGatherer;
 
 
     /////////////////////////////////////////////////////////////////////////
     //  Retrieval of an allele, for a given ID
     /////////////////////////////////////////////////////////////////////////
 
-	public SearchResults<Allele> getAlleleByID(SearchParams searchParams) {
+    public SearchResults<Allele> getAlleleByID(SearchParams searchParams) {
 
-		logger.info("AlleleFinder.getAlleleByID()");
+        logger.info("AlleleFinder.getAlleleByID()");
 
-		// result object to be returned
-		SearchResults<Allele> searchResults = new SearchResults<Allele>();
+        // result object to be returned
+        SearchResults<Allele> searchResults = new SearchResults<Allele>();
 
-		// ask the hunter to identify which objects to return
-		alleleHunter.hunt(searchParams, searchResults);
+        // ask the hunter to identify which objects to return
+        alleleHunter.hunt(searchParams, searchResults);
 
-		// gather objects identified by the hunter, add them to the results
+        // gather objects identified by the hunter, add them to the results
         List<Allele> alleleList = alleleGatherer.get( Allele.class, searchResults.getResultKeys() );
         searchResults.setResultObjects(alleleList);
 
-		return searchResults;
-	}
-	public List<Allele> getAlleleByID(String alleleID)
-	{
-		return getAlleleByID(Arrays.asList(alleleID));
-	}
-	public List<Allele> getAlleleByID(List<String> alleleID)
-	{
-		return alleleGatherer.get( Allele.class, alleleID, "primaryID" );
-	}
+        return searchResults;
+    }
+
+    public List<AllelePhenoSummary> getPhenoSummaryByAlleleID(String alleleID)
+    {
+        return phenoGatherer.get(AllelePhenoSummary.class, Arrays.asList(alleleID), "primaryID");
+    }
+    public List<Allele> getAlleleByID(String alleleID)
+    {
+        return getAlleleByID(Arrays.asList(alleleID));
+    }
+    public List<Allele> getAlleleByID(List<String> alleleID)
+    {
+        return alleleGatherer.get( Allele.class, alleleID, "primaryID" );
+    }
 
 
     /////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,129 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>All Genotypes Popup Test Suite</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>All Genotypes Popup Test Suite</h1>
+    <ul>
+        <li>User story #47, WI: Popup for All Genotypes</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>some button/link exists to make the "all genotypes" popup appear</li>
+		<li>popup includes a concatenation of all the genotype popups in the order they appear in the grid and legend</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Button exists that opens the window (and looks buttony)
+			<p concordion:assertTrue="true">jeffc 11/07/2012</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Trp53<sup>tm1Tyj</sup></b></li>
+                <li>Click on the button <b>See All</b></li>
+                <li>Verify the All Genotypes popup page displays in it's own window</li>
+    		</ol>
+    		</li>
+
+    		<li>Contents of popup is a concatenation of all the content of every genotype popup in the grid (in the same order as grid and legend)
+			<p concordion:assertTrue="true">jeffc 11/07/2012</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b></li>
+                <li>Click on the button <b>See All</b></li>
+                <li>Verify all the Genotypes are displayed in the correct order(should follow the same order as the Phenotype summary section)</li>
+                <li>Verify for genotype hm4 that an image displays to the right and clicking on the image takes you to the correct image detail</li>
+                <li>Verify for genotype hm6 that the correct disease table displays for this genotype</li>
+    		</ol>
+    		</li>
+
+    		<li>The ribbon for each genotype symbol does not include a print button
+			<p concordion:assertTrue="true">jeffc 11/07/2012</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b></li>
+                <li>Click on the button <b>See All</b></li>
+                <li>Verify the genotype header ribbon no longer contains a <b>Print</b> button</li>
+    		</ol>
+    		</li>
+
+    		<li>The All Genotypes opens in a new browser window
+			<p concordion:assertTrue="true">jeffc 11/07/2012</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b></li>
+                <li>Click on the button <b>See All</b></li>
+                <li>Verify this link opens up as a new window not as a popup page</li>
+    		</ol>
+    		</li>
+    		<li>Clicking on a genotype link does not open up the All Genotypes page
+			<p concordion:assertTrue="true">jeffc 11/07/2012</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b></li>
+                <li>Click on the link <b>hm5</b></li>
+                <li>Verify the popup displayed is for just this genotype and not the All Genotypes popup page</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

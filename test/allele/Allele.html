@@ -1,0 +1,331 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<title>Allele Detail | High-Throughput MP Project</title>
+<style>
+	h5 {font-size:1em; font-variant:small-caps;}
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	th {background-color:#D0E0F0;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	.lowlite {background-color:#FFFFDD;}
+	tr.small th, tr.small td {font-size:0.75em;}
+</style>
+</head>
+<body>
+<!-- 
+declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+    <h1>Allele Detail - High-Throughput MP Project</h1>
+
+	<div>
+	<h2>Functional Description</h2>
+	<p>For the Allele Detail Page, we plan to modify the Phenotype Summary grid to incorporate:</p>
+	<ul>
+		<li>Pulling the display from the FEWI</li>
+		<li>Displaying sex-specific (male/female) annotations</li>
+		<li>Displaying "Normal" annotations for any MP term</li>
+		<li>Associating mutant cell lines for an allele with the genotype which carries the MP annotation</li>
+		<li>Displaying MP annotations loaded automatically from WTSI (Sanger) and Europhenome High-Throughput Phenotyping projects</li>
+		<li>Modifying the page such that Phenotype-by-Genotype text is contained only in pop-up pages, one per Genotype</li> 
+	</ul>
+	
+	</div>
+
+	<div>
+	<h2>Test Suites</h2>
+<!-- 
+Possible test cases:
+Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. Curated one ref to the allele (for MP annots?).
+
+ -->
+		<table>
+			<tr>
+				<th width="40%">Description</th>
+				<th>User story IDs</th>
+				<th>Contains Manual Tests?</th>
+				<th width="45%">Notes</th>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>Loads</h5></td>
+			</tr>
+			<tr>
+				<td><p>* <a concordion:run="concordion" href="LoadGenotypes.html">Write
+						a parser and loader for genotypes in Sanger file</a></p>
+					<p>* See also <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/">Load-testing index page</a>:</p>
+					<ul>
+						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/logs/sangerload.cur.log">Results of "kick-out" tests</a> (Curator's Log file)</li>
+						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_skipped.txt">Rows from MP annotations skipped (bad data)</a></li>
+						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/logs/sangerload.test.sorted.log">Results of load-verification automated tests, sorted</a>
+						<ul>
+							<li>cell lines, zygosity for genotypes</li>
+							<li>MP annotations (incl. Normals via additional files)</li>
+							<li>"duplicate" M/F annotations collapsed to "NA"</li>
+							<li>allele germ line transmission status</li>
+						</ul>
+						</li>
+					</ul>
+				</td>
+				<td>16, 84, 88</td>
+				<td>Yes</td>
+				<td>
+				<ul>
+					<li>Manual tests done. 9/13 klf.</li>
+					<li>Automated data-load-testing added 10/26/12.</li>
+					<li> <span concordion:assertTrue="true">Loading scripts refactored. (klf 11/7/12)</span></li>
+					<li><span concordion:assertTrue="true">Story 88 allele transmission status tests. (klf 12/6/12)</span></li>
+				</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a concordion:run="concordion" href="LoadPhenotypeAnnots.html">Load Sanger MP Annots (with sex-specificity)</a>
+					<ul>
+						<li><a
+							concordion:run="concordion" href="EISangerLoadAnnotations.html">More
+								testing via the EI</a></li>
+					</ul>
+				</td>
+				<td>39, 84</td>
+				<td>Yes (no auto)</td>
+				<td>Manual tests done. 9/27 klf. Reran for refactor Sanger load.</td>
+			</tr>
+			<tr>
+				<td>
+					<a concordion:run="concordion" href="LoadGenotypeCellLines.html">Modify Sanger Loads to add Cell Lines</a><br/>
+						<i>Tests verify that "bad" data are rejected from load.</i>
+					<ul>
+						<li><a concordion:run="concordion" href="EISangerLoadCellLines.html">Verify correct data were loaded using the EI</a></li>
+					</ul>
+					
+				</td>
+				<td>55, 84</td>
+				<td></td>
+				<td>Reran for refactor Sanger load.</td>
+			</tr>
+			<tr>
+				<td>Refactor load into "generic" HTMP load<br/><span concordion:assertTrue="true">All retests passed. 11/13/2012</span></td>
+				<td>84</td>
+				<td></td>
+				<td>Reran some previous load tests</td>
+			</tr>
+			<tr>
+				<td>
+					<p>* <a concordion:run="concordion" href="EurophenomeLoad.html">Parse and load Europhenome MP annots</a></p> 
+					<p>* See also <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/">Europhenome load-testing index page</a>:</p>
+					<ul>
+						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/logs/europhenoload.cur.log">Results of "kick-out" tests</a> (Curator's Log file)</li>
+						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/input/mgi_europhenoload_skipped.txt">Rows from MP annotations skipped (bad data)</a></li>
+						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/logs/europhenoload.test.sorted.log">Results of load-verification automated tests, sorted</a>
+						<ul>
+							<li>cell lines, zygosity for genotypes</li>
+							<li>MP annotations</li>
+							<li>duplicate F/F and M/M annotations NOT collapsed to "NA"</li>
+						</ul>
+						</li>
+					</ul>
+				</td>
+				<td>87, 132</td>
+				<td></td>
+				<td>
+				<ul>
+					<li><span concordion:assertTrue="true">Set up test file when we added Europhenome data, incl. genotypes, cell lines, and sex-specificity. (klf 11/9/12)</span></li>
+					<li><span concordion:assertTrue="true">Tests for sex-specific duplicate rows. (klf 12/11/2012)</span></li>
+				</ul>
+				</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleTransmissionStatus.html">Allele Transmission Status Update (WI verifications)</a></td>
+				<td>88</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			
+			<tr>
+				<td colspan="4"><h5>EI</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="EIMPmoduleSexSpecificity.html">Modify EI for Sex
+						Specificity</a></td>
+				<td>07</td>
+				<td>Yes</td>
+				<td>Manual tests done. 8/28 Jeffc</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="EIAddModCellLines.html">EI: Search/display and Add/modify Cell Lines</a></td>
+				<td>56, 63</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="EINormalAnnotations.html">EI: Normal qualifier for any MP Term</a></td>
+				<td>73</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>WI: Allele Detail Page</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="AlleleDetailPhenoSummary.html">Modify Phenotype Summary
+						grid</a></td>
+				<td>34</td>
+				<td>Yes</td>
+				<td>Manual tests done. 9/14 klf</td>
+			</tr>
+<!-- 
+			TESTS NO LONGER NEEDED. STORY WAS SUPERSEDED. klf 11/26/12
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleDetailPhenoDisease.html">Phenotype Summary Grid - Add Diseases</a></td>
+				<td>51</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+-->
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleDetailPhenoSummary2.html">Phenotype Summary Grid - Right-side MP content</a> <br/>
+				Phenotype Summary Grid - Display Normals for any term (included)</td>
+				<td>14, 74, 81</td>
+				<td></td>
+				<td></td>
+			</tr>  
+<!-- 
+			TESTS NO LONGER NEEDED. STORY WAS SUPERSEDED. klf 11/26/12
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleDetailPhenoDisease2.html">Phenotype Summary Grid - Right-side Diseases content</a></td>
+				<td>70</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+ -->
+			<tr>
+				<td><a concordion:run="concordion" href="SimplifyDiseaseModelSection.html">Simplify Disease Models on Allele Detail</a></td>
+				<td>107</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="DisplayEurophenomeData.html">Display Europhenome MP Annotations</a></td>
+				<td>90</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a  concordion:run="concordion" href="GenotypeLegend.html">Genotypes legend</a></td>
+				<td>21</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GenotypePopup.html">Genotype Popup Window - Annotations Only</a></td>
+				<td>13, 20</td>
+				<td>Yes</td>
+				<td>Verified popup appears in all browsers. 9/17 Jeffc<br />(Verified
+					IE bug fixed 9/21 Jeffc)
+				</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GenotypePopupDiseaseImages.html">Genotype Popup Window - Add Images, Diseases</a></td>
+				<td>41</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GenotypePopupSexSpecificity.html">Genotype Popup Window - Add Sex-Specificity</a></td>
+				<td>50</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GenotypePopupLegend.html">Genotype Popup Window - Add Legend</a></td>
+				<td>76</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="GenotypePopupCellLines.html">Genotype Popup Window - Add Cell Lines</a></td>
+				<td>57</td>
+				<td></td>
+				<td>Uses test data from mgi_genotypeload_test file. <br/>
+				READY (klf). 10/23/2012. <br/> 
+				Can be automated???</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AllGenotypesPopup.html">WI Popup Window: all genotypes with MP, OMIM, images</a></td>
+				<td>47</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="IMSRRibbonSection.html">Move "Find Mice" ribbon</a></td>
+				<td>105</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleDetailLookAndFeelChanges.html">Look and Feel updates to Allele Detail Page</a></td>
+				<td>123</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleDetailExpressionRibbon.html">Remove Expression ribbon</a></td>
+				<td>128</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>WI: Other Pages</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleSummaryChanges.html">Simplify Allele Summary Page</a></td>
+				<td>106</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="CodeMergeSanityCheck.html">Code merge sanity check</a></td>
+				<td>119</td>
+				<td></td>
+				<td></td>
+			</tr>
+						<tr>
+				<td><a concordion:run="concordion" href="HumanDiseaseDetailSuppressRosa.html">Suppress Gene Gt(ROSA)26Sor on Disease Detail page</a></td>
+				<td>121</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="4"><h5>Build Sprint: Other Tests</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="FirienBuildSprintTests.html">Build Sprint tests for Firien</a></td>
+				<td>none</td>
+				<td></td>
+				<td>These are tests that fail on Cardolan due to differences in the install.  We need to run them on Firien during the Build Sprint.  Concordion instrumentation has been removed in the other test suites.</td>
+			</tr>
+		</table>
+	</div>
+<!-- <p>* means tests must be  updated for all newly added functionality</p>
+<p>Dynamic Data spreadsheet used for some automated tests is located at <a target="_blank" href="https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0">https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0</a>.</p> -->
+<p>Product Backlog: <a target="_blank" href="http://cardolan.informatics.jax.org:9180/kunagi/login.html">kunagi</a>.</p>
+<p>High-Throughput MP Project <a target="_blank" href="http://prodwww.informatics.jax.org/wiki/index.php/sw:Scrum:_High-Throughput_MP_Data">wiki page</a></p>
+<p>Cardolan's Postgres database (Pub - MGD schema): <a target="_blank" href="http://rohan.informatics.jax.org/phpPgAdmin/">PhP Admin Page</a></p>
+</body>
+</html>

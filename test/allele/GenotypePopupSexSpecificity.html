@@ -1,0 +1,247 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	span.hilite {background-color:#FFFF00;}
+	ol.indent {margin-left:50px;}
+	ul.tight {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:2px; margin-top:1px; margin-bottom:1px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+    <title>Genotype Popup: Part 1, MP Terms</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Genotype Popup Page Sex Specificity Tests</h1>
+    <ul>
+        <li>User story 50, WI: Sex specific in Genotype popup </li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>genotype popups display sex-specific annotations</li>
+		
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify popup displays no &quot;call&quot; icon for an abnormal phenotype for "NA" sexes
+ 			<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p>  - <i>semi-automated</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Trp53<sup>tm1Tyj</sup></b> (<b>MGI:1857263</b>)</li>
+                <li>Open a Genotype Popup window by clicking on the <b>Hm1</b> link in the Phenotype Summary section</li>
+                <li>Verify abnormal retinal vasculature morphology (listed under 2 different terms) shows no sex since they affect both sexes</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify popup display for a &quot;normal&quot; phenotype displays only <b>N </b>for &quot;NA&quot; sexes (currently only for highest level term in MGI's annotations) 
+  			<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Trp53<sup>tm1Tyj</sup></b> (<b>MGI:1857263</b>)</li>
+                <li>Open a Genotype Popup window by clicking on the <b>cx53</b> link in the Phenotype Summary section</li>
+                <li>Verify mortality_aging and tumorigenesis have <b>N</b> before then since they are high level terms with normal phenotype</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify popup display for an abnormal phenotype of Female sex only 
+ 			displays &quot;female&quot; symbol<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1a(KOMP)Wtsi</sup></b> (<b>MGI:4364794</b>)</li>
+                <li>Open a Genotype Popup window for by clicking on the <b>hm1</b> link in the Phenotype Summary section</li>
+                <li>Verify all 4 terms under the heading homeostasis_metabolism display the female symbol only</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify popup display for an abnormal phenotype of Male sex only 
+ 			displays &quot;male&quot; symbol<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Actn4<sup>tm1a(EUCOMM)Wtsi</sup></b> (<b>MGI:4441842</b>)</li>
+                <li>Open a Genotype Popup window for by clicking on the <b>ht1</b> link in the Phenotype Summary section</li>
+                <li>verify the term increased heart weight display the male symbol only</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify popup display for a normal phenotype of Female sex only 
+ 			displays &quot;female&quot; symbol and <b>N</b><p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1a(KOMP)Wtsi</sup></b> (<b>MGI:4364794</b>)</li>
+                <li>Open a Genotype Popup window for by clicking on the <b>hm1</b> link in the Phenotype Summary section</li>
+                <li>Verify the term adipose tissue phenotype displays the female symbol and N for normal phenotype</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify popup display for a normal phenotype of Male sex only 
+ 			displays male symbol and <b>N</b> <p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+    		<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Mecp2<sup>tm1Bird</sup></b> (<b>MGI:2137555</b>)</li>
+                <li>Open a Genotype Popup window for by clicking on the <b>cn1</b> link in the Phenotype Summary section</li>
+                <li>Verify the term mortality_aging displays the male symbol and N for normal phenotype</li>
+    		</ol>
+    		</li>
+    		
+			<li>Verify text "source: WTSI" appears in the Notes area for MP annotations loaded from Sanger
+ 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt; (<b>MGI:4362509</b>)</li>
+                <li>Open a Genotype Popup window by clicking on the <b>ot2</b> link in the Phenotype Summary section</li>
+                <li>Verify both terms have the note <b>Source: WTSI (J:175295)</b></li>
+ 			</ol>
+			</li>
+			
+			
+			<li>Verify annotations appear in order:
+			<ol class="indent">
+				<li class="tight">"NA"</li>
+				<li class="tight">"NA" Normal <i>(exists only in MGI data, on highest-level terms)</i></li>
+				<li class="tight">Female </li>
+				<li class="tight">Female Normal <i>(does not exist in our dataset yet)</i></li>
+				<li class="tight">Male</li>
+				<li class="tight">Male Normal <i>(does not exist in our dataset yet)</i></li>
+			</ol>
+ 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<ol>
+ 				<li>In the test Web Interface, navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</li>
+ 				<li>Open the genotype popup for the homozygous genotype with strain background "not specified"</li>
+ 				<li>For annotation to MP:004151 decreased circulating iron level, verify <b>MGI's &quot;NA&quot; annotation appears before Sanger's &quot;Female&quot; annotation</b>.</li>
+ 				<li>Verify MGI's notes appear with MGI's "NA" annotation.</li>
+ 				<li>Verify "source: WTSI" text appears with Sanger's annotation.</li>
+ 				<li>Navigate to Aldh16a1&lt;tm1a(EUCOMM)Wtsi&gt;</li>
+ 				<li>Open the genotype popup for the homozygous genotype with strain background "not specified"</li>
+ 				<li>For annotation MP:0005103 abnormal retinal pigmentation, verfiy <b>Sanger's &quot;NA&quot; annotation appears before MGI's &quot;Female&quot; annotation</b>.</li>
+ 				<li>Verify "source: WTSI" text appears with Sanger's annotation.</li>
+ 				<li>Verify MGI's notes appear with MGI's "Female" annotation.</li>
+ 				<li><i>Cannot find a case with one MP term annotated to "NA" and "Male" and "Female".</i></li>
+ 				<li><i>Cannot find a case with one MP term annotated to "NA" and "Male".</i></li>
+ 				<li><i>Cannot find a case with one MP term annotated to "Male" and "Female" (would have to be separate sources: WTSI for one, MGI for the other).</i></li>
+ 				</ol>
+			</li>
+			
+			<li>Verify "General" notes are displayed for MGI's MP annotations
+ 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<ol>
+ 				<li>In the test Web Interface, navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</li>
+ 				<li>Open the genotype popup for the homozygous genotype with strain background "not specified"</li>
+ 				<li>For annotation to MP:004151 decreased circulating iron level, verify that a note displays with J:98765 "paucity of iron in circulation determined by blood analysis"</li>
+ 				<li>Verify that the note is associated with MGI's annotation to "NA", not the WTSI annotation.</li>
+ 			</ol>
+			</li>
+			
+			<li>Verify "Normal" notes are displayed for MGI's MP annotations
+ 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<ol>
+ 				<li>In the test Web Interface, navigate to the Allele Detail Page for Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</li>
+ 				<li>Open the genotype popup for the heterozygous wild type genotype (second allele: Slc16a2&lt;+&gt;) with strain background "not specified"</li>
+ 				<li>For annotation to MP:0008854 bleb, verify that a note displays with J:2 "This is another Normal note for F."</li>
+ 				<li>Verify that the note is associated with MGI's annotation to "NA", not the WTSI annotation.</li>
+ 			</ol>
+			</li>
+			
+			<li>Verify "Background Sensitivity" notes are displayed for MGI's MP annotations, and have the label text "Background Sensitivity:"
+ 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<ol>
+ 				<li>In the test Web Interface, navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</li>
+ 				<li>Open the genotype popup for the homozygous genotype with strain background "not specified"</li>
+ 				<li>For annotation to MP:004151 decreased circulating iron level, verify that a note displays with J:98765 "Background Sensitivity: this pehenotype differs on a congenic C57BL/6J background""</li>
+ 				<li>Verify that the note is associated with MGI's annotation to "NA", not the WTSI annotation.</li>
+ 			</ol>
+			</li>
+			
+
+		</ol>
+		
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+		<li>Verify popup display for an abnormal phenotype for both sexes
+    		<ol>
+                <li>for genotype Trp53<sup>tm1ty1</sup>/Trp53<sup>tm1ty1</sup> (<b concordion:set="#gid">MGI:3849871</b>)</li>
+                <li>Verify abnormal retinal vasculature morphology (<b concordion:set="#termID">MP:0002792</b>) (listed under 2 different terms) shows no sex since they affect both sexes</li>
+                <li>For <b concordion:set="#system">cardiovascular system</b> the sex display, for the above term, should be an
+                	<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">empty string</b></li>
+                <li>For <b concordion:set="#system">vision/eye</b> the sex display, for the same term, should be an
+                	<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">empty string</b></li>
+    		</ol>
+    	</li>
+    	<li>Verify popup display for a normal phenotype for both sexes(currently only for highest level term)
+    		<ol>
+                <li>for genotype Cul9<sup>tm1.2Yxi</sup>/Cul9<sup>tm1.2Yxi</sup>,Trp53<sup>tm1Tyj</sup>/Trp53<sup>tm1Tyj</sup> 
+                	(<b concordion:set="#gid">MGI:5007743</b>)</li>
+                <li>For <b concordion:set="#system">mortality/aging</b> (<b concordion:set="#termID">MP:0010768</b>) the sex display, for the above term, should be an
+                	<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">N</b></li>
+                <li>For <b concordion:set="#system">tumorigenesis</b> (<b concordion:set="#termID">MP:0002006</b>) the sex display, for the above term, should be an
+                	<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">N</b></li>
+    		</ol>
+    	</li>
+<!-- 
+    	<li>Verify popup display for an abnormal phenotype of Female sex only
+			<ol>
+                <li>for genotype Slc16a2<sup>tm1a(KOMP)Wtsi</sup>/Slc16a2<sup>tm1a(KOMP)Wtsi</sup> 
+                	(<b concordion:set="#gid">MGI:4364794</b>)</li>
+                <li>For <b concordion:set="#system">homeostasis/metabolism</b></li>
+                <li>The sex display for the following terms should all be female:
+                	<ul>
+                		<li>decreased circulating glucose level (<b concordion:set="#termID">MP:0005560</b>) should be 
+                			<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">&amp;#9792;</b></li>
+                		<li>decreased circulating thyroxine level (<b concordion:set="#termID">MP:0005478</b>) should be 
+                			<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">&amp;#9792;</b></li>
+                		<li>hyperphosphatemia (<b concordion:set="#termID">MP:0001566</b>) should be 
+                			<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">&amp;#9792;</b></li>
+                		<li>increased circulating alkaline phosphatase level (<b concordion:set="#termID">MP:0002968</b>) should be 
+                			<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">&amp;#9792;</b></li>
+                	</ul>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Verify popup display for an abnormal phenotype of Male sex only
+			<ol>
+                <li>for genotype Actn4<sup>tm1a(EUCOMM)Wtsi</sup>/Actn4<sup>+</sup> 
+                	(<b concordion:set="#gid">MGI:4441842</b>)</li>
+                <li>For the system <b concordion:set="#system">cardiovascular system</b>, the term increased heart weight (<b concordion:set="#termID">MP:0002833</b>) the sex display, for the above term, should be
+                	<b concordion:assertEquals="getFirstSexGroup(#gid,#system,#termID)">&amp;#9794;</b></li>
+    		</ol>
+    		</li>
+-->
+		</ol>
+ 	</div>
+</div> 
+</body>
+</html>

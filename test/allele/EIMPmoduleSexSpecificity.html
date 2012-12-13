@@ -1,0 +1,144 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>EI MP module:Sex Specificity</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>EI MP module testing of Sex Specificity</h1>
+    <ul>
+        <li>User story 7, Modify EI for Sex Specificity</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Add a column named "sex" to the annotation section of the MP module</li>
+		<li>Add ability to enter new annotations with sex data included</li>
+		<li>Add ability to modify sex data on existing annotations</li>
+		<li>Add ability to delete sex data from exiting annotations</li>
+		<li>Add ability to search for annotations by sex data</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify Sex column exists
+ 			<p concordion:assertTrue="true">jeffc 8/28/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Verify there is a column called Sex between the EVI and Modified By columns</li>
+    		</ol>
+    		</li>
+		</ol>
+				<ol>
+    		<li>Verify you can enter new annotations with sex data included
+ 			<p concordion:assertTrue="true">jeffc 8/28/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>MGI:2654760</b> in the MGI Accession ID field and click Search</li>
+                <li>In the first empty row of the Annotation section enter: Term Acc ID: MP:0009790, J: 13466, Evi: EXP, Sex: M</li>
+                <li>In the second empty row of the Annotation section enter: Term Acc ID: MP:0001105, J: 13466, Evi: EXP, Sex: F</li>
+                <li>Click on the <b>Save Annotations</b> button</li>
+                <li>Verify both terms have been saved</li>
+    		</ol>
+    		</li>
+		</ol>
+				<ol>
+    		<li>Verify you can modify sex data of an annotation
+ 			<p concordion:assertTrue="true">jeffc 8/28/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>MGI:2654844</b> in the MGI Accession ID field and click Search</li>
+                <li>In the row for MP:0011085 change the Sex field from NA to M</li>
+                <li>Click on the <b>Save Annotations</b> button</li>
+                <li>Verify the sex has been saved</li>
+                <li>In the row for MP:0000745 change the Sex field from NA to F</li>
+                <li>Click on the <b>Save Annotations</b> button</li>
+                <li>Verify the sex has been saved</li>
+    		</ol>
+    		</li>
+		</ol>	
+		<ol>
+		    <li>Verify you can not delete sex data of an annotation
+ 			<p concordion:assertTrue="true">jeffc 8/28/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>MGI:2654844</b> in the MGI Accession ID field and click Search</li>
+                <li>In the row for MP:0002064 change the Sex field from NA to empty</li>
+                <li>Click on the <b>Save Annotations</b> button</li>
+                <li>Verify the sex has not been changed</li>
+    		</ol>
+    		</li>
+		</ol>
+		<ol>	
+		    <li>Verify you can search sex data of an annotation
+ 			<p concordion:assertTrue="true">jeffc 8/28/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>M</b> in the Sex field and click Search</li>
+                <li>Verify the results returned include MGI:2654760 and MGI:2654844</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -8,20 +8,16 @@ import java.util.Set;
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdControllerQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
 import org.jax.mgi.fewi.test.mock.MockJSONGXDAssayResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 
 public class MutantWildtypeSearchTest extends BaseConcordionTest 
 {
-	@Autowired
-    private AnnotationMethodHandlerAdapter handler;
 
     // The class being tested is autowired via spring's DI
     @Autowired
@@ -33,14 +29,14 @@ public class MutantWildtypeSearchTest extends BaseConcordionTest
     
     public int getCountByMutatedGene(String mutatedGene) throws Exception
 	{
-		MockGxdHttpQuery mq = new MockGxdHttpQuery(handler,gxdController);
+		MockGxdHttpQuery mq = getMockQuery().gxdHttp();
 		mq.setMutatedIn(mutatedGene);
 		
 		return mq.getAssayResults().getTotalCount();
 	}
     public int getCountByMutatedGeneAndAssayId(String mutatedGene,String assayId) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setMutatedIn(mutatedGene);
 		
 		int count = 0;
@@ -55,7 +51,7 @@ public class MutantWildtypeSearchTest extends BaseConcordionTest
 
     public int getCountByNomenAndMutatedGeneAndAssayId(String nomen,String mutatedGene,String assayId) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setMutatedIn(mutatedGene);
 		mq.setNomenclature(nomen);
 		
@@ -72,7 +68,7 @@ public class MutantWildtypeSearchTest extends BaseConcordionTest
     public Set<String> getGenotypes(String mutatedGene) throws Exception
     {
     	Set<String> genotypeStrings = new HashSet<String>();
-    	MockGxdHttpQuery mq = new MockGxdHttpQuery(handler,gxdController);
+    	MockGxdHttpQuery mq = getMockQuery().gxdHttp();
 		mq.setMutatedIn(mutatedGene);
 		JsonSummaryResponse<MockJSONGXDAssayResult> results = mq.getAssayResults();
 		for(MockJSONGXDAssayResult result : results.getSummaryRows())
@@ -86,7 +82,7 @@ public class MutantWildtypeSearchTest extends BaseConcordionTest
     public Set<String> getMutatedGenes(String mutatedGene) throws Exception
     {
     	Set<String> mutatedGenes = new HashSet<String>();
-    	MockGxdHttpQuery mq = new MockGxdHttpQuery(handler,gxdController);
+    	MockGxdHttpQuery mq = getMockQuery().gxdHttp();
 		mq.setMutatedIn(mutatedGene);
 		JsonSummaryResponse<MockJSONGXDAssayResult> results = mq.getAssayResults();
 		for(MockJSONGXDAssayResult result : results.getSummaryRows())
@@ -115,7 +111,7 @@ public class MutantWildtypeSearchTest extends BaseConcordionTest
     
     public int getWildTypeCountByNomenAndAssayId(String nomen,String assayId) throws Exception
    	{
-   		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+   		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
    		mq.setNomenclature(nomen);
    		mq.setIsWildType(true);
    		
@@ -131,7 +127,7 @@ public class MutantWildtypeSearchTest extends BaseConcordionTest
     
     public Set<String> getWildTypeAssayIdsByNomen(String nomen) throws Exception
     {
-    	MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+    	MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
    		mq.setNomenclature(nomen);
    		mq.setIsWildType(true);
    		Set<String> assayIds = new HashSet<String>();

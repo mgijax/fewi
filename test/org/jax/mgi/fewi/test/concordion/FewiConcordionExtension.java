@@ -72,10 +72,21 @@ public class FewiConcordionExtension implements ConcordionExtension {
 		concordionExtender.withCommand(NAMESPACE, 
 				"assertNotEquals", assertNotEquals);
 		
-		//Add assertEqualsCommand
+		//Add assertEqualsCICommand
+		AssertEqualsCICommand assertEqualsCI = new AssertEqualsCICommand();
+		assertEqualsCI.addAssertEqualsListener(new AssertResultRenderer());
+		concordionExtender.withCommand(NAMESPACE, 
+				"assertEqualsCI", assertEqualsCI);
+		
+		//Add dynamicDataCommand
 		DynamicDataCommand dynamicData = new DynamicDataCommand();
 		concordionExtender.withCommand(NAMESPACE, 
 				"dynamicData", dynamicData);
+		
+		//Add echoCommand
+		EchoCommand echo = new EchoCommand();
+		concordionExtender.withCommand(NAMESPACE, 
+				"echo", echo);
 		
 		
 	}

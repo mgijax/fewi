@@ -8,13 +8,11 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdControllerQuery;
+import org.jax.mgi.fewi.test.mock.MockQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 public class GeneVocabSearchTest extends BaseConcordionTest {
-
-    @Autowired
-    private AnnotationMethodHandlerAdapter handler;
 
     // The class being tested is autowired via spring's DI
     @Autowired
@@ -22,7 +20,7 @@ public class GeneVocabSearchTest extends BaseConcordionTest {
 	
 	public List<String> getGeneSymbolsByTermId(String termId) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setAnnotationId(termId);
 		List<String> symbols = new ArrayList<String>();
 		mq.pageSize=10000;

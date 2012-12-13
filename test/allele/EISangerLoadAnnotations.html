@@ -1,0 +1,360 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+    <title>EI MP module: loading MP annotations</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>EI MP module testing of loading annotations with Sex Specificity</h1>
+    <ul>
+        <li>User story 39, Sanger Load: Annotations (sex specific)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Confirm MP annotation data is correct</li>
+		<li>Confirm Male/Female duplicates get combined correctly</li>
+		<li>Confirm Header information is correct</li>
+<!--		<li>Confirm Headers are listed in default order</li> -->
+		<li>Confirm the qualifier, J#, and Evidence code data are correct</li>
+		<li>Confirm the created by and Modified by fields are correct</li>
+		<li>Confirm curators can edit Genotype data</li>
+		<li>Confirm after drop-and-reload, MP annotations added by curators remain</li>
+		<li>Confirm after drop-and-reload, Sanger annotations do not appear on "Sanger" genotype edited by curator</li>
+		<li>Confirm after drop-and-reload, Sanger annotations previously on edited genotype now appear on newly-created "Sanger" genotype</li>
+	</ul>
+	<p>See also: <a href="PhenotypeAnnotLoader.html">PhenotypeAnnotLoader</a> for tests of the load script.</p>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<p class="hilite"><b>Note:</b> Concordion doesn't like &lt; and &gt; signs directly in the HTML code. Encode them as "&amp;lt;" and "&amp;gt;", respectively.</p>
+		<ol>
+    		<li>Verify Male/Female duplicates get combined correctly
+    		<p concordion:assertTrue="true">passed. kstone 11/7/12.</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>Not Specified Akap9&lt;tm1a(KOMP)Wtsi&gt;,Akap9&lt;tm1a(KOMP)Wtsi&gt;</b> in the Genotype field and <b>sangermpload</b> in the Created by field, press the Tab key and then hit the Enter button</li>
+                <li>Verify that MP:0008211, MP:0005459, MP:00100025, MP:0008074, MP:0008078, MP:0005015 are listed just once with a sex of NA</li>
+    		</ol>
+    		</li>
+    		<li>Verify MP Annotation Header information is correct
+ 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>MP:0008039</b> in the Term Acc ID field and click the Search button</li>
+                <li>Locate in the Search results <b>Not Specified Zp1&lt;tm1a(KOMP)Wtsi&gt;, Zp1&lt;tm1a(KOMP)Wtsi&gt;</b> and highlight it</li>
+                <li>In the header section you should have listed in order <b>hematopoietic system and immune system</b></li>                
+    		</ol>
+    		</li>
+
+<!--     		<li>Verify Headers are listed in default order
+ 			<p concordion:assertTrue="false"></p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter ???</li>
+                <li>Verify ???</li>
+    		</ol>
+    		</li> -->
+
+		    <li>Verify the qualifier, J#, and Evidence code data are correct
+ 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>sangermpload</b> in the Created by field and click Search</li>
+                <li>Click through the search results</li>
+                <li>Verify the annotations have the Qualifier of <b>none</b>(blank field), J# of <b>175295</b>, and  the Evidence Code of <b>EXP</b></li>
+    		</ol>
+    		</li>
+	
+		    <li>Verify the created by and Modified by fields are correct
+ 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>sangermpload</b> in the Created by field and click Search</li>
+                <li>Verify the results returned have <b>sangermpload</b> in the modified by and created by fields</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify Hemizygous and Indeterminate are NOT combined incorrectly.
+ 			<p concordion:assertTrue="true">Passed. kstone 11/7/12 </p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>sangermpload</b> in the Created by field and Ascl4 in the Marker field.</li>
+                <li>Verify that 3 genotype exist: Hemizygous X-Linked, Heterozygous, and Indeterminate.</li>
+                <li>Select the Hemizygous X-Linked genotype and from the Edit menu select Mammalian Phenotype Annotations.</li>
+                <li>Verify that annotations exist for: MP:0000195, MP:0001262, MP:0003179, MP:0008805.</li>
+                <li>Close the MPVocAnnot module of the EI.</li>
+                <li>From the Genotypes module of the EI, select the Indeterminate genotype and from the Edit menu select Mammalian Phenotype Annotations.</li>
+                <li>Verify that annotations exist for: MP:0002161, MP:0004738, MP:0011085.</li>
+			</ol>    		
+    		</li>
+    		
+			<li>Confirm curators can <b><u>edit Genotypes</u></b> created by Sanger load.
+ 			<p concordion:assertTrue="true">Passed. klf 9/27/21</p>
+				<ol>
+					<li>In EI Genotype Module, Enter <b>Not Specified</b> in the Strains field and <b>Slc16a2</b> in the Marker field and press the search button. (Should have allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.)</li>
+					<li>Using the first search result. Change State from Hemizygous X-Linked to Heterozygous.</li> 
+					<li>Add Allele2: Slc16a2&lt;+&gt;. </li>
+					<li>Save changes by clicking "Modify".</li>
+					<li>Verify that changes were saved: the Modified By field should show the <b>curator log-in</b> and the Modified Date should be the <b>current date</b>.</li>
+				</ol>
+			<p>Note: this genotype will be used in additional tests, below.</p>
+			</li>
+
+			<li>Confirm annotations are correctly handled for "Sanger" genotypes modified by a curator after drop-and-reload:
+				<ul>
+					<li>MP annotations added by curators remain on a "Sanger" genotype modified by a curator.</li>
+					<li>Sanger annotations are removed from "Sanger" genotype modified by curator.</li>
+					<li>Sanger annotations previously on "Sanger" genotype modified by curator now appear on a newly-created "Sanger" genotype.</li>
+				</ul>
+			<img src="http://prodwww.informatics.jax.org/wiki/images/e/ef/MPLoadAnnotsTest_20120927.JPG" height="250px"/>
+			<p>Set Up:</p>
+			<ol>
+				<li>Using the genotype just modified above (Slc16a2&lt;tm1a(KOMP)Wtsi&gt;, Slc16a2&lt;+&gt; Heterozygous), from Edit menu of EI Genotype Module, select Mammalian Phenotype Annotations.</li>
+				<li>Add an annotation to MP:0005375 adipose tissue phenotype. Save the Annotations.
+				<ul>
+					<li>Set Qualifier to "norm".</li>
+					<li>Use J:72460.</li>
+					<li>Set evidence code to "EXP".</li>
+					<li>Set sex to "F".</li>
+					<li>Select note type General. Add note text: This is a General note. Save the note.</li>
+					<li>Select note type Normal. Add note text: This is a Normal note. Save the note.</li>
+					<li>Select note type Background Sensitivity. Add note text: This is a background sensitivity note. Save the note.</li>
+				</ul>
+				</li>
+				<li>Add an annotation to MP:0008854 bleb. Save the Annotations.
+				<ul>
+					<li>Leave Qualifier null.</li>
+					<li>Use J:72460.</li>
+					<li>Set evidence code to "EXP".</li>
+					<li>Set sex to "F".</li>
+					<li>Select note type General. Add note text: This is a General note. Save the note.</li>
+					<li>Select note type Normal. Add note text: This is a Normal note. Save the note.</li>
+					<li>Select note type Background Sensitivity. Add note text: This is a background sensitivity note. Save the note.</li>
+				</ul>
+				</li>
+				<li>Add another annotation to MP:0008854 bleb. Save the Annotations.
+				<ul>
+					<li>Leave Qualifier null.</li>
+					<li>Use J:1.</li>
+					<li>Set evidence code to "EXP".</li>
+					<li>Set sex to "F".</li>
+					<li>Select note type General. Add note text: This is another General note for F. Save the note.</li>
+					<li>Select note type Normal. Add note text: This is another Normal note for F. Save the note.</li>
+					<li>Select note type Background Sensitivity. Add note text: This is another background sensitivity note for F. Save the note.</li>
+				</ul>
+				</li>
+				<li>Add another annotation to MP:0008854 bleb. Save the Annotations.
+				<ul>
+					<li>Leave Qualifier null.</li>
+					<li>Use J:2.</li>
+					<li>Set evidence code to "EXP".</li>
+					<li>Set sex to "NA".</li>
+					<li>Select note type General. Add note text: This is another General note for NA. Save the note.</li>
+					<li>Select note type Normal. Add note text: This is another Normal note for NA. Save the note.</li>
+					<li>Select note type Background Sensitivity. Add note text: This is another background sensitivity note for NA. Save the note.</li>
+				</ul>
+				</li>
+			</ol>
+			<p>End of Set Up</p>
+			<p>Tests - After drop-and-reload, verify:</p>
+			<ul>
+				<li>Modified genotype exists.</li>
+				<li>The MP annotations added above remain attached to the modified genotype.</li>
+				<li>No MP annotations from the Sanger data are attached to the modified genotype.</li>
+			</ul>
+			
+			<ol>
+				<li>verify: <u><b>Sanger annotations do not appear</b></u> on &quot;Sanger&quot; genotype modified by curator.
+	 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+					<ol>
+						<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
+						<li>Select the <b>Heterozygous</b> genotype modified above.</li> 
+						<li>Verify Created by is <b>sangermpload</b> and Modifiedby is <b>Curator</b>.</li>
+						<li>From Edit menu of EI Genotype Module, select Mammalian Phenotype Annotations.</li>
+						<li>Verify MP annotations with Creatdby sangermpload, Modifiedby sangermpload DO NOT exist:
+						<ul>
+							<li>MP:0000183 decreased circulating LDL cholesterol... - Sex:M</li>
+							<li>MP:0005478 decreased circulating thyroxine... - Sex:M </li>
+							<li>MP:0002412 increased susceptibility to bacterial... - Sex:M</li>
+						</ul>
+						</li>
+						<li>Verify MP annotations with Createdby Curator DO exist:
+						<ul>
+							<li>MP:0005375 adipose tissue phenotype - Sex: F - Qual: norm</li>
+							<li>MP:0008854 bleb - Sex: F - J:72460</li>
+							<li>MP:0008854 bleb - Sex: F - J:1</li>
+							<li>MP:0008854 bleb - Sex: NA - J:2</li>
+						</ul>
+						</li>
+					</ol>
+				</li>
+				<li>verify: <u><b>Sanger annotations now appear on a newly-created "Sanger" genotype</b></u> (were on previously on edited genotype).
+	 			<p concordion:assertTrue="true">Passed. klf 9/27/2021</p>
+					<ol>
+						<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
+						<li>Verify the newly-created Hemizygous X-Linked genotype exists.</li> 
+						<li>Verify created by is sangermpload and modifiedby is sangermpload.</li>
+						<li>From Edit menu of EI Genotype Module, select Mammalian Phenotype Annotations.</li>
+						<li>Verify MP annotations with Creatdby sangermpload, Modifiedby sangermpload DO exist:
+						<ul>
+							<li>MP:0000183 decreased circulating LDL cholesterol... - Sex:M</li>
+							<li>MP:0005478 decreased circulating thyroxine...  - Sex:M</li>
+							<li>MP:0002412 increased susceptibility to bacterial... - Sex:M</li>
+						</ul>
+						</li>
+					</ol>
+				</li>
+			</ol>
+			</li>
+			<li>Confirm Curators can <u><b>add MP annotations to a &quot;Sanger&quot; genotype</b></u> (genotype not modified by curator).
+ 			<p concordion:assertTrue="true">Passed. klf 9/26/12</p>
+				<ol>
+					<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
+					<li>Select genotype that is Homozygous.</li>
+					<li>From Edit menu of EI Genotype Module, select Mammalian Phenotype Annotations.</li>
+					<li>Add an annotation to MP:0005375 adipose tissue phenotype. Save the Annotations.
+					<ul>
+						<li>Set Qualifier to "norm".</li>
+						<li>Use J:72460.</li>
+						<li>Set evidence code to "EXP".</li>
+						<li>Set sex to "F".</li>
+						<li>Select note type General. Add note text: This is a General note. Save the note.</li>
+						<li>Select note type Normal. Add note text: This is a Normal note. Save the note.</li>
+						<li>Select note type Background Sensitivity. Add note text: This is a background sensitivity note. Save the note.</li>
+					</ul>
+					</li>
+					<li>Add an annotation to MP:0008854 bleb. Save the Annotations.
+					<ul>
+						<li>Leave Qualifier null.</li>
+						<li>Use J:72460.</li>
+						<li>Set evidence code to "EXP".</li>
+						<li>Set sex to "F".</li>
+						<li>Select note type General. Add note text: This is a General note. Save the note.</li>
+						<li>Select note type Normal. Add note text: This is a Normal note. Save the note.</li>
+						<li>Select note type Background Sensitivity. Add note text: This is a background sensitivity note. Save the note.</li>
+					</ul>
+					</li>
+					<li>Add another annotation to MP:0008854 bleb. Save the Annotations.
+					<ul>
+						<li>Leave Qualifier null.</li>
+						<li>Use J:1.</li>
+						<li>Set evidence code to "EXP".</li>
+						<li>Set sex to "F".</li>
+						<li>Select note type General. Add note text: This is another General note for F. Save the note.</li>
+						<li>Select note type Normal. Add note text: This is another Normal note for F. Save the note.</li>
+						<li>Select note type Background Sensitivity. Add note text: This is another background sensitivity note for F. Save the note.</li>
+					</ul>
+					</li>
+					<li>Add another annotation to MP:0008854 bleb. Save the Annotations.
+					<ul>
+						<li>Leave Qualifier null.</li>
+						<li>Use J:2.</li>
+						<li>Set evidence code to "EXP".</li>
+						<li>Set sex to "NA".</li>
+						<li>Select note type General. Add note text: This is another General note for NA. Save the note.</li>
+						<li>Select note type Normal. Add note text: This is another Normal note for NA. Save the note.</li>
+						<li>Select note type Background Sensitivity. Add note text: This is another background sensitivity note for NA. Save the note.</li>
+					</ul>
+					</li>
+				</ol>
+			</li>
+		    <li>Verify <u><b>MP annotations added by curators remain after drop-and-reload</b></u>
+ 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+				<ol>
+					<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
+					<li>Select genotype that is Homozygous.</li>
+					<li>From Edit menu of EI Genotype Module, select Mammalian Phenotype Annotations.</li>
+						<li>Verify MP annotations with Creatdby sangermpload, Modifiedby sangermpload DO exist:
+						<ul>
+							<li>MP:0005560 decreased circulating glucose level.</li>
+							<li>MP:0005478 decreased circulating thyroxine level.</li>
+							<li>MP:0001566 hyperphsphatemia.</li>
+							<li>MP:0002968 increased circulating alkaline phosphata...</li>
+						</ul>
+						</li>
+						<li>Verify MP annotations with Createdby curator, Modified by curator DO exist:
+						<ul>
+							<li>MP:0008854 bleb - J:1 - sex: F</li>
+							<li>MP:0008854 bleb - J:2 - sex: NA</li>
+							<li>MP:0008854 bleb - J:72460 - sex: F</li>
+							<li>MP:0005375 adipose tissue phenotype - Qual: norm - J:72460 - sex: F</li>
+						</ul>
+						</li>
+    		</ol>
+    		</li>
+<!--     		<li>Verify MP Annotation data is not editable
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>sangermpload</b> in the Created by field and click Search</li>
+                <li>Click on any of the fields in the annotation section and confirm the <b>Save Annotations</b> is always greyed out and unusable</li>
+    		</ol>
+    		</li> -->
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

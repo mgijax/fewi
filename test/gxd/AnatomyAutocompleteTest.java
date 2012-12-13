@@ -16,12 +16,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
-
 public class AnatomyAutocompleteTest extends BaseConcordionTest {
-
-    @Autowired
-    private AnnotationMethodHandlerAdapter handler;
 
     // The class being tested is autowired via spring's DI
     @Autowired
@@ -37,14 +32,12 @@ public class AnatomyAutocompleteTest extends BaseConcordionTest {
     	String query = "brain";
 
     	MockHttpServletRequest request = new MockHttpServletRequest();
-    	MockHttpServletResponse response = new MockHttpServletResponse();
 
     	request.setRequestURI("/autocomplete/structure");
     	request.addParameter("query", query);
     	request.setMethod("GET");
-
-    	handler.handle(request, response, autoCompleteController);
-
+    	
+    	MockHttpServletResponse response = mockRequest().handle(request);
     	
     	ObjectMapper mapper = new ObjectMapper();
     	SearchResults<StructureACResult> results = null; 

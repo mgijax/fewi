@@ -95,7 +95,9 @@ public class NotesTagConverter
     }
     public String convertNotes (String notes, char delimiter,boolean noLink,boolean noSuperscript)
     {
-
+        // ensure the notes aren't null
+        if (notes == null) {return "  ";}
+        
         String      parmStr             = "";
         String      convertedTag        = "";
         String      matchStr            = "";
@@ -107,12 +109,9 @@ public class NotesTagConverter
         matchStrSet         = tagConversions.keySet();
         matchStrIter        = matchStrSet.iterator();
 
-
-
         // for each tag we are lookin for...
         while (matchStrIter.hasNext())
         {
-
             // pre-compile a matcher to look for regular expression matching
             // the tag format
             matchStr    = (String)matchStrIter.next();

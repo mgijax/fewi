@@ -8,7 +8,10 @@ import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * A utility class for mocking GXD queries either through http requests
@@ -18,12 +21,11 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
  */
 public class MockGxdHttpQuery extends AbstractMockGxdQuery
 {
-    protected AnnotationMethodHandlerAdapter handler;
+    protected MockRequest mr;
     public String gxdLitCountUrl = "/gxd/gxdLitCount";
 
-    public MockGxdHttpQuery(AnnotationMethodHandlerAdapter handler, GXDController gxdController) {
-    	this.gxdController = gxdController;
-    	this.handler = handler;
+    public MockGxdHttpQuery(MockRequest mr) {
+    	this.mr=mr;
     }
 	
 	public MockHttpServletRequest generateRequest()
@@ -98,12 +100,11 @@ public class MockGxdHttpQuery extends AbstractMockGxdQuery
 	public JsonSummaryResponse<MockJSONGXDMarker> getGenes() throws Exception
 	{
 		MockHttpServletRequest request = generateRequest();
-    	MockHttpServletResponse response = new MockHttpServletResponse();
     	
     	request.setRequestURI(this.markersUrl);
     	request.setMethod("GET");
 
-		handler.handle(request, response, gxdController);
+    	MockHttpServletResponse response = mr.handle(request);
     	
     	ObjectMapper mapper = new ObjectMapper();
     	JsonSummaryResponse<MockJSONGXDMarker> results = null; 
@@ -115,12 +116,11 @@ public class MockGxdHttpQuery extends AbstractMockGxdQuery
 	public JsonSummaryResponse<MockJSONGXDAssay> getAssays() throws Exception
 	{
 		MockHttpServletRequest request = generateRequest();
-    	MockHttpServletResponse response = new MockHttpServletResponse();
     	
     	request.setRequestURI(this.assaysUrl);
     	request.setMethod("GET");
 
-		handler.handle(request, response, gxdController);
+    	MockHttpServletResponse response = mr.handle(request);
     	
     	ObjectMapper mapper = new ObjectMapper();
     	JsonSummaryResponse<MockJSONGXDAssay> results = null; 
@@ -132,12 +132,11 @@ public class MockGxdHttpQuery extends AbstractMockGxdQuery
 	public JsonSummaryResponse<MockJSONGXDAssayResult> getAssayResults() throws Exception
 	{
 		MockHttpServletRequest request = generateRequest();
-	 	MockHttpServletResponse response = new MockHttpServletResponse();
 
     	request.setRequestURI(this.resultsUrl);
     	request.setMethod("GET");
 
-    	handler.handle(request, response, gxdController);
+    	MockHttpServletResponse response = mr.handle(request);
 
     	ObjectMapper mapper = new ObjectMapper();
     	JsonSummaryResponse<MockJSONGXDAssayResult> results = null; 
@@ -149,12 +148,11 @@ public class MockGxdHttpQuery extends AbstractMockGxdQuery
 	public Integer getGxdLitCount() throws Exception
 	{
 		MockHttpServletRequest request = generateRequest();
-	 	MockHttpServletResponse response = new MockHttpServletResponse();
 
     	request.setRequestURI(this.gxdLitCountUrl);
     	request.setMethod("GET");
-
-    	handler.handle(request, response, gxdController);
+    
+    	MockHttpServletResponse response = mr.handle(request);
 
     	ObjectMapper mapper = new ObjectMapper();
     	Integer count = null; 

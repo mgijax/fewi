@@ -243,7 +243,7 @@ order by m.symbol, sortValue, b.short_citation
                 <li>Open the GXD query page</li>
                 <li>Search for <b concordion:set="#nomen">Afp</b> in the gene nomenclature field (Note: includes all assay types except in situ reporter (knock in))</li>
                 <li>Click on the Assays tab</li>
-                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">36 </b> rows.</li>
+                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">37 </b> rows.</li>
                 <li>Data returned should include only the following, in this order (human-readable table of all values below, NOTE author does not include &quot;et al.,&quot;)<br/>
                 <b concordion:set="#orderedAssays">MGI:1327427,MGI:1329127, MGI:1329285, MGI:1337757, MGI:1342462, MGI:1346814, MGI:1351510, MGI:2155932, MGI:2179335, MGI:2180048, MGI:2655508, MGI:2662328, MGI:2662507, MGI:2667400, MGI:2667409, MGI:2668385, MGI:3037857, MGI:3038241, MGI:3041567, MGI:3056175, MGI:3056664, MGI:3512985, MGI:3513150, MGI:3531440, MGI:3617232, MGI:3653926, MGI:3713266, MGI:3714322, MGI:3825861, MGI:4410515, MGI:4823022, MGI:4823023, MGI:4949093, MGI:5292373, MGI:5305345, MGI:5319681
                 </b><br/>

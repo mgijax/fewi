@@ -1,0 +1,132 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Allele Detail Pheno Summary: Diseases, Left-side</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Detail Phenotype Summary Ribbon Tests: Diseases in Left-side</h1>
+    <ul>
+        <li>User story 51, WI: Disease model rows in phenotype summary table - left hand side</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Confirm Phenotype summary table display rows for diseases that have models in the table. (see current public WI).</li>
+		<li>Confirm Disease names link to disease details.</li>
+		<li>Confirm diseases are Sorted alphabetically on name.</li>
+		<li>Confirm you can Open/close (single summary level : Disease).</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify Phenotype summary table display rows for dieases that have models in the table.
+ 			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Verify in the Phenotype Summary section Under the Affected systems column, the last entry is Disease Models.</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify Disease names link to disease details.
+ 			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Click on the <b>arrow</b> link beside the Disease Models section in the Phenotype Summary section.</li>
+                <li>Verify Diseases display directly under the Disease Model heading</li>
+                <li>Click on the first disease(Breast Cancer) link.</li>
+                <li>Verify this takes you to the Human Disease and Mouse Model Detail page for the term <b>breast cancer</b></li>
+    		</ol>
+    		</li>
+		    <li>Verify diseases are Sorted alphabetically on name.
+ 			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Click on the <b>arrow</b> link beside the Disease Models section in the Phenotype Summary section.</li>
+                <li>Verify Diseases display directly under the Disease Model heading</li>
+                <li>Verify the disease terms listed are in alphabetical order</li>
+    		</ol>
+    		</li>
+ 		    <li>Verify you can Open/close (single summary level : Disease).
+ 			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Click on the <b>arrow</b> link beside the Disease Models section in the Phenotype Summary section.</li>
+                <li>Verify Diseases display directly under the Disease Model heading</li>
+                <li>Click on the <b>arrow</b> link beside the Disease Models section in the Phenotype Summary section again.</li>
+                <li>Verify the diseases list is collapsed</li>
+
+    		</ol>
+    		</li>   		
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+<!-- 
+		<ol>
+			<li> Verify that diseases appear in Alpha order, and are distinct
+				<ol>
+		    		<li>Verify that correct diseases appear in the correct (Alpha) order for allele Trp53<sup>tm1Tyj</sup> (<b concordion:set="#allid">MGI:1857263</b>)</li>
+	                <li><table concordion:verifyRows="#disease : getDiseases(#allid)">
+		               	<tr><th concordion:assertEquals="#disease.term">Disease Model</th></tr>
+		               	<tr><td>Breast Cancer</td></tr>
+		               	<tr><td>Li-Fraumeni Syndrome 1; LFS1</td></tr>
+		               	<tr><td>Medulloblastoma; MDB</td></tr>
+		               	<tr><td>Myxoid Liposarcoma</td></tr>
+		               	<tr><td>Neurofibromatosis, Type I; NF1</td></tr>
+		               	<tr><td>Peutz-Jeghers Syndrome; PJS</td></tr>
+	               		</table>
+               		</li>
+               		<li>Also verify that correct diseases appear in the correct order for allele Fas<sup>Ipr</sup> (<b concordion:set="#allid">MGI:1856334</b>)</li>
+	                <li><table concordion:verifyRows="#disease : getDiseases(#allid)">
+		               	<tr><th concordion:assertEquals="#disease.term">Disease Model</th></tr>
+		               	<tr><td>Autoimmune Lymphoproliferative Syndrome; ALPS</td></tr>
+		               	<tr><td>Diabetes Mellitus, Insulin-Dependent; IDDM</td></tr>
+		               	<tr><td>Hypotrichosis 6; HYPT6</td></tr>
+		               	<tr><td>Sjogren Syndrome</td></tr>
+		               	<tr><td>Systemic Lupus Erythematosus; SLE</td></tr>
+	               		</table>
+               		</li>
+	              </ol>
+    		</li>
+		</ol>
+-->
+ 	</div>
+</div>
+
+</body>
+</html>

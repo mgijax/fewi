@@ -1,0 +1,235 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+	.hidden{display:none;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Simplify the Disease Model Ribbon</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Simplify the Disease Model Ribbon</h1>
+    <ul>
+        <li>User story #107, Simplify the Disease Model Section on Allele Detail Page</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Only show Genotypes that have a disease model</li>
+		<li>Do not show sex or provider detail information</li>
+		<li>The OMIM ID is displayed under the Disease name with both the disease and omim id being links</li>
+		<li>The disease model ribbon does not display if there are no Disease models</li>
+		<li>To a first approximation: this story moves the disease model table out of the phentoype display grid and into the disease model ribbon, replacing its current contents.
+		<ol>
+			<li>Remove disease model table section from the phenotype display grid.</li>
+			<li>Remove the javawi-generated contents of the disease model ribbon.</li>
+			<li>In the disease model ribbon, display a table SIMILAR to what's in the pheno grid, with the following differences:
+			<ul>
+				<li>- only show genotypes (columns) that have a disease model</li>
+				<li>- there is no subdivision of columns into male/female or by provider</li>
+				<li>- the OMIM id is displayed under the disease name</li>
+			</ul>
+			</li>
+		</ol>
+		</li>		
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify disease model ribbon exists when it should, and doesn't when no disease models exist.
+ 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Fas<sup>theo</sup> (MGI:4455060).</li>
+                <li>Verify there is no Disease Model ribbon displayed since this allele is not associated to any diseases</li>
+                <li>Navigate to the Allele Detail Page for Fas<sup>lpr</sup> (MGI:1856334).</li>
+                <li>Verify there is a Disease Model section</li>
+    		</ol>
+    		</li>
+    		<li>Only genotypes that have disease models appear in disease model table
+ 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>automated</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
+                <li>Verify that only 3 genotypes appear in the Disease Models ribbon.</li>
+    		</ol>
+    		</li>
+    		<li>Verify that genotype labels match up with genotype legend
+ 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>semi-automated</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
+                <li>Verify that genotypes "hm3", "ht4" and "ht15" are the genotypes in the Disease Models ribbon.</li>
+                <li>Verify that these 3 genotypes have the same allelic composition and genetic background data as they do in the Phenotype Summary ribbon.</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Verify in the Disease model ribbon that column Genotype headings are hm5,ht12,ht13,ht15,ht16,cn26,cn31,cn32,cx63,cx67,cx74,cx82,cx102,cd103,cx145,tg194 and tg199</li>
+    		</ol>
+    		</li>
+    		<li>Verify that Omim ID appears under each disease with a link
+ 			<p concordion:assertTrue="true">jeffc 11/26/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
+                <li>Verify that the following disease are listed with their OMIM IDs:
+                <table>
+                	<tr><th>Disease Name</th><th>OMIM ID</th></tr>
+                	<tr><td>Albinism, Ocular, with Sensorineural Deafness</td><td>103470</td></tr>
+                	<tr><td>Tietz Syndrome</td><td>103500</td></tr>
+                	<tr><td>Waardenburg Syndrome, Type 2A; WS2A</td><td>193510</td></tr>
+                </table>
+                </li>
+                <li>Verify that disease names link to the correct MGI Disease page and OMIM IDs link to the correct OMIM page</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Verify in the Disease Model ribbon that under each disease listed is its OMIM ID and that this ID links to the correct page on the OMIM website</li>
+    		</ol>
+    		</li>
+    		<li>Each disease is only listed once
+ 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>automated</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
+                <li>Verify that each of the 3 diseases listed above appears only once on the page.</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Verify in the Disease Model ribbon that the Disease term Breast Cancer is only listed once</li>
+    		</ol>
+    		</li>
+    		<li>verify that table functions like the mp phenotype table above, with working popups.
+ 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
+                <li>Verify that clicking the genotype labels (e.g., "hm1") popups up the phenotypic detail genotype window.</li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
+                <li>Verify that clicking on the genotype headings in the Disease model ribbon opens its appropriate genotype popup</li>
+    		</ol>
+    		</li>
+    		<li>Verify that the "see all" button pops up the right window
+ 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
+                <li>Verify that clicking the Genotypes: "see all" button pops up the phenotypic detail genotypes window containing all MP, disease and image data for the 3 gentoypes in the grid.</li>
+    		</ol>
+    		</li>
+    		<li>Verify that the MP grid section didn't break when the Diseases were removed
+ 			<p concordion:assertTrue="true">passed. klf 11/26/2012</p>
+ 			<img src="http://prodwww.informatics.jax.org/wiki/images/4/42/AlleleDetail_MPGridError.png" width="700px" border="1" />
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Hprt<sup>b-m3</sup></b> (MGI:1857299).</li>
+                <li>Verify that the following genotypes and MP annotations exist, and no others:
+                <table>
+                	<tr><th>genotype</th><th>MP Annots</th><th>sex</th></tr>
+                	<tr><td>hemi x-linked (ot)</td><td>MP:0003423 <i>(also has disease model)</i></td><td>M</td></tr>
+                	<tr><td>hemi x-linked (ot)</td><td>MP:0001501, MP:0001441</td><td>M, M</td></tr>
+                	<tr><td>hemi x-linked (cx)<br/>with Impdh2<sup>tm1Bmi</sup></td><td>MP:0005078, MP:0000717</td><td>M, M</td></tr>
+                	<tr><td>homozygous</td><td><i>none - should not appear in grid</i></td><td><i>none</i></td></tr>
+                	<tr><td>het with Hprt<sup>tm1Dwm</sup></td><td>MP:0003171 (<b>N</b>)</td><td>F</td></tr>
+                	<tr><td>hemi x-linked (cx)<br/>with Impdh2<sup>tm1Bmi</sup></td><td>MP:0002401, MP:0008700, MP:0009335, MP:0005095, MP:0005079</td><td>all M</td></tr>
+                </table> 
+                </li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<li>Only genotypes that have disease models appear in disease model table
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (<b concordion:set="#alleleID">MGI:1856088</b>).</li>
+                <li>Verify that only 3 genotypes appear in the Disease Models ribbon.
+                <table concordion:verifyRows="#genotype : getDiseaseGenotypes(#alleleID)">
+                <tr><th cc:assertEquals="#genotype.genotype.primaryID">Genotype MGIID</th></tr>
+                <tr><td>MGI:3044413</td></tr>
+                <tr><td>MGI:3044414</td></tr>
+                <tr><td>MGI:2663064</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+			<li>Verify that genotype labels match up with genotype legend
+    		<ol>
+    			<li>For allele Lepr<sup>db</sup> (<b concordion:set="#alleleID">MGI:1856009</b>)</li>
+                <li>Verify that the following genotype labels match their respective genotype legend entries (by comparing MGIIDs)
+                	<table cc:execute="#genotypeID = getDiseaseGenotypeID(#alleleID,#genotypeLabel)">
+                	<tr><th concordion:set="#genotypeLabel">genotype label</th>
+                	<th cc:assertEquals="#genotypeID">MGIID</th></tr>
+                	<tr class="hidden"><td cc:execute="#legendID1 = getLegendGenotypeID(#alleleID,#TEXT)">hm-1</td><td><b cc:echo="#legendID1"></b></td></tr>
+                	<tr><td cc:execute="#legendID2 = getLegendGenotypeID(#alleleID,#TEXT)">hm2</td><td><b cc:echo="#legendID2"></b></td></tr>
+	               	<tr><td cc:execute="#legendID3 = getLegendGenotypeID(#alleleID,#TEXT)">hm3</td><td><b cc:echo="#legendID3"></b></td></tr>
+	               	<tr><td cc:execute="#legendID4 = getLegendGenotypeID(#alleleID,#TEXT)">hm6</td><td><b cc:echo="#legendID4"></b></td></tr>
+	               	<tr><td cc:execute="#legendID5 = getLegendGenotypeID(#alleleID,#TEXT)">hm7</td><td><b cc:echo="#legendID5"></b></td></tr>
+	               	<tr><td cc:execute="#legendID6 = getLegendGenotypeID(#alleleID,#TEXT)">tg33</td><td><b cc:echo="#legendID6"></b></td></tr>
+     	
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Each disease is only listed once
+    		<ol>
+                <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (<b concordion:set="#alleleID">MGI:1856088</b>).</li>
+                <li>Verify that each of the 3 diseases listed below appear once:
+                <table concordion:verifyRows="#disease : getDiseaseNames(#alleleID)">
+                <tr><th cc:assertEquals="#disease">Disease Name</th></tr>
+                <tr><td>Albinism, Ocular, with Sensorineural Deafness</td></tr>
+                <tr><td>Tietz Syndrome</td></tr>
+                <tr><td>Waardenburg Syndrome, Type 2A; WS2A</td></tr>
+                </table></li>
+                <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (<b concordion:set="#alleleID">MGI:1857263</b>).</li>
+                <li>Verify in the Disease Model ribbon that <b cc:assertValueAppearsOnlyOnce="getDiseaseNames(#alleleID)">Breast Cancer</b> is listed only once.
+                </li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

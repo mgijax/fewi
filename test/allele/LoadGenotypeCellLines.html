@@ -1,0 +1,799 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Genotype Cell Lines Loader Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<h1>Genotype Cell Lines Loader Tests</h1>
+    <ul>
+        <li>User story 55 - Modify Sanger loader to add cell lines</li>
+    </ul>
+
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Runs the genotype step and phenotype load steps, including validations</li>
+		<li>Cell lines not in the Mutant Cell Line table(s) of the database are reported as errors</li>
+		<li>Validates cell line-to-allele associations already exist or are reported as errors</li>
+		<li>Where no cell line is specified, allow nulls</li>
+		<li>Correct cell line values are loaded for each allele depending on the state of the genotype (hom, het, hemi, ind)</li>
+		<li>Creates new genotypes when needed where cell lines are different</li>
+		<li>Merges duplicate &quot;M&quot; and &quot;F&quot; annotations into one &quot;NA&quot; annotation for a single genotype</li>
+		<li>Repeated loads work correctly (drop/reload)</li>
+	</ul>
+	<p>See also: <a href="LoadGenotypes.html">LoadGenotypes</a> and <a href="LoadPhenotypeAnnots.html">LoadPhenotypeAnnots</a>.</p>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+			<li>Verify the following data inputs are interpreted and loaded as shown:
+			<table>
+				<tr><th>Column (Field)</th><th>Data Element</th><th>Value</th><th>Loaded as</th><th>Notes</th></tr>
+				<tr><td>1</td><td>pheno center</td><td>WTSI</td><td><i>not loaded</i></td><td>used for row validation</td></tr>
+				<tr><td>2</td><td>annot center</td><td>WTSI</td><td><i>not loaded</i></td><td>used for row validation</td></tr>
+				<tr><td>3</td><td>cell line</td><td><i>any</i></td><td><i>cell line 1</i> (and <i>cell line 2 if Hom</i>)</td><td>validated during load - <i>new with this User Story</i></td></tr>
+				<tr><td>4</td><td>MP term ID</td><td><i>any</i></td><td><i>MP term ID</i></td><td>validated during load</td></tr>
+				<tr><td>5</td><td>allele ID</td><td><i>any</i></td><td><i>allele ID</i></td><td>validated during load</td></tr>
+				<tr><td>6</td><td>allele state</td><td><ul><li>Hom</li><li>Het</li><li>Hemi</li><li>null</li></ul></td><td><ul><li>&quot;Homozygous&quot;</li><li>&quot;Heterozygous&quot; with wild type</li><li>&quot;Hemizygous X-Linked&quot; or &quot;...Y-Linked&quot;</li><li>&quot;Indeterminate&quot;</li></ul></td><td>Hemizygous  validates that marker is on the X or Y chromosome.  Heterozygous looks for existence of wild type - if not found, kicks out row with error message to Curator Log file. (11/9/12).</td></tr>
+				<tr><td>7</td><td>allele symbol</td><td><i>any</i></td><td><i>not loaded</i></td><td>not used</td></tr>
+				<tr><td>8</td><td>marker ID</td><td><i>any</i></td><td><i>marker ID</i></td><td>validated during load; <i>we are NOT validating correct marker for the given allele (10/5/2012). Curator QC report should catch these errors.</i></td></tr>
+				<tr><td>9</td><td>evidence code</td><td><i>any</i></td><td>&quot;EXP&quot;</td><td>all loaded with default value</td></tr>
+				<tr><td>10</td><td>strain</td><td><i>any</i></td><td>&quot;not specified&quot;</td><td>Sanger load file does not contain valid strain terminology yet (9/13/2012)</td></tr>
+				<tr><td>11</td><td>sex</td><td><ul><li>Male</li><li>Female</li><li>Both</li><li>null</li></ul></td><td><ul><li>&quot;M&quot;</li><li>&quot;F&quot;</li><li>&quot;NA&quot;</li><li>&quot;NA&quot;</li></ul></td><td>validated during load</td></tr>
+			</table>
+			</li>
+    		<li>Verify the following fields generate an error report for:
+    		<ul>
+				<li> null or bad data in Phenotyping Center</li>
+				<li> null or bad data in Annotation Center</li>
+				<li><i>null or bad data in Cell Line</i></li>
+				<li> bad or obsolete data in MP ID (rows with nulls are skipped without error report)</li>
+				<li> null or bad data in MGI Allele ID</li> 
+				<li> null or bad data in Allele State</li>
+				<li> conflict between Allele State and Marker chromosome (hemizygous allele state but chr not X or Y)</li>
+				<li> null or bad data in MGI Marker ID; <i>marker ID not valid for the given allele ID</i></li>
+				<li> bad data in Sex (Gender)</li>
+    		</ul>
+ 			<p concordion:assertTrue="true">passed kstone 11/11/12.</p>
+    		<ol>
+                <li>Run the parse-and-load script on <i>mgi_sanger_mp_test.tsv</i>.</li>
+                <li>Verify correct error message was generated for each error line in the file.</li>
+                <li>Verify error message email was received by the correct mail list recipients.</li>
+                <li>Verify genotypes were created for rows specifying new cell lines.</li>
+                <li>Verify MP annotations were created for rows specifying new cell lines.</li>
+                <li>Verify MP annotation was created merging &quot;M&quot; and &quot;F&quot; duplicate annotations into one &quot;NA&quot; annoation.</li>
+    		</ol>
+			<p>Test file updated 10/9/2012: (notes describing error or test case in last column)</p>
+			<table style='border-collapse: collapse;'>
+						<tr>
+							<td>1</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td>MGI:5287574</td>
+							<td>&#160;&#160;&#160;&#160;&#160;</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td>MGI:1924217</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Spaces&#160;Allele&#160;State</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td>MGI:5287574</td>
+							<td>Hemi</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td>MGI:1924217</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Bad&#160;Allele&#160;State</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td></td>
+							<td>WTSI</td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td>MGI:5287574</td>
+							<td>Het</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td>MGI:1924217</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Null&#160;pheno&#160;ctr</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>KLF</td>
+							<td>WTSI</td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td>MGI:5287574</td>
+							<td>Het</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td>MGI:1924217</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Nonsense&#160;pheno&#160;ctr</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>WTSI</td>
+							<td></td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td>MGI:5287574</td>
+							<td>Het</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td>MGI:1924217</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Null&#160;annot&#160;ctr</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td></td>
+							<td>Het</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td>MGI:1924217</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Null&#160;Allele&#160;ID</td>
+						</tr>
+						<tr>
+							<td>7</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td>MGI:1</td>
+							<td>Het</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td>MGI:1924217</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Bad&#160;Allele&#160;ID</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>Not&#160;Specified</td>
+							<td>MP:0002833</td>
+							<td>MGI:5287574</td>
+							<td>Het</td>
+							<td>2700049A03Rik&lt;tm1.1Arte&gt;</td>
+							<td></td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Null&#160;Marker&#160;ID</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP:00028339</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Female</td>
+							<td>Nonsense&#160;MP&#160;ID</td>
+						</tr>
+						<tr>
+							<td>10</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP:0000012</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Male</td>
+							<td>Bad&#160;MP&#160;ID</td>
+						</tr>
+						<tr>
+							<td>11</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP:000219</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Female</td>
+							<td>Nonsense&#160;MP&#160;ID</td>
+						</tr>
+						<tr>
+							<td>12</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP:0000063</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>&#160;&#160;&#160;&#160;</td>
+							<td>Spaces&#160;sex</td>
+						</tr>
+						<tr>
+							<td>13</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>KLF</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Both</td>
+							<td>Nonsense&#160;MP&#160;ID</td>
+						</tr>
+						<tr>
+							<td>14</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP&#160;MP:0011167</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Both</td>
+							<td>Nonsense&#160;MP&#160;ID</td>
+						</tr>
+						<tr>
+							<td>15</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP:0008762</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Klf</td>
+							<td>Nonsense&#160;sex</td>
+						</tr>
+						<tr>
+							<td>16</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP:0010770</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>F</td>
+							<td>Nonsense&#160;sex</td>
+						</tr>
+						<tr>
+							<td>17</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0027_2_B05</td>
+							<td>MP:0010770</td>
+							<td>MGI:4433303</td>
+							<td>Hom</td>
+							<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1924294</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Neither</td>
+							<td>Nonsense&#160;sex</td>
+						</tr>
+						<tr>
+							<td>18</td>
+							<td>WTSI</td>
+							<td>&#160;&#160;&#160;&#160;</td>
+							<td></td>
+							<td>MP:0008495</td>
+							<td>MGI:3588650</td>
+							<td></td>
+							<td>Chd7&lt;Whi&gt;</td>
+							<td>MGI:2444748</td>
+							<td>EXP</td>
+							<td>C3HeB/FeJ</td>
+							<td></td>
+							<td>Spaces&#160;annot&#160;ctr</td>
+						</tr>
+						<tr>
+							<td>19</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0181_1_A05</td>
+							<td>MP:0000221</td>
+							<td>MGI:4431679</td>
+							<td>Hez</td>
+							<td>Hira&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:99430</td>
+							<td>EXP</td>
+							<td>C57BL/6N</td>
+							<td>Male</td>
+							<td>Nonsense&#160;Allele&#160;State</td>
+						</tr>
+						<tr>
+							<td>20</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0158_4_G09</td>
+							<td>MP:0008044</td>
+							<td>MGI:4431946</td>
+							<td>Hemi</td>
+							<td>Ide&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:96412</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Bad&#160;Allele&#160;State</td>
+						</tr>
+						<tr>
+							<td>21</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td></td>
+							<td>&#160;&#160;&#160;&#160;&#160;&#160;</td>
+							<td>MGI:4128950</td>
+							<td></td>
+							<td>Kctd10&lt;Gt(RRG305)Byg&gt;</td>
+							<td>MGI:2141207</td>
+							<td>EXP</td>
+							<td>CBA/Ca;129P2</td>
+							<td></td>
+							<td>Spaces&#160;MP&#160;ID</td>
+						</tr>
+						<tr>
+							<td>22</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0070_2_G04</td>
+							<td>MP:0010067</td>
+							<td>MGI:4432392</td>
+							<td>Het</td>
+							<td>Ldha&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>Klf</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Nonsense&#160;Marker&#160;ID</td>
+						</tr>
+						<tr>
+							<td>23</td>
+							<td>&#160;&#160;&#160;&#160;</td>
+							<td>WTSI</td>
+							<td></td>
+							<td>MP:0008498</td>
+							<td>MGI:1856555</td>
+							<td></td>
+							<td>Myo6&lt;sv&gt;</td>
+							<td>MGI:104785</td>
+							<td>EXP</td>
+							<td>C57BL/6JIco;C57BL/10</td>
+							<td></td>
+							<td>Spaces&#160;pheno&#160;ctr</td>
+						</tr>
+						<tr>
+							<td>24</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0033_1_F12</td>
+							<td>MP:0000220</td>
+							<td>MGI:4364806</td>
+							<td>Het</td>
+							<td>Nf1&lt;tm1a(KOMP)Wtsi&gt;</td>
+							<td>&#160;&#160;&#160;&#160;</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Spaces&#160;Marker&#160;ID</td>
+						</tr>
+						<tr>
+							<td>25</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0033_4_D01</td>
+							<td>MP:0004974</td>
+							<td>&#160;&#160;&#160;&#160;</td>
+							<td>Het</td>
+							<td>Nfkb1&lt;tm1a(KOMP)Wtsi&gt;</td>
+							<td>MGI:97312</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Spaces&#160;Allele&#160;ID</td>
+						</tr>
+						<tr>
+							<td>26</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0079_5_G07</td>
+							<td></td>
+							<td>MGI:4362680</td>
+							<td>Hom</td>
+							<td>Rapgefl1&lt;tm1a(KOMP)Wtsi&gt;</td>
+							<td>MGI:3611446</td>
+							<td>EXP</td>
+							<td>C57BL/6N</td>
+							<td>Female</td>
+							<td>Null&#160;MP&#160;ID</td>
+						</tr>
+						<tr>
+							<td>27</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>&#160;&#160;&#160;&#160;</td>
+							<td>MP:0000183</td>
+							<td>MGI:4364794</td>
+							<td>Hom</td>
+							<td>Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</td>
+							<td>MGI:1203732</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Spaces&#160;cell&#160;line</td>
+						</tr>
+						<tr>
+							<td>28</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0109_3_E07</td>
+							<td>MP:0000183</td>
+							<td>MGI:4364794</td>
+							<td>Hom</td>
+							<td>Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</td>
+							<td>MGI:97490</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Bad&#160;marker&#160;for&#160;allele</td>
+						</tr>
+						<tr>
+							<td>29</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0126_4_F03</td>
+							<td>MP:0000183</td>
+							<td>MGI:4364794</td>
+							<td>Hom</td>
+							<td>Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</td>
+							<td>MGI:1203732</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Bad&#160;cell&#160;line</td>
+						</tr>
+						<tr>
+							<td>30</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>klf</td>
+							<td>MP:0000183</td>
+							<td>MGI:4364794</td>
+							<td>Hom</td>
+							<td>Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</td>
+							<td>MGI:1203732</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Nonsense&#160;cell&#160;line</td>
+						</tr>
+						<tr>
+							<td>31</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0069_4_H07</td>
+							<td>MP:0008854</td>
+							<td>MGI:4431547</td>
+							<td>Het</td>
+							<td>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:109490</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Female</td>
+							<td>Dup&#160;MF&#160;combine&#160;them</td>
+						</tr>
+						<tr>
+							<td>32</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0069_4_H07</td>
+							<td>MP:0008854</td>
+							<td>MGI:4431547</td>
+							<td>Het</td>
+							<td>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:109490</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Male</td>
+							<td>Dup&#160;MF&#160;combine&#160;them</td>
+						</tr>
+						<tr>
+							<td>33</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0069_4_A07</td>
+							<td>MP:0008855</td>
+							<td>MGI:4431547</td>
+							<td>Het</td>
+							<td>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:109490</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Female</td>
+							<td>Dup&#160;MF&#160;diff&#160;new&#160;cell&#160;lines</td>
+						</tr>
+						<tr>
+							<td>34</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0069_4_A08</td>
+							<td>MP:0008855</td>
+							<td>MGI:4431547</td>
+							<td>Het</td>
+							<td>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:109490</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Male</td>
+							<td>Dup&#160;MF&#160;diff&#160;new&#160;cell&#160;lines</td>
+						</tr>
+						<tr>
+							<td>35</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0069_4_B07</td>
+							<td>MP:0008856</td>
+							<td>MGI:4431547</td>
+							<td>Het</td>
+							<td>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:109490</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Both</td>
+							<td>Same&#160;annot&#160;diff&#160;new&#160;cell&#160;lines</td>
+						</tr>
+						<tr>
+							<td>36</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0069_4_B08</td>
+							<td>MP:0008856</td>
+							<td>MGI:4431547</td>
+							<td>Het</td>
+							<td>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:109490</td>
+							<td>EXP</td>
+							<td>anything</td>
+							<td>Both</td>
+							<td>Same&#160;annot&#160;diff&#160;new&#160;cell&#160;lines</td>
+						</tr>
+						<tr>
+							<td>37</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0060_1_A07</td>
+							<td>MP:0010124</td>
+							<td>KLF</td>
+							<td>Het</td>
+							<td>Sparc&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:98373</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Female</td>
+							<td>Nonsense&#160;Allele&#160;ID</td>
+						</tr>
+						<tr>
+							<td>38</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0060_1_A07</td>
+							<td>MP:0010124</td>
+							<td>MGI:2</td>
+							<td>Het</td>
+							<td>Sparc&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:98373</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Female</td>
+							<td>Bad&#160;Allele&#160;ID</td>
+						</tr>
+						<tr>
+							<td>39</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0060_1_A07</td>
+							<td>MP:0001304</td>
+							<td>MGI:4432869</td>
+							<td>Hom</td>
+							<td>Sparc&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:1</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Female</td>
+							<td>Bad&#160;Marker&#160;ID</td>
+						</tr>
+						<tr>
+							<td>40</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0060_1_A07</td>
+							<td>MP:0002100</td>
+							<td>MGI:4432869</td>
+							<td>Klf</td>
+							<td>Sparc&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:98373</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Nonsense&#160;Allele&#160;State</td>
+						</tr>
+						<tr>
+							<td>41</td>
+							<td>WTSI</td>
+							<td>KLF</td>
+							<td>EPD0065_1_F10</td>
+							<td>MP:0005419</td>
+							<td>MGI:4432393</td>
+							<td>Het</td>
+							<td>Spnb2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:98388</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Nonsense&#160;annot&#160;ctr</td>
+						</tr>
+						<tr>
+							<td>42</td>
+							<td>KLF</td>
+							<td>WTSI</td>
+							<td>EPD0183_4_A09</td>
+							<td>MP:0002412</td>
+							<td>MGI:4432885</td>
+							<td>Het</td>
+							<td>Tpi1&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:98797</td>
+							<td>EXP</td>
+							<td>C57BL/6JTyr;C57BL/6N</td>
+							<td>Male</td>
+							<td>Nonsense&#160;pheno&#160;ctr</td>
+						</tr>
+						<tr>
+							<td>43</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0001_3_G07</td>
+							<td>MP:0002833</td>
+							<td>MGI:4842867</td>
+							<td>Het</td>
+							<td>Tpm1&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:9999999</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Female</td>
+							<td>Nonsense&#160;Marker&#160;ID</td>
+						</tr>
+						<tr>
+							<td>44</td>
+							<td>WTSI</td>
+							<td>WTSI</td>
+							<td>EPD0001_3_G07</td>
+							<td>MP:0002833</td>
+							<td>MGI:9999999</td>
+							<td>Het</td>
+							<td>Tpm1&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:98809</td>
+							<td>EXP</td>
+							<td>129/SvEv</td>
+							<td>Male</td>
+							<td>Nonsense&#160;Allele&#160;ID</td>
+						</tr>
+						<tr>
+							<td>45</td>
+							<td>&#160;&#160;&#160;</td>
+							<td>WTSI</td>
+							<td></td>
+							<td>MP:0010091</td>
+							<td>MGI:1857090</td>
+							<td>Het</td>
+							<td>Whrn&lt;wi&gt;</td>
+							<td>MGI:2682003</td>
+							<td>EXP</td>
+							<td>STOCK</td>
+							<td>Male</td>
+							<td>Spaces&#160;pheno&#160;ctr</td>
+						</tr>
+					</table>
+				</li>
+		</ol>
+	
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<li>Test 1
+			<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+            </ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

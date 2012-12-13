@@ -1,0 +1,121 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFFE0;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Build Sprint Tests for Firien Install</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Build Sprint Tests for Firien Install</h1>
+    <ul>
+        <li>User story #121, Suppress Gt(ROSA)26Sor</li>
+        <li>User story #106, Simplify Allele Summary</li>
+        
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>not needed</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<p>From sto121, Suppress Gt(ROSA)26Sor</p>
+		<ol>
+    		<li>Verify Gt(ROSA)26Sor is still returned in Marker Query searches for diseases
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>On the Marker Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
+                <li>Verify that <b>Gt(ROSA)26Sor</b> is found in the results set.</li>
+    		</ol>
+    		</li>
+    		<li>Verify Gt(ROSA)26Sor alleles are still returned in Allele Query searches for diseases
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>On the Allele Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
+                <li>Verify that a <b>Gt(ROSA)26Sor</b> allele is found in the results set.</li>
+    		</ol>
+    		</li>
+    		<li>Verify sort order of genes on Human Disease Detail Page matches public.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+    			<li>Open the test Web Interface.</li>
+    			<li>Navigate to the Human Disease Detail page for Ciliary Dyskinesia, Primary, 1; CILD1 (244400).</li>
+    			<li>Verify that genes in the Associated Genes section are listed in the same ordera as on Public.</li>
+    		</ol>
+    		</li>
+		</ol>
+		<p>From sto106, Simplify Allele Summary</p>
+    	<p>ASCII sort currently has alleles with names like "tm10," "tm11", "tm12" appearing BEFORE "tm1" on Public, but AFTER "tm1" on Cardolan.</p>
+		<ol>
+    		<li>Verify that alleles are listed in the same order as displayed on Public 
+ 			 	<p concordion:assertTrue="false">new</p>
+ 				<ol>
+ 	            <li>Navigate to Allele Summary Page for <b>Hprt</b> (MGI:96217).</li>
+                <li>Verify that alleles are listed in the same order as on Public.</li>
+                </ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

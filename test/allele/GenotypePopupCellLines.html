@@ -1,0 +1,195 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	span.hilite {background-color:#FFFF00;}
+	tr.small td {font-size:0.75em;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Genotype Popup - Cell Lines</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Genotype Popup - Cell Lines Tests</h1>
+    <ul>
+        <li>User story 57, WI: Cell Lines for Genotypes  in popup header</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Confirm same allele pairs with different MCLs display properly</li>
+	</ul>
+
+
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p>Mockup:</p>
+    <img src="http://prodwww.informatics.jax.org/wiki/images/0/0a/MGI_5008609_GenotypeCellLinesMockup.jpg" width="400px" />
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<p>Set up: Add fake data via genotype loader  from file mgi_genotypeload_test.txt... </p>
+ 			<ul>
+ 				<li>Genotype with 2+ diff cell lines for 2+ allele pairs from same marker (genotype #1 below)</li>
+ 				<li>Genotype with 2 diff cell lines for an allele pair (genotype #2 below)</li>
+ 				<li>Genotype with 2 diff alleles (diff markers: compound genotype), each having diff cell line (genotype #3 below)</li>
+ 				<li>Genotype with 2+ allele pairs having even more cell lines (complex genotype #4 below)</li>
+ 				<li>Genotype with 2 diff alleles (same marker: heterozygous), no cell lines (genotype #5 below)</li>
+ 			</ul>
+		<table>
+			<tr class="small"><td>field 1: Genotype Order #</td>	<td>field 2: Genotype ID</td>	<td>field 3: Strain ID</td>	<td>field 4: Strain Name</td>	<td>field 5: MGI Marker ID</td>	<td>field 6: Allele 1 ID</td>	<td>field 7: Mutant Cell Line 1</td>	<td>field 8: Allele 2 ID</td>	<td>field 9: Mutant Cell Line 2</td>	<td>field 10: Conditional (yes/no)</td>	<td>field 11: Exist As Term (ex. 'Mouse Line', 'Cell Line', 'Chimeric')</td>	<td>field 12: General Notes (_notetype_key = 1027)</td>	<td>field 13: Private Notes (_notetype_key = 1028)</td>	<td>field 14: Pair State (ex. 'Homozygous', 'Hemizygous X-linked')</td>	<td>field 15: Compound (ex. 'Top', 'Bottom')</td>	<td>field 16: Created By User</td>	<td width="250px;">NOTES</td></tr>
+			<tr><td>1</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:1915303</td>	<td>MGI:4456838</td>	<td>EPD0009_1_A01</td>	<td>MGI:4456838</td>	<td>EPD0009_1_A01</td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; Hom, 3 allele pairs, varying MCLs</td></tr>
+			<tr><td>1</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:1915303</td>	<td>MGI:4456838</td>	<td>EPD0009_1_B01</td>	<td>MGI:4456838</td>	<td>EPD0009_1_B01</td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; Hom, 3 allele pairs, varying MCLs</td></tr>
+			<tr><td>1</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:1915303</td>	<td>MGI:4456838</td>	<td>EPD0009_1_A01</td>	<td>MGI:4456838</td>	<td>EPD0009_1_B01</td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; Hom, 3 allele pairs, varying MCLs</td></tr>
+			<tr><td>2</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:107809</td>	<td>MGI:4364285</td>	<td>EPD0318_4_C10</td>	<td>MGI:4364285</td>	<td>EPD0318_4_C11</td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>Aamp&lt;tm1a(KOMP)Wtsi&gt; Hom, diff MCL</td></tr>
+			<tr><td>3</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:107809</td>	<td>MGI:4364285</td>	<td>EPD0318_4_F11</td>	<td></td>	<td></td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Top</td>	<td>scrumdog</td>	<td>Compound: Aamp&lt;tm1a(KOMP)Wtsi&gt; and Abcb6&lt;tm1a(KOMP)Wtsi&gt; </td></tr>
+			<tr><td>3</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:1921354</td>	<td>MGI:4362220</td>	<td>EPD0246_2_B08</td>	<td></td>	<td></td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Bottom</td>	<td>scrumdog</td>	<td>Compound: Aamp&lt;tm1a(KOMP)Wtsi&gt; and Abcb6&lt;tm1a(KOMP)Wtsi&gt; </td></tr>
+			<tr><td>4</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:2148491</td>	<td>MGI:4451483</td>	<td>EPD0246_2_B08</td>	<td>MGI:4451483</td>	<td>EPD0246_2_B08</td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>Complex: Acaa1a, Adal, Agbl2, 4 alleles, 5 MCIs</td></tr>
+			<tr><td>4</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:1923144</td>	<td>MGI:5302323</td>	<td>EPD0471_1_H10</td>	<td>MGI:5302323</td>	<td>EPD0471_1_H11</td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Homozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>Complex: Acaa1a, Adal, Agbl2, 4 alleles, 5 MCIs</td></tr>
+			<tr><td>4</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:2443254</td>	<td>MGI:4441857</td>	<td>EPD0525_6_A11</td>	<td>MGI:4442049</td>	<td>EPD0525_6_B11</td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Heterozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>Complex: Acaa1a, Adal, Agbl2, 4 alleles, 5 MCIs</td></tr>
+			<tr><td>5</td>	<td></td>	<td>MGI:4867032</td>	<td>Not Specified</td>	<td>MGI:2442495</td>	<td>MGI:4433360</td>	<td></td>	<td>MGI:4431788</td>	<td></td>	<td>no</td>	<td>Mouse Line</td>	<td></td>	<td></td>	<td>Heterozygous</td>	<td>Not Applicable</td>	<td>scrumdog</td>	<td>No MCLs: Agmo het</td></tr>		
+		</table>
+		<ol>
+    		<li>Verify mutant cell line appears for simple genotypes which have one cell line.
+ 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Chd7&lt;tm2a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Open a Genotype Popup window for <b>MGI:5438348</b>, heterozygous wild type,  allele pair: <i>Chd7&lt;tm2a(EUCOMM)Wtsi&gt; / Chd7&lt;+&gt;</i></li>
+                <li>Verify the header includes label and list of cell lines as shown in the mockup</li>
+                <li>Verify there is ONE cell line:<b>EPD0019_1_D07</b>, similar to the mockup</li>
+    		</ol>
+    		</li>
+    		<li>Verify mutant cell lines appear for simple genotypes which have more than one cell line.
+ 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Aamp&lt;tm1a(KOMP)Wtsi&gt;</b></li>
+                <li>Open a Genotype Popup window homozygous genotype, allele pair: <i>Aamp&lt;tm1a(KOMP)Wtsi&gt; / Aamp&lt;tm1a(KOMP)Wtsi&gt;</i></li>
+                <li>Verify the header includes label and list of cell lines as shown in the mockup</li>
+                <li>Verify the the TWO cell lines are:<b>EPD0318_4_C10</b> and <b>EPD0318_4_C11</b> similar to the mockup</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify mutant cell lines appear for complex genotypes, same allele, which have more than one cell line.
+ 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Open a Genotype Popup window homozygous genotype, 3 allele pairs for same allele:
+                <table>
+                	<tr><td>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; / Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+                	<tr><td>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; / Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+                	<tr><td>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; / Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+                </table>
+                </li>
+                <li>Verify the header includes label and list of cell lines as shown in the mockup</li>
+                <li>Verify the header includes TWO cell lines:<b>EPD0009_1_A01</b>, <b>EPD0009_1_B01</b> similar to the mockup</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify mutant cell lines appear for compound genotypes.
+ 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Aamp&lt;tm1a(KOMP)Wtsi&gt; </b></li>
+                <li>Open a Genotype Popup window complex genotype, allele pair: <i>Aamp&lt;tm1a(KOMP)Wtsi&gt; / Abcb6&lt;tm1a(KOMP)Wtsi&gt; </i></li>
+                <li>Verify the header includes label and list of cell lines as shown in the mockup</li>
+                <li>Verify the header includes label and TWO cell lines:<b>EPD0246_2_B08</b> and <b>EPD0318_4_F11</b> similar to the mockup</li>
+                <li>Verify each cell line for each allele in the genotype is listed only once</li>
+                <li>Navigate to the Allele Detail Page for <b>Abcb6&lt;tm1a(KOMP)Wtsi&gt; </b></li>
+                <li>Open a Genotype Popup window complex genotype, allele pair: <i>Aamp&lt;tm1a(KOMP)Wtsi&gt; / Abcb6&lt;tm1a(KOMP)Wtsi&gt; </i></li>
+                <li>Verify the header includes label and list of cell lines as shown in the mockup</li>
+                <li>Verify the header includes label and TWO cell lines:<b>EPD0246_2_B08</b> and <b>EPD0318_4_F11</b> similar to the mockup</li>
+                <li>Verify each cell line for each allele in the genotype is listed only once</li>
+    		</ol>
+    		</li>
+    		<li>Verify mutant cell lines appear for complex genotypes.
+ 			<p concordion:assertTrue="true">passed. klf 10/26/12</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Acaa1a&lt;tm1a(KOMP)Wtsi&gt;</b></li>
+                <li>Open a Genotype Popup window complex genotype with allele pairs: 
+                <table>
+                	<tr><td>Acaa1a&lt;tm1a(KOMP)Wtsi&gt;</td><td>Acaa1a&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+                	<tr><td>Adal&lt;tm1e(EUCOMM)Wtsi&gt;</td><td>Adal&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+                	<tr><td>Agbl2&lt;tm1e(EUCOMM)Wtsi&gt;</td><td>Agbl2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+                </table>
+                </li>
+                <li>Verify the header includes label and list of cell lines as shown in the mockup</li>
+                <li>Verify the header includes FIVE cell lines:<b>EPD0246_2_B08</b>, <b>EPD0471_1_H10</b>, <b>EPD0471_1_H11</b>, <b>EPD0525_6_A11</b> and <b>EPD0525_6_B11</b> similar to the mockup</li>
+                <li>Verify each cell line for each allele in the genotype is listed only once</li>
+                <li>Repeat for the Allele Detail Page for <b>Adal&lt;tm1e(EUCOMM)Wtsi&gt;</b></li>
+                <li>Repeat for the Allele Detail Page for <b>Agbl2&lt;tm1e(EUCOMM)Wtsi&gt;</b></li>
+                <li>Repeat for the Allele Detail Page for <b>Agbl2&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify NO mutant cell lines appear for genotypes which DO NOT have them.
+ 			<p concordion:assertTrue="true">passed. klf 10/26/12</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Agmo&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Open a Genotype Popup window for heterozygote allele pair: <i>Agmo&lt;tm1e(EUCOMM)Wtsi&gt; / Agmo&lt;tm1a(EUCOMM)Wtsi&gt;</i></li>
+                <li>Verify the header DOES NOT include label and list of cell lines as shown in the mockup</li>
+                <li>Navigate to the Allele Detail Page for <b>Agmo&lt;tm1e(EUCOMM)Wtsi&gt;</b></li>
+                <li>Open a Genotype Popup window for heterozygote allele pair: <i>Agmo&lt;tm1e(EUCOMM)Wtsi&gt; / Agmo&lt;tm1a(EUCOMM)Wtsi&gt;</i></li>
+                <li>Verify the header DOES NOT include label and list of cell lines as shown in the mockup</li>
+    		</ol>
+    		</li>
+<!--  			<p>SET UP - ADD FAKE DATA VIA THE EI:</p>
+ 			<table>
+ 			<tr><th>Allele 1</th><th>Allele 2</th><th>State</th><th>Compound</th><th>Mutant 1</th><th>Mutant 2</th><th>Notes</th></tr>
+ 			<tr><td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td><td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td><td>Homozygous</td><td>Not Applicable</td><td>EPD0033_5_D02</td><td>EPD0033_5_A02</td><td>Changed Mutant 2 to value shown (2 diff cell lines).</td></tr>
+ 			<tr><td>Aldh16a1&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>null</td><td>Homozygous</td><td>Top</td><td>EPD0091_2_D04</td><td>null</td><td>Change from Homozygous to a Compound genotype.</td></tr>
+ 			<tr><td>Ampd3&lt;tm2a(KOMP)Wtsi&gt;</td><td>null</td><td>Homozygous</td><td>Bottom</td><td>EPD0043_3_B02</td><td>null</td><td>Add to above to create Compound genotype.</td></tr>
+ 			<tr><td>Anxa6&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>Anxa6&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>Homozygous</td><td>Not Applicable</td><td>EPD0046_2_A08</td><td>EPD0046_2_A08</td><td>Added allele pair below to create complex genotype.</td></tr>
+ 			<tr><td>Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</td><td>Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</td><td>Homozygous</td><td>Not Applicable</td><td>EPD0025_5_C08</td><td>EPD0025_5_E07</td><td>Added to allele pair above to create complex genotype. Has 2 diff cell lines.</td></tr>
+ 			</table>
+-->
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+		<li>
+    		<ol>
+    			<li>
+                </li>
+    		</ol>
+    	</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	span.hilite {background-color:#FFFF00;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Genotype Popup Legend</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Genotype Popup Legend Tests</h1>
+    <ul>
+        <li>User story 76, WI: Legend in Genotype popup</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Key:<br/>
+F {should be female symbol} | phenotype observed only in females<br/>
+M {should be male symbol} | phenotype observed only in males<br/>
+N | normal phenotype<br/>
+WTSI | Wellcome Trust Sanger Institute<br/>
+
+
+CSS on the table, its rows and cells was something like this:<br/>
+border-collapse: collapse;<br/>
+border: 1px solid #DDD;<br/>
+font-size: 9px;<br/>
+color: #777;<br/>
+padding: 2px;
+		</li>
+	</ul>
+
+<p><a href="http://prodwww.informatics.jax.org/wiki/index.php/File:GenoPopup_Legend.JPG">Draft mockup: <img src="http://prodwww.informatics.jax.org/wiki/images/b/b3/GenoPopup_Legend.JPG" width="400px" /></a> </p>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify the legend conforms to the above criteria
+ 			<p concordion:assertTrue="true">passed. klf 10/16/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>wl</b> (<b>MGI:1856271</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3838969</b>  allele pair: <i>wl/wl</i> with genetic background: <i>not specified</i></li>
+                <li>Verify the legend displays in the upper right area of the header and it looks like the mockup, with changes as desired by the SME</li>
+    		</ol>
+    		</li>
+    
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+		<li>
+    		<ol>
+    			<li>
+                </li>
+    		</ol>
+    	</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

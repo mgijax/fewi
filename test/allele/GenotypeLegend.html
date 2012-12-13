@@ -1,0 +1,153 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Genotype Legend Test Suite</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Genotype Legend Test Suite</h1>
+    <ul>
+        <li>User story #21, Genotype Legend</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Legend appears in pheno ribbon above the phenotype grid</li>
+		<li>Legend will have a max height (4 genotypes?) and be overflow-scrollable</li>
+		<li></li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<p>Screenshots from Lepr<sup>db</sup> page on Public (11/5/2012).  The table in these requirements will replace this view on Public.</p>
+		<img src="http://prodwww.informatics.jax.org/wiki/images/0/0c/Lepr-db-genotypes1-22_20121106.png" width="700" />
+		<img src="http://prodwww.informatics.jax.org/wiki/images/6/65/Lepr-db-genotypes22-34_20121106.png" width="680" />
+		<ol>
+    		<li>A table exists listing genotype label,allele pairs, genetic background, all cell lines (no transmission state this time) (see image above from Public on 11/6/2012 for reference)
+ 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+    		<ol>
+                <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
+                <li>Scroll to the Phenotype summary section</li>
+                <li>Verify just below the yellow header section in a Genotypes table</li>
+                <li>Verify the table has the headings for Genotype, Allele pairs, Genetic background, and Cell line(s)</li>
+                <li>Verify each genotype displays its allele pairs and genetic background</li>
+                <li>Verify allele pairs are listed on new lines (one allele pair per line, as shown in image above)</li>
+            </ol>
+            </li>
+            <li> Verify cell lines display properly.
+ 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+            <ol>
+                <li>Navigate to the allele <b>Ubxn2b<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
+                <li>Scroll to the Phenotype summary section</li>
+                <li>Verify that <b>EPD0009_1_A01, EPD0009_1_B01</b> is listed in the cell line(s) cell for genotype "ot"
+                <b>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; / Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;<br/>
+	                	Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt; / Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;<br/>
+	                	Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;/Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;</b>
+	              and <b>"Not Specified"</b>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Table lists all genotypes that exist in the pheno grid (and have identical numbering) (see image above from Public on 11/6/2012 for reference)
+ 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+    		<ol>
+                <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
+                <li>Scroll to the Phenotype summary section</li>
+                <li>Verify the Genotype column lists the same Genotypes as the Affected Systems table and in the same order with same numbering</li>
+    		</ol>
+    		</li>
+    		<li>Table properly displays complex genotypes (see image above from Public on 11/6/2012 for reference)
+ 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+    		<ol>
+                <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
+                <li>Scroll to the Phenotype summary section</li>
+                <li>Verify that allele pairs in genotype <b>cn16</b> are displayed as shown in the image above.</li>
+                <li>Verify that allele pairs in genotoype <b>cn17</b> are displayed as shown in the image above.</li>
+    		</ol>
+    		</li>
+    		<li>Make sure superscript is properly displayed in allelic composition and genetic background (see image above from Public on 11/6/2012 for reference)
+ 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+    		<ol>
+                <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
+                <li>Scroll to the Phenotype summary section</li>
+                <li>Verify that the Genetic Background for genotype <b>ht12</b> is displayed with superscripts as shown in the image above.</li>
+    		</ol>
+    		</li>
+    		<li>Table becomes scrollable at some height
+ 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+    		<ol>
+                <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
+                <li>Verify that the genotype legend is scrollable, and displays four or less genotypes at start.</li>
+                <li>Navigate to the allele <b>Baz1b<sup>tm2a(KOMP)Wtsi</sup></b></li>
+                <li>Verify that the genotype legend is not scrollable and conforms to the size of the two listed genotype rows.</li>
+    		</ol>
+    		</li>
+    		<li>Clicking on genotype label in legend opens up the genotype popup
+ 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+    		<ol>
+                <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
+                <li>Click on any cell in the genotype legend "genotype" column. Verify that the popup is identical to the matching genotype popup in the phenotype grid.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

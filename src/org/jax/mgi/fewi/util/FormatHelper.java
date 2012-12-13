@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jax.mgi.fewi.util.DBConstants;
 
 import mgi.frontend.datamodel.Sequence;
@@ -354,6 +355,11 @@ public class FormatHelper
     	if(start!=null) s = nf.format(start);
     	if(end!=null) e = nf.format(end);
     	return nf.format(start)+"-"+nf.format(end);
+    }
+    
+    public static String javascriptEncode(String s)
+    {
+    	return StringEscapeUtils.escapeJavaScript(s);
     }
     
 } // end of class FormatHelper

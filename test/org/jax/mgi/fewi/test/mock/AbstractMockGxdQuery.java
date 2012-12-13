@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype") 
-public class AbstractMockGxdQuery 
+public class AbstractMockGxdQuery implements MockQuery
 {
 	public String markersUrl = "/gxd/markers/json";
 	public String assaysUrl = "/gxd/assays/json";

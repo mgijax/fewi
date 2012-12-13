@@ -14,9 +14,10 @@
 	</path>
 	
 	<path id="tests.path">
-		<fileset includes="*.jar" dir="${lib.dir}" />
-		<fileset includes="*.jar" dir="${jboss.dir}/common/lib" />
-		<fileset includes="*.jar" dir="${jboss.dir}/lib" />
+		<fileset includes="*.jar" dir="${lib.dir}" excludes="javaee-api-5.jar"/>
+		<fileset includes="*.jar" dir="${jboss.dir}/bin/client" />
+		<fileset includes="*.jar" dir="${jboss.dir}/modules/javax/persistence/api/main" />
+		<fileset includes="*.jar" dir="${jboss.dir}/bundles/javax/servlet/api/v25" />
 		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
 		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
 		<pathelement location="${compile.dir}" />
@@ -99,6 +100,21 @@
 			</batchtest>
 		</junit>
 	</target>
+	
+	<!-- run just allele tests -->
+		<target name="allele-test" depends="compile-test">
+				<junit fork="yes" forkmode="once" failureproperty="junit.failure">
+					<jvmarg value="-Dconcordion.output.dir=${testoutput.dir}"/>
+					<classpath>
+						<path refid="tests.path" />
+					</classpath>
+					<formatter type="xml" usefile="true" />
+					<batchtest todir="${testoutput.dir}">
+						<fileset dir="${compile.dir}" includes="allele/*Test.class">
+						</fileset>
+					</batchtest>
+				</junit>
+			</target>
 
 	<!--war -->
 	<target name="war" depends="compile">

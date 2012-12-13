@@ -1,0 +1,150 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<style>
+		table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+		table, th, td {border: 1px solid #CCCCCC;}
+		td, th {padding:2px;}
+		.man {background-color:#FFFFCC;}
+		ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+		ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+		li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+		p {margin:2px 0px;}
+		.hilite {background-color:#FFFFE0;}
+		td.xl65 {background-color:#FFFF00;}
+		td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+		td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+	</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+    <title>Suppress Gt(ROSA)26Sor on Human Disease and Mouse Model Detail</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Suppress Gt(ROSA)26Sor on Human Disease and Mouse Model Detail</h1>
+    <ul>
+        <li>User story 121, Suppress Gt(ROSA)26Sor</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Confirm that Gene Gt(ROSA)26Sor is never displayed in the Associated Genes section of Human Disease and Mouse Model Detail page</li>
+		<li>Confirm this gene is only suppressed  on this page only</li>
+		<li>Confirm that this gene will still display for queries and reports</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify that Gene Gt(ROSA)26Sor is never displayed in the Associated Genes section of Human Disease and Mouse Model Detail page
+ 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Open the Human Disease browser and display the disease Parkinson Disease 1, Autosomal Dominant; PARK1 OMIM ID: 168601</li> 
+                <li>Verify that Gt(ROSA)26Sor is not displayed in the Associated Genes section but does show in the Genotypes of the Mouse Model section.</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify that CRE alleles that currently are suppressed on public still suppress
+ 			<p concordion:assertTrue="true">jeff - sort order for associated genes section is different than public because of Dev environment sort difference</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+				<li>Open the Human Disease browser and display the disease DiGeorge Syndrome; DGS OMIM ID: 188400</li>
+                <li>Verify the page looks exactly like public, associated genes are the same</li>
+    		</ol>
+    		</li>
+		    <li>Verify searching for Gt(ROSA)26Sor still returns results
+ 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Type <b>Gt(ROSA)26Sor</b> in the search tool and press Enter</li>
+                <li>Verify the results returned include <b>Gt(ROSA)26Sor</b></li>
+    		</ol>
+    		</li>
+ 		    <li>Verify Gt(ROSA)26Sor displays in reports
+ 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Display the list of Phenotype reports from the All Reports page</li>
+                <li>Click on the link <b>MGI_PhenoOMIM.rpt</b></li>
+                <li>Verify by using the browser Find option that <b>Gt(ROSA)26Sor</b> is found in this report</li>
+    		</ol>
+    		</li> 
+    		<li>Verify Gt(ROSA)26Sor is still returned in Marker Query searches for diseases
+ 			<p class="hilite">Can't test because we have no glimpse install - TEST ON FIRIEN DURING BUILD SPRINT.</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>On the Marker Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
+                <li>Verify that <b>Gt(ROSA)26Sor</b> is found in the results set.</li>
+    		</ol>
+    		</li>
+    		<li>Verify Gt(ROSA)26Sor alleles are still returned in Allele Query searches for diseases
+ 			<p class="hilite">Can't test because we have no glimpse install - TEST ON FIRIEN DURING BUILD SPRINT.</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>On the Allele Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
+                <li>Verify that a <b>Gt(ROSA)26Sor</b> allele is found in the results set.</li>
+    		</ol>
+    		</li>
+    		<li>Verify Gt(ROSA)26Sor alleles are still returned in Quick Search searches for diseases
+ 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>In the Quick Search, search for <b>168601</b>.</li>
+                <li>Verify that a <b>Gt(ROSA)26Sor</b> allele is found in the results set.</li>
+    		</ol>
+    		</li>
+    		<li>Verify Gt(ROSA)26Sor Marker Detail Page still displays associated diseases
+ 			<p concordion:assertTrue="true">klf 12/06/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Marker Detail Page for Gt(ROSA)26Sor. </li>
+                <li>Verify that the Alleles and Phenotypes ribbon displays "Human Diseases Modeled Using Mouse Gt(ROSA)26Sor" text with linked number value.</li>
+                <li>Verify mouse-over on the linked number value displays a list of associated diseases.</li>
+    		</ol>
+    		</li>
+    		<li>Verify sort order of genes on Human Disease Detail Page matches public.
+ 			<p class="hilite">Can't test because our install does strict ASCII sorting - TEST ON FIRIEN DURING BUILD SPRINT.</p>
+    		<ol>
+    			<li>Open the test Web Interface.</li>
+    			<li>Navigate to the Human Disease Detail page for Ciliary Dyskinesia, Primary, 1; CILD1 (244400).</li>
+    			<li>Verify that genes in the Associated Genes section are listed in the same ordera as on Public.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+<!-- 
+		<ol>
+			<li>
+    		</li>
+		</ol>
+-->
+ 	</div>
+</div>
+
+</body>
+</html>

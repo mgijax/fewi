@@ -1,0 +1,262 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Summary Changes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Summary Changes</h1>
+    <ul>
+        <li>User story #106, Simplify Allele Summary</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>The first 4 columns (allele symbol, chromosome, synonyms, and category) remain the same.</li>
+		<li>The last column (background) is removed entirely.</li>
+		<li>The affected systems column is combined (unioned) for all the genotypes for that allele. (Duplicated terms listed only once.)</li>
+		<li>Likewise, the similar diseases column is combined.</li>
+		<li>To restate, the results table has 6 columns:
+			<ul>
+				<li>Allele Symbol / Gene; Allele Name</li>
+				<li>Chr</li>
+				<li>Synonyms</li>
+				<li>Category</li>
+				<li>Affected Anatomical Systems</li>
+				<li>Similar Human Diseases</li>
+			</ul>
+		</li>
+		<li>Each row represents one allele. Genotype specific data are unioned in generating the last two columns.</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Exactly one row per Allele
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		<ol>
+                <li>Navigate to Allele Summary Page for <b>Pax9</b></li>
+                <li>Verify there are the same number of rows in the table as there are alleles (should be <b>8 alleles and 8 rows</b>)</li>
+    		</ol>
+    		</li>
+    		<li>Verify there is no Genetic Background column
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		<ol>
+                <li>Navigate to Allele Summary Page for <b>Pax9</b></li>
+                <li>Verify the Allelic Composition and Genetic Background column does not appear.</li>
+    		</ol>
+    		</li>
+    		<li>Verify that affected systems column displays unique comma separated list of systems for all genotypes 
+ 			of each allele. Exceptions: where all the <u><b>only</b></u> annotations for any genotype(s) of an allele are  to the MP term &quot;normal phenotype&quot; or its child terms,  display the word &quot;none&quot;.  Where annotations for all genotypes include annotations to the term &quot;normal phenotype&quot; or its child terms, omit the word &quot;none&quot; and list only the other affected systems.
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		<ol>
+                <li>Navigate to Allele Summary Page for <b>Hprt</b> (MGI:96217).</li>
+                <li>Verify that the row for allele <b>Hprt<sup>b-m3</sup></b> does NOT include the word "none" in the list of affected systems. </li>
+                <li>Verify that the row for allele <b>Hprt<sup>tm1.1Pobe</sup></b> displays <b>ONLY the word "none"</b> in the list of affected systems.</li>
+                <li>Verify that the row for allele <b>Hprt<sup>tm1(Agt)Sig</sup></b> has <b>no terms listed</b> under affected systems.</li>
+    		</ol>
+    		</li>
+    		<li>Verify that diseases column displays unique comma separated list of diseases for each genotype
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		<ol>
+                <li>Navigate to Allele Summary Page for <b>Hprt</b> (MGI:96217).</li>
+                <li>Verify that the row for allele <b>Hprt<sup>b-m3</sup></b> displays <b>Lesch-Nyhan Syndrome; LNS 300322</b> under Similar Human Diseases.</li>
+                <li>Verify that disease names are linked to their Disease Detail page, but ID numbers are not linked.</li>
+                <li>Verify that the row for allele <b>Hprt<sup>tm1(cre)Mnn</sup></b> displays <b>Focal Dermal Hypoplasia; FDH 305600, Stargardt Disease 3; STGD3 600110</b> under Similar Human Diseases.</li>
+                <li>Verify that disease names are linked to their Disease Detail page, but ID numbers are not linked.</li>
+                <li>Navigate to the Allele Summary Page for <b>Mitf</b> (MGI:104554).</li>
+                <li>Verify that the row for allele <b>Mitf<sup>Mi-H</sup></b> displays <b>Albinism, Ocular, with Sensorineural Deafness 103470; Tietz Syndrome 103500; Waardenburg Syndrome, Type 2A; WS2A 193510</b> under Similar Human Diseases.</li>
+                <li>Verify that disease names are linked to their Disease Detail page, but ID numbers are not linked.</li>
+    		</ol>
+    		</li>
+    		<li>Verify that disease column excludes "Not" annotations when there are no other annotations for a disease term for a given allele
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		<ol>
+                <li>Navigate to Allele Summary Page for <b>Foxp3</b> (MGI:1891436).</li>
+                <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> displays <b>Immunodysregulation, Polyendocrinopathy, and Enteropathy, X-Linked; 304790, Ichthyosis and Male Hypogonadism 308200, Wiskott-Aldrich Syndrome; WAS 301000</b> under Similar Human Diseases.</li>
+                <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> DOES NOT display <b>Ichthyosis, X-Linked; XLI OMIM ID: 308100</b>  under Similar Human Diseases.</li>
+                <li>Navigate to Allele Summary Page for <b>Nos1</b> (MGI:97360).</li>
+                <li>Verify that the row for allele <b>Nos1<sup>tm1Plh</sup></b> displays <b>Achalasia, Familial Esophageal 200400, Pyloric Stenosis, Infantile Hypertrophic, 1; IHPS1 179010</b> (Note: there is an annotation and a "Not" annotation for Pyloric Stenosis, so this disease SHOULD appear).</li>
+            </ol>
+    		</li>
+    		<li>Make the "Allele Symbol and Name", "Affected Anatomical System", and "Similar Human Diseases" columns roughly equal in width.
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		</li>
+    		<li>change “Observed Phenotypes in Mouse” to “Selected Phenotypes in Mouse”, with tooltip text changed to “phenotypic characteristics observed in mice carrying this allele”.
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		</li>
+    		<li>Reproduce mouse-over tooltips from Public on headings for "Affected Anatomical System", and "Similar Human Diseases" columns.
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+    		</li>
+    		<li>Reproduce data from Public for each allele in columns for "Allele Symbol // Gene; Allele Name", "Chr", "Synonyms", "Category".
+ 			<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+ 			<ol>
+ 				<li>Navigate to the Allele Summary page for <b>Mitf</b> (MGI:104554)</li>
+ 				<li>Verify that the row for <b>Mitf<sup>Mi</sup></b> contains the following:
+ 				<table>
+ 					<tr><th>Allele Symbol<br/>Gene; Allele Name</th><th>Chr</th><th>Synonyms</th><th>Category</th></tr>
+ 					<tr><td>Mitf<sup>Mi</sup><br/>microphthalmia-associated transcription factor; microphthalmia<br/>[camera icon]</td><td>6</td><td>m, mi</td><td>Not Specified</td></tr>
+ 					
+ 				</table>
+ 				</li>
+ 			</ol>
+    		</li>
+    		<li>Verify that alleles are listed in (approximately) the same order as displayed on Public (Note: ASCII sort currently has alleles with names like "tm10," "tm11", "tm12" appearing BEFORE "tm1" on Public, but AFTER "tm1" on Cardolan. If this persists and is the only difference in sort order, Cindy says it's OK.)
+ 			 	<p concordion:assertTrue="true">passed -kstone 2012-11-25</p>
+ 				<ol>
+                <li>Navigate to Allele Summary Page for <b>Hprt</b> (MGI:96217).</li>
+                <li>Verify that alleles are listed in the same order as on Public (with the exception described).</li>
+                </ol>
+    		</li>
+    		<li>Verify that <b>ONLY</b> MP and OMIM annotation data associated with <b>Simple</b> (single allele pair, homozygous, heterozygous, etc.) and <b>Conditionally Targeted</b> genotypes are displayed for an allele, but that searching for annotations associated with other types of genotypes <b>still does return</b> the allele.<br/>
+    		(<i>Note: we cannot test the search functionality without a more complete install.</i>)
+ 			<p concordion:assertTrue="true">passed. klf 11/26/12</p>
+ 			<p>QUESTION: WHAT ORDER DO THEY WANT THE AFFECTED SYSTEMS AND THE DISEASES LISTED IN?  IS ALPHA OK?</p>
+    		<ol>
+                <li>Navigate to the Allele Summary Page for Atf1</li>
+                <li>For the allele <b>Atf1<sup>tm1Gsc</sup></b>,<br/>  
+                Display:
+                <ul>
+                	<li>cellular</li>
+                	<li>nervous system</li>
+                </ul>
+                Do not display:
+                <ul>
+                	<li>embryogenesis</li>
+                	<li>mortality/aging</li>
+                </ul>
+                </li>
+                <li>Navigate to the Allele Summary Page for Atoh1</li>
+                <li>For the allele <b>Atoh1<sup>tm2Hzo</sup></b>,<br/>
+                Display: 
+                <ul>
+                	<li>digestive/alimentary</li>
+                	<li>endocrine/exocrine</li>
+                	<li>hearing/vestibular/ear</li>
+                	<li>homeostasis</li>
+                	<li>mortality/aging</li>
+                	<li>nervous system</li>
+                	<li>respiratory</li>
+                </ul>
+                Do not display:
+                <ul>
+                	<li>cellular</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Verify that MP and OMIM annotations associated with <b>Complex</b> (multiple allele pair), not conditionally-targeted genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.<br/>
+    		(Note: a genotype which is complex and also conditionally targeted <b>should</b> have the associated MP and OMIM terms displayed.)<br/>
+    		(<i>Note: we cannot test the search functionality without a more complete install.</i>)
+ 			<p concordion:assertTrue="true">passed. klf 11/26/2012</p>
+    		<ol>
+                <li>Navigate to Allele Summary page for Kras (MGI:  Marker key=10616)</li>
+                <li>For the allele <b>Kras<sup>tm1Mok</sup></b>, do not display MP header terms associated with complex (multi-gene) genotypes unless they are ALSO associated with a simple or a conditional genotype.<br/>
+                Do not display:
+                <ul>
+                	<li>homeostasis</li>
+                	<li>immune</li>
+                </ul>
+                Do display:
+                <ul>
+                	<li>cardiovascular</li>
+                	<li>cellular</li>
+                	<li>embryogenesis</li>
+                	<li>growth/size</li>
+                	<li>mortality/aging</li>
+                	<li>muscle</li>
+                	<li>nervous system</li>
+                </ul> 
+                </li>
+                <li>For the allele <b>Kras<sup>tm1Tyj</sup></b>,<br/>
+                Do not display:
+                <ul>
+                	<li>limbs/digits/tail</li>
+                	<li>vision/eye</li>
+                </ul>
+                Do display:
+                <ul>
+                	<li>cardiovascular</li>
+                	<li>cellular</li>
+                	<li>embryogenesis</li>
+                	<li>growth/size</li>
+                	<li>hematopoietic</li>
+                	<li>homeostasis</li>
+                	<li>integument</li>
+                	<li>liver/biliary</li>
+                	<li>mortality/aging</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Verify that MP and OMIM associations with <b>Compound</b> genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.<br/>
+    		(<i>Note: we cannot test the search functionality without a more complete install.</i>)
+ 			<p concordion:assertTrue="true">jeffc 11/27/2012</p>
+    		<ol>
+                <li>Navigate to the Allele Summary page for the marker <b>Del(2)49Ddu</b> (MGI:5305745)</li>
+                <li>Verify that <b>no data appears</b> in the columns for Affected Analytical Systems or Similar Human Diseases</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

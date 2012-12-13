@@ -1,0 +1,198 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+    <title>EI Genotype module: loading mutant cell lines</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>EI Genotype module: Adding, Modifying, and Deleting mutant cell lines</h1>
+    <ul>
+        <li>User story 63, EI: Search, Display cell lines</li>
+        <li>User story 56, EI: Add, Modify  cell lines</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Curators can search for and display cell lines for genotypes</li>
+		<li>Curators can add, modify, or delete cell lines for genotypes</li>
+		<li>Curators can not add a second cell line to heterozygous (wild type), hemizygous, or indeterminate genotype</li>
+		<li>Curators can not remove just 1 cell line from a homozygous genotype (can modify though)</li>
+	</ul>
+	<p>See also: <a href="PhenotypeAnnotLoader.html">PhenotypeAnnotLoader</a> for tests of the load script.</p>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+		<h3>Manual tests</h3>
+		<p class="hilite"><b>Note:</b> Concordion doesn't like &lt; and &gt; signs directly in the HTML code. Encode them as "&amp;lt;" and "&amp;gt;", respectively.</p>
+		<ol>
+    		<li>Verify searching by cell line returns genotypes
+    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>cell line EPD0109_3_E07</b> as "Mutant 1" cell line</li>
+                <li>Verify that <b>Homozygous</b> genotype for the allele <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b> is returned</li>
+    		</ol>
+    		</li>
+    		<li>Verify curator can modify Mutant 1 and Mutant 2 cell lines independently in genotype with "Homozygous" allele state 
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
+                <li>Verify that a <b>Homozygous</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_E07</b> and Mutant 2 cell line: <b>EPD0109_3_E07</b></li>
+                <li>Modify Mutant 1 cell line to <b>EPD0109_3_H05</b></li>
+                <li>Modify Mutant 2 cell line to <b>EPD0109_3_F08</b></li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are saved.</li>
+    		</ol>
+    		</li>
+    		<li>Verify curator cannot modify cell line to a value not already associated with the allele
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
+                <li>Verify that a <b>Homozygous</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_H05</b> and Mutant 2 cell line: <b>EPD0109_3_F08</b> (from changes above)</li>
+                <li>Modify Mutant 1 cell line to <b>EPD0069_4_A07</b> (this is a valid cell line for a different allele)</li>
+                <li>Modify Mutant 2 cell line to <b>EPD0069_4_H07</b> (this is a valid cell line for a different allele)</li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are NOT saved.</li>
+    		</ol>
+    		</li>
+    		<li>Verify curator can delete cell lines from a genotype
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
+                <li>Verify that a <b>Homozygous</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_H05</b> and Mutant 2 cell line: <b>EPD0109_3_F08</b> (from changes above)</li>
+                <li>Delete Mutant 1 cell line</li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are saved.</li>
+                <li>Delete Mutant 2 cell line</li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are saved.</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify curator can modify Mutant 1 cell line in genotype with "Hemizygous X-Linked" allele state
+    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
+                <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_E07</b></li>
+                <li>Modify Mutant 1 cell line to <b>EPD0109_3_H05</b></li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are saved.</li>
+    		</ol>
+    		</li>
+    		<li>Verify curator cannot modify cell line to a value not already associated with the allele in genotype with "Hemizygous X-Linked" allele state
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
+                <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_H05</b> (from changes above)</li>
+                <li>Modify Mutant 1 cell line to <b>EPD0069_4_A07</b> (this is a valid cell line for a different allele)</li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are NOT saved.</li>
+    		</ol>
+    		</li>
+    		<li>Verify curator can delete cell lines from a Hemizygous X-Linked genotype
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
+                <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_H05</b> (from changes above)</li>
+                <li>Delete Mutant 1 cell line</li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are saved.</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify curator cannot add Mutant 2 cell lines for a Heterozygous (wild type), Indeterminate or Hemizygous X-Linked genotype
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>* In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
+                <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_H05</b> (from changes above)</li>
+                <li>Add Mutant 2 cell line: <b>EPD0109_3_H05</b></li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are NOT saved.</li>
+                <li>* In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Verify that a <b>Indeterminate</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0066_2_D10</b></li>
+                <li>Add Mutant 2 cell line: <b>EPD0066_2_D10</b></li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are NOT saved.</li>
+                <li>* In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Verify that a <b>Heterozygous</b> genotype exists with Allele 2: Acsl4&lt;+&gt;</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0066_2_D10</b></li>
+                <li>Add Mutant 2 cell line: <b>EPD0066_2_D10</b></li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are NOT saved.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify curator cannot add/modify cell line that duplicates an existing genotype
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Sms&lt;tm1a(EUCOMM)WTSI&gt;</b></li>
+                <li>Verify that a <b>Heterozygous</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0069_4_H07</b> </li>
+                <li>Modify Mutant 1 cell line: <b>EPD0069_4_A07</b> (genotype with this cell line already exists in false data loaded in test file)</li>
+                <li>Click the "Modify" button in the EI module and verify that the changes are NOT saved.</li>
+    		</ol>
+    		</li>
+    		<li>Verify curator can add a new genotype and specify valid cell lines
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>1500015O10Rik&lt;tm1Lex&gt;</b></li>
+                <li>Verify that no <b>Homozygous</b> genotype already exists</li>
+                <li>Create a homozygous genotype with Allele 1: 1500015O10Rik&lt;tm1Lex&gt; and Allele 2: 1500015O10Rik&lt;tm1Lex&gt;</li>
+                <li>Select State: "Homozygous" and Compound: "Not Applicable".</li>
+                <li>Input Mutant 1 cell line: <b>Not Specified</b> and  Mutant 2 cell line: <b>Not Specified</b></li>
+                <li>Click the "Add" button in the EI module and verify that the changes are saved.</li>
+    		</ol>
+    		</li>
+
+
+
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+    			<li>Step 1</li>
+    			<li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

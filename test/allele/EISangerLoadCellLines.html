@@ -1,0 +1,573 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+    <title>EI Genotype module: loading mutant cell lines</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>EI Genotype module: loading mutant cell lines</h1>
+    <ul>
+        <li>User story 55, Modify Sanger loader to add cell lines</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Sanger cell line data are loaded correctly into MGI's database</li>
+		<li>incorrect data are rejected and error reports are sent to appropriate staff</li>
+		<li>new genotypes are created where needed to accommodate unique cell lines</li>
+		<li>MP data are loaded and associated with the correct (possibly new) genotypes</li>
+	</ul>
+	<p>See also: <a href="PhenotypeAnnotLoader.html">PhenotypeAnnotLoader</a> for tests of the load script.</p>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+ 		<h3>Summary of Tests:</h3>
+ 		<ul>
+		<li>Confirm cell lines get associated with 2 alleles in homozygous genotypes, only Allele1 in heterozygous, hemizygous, or indeterminate genotypes</li>
+		<li>Confirm cell lines get associated with their correct alleles</li>
+		<li>Confirm new genotypes get created for same allele, same allele state but different cell line</li>
+		<li>Confirm MP annotations get associated with genotype having the correct cell line(s)</li>
+		<li>Confirm alleles not part of the Sanger load don't have cell lines associated yet</li>
+ 		</ul>
+		<h3>Manual tests</h3>
+		<p class="hilite"><b>Note:</b> Concordion doesn't like &lt; and &gt; signs directly in the HTML code. Encode them as "&amp;lt;" and "&amp;gt;", respectively.</p>
+		<ol>
+    		<li>Verify genotype with "Homozygous" allele state loads correct cell line for both alleles
+    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</b></li>
+                <li>Verify that a <b>Homozygous</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0109_3_E07</b> and Mutant 2 cell line: <b>EPD0109_3_E07</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify genotype with "Heterozygous" allele state loads correct cell line for first allele, second allele is wild type and has no cell line
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Verify that a <b>Heterozygous</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0066_2_D10</b></li>
+                <li>Verify that this genotype has <b>Acsl4&lt;+&gt; as Allele 2 and Mutant 2 cell line is null</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify genotype with "Hemizygous X-Linked" allele state loads correct cell line for first allele, second allele is null and has no cell line
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0066_2_D10</b></li>
+                <li>Verify that this genotype has <b>Allele 2 as null and Mutant 2 cell line is null</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify genotype with "Indeterminate" (null in the load file) allele state loads correct cell line for first allele, second allele is null and has no cell line
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Verify that a <b>Indeterminate</b> genotype exists</li>
+                <li>Verify that this genotype has Mutant 1 cell line: <b>EPD0066_2_D10</b></li>
+                <li>Verify that this genotype has <b>Allele 2 as null and Mutant 2 cell line is null</b></li>
+    		</ol>
+    		</li>
+
+    		<li>ASSUMING THIS IS CORRECT REQUIREMENT: Verify genotype with "Homozygous" allele state loads no cell line for both alleles when source data is missing
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Ube3b&lt;Gt(RRJ142)Byg&gt;</b></li>
+                <li>Verify that a <b>Homozygous</b> genotype exists</li>
+                <li>Verify that this genotype has Ube3b&lt;Gt(RRJ142)Byg&gt; for Allele1 and Allele2, and <b>Mutant 1 and Mutant 2 cell lines are null</b></li>
+    		</ol>
+    		</li>
+    		<li>ASSUMING THIS IS CORRECT REQUIREMENT: Verify genotype with "Heterozygous" allele state loads no cell line for first allele when source data is missing, second allele is wild type and has no cell line 
+    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Ube3b&lt;Gt(RRJ142)Byg&gt;</b></li>
+                <li>Verify that a <b>Heterozygous</b> genotype exists</li>
+                <li>Verify that this genotype has <b>Ube3b&lt;Gt(RRJ142)Byg&gt; for Allele1, and Mutant 1 cell line is null</b></li>
+                <li>Verify that this genotype has <b>Ube3b&lt;+&gt; for Allele2, and Mutant 2 cell line is null</b></li>
+    		</ol>
+    		</li>
+
+
+    		<li>Verify that 2 genotypes exist when the same allele and allele state have different cell lines (from fake data in Load Test file)
+    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
+                <li>Verify that <b>Heterozygous</b> genotypes exist with the following Mutant 1 cell lines:
+                <table>
+                	<tr><th>Mutant 1</th><th>Note</th></tr>
+                	<tr><td>EPD0069_4_H07</td><td>Real data from load file</td></tr>
+					<tr><td>EPD0069_4_A07</td><td>Fake data for testing</td></tr>
+					<tr><td>EPD0069_4_A08</td><td>Fake data for testing</td></tr>
+					<tr><td>EPD0069_4_B07</td><td>Fake data for testing</td></tr>
+					<tr><td>EPD0069_4_B08</td><td>Fake data for testing</td></tr>
+                </table>
+            	</li>
+    		</ol>
+    		</li>
+    		<li>Verify that loaded MP annotations are associated with the correct genotypes (taking into account cell lines)
+    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<ol>
+                <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Sms&lt;tm1a(EUCOMM)WTSI&gt;</b></li>
+                <li>Verify that <b>Heterozygous</b> genotypes with the following Mutant 1 cell lines have the following MP annotations:
+                <table>
+                	<tr>
+                		<th>Mutant 1</th>
+                		<th>MP ID</th>
+                		<th>MP Term</th>
+                		<th>Sex</th>
+                		<th>Note</th>
+                	</tr>
+                	<tr>
+	                	<td>EPD0069_4_H07</td>
+	                	<td>MP:0008854</td>
+	                	<td>bleb</td>
+	                	<td>NA</td>
+	                	<td>Fake data for testing</td>
+                	</tr>
+					<tr>
+						<td>EPD0069_4_A07</td>
+						<td>MP:0008855</td>
+						<td>eye bleb</td>
+						<td>Female</td>
+						<td>Fake data for testing</td>
+					</tr>
+					<tr>
+						<td>EPD0069_4_A08</td>
+						<td>MP:0008855</td>
+						<td>eye bleb</td>
+						<td>Male</td>
+						<td>Fake data for testing</td>
+					</tr>
+					<tr>
+						<td>EPD0069_4_B07</td>
+						<td>MP:0008856</td>
+						<td>fetal bleb</td>
+						<td>NA</td>
+						<td>Fake data for testing</td>
+					</tr>
+					<tr>
+						<td>EPD0069_4_B08</td>
+						<td>MP:0008856</td>
+						<td>fetal bleb</td>
+						<td>NA</td>
+						<td>Fake data for testing</td>
+					</tr>
+                </table>
+            	</li>
+    		</ol>
+    		</li>
+<!--     		<li>Verify MP Annotation data is not editable
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the MP Annotations module button</li>
+                <li>Enter <b>sangermpload</b> in the Created by field and click Search</li>
+                <li>Click on any of the fields in the annotation section and confirm the <b>Save Annotations</b> is always greyed out and unusable</li>
+    		</ol>
+    		</li> -->
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<li>Test 1
+				<ol>
+					<li>Step 1</li>
+					<li>Step 2</li>
+				</ol>
+			</li>
+    		<!-- <li>Verify the correct cell lines were loaded for the correct alleles
+    		<ol>
+                <li>In the Genotypes data, for genotypes "Created by" <b>sangermpload</b>, verify that the following alleles are associated with the specified cell line
+                <table>
+	                <tr><th>Es cell</th>	<th>Mgi allele id</th>	<th>Allele symbol</th></tr>
+					<tr><td>EPD0169_3_F12</td>	<td>MGI:4432479</td>	<td>1810074P20Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0365_4_E10</td>	<td>MGI:4419127</td>	<td>2210016L21Rik&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0031_1_H07</td>	<td>MGI:4363008</td>	<td>2310046K01Rik&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_4_E06</td>	<td>MGI:4431715</td>	<td>3010026O09Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0145_4_B09</td>	<td>MGI:4432047</td>	<td>4930471M23Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0073_2_C09</td>	<td>MGI:4362812</td>	<td>A430084P05Rik&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0081_5_E07</td>	<td>MGI:4364049</td>	<td>Abhd5&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0066_2_D10</td>	<td>MGI:4431605</td>	<td>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0525_2_B12</td>	<td>MGI:4441842</td>	<td>Actn4&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0051_2_D12</td>	<td>MGI:4434074</td>	<td>Adam17&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0272_2_D07</td>	<td>MGI:4364424</td>	<td>Adam3&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0087_1_D11</td>	<td>MGI:4432463</td>	<td>Adar&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0080_1_D08</td>	<td>MGI:4432492</td>	<td>Agpat3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_5_D02</td>	<td>MGI:4362642</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0091_2_D04</td>	<td>MGI:4432547</td>	<td>Aldh16a1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0071_1_D03</td>	<td>MGI:4363671</td>	<td>Aldh18a1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0043_3_B02</td>	<td>MGI:4364610</td>	<td>Ampd3&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:4128768</td>	<td>Ankrd13a&lt;Gt(RRH308)Byg&gt;</td></tr>
+					<tr><td>EPD0046_2_A08</td>	<td>MGI:4432672</td>	<td>Anxa6&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_5_A08</td>	<td>MGI:4362509</td>	<td>Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:1857129</td>	<td>Apoe&lt;tm1Unc&gt;</td></tr>
+					<tr><td>EPD0099_5_G10</td>	<td>MGI:4363220</td>	<td>Arhgap18&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0085_1_C10</td>	<td>MGI:4362243</td>	<td>Arhgap25&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0135_1_A05</td>	<td>MGI:4364388</td>	<td>Arhgef4&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_2_B05</td>	<td>MGI:4433303</td>	<td>Arid2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_5_E08</td>	<td>MGI:4432398</td>	<td>Arid4a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0117_1_G06</td>	<td>MGI:4432430</td>	<td>Arl4d&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_1_D07</td>	<td>MGI:4431694</td>	<td>Arpc2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_1_A11</td>	<td>MGI:4433308</td>	<td>Arpc4&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0043_2_H10</td>	<td>MGI:4364811</td>	<td>Aste1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0080_1_D11</td>	<td>MGI:4431878</td>	<td>Asxl1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0102_2_A02</td>	<td>MGI:4432181</td>	<td>Atg16l1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_3_B02</td>	<td>MGI:4432141</td>	<td>Atp5a1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0026_5_G02</td>	<td>MGI:4362266</td>	<td>Atpaf2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0158_4_B04</td>	<td>MGI:4433166</td>	<td>Atpif1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0013_1_C02</td>	<td>MGI:4363543</td>	<td>Baz1b&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0036_1_B10</td>	<td>MGI:4432372</td>	<td>Bbx&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0031_1_G01</td>	<td>MGI:4364708</td>	<td>BC013712&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0079_5_E10</td>	<td>MGI:4363837</td>	<td>BC017643&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0489_1_C06</td>	<td>MGI:4441856</td>	<td>Blzf1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0001_3_E04</td>	<td>MGI:4842893</td>	<td>Brd7&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_2_E10</td>	<td>MGI:4433628</td>	<td>Brd8&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0126_2_D06</td>	<td>MGI:4455954</td>	<td>Brdt&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_5_E04</td>	<td>MGI:4432544</td>	<td>Brpf3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:3625158</td>	<td>Cadm1&lt;tm1.2Brd&gt;</td></tr>
+					<tr><td>EPD0126_4_E06</td>	<td>MGI:4432825</td>	<td>Cadm1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0105_5_A09</td>	<td>MGI:4432323</td>	<td>Capzb&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_2_B01</td>	<td>MGI:4432508</td>	<td>Cbx1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0445_4_A07</td>	<td>MGI:4441648</td>	<td>Cbx5&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0018_1_D08</td>	<td>MGI:4363230</td>	<td>Cbx7&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0381_1_A04</td>	<td>MGI:4431801</td>	<td>Cc2d2a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0059_1_A09</td>	<td>MGI:4433419</td>	<td>Ccdc104&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0041_1_F06</td>	<td>MGI:4363458</td>	<td>Ccdc137&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0037_3_D11</td>	<td>MGI:4431914</td>	<td>Ccdc57&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0553_2_A09</td>	<td>MGI:4454064</td>	<td>Cdc6&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_4_C09</td>	<td>MGI:4362476</td>	<td>Cdca8&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0036_1_G01</td>	<td>MGI:4432805</td>	<td>Cdh1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:1856228</td>	<td>Cdh23&lt;v&gt;</td></tr>
+					<tr><td>EPD0381_4_F01</td>	<td>MGI:4433427</td>	<td>Cdk5rap2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0590_1_D02</td>	<td>MGI:4460436</td>	<td>Cdkn2a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_1_C08</td>	<td>MGI:4363703</td>	<td>Cds2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_7_G05</td>	<td>MGI:4432238</td>	<td>Cenpj&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0424_5_A05</td>	<td>MGI:4434438</td>	<td>Cfh&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0019_1_D07</td>	<td>MGI:4433295</td>	<td>Chd7&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:3588650</td>	<td>Chd7&lt;Whi&gt;</td></tr>
+					<tr><td>EPD0068_1_B03</td>	<td>MGI:4364407</td>	<td>Cit&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0150_2_B12</td>	<td>MGI:4364889</td>	<td>Cldn16&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0064_2_A02</td>	<td>MGI:4363468</td>	<td>Cluap1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0046_1_A07</td>	<td>MGI:4433013</td>	<td>Cntfr&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0064_1_A10</td>	<td>MGI:4364810</td>	<td>Cog2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0102_1_D08</td>	<td>MGI:4432009</td>	<td>Copg&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0112_2_A09</td>	<td>MGI:4362815</td>	<td>Coq9&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0412_2_C09</td>	<td>MGI:4419915</td>	<td>Cox6a1&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_3_C11</td>	<td>MGI:4363171</td>	<td>Crlf3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_4_B07</td>	<td>MGI:4363521</td>	<td>Csrp2bp&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_4_B04</td>	<td>MGI:4431619</td>	<td>Ctcf&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0037_3_G01</td>	<td>MGI:4432734</td>	<td>Cyb561&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0555_2_B11</td>	<td>MGI:5002986</td>	<td>Cyfip1&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0037_1_F05</td>	<td>MGI:4433549</td>	<td>D11Wsu99e&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0134_3_A11</td>	<td>MGI:4362200</td>	<td>Dars2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0211_3_A05</td>	<td>MGI:4363390</td>	<td>Dbn1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0064_2_D04</td>	<td>MGI:4363526</td>	<td>Dctn5&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_1_E01</td>	<td>MGI:4363861</td>	<td>Ddx27&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_3_A11</td>	<td>MGI:4431942</td>	<td>Dhcr24&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0113_2_D12</td>	<td>MGI:4431779</td>	<td>Dip2b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:2388036</td>	<td>Dlg2&lt;tm1Dsb&gt;</td></tr>
+					<tr><td></td>	<td>MGI:2182460</td>	<td>Dlg4&lt;tm1Grnt&gt;</td></tr>
+					<tr><td>EPD0431_3_A05</td>	<td>MGI:4432280</td>	<td>Dmxl2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0296_2_A10</td>	<td>MGI:4362265</td>	<td>Dnase1l2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0243_2_A05</td>	<td>MGI:4433969</td>	<td>Donson&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0018_2_D02</td>	<td>MGI:4364227</td>	<td>Dot1l&lt;tm3a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0438_5_G07</td>	<td>MGI:4840638</td>	<td>Dph2&lt;tm2(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0064_2_H09</td>	<td>MGI:4362627</td>	<td>Dscc1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0272_4_C01</td>	<td>MGI:4364283</td>	<td>Dusp1&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0090_4_H11</td>	<td>MGI:4365004</td>	<td>Dusp3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0105_5_C02</td>	<td>MGI:4431999</td>	<td>Dusp4&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0525_1_B10</td>	<td>MGI:4441864</td>	<td>Dync1i2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0397_1_B02</td>	<td>MGI:4419330</td>	<td>Dynll1&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0373_7_C01</td>	<td>MGI:4432163</td>	<td>Dynlrb1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0089_1_A11</td>	<td>MGI:4432622</td>	<td>Ears2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0105_6_E08</td>	<td>MGI:4433482</td>	<td>Efna1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0454_5_C09</td>	<td>MGI:4433235</td>	<td>Egfr&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0114_1_D05</td>	<td>MGI:4432418</td>	<td>Ehd1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0168_1_D04</td>	<td>MGI:4364625</td>	<td>Eif2b2&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0068_1_H05</td>	<td>MGI:4362358</td>	<td>Eif2c1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0081_5_C11</td>	<td>MGI:4364967</td>	<td>Eif4e3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0056_1_A10</td>	<td>MGI:4362352</td>	<td>Eps15&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0413_2_A01</td>	<td>MGI:4419798</td>	<td>Esco1&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0409_6_A03</td>	<td>MGI:4431943</td>	<td>Esco2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0409_1_A08</td>	<td>MGI:4431731</td>	<td>Espn&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0339_4_A04</td>	<td>MGI:4363398</td>	<td>Expi&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0052_2_C05</td>	<td>MGI:4432638</td>	<td>Ezh2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0080_2_A07</td>	<td>MGI:4431855</td>	<td>Ezr&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0031_2_B02</td>	<td>MGI:4431777</td>	<td>Fahd2a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0084_1_B08</td>	<td>MGI:4362853</td>	<td>Fam107b&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0037_1_B03</td>	<td>MGI:4433416</td>	<td>Fam134c&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0026_1_C12</td>	<td>MGI:4362858</td>	<td>Fam73b&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0099_4_D09</td>	<td>MGI:4363551</td>	<td>Farp2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0445_6_D04</td>	<td>MGI:4441679</td>	<td>Farsa&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0553_3_A01</td>	<td>MGI:4454126</td>	<td>Fryl&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0103_5_A10</td>	<td>MGI:4432397</td>	<td>Fto&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0116_3_E02</td>	<td>MGI:4431861</td>	<td>Gap43&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0029_1_G04</td>	<td>MGI:4362453</td>	<td>Gatc&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0114_2_D12</td>	<td>MGI:4433071</td>	<td>Gba2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0164_6_A02</td>	<td>MGI:4364560</td>	<td>Gbe1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0394_2_A01</td>	<td>MGI:4419544</td>	<td>Gbf1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0051_3_D07</td>	<td>MGI:4432329</td>	<td>Gclc&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0117_4_C07</td>	<td>MGI:4432285</td>	<td>Gfm1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0099_4_B07</td>	<td>MGI:4363945</td>	<td>Gif&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:3762635</td>	<td>Git2&lt;Gt(XG510)Byg&gt;</td></tr>
+					<tr><td>EPD0359_2_A04</td>	<td>MGI:4431602</td>	<td>Gle1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0098_5_B05</td>	<td>MGI:4364018</td>	<td>Glt8d2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_2_D07</td>	<td>MGI:4363191</td>	<td>Gmnn&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_3_G07</td>	<td>MGI:4432956</td>	<td>Grb2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0469_5_C11</td>	<td>MGI:4432313</td>	<td>Grin1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:1928287</td>	<td>Grin2a&lt;tm1Rsp&gt;</td></tr>
+					<tr><td>EPD0051_1_H11</td>	<td>MGI:4434136</td>	<td>Gsk3a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0050_2_B11</td>	<td>MGI:4362662</td>	<td>Gtf3c5&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0086_2_F11</td>	<td>MGI:4364592</td>	<td>Gys2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_5_A01</td>	<td>MGI:4431918</td>	<td>Hdac1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_3_D01</td>	<td>MGI:4433408</td>	<td>Hdac3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_1_C04</td>	<td>MGI:4432268</td>	<td>Hdac8&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_6_C05</td>	<td>MGI:4434045</td>	<td>Herc3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0181_1_A05</td>	<td>MGI:4431679</td>	<td>Hira&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_5_F11</td>	<td>MGI:4432659</td>	<td>Hp1bp3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0296_2_C08</td>	<td>MGI:4364475</td>	<td>Hsp90aa1&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0039_5_B05</td>	<td>MGI:4432759</td>	<td>Hspb11&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0158_4_G09</td>	<td>MGI:4431946</td>	<td>Ide&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0198_1_F02</td>	<td>MGI:4432044</td>	<td>Ido1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_2_A09</td>	<td>MGI:4362242</td>	<td>Ikbkap&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_5_E07</td>	<td>MGI:4432305</td>	<td>Ikbkb&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0233_5_G07</td>	<td>MGI:4431742</td>	<td>Il22ra1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0017_3_E02</td>	<td>MGI:4363750</td>	<td>Impad1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0083_2_E03</td>	<td>MGI:4363818</td>	<td>Inpp1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_2_E04</td>	<td>MGI:4432308</td>	<td>Ints12&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_2_B10</td>	<td>MGI:4431834</td>	<td>Irf1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0018_2_C08</td>	<td>MGI:4362782</td>	<td>Jarid2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0157_6_B09</td>	<td>MGI:4432650</td>	<td>Kazn&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0156_2_F10</td>	<td>MGI:4431909</td>	<td>Kcne2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:4128950</td>	<td>Kctd10&lt;Gt(RRG305)Byg&gt;</td></tr>
+					<tr><td>EPD0070_4_E10</td>	<td>MGI:4433704</td>	<td>Kdm4b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_3_F04</td>	<td>MGI:4362199</td>	<td>Kdm4c&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0320_1_E08</td>	<td>MGI:4362297</td>	<td>Kifap3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0183_4_C10</td>	<td>MGI:4433701</td>	<td>Kptn&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0106_2_B05</td>	<td>MGI:4363117</td>	<td>Krt76&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_2_G04</td>	<td>MGI:4432392</td>	<td>Ldha&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0371_6_D10</td>	<td>MGI:4432131</td>	<td>Lix1l&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_1_G07</td>	<td>MGI:4432859</td>	<td>Lmnb1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0167_3_F08</td>	<td>MGI:4362469</td>	<td>Lmnb2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_3_G09</td>	<td>MGI:4431776</td>	<td>Lrig1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0135_3_B03</td>	<td>MGI:4363281</td>	<td>Lrpprc&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0554_4_A09</td>	<td>MGI:4840576</td>	<td>Lsm10&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0050_1_E07</td>	<td>MGI:4362146</td>	<td>Lsm11&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0127_1_A03</td>	<td>MGI:4433604</td>	<td>Ltbp1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0140_5_E07</td>	<td>MGI:4432946</td>	<td>Lztr1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0046_3_B02</td>	<td>MGI:4432091</td>	<td>Mad2l2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0114_2_F08</td>	<td>MGI:4434127</td>	<td>Map2k2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0065_1_D04</td>	<td>MGI:4432537</td>	<td>Mapk1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0180_5_B02</td>	<td>MGI:4433802</td>	<td>March5&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0126_2_F09</td>	<td>MGI:4455993</td>	<td>Mbtd1&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0080_2_A02</td>	<td>MGI:4431685</td>	<td>Mcph1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_2_F01</td>	<td>MGI:4363099</td>	<td>Mdn1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0039_5_G01</td>	<td>MGI:4432643</td>	<td>Mecr&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_1_A04</td>	<td>MGI:4431567</td>	<td>Mier1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0143_4_A03</td>	<td>MGI:4433029</td>	<td>Mks1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0002_2_B07</td>	<td>MGI:4842891</td>	<td>Mta1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0011_3_B08</td>	<td>MGI:4362362</td>	<td>Mta3&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0042_1_A05</td>	<td>MGI:4362485</td>	<td>Mtfmt&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0130_2_B09</td>	<td>MGI:4434021</td>	<td>Mthfd1l&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0046_3_B11</td>	<td>MGI:4432158</td>	<td>Mtor&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0042_1_A01</td>	<td>MGI:4363611</td>	<td>Mtrf1l&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0226_1_D04</td>	<td>MGI:4434029</td>	<td>Myd88&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_5_C01</td>	<td>MGI:4432815</td>	<td>Myh9&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0130_2_B02</td>	<td>MGI:4433200</td>	<td>Myl12b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0409_5_B05</td>	<td>MGI:4431637</td>	<td>Myo15&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0034_4_C03</td>	<td>MGI:4363512</td>	<td>Myo5a&lt;tm1e(KOMP)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:1856555</td>	<td>Myo6&lt;sv&gt;</td></tr>
+					<tr><td></td>	<td>MGI:3511858</td>	<td>Myo7a&lt;Hdb&gt;</td></tr>
+					<tr><td></td>	<td>MGI:1860092</td>	<td>Myo7a&lt;sh1-6J&gt;</td></tr>
+					<tr><td>EPD0019_1_A05</td>	<td>MGI:4362924</td>	<td>Mysm1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0156_5_B09</td>	<td>MGI:4431609</td>	<td>Ncaph&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_2_G09</td>	<td>MGI:4433039</td>	<td>Ncaph2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0057_2_F08</td>	<td>MGI:4433795</td>	<td>Ndufs3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_1_F12</td>	<td>MGI:4364806</td>	<td>Nf1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_4_D01</td>	<td>MGI:4363738</td>	<td>Nfkb1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0169_3_B05</td>	<td>MGI:4432279</td>	<td>Nkiras2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_2_F04</td>	<td>MGI:4432939</td>	<td>Nploc4&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0105_2_F10</td>	<td>MGI:4432654</td>	<td>Nsun2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0064_2_C12</td>	<td>MGI:4362420</td>	<td>Ogfod1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0157_3_B05</td>	<td>MGI:4433067</td>	<td>Otub2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0430_2_A02</td>	<td>MGI:4431852</td>	<td>Pabpc1l&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_6_D04</td>	<td>MGI:4432978</td>	<td>Pds5b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0103_1_H06</td>	<td>MGI:4431895</td>	<td>Pex3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_4_A04</td>	<td>MGI:4432814</td>	<td>Pfkl&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0046_1_C10</td>	<td>MGI:4433191</td>	<td>Pfn1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_2_G07</td>	<td>MGI:4432264</td>	<td>Phf20&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0051_3_E05</td>	<td>MGI:4434375</td>	<td>Pik3cb&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0359_4_A06</td>	<td>MGI:4432229</td>	<td>Pik3cg&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0199_3_B01</td>	<td>MGI:4362880</td>	<td>Pip5k1c&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0425_4_A09</td>	<td>MGI:4431584</td>	<td>Pitpnm1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0175_1_A02</td>	<td>MGI:4431598</td>	<td>Plekhg1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0089_2_F03</td>	<td>MGI:4432896</td>	<td>Plekhm2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0045_1_D02</td>	<td>MGI:4432810</td>	<td>Plin2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0051_2_A09</td>	<td>MGI:4433461</td>	<td>Plxnb2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0110_1_E10</td>	<td>MGI:4363478</td>	<td>Pnpo&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0026_1_H08</td>	<td>MGI:4364657</td>	<td>Pnpt1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0155_3_B07</td>	<td>MGI:4432134</td>	<td>Polg2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0032_2_H06</td>	<td>MGI:4362193</td>	<td>Polr1e&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0114_3_G12</td>	<td>MGI:4431812</td>	<td>Ppp5c&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:3838355</td>	<td>Prkab1&lt;Gt(RRR454)Byg&gt;</td></tr>
+					<tr><td>EPD0033_3_C09</td>	<td>MGI:4362414</td>	<td>Prkab1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0061_2_F06</td>	<td>MGI:4433718</td>	<td>Prkcz&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_1_B01</td>	<td>MGI:4432476</td>	<td>Prmt1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0197_1_C09</td>	<td>MGI:4433170</td>	<td>Prmt2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_5_D05</td>	<td>MGI:4433008</td>	<td>Prmt3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0160_2_A08</td>	<td>MGI:4432368</td>	<td>Prmt5&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_4_F09</td>	<td>MGI:4431677</td>	<td>Prmt7&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0105_1_A03</td>	<td>MGI:4434085</td>	<td>Prmt8&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0021_1_C08</td>	<td>MGI:4432556</td>	<td>Prpsap2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0151_3_G04</td>	<td>MGI:4363603</td>	<td>Psat1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0445_4_E01</td>	<td>MGI:4441737</td>	<td>Ptpn2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0085_6_H01</td>	<td>MGI:4451717</td>	<td>Pus7l&lt;tm2a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_4_B02</td>	<td>MGI:4433190</td>	<td>Rad18&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0079_5_G07</td>	<td>MGI:4362680</td>	<td>Rapgefl1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0091_1_A11</td>	<td>MGI:4432394</td>	<td>Rars&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0045_2_C04</td>	<td>MGI:4432770</td>	<td>Rars2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:3604205</td>	<td>Rassf1&lt;tm1.2Brd&gt;</td></tr>
+					<tr><td>EPD0126_4_F03</td>	<td>MGI:4455962</td>	<td>Rbbp7&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0140_1_C09</td>	<td>MGI:4432852</td>	<td>Rg9mtd2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0042_1_G09</td>	<td>MGI:4362349</td>	<td>Rhobtb3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0066_2_F01</td>	<td>MGI:4432006</td>	<td>Rhot1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0521_3_G01</td>	<td>MGI:4442055</td>	<td>Ripk4&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0087_4_A02</td>	<td>MGI:4432164</td>	<td>Rnaseh2b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0296_4_E05</td>	<td>MGI:4364620</td>	<td>Rnaseh2c&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_2_A10</td>	<td>MGI:4362564</td>	<td>Rnf10&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0064_1_G02</td>	<td>MGI:4362158</td>	<td>Rpap2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0373_5_A04</td>	<td>MGI:4432510</td>	<td>Rpgrip1l&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_4_H04</td>	<td>MGI:4432779</td>	<td>Rpn2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0156_3_A07</td>	<td>MGI:4431867</td>	<td>Rqcd1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_5_E04</td>	<td>MGI:4363925</td>	<td>Rtf1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0113_3_C11</td>	<td>MGI:4432515</td>	<td>Sar1b&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0146_1_B03</td>	<td>MGI:4432850</td>	<td>Sc4mol&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0125_1_E10</td>	<td>MGI:4363778</td>	<td>Sco1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0143_3_B04</td>	<td>MGI:4433079</td>	<td>Sdhc&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0081_6_E02</td>	<td>MGI:4365061</td>	<td>Sec16b&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0072_1_B09</td>	<td>MGI:4362215</td>	<td>Sec23a&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0099_2_E04</td>	<td>MGI:4362779</td>	<td>Sec24a&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0546_5_C05</td>	<td>MGI:4453708</td>	<td>Seh1l&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0132_5_C11</td>	<td>MGI:4363081</td>	<td>Sepn1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0051_5_C06</td>	<td>MGI:4432370</td>	<td>Sesn3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0027_4_H10</td>	<td>MGI:4432882</td>	<td>Setd1a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_1_D08</td>	<td>MGI:4432424</td>	<td>Setdb1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0242_4_B03</td>	<td>MGI:4432061</td>	<td>Setmar&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0113_4_F03</td>	<td>MGI:4433385</td>	<td>Sgol1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0109_3_E07</td>	<td>MGI:4364794</td>	<td>Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0085_1_D04</td>	<td>MGI:4364913</td>	<td>Slc25a21&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0086_4_D03</td>	<td>MGI:4363904</td>	<td>Slc30a8&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_1_A04</td>	<td>MGI:4431702</td>	<td>Slc38a10&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0082_2_G11</td>	<td>MGI:4365235</td>	<td>Slc41a3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0164_1_G10</td>	<td>MGI:4364041</td>	<td>Slc44a5&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0166_6_C04</td>	<td>MGI:4363573</td>	<td>Slc5a2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0146_2_A03</td>	<td>MGI:4432225</td>	<td>Slc5a6&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_5_A07</td>	<td>MGI:4363224</td>	<td>Slc9a8&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0099_1_B03</td>	<td>MGI:4363700</td>	<td>Slco2b1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0147_4_F03</td>	<td>MGI:4433467</td>	<td>Smarcal1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0070_2_G01</td>	<td>MGI:4434007</td>	<td>Smc3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0069_4_H07</td>	<td>MGI:4431547</td>	<td>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_1_F01</td>	<td>MGI:4362468</td>	<td>Smyd2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0065_4_B10</td>	<td>MGI:4433565</td>	<td>Snap29&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0029_4_E08</td>	<td>MGI:4362491</td>	<td>Snapc4&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0059_2_C08</td>	<td>MGI:4433763</td>	<td>Snf8&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0039_1_B01</td>	<td>MGI:4431749</td>	<td>Snip1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_3_D07</td>	<td>MGI:4362512</td>	<td>Snx5&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0021_4_A12</td>	<td>MGI:4432554</td>	<td>Socs7&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0060_1_A07</td>	<td>MGI:4432869</td>	<td>Sparc&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0065_1_F10</td>	<td>MGI:4432393</td>	<td>Spnb2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0090_5_B04</td>	<td>MGI:4460276</td>	<td>Spns2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0162_1_G07</td>	<td>MGI:4364926</td>	<td>Sqstm1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_2_D10</td>	<td>MGI:4431843</td>	<td>Src&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0078_2_C07</td>	<td>MGI:4363363</td>	<td>St18&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0044_5_B04</td>	<td>MGI:4363733</td>	<td>Stard13&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0097_1_C09</td>	<td>MGI:4363550</td>	<td>Stard5&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0452_5_E06</td>	<td>MGI:4433325</td>	<td>Stk32a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0116_2_E10</td>	<td>MGI:4432224</td>	<td>Supt7l&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_3_D07</td>	<td>MGI:4434293</td>	<td>Supv3l1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0022_2_D02</td>	<td>MGI:4363450</td>	<td>Suv420h1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0069_2_H09</td>	<td>MGI:4434309</td>	<td>Sympk&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0214_1_H11</td>	<td>MGI:4433781</td>	<td>Syt1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0084_1_C03</td>	<td>MGI:4363391</td>	<td>Sytl1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0021_1_D01</td>	<td>MGI:4432519</td>	<td>Tbc1d10a&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0051_3_C10</td>	<td>MGI:4432867</td>	<td>Tcf7l1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:1856845</td>	<td>Tmc1&lt;dn&gt;</td></tr>
+					<tr><td>EPD0343_3_C05</td>	<td>MGI:4432615</td>	<td>Tmem98&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0526_3_A01</td>	<td>MGI:4461475</td>	<td>Tmod1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0079_6_H08</td>	<td>MGI:4364308</td>	<td>Tmprss15&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_2_B02</td>	<td>MGI:4363000</td>	<td>Tpd52l2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0183_4_A09</td>	<td>MGI:4432885</td>	<td>Tpi1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0001_3_G07</td>	<td>MGI:4842867</td>	<td>Tpm1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0093_2_B04</td>	<td>MGI:4363678</td>	<td>Traf3ip3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0127_4_E01</td>	<td>MGI:4432441</td>	<td>Trafd1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0296_3_C07</td>	<td>MGI:4362876</td>	<td>Trex1&lt;tm1(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0056_1_B09</td>	<td>MGI:4363243</td>	<td>Trim45&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_2_A04</td>	<td>MGI:4362238</td>	<td>Trpc4ap&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0028_4_H02</td>	<td>MGI:4433230</td>	<td>Trrap&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0176_3_C01</td>	<td>MGI:4432572</td>	<td>Tsfm&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0089_4_B05</td>	<td>MGI:4432442</td>	<td>Tsga14&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_4_F05</td>	<td>MGI:4362341</td>	<td>Uba2&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_4_A11</td>	<td>MGI:4433059</td>	<td>Ubap1&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:4129255</td>	<td>Ube3b&lt;Gt(RRJ142)Byg&gt;</td></tr>
+					<tr><td>EPD0147_4_G08</td>	<td>MGI:4433766</td>	<td>Usp33&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0130_1_D07</td>	<td>MGI:4432706</td>	<td>Usp42&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0287_1_A02</td>	<td>MGI:4451513</td>	<td>Vps53&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0037_2_D06</td>	<td>MGI:4441789</td>	<td>Wbp2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_1_E05</td>	<td>MGI:4362309</td>	<td>Wdr3&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0046_1_C04</td>	<td>MGI:4433065</td>	<td>Wdr47&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0200_4_C04</td>	<td>MGI:4432119</td>	<td>Whrn&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td></td>	<td>MGI:1857090</td>	<td>Whrn&lt;wi&gt;</td></tr>
+					<tr><td>EPD0555_1_C05</td>	<td>MGI:4455951</td>	<td>Wnt3&lt;tm2a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_3_C05</td>	<td>MGI:4362278</td>	<td>Zc3hc1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0033_4_C03</td>	<td>MGI:4362535</td>	<td>Zfp106&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0147_2_E01</td>	<td>MGI:4432778</td>	<td>Zkscan14&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0025_6_A10</td>	<td>MGI:4433147</td>	<td>Zmynd8&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0553_3_A07</td>	<td>MGI:4454080</td>	<td>Zp1&lt;tm1a(KOMP)Wtsi&gt;</td></tr>
+					<tr><td>EPD0080_1_H04</td>	<td>MGI:4432383</td>	<td>Zranb2&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					<tr><td>EPD0058_3_B01</td>	<td>MGI:4432089</td>	<td>Zzz3&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li> -->
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

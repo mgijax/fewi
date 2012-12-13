@@ -1,0 +1,251 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Detail Pheno Summary: Right-side</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Detail Phenotype Summary Ribbon Tests: Right-side</h1>
+    <ul>
+        <li>User story 14, WI: phenotype summary - right hand side (not including disease section)</li>
+        <li>User story 74, WI: phenotype summary - display "Normals" for any term</li>
+        <li>User story 81, WI: On Allele detail page, suppress Pheno summary ribbon when no data</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>MP genotype matrix displays checkmarks or N's</li>
+		<li>checks link to corresponding place on genotype popup</li>
+		<li>Open/close behavior displays checkmarks correctly</li>
+		<li>Sex-specific annotations displayed in separate columns</li>
+		<li>Providers are separated into columns within each sex</li>
+		<li>Normals: pheno grid displays N's</li> 
+		<li>Normals: can be at any level</li>
+		<li>Normals: implements "roll up" rules ("checkmark always wins")</li>
+		<li>The Pheno summary section does not display if there is no phenotype data</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+ 		<h3>Summary of Tests</h3>
+ 		<ul>
+ 			<li>Genotypes are displayed in the correct order on the Allele Detail Page</li>
+ 			<li>Genotype links open the correct genotype popup</li>
+ 			<li>Each genotype popup appears in its own window.</li>
+ 			<li>Clicking the genotype link for a genotype popup window already open brings that window to the front (does not open another new window)</li>
+ 			<li>Genotype popups display the correct genotype data in their header</li>
+ 			<li>Genotype column is divided into Male/Female columns when NA+Male, NA+Female or Male+Female annotations exist</li>
+ 			<li>Sex column is divided into WTSI/MGI when both providers exist for a given sex</li>
+ 			<li>When WTSI data exist, genotype column headings include "WTSI" label</li>
+ 			<li>When WTSI and MGI data exist, genotype column headings include "WTSI" and "MGI" labels</li>
+ 			<li>When the only data are from MGI, "MGI" label does not appear in column headings</li>
+ 			<li>For a given genotype, sex and provider, a checkmark always wins over an "N":
+ 			<ul>
+ 				<li>The header term row displays a checkmark whenever any term for that system displays a checkmark</li>
+ 				<li>The header term row displays a "N" ONLY when every term for that system displays an "N"</li>
+ 				<li>A term displays an "N" ONLY when all annotations from the provider include the qualifier "norm"</li>
+ 			</ul> 
+ 			</li>
+ 			<li>Checkmark and "N" symbols are links: 
+ 			<ul>
+ 				<li>...which open the correct genotype popup and jump to the annotated term associated with the checkmark or "N"</li>
+ 				<li>If the annotated term occurs under more than one header term, clicking the symbol jumps to the term under the same header as the clicked symbol</li>
+ 			</ul>
+ 			</li>
+ 			
+ 		</ul>
+ 		
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify genotypes are displayed in the correct order (as on the current Public display: hm, ht, cn, cx, tg, ot)
+ 			<p concordion:assertTrue="true"></p> - <i>fully automated</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
+                <li>Verify the genotypes are in the correct order from hm1 to tg34</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify genotype popup links go to correct genotype popup
+ 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p> - <i>cannot automate</i>
+
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
+                <li>Click the link to open the popup for hm1
+                <ol>
+	                <li>Verify that the allele pair is <b>Lepr<sup>db</sup>/Lepr<sup>db</sup></b></li>
+	                <li>Verify that the genetic background is <b>B6.BKS(D)-Lepr<sup>db</sup>/J</b></li>
+                </ol>
+                </li>
+                <li>Click the link to open the popup for ht12
+                <ol>
+	                <li>Verify that the allele pair is <b>Lepr<sup>db</sup>/Lepr<sup>+</sup></b></li>
+	                <li>Verify that the genetic background is <b>B6.Cg-Dock7m +/+ Lepr<sup>db</sup>/J</b></li>
+                </ol>
+                </li>
+                <li>Click the link to open the popup for cn16
+                <ol>
+	                <li>Verify that the first allele pair is <b>Cebpb<sup>tm1.1Maka</sup>/Cebpb<sup>tm1.1Maka</sup></b></li>
+	                <li>Verify that the second allele pair is <b>Lepr<sup>db</sup>/Lepr<sup>db</sup></b></li>
+	                <li>Verify that the third allele pair is <b>Tg(Ins2-cre)23Herr/0</b></li>
+	                <li>Verify that the genetic background is <b>involves: 129P2/OlaHsd * C57BL/6J * C57BLKS/J * CBA/J</b></li>
+                </ol>
+                </li>
+    		</ol>
+    		</li>
+		    <li>Verify that genotype columns are split into M/F sexes where applicable, and left as a single column in standard cases
+ 			<p concordion:assertTrue="true">passed jeffc 10/15/2012</p> - <i>semi-automated</i>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
+                <li>Verify hm1 has not been split between male and female but that hm2 is split male and female</li>
+    		</ol>
+    		</li>
+    		<li>Verify that sex groupings under each genotype display all providers that have annotations (either MGI or WTSI for now)(is blank if only MGI results)
+ 			<p concordion:assertTrue="true">passed jeffc 10/15/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Slc16a2<sup>tm1.1Sref</sup> (MGI:3687950).</li>
+                <li>Go to the Phenotype Summary section of the page</li>
+                <li>Verify genotype hm1 has a heading for both Male and Female</li>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
+                <li>Go to the Phenotype Summary section of the page</li>
+                <li>Verify that genotypes hm2 and hm10 have a heading for both Male and Female but no WTSI and MGI headings because the data is all for MGI only.</li>
+    		</ol>
+    		</li>
+    		<li>Verify for a given genotype, sex and provider that a checkmark always wins over an N.
+ 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Slc16a2<sup>tm1.1Sref</sup> (MGI:3687950).</li>
+                <li>Expand the terms to show sub-terms</li>
+                <li>Verify that sub-term abnormal circulating triiodothyronine level display a <b>checkmark</b> for genotype <b>ot3</b>. (if you look at the annotations for this genotype in the EI you will notice there are two annotation  for this sub-term, a normal and a none entry)</li>
+                <li>Verify that sub-term decreased triiodothyronine level is N for genotype <b>ot2</b> but since the other sub-terms are checkmarks the high-level term homeostasis/metabolism is a checkmark</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify that checkmarks and N symbols are links
+ 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
+                <li>Click on the checkmark for term <b>immune system</b> for genotype <b>hm5</b></li>
+                <li>Verify the Genotype popup page displays at the heading for immune system</li>
+                <li>Click on the <b>N</b> for term growth/Size of genotype <b>tg33</b></li>
+                <li>Verify the Genotype popup page displays at the heading for growth/size</li>
+                <li>Navigate to the Allele Detail Page for Taf7l<sup>tm1.1Jw</sup> (MGI:3710399).</li>
+                <li>Click on the checkmark for term <b>decreased testis weight</b> for genotype <b>ot2</b> under header endocrine/exocrine glands</li>
+                <li>Verify the Genotype popup page displays at the heading for endocrine/exocrine glands</li>
+                <li>Click on the checkmark for term <b>decreased testis weight</b> of genotype <b>ot2</b> under header reproductive system</li>
+                <li>Verify the Genotype popup page displays at the heading for reproductive system</li>
+    		</ol>
+    		</li>
+    		<li>Verify that toggling works by clicking the system names, and also the "hide"/"show" buttons
+ 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
+                <li>Click on the term <b>cellular</b></li>
+                <li>Verify the sub-terms for cellular display</li>
+                <li>Click on the term <b>cellular</b> again</li>
+                <li>Verify the sub-terms for cellular display disappear</li>
+    		</ol>
+    		</li>
+    		<li>Verify that toggling works by clicking the system names, and also the "hide"/"show" buttons
+ 			<p concordion:assertTrue="true">Passed jeffc 10/30/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for a<sup>j</sup> (MGI:1856428).</li>
+                <li>Verify the Phenotype summary section does not display</li>
+                <li>Click in the search field and search for allele <b>fhd</b> MGI:1856869</li>
+                <li>Verify the Phenotype summary section does not display</li>
+                <li>Click in the search field and search for allele <b>Tg(ACTA1-Musk)HSjb</b> MGI:3768995</li>
+                <li>Verify the Phenotype summary section does not display</li>
+                <li>Click in the search field and search for allele <b>Tg(ACTB-CCL2)1Onoe</b> MGI:3700797</li>
+                <li>Verify the Phenotype summary section does not display</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<li>Verify genotypes are displayed in the correct order (match what is on public, [hm,ht,cn,cx,tg,ot])
+    		<ol>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (<b concordion:set="#alleleID">MGI:1856009</b>).</li>
+                <li>Verify the genotypes appear in this order
+                	<table concordion:verifyRows="#label : getGenotypeLabels(#alleleID)">
+                	<tr><th concordion:assertEquals="#label">Genotype Label</th></tr>
+                	<tr><td>hm1</td></tr><tr><td>hm2</td></tr><tr><td>hm3</td></tr><tr><td>hm4</td></tr>
+                	<tr><td>hm5</td></tr><tr><td>hm6</td></tr><tr><td>hm7</td></tr><tr><td>hm8</td></tr>
+                	<tr><td>hm9</td></tr><tr><td>hm10</td></tr><tr><td>hm11</td></tr><tr><td>ht12</td></tr>
+                	<tr><td>ht13</td></tr><tr><td>ht14</td></tr><tr><td>ht15</td></tr><tr><td>cn16</td></tr>
+                	<tr><td>cn17</td></tr><tr><td>cx18</td></tr><tr><td>cx19</td></tr><tr><td>cx20</td></tr>
+                	<tr><td>cx21</td></tr><tr><td>cx22</td></tr><tr><td>cx23</td></tr><tr><td>cx24</td></tr>
+                	<tr><td>cx25</td></tr><tr><td>cx26</td></tr><tr><td>cx27</td></tr><tr><td>cx28</td></tr>
+                	<tr><td>cx29</td></tr><tr><td>cx30</td></tr><tr><td>cx31</td></tr><tr><td>cx32</td></tr>
+                	<tr><td>tg33</td></tr><tr><td>tg34</td></tr>
+                	</table></li>
+    		</ol>
+    		</li>
+    		<li>Verify that genotype columns are split into M/F sexes where applicable, and left as a single column in standard cases
+    		<ol>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (<b concordion:set="#alleleID">MGI:1856009</b>).</li>
+                <li>Verify the following columns are split into male and female: 
+                <table concordion:execute="#count = getSexCountByLabel(#alleleID,#genotypeLabel)">
+                <tr><th concordion:set="#genotypeLabel">label</th><th>genotype mgi id</th><th concordion:assertEquals="#count">sex column count</th></tr>
+                <tr><td>hm2</td><td>MGI:3689720</td><td>2</td></tr>
+                 <tr><td>hm10</td><td>MGI:3822315</td><td>2</td></tr>
+                </table></li>
+                <li>Verify the following columns are not split into male and female: 
+                <table concordion:execute="#count = getSexCountByLabel(#alleleID,#genotypeLabel)">
+                <tr><th concordion:set="#genotypeLabel">label</th><th>genotype mgi id</th><th concordion:assertEquals="#count">sex column count</th></tr>
+                <tr><td>hm1</td><td>MGI:4429457</td><td>1</td></tr>
+                <tr><td>ht15</td><td>MGI:3699233</td><td>1</td></tr>
+                <tr><td>cx18</td><td>MGI:5305587</td><td>1</td></tr>
+                <tr><td>tg33</td><td>MGI:5435319</td><td>1</td></tr>
+                </table></li>
+    		</ol>
+    		</li>
+		</ol>
+		
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Europhenome Data Load</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Europhenome Data Load</h1>
+    <ul>
+        <li>User story #87, Load Europhenome Data</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>loading full set of data (i.e., sex-specific, cell lines, etc.) - not piecemeal as with sanger</li>
+		<li>still excluding normals</li>
+		<li>only want lines with MP calls</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<p>Load test data from "mock" Europhenome file:</p>
+		<table>
+<tr><td>field 1: ES Cell</td>	<td>field 2: MP ID</td>	<td>field 3: MGI Allele ID</td>	<td>field 4: Allele State</td>	<td>field 5: Allele Symbol</td>	<td>field 6: MGI Marker ID</td>	<td>field 7: Strain ID</td>	<td>field 8: Gender</td>	<td>9</td>	<td>10</td>	<td>11</td>	<td>12: Notes</td></tr>
+<tr><td>HEPD0549_5_C09</td>	<td>MP:0008854</td>	<td>MGI:4434984</td>	<td>-1</td>	<td>Wtap&lt;tm1a(EUCOMM)Hmgu&gt;</td>	<td>MGI:1926395 </td>	<td>none</td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro bad zygosity -1</td></tr>
+<tr><td>HEPD0549_5_C09</td>	<td>MP:0008854</td>	<td>MGI:4434984</td>	<td>   </td>	<td>Wtap&lt;tm1a(EUCOMM)Hmgu&gt;</td>	<td>MGI:1926395 </td>	<td>none</td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro spaces zygosity</td></tr>
+<tr><td>HEPD0549_5_C09</td>	<td>MP:0008854</td>	<td>MGI:4434984</td>	<td>4</td>	<td>Wtap&lt;tm1a(EUCOMM)Hmgu&gt;</td>	<td>MGI:1926395 </td>	<td>none</td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro bad zygosity 4</td></tr>
+<tr><td>HEPD0549_5_C09</td>	<td>MP:0008854</td>	<td>MGI:4434984</td>	<td>X</td>	<td>Wtap&lt;tm1a(EUCOMM)Hmgu&gt;</td>	<td>MGI:1926395 </td>	<td>none</td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro bad zygosity X</td></tr>
+<tr><td>HEPD0999_9_C09</td>	<td>MP:0008854</td>	<td>MGI:4434984</td>	<td>1</td>	<td>Wtap&lt;tm1a(EUCOMM)Hmgu&gt;</td>	<td>MGI:1926395 </td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Invalid cell line</td></tr>
+<tr><td>HEPD0549_5_C09</td>	<td>MP:0008854</td>	<td>MGI:4434984</td>	<td>2</td>	<td>Wtap&lt;tm1a(EUCOMM)Hmgu&gt;</td>	<td>MGI:1926395 </td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Hemi not on X</td></tr>
+<tr><td></td>	<td>MP:0008854</td>	<td>MGI:3582264</td>	<td>2</td>	<td>Tspy-ps&lt;tm1(Mlc3-Gdf8)Mgs&gt;</td>	<td>MGI:1201688</td>	<td>MGI:4836541</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Hemi on Y Female</td></tr>
+<tr><td></td>	<td>MP:0008855</td>	<td>MGI:3582264</td>	<td>2</td>	<td>Tspy-ps&lt;tm1(Mlc3-Gdf8)Mgs&gt;</td>	<td>MGI:1201688</td>	<td>MGI:4836541</td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro Hemi on Y Male</td></tr>
+<tr><td>EPD0033_5_D02</td>	<td>MP:0002100</td>	<td>MGI:4362642</td>	<td>1</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td>	<td>MGI:2178217</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Dup real Sanger geno+MP, dup MF out of order</td></tr>
+<tr><td>EPD0033_5_D02</td>	<td>MP:0002968</td>	<td>MGI:4362642</td>	<td>0</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td>	<td>MGI:2178217</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Dup real Sanger geno+MP</td></tr>
+<tr><td>EPD0033_5_D02</td>	<td>MP:0002968</td>	<td>MGI:4362642</td>	<td>1</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td>	<td>MGI:2178217</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Dup real Sanger geno+MP</td></tr>
+<tr><td>EPD0033_5_D02</td>	<td>MP:0008854</td>	<td>MGI:4362642</td>	<td>1</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td>	<td>MGI:2178217</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Real Sanger geno, mockMP</td></tr>
+<tr><td>EPD0033_5_D02</td>	<td>MP:0008854</td>	<td>MGI:4362642</td>	<td>0</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td>	<td>MGI:2178217</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Real Sanger geno, mockMP</td></tr>
+<tr><td>EPD0033_5_D02</td>	<td>MP:0008854</td>	<td>MGI:4362642</td>	<td>1</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td>	<td>MGI:2178217</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Real Sanger geno, mockMP</td></tr>
+<tr><td></td>	<td>MP:0008854</td>	<td>MGI:1856087</td>	<td>1</td>	<td>Mitf&lt;Mi-Or&gt;</td>	<td>MGI:104554</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Real MGI geno, mockMP, dup MF out of order</td></tr>
+<tr><td></td>	<td>MP:0000067</td>	<td>MGI:1856087</td>	<td>1</td>	<td>Mitf&lt;Mi-Or&gt;</td>	<td>MGI:104554</td>	<td>none</td>	<td>Female</td>	<td></td>	<td></td>	<td></td>	<td>Euro Real MGI geno, realMP</td></tr>
+<tr><td>EPD0033_5_D02</td>	<td>MP:0002100</td>	<td>MGI:4362642</td>	<td>1</td>	<td>Akap9&lt;tm1a(KOMP)Wtsi&gt;</td>	<td>MGI:2178217</td>	<td>none</td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro Dup real Sanger geno+MP, dup MF out of order</td></tr>
+<tr><td>EPD0874_1_C01</td>	<td>MP:0008854</td>	<td>MGI:5426568</td>	<td>0</td>	<td>1110059M19Rik&lt;tm2e(KOMP)Wtsi&gt;</td>	<td>MGI:1916050</td>	<td></td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro mock geno, only row for het</td></tr>
+<tr><td>EPD0864_5_C10</td>	<td>MP:0008854</td>	<td>MGI:5296526</td>	<td>2</td>	<td>1700013H16Rik&lt;tm2e(KOMP)Wtsi&gt;</td>	<td>MGI:1922764</td>	<td></td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro mock geno, only row for hemi</td></tr>
+<tr><td>EPD0659_2_A06</td>	<td>MP:0008854</td>	<td>MGI:4841078</td>	<td>1</td>	<td>Arr3&lt;tm2e(KOMP)Wtsi&gt;</td>	<td>MGI:2159617</td>	<td></td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro mock geno, only row for hom</td></tr>
+<tr><td></td>	<td>MP:0008854</td>	<td>MGI:1856087</td>	<td>1</td>	<td>Mitf&lt;Mi-Or&gt;</td>	<td>MGI:104554</td>	<td>none</td>	<td>Male</td>	<td></td>	<td></td>	<td></td>	<td>Euro Real MGI geno, mockMP, dup MF out of order</td></tr>
+		</table>
+		<ol>
+    		<li>Verify all lines in Europhenome's biomart download file are parsed and reformatted into our input HT-MP file format
+ 			<p concordion:assertTrue="true">passed 11/13/2012 -klf</p>
+    		<ol>
+                <li>Verify that counts at the top of <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload/logs/europhenoload.cur.log">Curator's Log file</a> are equal.</li>
+    		</ol>
+    		</li>
+    		<li>Test the Europhenome parser rules
+ 			<p concordion:assertTrue="true">passed 11/13/2012 -klf</p>
+    		<ol>
+                <li>Make a Europhenome "kick-out" file, to validate the parser. Verify that errors shown in the table above are reported in the <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/logs/europhenoload.cur.log">Curator's Log file for the test load</a>.
+                <ul>
+                	<li>Zygosity values that are invalid are rejected</li>
+                	<li>A mutant cell line not associated with the allele is rejected</li>
+                	<li>A genotype identified as hemizygous whose marker is not on the "X" or "Y" chromosome is rejected</li>
+                </ul>
+                </li>
+                <li>Verify that errors shown in the table above did not get loaded into the database.</li>
+                <li>Verify it populates EXPs</li>
+                <li>Verify it populates  providers(phenotyping center + annotation center) for this file</li>
+    		</ol>
+    		</li>
+    		<li>Include Europhenome "mock data" in the file, to validate the parser.
+ 			<p concordion:assertTrue="true">passed 11/13/2012 -klf</p>
+    		<ol>
+                <li>Zygosity values are correctly translated: 0=heterozygous, 1=homozygous, 2=hemizygous (see <b>Btk&lt;tm1a(EUCOMM)Hmgu&gt; homozygote, hemizygote.</b>  see <b>Ankrd11&lt;Yod&gt; heterozygote.</b>  All real data.)</li>
+                <li>Data associated with &quot;hemizygous&quot; genotype whose marker is on the &quot;Y&quot; chromosome is loaded (see <b>Tspy-ps&lt;tm1(Mlc3-Gdf8)Mgs&gt; hemizygote</b> - mock data)</li>
+                <li>&quot;Duplicate&quot; Male/Female data are correctly combined to &quot;NA&quot;, even if input rows are not in correct order (see <b>Mitf&lt;Mi-Or&gt; homozygote</b> - mock data)</li>
+                <li>Europhenome MP annotations are added to existing Sanger genotypes when allele, allele state and cell lines are the same, not creating new genotypes
+                <ul>
+                	<li>Europhenome annotations may "duplicate" Sanger annotations (see <b>Akap9&lt;tm1a(KOMP)Wtsi&gt; homozygote</b> - mock data)</li>
+                	<li>Europhenome annotations may be different from Sanger annotations (see <b>Baz1b&lt;tm2a(KOMP)Wtsi&gt; homozygote</b> - real data)</li>
+                </ul>
+                </li>
+                <li>Europhenome MP annotations create new genotypes when necessary</li>
+                <li>Europhenome MP annotations use J:165965</li>
+    		</ol>
+    		</li>
+ 		<li>"Duplicate" rows where both sex values are the same are NOT loaded as "NA" (that is, only Male/Female "dups" are loaded as "NA", not Male/Male "dups" or Female/Female "dups")<br/>
+ 		(Europhenome test data file has Female/Female data.)
+ 			<p >This will be covered in a bug-fix Story coming later.</p>
+    		<ol>
+                <li>Navigate to Akap9&lt;tm1a(KOMP)Wtsi&gt;</li>
+                <li>Verify there is no "Both" annotation for <b>MP:0008854 Bleb</b> for homozygous genotype</li>
+                <li>Verify there is a "Female" annotation for <b>MP:0008854 Bleb</b> for homozygous genotype</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

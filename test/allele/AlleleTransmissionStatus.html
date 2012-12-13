@@ -1,0 +1,259 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Transmission Status Updates</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Transmission Status Updates</h1>
+    <ul>
+        <li>User story 88, Update transmission state for alleles of genotypes with MP annotations</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>none</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<p>Requirements: change Germ Line Transmission value to "Germline" for alleles having MP annotations loaded from Sanger and Europhenome, with some exceptions.</p>
+		<ul>
+			<li>Cell Line - change to Germline and add J:# as "Transmission" reference</li>
+			<li>Chimeric - change to Germline and add J:# as "Transmission" reference</li>
+			<li>Germline - if this value already exists, do not change. Make sure we keep existing "Transmission" reference.</li>
+			<li>Not Applicable - if this value already exists, do not change.</li>
+			<li>Not Specified - if this value already exists, do not change.</li>
+		</ul>
+		<ol>
+    		<li>Alleles having genotypes with MP annotations loaded via the HTMP loader have their Germline Transmission display the text "Earliest citation of germline transmission"
+ 			<p concordion:assertTrue="true">klf 12/11/2012</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for  Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
+                <li>Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: </b></li>
+    		</ol>
+    		</li>
+    		<li>Alleles having their transmission status set to Germline via this load (above) have the appropriate (Sanger or Europhenome) load J:# associated with the transmission status, and it is linked to the correct References page.<br/>
+    		<i>Example: Earliest citation of germline transmission: J:175295</i> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
+                <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li>
+                <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:165965</b>.</li>
+                <li>Navigate to the Allele Detail Page for  Adam17&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4434074 (previously had germ line transmission status = cell line).</li>
+                <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:175295</b>.</li>
+                <li>Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:175295</b>.</li>
+    		</ol>
+    		</li>
+    		<li>A. Alleles previously having the transmission status  &quot;Germline&quot;  in the EI (displaying a reference J:# and phrase in the WI) do not change.
+ 			<p>WI displays existing data for the following alleles. They should not change.</p>
+    		<ol>
+                <li>Navigate to the Allele Detail Page for  Apoe&lt;tm1Unc&gt;, MGI:1857129.</li>
+                <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:1050</b>.</li>
+                <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:1050</b>.</li>
+                <li>Navigate to the Allele Detail Page for B9d1&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4432284</li>
+                <li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - <b>Earliest citation of germline transmission: J:178421.</b></li>
+<!--                 <li>Navigate to the Allele Detail Page for Csrp2bp&lt;tm1a(KOMP)Wtsi&gt;, MGI:4363521.</li>
+                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:164007.</b></li>
+                <li>Navigate to the Allele Detail Page for Dkk3&lt;tm1Cni&gt;, MGI:3621929.</li>
+                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:106922.</b></li>
+                <li>Navigate to the Allele Detail Page for Mysm1&lt;tm1a(KOMP)Wtsi&gt;, MGI:4362924.</li>
+                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:179287.</b></li>
+ -->
+            </ol>
+            <p>B. Alleles with the transmission status "Not Applicable" do not change.</p>
+            <ol>
+                <li>Navigate to the Allele Detail Page for Ankrd11&lt;Yod&gt;</li>
+                <li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+<!--                 <li>Navigate to the Allele Detail Page for Cdh23&lt;v&gt;, MGI:1856228.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li>Navigate to the Allele Detail Page for Ctnnb1&lt;Bfc&gt;, MGI:2656734.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li>Navigate to the Allele Detail Page for Mecom&lt;Jbo&gt;, MGI:2158381.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li>Navigate to the Allele Detail Page for Myo6&lt;sv&gt;, MGI:1856555.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+ -->
+    		</ol>
+    		<p>C. Alleles with the transmission status "Chimeric" do not change.</p>
+    		<ol>
+    			<li>Lori set Zfp715&lt;tm1a(EUCOMM)Hmgu&gt; to have status "Chimeric". (KLF verified around noon on 12/3/2012.) </li> 
+    			<li><span concordion:assertTrue="true">klf 13:39 12/3/2012.</span> - Verify load changes it to "Germline".</li>
+    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - Navigate to Allele Detail Page and verify WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li> 
+    		</ol>
+    		<p>D. Alleles with the transmission status "Not Specified" do not change.</p>
+    		<ol>
+    			<li>There are only a handful of these alleles and all are "Reserved" or "In Progress" Test not needed.</li>
+    		</ol>
+    		</li>
+    		<li>Tests in load scripts pass.
+    		<ol>
+    			<li>See <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/logs/sangerload.test.sorted.log">Test results.</a></li>
+    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - Verify that tests with the following labels pass:
+    			<ul>
+    				<li>CellLine: Notch1&lt;tm1a(EUCOMM)Wtsi&gt;</li>
+    				<li>Chimeric:  Med12&lt;tm1.2Hsch&gt;</li>
+    				<li>Germline: Acacb&lt;tm1a(EUCOMM)Wtsi&gt; and Fadd&lt;tm2Wnt&gt;</li>
+    				<li>GermlineOld:  Cbx2&lt;tm1Ykf&gt; and Mro&lt;tm1H&gt;</li>
+    				<li>NotApplicable: Ap3d1&lt;mh-2J&gt; and Apaf1&lt;fog&gt;</li>
+    				<li>NotSpecified: Braf&lt;tm2.1Cpri&gt; and Cfp&lt;tm2.2Song&gt;</li>
+    			</ul>
+    			</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<p>Performed via loading scripts. Dec 2012</p>
+<!-- 		<ol>
+			<li>Alleles which already have a Germ Line Transmission Status other than "Cell Line" or "Chimeric" should not change.
+			<ol>
+				<li>Alleles in the table below should already have the status "Germline" and should already have a "Transmission" Reference as shown.
+					<table>
+					<tr><th>Allele symbol</th><th>Allele key</th><th>Accession ID</th><th>Transmission key</th><th>Transmission Status</th><th>Transmission Ref</th><th>Ref Type</th><th>Refs key</th></tr>
+					<tr><td>Apoe&lt;tm1Unc&gt;</td><td>1303</td><td>MGI:1857129</td><td>3982951</td><td>Germline</td><td>J:1050</td><td>Transmission</td><td>1050</td></tr>
+					<tr><td>B9d1&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>607405</td><td>MGI:4432284</td><td>3982951</td><td>Germline</td><td>J:178421</td><td>Transmission</td><td>179517</td></tr>
+					<tr><td>Cadm1&lt;tm1.2Brd&gt;</td><td>42998</td><td>MGI:3625158</td><td>3982951</td><td>Germline</td><td>J:108386</td><td>Transmission</td><td>109460</td></tr>
+					<tr><td>Csrp2bp&lt;tm1a(KOMP)Wtsi&gt;</td><td>571460</td><td>MGI:4363521</td><td>3982951</td><td>Germline</td><td>J:164007</td><td>Transmission</td><td>165103</td></tr>
+					<tr><td>Dkk3&lt;tm1Cni&gt;</td><td>42629</td><td>MGI:3621929</td><td>3982951</td><td>Germline</td><td>J:106922</td><td>Transmission</td><td>107996</td></tr>
+					<tr><td>Dlg2&lt;tm1Dsb&gt;</td><td>8820</td><td>MGI:2388036</td><td>3982951</td><td>Germline</td><td>J:68924</td><td>Transmission</td><td>69874</td></tr>
+					<tr><td>Dlg4&lt;tm1Grnt&gt;</td><td>7401</td><td>MGI:2182460</td><td>3982951</td><td>Germline</td><td>J:77693</td><td>Transmission</td><td>78653</td></tr>
+					<tr><td>Dll1&lt;tm1Gos&gt;</td><td>2644</td><td>MGI:1861919</td><td>3982951</td><td>Germline</td><td>J:39633</td><td>Transmission</td><td>39813</td></tr>
+					<tr><td>Eya3&lt;Gt(W096D02)Wrst&gt;</td><td>66308</td><td>MGI:3834107</td><td>3982951</td><td>Germline</td><td>J:145164</td><td>Transmission</td><td>146257</td></tr>
+					<tr><td>Foxp2&lt;tm2.1Woen&gt;</td><td>68216</td><td>MGI:3851122</td><td>3982951</td><td>Germline</td><td>J:150425</td><td>Transmission</td><td>151518</td></tr>
+					<tr><td>Git2&lt;Gt(XG510)Byg&gt;</td><td>55900</td><td>MGI:3762635</td><td>3982951</td><td>Germline</td><td>J:126878</td><td>Transmission</td><td>127970</td></tr>
+					<tr><td>Gnas/Nespas&lt;tm2.1Jop&gt;</td><td>640512</td><td>MGI:4950066</td><td>3982951</td><td>Germline</td><td>J:171195</td><td>Transmission</td><td>172291</td></tr>
+					<tr><td>Gnas&lt;tm1Jop&gt;</td><td>32406</td><td>MGI:3050794</td><td>3982951</td><td>Germline</td><td>J:91717</td><td>Transmission</td><td>92706</td></tr>
+					<tr><td>Grin2a&lt;tm1Rsp&gt;</td><td>3021</td><td>MGI:1928287</td><td>3982951</td><td>Germline</td><td>J:45446</td><td>Transmission</td><td>45730</td></tr>
+					<tr><td>Hbp1&lt;Gt(EUCJ0053g09)Hmgu&gt;</td><td>813638</td><td>MGI:5293702</td><td>3982951</td><td>Germline</td><td>J:82809</td><td>Transmission</td><td>83783</td></tr>
+					<tr><td>Hmx3&lt;tm1Ebo&gt;</td><td>1700</td><td>MGI:1857493</td><td>3982951</td><td>Germline</td><td>J:45576</td><td>Transmission</td><td>45860</td></tr>
+					<tr><td>Hspb11&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>607880</td><td>MGI:4432759</td><td>3982951</td><td>Germline</td><td>J:184749</td><td>Transmission</td><td>185845</td></tr>
+					<tr><td>Kcnj16&lt;tm1Pess&gt;</td><td>637568</td><td>MGI:4882146</td><td>3982951</td><td>Germline</td><td>J:167533</td><td>Transmission</td><td>168629</td></tr>
+					<tr><td>Mro&lt;tm1H&gt;</td><td>66031</td><td>MGI:3831006</td><td>3982951</td><td>Germline</td><td>J:144349</td><td>Transmission</td><td>145442</td></tr>
+					<tr><td>Mthfd1l&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>609142</td><td>MGI:4434021</td><td>3982951</td><td>Germline</td><td>J:149352</td><td>Transmission</td><td>150445</td></tr>
+					<tr><td>Myl12b&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>608321</td><td>MGI:4433200</td><td>3982951</td><td>Germline</td><td>J:149352</td><td>Transmission</td><td>150445</td></tr>
+					<tr><td>Mysm1&lt;tm1a(KOMP)Wtsi&gt;</td><td>570863</td><td>MGI:4362924</td><td>3982951</td><td>Germline</td><td>J:179287</td><td>Transmission</td><td>180383</td></tr>
+					<tr><td>Ncam1&lt;tm1Cgn&gt;</td><td>1400</td><td>MGI:1857222</td><td>3982951</td><td>Germline</td><td>J:16590</td><td>Transmission</td><td>16470</td></tr>
+					<tr><td>Nfya&lt;Gt(EUCJ0004f10)Hmgu&gt;</td><td>629784</td><td>MGI:4872253</td><td>3982951</td><td>Germline</td><td>J:82809</td><td>Transmission</td><td>83783</td></tr>
+					<tr><td>Nodal&lt;tm1Rob&gt;</td><td>7045</td><td>MGI:2180793</td><td>3982951</td><td>Germline</td><td>J:32935</td><td>Transmission</td><td>33062</td></tr>
+					<tr><td>Nr1d2&lt;tm1Dgen&gt;</td><td>819450</td><td>MGI:5427681</td><td>3982951</td><td>Germline</td><td>J:82809</td><td>Transmission</td><td>83783</td></tr>
+					<tr><td>Nsun2&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>607775</td><td>MGI:4432654</td><td>3982951</td><td>Germline</td><td>J:179810</td><td>Transmission</td><td>180906</td></tr>
+					<tr><td>Plxnb2&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>608582</td><td>MGI:4433461</td><td>3982951</td><td>Germline</td><td>J:167973</td><td>Transmission</td><td>169069</td></tr>
+					<tr><td>Prkab1&lt;Gt(RRR454)Byg&gt;</td><td>66694</td><td>MGI:3838355</td><td>3982951</td><td>Germline</td><td>J:146618</td><td>Transmission</td><td>147711</td></tr>
+					<tr><td>Prmt5&lt;tm2a(EUCOMM)Wtsi&gt;</td><td>607489</td><td>MGI:4432368</td><td>3982951</td><td>Germline</td><td>J:149352</td><td>Transmission</td><td>150445</td></tr>
+					<tr><td>Ptch1&lt;tm1Mps&gt;</td><td>1648</td><td>MGI:1857447</td><td>3982951</td><td>Germline</td><td>J:42441</td><td>Transmission</td><td>42670</td></tr>
+					<tr><td>Rassf1&lt;tm1.2Brd&gt;</td><td>39990</td><td>MGI:3604205</td><td>3982951</td><td>Germline</td><td>J:101369</td><td>Transmission</td><td>102434</td></tr>
+					<tr><td>Rhbdf2&lt;tm1.1Mfm&gt;</td><td>816701</td><td>MGI:5309177</td><td>3982951</td><td>Germline</td><td>J:179654</td><td>Transmission</td><td>180750</td></tr>
+					<tr><td>Rnaseh2b&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>607285</td><td>MGI:4432164</td><td>3982951</td><td>Germline</td><td>J:186180</td><td>Transmission</td><td>187276</td></tr>
+					<tr><td>Sfrp1&lt;tm1Aksh&gt;</td><td>42564</td><td>MGI:3621116</td><td>3982951</td><td>Germline</td><td>J:106551</td><td>Transmission</td><td>107625</td></tr>
+					<tr><td>Sfrp2&lt;tm1Aksh&gt;</td><td>42565</td><td>MGI:3621117</td><td>3982951</td><td>Germline</td><td>J:106551</td><td>Transmission</td><td>107625</td></tr>
+					<tr><td>Sh3kbp1&lt;tm1Ivdi&gt;</td><td>617806</td><td>MGI:4818424</td><td>3982951</td><td>Germline</td><td>J:162088</td><td>Transmission</td><td>163184</td></tr>
+					<tr><td>Shh&lt;tm1Chg&gt;</td><td>2015</td><td>MGI:1857796</td><td>3982951</td><td>Germline</td><td>J:35802</td><td>Transmission</td><td>35960</td></tr>
+					<tr><td>Slc2a8&lt;tm1.1Asch&gt;</td><td>613215</td><td>MGI:4450978</td><td>3982951</td><td>Germline</td><td>J:159441</td><td>Transmission</td><td>160537</td></tr>
+					<tr><td>Slc5a2&lt;tm1a(KOMP)Wtsi&gt;</td><td>571512</td><td>MGI:4363573</td><td>3982951</td><td>Germline</td><td>J:185387</td><td>Transmission</td><td>186483</td></tr>
+					<tr><td>Smoc1&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>606830</td><td>MGI:4431709</td><td>3982951</td><td>Germline</td><td>J:174198</td><td>Transmission</td><td>175294</td></tr>
+					<tr><td>Spns2&lt;tm1a(KOMP)Wtsi&gt;</td><td>616774</td><td>MGI:4460276</td><td>3982951</td><td>Germline</td><td>J:188933</td><td>Transmission</td><td>190029</td></tr>
+					<tr><td>Stard13&lt;tm1a(KOMP)Wtsi&gt;</td><td>571672</td><td>MGI:4363733</td><td>3982951</td><td>Germline</td><td>J:168264</td><td>Transmission</td><td>169360</td></tr>
+					<tr><td>Tpcn2&lt;Gt(YHD437)Byg&gt;</td><td>67997</td><td>MGI:3848998</td><td>3982951</td><td>Germline</td><td>J:149472</td><td>Transmission</td><td>150565</td></tr>
+					<tr><td>Usp42&lt;tm2a(EUCOMM)Wtsi&gt;</td><td>607827</td><td>MGI:4432706</td><td>3982951</td><td>Germline</td><td>J:149352</td><td>Transmission</td><td>150445</td></tr>
+					<tr><td>Vim&lt;tm2Cba&gt;</td><td>3185</td><td>MGI:1931879</td><td>3982951</td><td>Germline</td><td>J:21588</td><td>Transmission</td><td>21695</td></tr>
+					<tr><td>Vnn1&lt;tm1Pna&gt;</td><td>26285</td><td>MGI:3027932</td><td>3982951</td><td>Germline</td><td>J:65449</td><td>Transmission</td><td>66396</td></tr>
+					</table>
+				</li>
+				<li>Alleles in the table below have status "Not Applicable" and <b>should not have</b> a "Transmission" Reference.
+					<table>
+					<tr><th>Allele symbol</th><th>Allele key</th><th>Accession ID</th><th>Transmission key</th><th>Transmission Status</th></tr>
+					<tr><td>Ankrd11&lt;Yod&gt;</td><td>60749</td><td>MGI:3797584</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Cdh23&lt;v&gt;</td><td>359</td><td>MGI:1856228</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Celsr1&lt;Crsh&gt;</td><td>24052</td><td>MGI:2668337</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Celsr1&lt;Scy&gt;</td><td>2702</td><td>MGI:1862019</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Chd7&lt;Whi&gt;</td><td>39553</td><td>MGI:3588650</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Ctnnb1&lt;Bfc&gt;</td><td>23295</td><td>MGI:2656734</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>cub</td><td>22960</td><td>MGI:2653121</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Fbxo11&lt;Jf&gt;</td><td>2700</td><td>MGI:1862017</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Mecom&lt;Jbo&gt;</td><td>5925</td><td>MGI:2158381</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Mir96&lt;Dmdo&gt;</td><td>568389</td><td>MGI:4354110</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Myo6&lt;Mhdatlc&gt;</td><td>2858</td><td>MGI:1913078</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Myo6&lt;sv&gt;</td><td>701</td><td>MGI:1856555</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Myo7a&lt;Hdb&gt;</td><td>34146</td><td>MGI:3511858</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Myo7a&lt;sh1-6J&gt;</td><td>2442</td><td>MGI:1860092</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Ostes</td><td>51009</td><td>MGI:3689329</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Pde6b&lt;+&gt;</td><td>9634</td><td>MGI:2430003</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Pitx3&lt;eyl&gt;</td><td>606380</td><td>MGI:4429408</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Ptk7&lt;chz&gt;</td><td>43675</td><td>MGI:3640803</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Sfrp2&lt;C50F&gt;</td><td>33562</td><td>MGI:3056485</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Sfrp2&lt;I153N&gt;</td><td>33561</td><td>MGI:3056484</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Sfrp5&lt;Q27stop&gt;</td><td>33560</td><td>MGI:3056483</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Tg(Thy1-MAPT*P301S)2541Godt</td><td>57350</td><td>MGI:3778191</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Tmc1&lt;dn&gt;</td><td>1011</td><td>MGI:1856845</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Trpc3&lt;Mwk&gt;</td><td>51006</td><td>MGI:3689326</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Ucp1&lt;m1H&gt;</td><td>67718</td><td>MGI:3847238</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Umod&lt;urehr4&gt;</td><td>54184</td><td>MGI:3712284</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Vangl2&lt;Lp&gt;</td><td>1854</td><td>MGI:1857642</td><td>3982955</td><td>Not Applicable</td></tr>
+					<tr><td>Whrn&lt;wi&gt;</td><td>1261</td><td>MGI:1857090</td><td>3982955</td><td>Not Applicable</td></tr>
+					</table>
+				</li>
+    		</ol>
+    		</li>
+    		<li>All <b>OTHER alleles</b> having genotypes created by the user <b>htmpload</b> have "Germ Line Transmission Status" set to <b>Germline</b> and a reference of type <b>Transmission</b> and the associated J:# is <b>either J:165965 or J:175295</b>.
+    		</li>
+    		<li>All alleles having "Germ Line Transmission Status" set to <b>Germline</b> and a reference of type <b>Transmission</b> and the associated J:# is <b>either J:165965 or J:175295</b> have genotypes which were created by the user <b>htmpload</b>.
+    		</li>
+		</ol>
+ -->
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

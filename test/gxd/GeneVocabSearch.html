@@ -300,7 +300,6 @@ order by m.symbol
             		 	 <tr><td>Adamts10</td></tr>            			
             		 	 <tr><td>Fbn1</td></tr>
 						 <tr><td>Fbn2</td></tr>
-						 <tr><td>Mfap2</td></tr>
 						 <tr><td>Mfap5</td></tr>
 						 <tr><td>Thsd4</td></tr>
             		</table>
@@ -320,6 +319,7 @@ order by m.symbol
 						 <tr><td>Dag1</td></tr>
 						 <tr><td>Lgi4</td></tr>
 						 <tr><td>Mpp5</td></tr>
+						 <tr><td>Ncmap</td></tr>
 						 <tr><td>Ndrg1</td></tr>
 						 <tr><td>Nf1</td></tr>
 						 <tr><td>Pou3f1</td></tr>
@@ -327,7 +327,7 @@ order by m.symbol
 						 <tr><td>Ski</td></tr>
 						 <tr><td>Sod1</td></tr>
             		</table>
-jjj            	</li>
+            	</li>
             </ol>
             </li>
             <li>Selecting a GO term that has a gene with only NOT annotations
@@ -466,7 +466,7 @@ and vm2.annottype like 'GO%'
             <ol>
                 <li>Select the molecular_function term '<b>molecular_function</b>' (<b concordion:set="#query">GO:0003674</b>) </li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should not be returned.</li>
-                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Ctla2a</b> should be returned (it has IEA annotations to child terms).</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctla2a</b> should not be returned (lost its annotations).</li>
                 <li>Select the biological_process term '<b>biological_process</b>' (<b concordion:set="#query">GO:0008150</b>) </li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should not be returned.</li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Bglap-rs1</b> should be returned (it has IEA annotations to child terms).</li>

@@ -23,9 +23,6 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
 
 public class TheilerStageSearchTest extends BaseConcordionTest {
 
-    @Autowired
-    private AnnotationMethodHandlerAdapter handler;
-
     // The class being tested is autowired via spring's DI
     @Autowired
     private GXDController gxdController;
@@ -59,7 +56,7 @@ public class TheilerStageSearchTest extends BaseConcordionTest {
 
     public SearchResults<SolrAssayResult> getResultsByStage(Integer stage) throws Exception
 	{
-		MockGxdControllerQuery mq = new MockGxdControllerQuery(gxdController);
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setTheilerStage(stage);
 		return mq.getAssayResults();
 	}
@@ -68,21 +65,21 @@ public class TheilerStageSearchTest extends BaseConcordionTest {
 	
 	public JsonSummaryResponse<MockJSONGXDAssayResult> mockResultQuery(String nomen) throws Exception
     {
-    	MockGxdHttpQuery mq = new MockGxdHttpQuery(handler, gxdController);
+    	MockGxdHttpQuery mq = getMockQuery().gxdHttp();
     	mq.setNomenclature(nomen);
     	return mq.getAssayResults();
     }
 	
     public JsonSummaryResponse<MockJSONGXDAssayResult> mockResultQuery(List<Integer> theilerStages) throws Exception
     {
-    	MockGxdHttpQuery mq = new MockGxdHttpQuery(handler, gxdController);
+    	MockGxdHttpQuery mq = getMockQuery().gxdHttp();
     	mq.setTheilerStage(theilerStages);
     	return mq.getAssayResults();
     }
 
     public JsonSummaryResponse<MockJSONGXDAssayResult> mockResultQuery(String nomen, List<Integer> theilerStages) throws Exception
     {
-    	MockGxdHttpQuery mq = new MockGxdHttpQuery(handler, gxdController);
+    	MockGxdHttpQuery mq = getMockQuery().gxdHttp();
     	mq.setNomenclature(nomen);
     	mq.setTheilerStage(theilerStages);
     	return mq.getAssayResults();
@@ -96,7 +93,7 @@ public class TheilerStageSearchTest extends BaseConcordionTest {
      */
     public JsonSummaryResponse<MockJSONGXDMarker> mockGeneQuery(List<Integer> theilerStages) throws Exception
     {
-    	MockGxdHttpQuery mq = new MockGxdHttpQuery(handler, gxdController);
+    	MockGxdHttpQuery mq = getMockQuery().gxdHttp();
     	mq.setTheilerStage(theilerStages);
     	return mq.getGenes();
     }

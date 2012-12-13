@@ -149,7 +149,9 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
 		// reorder results
 		for (String t : keys) {
-			orderedResults.add(resultsMap.get(t));
+			// There is a Hibernate bug where it occassionally returns null objects. Not sure how to fix it in the datamodel yet.
+			// This is a catch to prevent nulls from getting to the controllers -kstone 9-18-2012
+			if(resultsMap.get(t)!=null) orderedResults.add(resultsMap.get(t));
 		}
 		resultsMap = new LinkedHashMap<String, T>();
 		

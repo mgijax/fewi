@@ -34,6 +34,8 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 
 // external
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +88,10 @@ public class FooController {
     // Foo Query Form
     //--------------------//
     @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getQueryForm() {
+    public ModelAndView getQueryForm(HttpServletResponse response) {
 
         logger.debug("->getQueryForm started");
+        response.addHeader("Access-Control-Allow-Origin", "*");
 
         ModelAndView mav = new ModelAndView("foo_query");
         mav.addObject("sort", new Paginator());

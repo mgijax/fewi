@@ -22,9 +22,6 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
 
 public class VocabularyAutocompleteTest extends BaseConcordionTest {
 
-    @Autowired
-    private AnnotationMethodHandlerAdapter handler;
-
     // The class being tested is autowired via spring's DI
     @Autowired
     private AutoCompleteController autoCompleteController;
@@ -46,14 +43,12 @@ public class VocabularyAutocompleteTest extends BaseConcordionTest {
     public JsonSummaryResponse<VocabACSummaryRow> mockHttpQuery(String query) throws Exception
     {
     	MockHttpServletRequest request = new MockHttpServletRequest();
-    	MockHttpServletResponse response = new MockHttpServletResponse();
 
     	request.setRequestURI("/autocomplete/vocabTerm");
     	request.addParameter("query", query);
     	request.setMethod("GET");
 
-    	handler.handle(request, response, autoCompleteController);
-
+    	MockHttpServletResponse response = mockRequest().handle(request);
     	
     	ObjectMapper mapper = new ObjectMapper();
     	JsonSummaryResponse<VocabACSummaryRow> results = null; 
