@@ -326,13 +326,13 @@ td.padded { padding:4px; }
       <td class="<%=rightTdStyles.getNext() %>">
         <c:set var="hasHumanOrthology" value="0"/>
 		<c:forEach var="orthology" items="${marker.orthologousMarkers}" varStatus="status">
-		  <!-- ${orthology.otherOrganism}<c:if test="${!status.last}">; </c:if> -->
+		  ${orthology.otherOrganism}<c:if test="${!status.last}">; </c:if>
 		  <c:if test="${orthology.otherOrganism == 'human'}">
 		    <c:set var="hasHumanOrthology" value="1"/>
 		  </c:if>
 		</c:forEach>
-		<c:if test="${not empty marker.homoloGeneID}">
-		&nbsp;&nbsp;&nbsp;(<a href="${configBean.FEWI_URL}homology/${marker.homoloGeneID.accID}">Vertebrate Homology Class</a>)<br/>
+		<c:if test="${not empty marker.orthologousMarkers}">
+		&nbsp;&nbsp;&nbsp;(<a href="${configBean.WI_URL}searches/homology_report.cgi?_Marker_key=${marker.markerKey}">Mammalian Orthology</a>)<br/>
 		</c:if>
 		<c:if test="${(hasHumanOrthology == 1) and (hasGeneticLocation == 1)}">
           <c:set var="comparativemapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=2&dsegments=0&syntenics=0&species=2&format=Web+Map&source=MGD"/>
