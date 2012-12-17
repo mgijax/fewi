@@ -75,6 +75,14 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 							<li>allele germ line transmission status</li>
 						</ul>
 						</li>
+						<li>Input files created by load processes from the Test File:
+						<ul>
+							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_skipped.txt">skipped rows - no MP data</a></li>
+							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangermpload_test.txt">file having rows with something in MP ID field</a></li>
+							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_error.txt">input errors file</a></li>
+							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_dup.txt">dups file</a></li>
+						</ul>
+						</li>
 					</ul>
 				</td>
 				<td>16, 84, 88</td>
@@ -235,8 +243,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<td><a concordion:run="concordion" href="GenotypePopup.html">Genotype Popup Window - Annotations Only</a></td>
 				<td>13, 20</td>
 				<td>Yes</td>
-				<td>Verified popup appears in all browsers. 9/17 Jeffc<br />(Verified
-					IE bug fixed 9/21 Jeffc)
+				<td>Verified popup appears in all browsers. 9/17 Jeffc
 				</td>
 			</tr>
 			<tr>
@@ -262,9 +269,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 					href="GenotypePopupCellLines.html">Genotype Popup Window - Add Cell Lines</a></td>
 				<td>57</td>
 				<td></td>
-				<td>Uses test data from mgi_genotypeload_test file. <br/>
-				READY (klf). 10/23/2012. <br/> 
-				Can be automated???</td>
+				<td>Uses test data from mgi_genotypeload_test file. </td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="AllGenotypesPopup.html">WI Popup Window: all genotypes with MP, OMIM, images</a></td>
@@ -291,6 +296,18 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<td></td>
 			</tr>
 			<tr>
+				<td><a concordion:run="concordion" href="RenameEurophenomeAbbreviation.html">Change label for Europhenome from "Euro" to "EuPh"</a></td>
+				<td>153</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GenotypePopupJnumbers.html">WI: Fewer J numbers for notes</a></td>
+				<td>154</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
 				<td colspan="4"><h5>WI: Other Pages</h5></td>
 			</tr>
 			<tr>
@@ -300,12 +317,19 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<td></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="CodeMergeSanityCheck.html">Code merge sanity check</a></td>
+				<td>Sanity checking:
+					<ul>
+						<li><a concordion:run="concordion" href="CodeMergeSanityCheck.html">Code merge sanity checks: WI</a></li>
+						<li><a concordion:assertTrue="false" href="http://cardolan.informatics.jax.org:8090/view/webdriver/job/run-webdriver-PC/lastCompletedBuild/testReport/">Automated Selenium tests, WI on PC (NEW 12/17/12)</a></li>
+						<li><a concordion:assertTrue="false" href="">Automated Selenium tests, WI on Mac (NEW 12/17/12)</a></li>
+						<li><span concordion:assertTrue="false">Code merge sanity checks: EI (NEW 12/17/12)</span></li>
+					</ul>
+				</td>
 				<td>119</td>
 				<td></td>
 				<td></td>
 			</tr>
-						<tr>
+			<tr>
 				<td><a concordion:run="concordion" href="HumanDiseaseDetailSuppressRosa.html">Suppress Gene Gt(ROSA)26Sor on Disease Detail page</a></td>
 				<td>121</td>
 				<td></td>
