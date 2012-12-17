@@ -1,0 +1,101 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	span.hilite {background-color:#FFFF00;}
+</style>
+
+    <title>Genotype Popup: Part 1, MP Terms</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Genotype Popup Page Tests</h1>
+    <ul>
+        <li>User story 154, WI: Fewer J numbers for notes</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>if a note shows the male/female glyph or "N", show the J#, otherwise</li>
+		<li>if there is >1 J# for the MP term, show the J#, otherwise don't show the J#</li>
+		<li>All J# should still be listed following the MP term. This tweak only affects the notes</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify if the genotype has just one J number and one note, the note is not followed by the J number
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b> (<b>MGI:1856009</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3822315</b> <i>hm10</i></li>
+                <li>Verify the note for genotype <b>impaired adaptive thermogenesis ( J:142218 )</b> is not followed by the J number</li>
+    		</ol>
+    		</li>
+    		<li>Verify that when multiple notes exist for the same J number they do not display J number after notes
+    		<p concordion:assertTrue="false">new test</p>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b> (<b>MGI:1856009</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3689720</b> <i>hm2</i></li>
+                <li>Verify the 2 notes for genotype <b>heart left ventricle hypertrophy ( J:103063 )</b> is not followed by the J number</li>
+    		</ol>
+    		</li>
+    		<li>Verify that J numbers still display after notes when there are more than one note and  for different J numbers
+ 			<p concordion:assertTrue="falsee">new test</p>
+			<ol>
+			    <li>Open the test Web Interface</li>
+                <li>Navigate to the Allele Detail Page for <b>Apoe<sup>tm1Unc</sup></b> (<b>MGI:1857129</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:2384131</b> <i>hm2</i></li>
+                <li>Verify there are 2 notes for genotype <b>abnormal aorta wall morphology (J:101576)(J:142083)</b> and each note is followed by its J number</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+		<li>Test1
+    		<ol>
+    			<li></li>
+    		</ol>
+    		</li>
+    		<li>Test2
+    		<ol>
+    			<li></li>
+    		</ol>
+    		</li>
+
+ 	</div>
+</div>
+
+</body>
+</html>
