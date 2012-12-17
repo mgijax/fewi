@@ -39,6 +39,8 @@
 				<prop key="hibernate.cache.provider_class">
 					org.hibernate.cache.EhCacheProvider
 				</prop>		
+				<prop key="hibernate.jdbc.batch_fetch_size">50</prop>   
+				
 			</props>
 		</property>
 		<property name="packagesToScan">
