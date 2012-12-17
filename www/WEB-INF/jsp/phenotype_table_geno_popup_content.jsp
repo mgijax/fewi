@@ -64,7 +64,7 @@
 				        	<div class="mpNote">
 				            &bull; ${note.note} 
 				            <!-- check to determine when to display jnumID -->
-				            <c:if test="${fn:length(term.references)>1 || annotation.nonEmptyGlyph }">(${reference.jnumID})</c:if>
+				            <c:if test="${fn:length(term.references)>1 || annotation.hasNonEmptyGlyph }">(${reference.jnumID})</c:if>
 				            </div>
 				        </c:forEach> <!-- reference.notes -->
 				       <c:if test="${fn:length(reference.notes)==0}">
