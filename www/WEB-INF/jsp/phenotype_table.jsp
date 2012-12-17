@@ -172,7 +172,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 </c:if>
 
 <c:forEach var="phenoTableSystem" items="${phenoTableSystems}" varStatus="systemStatus">
-    <tr class="phenoSummarySystemRow  ${systemStatus.index % 2==0 ? ' stripe2' : ' stripe1'}">
+    <tr id="${phenoTableSystem.cssId}_row" class="phenoSummarySystemRow  ${systemStatus.index % 2==0 ? ' stripe2' : ' stripe1'}">
       <td  id="${phenoTableSystem.cssId}" class="noWrap borderUnder" style="min-width:250px" >
         <div style="text-align:left; cursor: pointer;">
          <!-- Add the toggle arrows -->
@@ -244,21 +244,47 @@ NotesTagConverter ntc = new NotesTagConverter();
 -->
 
 <script type="text/javascript">
-
+	/*
+	* Included here are some attempts at speeding up jquery performance on beastly allele pages such as Trp53 and Apoetm1Unc
+	*/
+	var showButtonCache = null;
+	function setShowButtonCache()
+	{
+		showButtonCache = [];
+		showButtonCache['terms'] = $('.phenoSummaryTermRow','#phenotable_id');
+		showButtonCache['arrowRight'] = $('.arrowRight','#phenotable_id');
+		showButtonCache['arrowDown'] = $('.arrowDown','#phenotable_id');
+		return showButtonCache;
+	}
   $('#showPhenoButton').click(function(){
-    $('.phenoSummaryTermRow').show();
-    $('.arrowRight').hide();
-    $('.arrowDown').show();
+  	if (showButtonCache==null) { showButtonCache = setShowButtonCache(); }
+    showButtonCache['terms'].show();
+    showButtonCache['arrowRight'].hide();
+    showButtonCache['arrowDown'].show();
   });
   $('#hidePhenoButton').click(function(){
-    $('.phenoSummaryTermRow').hide();
-    $('.arrowRight').show();
-    $('.arrowDown').hide();
+	if (showButtonCache==null) { showButtonCache = setShowButtonCache(); }
+	showButtonCache['terms'].hide();
+	showButtonCache['arrowRight'].show();
+	showButtonCache['arrowDown'].hide();
   });
 
   <c:forEach var="phenoTableSystem" items="${phenoTableSystems}" >
     $('#${phenoTableSystem.cssId}').click(function(){
-      $('.${phenoTableSystem.cssClass}').toggle();
+      $('.${phenoTableSystem.cssClass}','#phenotable_id').toggle();
+    /*   $(this).nextAll('tr').each( function() {
+	        if ($(this).hasClass('phenoSummarySystemRow')) {
+	            return false;
+	        }
+	        $(this).toggle();
+	    }); */
+/* 	    var tr = $(this.parentElement).nextAll('tr');
+	    for (i = 0; i < tr.length; i++) {
+	      var class1 = $(tr[i]).attr('class');
+	      if (class1 == 'phenoSummarySystemRow')
+	    	  return false;
+	      $(tr[i]).toggle();
+	    } */
     });
 
   </c:forEach>
