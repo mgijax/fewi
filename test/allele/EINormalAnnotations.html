@@ -67,89 +67,78 @@
 		<p class="hilite"><b>Note:</b> Concordion doesn't like &lt; and &gt; signs directly in the HTML code. Encode them as "&amp;lt;" and "&amp;gt;", respectively.</p>
 		<ol>
     		<li>Verify you can add a normal qualifier to a new annotation
- 			<p concordion:assertTrue="true">jeffc 10/24/2012</p>
+ 			<p concordion:assertTrue="true">klf 12/17/2012</p>
     		<ol>
-                <li>Open the Scrum-dog EI</li>
-                <li>Log in to the Scrum-dog EI</li>
+                <li>Using the Scrum-dog EI, Genotypes module, search for Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;, Indeterminate genotype</li>
                 <li>Click on the MP Annotations module button</li>
-                <li>Enter Genotype <b>Not Specified Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b> and click Search</li>
                 <li>Add a new annoation MP:0008888 with a normal Qualifier and press Save Annotation</li>
                 <li>Verify the Qualifier for MP:0008888  is now normal</li>
                             
     		</ol>
     		</li>		
-    		<li>Verify you can modify an existing non-load annotation sub term with a normal qualifier
- 			<p concordion:assertTrue="true">jeffc 10/24/2012</p>
+    		<li>Verify you can modify an existing HTMP-load annotation sub term with a normal qualifier
+ 			<p concordion:assertTrue="true">klf 12/17/2012</p>
     		<ol>
-                <li>Open the Scrum-dog EI</li>
-                <li>Log in to the Scrum-dog EI</li>
+                <li>Using the Scrum-dog EI, Genotypes module, search for Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;, Indeterminate genotype</li>
                 <li>Click on the MP Annotations module button</li>
-                <li>Enter Genotype <b>Not Specified Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b> and click Search</li>
                 <li>Change the Qualifier for MP:0008856 to normal and press Save Annotation</li>
                 <li>Verify the Qualifier for MP:0008856  is now normal</li>
                             
     		</ol>
     		</li>
 
-     		<li>Verify you can modify an existing sanger load sub term with a normal qualifier
- 			<p concordion:assertTrue="true">jeffc 10/24/2012</p>
+     		<li>Verify you can modify an existing non-HTMP load sub term with a normal qualifier
+ 			<p concordion:assertTrue="false">klf 12/17/2012</p>
     		<ol>
-                <li>Open the Scrum-dog EI</li>
-                <li>Log in to the Scrum-dog EI</li>
+                <li>Using the Scrum-dog EI, Genotypes module, search for Mitf&lt;Mi-Or&gt;, Heterozygous genotype</li>
                 <li>Click on the MP Annotations module button</li>
-                <li>Enter Genotype <b>Not Specified Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b> and click Search</li>
-                <li>Change the Qualifier for MP:0008805 to normal and press Save Annotation</li>
-                <li>Verify the Qualifier for MP:0008805  is now normal</li>
+                <li>Change the Qualifier for MP:0005172 to normal and press Save Annotation</li>
+                <li>Verify the Qualifier for MP:0005172  is now normal</li>
     		</ol>
     		</li>
 
 		    <li>Verify you can remove an existing normal qualifier from a non-load annotation term
- 			<p concordion:assertTrue="true">jeffc 10/24/2012</p>
+ 			<p concordion:assertTrue="true">klf 12/17/2012</p>
     		<ol>
-                <li>Open the Scrum-dog EI</li>
-                <li>Log in to the Scrum-dog EI</li>
+                <li>Using the Scrum-dog EI, Genotypes module, search for Il13&lt;tm1(YFP/cre)Lky&gt;, Indeterminate genotype, strain=C.Cg-Il13&lt;tm1(YFP/cre)Lky&gt; (MGI:4461201)</li>
                 <li>Click on the MP Annotations module button</li>
-                <li>Enter Genotype <b>(129S6.129P2-Mecp1)&lt;tm1Bird&gt; x C57BL/6)F1 Mecp2&lt;tm1Bird&gt;</b> and click Search</li>
-                <li>Change the Qualifier for MP:0010768 from normal to none and press Save Annotation</li>
-                <li>Verify the Qualifier for MP:0010768 is now none</li>
+                <li>Change the Qualifier for MP:0003162 from normal to none and press Save Annotation</li>
+                <li>Verify the Qualifier for MP:0003162 is now none</li>
+                <li>Return annotation for MP:0003162 to normal again so this data appears in the WI as it was originally entered.</li>
     		</ol>
     		</li>
 	
-		    <li>Verify you can remove an existing normal qualifier from a sanger load annotation term
- 			<p concordion:assertTrue="true">jeffc 10/24/2012</p>
+		    <li>Verify you can remove an existing normal qualifier from a HTMP load annotation term
+ 			<p concordion:assertTrue="true">klf 12/17/2012</p>
     		<ol>
-                <li>Open the Scrum-dog EI</li>
-                <li>Log in to the Scrum-dog EI</li>
+                <li>Using the Scrum-dog EI, Genotypes module, search for Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;, Indeterminate genotype, strain=Not Specified</li>
                 <li>Click on the MP Annotations module button</li>
-                <li>Enter Genotype <b>Not Specified Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b> and click Search</li>
                 <li>Change the Qualifier for MP:0008856 from normal to none and press Save Annotation</li>
                 <li>Verify the Qualifier for MP:0008856  is now none</li>
     		</ol>
     		</li>
     		
     		<li>Verify all header terms default to normal qualifier
- 			<p concordion:assertTrue="true">jeffc 10/24/2012</p>
+ 			<p concordion:assertTrue="true">klf 12/17/2012</p>
     		<ol>
-                <li>Open the Scrum-dog EI</li>
-                <li>Log in to the Scrum-dog EI</li>
-                <li>Enter Term Acc ID <b>MP:0003631</b> and click search</li>
-                <li>Verify MP:0003631 has a qualifier of normal</li>
-                <li>Reset the form and Enter Term Acc ID <b>MP:0005377</b> and click search</li>
-                <li>Verify MP:0005377 has a qualifier of normal</li>
-                <li>Reset the form and Enter Term Acc ID <b>MP:0005384</b> and click search</li>
-                <li>Verify MP:0005384 has a qualifier of normal</li>
+                <li>Using the Scrum-dog EI, Genotypes module, search for Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;, Indeterminate genotype, strain=Not Specified.</li>
+                <li>Click on the MP Annotations module button.</li>
+                <li>Enter Term Acc ID <b>MP:0003631</b> and tab out of the Term Acc ID field.</li>
+                <li>Verify MP:0003631 has a qualifier of normal.</li>
+                <li>Enter Term Acc ID <b>MP:0005377</b> and tab out of the Term Acc ID field.</li>
+                <li>Verify MP:0005377 has a qualifier of normal.</li>
+                <li>Enter Term Acc ID <b>MP:0005384</b> and tab out of the Term Acc ID field.</li>
+                <li>Verify MP:0005384 has a qualifier of normal.</li>
+                <li>Keep these data displayed for the next test...</li>
 			</ol>    		
     		</li>
     		
 			<li>Confirm you can't change a header term to null qualifier
- 			<p concordion:assertTrue="true">jeffc 10/24/2012</p>
+ 			<p concordion:assertTrue="true">klf 12/17/2012</p>
 				<ol>
-					                <li>Open the Scrum-dog EI</li>
-                <li>Log in to the Scrum-dog EI</li>
-                <li>Enter Term Acc ID <b>MP:0005384</b> and click search</li>
-                <li>Verify MP:0005384 has a qualifier of normal</li>
-                <li>Change the Qualifier for Term Acc ID <b>MP:0005384</b> to none and click Save Annotations</li>
-                <li>Verify the qualifier does not change but stays as normal, You get the warning "Qualifier 'norm' is the default for MP header terms."</li>
+                <li>Using the data above...</li>
+                <li>Change the Qualifier for Term Acc ID <b>MP:0005384</b> to none and click Save Annotations.</li>
+                <li>Verify the qualifier does not change but stays as normal, You get the warning "Qualifier 'norm' is the default for MP header terms.", and the change cannot be saved.</li>
 				</ol>
 			</li>
 		</ol>
