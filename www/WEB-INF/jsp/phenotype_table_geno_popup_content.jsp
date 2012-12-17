@@ -62,7 +62,9 @@
 			       			</c:if>
 				        <c:forEach var="note" items="${reference.notes}" varStatus="noteStatus">
 				        	<div class="mpNote">
-				            &bull; ${note.note} (${reference.jnumID})
+				            &bull; ${note.note} 
+				            <!-- check to determine when to display jnumID -->
+				            <c:if test="${fn:length(term.references)>1 || annotation.nonEmptyGlyph }">(${reference.jnumID})</c:if>
 				            </div>
 				        </c:forEach> <!-- reference.notes -->
 				       <c:if test="${fn:length(reference.notes)==0}">
