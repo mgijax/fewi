@@ -320,14 +320,18 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<td>Sanity checking:
 					<ul>
 						<li><a concordion:run="concordion" href="CodeMergeSanityCheck.html">Code merge sanity checks: WI</a></li>
-						<li><a concordion:assertTrue="false" href="http://cardolan.informatics.jax.org:8090/view/webdriver/job/run-webdriver-PC/lastCompletedBuild/testReport/">Automated Selenium tests, WI on PC (NEW 12/17/12)</a></li>
-						<li><a concordion:assertTrue="false" href="">Automated Selenium tests, WI on Mac (NEW 12/17/12)</a></li>
-						<li><span concordion:assertTrue="false">Code merge sanity checks: EI (NEW 12/17/12)</span></li>
+						<li><a concordion:assertTrue="false" href="http://cardolan.informatics.jax.org:8090/view/webdriver/job/run-webdriver-PC/lastCompletedBuild/testReport/">Automated Selenium tests, FeWi on PC (kstone 12/18/12)</a></li>
+						<li><span concordion:assertTrue="true">Code merge sanity checks: EI (klf 12/18/12)</span></li>
 					</ul>
 				</td>
-				<td>119</td>
+				<td>119, 130</td>
 				<td></td>
-				<td></td>
+				<td>
+				<ul>
+					<li>Tested for merging Scrumbob Squarepants trunk changes up to our branch (sto119) - included fake coordinates data for 4 markers</li>
+					<li>Tested again for merging our branch changes down to the trunk (sto130) - did NOT include fake coordiantes data</li>
+				</ul>
+				</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="HumanDiseaseDetailSuppressRosa.html">Suppress Gene Gt(ROSA)26Sor on Disease Detail page</a></td>
