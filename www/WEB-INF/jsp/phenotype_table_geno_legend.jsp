@@ -63,7 +63,7 @@ jsData = {
 		allComp = FormatHelper.newline2HTMLBR(allComp.replace("\"", "'"));
 		String diseaseModel = new String("");
 		if (genotype.hasDiseases()) {
-			diseaseModel = new String("<span style='font-size:80%; font-style:italic;' >&nbsp;&nbsp;Disease Model</span>");
+			diseaseModel = new String("<span style='font-size:80%; font-style:italic;' >&nbsp;&nbsp;Disease&nbsp;Model</span>");
 		}
 	  %>
       {
