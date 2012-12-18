@@ -62,7 +62,7 @@ jsData = {
 		allComp = ntc.convertNotes(allComp, '|');
 		allComp = FormatHelper.newline2HTMLBR(allComp.replace("\"", "'"));
 		String diseaseModel = new String("");
-		if (genotype.hasDiseases) {
+		if (genotype.hasDiseases()) {
 			diseaseModel = new String("&nbsp;Disease Model");
 		}
 	  %>
