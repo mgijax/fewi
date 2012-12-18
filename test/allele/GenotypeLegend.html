@@ -62,6 +62,7 @@
 		<img src="http://prodwww.informatics.jax.org/wiki/images/0/0c/Lepr-db-genotypes1-22_20121106.png" width="700" />
 		<img src="http://prodwww.informatics.jax.org/wiki/images/6/65/Lepr-db-genotypes22-34_20121106.png" width="680" />
 		<ol>
+
     		<li>A table exists listing genotype label,allele pairs, genetic background, all cell lines (no transmission state this time) (see image above from Public on 11/6/2012 for reference)
  			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
     		<ol>
@@ -73,6 +74,8 @@
                 <li>Verify allele pairs are listed on new lines (one allele pair per line, as shown in image above)</li>
             </ol>
             </li>
+
+
             <li> Verify cell lines display properly.
  			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
             <ol>
@@ -86,6 +89,17 @@
                 </li>
     		</ol>
     		</li>
+
+            <li> Verify disease models.
+ 			<p concordion:assertTrue="false">test</p>
+            <ol>
+                <li>Navigate to the allele <b>Apc<sup>Min</sup></b> (MGI:1856318)</li>
+                <li>Verify that <b>ht6</b>, <b>cx18</b>, <b>cx24</b>, <b>cx33</b> and , <b>cx70</b> have "Disease Model" indicators
+                </li>
+    		</ol>
+    		</li>
+
+
     		<li>Table lists all genotypes that exist in the pheno grid (and have identical numbering) (see image above from Public on 11/6/2012 for reference)
  			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
     		<ol>
@@ -139,11 +153,11 @@
     		</ol>
     		</li>
 		</ol>
- <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2
      			<li>
-    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
-    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
-    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results,
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays,
     			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
   -->
  	</div>
