@@ -218,16 +218,16 @@ Last updated in dbSNP build: 125</a></li>
     		</li>
     		<li>Pages affected by Build 38 changes (new Genomic Chromosome data, new coordinates) have correct data.
     		<br/>
-    		<i>Note: These tests require mock data to be inserted for marker Vamp7</i>
+    		<i>Note: These tests require mock data to be inserted for marker Vamp7.</i>
     		<ol>
-    			<li><span concordion:assertTrue="true">klf 12/5/12</span> - Marker coordinates for various markers [we loaded Scrum Bob's fake data with Chromosome conflict]
+    			<li><span concordion:assertTrue="true">klf 12/18/12</span> - Marker coordinates for various markers [we loaded Scrum Bob's fake data with Chromosome conflict]
     			<ul>
                 	<li><a href="http://cardolan.informatics.jax.org:13080/fewi/mgi/marker/MGI:104993">Lepr</a>. Coordinates should be <b>Chr4:101717404-101815352 bp, + strand</b></li>
                 	<li><a href="http://cardolan.informatics.jax.org:13080/fewi/mgi/marker/MGI:1096399">Vamp7</a>. Genetic chr: Chromosome X. Genomic chr and coordinates: Chr13:4001111-4002222 bp, + strand.</li>
     			</ul>
     			</li>
 
-    			<li><span concordion:assertTrue="true">klf 12/5/12</span> - Sequence detail pages
+    			<li><span concordion:assertTrue="true">klf 12/18/12</span> - Sequence detail pages
     			<ul>
     				<li>Several sequence detail pages for Vamp7. <a href="http://cardolan.informatics.jax.org/sequence/U041303">Example.</a> Version includes text "mm9" when necessary.</li>
     				<li>Several sequence detail pages for Pax6. <a href="http://cardolan.informatics.jax.org/sequence/OTTMUSG00000015006">Example.</a> Version includes text "GRCm38" when necessary.</li>
@@ -236,30 +236,30 @@ Last updated in dbSNP build: 125</a></li>
 
     			<li>Quick Search. <i>Note: This is happening as part of the upgrade to Jboss7 story. We don't need to verify the changes to the quick search code, since we never branched.
     				Also. It would be a pain to regenerate the indexes from scratch to test this.</i></li>
-    			<li><span concordion:assertTrue="true">passed - kstone 1202-12-05</span> - Expression Summary - Genes tab. Search for Vamp7 on GXD query form. Click the genes tab and verify that the chromosome shown is 13 (the genomic). 
+    			<li><span concordion:assertTrue="true">passed - klf 12/18/2012</span> - Expression Summary - Genes tab. Search for Vamp7 on GXD query form. Click the genes tab and verify that the chromosome shown is 13 (the genomic). 
     				Also verify that the text "Genome Location - GRCm38" is displayed in the summary next to "Chr"</li>
-    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-05</span> - Batch Query. Search for Vamp7. Verify that chr13 is shown for the location. Also verify that the text "Genome Location - GRCm38" appears in the summary above Chr</li>
+    			<li><span concordion:assertTrue="true">passed - klf 12/18/2012</span> - Batch Query. Search for Vamp7. Verify that chr13 is shown for the location. Also verify that the text "Genome Location - GRCm38" appears in the summary above Chr</li>
     		</ol>
     		</li>
     		<li>Functionality affected by addition of Genomic Chromosome and Coordinates For Any Marker still works.
     		<br/>
-    		<i>Note: These tests require mock data to be inserted for marker Vamp7</i>
+    		<i>Note: These tests require mock data to be inserted for marker Vamp7.</i>
     		<ol>
-    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-05</span> - Allele Detail page. Visit <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=817289">Vamp7<sup>tm1.1Ics</sup></a> detail page. And verify that the allele is shown to be on chromosome 13 (the genomic)</li>
-    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-05</span> - Marker Query Form. Search.  Search for marker Vamp7, and chromosome X. Also search for Vamp7 and chromosome 13. Verify that you get the same result set for both queries. </li>
-    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-05</span> - GXD Expression Expanded Query. Search for marker Vamp7, and chromosome X. Also search for Vamp7 and chromosome 13. Verify that you get the same result set for both queries.</li>
+    			<li><span concordion:assertTrue="true">passed - klf 12/18/2012</span> - Allele Detail page. Visit <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=817289">Vamp7<sup>tm1.1Ics</sup></a> detail page. And verify that the allele is shown to be on chromosome 13 (the genomic)</li>
+    			<li><span concordion:assertTrue="true">passed - klf 12/18/2012</span> - Marker Query Form. Search.  Search for marker Vamp7, and chromosome X. Also search for Vamp7 and chromosome 13. Verify that you get the same result set for both queries. </li>
+    			<li><span concordion:assertTrue="true">passed - klf 12/18/2012</span> - GXD Expression Expanded Query. Search for marker Vamp7, and chromosome X. Also search for Vamp7 and chromosome 13. Verify that you get the same result set for both queries.</li>
     		</ol> 
     		</li>
     		<li>Bug fixes from 5.1.1. release made it into our code merge.
     		<ol>
-    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-04</span> - Public Batch Query returns non-zero results.</li>
+    			<li><span concordion:assertTrue="true">passed - klf 12/18/2012</span> - Public Batch Query returns non-zero results.</li>
     			<li><span concordion:assertTrue="true">passed - kstone 2012-12-04</span> - Orthology Page link from Marker Detail for Hoxa does not produce an error.</li>
     			<li><span concordion:assertTrue="true">passed - kstone 2012-12-05</span> - Count of SNPs on Marker Detail Page (for marker Ar) matches count of SNPs returned from SNP Summary for Marker.</li>
     		</ol>
     		</li>
     		<li>Bug fixes from our old 5.1 release are still present in merged code.
     		<ol>
-    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-04</span> - Batch Query text file download works.</li>
+    			<li><span concordion:assertTrue="true">passed - klf 12/18/2012</span> - Batch Query text file download works.</li>
     			<li><span concordion:assertTrue="true">passed - kstone 2012-12-04</span> - Text and Excel filenames have the correct data and hour (from GXD Summary pages).</li>
     			<li><span concordion:assertTrue="true">passed - kstone 2012-12-04</span> - GXD QF Vocab autocomplete functionality works.</li>
     		</ol>
