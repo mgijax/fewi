@@ -62,29 +62,24 @@
     		<li>Verify an allele gaining annotations from both HTMP providers is associated with both J:#s. 
  			<p concordion:assertTrue="false">new test</p> 
     		<ol>
-                <li>Need an allele with both providers</li>
-                <li>asdf</li>
+                <li>Navigate to the Allele Detail Page for <b>Mysm1<sup>tm1a(KOMP)Wtsi</sup></b> </li>
+                <li>Verify that MP annotations exist from both WTSI and EuPh.</li>
+                <li>Click the count of References at the bottom of the page.</li>
+                <li>Verify that <b>J:175295 and J:165065</b> both appear in the list of references.</li>
     		</ol>
     		</li>
     		<li>Verify an allele gaining annotations from only one HTMP provider is associated with only the correct J:#. 
- 			<p concordion:assertTrue="false">new test</p> 
     		<ol>
-                <li>Sanger-only: </li>
-                <li>Europhenome-only: </li>
-    		</ol>
-    		</li>
-    		<li>Verify the HTMP J:#s are associated with only those <b>alleles</b> having HTMP annotations.
- 			<p concordion:assertTrue="false">new test</p> 
-    		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
-    		</ol>
-    		</li>
-    		<li>Verify the HTMP J:#s are associated with only those <b>markers</b> having alleles with HTMP annotations.
- 			<p concordion:assertTrue="false">new test</p> 
-    		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
+                <li><span concordion:assertTrue="false">new test</span> - Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1.1Sref</sup></b> </li>
+                <li>Verify that MP annotations exist from both MGI and WTSI, but not EuPh.</li>
+                <li>Click the count of References at the bottom of the page.</li>
+                <li>Verify that <b>J:175295</b> appears in the list of references.</li>
+                <li>Verify that <b>J:165065</b> does not appear in the list of references.</li>
+                <li><span concordion:assertTrue="false">new test</span> - Navigate to the Allele Detail Page for <b>B9d1<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
+                <li>Verify that MP annotations exist from both MGI and EuPh, but not WTSI.</li>
+                <li>Click the count of References at the bottom of the page.</li>
+                <li>Verify that <b>J:165065</b> appears in the list of references.</li>
+                <li>Verify that <b>J:175295</b> does not appear in the list of references.</li>
     		</ol>
     		</li>
 		</ol>
@@ -92,10 +87,18 @@
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
-    		<li>Test 1
+    		<li>Verify the HTMP J:#s are associated with only those <b>alleles</b> having HTMP annotations.
+ 			<p concordion:assertTrue="false">new test</p> 
     		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
+                <li>Find MP annotations from J:175295. - Find associated genotypes. - Find associated alleles. - Verify that no other alleles have J:175295 with reference type = Used-FC.</li>
+                <li>Find MP annotations from J:165965. - Find associated genotypes. - Find associated alleles. - Verify that no other alleles have J:165965 with reference type = Used-FC.</li>
+    		</ol>
+    		</li>
+    		<li>Verify the HTMP J:#s are associated with only those <b>markers</b> having alleles with HTMP annotations.
+ 			<p concordion:assertTrue="false">new test</p> 
+    		<ol>
+                <li>Find MP annotations from J:175295. - Find associated genotypes. - Find associated alleles. - Find associated markers. - Verify that no other markers have J:175295.</li>
+                <li>Find MP annotations from J:165965. - Find associated genotypes. - Find associated alleles. - Find associated markers. - Verify that no other markers have J:165965.</li>
     		</ol>
     		</li>
 		</ol>
