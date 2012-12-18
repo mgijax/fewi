@@ -63,11 +63,11 @@ jsData = {
 		allComp = FormatHelper.newline2HTMLBR(allComp.replace("\"", "'"));
 		String diseaseModel = new String("");
 		if (genotype.hasDiseases()) {
-			diseaseModel = new String("&nbsp;Disease Model");
+			diseaseModel = new String("<span style='font-size:70%; font-style:italic;' >&nbsp;&nbsp;Disease Model</span>");
 		}
 	  %>
       {
-       genotypeCol:"<a style='text-decoration: none;' class='genoLink' title='phenotype details' href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target='new' onClick=\"javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}'); return false;\" ><span style='font-size:80%;' class='${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoLegendButton' >${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</span></a><span><%=diseaseModel%></span>", 
+       genotypeCol:"<a style='text-decoration: none;' class='genoLink' title='phenotype details' href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target='new' onClick=\"javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}'); return false;\" ><span style='font-size:80%;' class='${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoLegendButton' >${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</span></a><%=diseaseModel%>", 
        allCompCol:"<span style='font-size:80%;'> <%=allComp%> </span>", 
        genBackCol:"<span style='font-size:80%;'><%=FormatHelper.superscript(genotype.getBackgroundStrain())%></span>", 
        <c:if test="${not empty genotype.cellLines}">
