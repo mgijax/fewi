@@ -60,7 +60,7 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Verify an allele gaining annotations from both HTMP providers is associated with both J:#s. 
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:assertTrue="true">klf 12/19/2012</p> 
     		<ol>
                 <li>Navigate to the Allele Detail Page for <b>Mysm1<sup>tm1a(KOMP)Wtsi</sup></b> </li>
                 <li>Verify that MP annotations exist from both WTSI and EuPh.</li>
@@ -70,23 +70,31 @@
     		</li>
     		<li>Verify an allele gaining annotations from only one HTMP provider is associated with only the correct J:#. 
     		<ol>
-                <li><span concordion:assertTrue="false">new test</span> - Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1.1Sref</sup></b> </li>
+                <li><span concordion:assertTrue="true">klf 12/19/2012</span> - Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1.1Sref</sup></b> </li>
                 <li>Verify that MP annotations exist from both MGI and WTSI, but not EuPh.</li>
                 <li>Click the count of References at the bottom of the page.</li>
                 <li>Verify that <b>J:175295</b> appears in the list of references.</li>
                 <li>Verify that <b>J:165065</b> does not appear in the list of references.</li>
-                <li><span concordion:assertTrue="false">new test</span> - Navigate to the Allele Detail Page for <b>B9d1<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
+                <li><span concordion:assertTrue="true">klf 12/19/2012</span> - Navigate to the Allele Detail Page for <b>B9d1<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
                 <li>Verify that MP annotations exist from both MGI and EuPh, but not WTSI.</li>
                 <li>Click the count of References at the bottom of the page.</li>
                 <li>Verify that <b>J:165065</b> appears in the list of references.</li>
                 <li>Verify that <b>J:175295</b> does not appear in the list of references.</li>
     		</ol>
     		</li>
+    		<li>Verify a marker having an alleles with HTMP annotations has the appropriate J:#s.
+    		<ol>
+    			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Mysm1 has both</li>
+    			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Slc16a2 has J:175295</li>
+    			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - B9D1 has J:165965</li>
+    		</ol>
+    		</li>
 		</ol>
 	</div>
 	<div id="auto">
 		<h3>Automated tests</h3>
-		<ol>
+<!-- WRITE MANUAL TESTS EVENTUALLY USING SQL TO LOOK FOR THESE SITUATIONS.
+ 		<ol>
     		<li>Verify the HTMP J:#s are associated with only those <b>alleles</b> having HTMP annotations.
  			<p concordion:assertTrue="false">new test</p> 
     		<ol>
@@ -102,6 +110,7 @@
     		</ol>
     		</li>
 		</ol>
+ -->
  <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
      			<li>
     			Query for <b concordion:set="#structure">4-cell stage</b> should return 
