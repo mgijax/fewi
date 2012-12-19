@@ -12,7 +12,7 @@
         <td><span class='sexSymbol'>&#9794;</span></td>
         <td>phenotype observed in males </td>
         
-        <td>Euro </td>
+        <td>EuPh </td>
         <td>Europhenome </td>
         </tr>
         <tr>
