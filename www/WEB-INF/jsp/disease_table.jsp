@@ -22,39 +22,9 @@
   .provider img {   display: block;   margin-left: auto;   margin-right: auto; }
 #diseasetable_id { border-spacing:0px; border-collapse:collapse; border: 2px solid #AAA;}
 #diseasetable_id td { width: 18px; padding: 4px 2px;}
-#diseasetable_id .hmGenoButton {
-  border-right: 2px solid rgb(209, 109, 0); 
-  border-bottom: 2px solid rgb(249, 149, 0);
-}
-#diseasetable_id .htGenoButton {
-  border-right: 2px solid rgb(0, 166, 202); 
-  border-bottom: 2px solid rgb(0, 166, 202); 
-}
-#diseasetable_id .cxGenoButton {
-  border-right: 2px solid rgb(118, 88, 175);
-  border-bottom: 2px solid rgb(118, 88, 175);
-}
-#diseasetable_id .cnGenoButton {
-  border-right: 2px solid rgb(126, 168, 88); 
-  border-bottom: 2px solid rgb(126, 168, 88); 
-}
-#diseasetable_id .tgGenoButton {
-  border-right: 2px solid rgb(215, 73, 158); 
-  border-bottom: 2px solid rgb(215, 73, 158); 
-}
-#diseasetable_id .otGenoButton {
-  border-right: 2px solid #99755A; 
-  border-bottom: 2px solid #AC8B72; 
-}
-.blankGeno
-{
-	border-left: thin solid #DDD;
-	border-top: thin solid #DDD;
-	border-right: 2px solid #AAA;
-  	border-bottom: 2px solid #AAA;
-}
 .genoButton{padding: 2px;}
 </style>
+
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
 
 <!-- container table -->

@@ -39,37 +39,7 @@ NotesTagConverter ntc = new NotesTagConverter();
   .provider img {   display: block;   margin-left: auto;   margin-right: auto; }
 #phenotable_id { border-spacing:0px; border-collapse:collapse; border: 2px solid #AAA;}
 #phenotable_id td { width: 18px; padding: 4px 2px;}
-#phenotable_id .hmGenoButton {
-  border-right: 2px solid rgb(209, 109, 0); 
-  border-bottom: 2px solid rgb(249, 149, 0);
-}
-#phenotable_id .htGenoButton {
-  border-right: 2px solid rgb(0, 166, 202); 
-  border-bottom: 2px solid rgb(0, 166, 202); 
-}
-#phenotable_id .cxGenoButton {
-  border-right: 2px solid rgb(118, 88, 175);
-  border-bottom: 2px solid rgb(118, 88, 175);
-}
-#phenotable_id .cnGenoButton {
-  border-right: 2px solid rgb(126, 168, 88); 
-  border-bottom: 2px solid rgb(126, 168, 88); 
-}
-#phenotable_id .tgGenoButton {
-  border-right: 2px solid rgb(215, 73, 158); 
-  border-bottom: 2px solid rgb(215, 73, 158); 
-}
-#phenotable_id .otGenoButton {
-  border-right: 2px solid #99755A; 
-  border-bottom: 2px solid #AC8B72; 
-}
-.blankGeno
-{
-	border-left: thin solid #DDD;
-	border-top: thin solid #DDD;
-	border-right: 2px solid #AAA;
-  	border-bottom: 2px solid #AAA;
-}
+
 .genoButton{padding: 2px; margin-top:3px; margin-left:1px; margin-right:1px; cursor:pointer;}
 .phenotable_glyph {width:15px;height:15px;}
 
