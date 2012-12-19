@@ -50,17 +50,29 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
+			<li>Verify if the genotype has male/female glyph or "N", show the J#
+ 			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Apoe<sup>tm1Unc</sup></b> (<b>MGI:1857129</b>)</li>
+                <li>Open a Genotype Popup window for <b>MGI:3822315</b> <i>hm10</i></li>
+                <li>Verify that all entries that have a male/female symbol in front of them are followed by the J number</li>
+                <li>Open a Genotype Popup window for <b>MGI:3822293</b> <i>cx20</i></li>
+                <li>Verify that N entry is followed by the J number(makes no difference if it has a note or not)</li>
+
+    		</ol>
+    		</li>
     		<li>Verify if the genotype has just one J number and one note, the note is not followed by the J number
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b> (<b>MGI:1856009</b>)</li>
-                <li>Open a Genotype Popup window for <b>MGI:3822315</b> <i>hm10</i></li>
-                <li>Verify the note for genotype <b>impaired adaptive thermogenesis ( J:142218 )</b> is not followed by the J number</li>
+                <li>Open a Genotype Popup window for <b>MGI:5445719</b> <i>hm10</i></li>
+                <li>Verify the note for genotype <b>impaired adaptive thermogenesis (J:142218 )</b> is not followed by the J number</li>
     		</ol>
     		</li>
     		<li>Verify that when multiple notes exist for the same J number they do not display J number after notes
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">jeffc 12/18/2012</p>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b> (<b>MGI:1856009</b>)</li>
@@ -68,8 +80,8 @@
                 <li>Verify the 2 notes for genotype <b>heart left ventricle hypertrophy ( J:103063 )</b> is not followed by the J number</li>
     		</ol>
     		</li>
-    		<li>Verify that J numbers still display after notes when there are more than one note and  for different J numbers
- 			<p concordion:assertTrue="falsee">new test</p>
+    		<li>Verify that J numbers still display after notes when there are more than one note and for different J numbers
+ 			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Apoe<sup>tm1Unc</sup></b> (<b>MGI:1857129</b>)</li>
