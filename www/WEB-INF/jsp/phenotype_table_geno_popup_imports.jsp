@@ -141,4 +141,4 @@ font-size: 12px;
 .mp_glyph {height:15px; width:15px;}
 </style>
 
-<%@ include file="/WEB-INF/jsp/phenotype_table_geno_box_imports.jsp" %>
+<%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>

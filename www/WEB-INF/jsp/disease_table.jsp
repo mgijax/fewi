@@ -55,7 +55,7 @@
 }
 .genoButton{padding: 2px;}
 </style>
-<%@ include file="/WEB-INF/jsp/phenotype_table_geno_box_imports.jsp" %>
+<%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
 
 <!-- container table -->
 <table class="diseasetable" id="diseasetable_id">

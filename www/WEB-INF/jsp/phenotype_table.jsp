@@ -75,7 +75,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 
 </style>
 
-<%@ include file="/WEB-INF/jsp/phenotype_table_geno_box_imports.jsp" %>
+<%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_legend.jsp" %>
 
