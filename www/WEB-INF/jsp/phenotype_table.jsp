@@ -64,14 +64,16 @@ NotesTagConverter ntc = new NotesTagConverter();
 <tr class="stripe1">
 <th id="phenoSystemTH">Affected Systems </th>
 <c:forEach var="phenoTableGenotype" items="${phenoTableGenotypes}" varStatus="gStatus">
-  <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>" colspan="${phenoTableGenotype.columnSpan}">
-  <c:set var="genotype" value="${phenoTableGenotype.genotype}" scope="request"/>
-  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton" 
-  	onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}'); return false;">
-  <a href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target="new" class='genoLink small' title='phenotype details'>
-  ${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</a></div>
-
-  </th>
+<c:if test="${!phenoTableGenotype.diseaseOnly }">
+	  <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>" colspan="${phenoTableGenotype.columnSpan}">
+	  <c:set var="genotype" value="${phenoTableGenotype.genotype}" scope="request"/>
+	  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton" 
+	  	onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}'); return false;">
+	  <a href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target="new" class='genoLink small' title='phenotype details'>
+	  ${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</a></div>
+	
+	  </th>
+</c:if>
 </c:forEach>
 </tr>
 
