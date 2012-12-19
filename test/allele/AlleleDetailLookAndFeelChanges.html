@@ -34,7 +34,8 @@
 <div id="maintitle">
     <h1>Allele Detail Look and Feel Changes</h1>
     <ul>
-        <li>User story 123, Look adn Feel Updates to Allele Detail Page</li>
+        <li>User story 123, Look and Feel Updates to Allele Detail Page</li>
+        <li>User story 143, Clean up CSS</li>
     </ul>
 </div>
 
@@ -132,6 +133,13 @@
 			<li>On the Allele Summary page, remove mouse-over tooltips from the column headers. - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
 			<li>On the Allele Summary page, change "Similar Human Diseases" to "Human Disease Models". - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
 			</ul>
+		</li>
+		<li>Update CSS: although it appears in the rendered page multiple times (using View Source), the code for generating styles for the FeWi and the JavaWI portions of the page lives in one place.  Verify "hm1"-type buttons look the same throughout the Allele Detail Page areas.
+		<ul>
+			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup></b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
+			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Allele Detail page for <b>Apoe<sup>tm1Lmh</sup></b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
+			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Allele Detail page for <b>Yaa</b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
+		</ul>
 		</li>
 		</ol>
 	</div>
