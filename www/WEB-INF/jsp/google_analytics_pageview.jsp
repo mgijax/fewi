@@ -1,5 +1,6 @@
 <script type="text/javascript">
 	// include this JSP to track your page in google analytics
+	// Note: ONLY APPLIES TO JSPs WITH NO MGI HEADER
 	var track_analytics_once=true;
 	function trackPage()
 	{
