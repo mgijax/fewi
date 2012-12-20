@@ -2,31 +2,6 @@
 <head>
 <title>Allele Detail | High-Throughput MP Project</title>
 <style>
-table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
-table, th, td {border: 1px solid #CCCCCC;}
-td, th {padding:2px;}
-li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
-ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-p {margin:2px 0px;}
-td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
-td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:30px;}
-td.xl65 {background-color:#FFFF00;}
-
-
-h5 {font-size:1em; font-variant:small-caps; margin:4px 2px 0px 2px;}
-tr.small th, tr.small td {font-size:0.75em;}
-tr.blue th {background-color:#D0E0F0;}
-tr.gray td {background-color:#EEEEEE;}
-
-.hide {display:none;}
-.hilite {background-color:#FFFF00;} /*bright yellow*/
-.lowlite {background-color:#FFFFDD;} /*palest yellow*/
-.man {background-color:#FFFFCC;} /*less-pale yellow*/
-
-.regressHi {background-color:#FFAB57;} /*medium-orange*/
-.regressLo {background-color:#90DDF5;} /*light blue*/
-
 </style>
 <!-- <link href="/FeWi/test/concordion.css" rel="stylesheet" type="text/css"/> -->
 
@@ -174,7 +149,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<td><a concordion:run="concordion" href="AlleleTransmissionStatus.html">Allele Transmission Status Update (WI verifications)</a></td>
 				<td>88</td>
 				<td>Yes</td>
-				<td></td>
+				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="LoadUsedFCReferences.html">Add a &quot;Used-FC&quot; reference type for alleles with HTMP annots (WI verifications)</a></td>

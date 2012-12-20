@@ -2,18 +2,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <style>
-	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
-	table, th, td {border: 1px solid #CCCCCC;}
-	td, th {padding:2px;}
-	.man {background-color:#FFFFCC;}
-	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
-	p {margin:2px 0px;}
-	.hilite {background-color:#FFFF00;}
-	td.xl65 {background-color:#FFFF00;}
-	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
-	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+
 </style>
 <!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
@@ -50,6 +39,8 @@
 <div id="tests">
     <h2>Tests</h2>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><span class="regressHi">Regress: high priority</span></p>
+    <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
 <p concordion:assertTrue="true">testing assertTrue - displays as green</p>
@@ -75,10 +66,10 @@
     		<li>Alleles having their transmission status set to Germline via this load (above) have the appropriate (Sanger or Europhenome) load J:# associated with the transmission status, and it is linked to the correct References page.<br/>
     		<i>Example: Earliest citation of germline transmission: J:175295</i> 
     		<ol>
-                <li>Navigate to the Allele Detail Page for Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
                 <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li>
                 <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:165965</b>.</li>
-                <li>Navigate to the Allele Detail Page for  Adam17&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4434074 (previously had germ line transmission status = cell line).</li>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Adam17&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4434074 (previously had germ line transmission status = cell line).</li>
                 <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:175295</b>.</li>
                 <li>Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:175295</b>.</li>
     		</ol>
@@ -86,7 +77,7 @@
     		<li>A. Alleles previously having the transmission status  &quot;Germline&quot;  in the EI (displaying a reference J:# and phrase in the WI) do not change.
  			<p>WI displays existing data for the following alleles. They should not change.</p>
     		<ol>
-                <li>Navigate to the Allele Detail Page for  Apoe&lt;tm1Unc&gt;, MGI:1857129.</li>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Apoe&lt;tm1Unc&gt;, MGI:1857129.</li>
                 <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:1050</b>.</li>
                 <li><span concordion:assertTrue="true">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:1050</b>.</li>
                 <li>Navigate to the Allele Detail Page for B9d1&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4432284</li>
@@ -101,7 +92,7 @@
             </ol>
             <p>B. Alleles with the transmission status "Not Applicable" do not change.</p>
             <ol>
-                <li>Navigate to the Allele Detail Page for Ankrd11&lt;Yod&gt;</li>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Ankrd11&lt;Yod&gt;</li>
                 <li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
                 <li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
 <!--                 <li>Navigate to the Allele Detail Page for Cdh23&lt;v&gt;, MGI:1856228.</li>
@@ -118,7 +109,7 @@
                 <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
  -->
     		</ol>
-    		<p>C. Alleles with the transmission status "Chimeric" do not change.</p>
+    		<p>C. Alleles with the transmission status "Chimeric" do change.</p>
     		<ol>
     			<li>Lori set Zfp715&lt;tm1a(EUCOMM)Hmgu&gt; to have status "Chimeric". (KLF verified around noon on 12/3/2012.) </li> 
     			<li><span concordion:assertTrue="true">klf 13:39 12/3/2012.</span> - Verify load changes it to "Germline".</li>
@@ -135,9 +126,9 @@
     			<li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - Verify that tests with the following labels pass:
     			<ul>
     				<li>CellLine: Notch1&lt;tm1a(EUCOMM)Wtsi&gt;</li>
-    				<li>Chimeric:  Med12&lt;tm1.2Hsch&gt;</li>
-    				<li>Germline: Acacb&lt;tm1a(EUCOMM)Wtsi&gt; and Fadd&lt;tm2Wnt&gt;</li>
-    				<li>GermlineOld:  Cbx2&lt;tm1Ykf&gt; and Mro&lt;tm1H&gt;</li>
+    				<li>Chimeric:  none to test<!-- Med12&lt;tm1.2Hsch&gt; HAS NO HTMP DATA, NOT A GOOD TEST. NO CHIMERAS HAVE HTMP DATA AT THIS TIME. klf 12/20/12 --></li>
+    				<li>Germline: Acacb&lt;tm1a(EUCOMM)Wtsi&gt; <!-- Fadd&lt;tm2Wnt&gt; THIS ONE SHOULD BE GERMLINE-OLD klf 12/20/12 --></li>
+    				<li>GermlineOld:  <!-- Cbx2&lt;tm1Ykf&gt; HAS NO HTMP DATA, NOT A GOOD TEST klf 12/20/12 --> Mro&lt;tm1H&gt;</li>
     				<li>NotApplicable: Ap3d1&lt;mh-2J&gt; and Apaf1&lt;fog&gt;</li>
     				<li>NotSpecified: Braf&lt;tm2.1Cpri&gt; and Cfp&lt;tm2.2Song&gt;</li>
     			</ul>
