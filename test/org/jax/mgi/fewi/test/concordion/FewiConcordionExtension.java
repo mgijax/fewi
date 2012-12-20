@@ -89,7 +89,7 @@ public class FewiConcordionExtension implements ConcordionExtension {
 		concordionExtender.withCommand(NAMESPACE, 
 				"echo", echo);
 		
-		concordionExtender.withLinkedCSS("/concordion.css", new Resource("/concordion.css"));
+		concordionExtender.withLinkedCSS("/concordion_master.css", new Resource("/concordion_master.css"));
 		
 	}
 }
