@@ -6,7 +6,7 @@ table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
 table, th, td {border: 1px solid #CCCCCC;}
 td, th {padding:2px;}
 td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
-td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:30px;}
 td.xl65 {background-color:#FFFF00;}
 
 
@@ -16,8 +16,12 @@ tr.blue th {background-color:#D0E0F0;}
 tr.gray td {background-color:#EEEEEE;}
 
 .hide {display:none;}
-.hilite {background-color:#FFFF00;}
-.lowlite {background-color:#FFFFDD;}
-.man {background-color:#FFFFCC;
+<<<<<<< concordion_master.css
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
 p {color:blue;}
 li,b {color:red;}
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+
