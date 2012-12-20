@@ -12,7 +12,7 @@ ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
 h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
 tr.small th, tr.small td {font-size:0.75em;}
 tr.blue th {background-color:#D0E0F0;}
-tr.gray td {background-color: #EEEEEE;}
+tr.gray td {background-color:#EEEEEE;}
 
 .hide {display:none;}
 .hilite {background-color:#FFFF00;}
