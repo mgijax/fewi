@@ -2,21 +2,31 @@
 <head>
 <title>Allele Detail | High-Throughput MP Project</title>
 <style>
-/* COMMENTING OUT STYLES TO TEST USE OF STYLESHEET
-	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
-	table, th, td {border: 1px solid #CCCCCC;}
-	td, th {padding:2px;}
-	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
-	p {margin:2px 0px;}
-	tr.small th, tr.small td {font-size:0.75em;}
-	
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
 h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
 tr.small th, tr.small td {font-size:0.75em;}
 tr.blue th {background-color:#D0E0F0;}
 tr.gray td {background-color:#EEEEEE;}
-*/
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+
 </style>
 <!-- <link href="/FeWi/test/concordion.css" rel="stylesheet" type="text/css"/> -->
 
@@ -167,7 +177,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<td></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="LoadUsedFCReferences.html">Add a &quot;Used-FC&quot; reference type for alleles with HTMP annots</a></td>
+				<td><a concordion:run="concordion" href="LoadUsedFCReferences.html">Add a &quot;Used-FC&quot; reference type for alleles with HTMP annots (WI verifications)</a></td>
 				<td>161</td>
 				<td></td>
 				<td></td>
