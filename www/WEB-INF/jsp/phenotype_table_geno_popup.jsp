@@ -4,6 +4,8 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
+<%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
+
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_imports.jsp" %>
 
 <% Genotype genotype = (Genotype)request.getAttribute("genotype"); 
