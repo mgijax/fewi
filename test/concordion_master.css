@@ -18,7 +18,6 @@ tr.gray td {background-color:#EEEEEE;}
 .hide {display:none;}
 .hilite {background-color:#FFFF00;}
 .lowlite {background-color:#FFFFDD;}
-.man {background-color:#FFFFCC;}
-
-
-
+.man {background-color:#FFFFCC;
+p {color:blue;}
+li,b {color:red;}

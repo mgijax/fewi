@@ -20,6 +20,7 @@
 		<fileset includes="*.jar" dir="${jboss.dir}/bundles/javax/servlet/api/v25" />
 		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
 		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
+		<pathelement location="${test.dir}" />
 		<pathelement location="${compile.dir}" />
 	</path>
 	
@@ -64,6 +65,7 @@
 		<copy todir="${testoutput.dir}" overwrite="true">
 		  <fileset dir="${test.dir}">
 		    <include name="**/*.html"/>
+		  	<include name="**/*.css"/>
 		  </fileset>
 		</copy>
 	</target>
