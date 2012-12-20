@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.test.concordion;
 
+import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.internal.listener.AssertResultRenderer;
@@ -88,6 +89,7 @@ public class FewiConcordionExtension implements ConcordionExtension {
 		concordionExtender.withCommand(NAMESPACE, 
 				"echo", echo);
 		
+		concordionExtender.withLinkedCSS("/concordion.css", new Resource("/concordion.css"));
 		
 	}
 }
