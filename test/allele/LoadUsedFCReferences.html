@@ -2,18 +2,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <style>
-	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
-	table, th, td {border: 1px solid #CCCCCC;}
-	td, th {padding:2px;}
-	.man {background-color:#FFFFCC;}
-	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
-	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
-	p {margin:2px 0px;}
-	.hilite {background-color:#FFFF00;}
-	td.xl65 {background-color:#FFFF00;}
-	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
-	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+
 </style>
 <!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
@@ -59,7 +48,7 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Verify an allele gaining annotations from both HTMP providers is associated with both J:#s. 
+    		<li><span class="regressHi">Regress</span> Verify an allele gaining annotations from both HTMP providers is associated with both J:#s. 
  			<p concordion:assertTrue="true">klf 12/19/2012</p> 
     		<ol>
                 <li>Navigate to the Allele Detail Page for <b>Mysm1<sup>tm1a(KOMP)Wtsi</sup></b> </li>
@@ -70,12 +59,12 @@
     		</li>
     		<li>Verify an allele gaining annotations from only one HTMP provider is associated with only the correct J:#. 
     		<ol>
-                <li><span concordion:assertTrue="true">klf 12/19/2012</span> - Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1.1Sref</sup></b> </li>
+                <li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">klf 12/19/2012</span> - Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1.1Sref</sup></b> </li>
                 <li>Verify that MP annotations exist from both MGI and WTSI, but not EuPh.</li>
                 <li>Click the count of References at the bottom of the page.</li>
                 <li>Verify that <b>J:175295</b> appears in the list of references.</li>
                 <li>Verify that <b>J:165065</b> does not appear in the list of references.</li>
-                <li><span concordion:assertTrue="true">klf 12/19/2012</span> - Navigate to the Allele Detail Page for <b>B9d1<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
+                <li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">klf 12/19/2012</span> - Navigate to the Allele Detail Page for <b>B9d1<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
                 <li>Verify that MP annotations exist from both MGI and EuPh, but not WTSI.</li>
                 <li>Click the count of References at the bottom of the page.</li>
                 <li>Verify that <b>J:165065</b> appears in the list of references.</li>
@@ -84,9 +73,9 @@
     		</li>
     		<li>Verify a marker having an alleles with HTMP annotations has the appropriate J:#s.
     		<ol>
-    			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Mysm1 has both</li>
-    			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Slc16a2 has J:175295</li>
-    			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - B9D1 has J:165965</li>
+    			<li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">klf 12/19/2012</span> - Mysm1 has both</li>
+    			<li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">klf 12/19/2012</span> - Slc16a2 has J:175295</li>
+    			<li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">klf 12/19/2012</span> - B9D1 has J:165965</li>
     		</ol>
     		</li>
 		</ol>

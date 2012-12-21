@@ -33,8 +33,8 @@
     <h2>Acceptance Criteria</h2>
 	<ul>
 		<li>if a note shows the male/female glyph or "N", show the J#, otherwise</li>
-		<li>if there is >1 J# for the MP term, show the J#, otherwise don't show the J#</li>
-		<li>All J# should still be listed following the MP term. This tweak only affects the notes</li>
+		<li>if there is &gt;1 J# for the MP term, show the J#, otherwise don't show the J#</li>
+		<li>All J# should still be listed following the MP term. This tweak only affects the notes.</li>
 	</ul>
 </div>
 
@@ -50,7 +50,7 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-			<li>Verify if the genotype has male/female glyph or "N", show the J#
+			<li><span class="regressHi">Regress</span> Verify if the genotype has male/female glyph or "N", show the J#
  			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
@@ -58,11 +58,11 @@
                 <li>Open a Genotype Popup window for <b>MGI:3822315</b> <i>hm10</i></li>
                 <li>Verify that all entries that have a male/female symbol in front of them are followed by the J number</li>
                 <li>Open a Genotype Popup window for <b>MGI:3822293</b> <i>cx20</i></li>
-                <li>Verify that N entry is followed by the J number(makes no difference if it has a note or not)</li>
+                <li>Verify that &quot;N&quot; entry is followed by the J number (makes no difference if it has a note or not)</li>
 
     		</ol>
     		</li>
-    		<li>Verify if the genotype has just one J number and one note, the note is not followed by the J number
+    		<li><span class="regressHi">Regress</span> Verify if the genotype has just one J number and one note, the note is not followed by the J number
  			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
@@ -71,7 +71,7 @@
                 <li>Verify the note for genotype <b>impaired adaptive thermogenesis (J:142218 )</b> is not followed by the J number</li>
     		</ol>
     		</li>
-    		<li>Verify that when multiple notes exist for the same J number they do not display J number after notes
+    		<li><span class="regressHi">Regress</span> Verify that when multiple notes exist for the same J number they do not display J number after notes
     		<p concordion:assertTrue="true">jeffc 12/18/2012</p>
 			<ol>
 			    <li>Open the test Web Interface</li>
@@ -80,7 +80,7 @@
                 <li>Verify the 2 notes for genotype <b>heart left ventricle hypertrophy ( J:103063 )</b> is not followed by the J number</li>
     		</ol>
     		</li>
-    		<li>Verify that J numbers still display after notes when there are more than one note and for different J numbers
+    		<li><span class="regressHi">Regress</span> Verify that J numbers still display after notes when there are more than one note and for different J numbers
  			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
 			<ol>
 			    <li>Open the test Web Interface</li>
