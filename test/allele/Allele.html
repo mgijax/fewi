@@ -35,6 +35,7 @@ declare strict doctype to look for disallowed html errors
 
 	<div>
 	<h2>Test Suites</h2>
+	<p>Some test suites have indicators for Build Sprint regression testing in the Notes column.  A test may be marked <span class="regressHi">High</span> priority when 2 conditions are true: (1) There is a likelihood that the code could break or some error could occur.  (2) It would be very important to fix if it did.  If only one of those conditions is true, the test is marked <span class="regressLo">Low</span> priority. Otherwise, no priority is indicated.</p>
 <!-- 
 Possible test cases:
 Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. Curated one ref to the allele (for MP annots?).
@@ -192,7 +193,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 						grid</a></td>
 				<td>34</td>
 				<td>Yes</td>
-				<td>Manual tests done. 9/14 klf</td>
+				<td>Contains automated tests that are <span class="regressHi">high priority</span> for regression.</td>
 			</tr>
 <!-- 
 			TESTS NO LONGER NEEDED. STORY WAS SUPERSEDED. klf 11/26/12
