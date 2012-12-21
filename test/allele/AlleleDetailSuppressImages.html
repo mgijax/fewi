@@ -14,6 +14,8 @@
 	td.xl65 {background-color:#FFFF00;}
 	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
 	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
 </style>
 <!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
@@ -49,6 +51,8 @@
 <div id="tests">
     <h2>Requirements &amp; Tests</h2>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><span class="regressHi">Regress: high priority</span></p>
+    <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
 <p concordion:assertTrue="true">testing assertTrue - displays as green</p>
@@ -72,17 +76,17 @@
 			<li>Verify when you click on this link you return just 1 image</li>
 			</ul>
 		</li>
-		<li>Examples of alleles with one molecular image and no phenotype images. Cindy looked at these 12/20/2012.
+		<li>Examples of alleles with one molecular image and no phenotype images.  Should not display or refer to an image on Allele Detail Page or any Genotype popup windows. Cindy looked at these 12/20/2012.
 		<ul>
-			<li>Stk11&lt;tm1Jish&gt; MGI:2676471</li>
-			<li>Wnt3a&lt;tm1(cre)Eag&gt;  MGI:3612795</li>
-			<li>Tg(Gh1-cre)1Sac   MGI:3833232</li>
+			<li><span class="regressHi">Regress</span> Stk11&lt;tm1Jish&gt; MGI:2676471</li>
+			<li><span class="regressHi">Regress</span> Wnt3a&lt;tm1(cre)Eag&gt;  MGI:3612795</li>
+			<li><span class="regressHi">Regress</span> Tg(Gh1-cre)1Sac   MGI:3833232</li>
 		</ul>
 		</li>
 		<li>Examples of alleles with molecular image plus additional phenotypes images.  Note that counts are now correct on cardolan allele detail page and match the number on the linked image summary page. --Cindy 12/20/2012
 		<ul>
-			<li>Cryaa&lt;tm1Ady&gt;  MGI:4437472</li>
-			<li>Gys2&lt;tm1.1Pro&gt; MGI:4462836</li>
+			<li><span class="regressHi">Regress</span> Cryaa&lt;tm1Ady&gt;  MGI:4437472</li>
+			<li><span class="regressHi">Regress</span> Gys2&lt;tm1.1Pro&gt; MGI:4462836</li>
 		</ul>
 		</li>
 		</ol>
