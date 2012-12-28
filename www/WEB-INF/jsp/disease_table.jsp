@@ -5,37 +5,35 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 <style type="text/css">
-  .stripe1 {background-color:#FFF;}
-  .stripe2 {background-color:#EFEFEF;}
-  .arrowRight,.arrowDown {float:right;}
-  .leftBorder {border-left: solid 1px #ccc;}
-  .genoHeader { text-align:center; padding: 0 2px 2px 2px; }
-  .provider { text-align:center; padding: 0px; font-size:9px;}
-  #phenoSystemTH {text-align:left; font-size:120%; font-weight:bold;}
-  .noDisplay{display:none;}
-  .noWrap {white-space: nowrap;}
-  th.genoBorder, td.genoBorder{border-left: solid 2px #AAA;}
-  th.rightGenoBorder,td.rightGenoBorder{border-right: solid 2px #AAA;}
-  th.borderUnder{border-bottom:solid 1px #ccc;}
-  td.borderUnder{border-bottom:solid 1px #F8F8F8;}
-  th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
-  .provider img {   display: block;   margin-left: auto;   margin-right: auto; }
+.stripe1 {background-color:#FFF;}
+.stripe2 {background-color:#EFEFEF;}
+.arrowRight,.arrowDown {float:right;}
+.leftBorder {border-left: solid 1px #ccc;}
+.genoHeader { text-align:center; padding: 0 2px 2px 2px; }
+.provider { text-align:center; padding: 0px; font-size:9px;}
+.noDisplay{display:none;}
+.noWrap {white-space: nowrap;}
+th.genoBorder, td.genoBorder{border-left: solid 2px #AAA;}
+th.rightGenoBorder,td.rightGenoBorder{border-right: solid 2px #AAA;}
+th.borderUnder{border-bottom:solid 1px #ccc;}
+td.borderUnder{border-bottom:solid 1px #F8F8F8;}
+th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
+.provider img {   display: block;   margin-left: auto;   margin-right: auto; }
+#phenoSystemTH {text-align:left; font-size:120%; font-weight:bold;}
 #diseasetable_id { border-spacing:0px; border-collapse:collapse; border: 2px solid #AAA;}
 #diseasetable_id td { width: 18px; padding: 4px 2px;}
 .genoButton{padding: 2px;}
-</style>
-
-<%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
-
-
-<style>
 .yui-skin-sam tr.yui-dt-even { background-color:#FFF; } /* white */
 .yui-skin-sam tr.yui-dt-odd { background-color:#f1f1f1; } /* light grey */
 </style>
 
+<%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
+
 <table>
+
+<!-- Key -->
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;"><span class="label">Key:&nbsp;</span></td>
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td>
   <td NOWRAP="nowrap" style="vertical-align:top;">
     <table WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
     <tr>
@@ -48,9 +46,11 @@
     </TABLE>
   </td>
 </tr>
+
+<!-- Diseases -->
 <tr>
   <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;">
-    <font class="label">Models:&nbsp;</font>
+    <font class="label">Models:</font>
   </td>
   <td >
 
