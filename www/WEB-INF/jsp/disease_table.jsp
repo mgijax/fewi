@@ -27,24 +27,56 @@
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
 
-<!-- container table -->
-<table class="diseasetable" id="diseasetable_id">
 
-<tr class="stripe1"><th id="phenoSystemTH">&nbsp;</th>
-<c:forEach var="diseaseGenotype" items="${genotypes}" varStatus="gStatus">
-  <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>">
-  <c:set var="genotype" value="${diseaseGenotype.genotype}" scope="request"/>
-  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
-  <a href='${configBean.FEWI_URL}allele/genoview/${diseaseGenotype.genotype.primaryID}' target="new" 
-  class='genoLink small' title='phenotype details'
-  onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}', '${diseaseGenotype.genotypeSeq}'); return false;">
-  ${genotype.genotypeType}${diseaseGenotype.genotypeSeq}</a></div>
+<style>
+.yui-skin-sam tr.yui-dt-even { background-color:#FFF; } /* white */
+.yui-skin-sam tr.yui-dt-odd { background-color:#f1f1f1; } /* light grey */
+</style>
 
-  </th>
-</c:forEach>
+<table>
+<tr>
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;">
+    <font class="label">Key:&nbsp;</font>
+  </td>
+  <td NOWRAP="nowrap" style="vertical-align:top;">
+    <table WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
+    <tr>
+      <td style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small">&#8730;</td>
+      <td style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">disease model</td>
+      <td style="padding-left:1px;padding-right:1px;" border="0" /> &nbsp; </td>
+      <td style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small"><img src="http://www.informatics.jax.org/webshare/images/notSymbol.gif" border="0" valign="bottom"/></td>
+      <td style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">expected model not found</td>
+    </TR>
+    </TABLE>
+  </td>
 </tr>
-<c:forEach var="disease" items="${diseases}" varStatus="dStatus">
+<tr>
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;">
+    <font class="label">Models:&nbsp;</font>
+  </td>
+  <td >
+
+  <!-- diseasetable container -->
+  <table class="diseasetable" id="diseasetable_id">
+
+  <!-- create genotype headers -->
+  <tr class="stripe1"><th id="phenoSystemTH">&nbsp;</th>
+  <c:forEach var="diseaseGenotype" items="${genotypes}" varStatus="gStatus">
+    <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>">
+    <c:set var="genotype" value="${diseaseGenotype.genotype}" scope="request"/>
+    <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
+    <a href='${configBean.FEWI_URL}allele/genoview/${diseaseGenotype.genotype.primaryID}' target="new" 
+    class='genoLink small' title='phenotype details'
+    onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}', '${diseaseGenotype.genotypeSeq}'); return false;">
+    ${genotype.genotypeType}${diseaseGenotype.genotypeSeq}</a></div>
+    </th>
+  </c:forEach>
+  </tr>
+
+  <!-- create disease rows -->
+  <c:forEach var="disease" items="${diseases}" varStatus="dStatus">
     <tr class="${dStatus.index % 2==0 ? ' stripe2' : ' stripe1'}">
+      <!-- disease -->
       <td class="noWrap borderUnder" style="min-width:250px" >
         <div style="text-align:left;">
            <a class="MP" href='${configBean.JAVAWI_URL}WIFetch?page=humanDisease&id=${disease.omimID}'>
@@ -52,37 +84,38 @@
            <span style="font-size:80%">OMIM: <a class="MP" href="http://www.omim.org/entry/${disease.omimID}">${disease.omimID }</a></span>
         </div>
       </td>
-      <!-- TDs for grid system row will go here -->
       <c:set var="genoID" value="" />
+      <!-- disease/geno table cell-->
       <c:forEach var="cell" items="${disease.cells}" varStatus="cStatus">
 		<td class="<c:if test="${genoID!=cell.genotypeID}">genoBorder </c:if> borderUnder <c:if test="${cStatus.last}">rightGenoBorder</c:if>" style="text-align:center;">
-         <c:if test="${cell.hasCall}">
-		    	<c:choose>
-		    	<c:when test="${cell.callString=='N'}">
-		    		<img src="http://www.informatics.jax.org/webshare/images/notSymbol.gif" border="0"/>
-		    	</c:when>
-		    	<c:otherwise>
-  					<c:out value="${cell.callString}" escapeXml="false"/></a>
-		    	</c:otherwise>
-		    	</c:choose>
-  			</c:if>
+        <c:if test="${cell.hasCall}">
+          <c:choose>
+          <c:when test="${cell.callString=='N'}">
+            <img src="http://www.informatics.jax.org/webshare/images/notSymbol.gif" border="0"/>
+          </c:when>
+          <c:otherwise>
+  		    <c:out value="${cell.callString}" escapeXml="false"/></a>
+          </c:otherwise>
+          </c:choose>
+        </c:if>
         </td>
         <c:set var="genoID" value="${cell.genotypeID }"/>
       </c:forEach>
     </tr>
   </c:forEach>
+  </table>
+
+  </td>
+</TR>
 </table>
 
-<!--
-<br/>
-<a href='${configBean.FEWI_URL}allele/genoview/MGI:2166662' target="new" 
-  class='genoLink' title='genotype details'
-  onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/MGI:2166662?counter=1', '1'); return false;" >
-  EXAMPLE GENO POPUP -- ${configBean.FEWI_URL}/genoview/MGI:2166662
-</a>
--->
 
+
+
+
+<!-- JavaScript for geno popup -->
 <script type="text/javascript">
+
   /* --- specific to genotype popup windows ----------------------------- */
   var popupNextX = 0;	// x position of top-left corner of next popup
   var popupNextY = 0;	// y position of top-left corner of next popup
@@ -117,5 +150,3 @@
     return;
   }
 </script>
-
-
