@@ -47,11 +47,66 @@ NotesTagConverter ntc = new NotesTagConverter();
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
 
-<%@ include file="/WEB-INF/jsp/phenotype_table_geno_legend.jsp" %>
+<style>
+.yui-skin-sam tr.yui-dt-even { background-color:#FFF; } /* white */
+.yui-skin-sam tr.yui-dt-odd { background-color:#f1f1f1; } /* light grey */
+</style>
 
-<br/>
+<table>
+<tr>
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td>
+  <td NOWRAP="nowrap" style="vertical-align:top;">
 
-<!-- container table -->
+          <!-- begin key -->
+          <TABLE BORDER="0">
+          <TR>
+          <TD ALIGN="left" VALIGN="top">
+            &nbsp;
+          </TD>
+          <TD ALIGN="left" VALIGN="top">
+            <TABLE WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
+            <TR>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFC166" CLASS="small">hm</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFC166" CLASS="small" NOWRAP="nowrap">homozygous</TD>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#A8F2FF" CLASS="small">ht</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#A8F2FF" CLASS="small" NOWRAP="nowrap">heterozygous</TD>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFB3E0" CLASS="small">tg</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFB3E0" CLASS="small" NOWRAP="nowrap">involves transgenes</TD>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small">&#8730;</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">phenotype observed</TD>
+            </TR>
+            <TR>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#D3FFA8" CLASS="small">cn</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#D3FFA8" CLASS="small" NOWRAP="nowrap">conditional&nbsp;genotype&nbsp;</TD>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#CCCCFF" CLASS="small">cx</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#CCCCFF" CLASS="small" NOWRAP="nowrap">complex: > 1 genome feature</TD>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#E3C8AC" CLASS="small">ot</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#E3C8AC" CLASS="small" NOWRAP="nowrap">other: hemizygous, indeterminate,...</TD>
+              <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small">N</TD>
+              <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">normal phenotype</TD>
+            </TR>
+            </TABLE>
+          </TD>
+          </TR>
+          </TABLE><!-- end legend -->
+
+  </td>
+</tr>
+
+
+<tr>
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Genotypes</span></td>
+  <td >
+    <%@ include file="/WEB-INF/jsp/phenotype_table_geno_legend.jsp" %>
+  </td>
+</tr>
+
+<tr>
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Phenotypes</span></td>
+  <td >
+
+<!-- ---------------------------------------------------------- -->
+<!-- pheno table container -->
 <table class="phenotable" id="phenotable_id">
 
 <%
@@ -207,15 +262,16 @@ NotesTagConverter ntc = new NotesTagConverter();
       </c:forEach>
   </c:forEach>
 </table>
+<!-- ---------------------------------------------------------- -->
 
-<!--
-<br/>
-<a href='${configBean.FEWI_URL}allele/genoview/MGI:2166662' target="new" 
-  class='genoLink' title='genotype details'
-  onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/MGI:2166662?counter=1', '1'); return false;" >
-  EXAMPLE GENO POPUP -- ${configBean.FEWI_URL}/genoview/MGI:2166662
-</a>
--->
+
+  </td>
+</tr>
+
+</table>
+
+
+
 
 <script type="text/javascript">
 	/*
