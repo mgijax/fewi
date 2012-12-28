@@ -58,7 +58,7 @@
   <table class="diseasetable" id="diseasetable_id">
 
   <!-- create genotype headers -->
-  <tr class="stripe1"><th id="phenoSystemTH">&nbsp;</th>
+  <tr class="stripe1"><th id="phenoSystemTH">Human Diseases</th>
   <c:forEach var="diseaseGenotype" items="${genotypes}" varStatus="gStatus">
     <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>">
     <c:set var="genotype" value="${diseaseGenotype.genotype}" scope="request"/>
