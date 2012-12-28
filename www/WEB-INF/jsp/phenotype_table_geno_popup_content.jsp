@@ -58,7 +58,7 @@
 			      <c:if test="${!annotation.isBoth || !annotation.isCall || reference.hasNotes || reference.hasNonMgiSource}">
 				      <div class="refSection" >
 				          <c:if test="${refStatus.index==0 && reference.hasNonMgiSource}">
-			       				<span class="small">Source:</span> <span class="sourceDisplay">${reference.sourceDisplay}</span>
+			       				 <span class="sourceDisplay">${reference.sourceDisplay}</span>
 			       			</c:if>
 				        <c:forEach var="note" items="${reference.notes}" varStatus="noteStatus">
 				        	<div class="mpNote">
