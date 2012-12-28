@@ -35,9 +35,7 @@
 
 <table>
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;">
-    <font class="label">Key:&nbsp;</font>
-  </td>
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;"><span class="label">Key:&nbsp;</span></td>
   <td NOWRAP="nowrap" style="vertical-align:top;">
     <table WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
     <tr>
