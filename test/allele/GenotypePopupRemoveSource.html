@@ -1,0 +1,87 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	span.hilite {background-color:#FFFF00;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Genotype Popup Legend</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Genotype Popup Legend Tests</h1>
+    <ul>
+        <li>User story 155, WI: Remove Source text  in Genotype popup</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Remove the text "Source:" from in front of WTSI and EuPh entries<br/>
+	</ul>
+
+
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify the Source text has been removed from in front of all WTSI and EuPh entries
+ 			<p concordion:assertTrue="true">passed jeffc 01/02/2013</p>
+    		<ol>
+                <li>Open the test Web Interface.</li>
+                <li>Navigate to the Allele Detail Page for <b>Apoe<sup>tm1Unc</sup></b> (<b>MGI:1857129</b>)</li>
+                <li>Open a Genotype Popup window for hm10 <b>MGI:5445719</b></li>
+                <li>Verify for every WTSI and EuPh entry the text "Source:" has been removed from in front of it</li>
+                <li>From the Allele detail page, click the <b>View</b> link i the Phenotype ribbon to open the allGenotypes popup</li>
+                <li>Verify for every WTSI and EuPh entry the text "Source:" has been removed from in front of it</li>
+    		</ol>
+    		</li>
+    
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+		<li>
+    		<ol>
+    			<li>
+                </li>
+    		</ol>
+    	</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
