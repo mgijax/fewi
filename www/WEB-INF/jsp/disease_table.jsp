@@ -33,9 +33,7 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
 
 <!-- Key -->
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td>
-  <td style="vertical-align:top;">
-    <table WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
+  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td><td style="vertical-align:top;"><table WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
     <tr>
       <td style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small">&#8730;</td>
       <td style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">disease model</td>
