@@ -12,7 +12,7 @@
 .genoLegendStrain{}
 .genoLegendCellLine{}
 
-#genoLegendWrapper{max-width:870px;}
+#genoLegendWrapper{max-width:880px;}
 #genoLegendWrapper .hmGenoButton {
   border-right: 2px solid rgb(209, 109, 0); 
   border-bottom: 2px solid rgb(249, 149, 0);
