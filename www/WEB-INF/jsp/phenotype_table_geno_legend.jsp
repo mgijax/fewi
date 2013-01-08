@@ -12,7 +12,7 @@
 .genoLegendStrain{}
 .genoLegendCellLine{}
 
-#genoLegendWrapper{max-width:900px;}
+#genoLegendWrapper{max-width:870px;}
 #genoLegendWrapper .hmGenoButton {
   border-right: 2px solid rgb(209, 109, 0); 
   border-bottom: 2px solid rgb(249, 149, 0);
@@ -97,7 +97,7 @@ initGenoLegendTable = function() {
   // Instantiate the table object, causing it to display on the page.
   // Large tables will be set to scrollable 
   <c:if test="${phenoTableGenoSize > 4}">
-    var genoLegendDataTable = new YAHOO.widget.ScrollingDataTable("genoLegendDiv", genoLegendColDefs, genoLegendDataSrc, {height:"9em"});
+    var genoLegendDataTable = new YAHOO.widget.ScrollingDataTable("genoLegendDiv", genoLegendColDefs, genoLegendDataSrc, {height:"10em"});
   </c:if>
   <c:if test="${phenoTableGenoSize < 5}">
     var genoLegendDataTable = new YAHOO.widget.DataTable("genoLegendDiv", genoLegendColDefs, genoLegendDataSrc, {});
