@@ -61,7 +61,7 @@
 		<p>From sto121, Suppress Gt(ROSA)26Sor</p>
 		<ol>
     		<li>Verify Gt(ROSA)26Sor is still returned in Marker Query searches for diseases
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">jeffc 01/08/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>On the Marker Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
@@ -69,7 +69,7 @@
     		</ol>
     		</li>
     		<li>Verify Gt(ROSA)26Sor alleles are still returned in Allele Query searches for diseases
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">jeffc 01/08/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>On the Allele Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
@@ -77,11 +77,11 @@
     		</ol>
     		</li>
     		<li>Verify sort order of genes on Human Disease Detail Page matches public.
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">jeffc 01/08/2013</p>
     		<ol>
     			<li>Open the test Web Interface.</li>
     			<li>Navigate to the Human Disease Detail page for Ciliary Dyskinesia, Primary, 1; CILD1 (244400).</li>
-    			<li>Verify that genes in the Associated Genes section are listed in the same ordera as on Public.</li>
+    			<li>Verify that genes in the Associated Genes section are listed in the same ordera as on Public.(minus Gt(ROSA)26Sor)</li>
     		</ol>
     		</li>
 		</ol>
@@ -89,7 +89,7 @@
     	<p>ASCII sort currently has alleles with names like "tm10," "tm11", "tm12" appearing BEFORE "tm1" on Public, but AFTER "tm1" on Cardolan.</p>
 		<ol>
     		<li>Verify that alleles are listed in the same order as displayed on Public 
- 			 	<p concordion:assertTrue="false">new</p>
+ 			 	<p concordion:assertTrue="true">jeffc 01/08/2013</p>
  				<ol>
  	            <li>Navigate to Allele Summary Page for <b>Hprt</b> (MGI:96217).</li>
                 <li>Verify that alleles are listed in the same order as on Public.</li>
