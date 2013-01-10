@@ -32,7 +32,7 @@
         	genotype.getCombination1();
  			ntc.convertNotes(genotype.getCombination1(), '|');       
         %>
-		<%=FormatHelper.newline2HTMLBR(ntc.convertNotes(genotype.getCombination1(), '|'))%>
+		<%=FormatHelper.newline2HTMLBR(ntc.useNewWindows(ntc.convertNotes(genotype.getCombination1(), '|')))%>
         </span>
         <br/>
         <%=FormatHelper.superscript(genotype.getBackgroundStrain())%>
