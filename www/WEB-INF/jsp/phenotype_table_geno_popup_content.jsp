@@ -13,7 +13,7 @@
 <!-- Primary Image -->
 <c:if test="${hasImage}">
 	<div style="float:right;clear:right;text-align: center; width:200px; max-width: 200px; padding-left: 4px; padding-right: 4px; margin-left: 5px;">
-		<a href="${configBean.FEWI_URL}image/pheno/${genotype.primaryImage.mgiID}" style="text-align: center;" class="MP">
+		<a target="_blank" href="${configBean.FEWI_URL}image/pheno/${genotype.primaryImage.mgiID}" style="text-align: center;" class="MP">
 			<img src="${configBean.PIXELDB_URL}${genotype.thumbnail.pixeldbNumericID}" height="${genotype.thumbnail.height}" width="${genotype.thumbnail.width}">
 		</a>
 		<p>${genotype.thumbnail.caption}</p>
