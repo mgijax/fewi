@@ -105,9 +105,9 @@
 				<td colspan='2' rowspan='1'>
 				</c:otherwise>
 				</c:choose>
-				<a class='MP' href="${configBean.JAVAWI_URL}WIFetch?page=humanDisease&id=${disease.termID}">${disease.term}</a></td>
+				<a class='MP' target="_blank" href="${configBean.JAVAWI_URL}WIFetch?page=humanDisease&id=${disease.termID}">${disease.term}</a></td>
 				<td>
-					<a class='MP' href="http://www.omim.org/entry/${disease.termID}">${disease.termID}</a>
+					<a class='MP' target="_blank" href="http://www.omim.org/entry/${disease.termID}">${disease.termID}</a>
 				</td>
 				<td>
 				<c:forEach var="reference" items="${disease.references}" varStatus="refStatus">
