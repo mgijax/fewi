@@ -13,7 +13,7 @@
 <!-- Primary Image -->
 <c:if test="${hasImage}">
 	<div style="float:right;clear:right;text-align: center; width:200px; max-width: 200px; padding-left: 4px; padding-right: 4px; margin-left: 5px;">
-		<a target="_blank" href="${configBean.FEWI_URL}image/pheno/${genotype.primaryImage.mgiID}" style="text-align: center;" class="MP">
+		<a target="_new" href="${configBean.FEWI_URL}image/pheno/${genotype.primaryImage.mgiID}" style="text-align: center;" class="MP">
 			<img src="${configBean.PIXELDB_URL}${genotype.thumbnail.pixeldbNumericID}" height="${genotype.thumbnail.height}" width="${genotype.thumbnail.width}">
 		</a>
 		<p>${genotype.thumbnail.caption}</p>
@@ -34,12 +34,12 @@
 
 	<div class="termDiv" id="${mpSystem.cssId}_${term.cssId}">
       <div class="mpTerm" style="margin-left:${term.displayIndent}px;">
-        <a class='MP' target="_blank" href='${configBean.WI_URL}searches/Phat.cgi?id=${term.termId}'>
+        <a class='MP' target="_new" href='${configBean.WI_URL}searches/Phat.cgi?id=${term.termId}'>
         ${term.term}</a>
 
         (
         <c:forEach var="reference" items="${term.references}" varStatus="refStatus">
-          <c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_blank" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
+          <c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_new" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
         </c:forEach>
         ) 
 
@@ -105,13 +105,13 @@
 				<td colspan='2' rowspan='1'>
 				</c:otherwise>
 				</c:choose>
-				<a class='MP' target="_blank" href="${configBean.JAVAWI_URL}WIFetch?page=humanDisease&id=${disease.termID}">${disease.term}</a></td>
+				<a class='MP' target="_new" href="${configBean.JAVAWI_URL}WIFetch?page=humanDisease&id=${disease.termID}">${disease.term}</a></td>
 				<td>
-					<a class='MP' target="_blank" href="http://www.omim.org/entry/${disease.termID}">${disease.termID}</a>
+					<a class='MP' target="_new" href="http://www.omim.org/entry/${disease.termID}">${disease.termID}</a>
 				</td>
 				<td>
 				<c:forEach var="reference" items="${disease.references}" varStatus="refStatus">
-	          		<c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_blank" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
+	          		<c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_new" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
 	        	</c:forEach>
 	        	</td>
         	</tr>
