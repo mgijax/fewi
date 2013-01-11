@@ -152,7 +152,7 @@ public class NotesTagConverter
 	while (m.find()) {
 	    url = m.group(1);
 	    s = m.replaceFirst ("HHRREEFF=" + url + " onClick='newWindow(" +
-		url + "); return false;' TARGET='_new'");
+		url + "); return false;' TARGET='_blank'");
 	    m = p.matcher(s);
 	}
 	return s.replaceAll ("HHRREEFF", "HREF");
