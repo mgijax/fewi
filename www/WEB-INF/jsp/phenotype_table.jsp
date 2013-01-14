@@ -114,7 +114,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 	  <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>" colspan="${phenoTableGenotype.columnSpan}">
 	  <c:set var="genotype" value="${phenoTableGenotype.genotype}" scope="request"/>
 	  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton" 
-	  	onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}'); return false;">
+	  	onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotype.primaryID}'); return false;">
 	  <a href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target="new" class='genoLink small' title='phenotype details'>
 	  ${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</a></div>
 	
@@ -214,7 +214,7 @@ NotesTagConverter ntc = new NotesTagConverter();
           <c:if test="${cell.hasCall}">
 	          <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}' target="new" 
 	  			class='genoLink' style="font-weight:bold;" title='details'
-	  			onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}', '${cell.genotypeSeq}'); return false;">
+	  			onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}', '${cell.genotypeSeq}', '${cell.genotypeID}'); return false;">
 	  			<c:out value="${cell.callString}" escapeXml="false"/></a>
   			</c:if>
         </td>
@@ -242,7 +242,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 		    <c:if test="${cell.hasCall}">
 		    <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}' target="new" 
   			class='genoLink small' title='details'
-  			onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}_${phenoTableTerm.cssId}', '${cell.genotypeSeq}'); return false;">
+  			onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}_${phenoTableTerm.cssId}', '${cell.genotypeSeq}', '${cell.genotypeID}'); return false;">
   			<c:out value="${cell.callString}" escapeXml="false"/></a>
   			</c:if>
           </td>
@@ -316,11 +316,11 @@ NotesTagConverter ntc = new NotesTagConverter();
 
   // pop up a new window for displaying details from the given 'url' for the
   // given genotype key.
-  function popupGenotype (url, counter)
+  function popupGenotype (url, counter, id)
   {
     // new window will be named using the genotype key with a prefix
     var windowName;
-    windowName = "genoPopup" + counter;
+    windowName = "genoPopup_" + id + "_" + counter;
 
     // open the window small but scrollable and resizable
     var child = window.open (url, windowName,
