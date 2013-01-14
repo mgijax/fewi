@@ -63,7 +63,7 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
     <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
     <a href='${configBean.FEWI_URL}allele/genoview/${diseaseGenotype.genotype.primaryID}' target="new" 
     class='genoLink small' title='phenotype details'
-    onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}', '${diseaseGenotype.genotypeSeq}'); return false;">
+    onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}', '${diseaseGenotype.genotypeSeq}', '${genotype.primaryID}'); return false;">
     ${genotype.genotypeType}${diseaseGenotype.genotypeSeq}</a></div>
     </th>
   </c:forEach>
@@ -118,11 +118,12 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
 
   // pop up a new window for displaying details from the given 'url' for the
   // given genotype key.
-  function popupGenotype (url, counter)
+  function popupGenotype (url, counter, id)
   {
     // new window will be named using the genotype key with a prefix
     var windowName;
-    windowName = "genoPopup" + counter;
+    windowName = "genoPopup_" + id + "_" + counter;
+alert(windowName);
 
     // open the window small but scrollable and resizable
     var child = window.open (url, windowName,
