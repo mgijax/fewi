@@ -183,7 +183,7 @@ public class AlleleController {
         mav.addObject("hasSexCols",hasSexCols);
         mav.addObject("hasSourceCols",hasSourceCols);
         mav.addObject("phenoTableGenoSize",allele.getPhenoTableGenotypeAssociations().size());
-        
+
     	return mav;
     }
 
@@ -233,26 +233,6 @@ public class AlleleController {
         mav.addObject("genotype",genotype);
         mav.addObject("mpSystems", genotype.getMPSystems());
 
-//        for(MPSystem system : genotype.getMPSystems())
-//        {
-//        	logger.info("found system: "+system.getSystem()+" with seq: "+system.getSystemSeq());
-//        	for(MPAnnotation annot : system.getAnnotations())
-//        	{
-//        		logger.info("found annotation: "+annot.getTerm()+" with seq: "+annot.getTermSeq());
-//        		String refString = "";
-//        		for(MPReference ref : annot.getReferences())
-//        		{
-//        			refString+= ref.getJnumID()+",";
-//        			for(MPAnnotationNote note : ref.getNotes())
-//        			{
-//        				logger.info(" annotation has note: "+note.getNote());
-//        			}
-//        		}
-//
-//    			logger.info(" annotation has following jnums: ("+refString+")");
-//
-//        	}
-//        }
         for (GenotypeDisease gd : genotype.getDiseases())
         {
         	logger.info(" found disease: "+gd.getTerm());
@@ -317,7 +297,7 @@ public class AlleleController {
        mav.addObject("genotypeAssociations",allele.getPhenoTableGenotypeAssociations());
    	return mav;
    }
-   
+
    @RequestMapping(value="/alldiseasegenoviews/{alleleID}")
    public ModelAndView allDiseaseGenoviews(
 		  HttpServletRequest request,
