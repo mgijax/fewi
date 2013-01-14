@@ -321,7 +321,7 @@ NotesTagConverter ntc = new NotesTagConverter();
     // new window will be named using the genotype key with a prefix
     var windowName;
     windowName = "genoPopup_" + id + "_" + counter;
-
+alert(windowName);
     // open the window small but scrollable and resizable
     var child = window.open (url, windowName,
 	'width=800,height=600,resizable=yes,scrollbars=yes,alwaysRaised=yes');

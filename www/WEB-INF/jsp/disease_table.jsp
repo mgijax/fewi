@@ -123,6 +123,7 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
     // new window will be named using the genotype key with a prefix
     var windowName;
     windowName = "genoPopup_" + id + "_" + counter;
+alert(windowName);
 
     // open the window small but scrollable and resizable
     var child = window.open (url, windowName,
