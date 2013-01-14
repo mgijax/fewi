@@ -67,7 +67,7 @@ jsData = {
 		}
 	  %>
       {
-       genotypeCol:"<a style='text-decoration: none;' class='genoLink' title='phenotype details' href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target='new' onClick=\"javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}'); return false;\" ><span style='font-size:80%;' class='${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoLegendButton' >${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</span></a><%=diseaseModel%>", 
+       genotypeCol:"<a style='text-decoration: none;' class='genoLink' title='phenotype details' href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target='new' onClick=\"javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotype.primaryID}'); return false;\" ><span style='font-size:80%;' class='${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoLegendButton' >${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</span></a><%=diseaseModel%>", 
        allCompCol:"<span style='font-size:80%;'> <%=allComp%> </span>", 
        genBackCol:"<span style='font-size:80%;'><%=FormatHelper.superscript(genotype.getBackgroundStrain())%></span>", 
        <c:if test="${not empty genotype.cellLines}">
