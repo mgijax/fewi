@@ -4,6 +4,10 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
+<style>
+.genotypeCombo a {text-decoration:none;}
+</style>
+
 <div class='genoPopupHeader'>
 
 <table STYLE="" CELLPADDING="0" CELLSPACING="0">
