@@ -30,8 +30,9 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.ALLELE, javaWiUrl +"WIFetch?page=alleleDetail&id=%s");
 		idUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/%s");
 		idUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/%s");
-		idUrlMap.put(ObjectTypes.ORTHOLOGY, pythonWiUrl +"searches/homology_report.cgi?id=%s");
-		idUrlMap.put(ObjectTypes.OMIM, baseUrl +"omim/%s");
+		idUrlMap.put(ObjectTypes.HOMOLOGY, baseUrl +"homology/%s");
+		idUrlMap.put(ObjectTypes.MARKER_CLUSTER, baseUrl +"homology/%s");
+		idUrlMap.put(ObjectTypes.DISEASE, baseUrl +"disease/%s");
 		idUrlMap.put(ObjectTypes.GENE, javaWiUrl +"?page=markerDetail&id=%s");
 		idUrlMap.put(ObjectTypes.GO_BP, pythonWiUrl +"searches/GO.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.GO_MF, pythonWiUrl +"searches/GO.cgi?id=%s");
@@ -50,7 +51,9 @@ public class FewiLinker {
 		keyUrlMap.put(ObjectTypes.ANTIBODY, pythonWiUrl +"searches/antibody.cgi?%s");
 		keyUrlMap.put(ObjectTypes.ANTIGEN, pythonWiUrl +"searches/antigen.cgi?%s");
 		keyUrlMap.put(ObjectTypes.MAPPING, baseUrl +"mapping/key/%s");
-		keyUrlMap.put(ObjectTypes.OMIM, baseUrl +"omim/key/%s");
+		keyUrlMap.put(ObjectTypes.DISEASE, baseUrl +"disease/key/%s");
+		keyUrlMap.put(ObjectTypes.HOMOLOGY, baseUrl +"homology/key/%s");
+		keyUrlMap.put(ObjectTypes.MARKER_CLUSTER, baseUrl +"homology/key/%s");
 
 	}
 

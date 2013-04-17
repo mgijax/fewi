@@ -15,12 +15,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.DatabaseInfo;
+import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerAlleleAssociation;
 import mgi.frontend.datamodel.MarkerBiotypeConflict;
@@ -31,6 +32,7 @@ import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerOrthology;
 import mgi.frontend.datamodel.MarkerSequenceAssociation;
 import mgi.frontend.datamodel.MarkerSynonym;
+import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.SequenceSource;
 
@@ -223,33 +225,52 @@ public class MarkerController {
         
         this.dbDate(mav);
         
-        // add human ortholog to model if present
-        Marker humanOrtholog = null;
-        if (marker.getOrthologousMarkers().size() > 0){
-        	for (MarkerOrthology mo: marker.getOrthologousMarkers()) {
-        		if (mo.getOtherOrganism().equalsIgnoreCase("human")){
-        	        SearchResults<Marker> orthalogResults
-        	        	= MarkerFinder.getMarkerByKey(String.valueOf(mo.getOtherMarkerKey()));
-        	        if (orthalogResults.getResultObjects().size() > 0) {
-        	        	humanOrtholog = orthalogResults.getResultObjects().get(0);
-        	        	if (humanOrtholog.getSynonyms().size() > 0) {
-        	        		List<String> humanSynonyms = new ArrayList<String>();
-        	        		for (MarkerSynonym syn: humanOrtholog.getSynonyms()){
-        	        			humanSynonyms.add(syn.getSynonym());
-        	        		}
-        	        		mav.addObject("humanSynonyms", humanSynonyms.toArray(new String[humanSynonyms.size()]));
-        	        	}
-        	        	if (humanOrtholog.getPreferredCoordinates() != null){
-            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCoordinates());
-        	        	} else if (humanOrtholog.getPreferredCytoband() != null) {
-            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCytoband());
-        	        	}
-        	        	mav.addObject("humanOrtholog", humanOrtholog);
-        	        }       			
-        		}
-        	}
-        }
+        // add human homologs to model if present
+        OrganismOrtholog humanOO = null;
+        OrganismOrtholog mouseOO = null;
+	HomologyCluster homologyCluster = null;
+	List<Marker> humanHomologs = null;
 
+	mouseOO = marker.getOrganismOrtholog();
+
+	if (mouseOO != null) {
+		homologyCluster = mouseOO.getHomologyCluster();
+		if (homologyCluster != null) {
+			mav.addObject("homologyClass", homologyCluster);
+
+			humanOO = homologyCluster.getOrganismOrtholog("human");
+			if (humanOO != null) {
+				humanHomologs = humanOO.getMarkers();
+				mav.addObject("humanHomologs", humanHomologs);
+			}
+		}
+	}
+
+/*        if (marker.getOrganismOrtholog()().size() > 0){
+*        	for (MarkerOrthology mo: marker.getOrthologousMarkers()) {
+*        		if (mo.getOtherOrganism().equalsIgnoreCase("human")){
+*        	        SearchResults<Marker> orthalogResults
+*        	        	= MarkerFinder.getMarkerByKey(String.valueOf(mo.getOtherMarkerKey()));
+*        	        if (orthalogResults.getResultObjects().size() > 0) {
+*        	        	humanOrtholog = orthalogResults.getResultObjects().get(0);
+*        	        	if (humanOrtholog.getSynonyms().size() > 0) {
+*        	        		List<String> humanSynonyms = new ArrayList<String>();
+*        	        		for (MarkerSynonym syn: humanOrtholog.getSynonyms()){
+*        	        			humanSynonyms.add(syn.getSynonym());
+*        	        		}
+*        	        		mav.addObject("humanSynonyms", humanSynonyms.toArray(new String[humanSynonyms.size()]));
+*        	        	}
+*        	        	if (humanOrtholog.getPreferredCoordinates() != null){
+*            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCoordinates());
+*        	        	} else if (humanOrtholog.getPreferredCytoband() != null) {
+*            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCytoband());
+*        	        	}
+*        	        	mav.addObject("humanOrtholog", humanOrtholog);
+*        	        }       			
+*        		}
+*        	}
+*        }
+*/
         // We need to pull out the GO terms we want to use as teasers for
         // each ontology.  (This is easier in Java than JSTL, so we do
         // it here.)

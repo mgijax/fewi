@@ -28,6 +28,7 @@ public class SolrMarkerAnnotationSummaryHunter extends SolrHunter {
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
          */
+        propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
         propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
         propertyMap.put(SearchConstants.VOC_VOCAB, new SolrPropertyMapper(IndexConstants.VOC_VOCAB));
         propertyMap.put(SearchConstants.VOC_RESTRICTION, new SolrPropertyMapper(IndexConstants.VOC_QUALIFIER));

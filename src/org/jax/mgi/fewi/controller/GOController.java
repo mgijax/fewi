@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.finder.MarkerAnnotationFinder;
+import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -55,7 +57,73 @@ public class GOController {
     private MarkerAnnotationFinder markerAnnotationFinder;
 
     @Autowired
+    private ReferenceFinder referenceFinder;
+
+    @Autowired
     private MarkerFinder markerFinder;
+
+    //-------------------------------//
+    // go Summary by Reference
+    //-------------------------------//
+    @RequestMapping(value="/reference/{referenceID}")
+    public ModelAndView goSummaryByReferenceId(@PathVariable("referenceID") String referenceID) {
+        logger.debug("->goSummaryByReferenceId started");
+
+        // setup search parameters object to gather the requested object
+        SearchParams searchParams = new SearchParams();
+        Filter referenceIDFilter = new Filter(SearchConstants.REF_ID,
+		referenceID);
+        searchParams.setFilter(referenceIDFilter);
+
+        // find the requested reference
+        SearchResults<Reference> searchResults
+          = referenceFinder.getReferenceByID(searchParams);
+        List<Reference> referenceList = searchResults.getResultObjects();
+
+        return goSummaryByReference(referenceList, referenceID);
+    }
+
+    @RequestMapping(value="/reference/key/{referenceKey}")
+    public ModelAndView goSummaryByReferenceKey(
+		@RequestParam("referenceKey") String referenceKey) {
+
+        logger.debug("->goSummaryByReferenceKey started: " + referenceKey);
+
+        // find the requested reference
+        SearchResults<Reference> searchResults
+          = referenceFinder.getReferenceByKey(referenceKey);
+        List<Reference> referenceList = searchResults.getResultObjects();
+
+        return goSummaryByReference(referenceList, referenceKey);
+    }
+    
+    private ModelAndView goSummaryByReference(List<Reference> referenceList,
+		String reference){
+    	
+    	ModelAndView mav = new ModelAndView("go_summary_reference");
+
+        // there can be only one...
+        if (referenceList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No reference found for " + reference);
+            return mav;
+        }
+        if (referenceList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Dupe reference found for " + reference);
+            return mav;
+        }
+        // pull out the reference, and place into the mav
+        Reference ref = referenceList.get(0);
+        mav.addObject("reference", ref);
+                
+        // pre-generate query string
+        mav.addObject("queryString", "referenceKey=" + ref.getReferenceKey() + "&vocab=GO");
+
+        return mav;
+    }
 
     //-------------------------------//
     // go Summary by Marker
@@ -133,8 +201,20 @@ public class GOController {
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(query));
         
-        SearchResults<Marker> sr = markerFinder.getMarkerByKey(query.getMrkKey());
-        Marker m = (Marker) sr.getResultObjects().get(0);
+	Marker m = null;
+	Reference r = null;
+
+	if (query.getMrkKey() != null) {
+            SearchResults<Marker> sr = markerFinder.getMarkerByKey(
+		query.getMrkKey());
+            m = (Marker) sr.getResultObjects().get(0);
+	}
+
+	if (query.getReferenceKey() != null) {
+            SearchResults<Reference> sr = referenceFinder.getReferenceByKey(
+		query.getReferenceKey());
+            r = (Reference) sr.getResultObjects().get(0);
+	}
 
         // perform query, and pull out the requested objects
         SearchResults<Annotation> searchResults
@@ -148,8 +228,10 @@ public class GOController {
             Annotation annot = it.next();
             if (annot == null) {
                 logger.debug("--> Null Object");
-            }else {
+            }else if (m != null) {
                 summaryRows.add(new GOSummaryRow(annot, m));
+            }else if (r != null) {
+                summaryRows.add(new GOSummaryRow(annot, r));
             }
         }
 
@@ -181,15 +263,31 @@ public class GOController {
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(query));
         
-        SearchResults<Marker> sr = markerFinder.getMarkerByKey(query.getMrkKey());
-        Marker m = (Marker) sr.getResultObjects().get(0);
+	Marker m = null;
+	Reference r = null;
+	String view = null;
+
+	if (query.getMrkKey() != null) {
+            SearchResults<Marker> sr = markerFinder.getMarkerByKey(
+		query.getMrkKey());
+            m = (Marker) sr.getResultObjects().get(0);
+	    view = "goMarkerSummaryReport";
+	}
+
+	if (query.getReferenceKey() != null) {
+            SearchResults<Reference> sr = referenceFinder.getReferenceByKey(
+		query.getReferenceKey());
+            r = (Reference) sr.getResultObjects().get(0);
+	    view = "goReferenceSummaryReport";
+	}
 
         // perform query, and pull out the requested objects
         SearchResults<Annotation> searchResults
           = markerAnnotationFinder.getMarkerAnnotations(params);
         
-		ModelAndView mav = new ModelAndView("goMarkerSummaryReport");
-		mav.addObject("marker", m);
+		ModelAndView mav = new ModelAndView(view);
+		if (m != null) { mav.addObject("marker", m); }
+		if (r != null) { mav.addObject("reference", r); }
 		mav.addObject("results", searchResults.getResultObjects());
 		return mav;
     }
@@ -221,7 +319,7 @@ public class GOController {
             desc = true;
         }*/
 
-        Sort sort = new Sort(SortConstants.VOC_BY_DAG_TERM, false);
+        Sort sort = new Sort(SortConstants.MARKER_DAG_TERM, false);
         
         sorts.add(sort);
 
@@ -240,10 +338,15 @@ public class GOController {
         List<Filter> filterList = new ArrayList<Filter>();
 
         String mrkKey = query.getMrkKey();
+        String refsKey = query.getReferenceKey();
         String vocab = query.getVocab();
         String restriction = query.getRestriction();
 
         //
+        if ((refsKey != null) && (!"".equals(refsKey))) {
+            filterList.add(new Filter (SearchConstants.REF_KEY, refsKey,
+                Filter.OP_EQUAL));
+        }
         if ((mrkKey != null) && (!"".equals(mrkKey))) {
             filterList.add(new Filter (SearchConstants.MRK_KEY, mrkKey,
                 Filter.OP_EQUAL));
@@ -264,6 +367,7 @@ public class GOController {
             containerFilter.setNestedFilters(filterList);
         }
 
+//	logger.debug("Filters: " + containerFilter.toString());
         return containerFilter;
     }
 

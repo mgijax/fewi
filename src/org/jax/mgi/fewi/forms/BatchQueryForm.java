@@ -25,7 +25,7 @@ public class BatchQueryForm {
 		idTypes.put("auto", "Search all input types");
 		idTypes.put("MGI", "MGI Gene/Marker ID");
 		idTypes.put("current symbol", "Current Symbols Only");
-		idTypes.put("nomen", "All Symbols/Synonyms/Orthologs");
+		idTypes.put("nomen", "All Symbols/Synonyms/Homologs");
 		idTypes.put("Entrez Gene", "Entrez Gene ID");
 		idTypes.put("Ensembl", "Ensembl ID");
 		idTypes.put("VEGA", "VEGA ID");

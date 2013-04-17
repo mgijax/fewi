@@ -75,7 +75,7 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
       <!-- disease -->
       <td class="noWrap borderUnder" style="min-width:250px" >
         <div style="text-align:left;">
-           <a class="MP" href='${configBean.JAVAWI_URL}WIFetch?page=humanDisease&id=${disease.omimID}'>
+           <a class="MP" href='${configBean.FEWI_URL}disease/${disease.omimID}'>
                    ${disease.disease}</a>&nbsp;&nbsp;
            <span style="font-size:80%">OMIM: <a class="MP" href="http://www.omim.org/entry/${disease.omimID}">${disease.omimID }</a></span>
         </div>

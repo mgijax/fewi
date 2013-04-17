@@ -40,7 +40,7 @@ public class HibernateAccessionSummaryHunter<T> {
 		List<String> nomenItems = new ArrayList<String>();
 		nomenItems.add("old symbol");
 		nomenItems.add("%synonym");
-		nomenItems.add("%ortholog symbol");
+		nomenItems.add("% symbol");	// removed 'ortholog'
 		nomenItems.add("current name");
 		typeMap.put("nomen", nomenItems);
 		

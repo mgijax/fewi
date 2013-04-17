@@ -88,6 +88,9 @@ public class SearchConstants {
     public static final String IMG_CLASS			= "imageClass";
     public static final String IMG_IS_THUMB         = "isThumb";
 
+    // disease constants
+    public static final String DISEASE_ID            = "disease_id";
+
     // faux entry;  used by webapp class template
     public static final String FOO_ID            = "foo_id";
 
@@ -105,4 +108,7 @@ public class SearchConstants {
 	public static final String STRUCTURE_ID = "structureID";
 
 	public static final String PRIMARY_KEY = "pKey";
+	
+	// Homology constants
+	public static final String HOMOLOGY_ID            = "homologyID";
 }

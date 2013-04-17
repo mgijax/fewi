@@ -5,6 +5,7 @@ import java.util.List;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class GOSummaryRow {
 	
 	private Marker marker;
 	
+	private Reference reference;
+
 	private IDLinker  linker = ContextLoader.getIDLinker();
 
 	// config values
@@ -51,18 +54,58 @@ public class GOSummaryRow {
     	return;
     }
 
+    public GOSummaryRow (Annotation annot, Reference reference) {
+    	this.annot = annot;
+    	this.reference = reference;
+    	return;
+    }
 
     //------------------------------------------------------------------------
     // public instance methods;  JSON serializer will call all public methods
     //------------------------------------------------------------------------
+
+    public String getMarker() {
+	List<Marker> markers = this.annot.getMarkers();
+	if ((markers == null) || (markers.size() == 0)) {
+	    return "";
+	}
+
+	// assume only one marker, and that the marker is for mouse
+	Marker m = markers.get(0);
+
+	String t = "<a href='" + fewiUrl + "marker/" + m.getPrimaryID()
+	    + "'>" + m.getSymbol() + "</a>, " + m.getName();
+	return t;
+    }
+
+    public String getChromosome() {
+	List<Marker> markers = this.annot.getMarkers();
+	if ((markers == null) || (markers.size() == 0)) {
+	    return "";
+	}
+
+	// assume only one marker, and that the marker is for mouse
+	Marker m = markers.get(0);
+
+	// prefer a genetic location if one is available; if not, fall back on
+	// whatever is available
+	MarkerLocation ml = m.getPreferredCentimorgans();
+	if (ml == null) {
+		ml = m.getPreferredLocation();
+	}
+	if (ml.getChromosome() == null) {
+		return "";
+	}
+	return ml.getChromosome();
+    }
 
     public String getCategory() {
     	return annot.getDagName();
     }
     public String getTerm() {
     	String termText = "<a href='"+ wiUrl +"searches/GO.cgi?id=" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
-    	if (annot.getQualifier() != null && annot.getQualifier().equals("NOT")) {
-    		return "<b>NOT</b> " + termText;
+    	if (annot.getQualifier() != null) {
+    		return "<b>" + annot.getQualifier() + "</b> " + termText;
     	}
         return termText;
     }

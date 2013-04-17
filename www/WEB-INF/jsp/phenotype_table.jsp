@@ -110,7 +110,6 @@ NotesTagConverter ntc = new NotesTagConverter();
 <tr class="stripe1">
 <th id="phenoSystemTH">Affected Systems </th>
 <c:forEach var="phenoTableGenotype" items="${phenoTableGenotypes}" varStatus="gStatus">
-<c:if test="${!phenoTableGenotype.diseaseOnly }">
 	  <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>" colspan="${phenoTableGenotype.columnSpan}">
 	  <c:set var="genotype" value="${phenoTableGenotype.genotype}" scope="request"/>
 	  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton" 
@@ -119,7 +118,6 @@ NotesTagConverter ntc = new NotesTagConverter();
 	  ${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</a></div>
 	
 	  </th>
-</c:if>
 </c:forEach>
 </tr>
 
@@ -142,7 +140,6 @@ NotesTagConverter ntc = new NotesTagConverter();
   </div>
 </th>
 <c:forEach var="phenoTableGenotype" items="${phenoTableGenotypes}" varStatus="gStatus">
-<c:if test="${!phenoTableGenotype.diseaseOnly }">
   <c:if test="${phenoTableGenotype.splitSex == '1' }">
       <th class="genoBorder borderUnder" colspan="${phenoTableGenotype.columnSpan / 2}" style="text-align:center;">
         <span><img class="phenotable_glyph" src="${configBean.FEWI_URL}assets/images/Venus_symbol.svg"/></span>
@@ -157,7 +154,6 @@ NotesTagConverter ntc = new NotesTagConverter();
         <c:if test="${phenoTableGenotype.htmlSex=='F'}"><img class="phenotable_glyph" src="${configBean.FEWI_URL}assets/images/Venus_symbol.svg"/></c:if>&nbsp;</span>
       </th>
   </c:if>
-</c:if>
 </c:forEach>
 </tr>
 

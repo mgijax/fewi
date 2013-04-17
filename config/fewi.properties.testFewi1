@@ -65,6 +65,8 @@ solr.markerAnnotation.url=${solr.server1.url}markerAnnotation/
 solr.creAlleleSystem.url=${solr.server1.url}creAlleleSystem/
 solr.creAssayResult.url=${solr.server1.url}creAssayResult/
 solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
+solr.homology.url=${solr.server1.url}homology/
+solr.disease.url=${solr.server1.url}disease/
 
 # solr config parameters
 solr.soTimeout=70000

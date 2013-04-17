@@ -301,7 +301,7 @@ public class BatchSummaryRow {
     	if (omimAnnots != null){
     		String url;
     		for (Annotation annotation : omimAnnots) {
-    			url = javawiUrl + "WIFetch?page=humanDisease&id=" + annotation.getTermID();
+    			url = fewiUrl + "disease/" + annotation.getTermID();
     			omim.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
 			}
     	}

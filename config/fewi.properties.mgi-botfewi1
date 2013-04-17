@@ -68,6 +68,8 @@ solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
 solr.structure_ac.url=${solr.server1.url}structureAC/
 solr.vocab_term_ac.url=${solr.server1.url}vocabTermAC/
 solr.gxd_result.url=${solr.server1.url}gxdResult/
+solr.homology.url=${solr.server1.url}homology/
+solr.disease.url=${solr.server1.url}disease/
 
 # solr config parameters
 solr.soTimeout=70000

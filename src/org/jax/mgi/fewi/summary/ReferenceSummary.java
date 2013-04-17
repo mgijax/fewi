@@ -123,6 +123,9 @@ public class ReferenceSummary {
         if (reference.getCountOfGXDIndex() > 0){
         	sb.append(String.format("<li>Expression literature records: <a href=\"%sgxdlit/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGXDIndex()));
         }
+        if(reference.getCountOfGOAnnotations() > 0){
+        	sb.append(String.format("<li>Functional annotations (GO): <a href=\"%sgo/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGOAnnotations()));
+        }
         if(reference.getCountOfMarkers() > 0){
         	sb.append(String.format("<li>Genome features: <a href=\"%ssearches/marker_report_by_reference.cgi?%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfMarkers()));
         }

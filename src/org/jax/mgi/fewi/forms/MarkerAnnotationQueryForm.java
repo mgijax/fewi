@@ -11,6 +11,7 @@ public class MarkerAnnotationQueryForm {
     // instance variables
     //--------------------//
 
+    private String referenceKey;
     private String mrkKey;
     private String vocab;
     private String restriction;
@@ -19,6 +20,12 @@ public class MarkerAnnotationQueryForm {
     // accessors
     //--------------------//
 
+    public String getReferenceKey() {
+        return referenceKey;
+    }
+    public void setReferenceKey(String referenceKey) {
+        this.referenceKey = referenceKey;
+    }
     public String getMrkKey() {
         return mrkKey;
     }

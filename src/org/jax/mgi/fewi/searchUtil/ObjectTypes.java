@@ -17,11 +17,12 @@ public class ObjectTypes {
 	public static String PROBECLONE = "Probe/Clone";
 	public static String IMAGE = "Image";
 	public static String ASSAY = "Assay";
-	public static String ORTHOLOGY = "Orthology";
+	public static String HOMOLOGY = "Homology";
+	public static String MARKER_CLUSTER = "Marker Cluster";
 	public static String ANTIBODY = "Antibody";
 	public static String ANTIGEN = "Antigen";
 	public static String MAPPING = "Experiment";
-	public static String OMIM = "OMIM";
+	public static String DISEASE = "Disease";
 	public static String GENE = "Gene";
 	public static String GO_MF = "Molecular Function";
 	public static String GO_BP = "Biological Process";

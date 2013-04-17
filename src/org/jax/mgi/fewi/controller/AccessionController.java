@@ -120,7 +120,12 @@ public class AccessionController {
         	}
         	
         	// Handle the old wi cases, but with ID        	
-        	else if (objectType.equals(ObjectTypes.ORTHOLOGY)) {
+        	else if (objectType.equals(ObjectTypes.HOMOLOGY)) {
+        		url = linker.getFewiIDLink(objectType, acc.getDisplayID());
+        	}
+        	
+        	// Handle the old wi cases, but with ID        	
+        	else if (objectType.equals(ObjectTypes.MARKER_CLUSTER)) {
         		url = linker.getFewiIDLink(objectType, acc.getDisplayID());
         	}
         	
@@ -150,6 +155,9 @@ public class AccessionController {
 	        }	        
 	        mav.addObject("queryString", queryString);
 	        mav.addObject("queryForm", queryForm);
+		logger.debug("Going to summary for "
+			+ searchResults.getResultObjects().size()
+			+ " matches to " + queryForm.getId() );
         }
         return mav;
     }

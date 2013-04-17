@@ -1,0 +1,96 @@
+
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+    <title>Homology Class Only 1 Species</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Homology Class Only One Species</h1>
+    <ul>
+        <li>US28, Display HomoloGene classes w/o mouse and w/only one species</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>A homology class may have only 1 species
+		<ol><li>A homology class with only mouse</li>
+		    <li>A homology class with only a single species that is not mouse (human, rat, cattle, chimp, or dog)
+		    <ol><li>Single species class at HomoloGene</li>
+		        <li>Multiple species class at HomoloGene, but single in MGI because other species are not loaded</li>
+		    </ol></li>
+		</ol></li>
+	    
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+    </div>
+		<h3>Manual tests</h3>
+    	
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+       		<li>Verify homology class <b concordion:set="#clusterId">86036</b> containing only mouse markers is returned. 
+    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
+    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">mouse</b>.</li>
+    			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
+    		</ol>
+    		</li>    		
+   		    <li>Verify homology class <b concordion:set="#clusterId">133546</b> containing only dog markers is returned. 
+    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
+    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">dog</b>.</li>
+    			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
+    		</ol>
+    		</li>    	
+   		    <li>Verify homology class <b concordion:set="#clusterId">133522</b> only displays chimp markers even though homologene class also includes chicken. 
+    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
+    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">chimpanzee</b>.</li>
+    			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
+    		</ol>
+    		</li>    	
+   		
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

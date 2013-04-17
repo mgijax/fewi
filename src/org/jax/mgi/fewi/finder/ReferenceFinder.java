@@ -70,6 +70,28 @@ public class ReferenceFinder {
 			return results;
 	}
 	
+    public SearchResults<Reference> getReferenceByID(
+		SearchParams searchParams) {
+
+        logger.debug("->getReferenceByID()");
+
+        // result object to be returned
+        SearchResults<Reference> searchResults = new SearchResults<Reference>();
+
+        // ask the hunter to identify which objects to return
+        referenceHunter.hunt(searchParams, searchResults);
+        logger.debug("->hunter found these resultKeys - "
+          + searchResults.getResultKeys());
+
+        // gather objects identified by the hunter, add them to the results
+        List<Reference> refList = referenceGatherer.get( Reference.class,
+		searchResults.getResultKeys() );
+        searchResults.setResultObjects(refList);
+
+        return searchResults;
+    }
+
+
     public SearchResults<Reference> getReferenceByKey(String dbKey) {
 
         logger.debug("->getReferenceByKey()");

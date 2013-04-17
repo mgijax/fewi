@@ -77,7 +77,13 @@ public class AccessionSummaryRow {
     	
     	// Handle the old wi cases, but with ID
     	
-    	else if (objectType.equals(ObjectTypes.ORTHOLOGY)) {
+    	else if (objectType.equals(ObjectTypes.DISEASE)) {
+    		url = feLinker.getFewiIDLink(objectType, acc.getDisplayID());
+    	}
+    	else if (objectType.equals(ObjectTypes.HOMOLOGY)) {
+    		url = feLinker.getFewiIDLink(objectType, acc.getDisplayID());
+    	}
+    	else if (objectType.equals(ObjectTypes.MARKER_CLUSTER)) {
     		url = feLinker.getFewiIDLink(objectType, acc.getDisplayID());
     	}
     	
@@ -103,6 +109,9 @@ public class AccessionSummaryRow {
     		}
     	}
     	if (! objectType.equals(ObjectTypes.INTERPRO)) {
+	    if (objectType.equals(ObjectTypes.MARKER_CLUSTER)) {
+		objectType = ObjectTypes.HOMOLOGY;
+	    }
     		return "<a href=\"" + url + "\">" + "MGI " + objectType + " Detail" +  "</a>";
     	}
     	else {

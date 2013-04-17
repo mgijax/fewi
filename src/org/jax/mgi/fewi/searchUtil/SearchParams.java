@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.searchUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A SearchParams object represents Search parameters
