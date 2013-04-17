@@ -1,17 +1,22 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.List;
+import java.io.*;
 
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.HomologyFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.util.TextFileReader;
+import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,13 +75,9 @@ public class HomologyController {
 	// should only be one.  error condition if not.
 
 	if (markerList.size() < 1) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "No Marker Found");
-	    return mav;
+	    return errorMav("No Marker Found");
 	} else if (markerList.size() > 1) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "Non-Unique Marker ID Found");
-	    return mav;
+	    return errorMav("Non-Unique Marker ID Found");
 	}
 
 	// So, we now have found our marker.  Get its HomoloGene ID.
@@ -84,9 +85,7 @@ public class HomologyController {
 	MarkerID mouseID = mouse.getHomoloGeneID();
 
 	if (mouseID == null) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "Non-Mouse Marker Has No HomoloGene ID");
-	    return mav;
+	    return errorMav("Non-Mouse Marker Has No HomoloGene ID");
 	}
 
 	String hgID = mouseID.getAccID();
@@ -112,13 +111,9 @@ public class HomologyController {
 	// should only be one.  error condition if not.
 
 	if (markerList.size() < 1) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "No Marker Found");
-	    return mav;
+	    return errorMav("No Marker Found");
 	} else if (markerList.size() > 1) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "Non-Unique Marker Key Found");
-	    return mav;
+	    return errorMav("Non-Unique Marker Key Found");
 	}
 
 	// So, we now have found our marker.  Get its HomoloGene ID.
@@ -126,9 +121,7 @@ public class HomologyController {
 	MarkerID mouseID = mouse.getHomoloGeneID();
 
 	if (mouseID == null) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "Non-Mouse Marker Has No HomoloGene ID");
-	    return mav;
+	    return errorMav("Non-Mouse Marker Has No HomoloGene ID");
 	}
 
 	String hgID = mouseID.getAccID();
@@ -166,14 +159,9 @@ public class HomologyController {
 
         // there can be only one...
         if (homologyList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            logger.info("No Homology Cluster Found");
-            mav.addObject("errorMsg", "No Homology Cluster Found");
-            return mav;
+            return errorMav("No Homology Cluster Found");
         } else if (homologyList.size() > 1) { // dupe found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate ID");
-            return mav;
+            return errorMav("Duplicate ID");
         }
         // success - we have a single object
 
@@ -187,4 +175,107 @@ public class HomologyController {
         return mav;
     }
 
+    //---------------------------------------------------------------
+    // Comparative GO Graph for a HomoloGene class (by HomoloGene ID)
+    //---------------------------------------------------------------
+    @RequestMapping(value="/GOGraph/{homologyID:.+}", method = RequestMethod.GET)
+    public ModelAndView comparativeGOGraphByID(@PathVariable("homologyID") String homologyID) {
+
+        logger.debug("->comparativeGOGraphByID started");
+
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter homologyIdFilter = new Filter(SearchConstants.HOMOLOGY_ID, homologyID);
+        searchParams.setFilter(homologyIdFilter);
+
+        // find the requested HomologyCluster
+        SearchResults<HomologyCluster> searchResults
+          = homologyFinder.getHomologyByID(searchParams);
+        List<HomologyCluster> homologyList = searchResults.getResultObjects();
+
+        // there can be only one...
+        if (homologyList.size() < 1) { // none found
+            return errorMav("No Homology Cluster Found");
+        } else if (homologyList.size() > 1) { // dupe found
+            return errorMav("Duplicate ID");
+        }
+        // success - we have a single object
+
+        //pull out the HomologyCluster
+        HomologyCluster homology = homologyList.get(0);
+
+	// if this HomologyCluster has no comparative GO graph, it's an error
+	if (homology.getHasComparativeGOGraph() == 0) {
+	    return errorMav("Homology Cluster has no comparative GO graph");
+	}
+
+	String goGraphText = null;
+	try {
+	    String goGraphPath = 
+		ContextLoader.getConfigBean().getProperty("GO_GRAPHS_PATH");
+
+	    if (!goGraphPath.endsWith("/")) {
+		goGraphPath = goGraphPath + "/orthology/" + homologyID + ".html";
+	    } else {
+		goGraphPath = goGraphPath + "orthology/" + homologyID + ".html";
+	    }
+	    logger.debug("Reading GO Graph from: " + goGraphPath);
+
+	    goGraphText = TextFileReader.readFile(goGraphPath);
+
+	    if (goGraphText == null) {
+		    logger.debug ("GO Graph text is null");
+	    } else {
+		    logger.debug ("GO Graph text length: "
+			+ goGraphText.length());
+	    }
+
+	    // convert special MGI markups to their full HTML equivalents
+	    NotesTagConverter ntc = new NotesTagConverter();
+	    goGraphText = ntc.convertNotes(goGraphText, '|');
+
+	    GOGraphConverter ggc = new GOGraphConverter();
+	    goGraphText = ggc.translateMarkups(goGraphText);
+
+	} catch (IOException e) {
+	    return errorMav("Could not read comparative GO graph from file");
+	}
+
+	// determine which organisms appear in the title (mouse, human, rat)
+	StringBuffer organisms = new StringBuffer();
+
+	if (homology.getMouseMarkerCount() > 0) {
+	    organisms.append("mouse");
+	}
+	
+	if (homology.getHumanMarkerCount() > 0) {
+	    if (organisms.length() > 0) {
+		organisms.append(", ");
+	    }
+	    organisms.append("human");
+	}
+
+	if (homology.getRatMarkerCount() > 0) {
+	    if (organisms.length() > 0) {
+		organisms.append(", ");
+	    }
+	    organisms.append("rat");
+	}
+
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("homology_go_graph");
+        mav.addObject("homology", homology);
+	mav.addObject("goGraphText", goGraphText);
+	mav.addObject("organisms", organisms.toString());
+
+        return mav;
+    }
+
+    // convenience method -- construct a ModelAndView for the error page and
+    // include the given 'msg' as the error String to be reported
+    private ModelAndView errorMav (String msg) {
+	ModelAndView mav = new ModelAndView("error");
+	mav.addObject("errorMsg", msg);
+	return mav;
+    }
 }
