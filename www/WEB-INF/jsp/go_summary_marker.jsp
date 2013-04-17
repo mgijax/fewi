@@ -76,7 +76,7 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
-<div id="paginationWrap">
+<div id="paginationWrap" style="width:1080px;">
 	<div id="paginationBottom">&nbsp;</div>
 </div>
 
