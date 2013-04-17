@@ -70,7 +70,9 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 	<div id="querySummary">
 		<div class="innertube">
-			<span class="small"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOOrthologyGraph&id=${homology.primaryID}">Comparative GO Graph</a> (mouse, human, rat)</span>	
+		    <c:if test="${homology.hasComparativeGOGraph == 1}">
+			<span class="small"><a href="${configBean.FEWI_URL}homology/GOGraph/${homology.primaryID}">Comparative GO Graph</a> (mouse, human, rat)</span>	
+		    </c:if>&nbsp;
 		</div>
 	</div>
 	<div id="rightcolumn">
