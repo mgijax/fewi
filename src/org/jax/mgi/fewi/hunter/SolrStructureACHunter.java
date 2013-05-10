@@ -101,7 +101,8 @@ public class SolrStructureACHunter extends SolrHunter
             String structure = (String) doc.getFieldValue(IndexConstants.STRUCTUREAC_STRUCTURE);
             String synonym = (String) doc.getFieldValue(IndexConstants.STRUCTUREAC_SYNONYM);
             boolean isStrictSynonym = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_IS_STRICT_SYNONYM);
-            StructureACResult resultObject = new StructureACResult(structure,synonym,isStrictSynonym);
+            boolean hasCre = (Boolean) doc.getFieldValue(IndexConstants.STRUCTUREAC_HAS_CRE);
+            StructureACResult resultObject = new StructureACResult(structure,synonym,isStrictSynonym,hasCre);
             
             // Add result to SearchResults
             sr.addResultObjects(resultObject);

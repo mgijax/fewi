@@ -11,7 +11,8 @@
  -->
 
 
-    <title>Remove Expression Ribbon from Allele Detail Page</title>
+<!--    <title>Remove Expression Ribbon from Allele Detail Page</title> -->
+    <title>Reinstate Expression Ribbon on Allele Detail Page</title>
 </head>
 
 <body>
@@ -21,9 +22,11 @@
 </div>
 
 <div id="maintitle">
-    <h1>Remove Expression Ribbon from Allele Detail Page</h1>
+<!--      <h1>Remove Expression Ribbon from Allele Detail Page</h1>-->
+    <h1>Reinstate Expression Ribbon on Allele Detail Page</h1>
     <ul>
-        <li>User story 128, Remove Expression Ribbon from Allele Detail Page</li>
+<!--          <li>MGI 5.12 User story 128, Remove Expression Ribbon from Allele Detail Page</li>-->
+		<li>MGI 5.14 User story 163, Reinstate links to expression data from allele detail pages for that allele</li>
     </ul>
 </div>
 
@@ -48,15 +51,19 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li><span class="regressHi">Regress</span> Expression Ribbon no longer appears on Allele Detail Pages
- 			<p concordion:assertTrue="true">klf 12/6/12</p>
+    		<li><span class="regressHi">Regress</span> Expression Ribbon appears on Allele Detail Pages
+ 			<p concordion:assertTrue="true">klf 4/15/2013</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=7504">Pkd1<sup>tm2Jzh</sup></a></li>
-                <li>Verify that the Expression ribbon no longer appears.</li>
+                <li>Verify that the Expression ribbon appears.</li>
+                <li>Follow the link and verify the Expression summary displays results containing this allele.</li>
+                <li>Navigate to the Allele Detail age for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=51253">Slc6a3&lt;tm1(cre)Xz&gt;</a></li>
+                <li>Verify that the Expression ribbon appears. (Note: this allele also has Recombinase data and Phenotype data ribbons.)</li>
+                <li>Follow the link and verify the Expression summary displays results containing this allele.</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Ribbons alternate colors properly on the page.
- 			<p concordion:assertTrue="true">klf 12/6/12</p>
+ 			<p concordion:assertTrue="true">klf 4/15/2013</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=7504">Pkd1<sup>tm2Jzh</sup></a></li>
                 <li>Verify that ribbons alternate colors: light blue left with white background on right, then darker blue left with gray background on right.</li>

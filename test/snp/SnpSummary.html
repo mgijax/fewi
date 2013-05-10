@@ -1,0 +1,152 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>SNP Summary Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>SNP Summary Tests</h1>
+    <ul>
+        <li>User story 69, Text fixes to Update Build, Create Build, GRCm38, etc.</li>
+        <li>User story 73, Ameliorate data size issue</li>
+        <li>User story 89, Change links to MPD</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US69 - dbSNP build is 137 not 128, NCBI build is 38 not 37</li>
+		<li>US73 - for HTML-formatted (format=Web) returns, the SNP query CGI displays up to a fixed maximum (e.g. 1000) SNPs.</li>
+		<li>US73 - if the number of items returned by the query is greater than the limit (or maybe always??), display a link that re-executes the same query, but returns tab-delimited (or tab delimited to ftp site) data with no limits.</li>
+		<li>US73 - this behavior is in effect regardless of the origin of the request (i.e. works for the query form and for links from the marker detail).</li>
+		<li>US89 - MPD links use the correct url pattern as requested by MPD.</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify dbSNP build is 137 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
+ 			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
+    		<ol>
+                <li>From the SNP query form search strain of C57BL/6J and Chromosome 11</li>
+                <li>When the summary page displays verify the SNP ID column header says dbSNP Build 137</li>
+    		</ol>
+    		</li>
+    		<li>Verify NCBI build is 38 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
+ 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+    		<ol>
+                <li>From the SNP query form search strain of C57BL/6J and Chromosome 11</li>
+                <li>When the summary page displays verify the Map Position column header says GRCm38</li>
+    		</ol>
+    		</li>
+    		<li>dbSNP build is 137 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
+ 			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
+    		<ol>
+                <li>Display the Marker detail page for <b>Ap1b1</b> and click on the SNPs link in the Polymorphisms ribbon</li>
+                <li>When the summary page displays verify the SNP ID column header says dbSNP Build 137</li>
+    		</ol>
+    		</li>
+    		<li>Verify NCBI build is 38 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
+ 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+    		<ol>
+                <li>Display the Marker detail page for <b>Ap1b1</b> and click on the SNPs link in the Polymorphisms ribbon</li>
+                <li>When the summary page displays verify the Map Position column header says GRCm38</li>
+    		</ol>
+    		</li>
+    		<li>A SNP query summary that returns over 1,000 results displays only 1,000 SNPs but displays the full count in the intro text
+			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+    		<ol>
+				<li>Open the SNP query form use the selected strain of <b>C57BL/6J</b> and select Chromosome 11</li>
+				<li>When the summary page displays verify the first 1000 SNPs are displayed but the intro text says what the total number of SNPs are available</li>
+    		</ol>
+    		</li>
+    		<li>A summary that returns over 1,000 results for a marker displays only 1,000 SNPs but displays the full count in the intro text
+			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+    		<ol>
+                <li>Display the Marker detail page for <b>Lrp1b</b> and click on the first SNPs link in the Polymorphisms ribbon</li>
+                <li>When the summary page displays verify the first 1000 SNPs are displayed but the intro text says what the total number of SNPs are available</li>
+    		</ol>
+    		</li>
+    		<li>A tab-delimited text report including the total number of SNPs is available from a link in the intro text
+			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+    		<ol>
+                <li>Display the Marker detail page for <b>Lrp1b</b> and click on the first SNPs link in the Polymorphisms ribbon</li>
+                <li>When the summary page displays verify there is a link in the intro text called <b>tab-delimited format</b>, Clicking on this  link displays the entire list of SNPs in Tab delimited format</li>
+    		</ol>
+    		</li>
+    		<li>MPD links from SNP summary pages ure the correct URL pattern to link to MPD
+			<p concordion:assertTrue="true">KLF 3/13/13</p>
+    		<ol>
+                <li>Display the SNP summary page for <b>Pax6</b> and hover over the MPD links</li>
+                <li>Verify the link follows the pattern <b>http://phenome.jax.org/db/q?rtn=snp/ret1&amp;gohint=1&amp;ureg=rs33198906</b> and NOT http://phenome.jax.org/db/q?rtn=snps/retrieve&amp;searchreq=rs33198906</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

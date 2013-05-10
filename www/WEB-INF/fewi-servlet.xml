@@ -39,8 +39,8 @@
         <property name="ignoreAcceptHeader" value="true" />
         <property name="mediaTypes">
             <map>
-            	<entry key="xlsx"  value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                 <entry key="xls"  value="application/vnd.ms-excel"/>
+                <entry key="xlsx"  value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
                 <entry key="txt"  value="text/plain"/>
             </map>
         </property>

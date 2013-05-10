@@ -1,0 +1,619 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Recombinase Ribbon tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Recombinase Ribbon tests</h1>
+    <ul>
+        <li>User story 141, Cre Allele Overview - framework</li>
+        <li>User story 143, Cre Allele Overview - grid content - left hand column</li>
+        <li>User story 144, Cre Allele Overview - grid content - right hand side</li>
+        <li>User story 166, Cre Allele Overview - key to the grid</li>
+        <li>User story 167, Cre Allele Overview - show all / hide all</li>
+        <li>User story 185,	Cre: open/close entire ribbon</li>
+        <li>User story 189,	Cre: L&amp;F tweaks</li>
+        <li>User story 190,	Cre: Age range change</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto141: JavaWI: always opens section when allele is recombinase</li>
+		<li>sto141: JavaWI: calls to fewi for content</li>
+		<li>sto141: JavaWI: injects the content</li>
+		<li>sto141: fewi: set up URL pattern and controller</li>
+		<li>sto141: fewi: controller just says "Content goes here"</li>
+		<li>sto143: systems and subterms displayed in hierarchy</li>
+		<li>sto143: open/close turnstiles work</li>
+		<li>sto143: no data columns yet</li>
+		<li>sto144: age range columns defined and displayed</li>
+		<li>sto144: image column column displayed</li>
+		<li>sto144: check/minuses displayed</li>
+		<li>sto144: rollup rule implemented (i.e., check/minuses at system level)</li>
+		<li>sto144: checks/minuses link to system+allele page (existing page). All checks/minuses under same system go to same URL.</li>
+		<li>sto166: <i>none</i></li>
+		<li>sto167: grid displays an open/close all button(s)</li>
+		<li>sto167: clicking open-all opens each system section</li>
+		<li>sto167: clicking close-all closes each system section</li>
+		<li>sto185: <i>none</i>. User story: As a user coming to the allele detail page, if coming from Cre summary, I want the cre activity section open. Otherwise, not.</li>
+		<li>sto190: <i>none</i>. User story: Merge Adult with Postnatal (not specified). Merge Merge E0-4.5 with E4.6-8.9.</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Allele detail page displays a Recombinase Ribbon for recombinase alleles
+ 			<p concordion:assertTrue="true">jeffc 04/10/2013</p>
+    		<ol>
+                <li>Navigate to the allele detail page for <b>Crh&lt;tm1(cre)Zjh&gt;</b>.</li>
+                <li>Verify that a Recombinase Ribbon <b>exists</b>.</li>
+    		</ol>
+    		</li>
+    		<li>Allele detail page does not display a Recombinase Ribbon for non-recombinase alleles
+ 			<p concordion:assertTrue="true">jeffc 04/10/2013</p>
+    		<ol>
+                <li>Navigate to the allele detail page for <b>Crh&lt;tm1Maj&gt;</b>.</li>
+                <li>Verify that a Recombinase Ribbon <b>does not exist</b>.</li>
+    		</ol>
+    		</li>
+    		<li>Recombinase Ribbon indicates the recombinase driver
+ 			<p concordion:assertTrue="true">jeffc 04/10/2013</p>
+    		<ol>
+                <li>Navigate to the allele detail page for <b>Crh&lt;tm1(cre)Zjh&gt;</b>.</li>
+                <li>Verify that the following text exists: <b>Driver: | Crh <span style="font-size:0.80em;">Summary of all recombinase alleles driven by Crh</span>.</b></li>
+    		</ol>
+    		</li>
+    		<li>Recombinase driver links to Recombinase Summary page showing results of query by the Driver
+ 			<p concordion:assertTrue="true">jeffc 04/10/2012</p>
+    		<ol>
+                <li>Navigate to the allele detail page for <b>Crh&lt;tm1(cre)Zjh&gt;</b>.</li>
+                <li>Verify that the text <b>driven by Crh</b> links to the Recombinase Alleles - Tissue Summary page showing alleles with <b>driver = Crh</b> (check the URL)</li>
+    		</ol>
+    		</li>
+
+    		<li>Left-hand column displays only those unique Anatomical Systems, in alphabetical order, for which the allele has recombinase results for child terms.
+ 			<p concordion:assertTrue="true">klf 4/12/2013</p>
+    		<ol>
+                <li>Navigate to the allele detail page for <b>Pitx2&lt;tm4(cre)Jfm&gt;</b>.</li>
+                <li>Verify that only the anatomical system <b>cardiovascular system</b> is displayed.</li>
+                <li>Navigate to the allele detail page for <b>Tg(Mylpf-cre)3Kraj</b>.</li>
+                <li>Verify that only the anatomical systems <b>embryo-other</b>, <b>nervous system</b>, and <b>sensory organs</b> are displayed.</li>
+    		</ol>
+    		</li>
+    		<li>Left-hand column contains "turnstiles" which show/hide additional rows for each Anatomical System displayed.
+ 			<p concordion:assertTrue="true">klf 4/12/2013</p>
+    		<ol>
+                <li>Navigate to the allele detail page for <b>Pitx2&lt;tm4(cre)Jfm&gt;</b>.</li>
+                <li>Verify that the Anatomical System <b>cardiovascular system</b> displays a turnstile which can be clicked to show/hide child terms.</li>
+    		</ol>
+    		</li>
+    		<li>When turnstiles are open, left-hand column displays only those unique child terms, in alphabetical order, that are within the given Anatomical System and for which the allele has recombinase results.
+ 			<p concordion:assertTrue="true">klf 4/12/2013</p>
+    		<ol>
+                <li>Navigate to the allele detail page for <b>Pitx2&lt;tm4(cre)Jfm&gt;</b>.</li>
+                <li>Open the turnstile for anatomical system <b>cardiovascular system</b>.</li>
+                <li>Verify that only the following terms are displayed:
+                <ul>
+                	<li>atrio-ventricular cushion tissue</li>
+					<li>cardiac muscle</li>
+					<li>heart</li>
+					<li>interatrial septum</li>
+					<li>interventricular groove</li>
+					<li>interventricular septum</li>
+					<li>mitral valve leaflet</li>
+					<li>outflow tract</li>
+					<li>right ventricle cardiac muscle</li>
+					<li>tricuspid valve leaflet</li>
+                </ul>
+                </li>
+                <li>Navigate to the allele detail page for <b>Tg(Mylpf-cre)3Kraj</b>.</li>
+                <li>Open the turnstile for anatomical system <b>embryo-other</b>.</li>
+                <li>Verify that only the following terms are displayed:
+                <ul>
+                	<li>embryo</li>
+                </ul>
+                </li>
+                <li>Open the turnstile for anatomical system <b>nervous system</b>.</li>
+                <li>Verify that only the following terms are displayed:
+                <ul>
+					<li>basal ganglia</li>
+					<li>brain</li>
+					<li>brain grey matter</li>
+					<li>brain white matter</li>
+					<li>brainstem</li>
+					<li>cerebellar cortex</li>
+					<li>cerebellum</li>
+					<li>cerebral cortex</li>
+					<li>corpus striatum</li>
+					<li>deep cerebellar nucleus</li>
+					<li>dorsal root ganglion</li>
+					<li>forebrain</li>
+					<li>future spinal cord</li>
+					<li>hippocampus region</li>
+					<li>hippocampus region CA2</li>
+					<li>hippocampus region CA3</li>
+					<li>hypothalamus</li>
+					<li>midbrain</li>
+					<li>tegmentum</li>
+					<li>telencephalon</li>
+					<li>thalamus</li>
+				</ul>
+                </li>
+                <li>Open the turnstile for anatomical system <b>sensory organs</b>.</li>
+                <li>Verify that only the following terms are displayed:
+                <ul>
+                	<li>eye</li>
+					<li>optic cup</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+            <li>Verify that an allele shows the correct Expressed/Not Expr results icon for each term and system (story 144 modified by story 190):
+				<table>
+					<tr><th>Category</th><th>Label on WI</th><th>AgeMin-AgeMax range used to define  display Category</th></tr>
+					<tr><td>E0-E8.9</td><td>E 0-8.9</td><td>0.00 - 8.90</td></tr>
+					<tr><td>E9.0-E13.9</td><td>E 9.0-13.9</td><td>8.91 - 13.90</td></tr>
+					<tr><td>E14-E19.5</td><td>E 14.0-19.5</td><td>14.00 - 21.00</td></tr>
+					<tr><td>P0-P21<br/>Includes postnatal-newborn</td><td>P 0-21</td><td>21.01 - 42.<span style="color:#FF0000;">01</span> (equiv. to age birth - 3 wks)<br/>21.01 - 25.00</td></tr>
+					<tr><td>P22-P42</td><td>Post-weaning<br/>P 22-42</td><td>42.<span style="color:#FF0000;">02</span> - 63.<span style="color:#FF0000;">01</span> (equiv. to age 3 wks - 6 wks)</td></tr>
+					<tr><td>P43+<br/>Includes postnatal-adult<br/>Includes postnatal</td><td>Adult<br/>&gt;P 43</td><td>63.<span style="color:#FF0000;">02</span> - 1846.00 (equiv. to age 6 wks and older)<br/> display here by special handling<br/> display here by special handling</td></tr>
+					<tr><td colspan="3">Note: AgeMin-AgeMax ranges as defined in the database for the terms "postnatal-adult" and "postnatal"<br/>overlap AgeMin-AgeMax ranges for the other  &quot;P&quot; categories.  To avoid having duplicate Expressed/Not Expr icons,<br/>display for these two categories is determined by special rules.</td></tr>
+				</table>
+
+			<h4>Tests below cover only some of the data for a given allele.  Any allele may have additional data not included in the test.</h4>
+           	<p>A.) For the allele <b>Acan&lt;tm1(cre/ERT2)Crm&gt;</b>(<b concordion:set="#alleleID">MGI:4420223</b>) verify the following age ranges have the specified data:</p>
+            	<table concordion:execute="#result = isExpressedIn(#alleleID,#system,#struct,#age)">
+	            	<tr>
+		            	<th concordion:set="#system">System</th>
+		            	<th concordion:set="#struct">Structure</th>
+		            	<th concordion:set="#age">Age Category</th>
+		            	<th concordion:assertEquals="#result">Expressed/Not Expr</th>
+	            	</tr>
+	            	<tr>
+		            	<td><i>none</i></td>
+		            	<td></td>
+		            	<td>E0-E8.9</td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td>Embryo-Other</td>
+		            	<td>embryo</td>
+		            	<td>E9-E13.9</td>
+		            	<td><b>Not Expr</b></td>
+	            	</tr>
+	            	<tr>
+		            	<td>Embryo-Other</td>
+		            	<td>cervical vertebral cartilage condensation</td>
+		            	<td>E9-E13.9</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>Embryo-Other</td>
+		            	<td><b>&lt;-- at system level</b></td>
+		            	<td>E9-E13.9</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>Embryo-Other</td>
+		            	<td>embryo cartilage</td>
+		            	<td>E14-E19.5</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>Limbs</td>
+		            	<td>knee</td>
+		            	<td>P0-P21</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>Limbs</td>
+		            	<td>knee</td>
+		            	<td>P22-P42</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>Limbs</td>
+		            	<td>knee</td>
+		            	<td>P43+ (Adult)</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>Cardiovascular System</td>
+		            	<td>heart</td>
+		            	<td>P43+ (Adult)</td>
+		            	<td><b>Not Expr</b></td>
+	            	</tr>
+            	</table>
+
+           	<p>B.) For the allele <b>Krt19&lt;tm1(cre)Mmt&gt;</b>(<b concordion:set="#alleleID">MGI:1858007</b>) verify the following age ranges have the specified data:</p>
+            	<table concordion:execute="#result = isExpressedIn(#alleleID,#system,#struct,#age)">
+	            	<tr>
+		            	<th concordion:set="#system">System</th>
+		            	<th concordion:set="#struct">Structure</th>
+		            	<th concordion:set="#age">Age Category</th>
+		            	<th concordion:assertEquals="#result">Expressed/Not Expr</th>
+		            	<th>Notes</th>
+	            	</tr>
+	            	<tr>
+		            	<td>Early embryo</td>
+		            	<td>embryo</td>
+		            	<td>E0-E8.9</td>
+		            	<td><b>Not Expr</b></td>
+		            	<td> <i>This is the only cre result &lt;=E4.5 in the database.</i></td>
+	            	</tr>
+	            	<tr>
+		            	<td>Extraembryonic component</td>
+		            	<td>allantois</td>
+		            	<td>E0-E8.9</td>
+		            	<td>Expressed</td>
+		            	<td></td>
+		            </tr>
+	            	<tr>
+		            	<td>Extraembryonic component</td>
+		            	<td>yolk sac endoderm</td>
+		            	<td>E0-E8.9</td>
+		            	<td><b>Not Expr</b></td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td>Extraembryonic component</td>
+		            	<td><b>&lt;-- at system level</b></td>
+		            	<td>E0-E8.9</td>
+		            	<td>Expressed</td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td>Alimentary system</td>
+		            	<td>foregut</td>
+		            	<td>E9-E13.9</td>
+		            	<td>Expressed</td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td><i>none</i></td>
+		            	<td></td>
+		            	<td>E14-E19.5</td>
+		            	<td></td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td><i>none</i></td>
+		            	<td></td>
+		            	<td>P0-P21</td>
+		            	<td></td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td><i>none</i></td>
+		            	<td></td>
+		            	<td>P22-P42</td>
+		            	<td></td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td><i>none</i></td>
+		            	<td></td>
+		            	<td>P43+ (Adult)</td>
+		            	<td></td>
+		            	<td></td>
+	            	</tr>
+            	</table>
+
+           	<p>C.) For the allele <b>Dlx1&lt;tm1(cre/ERT2)Zjh&gt;</b>(<b concordion:set="#alleleID">MGI:5295937</b>) verify the following age ranges have the specified data:</p>
+            	<table concordion:execute="#result = isExpressedIn(#alleleID,#system,#struct,#age)">
+	            	<tr>
+		            	<th concordion:set="#system">System</th>
+		            	<th concordion:set="#struct">Structure</th>
+		            	<th concordion:set="#age">Age Category</th>
+		            	<th concordion:assertEquals="#result">Expressed/Not Expr</th>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td><i>none</i></td>
+		            	<td>E0-E8.9</td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>cerebral cortex</td>
+		            	<td>E9-E13.9</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>cerebral cortex subventricular zone</td>
+		            	<td>E9-E13.9</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>cerebral cortex marginal layer</td>
+		            	<td>E14-E19.5</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>cortical plate</td>
+		            	<td>E14-E19.5</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>amygdala</td>
+		            	<td>P0-P21</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>brainstem</td>
+		            	<td>P0-P21</td>
+		            	<td><b>Not Expr</b></td>
+	            	</tr>
+	            	<tr>
+		            	<td><i>none</i></td>
+		            	<td></td>
+		            	<td>P22-P42</td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>amygdala</td>
+		            	<td>P43+ (Adult)</td>
+		            	<td>Expressed</td>
+	            	</tr>
+	            	<tr>
+		            	<td>nervous system</td>
+		            	<td>brainstem</td>
+		            	<td>P43+ (Adult)</td>
+		            	<td>Expressed</td>
+	            	</tr>
+            	</table>
+
+           	<p>D.) For the allele <b>Calb2&lt;tm1(cre)Zjh&gt;</b>(<b concordion:set="#alleleID">MGI:4365736</b>) verify the following age ranges have the specified data:</p>
+            	<table concordion:execute="#result = isExpressedIn(#alleleID,#system,#struct,#age)">
+	            	<tr>
+		            	<th concordion:set="#system">System</th>
+		            	<th concordion:set="#struct">Structure</th>
+		            	<th concordion:set="#age">Age Category</th>
+		            	<th concordion:assertEquals="#result">Expressed/Not Expr</th>
+	            	</tr>
+	            	<tr>
+		            	<td><i>none</i></td>
+		            	<td></td>
+		            	<td>E0-E8.9</td>
+		            	<td></td>
+	            	</tr>
+	            	<tr>
+		            	<td>alimentary system</td>
+		            	<td>alimentary system</td>
+		            	<td>E9-E13.9</td>
+		            	<td><b>Not Expr</b></td>
+	            	</tr>
+	            	<tr>
+		            	<td>alimentary system</td>
+		            	<td>alimentary system</td>
+		            	<td>E14-E19.5</td>
+		            	<td><b>Not Expr</b></td>
+	            	</tr>
+	            	<tr>
+		            	<td>alimentary system</td>
+		            	<td><b>&lt;--- at system level</b></td>
+		            	<td>E9-E13.9</td>
+		            	<td><b>Not Expr</b></td>
+	            	</tr>
+	            	<tr>
+		            	<td>alimentary system</td>
+		            	<td><b>&lt;--- at system level</b></td>
+		            	<td>E14-E19.5</td>
+		            	<td><b>Not Expr</b></td>
+	            	</tr>
+            	</table>
+           	</li>
+           	<li><span concordion:assertTrue="true">klf 5/8/13</span> For a structure with both Expressed and Not Expr results in the database, the grid aggregates to display "Expressed".
+           	<ul>
+	           	<li>For the allele <b>Foxn1&lt;tm3(cre)Nrm&gt;</b> and system <b>branchial arches</b>, verify that the structure <b>3rd arch branchial pouch</b> in the age range <b>E9-E13.9</b> has both <i>Expressed</i> and <i>Not Expr</i> results (using the tissue specificity pages).</li>
+	           	<li>Verify that the grid aggregates the data to display as <b>Expressed</b>.</li>
+	           	<li>For the allele <b>Pax3&lt;tm1(cre)Joe&gt;</b> and the system <b>cardiovascular system</b>, verify that the structure <b>endocardial cushion tissue</b> in the age range <b>E9-E13.9</b> has both <i>Not Expr</i> and <i>Expressed</i> results (using the tissue specificity page). </li>
+	           	<li>Verify that the grid aggregates the data to display as <b>Expressed</b>. </li>
+           	</ul>
+           	</li>
+           	<li><span concordion:assertTrue="true">passed klf 5/8/13</span> For a structure whose expression annotation spans an age category boundary, the grid displays the appropriate  &quot;Expressed/Not Expr&quot; icons in all spanned categories.
+           	<ul>
+           		<li>For the allele <b>Grid2&lt;tm1(cre/PGR)Ksak&gt;</b> and the system <b>nervous system</b>, verify that the structure <b>cerebellum purkinje cell layer</b> has <i>Expressed</i> results for the age <b>postnatal week 5-7</b> (using the tissue specificity page).</li>
+           		<li>Verify that the grid displays <b>Expressed</b> icons in both the <b>P 22-42</b> age range and also the <b>Adult &gt;P 43</b> age range for that structure.</li>
+           		<li>Verify that the grid displays <b>Expressed</b> icons in both age range categories for the system <b>nervous system</b>.</li>
+           	</ul>
+           	</li>
+           	<li><span concordion:assertTrue="true">klf 4/29/13</span> For a structure with multiple annotations within an age category, the grid
+           	lists the structure only once and displays the appropriate icon only once.<ul>
+           		<li>For the allele <b>Tg(Neurog1-cre/ERT2)1Good</b> and the system <b>sensory organs</b>, verify the structure <b>cochlea</b> is listed only once and displays <i>Expressed</i> results for the age ranges <b>E14-E19.5</b> and <b>P0-P21</b>. (Note: this allele has 9 Expressed results for this structure in these 2 age ranges.)</li>
+           	</ul>
+
+           	</li>
+            <li>Image column displays indicator  (checkmark) only when an image file is visible on the Specificity page.
+            Indicator is linked to the appropriate Tissue Specificity page.<p concordion:assertTrue="true">klf 4/29/13</p>
+            <ul>
+            	<li>For the allele <b>Foxn1&lt;tm3(cre)Nrm&gt;</b> and system <b>branchial arches</b>,
+            	<ul>
+            		<li>verify that the structure <b>3rd arch branchial pouch</b> displays an image indicator and is linked to the <b>Branchial Arches</b> specificity page for that allele.</li>
+            		<li>verify that the system <b>branchial arches</b> displays an image indicator and is linked to the <b>Branchial Arches</b> specificity page for that allele.</li>
+            	</ul>
+            	</li>
+            	<li>For the allele <b>Ascl3&lt;tm1(EGFP/cre)Ovi&gt;</b> and system <b>alimentary system</b>,
+            	<ul>
+            		<li>verify that the structure <b>parotid gland</b> does NOT display an image indicator.</li>
+            		<li>verify that the structure <b>sublingual gland</b> DOES display an image indicator and is linked to the <b>Alimentary System</b> specificity page for that allele.</li>
+            		<li>verify that the structure <b>submandibular gland</b> DOES display an image indicator and is linked to the <b>Alimentary System</b> specificity page for that allele.</li>
+            		<li>verify that the system <b>alimentary system</b> DOES display an image indicator and is linked to the <b>Alimentary System</b> specificity page for that allele.</li>
+            	</ul>
+            	</li>
+            </ul>
+            </li>
+    		<li>For recombinase alleles having no recombinase activity assay data, in place of the Activity Overview grid display the sentence "MGI has not yet included recombinase activity data for this allele in any anatomical systems.".
+ 			<p concordion:assertTrue="true">klf 5/8/2013</p>
+ 			<ol>
+ 				<li>Verify the sentence appears for the following alleles:
+ 				<ul>
+ 					<li>Sftpc&lt;tm1(cre/ERT2)Blh&gt;</li>
+ 					<li>Tg(SFTPC-cre)#Mliu</li>
+ 					<li>Tg(ACTA1-cre)1Jdz</li>
+ 					<li>Gt(ROSA)26Sor&lt;tm6(Acta2-cre)Npa&gt;</li>
+ 				</ul>
+ 				</li>
+ 			</ol>
+ 			</li>
+ 			<li>Verify show/hide all button appears in recombinase grid, and works.
+ 			<p concordion:assertTrue="true">kstone - 2013-04-24</p>
+ 			<ol>
+ 				<li>Verify that text appears at top of the grid, with links to "show" or "hide" the terms.
+ 				<ul>
+ 					<li>Visit allele page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3053813">Tg(Acp5-cre)4Rda </a></li>
+ 					<li>Click "show". Verify that all the systems expand to display their systems</li>
+ 					<li>Click "hide". Verif that all the systems revert to a closed state (like on first page viewing).</li>
+ 					<li>Open a couple systems (but not all), then click "show". Verify all systems are open.</li>
+ 					<li>Close a couple systems (but not all), then click "hide. Verify all systems are now closed.</li>
+ 				</ul>
+ 				</li>
+ 			</ol>
+ 			</li>
+
+<!-- SUPERSEDED BY THE TEST THAT FOLLOWS.
+ 			<li>Verify that legend appears.
+ 			<p concordion:assertTrue="true">passed klf 5/6/13</p>
+ 			<ol>
+ 				<li>Verify that legend appears above the grid. It should be on its own line, and displays proper text, with the left-heading <b>Key:</b>
+ 				<ul>
+ 					<li>Visit allele page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3053813">Tg(Acp5-cre)4Rda </a></li>
+ 					<li>table should look like this:
+ 						<table><tr><td>&#8730;</td><td>Activity Detected</td><td><b>&#8211; </b></td><td>Activity Not Detected</td></tr></table></li>
+ 				</ul>
+ 				</li>
+ 			</ol>
+ 			</li>
+ -->
+
+    		<li>Move Key (legend): Key to the grid appears in header row, below "show/hide all" text, left-aligned to "Activity in Systems/Structures" header.
+ 			<p concordion:assertTrue="true">pf 5/8/2013</p>
+ 			<ol>
+ 				<li>Verify that legend appears inside the grid.
+ 				<ul>
+ 					<li>Visit allele page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3053813">Tg(Acp5-cre)4Rda </a></li>
+ 					<li>table should look like this:
+ 						<table><tr><td>&#8730;</td><td>Activity Detected</td><td><b>&#8211; <!-- ndash --></b></td><td>Activity Not Detected</td></tr></table></li>
+ 				</ul>
+ 				</li>
+ 			</ol>
+    		</li>
+
+    		<li>On an Allele Detail Page, recombinase ribbon can toggle between "showing" and "hiding" the data.
+ 			<p concordion:assertTrue="true">pf 5/8/2013</p>
+ 			<ul>
+ 				<li>For a recombinase allele that has activity data.
+	    		<ol>
+	    			<li>Navigate to the Allele Detail Page for <b><a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3576667">Tg(ACTA1-cre/ERT2)97.16Mtz</a></b></li>
+	    			<li>Verify the recombinase ribbon contains 2 elements: <b>Activity</b> and <b>Driver</b>.</li>
+	    			<li>Verify the <b>Activity</b> row contains a blue triangle pointing to the right with the text "Tissue activity of this recombinase allele".</li>
+	    			<li>Verify that clicking the blue triangle or the associated text causes the triangle to point downwards and the text to be replaced with the "Activity in Systems/Structures" grid to appear.</li>
+	    			<li>Verify that clicking the blue triangle again causes the grid to be replaced with the "Tissue activity..." text.</li>
+	    		</ol>
+ 				</li>
+ 				<li>For a recombinase allele that has no activity data.
+	    		<ol>
+	    			<li>Navigate to the Allele Detail Page for <b><a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3718075">Tg(ACTA1-cre)1Jdz</a></b></li>
+	    			<li>Verify the recombinase ribbon contains 2 elements: <b>Activity</b> and <b>Driver</b>.</li>
+	    			<li>Verify the <b>Activity</b> row contains a blue triangle pointing to the right with the text "Tissue activity of this recombinase allele".</li>
+	    			<li>Verify that clicking the blue triangle or the associated text causes the triangle to point downwards and the text to be replaced with "MGI has not yet included tissue activity data for this allele in any anatomical systems."</li>
+	    			<li>Verify that clicking the blue triangle again causes the "MGI has not yet..." text to be replaced with the "Tissue activity..." text.</li>
+	    		</ol>
+ 				</li>
+ 			</ul>
+    		</li>
+
+    		<li>Coming from the Recombinase Alleles - Tissue Summary page to an Allele Detail Page, the recombinase ribbon should be "open".  Coming from any other page, the recombinase ribbon should be "closed".
+ 			<p concordion:assertTrue="true">pf 5/8/2013</p>
+ 			<ol>
+				<li>From the Recombinase mini-home, query for alleles driven by <b>Acan</b>.</li>
+				<li>From the Recombinase Alleles - Tissue Summary, click the Allele Symbol link for <b>Acan&lt;tm1(cre/ERT2)Crm&gt;</b> (<i>Note: not hyperlinking this here.  Must go to the page to perform the test accurately.</i>)</li>
+				<li>Verify that the recombinase ribbon "Activity" section displays the blue triangle pointing downward and the "Activity in Systems/Structures" grid.</li>
+				<li>From the allele detail page, click the <b>Acan</b> gene symbol link.</li>
+				<li>From the marker detail page, click the <b>All alleles</b> link.</li>
+				<li>From the allele summary page, click the <b>Acan&lt;tm1(cre/ERT2)Crm&gt;</b> link. (<i>Note: not hyperlinking this here.  Must go to the page to perform the test accurately.</i>)</li>
+				<li>Verify that the recombinase ribbon "Activity" section displays the blue triangle pointing to the right with the text "Tissue activity of this recombinase allele".</li>
+				<li>Perform a Quick Search query for <b>Acan&lt;tm1(cre/ERT2)Crm&gt;</b>.</li>
+				<li>Click the <b>Acan&lt;tm1(cre/ERT2)Crm&gt;</b> link in the Quick Search results.</li>
+				<li>Verify that the recombinase ribbon "Activity" section displays the blue triangle pointing to the right with the text "Tissue activity of this recombinase allele".</li>
+ 			</ol>
+    		</li>
+
+ 		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

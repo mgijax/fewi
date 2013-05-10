@@ -1,45 +1,39 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
 <head>
-<title>Cre Detail | GXD CRE SNP Project</title>
+<title>Cre Project Work | GXD CRE SNP Project</title>
 <style>
+h5 {font-size:1em; font-variant:small-caps;}
+th {background-color:#D0E0F0;}
 </style>
 <!-- <link href="/FeWi/test/concordion.css" rel="stylesheet" type="text/css"/> -->
 
 
 </head>
 <body>
-<!-- 
-declare strict doctype to look for disallowed html errors
+<!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
 -->
 
-    <h1>CRE Detail- GXD Cre Snp Project</h1>
+    <h1>CRE Project Work - GXD Cre Snp Project</h1>
 
 	<div>
 	<h2>Functional Description</h2>
-	<p>For the Cre Detail Page, we plan to modify ????:</p>
+	<p>For the Cre Pages, we plan to modify the Cre activity query, the display of the summary page, and add an overview summary of all recombinase activity for an allele:</p>
 	<ul>
-		<li>Pulling the display from the FEWI</li>
-		<li></li>
-		<li></li>
-		<li></li>
-		<li></li>
-		<li></li> 
+		<li>Allow more detailed querying for recombinase activity by using the AD structures rather than Anatomical Systems</li>
+		<li>Simplify display of query summaries</li>
+		<li>Create an overview summary of all activity data for each recombinase allele</li>
+		<li>Clean up links to external image sources from the Recombinase Specificy (detail) Page</li>
 	</ul>
 	
 	</div>
-<h1>All data below this line has not been updated for use with this project</h1>
+
 	<div>
 	<h2>Test Suites</h2>
 	<p>Some test suites have indicators for Build Sprint regression testing in the Notes column.  A test may be marked <span class="regressHi">High</span> priority when 2 conditions are true: (1) There is a likelihood that the code could break or some error could occur.  (2) It would be very important to fix if it did.  If only one of those conditions is true, the test is marked <span class="regressLo">Low</span> priority. Otherwise, no priority is indicated.</p>
-<!-- 
-Possible test cases:
-Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. Curated one ref to the allele (for MP annots?).
--->
+
 		<table>
 			<tr class="blue">
 				<th>Description</th>
@@ -52,350 +46,87 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<td colspan="5"><h5>Loads</h5></td>
 			</tr>
 			<tr>
-				<td><p>* <a concordion:run="concordion" href="LoadGenotypes.html">Write
-						a parser and loader for genotypes in Sanger file</a></p>
-					<p>* See also <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/">Load-testing index page</a>:</p>
-					<ul>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/logs/sangerload.cur.log">Results of "kick-out" tests</a> (Curator's Log file)</li>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_skipped.txt">Rows from MP annotations skipped (bad data)</a></li>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/logs/sangerload.test.sorted.log">Results of load-verification automated tests, sorted</a>
-						<ul>
-							<li>cell lines, zygosity for genotypes</li>
-							<li>MP annotations (incl. Normals via additional files)</li>
-							<li>"duplicate" M/F annotations collapsed to "NA"</li>
-							<li>allele germ line transmission status</li>
-						</ul>
-						</li>
-						<li>Input files created by load processes from the Test File:
-						<ul>
-							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_skipped.txt">skipped rows - no MP data</a></li>
-							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangermpload_test.txt">file having rows with something in MP ID field</a></li>
-							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_error.txt">input errors file</a></li>
-							<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/input/mgi_sangerload_dup.txt">dups file</a></li>
-						</ul>
-						</li>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload/logs/sangerload.test.log">Results of tests for all annotations in the Sanger (real) input file</a></li>
-					</ul>
+				<td><p><!-- <a concordion:run="concordion" href="LoadGenotypes.html">????</a> --> </p>
 				</td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>
-				<ul>
-					<li>Manual tests done. 9/13 klf.</li>
-					<li>Automated data-load-testing added 10/26/12.</li>
-					<li> <span concordion:assertTrue="true">Loading scripts refactored. (klf 11/7/12)</span></li>
-					<li><span concordion:assertTrue="true">Story 88 allele transmission status tests. (klf 12/6/12)</span></li>
-				</ul>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a concordion:run="concordion" href="LoadPhenotypeAnnots.html">Load Sanger MP Annots (with sex-specificity)</a>
-					<ul>
-						<li><a
-							concordion:run="concordion" href="EISangerLoadAnnotations.html">More
-								testing via the EI</a></li>
-					</ul>
-				</td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes (no auto)</td>
-				<td>Manual tests done. 9/27 klf. Reran for refactor Sanger load.</td>
-			</tr>
-			<tr>
-				<td>
-					<a concordion:run="concordion" href="LoadGenotypeCellLines.html">Modify Sanger Loads to add Cell Lines</a><br/>
-						<i>Tests verify that "bad" data are rejected from load.</i>
-					<ul>
-						<li><a concordion:run="concordion" href="EISangerLoadCellLines.html">Verify correct data were loaded using the EI</a></li>
-					</ul>
-					
-				</td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>Reran for refactor Sanger load.</td>
-			</tr>
-			<tr>
-				<td>Refactor load into "generic" HTMP load<br/><span concordion:assertTrue="true">All retests passed. 11/13/2012</span></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>Reran some previous load tests</td>
-			</tr>
-			<tr>
-				<td>
-					<p>* <a concordion:run="concordion" href="EurophenomeLoad.html">Parse and load Europhenome MP annots</a></p> 
-					<p>* See also <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/">Europhenome load-testing index page</a>:</p>
-					<ul>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/logs/europhenoload.cur.log">Results of "kick-out" tests</a> (Curator's Log file)</li>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/input/mgi_europhenoload_skipped.txt">Rows from MP annotations skipped (bad data)</a></li>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/logs/europhenoload.test.sorted.log">Results of load-verification automated tests, sorted</a>
-						<ul>
-							<li>cell lines, zygosity for genotypes</li>
-							<li>MP annotations</li>
-							<li>duplicate F/F and M/M annotations NOT collapsed to "NA"</li>
-						</ul>
-						</li>
-						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload/logs/europhenoload.test.log">Results of tests for all annotations in the Europhenome (real) input file</a></li>
-					</ul>
-				</td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>
-				<ul>
-					<li><span concordion:assertTrue="true">Set up test file when we added Europhenome data, incl. genotypes, cell lines, and sex-specificity. (klf 11/9/12)</span></li>
-					<li><span concordion:assertTrue="true">Tests for sex-specific duplicate rows. (klf 12/11/2012)</span></li>
-				</ul>
-				</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="AlleleTransmissionStatus.html">Allele Transmission Status Update (WI verifications)</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="LoadUsedFCReferences.html">Add a &quot;Used-FC&quot; reference type for alleles with HTMP annots (WI verifications)</a></td>
-				<td>MGI 5.12</td>
+				<td>MGI 5.??</td>
 				<td></td>
 				<td></td>
 				<td></td>
-			</tr>
-			
+			</tr>			
 			<tr class="gray">
 				<td colspan="5"><h5>EI</h5></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion"
-					href="EIMPmoduleSexSpecificity.html">Modify EI for Sex
-						Specificity</a></td>
-				<td>MGI 5.12</td>		
+				<td><a concordion:run="concordion" href="CreImageExtLinksEI.html">Cre Images</a></td>
+				<td>MGI 5.14</td>		
+				<td>154</td>
 				<td></td>
-				<td>Yes</td>
-				<td>Manual tests done. 8/28 Jeffc</td>
+				<td>Will need retesting when we move to Production.<br/>Marked for regression testing.</td>
+			</tr>
+
+			<tr class="gray">
+				<td colspan="5"><h5>WI: Cre Recombinase Activity Detail Page</h5></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion"
-					href="EIAddModCellLines.html">EI: Search/display and Add/modify Cell Lines</a></td>
-				<td>MGI 5.12</td>
+				<td><a concordion:run="concordion" href="RecomActivityDetail.html">Recombinase Activity Detail Page</a> </td>
+				<td>MGI 5.14</td>
+				<td>154</td>
 				<td></td>
-				<td>Yes</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion"
-					href="EINormalAnnotations.html">EI: Normal qualifier for any MP Term</a></td>
-				<td>MGI 5.12</td>	
-				<td></td>
-				<td></td>
-				<td></td>
+				<td>Marked for regression testing.</td>
 			</tr>
 			<tr class="gray">
-				<td colspan="5"><h5>WI: Allele Detail Page</h5></td>
+				<td colspan="5"><h5>WI: Cre Recombinase Alleles - Tissue Summary Page</h5></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion"
-					href="AlleleDetailPhenoSummary.html">Modify Phenotype Summary
-						grid</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>Contains automated tests that are <span class="regressHi">high priority</span> for regression.</td>
-			</tr>
-<!-- 
-			TESTS NO LONGER NEEDED. STORY WAS SUPERSEDED. klf 11/26/12
-			<tr>
-				<td><a concordion:run="concordion" href="AlleleDetailPhenoDisease.html">Phenotype Summary Grid - Add Diseases</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
+				<td><a concordion:run="concordion" href="CreSummary.html">Simplify Cre summary page</a></td>
+				<td>MGI 5.14</td>
+				<td>118</td>
 				<td>Yes</td>
 				<td></td>
-			</tr>
--->
-			<tr>
-				<td><a concordion:run="concordion" href="AlleleDetailPhenoSummary2.html">Phenotype Summary Grid - Right-side MP content</a> <br/>
-				Phenotype Summary Grid - Display Normals for any term (included)</td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>  
-<!-- 
-			TESTS NO LONGER NEEDED. STORY WAS SUPERSEDED. klf 11/26/12
-			<tr>
-				<td><a concordion:run="concordion" href="AlleleDetailPhenoDisease2.html">Phenotype Summary Grid - Right-side Diseases content</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td></td>
-			</tr>
- -->
-			<tr>
-				<td><a concordion:run="concordion" href="SimplifyDiseaseModelSection.html">Simplify Disease Models on Allele Detail</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="DisplayEurophenomeData.html">Display Europhenome MP Annotations</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a  concordion:run="concordion" href="GenotypeLegend.html">Genotypes legend</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="GenotypePopup.html">Genotype Popup Window - Annotations Only</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>Verified popup appears in all browsers. 9/17 Jeffc
-				</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="GenotypePopupDiseaseImages.html">Genotype Popup Window - Add Images, Diseases</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="GenotypePopupSexSpecificity.html">Genotype Popup Window - Add Sex-Specificity</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="GenotypePopupLegend.html">Genotype Popup Window - Add Legend</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion"
-					href="GenotypePopupCellLines.html">Genotype Popup Window - Add Cell Lines</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>Uses test data from mgi_genotypeload_test file. </td>
-			</tr>
-						<tr>
-				<td><a concordion:run="concordion" href="GenotypePopupRemoveSource.html">Genotype Popup Window - Remove Source text</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>also includes test of all Genotypes popup page</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="AllGenotypesPopup.html">WI Popup Window: all genotypes with MP, OMIM, images</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="IMSRRibbonSection.html">Move "Find Mice" ribbon</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="AlleleDetailLookAndFeelChanges.html">Look and Feel updates to Allele Detail Page</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>added CSS story 143 12/19/2012</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="AlleleDetailExpressionRibbon.html">Remove Expression ribbon</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="RenameEurophenomeAbbreviation.html">Change label for Europhenome from "Euro" to "EuPh"</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="GenotypePopupJnumbers.html">WI: Fewer J numbers for notes</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="AlleleDetailSuppressImages.html">Molecular Images should not be included on Allele detail</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="LoadUsedFCReferences.html">Add J number with Reference type=Used-FC</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
 			</tr>
 			<tr class="gray">
 				<td colspan="5"><h5>WI: Other Pages</h5></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="AlleleSummaryChanges.html">Simplify Allele Summary Page</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
+				<td><a concordion:run="concordion" href="RecomActivityAutocomplete.html">Cre QF Recombinase Activity Autocomplete</a></td>
+				<td>MGI 5.14</td>
+				<td>126</td>
+				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td>Sanity checking:
-					<ul>
-						<li><a concordion:run="concordion" href="CodeMergeSanityCheck.html">Code merge sanity checks: WI</a></li>
-						<li><a concordion:assertTrue="true" href="http://cardolan.informatics.jax.org:8090/view/webdriver/job/run-webdriver-PC/lastCompletedBuild/testReport/">Automated Selenium tests, FeWi on PC (kstone 12/18/12)</a></li>
-						<li><span concordion:assertTrue="true">Code merge sanity checks: EI (klf 12/18/12)</span></li>
-					</ul>
-				</td>
-				<td>MGI 5.12</td>
+				<td><a concordion:run="concordion" href="RecomActivitySearch.html">Cre QF Recombinase Activity Search</a></td>
+				<td>MGI 5.14</td>
+				<td>115, 136</td>
+				<td>Yes</td>
 				<td></td>
-				<td></td>
-				<td>
+			</tr>
+			<tr>
+				<td>Allele Detail Page:
 				<ul>
-					<li>Tested for merging Scrumbob Squarepants trunk changes up to our branch (sto119) - included fake coordinates data for 4 markers</li>
-					<li>Tested again for merging our branch changes down to the trunk (sto130) - included fake coordiantes data</li>
+					<li><a href="../allele/RecombinaseRibbon.html">Recombinase overview grid</a></li>
+					<li><a href="../allele/CreUserSubmittedNotes.html">User-submitted notes</a></li>
 				</ul>
 				</td>
+				<td>MGI 5.14</td>
+				<td>141, 143, 144</td>
+				<td>Yes</td>
+				<td>These tests are located in the suites associated with Allele pages.</td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="HumanDiseaseDetailSuppressRosa.html">Suppress Gene Gt(ROSA)26Sor on Disease Detail page</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td><a concordion:run="concordion" href="CreUserSubmittedData.html">User-submitted data</a></td>
+				<td>MGI 5.14</td>
+				<td>156</td>
+				<td>Yes</td>
+				<td>Includes test for fixing broken ILAR link on Mutant Alleles, Strains, and Phenotypes Submission Form.</td>
 			</tr>
+			
 			<tr class="gray">
 				<td colspan="5"><h5>Build Sprint: Other Tests</h5></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="FirienBuildSprintTests.html">Build Sprint tests for Firien</a></td>
-				<td>MGI 5.12</td>
+				<td><!-- <a concordion:run="concordion" href="FirienBuildSprintTests.html">Build Sprint tests for Firien</a> --></td>
+				<td>MGI 5.??</td>
 				<td></td>
 				<td></td>
 				<td>These are tests that fail on Cardolan due to differences in the install.  We need to run them on Firien during the Build Sprint.  Concordion instrumentation has been removed in the other test suites.</td>
@@ -405,7 +136,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 <!-- <p>* means tests must be  updated for all newly added functionality</p>
 <p>Dynamic Data spreadsheet used for some automated tests is located at <a target="_blank" href="https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0">https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0</a>.</p> -->
 <p>Product Backlog: <a target="_blank" href="http://cardolan.informatics.jax.org:9180/kunagi/login.html">kunagi</a>.</p>
-<p>High-Throughput MP Project <a target="_blank" href="http://prodwww.informatics.jax.org/wiki/index.php/sw:Scrum:_High-Throughput_MP_Data">wiki page</a></p>
+<p>GXD_Cre_Snp Project <a target="_blank" href="http://prodwww.informatics.jax.org/wiki/index.php/sw:Scrum:_GXD_Cre_Snp">wiki page</a></p>
 <p>Cardolan's Postgres database (Pub - MGD schema): <a target="_blank" href="http://rohan.informatics.jax.org/phpPgAdmin/">PhP Admin Page</a></p>
 </body>
 </html>

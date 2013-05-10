@@ -8,6 +8,7 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.internal.util.Check;
 import org.jax.mgi.fewi.test.data.DynamicTestData;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -20,24 +21,25 @@ public class DynamicDataCommand extends AbstractCommand {
 	
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside a 'dynamicData' is not supported");
+    	Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside a 'dynamicData' is not supported");
         
         String id = commandCall.getExpression();
         
         Element element = commandCall.getElement();
         if (id != null) {
-        	// resolve the id into data.
-        	String data = getDynamicData(id.toString());
-        	if(data != null && !data.equals(""))
+    		// redundancy check.
+    		if(element.getAttributeValue("processed") != null) return;
+    		element.addAttribute("processed", "true");
+
+        	String data = getDynamicData(id,evaluator);
+        	if(data != null && !data.trim().equals(""))
         	{
-        		if(element.getAttributeValue("processed") != null) return;
-        		element.addAttribute("processed", "true");
-        		// redundancy check.
+
         		if (!element.getText().equalsIgnoreCase(data))
         		{
 					if (data.contains("ROW["))
 					{
-						formatHTMLTableRows(element,data);
+						formatHTMLTableRows(element,preprocessRowMarkup(data));
 					}
 					else
 					{
@@ -47,7 +49,8 @@ public class DynamicDataCommand extends AbstractCommand {
         	}
         	else
         	{
-        		commandCall.setElement(new Element("i").appendText("No data exists for: "+id));
+        		element.appendText("No data exists for: "+id);
+        		//commandCall.setElement(new Element("i").appendText("No data exists for: "+id));
         	}
         } else {
             Element child = new Element("em");
@@ -56,23 +59,32 @@ public class DynamicDataCommand extends AbstractCommand {
         }
     }
     
+    protected String[] preprocessRowMarkup(String data)
+    {
+    	// I'm not sure how to regex this, but for now I will split on "]," and re-add the ] bracket to the split rows
+		String[] rows = data.split("],");
+		for(int i=0;i<rows.length;i++)
+		{
+			// remove the ROW[ text
+			rows[i] = rows[i].substring(4);
+			if(i==(rows.length-1))
+			{
+				// last row
+				// remove the last ]
+				rows[i] = rows[i].substring(0,rows[i].length()-1);
+			}
+		}
+		return rows;
+    }
 	/*
 	 * Formats row/object data into html table rows
 	 * @param data
 	 * @return
 	 */
-	private void formatHTMLTableRows(Element element,String data)
+	protected void formatHTMLTableRows(Element element,String[] rows)
 	{
 		Element currentEl = element;
 		Element sibling = element;
-		
-		// I'm not sure how to regex this, but for now I will split on "]," and re-add the ] bracket to the split rows
-		String[] rows = data.split("],");
-		if (rows.length > 1)
-		{
-			for(int i=0;i<rows.length-1;i++)
-			rows[i] += "]";
-		}
 
 		boolean first = true;
 		for (String row : rows)
@@ -84,7 +96,7 @@ public class DynamicDataCommand extends AbstractCommand {
 				sibling.appendSister(currentEl);
 			}
 			
-			row = row.substring(4, row.length()-1);
+			//row = row.substring(4, row.length()-1);
 			String[] cols = row.split(",");
 			for (String col : cols)
 			{
@@ -95,8 +107,13 @@ public class DynamicDataCommand extends AbstractCommand {
 		}
 	}
 	
-    private String getDynamicData(String id)
+    protected String getDynamicData(String id,Evaluator evaluator)
     {
-    	return DynamicTestData.get(id);
+    	// resolve the id into data by calling the get() method on BaseConcordionTest class
+    	// I'm not sure how the evaluator scope works, but let's set it to an unlikely variable name just to be safe
+    	evaluator.setVariable("#varDD1234", id.toString());
+    	String data = (String) evaluator.evaluate("get(#varDD1234)");
+    	return data;
+    	//return dd.get(id);
     }
 }

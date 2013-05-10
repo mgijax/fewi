@@ -1,17 +1,21 @@
 package org.jax.mgi.fewi.forms;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 
 /*-------*/
 /* class */
 /*-------*/
 
-public class GxdQueryForm {
-
+public class GxdQueryForm 
+{
     private Map<Integer, String> theilerStages = new LinkedHashMap<Integer, String>();
 	private List<Integer> theilerStage = new ArrayList<Integer>();
 	public static Integer ANY_STAGE = 0;
@@ -42,7 +46,22 @@ public class GxdQueryForm {
     private String markerMgiId = "";
     private String jnum = "";
     private String alleleId = "";
+    private String probeKey = "";
+    private String antibodyKey = "";
 
+
+	// differential specific fields
+    private String difStructure = "";
+    
+    private Map<Integer, String> theilerStagesRibbon2 = new LinkedHashMap<Integer, String>();
+    private Map<Integer, String> difTheilerStages = new LinkedHashMap<Integer, String>();
+	private List<Integer> difTheilerStage = new ArrayList<Integer>();
+	public static Integer ANY_STAGE_NOT_ABOVE=-1;
+	
+    private Map<String, String> difAges = new LinkedHashMap<String, String>();
+	private List<String> difAge = new ArrayList<String>();
+	public final static String ANY_AGE_NOT_ABOVE = "NOT_ABOVE";
+    
 	public GxdQueryForm() {
 
 		detectedOptions.put("Yes", "detected in ");
@@ -136,6 +155,25 @@ public class GxdQueryForm {
     	assayTypes.add("RT-PCR");
     	assayTypes.add("Western blot");
 
+    	
+    	// init differential fields
+    	for(Integer key : theilerStages.keySet())
+    	{
+    		if(key != ANY_STAGE) theilerStagesRibbon2.put(key,theilerStages.get(key));
+    	}
+    	difTheilerStages.put(ANY_STAGE_NOT_ABOVE, "Any stage not selected above");
+    	for(Integer key : theilerStages.keySet())
+    	{
+    		if(key != ANY_STAGE) difTheilerStages.put(key,theilerStages.get(key));
+    	}
+    	//difTheilerStage.add(ANY_STAGE_NOT_ABOVE);
+    	
+    	difAges.put(ANY_AGE_NOT_ABOVE, "Any age not selected above");
+    	for(String key : ages.keySet())
+    	{
+    		if(key != ANY_AGE) difAges.put(key,ages.get(key));
+    	}
+    	//difAge.add(ANY_AGE_NOT_ABOVE);
     }
     public List<String> getAssayType() {
         return assayType;
@@ -280,6 +318,87 @@ public class GxdQueryForm {
 	public void setAlleleId(String alleleId) {
 		this.alleleId = alleleId;
 	}
+	public String getProbeKey() {
+		return probeKey;
+	}
+	public void setProbeKey(String probeKey) {
+		this.probeKey = probeKey;
+	}
+	public String getAntibodyKey() {
+		return antibodyKey;
+	}
+	public void setAntibodyKey(String antibodyKey) {
+		this.antibodyKey = antibodyKey;
+	}
+	
+	/*
+	 * Differential getters / setters
+	 */
+	public String getDifStructure() {
+		return difStructure;
+	}
+	public void setDifStructure(String difStructure) {
+		this.difStructure = difStructure;
+	}
+	public Map<Integer, String> getDifTheilerStages() {
+		return difTheilerStages;
+	}
+	public void setDifTheilerStages(Map<Integer, String> difTheilerStages) {
+		this.difTheilerStages = difTheilerStages;
+	}
+	public List<Integer> getDifTheilerStage() {
+		return difTheilerStage;
+	}
+	public void setDifTheilerStage(List<Integer> difTheilerStage) {
+		this.difTheilerStage = difTheilerStage;
+	}
+	public Map<String, String> getDifAges() {
+		return difAges;
+	}
+	public void setDifAges(Map<String, String> difAges) {
+		this.difAges = difAges;
+	}
+	public List<String> getDifAge() {
+		return difAge;
+	}
+	public void setDifAge(List<String> difAge) {
+		this.difAge = difAge;
+	}
+	
+	
+	public Map<Integer, String> getTheilerStagesRibbon2() {
+		return theilerStagesRibbon2;
+	}
+	public void setTheilerStagesRibbon2(Map<Integer, String> theilerStagesRibbon2) {
+		this.theilerStagesRibbon2 = theilerStagesRibbon2;
+	}
+	/*
+	 *  resolve difTheilerStages by processing "ANY_OTHER_STAGE" option 
+	 *  	(assumes this part of the form is filled in)
+	 */
+	public Collection<Integer> getResolvedDifTheilerStage()
+	{
+		if(difTheilerStage.contains(ANY_STAGE_NOT_ABOVE))
+		{
+			// I'm actually not sure what to do in this case. What does "any not selected" from "any" mean?
+			if(theilerStage.contains(ANY_STAGE)) return new ArrayList<Integer>();
+			
+			// populate stagesBelow with the full list of stages
+			Set<Integer> stagesBelow = new HashSet<Integer>();
+			for(Integer s : theilerStages.keySet())
+			{
+				// don't include the ANY option
+				if(!s.equals(ANY_STAGE))
+				{
+					stagesBelow.add(s);
+				}
+			}
+			stagesBelow.removeAll(theilerStage);
+			return stagesBelow;
+		}
+		
+		return difTheilerStage;
+	}
 	@Override
 	public String toString() {
 		return "GxdQueryForm [theilerStages=" + theilerStages
@@ -292,6 +411,8 @@ public class GxdQueryForm {
 				+ ", detected=" + detected + ", annotationId=" + annotationId
 				+ ", isWildType=" + isWildType + ", mutatedIn=" + mutatedIn
 				+ ", markerMgiId=" + markerMgiId + ", jnum=" + jnum
+				+ ", probeKey=" + probeKey
+				+ ", antibodyKey=" + antibodyKey
 				+ "]";
 	}
 

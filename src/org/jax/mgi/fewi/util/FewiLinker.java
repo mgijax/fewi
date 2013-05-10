@@ -38,6 +38,7 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.GO_MF, pythonWiUrl +"searches/GO.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.GO_CC, pythonWiUrl +"searches/GO.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.MP, pythonWiUrl +"searches/Phat.cgi?id=%s");
+		idUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/%s");
 
 		// Mapping that is key based
 
@@ -47,7 +48,7 @@ public class FewiLinker {
 		keyUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/key/%s");
 		keyUrlMap.put(ObjectTypes.PROBECLONE, pythonWiUrl +"searches/probe.cgi?%s");
 		keyUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/key/%s");
-		keyUrlMap.put(ObjectTypes.ASSAY, pythonWiUrl +"searches/expression.cgi?%s");
+		keyUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/key/%s");
 		keyUrlMap.put(ObjectTypes.ANTIBODY, pythonWiUrl +"searches/antibody.cgi?%s");
 		keyUrlMap.put(ObjectTypes.ANTIGEN, pythonWiUrl +"searches/antigen.cgi?%s");
 		keyUrlMap.put(ObjectTypes.MAPPING, baseUrl +"mapping/key/%s");
@@ -63,7 +64,7 @@ public class FewiLinker {
 			return String.format(idUrlMap.get(objectType), id);
 		}
 
-		return "Link Type " + objectType + " not available yet";
+		return null;
 	}
 
 	public String getFewiKeyLink(String objectType, String key) {
@@ -72,7 +73,7 @@ public class FewiLinker {
 			return String.format(keyUrlMap.get(objectType), key);
 		}
 
-		return "Link Type " + objectType + " not available yet";
+		return  "Link Type " + objectType + " not available yet";
 	}
 
 	public static FewiLinker getInstance() {

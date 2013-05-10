@@ -87,7 +87,7 @@ public class GxdAssayResultSummaryRow {
 		
 		public String getAssayID()
 		{
-			return "<a href='"+pywiUrl+"searches/expression.cgi?"+result.getAssayKey()+"'>data</a><span> ("+result.getAssayMgiid()+")</span>";
+			return "<a href='"+fewiUrl+"assay/"+result.getAssayMgiid()+"'>data</a><span> ("+result.getAssayMgiid()+")</span>";
 		}
 		
 		public String getAssayType() {

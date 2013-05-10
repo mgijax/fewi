@@ -10,7 +10,8 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
-import org.jax.mgi.fewi.propertyMapper.PropertyMapper;
+import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
+import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 
 // external classes
@@ -18,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.GroupResponse;
@@ -31,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.terracotta.ehcachedx.org.mortbay.log.Log;
+
+import com.google.gdata.util.common.base.StringUtil;
 
 /**
  * This is the Solr specific hunter.  It is responsible for translating
@@ -60,7 +63,7 @@ public class SolrHunter implements Hunter {
     /**
      * solr server settings from configuration
      */
-    protected CommonsHttpSolrServer server = null;
+    protected HttpSolrServer server = null;
     @Value("${solr.soTimeout}")
     protected Integer solrSoTimeout;
     @Value("${solr.connectionTimeout}")
@@ -82,8 +85,8 @@ public class SolrHunter implements Hunter {
      */
 
     // Front end fields -> PropertyMappers
-    protected HashMap <String, PropertyMapper> propertyMap =
-        new HashMap<String, PropertyMapper>();
+    protected HashMap <String, SolrPropertyMapper> propertyMap =
+        new HashMap<String, SolrPropertyMapper>();
 
     // Solr Fields -> Front end field mappings
     protected HashMap <String, String> fieldToParamMap =
@@ -113,6 +116,12 @@ public class SolrHunter implements Hunter {
      */
     // Fields that can be grouped on
     protected Map<String,String> groupFields = new HashMap<String,String>();
+    
+    /**
+     * Index joining
+     */
+    // Indexes that can be joined on
+    protected Map<String,SolrJoinMapper> joinIndices = new HashMap<String,SolrJoinMapper>();
     
 
     /*----- CONSTRUCTOR -----*/
@@ -148,7 +157,15 @@ public class SolrHunter implements Hunter {
 
     @Override
     public void hunt(SearchParams searchParams, SearchResults searchResults) {
-    	hunt(searchParams,searchResults, null);
+    	hunt(searchParams,searchResults, null, null);
+    }
+    
+    public void hunt(SearchParams searchParams,SearchResults searchResults,String groupField) {
+    	hunt(searchParams,searchResults, groupField, null);
+    }
+    
+    public void joinHunt(SearchParams searchParams,SearchResults searchResults,String joinField){
+    	hunt(searchParams,searchResults, null, joinField);
     }
 
     /**
@@ -161,24 +178,39 @@ public class SolrHunter implements Hunter {
      * 
      */
 
-    public void hunt(SearchParams searchParams, SearchResults searchResults, String groupField) {
+    public void hunt(SearchParams searchParams, SearchResults searchResults, String groupField,String joinField) {
 
         // Invoke the hook, editing the search params as needed.
         searchParams = this.preProcessSearchParams(searchParams);
 
+        HttpSolrServer qServer;
         // Setup our interface into solr.
-        setupSolrConnection();
-
+        boolean doJoin=false;
+        if(joinField!=null && this.joinIndices.containsKey(joinField))
+        {
+        	qServer = createSolrConnection(this.joinIndices.get(joinField).getToIndexUrl());
+        	doJoin=true;
+        }
+        else
+        {
+        	qServer = createSolrConnection();
+        }
         // Create the query string by invoking the translate filter method.
         SolrQuery query = new SolrQuery();
         query.setHighlightRequireFieldMatch(true);
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
         logger.debug("TranslatedFilters: " + queryString);
+        
+        // If a join field is specified add the join clause to the beginning of the query string
+        if(doJoin)
+        {
+        	queryString = this.joinIndices.get(joinField).getJoinClause()+" "+queryString;
+        }
         query.setQuery(queryString);
 
         // pack the score
-        query.setFields("score");
+        query.setFields("*","score");
 
         // Add in the Sorts from the search parameters.
         addSorts(searchParams, query);
@@ -217,13 +249,19 @@ public class SolrHunter implements Hunter {
         try {
             logger.debug("Running query & packaging searchResults");
 
-            rsp = server.query( query, METHOD.POST );
+            rsp = qServer.query( query, METHOD.POST );
             SolrDocumentList sdl = rsp.getResults();
-
             if(doGrouping)
             {
                 // Package the results into the searchResults object by traversing GroupResponse object.
                 packInformationByGroup(rsp, searchResults, searchParams);
+            }
+            else if(doJoin)
+            {
+            	// Package the results normally, but wrap them in a function that can be overrided for custom implementation
+                packInformationForJoin(rsp, searchResults, searchParams);
+                // Set the total number found.
+                searchResults.setTotalCount(new Integer((int) sdl.getNumFound()));
             }
             else
             {
@@ -243,6 +281,8 @@ public class SolrHunter implements Hunter {
         return ;
 
     }
+    
+    
 
     /*----- PROTECTED METHODS -----*/
 
@@ -276,7 +316,7 @@ public class SolrHunter implements Hunter {
      */
 
     protected String translateFilter(Filter filter, HashMap<String,
-            PropertyMapper> propertyMap) {
+            SolrPropertyMapper> propertyMap) {
 
         /**
          * This is the end case for the recursion.  If we are at a node in the
@@ -303,44 +343,63 @@ public class SolrHunter implements Hunter {
             if (filter.getOperator() != Filter.OP_IN
                     && filter.getOperator() != Filter.OP_NOT_IN) {
                 return propertyMap.get(filter.getProperty())
-                    .getClause(filter.getValue(), filter.getOperator());
+                    .getClause(filter);
             }
             
             /** If its an IN or NOT IN, break the query down further, joining
              * thesubclauses by OR or AND as appropriate
              */
 
-            else {
-
-                int operator;
-                String joinClause = "";
-                if (filter.getOperator() == Filter.OP_NOT_IN) {
-                    operator = Filter.OP_NOT_EQUAL;
-                    joinClause = " AND ";
-                }
-                else {
-                    operator = Filter.OP_EQUAL;
-                    joinClause = " OR ";
-                }
+       /*
+        * I am leaving the following commented out code below as a "Wall of Shame"
+        * You can see the equivalent "normal" code just below it.
+        * 
+        * ... As a bonus this special code actually performs roughly 300 times slower than the refactored version.
+        * I'm serious. processing 1000 values took over a second throught this code, 
+        * 	compared to only 2 or 3 milliseconds in the normal version.
+        * Ponder that for a moment...
+        */
+//            else {
+//
+//                int operator;
+//                String joinClause = "";
+//                if (filter.getOperator() == Filter.OP_NOT_IN) {
+//                    operator = Filter.OP_NOT_EQUAL;
+//                    joinClause = " AND ";
+//                }
+//                else {
+//                    operator = Filter.OP_EQUAL;
+//                    joinClause = " OR ";
+//                }
+//
+//                // Create the subclause, surround it in parens
+//
+//                String output = "(";
+//                Boolean first = Boolean.TRUE;
+//                for (String value: filter.getValues()) {
+//                    if (first) {
+//                        output += propertyMap.get(filter.getProperty())
+//                            .getClause(value, operator);
+//
+//                        first = Boolean.FALSE;
+//                    }
+//                    else {
+//                        output += joinClause
+//                            + propertyMap.get(filter.getProperty())
+//                                .getClause(value, operator);
+//                    }
+//                }
+//                return output + ")";
+//            }
+            else
+            {
+                String joinClause = " OR ";
+                String field = propertyMap.get(filter.getProperty()).getField();
+                // NOT IN should not be supported for solr queries. It is not used anywhere in our codebase
+                //if (filter.getOperator() == Filter.OP_NOT_IN) joinClause = " AND ";
 
                 // Create the subclause, surround it in parens
-
-                String output = "(";
-                Boolean first = Boolean.TRUE;
-                for (String value: filter.getValues()) {
-                    if (first) {
-                        output += propertyMap.get(filter.getProperty())
-                            .getClause(value, operator);
-
-                        first = Boolean.FALSE;
-                    }
-                    else {
-                        output += joinClause
-                            + propertyMap.get(filter.getProperty())
-                                .getClause(value, operator);
-                    }
-                }
-                return output + ")";
+                return field+":("+StringUtils.join(filter.getValues(),joinClause)+")";
             }
         }
 
@@ -365,7 +424,9 @@ public class SolrHunter implements Hunter {
                     resultsString.add(tempString);
                 }
             }
-            return "(" + StringUtils.join(resultsString,
+            // handle negating a nested filter
+            String negation= filter.doNegation() ? "-" : "";
+            return negation+"(" + StringUtils.join(resultsString,
                     filterClauseMap.get(filter.getFilterJoinClause()))
                     + ")";
         }
@@ -381,9 +442,17 @@ public class SolrHunter implements Hunter {
      * as needed.
      */
 
-    protected void setupSolrConnection() {
-
-        try { server = new CommonsHttpSolrServer(solrUrl);}
+    protected void setupSolrConnection()
+    {
+    	this.server = createSolrConnection(solrUrl);
+    }
+    protected HttpSolrServer createSolrConnection()
+    {
+    	return createSolrConnection(solrUrl);
+    }
+    protected HttpSolrServer createSolrConnection(String url) {
+        logger.debug("solrUrl->" + url);
+        try { server = new HttpSolrServer(url);}
         catch (Exception e) {
             System.out.println("Cannot reach the Solr server.");
             e.printStackTrace();
@@ -397,7 +466,7 @@ public class SolrHunter implements Hunter {
         server.setAllowCompression(true);
         server.setMaxRetries(maxRetries);
 
-        return;
+        return server;
     }
 
     /**
@@ -554,7 +623,6 @@ public class SolrHunter implements Hunter {
         for (Iterator iter = sdl.iterator(); iter.hasNext();)
         {
             SolrDocument doc = (SolrDocument) iter.next();
-
             /**
              * Calculate the row level metadata.  Currently this only
              * applies to score, and whether or not a row is generated for
@@ -580,7 +648,7 @@ public class SolrHunter implements Hunter {
                  */
 
                 if (this.keyString != null) {
-                    metaList.put((String) doc.getFieldValue(keyString),
+                    metaList.put("" + doc.getFieldValue(keyString),
                             tempMeta);
                 }
                 if (this.otherString != null) {
@@ -597,7 +665,7 @@ public class SolrHunter implements Hunter {
              */
 
             if (this.keyString != null) {
-                keys.add((String) doc.getFieldValue(keyString));
+                keys.add("" + doc.getFieldValue(keyString));
                 scoreKeys.add("" + doc.getFieldValue("score"));
             }
 
@@ -705,6 +773,19 @@ public class SolrHunter implements Hunter {
             sr.setMetaMapping(metaList);
         }
 
+    }
+
+    /**
+     * Version of the above method that is only called for join queries.
+     * This provides a way to separate custom implementations for packaging join query results
+     * 
+     * @param rsp
+     * @param sr
+     * @param sp
+     */
+    protected void packInformationForJoin(QueryResponse rsp,SearchResults sr, SearchParams sp)
+    {
+    	packInformation(rsp,sr,sp);
     }
     
     /**

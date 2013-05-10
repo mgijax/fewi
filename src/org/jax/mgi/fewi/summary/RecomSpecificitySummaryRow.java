@@ -105,6 +105,11 @@ public class RecomSpecificitySummaryRow {
               figureLables.append(thisImagePane.getPaneLabel());
 			}
             figureLables.append(" ");
+            try {
+              NotesTagConverter ntc = new NotesTagConverter();
+              figureLables.append(ntc.convertNotes(thisImage.getExternalLink(), '|'));
+              figureLables.append(" ");
+            }catch (Exception e) {}
 
             if (thisImage.getPixeldbNumericID() == null) {
               imageTags.append("<span class='small italic' ");
@@ -150,7 +155,7 @@ public class RecomSpecificitySummaryRow {
           convertedAllComp = ntc.convertNotes(convertedAllComp, '|');
         }catch (Exception e) {}
 
-        return String.format("<div style='padding-top:6px;'></div><span class='summaryDataCell'>%s<br/>%s</span>", 
+        return String.format("<div style='padding-top:6px;'></div><span class='summaryDataCell'>%s<br/>%s</span>",
         		convertedAllComp, FormatHelper.superscript(alleleSystemAssayResult.getBackgroundStrain()));
     }
 

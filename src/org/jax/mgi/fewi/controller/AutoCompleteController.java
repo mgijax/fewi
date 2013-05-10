@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletResponse;
+
 import mgi.frontend.datamodel.GxdAssayResult;
 
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
@@ -24,6 +26,7 @@ import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
@@ -194,44 +197,56 @@ public class AutoCompleteController {
 	 * are returned as JSON.
 	 */
 	@RequestMapping("/structure")
-	public @ResponseBody SearchResults<StructureACResult> structureAutoComplete(
+	public @ResponseBody SearchResults<StructureACResult> structureAutoCompleteRequest(
+			HttpServletResponse response,
 			@RequestParam("query") String query) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return performStructureAutoComplete(query);
+	}
+	
+	public @ResponseBody SearchResults<StructureACResult> structureAutoComplete(
+			String query) {
+		return performStructureAutoComplete(query);
+	}
+	SearchResults<StructureACResult> performStructureAutoComplete(
+			String query)
+	{
 		// split input on any non-alpha characters
-		Collection<String> words = QueryParser.parseAutoCompleteSearch(query);
-		logger.debug("structure query:" + words.toString());
-		
-		if(words.size() == 0)
-		{
-			// return an empty result set;
-			SearchResults<StructureACResult> sr = new SearchResults<StructureACResult>();
-			sr.setTotalCount(0);
-			return sr;
-		}
+				Collection<String> words = QueryParser.parseAutoCompleteSearch(query);
+				logger.debug("structure query:" + words.toString());
+				
+				if(words.size() == 0)
+				{
+					// return an empty result set;
+					SearchResults<StructureACResult> sr = new SearchResults<StructureACResult>();
+					sr.setTotalCount(0);
+					return sr;
+				}
 
-		SearchParams params = new SearchParams();
-		params.setPageSize(1000);
-		
-		Filter f = new Filter();
-		List<Filter> fList = new ArrayList<Filter>();
-		for (String q : words) {
-			Filter wordFilter = new Filter(SearchConstants.STRUCTURE,q,Filter.OP_GREEDY_BEGINS);
-			fList.add(wordFilter);
-		}
-		f.setNestedFilters(fList,Filter.FC_AND);
-		
-		params.setFilter(f);
-		
-		// default sorts are "score","autocomplete text"
-		List<Sort> sorts = new ArrayList<Sort>();
-		
-		sorts.add(new Sort("score",true));
-		sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM,false));
-		params.setSorts(sorts);
-		
-		SearchResults<StructureACResult> results = autocompleteFinder.getStructureAutoComplete(params);
-		// need a unique list of terms. 
-		results.uniqueifyResultObjects();
-		return results;
+				SearchParams params = new SearchParams();
+				params.setPageSize(200);
+				
+				Filter f = new Filter();
+				List<Filter> fList = new ArrayList<Filter>();
+				for (String q : words) {
+					Filter wordFilter = new Filter(SearchConstants.STRUCTURE,q,Filter.OP_GREEDY_BEGINS);
+					fList.add(wordFilter);
+				}
+				f.setNestedFilters(fList,Filter.FC_AND);
+				
+				params.setFilter(f);
+				
+				// default sorts are "score","autocomplete text"
+				List<Sort> sorts = new ArrayList<Sort>();
+				
+				sorts.add(new Sort("score",true));
+				sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM,false));
+				params.setSorts(sorts);
+				
+				SearchResults<StructureACResult> results = autocompleteFinder.getStructureAutoComplete(params);
+				// need a unique list of terms. 
+				results.uniqueifyResultObjects();
+				return results;
 	}
 	
 	/*

@@ -5,6 +5,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -28,7 +29,9 @@ public class SolrCreSummaryHunter extends SolrHunter {
         sortMap.put(SortConstants.CRE_TYPE, new SolrSortMapper(IndexConstants.ALL_TYPE_SORT));
         sortMap.put(SortConstants.CRE_INDUCIBLE, new SolrSortMapper(IndexConstants.ALL_INDUCIBLE));
         sortMap.put(SortConstants.CRE_REF_COUNT, new SolrSortMapper(IndexConstants.ALL_REFERENCE_COUNT_SORT));
-        sortMap.put(SortConstants.CRE_DETECTED_COUNT, new SolrSortMapper(IndexConstants.CRE_DETECTED_TOTAL_COUNT));
+        sortMap.put(SortConstants.CRE_DETECTED_COUNT, new SolrSortMapper(IndexConstants.CRE_DETECTED_COUNT));
+        sortMap.put(SortConstants.CRE_NOT_DETECTED_COUNT, new SolrSortMapper(IndexConstants.CRE_NOT_DETECTED_COUNT));
+
         /*
          * Setup the property map.  This maps from the properties of the incoming
          * filter list to the corresponding field names in the Solr implementation.
@@ -38,16 +41,28 @@ public class SolrCreSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.ALL_DRIVER, new SolrPropertyMapper(IndexConstants.ALL_DRIVER));
         propertyMap.put(SearchConstants.ALL_SYSTEM, new SolrPropertyMapper(IndexConstants.CRE_ALL_SYSTEM));
         
-        // Set the url for the solr instance.
+        // structure resulated search fields. All copied from gxdResult and behave exactly the same
+        // structure
+        propertyMap.put(SearchConstants.STRUCTURE,
+          		new SolrPropertyMapper(GxdResultFields.STRUCTURE_ANCESTORS));
+
+        // structure key
+        propertyMap.put(SearchConstants.STRUCTURE_KEY,
+          		new SolrPropertyMapper(GxdResultFields.STRUCTURE_KEY));
+
+        // annotated structure key (does not include children)
+        propertyMap.put(GxdResultFields.ANNOTATED_STRUCTURE_KEY,
+          		new SolrPropertyMapper(GxdResultFields.ANNOTATED_STRUCTURE_KEY));
         
-        //solrUrl = ContextLoader.getConfigBean().getProperty("solr.cre.url");
+        // structure ID
+        propertyMap.put(SearchConstants.STRUCTURE_ID,
+          		new SolrPropertyMapper(GxdResultFields.STRUCTURE_ID));
+
+        
         
         /*
-         * The name of the field we want to iterate through the documents for
-         * and place into the output.  In this case we are looking for the 
-         * standard list of keys to be returned.
+         * field to iterate over and place into the output
          */
-        
         keyString = IndexConstants.ALL_KEY;
         
     }

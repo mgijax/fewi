@@ -18,44 +18,20 @@ import org.jax.mgi.fewi.searchUtil.Filter;
  * 
  * @author mhall
  *
+ * - refactored by kstone on 2013-05-02 to actually use objects properly. What a complete WTF this code was.
  */
 
-public class SolrReferenceTextSearchPropertyMapper implements PropertyMapper {
+public class SolrReferenceTextSearchPropertyMapper extends SolrPropertyMapper 
+{
+    public SolrReferenceTextSearchPropertyMapper(String field) {
+		super(field);
+	}
 
-    ArrayList <String> fieldList = new ArrayList<String>();
-    // The default operand is equals.
-    int operand = 0;
-    String singleField = "";
-    String joinClause = "";
-    
-    /**
-     * The constructor that allows us to have an entire fieldlist.
-     * @param fieldList
-     * @param joinClause
-     */
-    
-    public SolrReferenceTextSearchPropertyMapper(ArrayList<String> fieldList, String joinClause) {
-        this.fieldList = fieldList;
-        this.joinClause = joinClause;
-    }
-    
-    /**
-     * A single property.
-     * @param field
-     * For this object you can ONLY accept a list of fields, due to special requirements below.
-     */
-    
-/*    public SolrReferenceTextSearchPropertyMapper(String field) {
-        this.singleField = field;
-    }*/
-    
-    
-    /**
-     * This is the standard api, which returns a string that will be passed 
-     * to the underlying technology.
-     */
-    
-    @Override
+	public SolrReferenceTextSearchPropertyMapper(ArrayList<String> fieldList, String joinClause) {
+		super(fieldList, joinClause);
+	}
+
+	@Override
     public String getClause(String value, int operand) {
 
         Boolean flag = Boolean.FALSE;
@@ -137,52 +113,4 @@ public class SolrReferenceTextSearchPropertyMapper implements PropertyMapper {
         
         return "(" + outClause + ")";
     }
-    
-    /***
-     * This function handles the mappings from the hunters to the respective solr operands.
-     * It basically functions as a mapping from the front end to the back end.
-     * @param operand
-     * @param value
-     * @param field
-     * @return
-     */
-    private String handleOperand(int operand, String value, String field) {
-
-        if (operand == Filter.OP_EQUAL) {
-            return field + ":\"" + value + "\"";
-        }
-        else if (operand == Filter.OP_GREATER_THAN) {
-            Integer newValue = new Integer(value);
-            newValue++;
-            return field + ":[" + newValue + " TO *]";
-        }
-        else if (operand == Filter.OP_LESS_THAN) {
-            Integer newValue = new Integer(value);
-            newValue--;
-            return field + ":[* TO "+newValue+"]";
-        }
-        else if (operand == Filter.OP_WORD_BEGINS || operand == Filter.OP_HAS_WORD) {
-            return field + ":" + value;
-        }
-        else if (operand == Filter.OP_GREATER_OR_EQUAL) {
-            return field + ":[" + value + " TO *]";
-        }
-        else if (operand == Filter.OP_LESS_OR_EQUAL) {
-            return field + ":[* TO "+value+"]";
-        }
-        else if (operand == Filter.OP_NOT_EQUAL) {
-            return "-" + field + ":" + value;
-        }
-        else if (operand == Filter.OP_BEGINS) {
-            return field + ":" + value + "*";
-        }
-        else if (operand == Filter.OP_ENDS) {
-            return field + ":" + "*" + value;
-        }
-        else if (operand == Filter.OP_CONTAINS) {
-            return field + ":" + "(" + value + ")";
-        }
-        return "";
-    }
-
 }

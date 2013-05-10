@@ -1,0 +1,173 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Reference Query Form tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Reference Query Form tests</h1>
+    <ul>
+        <li>User story 180, Journals missing from autocomplete on Reference QF</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li></li>
+		<li></li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><span class="regressHi">Regress: high priority</span></p>
+    <p><span class="regressLo">Regress: low priority</span></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>The Reference QF Journals autocomplete should list all journals in our database
+ 			<p concordion:assertTrue="true">passed 2013-May-03 klf</p>
+    		<ol>
+                <li>Navigate to the Reference Query Form.</li>
+                <li>In the Journals field, type <b>plos</b>. Verify that at least the following journals are displayed in the autocomplete (may also be others):
+                <table>
+					<tr><td> PLoS Biol</td></tr>
+					<tr><td> PLoS Comput Biol</td></tr>
+					<tr><td> PLoS Genet</td></tr>
+					<tr><td> PLoS Med</td></tr>
+					<tr><td> PLoS Negl Trop Dis</td></tr>
+					<tr><td> PLoS ONE</td></tr>
+					<tr><td> PLoS Pathog</td></tr>
+				</table>                
+                </li>
+                <li>In the Journals field, type <b>International Mouse Genome</b>. Verify that at least the following journals are displayed in the autocomplete (may also be others):
+                <table>
+					<tr><td>8th International Mouse Genome Conference, London </td></tr>
+					<tr><td>9th International Mouse Genome Conference</td></tr>
+					<tr><td>10th International Mouse Genome Conference 10/7/96 - 10/10/96, Paris, France </td></tr>
+					<tr><td>12th International Mouse Genome Conference 9/29/98 - 10/3/98, Garmisch-Pastenkerchen, Germany </td></tr>
+                </table>
+                </li>
+                <li>In the Journals field, type <b>acta b</b>. Verify that at least the following journals are displayed in the autocomplete (may also be others):
+                <table>
+					<tr><td>Acta Anat (Basel) </td></tr>
+					<tr><td>Acta Biochim Biophys Sin (Shanghai) </td></tr>
+					<tr><td>Acta Biochim Pol </td></tr>
+					<tr><td>Acta Biol Acad Sci Hung </td></tr>
+					<tr><td>Acta Biol Hung </td></tr>
+					<tr><td>Acta Biol Med Ger</td></tr>
+                </table>
+                </li>
+                <li>In the Journals field, type <b>cell mol</b>. Verify that at least the following journals are displayed in the autocomplete (may also be others):
+                <table>
+					<tr><td> Cell Mol Biol</td></tr>
+					<tr><td> Cell Mol Biol Lett</td></tr>
+					<tr><td> Cell Mol Biol (Noisy-Le-Grand)</td></tr>
+					<tr><td> Cell Mol Biol Res</td></tr>
+					<tr><td> Cell Mol Life Sci</td></tr>
+					<tr><td> Cell Mol Neurobiol</td></tr>
+                </table>
+                </li>
+                <li>In the Journals field, type <b>tumor</b>. Verify that the following journals are displayed in the autocomplete (these all are "no GXD data" journals):
+                <table>
+                	<tr><td>J Immunother Emphasis Tumor Immunol</td></tr>
+					<tr><td>Lillia Babbitt Hyde Foundation Conference on the Mammary Tumor Virus, Inverness, California</td></tr>
+                	<tr><td>Prog Exp Tumor Res</td></tr>
+					<tr><td>Tumori</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>The Journals QF should display a given journal in the autocomplete only once (i.e., autocomplete should not be case-sensitive).<br/>
+    		Note: this is a manual entry into a translation dictionary. If more journals are identified, they will need to be added to that dictionary.
+ 			<p concordion:assertTrue="true">passed 2013-May-03 klf</p>
+    		<ol>
+    			<li>In the Journals field, type the indicated input. Verify that the following journals are displayed or not, as indicated:
+    			<table>
+					<tr><th>Input</th><th>Autocomplete value</th><th>Displayed/Not displayed</th></tr>
+					<tr><td>plos</td><td> PLoS One</td><td>not displayed</td></tr>
+					<tr><td>plos</td><td> PLoS ONE</td><td>displayed</td></tr>
+					<tr><td>noisy</td><td> Cell Mol Biol (Noisy-le-grand)</td><td>not displayed</td></tr>
+					<tr><td>noisy</td><td> Cell Mol Biol (Noisy-Le-Grand)</td><td>displayed</td></tr>
+    			</table>
+    			</li>
+    		</ol>
+    		</li>
+    		<li>The GXD Literature QF Journals autocomplete should list only journals which have GXD data
+ 			<p concordion:assertTrue="true">passed 2013-May-03 klf</p>
+    		<ol>
+                <li>In the Journals field, type <b>alcohol</b>. Verify that the following journals are NOT displayed in the autocomplete:
+                <table>
+					<tr><td>Alcohol</td></tr>
+					<tr><td>Alcohol Alcohol</td></tr>
+					<tr><td>Alcohol Res Health</td></tr>
+					<tr><td>Drug Alcohol Depend</td></tr>
+					<tr><td>J Stud Alcohol</td></tr>
+					<tr><td>Q J Stud Alcohol</td></tr>
+					<tr><td>Subst Alcohol Actions Misuse</td></tr>
+                </table>
+                <p>Verify that the following journals ARE displayed:</p>
+                <table>
+                	<tr><td> Alcohol Alcohol Suppl</td></tr>
+					<tr><td> Alcohol Clin Exp Res</td></tr>
+                </table>
+                </li>
+                <li>In the Journals field, type <b>tumor</b>. Verify that the following journals are NOT displayed in the autocomplete:
+                <table>
+                	<tr><td>J Immunother Emphasis Tumor Immunol</td></tr>
+					<tr><td>Lillia Babbitt Hyde Foundation Conference on the Mammary Tumor Virus, Inverness, California</td></tr>
+                	<tr><td>Prog Exp Tumor Res</td></tr>
+					<tr><td>Tumori</td></tr>
+                </table>
+                <p>Verify that there are NO JOURNALS displayed in the autocomplete.</p>
+				</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

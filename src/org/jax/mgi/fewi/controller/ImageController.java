@@ -550,118 +550,28 @@ public class ImageController {
 
     //-------------------------------//
     // GXD Image Summary by Marker
+    // NOTE: As of 2013/04/08 this redirects to the GXD controller
     //-------------------------------//
     @RequestMapping(value="/gxdSummary/marker/{markerID}")
-    public ModelAndView gxdImageSummeryByMarker(
+    public String gxdImageSummeryByMarker(
                @PathVariable("markerID") String markerID,
                @ModelAttribute Paginator page)
     {
         logger.debug("->gxdImageSummeryByMarker started");
-
-        // view object
-        ModelAndView mav = new ModelAndView("image_gxdSummary_by_marker");
-
-        // data holders
-        Marker marker;
-        Integer markerKey;
-        List<ImageSummaryRow> imageSummaryRows;
-        ImageSummaryRow thisRow;
-
-        /**********************
-        * Gather Marker Object
-        **********************/
-
-        // setup search parameters to get marker object
-        SearchParams markerSearchParams = new SearchParams();
-        Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
-        markerSearchParams.setFilter(markerIdFilter);
-
-        // find the requested marker for header
-        SearchResults<Marker> markerSearchResults
-          = markerFinder.getMarkerByID(markerSearchParams);
-
-        List<Marker> markerList = markerSearchResults.getResultObjects();
-
-        // there can be only one...
-        if (markerList.size() < 1) { // none found
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Marker Found");
-            return mav;
-        }
-        if (markerList.size() > 1) { // dupe found
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate ID");
-            return mav;
-        }
-
-        // success - we have a single object
-        marker = markerList.get(0);
-
-        /**********************
-        * Gather Image Objects
-        **********************/
-
-        // setup search parameters to get the image objects
-        SearchParams imageSearchParams = new SearchParams();
-        imageSearchParams.setSorts(this.genDefaultSorts());
-        page.setResultsDefault(10);
-        imageSearchParams.setPaginator(page);
-        markerKey = new Integer(marker.getMarkerKey());
-        Filter markerKeyFilter
-          = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
-        imageSearchParams.setFilter(markerKeyFilter);
-
-        // gather the images, and generate the summary rows
-        SearchResults<ImageSummaryRow> imageSearchResults
-          = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
-        imageSummaryRows = imageSearchResults.getResultObjects();
-
-        // add marker key to each row (it needs to know the marker)
-        Iterator<ImageSummaryRow> rowIter = imageSummaryRows.iterator();
-        while (rowIter.hasNext()) {
-          thisRow = rowIter.next();
-          thisRow.setSummaryObjectKey(markerKey.intValue());
-	    }
-
-
-        /**********************
-        * Fill View Object
-        **********************/
-
-        // data objects
-        mav.addObject("marker", marker);
-        mav.addObject("imageSummaryRows", imageSummaryRows);
-
-        // pagination
-        PaginationControls paginationControls = new PaginationControls(page);
-        paginationControls.setResultsTotal(imageSearchResults.getTotalCount());
-        mav.addObject("paginationControls", paginationControls);
-
-        return mav;
-
-
+        logger.debug("Forwarding to /gxd/marker/{mgiid}?tab=imagestab");
+        return "forward:/mgi/gxd/marker/"+markerID+"?tab=imagestab";
     }
 
 
     //---------------------------------//
     // GXD Image Summary by Marker Key
+    // NOTE: As of 2013/04/08 this redirects to the GXD controller
     //---------------------------------//
-
     // this is solely to support forwarding from old URLs via urlmapper
 
     @RequestMapping(value="/gxdSummary/marker")
-    public ModelAndView gxdImageSummeryByMarkerKey(@RequestParam("key") String dbKey) {
+    public String gxdImageSummeryByMarkerKey(@RequestParam("key") String dbKey) {
         logger.debug("->gxdImageSummeryByMarker started");
-
-        // view object & paginator
-        ModelAndView mav = new ModelAndView("image_gxdSummary_by_marker");
-        Paginator page = new Paginator();
-
-        // data holders
-        Marker marker;
-        Integer markerKey;
-        List<ImageSummaryRow> imageSummaryRows;
-        ImageSummaryRow thisRow;
 
         /**********************
         * Gather Marker Object
@@ -675,61 +585,21 @@ public class ImageController {
 
         // there can be only one...
         if (markerList.size() < 1) { // none found
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Marker Found");
-            return mav;
+            //ModelAndView mav = new ModelAndView("error");
+            //mav.addObject("errorMsg", "No Marker Found");
+           return "errorMsg";
         }
         if (markerList.size() > 1) { // dupe found
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate Key");
-            return mav;
+        	//ModelAndView mav = new ModelAndView("error");
+            //mav.addObject("errorMsg", "Duplicate Key");
+           // return mav;
+           return "errorMsg";
         }
 
         // success - we have a single object
-        marker = markerList.get(0);
-
-        /**********************
-        * Gather Image Objects
-        **********************/
-
-        // setup search parameters to get the image objects
-        SearchParams imageSearchParams = new SearchParams();
-        imageSearchParams.setSorts(this.genDefaultSorts());
-        page.setResultsDefault(10);
-        imageSearchParams.setPaginator(page);
-        markerKey = new Integer(marker.getMarkerKey());
-        Filter markerKeyFilter
-          = new Filter(SearchConstants.MRK_KEY, markerKey.toString());
-        imageSearchParams.setFilter(markerKeyFilter);
-
-        // gather the images, and generate the summary rows
-        SearchResults<ImageSummaryRow> imageSearchResults
-          = imageFinder.getGxdImagesByMarkerKey(imageSearchParams);
-        imageSummaryRows = imageSearchResults.getResultObjects();
-
-        // add marker key to each row (it needs to know the marker)
-        Iterator<ImageSummaryRow> rowIter = imageSummaryRows.iterator();
-        while (rowIter.hasNext()) {
-          thisRow = rowIter.next();
-          thisRow.setSummaryObjectKey(markerKey.intValue());
-	    }
-
-
-        /**********************
-        * Fill View Object
-        **********************/
-
-        // data objects
-        mav.addObject("marker", marker);
-        mav.addObject("imageSummaryRows", imageSummaryRows);
-
-        // pagination
-        PaginationControls paginationControls = new PaginationControls(page);
-        paginationControls.setResultsTotal(imageSearchResults.getTotalCount());
-        mav.addObject("paginationControls", paginationControls);
-
-        return mav;
-
+        Marker marker = markerList.get(0);
+        logger.debug("forwarding to /gxd/marker/{mgiid}?tab=imagestab");
+        return "forward:/mgi/gxd/marker/"+marker.getPrimaryID()+"?tab=imagestab";
 
     }
 

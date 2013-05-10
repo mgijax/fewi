@@ -3,7 +3,6 @@ package gxd;
 import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
 
 
-public class MarkerDetailLinkChangesTest extends BaseConcordionTest {
+public class AssayDetailFewiLinksInboundTest extends BaseConcordionTest {
 
 }
-	

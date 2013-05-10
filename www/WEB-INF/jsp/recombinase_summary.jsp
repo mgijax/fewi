@@ -86,6 +86,10 @@ table.checkBoxSelectTable td{
     border-spacing:4px;
     padding:4px;
 }
+span.smallGrey {
+font-size: 75%;
+color: #999999;
+}
 </style>
 
 <!-- Browser History Manager source file -->
@@ -104,135 +108,17 @@ ${templateBean.templateBodyStartHtml}
 </div>
 <!-- end header bar -->
 
+<br/>
+
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase_summary_1.js"></script>
-
-<div id="checkboxes">
-  <table class="checkBoxSelectTable">
-    <tr><td colspan="4" class="pageAdvice">You can control the data displayed below.</td>
-      <td colspan="2">&nbsp;</td></tr>
-    <tr><td colspan="4" class="pageAdvice">Check the boxes to show Anatomical System
-      columns containing links to data and images.</td>
-      <td colspan="2" class="pageAdvice">Hide or show other columns.</td></tr>
-	<tr>
-	  <td><input type="checkbox" id="adiposeTissueCheckbox" 
-        onClick="flipColumn('Adipose Tissue');">Adipose&nbsp;Tissue</input>
-	  </td>
-	  <td><input type="checkbox" id="headCheckbox"
-        onClick="flipColumn('Head');">Head</input>
-	  </td>
-	  <td><input type="checkbox" id="muscleCheckbox"
-        onClick="flipColumn('Muscle');">Muscle</input>
-	  </td>
-	  <td><input type="checkbox" id="skeletalSystemCheckbox"
-        onClick="flipColumn('Skeletal System');">Skeletal&nbsp;System</input>
-	  </td>
-	  <td colspan="2"><input type="checkbox" id="synonymsCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('Allele Synonyms');">Allele&nbsp;Synonyms</input>
-	  </td>
-	</tr>
-	<tr>
-	  <td><input type="checkbox" id="alimentarySystemCheckbox"
-        onClick="flipColumn('Alimentary System');">Alimentary&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="hemolymphoidSystemCheckbox"
-        onClick="flipColumn('Hemolymphoid System');">Hemolymphoid&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="nervousSystemCheckbox"
-        onClick="flipColumn('Nervous System');">Nervous&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="tailCheckbox"
-        onClick="flipColumn('Tail');">Tail</input>
-	  </td>
-	  <td><input type="checkbox" id="alleleTypeCheckbox"
-        onClick="flipColumn('Allele Type');">Allele&nbsp;Type</input>
-	  </td>
-	  <td><input type="checkbox" id="imsrCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('IMSR');">IMSR</input>
-	  </td>
-	</tr>
-	<tr>
-	  <td><input type="checkbox" id="branchialArchesCheckbox"
-        onClick="flipColumn('Branchial Arches');">Branchial&nbsp;Arches</input>
-	  </td>
-	  <td><input type="checkbox" id="integumentalSystemCheckbox"
-        onClick="flipColumn('Integumental System');">Integumental&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="renalAndUrinarySystemCheckbox"
-        onClick="flipColumn('Renal and Urinary System');">Renal&nbsp;and&nbsp;Urinary&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="earlyEmbryoCheckbox"
-        onClick="flipColumn('Early Embryo');">Early&nbsp;Embryo,&nbsp;All&nbsp;Tissues</input>
-	  </td>
-	  <td><input type="checkbox" id="inducibleCheckbox"
-        onClick="flipColumn('Inducible');">Inducible</input>
-	  </td>
-	  <td><input type="checkbox" id="referenceCheckbox" checked="checked"
-		class="checkboxSelected"
-        onClick="flipColumn('References');">References</input>
-	  </td>
-	</tr>
-	<tr>
-	  <td><input type="checkbox" id="cardiovascularSystemCheckbox"
-        onClick="flipColumn('Cardiovascular System');">Cardiovascular&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="limbsCheckbox"
-        onClick="flipColumn('Limbs');">Limbs</input>
-	  </td>
-	  <td><input type="checkbox" id="reproductiveSystemCheckbox"
-        onClick="flipColumn('Reproductive System');">Reproductive&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="extraEmbryonicCheckbox"
-        onClick="flipColumn('Extraembryonic Component');">Extraembryonic&nbsp;Component</input>
-	  </td>
-	  <td colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
-	  <td><input type="checkbox" id="cavitiesAndLiningsCheckbox"
-        onClick="flipColumn('Cavities and Linings');">Cavities&nbsp;And&nbsp;Linings</input>
-	  </td>
-	  <td><input type="checkbox" id="liverAndBiliarySystemCheckbox"
-        onClick="flipColumn('Liver and Biliary System');">Liver&nbsp;and&nbsp;Biliary&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="respiratorySystemCheckbox"
-        onClick="flipColumn('Respiratory System');">Respiratory&nbsp;System</input>
-	  </td>
-	  <td colspan="3"><input type="checkbox" id="embryoOtherCheckbox"
-        onClick="flipColumn('Embryo Other');">Embryo-other&nbsp;(Embryonic&nbsp;structures&nbsp;not&nbsp;listed&nbsp;above)</input>
-	  </td>
-	</tr>
-	<tr>
-	  <td><input type="checkbox" id="endocrineSystemCheckbox"
-        onClick="flipColumn('Endocrine System');">Endocrine&nbsp;System</input>
-	  </td>
-	  <td><input type="checkbox" id="mesenchymeCheckbox"
-        onClick="flipColumn('Mesenchyme');">Mesenchyme</input>
-	  </td>
-	  <td><input type="checkbox" id="sensoryOrgansCheckbox"
-        onClick="flipColumn('Sensory Organs');">Sensory&nbsp;Organs</input>
-	  </td>
-	  <td colspan="2"><input type="checkbox" id="postnatalOtherCheckbox"
-        onClick="flipColumn('Postnatal Other');">Postnatal-other&nbsp;(Postnatal&nbsp;structures&nbsp;not&nbsp;listed&nbsp;above)</input>
-	  </td>
-	  <td><span id="summaryResetButton" onClick="resetCheckboxes(); window.location.reload();">Reset Page</span></td>
-	</tr>
-  </table>
-</div>
-<div>
-
-</div><br/>
-
-
 <div id="summary" style="width:1150px;">
 	<div id="breadbox">
-		<div id="contentcolumn">
-			<div class="innertube">
-			</div>
+		<div id="contentcolumn" style="margin:0px;">
+			<div class="innertube"></div>
 		</div>
-	</div>
-	<div id="querySummary">
-		<div class="innertube">
+	</div> 
+	<div id="querySummary" style="width:700px;">
+		<div class="innertube" >
 				<span class="enhance">You searched for:</span><br/>
 		<c:if test="${not empty recombinaseQueryForm.system}"><span class="label">Anatomical System</span> equals 
 			<span class="label">${fn:replace(recombinaseQueryForm.system,";", ",") }</span><br/>
@@ -242,8 +128,12 @@ ${templateBean.templateBodyStartHtml}
 			</c:if>
 		<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals 
 			<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
+		<c:if test="${not empty recombinaseQueryForm.structure}">
+			<b>Activity assayed</b> in <b>${recombinaseQueryForm.structure}</b> 
+			<span class="smallGrey"> includes synonyms &amp; substructures</span>
+			<br/></c:if>
     <span class="pageAdvice" style="height: 20px;">
-	    Click column headings to sort table data.  Drag headings to rearrange columns.
+	    Click column headings to sort table data.
     </span>
 		</div>
 	</div>

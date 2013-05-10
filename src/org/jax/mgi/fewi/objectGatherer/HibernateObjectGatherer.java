@@ -75,7 +75,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	@Transactional(readOnly = true)
 	public List<T> get(Class<T> modelObj, List<String> keys) {
 
-		return get(modelObj,keys,"id");
+		return get(modelObj,keys,"primary key");
 	}
 	
 	/**
@@ -107,6 +107,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		// get results chunking if needed.
 		long start = System.nanoTime();
 		int step = 10000;
+		String queryField = fieldName.equals("primary key") ? "id" : fieldName;
 		if (keyObjs.size() > 10000) {
 			int begin = 0;
 			int end = step;
@@ -118,18 +119,18 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
 				List inList = keyObjs.subList(begin, end);
 
-				queryResults.addAll(s.createCriteria(modelObj).add(Restrictions.in(fieldName, inList)).list());
+				queryResults.addAll(s.createCriteria(modelObj).add(Restrictions.in(queryField, inList)).list());
 				begin += step;
 				end += step;
 			}
 
 		}
 		else {
-			queryResults = s.createCriteria(modelObj).add(Restrictions.in(fieldName, keyObjs)).list();
+			queryResults = s.createCriteria(modelObj).add(Restrictions.in(queryField, keyObjs)).list();
 		}
 
 		// load results into Map keyed by id
-		if(fieldName.equals("id"))
+		if(fieldName.equals("primary key"))
 		{
 		String id;
 			for (T r : queryResults) {

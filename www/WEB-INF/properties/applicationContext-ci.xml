@@ -51,7 +51,7 @@
     <!-- JDBC DataSource for local environments -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SingleConnectionDataSource" destroy-method="destroy">
         <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://mgi-testdb3.jax.org:5432/fe_dev"/>
+        <property name="url" value="jdbc:postgresql://mgi-testdb4.jax.org:5432/fe_stable"/>
         <property name="username" value="mgd_public"/>
         <property name="password" value="mgdpub"/>
         <property name="suppressClose" value="true"/>

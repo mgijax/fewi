@@ -10,6 +10,14 @@ YAHOO.namespace("gxd.container");
 YAHOO.gxd.container.panelVocab = new YAHOO.widget.Panel("gxdVocabHelp", { width:"520px", draggable:false, visible:false, constraintoviewport:true } ); 
 YAHOO.gxd.container.panelVocab.render(); 
 YAHOO.util.Event.addListener("gxdVocabHelpImage", "mouseover", YAHOO.gxd.container.panelVocab.show, YAHOO.gxd.container.panelVocab, true); 
+YAHOO.gxd.container.panelDifStruct1 = new YAHOO.widget.Panel("gxdDifStruct1Help", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } ); 
+YAHOO.gxd.container.panelDifStruct1.render(); 
+YAHOO.util.Event.addListener("gxdDifStruct1HelpImage", "mouseover", YAHOO.gxd.container.panelDifStruct1.show, YAHOO.gxd.container.panelDifStruct1, true);
+YAHOO.util.Event.addListener("gxdDifStruct1HelpImage", "mouseout", YAHOO.gxd.container.panelDifStruct1.hide, YAHOO.gxd.container.panelDifStruct1, true);
+YAHOO.gxd.container.panelDifStage = new YAHOO.widget.Panel("gxdDifStageHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } ); 
+YAHOO.gxd.container.panelDifStage.render(); 
+YAHOO.util.Event.addListener("gxdDifStageHelpImage", "mouseover", YAHOO.gxd.container.panelDifStage.show, YAHOO.gxd.container.panelDifStage, true); 
+YAHOO.util.Event.addListener("gxdDifStageHelpImage", "mouseout", YAHOO.gxd.container.panelDifStage.hide, YAHOO.gxd.container.panelDifStage, true); 
 
 //GXD tooltips
 var tsTooltips = {
@@ -41,37 +49,89 @@ var tsTooltips = {
 		26:"Long whiskers",
 		28:"Postnatal development"
 		};
-var tsBox = YAHOO.util.Dom.get("theilerStage");
-for(var i=0; i< tsBox.children.length; i++)
+var tsBoxIDs = ["theilerStage","difTheilerStage1","difTheilerStage2"];
+for(var j=0;j<tsBoxIDs.length;j++)
 {
-	var option = tsBox.children[i];
-	// check if we've defined the tooltip for this option
-	if(tsTooltips[option.value])
+	var tsBox = YAHOO.util.Dom.get(tsBoxIDs[j]);
+	if(tsBox!=null)
 	{
-		var ttText = "<b>"+option.text+"</b>"+
-			"<br/>"+tsTooltips[option.value];
-		var tt = new YAHOO.widget.Tooltip("tsTT"+i,{context:option, text:ttText,showdelay:1000});
+		for(var i=0; i< tsBox.children.length; i++)
+		{
+			var option = tsBox.children[i];
+			// check if we've defined the tooltip for this option
+			if(tsTooltips[option.value])
+			{
+				var ttText = "<b>"+option.text+"</b>"+
+					"<br/>"+tsTooltips[option.value];
+				var tt = new YAHOO.widget.Tooltip("tsTT_"+j+"_"+i,{context:option, text:ttText,showdelay:1000});
+			}
+		}
 	}
 }
 
+var QFHeight = 704;
+var DifQFHeight = 150;
+var currentQF = "standard";
+var currentDifQF = "structure";
 // GXD form tab control
 YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
-var tabView = new YAHOO.widget.TabView('expressionSearch');
+var formTabs = new YAHOO.widget.TabView('expressionSearch');
+
+formTabs.addListener("activeTabChange", function(e){
+	if(formTabs.get('activeIndex')==0) currentQF = "standard";
+	else currentQF = "differential";
+});
+//basic functions to manage the form tabs
+var showStandardForm = function()
+{ 
+	currentQF = "standard";
+	formTabs.selectTab(0); 
+};
+var showDifferentialForm = function()
+{ 
+	currentQF = "differential";
+	formTabs.selectTab(1); 
+};
+
+//set up toggle for differential ribbons
+function showDifStructuresQF()
+{
+	currentDifQF = "structure";
+	showDifferentialForm();
+	$("#difStructClosed").hide();
+	$("#difStructOpen").show();
+	$("#difStageClosed").show();
+	$("#difStageOpen").hide();
+}
+function showDifStagesQF()
+{
+	currentDifQF = "stage";
+	showDifferentialForm();
+	$("#difStructClosed").show();
+	$("#difStructOpen").hide();
+	$("#difStageClosed").hide();
+	$("#difStageOpen").show();
+}
+// attach the click handlers for ribbon toggle
+$("#difStructClosed").click(showDifStructuresQF);
+$("#difStageClosed").click(showDifStagesQF);
+
+function getCurrentQF()
+{
+	if(currentQF=="differential")
+	{
+		if(currentDifQF=="stage") return YAHOO.util.Dom.get("gxdDifferentialQueryForm2");
+		return YAHOO.util.Dom.get("gxdDifferentialQueryForm1");
+	}
+		
+	return YAHOO.util.Dom.get("gxdQueryForm");
+}
 
 //GXD age/stage tab control
 // COMMENTING OUT THE YUI2 way of doing this, because it breaks in IE on windows 7
 //YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
 //var Tabs = new YAHOO.widget.TabView('ageStage');
-// Script to set up and control the ageStage tab widget (using jquery)
-var ageStageID = "ageStage";
-function selectTheilerStage()
-{
-	changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID);
-}
-function selectAge()
-{
-	changeTab($('#'+ageStageID+' .tab-nav')[1],ageStageID);
-}
+
 // general purpose function for changing tabs
 function changeTab(tabElement,parentId)
 {
@@ -91,16 +151,51 @@ function changeTab(tabElement,parentId)
     $(eSelector+' .inactive-content').eq(tab_index).removeClass("inactive-content")
         .addClass("active-content");
 }
+//Script to set up and control the ageStage tab widget (using jquery)
+var ageStageID = "ageStage";
+function selectTheilerStage()
+{ changeTab($('#'+ageStageID+' .tab-nav')[0],ageStageID); }
+function selectAge()
+{ changeTab($('#'+ageStageID+' .tab-nav')[1],ageStageID); }
 function ageStageChange(e)
-{
-    if(!$(this).hasClass("active-tab"))
-    {
-        changeTab(this,ageStageID);
-    }
-}
+{ if(!$(this).hasClass("active-tab")) changeTab(this,ageStageID); }
 // Init the event listener for clicking tabs
 $('#'+ageStageID+' .tab-nav').click(ageStageChange);
 
+// init the age/stage widgets for diff query form (tie the two together)
+//var difAgeStage1ID = "ageStage2";
+//var difAgeStage2ID = "ageStage3";
+//function selectDifTheilerStage()
+//{ 
+//	changeTab($('#'+difAgeStage1ID+' .tab-nav')[0],difAgeStage1ID); 
+//	changeTab($('#'+difAgeStage2ID+' .tab-nav')[0],difAgeStage2ID); 
+//}
+//function selectDifAge()
+//{ 
+//	changeTab($('#'+difAgeStage1ID+' .tab-nav')[1],difAgeStage1ID); 
+//	changeTab($('#'+difAgeStage2ID+' .tab-nav')[1],difAgeStage2ID); 
+//}
+//function difAgeStageChange1(e)
+//{ 
+//	if(!$(this).hasClass("active-tab")) 
+//	{
+//		if(this.id=="stagesTab2") selectDifTheilerStage();
+//		else if(this.id=="agesTab2") selectDifAge();
+//	}
+//}
+//// Init the event listener for clicking tabs
+//$('#'+difAgeStage1ID+' .tab-nav').click(difAgeStageChange1);
+//
+//function difAgeStageChange2(e)
+//{ 
+//	if(!$(this).hasClass("active-tab")) 
+//	{
+//		if(this.id=="stagesTab3") selectDifTheilerStage();
+//		else if(this.id=="agesTab3") selectDifAge();
+//	}
+//}
+//// Init the event listener for clicking tabs
+//$('#'+difAgeStage2ID+' .tab-nav').click(difAgeStageChange2);
 
 // Updates the "You searched for" section
 var updateQuerySummary = function() {
@@ -129,210 +224,104 @@ var updateQuerySummary = function() {
 	el.appendChild(new YAHOO.util.Element(document.createElement('br')));
 	el.appendTo(searchParams);
 	
-	// Create all the relevant search parameter elements
-	if (YAHOO.util.Dom.get('nomenclature').value != "") {
-		
-		// Create a span
-		var el = new YAHOO.util.Element(document.createElement('span'));
-		//add the text node to the newly created span
-		el.appendChild(document.createTextNode("Gene nomenclature: "));
-
-		// Create a bold
-		var b = new YAHOO.util.Element(document.createElement('b'));
-		var newContent = document.createTextNode(YAHOO.util.Dom.get('nomenclature').value);
-		// Build and append the nomenclature query parameter section
-		b.appendChild(newContent);
-		el.appendChild(b);
-		
-		var sp = new YAHOO.util.Element(document.createElement('span'));
-		sp.addClass("smallGrey");
-		sp.appendChild(document.createTextNode(" current symbol, name, synonyms"));
-		el.appendChild(sp);
-		
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
-		el.appendTo(searchParams);
-	}
-
-	if (YAHOO.util.Dom.get('vocabTerm').value != "" && YAHOO.util.Dom.get("annotationId").value!="") {
-		
-		// Create a span
-		var el = new YAHOO.util.Element(document.createElement('span'));
-		//add the text node to the newly created span
-		el.appendChild(document.createTextNode("Genes annotated to "));
-
-		// Create a bold
-		var b = new YAHOO.util.Element(document.createElement('b'));
-		var c = YAHOO.util.Dom.get('vocabTerm').value;
-		var s = c.split(" - ");
-		var newValue = document.createTextNode(s[1] + ": "+s[0]);
-		// Build and append the nomenclature query parameter section
-		b.appendChild(newValue);
-		el.appendChild(b);
-
-		var sp = new YAHOO.util.Element(document.createElement('span'));
-		sp.addClass("smallGrey");
-		sp.appendChild(document.createTextNode(" includes subterms"));
-		el.appendChild(sp);
-
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
-		el.appendTo(searchParams);
-	}
-	// do detected
-	var detectedText = "Assayed";
-	// 1 = Yes, 2 = No
-	if(YAHOO.util.Dom.get("detected1").checked)
+	// handle the differential stuff first
+	var isDifStructure = YAHOO.util.Dom.get('difStructure1').value!="" &&
+		YAHOO.util.Dom.get('difStructure2').value != "";
+	var difStage1 = YAHOO.util.Dom.get("difTheilerStage1");
+	var hasAnyStage=false;
+	var difStages1 =[] 
+	for(var key in difStage1.children)
 	{
-		detectedText = "Detected";
-	}
-	if(YAHOO.util.Dom.get("detected2").checked)
-	{
-		detectedText = "Not detected";
-	}
-
-	// do structure
-	// Create all the relevant search parameter elements
-	if (YAHOO.util.Dom.get('structure').value != "") {
-		
-		el = new YAHOO.util.Element(document.createElement('span'));
-
-		b = new YAHOO.util.Element(document.createElement('b'));
-		b.appendChild(document.createTextNode(detectedText));
-		el.appendChild(b);
-
-		el.appendChild(document.createTextNode(" in "));
-
-		b = new YAHOO.util.Element(document.createElement('b'));
-		b.appendChild(document.createTextNode(YAHOO.util.Dom.get('structure').value));
-		el.appendChild(b);
-
-		var sp = new YAHOO.util.Element(document.createElement('span'));
-		sp.addClass("smallGrey");
-		sp.appendChild(document.createTextNode(" includes synonyms & substructures"));
-		el.appendChild(sp);
-
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
-		el.appendTo(searchParams);
-
-
-	} else {
-
-		el = new YAHOO.util.Element(document.createElement('span'));
-
-		b = new YAHOO.util.Element(document.createElement('b'));
-		b.appendChild(document.createTextNode(detectedText));
-		el.appendChild(b);
-
-		el.appendChild(document.createTextNode(" in "));
-
-		b = new YAHOO.util.Element(document.createElement('b'));
-		b.appendChild(document.createTextNode("any structures"));
-		el.appendChild(b);
-
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
-		el.appendTo(searchParams);
-	}
-
-
-
-	// If the user selected age to search by, show the age display,
-	// otherwise show the TS display as default
-	var age = YAHOO.util.Dom.get('age');
-
-	if (age.parentNode.className != "inactive-content") {
-
-		// do age
-		var ages="";
-		var _ages = [];
-		for(var key in age.children)
+		if(difStage1[key]!=undefined && difStage1[key].selected)
 		{
-			if(age[key]!=undefined && age[key].selected)
+			// set to "Any" if stage "0" appears anywhere in the list
+			if(difStage1[key].value=="0")
 			{
-				// set to "Any" if stage "ANY" appears anywhere in the list
-				if(age[key].value=="ANY") ages = "Any";
-				else _ages.push(age[key].innerHTML);
+				hasAnyStage=true;
+				break;
 			}
+			difStages1.push(difStage1[key].value);
 		}
-
-		el = new YAHOO.util.Element(document.createElement('span'));
-		el.appendChild(document.createTextNode("at age(s): "));
-
-		// ensure that "Any" is displayed if somehow no ages are selected
-		if (_ages.length == 0 || ages != "") {
-			b = new YAHOO.util.Element(document.createElement('b'));
-			b.appendChild(document.createTextNode("Any"));
-			el.appendChild(b);
-		} else {
-			var cnt = 0;
-			for(var i in _ages) {
-				b = new YAHOO.util.Element(document.createElement('b'));
-				var ageText = "";
-				if(cnt == 0) ageText += "(";
-				ageText += _ages[i];
-				if(cnt == _ages.length-1) ageText+=")";
-				b.appendChild(document.createTextNode(ageText));
-				el.appendChild(b);
-				if(cnt < _ages.length-1) el.appendChild(document.createTextNode(" or "));
-				cnt+=1;
-			}
-		}
-		
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
-		el.appendTo(searchParams);
-	} else {
-
-		// Build and append the theiler stage query parameter section
-		var ts = YAHOO.util.Dom.get('theilerStage');
-		var _stages = [];
-		for(var key in ts.children)
+	}
+	
+	var hasAnyStageAbove=false;
+	var difStage2 = YAHOO.util.Dom.get("difTheilerStage2");
+	var difStages2 = []
+	for(var key in difStage2.children)
+	{
+		if(difStage2[key]!=undefined && difStage2[key].selected)
 		{
-			if(ts[key]!=undefined && ts[key].selected)
+			// set to "Any" if stage "-1" appears anywhere in the list
+			if(difStage2[key].value=="-1")
 			{
-				// set to "Any" if stage "0" appears anywhere in the list
-				if(ts[key].value=="0") stages = "Any";
-				else _stages.push("TS:"+ts[key].value);
+				hasAnyStageAbove=true;
+				break;
 			}
+			difStages2.push(difStage2[key].value);
 		}
-
-		el = new YAHOO.util.Element(document.createElement('span'));
-		el.appendChild(document.createTextNode("at Developmental stage(s): "));
-
-		// ensure that "Any" is displayed if somehow no ages are selected
-		if (_stages.length == 0) {
-			b = new YAHOO.util.Element(document.createElement('b'));
-			b.appendChild(document.createTextNode("Any"));
-			el.appendChild(b);
-		} else {
-			var cnt = 0;
-			for(var i in _stages) {
-				b = new YAHOO.util.Element(document.createElement('b'));
-				var stageText = "";
-				if(cnt == 0) stageText +="(";
-				stageText += _stages[i];
-				if(cnt == _stages.length-1) stageText += ")";
-				b.appendChild(document.createTextNode(stageText));
-				el.appendChild(b);
-				if(cnt < _stages.length-1) el.appendChild(document.createTextNode(" or "));
-				cnt+=1;
-			}
-		}
-		
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+	}
+	var isDifStage = currentQF=="differential" && currentDifQF=="stage";
+	
+	if(isDifStructure)
+	{
+		// Differential Structures Section
+		var el = new YAHOO.util.Element(document.createElement('span'));
+		el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure1').value+"</b>" +
+				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
+				"<br/>but not detected or assayed in <b>"+
+					YAHOO.util.Dom.get('difStructure2').value+"</b>"+
+				"<span class=\"smallGrey\"> includes synonyms & substructures</span>");
 		el.appendTo(searchParams);
 	}
-
-
-	// do genetic background
-	var gbText = "Specimens: ";
-	if(YAHOO.util.Dom.get("mutatedSpecimen").checked)
+	else if(isDifStage)
 	{
-		var mutatedIn = YAHOO.util.Dom.get("mutatedIn");
-		if (mutatedIn.value != "")
+		// Differential Stages Section
+		var el = new YAHOO.util.Element(document.createElement('span'));
+		var detectedStages = [];
+		var detectedStagesText = "Developmental stage(s):";
+		if(hasAnyStage) detectedStagesText = "<b>Any</b> Developmental stage";
+		else
 		{
-			// mutated in specific nomenclature
-			el = new YAHOO.util.Element(document.createElement('span'));
-			el.appendChild(document.createTextNode(gbText));
-			b = new YAHOO.util.Element(document.createElement('b'));
-			b.appendChild(document.createTextNode("Mutated in "+mutatedIn.value));
+			for(var i=0;i<difStages1.length;i++)
+			{
+				detectedStages.push("<b>TS:"+difStages1[i]+"</b>");
+			}
+			detectedStagesText += " ("+detectedStages.join(" or ")+")";
+		}
+		var notDetectedStages = [];
+		var notDetectedStagesText = "Developmental stage(s):";
+		if(hasAnyStageAbove) notDetectedStagesText = "<b>Any Developmental stage not selected above</b>";
+		else
+		{
+			for(var i=0;i<difStages2.length;i++)
+			{
+				notDetectedStages.push("<b>TS:"+difStages2[i]+"</b>");
+			}
+			notDetectedStagesText += " ("+notDetectedStages.join(" or ")+")";
+		}
+		
+		var htmlText = "Detected at " +detectedStagesText+
+				"<br/>but not detected or assayed at "+notDetectedStagesText;
+		el.set('innerHTML',htmlText);
+		el.appendTo(searchParams);
+	}
+	else
+	{
+		// Standard QF Section
+		
+		// Create all the relevant search parameter elements
+		if (YAHOO.util.Dom.get('nomenclature').value != "") {
+			
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode("Gene nomenclature: "));
+	
+			// Create a bold
+			var b = new YAHOO.util.Element(document.createElement('b'));
+			var newContent = document.createTextNode(YAHOO.util.Dom.get('nomenclature').value);
+			// Build and append the nomenclature query parameter section
+			b.appendChild(newContent);
 			el.appendChild(b);
 			
 			var sp = new YAHOO.util.Element(document.createElement('span'));
@@ -343,51 +332,243 @@ var updateQuerySummary = function() {
 			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
 			el.appendTo(searchParams);
 		}
-	}
-	else if (YAHOO.util.Dom.get("isWildType").checked)
-	{
-		// only wild type specimens
-		el = new YAHOO.util.Element(document.createElement('span'));
-		el.appendChild(document.createTextNode(gbText));
-		b = new YAHOO.util.Element(document.createElement('b'));
-		b.appendChild(document.createTextNode("Wild type only"));
-		el.appendChild(b);
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
-		el.appendTo(searchParams);
-	}
 	
-	// do assay types
-	var boxes = YAHOO.util.Selector.query(".assayType");
-	var assayTypes = [];
-	for(var key in boxes)
-	{
-		var box = boxes[key];
-		if(box.checked)
-		{
-			assayTypes.push(box.value);
-		}
-	}
-	if(assayTypes.length > 0 && !YAHOO.util.Dom.get("assayType-ALL").checked)
-	{
-
-		el = new YAHOO.util.Element(document.createElement('span'));
-		el.appendChild(document.createTextNode("Assayed by "));
-
-		var cnt = 0;
-		for(var i in assayTypes) {
-			b = new YAHOO.util.Element(document.createElement('b'));
-			var assayTypeText = "";
-			if(cnt == 0) assayTypeText +="(";
-			assayTypeText += assayTypes[i];
-			if(cnt == assayTypes.length-1) assayTypeText += ")";
-			b.appendChild(document.createTextNode(assayTypeText));
+		if (YAHOO.util.Dom.get('vocabTerm').value != "" && YAHOO.util.Dom.get("annotationId").value!="") {
+			
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode("Genes annotated to "));
+	
+			// Create a bold
+			var b = new YAHOO.util.Element(document.createElement('b'));
+			var c = YAHOO.util.Dom.get('vocabTerm').value;
+			var s = c.split(" - ");
+			var newValue = document.createTextNode(s[1] + ": "+s[0]);
+			// Build and append the nomenclature query parameter section
+			b.appendChild(newValue);
 			el.appendChild(b);
-			if(cnt < assayTypes.length-1) el.appendChild(document.createTextNode(" or "));
-			cnt+=1;
+	
+			var sp = new YAHOO.util.Element(document.createElement('span'));
+			sp.addClass("smallGrey");
+			sp.appendChild(document.createTextNode(" includes subterms"));
+			el.appendChild(sp);
+	
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+		}
+		// do detected
+		var detectedText = "Assayed";
+		// 1 = Yes, 2 = No
+		if(YAHOO.util.Dom.get("detected1").checked)
+		{
+			detectedText = "Detected";
+		}
+		if(YAHOO.util.Dom.get("detected2").checked)
+		{
+			detectedText = "Not detected";
+		}
+	
+		// do structure
+		// Create all the relevant search parameter elements
+		if (YAHOO.util.Dom.get('structure').value != "") {
+			
+			el = new YAHOO.util.Element(document.createElement('span'));
+	
+			b = new YAHOO.util.Element(document.createElement('b'));
+			b.appendChild(document.createTextNode(detectedText));
+			el.appendChild(b);
+	
+			el.appendChild(document.createTextNode(" in "));
+	
+			b = new YAHOO.util.Element(document.createElement('b'));
+			b.appendChild(document.createTextNode(YAHOO.util.Dom.get('structure').value));
+			el.appendChild(b);
+	
+			var sp = new YAHOO.util.Element(document.createElement('span'));
+			sp.addClass("smallGrey");
+			sp.appendChild(document.createTextNode(" includes synonyms & substructures"));
+			el.appendChild(sp);
+	
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+	
+	
+		} else {
+	
+			el = new YAHOO.util.Element(document.createElement('span'));
+	
+			b = new YAHOO.util.Element(document.createElement('b'));
+			b.appendChild(document.createTextNode(detectedText));
+			el.appendChild(b);
+	
+			el.appendChild(document.createTextNode(" in "));
+	
+			b = new YAHOO.util.Element(document.createElement('b'));
+			b.appendChild(document.createTextNode("any structures"));
+			el.appendChild(b);
+	
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+		}
+	
+	
+	
+		// If the user selected age to search by, show the age display,
+		// otherwise show the TS display as default
+		var age = YAHOO.util.Dom.get('age');
+	
+		if (age.parentNode.className != "inactive-content") {
+	
+			// do age
+			var ages="";
+			var _ages = [];
+			for(var key in age.children)
+			{
+				if(age[key]!=undefined && age[key].selected)
+				{
+					// set to "Any" if stage "ANY" appears anywhere in the list
+					if(age[key].value=="ANY") ages = "Any";
+					else _ages.push(age[key].innerHTML);
+				}
+			}
+	
+			el = new YAHOO.util.Element(document.createElement('span'));
+			el.appendChild(document.createTextNode("at age(s): "));
+	
+			// ensure that "Any" is displayed if somehow no ages are selected
+			if (_ages.length == 0 || ages != "") {
+				b = new YAHOO.util.Element(document.createElement('b'));
+				b.appendChild(document.createTextNode("Any"));
+				el.appendChild(b);
+			} else {
+				var cnt = 0;
+				for(var i in _ages) {
+					b = new YAHOO.util.Element(document.createElement('b'));
+					var ageText = "";
+					if(cnt == 0) ageText += "(";
+					ageText += _ages[i];
+					if(cnt == _ages.length-1) ageText+=")";
+					b.appendChild(document.createTextNode(ageText));
+					el.appendChild(b);
+					if(cnt < _ages.length-1) el.appendChild(document.createTextNode(" or "));
+					cnt+=1;
+				}
+			}
+			
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+		} else {
+	
+			// Build and append the theiler stage query parameter section
+			var ts = YAHOO.util.Dom.get('theilerStage');
+			var _stages = [];
+			for(var key in ts.children)
+			{
+				if(ts[key]!=undefined && ts[key].selected)
+				{
+					// set to "Any" if stage "0" appears anywhere in the list
+					if(ts[key].value=="0") stages = "Any";
+					else _stages.push("TS:"+ts[key].value);
+				}
+			}
+	
+			el = new YAHOO.util.Element(document.createElement('span'));
+			el.appendChild(document.createTextNode("at Developmental stage(s): "));
+	
+			// ensure that "Any" is displayed if somehow no ages are selected
+			if (_stages.length == 0) {
+				b = new YAHOO.util.Element(document.createElement('b'));
+				b.appendChild(document.createTextNode("Any"));
+				el.appendChild(b);
+			} else {
+				var cnt = 0;
+				for(var i in _stages) {
+					b = new YAHOO.util.Element(document.createElement('b'));
+					var stageText = "";
+					if(cnt == 0) stageText +="(";
+					stageText += _stages[i];
+					if(cnt == _stages.length-1) stageText += ")";
+					b.appendChild(document.createTextNode(stageText));
+					el.appendChild(b);
+					if(cnt < _stages.length-1) el.appendChild(document.createTextNode(" or "));
+					cnt+=1;
+				}
+			}
+			
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+		}
+	
+	
+		// do genetic background
+		var gbText = "Specimens: ";
+		if(YAHOO.util.Dom.get("mutatedSpecimen").checked)
+		{
+			var mutatedIn = YAHOO.util.Dom.get("mutatedIn");
+			if (mutatedIn.value != "")
+			{
+				// mutated in specific nomenclature
+				el = new YAHOO.util.Element(document.createElement('span'));
+				el.appendChild(document.createTextNode(gbText));
+				b = new YAHOO.util.Element(document.createElement('b'));
+				b.appendChild(document.createTextNode("Mutated in "+mutatedIn.value));
+				el.appendChild(b);
+				
+				var sp = new YAHOO.util.Element(document.createElement('span'));
+				sp.addClass("smallGrey");
+				sp.appendChild(document.createTextNode(" current symbol, name, synonyms"));
+				el.appendChild(sp);
+				
+				el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+				el.appendTo(searchParams);
+			}
+		}
+		else if (YAHOO.util.Dom.get("isWildType").checked)
+		{
+			// only wild type specimens
+			el = new YAHOO.util.Element(document.createElement('span'));
+			el.appendChild(document.createTextNode(gbText));
+			b = new YAHOO.util.Element(document.createElement('b'));
+			b.appendChild(document.createTextNode("Wild type only"));
+			el.appendChild(b);
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
 		}
 		
-		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
-		el.appendTo(searchParams);
+		// do assay types
+		var boxes = YAHOO.util.Selector.query(".assayType");
+		var assayTypes = [];
+		for(var key in boxes)
+		{
+			var box = boxes[key];
+			if(box.checked)
+			{
+				assayTypes.push(box.value);
+			}
+		}
+		if(assayTypes.length > 0 && !YAHOO.util.Dom.get("assayType-ALL").checked)
+		{
+	
+			el = new YAHOO.util.Element(document.createElement('span'));
+			el.appendChild(document.createTextNode("Assayed by "));
+	
+			var cnt = 0;
+			for(var i in assayTypes) {
+				b = new YAHOO.util.Element(document.createElement('b'));
+				var assayTypeText = "";
+				if(cnt == 0) assayTypeText +="(";
+				assayTypeText += assayTypes[i];
+				if(cnt == assayTypes.length-1) assayTypeText += ")";
+				b.appendChild(document.createTextNode(assayTypeText));
+				el.appendChild(b);
+				if(cnt < assayTypes.length-1) el.appendChild(document.createTextNode(" or "));
+				cnt+=1;
+			}
+			
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+		}
 	}
 };
 
@@ -395,7 +576,6 @@ var updateQuerySummary = function() {
 //
 // Handle the animation for the queryform
 //
-var QFHeight = 704;
 var toggleQF = function(oCallback,noAnimate) {
 	if(noAnimate==undefined) noAnimate=false;
 	
@@ -408,7 +588,7 @@ var toggleQF = function(oCallback,noAnimate) {
     	
     if (!YAHOO.lang.isNull(toggleLink) && !YAHOO.lang.isNull(toggleImg)
     		) {
-	    attributes = { height: { to: QFHeight }};
+	    attributes = { height: { to: currentQF=="differential" ? DifQFHeight : QFHeight }};
 		if (!qDisplay){
 			attributes = { height: { to: 0  }};
 			setText(toggleLink, "Click to modify search");
@@ -431,9 +611,7 @@ var toggleQF = function(oCallback,noAnimate) {
     {
     	animComplete = function(){
     		changeVisibility('qwrap');
-			//YAHOO.util.Dom.get("qwrap").show();
-			//YAHOO.util.Dom.get("expressionSearch").show();
-			//YAHOO.util.Dom.get('nomenclature').focus();
+    		$("#qwrap").css("height","auto");
     	};
     }
     else
@@ -450,6 +628,7 @@ var toggleQF = function(oCallback,noAnimate) {
 		    	YAHOO.util.Dom.setStyle(YAHOO.util.Dom.get('toggleQF'), 'display', 'none');
 		    	YAHOO.util.Dom.setStyle(YAHOO.util.Dom.get('toggleQF'), 'display', 'block');				
 			}
+    		$("#qwrap").css("height","auto");
     	};
     }
     if(!noAnimate)
@@ -516,11 +695,15 @@ var interceptSubmit = function(e) {
 		YAHOO.util.Dom.setStyle(outer, 'overflow', 'hidden');
 		
 		// Set the global querystring to the form values
-		window.querystring = getQueryString(YAHOO.util.Dom.get("gxdQueryForm"));
+		window.querystring = getQueryString(this);
 		
 		newQueryState = true;
 		if(typeof resultsTabs != 'undefined')
-			resultsTabs.selectTab(2);
+		{
+			// go to genes tab for differential, and results tab for anything else
+			if(currentQF=="differential") resultsTabs.selectTab(0);
+			else resultsTabs.selectTab(2);
+		}
 		if(typeof gxdDataTable != 'undefined')
 			gxdDataTable.setAttributes({ width: "100%" }, true);
 	    
@@ -529,6 +712,8 @@ var interceptSubmit = function(e) {
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm1","submit",interceptSubmit);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm2","submit",interceptSubmit);
 
 /*
  * The following functions handle form validation/restriction
@@ -593,14 +778,87 @@ var mutationRestriction  = function() {
 	
 	setVisibility('mutatedSelectError', selectVisible);
 	setVisibility('mutatedGeneError', geneVisible);
-	return selectVisible | geneVisible;
+	return selectVisible || geneVisible;
+};
+
+var difStructureRestriction  = function() 
+{
+	var form = YAHOO.util.Dom.get("gxdDifferentialQueryForm1");
+	var structure = form.structure.value;
+	var difStructure = form.difStructure.value;
+	
+	var setVisible = structure == '' || difStructure == '';
+	
+	setVisibility('difStructureError', setVisible);
+	return setVisible;
+};
+
+var difStageRestriction  = function() 
+{
+	var form = YAHOO.util.Dom.get("gxdDifferentialQueryForm2");
+	var stage = form.theilerStage;
+	var difStage = form.difTheilerStage;
+	
+	var hasAnyStage=false;
+	for(var key in stage.children)
+	{
+		if(stage[key]!=undefined && stage[key].selected)
+		{
+			// set to "Any" if stage "-1" appears anywhere in the list
+			if(stage[key].value=="0")
+			{
+				hasAnyStage=true;
+				break;
+			}
+		}
+	}
+
+	var hasAnyStageAbove=false;
+	for(var key in difStage.children)
+	{
+		if(difStage[key]!=undefined && difStage[key].selected)
+		{
+			// set to "Any" if stage "-1" appears anywhere in the list
+			if(difStage[key].value=="-1")
+			{
+				hasAnyStageAbove=true;
+				break;
+			}
+		}
+	}
+	var setVisible = hasAnyStage && hasAnyStageAbove;
+	
+	setVisibility('difStageError', setVisible);
+	return setVisible;
 };
 
 var runValidation  = function(){
-	var result = geneRestriction() | mutationRestriction();
-	setSubmitDisabled(result);
+	var result=false;
+	if(currentQF == "standard")
+	{
+		result = geneRestriction() || mutationRestriction();  
+		setSubmitDisabled(result);
+	}
+	else if(currentDifQF=="structure")
+	{
+		result = difStructureRestriction();
+		//YAHOO.util.Dom.get("submit3").disabled=result;
+	}
+	else if(currentDifQF=="stage")
+	{
+		result = difStageRestriction();
+	}
 	return result;
 };
+var clearValidation = function()
+{
+	if(currentQF == "standard") runValidation();
+	else
+	{
+		setVisibility('difStructureError', false);
+		setVisibility('difStageError',false);
+	}
+}
 
 YAHOO.util.Event.addListener(YAHOO.util.Dom.get("nomenclature"), "keyup", runValidation); 
 YAHOO.util.Event.addListener(YAHOO.util.Dom.get("nomenclature"), "change", runValidation); 
@@ -765,7 +1023,7 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
 /*
  * Anatomical Dictionary Auto Complete Section
  */
-(function() {
+function makeStructureAC(inputID,containerID){
     // Use an XHRDataSource
     var oDS = new YAHOO.util.XHRDataSource(fewiurl + "autocomplete/structure");
     // Set the responseType
@@ -775,8 +1033,8 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
     //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
 
-    // Instantiate the AutoComplete
-    var oAC = new YAHOO.widget.AutoComplete("structure", "structureContainer", oDS);
+    // Instantiate the AutoCompletes
+    var oAC = new YAHOO.widget.AutoComplete(inputID, containerID, oDS);
 
     // Throttle requests sent
     oAC.queryDelay = .03;
@@ -793,7 +1051,7 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
 	    var oData = aArgs[2]; // object literal of selected item's result data 
 	    //populate input box with another value (the base structure name)
 	    var structure = oData[1]; // 0 = term, 1 = ACtext
-	    var inputBox = YAHOO.util.Dom.get("structure");
+	    var inputBox = YAHOO.util.Dom.get(inputID);
  	    inputBox.value = structure;
     }; 
     oAC.itemSelectEvent.subscribe(selectionHandler); 
@@ -820,7 +1078,10 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
         oDS: oDS,
         oAC: oAC
     };
-})();
+};
+makeStructureAC("structure","structureContainer");
+makeStructureAC("difStructure1","difStructureContainer1");
+makeStructureAC("difStructure2","difStructureContainer2");
 
 //
 // Wire up the functionality to reset the query form
@@ -843,12 +1104,29 @@ var resetQF = function (e) {
 	form.detected3.checked=true;
 	form.allSpecimen.checked=true;
 	form.mutatedIn.value = "";
+	
+	var difForm1 = YAHOO.util.Dom.get("gxdDifferentialQueryForm1");
+	if(difForm1)
+	{
+		difForm1.structure.value="";
+		difForm1.difStructure.value="";
+	}
+	var difForm2 = YAHOO.util.Dom.get("gxdDifferentialQueryForm2");
+	if(difForm2)
+	{
+		difForm2.theilerStage.selectedIndex=0;
+		difForm2.difTheilerStage.selectedIndex=0;	
+		//difForm2.age.selectedIndex=0;
+		//difForm2.difAge.selectedIndex=0;	
+		//selectDifTheilerStage();
+	}
 	// clear the validation errors
-	runValidation();
+	clearValidation();
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "reset", resetQF);
-
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", resetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", resetQF);
 
 //
 //Parse the URL parameters into key value pairs and return the 
@@ -872,11 +1150,14 @@ function parseRequest(request){
 // Return the passed in form argument values in key/value URL format
 //
 var getQueryString = function(form) {
+	if(form==undefined) form = getCurrentQF();
 	var _qs = [];
 	for(var i=0; i<form.elements.length; i++)
 	{
 		var element = form.elements[i];
-		if(element.name != "" && element.name !="_theilerStage" && element.name !="_age") {
+		if(element.name != "" 
+			&& element.name !="_theilerStage" && element.name !="_age"
+			&& element.name !="_difTheilerStage" && element.name !="_difAge") {
 			if(element.tagName=="INPUT")
 			{
 				if(element.type=="checkbox" || element.type=="radio")
@@ -934,6 +1215,9 @@ var getQueryString = function(form) {
 function reverseEngineerFormInput(request)
 {
 	var params = parseRequest(request);
+	var formID = "#gxdQueryForm";
+	var foundDifStruct=false;
+	var foundDifStage=false;
 	for(var key in params)
 	{
 		if(key == "detected")
@@ -942,16 +1226,36 @@ function reverseEngineerFormInput(request)
 			params["detected1"] = params[key];
 			params["detected2"] = params[key];
 		}
+		else if(key == "difStructure") foundDifStruct=true;
+		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
 	}
+	// make sure correct form is visible
+	// this code allows for flexibility to add third ribbon
+	if(foundDifStruct && foundDifStage) { } // add third ribbon here
+	else if (foundDifStruct) 	
+	{
+		formID = "#gxdDifferentialQueryForm1";
+		showDifStructuresQF();
+	}
+	else if (foundDifStage)
+	{
+		formID = "#gxdDifferentialQueryForm2";
+		showDifStagesQF();
+	}
+	
 	var foundParams = false;
 	resetQF();
 	for(var key in params)
 	{
-		if(key!=undefined && key!="" && params[key].length>0)
+		if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
 		{
-			var input = YAHOO.util.Dom.get(key);
-			if(input!=undefined && input!=null)
+			//var input = YAHOO.util.Dom.get(key);
+			// jQuery is better suited to resolving form name parameters
+			var input = $(formID+" [name='"+key+"']");
+			if(input.length < 1) input = $(formID+" #"+key);
+			if(input!=undefined && input!=null && input.length > 0)
 			{
+				input = input[0];
 				if(input.tagName=="INPUT")
 				{
 					foundParams = true;
@@ -1010,6 +1314,8 @@ function reverseEngineerFormInput(request)
 				{
 					if (input.name == "age") {
 						// open the age tab
+						//if(foundDifStage) selectDifAge();
+						//else selectAge();
 						selectAge();
 					}
 					foundParams = true;
@@ -1087,4 +1393,5 @@ var mutatedInOnFocus = function(e)
 	YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
 };
 YAHOO.util.Event.addFocusListener(YAHOO.util.Dom.get("mutatedIn"),mutatedInOnFocus);
+
 

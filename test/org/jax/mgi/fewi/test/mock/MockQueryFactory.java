@@ -25,4 +25,9 @@ public class MockQueryFactory
 	{
 		return new MockGxdHttpQuery(mr);
 	}
+	
+	public MockCreHttpQuery creHttp() throws Exception
+	{
+		return new MockCreHttpQuery(mr);
+	}
 }

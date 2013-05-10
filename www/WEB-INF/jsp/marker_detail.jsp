@@ -552,7 +552,7 @@ td.padded { padding:4px; }
 		  Tissues (<a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdImages > 0}">
-		  Images (<a href="${configBean.FEWI_URL}image/gxdSummary/marker/${marker.primaryID}">${marker.countOfGxdImages}</a>)
+		  Images (<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=imagestab">${marker.countOfGxdImages}</a>)
 		</c:if>
 		<br/>
 		<c:if test="${not empty marker.gxdResultCountsByStage}">

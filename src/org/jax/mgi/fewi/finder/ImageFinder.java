@@ -8,7 +8,6 @@ import mgi.frontend.datamodel.Image;
 
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByAlleleHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleImagesByMrkHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdImagesByMrkHunter;
 import org.jax.mgi.fewi.hunter.SolrImageKeyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -45,9 +44,6 @@ public class ImageFinder {
 
   @Autowired
   private SolrAlleleImagesByMrkHunter alleleImagesByMrkHunter;
-
-  @Autowired
-  private SolrGxdImagesByMrkHunter gxdImagesByMrkHunter;
 
   @Autowired
   private HibernateObjectGatherer<Image> imageGatherer;
@@ -175,38 +171,6 @@ public class ImageFinder {
 
     return searchResults;
   }
-
-  /*-----------------------------------------------*/
-  /* Retrieval of GXD images, for a given marker
-  /*-----------------------------------------------*/
-
-  public SearchResults<ImageSummaryRow> getGxdImagesByMarkerKey(SearchParams searchParams) {
-
-    logger.debug("->getGxdImagesByMarkerKey()");
-
-    // result object to be returned
-    SearchResults<ImageSummaryRow> searchResults
-      = new SearchResults<ImageSummaryRow>();
-
-    // ask the hunter to identify which objects to return
-    gxdImagesByMrkHunter.hunt(searchParams, searchResults);
-    logger.debug("->hunter found these resultKeys - "
-      + searchResults.getResultKeys());
-
-    // gather objects identified by the hunter, add them to the results
-    List<Image> imageList
-      = imageGatherer.get( Image.class, searchResults.getResultKeys() );
-
-    // list of summary objects to be returned
-    List<ImageSummaryRow> imageSummaryRowList
-      = genSummaryRows (imageList);
-
-    searchResults.setResultObjects(imageSummaryRowList);
-
-    return searchResults;
-  }
-
-
 
     //--------------------------------------------------------------------//
     // private methods

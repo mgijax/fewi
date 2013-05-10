@@ -8,6 +8,7 @@ public class RecombinaseQueryForm {
 	private String alleleKey;
 	private String system;
 	private String systemKey;
+	private String structure;
 
 	public String getDriver() {
 		return driver;
@@ -39,10 +40,18 @@ public class RecombinaseQueryForm {
 	public void setAlleleKey(String alleleKey) {
 		this.alleleKey = alleleKey;
 	}
+	
+	public void setStructure(String structure) {
+		this.structure = structure;
+	}
+	public String getStructure() {
+		return structure;
+	}
 	@Override
 	public String toString() {
 		return "RecombinaseQueryForm [driver=" + driver + ", id=" + id
 				+ ", alleleKey=" + alleleKey + ", system=" + system
+				+ ", structure=" + structure 
 				+ ", systemKey=" + systemKey + "]";
 	}
 	

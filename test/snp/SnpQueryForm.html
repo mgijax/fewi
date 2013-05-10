@@ -1,0 +1,144 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>SNP Query Form Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>SNP Query Form Tests</h1>
+    <ul>
+        <li>User story 61, Activate the SNP Query Form</li>
+        <li>User story 69, Text fixes to Update Build, Create Build, GRCm38, etc.</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US61 - vocabs properly displayed</li>
+		<li>US61 - can execute snp queries (even though the answers may not be right!)</li>
+		<li>US61 - this is NOT test that the results are correct (yet)</li>
+		<li>US69 - dbSNP build is 137 not 128, NCBI build is 38 not 37</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>SNP Query Form displays correct, updated vocabulary values
+ 			<p concordion:assertTrue="true">klf 2/18/2013</p>
+    		<ol>
+                <li>Verify new Strains added in proper order to multiselect list
+                <ul>
+                	<li>"BTBR T&lt;+&gt; Itpr3&lt;tf&gt;/J" added to the list</li>
+                	<li>New strains appear in 2nd set of strains in the list; first 23 strains are the same and in the same order; remaining strains follow in alphanumeric order</li>
+                </ul>
+                </li>
+                <li>Verify proper list of Variation Classes
+                <ul>
+                	<li>Only SNP, In-Del and Mixed appear in the SAMPLE data set.</li>
+                	<li>Named and MNP should also exist in the FULL data set when we load it.</li>
+                </ul>
+                </li>
+                <li>Verify proper list of Function Classes
+                <ul>
+                	<li>All terms currently on Public exist.</li>
+                	<li>Add the terms "Coding" and "Noncoding-Transcript-Variant".</li>
+                	<li>List is ordered alphabetically (ASCII-sort).</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+    		<li>SNP Query Form runs and returns results for SAMPLE data set
+ 			<p concordion:assertTrue="true">klf 2/18/2013</p>
+    		<ol>
+                <li>Verify some results can be returned for Chr 1</li>
+                <li>Verify some results can be returned for Chr 2</li>
+                <li>Verify some results can be returned for Chr 19</li>
+                <li>Verify some results can be returned for Chr Y</li>
+    		</ol>
+    		</li>
+    		<li>SNP Query Form returns correct counts for SAMPLE data set
+ 			<p concordion:assertTrue="true">klf 2/18/2013</p>
+    		<ol>
+                <li>Chr 1: 1,400,516 distinct consensus SNPs (having multicoord "false")</li>
+                <li>Chr 2: 1,058,891</li>
+                <li>Chr 19: 408,762</li>
+                <li>Chr Y: 11,515</li>
+    		</ol>
+    		</li>
+    		<li>SNP query form displays corrct dbSNP build number and correct NCBI build number
+ 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+    		<ol>
+                <li>Open the SNP query form</li>
+                <li>Verify the dbSNP build listed at the top of the form says dbSNP Build 137</li>
+                <li>Verify the NCBI build listed in the Map Position ribbon says GRCm38</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

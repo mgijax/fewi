@@ -1,0 +1,86 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>External Links Reference Abstract Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>External Links in Reference Abstract Tests</h1>
+    <ul>
+        <li>User story 162, external links in reference abstracts</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>EI users can enter \Link(http://anything.com|Any Link|) note tags into referene abstracts.</li>
+		<li>Those links will appear on reference summary and detail</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><span class="regressHi">Regress: high priority</span></p>
+    <p><span class="regressLo">Regress: low priority</span></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li><i>NOTE: this test relies on fake data.</i> View Europhenome reference to see the link.
+ 			<p concordion:assertTrue="true">kstone 4/30/2013</p>
+    		<ol>
+                <li>Open <a href="http://cardolan.informatics.jax.org/reference/J:165965">Europhenome reference (J:165965)</a></li>
+                <li>Verify that at the end of the abstract is a link to www.europhenome.org, and that the link opens in a new tab/window.</li>
+                <li>Also verify that highlighting does not break the link by visitting 
+                	<a href="http://cardolan.informatics.jax.org/reference/summary?author=&amp;authorScope=any&amp;journal=&amp;year=&amp;text=europhenome%0D%0A&amp;inTitle=true&amp;_inTitle=on&amp;inAbstract=true&amp;_inAbstract=on&amp;id=">query summary for "europhenome" in abstract</a>.
+                </li>
+                <li>Verify europhenome link works.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

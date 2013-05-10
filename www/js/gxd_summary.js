@@ -19,9 +19,11 @@ var tabs = {};
 tabs["genestab"] = 0;
 tabs["assaystab"] = 1;
 tabs["resultstab"] = 2;
+tabs["imagestab"] = 3;
 tabs[0] = "genestab";
 tabs[1] = "assaystab";
 tabs[2] = "resultstab";
+tabs[3] = "imagestab";
 
 // return the current tab from the history manager
 var getCurrentTab = function() {
@@ -33,6 +35,7 @@ var getCurrentTab = function() {
 var GENES_PAGE_SIZE = 100;
 var ASSAYS_PAGE_SIZE = 100;
 var RESULTS_PAGE_SIZE = 100;
+var IMAGES_PAGE_SIZE = 25;
 // a global variable to help the tab change handler know when to fire off a new query
 var newQueryState = false;
 
@@ -44,7 +47,7 @@ function handleTabViewActiveTabChange (e) {
 	var PAGE_SIZE = RESULTS_PAGE_SIZE;
 	if(currentTabState == "genestab") PAGE_SIZE = GENES_PAGE_SIZE;
 	if(currentTabState == "assaystab") PAGE_SIZE = ASSAYS_PAGE_SIZE;
-
+	if(currentTabState == "imagestab") PAGE_SIZE = IMAGES_PAGE_SIZE;
 	
 	var currentRequest = History.getCurrentState("gxd");
 	var currentValues = parseRequest(currentRequest);
@@ -89,56 +92,44 @@ function handleTabViewActiveTabChange (e) {
 }
 resultsTabs.addListener("activeTabChange", handleTabViewActiveTabChange);
 
-// refresh all three counts in each tab via AJAX
+// refresh all four counts in each tab via AJAX
+// store the request objects to verify the correct IDs;
+var resultsRq,assaysRs,genesRq,imagesRq;
 function refreshTabCounts()
 {
 	 //get the tab counts via ajax
-	var handleResultsCount = function(o)
+	var handleCountRequest = function(o)
 	{
-		if(o.responseText == "-1") o.responseText = "0";
-		YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
-	};
-	var handleAssaysCount = function(o)
-	{
-		if(o.responseText == "-1") o.responseText = "0";
-		YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
-	};
-	var handleGenesCount = function(o)
-	{
-		if(o.responseText == "-1") o.responseText = "0";
-		YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
-	};
-	// Turned off until we can figure out how to get better performance on large group queries
-//    var handleTotalCounts = function(o)
-//    {
-//    	var response = YAHOO.lang.JSON.parse(o.responseText);
-//
-//    	//set genes count
-//    	if(response["genesCount"]==-1) response["genesCount"] = 0;
-//    	YAHOO.util.Dom.get("totalGenesCount").innerHTML = response["genesCount"];
-//    	
-//    	//set assays count
-//    	
-//    	//set results count
-//    	if(response["resultsCount"]==-1) response["resultsCount"] = 0;
-//    	YAHOO.util.Dom.get("totalResultsCount").innerHTML = response["resultsCount"];
-//    };
+		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
+		// resolve the request ID to its appropriate handler
+		if(o.tId==resultsRq.tId) YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
+		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
+		else if(o.tId==genesRq.tId) YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
+		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = o.responseText;
+	}
+	
 	// clear these until the data comes back
 	YAHOO.util.Dom.get("totalResultsCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
-    YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystring,
-    {	success:handleResultsCount,
+	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
+	
+    resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystring,
+    {	success:handleCountRequest,
     	failure:function(o){}
     },null);
-    YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystring,
-    	    {	success:handleAssaysCount,
-    	    	failure:function(o){}
-    	    },null);
-    YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystring,
-    	    {	success:handleGenesCount,
-    	    	failure:function(o){}
-    	    },null);
+    assaysRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystring,
+    {	success:handleCountRequest,
+    	failure:function(o){}
+    },null);
+    genesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystring,
+    {	success:handleCountRequest,
+    	failure:function(o){}
+    },null);
+    imagesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/images/totalCount?"+querystring,
+    {	success:handleCountRequest,
+    	failure:function(o){}
+    },null);
 }
 
 function refreshGxdLitLink()
@@ -200,7 +191,7 @@ var generateRequest = function(sortedBy, startIndex, results, facets) {
 		dir = dir.substring(7);
 	}
 	results   = results || RESULTS_PAGE_SIZE;
-
+	
 	var tabParams = "tab="+getCurrentTab();
 	var stateParams = "results="+results+"&startIndex="+startIndex+"&sort="+sort+"&dir="+dir;
 	var facetParams = [];
@@ -242,7 +233,7 @@ handleNavigation = function (request, calledLocally) {
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
 	if (typeof getQueryString == 'function')
-		window.querystring = getQueryString(YAHOO.util.Dom.get("gxdQueryForm")); 
+		window.querystring = getQueryString(); 
 
 	// Handle proper behavior for back and forward navigation 
 	// if we have no tab state in the request, then we won't try to switch tabs.
@@ -261,9 +252,14 @@ handleNavigation = function (request, calledLocally) {
 	} else if(tabState == "assaystab"){
 		gxdAssaysTable();
 		PAGE_SIZE = ASSAYS_PAGE_SIZE;
-	} else {
-		gxdResultsTable();
+	} 
+	else if(tabState == "imagestab"){
+		gxdImagesTable();
 		PAGE_SIZE = RESULTS_PAGE_SIZE;
+	}
+	else {
+		gxdResultsTable();
+		PAGE_SIZE = IMAGES_PAGE_SIZE;
 	}
 
 	if(!foundParams)
@@ -517,7 +513,7 @@ var gxdAssaysTable = function() {
 	// Create the Paginator
 	var myPaginator = new YAHOO.widget.Paginator({
 	   template: "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-	   pageReportTemplate: "Showing results(s) {startRecord} - {endRecord} of {totalRecords}",
+	   pageReportTemplate: "Showing assay(s) {startRecord} - {endRecord} of {totalRecords}",
 	   rowsPerPageOptions: [50,100,250,500],
 	   containers: ["paginationTop", "paginationBottom"],
 	   rowsPerPage: RESULTS_PAGE_SIZE,
@@ -531,7 +527,7 @@ var gxdAssaysTable = function() {
 	   dynamicData: true,
 	   initialLoad: false,
 	   MSG_LOADING: '<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...',
-	   MSG_EMPTY: 'No genes with expression data found.'
+	   MSG_EMPTY: 'No assays with expression data found.'
 	};
 	
 	// DataTable instance
@@ -668,7 +664,7 @@ var gxdResultsTable = function() {
 	   dynamicData: true,
 	   initialLoad: false,
 	   MSG_LOADING: '<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...',
-	   MSG_EMPTY: 'No genes with expression data found.'
+	   MSG_EMPTY: 'No results with expression data found.'
 	};
 	
 	// DataTable instance
@@ -730,6 +726,123 @@ var gxdResultsTable = function() {
 	};
 };
 
+//
+//Images table population function
+//
+var gxdImagesTable = function() {
+
+	var numConfig = {thousandsSeparator: ','};
+
+	// Column definitions
+	var myColumnDefs = [
+		// sortable:true enables sorting
+		{key: "image", label: "Image", sortable: false},
+		{key: "metaData", label: "Meta Data", sortable:false}
+	];
+	
+	// DataSource instance
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/images/json?");
+	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+	gxdDataSource.responseSchema = {
+		resultsList: "summaryRows",
+		fields: [
+			{key: "image"},
+			{key: "metaData"}
+		],
+		metaFields: {
+			totalRecords: "totalCount",
+			paginationRecordOffset: "startIndex",
+			paginationRowsPerPage: "pageSize",
+			sortKey: "sort",
+			sortDir: "dir"
+		}
+	};
+
+	gxdDataSource.maxCacheEntries = 3;
+	gxdDataSource.connXhrMode = "cancelStaleRequests";
+
+	// Create the Paginator
+	var myPaginator = new YAHOO.widget.Paginator({
+	   template: "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
+	   pageReportTemplate: "Showing images(s) {startRecord} - {endRecord} of {totalRecords}",
+	   rowsPerPageOptions: [25,50,100,250],
+	   containers: ["paginationTop", "paginationBottom"],
+	   rowsPerPage: RESULTS_PAGE_SIZE,
+	   pageLinks: 3,
+	   recordOffset: 1
+	});
+	
+	// DataTable configurations
+	var myConfigs = {
+	   paginator: myPaginator,
+	   dynamicData: true,
+	   initialLoad: false,
+	   MSG_LOADING: '<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...',
+	   MSG_EMPTY: 'No expression images found.'
+	};
+	
+	// DataTable instance
+	gxdDataTable = new YAHOO.widget.DataTable("imagesdata", myColumnDefs, gxdDataSource, myConfigs);
+	
+	// Show loading message while page is being rendered
+	gxdDataTable.showTableMessage(gxdDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);
+	
+	// Define a custom function to route sorting through the Browser History Manager
+	var handleSorting = function(oColumn) {
+	   // The next state will reflect the new sort values
+	   // while preserving existing pagination rows-per-page
+	   // As a best practice, a new sort will reset to page 0
+	   var sortedBy = {
+	       dir: this.getColumnSortDir(oColumn),
+	       key: oColumn.key
+	   };
+	   // Pass the state along to the Browser History Manager
+	   History.navigate("gxd", generateRequest(sortedBy, 0, myPaginator.getRowsPerPage()));
+	};
+	gxdDataTable.sortColumn = handleSorting;
+
+	// Define a custom function to route pagination through the Browser History Manager
+	var handlePagination = function(state) {
+	   // The next state will reflect the new pagination values
+	   // while preserving existing sort values
+	   var newState = generateRequest(this.get("sortedBy"), state.recordOffset, state.rowsPerPage);
+	   //myPaginator.setState(newState);
+	   // Pass the state along to the Browser History Manager
+	   History.navigate("gxd", newState);
+	};
+	// First we must unhook the built-in mechanism...
+	myPaginator.unsubscribe("changeRequest", gxdDataTable.onPaginatorChangeRequest);
+	// ...then we hook up our custom function
+	myPaginator.subscribe("changeRequest", handlePagination, gxdDataTable, true);
+		
+	gxdDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
+		var pRequest = parseRequest(oRequest);
+		var meta = oResponse.meta;
+		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
+		//   updateCount(oPayload.totalRecords);
+		var filterCount = YAHOO.util.Dom.get('filterCount');
+		if (!YAHOO.lang.isNull(filterCount)) {
+			setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
+		}
+
+//		oPayload.sortedBy = {
+//			key: pRequest['sort'][0] || "image",
+//			dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc"
+//				// Convert from server value to DataTable format
+//		};
+
+		oPayload.pagination = {
+			rowsPerPage: Number(pRequest['results'][0]) || myPaginator.getRowsPerPage(),
+			recordOffset: Number(pRequest['startIndex'][0]) || 0
+		};
+
+		return true;
+	};
+
+	// Add tooltips to the camera icons
+	gxdDataTable.subscribe('postRenderEvent', addCameraIconTooltips);
+
+};
 
 
 //
@@ -739,10 +852,35 @@ var gxdResultsTable = function() {
 gxdResultsTable();
 History.register("gxd", History.getBookmarkedState("gxd") || "", handleNavigation);
 
+// to enable tab to be specified in querystring, we need  a way to parse it out
+function resolveTabParam()
+{
+	var reply = {};
+	var kvPairs = querystring.split('&');
+	var newKVs = [];
+	var tabParam;
+	for (pair in kvPairs) {
+		arg = kvPairs[pair];
+		if(arg && arg.indexOf("tab=")==0 )
+		{
+			if(arg.length>4) tabParam = arg.substr(4);
+		}
+		else
+		{
+			newKVs.push(arg);
+		}
+	}
+	querystring = newKVs.join("&");
+	return tabParam;
+}
 
 //Handle the initial state of the page through history manager
 function historyInit()
-{
+{	
+	// try to see if tab was specified in querystring
+	// and reset querystring if it was
+	var queryTabParam = resolveTabParam();
+	
 	// get the bookmarked state
 	var currentState = History.getBookmarkedState("gxd");
 	if(currentState)
@@ -754,24 +892,32 @@ function historyInit()
 		// rebuild the global querystring
 		// if there is no getQueryString function, we assume that window.querystring is already set
 		if (typeof getQueryString == 'function')
-			window.querystring = getQueryString(YAHOO.util.Dom.get("gxdQueryForm"));
+			window.querystring = getQueryString();
 
-		var currentTab = History.getBookmarkedState("gxd");
-
-		if(currentTab=="genestab") 
-		{
-			resultsTabs.set("activeIndex", 0);
-			gxdGenesTable();
-		}
-		else if(currentTab=="assaystab") 
-		{
-			resultsTabs.set("activeIndex", 1);
-			gxdAssaysTable();
-		}
+//		var currentTab = History.getBookmarkedState("gxd");
+//
+//		if(currentTab=="genestab") 
+//		{
+//			resultsTabs.set("activeIndex", 0);
+//			gxdGenesTable();
+//		}
+//		else if(currentTab=="assaystab") 
+//		{
+//			resultsTabs.set("activeIndex", 1);
+//			gxdAssaysTable();
+//		}
+//		else if(currentTab=="imagestab") 
+//		{
+//			resultsTabs.set("activeIndex", 3);
+//			gxdImagesTable();
+//		}
 
 		handleNavigation(currentState); 
 	}
-	else {
+	else 
+	{
+		// switch to querystring specified tab
+		if (queryTabParam && queryTabParam in tabs) resultsTabs.set("activeIndex",tabs[queryTabParam]);
 		handleNavigation(generateRequest(null, 0, RESULTS_PAGE_SIZE)); 
 	}
 }

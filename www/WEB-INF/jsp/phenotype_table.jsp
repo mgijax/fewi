@@ -202,7 +202,8 @@ NotesTagConverter ntc = new NotesTagConverter();
           <!-- (systemSeq= ${phenoTableSystem.systemSeq}) -->
         </div>
       </td>
-      <!-- TDs for grid system row will go here -->
+
+      <!-- TDs for grid system row -->
       <c:set var="genoID" value="" />
       <c:set var="sex" value="" />
       <c:forEach var="cell" items="${phenoTableSystem.cells}" varStatus="cStatus">
@@ -230,7 +231,8 @@ NotesTagConverter ntc = new NotesTagConverter();
               </span>
             </div>
         </td>
-      <!-- TDs for grid term row will go here -->
+
+      <!-- TDs for grid term row -->
       <c:set var="genoID" value="" />
       <c:set var="sex" value="" />
         <c:forEach var="cell" items="${phenoTableTerm.cells}" varStatus="cStatus">

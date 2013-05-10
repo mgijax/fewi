@@ -1,0 +1,189 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Recombinase Activity Search Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Recombinase Activity Search Tests</h1>
+    <ul>
+        <li>User story 115, Cre: improved anatomy search (no autocomplete)</li>
+        <li>User story 136, Cre: improved anatomy search (with autocomplete)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Sto115: query by anatomy term works</li>
+		<li>Sto115: simple type-in box - no autocomplete (yet) on the Cre home page (replaces the existing dropdown)</li>
+		<li>Sto115: search verified (across structures and stages)</li>
+		<li>Sto136: typein box (from sto115) implements autocomplete behavior</li>
+		<li>Sto136: results/requirements from sto126 implemented</li>
+		<li>Sto136: autocomplete verified (across structures and stages)</li>
+	</ul>
+	<h3>Reminder of querying rules:</h3>
+	<ul>
+		<li>Two assay types are returned NEVER for GXD and ONLY for Cre:
+		<ul>
+			<li>In situ reporter (transgenic) <i>(_AssayType_key = 10)</i></li>
+			<li>Recombinase reporter <i>(_AssayType_key = 11)</i></li>
+		</ul>
+		</li>
+		<li>One assay type is returned ALWAYS for GXD and CONDITIONALLY for Cre:
+		<ul>
+			<li>In situ reporter (knock in) <i>(_AssayType_key = 9)</i>
+			<ul>
+				<li>Reporter gene = Cre ... return for Cre and for GXD queries</li>
+				<li>Reporter gene = FLP ... return for Cre and for GXD queries</li>
+				<li>Reporter gene = anything else ... return ONLY for GXD queries</li>
+				<li>Note: reporter genes are a Vocabulary, not markers with marker keys. Find values in VOC_Term where _vocab_key = 14.</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual &amp; Automated tests</h3>
+		<ol>
+    		<li>Searching for a term with Cre assays includes Cre data and results from non-Cre (GXD-only) assay types are excluded <i>(Partially automated all these tests)</i>
+    		<ol>
+    			<li>Search for <b concordion:set="#struct">dorsal mesocardium</b>: 
+ 					<ul>
+ 					<li>return Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Isl1&lt;tm1(cre/Esr1*)Krc&gt;</b> with results for <b>in situ reporter (knock-in) [reporter=Cre]</b></li>
+ 					<li>exclude results for <b>immunohistochemistry</b> assay. (verify by looking at Recombinase Summary page: should see no immuno results) <span concordion:assertTrue="true">klf 4/2/13</span></li>
+ 					</ul>
+    			</li>
+                <li>Search for <b concordion:set="#struct">olfactory bulb external plexiform layer</b>
+ 					<ul>
+ 					<li> returns Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Tg(Pcdh21-cre)BYoko</b> with results for <b>in situ reporter (transgenic)</b></li>
+ 					<li> returns Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Tg(Pcdh21-cre/ERT)CYoko</b> with results for <b>recombinase reporter</b></li>
+ 					<li> exclude results for <b>in situ reporter (knock in)</b> where allele is <b cc:assertNoResultsContain="getAlleleSymbolsByStructure(#struct)">Trmt1l&lt;Gt(W027A02)Wrst&gt;</b> [reporter=lacZ]</li>
+ 					</ul>
+				</li>
+				<li>Search for <b concordion:set="#struct">cerebral cortex marginal layer</b>
+ 					<ul>
+ 					<li> returns Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Tg(Fev-FLPe)1Dym</b> with results for <b>in situ reporter (transgenic) [reporter=FLP]</b></li>
+ 					<li> returns Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Neurod6&lt;tm1(cre)Kan&gt;</b> with results for <b>in situ reporter (knock in) [reporter=cre]</b></li>
+ 					<li> exclude results for <b>in situ reporter (knock in)</b> where allele is <b><i>any other allele</i>  [reporter=lacZ]</b> <span concordion:assertTrue="true">klf 4/2/13</span> (verify by looking at each Recombinase Specificity page for the other alleles: should see no assays of this type)</li>
+ 					</ul>
+				</li>
+    		</ol>
+    		</li>
+			<li>Autocomplete performs "begins" matching on multiple tokens.
+			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+				<ul>
+				<li>Typing <b>br fa</b> returns terms (and/or synonyms) containg multiple tokens.</li>
+				<li>Each term (or synonym) contains a token beginning with "br" AND a token beginning with "fa", in either order.</li>
+				<li>There are no other AD terms or synonyms containing tokens beginning with "br" AND "fa" in either order. (Need SQL query against all terms and synonyms in the AD.)</li>
+				</ul>
+			</li>
+			<li>Autocomplete does not match across a term and its synonym.
+			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+				<ul>
+				<li>Typing <b>audi coch</b> does not return <b>auditory nerve</b>.</li>
+				<li>Typing <b>audi coch</b> does not return <b>vestibulocochlear VIII nerve cochlear component</b>.</li>
+				</ul>
+			</li>
+			<li>Selecting a synonym from the picklist places only the synonym text in the search text box.
+			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+				<ul>
+				<li>Type <b>audit</b> and select <b>auditory nerve [syn. of vestibulocochlear VIII nerve cochlear component</b>.</li>
+				<li>Verify only <b>auditory nerve</b> appears in the search text box.</li>
+				</ul>
+			</li>
+			<li>Searching for a synonym of a term should return same number and set of results as for the term itself.
+			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+				<ul>
+				<li>Search for <b>brown fat</b> should return the same count and allele list results as for <b>brown adipose tissue</b> (this term has no child terms).</li>
+				</ul>
+			</li>
+			<li>Searching for a synonym returns alleles having recombinase data for the associated term or any of its children
+			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+				<ul>
+				<li>Search for <b>trigeminal nerve</b> should return the same count and allele list results as for <b>trigeminal V nerve</b>.</li>
+				<li>Each allele's "Nervous System" Recombinase Specificity Page should contain at least 1 of the following structures:
+					<ul>
+					<li>trigeminal V nerve - has annotations to this term</li>
+					<li>trigeminal V nerve mandibular division - has annotations to this term</li>
+					<li>trigeminal V nerve maxillary division - no annotations to this term directly</li>
+					<li>trigeminal V nerve ophthalmic division - no annotations to this term directly</li>
+					<li>trigeminal V nerve mandibular division lingual branch - no annotations to this term directly</li>
+					</ul>
+				</li>
+				</ul>
+			</li>
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+		
+    		<li>The count of Cre alleles returned for a text string queried against Sybase should match the count returned from the FeWI.
+    		<table cc:execute="#count = getAlleleCountByStructure(#struct)">
+    		<tr><th concordion:set="#struct">Text string</th><th>Notes</th><th cc:assertEquals="#count">Cre Alleles in Sybase (via SQL)<br/>(green if FeWI count matches)</th></tr>
+    		<tr><td>heart</td><td>should have many child terms</td><td><b cc:dynamicData="creHeartAlleleCount"></b></td></tr>
+    		<tr><td>esophagus</td><td>is a synonym of term "oesophagus"</td><td><b cc:dynamicData="creEsophagusAlleleCount"></b></td></tr>
+    		<tr><td>bronchus epithelium</td><td>has 2 tokens in the term</td><td><b cc:dynamicData="creBronchusEpitheliumAlleleCount"></b></td></tr>
+    		<tr><td>bronchial epithelium</td><td>is synonym of term above and has 2 tokens in the term</td><td><b cc:dynamicData="creBronchialEpitheliumAlleleCount"></b></td></tr>
+    		<tr><td>uterus</td><td>Is a term and also a synonym (for uterine horn).</td><td><b cc:dynamicData="creUterusAlleleCount"></b></td></tr>
+    		</table>
+    		</li>
+    		<li>Test that terms in autocomplete with cre data are marked appropriately
+    		<ol>
+    			<li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
+                	<b cc:assertResultsContain="getTermsWithCre(#struct)">trigeminal V nerve</b> which is marked as having cre data.</li>
+                <li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
+                	<b cc:assertResultsContain="getTermsWithCre(#struct)">trigeminal V nerve mandibular division</b> which is marked as having cre data.</li>
+    		</ol>
+    	</li>
+    	<li>Test that terms in autocomplete with NO cre data are marked appropriately
+    		<ol>
+				<li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
+                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">trigeminal V nerve maxillary division</b>
+                		 which is marked as <b>not</b> having cre data.</li>
+                <li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
+                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">trigeminal V nerve mandibular division lingual branch</b>
+                		 which is marked as <b>not</b> having cre data.</li>
+    		</ol>
+    	</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

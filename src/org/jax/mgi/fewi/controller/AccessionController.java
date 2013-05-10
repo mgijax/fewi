@@ -120,18 +120,14 @@ public class AccessionController {
         	}
         	
         	// Handle the old wi cases, but with ID        	
-        	else if (objectType.equals(ObjectTypes.HOMOLOGY)) {
-        		url = linker.getFewiIDLink(objectType, acc.getDisplayID());
-        	}
-        	
-        	// Handle the old wi cases, but with ID        	
-        	else if (objectType.equals(ObjectTypes.MARKER_CLUSTER)) {
+        	else if (objectType.equals(ObjectTypes.HOMOLOGY) ||
+        			objectType.equals(ObjectTypes.ASSAY) ||
+        			objectType.equals(ObjectTypes.MARKER_CLUSTER)) {
         		url = linker.getFewiIDLink(objectType, acc.getDisplayID());
         	}
         	
         	// Handle the old wi cases.        	
         	else if (objectType.equals(ObjectTypes.PROBECLONE) || 
-        			objectType.equals(ObjectTypes.ASSAY) ||
         			objectType.equals(ObjectTypes.GO_CC) ||
         			objectType.equals(ObjectTypes.GO_MF) ||
         			objectType.equals(ObjectTypes.GO_BP) ||
@@ -144,7 +140,14 @@ public class AccessionController {
         		logger.debug("Base case.");
             	url = linker.getFewiIDLink(acc.getObjectType(), acc.getDisplayID());        			
         	}
-
+        	// check if linker failed to match link type
+        	if(url==null || url.equals("") || url.contains("not available yet"))
+        	{
+        		mav = new ModelAndView("error");
+    	        mav.addObject("errorMsg", "Link Type " + objectType + " not available yet");
+    	        return mav;
+        	}
+        		;
         	return new ModelAndView("redirect:" + url);
         } else {
 	        mav = new ModelAndView("accession_summary");

@@ -20,7 +20,7 @@ import org.concordion.api.listener.MissingRowEvent;
 import org.concordion.api.listener.SurplusRowEvent;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
-import org.concordion.internal.TableSupport;
+import org.jax.mgi.fewi.test.concordion.TableSupport;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
@@ -61,7 +61,7 @@ public class VerifyRowsUnorderedCommand extends AbstractCommand {
         Check.isTrue(obj instanceof Collection,obj.getClass().getCanonicalName() + " is not a Collection");
         Collection<Object> results = (Collection<Object>) obj;
         
-        TableSupport tableSupport = new TableSupport(commandCall);
+        TableSupport tableSupport = new TableSupport(commandCall,evaluator,resultRecorder);
         ArrayList<Row> detailRows = new ArrayList<Row>(Arrays.asList(tableSupport.getDetailRows()));
 
         announceExpressionEvaluated(commandCall.getElement());

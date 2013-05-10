@@ -1,0 +1,177 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Cre Summary (recombinase alleles-tissue) Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Cre Summary Tests</h1>
+    <ul>
+        <li>User story 118, Cre: Simplify summary page</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US118 - The checkbox section at the top of the page has been removed</li>
+		<li>US118 - The System column has been removed from the main table</li>
+		<li>US118 - The Detected in and Not detected in lists  now each have their own column</li>
+		<li>US118 - The text <b>Drag headings to rearrange columns.</b> has been removed from the You Searched for section</li>
+		<li>US118 - When no data is available for Detected in or Not Detected in, leave the field blank</li>
+		<li>US118 - Sorting works for all sortable columns</li>
+		<li>US118 - Summary table headings are correct</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify the checkbox section at the top of the summary page has been removed
+ 			<p concordion:assertTrue="true">KLF 3/26/2013</p>
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>adipose tissue</b></li>
+                <li>When the summary page displays verify the checkbox section is no longer displayed</li>
+    		</ol>
+    		</li>
+    		<li>Verify the System column has been removed from the summary page
+ 			<p concordion:assertTrue="true">KLF 3/26/2013</p>
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>adipose tissue</b></li>
+                <li>When the summary page displays verify the <b>System</b> column is no longer displayed</li>
+    		</ol>
+    		</li>
+    		<li>Verify the existance of the columns Detected and Not Detected in the main table
+ 			<p concordion:assertTrue="true">KLF 3/26/2013</p>
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>adipose tissue</b></li>
+                <li>When the summary page displays verify the columns <b>Recombinase Activity Detected</b> and <b>Recombinase Activity not Detected</b> display right after the <b>Allele Symbol</b> column</li>
+    		</ol>
+    		</li>
+    		<li>Verify the text <b>Drag headings to rearrange columns.</b> has been removed from the You Searched for section
+ 			<p concordion:assertTrue="true">KLF 3/26/2013</p>
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>adipose tissue</b></li>
+                <li>When the summary page displays the <b>You Searched for:</b> section with the text <b>Drag headings to rearrange columns.</b> removed</li>
+    		</ol>
+    		</li>
+    		<li>Verify when no data is available for Recombinase Activity Detected or Recombinase Activity Not Detected, leave the field blank
+ 			<p concordion:assertTrue="true">KLF 3/27/2013</p>
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>postnatal-other</b></li>
+                <li>When the summary page displays find the row for the first instance of Driver <b>Bglap2</b></li>
+                <li>Verify the <b>Recombinase Activity Detected</b> column is blank but the <b>Recombinase Activity Not Detected</b> column has data</li>
+                <li>View the second instance of Driver <b>Bglap2</b></li>
+                <li>Verify the <b>Recombinase Activity Detected</b> column has data but the <b>Recombinase Activity Not Detected</b> column is blank</li>
+                <li>View the only instance of Driver <b>Cd19</b></li>
+                <li>Verify the <b>Recombinase Activity Detected</b> column has data and the <b>Recombinase Activity Not Detected</b> column has data</li>
+    		</ol>
+    		</li>
+    		<li>Verify sorting works for all sortable columns - NOTE: INDUCIBLE COLUMN PROBLEM IS CAPTURED IN STO137 IN THE PRODUCT BACKLOG AS A BUG AND HAS NOT BEEN PRIORITIZED TO DO YET. <!-- klf 4/29/2013 -->
+<!--		<p concordion:assertTrue="false">currently the Inducible column is not sorting</p> -->
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>postnatal-other</b></li>
+                <li>When the summary page displays click on each of the listed column headings to confirm the column sorts correctly:
+                	<ul>
+	                	<li>Driver</li>
+	                	<li>Allele Symbol</li>
+	                	<li>Recombinase Activity Detected</li>
+	                	<li>Recombinase Activity Not Detected</li>
+	                	<li>Inducible</li>
+	                	<li>Find Mice(IMSR)</li>
+	                	<li>Refs</li>
+                	</ul>   
+                </li> 
+            </ol>
+            </li>
+    		<li>Verify the summary table heads are correct
+ 			<p concordion:assertTrue="true">KLF 3/26/2013</p>
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>postnatal-other</b></li>
+                <li>When the summary page displays confirm the column headings are:
+                	<ul><li>Driver</li>
+                	<li>Allele Symbol</li>
+                	<li>Recombinase Activity Detected</li>
+                	<li>Recombinase Activity Not Detected</li>
+                	<li>Allele Synonym</li>
+                	<li>Inducible</li>
+                	<li>Find Mice(IMSR)</li>
+                	<li>Refs</li>
+                	</ul>   
+                </li>            	
+    		</ol>
+    		</li>
+    		<li>Verify that the column "Allele Type" no longer appears.
+ 			<p concordion:assertTrue="true">KLF 3/26/2013</p>
+    		<ol>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>postnatal-other</b></li>
+                <li>When the summary page displays confirm that the column "Allele Type" no longer appears.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

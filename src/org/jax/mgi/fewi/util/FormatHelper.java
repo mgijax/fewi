@@ -9,9 +9,11 @@ import org.jax.mgi.fewi.util.DBConstants;
 
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceLocation;
+import mgi.frontend.datamodel.util.DatamodelUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.util.HtmlUtils;
 
 /**
 * provides static methods to help with formatting of JSP pages
@@ -37,30 +39,35 @@ public class FormatHelper
         // along with regular expression handling.  Coding our own loop to
         // traverse the string once should be faster.
 
-        StringBuffer sb = new StringBuffer();
-        int vsLength = verbatimString.length();
-        char c;
 
-        // loop over each character
-        for (int i = 0; i < vsLength; i++){
+//        StringBuffer sb = new StringBuffer();
+//        int vsLength = verbatimString.length();
+//        char c;
+//
+//        // loop over each character
+//        for (int i = 0; i < vsLength; i++){
+//
+//            c = verbatimString.charAt (i);
+//
+//            // translate the relevant chars
+//            if (c == '<'){
+//                sb.append ("&lt;");
+//            }
+//            else if (c == '>'){
+//                sb.append ("&gt;");
+//            }
+//            else if (c == '&'){
+//                sb.append ("&amp;");
+//            }
+//            else{
+//                sb.append (c);
+//            }
+//        }
+//        return sb.toString();
 
-            c = verbatimString.charAt (i);
-
-            // translate the relevant chars
-            if (c == '<'){
-                sb.append ("&lt;");
-            }
-            else if (c == '>'){
-                sb.append ("&gt;");
-            }
-            else if (c == '&'){
-                sb.append ("&amp;");
-            }
-            else{
-                sb.append (c);
-            }
-        }
-        return sb.toString();
+        // Or you could do this in one (more robust) line, because string manipulation is not where our performance is lost
+        // kstone
+        return HtmlUtils.htmlEscape(verbatimString);
     }
 
 
@@ -96,13 +103,24 @@ public class FormatHelper
          return newStr;
     }
 
+    // specify any kind of text to replace the newlines, if the above two methods don't meet requirements
+    public static String replaceNewline(String str,String replacement)
+    {
+   	 String newStr = "";
+     if (str != null) {
+         newStr = str.trim();
+         newStr = newStr.replaceAll("\\n",replacement);
+     }
+     return newStr;
+    }
+
     /** convert all 'start' and 'stop' pair in 's' to be HTML
      *    superscript tags.
      * @param s the source String
      * @param start the String which indicates the position for the HTML
-     *    superscript start tag "<SUP>"
+     *    superscript start tag "<sup>"
      * @param stop the String which indicates the position for the HTML
-     *    superscript stop tag "</SUP>"
+     *    superscript stop tag "</sup>"
      * @return String as 's', but with the noted replacement made.  returns
      *    null if 's' is null.  returns 's' if either 'start' or 'stop' is
      *    null.
@@ -134,11 +152,13 @@ public class FormatHelper
 
         StringBuffer sb = new StringBuffer();
 
-        while ((startPos != -1) && (stopPos != -1))    {
+        while ((startPos != -1) && (stopPos != -1) && (stopPos > startPos))
+        {
+
             sb.append (s.substring(sectionStart, startPos));
-            sb.append ("<SUP>");
+            sb.append ("<sup>");
             sb.append (s.substring(startPos + startLen, stopPos));
-            sb.append ("</SUP>");
+            sb.append ("</sup>");
 
             sectionStart = stopPos + stopLen;
             startPos = s.indexOf(start, sectionStart);
@@ -149,12 +169,12 @@ public class FormatHelper
         return sb.toString();
     }
 
-    /** convenience wrapper over superscript(s, "<", ">")
+    /** convenience wrapper over superscript(s, "<", ">"), which is the common use case
      */
     public static String superscript (String s) {
+        if (s == null) {return "";}
         return superscript(s, "<", ">");
     }
-
 
     /** returns the correct plural/singular form of the given 'singular'
      * string, based on the given 'count'.
@@ -356,11 +376,17 @@ public class FormatHelper
     	if(end!=null) e = nf.format(end);
     	return nf.format(start)+"-"+nf.format(end);
     }
-    
+
     public static String javascriptEncode(String s)
     {
     	return StringEscapeUtils.escapeJavaScript(s);
     }
-    
+
+    // try to keep this in sync with the DatamodelUtils version
+    // it helps make consistent anchor links
+    public static String makeCssSafe(String input)
+    {
+    	return DatamodelUtils.makeCssSafe(input);
+    }
 } // end of class FormatHelper
 

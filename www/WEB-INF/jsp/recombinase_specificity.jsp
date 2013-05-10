@@ -1,5 +1,5 @@
-<%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
-<%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "org.jax.mgi.fewi.util.*" %>
+<%@ page import = "org.jax.mgi.fewi.summary.RecomImage" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -12,14 +12,17 @@ ${templateBean.templateHeadHtml}
 
 <%  // Pull detail object into servlet scope
 
-    Allele allele = (Allele)request.getAttribute("allele");
-    AlleleSystem alleleSystem 
-      = (AlleleSystem)request.getAttribute("alleleSystem");
+  Allele allele = (Allele)request.getAttribute("allele");
+  AlleleSystem alleleSystem 
+    = (AlleleSystem)request.getAttribute("alleleSystem");
 
-    StyleAlternator leftTdStyles 
-      = new StyleAlternator("detailCat1","detailCat2");
-    StyleAlternator rightTdStyles 
-      = new StyleAlternator("detailData1","detailData2");
+  StyleAlternator leftTdStyles 
+    = new StyleAlternator("detailCat1","detailCat2");
+  StyleAlternator rightTdStyles 
+    = new StyleAlternator("detailData1","detailData2");
+
+  NotesTagConverter ntc = new NotesTagConverter(); 
+
 %>
 
 <style type="text/css">
@@ -64,17 +67,8 @@ a {
   background-color:#eeeeee;
   border: 1px #7D95B9 solid;
   cursor: pointer;
-  width:86px;
-  height:25px;
-}
-.galImageInfoBoxSelected {
-  font-size:9px;
-  color:#002255;
-  background-color:#cccccc;
-  border: 2px #7D95B9 solid;
-  cursor: pointer;
-  width:86px;
-  height:25px;
+  width:116px;
+  height:40px;
 }
 .selectedImage {
   border: 2px dashed #F00;
@@ -458,15 +452,21 @@ ${templateBean.templateBodyStartHtml}
       <div style="position:relative; height:${galleryImageRow.rowHeight}px; padding-top:4px; padding-bottom:4px;">
 
         <c:forEach var="galleryImage" items="${galleryImageRow.recomImages}" >
+          <% RecomImage galleryImage = (RecomImage)pageContext.getAttribute("galleryImage"); %>
 
           <span class='galImageInfoBox' style='position:absolute;left:<%=(leftDist-3)%>px;' >
-            ${galleryImage.jnumID}<br/>Fig.&nbsp;${galleryImage.figureLabel}
+            ${galleryImage.jnumID}
+            <c:if test="${not empty galleryImage.externalLink}">
+              <%=ntc.convertNotes(galleryImage.getExternalLink(), '|')%>
+              <br/>
+            </c:if>
+            Fig.&nbsp;${galleryImage.figureLabel}
           </span> 
 
           <img src='${configBean.PIXELDB_URL}${galleryImage.pixeldbNumericID}' 
             id='creImg${galleryImage.pixeldbNumericID}' 
             ${galleryImage.mouseUp}
-            style='position:absolute; top:32px; left:<%=leftDist%>px; z-index:${galleryImage.indexZ};'> 
+            style='position:absolute; top:50px; left:<%=leftDist%>px; z-index:${galleryImage.indexZ};'> 
 
           <script>
             (function() { 
@@ -488,7 +488,7 @@ ${templateBean.templateBodyStartHtml}
             })(); 
           </script> 
           
-          <% leftDist = leftDist + 100; %>
+          <% leftDist = leftDist + 130; %>
         </c:forEach>
 
         <% leftDist = 10; %>
@@ -515,7 +515,7 @@ ${templateBean.templateBodyStartHtml}
       <div style="position: relative; height:52px;">
 
         <div class="sectionIntro" style="position: absolute; top:3px; left:2px; width:200px;">
-          Click heading to resort table.
+          Click heading to re-sort table.
           <img src="${configBean.WEBSHARE_URL}images/blue_info_icon.gif" id="InfoIcon"
              onMouseOver="return overlib('<em>MGI\'s annotations reflect statements made by the authors or data providers.   Notes contain additional information pertaining to the assay result.</em><br /><br /><strong>Structures:</strong><br />Recombinase activity results are associated with structures described in the Mouse Anatomical Dictionary (AD).<br /><br /><strong>Assayed Age:</strong><br />Age of the specimen when assayed.  Because recombinase activity is maintained throughout the cell lineage, expression may have occurred at an earlier age.<br /><br /><strong>Levels:</strong><br />Absent, Present*, Ambiguous, Trace, Weak, Moderate, Strong, Very Strong<br /><em>*\'Present\' is used when the author does not describe expression level explicitly.</em><br /><br /><strong>Patterns:</strong><br />Homogeneous, Non-Homogeneous, Diffuse, Graded, Patchy, Regionally Restricted, Scattered, Single cells, Spotted, Ubiquitous, Widespread, Not Specified, Not Applicable', WIDTH, 350, DELAY, 500, CAPTION, 'Structures, Ages, Levels, and Patterns', ANCHOR, 'InfoIcon', ANCHORALIGN, 'UR', 'UL', STICKY, CLOSECLICK, CLOSETEXT, 'close X');" onMouseOut="nd();">
         </div>

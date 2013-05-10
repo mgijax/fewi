@@ -29,6 +29,8 @@ public class Filter {
 
 	// The type of comparison to use for joining nested filters
 	protected int filterJoinClause;
+	
+	protected boolean negate=false;
 
     //////////////////////////////////////////////////////////////////////////
     //  CONSTRUCTORS
@@ -146,6 +148,10 @@ public class Filter {
 	public void setOperator(int operator) {
 		this.operator = operator;
 	}
+	
+	// negate this filter?
+	public void negate() { this.negate=true; }
+	public boolean doNegation() { return this.negate; }
 
 	// filters
 	public List<Filter> getNestedFilters() {

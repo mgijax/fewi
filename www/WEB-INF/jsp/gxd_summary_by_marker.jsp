@@ -121,7 +121,7 @@ ${templateBean.templateBodyStartHtml}
     var mgiMarkerId = "${marker.primaryID}";
     var searchedStage = "${theilerStage}";
     var searchedAssayType = "${assayType}";
-    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}";
+    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 

@@ -1,18 +1,27 @@
 package gxd;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.jax.mgi.fewi.controller.AutoCompleteController;
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
 import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdControllerQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 public class AnatomySearchTest extends BaseConcordionTest {
 
@@ -81,5 +90,62 @@ public class AnatomySearchTest extends BaseConcordionTest {
 		
 		return structures;
 	}
+
+	// HERE TO LINE 144 COPIED OUT OF AnatomyAutocomplete FOR TEST CONSOLIDATION
+	// klf 3/25/2013
+    // The class being tested is autowired via spring's DI
+    @Autowired
+    private AutoCompleteController autoCompleteController;
+
+
+	 // ================================================================
+    // Unit tests
+    // ================================================================
+    @Test
+    public void testUrlRouting () throws Exception
+    {
+    	String query = "brain";
+
+    	MockHttpServletRequest request = new MockHttpServletRequest();
+
+    	request.setRequestURI("/autocomplete/structure");
+    	request.addParameter("query", query);
+    	request.setMethod("GET");
+    	
+    	MockHttpServletResponse response = mockRequest().handle(request);
+    	
+    	ObjectMapper mapper = new ObjectMapper();
+    	SearchResults<StructureACResult> results = null; 
+    	results = mapper.readValue(response.getContentAsString(), 
+    			new TypeReference<SearchResults<StructureACResult>>() { });
+    	assertTrue(results.getTotalCount()>0);
+    }
+
+	 // ================================================================
+    // Concordion Methods
+    // ================================================================
+    public List<String> getTerms(String query)
+    {
+    	SearchResults<StructureACResult> results = 
+        		autoCompleteController.structureAutoComplete(query);
+    	List<String> terms = new ArrayList<String>();
+    	for(StructureACResult result : results.getResultObjects())
+    	{
+    		// synonym is the field we display in the dropdown.
+    		terms.add(result.getSynonym());
+    	}
+    	return terms;
+    }
+    
+    public int getTermCount(String query)
+    {
+    	int count = autoCompleteController.structureAutoComplete(query).getTotalCount();
+    	if(count < 0) count = 0;
+    	return count;
+    }
+
+	
+	
+
 }
 

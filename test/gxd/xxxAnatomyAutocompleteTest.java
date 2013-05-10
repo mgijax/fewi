@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-public class AnatomyAutocompleteTest extends BaseConcordionTest {
+public class xxxAnatomyAutocompleteTest extends BaseConcordionTest {
 
     // The class being tested is autowired via spring's DI
     @Autowired

@@ -55,10 +55,10 @@ public class GxdAssaySummaryRow {
 	{
 		if(assay.getHasImage() )
 		{
-			return "<a href='"+pywiUrl+"searches/expression.cgi?"+assay.getAssayKey()+"'>data</a><span> ("+assay.getAssayMgiid()+")</span>" + 
+			return "<a href='"+fewiUrl+"assay/"+assay.getAssayMgiid()+"'>data</a><span> ("+assay.getAssayMgiid()+")</span>" + 
 					" <img class=\"cameraIcon\" src=\""+webshareUrl+"/images/mgi_camera.gif\" /> ";
 		}
-		return "<a href='"+pywiUrl+"searches/expression.cgi?"+assay.getAssayKey()+"'>data</a><span> ("+assay.getAssayMgiid()+")</span>";
+		return "<a href='"+fewiUrl+"assay/"+assay.getAssayMgiid()+"'>data</a><span> ("+assay.getAssayMgiid()+")</span>";
 	}
 	
 	public String getAssayType() {

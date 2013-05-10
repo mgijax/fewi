@@ -4,10 +4,12 @@ package org.jax.mgi.fewi.controller;
 /* to change in each controller */
 /*------------------------------*/
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSynonym;
@@ -30,7 +32,9 @@ import org.jax.mgi.fewi.summary.RecomImage;
 import org.jax.mgi.fewi.summary.RecomImageRow;
 import org.jax.mgi.fewi.summary.RecomSpecificitySummaryRow;
 import org.jax.mgi.fewi.summary.RecombinaseSummary;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.QueryParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 /*-------*/
@@ -65,7 +71,7 @@ public class RecombinaseController {
     // get the finder to use for various methods
     @Autowired
     private RecombinaseFinder recombinaseFinder;
-    
+
     @Autowired
     private AlleleFinder alleleFinder;
 
@@ -113,7 +119,7 @@ public class RecombinaseController {
         // set up search parameters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
-        params.setSorts(this.parseSorts(request));
+        params.setSorts(this.parseSummarySorts(request));
         params.setFilter(this.parseRecombinaseQueryForm(query));
 
         // issue the query and get back the matching Allele objects
@@ -153,11 +159,11 @@ public class RecombinaseController {
         Image thisImage;
         Iterator<Image> imageIter;
         List<Image> validatedImages   = new ArrayList<Image>();
-        
+
         Allele allele = null;
         List<AlleleSystem> alleleSystems = new ArrayList<AlleleSystem>();
         AlleleSystem alleleSystem = null;
-        
+
         /*
          * Lookup AlleleSystem object
          */
@@ -186,14 +192,14 @@ public class RecombinaseController {
             SearchResults<AlleleSystem> searchResults =
                 recombinaseFinder.getAlleleSystem(searchParams);
             alleleSystems = searchResults.getResultObjects();
-	
-            if (alleleSystems.size() == 1) {            
+
+            if (alleleSystems.size() == 1) {
 		        alleleSystem = alleleSystems.get(0);
 		        allele = alleleSystem.getAllele();
             }
         }
 
-        
+
         // ensure we found allele system
         if (allele == null || alleleSystem == null) {
             // forward to error page
@@ -208,8 +214,8 @@ public class RecombinaseController {
         	if (request.getParameterMap().containsKey("alleleKey")){
         		logger.debug("hasKey");
         		queryString = queryString + "&id=" + allele.getPrimaryID();
-        	} 
-        	
+        	}
+
         	mav.addObject("queryString", queryString);
 	        mav.addObject("alleleSystem", alleleSystem);
 	        mav.addObject("allele", allele);
@@ -219,7 +225,7 @@ public class RecombinaseController {
 	        mav.addObject("otherAllelesSize", alleleSystem.getOtherAlleles().size());
 	        mav.addObject("otherSystems", alleleSystem.getOtherSystems());
 	        mav.addObject("otherSystemsSize", alleleSystem.getOtherSystems().size());
-	
+
 	        // allele synonyms; pre-gen comma-delimitted list
 	        List<String> synonymList = new ArrayList<String> ();
 	        Iterator<AlleleSynonym> synonymIter = allele.getSynonyms().iterator();
@@ -229,7 +235,7 @@ public class RecombinaseController {
 	        }
 	        mav.addObject("synonymsString",
 	          FormatHelper.superscript(FormatHelper.commaDelimit(synonymList)));
-	
+
 	        // remove images with 'null' values
 	        imageIter = alleleSystem.getImages().iterator();
 	        while (imageIter.hasNext()) {
@@ -238,21 +244,21 @@ public class RecombinaseController {
 				validatedImages.add(thisImage);
 			  }
 		    }
-	
+
 	        // iterate over the validated images; pre-gen image gallery rows
 	        int imageIndex = 0;
 	        List<RecomImage> recomImages = new ArrayList<RecomImage>();
 	        List<RecomImageRow> recomImageRows = new ArrayList<RecomImageRow>();
 	        imageIter = validatedImages.iterator();
 	        while (imageIter.hasNext()) {
-	
+
 	          thisImage = imageIter.next();
-	
+
 	          imageIndex++;
 	          RecomImage thisRecomImage
 	            = new RecomImage(thisImage, imageIndex);
 	          recomImages.add(thisRecomImage);
-	
+
 	          // if we have enough images to fill a row, of if this is our last
 	          // image, create the row and add to row list
 	          if ( ((imageIndex % 8 ) == 0) || !imageIter.hasNext() ) {
@@ -282,7 +288,7 @@ public class RecombinaseController {
         logger.debug(query.toString());
         List<AlleleSystemAssayResult> assayResultList = new ArrayList<AlleleSystemAssayResult>();
         SearchResults<AlleleSystemAssayResult> searchResults;
-        
+
         // The JSON return object will be serialized to a JSON response.
         // Client-side JavaScript expects this object
         JsonSummaryResponse<RecomSpecificitySummaryRow> jsonResponse
@@ -302,7 +308,7 @@ public class RecombinaseController {
         // create/load the list of SummaryRow wrapper objects
         List<RecomSpecificitySummaryRow> summaryRows
         	= new ArrayList<RecomSpecificitySummaryRow>();
-        
+
         for (AlleleSystemAssayResult thisAssayResult: assayResultList) {
             if (thisAssayResult == null) {
                 logger.debug("--> Null Object");
@@ -312,10 +318,54 @@ public class RecombinaseController {
         }
 
         // place data into JSON response, and return
-        jsonResponse.setSummaryRows(summaryRows);        
+        jsonResponse.setSummaryRows(summaryRows);
         return jsonResponse;
     }
 
+    //-------------------------------//
+    // Recombinase/Allele
+    //-------------------------------//
+
+    @RequestMapping("/allele/{allID}")
+    public ModelAndView recombAlleleSystemsTable( HttpServletRequest request,
+    		HttpServletResponse response,
+            @PathVariable("allID") String allID) {
+
+        logger.debug("->recombAlleleSystemsTable() started");
+
+        // need to add headers to allow AJAX access
+        AjaxUtils.prepareAjaxHeaders(response);
+
+        ModelAndView mav = new ModelAndView("recombinase_table");
+
+    	// find the requested Allele
+        logger.debug("->asking alleleFinder for allele");
+    	List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
+    	// there can be only one...
+        if (alleleList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No allele found for " + allID);
+            return mav;
+        }
+        if (alleleList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Dupe reference found for " + allID);
+            return mav;
+        }
+        Allele allele = alleleList.get(0);
+        logger.debug("->1 allele found");
+        mav.addObject("allele",allele);
+
+        List<AlleleSystem> alleleSystems =
+          allele.getAlleleSystems();
+        logger.debug("->List<AlleleSystem> size - " + alleleSystems.size());
+
+        mav.addObject("alleleSystems",alleleSystems);
+
+        return mav;
+    }
 
 
     /*---------------------------------------------------------------------*/
@@ -325,7 +375,7 @@ public class RecombinaseController {
     /** TODO : needs to be adjusted for alleles
      *
      */
-    private List<Sort> parseSorts(HttpServletRequest request) {
+    private List<Sort> parseSummarySorts(HttpServletRequest request) {
 
         List<Sort> sorts = new ArrayList<Sort>();
 
@@ -406,6 +456,25 @@ public class RecombinaseController {
                 Filter.OP_EQUAL));
         }
 
+        String structure = query.getStructure();
+        if ((structure != null) && (!"".equals(structure))) {
+        	logger.debug("splitting structure query into tokens");
+			Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
+
+			String phraseSearch = "";
+			for(String structureToken : structureTokens)
+			{
+				logger.debug("token="+structureToken);
+				phraseSearch += structureToken+" ";
+			}
+			if(!phraseSearch.trim().equals(""))
+			{
+				// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
+				String sToken = "\""+phraseSearch+"\"~100";
+				filterList.add(new Filter(SearchConstants.STRUCTURE,sToken,Filter.OP_HAS_WORD));
+			}
+        }
+
         // build container filter and return
         Filter containerFilter = new Filter();
         containerFilter.setFilterJoinClause(Filter.FC_AND);
@@ -456,5 +525,5 @@ public class RecombinaseController {
         logger.debug("genFilters -> " + containerFilter);
         return containerFilter;
     }
-    
+
 }

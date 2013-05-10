@@ -1,0 +1,475 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>SNP Load Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>SNP Load Tests</h1>
+    <ul>
+        <li>User story 41, SNP Build 38: install MGI and SNP vocab terms and translations</li>
+        <li>User story 26, SNP Build 38: SAMPLE Build 38 SNPs loaded into postgres</li>
+        <li>User story 106, SNP Build 38: verify snp counts for all chromosomes</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto41: vocabularies in MGI and SNP dbs loaded/updated based on results of sto32</li>
+		<li>sto41: same for translation tables</li>
+		<li>sto26: new/revised loader</li>
+		<li>sto26: loads a sample of the full data set (say, 100,000 rs snps, or everything from one chromosome)</li>
+		<li>sto26: maybe: snp cache load run in out-of-sync mode?</li>
+		<li>sto26: focus on logic; defer any lurking size/performance issues to sto27</li>
+		<li>sto26: snp pages display in javawi</li>
+		<li>sto26: broad data validation - counts/spot check a few</li>
+		<li>sto26: may some xml+sql solution (parse the xml and directly check that the db contains the values)</li>
+		<li>sto106: for each chromosome, count of snps in the db matched count from the XML file</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><span class="regressHi">Regress: high priority</span></p>
+    <p><span class="regressLo">Regress: low priority</span></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Vocabularies are identified and updated with new values where needed
+ 			<p concordion:assertTrue="true">klf 2/18/2013</p>
+				<table>
+				<tr>
+					<th>Vocab Name</th><th>New Values Exist?</th><th>New Values Added?</th>
+				</tr>
+				<tr>
+					<td>Population Name</td>
+					<td>Examples:
+					<ul>
+						<li>Acadl_SNP_variants</li>
+						<li>ENSEMBL_Sanger</li>
+						<li>SJL_07</li>
+					</ul>
+					</td>
+					<td>Yes</td>
+				</tr>
+				<tr>
+					<td>Submitter Handle</td>
+					<td>Examples:
+					<ul>
+						<li>CHEVERUD</li>
+						<li>DIFE</li>
+						<li>VISION_GENETICS_LAB</li>
+					</ul>
+					</td>
+					<td>Yes</td>
+				</tr>
+				<tr>
+					<td>Strain</td>
+					<td>
+					<ul>
+						<li>NOD/ShiLtJ</li>
+						<li>B10.D2-H2&lt;d&gt;</li>
+						<li>B10.D2-Hc&lt;0&gt; H2&lt;d&gt; H2-T18&lt;c&gt;/oSnJ</li>
+						<li>BTBR T&lt;+&gt; Itpr3&lt;tf&gt;/J</li>
+					</ul>
+					</td>
+					<td>Yes</td>
+				</tr>
+				<tr>
+					<td>Variation Class</td>
+					<td>No</td>
+					<td>-</td>
+				</tr>
+				<tr>
+					<td>Function Class</td>
+					<td>Examples:
+					<ul>
+						<li>Coding</li>
+						<li>Noncoding Transcript Variant</li>
+					</ul>
+					</td>
+					<td>Yes</td>
+				</tr>
+				</table>
+    		</li>
+    		<li>SNPs are loaded properly for sample set of chromosomes
+ 				<table>
+ 					<tr>
+ 						<th>Chr</th>
+ 						<th>Total RS IDs in XML file<br/>
+ 						(Kevin's count)</th>
+ 						<th>Total RS IDs processed<br/>
+ 						(dbsnpload.diag.log)</th>
+ 						<th>RS IDs loaded<br/>
+ 						(dbsnpload.diag.log)</th>
+ 						<th>RS IDs "exceptions"<br/>
+ 						(unique RS IDs from dbsnpload.cur.log - Kevin's count)</th>
+ 						<th>RS IDs kicked: predicted<br/>
+ 						(=processed - loaded)</th>
+					</tr>
+ 					<tr>
+ 						<td>1</td>
+ 						<td>5,463,558</td>
+ 						<td><span concordion:assertTrue="true">5,463,558</span></td>
+ 						<td>1,405,002</td>
+ 						<td>4,113,150</td>
+ 						<td>4,058,556</td>
+ 					</tr>
+ 					<tr>
+ 						<td>2</td>
+ 						<td>4,724,014</td>
+ 						<td><span concordion:assertTrue="true">4,724,014</span></td>
+ 						<td>1,062,626</td>
+ 						<td>3,662,997</td>
+ 						<td>3,661,388</td>
+ 					</tr>
+ 					<tr>
+ 						<td>19</td>
+ 						<td>1,665,006</td>
+ 						<td><span concordion:assertTrue="true">1,665,006</span></td>
+ 						<td>410,192</td>
+ 						<td>1,254,837</td>
+ 						<td>1,254,814</td>
+ 					</tr>
+ 					<tr>
+ 						<td>Y</td>
+ 						<td>19,896</td>
+ 						<td><span concordion:assertTrue="true">19,896</span></td>
+ 						<td>18,663</td>
+ 						<td>1,483</td>
+ 						<td>1,233</td>
+ 					</tr>
+ 				</table>
+    		</li>
+    		<li>SNPs are loaded properly for all chromosomes (3/12/2013)<br/>
+    		Number of SNPs processed by the loading script  (col.3) = number of GRCm38 assembly RS IDs in the XML file for each chromosome (col.2).<br/>
+    		Number of SNPs loaded (col.4) = number of SNPs in database table (col.5). - (This may not be a good test. Diagnosticts Log may be doing this query to report the count.)
+ 				<table>
+ 						<tr>
+ 							<th>(1)</th>
+ 							<th>(2)</th>
+ 							<th>(3)</th>
+ 							<th>(4)</th>
+ 							<th>(5)</th>
+ 						</tr>
+						<tr>
+							<th>Chr</th>
+							<th>Total RS IDs in XML file<br /> (Kevin's script)
+							</th>
+							<th>Total RS IDs processed<br /> (reported in dbsnpload.diag.log)
+							</th>
+							<th>RS IDs loaded<br /> (reported in dbsnpload.diag.log)
+							</th>
+							<th>Consensus SNPs in snp_coord_cache table</th>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>5,463,558</td>
+							<td><span concordion:assertTrue="true">5,463,558</span></td>
+							<td>1,405,002</td>
+							<td>1,405,002</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>4,724,014</td>
+							<td><span concordion:assertTrue="true">4,724,014</span></td>
+							<td>1,062,626</td>
+							<td>1,062,626</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>4,418,722</td>
+							<td><span concordion:assertTrue="true">4,418,722</span></td>
+							<td>1,010,284</td>
+							<td>1,010,284</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>4,151,267</td>
+							<td><span concordion:assertTrue="true">4,151,267</span></td>
+							<td>991,926</td>
+							
+							
+							<td>991,926</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>4,118,809</td>
+							<td><span concordion:assertTrue="true">4,118,809</span></td>
+							<td>849,738</td>
+							
+							
+							<td>849,738</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>4,063,238</td>
+							<td><span concordion:assertTrue="true">4,063,238</span></td>
+							<td>947,667</td>
+							
+							
+							<td>947,667</td>
+						</tr>
+						<tr>
+							<td>7</td>
+							<td>3,705,837</td>
+							<td><span concordion:assertTrue="true">3,705,837</span></td>
+							<td>1,038,734</td>
+							
+							
+							<td>1,038,734</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>3,605,590</td>
+							<td><span concordion:assertTrue="true">3,605,590</span></td>
+							<td>851,386</td>
+							
+							
+							<td>851,386</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>3,381,567</td>
+							<td><span concordion:assertTrue="true">3,381,567</span></td>
+							<td>784,044</td>
+							
+							
+							<td>784,044</td>
+						</tr>
+						<tr>
+							<td>10</td>
+							<td>3,613,694</td>
+							<td><span concordion:assertTrue="true">3,613,694</span></td>
+							<td>744,301</td>
+							
+							
+							<td>744,301</td>
+						</tr>
+						<tr>
+							<td>11</td>
+							<td>3,332,742</td>
+							<td><span concordion:assertTrue="true">3,332,742</span></td>
+							<td>699,452</td>
+							
+							
+							<td>699,452</td>
+						</tr>
+						<tr>
+							<td>12</td>
+							<td>3,227,492</td>
+							<td><span concordion:assertTrue="true">3,227,492</span></td>
+							<td>833,289</td>
+							
+							
+							<td>833,289</td>
+						</tr>
+						<tr>
+							<td>13</td>
+							<td>3,223,137</td>
+							<td><span concordion:assertTrue="true">3,223,137</span></td>
+							<td>807,215</td>
+							
+							
+							<td>807,215</td>
+						</tr>
+						<tr>
+							<td>14</td>
+							<td>3,264,459</td>
+							<td><span concordion:assertTrue="true">3,264,459</span></td>
+							<td>799,876</td>
+							
+							
+							<td>799,876</td>
+						</tr>
+						<tr>
+							<td>15</td>
+							<td>2,886,892</td>
+							<td><span concordion:assertTrue="true">2,886,892</span></td>
+							<td>661,405</td>
+							
+							
+							<td>661,405</td>
+						</tr>
+						<tr>
+							<td>16</td>
+							<td>2,691,300</td>
+							<td><span concordion:assertTrue="true">2,691,300</span></td>
+							<td>518,191</td>
+							
+							
+							<td>518,191</td>
+						</tr>
+						<tr>
+							<td>17</td>
+							<td>2,654,942</td>
+							<td><span concordion:assertTrue="true">2,654,942</span></td>
+							<td>549,529</td>
+							
+							
+							<td>549,529</td>
+						</tr>
+						<tr>
+							<td>18</td>
+							<td>2,499,999</td>
+							<td><span concordion:assertTrue="true">2,499,999</span></td>
+							<td>513,709</td>
+							
+							
+							<td>513,709</td>
+						</tr>
+						<tr>
+							<td>19</td>
+							<td>1,665,006</td>
+							<td><span concordion:assertTrue="true">1,665,006</span></td>
+							<td>410,192</td>
+							
+							
+							<td>410,192</td>
+						</tr>
+						<tr>
+							<td>X</td>
+							<td>2,696,330</td>
+							<td><span concordion:assertTrue="true">2,696,330</span></td>
+							<td>411,240</td>
+							
+							
+							<td>411,240</td>
+						</tr>
+						<tr>
+							<td>Y</td>
+							<td>19,896</td>
+							<td><span concordion:assertTrue="true">19,896</span></td>
+							<td>18,663</td>
+							
+							
+							<td>18,663</td>
+						</tr>
+						<tr>
+							<td>MT</td>
+							<td>165</td>
+							<td><span concordion:assertTrue="true">165</span></td>
+							<td>163</td>
+							
+							
+							<td>163</td>
+						</tr>
+					</table>
+				</li>
+				<li><span class="regressHi">Regress</span> SNP cache load appears to run correctly (see HTML comments for SQL queries).<br/>
+				Number of SNPs obtained from database queries matches the number displayed on SNP Summary for a Marker.
+				<table>
+					<tr>
+						<th>Marker</th>
+						<th>Chr</th>
+						<th>Start Coordinate</th>
+						<th>End Coordinate</th>
+						<th>Start minus 2kbp</th>
+						<th>End plus 2kbp</th>
+						<th>SNP count</th>
+						<th>tested</th>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>2</td>
+						<td>105668896</td>
+						<td>105703160</td>
+						<td>105666896</td>
+						<td>105705160</td>
+						<td><p concordion:assertTrue="true">90</p></td>
+						<td>klf 3/13/13</td>
+					</tr>
+					<tr>
+						<td>Bmp4</td>
+						<td>14</td>
+						<td>46383520</td>
+						<td>46390669</td>
+						<td>46381520</td>
+						<td>46392669</td>
+						<td><p concordion:assertTrue="true">101</p></td>
+						<td>klf 3/13/13</td>
+					</tr>
+				</table>
+<!-- FIND COORDINATES FOR MARKER IN MGD DATABASE:
+select mlc._marker_key, mlc.chromosome, mlc.startcoordinate, mlc.endcoordinate, mlc.strand, mrk.symbol
+from mrk_location_cache mlc, mrk_marker mrk
+where mrk._marker_key = mlc._marker_key
+and (mrk.symbol like 'Pax6'
+or mrk.symbol like 'Bmp4')
+    FIND SNPS IN REGION BETWEEN -2kbp and +2kbp IN SNP DATABASE, ONE MARKER AT A TIME;
+select scc.chromosome, scc.strand, scc.startcoordinate, sa.accid
+from snp_coord_cache scc, snp_accession sa
+where sa._mgitype_key = 30
+and sa._object_key = scc._consensussnp_key
+and scc.chromosome = '14'
+and scc.startcoordinate >= 46381520
+and scc.startcoordinate <= 46392669
+and scc.ismulticoord = 0
+-->
+				</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

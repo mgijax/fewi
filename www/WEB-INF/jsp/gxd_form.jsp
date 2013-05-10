@@ -64,6 +64,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 {
     display: none;
 }
+
+.redNot{ font-size:110%; color:red; font-weight:bold; }
+.hide { display:none; }
 #ageStage
 {
     display: inline-block;
@@ -82,8 +85,14 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
 </style>
 
-
-<form:form commandName="gxdQueryForm">
+<div id="expressionSearch" class="yui-navset">
+<ul class="yui-nav">
+    <li class="selected"><a href="#standard-gxd-expression-search"><em>Standard Search</em></a></li>
+    <li><a href="#differential-gxd-expression-search"><em>Differential Expression Search</em></a></li>
+</ul>
+<div class="yui-content">
+<div id="standard-qf">
+<form:form commandName="gxdQueryForm" class="gxdQf">
 <!-- query form table -->
 <table class="pad5 borderedTable" width="100%">
 	<tr>
@@ -271,3 +280,142 @@ span.smallGrey { font-size: 75%; color: #999999; }
 </div> 
 		             
 </form:form>
+</div>
+<div id="differential-qf">
+<table class="pad5 borderedTable" width="100%">
+	<tr class="stripe1">
+		<td class="cat1">Anatomical Structure</td>
+		<td>
+			<div id="difStructClosed" style="cursor:pointer;" class="hide">
+			<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
+			</div>
+			<div id="difStructOpen">
+			<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
+			<br/>
+			<form:form commandName="gxdDifferentialQueryForm"  id="gxdDifferentialQueryForm1" class="gxdQf">
+			<table class="noborder">
+			<tr><td colspan="2">
+				Find genes where expression is detected in<br/>
+				<div style="padding:2px 0px 12px 20px; width:300px;text-align:left;" id="difStructureAutoComplete1">
+				<input id="difStructure1" name="structure" style="width:270px;"></input>
+				<div id="difStructureContainer1"></div>
+				</div>
+			</td></tr>
+			<tr><td colspan="2">
+				and expression is <span class="redNot">NOT</span> detected or analyzed in 
+				<img id="gxdDifStruct1HelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
+				<div id="gxdDifStruct1Help"> 
+					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
+					<div class="bd">
+						<p>NOT detected or analyzed in = there are no positive expression results in the specified structures 
+							recorded in the database.</p>
+					</div> 
+				</div> 
+			</td></tr>
+			<tr><td colspan="2">
+				<div style="padding:2px 0px 12px 20px;width:300px;text-align:left;" id="difStructureAutoComplete2">
+				<input id="difStructure2" name="difStructure" style="width:270px;"></input>
+				<div id="difStructureContainer2"></div>
+				</div>
+			</td></tr>
+			<tr><td colspan="2">
+				<div id="difStructureError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;">
+				*Please enter a structure in <i>both</i> search boxes.</div>
+				<input class="buttonLabel" value="Search" type="submit" id="submit3">
+				&nbsp;&nbsp;
+				<input type="reset" id="reset3">
+			</td></tr>
+			</table>
+			</form:form>
+			</div>
+		</td>
+	</tr>
+	<tr class="stripe2">
+		<td class="cat2">Developmental Stage</td>
+		<td>
+		<div id="difStageClosed" style="cursor:pointer;">
+		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some <b>developmental stages</b> but not others.
+		</div>
+		<div id="difStageOpen" class="hide">
+		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some <b>developmental stages</b> but not others.
+		<br/>
+		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm2" class="gxdQf">
+		<table class="noborder">
+			<tr>
+			<td colspan="2" style="vertical-align:top;">
+			Find genes where expression is detected in
+			</td>
+			<td>
+				<div style="padding-left:40px;">
+				<div id="ageStage2">
+					<!-- <div class="tab-header">
+						<div class="tab-nav active-tab" id="stagesTab2">Use Theiler Stages</div>
+						<div class="tab-nav inactive-tab" id="agesTab2">Use Ages (dpc)</div>
+					</div>
+					<div id="ageStageDiv2" class="tab-content">
+						<div class="active-content"> -->
+							<form:select multiple="true" path="theilerStage" id="difTheilerStage1" size="7" items="${gxdQueryForm.theilerStagesRibbon2}">
+	                        <form:options items="${theilerStagesRibbon2}" />
+	                        </form:select>
+						<!-- </div> -->
+<%-- 						<div class="inactive-content">
+							 <form:select multiple="true" path="age" size="7" items="${gxdQueryForm.ages}">
+	                        <form:options items="${ages}" />
+	                        </form:select>
+						</div> --%>
+					<!-- </div> -->
+		        </div>               
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="vertical-align:top;">
+				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed in 
+				<img id="gxdDifStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
+				<div id="gxdDifStageHelp"> 
+					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
+					<div class="bd">
+						<p>NOT detected or analyzed in = there are no positive expression results in the specified stages 
+							recorded in the database.</p>
+					</div> 
+				</div> 
+			</td>
+			<td>
+				<div style="padding-left:40px;">
+		        <div id="ageStage3">
+					<!-- <div class="tab-header">
+						<div class="tab-nav active-tab" id="stagesTab3">Use Theiler Stages</div>
+						<div class="tab-nav inactive-tab" id="agesTab3">Use Ages (dpc)</div>
+					</div>
+					<div id="ageStageDiv3" class="tab-content">
+						<div class="active-content"> -->
+							<form:select multiple="true" path="difTheilerStage" id="difTheilerStage2" size="7" items="${gxdQueryForm.difTheilerStages}">
+	                        <form:options items="${theilerStages}" />
+	                        </form:select>
+						<!-- </div> -->
+<%-- 						<div class="inactive-content">
+							 <form:select multiple="true" path="difAge" size="7" items="${gxdQueryForm.difAges}">
+	                        <form:options items="${ages}" />
+	                        </form:select>
+						</div> --%>
+					</div> 
+		        </div>                            
+			</td>
+				</div>
+			</td>
+		</tr>
+		<tr><td colspan="3">
+			<div id="difStageError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;">
+				*Please select a specific stage(s) in one of the select boxes.</div>
+				<input class="buttonLabel" value="Search" type="submit" id="submit4">
+				&nbsp;&nbsp;
+				<input type="reset" id="reset4">
+		</td></tr>
+		</table>
+		</form:form>
+		</div>
+		</td>
+</table>
+</div>
+</div>
+</div>

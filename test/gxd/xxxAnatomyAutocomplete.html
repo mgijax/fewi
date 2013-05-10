@@ -20,18 +20,21 @@
     <h1>Anatomy Autocomlete Tests</h1>
     <ul>
         <li>User story 10, Build autocomplete for Anatomy term search</li>
+        <li>User story 48, Change anatomy autocomplete handling of synonyms</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li> input text causes a dropdown list to appear with matching structure and synonyms</li>
-		<li> when the user selects a term, the input box is populated with the selected text</li>
-		<li> sorting is by 
-		score (exact matches first), then by alpha</li>
-		<li> support string tokens (i.e. ""le lo"" includes ""left lobe"")</li>
-		<li> does not support selecting multiple Structure Names</li>
+		<li>Story 10: input text causes a dropdown list to appear with matching structure and synonyms</li>
+		<li>Story 10: when the user selects a term, the input box is populated with the selected text</li>
+		<li>Story 10: sorting is by score (exact matches first), then by alpha</li>
+		<li>Story 10: support string tokens (i.e. ""le lo"" includes ""left lobe"")</li>
+		<li>Story 10: does not support selecting multiple Structure Names</li>
+		<li>Story 48: For synonyms in the autocomplete, display the text of the synonym and "[synonym]" after it</li>
+		<li>Story 48: Do this if it is only a synonym. If the text is a real term somewhere in the anatomy and a synonym elsewhere, don't display "[synonym]"</li>
+		<li>Story 48: If the user selects a synonym in the autocomplete, display the synonym in the query field and search for terms/synonyms that contain all the tokens from that synonym. (Do not display the text "[synonym]".)</li>
 	</ul>
 </div>
 
@@ -40,6 +43,7 @@
 	<div id="manual">
 		<h3>Manual tests</h3>
 		<ol>
+		<h4>Sto 10: Basic Autocomplete</h4>
      		<li>Test that a structure when selected gets put into the input box
      		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
@@ -99,7 +103,7 @@
 		</li>
 		<li>Test that special characters are treated as white space
     		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
-		<ol>
+			<ol>
                 <li>open the GXD query form and clear the anatomy field</li>
 				<li>type <b>cranio facial</b> in the anatomy field</li>
 				<li>verify that <b>cranio-facial muscle</b> appears in the dropdown list</li>
@@ -109,8 +113,33 @@
 				<li>verify that <b>Rathke's pouch</b> appears in the dropdown list</li>
 				<li>type <b>rathke's</b> in the anatomy field</li>
 				<li>verify that <b>Rathke's pouch</b> appears in the dropdown list</li>
-		</ol>
+			</ol>
 		</li>
+		<h4>Sto 48: Autocomplete with Synonyms</h4>
+    		<li>Text in the autocomplete list that corresponds to one or more synonyms but no primary terms should display [synonym] next to the text.
+ 			<p concordion:assertTrue="true">jeffc 8/10/2012</p> 
+    		<ol>
+                <li>Open the GXD Query Form.</li>
+                <li>In the Anatomical Structures field, enter <b>heart muscle</b>.</li>
+                <li>Verify that <b>[synonym]</b> appears next to the text &quot;heart muscle&quot;.</li>
+    		</ol>
+    		</li>
+    		<li>Text in the autocomplete list that corresponds to one or more synonyms and also one or more primary terms should NOT display [synonym] next to the text.
+ 			<p concordion:assertTrue="true">jeffc 8/10/2012</p> 
+    		<ol>
+                <li>Open the GXD Query Form.</li>
+                <li>In the Anatomical Structures field, enter <b>kidney</b>.</li>
+                <li>Verify that <b>[synonym] DOES NOT appear</b> next to the text &quot;kidney&quot;. <i>(A primary term in TS 28 but a synonym in other Stages.)</i></li>
+    		</ol>
+    		</li>
+    		<li>Text in the autocomplete list that corresponds to one or more primary terms should NOT display [synonym] next to the text.
+ 			<p concordion:assertTrue="true">jeffc 8/10/2012</p> 
+    		<ol>
+                <li>Open the GXD Query Form.</li>
+                <li>In the Anatomical Structures field, enter <b>cardiac muscle</b>.</li>
+                <li>Verify that <b>[synonym] DOES NOT appear</b> next to the text &quot;cardiac muscle&quot;.</li>
+    		</ol>
+    		</li>
 		</ol>
 	</div>
 	<div id="auto">

@@ -90,7 +90,7 @@ public class SearchConstants {
 
     // disease constants
     public static final String DISEASE_ID            = "disease_id";
-
+    
     // faux entry;  used by webapp class template
     public static final String FOO_ID            = "foo_id";
 
@@ -98,6 +98,7 @@ public class SearchConstants {
     public static final String GXD_AGE_MIN = "ageMin";
     public static final String GXD_AGE_MAX = "ageMax";
     public static final String GXD_ASSAY_KEY = "assayKey";
+    public static final String GXD_ASSAY_ID = "assayID";
     public static final String GXD_ASSAY_TYPE = "assayType";
 	public static final String GXD_THEILER_STAGE = "stage";
 	public static final String GXD_DETECTED = "detected";
@@ -106,6 +107,9 @@ public class SearchConstants {
 	public static final String STRUCTURE = "structure";
 	public static final String STRUCTURE_KEY = "structureKey";
 	public static final String STRUCTURE_ID = "structureID";
+	public static final String PROBE_KEY = "probeKey";
+	public static final String ANTIBODY_KEY = "antibodyKey";
+	public static final String POS_STRUCTURE = "posStructure";
 
 	public static final String PRIMARY_KEY = "pKey";
 	

@@ -28,7 +28,8 @@ public class SortConstants {
 	public static final String CRE_INDUCIBLE       = "inducibleNote";
 	public static final String CRE_REF_COUNT       = "countOfReferences";
 	public static final String CRE_DETECTED_COUNT  = "detectedCount";
-
+	public static final String CRE_NOT_DETECTED_COUNT  = "notDetectedCount";
+	
     // Cre sorting strings, for the detail page
     public static final String CRE_BY_STRUCTURE                 = "byStructure";
     public static final String CRE_BY_AGE                       = "byAge";

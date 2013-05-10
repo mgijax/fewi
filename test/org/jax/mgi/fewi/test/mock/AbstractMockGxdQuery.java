@@ -51,6 +51,14 @@ public class AbstractMockGxdQuery implements MockQuery
 	{
 		gqf.setTheilerStage(stages);
 	}
+	public void setDifTheilerStage(Integer stage)
+	{
+		gqf.setDifTheilerStage(Arrays.asList(stage));
+	}
+	public void setDifTheilerStage(List<Integer> stages)
+	{
+		gqf.setDifTheilerStage(stages);
+	}
 	
 	public void setAge(String age)
 	{
@@ -73,6 +81,10 @@ public class AbstractMockGxdQuery implements MockQuery
 	public void setStructure(String structure)
 	{
 		gqf.setStructure(structure);
+	}
+	public void setDifStructure(String difStructure)
+	{
+		gqf.setDifStructure(difStructure);
 	}
 	public void setIsWildType(boolean isWildType)
 	{

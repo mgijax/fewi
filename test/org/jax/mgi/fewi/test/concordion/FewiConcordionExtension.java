@@ -24,7 +24,25 @@ public class FewiConcordionExtension implements ConcordionExtension {
 		verifySubsetOf.addVerifyRowsListener(new VerifyRowsResultRenderer());
 		concordionExtender.withCommand(NAMESPACE, 
 				"verifySubsetOf", verifySubsetOf);
+		
+		//Add verifySupersetOfCommand
+		VerifySupersetOfCommand verifySupersetOf = new VerifySupersetOfCommand();
+		verifySupersetOf.addVerifyRowsListener(new VerifyRowsResultRenderer());
+		concordionExtender.withCommand(NAMESPACE, 
+				"verifySupersetOf", verifySupersetOf);
+		
+		//Add verifyNotRowsCommand
+		VerifyNotRowsCommand verifyNotRows = new VerifyNotRowsCommand();
+		verifyNotRows.addVerifyRowsListener(new VerifyRowsResultRenderer());
+		concordionExtender.withCommand(NAMESPACE, 
+				"verifyNotRows", verifyNotRows);
 
+		//Add assertEmptyCommand
+				AssertEmptyCommand assertEmpty = new AssertEmptyCommand();
+				assertEmpty.addAssertEqualsListener(new AssertResultRenderer());
+				concordionExtender.withCommand(NAMESPACE, 
+						"assertEmpty", assertEmpty);
+				
 		//Add assertAllRowsEqualCommand
 		AssertAllRowsEqualCommand assertAllRowsEqual = new AssertAllRowsEqualCommand();
 		assertAllRowsEqual.addAssertEqualsListener(new AssertResultRenderer());
@@ -83,6 +101,11 @@ public class FewiConcordionExtension implements ConcordionExtension {
 		DynamicDataCommand dynamicData = new DynamicDataCommand();
 		concordionExtender.withCommand(NAMESPACE, 
 				"dynamicData", dynamicData);
+		
+		//Add dynamicDataTableCommand
+				DynamicDataTableCommand dynamicDataTable = new DynamicDataTableCommand();
+				concordionExtender.withCommand(NAMESPACE, 
+						"dynamicDataTable", dynamicDataTable);
 		
 		//Add echoCommand
 		EchoCommand echo = new EchoCommand();

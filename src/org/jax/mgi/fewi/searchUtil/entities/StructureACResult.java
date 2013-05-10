@@ -13,6 +13,7 @@ public class StructureACResult implements UniqueableObject
 	private String structure;
 	private String synonym;
 	private boolean isStrictSynonym;
+	private boolean hasCre=false;
 	
 	public StructureACResult(){}
 	public StructureACResult(String structure,String synonym,boolean isStrictSynonym)
@@ -20,6 +21,13 @@ public class StructureACResult implements UniqueableObject
 		this.structure=structure;
 		this.synonym=synonym;
 		this.isStrictSynonym=isStrictSynonym;
+	}
+	public StructureACResult(String structure,String synonym,boolean isStrictSynonym,boolean hasCre)
+	{
+		this.structure=structure;
+		this.synonym=synonym;
+		this.isStrictSynonym=isStrictSynonym;
+		this.hasCre=hasCre;
 	}
 	
 	public String getStructure()
@@ -41,6 +49,14 @@ public class StructureACResult implements UniqueableObject
 	public void setIsStrictSynonym(boolean isStrictSynonym)
 	{
 		this.isStrictSynonym=isStrictSynonym;
+	}
+	public boolean getHasCre()
+	{
+		return hasCre;
+	}
+	public void setHasCre(boolean hasCre)
+	{
+		this.hasCre=hasCre;
 	}
 	public Object getUniqueKey()
 	{

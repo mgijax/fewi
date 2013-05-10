@@ -47,14 +47,14 @@ public class RecomImageRow {
     // height of the row, taking into account the tallest image in the row
     public int getRowHeight() {
 
-		int rowHeight = 66; // default
+		int rowHeight = 80; // default
 
 		for (RecomImage image: recomImages) {
 			if (image.getModifiedHeight() > rowHeight) {
 				rowHeight = image.getModifiedHeight();
 			}
 		}
-        rowHeight = rowHeight + 30; //adding space for header
+        rowHeight = rowHeight + 42; //adding space for header
 
     	return rowHeight;
     }

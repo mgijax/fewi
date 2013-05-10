@@ -86,14 +86,7 @@ ${templateBean.templateBodyStartHtml}
 <div id="outer">    
     <div id="toggleQF" class="summaryControl" style="display:none"><span id="toggleImg" class="qfExpand" style="margin-right:15px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
     <div id="qwrap">
-        <div id="expressionSearch" class="yui-navset">
-            <ul class="yui-nav">
-                <li class="selected""><a href="#standard-gxd-expression-search"><em>Standard Search</em></a></li>
-            </ul>
-            <div class="yui-content">
-               <%@ include file="/WEB-INF/jsp/gxd_form.jsp" %>
-            </div>
-        </div>
+    	<%@ include file="/WEB-INF/jsp/gxd_form.jsp" %>
     </div>
 </div>
 <br clear="all" />
@@ -110,5 +103,13 @@ ${templateBean.templateBodyStartHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 
+<c:if test="${showDifferentialQueryForm}">
+<script>
+$(function(){
+	// open the differential query form
+	showDifferentialForm();
+});
+</script>
+</c:if>
 
 ${templateBean.templateBodyStopHtml}

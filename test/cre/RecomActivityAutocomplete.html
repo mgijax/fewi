@@ -1,0 +1,181 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+<title>Anatomy Autocomplete Tests</title>
+</head>
+
+
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="maintitle">
+    <h1>Recombinase Activity Anatomy Autocomplete Tests</h1>
+    <ul>
+        <li>User story 126, Build autocomplete (prototype) for Recombinase Activity Anatomy term search</li>
+
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Story 126: the prototype presents a type in box for tissue/anatomy term</li>
+		<li>Story 126: type ahead implemented</li>
+		<li>Story 126: synonyms indicated by "syn." prefix</li>
+		<li>Story 126: zero vs non-zero result counts distinguished somehow ("+"/"-" or grayed text or...)</li>
+		<li>Story 126: don't worry about moving 0 counts down yet</li>
+		<li>Story 126: don't worry about showing actual counts yet</li>
+		<li>Story 126: stakeholders settle on main set of acceptable requirements:
+			<ul>
+				<li>Story 126: For synonyms in the autocomplete, display the text of the synonym and "[syn. of ...]" after it</li>
+				<li>Story 126: Do this if it is only a synonym. If the text is a real term somewhere in the anatomy and a synonym elsewhere, don't display "[syn. of ...]"</li>
+				<li>Story 126: The search and sort of this autocomplete mirrors what the GXD anatomical structures autocomplete does...</li> 
+				<li>From GXD Anatomy autocomplete: input text causes a dropdown list to appear with matching structure and synonyms</li>
+				<li>From GXD Anatomy autocomplete: when the user selects a term, the input box is populated with the selected text</li>
+				<li>From GXD Anatomy autocomplete: sorting is by by score (exact matches first), then by alpha</li>
+				<li>From GXD Anatomy autocomplete: support string tokens (i.e. "le lo" includes "left lung lobar bronchus")</li>
+				<li>From GXD Anatomy autocomplete: does not support selecting multiple Structure Names</li>
+				<li>From GXD Anatomy autocomplete: If the user selects a synonym in the autocomplete, display the synonym in the query field and search for terms/synonyms that contain all the tokens from that synonym. (Do not display the text "[synonym]".)</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+		<h3>Manual tests</h3>
+		<h4>Sto 126: Basic Autocomplete Prototype</h4>
+		<ol>
+			<li>Build working prototype and arrive at final set of stakeholder requirements.
+     		<p concordion:assertTrue="true">klf 3/27/2013</p>
+			</li>
+		</ol>
+		<p> </p>
+		<p> </p>
+		<h4>Tests below will go with stories for working query, not prototype.</h4>
+		<ol>
+     		<li>Test that a structure when selected gets put into the input box
+     		<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>open Recombinase query form and make sure anatomy field is clear</li>
+				<li>type <b>???</b> in the Recombinase Activity field</li>
+				<li>click on <b>???</b> in the dropdown list</li>
+				<li>verify that the <b>input box is populated with ???</b></li>
+    		</ol>
+    		</li>
+    		<li>Test that a synonym when selected puts the synonym in the input box instead of synonym
+    		<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>open the Recombinase query form</li>
+				<li>type <b>????</b> into the Anatomy field</li>
+				<li>click on <b>???</b> in the dropdown</li>
+				<li>verify that the <b>input box is populated with ???</b></li>
+    		</ol>
+    		</li>
+
+    		<li>Test that autocomplete starts when you enter the second character
+    		<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>open the Recombinase query form and clear the recombinase activity field</li>
+				<li>type the character <b>1</b> in the anatomy field and wait a few seconds</li>
+				<li>verify that no dropdown appears</li>
+				<li>continue typing entering the character <b>s</b></li>
+				<li>verify that <b>the dropdown list appears, and terms in the list contain words beginning with "1s"</b></li>
+    		</ol>
+    		</li>
+    		<li>Test that tokens are ANDed
+    		<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>open the Recombinase query form and clear the recombinase activity field</li>
+				<li>type <b>cardiac brain</b> in the recombinase activity field</li>
+				<li>verify that <b>the dropdown appears after typing cardiac, but has disappeared by the time you finish typing brain</b></li>
+    		</ol>
+    		</li>
+    		<li>Test that sorting of the autocomplete list is by exact match to a completed token, and then by smart-alpha?????
+    		<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>open the Recombinase query form and clear the recombinase activity field</li>
+				<li>type <b>epithel</b> in the recombinase activity field</li>
+				<li>verify that <b>the dropdown list is presented in alphabetical order (case insensitive)</b></li>
+				<li>complete typing <b>epithelium</b> in the recombinase activity field</li>
+				<li>verify that <b>epithelium</b> is the first value in the dropdown list</li>
+				<li>verify that two-token terms appear next in the list, in alphabetical order (case insensitive)</li>
+				<li>verify that terms having 3 or more tokens appear after single- and two-token terms, and are in alphabetical order (case insensitive)</li> 
+    		</ol>
+    		</li>
+		<li>Test reset button clears all fields(test not needed for recombinase?)
+		    <!-- <p concordion:assertTrue="false">new test</p> -->
+			<ol>
+				<li>open the Recombinase query form and enter <b>text in the recombinase activity field</b></li>
+				<li><b>Press the Reset button</b></li>
+				<li>verify that <b>Recominase Activity text</b> is removed</li>
+			</ol>
+		</li>
+		<li>Test that special characters are treated as white space
+    		<!-- <p concordion:assertTrue="false">new test</p> -->
+			<ol>
+                <li>open the Recombinase query form and clear the recombinase activity field</li>
+				<li>type <b>cranio facial</b> in the recombinase activity field</li>
+				<li>verify that <b>cranio-facial muscle</b> appears in the dropdown list</li>
+				<li>type <b>?????</b> in the recombinase activity field</li>
+				<li>verify that <b>?????, ????</b> appears in the dropdown list</li>
+				<li>type <b>rathke s</b> in the recombinase activity field</li>
+				<li>verify that <b>Rathke's pouch</b> appears in the dropdown list</li>
+				<li>type <b>rathke's</b> in the recombinase activity field</li>
+				<li>verify that <b>Rathke's pouch</b> appears in the dropdown list</li>
+			</ol>
+		</li>
+		<h4>Sto 48: Autocomplete with Synonyms</h4>
+    		<li>Text in the autocomplete list that corresponds to one or more synonyms but no primary terms should display [synonym] next to the text.
+ 			<!-- <p concordion:assertTrue="false">new test</p> --> 
+    		<ol>
+                <li>Open the Recombinase Query Form.</li>
+                <li>In the recombinase activity field, enter <b>heart muscle</b>.</li>
+                <li>Verify that <b>[syn. of cardiac muscle]</b> appears next to the text &quot;heart muscle&quot;.</li>
+    		</ol>
+    		</li>
+    		<li>Text in the autocomplete list that corresponds to one or more synonyms and also one or more primary terms should NOT display [syn. of ...] next to the text.
+ 			<!-- <p concordion:assertTrue="false">new test</p> --> 
+    		<ol>
+                <li>Open the Recombinase Query Form.</li>
+                <li>In the recombinase activity field, enter <b>kidney</b>.</li>
+                <li>Verify that <b>[syn. of kidney] DOES NOT appear</b> next to the text &quot;kidney&quot;.</li>
+    		</ol>
+    		</li>
+    		<li>Text in the autocomplete list that corresponds to one or more primary terms should NOT display [syn. of ...] next to the text.
+ 			<!-- <p concordion:assertTrue="false">new test</p> --> 
+    		<ol>
+                <li>Open the Recombinase Query Form.</li>
+                <li>In the Recombinase Activity field, enter <b>cardiac muscle</b>.</li>
+                <li>Verify that <b>[syn. of cardiac muscle] DOES NOT appear</b> next to the text &quot;cardiac muscle&quot;.</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+   		
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

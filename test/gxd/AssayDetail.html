@@ -1,0 +1,934 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+<title>Assay Results Pagination Test Suite</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Assay Detail Test Suite</h1>
+    <ul>
+        <li>User story 14, GXD Assay Detail - framework and header section</li>
+        <li>User story 15, GXD Assay Detail - probe section</li>
+        <li>User story 17, GXD Assay Detail - Results section (Insitu assays)</li>
+        <li>User story 65, GXD Assay Detail - page metadata tweaks</li>
+        <li>User story 23, GXD Assay Detail - specimen summary line and details</li>
+        <li>User story 18, GXD Assay Detail - Image Panes (Insitu assays)</li>
+        <li>User story 16, GXD Assay Detail - Results section (Blot assays)</li>
+        <li>User story 19, GXD Assay Detail - Image Panes (blot assays)</li>
+        <li>User story 22, GXD Assay Detail - Tweak image pane sizing/spacing</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US14 - Standard MGI header displays and all pulldowns and hover text work correctly</li>
+		<li>US14 - Assay  section displays new ribbon design with the items 
+			<ul>
+			<li>reference, J number links to the proper Reference detail page</li> 
+			<li>assay type</li> 
+			<li>MGI accession ID (of the Assay)</li> 
+			<li>gene symbol, Marker symbol links to the proper gene detail page</li>
+			<li>gene name</li>
+			<li>Modification date</li>
+			</ul>
+		</li>
+	</ul>
+	<ul>
+		<li>US15 - (if reporter gene exists) Probe section displays reporter gene
+		<ul>
+			<li>US15 - (if reporter gene exists  AND antibody data exist) also display antibody data, antibody name links to correct antibody detail page</li>
+			<li>US15 - (if reporter gene exists AND probe data exist) instead, also display probe data, probe name links to correct probe detail page</li>
+			<li>US15 - (if reporter gene exists and NO antibody and NO probe) instead, display text "direct detection"</li>
+		</ul>
+		</li>
+		<li>US15 - (if probe) Probe section displays probe, probe preparation, and "visualized with" data (when these data exist)</li> 
+		<li>US15 - (if probe) probe name links to correct probe detail page</li>
+		<li>US15 - (if antibody) Probe section displays antibody and "detection system" (when these data exist)</li>
+		<li>US15 - (if antibody) antibody name links to correct antibody detail page</li>
+		<li>US15 - display assay notes (if data exist)</li>
+	</ul>
+	<ul>
+		<li>US17 - (in situ)Table has columns of Structure, Level, Pattern, Image and Note</li>
+		<li>US17 - (in situ)Confirm if Pattern is &quot;not specified&quot; or &quot;not applicable&quot; the field is left blank.</li>
+		<li>US17 - (in situ)Results Table Data for the Image column displays the proper figure labels and links properly</li>
+	</ul>
+	<ul>
+		<li>US16 - (blot)Table has table headings of Sample Information, Bands, Other Sample Information. It should have sub-headings of Lane, Age, Structure, (band sizes), Amount, Genetic Background, Mutant Allele(s), Sex and Note</li>
+		<li>US16 - (blot)Table displays  reference to lane notes, band notes, row notes,  and age notes in the correct locations. (lane notes  display in the note column, all other notes display as table footnotes)(Conditional notes cover in another test)</li>
+		<li>US16 - (blot)Table displays Lane 1, Lane 2, etc if the Label field of the EI is blank.</li>
+		<li>US16 - (blot)Table displays superscript correctly when used in a lane label</li>
+		<li>US16 - All Western blots should suppress the <b>Amount</b> column</li>
+		<li>US16 - (blot)Table remove any trailing zeros from gel row or band sizes. EG: 300.0 or 12.0</li>
+		<li>US16 - (blot)Table, if <b>sample amount</b> and <b>rna type</b> are both <b>Not Specified</b> display <b>Not Specified</b> in stead of showing <b>Not Specified; Not Specified RNA</b></li>
+		<li>US16 - If any unused lane has a lane note in the database do not display it in the WI</li>
+		<li>US16 - Verify that Not Applicable is not suppressed in Band rows</li>
+		<li>US16 - Verify if a band row size field is null the heading is set to <b>Size Not Specified</b> no matter what row unit might be selected</li>
+	</ul>
+	<ul>
+		<li>US65 - page title is in the format <b>symbol + assay type + data</b></li>
+	</ul>
+	<ul>
+		<li>US23 - each results section displays a short summary line for that specimen (with "more" and a turnstile in parentheses)(age is separated from Genotype by a semicolon)</li>
+		<li>US23 - If there is a specimen note, it is displayed below the  [specimen data] line</li>
+		<li>US23 - When the "more" turnstile is opened, additional specimen details are displayed in table below the  [specimen data] line [and above the specimen note]</li>
+		<li>US23 - hemizygous X- and Y-linked genotypes should display as "allele/X" or "allele/Y" (rather than current "allele/blank")</li>
+		<li>US23 - Add the text "Conditional mutant specimen" to the beginning of all specimen notes where genotype is conditional, if there is no other specimen note, the conditional text becomes the note</li>
+	</ul>
+	<ul>
+		<li>US18 - Image panes will be displayed above the Results table</li>
+		<li>US18 - Image and panel/figure labels link to their image detail page</li>
+		<li>US18 - Image panes should be displayed in alpha-numeric order when a specimen has more than one image</li>
+		<li>US18 - Multiple panes should wrap when hitting page width</li>
+		<li>US18 - Add a copyright icon to the pane label that links to the image detail page</li>
+	</ul>
+	<ul>
+		<li>US19 - Image panes will be displayed above the Results table</li>
+		<li>US19 - Image and panel/figure labels link to their image detail page</li>
+		<li>US19 - When a gel has an image reference but no jpg just display the Figure label</li>
+		<li>US19 - Add a copyright icon to the pane label that links to the image detail page</li>
+	</ul>
+	<ul>
+		<li>US22 - the stakeholders and the team have agreed on a set of rules for (re)sizing displayed image panes (see comments to a strawman set of such rules)</li>
+		<li>US22 - the rules are implemented</li>
+	</ul>
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+		<h3>Manual tests</h3>
+		<p><a href="#pageBanner">Page Banner</a> | <a href="#assayRibbon">Assay Ribbon</a> | <a href="#probeRibbon">Probe Ribbon</a> 
+			| <a href="#specimenData">Specimen Data</a> | <a href="#imagePanes">Images</a> | <a href="#BlotData">Blot Data</a> | <a href="#inSituResults">In Situ Results</a></p>
+		<h4 id="pageBanner">FeWI Page Structure and Standard Page Banner Elements</h4>
+		<ol>
+    		<li>Basic FeWI page structure renders for an assay detail page.
+    		<p concordion:assertTrue="true">klf 2/5/2013</p>
+    		<ol>
+				<li>Navigate to URL http://cardolan.informatics.jax.org/assay/MGI:3639206</li>
+				<li>Verify a page renders</li>
+    		</ol>
+    		</li>
+
+			<li>Page contains working Banner and standard elements, as on the current Public WI
+			<p concordion:assertTrue="true">klf 2/5/2013</p>
+    		<ol>
+				<li>Navigate to URL http://cardolan.informatics.jax.org/assay/MGI:3639206</li>
+				<li>Verify MGI logo exists</li>
+				<li>Verify clicking MGI logo hyperlinks to MGI Front Page on Cardolan</li>
+				<li>Verify "About" "Help" and "FAQ" elements hyperlink to correct MGI pages on Cardolan</li>
+				<li>Verify tab widgets exist for "Home" "Genes" "Phenotypes" "Expression" "Recombinase" "Function" "Pathways" "Strain/SNPs" "Orthology" "Tumors". Verify these elements link to the correct pages on Cardolan (except "Tumors" which links to MTB).</li>
+				<li>Verify hovering over each tab widget displays the proper tooltip text above the tab.</li>
+				<li>Verify the menu bar exists with labels "Search" "Download" "More Resources" "Submit Data" "Find Mice (IMSR)" "Analysis Tools" "Contact Us". Verify these elements trigger drop-down menus or link to the correct pages on Cardolan.</li>
+				<li>Verify drop-down menus contain the same elements and have the same visual presentation as on Public. (Spot-check a few, don't need to verify every detail.)</li>
+				<li>Verify "Analysis Tools" is preceded by a small tools icon.</li>
+				<li>Verify Quick Search help icon, input text box, and button appear.</li>
+				<li>Verify Quick Search "Tips" tooltip appears on hover over the icon.</li>
+				<li>Verify Quick Search functions (enter "Pax*" and click "Quick Search" button - verify results are returned)</li>
+				<li>Verify page-specific Help logo appears.</li>
+				<li>Verify page-specific Help logo links to the correct User Help page (don't need to render that page - just verify link has correct URL).</li>
+				<li>Verify "Your Input Welcome" button appears. Verify tooltip appears on hover.</li>
+				<li>Verify clicking "Your Input Welcome" links to User Support form, and Subject field contains MGI Assay accession ID number.</li>
+    		</ol>
+			</li>
+			<li>Page displays proper page heading text
+			<p concordion:assertTrue="true">klf 2/5/2013</p>
+    		<ol>
+				<li>Navigate to URL http://cardolan.informatics.jax.org/assay/MGI:3639206</li>
+				<li>Verify page heading is Gene Expression Data</li>
+				<li>Verify page subheading is Query Results -- Assay Details</li>
+				<li>Verify page title is in the format <b>symbol + assay type + data (eg. Prkaa2 Western blot Data)</b>(for US65)</li>
+    		</ol>
+			</li>
+		</ol>
+		<h4 id="assayRibbon">Assay Ribbon</h4>
+		<ol>
+			<li>The correct data are displayed for the particular assay
+    		<ul>
+				<li>Reference exists and is linked to the correct MGI reference page.</li>
+				<li>Correct Gene Symbol for the assay appears and is linked to the correct MGI Marker Detail page.</li>
+    		</ul>
+    		<table>
+    		<tbody>
+   			<tr>
+   				<th>OK?</th>
+   				<th>Reference (J:# linked)</th>
+   				<th>Assay type</th>
+   				<th>MGI Accession ID</th>
+   				<th>Gene symbol (linked)</th>
+   				<th>Gene name</th>
+   				<th>Modification </th>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:101679</b> Deltagen Inc, NIH initiative supporting placement of Deltagen, Inc. mice into public repositories. MGI Direct Data Submission. 2005;</td>
+   				<td>In situ reporter (knock in)</td>
+   				<td>MGI:3639206</td>
+   				<td><b>Bai2</b></td>
+   				<td>brain-specific angiogenesis inhibitor 2</td>
+   				<td>07/27/2006</td>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:100030</b> Urano A, et al., Infertility with defective spermiogenesis in mice lacking AF5q31, the target of chromosomal translocation in human infant leukemia. Mol Cell Biol. 2005 Aug;25(15):6834-45</td>
+   				<td>Immunohistochemistry</td>
+   				<td>MGI:4357807</td>
+   				<td>Aff4</td>
+   				<td>AF4/FMR2 family, member 4</td>
+   				<td>09/14/2009</td>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:100326</b> Kleinhenz B, et al., Raver2, a new member of the hnRNP family. FEBS Lett. 2005 Aug 15;579(20):4254-8</td>
+   				<td>Northern blot</td>
+   				<td>MGI:3845947</td>
+   				<td>Raver1</td>
+   				<td>ribonucleoprotein, PTB-binding 1</td>
+   				<td>06/02/2009</td>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:14435</b> Rivkin M, et al., Identification of an antisense transcript from the IGF-II locus in mouse. Mol Reprod Dev. 1993 Aug;35(4):394-7</td>
+   				<td>Nuclease S1</td>
+   				<td>MGI:3036724*<br/>(has LONG assay note)</td>
+   				<td>Igf2as</td>
+   				<td>insulin-like growth factor 2, antisense</td>
+   				<td>11/30/2005</td>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:100166</b> Moriguchi T, et al., DREG, a developmentally regulated G protein-coupled receptor containing two conserved proteolytic cleavage sites. Genes Cells. 2004 Jun;9(6):549-60</td>
+   				<td>RNA in situ</td>
+   				<td>MGI:3589431*<br/>(has assay note)</td>
+   				<td>Gpr126</td>
+   				<td>G protein-coupled receptor 126</td>
+   				<td>10/12/2005</td>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:103471</b> Pinson J, et al., Regulation of the Pax6 : Pax6(5a) mRNA ratio in the developing mammalian brain. BMC Dev Biol. 2005 Jul 19;5:13</td><td>RNase protection</td>
+   				<td>MGI:3801417*<br/>(has assay note)</td>
+   				<td>Pax6</td>
+   				<td>paired box gene 6</td>
+   				<td>08/15/2008</td>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:100233</b> Shou S, et al., Transcriptome analysis of the murine forelimb and hindlimb autopod. Dev Dyn. 2005 Sep;234(1):74-89</td>
+   				<td>RT-PCR</td>
+   				<td>MGI:3608642</td>
+   				<td>Cbln1</td>
+   				<td>cerebellin 1 precursor protein</td>
+   				<td>02/08/2006</td>
+   			</tr>
+   			<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+   				<td><b>J:100171</b> Tan W, et al., Identification and characterization of the mouse nuclear export factor (Nxf) family members. Nucleic Acids Res. 2005;33(12):3855-65</td>
+   				<td>Western blot</td>
+   				<td>MGI:3589554</td>
+   				<td>Nxf2</td>
+   				<td>nuclear RNA export factor 2</td>
+   				<td>02/06/2007</td>
+   			</tr>
+    		</tbody>
+    		</table>
+			</li>
+		</ol>
+		<h4 id="probeRibbon">Probe Ribbon</h4>
+		<ol>
+			<li>The correct data are displayed for the particular assay and assay type.
+    		<table>
+    		<tbody>
+    		<tr>
+    			<th>OK?</th>
+    			<th>Assay ID</th>
+    			<th>Reporter</th>
+    			<th>Direct Detection</th>
+    			<th>Probe Name (linked)</th>
+    			<th>Probe preparation</th>
+    			<th>Visualized with</th>
+    			<th>Antibody (linked)</th>
+    			<th>Detection system</th>
+    			<th>Assay Notes</th>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:3639206</td>
+    			<td>lacZ</td>
+    			<td><i>DISPLAY</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:1928652</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Pax1 probe8</td>
+    			<td>Antisense RNA labelled with S35</td>
+    			<td>Autoradiography</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Embryos were imbedded in Paraplast.</td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:2158422</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>anti PAX6</td>
+    			<td>Secondary antibody coupled to Cy3</td>
+    			<td><i>null</i></td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:5424803</td>
+    			<td>Beta-geo</td>
+    			<td><i>null</i></td>
+    			<td>pSA-Beta-geo</td>
+    			<td>Antisense RNA labelled with P32</td>
+    			<td>Autoradiography</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:5316996</td>
+    			<td>T2A</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>anti-T2A (EGR) 5E6</td>
+    			<td>Secondary antibody coupled to other - see notes</td>
+    			<td>DyLight 549 was used to label the secondary antibody.</td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:3629410</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>RP670 antibody</td>
+    			<td>Secondary antibody</td>
+    			<td>Proteins were immunoprecipitated prior to Western blotting.</td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:3589759</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>anti-insulin</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:3640653</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Anti-smooth muscle alpha-Actin</td>
+    			<td>fluorescein</td>
+    			<td>Double immunofluorescence with Alk as shown in assay: MGI:3640131.</td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:5441493</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Limk1 cDNA4</td>
+    			<td>RNA</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Data not shown.</td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:4356527</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>mAF5q31-pC, mAF5q31-pD</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:3608655</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Bmp7-pE, Bmp7-pF</td>
+    			<td>labelled with SYBR green</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Quantitative Real-Time RT-PCR. These data are reported in Table 7.</td>
+    		</tr>
+    		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:3608642</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Cbln1-pC, Cbln1-pD</td>
+    			<td><i>null</i></td>
+    			<td>Ethidium bromide</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>Semi-quantitative RT-PCR. These data are reported in Table 5.</td>
+    		</tr>
+     		<tr>
+   				<td><span concordion:assertTrue="true">KLF 2/5/2013</span></td>
+    			<td>MGI:3036724</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td>A</td>
+    			<td>Antisense RNA labelled with P32</td>
+    			<td>Autoradiography</td>
+    			<td><i>null</i></td>
+    			<td><i>null</i></td>
+    			<td> S1 nuclease protection was also performed using probes MGI:3036702, MGI:3036703 and MGI:3036705 detecting bands of 350, 250 and 214 bps. It was not indicated which probes detected which bands. An antisense Igf2as probe was used in lane 2, sense orientation compared to Igf2, and detected no bands.<br /><i>(Note requires 2 Note Chunks. Testing to verify order.)</i></td>
+    		</tr>
+    		</tbody>
+    		</table>
+			</li>
+		</ol>
+		<h4 id="specimenData">Specimen data</h4>
+		<p>Specimen data may include the following:</p>
+		<ul>
+			<li>Genetic background</li>
+			<li>Mutant alleles</li>
+			<li>Age</li>
+			<li>Age note</li>
+			<li>Sex</li>
+			<li>Type</li>
+			<li>Fixation</li>
+			<li>Embedding</li>
+		</ul>
+		<p>Some fields should only be displayed if their value is not null or "Not Specified" or "Not Applicable". These are:</p>
+		<ul>
+			<li>Mutant alleles</li>
+			<li>Age note</li>
+			<li>Fixation (not displayed if "Not Specified" or "Not Applicable")</li>
+			<li>Embedding (not displayed if "Not Specified" or "Not Applicable")</li>
+		</ul>
+		<ol>
+			<li>All elements are displayed when appropriate data exist (no nulls or "Not Specified" or "Not Applicable" to exclude)
+    		<ul>
+				<li>Verify data are displayed for the following (NOTE: not every Specimen for an Assay is included here):
+				<table>
+				<tr>
+					<th>Assay - Pass?</th>
+					<th width="300px">Specimen label + Age + Allele (linked)</th>
+					<th>Background Strain</th>
+					<th>Allelic Composition (linked)</th>
+					<th>Age</th>
+					<th>Age Note</th>
+					<th>Sex</th>
+					<th>Type</th>
+					<th>Fixation</th>
+					<th>Embedding Method</th>
+					<th>Specimen Note</th>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:2676237">MGI:2676237</a> - kstone-2013/02/25</span></td>
+					<td>1B,1C (embryonic day 9.5) </td>
+					<td>Not Specified</td>
+					<td><i>--</i></td>
+					<td>embryonic day 9.5</td>
+					<td>23 somites</td>
+					<td>Not Specified</td>
+					<td>section</td>
+					<td>4% Paraformaldehyde</td>
+					<td>Cryosection</td>
+					<td><i>--</i></td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:2676237">MGI:2676237</a> - kstone-2013/02/25</span></td>
+					<td>S1 A (embryonic day 9.5)</td>
+					<td>Not Specified</td>
+					<td><i>--</i></td>
+					<td>embryonic day 9.5</td>
+					<td><i>--</i></td>
+					<td>Not Specified</td>
+					<td>section</td>
+					<td>4% Paraformaldehyde</td>
+					<td>Cryosection</td>
+					<td><i>(Has a Result Note - not a Specimen note.)</i></td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:2676237">MGI:2676237</a> - kstone-2013/02/25</span></td>
+					<td>S1 B (embryonic day 9.5; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a>)</td>
+					<td>Not Specified</td>
+					<td><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a></td>
+					<td>embryonic day 9.5</td>
+					<td><i>--</i></td>
+					<td>Not Specified</td>
+					<td>section</td>
+					<td>4% Paraformaldehyde</td>
+					<td>Cryosection</td>
+					<td><i>--</i></td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:2676237">MGI:2676237</a> - kstone-2013/02/25</span></td>
+					<td>S1 C (embryonic day 9.5; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=260">Pax6<sup>Sey</sup></a>/Pax6<sup>+</sup>)</td>
+					<td>Not Specified</td>
+					<td><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=260">Pax6<sup>Sey</sup></a>/Pax6<sup>+</sup></td>
+					<td>embryonic day 9.5</td>
+					<td><i>--</i></td>
+					<td>Not Specified</td>
+					<td>section</td>
+					<td>4% Paraformaldehyde</td>
+					<td>Cryosection</td>
+					<td><i>--</i></td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:1314611">MGI:1314611</a> - kstone-2013/02/25</span></td>
+					<td>double-mutant (embryonic day 11.0; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a>, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a>)</td>
+					<td>involves: 129S1/Sv * 129S7/SvEvBrd</td>
+					<td width="200px"><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a><br/><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a></td>
+					<td>embryonic day 11.0</td>
+					<td><i>--</i></td>
+					<td>Not Specified</td>
+					<td>whole mount</td>
+					<td>4% Paraformaldehyde</td>
+					<td>Not Applicable(this field should not display)</td>
+					<td><i>(Has a Result Note - not a Specimen note.)</i></td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:3694452">MGI:3694452</a> - kstone-2013/02/25</span></td>
+					<td>Fig. 1A (embryonic day 9.5)</td>
+					<td>C57BL/6</td>
+					<td><i>--</i></td>
+					<td>embryonic day 9.5</td>
+					<td>Age of embryo at noon of plug day not specified in reference.</td>
+					<td>Not Specified</td>
+					<td>whole mount</td>
+					<td>Not Specified(this field should not display)</td>
+					<td>Not Applicable(this field should not display)</td>
+					<td><i>--</i></td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:3589760">MGI:3589760</a> - kstone-2013/02/25</span></td>
+					<td>Control (postnatal week 24)</td>
+					<td>involves: 129P2/OlaHsd * C57BL/6J</td>
+					<td><i>--</i></td>
+					<td>postnatal week 24</td>
+					<td><i>--</i></td>
+					<td>Not Specified</td>
+					<td>section</td>
+					<td>Not Specified(this field should not display)</td>
+					<td>Paraffin</td>
+					<td>Wild type and heterozygous littermates were used as controls; thus the pictured specimen could have been a heterozygous animal.</td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:5304846">MGI:5304846</a> - jeffc-02/27/2013</span></td>
+					<td> Fig.1C (postnatal adult;  <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=569731">Tg(KRT5-cre/ERT2)1Blh)</a></td>
+					<td> involves: 129S4/SvJaeSor * C57BL/6</td>
+					<td><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a><br/><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=569731">Tg(KRT5-cre/ERT2)1Blh)</a></td>
+					<td>postnatal adult</td>
+					<td><i>--</i></td>
+					<td>pooled</td>
+					<td>section</td>
+					<td>Not Specified(this field should not display)</td>
+					<td>Paraffin</td>
+					<td width="400px">Conditional mutant specimen. Adult mice were injected i.p. 4 times (once every other day) with 0.25 mg tamoxifen/g body weight. Mice were sacrificed for analysis 6 days after the final tamoxifen injection. on.</td>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:4366544">MGI:4366544</a> - jeffc-02/27/2013</span></td>
+					<td>Fig.S3B (embryonic day 10.0; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=26287">Fgf3<sup>tm1Sng</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=26287">Fgf3<sup>tm1Sng</sup></a>, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=3580">Fgf8<sup>tm1.3Mrt</sup></a>/Fgf8+, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=3581">Fgf8<sup>tm1.4Mrt</sup></a>/Fgf8+, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=6270">Mesp1<sup>tm2(cre)Ysa</sup></a>/Mesp1+)</td>
+					<td> involves: 129P2/OlaHsd * C57BL/6 * CBA</td>
+					<td>Fgf3<sup>tm1Sng</sup>/Fgf3<sup>tm1Sng</sup><br/>
+						Fgf8<sup>tm1.3Mrt</sup>/Fgf8<sup>+</sup><br/>
+						Fgf8<sup></sup>/Fgf8<sup>+</sup><br/>
+						Mesp1<sup>tm2(cre)Ysa</sup>/Mesp1<sup>+</sup> </td>
+					<td>embryonic day 10.0 </td>
+					<td>Age of embryo at noon of plug day not specified in reference.</td>
+					<td>Not Specified </td>
+					<td>whole mount</td>
+					<td>4% Paraformaldehyde</td>
+					<td></td>
+					<td>Conditional mutant specimen.</td>
+				</tr>
+
+				</table>
+				</li>
+    		</ul>
+    		</li>
+    		<li>Verify Specimen Table displays superscript correctly when used in a specimen label
+			<p concordion:assertTrue="true">jeffc 03/11/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3790723">MGI:3790723</a></li>
+				<li>Verify the last specimen label reads <b>Specimen Fig. 5 Group II Dab<sup>yot/yot</sup></b> not <b>Specimen Fig. 5 Group II Dab</b></li>
+				</ul>
+			</li>
+			<li>Verify when the Label field is null that the lane rows get filled with Lane 1, Lane 2, etc<br /> 
+			*Specimens 1 and 2 had no speciemn label provided, the system added the specimen labels od specimen 1 and specimen 2
+			<p concordion:assertTrue="true">jeffc 03/11/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3654836">MGI:3654836</a></li>
+				<li>Verify the specimen labels read <b>Specimen 1</b> and <b>Specimen 2</b>, they should not be blank labels</li>
+				</ul>
+			</li>
+		</ol>
+		<h4 id="BlotData">Blot data</h4>
+		<p>Blot Table has the following column headings:</p>
+		<span concordion:assertTrue="true">jeffc 03/11/2013</span>
+		<ul>
+			<li>Sample Information</li>
+			<li>Bands</li>
+			<li>Other Sample Information</li>
+			<li>Lane</li>
+			<li>Age</li>
+			<li>Structure</li>
+			<li>(band sizes)</li>
+			<li>Amount</li>
+			<li>Genetic Background</li>
+			<li>Mutant Allee(s)</li>
+			<li>Sex</li>
+			<li>Note</li>
+		</ul>
+		<ol>
+			<li>All blot table notes get displayed correctly
+			<table>
+					<tr>
+						<th></th>
+						<th></th>
+						<th colspan="2">Sample Information</th>
+						<th colspan="2">Bands</th>
+						<th colspan="5">Other Sample Information</th> 
+					</tr>
+					<tr>
+						<th>Assay - Pass?</th>
+						<th>Lane</th>
+						<th>Age</th>
+						<th>Structure</th>
+						<th>1.8 kb (b)</th>
+						<th>1.0 kb (c)</th>
+						<th>Amount</th>
+						<th>Genetic Background</th>
+						<th>Mutant Allele(s)</th>
+						<th>Sex</th>
+						<th>Note</th>
+					</tr>
+					<tr>
+						<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:2655344">MGI:2655344</a> - jeffc 03/11/2013</span></td>
+						<td>Lane 1</td>
+						<td>embryonic day 10.5 (a)</td>
+						<td>TS17: embryo</td>
+						<td>Present</td>
+						<td>Present</td>
+						<td>3 µg; poly-A+ RNA</td>
+						<td>Not Specified</td>
+						<td></td>
+						<td>Not Specified</td>
+						<td>Message was abundant in this tissue.</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Lane 2 </td>
+						<td>postnatal </td>
+						<td>TS28: skeletal muscle</td>
+						<td>Present</td>
+						<td>Present</td>
+						<td>3 µg; poly-A+ RNA</td>
+						<td>BALB/c</td>
+						<td></td>
+						<td>Not Specified</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Lane 3</td>
+						<td>postnatal</td>
+						<td>TS28: kidney</td>
+						<td>Present</td>
+						<td>Present</td>
+						<td>3 µg; poly-A+ RNA</td>
+						<td>BALB/c</td>
+						<td></td>
+						<td>Not Specified</td>
+						<td>Message was abundant in this tissue.</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Lane 4</td>
+						<td>postnatal</td>
+						<td>TS28: liver</td>
+						<td>Present</td>
+						<td>Present (d)</td>
+						<td>3 µg; poly-A+ RNA</td>
+						<td>BALB/c</td>
+						<td></td>
+						<td>Not Specified</td>
+						<td>Message was abundant in this tissue.</td>
+					</tr>
+					<tr>
+						<td colspan="11">*lanes 5-13 not displayed*</td>
+					</tr>
+				</table>
+					<p><b>Notes:</b>
+					(a) Age of embryo at noon of plug day not specified in references.<br />
+					(b) The relative intensity between the 1.8 and 1kb bands varies between tissues.<br />
+					(c) The relative intensity between the 1.8 and 1kb bands varies between tissues. Other experiments suggest that this transcript is a soluble form.<br />
+					(d) This was the predominant transcript in this tissue.
+					</p>
+			</li>
+			<li>Verify Conditional Notes display in the Note field
+			<p concordion:assertTrue="true">jeffc 03/11/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3852637">MGI:3852637</a></li>
+				<li>Verify the Conditional note <b>Conditional Mutant</b> displays in the Note field for all 3 XY mutant lanes, it should not display in the Notes section below the blot table</li>
+				</ul>
+			</li>
+		
+			<li>Verify when the Label field is null that the lane rows get filled with Lane 1, Lane 2, etc<br /> 
+			*Lanes 1-5 had no label provided, the system added the Lane labels
+		<table>
+				<tr>
+					<th></th>
+					<th></th>
+					<th colspan="2">Sample Information</th>
+					<th colspan="2">Bands</th>
+					<th colspan="5">Other Sample Information</th> 
+				</tr>
+				<tr>
+					<th>Assay - Pass?</th>
+					<th>Lane</th>
+					<th>Age</th>
+					<th>Structure</th>
+					<th>296.0 bp</th>
+					<th>Amount</th>
+					<th>Genetic Background</th>
+					<th>Mutant Allele(s)</th>
+					<th>Sex</th>
+					<th>Note</th>
+				</tr>
+				<tr>
+					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:4948500">MGI:4948500</a> - jeffc 03/11/2013</span></td>
+					<td>Lane 1</td>
+					<td colspan="8" align="center">Control: no data stored</td>
+
+				</tr>
+				<tr>
+					<td></td>
+					<td>Lane 2 </td>
+					<td colspan="8" align="center">Control: no data stored</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Lane 3</td>
+					<td colspan="8" align="center">Control: no data stored</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Lane 4</td>
+					<td colspan="7" align="center">Control: no data stored</td>
+					<td>Two-cell embryo</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Lane 5</td>
+					<td>embryonic day 1.0 (a)</td>
+					<td>TS:2 conceptus</td>
+					<td>Present</td>
+					<td>Not Specified: total RNA</td>
+					<td>(C57BL/6 x CBA/He)F1</td>
+					<td></td>
+					<td>Not Specified</td>
+					<td>Two-cell embryo</td>
+				</tr>
+				</table>
+				<p><b>Notes:</b>
+				(a) Age assigned by curator based on morphological criteria supplied by authors.
+				</p>
+				
+				</li>
+			<li>Verify blot Table displays superscript correctly when used in a lane label
+			<p concordion:assertTrue="true">jeffc 03/11/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:1341517">MGI:1341517</a></li>
+				<li>Verify the label for the lane reads <b>XY<sup>m</sup>Y<sup>d</sup> male</b> not <b>XXY male</b></li>
+				</ul>
+			</li>
+			<li>Verify all Western blots suppress the <b>Amount</b> column
+			<p concordion:assert="true=">jeffc 03/12/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3589554">MGI:3589554</a></li>
+				<li>Verify the <b>Amount</b> does not display in the blot table</li>
+				</ul>
+			</li>
+			<li>Verify trailing zeros are removed from Band size in blot tables
+			<p concordion:assertTrue="true">jeffc 03/12/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:4948855">MGI:4948855</a></li>
+				<li>Verify the label under the Band column reads <b>2.8 kb</b>and not <b>2.80 kb</b></li>
+				</ul>
+			</li>
+			<li>Verify when the amount field is null and the RNA field is not specidied in the EI that Not Specified is displayed in the Amount field of the blot table
+			<p concordion:assertTrue="true">jeffc 03/12/2012</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3589433">MGI:3589433</a></li>
+				<li>Verify the Amount field displays <b>Not Specified</b> and not <b>Not Specified; Not Specified RNA</b></li>
+				</ul>
+			</li>
+			<li>Verify if an unused lane has a lane note in the database do not display the note in the WI
+			<p concordion:assertTrue="true">jeffc 03/12/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:1929602">MGI:1929602</a></li>
+				<li>Verify no lane notes are displayed for Lanes B, C, D, and E</li>
+				</ul>
+			</li>
+			<li>Verify when a Band size is set to <b>Not Applicable</b> that it displays in the blot table
+			<p concordion:assertTrue="true">jeffc 03/12/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3851685">MGI:3851685</a></li>
+				<li>Verify that <b>Not Applicable</b> is displayed for bands on the Lanes <b>Maternal kidney C and Maternal kidney B</b>, they should not be suppressed</li>
+				</ul>
+			</li>
+			<li>Verify if the Band size is set to null the band heading is set to Size Not Specified, even if the unit has been selected
+			<p concordion:assertTrue="true">jeffc 03/12/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3789606">MGI:3789606</a></li>
+				<li>Verify the Band header displays <b>Size Not Specified</b> and not <b> kb</b></li>
+				</ul>
+			</li>
+		</ol>
+		<h4 id="imagePanes">Images</h4>
+		<ol>
+			<li>Image panes display in the results ribbon in alpha numeric order(insitu assay)
+			<p concordion:assertTrue="true">jeffc 02/28/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:5449245">MGI:5449245</a></li>
+				<li>Verify Image panes are displayed above the specimen line in alpha numeric order</li>
+				</ul>
+			</li>
+			
+			<li>Image panes, image labels and copright icons link to their image detail pages(insitu assay) 
+			<p concordion:assertTrue="true">jeffc 02/28/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:5304846">MGI:5304846</a></li>
+				<li>Verify clicking on an image, a figure label or a copyright icon takes you to the images detail page</li>
+				</ul>
+			</li>
+			<li>When a gel has an image reference but no jpg just display the Figure label(gel assay)
+			<p concordion:assertTrue="true">jeffc 03/11/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:2137197">MGI:2137197</a></li>
+				<li>Verify no image is displayed but the figure label <b>Image: 2(A)</b> is displayed above the gel table</li>
+				</ul>
+			</li>			
+			<li>Image panes, image labels and copright icons link to their image detail pages(gel assay) 
+			<p concordion:assertTrue="true">jeffc 03/11/2013</p>
+				<ul>
+				<li>Open the Assay <a href="http://cardolan.informatics.jax.org/assay/MGI:2655344">MGI:2655344</a></li>
+				<li>Verify clicking on an image, a figure label or a copyright icon takes you to the images detail page</li>
+				</ul>
+			</li>
+			<li>Images associated with in situ assays are displayed no larger than 300px wide by 250px high. Images smaller than this are displayed at their stated size.
+			<p concordion:assertTrue="true">klf 3/27/2013 verified with new height dimension</p>
+			<p>Navigate to the following assays and verify that the specified image is no larger than the maximum size.</p>
+				<ul>
+				<li>Image reduced because it is big: <a href="http://cardolan.informatics.jax.org/assay/MGI:2674592">cardolan.informatics.jax.org/assay/MGI:2674592</a></li>
+				<li>Small images shown as is: <a href="http://cardolan.informatics.jax.org/assay/MGI:4397457">cardolan.informatics.jax.org/assay/MGI:4397457</a></li>
+				<li>Image reduced because of height—at least 4A: <a href="http://cardolan.informatics.jax.org/assay/MGI:5439156">cardolan.informatics.jax.org/assay/MGI:5439156</a></li>
+				<li>Image reduced because of width—3A: <a href="http://cardolan.informatics.jax.org/assay/MGI:4365638">cardolan.informatics.jax.org/assay/MGI:4365638</a></li>
+				</ul>
+			</li>
+			<li>Images associated with blot assays are displayed no larger than 740px wide by 300px high.  Images smaller than this are displayed at their stated size.
+			<p concordion:assertTrue="true">klf 3/25/2013</p>
+			<p>Navigate to the following assays and verify that the specified image is no larger than the maximum size.</p>
+				<ul>
+				<li>Image reduced because it is big: <a href="http://cardolan.informatics.jax.org/assay/MGI:1933613">cardolan.informatics.jax.org/assay/MGI:1933613</a></li>
+				<li>Small image shown as is: <a href="http://cardolan.informatics.jax.org/assay/MGI:4837151">cardolan.informatics.jax.org/assay/MGI:4837151</a></li>
+				<li>Image reduced because of height: <a href="http://cardolan.informatics.jax.org/assay/MGI:3714836">cardolan.informatics.jax.org/assay/MGI:3714836</a></li>
+				<li>Image reduced because of width: <a href="http://cardolan.informatics.jax.org/assay/MGI:2655133">cardolan.informatics.jax.org/assay/MGI:2655133</a></li>
+				</ul>
+			</li>
+		</ol>
+			
+		<h4 id="inSituResults">In Situ Results</h4>
+		<ol>
+			<li>(in situ)Table has columns of Structure, Level, Pattern, Image and Note
+			<p concordion:assertTrue="true">jeffc 2/13/2013</p>
+    		<ul>
+				<li>Visit assay <a href="http://cardolan.informatics.jax.org/assay/MGI:1859758">MGI:1859758</a>.</li>
+				<li>Verify the column names in each table are "Structure","Level","Pattern","Image","Note"</li>
+    		</ul>
+    		</li>
+    		<li>Verify Results Table Data for the Pattern column does not display Not Specified or Not Applicable
+    		<p concordion:assertTrue="true">jeffc 2/13/2013</p>
+    		<ul>
+				<li>Visit assay <a href="http://cardolan.informatics.jax.org/assay/MGI:1859758">MGI:1859758</a>.</li>
+				<li>Results for specimen <b>3.A</b> should not display <b>Not Applicable</b> in the Pattern column</li>
+				<li>Visit assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3776837">MGI:3776837</a>.</li>
+				<li>Results for specimen <b>7.A</b> should not display <b>Not Specified</b> in the Pattern column</li>	
+			</ul>
+			</li>
+			 <li>Verify Results Table Data for the Image column displays the proper figure labels
+    		<p concordion:assertTrue="true">jeffc 2/14/2013</p>
+    		<ul>
+				<li>Visit assay <a href="http://cardolan.informatics.jax.org/assay/MGI:1859758">MGI:1859758</a>.</li>
+				<li>Results for specimen <b>3.A</b> should display <b>Figure 3A</b> in the Image column</li>
+				<li>Visit assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3776837">MGI:3776837</a>.</li>
+				<li>Results for specimen <b>7.A</b> should display <b>Figure 7A</b> in the Image column()</li>
+				
+    		</ul>
+    		</li>
+			
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>None</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

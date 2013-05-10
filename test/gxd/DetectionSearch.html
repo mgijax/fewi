@@ -26,6 +26,7 @@
     <ul>
         <li>User story 19, Search for expression results by specifying detected/not detected</li>
         <li>User story 105, Change display of Detected? to yes/no</li>
+        <li>User story 134 (of SNPs/Cre/Gxd 2013) - Changed detected/not detected options to not return ambiguous results.</li>
     </ul>
 </div>
 
@@ -104,7 +105,7 @@
 						<tr><td>Not Applicable</td><td>no</td></tr>
 						<tr><td>Not Specified</td><td>yes</td></tr>
 					</table></li>
-            <li>Verify that searching for "<b concordion:set="#detected">detected</b>" brings back everything but "absent". Detected column should only return Yes results.
+            <li>Verify that searching for "<b concordion:set="#detected">detected</b>" brings back only "Yes"s. Detected column should only return Yes results.
             <p>Test using nomenclature=<b concordion:set="#nomen">Hhex</b> to narrow results</p>
             <table concordion:execute="#result = containsDetectionLevelByNomen(#detected,#nomen,#level)">
 			    <tr>
@@ -112,12 +113,12 @@
 			    	<th concordion:assertEquals="#result">Should exist in results?</th>
 			    </tr>
 			    <tr><td>No</td><td>no</td></tr>
-			    <tr><td>Ambiguous</td><td>yes</td></tr>
+			    <tr><td>Ambiguous</td><td>no</td></tr>
 			    <tr><td>Yes</td><td>yes</td></tr>
 			    <tr><td>Not Applicable</td><td>no</td></tr>
-			    <tr><td>Not Specified</td><td>yes</td></tr>
+			    <tr><td>Not Specified</td><td>no</td></tr>
 			</table></li>
-            <li>Verify that searching for "<b concordion:set="#detected">not detected</b>" brings back only "absent", "ambiguous", and "not specified". Detected column should only return No, ambiguous, and not specified results.
+            <li>Verify that searching for "<b concordion:set="#detected">not detected</b>" brings back only "absent". Detected column should only return "No" results.
             <p>Test using nomenclature=<b concordion:set="#nomen">Hhex</b> to narrow results</p>
             <table concordion:execute="#result = containsDetectionLevelByNomen(#detected,#nomen,#level)">
 			    <tr>
@@ -125,10 +126,10 @@
 			    	<th concordion:assertEquals="#result">Should exist in results?</th>
 			    </tr>
 			    <tr><td>No</td><td>yes</td></tr>
-			    <tr><td>Ambiguous</td><td>yes</td></tr>
+			    <tr><td>Ambiguous</td><td>no</td></tr>
 			    <tr><td>Yes</td><td>no</td></tr>
 			    <tr><td>Not Applicable</td><td>no</td></tr>
-			    <tr><td>Not Specified</td><td>yes</td></tr>
+			    <tr><td>Not Specified</td><td>no</td></tr>
 			</table></li>
             <li>See also <a href="MultipleParametersSearch.html">multiple parameter search tests</a></li>
             

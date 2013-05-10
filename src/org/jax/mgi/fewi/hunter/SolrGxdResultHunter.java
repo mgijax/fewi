@@ -15,6 +15,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
@@ -24,12 +25,14 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
 import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
+import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -45,6 +48,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SolrGxdResultHunter extends SolrHunter
 {
+	private String imagePaneUrl;
     /***
      * The constructor sets up this hunter so that it is specific to sequence
      * summary pages.  Each item in the constructor sets a value that it has
@@ -125,7 +129,18 @@ public class SolrGxdResultHunter extends SolrHunter
          propertyMap.put(SearchConstants.GXD_MUTATED_IN,
          		new SolrPropertyMapper(GxdResultFields.MUTATED_IN));
 
+         // probe key
+         propertyMap.put(SearchConstants.PROBE_KEY,
+           		new SolrPropertyMapper(GxdResultFields.PROBE_KEY));
 
+         // antibody key
+         propertyMap.put(SearchConstants.ANTIBODY_KEY,
+           		new SolrPropertyMapper(GxdResultFields.ANTIBODY_KEY));
+
+
+         // marker key
+         propertyMap.put(SearchConstants.MRK_KEY,
+        		 new SolrPropertyMapper(GxdResultFields.MARKER_KEY));
         /*
          * Setup the sort mapping.
          */
@@ -140,6 +155,9 @@ public class SolrGxdResultHunter extends SolrHunter
         sortMap.put(SortConstants.GXD_GENOTYPE, new SolrSortMapper(GxdResultFields.R_BY_MUTANT_ALLELES));
         sortMap.put(SortConstants.GXD_REFERENCE, new SolrSortMapper(GxdResultFields.R_BY_REFERENCE));
         sortMap.put(SortConstants.GXD_LOCATION, new SolrSortMapper(GxdResultFields.M_BY_LOCATION));
+        
+        // this is only available on the join index gxdImagePane (use wisely my friend)
+        sortMap.put(SortConstants.BY_DEFAULT, new SolrSortMapper(IndexConstants.BY_DEFAULT));
 
          /*
           * Groupings
@@ -147,6 +165,8 @@ public class SolrGxdResultHunter extends SolrHunter
           */
          this.groupFields.put(SearchConstants.MRK_KEY,GxdResultFields.MARKER_KEY);
          this.groupFields.put(SearchConstants.GXD_ASSAY_KEY,GxdResultFields.ASSAY_KEY);
+         
+         
         /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to actually get a
@@ -340,7 +360,63 @@ public class SolrGxdResultHunter extends SolrHunter
 
     }
 
+    /*
+     * Custom implementation for the join response
+     * 
+     */
+    @Override
+    protected void packInformationForJoin(QueryResponse rsp, SearchResults sr,
+            SearchParams sp) {
+
+        // A list of all the primary keys in the document
+
+        SolrDocumentList sdl = rsp.getResults();
+        logger.debug("packing gxd join hunt data");
+
+        /**
+         * Iterate through the response documents, extracting the information
+         * that was configured at the implementing class level.
+         */
+
+        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        {
+            SolrDocument doc = (SolrDocument) iter.next();
+           
+            SolrGxdImage image = new SolrGxdImage();
+            image.setImagePaneKey((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_PANE_KEY));
+            image.setImageID((String) doc.getFieldValue(IndexConstants.IMAGE_ID));
+            String pixeldbID = (String) doc.getFieldValue(ImagePaneFields.IMAGE_PIXELDBID);
+            image.setPixeldbID(pixeldbID);
+            image.setImageLabel((String) doc.getFieldValue(ImagePaneFields.IMAGE_LABEL));
+            image.setPaneWidth((Integer) doc.getFieldValue(ImagePaneFields.PANE_WIDTH));
+            image.setPaneHeight((Integer) doc.getFieldValue(ImagePaneFields.PANE_HEIGHT));
+            image.setPaneX((Integer) doc.getFieldValue(ImagePaneFields.PANE_X));
+            image.setPaneY((Integer) doc.getFieldValue(ImagePaneFields.PANE_Y));
+            image.setImageWidth((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_WIDTH));
+            image.setImageHeight((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_HEIGHT));
+            image.setAssayID((String) doc.getFieldValue(GxdResultFields.ASSAY_MGIID));
+            image.setMetaData((List<String>) doc.getFieldValue(ImagePaneFields.IMAGE_META));
+            
+            sr.addResultObjects(image);
+        }
+    }
+    
 	@Value("${solr.gxd_result.url}")
 	public void setSolrUrl(String solrUrl)
 	{ super.solrUrl = solrUrl; }
+	
+	@Value("${solr.gxdImagePane.url}")
+	public void setImagePaneJoinUrl(String imagePaneUrl)
+	{ 
+		this.imagePaneUrl = imagePaneUrl; 
+		/*
+         * Joined indices
+         * List of indices that can be joined to this index.
+         * This means you query *this* index (the "from"), but return docs from the joined index (the "to").
+         */
+        this.joinIndices.put("gxdImagePane", new SolrJoinMapper(imagePaneUrl,
+       		 GxdResultFields.RESULT_KEY,
+       		 "gxdResult",
+       		 GxdResultFields.RESULT_KEY)
+        );}
 }

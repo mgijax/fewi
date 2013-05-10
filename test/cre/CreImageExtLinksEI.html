@@ -1,0 +1,101 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Cre Image External Links EI Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Cre Image External Links EI Tests</h1>
+    <ul>
+        <li>User story 154, Cre: Improved visibility/consistency for external image links</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Acc crit 1</li>
+		<li>Acc crit 2</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><span class="regressHi">Regress: high priority</span></p>
+    <p><span class="regressLo">Regress: low priority</span></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li><span class="regressHi">Regress</span> New notes field appears on GXDImage module of the EI.
+ 			<p concordion:assertTrue="true">klf 4/29/2013</p>
+    		<ol>
+                <li>Open GXDImage Module of the EI</li>
+                <li>Verify "External Link Notes" button appears and opens a Notes Dialog window.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> Curators may enter new \Link(<i>URL</i>|<i>display text</i>|) MGI markup for arbitrary hyperlinks in this field. The \Link(...) markup is stored in the database.
+ 			<p concordion:assertTrue="true">klf 4/29/2013</p>
+    		<ol>
+                <li>Log in to the EI with Update privileges.</li>
+                <li>Open the GXDImage Module and search for images associated with J:184579.</li>
+                <li>Select the Full Size image for "Calb2 Spinal cord (wh matter) P7", ID MGI:5429064.</li>
+                <li>Open the External Link Notes and enter "\Link(http://connectivity.brain-map.org/transgenic/search?page_num=0&amp;page_size=38&amp;no_paging=false&amp;exact_match=false&amp;search_term=Calb2-IRES-cre&amp;search_type=line|AIBS Data|)" without quotation marks.</li>
+                <li>Click "Save Changes" to close the Notes Dialog window.</li>
+                <li>Click "Modify" button in the GXDImage Module to save the note associated with that image.</li>
+                <li>To verify data were saved: close then reopen the GXDImage Module.</li>
+                <li>Open the External Link Notes and type "%Link%" without quotation marks.</li>
+                <li>Click "Save Changes" to close the Notes Dialog window.</li>
+                <li>Click "Search" button to search for Image records.</li>
+                <li>Verify that the Full Size image for "Calb2 Spinal cord (wh matter) P7", ID MGI:5429064 is returned. </li>
+                <li>Open the External Link Notes and verify the \Link(...) text appears.</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

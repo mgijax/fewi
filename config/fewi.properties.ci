@@ -20,7 +20,7 @@
 #----- solr server urls -----#
 
 # Weekly Proto
-solr.server1.url=http://cardolan.informatics.jax.org:8991/solr/
+solr.server1.url=http://mgi-testweb4.jax.org:8991/solr/
 
 # Front-end development indexes
 #solr.server1.url=http://cardolan:8985/solr/
@@ -48,7 +48,7 @@ jndi.datasource=java:jboss/datasources/fe
 gxdLit.limit=20000
 
 # SNP build identifier
-SNP_BUILD=dbSNP Build 128
+SNP_BUILD=dbSNP Build 137
 
 #-------------------------------------------------------------------------------
 #----- SOLR INDEX URLS
@@ -72,6 +72,8 @@ solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
 solr.structure_ac.url=${solr.server1.url}structureAC/
 solr.vocab_term_ac.url=${solr.server1.url}vocabTermAC/
 solr.gxd_result.url=${solr.server1.url}gxdResult/
+solr.gxdImagePane.url=${solr.server1.url}gxdImagePane/
+solr.gxdDifferentialMarker.url=${solr.server1.url}gxdDifferentialMarker/
 solr.homology.url=${solr.server1.url}homology/
 solr.disease.url=${solr.server1.url}disease/
 

@@ -1,0 +1,129 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Recombinase Activity Detail tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Recombinase Activity Detail tests</h1>
+    <ul>
+        <li>User story 154, Cre: Improved visibility/consistency for external image links</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Acc crit 1</li>
+		<li>Acc crit 2</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li><span class="regressHi">Regress</span> Image link URLs appear on the Recombinase Activity Detail page
+ 			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+    		<ol>
+                <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
+                <li>Verify that images in the "Images" ribbon display linked text between the J:# and the Figure Label text.</li>
+                <li>Verify that tiny thumbnails in the "Recombinase Activity" ribbon, "Reference, Source" column, display linked text following the Figure Label text.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> Image link URLs open the linked resource in a new window
+ 			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+    		<ol>
+                <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
+                <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the Images ribbon for Fig. Calb2 Brain (dorsal) Adult, and opens in a new window.</li>
+                <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the "Reference, Source" column wherever Fig. Calb2 Brain (dorsal) Adult is cited, and opens in a new window.</li>
+                <li>Verify "AIBS Data" is hyperlinked to connectivity.brain-map.org in the Images ribbon for Fig. Calb2 Spinal cord (wh matter) P7, and opens in a new window.</li>
+                <li>Verify "AIBS Data" is hyperlinked to connectivity.brain-map.org in the "Reference, Source" column wherever Fig. Calb2 Spinal cord (wh matter) P7 is cited, and opens in a new window.</li>
+                <li>Verify each link opens in a new tab/window.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> The \Link(...) markup does not affect the display of images on GXD Expression Detail WI pages.
+ 			<p concordion:assertTrue="true">klf 4/30/2013</p>
+    		<ol>
+                <li>Open the record for image MGI:5310731 (in situ reporter (knock-in) assay used by both Cre and GXD for Six1&lt;tm1(cre,ALPP)Xli&gt;)</li>
+                <li>Enter \Link(https://www.google.com/|Test Link|)  </li>
+                <li>Save the note and the image record.</li>
+                <li>After Exporter and/or Mover steps...</li>
+                <li>Navigate to the Recombinase Activity Detail page for Six1&lt;tm1(cre,ALPP)Xli&gt; - Alimentary System.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the Images ribbon for Fig. 5.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the "Reference, Source" column wherever Figure 5 is cited.</li>
+                <li>Navigate to the Recombinase Activity Detail page for Six1&lt;tm1(cre,ALPP)Xli&gt; - Sensory Organs.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the Images ribbon for Fig. 5.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the "Reference, Source" column wherever Figure 5 is cited.</li>
+                <li>Navigate to the GXD Image Detail page for the image (http://cardolan.informatics.jax.org/image/MGI:5310731).</li>
+                <li>Verify "Test Link" does not appear on the page.</li>
+                <li>Verify the page looks the same as it does on Public.</li>
+    		</ol>
+    		</li>
+<!-- 
+    		<li>Test
+ 			<p concordion:assertTrue="false">new test</p> 
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new test</p> 
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+ -->
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

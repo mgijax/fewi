@@ -34,6 +34,7 @@ import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
 import org.jax.mgi.fewi.forms.ReferenceQueryForm;
+import org.jax.mgi.fewi.hunter.SolrMarkerKeyHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -44,9 +45,11 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
+import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
@@ -69,6 +72,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -91,6 +95,9 @@ public class GXDController {
 
 	private Logger logger = LoggerFactory.getLogger(GXDController.class);
 
+	@Autowired
+    private SolrMarkerKeyHunter mrkKeyHunter;
+	
 	@Autowired
 	private MarkerFinder markerFinder;
 
@@ -122,10 +129,25 @@ public class GXDController {
 		ModelAndView mav = new ModelAndView("gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
-		;
+		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
+		
 		return mav;
 	}
 
+	// "expanded" query form
+	@RequestMapping("differential")
+	public ModelAndView getDifferentialQueryForm() {
+
+		logger.debug("->getQueryForm started");
+
+		ModelAndView mav = new ModelAndView("gxd_query");
+		mav.addObject("sort", new Paginator());
+		mav.addObject("gxdQueryForm", new GxdQueryForm());
+		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
+		mav.addObject("showDifferentialQueryForm",true);
+		
+		return mav;
+	}
 
 	/*
 	 * report
@@ -329,6 +351,10 @@ public class GXDController {
 		}else {
 			mav.addObject("theilerStage", "");
 		}
+        
+        // handle requests for a specific summary tab
+        String tab = request.getParameter("tab");
+        if(tab != null) mav.addObject("tab", tab);
 
 		// handle requests for a specific assay type
         String assayType = request.getParameter("assayType");
@@ -420,6 +446,9 @@ public class GXDController {
         		= new JsonSummaryResponse<GxdMarkerSummaryRow>();
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
+        
+        logger.debug("gxdMarkersSummaryJson() found "+searchResults.getTotalCount()+" markers");
+
         return jsonResponse;
 	}
 
@@ -455,6 +484,8 @@ public class GXDController {
         		= new JsonSummaryResponse<GxdAssaySummaryRow>();
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
+        logger.debug("gxdAssaySummaryJson() found "+searchResults.getTotalCount()+" assays");
+
         return jsonResponse;
 	}
 
@@ -492,6 +523,39 @@ public class GXDController {
         		= new JsonSummaryResponse<GxdAssayResultSummaryRow>();
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
+
+        logger.debug("gxdResultsSummaryJson() found "+searchResults.getTotalCount()+" results");
+        return jsonResponse;
+	}
+	
+	@RequestMapping("/images/json")
+	public @ResponseBody JsonSummaryResponse<GxdImageSummaryRow> gxdImageSummaryJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			BindingResult result) throws BindException {
+
+		logger.debug("gxdImageSummaryJson() started");
+		SearchResults<SolrGxdImage> searchResults = this.getGxdImages(request, query, page, result);
+		List<SolrGxdImage> imageList = searchResults.getResultObjects();
+        //List<SolrGxdAssay> assayList = searchResults.getResultObjects();
+
+        List<GxdImageSummaryRow> summaryRows = new ArrayList<GxdImageSummaryRow>();
+        MetaData rowMeta;
+
+        for (SolrGxdImage image : imageList) {
+			if (image != null){
+		        GxdImageSummaryRow row = new GxdImageSummaryRow(image);
+				summaryRows.add(row);
+			} else {
+				logger.debug("--> Null Object");
+			}
+		}
+        JsonSummaryResponse<GxdImageSummaryRow> jsonResponse
+        		= new JsonSummaryResponse<GxdImageSummaryRow>();
+        jsonResponse.setSummaryRows(summaryRows);
+        jsonResponse.setTotalCount(searchResults.getTotalCount());
+        logger.debug("gxdImageSummaryJson() found "+searchResults.getTotalCount()+" images");
 
         return jsonResponse;
 	}
@@ -531,6 +595,17 @@ public class GXDController {
 		params.setPageSize(0);
 
 		return gxdFinder.getAssayResultCount(params);
+	}
+	@RequestMapping("/images/totalCount")
+	public @ResponseBody Integer getGxdImageCount(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query)
+	{
+		SearchParams params = new SearchParams();
+		params.setFilter(this.parseGxdQueryForm(query));
+		params.setPageSize(0);
+
+		return gxdFinder.getImageCount(params);
 	}
 
 	@RequestMapping("/totalCounts")
@@ -646,7 +721,10 @@ public class GXDController {
 				|| (query.getStructureKey()!=null && !query.getStructureKey().equals(""))
 				|| (query.getStructureID()!=null && !query.getStructureID().equals(""))
 				|| (query.getAnnotatedStructureKey()!=null && !query.getAnnotatedStructureKey().equals(""))
-				|| (query.getJnum()!=null && !query.getJnum().equals("")))
+				|| (query.getJnum()!=null && !query.getJnum().equals(""))
+				|| (query.getProbeKey()!=null && !query.getProbeKey().equals(""))
+				|| (query.getAntibodyKey()!=null && !query.getAntibodyKey().equals(""))
+				|| isDifferentialQuery(query))
 		{
 			logger.debug("Form fields have been entered that do not apply to gxd lit query.");
 			// return null if we have no valid mapped query to make
@@ -772,6 +850,171 @@ public class GXDController {
 	}
 
 	/*
+	 * Returns whether or not this query form has differential query params
+	 */
+	private boolean isDifferentialQuery(GxdQueryForm query)
+	{
+		return (query.getDifStructure()!=null && !query.getDifStructure().equals(""))
+				|| 
+				(query.getDifTheilerStage().size() > 0);
+	}
+	
+	/*
+	 * Creates the differental part 1 filters, 
+	 * 	performs the query against gxdDifferentialMarker index
+	 * 	and returns the unique marker keys returned
+	 */
+	private List<String> resolveDifferentialMarkers(GxdQueryForm query)
+	{
+		// start filter list for query filters
+		List<Filter> queryFilters = new ArrayList<Filter>();
+
+		// init form fields
+		String structure = query.getStructure();
+		String difStructure = query.getDifStructure();
+		List<Integer> stages = query.getTheilerStage();
+		List<Integer> difStages = query.getDifTheilerStage();
+		
+		// figure out what kind of diff query this is
+		boolean hasStructures = (structure!=null && !structure.equals("")
+				&& difStructure!=null && !difStructure.equals(""));
+		boolean hasStages = (stages.size() > 0 && difStages.size()>0
+				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+		
+		// perform structure diff
+		if(hasStructures && !hasStages)
+		{
+			Filter sFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,structure);
+			Filter dsFilter = makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,difStructure);
+			dsFilter.negate();
+			queryFilters.add(sFilter);
+			queryFilters.add(dsFilter);
+		}
+		// perform stages diff
+		else if(hasStages && !hasStructures)
+		{
+			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
+			{
+				List<Filter> stageFilters = new ArrayList<Filter>();
+				for(Integer stage : stages)
+				{
+					stageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+stage,Filter.OP_HAS_WORD));
+				}
+				// OR the stages together
+				queryFilters.add(Filter.or(stageFilters));
+			}
+			List<Filter> dStageFilters = new ArrayList<Filter>();
+			for(Integer dStage : query.getResolvedDifTheilerStage())
+			{
+				dStageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+dStage,Filter.OP_HAS_WORD));
+			}
+			Filter dStageFilter = Filter.or(dStageFilters);
+			dStageFilter.negate();
+			queryFilters.add(dStageFilter);
+		}
+		// perform both structure and stage diff
+		else if(hasStructures && hasStages)
+		{
+			// stub for 3rd differential ribbon logic
+		}
+		
+
+		
+		Filter difFilter = new Filter();
+		if(queryFilters.size() > 0)
+		{
+			difFilter.setNestedFilters(queryFilters,Filter.FC_AND);
+		}		
+		else return null;
+		
+		
+		SearchParams difSP = new SearchParams();
+		difSP.setFilter(difFilter);
+		
+		return gxdFinder.searchDifferential(difSP);
+	}
+	/*
+	 * Creates the differential part 2 filter that goes against the gxdResult index
+	 */
+	public Filter makeDifferentialPart2Filter(GxdQueryForm query)
+	{
+		ArrayList<Filter> queryFilters = new ArrayList<Filter>();
+		// init form fields
+		String structure = query.getStructure();
+		String difStructure = query.getDifStructure();
+		List<Integer> stages = query.getTheilerStage();
+		List<Integer> difStages = query.getDifTheilerStage();
+		
+		// figure out what kind of diff query this is
+		boolean hasStructures = (structure!=null && !structure.equals("")
+				&& difStructure!=null && !difStructure.equals(""));
+		boolean hasStages = (stages.size() > 0 && difStages.size()>0
+				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
+		
+		// perform structure diff
+		if(hasStructures && !hasStages)
+		{
+			// create the positive results filter
+			List<Filter> posFilters = new ArrayList<Filter>();
+			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+			queryFilters.add(Filter.and(posFilters));
+		}
+		// perform stages diff
+		else if(hasStages && !hasStructures)
+		{
+			// create the positive results filter
+			List<Filter> posFilters = new ArrayList<Filter>();
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
+			{
+				List<Filter> stageFilters = new ArrayList<Filter>();
+				for(Integer stage : stages)
+				{
+					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.OP_HAS_WORD);
+					stageFilters.add(stageF);
+
+				}
+				// OR the stages together
+				posFilters.add(Filter.or(stageFilters));
+			}
+			queryFilters.add(Filter.and(posFilters));
+		}
+		else if(hasStructures && hasStages)
+		{
+			// stub for 3rd differential ribbon logic
+		}
+		
+		// all results MUST be wild type (broad definition)
+		queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, "true"));
+		
+		return Filter.and(queryFilters);
+	}
+	
+	/*
+	 * Factored out building the anatomy style filter, because 1) it is complicated
+	 * 	and 2) it is used in many places
+	 */
+	public Filter makeStructureSearchFilter(String queryField, String structure)
+	{
+		Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
+
+		String phraseSearch = "";
+		for(String structureToken : structureTokens)
+		{
+			logger.debug("token="+structureToken);
+			phraseSearch += structureToken+" ";
+		}
+		if(!phraseSearch.trim().equals(""))
+		{
+			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
+			String sToken = "\""+phraseSearch+"\"~100";
+			return new Filter(queryField,sToken,Filter.OP_HAS_WORD);
+		}
+		return null;
+	}
+	
+	/*
 	 * This method parses the GxdQueryForm bean and constructs a Filter
 	 * object to represent the query.
 	 */
@@ -785,7 +1028,30 @@ public class GXDController {
 
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.
-
+		// the first this we need to check is if we have differential params
+		if(isDifferentialQuery(query))
+		{
+			// Process DIFFERENTIAL QUERY FORM params
+			// Do part 1 of the differential (I.e. find out what markers to bring back)
+			List<String> markerKeys = resolveDifferentialMarkers(query);
+			if(markerKeys !=null && markerKeys.size()>0)
+			{
+				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.OP_IN));
+			}
+			else
+			{
+				// need a way to prevent the standard query from returning results when the differential fails to find markers
+				queryFilters.add( new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.OP_EQUAL));
+			}
+			// add the 2nd part of the differential query (I.e. what results to display for the given markers)
+			queryFilters.add(makeDifferentialPart2Filter(query));
+			
+			return Filter.and(queryFilters);
+			// NOTE: THIS WAS A DIFFERENTIAL QUERY, THE BELOW CODE ONLY APPLIES TO STANDARD QUERY FORM
+		}
+		
+		// Process STANDARD QUERY FORM params
+		
 		// prep form parameter variables
 		String markerMgiId = query.getMarkerMgiId();
 		String jnum = query.getJnum();
@@ -793,6 +1059,8 @@ public class GXDController {
 		String annotatedStructureKey = query.getAnnotatedStructureKey();
 		String structureID = query.getStructureID();
 		String alleleId = query.getAlleleId();
+		String probeKey = query.getProbeKey();
+		String antibodyKey = query.getAntibodyKey();
 
 		if(structureKey !=null && !structureKey.equals("")) {
 			Filter structureKeyFilter = new Filter(SearchConstants.STRUCTURE_KEY, structureKey);
@@ -818,6 +1086,14 @@ public class GXDController {
 			Filter markerIDFilter = new Filter(SearchConstants.MRK_ID, markerMgiId);
 			queryFilters.add(markerIDFilter);
 		}
+		if(probeKey !=null && !probeKey.equals("")) {
+			Filter probeKeyFilter = new Filter(SearchConstants.PROBE_KEY, probeKey);
+			queryFilters.add(probeKeyFilter);
+		}
+		if(antibodyKey !=null && !antibodyKey.equals("")) {
+			Filter antibodyKeyFilter = new Filter(SearchConstants.ANTIBODY_KEY, antibodyKey);
+			queryFilters.add(antibodyKeyFilter);
+		}
 
 		String nomenclature = query.getNomenclature();
 		String annotationId = query.getAnnotationId();
@@ -839,15 +1115,17 @@ public class GXDController {
 				|| detected.equalsIgnoreCase("explicit-yes"))
 		{
 			List<Filter> dFilters = new ArrayList<Filter>();
-			// all searches from the form bring back the ambiguous results
+			
+			// UPDATE: 2013-04-24 GXD changed their mind and does not want to return ambiguous results for detected radio buttons.
+			// I am merely commenting out the code in case they change their mind again  - kstone
 			if(detected.equalsIgnoreCase("yes"))
 			{
-				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
+				//dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
 			}
 			else if (detected.equalsIgnoreCase("no"))
 			{
-				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
+				//dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
 			}
 			else if (detected.equalsIgnoreCase("explicit-yes"))
@@ -858,9 +1136,8 @@ public class GXDController {
 			{
 				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
 			}
-			Filter dFilter = new Filter();
-			dFilter.setNestedFilters(dFilters, Filter.FC_OR);
-			queryFilters.add(dFilter);
+
+			queryFilters.add(Filter.or(dFilters));
 		}
 		// anatomical structure section
 		String structure = query.getStructure();
@@ -868,20 +1145,8 @@ public class GXDController {
 		if(structure!=null && !structure.equals(""))
 		{
 			logger.debug("splitting structure query into tokens");
-			Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
-
-			String phraseSearch = "";
-			for(String structureToken : structureTokens)
-			{
-				logger.debug("token="+structureToken);
-				phraseSearch += structureToken+" ";
-			}
-			if(!phraseSearch.trim().equals(""))
-			{
-				// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-				String sToken = "\""+phraseSearch+"\"~100";
-				queryFilters.add(new Filter(SearchConstants.STRUCTURE,sToken,Filter.OP_HAS_WORD));
-			}
+			Filter sFilter = makeStructureSearchFilter(SearchConstants.STRUCTURE,structure);
+			if(sFilter!=null) queryFilters.add(sFilter);
 		}
 		// theiler stage/age section
 		List<Integer> stages = query.getTheilerStage();
@@ -890,7 +1155,6 @@ public class GXDController {
 		if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
 		{
 			logger.debug("adding theiler stage selections to query");
-			Filter stageFilter = new Filter();
 			List<Filter> stageFilters = new ArrayList<Filter>();
 			for(Integer stage : stages)
 			{
@@ -899,9 +1163,8 @@ public class GXDController {
 
 			}
 
-			stageFilter.setNestedFilters(stageFilters,Filter.FC_OR);
 			// add the theiler stage search filter
-			queryFilters.add(stageFilter);
+			queryFilters.add(Filter.or(stageFilters));
 		}
 		// age query
 		// this can only happen if theilerStage was not passed in
@@ -911,7 +1174,6 @@ public class GXDController {
 			if( !(ages.contains(GxdQueryForm.EMBRYONIC) && ages.contains(GxdQueryForm.POSTNATAL)))
 			{
 				List<Filter> ageFilters = new ArrayList<Filter>();
-				Filter ageFilter = new Filter();
 				//postnatal means TS 28
 				if(ages.contains(GxdQueryForm.POSTNATAL))
 				{
@@ -934,13 +1196,11 @@ public class GXDController {
 								&& !age.equalsIgnoreCase(GxdQueryForm.POSTNATAL))
 						{
 							try{
-							Float age_num = Float.parseFloat(age);
+							//Float age_num = Float.parseFloat(age);
 							Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,age,Filter.OP_LESS_OR_EQUAL);
 							Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,age,Filter.OP_GREATER_OR_EQUAL);
-							Filter ageRangeFilter = new Filter();
 							// AND the min and max query to make a range query;
-							ageRangeFilter.setNestedFilters(Arrays.asList(ageMinFilter,ageMaxFilter), Filter.FC_AND);
-							ageFilters.add(ageRangeFilter);
+							ageFilters.add(Filter.and(Arrays.asList(ageMinFilter,ageMaxFilter)));
 							}
 							catch (NumberFormatException ne)
 							{
@@ -952,11 +1212,10 @@ public class GXDController {
 					}
 					// do some age things
 				}
-				ageFilter.setNestedFilters(ageFilters,Filter.FC_OR);
-				queryFilters.add(ageFilter);
+				queryFilters.add(Filter.or(ageFilters));
 			}
 		}
-		if (query.getIsWildType() != null && "true".equals(query.getIsWildType())){
+		if ((query.getIsWildType() != null && "true".equals(query.getIsWildType()))){
 			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, "true"));
 		} else if (query.getMutatedIn() != null && !"".equals(query.getMutatedIn())) {
 			Filter mutatedInFilter = generateNomenFilter(SearchConstants.GXD_MUTATED_IN, query.getMutatedIn());
@@ -970,7 +1229,6 @@ public class GXDController {
 		{
 			logger.debug("adding assay type selections to query");
 			// build the assay type filters and OR them
-			Filter assayTypeFilter = new Filter();
 			List<Filter> aFilters = new ArrayList<Filter>();
 			for(String assayType : assayTypes)
 			{
@@ -978,8 +1236,7 @@ public class GXDController {
 				Filter aFilter = new Filter(SearchConstants.GXD_ASSAY_TYPE,assayType,Filter.OP_EQUAL);
 				aFilters.add(aFilter);
 			}
-			assayTypeFilter.setNestedFilters(aFilters, Filter.FC_OR);
-			queryFilters.add(assayTypeFilter);
+			queryFilters.add(Filter.or(aFilters));
 		}
 
 		// And all base filter sections
@@ -1275,4 +1532,35 @@ public class GXDController {
 		}
 	}
 
+	public SearchResults<SolrGxdImage> getGxdImages(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			BindingResult result) throws BindException{
+
+		logger.debug("getGxdImages() started " );
+		logger.debug("query =  " + query.toString());
+
+		// parse the various query parameter to generate SearchParams object
+		SearchParams params = new SearchParams();
+		params.setIncludeSetMeta(true);
+		params.setIncludeMetaHighlight(true);
+		params.setIncludeRowMeta(true);
+		params.setIncludeMetaScore(true);
+		params.setPaginator(page);
+		params.setFilter(this.parseGxdQueryForm(query));
+
+		// sort using byDefaultSort
+		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
+
+		// perform query and return results as json
+		logger.debug("params parsed");
+
+		if (result.hasErrors()){
+			logger.debug("bind error");
+			throw new BindException(result);
+		} else {
+			return gxdFinder.searchImages(params);
+		}
+	}
 }

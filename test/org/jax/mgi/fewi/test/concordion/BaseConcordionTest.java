@@ -1,9 +1,13 @@
 package org.jax.mgi.fewi.test.concordion;
 
+import java.util.Arrays;
+import java.util.List;
+
+import mgi.frontend.datamodel.test.TestStats;
+
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.ConcordionBuilder;
-import org.jax.mgi.fewi.test.data.DynamicTestData;
-import org.jax.mgi.fewi.test.mock.MockQuery;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.test.mock.MockQueryFactory;
 import org.jax.mgi.fewi.test.mock.MockRequest;
 import org.junit.Test;
@@ -27,6 +31,10 @@ public class BaseConcordionTest {
     protected RequestMappingHandlerAdapter handler;
     @Autowired
     protected RequestMappingHandlerMapping handlerMapping;
+
+    // the gatherer for pulling out dynamic test data
+    @Autowired
+    protected HibernateObjectGatherer<TestStats> testStatsGatherer;
     
     /**
      * 
@@ -47,9 +55,23 @@ public class BaseConcordionTest {
     }
 	
 	// Makes the dynamic test data available to concordion tests
-	public static String get(String id)
+	public String get(String id)
 	{
-		return DynamicTestData.get(id);
+		List<TestStats> testStats = testStatsGatherer.get(TestStats.class, Arrays.asList(id),"id");
+		if (testStats==null || testStats.size()<1)
+		{
+			System.out.println("Cannot find test value for id '"+id+"'. Id either does not exist or has an error.");
+			return null;
+		}
+		String returnValue = testStats.get(0).getTestData();
+		if (returnValue == null || returnValue.trim().equals(""))
+		{
+			System.out.println("Test data for id '"+id+"' is empty. Query did not return a value.");
+			return null;
+		}
+		
+		return returnValue;
+		
 	}
 	
 	/*

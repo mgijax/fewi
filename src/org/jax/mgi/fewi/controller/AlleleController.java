@@ -151,18 +151,10 @@ public class AlleleController {
         Hibernate.initialize(phenoTableSystems);
         logger.debug("->List<PhenoTableSystem> size - " + phenoTableSystems.size());
 
-//        // tell hibernate to filter out disease headers
-//        List<PhenoTableDisease> phenoTableDiseases = allele.getPhenoTableDiseases();
-//        Hibernate.initialize(phenoTableDiseases);
-//        logger.debug("->List<phenoTableDiseases> size - " + phenoTableDiseases.size());
-//        logger.debug("->hasDiseaseModels - " + allele.getHasDiseaseModel());
-//        mav.addObject("allele",allele);
-//        allele.getPhenoTableDiseases().size(); // Trick to have hibernate fetch entire list at once
-
-        // figure out in advance if there will be sex columns.
+        // predetermine existance of a few columns.
         boolean hasSexCols=false;
-        // figure out if there will be any "source" columns
         boolean hasSourceCols=false;
+
         for(PhenoTableGenotype g : allele.getPhenoTableGenotypeAssociations())
         {
         	if(g.getSexDisplay()!=null && !g.getSexDisplay().trim().equals(""))
@@ -177,8 +169,6 @@ public class AlleleController {
         }
         mav.addObject("allele",allele);
         mav.addObject("phenoTableSystems",phenoTableSystems);
-       // mav.addObject("phenoTableDiseases",phenoTableDiseases);
-        //mav.addObject("hasDiseaseModel",allele.getHasDiseaseModel());
         mav.addObject("phenoTableGenotypes",allele.getPhenoTableGenotypeAssociations());
         mav.addObject("hasSexCols",hasSexCols);
         mav.addObject("hasSourceCols",hasSourceCols);

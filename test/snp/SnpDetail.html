@@ -1,0 +1,136 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>SNP Detail Page Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>SNP Detail Page Tests</h1>
+    <ul>
+        <li>User story 69, Text fixes to Update Build, Create Build, GRCm38, etc.</li>
+        <li>User story 74, Update mouse gbrowse links on SNP detail page</li>
+        <li>User story 89, change links to MPD</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US69 - dbSNP build is 137 not 128, NCBI build is 38 not 37</li>
+		<li>US74 - the links correctly point to the new GBrowse</li>
+		<li>US74 - NO requirement that Gbrowse itself is correct</li>
+		<li>US89 - Verify the MPD links use the correct URL pattern provided by MPD</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify dbSNP build is 137 on the snp detail page
+ 			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
+    		<ol>
+                <li>Display the SNP detail page for rs29438715</li>
+                <li>When the detail page displays verify in the ID/Version ribbon it says dbSNP Build 137</li>
+    		</ol>
+    		</li>
+    		<li>Verify NCBI build is 38 on the snp detail page
+ 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+    		<ol>
+                <li>Display the SNP detail page for rs29438715</li>
+                <li>When the detail page displays verify on the Genome Location and Flanking Sequence ribbon it says GRCm38</li>
+                <li>When the detail page displays verify on the Gene/Marker associations and Function classes ribbon it says GRCm38</li>
+    		</ol>
+    		</li>
+    		<li>Verify GBrowse link renders correct page when SNP is mapped to 1 coordinate location.
+ 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+    		<ol>
+                <li>Display the SNP detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=snpDetail&amp;id=rs29404805">rs29404805</a>.</li>
+                <li>Verify that the link for Mouse Genome Browser appears in the Additional resources ribbon between links to MPD and Ensembl SNP View.</li>
+                <li>Verify that the link for Mouse Genome Browser uses coordinate locations +2,000 and -2,000 bp from the SNP coordinate.</li>
+                <li>Verify that clicking the link renders the GBrowse page with the correct region of the correct chromosome.</li>
+    		</ol>
+    		</li>
+    		<li>Verify GBrowse link does not appear and special message appears when SNP is mapped to 2+ coordinate locations.
+    		<!-- The marker Gm20528 on chr 1 between 55538965 and 156522369 contains many SNPs with multiple coordinates -->
+ 			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+    		<ol>
+                <li>Display the SNP detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=snpDetail&amp;id=rs48224344">rs48224344</a>.</li>
+                <li>Verify that the link for Mouse Genome Browser does not appear in the Additional resources ribbon.</li>
+                <li>Verify that a text message appears in red below the existing genome browser links: "SNP maps to multiple genome locations. MGI Gbrowse link is not available."</li>
+    		</ol>
+    		</li>
+    		<li>MPD links from SNP summary pages ure the correct URL pattern to link to MPD
+			<p concordion:assertTrue="true">KLF 3/13/13</p>
+    		<ol>
+                <li>Display the SNP Summary page for <b>Pax6</b> and click on the first SNP Detail link for RS33198906</li>
+                <li>Hover over the MPD link</li>
+                <li>Verify the link follows the pattern <b>http://phenome.jax.org/db/q?rtn=snp/ret1&amp;gohint=1&amp;ureg=rs33198906</b> and NOT http://phenome.jax.org/db/q?rtn=snps/retrieve&amp;searchreq=rs33198906</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

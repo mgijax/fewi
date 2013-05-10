@@ -1,0 +1,207 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Cre User-Submitted Data Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Cre User-Submitted Data Tests</h1>
+    <ul>
+        <li>User story 156, Cre: User data submission form</li>
+        <li>User story ???, fix broken ILAR link on Mutant Alleles, Strains, and Phenotypes Submission Form</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>users can submit Cre specificity data via a web based form</li>
+		<li>data may include uploaded files</li>
+		<li>submissions are simply uploaded and stored by the system</li>
+		<li>submissions are processed by curators</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>The "Submit Data" index page contains text inviting users to submit recombinase data. The text is hyperlinked to a form.
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+                <li>From any MGI page, click the "Submit Data" item in the navigation bar.</li>
+                <li>Verify that the "Submit Data" index page appears.</li>
+                <li>Verify that the 3rd text item is "Recombinase Knock-in or Transgenic Allele Activity/Specificity Data Submission".</li>
+                <li>Verify that the subtext is "Submit recombination activity/specificity data for a knock-in or transgene".</li>
+                <li>Verify that the text is hyperlinked to the "Recombinase Knock-in or Transgenic Allele Activity/Specificity Data Submission" form.</li>
+    		</ol>
+    		</li>
+
+    		<li>The recombinase data submission form contains sections containing input fields to capture data.
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+                <li>Navigate to the "Recombinase Knock-in or Transgenic Allele Activity/Specificity Data Submission" form page.</li>
+                <li>Verify the <i>Contact details</i> section exists and contains input fields</li>
+                <li>Verify the <i>Citing your data</i> section exists and contains input fields</li>
+                <li>Verify the <i>Recombinase knock-in or transgene</i> section exists and contains input fields</li>
+                <li>Verify the <i>Genetic background</i> section exists and contains input fields</li>
+                <li>Verify the <i>Recombinase activity data</i> section exists</li>
+                <li>Verify the <i>File submission</i> section exists and contains input buttons</li>
+                <li>Verify the <i>Completing your submission</i> section exists and contains an input field.</li>
+    		</ol>
+    		</li>
+
+    		<li>Links to resources that appear on the form work properly.
+ 			<p concordion:assertTrue="true">passed klf 5/10/2013</p>
+    		<ol>
+    			<li>Recombinase knock-in or transgene section, "searching MGI" text is hyperlinked to MGI's "Marker Query Form" and opens in a new tab/window.</li>
+    			<li>Recombinase knock-in or transgene section, "Mouse Nomenclature Page" is linked to MGI's "Mouse Nomenclature Home Page" and opens in a new tab/window. </li>
+    			<li>Recombinase knock-in or transgene section, "lab codes" is linked to the ILAR home page and opens in a new tab/window. </li>
+    			<li>Genetic background section, "repositories" is linked to the IMSR home page and opens in a new tab/window.</li>
+    			<li>Genetic background section, "Guidelines for Nomenclature of Mouse and Rat Strains" is linked to MGI's "Guidelines for Nomenclature of Mouse and Rat Strains page" and opens in a new tab/window.</li>
+    			<li>Genetic background section, "lab codes" is linked to the ILAR home page and opens in a new tab/window.</li>
+    		</ol>
+    		</li>
+
+    		<li>The Recombinase activity data section contains an Excel file template the user may download.
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+                <li>Verify the Recombinase activity data section contains a link to an Excel file template.</li>
+                <li>Verify that the user can download and open the Excel file template.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>The user may enter data and submit the recombinase data form. Prior to submitting, the user may edit any field. Submitting the form saves the submitted data on one of MGI's servers. 
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+                <li>Enter something in every input field.</li>
+                <li>Verify that clicking the "Verify" button validates the form inputs and allows the user to edit or submit the data.</li>
+                <li>Click the "Edit your submission" link and make some changes in the form.</li>
+                <li>Submit the form data.</li>
+                <li>Verify that data entered was saved in:  /export/&lt;Server&gt;/submissions/&lt;Year&gt;/&lt;Month&gt;/&lt;Date_RandomCharacters&gt;/submissionForm.txt<br/>
+                Example: /export/valinor/submissions/2013/05/08_HBfvJj/submissionForm.txt<br/>
+                Example: /export/valinor/submissions/2013/05/07_iTpTG2/submissionForm.txt
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When a user submits a form, the address(es) indicated in the &quot;File Submission&quot; section is/are notified via email.  The email contains the the text submitted through the form. A confirmation email is also sent to the user who submitted the form. 
+ 			<p concordion:assertTrue="true">passed on Valinor, klf 5/10/2013</p>
+    		<ol>
+                <li>From the test above, verify that the user receives a confirmation email containing the text submitted through the form.</li>
+                <li>From the test above, verify that MGI staff receive an email containing the text submitted through the form.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Successful submission gives the user a link to submit additional data. Clicking the link opens the Recombinase form with user identity data pre-populated.
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+                <li>Verify that after submitting the form, a link appears inviting the user to submit more recombinase data.</li>
+                <li>Verify that clicking the link opens the Recombinase form.</li>
+                <li>Verify that the same data previously used appear in the Contact Details input fields.</li>
+            </ol>
+    		</li>
+
+    		<li>The form contains a "Verify" button for form input validation. Clicking this button highlights required input fields which are missing data. The form will not submit when required data are missing.
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+                <li>Do not enter data into any required fields.</li>
+                <li>Verify that clicking the "Verify" button does not submit the form.</li>
+                <li>Verify that required fields with missing data are highlighted.</li>
+                <li>Input data into some but not all required fields.</li>
+                <li>Verify that clicking the "Verify" button again still does not submit the form.</li>
+                <li>Verify that required fields with missing data are highlighted.</li>
+                <li>Input data into all required fields.</li>
+                <li>Verify that clicking the "Verify" button again now allows the user to submit the form.</li>
+    		</ol>
+    		</li>
+
+    		<li>The user may upload one or more files with the submitted form.  Uploading files saves all of them in MGI and associates them with the submitted data. Names of all uploaded files are identified in an email to the user. The directory(ies) containing uploaded file(s) is/are identifed in an email to MGI staff.   
+ 			<p concordion:assertTrue="true">passed on Valinor, klf 5/10/2013</p>
+    		<ol>
+                <li>Fill in the required parts of the form.</li>
+                <li>Click the "Choose file" button and select a file &lt;5MB.</li>
+                <li>Click the "Submit more files" button.</li>
+                <li>Click the "Choose file" button for File 2 and select a different file &lt;5MB.</li>
+                <li>Click the "Submit more files" button.</li>
+                <li>Click the "Choose file" button for File 3 and select a different file &lt;5MB.</li>
+                <li>Click the "Verify" button.</li>
+                <li>Submit the form.</li>
+                <li>Verify that an email is transmitted to the user stating the submission was received and listing all the submitted files.</li>
+                <li>Verify that an internal email is transmitted to MGI staff listing the submitted files and their directories.</li>
+                <li>Verify that the files exist in the directories and that the contents are as uploaded.</li>
+    		</ol>
+    		</li>
+
+    		<li>The uploaded files are saved and are available to curators from the specified directory.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li><span style="background-color:#FFFF66;">Curators access files from the main wiki page via a link called "Submissions". We might not be able to test this until we go to Production?</span></li>
+    		</ol>
+    		</li>
+    		
+    		<li>Reset button works.
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+                <li>Enter text in several fields.</li>
+                <li>Click the "Reset" button.</li>
+                <li>Verify no data exist in the input fields.</li>
+    		</ol>
+    		</li>
+
+    		<li>Links to resources that appear on the Mutant Alleles, Strains, and Phenotypes Submission Form work properly.
+ 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+    		<ol>
+    			<li>Allele section, "lab codes" is linked to the ILAR home page and opens in a new tab/window. </li>
+    			<li>Genetic background section, "lab codes" is linked to the ILAR home page and opens in a new tab/window.</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

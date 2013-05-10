@@ -28,11 +28,10 @@ public class NotesTagConverter
     /////////////////////
 
     // This is used to map a tag pattern to it's converted replacement string.
-    private HashMap tagConversions = new HashMap();
+	// the Pattern objects are cached in this class variable to make for speedy conversions
+    private static List<TagConversion> tagConversionList = null;
 
-    // maps from MGI ID to its corresponding allele symbol, to save looking
-    // up the same symbol multiple times for the same page
-    private HashMap alleleSymbols = new HashMap();
+    private String cssAnchorClass = "";
 
     // logger for this class
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -51,7 +50,9 @@ public class NotesTagConverter
     public NotesTagConverter (String cssAnchorClass)
         throws IOException
     {
-        tagConversions = makeTagMap(cssAnchorClass);
+    	initTagConversions();
+    	this.cssAnchorClass=cssAnchorClass;
+        //tagConversions = makeTagMap(cssAnchorClass);
 
         return;
     }
@@ -65,12 +66,178 @@ public class NotesTagConverter
     public NotesTagConverter ()
         throws IOException
     {
-        String cssAnchorClass = "";
-        tagConversions = makeTagMap(cssAnchorClass);
+    	initTagConversions();
+        //tagConversions = makeTagMap(cssAnchorClass);
 
         return;
     }
 
+    private void initTagConversions()
+    {
+    	// init the list once and cache it
+    	if(tagConversionList == null)
+    	{
+    		tagConversionList = new ArrayList<TagConversion>();
+    		 // Base URLs used in creating the replacement string patterns
+            String fewiURL          = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+            String javawiURL        = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
+            String pywiURL          = ContextLoader.getConfigBean().getProperty("WI_URL");
+            String mgihomeURL       = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
+            String ipURL            = ContextLoader.getExternalUrls().getProperty("InterPro");
+            String ecURL            = ContextLoader.getExternalUrls().getProperty("EC");
+            String emblURL          = ContextLoader.getExternalUrls().getProperty("EMBL");
+            String spURL            = ContextLoader.getExternalUrls().getProperty("SWISS_PROT");
+            String ncbiqURL         = ContextLoader.getExternalUrls().getProperty("NCBIQuery");
+            String ncbipqURL        = ContextLoader.getExternalUrls().getProperty("NCBIProteinQuery");
+            String ncbinqURL        = ContextLoader.getExternalUrls().getProperty("NCBINucleotideQuery");
+            String jbcURL           = ContextLoader.getExternalUrls().getProperty("JBiolChem");
+            String jlrURL           = ContextLoader.getExternalUrls().getProperty("JLipidRes");
+            String dxdoiURL         = ContextLoader.getExternalUrls().getProperty("DXDOI");
+            String pantherURL       = ContextLoader.getExternalUrls().getProperty("PTHR");
+
+            // Pre-build all anchor replacement strings for each known tag
+
+            ///////////////////
+            // fewi links //
+            ///////////////////
+
+            // Marker
+            tagConversionList.add(new TagConversion("\\\\Marker\\((.*?[|].*?[|].*?)\\)",
+            		String.format("<a class=\"%s\" href=\"%smarker/%s\" %s>%s</a>",
+                            "%s", fewiURL, "%s", "%s", "%s")));
+
+            // Sequence
+            tagConversionList.add(new TagConversion("\\\\Sequence\\((.*?[|].*?[|].*?)\\)",
+                String.format ("<a class=\"%s\" href=\"%ssequence/%s\" %s>%s</a>",
+                "%s", fewiURL, "%s", "%s", "%s")));
+
+            ///////////////
+            // python wi //
+            ///////////////
+
+            // Accession
+            tagConversionList.add(new TagConversion("\\\\Acc\\((.*?[|].*?[|].*?)\\)",
+                String.format("<a class=\"%s\" href=\"%saccession/%s\" %s>%s</a>",
+                "%s", fewiURL, "%s", "%s", "%s")));
+
+            // Allele
+            tagConversionList.add(new TagConversion("\\\\Allele\\((.*?[|].*?[|].*?)\\)",
+                String.format("<a style='white-space: normal; 'class=\"%s\" href=\"%sWIFetch?page=alleleDetail&id=%s\" %s>%s</a>",
+                "%s", javawiURL, "%s", "%s", "%s")));
+
+            // AMA
+            tagConversionList.add(new TagConversion("\\\\AMA\\((.*?[|].*?[|].*?)\\)",
+                String.format ("<a class=\"%s\" href=\"%sama/%s\" %s>%s</a>",
+                "%s", fewiURL, "%s", "%s", "%s")));
+
+            // GO
+            tagConversionList.add(new TagConversion("\\\\GO\\((.*?[|].*?[|].*?)\\)",
+                String.format ("<a class=\"%s\" href=\"%ssearches/GO.cgi?id=%s\" %s>%s</a>",
+                "%s", pywiURL, "%s", "%s", "%s")));
+
+            // Reference
+            tagConversionList.add(new TagConversion("\\\\Ref\\((.*?[|].*?[|].*?)\\)",
+                String.format ("<a class=\"%s\" href=\"%sreference/%s\" %s>%s</a>",
+                "%s", fewiURL, "%s", "%s", "%s")));
+
+
+            // Elsevier (might be a temp solution...python wi renders this tag differently)
+            tagConversionList.add(new TagConversion("\\\\Elsevier\\((.*?[|].*?[|].*?)\\)",
+                String.format (" in <a class=\"%s\" href=\"%saccession/%s\" %s>%s</a>",
+                "%s", fewiURL, "%s", "%s", "%s")));
+
+            /////////////
+            // mgihome //
+            /////////////
+
+            // GoCurators
+            tagConversionList.add(new TagConversion("\\\\GoCurators\\((.*?[|].*?[|].*?)\\)",
+                String.format("<a class=\"%s\" href=\"%sGO/go_curators.shtml%s\" %s>%s</a>",
+                "%s", mgihomeURL, "%s", "%s", "%s")));
+
+            // GoRefGenome
+            tagConversionList.add(new TagConversion("\\\\GoRefGenome\\((.*?[|].*?[|].*?)\\)",
+                String.format("<a class=\"%s\" href=\"%sGO/reference_genome_project.shtml%s\" %s>%s</a>",
+                "%s", mgihomeURL, "%s", "%s", "%s")));
+
+            ///////////////////
+            // email aliases //
+            ///////////////////
+
+            // GoCurators
+            tagConversionList.add(new TagConversion("\\\\GoEmail\\((.*?[|].*?[|].*?)\\)",
+                "<a class=\"%s\" href=\"mailto:mgi-go@informatics.jax.org%s\" %s>%s</a>"));
+
+
+            ///////////////
+            // external
+            ///////////////
+
+            // These are created in a three step process due to not being able
+            // to place two '%s' together.  (e.g. foo%s%s currently errors)
+
+            // InterPro
+            String ipRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", ipURL.replaceAll("@@@@","%s"));
+            ipRepStr = ipRepStr.concat(" %s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\InterPro\\((.*?[|].*?[|].*?)\\)",ipRepStr));
+
+            // Enzyme Commission Number
+            String ecRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", ecURL.replaceAll("@@@@","%s"));
+            ecRepStr = ecRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\EC\\((.*?[|].*?[|].*?)\\)",ecRepStr));
+
+            // EMBL
+            String emblRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", emblURL.replaceAll("@@@@","%s"));
+            emblRepStr = emblRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\EMBL\\((.*?[|].*?[|].*?)\\)",emblRepStr));
+
+            // SwissProt
+            String spRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", spURL.replaceAll("@@@@","%s"));
+            spRepStr = spRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\SwissProt\\((.*?[|].*?[|].*?)\\)",spRepStr));
+
+            // NCBI Query
+            String ncbiqRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", ncbiqURL.replaceAll("@@@@","%s"));
+            ncbiqRepStr = ncbiqRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\NCBIQuery\\((.*?[|].*?[|].*?)\\)",ncbiqRepStr));
+
+            // NCBI Protein Query
+            String ncbipqRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", ncbipqURL.replaceAll("@@@@","%s"));
+            ncbipqRepStr = ncbipqRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\NCBIProteinQuery\\((.*?[|].*?[|].*?)\\)",ncbipqRepStr));
+
+            // NCBI Nucleotide Query
+            String ncbinqRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", ncbinqURL.replaceAll("@@@@","%s"));
+            ncbinqRepStr = ncbinqRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\NCBINucleotideQuery\\((.*?[|].*?[|].*?)\\)",ncbinqRepStr));
+
+            // Journal of Biological Chemistry
+            String jbcRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", jbcURL.replaceAll("@@@@","%s"));
+            jbcRepStr = jbcRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\JBiolChem\\((.*?[|].*?[|].*?)\\)",jbcRepStr));
+
+            // Journal of Lipid Research
+            String jlrRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", jlrURL.replaceAll("@@@@","%s"));
+            jlrRepStr = jlrRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\JLipidRes\\((.*?[|].*?[|].*?)\\)",jlrRepStr));
+
+            // DXDOI
+            String dxdoiStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", dxdoiURL.replaceAll("@@@@","%s"));
+            dxdoiStr = dxdoiStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\DXDOI\\((.*?[|].*?[|].*?)\\)",dxdoiStr));
+
+            // Panther Classification System
+            String pantherRepStr = String.format("<a class=\"%s\" href=\"%s\"", "%s", pantherURL.replaceAll("@@@@","%s"));
+            pantherRepStr = pantherRepStr.concat("%s>%s</a>");
+            tagConversionList.add(new TagConversion("\\\\PANTHER\\((.*?[|].*?[|].*?)\\)",pantherRepStr));
+
+
+            // Generic Link
+            tagConversionList.add(new TagConversion("\\\\Link\\((.*?[|].*?[|].*?)\\)",
+                String.format ("<a class=\"%s\" target=\"_blank\" href=\"%s\" %s>%s</a>",
+                "%s", "%s", "%s", "%s")));
+    	}
+    }
 
     /* -------------------------------------------------------------------- */
     ////////////////////////
@@ -97,41 +264,29 @@ public class NotesTagConverter
     {
         // ensure the notes aren't null
         if (notes == null) {return "  ";}
-        
+
         String      parmStr             = "";
         String      convertedTag        = "";
-        String      matchStr            = "";
-        Iterator    matchStrIter;
-        Set         matchStrSet;
-
-        // Create iterator for pattern matching, from the pre-built
-        // HashMap of searchPatterns
-        matchStrSet         = tagConversions.keySet();
-        matchStrIter        = matchStrSet.iterator();
 
         // for each tag we are lookin for...
-        while (matchStrIter.hasNext())
+        //while (matchStrIter.hasNext())
+        for(TagConversion tc : tagConversionList)
         {
-            // pre-compile a matcher to look for regular expression matching
-            // the tag format
-            matchStr    = (String)matchStrIter.next();
-            Pattern p   = Pattern.compile(matchStr);
-            Matcher m   = p.matcher(notes);
+            Matcher m   = tc.pattern.matcher(notes);
 
             // for each tag in the notes text...
             while(m.find()){
-
                 parmStr= m.group(1);
 
                 // Replace the tag with the new string
                 convertedTag = convertTag(parmStr,
                                 delimiter,
-                                (String)tagConversions.get(matchStr),
+                                tc.formatString,
                                 noLink,noSuperscript);
                 notes = m.replaceFirst(convertedTag);
 
                 // reset the matcher for the next search
-                m = p.matcher(notes);
+                m = tc.pattern.matcher(notes);
             }
         }
 
@@ -156,178 +311,6 @@ public class NotesTagConverter
 	    m = p.matcher(s);
 	}
 	return s.replaceAll ("HHRREEFF", "HREF");
-    }
-
-    /* -------------------------------------------------------------------- */
-
-    ////////////////////////
-    // private methods
-    ////////////////////////
-
-    /** builds internal HashMap containing key:value pairs with keys being
-    *   tag search patterns and values being replacement string for that tag
-    * @param string; name of css anchor tag to use
-    * @assumes nothing
-    * @effects local makeTagMap HashMap
-    * @throws
-    */
-    private HashMap makeTagMap (String cssAnchorClass)
-    {
-        HashMap tags = new HashMap();
-
-        // Base URLs used in creating the replacement string patterns
-        String fewiURL          = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-        String javawiURL        = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
-        String pywiURL          = ContextLoader.getConfigBean().getProperty("WI_URL");
-        String mgihomeURL       = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
-        String ipURL            = ContextLoader.getExternalUrls().getProperty("InterPro");
-        String ecURL            = ContextLoader.getExternalUrls().getProperty("EC");
-        String emblURL          = ContextLoader.getExternalUrls().getProperty("EMBL");
-        String spURL            = ContextLoader.getExternalUrls().getProperty("SWISS_PROT");
-        String ncbiqURL         = ContextLoader.getExternalUrls().getProperty("NCBIQuery");
-        String ncbipqURL        = ContextLoader.getExternalUrls().getProperty("NCBIProteinQuery");
-        String ncbinqURL        = ContextLoader.getExternalUrls().getProperty("NCBINucleotideQuery");
-        String jbcURL           = ContextLoader.getExternalUrls().getProperty("JBiolChem");
-        String jlrURL           = ContextLoader.getExternalUrls().getProperty("JLipidRes");
-        String dxdoiURL         = ContextLoader.getExternalUrls().getProperty("DXDOI");
-        String pantherURL       = ContextLoader.getExternalUrls().getProperty("PTHR");
-        
-        // Pre-build all anchor replacement strings for each known tag
-
-        ///////////////////
-        // fewi links //
-        ///////////////////
-
-        // Marker
-        tags.put("\\\\Marker\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A class=\"%s\" HREF=\"%smarker/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
-
-        // Sequence
-        tags.put("\\\\Sequence\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%ssequence/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
-
-        ///////////////
-        // python wi //
-        ///////////////
-
-        // Accession
-        tags.put("\\\\Acc\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A class=\"%s\" HREF=\"%saccession/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
-
-        // Allele
-        tags.put("\\\\Allele\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A style='white-space: normal; 'class=\"%s\" HREF=\"%sWIFetch?page=alleleDetail&id=%s\" %s>%s</A>",
-            cssAnchorClass, javawiURL, "%s", "%s", "%s"));
-
-        // AMA
-        tags.put("\\\\AMA\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%sama/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
-
-        // GO
-        tags.put("\\\\GO\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%ssearches/GO.cgi?id=%s\" %s>%s</A>",
-            cssAnchorClass, pywiURL, "%s", "%s", "%s"));
-
-        // Reference
-        tags.put("\\\\Ref\\((.*?[|].*?[|].*?)\\)",
-            String.format ("<A class=\"%s\" HREF=\"%sreference/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
-
-        // Elsevier (might be a temp solution...python wi renders this tag differently)
-        tags.put("\\\\Elsevier\\((.*?[|].*?[|].*?)\\)",
-            String.format (" in <A class=\"%s\" HREF=\"%saccession/%s\" %s>%s</A>",
-            cssAnchorClass, fewiURL, "%s", "%s", "%s"));
-
-        /////////////
-        // mgihome //
-        /////////////
-
-        // GoCurators
-        tags.put("\\\\GoCurators\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A class=\"%s\" HREF=\"%sGO/go_curators.shtml%s\" %s>%s</A>",
-            cssAnchorClass, mgihomeURL, "%s", "%s", "%s"));
-
-        // GoRefGenome
-        tags.put("\\\\GoRefGenome\\((.*?[|].*?[|].*?)\\)",
-            String.format("<A class=\"%s\" HREF=\"%sGO/reference_genome_project.shtml%s\" %s>%s</A>",
-            cssAnchorClass, mgihomeURL, "%s", "%s", "%s"));
-
-        ///////////////////
-        // email aliases //
-        ///////////////////
-
-        // GoCurators
-        tags.put("\\\\GoEmail\\((.*?[|].*?[|].*?)\\)",
-            "<A HREF=\"mailto:mgi-go@informatics.jax.org%s\" %s>%s</A>");
-
-
-        ///////////////
-        // external
-        ///////////////
-
-        // These are created in a three step process due to not being able
-        // to place two '%s' together.  (e.g. foo%s%s currently errors)
-
-        // InterPro
-        String ipRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, ipURL.replaceAll("@@@@","%s"));
-        ipRepStr = ipRepStr.concat(" %s>%s</A>");
-        tags.put("\\\\InterPro\\((.*?[|].*?[|].*?)\\)",ipRepStr);
-
-        // Enzyme Commission Number
-        String ecRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, ecURL.replaceAll("@@@@","%s"));
-        ecRepStr = ecRepStr.concat("%s>%s</A>");
-        tags.put("\\\\EC\\((.*?[|].*?[|].*?)\\)",ecRepStr);
-
-        // EMBL
-        String emblRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, emblURL.replaceAll("@@@@","%s"));
-        emblRepStr = emblRepStr.concat("%s>%s</A>");
-        tags.put("\\\\EMBL\\((.*?[|].*?[|].*?)\\)",emblRepStr);
-
-        // SwissProt
-        String spRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, spURL.replaceAll("@@@@","%s"));
-        spRepStr = spRepStr.concat("%s>%s</A>");
-        tags.put("\\\\SwissProt\\((.*?[|].*?[|].*?)\\)",spRepStr);
-
-        // NCBI Query
-        String ncbiqRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, ncbiqURL.replaceAll("@@@@","%s"));
-        ncbiqRepStr = ncbiqRepStr.concat("%s>%s</A>");
-        tags.put("\\\\NCBIQuery\\((.*?[|].*?[|].*?)\\)",ncbiqRepStr);
-
-        // NCBI Protein Query
-        String ncbipqRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, ncbipqURL.replaceAll("@@@@","%s"));
-        ncbipqRepStr = ncbipqRepStr.concat("%s>%s</A>");
-        tags.put("\\\\NCBIProteinQuery\\((.*?[|].*?[|].*?)\\)",ncbipqRepStr);
-
-        // NCBI Nucleotide Query
-        String ncbinqRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, ncbinqURL.replaceAll("@@@@","%s"));
-        ncbinqRepStr = ncbinqRepStr.concat("%s>%s</A>");
-        tags.put("\\\\NCBINucleotideQuery\\((.*?[|].*?[|].*?)\\)",ncbinqRepStr);
-
-        // Journal of Biological Chemistry
-        String jbcRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, jbcURL.replaceAll("@@@@","%s"));
-        jbcRepStr = jbcRepStr.concat("%s>%s</A>");
-        tags.put("\\\\JBiolChem\\((.*?[|].*?[|].*?)\\)",jbcRepStr);
-
-        // Journal of Lipid Research
-        String jlrRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, jlrURL.replaceAll("@@@@","%s"));
-        jlrRepStr = jlrRepStr.concat("%s>%s</A>");
-        tags.put("\\\\JLipidRes\\((.*?[|].*?[|].*?)\\)",jlrRepStr);
-
-        // DXDOI
-        String dxdoiStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, dxdoiURL.replaceAll("@@@@","%s"));
-        dxdoiStr = dxdoiStr.concat("%s>%s</A>");
-        tags.put("\\\\DXDOI\\((.*?[|].*?[|].*?)\\)",dxdoiStr);
-        
-        // Panther Classification System
-        String pantherRepStr = String.format("<A class=\"%s\" HREF=\"%s\"", cssAnchorClass, pantherURL.replaceAll("@@@@","%s"));
-        pantherRepStr = pantherRepStr.concat("%s>%s</A>");
-        tags.put("\\\\PANTHER\\((.*?[|].*?[|].*?)\\)",pantherRepStr);
-
-        return tags;
     }
 
     /* -------------------------------------------------------------------- */
@@ -378,7 +361,7 @@ public class NotesTagConverter
         if ((parmArray.length > 2) && (parmArray[2] != null)) {
             String parm2 = parmArray[2];
             if (parm2.equals("newwin")) {
-                target = "TARGET=\"NEW\"";
+                target = "TARGET=\"_blank\"";
             }
         }
 
@@ -388,11 +371,11 @@ public class NotesTagConverter
         	display = superscript(display);
         }
         // Apply parms to replacement string
-        convertedTag = String.format(replaceStr, id, target, display);
+        convertedTag = String.format(replaceStr,this.cssAnchorClass, id, target, display);
 
         //HACK: escape route for times when stake-holders don't want to display a link.
         if(noLink) return display;
-        
+
         return convertedTag;
     }
 
@@ -420,6 +403,19 @@ public class NotesTagConverter
         }
 
         return displayParm;
+    }
+
+    // helper class to group tag conversions (and pre-compile the regular expressions)
+    private class TagConversion
+    {
+    	public Pattern pattern;
+    	public String formatString;
+
+    	public TagConversion(String matchStr,String formatString)
+    	{
+    		this.pattern = Pattern.compile(matchStr);
+    		this.formatString = formatString;
+    	}
     }
 
 }

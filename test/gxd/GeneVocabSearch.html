@@ -176,33 +176,8 @@ order by m.symbol
             	<li>Select the term 'retroesophageal right subclavian artery' (<b concordion:set="#query">MP:0004160</b>) </li>
             	<li>Return the following markers:
             		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
-            			<tr><th concordion:assertEquals="#results">Marker</th></tr>
-            			<tr><td>Acvr1</td></tr>
-						<tr><td>Chrd</td></tr>
-						<tr><td>Eya1</td></tr>
-						<tr><td>Fbln1</td></tr>
-						<tr><td>Fgf8</td></tr>
-						<tr><td>Foxg1</td></tr>
-						<tr><td>Gata6</td></tr>
-						<tr><td>Gbx2</td></tr>
-						<tr><td>Hand2</td></tr>
-						<tr><td>Hoxa1</td></tr>						
-						<tr><td>Hprt</td></tr>
-						<tr><td>Itga5</td></tr>
-						<tr><td>Itgav</td></tr>
-						<tr><td>Jag1</td></tr>
-						<tr><td>Pax3</td></tr>
-						<tr><td>Pdgfra</td></tr>
-						<tr><td>Pdgfrb</td></tr>
-						<tr><td>Prrx1</td></tr>
-						<tr><td>Prrx2</td></tr>
-						<tr><td>Six1</td></tr>
-						<tr><td>Tbx1</td></tr>
-						<tr><td>Tfap2a</td></tr>
-						<tr><td>Tgfbr2</td></tr>
-						<tr><td>Vangl1</td></tr>
-						<tr><td>Vangl2</td></tr>
-						<tr><td>Vegfa</td></tr>
+            			<tr><th cc:assertEquals="#results">Marker</th></tr>
+            			<tr cc:dynamicDataTable="retroesophagealArteryGXDGenes"></tr>
             		</table>
             	<!-- SELECT V._term_key, V._marker_key, V.annottype, M.symbol FROM mgd.voc_marker_cache V, mgd.mrk_marker M WHERE V._term_key = '1671269' and V._marker_key = M._marker_key -->
             	<!-- SELECT distinct V._marker_key, V.annottype, M.symbol FROM mgd.voc_marker_cache V, mgd.mrk_marker M WHERE V._marker_key = M._marker_key and M._marker_key in (8726, 9027, 9936, 10498, 10502, 12181, 12242, 12243, 12559, 13300, 13762, 14103, 15433, 18737, 23133, 24907, 28691, 31369, 33109, 33682, 37270, 38210, 40822, 43537, 64487, 67204, 91436, 93329, 307082) and V.annottype like 'AD' -->
@@ -296,12 +271,8 @@ order by m.symbol
             	<li>Select the term 'microfibril' (<b concordion:set="#query">GO:0001527</b>) </li>
             	<li>Return the following markers:
             		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
-            			<tr><th concordion:assertEquals="#results">Marker</th></tr>
-            		 	 <tr><td>Adamts10</td></tr>            			
-            		 	 <tr><td>Fbn1</td></tr>
-						 <tr><td>Fbn2</td></tr>
-						 <tr><td>Mfap5</td></tr>
-						 <tr><td>Thsd4</td></tr>
+            			<tr><th cc:assertEquals="#results">Marker</th></tr>
+            			<tr cc:dynamicDataTable="microfibrilGXDGenes"></tr>
             		</table>
             	</li>
             </ol>
@@ -311,21 +282,8 @@ order by m.symbol
             	<li>Select the term 'peripheral nervous system axon ensheathment' (<b concordion:set="#query">GO:0032292</b>) </li>
             	<li>Return the following markers:
             		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
-            			<tr><th concordion:assertEquals="#results">Marker</th></tr>
-            		 	<tr><td>Adam22</td></tr>
-            		 	<tr><td>Akt1</td></tr>
-            		 	<tr><td>Akt2</td></tr>
-						 <tr><td>Arhgef10</td></tr>
-						 <tr><td>Dag1</td></tr>
-						 <tr><td>Lgi4</td></tr>
-						 <tr><td>Mpp5</td></tr>
-						 <tr><td>Ncmap</td></tr>
-						 <tr><td>Ndrg1</td></tr>
-						 <tr><td>Nf1</td></tr>
-						 <tr><td>Pou3f1</td></tr>
-						 <tr><td>Pou3f2</td></tr>
-						 <tr><td>Ski</td></tr>
-						 <tr><td>Sod1</td></tr>
+            			<tr><th cc:assertEquals="#results">Marker</th></tr>
+            			<tr cc:dynamicDataTable="perisheralNSAxonGXDGenes"></tr>
             		</table>
             	</li>
             </ol>
@@ -469,7 +427,7 @@ and vm2.annottype like 'GO%'
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctla2a</b> should not be returned (lost its annotations).</li>
                 <li>Select the biological_process term '<b>biological_process</b>' (<b concordion:set="#query">GO:0008150</b>) </li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should not be returned.</li>
-                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Bglap-rs1</b> should be returned (it has IEA annotations to child terms).</li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Bglap3</b> should be returned (it has IEA annotations to child terms).</li>
                 <li>Select the cellular_component term '<b>cellular_component</b>' (<b concordion:set="#query">GO:0005575</b>) </li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Agfg2</b> should not be returned.</li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should be returned  (it has IEA annotations to child terms).</li>

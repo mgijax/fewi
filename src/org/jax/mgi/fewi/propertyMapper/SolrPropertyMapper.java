@@ -17,16 +17,17 @@ import org.jax.mgi.fewi.searchUtil.Filter;
  * have extend this class and override the appropriate function.
  * 
  * @author mhall
- *
+ * 
+ * - refactored by kstone on 2013-05-02 to actually use objects properly. What a complete WTF this code was.
  */
 
-public class SolrPropertyMapper implements PropertyMapper {
-
+public class SolrPropertyMapper 
+{
     ArrayList <String> fieldList = new ArrayList<String>();
     // The default operand is equals.
     int operand = 0;
-    String singleField = "";
-    String joinClause = "";
+    protected String singleField = "";
+    protected String joinClause = "";
     
     /**
      * The constructor that allows us to have an entire fieldlist.
@@ -48,27 +49,38 @@ public class SolrPropertyMapper implements PropertyMapper {
         this.singleField = field;
     }
     
+    public String getField()
+    {
+    	return singleField;
+    }
     
     /**
      * This is the standard api, which returns a string that will be passed 
      * to the underlying technology.
      */
     
-    @Override
-    public String getClause(String value, int operand) {
-
+    public String getClause(String value,int operator)
+    {
+    	return getClause(value,operator,false);
+    }
+    public String getClause(Filter filter)
+    {
+    	return getClause(filter.getValue(),filter.getOperator(),filter.doNegation());
+    }
+    public String getClause(String value,int operator,boolean negate) 
+    {
         String outClause = "";
         
         if (!singleField.equals("")) {
-            outClause = handleOperand(operand, value, singleField);
+            outClause = handleOperand(operator, value, singleField,negate);
         }
         else {
             for (String field: fieldList) {
                 if (outClause.equals("")) {
-                   outClause = handleOperand(operand, value, field); 
+                   outClause = handleOperand(operator, value, field,negate); 
                 }
                 else {
-                   outClause += " " + joinClause + " " + handleOperand(operand, value, field);
+                   outClause += " " + joinClause + " " + handleOperand(operator, value, field,negate);
                 }
             }
         }
@@ -83,46 +95,53 @@ public class SolrPropertyMapper implements PropertyMapper {
      * @param field
      * @return
      */
-    private String handleOperand(int operand, String value, String field) {
-
+    protected String handleOperand(int operand, String value, String field)
+    {
+    	return handleOperand(operand,value,field,false);
+    }
+    protected String handleOperand(int operand, String value, String field,boolean negate) 
+    {
+    	String val = "";
         if (operand == Filter.OP_EQUAL) {
-            return field + ":\"" + value + "\"";
+            val =  field + ":\"" + value + "\"";
         }
         else if (operand == Filter.OP_GREATER_THAN) {
             Integer newValue = new Integer(value);
             newValue++;
-            return field + ":[" + newValue + " TO *]";
+            val =  field + ":[" + newValue + " TO *]";
         }
         else if (operand == Filter.OP_LESS_THAN) {
             Integer newValue = new Integer(value);
             newValue--;
-            return field + ":[* TO "+newValue+"]";
+            val =  field + ":[* TO "+newValue+"]";
         }
         else if (operand == Filter.OP_WORD_BEGINS || operand == Filter.OP_HAS_WORD) {
-            return field + ":" + value;
+            val =  field + ":" + value;
         }
         else if (operand == Filter.OP_GREATER_OR_EQUAL) {
-            return field + ":[" + value + " TO *]";
+            val =  field + ":[" + value + " TO *]";
         }
         else if (operand == Filter.OP_LESS_OR_EQUAL) {
-            return field + ":[* TO "+value+"]";
+            val =  field + ":[* TO "+value+"]";
         }
         else if (operand == Filter.OP_NOT_EQUAL) {
-            return "*:* -" + field + ":" + value;
+            val =  "*:* -" + field + ":" + value;
         }
         else if (operand == Filter.OP_BEGINS) {
-            return field + ":" + value + "*";
+            val =  field + ":" + value + "*";
         }
         else if (operand == Filter.OP_ENDS) {
-            return field + ":" + "*" + value;
+            val =  field + ":" + "*" + value;
         }
         else if (operand == Filter.OP_CONTAINS) {
-            return field + ":" + "(" + value + ")";
+            val =  field + ":" + "(" + value + ")";
         }
         else if (operand == Filter.OP_GREEDY_BEGINS) {
-        	return "("+field + ":" + value + " OR "+field + ":" + value+"* )";
+        	val =  "("+field + ":" + value + " OR "+field + ":" + value+"* )";
         }
-        return "";
+        
+        if(negate) val = "-("+val+")";
+        return val;
     }
 
 }

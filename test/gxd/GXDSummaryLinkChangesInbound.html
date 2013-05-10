@@ -11,9 +11,14 @@
     li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
     p {margin:2px 0px;}
 </style>
-    <title>Marker Detail GXD Link Changes</title>
+    <title>GXD Summary Link Changes Inbound</title>
 </head>
 
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
 <body>
 
 <div id="TOC">
@@ -21,9 +26,11 @@
 </div>
 
 <div id="maintitle">
-    <h1>Marker Detail GXD Link Changes</h1>
+    <h1>GXD Summary Link Changes, Inbound</h1>
+    <p>formerly: Marker Detail GXD Link Changes</p>
     <ul>
-        <li>User story 96, Change links to GXD from the Marker Detail page</li>
+        <li>MGI 5.10, User story 96, Change links to GXD from the Marker Detail page</li>
+        <li>MGI 5.14, User story 81, Change links to GXD Summary from the Antibody Detail and Probe Detail pages</li>
     </ul>
 </div>
 
@@ -43,6 +50,7 @@
     <h2>Tests</h2>
     <div id="manual">
         <h3>Manual tests</h3>
+        <h4>from Marker Detail Page</h4>
         <ol>
             <li>Verify the Assay links have been removed from Expression section of Marker detail
             <p concordion:assertTrue="true">jeffc 8/13/2012</p>
@@ -113,6 +121,27 @@
                 </li>
             </ol>
             </li>
+       </ol>
+       <h4>From Probe Detail and Antibody Detail pages</h4>
+       <ol>
+       		<li>The link from the Antibody Detail page returns the correct GXD Summary page with the correct number of results
+            <p concordion:assertTrue="true">klf 3/25/2013</p>
+            <ol>
+            	<li>Navigate to the <a href="http://cardolan.informatics.jax.org/searches/antibody.cgi?4691">Antibody Detail page for 12F8 Antibody</a></li>
+            	<li>Verify that the Additional Information section says "24 results".</li>
+            	<li>Click the link and verify that 24 results are displayed.</li>
+            	<li>Verify that all results belong to Immunohistochemistry or Western Blot assays for Ncam1.</li>
+            </ol>
+			</li>
+			<li>The link from the Probe Detail page returns the correct GXD Summary page with the correct number of results
+			<p concordion:assertTrue="true">klf 3/25/2013</p>
+            <ol>
+            	<li>Navigate to the <a href="http://cardolan.informatics.jax.org/searches/probe.cgi?2543536">Probe Detail page for Arhgap31 probe</a></li>
+            	<li>Verify that the Additional Information section says "17 results".</li>
+            	<li>Click the link and verify that 17 results are displayed.</li>
+            	<li>Verify that all results belong to one RNA in situ assay for Arhgap31</li>
+            </ol>
+			</li>
        </ol>
     </div>
     <div id="auto">

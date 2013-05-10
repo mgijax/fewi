@@ -1,0 +1,564 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>GXD Differential Query Tests</title>
+</head>
+
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>GXD Differential Query Tests</h1>
+    <ul>
+        <li>User story #168, GXD Differential QF - Framework</li>
+        <li>User story #146, GXD Differential QF - Stucture A but not B</li>
+        <li>User story #170, GXD Differential QF - Stage I but not J</li>
+        <li>User story #196, GXD Differential QF - should land on Genes tab</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto168: Standard form has a second tab for the differential query</li>
+		<li>sto168: Differential Query Form has 2 ribbons: Strucures only and Stages only.</li>
+		<li>sto168: Each ribbon has a submit and reset button. User is only able to submit one ribbon.</li>
+		<li>sto168: Differential Query Form is tied into history manager by opening the appropriate tab+ribbon 
+			if the querystring represents a differential query.</li>
+		<li>sto146: the first query ribbon functional</li>
+		<li>sto146: looks only at positive results; shows only positive results</li>
+		<li>sto146: Has autocomplete boxes for structure A and another for structure B</li>
+		<li>sto146: Implements the broad flavor of NOT. That is a gene is returned if it shows positive expression in A or its descendants, AND has NO positive expression in B or its descendants.</li>
+		<li>sto146: For those genes that satisfy this criterion, show the positive results from A and its descendants</li>
+		<li>sto170: form allows user to select multiple stages for both I and J</li>
+		<li>sto170: allow user to specify J with a "no other stages" checkbox (equivalent to manually selecting all the other stages not in I)</li>
+		<li>sto170: returns genes that show positive expression in any of the I stages AND do NOT show positive expression in any of the J stages</li>
+		<li>sto170: for returned genes, show positive results from the I stages</li>
+		<li>sto196: when user clicks "Search" on the differential QF tab, the Genes tab is opened by default</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<h4>Framework - tabs and ribbons exist and javascript works properly</h4>
+		<p>Skip to <a href="#broadQuery">Broad Query</a></p>
+		<ol>
+		<li>Differential tab exists structures and stages ribbons
+			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+			<ol>
+			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a></li>
+			<li>Verify that <b>Differential Expression Search</b> tab exists.</li>
+			<li>Verify that clicking on it switches tabs.</li>
+			<li>Differential form should have two ribbons: 
+				<b>Anatomical Structure</b> and <b>Developmental Stage</b>.</li>
+			<li>The structure ribbon should be open by default. The stages ribbon should be closed by default.</li>
+			</ol>
+		</li>
+		<li>Anatomical Structure ribbon exists with proper form parameters
+			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+			<ol>
+			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a> and click 
+				<b>Differential Expression Search</b> tab.</li>
+			<li>Verify that the <b>Anatomical Structure</b> ribbon says:
+				<p>Search for genes expressed in some <b>anatomical structures</b> but not others.</p></li>
+			<li>Verify that there are two structure search boxes.</li>
+			<li>Verify that each structure box has a functional anatomical autocomplete and that each autocomplete
+				properly populates its input box.</li>
+			<li>Verify that there is a tooltip between the structure boxes that only appears on hover
+				and <b>disappears</b> when you hover out.</li>
+			<li>Tooltip should have the header <b>NOT detected or analyzed in...</b> and should display text:
+				<p>NOT detected or analyzed in = there are no positive expression results in the specified
+					structures recorded in the database.</p></li>
+			<li>Verify that the reset button works to reset the parameters on this form.</li>
+			<li>Verify that the submit button makes the summary appear (NOTE: we don't care if query is correct here.).</li>
+			<li>Copy the url in the browser after submitting a query. Paste into a new window or tab. </li>
+			<li>Verify that the summary appears. Click modify Search and verify that the <b>Anatomical Structure</b> ribbon
+				is display and populated with your search term(s).</li>
+			</ol>
+		</li>
+		<li>Developmental Stage ribbon exists with proper form parameters
+			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+			<ol>
+			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a>, click 
+				<b>Differential Expression Search</b> tab, then click anywhere on the text of the
+					<b>Developmental Stage</b> ribbon.</li>
+			<li>Verify that the <b>Anatomical Structure</b> ribbon closes, and the stages ribbon opens.</li>
+			<li>Verify that the <b>Developmental Stage</b> ribbon says:
+				<p>Search for genes expressed in some <b>developmental stages</b> but not others.</p></li>
+			<li>Verify that there are two theiler stage multiselect search boxes. (NOTE: there should not be an ages search)</li>
+			<li>Verify that there is a tooltip between the stages boxes that only appears on hover
+				and <b>disappears</b> when you hover out.</li>
+			<li>Tooltip should have the header <b>NOT detected or analyzed in...</b> and should display text:
+				<p>NOT detected or analyzed in = there are no positive expression results in the specified
+					stages recorded in the database.</p></li>
+			<li>Verify that the reset button works to reset the parameters on this form.</li>
+			<li>Verify that the submit button makes the summary appear (NOTE: we don't care if query is correct here.).</li>
+			<li>Copy the url in the browser after submitting a query. Paste into a new window or tab. </li>
+			<li>Verify that the summary appears. Click modify Search and verify that the <b>Developmental Stage</b> ribbon
+				is display and populated with the stage options you selected.</li>
+			</ol>
+		</li>
+		<li>Query submits and retains only the form parameters displayed to the user
+			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+			<ol>
+			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a>, click <b>Differential Expression Search</b> tab.</li>
+			<li>Select an anatomical structure for each of the input boxes in the "anatomical structure" ribbon.</li>
+			<li>Click anywhere on the text of the <b>Developmental Stage</b> ribbon.</li>
+			<li>Select any non-default Theiler Stage selections in each of the multi-select widgets in the "developmental stage" ribbon.</li>
+			<li>Click anywhere on the text of the <b>Anatomical Structure</b> ribbon.</li>
+			<li>Verify the anatomical structures previously selected are still visible.</li>
+			<li>Click anywhere on the text of the <b>Developmental Stage</b> ribbon.</li>
+			<li>Verify the theiler stage selections previously selected remain selected.</li>
+			<li>Click the <b>Submit</b> button (NOTE: we don't care if query is correct here).</li>
+			<li>Verify that the summary appears. Click modify Search and verify that the <b>Developmental Stage</b> ribbon is display and populated with the stage options you selected.</li>
+			<li>Click anywhere on the text of the <b>Anatomical Structure</b> ribbon.</li>
+			<li>Verify that the input boxes are empty.</li>
+			<li>Select an anatomical structure for each of the input boxes in the "anatomical structure" ribbon.</li>
+			<li>Click the <b>Submit</b> button (NOTE: we don't care if query is correct here).</li>
+			<li>Verify that the summary appears. Click modify Search and verify that the <b>Anatomical Structure</b> ribbon is display and populated with the structures you selected.</li>
+			</ol>
+		
+		</li>
+		</ol>
+
+		<h4 id="broadQuery">Broad Queries, return only positive results</h4>
+		<p>Note: all differential queries include only "wild type" results in the query logic and in the displayed results sets.  "Wild type" means any assays which are not associated with any allele pairs, and also in situ reporter (knock-in) assays associated with a single allele pair which is heterozygous w.t. for the assayed gene.</p>
+		<p>Skip to <a href="#structures">Structures</a> | <a href="#stages">Stages</a></p>
+
+		<h5 id="structures">Structures</h5>
+
+		<ol>
+			<li>The Genes tab is the default view for results in the differential query.
+  			<p concordion:assertTrue="true">passed klf 5/10/2013</p>  
+  			<ol>
+  				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
+  				<li>Verify that the Genes tab is the default view (not the Assay Results tab).</li>
+  			</ol>
+			</li>
+
+			<li>Wild type results ("broad" definition) are included in the differential query.
+  			<p concordion:assertTrue="true">passed kstone 5/7/13</p>  
+  			<ol>
+  				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
+  				<li>Verify that the gene <b>Th</b> is returned.</li>
+  				<li>Verify that the results for <b>Th</b> include assay <b>MGI:3842448</b> having genotype <b>Th&lt;tm1(cre)Te&gt;/Th+</b>.</li>
+  				<li>Verify that the results for <b>Th</b> include assay <b>MGI:3842448</b> but NOT genotype <b>Th&lt;tm1(cre)Te&gt;/Th&lt;tm1(cre)Te&gt;</b>.</li>
+  				<li>Verify that the results for <b>Th</b> do NOT include assay <b>MGI:4451201</b> having genotype <b>Gdnf&lt;tm1Rosl&gt;/Gdnf&lt;tm1Rosl&gt;</b>.</li>
+  			</ol>
+			</li>
+    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
+    		<ul>
+    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
+    			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+  			<p concordion:assertTrue="true">passed kstone 5/7/13</p>
+    		<ol>
+                <li>Query for genes with expression detected in <b  concordion:set="#struct1">pulmonary valve</b>, not detected or analyzed in <b  concordion:set="#struct2">aortic valve</b>.</li>
+                <li>Verify that <i>results</i> for <b>pulmonary valve</b> or its child term <b>pulmonary valve leaflet</b> are returned for the following genes <i>(semi automated)</i>:
+                <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
+                	<tr><td>Acta2</td></tr>
+					<tr><td>Casp3</td></tr>
+					<tr><td>Col11a1</td></tr>
+					<tr><td>Foxc1</td></tr>
+					<tr><td>Foxc2</td></tr>
+					<tr><td>Hand1</td></tr>
+					<tr><td>Itga6</td></tr>
+					<tr><td>Mki67</td></tr>
+					<tr><td>Postn</td></tr>
+				</table>
+                </li>
+                <li>Verify that <i>results</i> for <b>aortic valve</b> or its child term <b>aortic valve leaflet</b> are <b>not returned</b>.</li>
+                <li>Verify that the following genes are <b>not returned</b> <i>(fully automated)</i>:
+                <table cc:verifyNotRows="#result : getGeneSymbols(#struct1,#struct2)">
+						<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
+					    <tr><td>Gnb4</td></tr>
+					    <tr><td>Itgb1</td></tr>
+					    <tr><td>Mxra8</td></tr>
+					    <tr><td>Nat2</td></tr>
+					    <tr><td>Npas3</td></tr>
+					    <tr><td>Pdgfra</td></tr>
+				</table>
+				<p>Note: Nat2 is excluded because its results are not "wild type". </p>
+                </li>
+    		</ol>
+    		</li>
+    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" is a parent of "B" in the same Anatomical System, returns only the following:<br/>
+    		Example: <i>detected in Cardiovascular System but not detected or analyzed in Heart</i> is a valid query and should return results. 
+    		<ul>
+    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
+    			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+  			<p concordion:assertTrue="true">passed kstone 5/7/13</p> 
+    		<ol>
+                <li>Query for genes with expression detected in <b concordion:set="#struct1">pulmonary valve</b> but not detected or analyzed in <b concordion:set="#struct2">pulmonary valve leaflet</b>.</li>
+                <li>Verify that <i>results</i> for <b>pulmonary valve</b> are returned for the following genes <i>(semi automated)</i>:
+                <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
+					<tr><td>Acta2</td></tr>
+					<tr><td>Casp3</td></tr>
+					<tr><td>Col11a1</td></tr>
+					<tr><td>Foxc1</td></tr>
+					<tr><td>Foxc2</td></tr>
+					<tr><td>Gnb4</td></tr>
+					<tr><td>Hand1</td></tr>
+					<tr><td>Itga6</td></tr>
+					<tr><td>Itgb1</td></tr>
+					<tr><td>Mki67</td></tr>
+					<tr><td>Mxra8</td></tr>
+					<tr><td>Npas3</td></tr>
+					<tr><td>Postn</td></tr>
+				</table>
+                <ul>
+                </ul>
+                </li>
+                <li>Verify that results for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">pulmonary valve leaflet</b> are not returned. <i>(fully automated)</i></li>
+                <li>Verify that the gene <b cc:assertNoResultsContain="getGeneSymbols(#struct1,#struct2)">Pdgfra</b> is not returned. <i>(fully automated)</i></li>
+    		</ol>
+    		</li>
+    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" is a child of "B" in the same Anatomical System, returns NO RESULTS.<br/>
+    		Example: <i>detected in Lung but not detected or analyzed in Respiratory System</i> is not a valid query. 
+    		<ol>
+                <li>Query for genes with expression detected in <b concordion:set="#struct1">lung</b> but not detected or analyzed in <b concordion:set="#struct2">respiratory system</b>.</li>
+                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b><i>(fully automated)</i></li>
+    		</ol>
+    		</li>
+
+    		<li>A query for detected in "A", not detected or analyzed in "B", where "B" is a text token contained in the text string of "A", returns NO RESULTS. <br/>
+    		Example: <i>detected in Future Brain but not detected or analyzed in Brain</i> is valid biologically, but since we are doing "contains token" textual-searching, the query will fail.
+    		<ol>
+                <li>Query for genes with expression detected in <b concordion:set="#struct1">pancreas primordium</b> but not detected or analyzed in <b concordion:set="#struct2">pancreas</b>.</li>
+                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b><i>(fully automated)</i></li>
+    		</ol>
+    		</li>
+
+    		<li>A query for detected in "A", not detected or analyzed in "B", where "B" is text but not a full text token contained in the text string of "A", returns results. <br/>
+    		Example: <i>detected in Female... but not detected or analyzed in Male...</i>, since we are doing "contains token" textual-searching, should still produce some results.
+  			<p concordion:assertTrue="true">passed kstone 5/7/13</p>  
+    		<ol>
+                <li>Query for genes with expression detected in <b concordion:set="#struct1">female reproductive system</b> but not detected or analyzed in <b concordion:set="#struct2">male reproductive system</b>.</li>
+                <li>Verify that <b>1,045 genes</b> are returned including<i>(semi automated)</i>:
+                <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
+                	<tr><td>Abcb1b</td></tr>
+                	<tr><td>Ablim1</td></tr>
+                	<tr><td>Ablim2</td></tr>
+                	<tr><td>Casp3</td></tr>
+                	<tr><td>Mnx1</td></tr>
+                	<tr><td>Prr3</td></tr>
+                	<tr><td>Prr14</td></tr>
+                	<tr><td>Th</td></tr>
+                	<tr><td>Zufsp</td></tr>
+				</table>
+                </li>
+                <li>Verify that results DO NOT include <i>(semi automated)</i>:
+                <table cc:verifyNotRows="#result : getResultStructures(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Structure</th></tr>
+                	<tr><td>male reproductive system</td></tr>
+                	<tr><td>testis</td></tr>
+                </table>
+                OR - <i>Note: these 3 are manual tests...</i>
+                <ul>
+                	<li>any term that has <b>testis</b> in it</li>
+                	<li>male reproductive structure</li>
+                	<li>any term that has <b>male</b> (but "female" is OK) in it</li>
+                </ul>
+				</li>
+                <li>Verify that results DO include:
+                <table cc:verifySupersetOf="#result : getResultStructures(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Structure</th></tr>
+                	<tr><td>female reproductive system</td></tr>
+                	<tr><td>ovary</td></tr>
+                	<tr><td>oocyte</td></tr>
+                	<tr><td>uterus</td></tr>
+                	<tr><td>placenta</td></tr>
+                </table>
+				</li>
+    		</ol>
+    		</li>
+    		
+    		<li>A query for detected in "A", not detected or analyzed in "B", where a gene has both "expressed" and "not expressed" results for "A" and has no results and/or "not expressed" results (but does not have any "expressed" results) for "B" should return the gene.
+  			<p concordion:assertTrue="true">passed kstone 5/7/13</p>  
+  			<ol>
+  				<li>Query for genes with expression data detected in <b concordion:set="#struct1">liver</b>, not detected or analyzed in <b concordion:set="#struct2">spleen</b> <i>(fully automated)</i></li>
+  				<li>Verify that these genes ARE included in the results set:
+  				<table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
+  					<tr><th concordion:assertEquals="#result">Gene</th><th>Notes</th></tr>
+  					<tr><td>A2m</td><td>liver has "expr"; spleen has no results</td></tr>
+  					<tr><td>Aard</td><td>liver has "expr" and "not spec"; spleen has "not spec"</td></tr>
+  					<tr><td>Abca3</td><td>liver has "expr" and "not expr"; spleen has "not expr" and "not spec"</td></tr>
+  					<tr><td>Bckdk</td><td>liver has "expr" and "not expr" and "not spec"; no data for "spleen"</td></tr>
+  					<tr><td>Pkm</td><td>liver has "expr" and "ambig"; spleen has "not expr"</td></tr>
+  				</table>
+  				</li>
+  				<li>Verify that these genes ARE NOT included in the results set:
+  				<table cc:verifyNotRows="#result : getGeneSymbols(#struct1,#struct2)">
+  					<tr><th concordion:assertEquals="#result">Gene</th><th>Notes</th></tr>
+  					<tr><td>Abat</td><td>spleen has "expr" and "not expr"</td></tr>
+  					<tr><td>Abca7</td><td>spleen has "expr" and "not expr"</td></tr>
+  					<tr><td>Arhgap20</td><td>liver has "not specified", should be excluded</td></tr>
+  					<tr><td>Inhbb</td><td>liver has "not expr" and "ambig"; spleen has "not expr"</td></tr>
+  				</table>
+  				</li>
+  			</ol>
+    		</li>
+
+   		</ol>
+
+   		<h5 id="stages">Stages</h5>
+
+   		<ol>
+    		<li>A query for detected in "Stage I", not detected or analyzed in "Stage J", returns only the following:
+    		<ul>
+    			<li>GENES having positive results for "Stage I" and having no positive results for "Stage J" (treat root nodes like any other node)</li>
+    			<li>ASSAY RESULTS for "Stage I" - positive results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+    		<ol>
+                <li>Query for genes with expression detected in Stage <b concordion:set="#stage1">22</b>, not detected or analyzed in Stage <b concordion:set="#stage2">23</b>. 
+                	<i>(fully automated)</i></li>
+                <li>Verify that the following genes appear in the results set:
+                <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
+	                <tr><td>Abca2</td></tr>
+	                <tr><td>Abca4</td></tr>
+                	<tr><td>Abca7</td></tr>
+                </table>
+                </li>
+                <li>Verify that the following genes DO NOT appear in the results set:
+                <table cc:verifyNotRows="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
+                	<tr><td>Abca1</td></tr>
+                	<tr><td>Abca3</td></tr>
+	                <tr><td>Abca5</td></tr>
+                	<tr><td>Kcnh5</td></tr>
+                </table>
+                </li>
+    		</ol>  		
+    		<ol>
+                <li>Query for genes with expression detected in Stage <b concordion:set="#stage1">17</b>, not detected or analyzed in Stage <b concordion:set="#stage2">20</b>.
+                	<i>(fully automated)</i></li>
+                <li>Verify that the following genes appear in the results set:
+                <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
+	                <tr><td>Asgr2</td></tr>
+                </table>
+                <p>Note: This gene has a "Not detected" result at TS20. Therefore, this query should return it.</p>
+                </li>
+    		</ol>  		
+    		</li>
+    		<li>A query for detected in "Stage I or J", not detected or analyzed in "Stage K or L", returns only the following:
+    		<ul>
+    			<li>GENES having positive results for "Stage I" or having positive results for "Stage J" and having no positive results for "Stage K" and having no positive results for "Stage L" (treat root nodes like any other node)</li>
+    			<li>ASSAY RESULTS for "Stage I" and for "Stage J" - positive results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+    		<ol>
+                <li>Query for genes with expression detected in Stages <b concordion:set="#stage1">2,3</b>, not detected or analyzed in Stages <b concordion:set="#stage2">8,9,10</b>
+                	<i>(fully automated)</i></li>
+                <li>Verify that the following genes appear in the results set:
+                <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
+                	<tr><td>Fabp5</td></tr>
+                	<tr><td>Kat2a</td></tr>
+	                <tr><td>Klf3</td></tr>
+	                <tr><td>Klf4</td></tr>
+	                <tr><td>Klk1</td></tr>
+                </table>
+                </li>
+                <li>Verify that the following genes DO NOT appear in the results set:
+                <table cc:verifyNotRows="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
+                	<tr><td>Art1</td></tr>
+                	<tr><td>Art5</td></tr>
+                	<tr><td>Bmp5</td></tr>
+                	<tr><td>Bmp7</td></tr>
+                	<tr><td>Klf1</td></tr>
+                	<tr><td>Klf2</td></tr>
+                </table>
+                </li>
+    		</ol>  		
+    		</li>
+    		<li>A query for detected in "Stage I or J", not detected or analyzed in "Any stage not selected above", returns only the following:
+    		<ul>
+    			<li>GENES having positive results for "Stage I" or having positive results for "Stage J" and having no positive results for "Stage K" and having no positive results for "Stage L" and having no positive results for "Stage M"... and having no positive results for "Stage 28" (treat root nodes like any other node)</li>
+    			<li>ASSAY RESULTS for "Stage I" and for "Stage J" - positive results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+    		<ol>
+                <li>Query for genes with expression detected in Stage <b concordion:set="#stage1">23</b> and not detected or analyzed in <b concordion:set="#stage2">any stage not selected above</b>.
+                	<i>(fully automated)</i></li>
+                <li>Verify that the following genes appear in the results set:
+                <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th><th>Notes</th></tr>
+                	<tr><td>Bfsp1</td><td>1 result</td></tr>
+                	<tr><td>Chm</td><td>1 result</td></tr>
+                	<tr><td>Esyt3</td><td>2 results</td></tr>
+                	<tr><td>Krtap14</td><td>3 results</td></tr>
+                	<tr><td>Serpina3c</td><td>3 results</td></tr>
+                	<tr><td>Sult1c1</td><td>3 results</td></tr>
+                </table>
+                </li>
+                <li>Verify that the following genes DO NOT appear in the results set:
+                <table cc:verifyNotRows="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th><th>Notes</th></tr>
+                	<tr><td>Bnipl</td><td>has data other stages</td></tr>
+                	<tr><td>Ltb4r1</td><td>has data other stages</td></tr>
+                	<tr><td>Slc17a1</td><td>has only "not expressed" for TS 23</td></tr>
+                	<tr><td>Slc26a3</td><td>has only "not expressed" for TS 23</td></tr>
+                	<tr><td>Snx10</td><td>has data other stages</td></tr>
+                </table>
+                </li>
+                <li>Query for genes with expression detected in Stages <b concordion:set="#stage1">22,23</b> and not detected or analyzed in <b concordion:set="#stage2">any stage not selected above</b>.
+                	<i>(fully automated)</i></li>
+                <li>Verify that the following genes appear in the results set:
+                <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th><th>Notes</th></tr>
+                	<tr><td>Bfsp1</td><td>1 result</td></tr>
+                	<tr><td>Chm</td><td>1 result</td></tr>
+                	<tr><td>Cfl2</td><td>1 result</td></tr>
+                	<tr><td>Eif6</td><td>1 "expr", 2 "not expr" at TS 22</td></tr>
+                	<tr><td>Esyt3</td><td>2 results</td></tr>
+                	
+                	<tr><td>Krtap14</td><td>3 results</td></tr>
+                	<tr><td>Rad23a</td><td>2 at TS22</td></tr>
+                	<tr><td>Serpina3c</td><td>3 results</td></tr>
+                	<tr><td>Snx10</td><td>2 at TS22, 1 at TS23</td></tr>
+                	<tr><td>Sult1c1</td><td>3 results</td></tr>
+                	<tr><td>Tspan15</td><td>1 at TS22, 2 at TS23</td></tr>
+                </table>
+                </li>
+                <li>Verify that the following genes DO NOT appear in the results set:
+                <table cc:verifyNotRows="#result : getGeneSymbolsByStage(#stage1,#stage2)">
+	                <tr><th concordion:assertEquals="#result">Gene symbol</th><th>Notes</th></tr>
+                	<tr><td>Arsk</td><td>has data TS 22 but also TS 20</td></tr>
+                	<tr><td>Bnipl</td><td>has data other stages</td></tr>
+                	<tr><td>Fgl1</td><td></td></tr>
+                	<tr><td>Ltb4r1</td><td>has data other stages</td></tr>
+                	<tr><td>Slc17a1</td><td>has only "not expressed" for TS 23</td></tr>
+                	<tr><td>Slc26a3</td><td>has only "not expressed" for TS 23</td></tr>
+                </table>
+                </li>
+    		</ol>  		
+    		</li>
+    	</ol>
+<!--     	<h4>Broad Queries, return positive and "negative" results</h4>
+    	<ol>
+    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
+    		<ul>
+    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
+    			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
+    			<li>ASSAY RESULTS for "B" ONLY, no substructures, no ancestors - negative ("absent") results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+ 			<p concordion:assertTrue="false">new</p> 
+ 			<ol>
+ 				<li>Step 1</li>
+ 				<li>Step 2</li>
+ 			</ol>
+    		</li>
+    	</ol>
+ -->
+
+ <!-- 
+		<h4>Strict Queries</h4>
+		<ol>
+    		<li>A query for detected in "A", not detected in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
+    		<ul>
+    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures and having negative results in "B" or its parent terms</li>
+    			<li>ASSAY RESULTS for "A" and its parent terms - positive results only</li>
+    			<li>??? ASSAY RESULTS for "B" and its substructures - negative results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li><i>Need to find test data</i></li>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+    		<li>A query for detected in "A", not detected in "B", where "A" is a parent of "B" in the same Anatomical System, returns only the following: 
+    		<ul>
+    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures and having negative results in "B" or its parent terms</li>
+    			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
+    			<li>??? ASSAY RESULTS for "B" and its parent terms - negative results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li><i>Need to find test data</i></li>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+    		<li>A query for detected in "A", not detected in "B", where "A" is a child of "B" in the same Anatomical System, returns NO RESULTS. 
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li><i>Need to find test data</i></li>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+-->
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

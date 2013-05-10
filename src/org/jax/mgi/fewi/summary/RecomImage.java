@@ -80,6 +80,10 @@ public class RecomImage {
         return image.getFigureLabel();
     }
 
+    public String getExternalLink() {
+        return image.getExternalLink();
+    }
+
     public String getCaption() {
 		String cleanCaption = image.getCaption();
 		if (cleanCaption==null) {return "";}

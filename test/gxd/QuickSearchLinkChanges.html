@@ -24,12 +24,14 @@
 <div id="maintitle">
     <h1>Quick Search Link Changes</h1>
     <ul>
-        <li>User story 116, Change links from Quick Search to GXD Summary</li>
+        <li>Release 5.10 - User story 116, Change links from Quick Search to GXD Summary</li>
+        <li>Release 5.14 - User story 104, Change links from Quick Search to GXD Assay Detail Page</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
+    <p>Release 5.10, User story 115, GXD Summary</p>
 	<ul>
 		<li>users of the Quick Search should land on new results summary page when they click on "xxx expression results".<i>Note: copied this A.C. from <a href="ADBrowserLinkChanges.html">AD Browser Link Changes</a>, story 111.</i></li>
 		<li><i>Note: no change to our default sort. -Connie 7/27/12</i></li>
@@ -40,6 +42,10 @@
 	<li>(A) page has result tabs at bottom and collapsed query form at top.</li>
 	<li>(B) page has result tabs at bottom and nothing at top.</li>
 	<li>(C) page has result tabs at bottom and custom header at top.</li>
+	</ul>
+	<p>Release 5.14, User story 104, GXD Assay Detail page</p>
+	<ul>
+		<li>An assay detail page link returned by the Quick Search now uses the correct, updated FeWI URL. (--KLF 3/8/2013)</li>
 	</ul>
 </div>
 
@@ -145,6 +151,15 @@ SELECT COUNT(*) FROM gxd_expression e, closure s WHERE e._Structure_key = s._Str
                 <li>Verify that the <b>"You searched for" area is empty</b>.</li>
                 <li>Verify that a <b>link to GXD Lit Index records does not appear</b>.</li>
     		</ol>
+    		</li>
+    		<li>Quick Search results that match an Assay Detail page id link to the new FeWI URL.
+ 			<p concordion:assertTrue="true">klf 3/13/13</p>
+ 			<ol>
+ 				<li>Query for in situ assay ID: MGI:3687286.</li>
+ 				<li>Verify that the Quick Search result is hyperlinked to the FeWI URL and opens the correct page.</li>
+ 				<li>Query for blot assay ID: MGI:3608642.</li>
+ 				<li>Verify that the Quick Search result is hyperlinked to the FeWI URL and opens the correct page.</li>
+ 			</ol>
     		</li>
 		</ol>
 	</div>
