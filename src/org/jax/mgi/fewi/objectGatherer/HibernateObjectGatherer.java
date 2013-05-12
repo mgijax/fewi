@@ -75,7 +75,13 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	@Transactional(readOnly = true)
 	public List<T> get(Class<T> modelObj, List<String> keys) {
 
-		return get(modelObj,keys,"primary key");
+		return get(modelObj,keys,"primary key","int");
+	}
+	
+	@Transactional(readOnly = true)
+	public List<T> get(Class<T> modelObj, List<String> keys, String fieldName) {
+
+		return get(modelObj,keys,fieldName,"String");
 	}
 	
 	/**
@@ -83,7 +89,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	 * by specified field name
 	 */
 	@Transactional(readOnly = true)
-	public List<T> get(Class<T> modelObj, List<String> keys, String fieldName) {
+	public List<T> get(Class<T> modelObj, List<String> keys, String fieldName,String fieldType) {
 
 		logger.debug("Started : objects keys - " + keys);
 
@@ -102,7 +108,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		}
 
 		// format the keys to Integer objects if possible
-		List<Object> keyObjs = formatKeys(keys);
+		List<Object> keyObjs = formatKeys(keys,fieldType);
 		
 		// get results chunking if needed.
 		long start = System.nanoTime();
@@ -165,25 +171,29 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	/*
 	 * Formats keys to Integer if they parse as ints, else return the original list
 	 */
-	public List<Object> formatKeys(List<String> keys)
+	public List<Object> formatKeys(List<String> keys,String fieldType)
 	{
 		List<Object> keyObjs = new ArrayList<Object>();
-		try
+		if(fieldType.equals("int"))
 		{
-			// convert keys to Integers
-			for (String key : keys) {
-				keyObjs.add(new Integer(key));
-			}
-			return keyObjs;
-		}
-		catch (NumberFormatException ne)
-		{
-			for(String key : keys)
+			try
 			{
-				keyObjs.add(key);
+				// convert keys to Integers
+				for (String key : keys) {
+					keyObjs.add(new Integer(key));
+				}
+				return keyObjs;
 			}
-			return keyObjs;
+			catch (NumberFormatException ne)
+			{
+				// apply default behavior of using strings below
+			}
 		}
+		for(String key : keys)
+		{
+			keyObjs.add(key);
+		}
+		return keyObjs;
 	}
 
 }
