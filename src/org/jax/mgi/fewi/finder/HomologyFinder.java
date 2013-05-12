@@ -1,8 +1,10 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import mgi.frontend.datamodel.Disease;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 
@@ -69,11 +71,19 @@ public class HomologyFinder {
         return searchResults;
     }
     
-    // convenience wrapper
-    public SearchResults<HomologyCluster> getHomologyByID(String id) {
-        SearchParams searchParams = new SearchParams();
-        searchParams.setFilter(new Filter(SearchConstants.HOMOLOGY_ID,id,Filter.OP_EQUAL));
-        return getHomologyByID(searchParams);
+    public List<HomologyCluster> getHomologyClusterByID(String id)
+    {
+        return getHomologyByID(Arrays.asList(id));
     }
+    public List<HomologyCluster> getHomologyByID(List<String> id)
+    {
+        return homologyGatherer.get( HomologyCluster.class, id, "primaryID" );
+    }
+//    // convenience wrapper
+//    public SearchResults<HomologyCluster> getHomologyByID(String id) {
+//        SearchParams searchParams = new SearchParams();
+//        searchParams.setFilter(new Filter(SearchConstants.HOMOLOGY_ID,id,Filter.OP_EQUAL));
+//        return getHomologyByID(searchParams);
+//    }
     
 }

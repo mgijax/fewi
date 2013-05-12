@@ -147,15 +147,7 @@ public class HomologyController {
     // whether the initial link was by HG ID or by non-mouse marker key
     private ModelAndView prepareHomoloGeneClass (String homologyID) {
 
-        // setup search parameters object
-        SearchParams searchParams = new SearchParams();
-        Filter homologyIdFilter = new Filter(SearchConstants.HOMOLOGY_ID, homologyID);
-        searchParams.setFilter(homologyIdFilter);
-
-        // find the requested HomologyCluster
-        SearchResults<HomologyCluster> searchResults
-          = homologyFinder.getHomologyByID(searchParams);
-        List<HomologyCluster> homologyList = searchResults.getResultObjects();
+        List<HomologyCluster> homologyList = homologyFinder.getHomologyClusterByID(homologyID);
 
         // there can be only one...
         if (homologyList.size() < 1) { // none found
@@ -183,15 +175,7 @@ public class HomologyController {
 
         logger.debug("->comparativeGOGraphByID started");
 
-        // setup search parameters object
-        SearchParams searchParams = new SearchParams();
-        Filter homologyIdFilter = new Filter(SearchConstants.HOMOLOGY_ID, homologyID);
-        searchParams.setFilter(homologyIdFilter);
-
-        // find the requested HomologyCluster
-        SearchResults<HomologyCluster> searchResults
-          = homologyFinder.getHomologyByID(searchParams);
-        List<HomologyCluster> homologyList = searchResults.getResultObjects();
+        List<HomologyCluster> homologyList = homologyFinder.getHomologyClusterByID(homologyID);
 
         // there can be only one...
         if (homologyList.size() < 1) { // none found

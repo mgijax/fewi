@@ -117,16 +117,7 @@ public class DiseaseController {
     // whether the initial link was by disease ID or by database key
     private ModelAndView prepareDisease (String diseaseID, String view) {
 
-        // setup search parameters object
-        SearchParams searchParams = new SearchParams();
-        Filter diseaseIdFilter = new Filter(SearchConstants.DISEASE_ID, diseaseID);
-        searchParams.setFilter(diseaseIdFilter);
-
-        // find the requested Disease object
-        SearchResults<Disease> searchResults
-          = diseaseFinder.getDiseaseByID(searchParams);
-        List<Disease> diseaseList = searchResults.getResultObjects();
-
+        List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
         // there can be only one...
         if (diseaseList.size() < 1) { // none found
             ModelAndView mav = new ModelAndView("error");

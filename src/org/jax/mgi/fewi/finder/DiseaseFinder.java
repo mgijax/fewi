@@ -1,8 +1,10 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Disease;
 
 import org.jax.mgi.fewi.hunter.SolrDiseaseHunter;
@@ -78,12 +80,20 @@ public class DiseaseFinder {
         
         return searchResults;
     }
-    
-    // convenience wrapper
-    public SearchResults<Disease> getDiseaseByID(String id) {
-        SearchParams searchParams = new SearchParams();
-        searchParams.setFilter(new Filter(SearchConstants.DISEASE_ID,id,Filter.OP_EQUAL));
-        return getDiseaseByID(searchParams);
+    public List<Disease> getDiseaseByID(String diseaseID)
+    {
+        return getDiseaseByID(Arrays.asList(diseaseID));
     }
+    public List<Disease> getDiseaseByID(List<String> diseaseID)
+    {
+        return diseaseGatherer.get( Disease.class, diseaseID, "primaryID" );
+    }
+    
+//    // convenience wrapper
+//    public SearchResults<Disease> getDiseaseByID(String id) {
+//        SearchParams searchParams = new SearchParams();
+//        searchParams.setFilter(new Filter(SearchConstants.DISEASE_ID,id,Filter.OP_EQUAL));
+//        return getDiseaseByID(searchParams);
+//    }
     
 }
