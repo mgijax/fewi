@@ -68,6 +68,7 @@ tr.gray td {background-color:#EEEEEE;}
 
 <div id="tests">
     <h2>Tests</h2>
+    <p>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</p>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
@@ -76,14 +77,14 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Verify dbSNP build is 137 on the snp detail page
+    		<li><span class="regressHi">Regress</span> Verify dbSNP build is 137 on the snp detail page
  			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
     		<ol>
                 <li>Display the SNP detail page for rs29438715</li>
                 <li>When the detail page displays verify in the ID/Version ribbon it says dbSNP Build 137</li>
     		</ol>
     		</li>
-    		<li>Verify NCBI build is 38 on the snp detail page
+    		<li><span class="regressHi">Regress</span> Verify NCBI build is 38 on the snp detail page
  			<p concordion:assertTrue="true">klf 3/4/2013</p>
     		<ol>
                 <li>Display the SNP detail page for rs29438715</li>
@@ -91,7 +92,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>When the detail page displays verify on the Gene/Marker associations and Function classes ribbon it says GRCm38</li>
     		</ol>
     		</li>
-    		<li>Verify GBrowse link renders correct page when SNP is mapped to 1 coordinate location.
+    		<li><span class="regressHi">Regress</span> Verify GBrowse link renders correct page when SNP is mapped to 1 coordinate location.
  			<p concordion:assertTrue="true">klf 3/4/2013</p>
     		<ol>
                 <li>Display the SNP detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=snpDetail&amp;id=rs29404805">rs29404805</a>.</li>
@@ -100,7 +101,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify that clicking the link renders the GBrowse page with the correct region of the correct chromosome.</li>
     		</ol>
     		</li>
-    		<li>Verify GBrowse link does not appear and special message appears when SNP is mapped to 2+ coordinate locations.
+    		<li><span class="regressHi">Regress</span> Verify GBrowse link does not appear and special message appears when SNP is mapped to 2+ coordinate locations.
     		<!-- The marker Gm20528 on chr 1 between 55538965 and 156522369 contains many SNPs with multiple coordinates -->
  			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
     		<ol>
@@ -109,7 +110,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify that a text message appears in red below the existing genome browser links: "SNP maps to multiple genome locations. MGI Gbrowse link is not available."</li>
     		</ol>
     		</li>
-    		<li>MPD links from SNP summary pages ure the correct URL pattern to link to MPD
+    		<li><span class="regressHi">Regress</span> MPD links from SNP summary pages ure the correct URL pattern to link to MPD
 			<p concordion:assertTrue="true">KLF 3/13/13</p>
     		<ol>
                 <li>Display the SNP Summary page for <b>Pax6</b> and click on the first SNP Detail link for RS33198906</li>
