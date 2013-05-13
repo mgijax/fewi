@@ -1,6 +1,6 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
 <head>
-<title>Allele Detail | High-Throughput MP Project</title>
+<title>Allele Detail and Summary Tests</title>
 <style>
 </style>
 <!-- <link href="/FeWi/test/concordion.css" rel="stylesheet" type="text/css"/> -->
@@ -17,11 +17,11 @@ declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
 -->
 
-    <h1>Allele Detail - High-Throughput MP Project</h1>
+    <h1>Allele Detail and Summary Tests</h1>
 
 	<div>
 	<h2>Functional Description</h2>
-	<p>For the Allele Detail Page, we plan to modify the Phenotype Summary grid to incorporate:</p>
+	<p>For the Allele Detail Page, the Phenotype Summary grid incorporates:</p>
 	<ul>
 		<li>Pulling the display from the FEWI</li>
 		<li>Displaying sex-specific (male/female) annotations</li>
@@ -29,6 +29,12 @@ declare strict doctype to look for disallowed html errors
 		<li>Associating mutant cell lines for an allele with the genotype which carries the MP annotation</li>
 		<li>Displaying MP annotations loaded automatically from WTSI (Sanger) and Europhenome High-Throughput Phenotyping projects</li>
 		<li>Modifying the page such that Phenotype-by-Genotype text is contained only in pop-up pages, one per Genotype</li> 
+	</ul>
+	<p>For recombinase alleles (alleles which possess a Driver Note), the Recombinase Activity ribbon incorporates:</p>
+	<ul>
+		<li>Display is pulled from the FEWI</li>
+		<li>Recombinase activity in all Anatomical Systems and Structures is summarized in an overview grid, similar to the Phenotype annotations grid</li>
+		<li>Users may submit observations about the recombinase allele which may be entered by curators and displayed here.</li>
 	</ul>
 	
 	</div>
