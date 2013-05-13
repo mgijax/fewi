@@ -54,6 +54,16 @@ public class SolrPropertyMapper
     	return singleField;
     }
     
+    public List<String> getFieldList()
+    {
+    	return fieldList;
+    }
+    
+    public String getJoinClause()
+    {
+    	return joinClause;
+    }
+    
     /**
      * This is the standard api, which returns a string that will be passed 
      * to the underlying technology.

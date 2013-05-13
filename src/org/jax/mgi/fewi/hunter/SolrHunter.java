@@ -393,13 +393,29 @@ public class SolrHunter implements Hunter {
 //            }
             else
             {
-                String joinClause = " OR ";
-                String field = propertyMap.get(filter.getProperty()).getField();
+                String joinClause = "\" OR \"";
+                SolrPropertyMapper pm = propertyMap.get(filter.getProperty());
+                String field = pm.getField();
                 // NOT IN should not be supported for solr queries. It is not used anywhere in our codebase
                 //if (filter.getOperator() == Filter.OP_NOT_IN) joinClause = " AND ";
-
-                // Create the subclause, surround it in parens
-                return field+":("+StringUtils.join(filter.getValues(),joinClause)+")";
+                if(!"".equals(field))
+                {
+                    // Create the subclause, surround it in parens
+                    return field+":(\""+StringUtils.join(filter.getValues(),joinClause)+"\")";
+                }
+                else
+                {
+                	// have to support the lazy programmer who feels the need to put multiple solr fields into one property
+                	String fieldJoinClause = pm.getJoinClause();
+                	
+                	// build the multiple field list
+                	List<String> queryClauses = new ArrayList<String>();
+                	for(String listField : pm.getFieldList())
+                	{
+                		queryClauses.add(listField+":(\""+StringUtils.join(filter.getValues(),joinClause)+"\")");
+                	}
+                	return "("+StringUtils.join(queryClauses,fieldJoinClause)+")";
+                }
             }
         }
 
