@@ -61,6 +61,7 @@
 
 <div id="tests">
     <h2>Tests</h2>
+    <p>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</p>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
@@ -156,7 +157,7 @@
 		<h5 id="structures">Structures</h5>
 
 		<ol>
-			<li>The Genes tab is the default view for results in the differential query.
+			<li><span class="regressHi">Regress</span> The Genes tab is the default view for results in the differential query (sto196).
   			<p concordion:assertTrue="true">passed klf 5/10/2013</p>  
   			<ol>
   				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
@@ -174,7 +175,7 @@
   				<li>Verify that the results for <b>Th</b> do NOT include assay <b>MGI:4451201</b> having genotype <b>Gdnf&lt;tm1Rosl&gt;/Gdnf&lt;tm1Rosl&gt;</b>.</li>
   			</ol>
 			</li>
-    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
+    		<li><span class="regressHi">high</span> A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
     		<ul>
     			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
     			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
@@ -198,7 +199,6 @@
 					<tr><td>Postn</td></tr>
 				</table>
                 </li>
-                <li>Verify that <i>results</i> for <b>aortic valve</b> or its child term <b>aortic valve leaflet</b> are <b>not returned</b>.</li>
                 <li>Verify that the following genes are <b>not returned</b> <i>(fully automated)</i>:
                 <table cc:verifyNotRows="#result : getGeneSymbols(#struct1,#struct2)">
 						<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
@@ -211,9 +211,10 @@
 				</table>
 				<p>Note: Nat2 is excluded because its results are not "wild type". </p>
                 </li>
+                <li>Verify that <i>results</i> for <b>aortic valve</b> or its child term <b>aortic valve leaflet</b> are <b>not returned</b>.</li>
     		</ol>
     		</li>
-    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" is a parent of "B" in the same Anatomical System, returns only the following:<br/>
+    		<li><span class="regressHi">high</span> A query for detected in "A", not detected or analyzed in "B", where "A" is a parent of "B" in the same Anatomical System, returns only the following:<br/>
     		Example: <i>detected in Cardiovascular System but not detected or analyzed in Heart</i> is a valid query and should return results. 
     		<ul>
     			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
