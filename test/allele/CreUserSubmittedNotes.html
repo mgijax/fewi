@@ -65,6 +65,7 @@ tr.gray td {background-color:#EEEEEE;}
 
 <div id="tests">
     <h2>Tests</h2>
+    <p>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</p>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
@@ -90,11 +91,11 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 
-    		<li>Submitting the form sends the text input from the user to User Support.
- 			<p concordion:assertTrue="false">new test</p>
+    		<li>Submitting the form sends the text input from the user to  Scrum-Dog (from Valinor/Cardolan), to mgi-qa (from Firien during Build Sprint), or to User Support (from Public after release).
+ 			<p concordion:assertTrue="true">passed  on Valinor, klf 5/13/2013</p>
     		<ol>
                 <li>Enter some text in the form and click the "Submit" button.</li>
-                <li>Verify that User Support received an email with the entered text for the specified allele.</li>
+                <li>Verify that Scrum-Dog, mgi-qa, or User Support  (depending on which build we are testing) received an email with the entered text for the specified allele.</li>
     		</ol>
     		</li>
 
