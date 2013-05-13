@@ -67,6 +67,7 @@ tr.gray td {background-color:#EEEEEE;}
 
 <div id="tests">
     <h2>Tests</h2>
+    <p>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</p>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
@@ -108,7 +109,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify some results can be returned for Chr Y</li>
     		</ol>
     		</li>
-    		<li>SNP Query Form returns correct counts for SAMPLE data set
+    		<li><span class="regressHi">Regress</span> SNP Query Form returns correct counts for SAMPLE data set
  			<p concordion:assertTrue="true">klf 2/18/2013</p>
     		<ol>
                 <li>Chr 1: 1,400,516 distinct consensus SNPs (having multicoord "false")</li>
@@ -117,7 +118,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Chr Y: 11,515</li>
     		</ol>
     		</li>
-    		<li>SNP query form displays corrct dbSNP build number and correct NCBI build number
+    		<li><span class="regressHi">Regress</span> SNP query form displays corrct dbSNP build number and correct NCBI build number
  			<p concordion:assertTrue="true">klf 3/4/2013</p>
     		<ol>
                 <li>Open the SNP query form</li>
