@@ -123,16 +123,16 @@ tr.gray td {background-color:#EEEEEE;}
     		
     		<li><span class="regressHi">Regress</span> The Allele Detail Page displays the text that was saved by Curators using the EI, associated with the appropriate recombinase allele.<br/>
     		See Kunagi for link to look-and-feel.
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed klf 5/14/2013</p>
+ 			<p>Note: this field IS NOT Notes Tag-enabled.  Users cannot enter \Link(URL|text|) and have it converted to hyperlinks. Need to remove errant \Link(URL|text|) tags from the test data eventually.</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Pax3&lt;tm1(cre)Joe&gt;</b>;</li>
                 <li>Verify that the Recombinase activity ribbon displays a "User Notes" row with an open/close toggle in the "closed" state and text: "Additional information submitted by the research community".</li>
                 <li>Click the toggle icon or text to "open" the row.</li>
                 <li>Verify that the displayed text matches the test text:
                 <ul>
-                	<li>Scrum is an iterative and incremental agile software development framework for managing software projects and product or application development. Its focus is on "a flexible, holistic product development strategy where a development team works as a unit to reach a common goal" as opposed to a "traditional, sequential approach". <a href="http://www.google.com">Google</a><br/><br/>
-                	Hirotaka Takeuchi and Ikujiro Nonaka later argued in "The Knowledge Creating Company" that it is a form of "organizational knowledge creation, [...] especially good at bringing about innovation continuously, incrementally and spirally".
-The authors described a new approach to commercial product development that would increase speed and flexibility, based on case studies from manufacturing firms in the automotive, photocopier and printer industries. They called this the holistic or rugby approach, as the whole process is performed by one cross-functional team across multiple overlapping phases, where the team "tries to go the distance as a unit, passing the ball back and forth". <a href="http://www.wikipedia.com">Wikipedia</a>
+                	<li>Scrum is an iterative and incremental agile software development framework for managing software projects and product or application development. Its focus is on "a flexible, holistic product development strategy where a development team works as a unit to reach a common goal" as opposed to a "traditional, sequential approach".Hirotaka Takeuchi and Ikujiro Nonaka later argued in "The Knowledge Creating Company" that it is a form of "organizational knowledge creation, [...] especially good at bringing about innovation continuously, incrementally and spirally".
+The authors described a new approach to commercial product development that would increase speed and flexibility, based on case studies from manufacturing firms in the automotive, photocopier and printer industries. They called this the holistic or rugby approach, as the whole process is performed by one cross-functional team across multiple overlapping phases, where the team "tries to go the distance as a unit, passing the ball back and forth".
                 	</li>
                 </ul>
                 </li>
@@ -151,13 +151,6 @@ The authors described a new approach to commercial product development that woul
     		</ol>
     		</li>
 		</ol>
- <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
-     			<li>
-    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
-    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
-    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
-    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
-  -->
  	</div>
 </div>
 
