@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jax.mgi.fewi.util.DBConstants;
+import org.jax.org.mgi.shr.fe.util.TextFormat;
 
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceLocation;
@@ -128,52 +129,16 @@ public class FormatHelper
      * @effects nothing
      * @throws nothing
      */
-    public static String superscript (String s, String start, String stop) {
-
-        // if any of the input parameters are null, just bail out
-        if ((s == null) || (start == null) || (stop == null)) { return s; }
-
-        // revert existing <sup></sup> tags;  this is done incase there is
-        // a mixture of existing sup tags and others that need conversion
-        s = s.replaceAll("<sup>", start);
-        s = s.replaceAll("</sup>", stop);
-
-        // find the first instance of 'start' and 'stop' in 's'.
-        int startPos = s.indexOf(start);
-        int stopPos = s.indexOf(stop);
-        int startLen = start.length();    // chars to cut out for start
-        int stopLen = stop.length();      // chars to cut out for stop
-        int sectionStart = 0;             // position of char starting section
-
-        // if either start/stop value does not appear, then short-circuit
-        if (startPos == -1 || stopPos == -1) {
-            return s;
-        }
-
-        StringBuffer sb = new StringBuffer();
-
-        while ((startPos != -1) && (stopPos != -1) && (stopPos > startPos))
-        {
-
-            sb.append (s.substring(sectionStart, startPos));
-            sb.append ("<sup>");
-            sb.append (s.substring(startPos + startLen, stopPos));
-            sb.append ("</sup>");
-
-            sectionStart = stopPos + stopLen;
-            startPos = s.indexOf(start, sectionStart);
-            stopPos = s.indexOf(stop, sectionStart);
-        }
-        sb.append (s.substring(sectionStart));
-
-        return sb.toString();
+    public static String superscript (String s, String start, String stop) 
+    {
+        return TextFormat.superscript(s,start,stop);
     }
 
     /** convenience wrapper over superscript(s, "<", ">"), which is the common use case
      */
-    public static String superscript (String s) {
-        if (s == null) {return "";}
-        return superscript(s, "<", ">");
+    public static String superscript (String s) 
+    {
+        return TextFormat.superscript(s);
     }
 
     /** returns the correct plural/singular form of the given 'singular'
