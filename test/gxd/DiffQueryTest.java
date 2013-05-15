@@ -17,7 +17,9 @@ public class DiffQueryTest extends BaseConcordionTest
     @Autowired
     private GXDController gxdController;
     
-    
+    private static final int MAX_GENES=4000;
+    private static final int MAX_RESULTS=10000;
+
     /*
      * input parsing functions
      */
@@ -39,12 +41,13 @@ public class DiffQueryTest extends BaseConcordionTest
     /*
      * Test functions
      */
+    // gene symbols 1st ribbon query
 	public List<String> getGeneSymbols(String structure,String difStructure) throws Exception
 	{
 		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setStructure(structure);
 		mq.setDifStructure(difStructure);
-		mq.pageSize=4000;
+		mq.pageSize=MAX_GENES;
 		List<String> symbols = new ArrayList<String>();
 		SearchResults<SolrGxdMarker> results = mq.getGenes();
 		for(SolrGxdMarker gene : results.getResultObjects())
@@ -54,12 +57,13 @@ public class DiffQueryTest extends BaseConcordionTest
 		
 		return symbols;
 	}
-	public List<String> getGeneSymbolsByStage(String stages1,String stages2) throws Exception
+	// gene symbyols 2nd ribbon query
+	public List<String> getGeneSymbolsByStage(String stages,String difStages) throws Exception
 	{
 		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
-		mq.setTheilerStage(parseStageInput(stages1));
-		mq.setDifTheilerStage(parseStageInput(stages2));
-		mq.pageSize=4000;
+		mq.setTheilerStage(parseStageInput(stages));
+		mq.setDifTheilerStage(parseStageInput(difStages));
+		mq.pageSize=MAX_GENES;
 		List<String> symbols = new ArrayList<String>();
 		SearchResults<SolrGxdMarker> results = mq.getGenes();
 		for(SolrGxdMarker gene : results.getResultObjects())
@@ -69,12 +73,34 @@ public class DiffQueryTest extends BaseConcordionTest
 		
 		return symbols;
 	}
+	
+	// gene symbols 3rd ribbon query
+	public List<String> getGeneSymbolsByBoth(String structure,String stages,String difStructure,String difStages) throws Exception
+	{
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
+		mq.setStructure(structure);
+		mq.setTheilerStage(parseStageInput(stages));
+		mq.setDifStructure(difStructure);
+		mq.setDifTheilerStage(parseStageInput(difStages));
+		mq.pageSize=MAX_GENES;
+		
+		List<String> symbols = new ArrayList<String>();
+		SearchResults<SolrGxdMarker> results = mq.getGenes();
+		for(SolrGxdMarker gene : results.getResultObjects())
+		{
+			symbols.add(gene.getSymbol());
+		}
+		
+		return symbols;
+	}
+	
+	// get structure names 1st ribbon query
 	public List<String> getResultStructures(String structure,String difStructure) throws Exception
 	{
 		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setStructure(structure);
 		mq.setDifStructure(difStructure);
-		mq.pageSize=10000;
+		mq.pageSize=MAX_RESULTS;
 		List<String> structures = new ArrayList<String>();
 		SearchResults<SolrAssayResult> results = mq.getAssayResults();
 		for(SolrAssayResult result : results.getResultObjects())
@@ -84,4 +110,25 @@ public class DiffQueryTest extends BaseConcordionTest
 		
 		return structures;
 	}
+	
+	// get structure names 3rd ribbon query
+	public List<String> getResultStructuresByBoth(String structure,String stages,String difStructure,String difStages) throws Exception
+	{
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
+		mq.setStructure(structure);
+		mq.setTheilerStage(parseStageInput(stages));
+		mq.setDifStructure(difStructure);
+		mq.setDifTheilerStage(parseStageInput(difStages));
+		mq.pageSize=MAX_RESULTS;
+		
+		List<String> structures = new ArrayList<String>();
+		SearchResults<SolrAssayResult> results = mq.getAssayResults();
+		for(SolrAssayResult result : results.getResultObjects())
+		{
+			structures.add(result.getPrintname());
+		}
+		
+		return structures;
+	}
+
 }
