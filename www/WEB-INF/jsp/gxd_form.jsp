@@ -297,7 +297,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</div>
 			<div id="difStructOpen">
 			<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
-			<br/>
+			<br/><br/>
 			<form:form commandName="gxdDifferentialQueryForm"  id="gxdDifferentialQueryForm1" class="gxdQf">
 			<table class="noborder">
 			<tr><td colspan="2">
@@ -313,8 +313,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				<div id="gxdDifStruct1Help"> 
 					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
 					<div class="bd">
-						<p>NOT detected or analyzed in = there are no positive expression results in the specified structures 
-							recorded in the database.</p>
+						<p>The search will return genes whose expression was absent (not detected), 
+						as well as genes whose expression has not been analyzed or recorded in the database for the specified structure.</p>
 					</div> 
 				</div> 
 			</td></tr>
@@ -344,7 +344,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</div>
 		<div id="difStageOpen" class="hide">
 		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some <b>developmental stages</b> but not others.
-		<br/>
+		<br/><br/>
 		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm2" class="gxdQf">
 		<table class="noborder">
 			<tr>
@@ -381,8 +381,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				<div id="gxdDifStageHelp"> 
 					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
 					<div class="bd">
-						<p>NOT detected or analyzed in = there are no positive expression results in the specified stages 
-							recorded in the database.</p>
+						<p>The search will return genes whose expression was absent (not detected), 
+						as well as genes whose expression has not been analyzed or recorded in the database for the specified developmental stage(s).</p>
 					</div> 
 				</div> 
 			</td>
@@ -432,7 +432,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<div id="difStructStageOpen" class="hide">
 		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some anatomical structures at particular stages
 			 but not in other structures at particular stages.
-		<br/>
+		<br/><br/>
 		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm3" class="gxdQf">
 		<table class="noborder">
 			<tr>
@@ -459,8 +459,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				<div id="gxdDifStructStageHelp"> 
 					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
 					<div class="bd">
-						<p>NOT detected or analyzed in = there are no positive expression results in the specified structures and/or stages 
-							recorded in the database.</p>
+						<p>The search will return genes whose expression was absent (not detected), 
+						as well as genes whose expression has not been analyzed or recorded in the database for the specified structure and stage(s).</p>
 					</div> 
 				</div> 
 				<div class="anatomyAC" id="difStructureAutoComplete4">
