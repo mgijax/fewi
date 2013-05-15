@@ -94,8 +94,23 @@ public class DiffQueryTest extends BaseConcordionTest
 		return symbols;
 	}
 	
-	// get structure names 1st ribbon query
+	/*
+	 *  get structure names 1st ribbon query
+	 *  
+	 *  Can use any of the following:
+	 *  getResultStructures(#structure,#difStructure) - returns only positives
+	 *  getResultStructuresNegatives(#structure,#difStructure) - returns only negatives
+	 *  getResultStructures(#structure,#difStructure,#detectionLevel) - returns structures for the specified detection level
+	 */
 	public List<String> getResultStructures(String structure,String difStructure) throws Exception
+	{
+		return getResultStructures(structure,difStructure,"Yes");
+	}
+	public List<String> getResultStructuresNegatives(String structure,String difStructure) throws Exception
+	{
+		return getResultStructures(structure,difStructure,"No");
+	}
+	public List<String> getResultStructures(String structure,String difStructure,String detected) throws Exception
 	{
 		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setStructure(structure);
@@ -105,14 +120,32 @@ public class DiffQueryTest extends BaseConcordionTest
 		SearchResults<SolrAssayResult> results = mq.getAssayResults();
 		for(SolrAssayResult result : results.getResultObjects())
 		{
-			structures.add(result.getPrintname());
+			if(detected.equalsIgnoreCase(result.getDetectionLevel()))
+			{
+				structures.add(result.getPrintname());
+			}
 		}
 		
 		return structures;
 	}
 	
-	// get structure names 3rd ribbon query
+	/*
+	 *  get structure names 3rd ribbon query
+	 *  
+	 *  Can use any of the following:
+	 *  getResultStructuresByBoth(#structure,#stages,#difStructure,#difStages) - returns only positives
+	 *  getResultStructuresByBothNegatives(#structure,#stages,#difStructure,#difStages) - returns only negatives
+	 *  getResultStructuresByBoth(#structure,#stages,#difStructure,#difStages,#detectionLevel) - returns structures for the specified detection level
+	 */
 	public List<String> getResultStructuresByBoth(String structure,String stages,String difStructure,String difStages) throws Exception
+	{
+		return getResultStructuresByBoth(structure,stages,difStructure,difStages,"Yes");
+	}
+	public List<String> getResultStructuresByBothNegatives(String structure,String stages,String difStructure,String difStages) throws Exception
+	{
+		return getResultStructuresByBoth(structure,stages,difStructure,difStages,"No");
+	}
+	public List<String> getResultStructuresByBoth(String structure,String stages,String difStructure,String difStages,String detected) throws Exception
 	{
 		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
 		mq.setStructure(structure);
@@ -125,7 +158,10 @@ public class DiffQueryTest extends BaseConcordionTest
 		SearchResults<SolrAssayResult> results = mq.getAssayResults();
 		for(SolrAssayResult result : results.getResultObjects())
 		{
-			structures.add(result.getPrintname());
+			if(detected.equalsIgnoreCase(result.getDetectionLevel()))
+			{
+				structures.add(result.getPrintname());
+			}
 		}
 		
 		return structures;
