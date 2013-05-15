@@ -67,6 +67,12 @@ span.smallGrey { font-size: 75%; color: #999999; }
 
 .redNot{ font-size:110%; color:red; font-weight:bold; }
 .hide { display:none; }
+.anatomyAC
+{
+	padding:2px 0px 12px 20px; 
+	width:300px;
+	text-align:left;
+}
 #ageStage
 {
     display: inline-block;
@@ -415,6 +421,76 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</form:form>
 		</div>
 		</td>
+	</tr>
+	<tr class="stripe1">
+		<td class="cat1">Structure and Stage</td>
+		<td>
+		<div id="difStructStageClosed" style="cursor:pointer;">
+		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some anatomical structures at particular stages
+			 but not in other structures at particular stages.
+		</div>
+		<div id="difStructStageOpen" class="hide">
+		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some anatomical structures at particular stages
+			 but not in other structures at particular stages.
+		<br/>
+		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm3" class="gxdQf">
+		<table class="noborder">
+			<tr>
+			<td colspan="2" style="vertical-align:top;">
+			Find genes where expression is detected in<br/>
+			<div class="anatomyAC" id="difStructureAutoComplete3">
+				<input id="difStructure3" name="structure" style="width:270px;"></input>
+				<div id="difStructureContainer3"></div>
+			</td>
+			<td>
+				<div style="padding-left:40px;">
+				<div id="ageStage4">
+							<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
+	                        <form:options items="${theilerStages}" />
+	                        </form:select>
+		        </div>               
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="vertical-align:top;">
+				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed in 
+				<img id="gxdDifStructStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
+				<div id="gxdDifStructStageHelp"> 
+					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
+					<div class="bd">
+						<p>NOT detected or analyzed in = there are no positive expression results in the specified structures and/or stages 
+							recorded in the database.</p>
+					</div> 
+				</div> 
+				<div class="anatomyAC" id="difStructureAutoComplete4">
+				<input id="difStructure4" name="difStructure" style="width:270px;"></input>
+				<div id="difStructureContainer4"></div>
+			</td>
+			<td>
+				<div style="padding-left:40px;">
+		        <div id="ageStage4">
+							<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}">
+	                        <form:options items="${theilerStages}" />
+	                        </form:select>
+					</div> 
+		        </div>                            
+			</td>
+				</div>
+			</td>
+		</tr>
+		<tr><td colspan="3">
+			<div id="difStructStageError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;">
+				*You did something bad. Please fix it.</div>
+				<input class="buttonLabel" value="Search" type="submit" id="submit5">
+				&nbsp;&nbsp;
+				<input type="reset" id="reset5">
+		</td></tr>
+		</table>
+		</form:form>
+		</div>
+		</td>
+	</tr>
 </table>
 </div>
 </div>

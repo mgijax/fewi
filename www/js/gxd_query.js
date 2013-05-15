@@ -18,6 +18,10 @@ YAHOO.gxd.container.panelDifStage = new YAHOO.widget.Panel("gxdDifStageHelp", { 
 YAHOO.gxd.container.panelDifStage.render(); 
 YAHOO.util.Event.addListener("gxdDifStageHelpImage", "mouseover", YAHOO.gxd.container.panelDifStage.show, YAHOO.gxd.container.panelDifStage, true); 
 YAHOO.util.Event.addListener("gxdDifStageHelpImage", "mouseout", YAHOO.gxd.container.panelDifStage.hide, YAHOO.gxd.container.panelDifStage, true); 
+YAHOO.gxd.container.panelDifBoth = new YAHOO.widget.Panel("gxdDifStructStageHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } ); 
+YAHOO.gxd.container.panelDifBoth.render(); 
+YAHOO.util.Event.addListener("gxdDifStructStageHelpImage", "mouseover", YAHOO.gxd.container.panelDifBoth.show, YAHOO.gxd.container.panelDifBoth, true); 
+YAHOO.util.Event.addListener("gxdDifStructStageHelpImage", "mouseout", YAHOO.gxd.container.panelDifBoth.hide, YAHOO.gxd.container.panelDifBoth, true); 
 
 //GXD tooltips
 var tsTooltips = {
@@ -102,6 +106,8 @@ function showDifStructuresQF()
 	$("#difStructOpen").show();
 	$("#difStageClosed").show();
 	$("#difStageOpen").hide();
+	$("#difStructStageClosed").show();
+	$("#difStructStageOpen").hide();
 }
 function showDifStagesQF()
 {
@@ -111,16 +117,31 @@ function showDifStagesQF()
 	$("#difStructOpen").hide();
 	$("#difStageClosed").hide();
 	$("#difStageOpen").show();
+	$("#difStructStageClosed").show();
+	$("#difStructStageOpen").hide();
+}
+function showDifBothQF()
+{
+	currentDifQF = "both";
+	showDifferentialForm();
+	$("#difStructClosed").show();
+	$("#difStructOpen").hide();
+	$("#difStageClosed").show();
+	$("#difStageOpen").hide();
+	$("#difStructStageClosed").hide();
+	$("#difStructStageOpen").show();
 }
 // attach the click handlers for ribbon toggle
 $("#difStructClosed").click(showDifStructuresQF);
 $("#difStageClosed").click(showDifStagesQF);
+$("#difStructStageClosed").click(showDifBothQF);
 
 function getCurrentQF()
 {
 	if(currentQF=="differential")
 	{
 		if(currentDifQF=="stage") return YAHOO.util.Dom.get("gxdDifferentialQueryForm2");
+		else if(currentDifQF=="both") return YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
 		return YAHOO.util.Dom.get("gxdDifferentialQueryForm1");
 	}
 		
@@ -197,6 +218,27 @@ $('#'+ageStageID+' .tab-nav').click(ageStageChange);
 //// Init the event listener for clicking tabs
 //$('#'+difAgeStage2ID+' .tab-nav').click(difAgeStageChange2);
 
+// returns either "Any" or a list of the selected options
+function parseStageOptions(id,anyValue)
+{
+	if(anyValue==undefined) anyValue="0";
+	var stage = YAHOO.util.Dom.get(id);
+	var stages =[] 
+	for(var key in stage.children)
+	{
+		if(stage[key]!=undefined && stage[key].selected)
+		{
+			// set to "Any" if stage "0" appears anywhere in the list
+			if(stage[key].value==anyValue)
+			{
+				return "Any";
+			}
+			stages.push(stage[key].value);
+		}
+	}
+	return stages;
+}
+
 // Updates the "You searched for" section
 var updateQuerySummary = function() {
 	var summaryDiv = new YAHOO.util.Element('searchSummary');
@@ -225,43 +267,9 @@ var updateQuerySummary = function() {
 	el.appendTo(searchParams);
 	
 	// handle the differential stuff first
-	var isDifStructure = YAHOO.util.Dom.get('difStructure1').value!="" &&
-		YAHOO.util.Dom.get('difStructure2').value != "";
-	var difStage1 = YAHOO.util.Dom.get("difTheilerStage1");
-	var hasAnyStage=false;
-	var difStages1 =[] 
-	for(var key in difStage1.children)
-	{
-		if(difStage1[key]!=undefined && difStage1[key].selected)
-		{
-			// set to "Any" if stage "0" appears anywhere in the list
-			if(difStage1[key].value=="0")
-			{
-				hasAnyStage=true;
-				break;
-			}
-			difStages1.push(difStage1[key].value);
-		}
-	}
-	
-	var hasAnyStageAbove=false;
-	var difStage2 = YAHOO.util.Dom.get("difTheilerStage2");
-	var difStages2 = []
-	for(var key in difStage2.children)
-	{
-		if(difStage2[key]!=undefined && difStage2[key].selected)
-		{
-			// set to "Any" if stage "-1" appears anywhere in the list
-			if(difStage2[key].value=="-1")
-			{
-				hasAnyStageAbove=true;
-				break;
-			}
-			difStages2.push(difStage2[key].value);
-		}
-	}
+	var isDifStructure = currentQF=="differential" && currentDifQF=="structure";
 	var isDifStage = currentQF=="differential" && currentDifQF=="stage";
-	
+	var isDifBoth = currentQF=="differential" && currentDifQF=="both";
 	if(isDifStructure)
 	{
 		// Differential Structures Section
@@ -277,25 +285,27 @@ var updateQuerySummary = function() {
 	{
 		// Differential Stages Section
 		var el = new YAHOO.util.Element(document.createElement('span'));
+		var selectedStages = parseStageOptions("difTheilerStage1","0");
 		var detectedStages = [];
 		var detectedStagesText = "Developmental stage(s):";
-		if(hasAnyStage) detectedStagesText = "<b>Any</b> Developmental stage";
+		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> Developmental stage";
 		else
 		{
-			for(var i=0;i<difStages1.length;i++)
+			for(var i=0;i<selectedStages.length;i++)
 			{
-				detectedStages.push("<b>TS:"+difStages1[i]+"</b>");
+				detectedStages.push("<b>TS:"+selectedStages[i]+"</b>");
 			}
 			detectedStagesText += " ("+detectedStages.join(" or ")+")";
 		}
+		var selectedDifStages = parseStageOptions("difTheilerStage2","-1");
 		var notDetectedStages = [];
 		var notDetectedStagesText = "Developmental stage(s):";
-		if(hasAnyStageAbove) notDetectedStagesText = "<b>Any Developmental stage not selected above</b>";
+		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any Developmental stage not selected above</b>";
 		else
 		{
-			for(var i=0;i<difStages2.length;i++)
+			for(var i=0;i<selectedDifStages.length;i++)
 			{
-				notDetectedStages.push("<b>TS:"+difStages2[i]+"</b>");
+				notDetectedStages.push("<b>TS:"+selectedDifStages[i]+"</b>");
 			}
 			notDetectedStagesText += " ("+notDetectedStages.join(" or ")+")";
 		}
@@ -303,6 +313,46 @@ var updateQuerySummary = function() {
 		var htmlText = "Detected at " +detectedStagesText+
 				"<br/>but not detected or assayed at "+notDetectedStagesText;
 		el.set('innerHTML',htmlText);
+		el.appendTo(searchParams);
+	}
+	else if(isDifBoth)
+	{
+		// 3rd ribbon query
+		
+		var el = new YAHOO.util.Element(document.createElement('span'));
+		// parse the stages input
+		var selectedStages = parseStageOptions("difTheilerStage3","0");
+		var detectedStages = [];
+		var detectedStagesText = "Developmental stage(s):";
+		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> Developmental stage";
+		else
+		{
+			for(var i=0;i<selectedStages.length;i++)
+			{
+				detectedStages.push("<b>TS:"+selectedStages[i]+"</b>");
+			}
+			detectedStagesText += " ("+detectedStages.join(" or ")+")";
+		}
+		var selectedDifStages = parseStageOptions("difTheilerStage4","-1");
+		var notDetectedStages = [];
+		var notDetectedStagesText = "Developmental stage(s):";
+		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any Developmental stage not selected above</b>";
+		else
+		{
+			for(var i=0;i<selectedDifStages.length;i++)
+			{
+				notDetectedStages.push("<b>TS:"+selectedDifStages[i]+"</b>");
+			}
+			notDetectedStagesText += " ("+notDetectedStages.join(" or ")+")";
+		}
+		
+		el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
+				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
+				"<br/>at "+detectedStagesText+
+				"<br/>but not detected or assayed in <b>"+
+					YAHOO.util.Dom.get('difStructure4').value+"</b>"+
+				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
+				"<br/>at "+notDetectedStagesText);
 		el.appendTo(searchParams);
 	}
 	else
@@ -714,6 +764,7 @@ var interceptSubmit = function(e) {
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2","submit",interceptSubmit);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit",interceptSubmit);
 
 /*
  * The following functions handle form validation/restriction
@@ -832,6 +883,18 @@ var difStageRestriction  = function()
 	return setVisible;
 };
 
+var difBothRestriction  = function() 
+{
+	var form = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
+	var structure = form.structure.value;
+	var difStructure = form.difStructure.value;
+	
+	var setVisible = structure == '' || difStructure == '';
+	
+	setVisibility('difStructStageError', setVisible);
+	return setVisible;
+};
+
 var runValidation  = function(){
 	var result=false;
 	if(currentQF == "standard")
@@ -847,6 +910,10 @@ var runValidation  = function(){
 	else if(currentDifQF=="stage")
 	{
 		result = difStageRestriction();
+	}
+	else if(currentDifQF=="both")
+	{
+		result = difBothRestriction();
 	}
 	return result;
 };
@@ -1082,6 +1149,8 @@ function makeStructureAC(inputID,containerID){
 makeStructureAC("structure","structureContainer");
 makeStructureAC("difStructure1","difStructureContainer1");
 makeStructureAC("difStructure2","difStructureContainer2");
+makeStructureAC("difStructure3","difStructureContainer3");
+makeStructureAC("difStructure4","difStructureContainer4");
 
 //
 // Wire up the functionality to reset the query form
@@ -1120,6 +1189,14 @@ var resetQF = function (e) {
 		//difForm2.difAge.selectedIndex=0;	
 		//selectDifTheilerStage();
 	}
+	var difForm3 = YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
+	if(difForm3)
+	{
+		difForm3.structure.value="";
+		difForm3.difStructure.value="";
+		difForm3.theilerStage.selectedIndex=0;
+		difForm3.difTheilerStage.selectedIndex=0;
+	}
 	// clear the validation errors
 	clearValidation();
 };
@@ -1127,6 +1204,7 @@ var resetQF = function (e) {
 YAHOO.util.Event.addListener("gxdQueryForm", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", resetQF);
+YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", resetQF);
 
 //
 //Parse the URL parameters into key value pairs and return the 
@@ -1231,7 +1309,11 @@ function reverseEngineerFormInput(request)
 	}
 	// make sure correct form is visible
 	// this code allows for flexibility to add third ribbon
-	if(foundDifStruct && foundDifStage) { } // add third ribbon here
+	if(foundDifStruct && foundDifStage) 
+	{ 
+		formID = "#gxdDifferentialQueryForm3";
+		showDifBothQF();
+	} 
 	else if (foundDifStruct) 	
 	{
 		formID = "#gxdDifferentialQueryForm1";

@@ -102,6 +102,8 @@ public class SolrGxdResultHunter extends SolrHunter
          // structure
          propertyMap.put(SearchConstants.STRUCTURE,
            		new SolrPropertyMapper(GxdResultFields.STRUCTURE_ANCESTORS));
+         propertyMap.put(SearchConstants.STRUCTURE_EXACT,
+            		new SolrPropertyMapper(GxdResultFields.STRUCTURE_EXACT));
 
          // structure key
          propertyMap.put(SearchConstants.STRUCTURE_KEY,

@@ -105,6 +105,7 @@ public class SearchConstants {
 	public static final String GXD_MUTATED_IN = "mutatedIn";
 	public static final String GXD_IS_WILD_TYPE = "isWildType";
 	public static final String STRUCTURE = "structure";
+	public static final String STRUCTURE_EXACT = "structureExact";
 	public static final String STRUCTURE_KEY = "structureKey";
 	public static final String STRUCTURE_ID = "structureID";
 	public static final String PROBE_KEY = "probeKey";

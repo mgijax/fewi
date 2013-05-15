@@ -915,7 +915,26 @@ public class GXDController {
 		// perform both structure and stage diff
 		else if(hasStructures && hasStages)
 		{
+			logger.debug("Performing dif query for BOTH structure and stage");
 			// stub for 3rd differential ribbon logic
+			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
+			{
+				List<Filter> stageFilters = new ArrayList<Filter>();
+				for(Integer stage : stages)
+				{
+					stageFilters.add(makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,"TS"+stage+" "+structure));
+				}
+				// OR the stages together
+				queryFilters.add(Filter.or(stageFilters));
+			}
+			List<Filter> dStageFilters = new ArrayList<Filter>();
+			for(Integer dStage : query.getResolvedDifTheilerStage())
+			{
+				dStageFilters.add(makeStructureSearchFilter(SearchConstants.POS_STRUCTURE,"TS"+dStage+" "+difStructure));
+			}
+			Filter dStageFilter = Filter.or(dStageFilters);
+			dStageFilter.negate();
+			queryFilters.add(dStageFilter);
 		}
 		
 
@@ -958,7 +977,16 @@ public class GXDController {
 			List<Filter> posFilters = new ArrayList<Filter>();
 			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
 			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
-			queryFilters.add(Filter.and(posFilters));
+			Filter posFilter = Filter.and(posFilters);
+			
+			// create negative results filter
+			List<Filter> negFilters = new ArrayList<Filter>();
+			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
+			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+			Filter negFilter = Filter.and(negFilters);
+			
+			// or them to bring back both datasets
+			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
 		}
 		// perform stages diff
 		else if(hasStages && !hasStructures)
@@ -978,11 +1006,62 @@ public class GXDController {
 				// OR the stages together
 				posFilters.add(Filter.or(stageFilters));
 			}
-			queryFilters.add(Filter.and(posFilters));
+			Filter posFilter = Filter.and(posFilters);
+			
+			// create the negative results filter
+			List<Filter> negFilters = new ArrayList<Filter>();
+			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+			List<Filter> difStageFilters = new ArrayList<Filter>();
+			for(Integer difStage : query.getResolvedDifTheilerStage())
+			{
+				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.OP_HAS_WORD);
+				difStageFilters.add(difStageF);
+
+			}
+			// OR the stages together
+			negFilters.add(Filter.or(difStageFilters));
+			Filter negFilter = Filter.and(negFilters);
+			
+			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
 		}
 		else if(hasStructures && hasStages)
 		{
 			// stub for 3rd differential ribbon logic
+			// create the positive results filter
+			List<Filter> posFilters = new ArrayList<Filter>();
+			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
+			{
+				List<Filter> stageFilters = new ArrayList<Filter>();
+				for(Integer stage : stages)
+				{
+					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.OP_HAS_WORD);
+					stageFilters.add(stageF);
+
+				}
+				// OR the stages together
+				posFilters.add(Filter.or(stageFilters));
+			}
+			Filter posFilter = Filter.and(posFilters);
+			
+			// create negative results filter
+			List<Filter> negFilters = new ArrayList<Filter>();
+			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
+			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+			List<Filter> difStageFilters = new ArrayList<Filter>();
+			for(Integer difStage : query.getResolvedDifTheilerStage())
+			{
+				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.OP_HAS_WORD);
+				difStageFilters.add(difStageF);
+
+			}
+			// OR the stages together
+			negFilters.add(Filter.or(difStageFilters));
+			Filter negFilter = Filter.and(negFilters);
+			
+			// or them to bring back both datasets
+			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
 		}
 		
 		// all results MUST be wild type (broad definition)
