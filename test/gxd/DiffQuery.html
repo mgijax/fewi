@@ -622,7 +622,7 @@
 					<tr><td>Slc22a6</td></tr>
 				</table>
 				 </li>
-				 <li>Verify that <b cc:assertNoResultsContain="getGeneSymbolsByBoth(#struct1,#stage1,#struct2,#stage2)">Mmp11</b> is NOT returned.
+				 <li>Verify that the following genes are not returned:
 				 <table cc:verifyNotRows="#result : getGeneSymbolsByBoth(#struct1,#stage1,#struct2,#stage2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
 					<tr><td>Fam89b</td></tr>
