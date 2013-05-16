@@ -495,11 +495,61 @@
                 	but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">pyloric antrum</b>. <i>(fully automated)</i></li>
  				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">detrusor muscle of bladder</b> are returned, 
  					but no <i>positive results</i> for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">detrusor muscle of bladder</b>. <i>(fully automated)</i></li>
- 				<li>Verify that query for structur "A", but not detected or analyzed in "B" does not return negatives for children of the query term (it should only search directly annotated "absent" results).
+ 				<li>Verify that query for structure "A", but not detected or analyzed in "B" does not return negatives for children of the query term (it should only search directly annotated "absent" results).
  				<br/>Query for genes with expression detected in <b  concordion:set="#struct1">pronephros</b>, not detected or analyzed in <b  concordion:set="#struct2">oropharynx-derived pituitary gland</b>.</li>
                 <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pronephros</b> are returned. <i>(fully automated)</i></li>
  				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">oropharynx-derived pituitary gland</b> are returned, 
  					but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">Rathke's pouch</b>. <i>(fully automated)</i></li>
+ 			</ol>
+    		</li>
+    		<li>A query for detected in Stage "I", not detected or analyzed in Stage "J", returns only the following:
+    		<ul>
+    			<li>GENES having positive results for "I" and having no positive results for "J" in any structures</li>
+    			<li>ASSAY RESULTS for Stage "I" in every structure - positive results only</li>
+    			<li>ASSAY RESULTS for Stage "J" - negative ("absent") results only</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+ 			<p concordion:assertTrue="false">new</p> 
+ 			<ol>
+ 				<li>Query for genes with expression detected in Stages <b  concordion:set="#stages1">6,7,8</b>, not detected or analyzed in Stages <b  concordion:set="#stages2">5,14,15,16,17,18,19,20,21,22,23,24,25,26,28</b>.</li>
+                <li>Verify that <i>positive results</i> are returned for only the following Stages: <i>(fully automated)</i>
+                	<table cc:verifyRowsUnordered="#result : getResultStages(#stages1,#stages2)">
+                	<tr><th concordion:assertEquals="#result">Stage</th></tr>
+                	<tr><td>6</td></tr>
+                	<tr><td>7</td></tr>
+                	<tr><td>8</td></tr>
+                	</table>
+                </li>
+                <li>Verify that no <i>negative results</i> for the following Stages: <i>(fully automated)</i>
+                	<table cc:verifyNotRows="#result : getResultStagesNegatives(#stages1,#stages2)">
+                	<tr><th concordion:assertEquals="#result">Stage</th></tr>
+                	<tr><td>6</td></tr>
+                	<tr><td>7</td></tr>
+                	<tr><td>8</td></tr>
+                	</table>
+                </li>
+ 				<li>Verify that <i>negative results</i> for  Stage <b cc:assertResultsContain="getResultStagesNegatives(#stages1,#stages2)">5</b> are returned. <i>(fully automated)</i></li>
+ 				<li>Verify that no <i>positive results</i> for the following Stages. <i>(fully automated)</i>
+ 					<table cc:verifyNotRows="#result : getResultStages(#stages1,#stages2)">
+ 					<tr><th concordion:assertEquals="#result">Stage</th></tr>
+ 					<tr><td>5</td></tr>
+ 					<tr><td>14</td></tr>
+ 					<tr><td>15</td></tr>
+ 					<tr><td>16</td></tr>
+ 					<tr><td>17</td></tr>
+ 					<tr><td>18</td></tr>
+ 					<tr><td>19</td></tr>
+ 					<tr><td>20</td></tr>
+ 					<tr><td>21</td></tr>
+ 					<tr><td>22</td></tr>
+ 					<tr><td>23</td></tr>
+ 					<tr><td>24</td></tr>
+ 					<tr><td>25</td></tr>
+ 					<tr><td>26</td></tr>
+ 					<tr><td>28</td></tr>
+ 					</table>
+ 					</li>
  			</ol>
     		</li>
     	</ol>
