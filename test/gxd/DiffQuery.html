@@ -478,7 +478,7 @@
     		</ol>  		
     		</li>
     	</ol>
-<!--     	<h4>Broad Queries, return positive and "negative" results</h4>
+     	<h4>Broad Queries, return positive and "negative" results</h4>
     	<ol>
     		<li>A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
     		<ul>
@@ -490,12 +490,15 @@
     		</ul>
  			<p concordion:assertTrue="false">new</p> 
  			<ol>
- 				<li>Step 1</li>
- 				<li>Step 2</li>
+ 				<li>Query for genes with expression detected in <b  concordion:set="#struct1">endocardial cushion tissue</b>, not detected or analyzed in <b  concordion:set="#struct2">aortic valve</b>.</li>
+                <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">endocardial cushion tissue</b> are returned, 
+                	but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">endocardial cushion tissue</b>. <i>(fully automated)</i></li>
+ 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">aortic valve</b> are returned, 
+ 					but no <i>positive results</i> for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">aortic valve</b>. <i>(fully automated)</i></li>
  			</ol>
     		</li>
     	</ol>
- -->
+ 
 
  <!-- 
 		<h4>Strict Queries</h4>
