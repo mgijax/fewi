@@ -490,11 +490,11 @@
     		</ul>
  			<p concordion:assertTrue="false">new</p> 
  			<ol>
- 				<li>Query for genes with expression detected in <b  concordion:set="#struct1">endocardial cushion tissue</b>, not detected or analyzed in <b  concordion:set="#struct2">aortic valve</b>.</li>
-                <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">endocardial cushion tissue</b> are returned, 
-                	but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">endocardial cushion tissue</b>. <i>(fully automated)</i></li>
- 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">aortic valve</b> are returned, 
- 					but no <i>positive results</i> for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">aortic valve</b>. <i>(fully automated)</i></li>
+ 				<li>Query for genes with expression detected in <b  concordion:set="#struct1">pyloric antrum</b>, not detected or analyzed in <b  concordion:set="#struct2">detrusor muscle of bladder</b>.</li>
+                <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pyloric antrum</b> are returned, 
+                	but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">pyloric antrum</b>. <i>(fully automated)</i></li>
+ 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">detrusor muscle of bladder</b> are returned, 
+ 					but no <i>positive results</i> for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">detrusor muscle of bladder</b>. <i>(fully automated)</i></li>
  				<li>Verify that query for structur "A", but not detected or analyzed in "B" does not return negatives for children of the query term (it should only search directly annotated "absent" results).
  				<br/>Query for genes with expression detected in <b  concordion:set="#struct1">pronephros</b>, not detected or analyzed in <b  concordion:set="#struct2">oropharynx-derived pituitary gland</b>.</li>
                 <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pronephros</b> are returned. <i>(fully automated)</i></li>
