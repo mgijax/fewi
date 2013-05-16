@@ -552,8 +552,43 @@
  					</li>
  			</ol>
     		</li>
+
+    		<li>A query for detected in Structure "A" + Stage "I", not detected or analyzed in Structure "A" + Stage "J" returns only the following:
+    		<ul>
+    			<li>GENES having positive results for Structure "A" and its children at Stage "I", and having no positive results for Structure "A" and its children at Stage "J"</li>
+    			<li>ASSAY RESULTS for Structure "A"  and its children at Stage "I"  - positive results only</li>
+    			<li>NO ASSAY RESULTS for Structure "A" and its children at Stage "J"</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+    		<ol>
+    			<li>Query for genes with expression detected in Structure <b>structure1</b> and Stage <b>stage list</b>, not detected or analyzed in Structure <b>structure1</b> and Stage <b>stage list</b>.</li>
+    			<li>Verify that the following genes are returned: <b>...list...</b> </li>
+    			<li>Verify that the following genes are not returned: <b>...list...</b> </li>
+    			<li>Verify that <i>postive results</i> for <b>structure1</b> or its children in Stages <b>stage list</b> are returned.</li>
+    			<li>Verify that <i>no positive results</i> for <b>structure2</b> or its children in Stages <b>stage list</b> are returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>TEMPLATE: A query for detected in Structure "A" + Stage "I", not detected or analyzed in Structure "B" + Stage "I" returns only the following:
+    		<ul>
+    			<li>GENES having positive results for Structure "A" and its children at Stage "I", and having no positive results for Structure "B" and its children at Stage "I"</li>
+    			<li>ASSAY RESULTS for Structure "A"  and its children at Stage "I"  - positive results only</li>
+    			<li>NO ASSAY RESULTS for Structure "B" and its children at Stage "I"</li>
+    			<li>ASSAYS corresponding to the displayed assay results</li>
+    			<li>IMAGES corresponding to the displayed assay results</li>
+    		</ul>
+    		<ol>
+    			<li>Query for genes with expression detected in Structure <b>structure1</b> and Stage <b>stage list</b>, not detected or analyzed in Structure <b>structure1</b> and Stage <b>stage list</b>.</li>
+    			<li>Verify that the following genes are returned: <b>...list...</b> </li>
+    			<li>Verify that the following genes are not returned: <b>...list...</b> </li>
+    			<li>Verify that <i>postive results</i> for <b>structure1</b> or its children in Stages <b>stage list</b> are returned.</li>
+    			<li>Verify that <i>no negative results</i> for <b>structure1</b> or its children in Stages <b>stage list</b> are returned.</li>
+    		</ol>
+    		</li>
+
     		
-    		<li>A query for detected in Structure "A" + Stage "I", not detected or analyzed in Structure "B" + Stage "J", where "A" and "B" are in different Anatomical Systems returns only the following:
+    		<li>TEMPLATE: A query for detected in Structure "A" + Stage "I", not detected or analyzed in Structure "B" + Stage "J", where "A" and "B" are in different Anatomical Systems returns only the following:
     		<ul>
     			<li>GENES having positive results for Structure "A" and its children and Stage "I", and having no positive results for Structure "B" and its children and Stage "J"</li>
     			<li>ASSAY RESULTS for Stage "I" in every structure - positive results only</li>
