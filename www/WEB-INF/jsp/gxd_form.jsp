@@ -451,6 +451,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				</div>
 			</td>
 		</tr>
+		<tr  style="height:8px;"><td colspan="4"></td></tr>
 		<tr>
 			<td colspan="2" style="vertical-align:top;">
 				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed in 
