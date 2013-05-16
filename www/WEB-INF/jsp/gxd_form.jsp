@@ -481,7 +481,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</tr>
 		<tr><td colspan="3">
 			<div id="difStructStageError" class="small error" style="display:none; white-space:nowrap;padding-bottom:4px;">
-				*Please enter a structure in both search boxes.</div>
+				*Please enter a structure in <i>both</i> search boxes.</div>
 				<input class="buttonLabel" value="Search" type="submit" id="submit5">
 				&nbsp;&nbsp;
 				<input type="reset" id="reset5">
