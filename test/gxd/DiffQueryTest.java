@@ -1,7 +1,9 @@
 package gxd;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -130,6 +132,42 @@ public class DiffQueryTest extends BaseConcordionTest
 	}
 	
 	/*
+	 * get stages 2nd ribbon query
+	 * 	 
+	 *  Can use any of the following:
+	 *  getResultStages(#stages,#difStages) - returns only positives
+	 *  getResultStagesNegatives(#stages,#difStages) - returns only negatives
+	 *  getResultStages(#stages,#difStages,#detectionLevel) - returns structures for the specified detection level
+	 */
+	public List<String> getResultStages(String stages,String difStages) throws Exception
+	{
+		return getResultStages(stages,difStages,"Yes");
+	}
+	public List<String> getResultStagesNegatives(String stages,String difStages) throws Exception
+	{
+		return getResultStages(stages,difStages,"No");
+	}
+	public List<String> getResultStages(String stages,String difStages,String detected) throws Exception
+	{
+		MockGxdControllerQuery mq = getMockQuery().gxdController(gxdController);
+		mq.setTheilerStage(parseStageInput(stages));
+		mq.setDifTheilerStage(parseStageInput(difStages));
+		mq.pageSize=MAX_RESULTS;
+		
+		Set<String> returnStages = new HashSet<String>();
+		SearchResults<SolrAssayResult> results = mq.getAssayResults();
+		for(SolrAssayResult result : results.getResultObjects())
+		{
+			if(detected.equalsIgnoreCase(result.getDetectionLevel()))
+			{
+				returnStages.add(result.getTheilerStage().toString());
+			}
+		}
+		
+		return new ArrayList<String>(returnStages);
+	}
+	
+	/*
 	 *  get structure names 3rd ribbon query
 	 *  
 	 *  Can use any of the following:
@@ -166,5 +204,4 @@ public class DiffQueryTest extends BaseConcordionTest
 		
 		return structures;
 	}
-
 }
