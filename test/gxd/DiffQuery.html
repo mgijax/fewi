@@ -33,6 +33,10 @@
         <li>User story #146, GXD Differential QF - Stucture A but not B</li>
         <li>User story #170, GXD Differential QF - Stage I but not J</li>
         <li>User story #196, GXD Differential QF - should land on Genes tab</li>
+        <li>User story #169, GXD Differential QF - Stucture A but not B, include negatives</li>
+        <li>User story #171, GXD Differential QF - Stage I but not J, include negatives</li>
+        <li>User story #172, GXD Differential QF - Structure/Stage A/I but not B/J</li>
+        <li>User story #173, GXD Differential QF - Structure/Stage A/I but not B/J, include negatives</li>
     </ul>
 </div>
 
@@ -53,6 +57,14 @@
 		<li>sto170: allow user to specify J with a "no other stages" checkbox (equivalent to manually selecting all the other stages not in I)</li>
 		<li>sto170: returns genes that show positive expression in any of the I stages AND do NOT show positive expression in any of the J stages</li>
 		<li>sto170: for returned genes, show positive results from the I stages</li>
+		<li>sto169: results include everything returned in sto146, plus results include negative/absent results for structure B. This includes just the negative results in B. (No ancestors or descendants needed.)</li>
+		<li>sto171: for the genes returned, returns the same positive results as in sto170, plus returns negative results for stage(s) J</li>
+		<li>sto172: form has 3rd ribbon</li>
+		<li>sto172: allows user to specify structure A and one or more stages I</li>
+		<li>sto172: allows user to specify structure B and one or more stages J</li>
+		<li>sto172: query finds genes that have positive expression in the A structure in any of the I stages, and subtracts any genes that have positive expression in the B structure in any of the J stages</li>
+		<li>sto172: for the remaining genes, shows the positive results in A structure in stages I</li>
+		<li>sto173: results include all those from sto172, plus... results include and negative results in structure B stages J</li>
 		<li>sto196: when user clicks "Search" on the differential QF tab, the Genes tab is opened by default</li>
 	</ul>
 </div>
@@ -69,8 +81,8 @@
 <p concordion:assertTrue="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
+		<p>Skip to <a href="#broadQuery">Broad Query</a> | <a href="#structures">Structures</a> | <a href="#stages">Stages</a> | <a href="#structuresStages">Structures + Stages (3rd Ribbon)</a> | <a href="#addNegatives">Add Negative Results</a> </p>
 		<h4>Framework - tabs and ribbons exist and javascript works properly</h4>
-		<p>Skip to <a href="#broadQuery">Broad Query</a></p>
 		<ol>
 		<li>Differential tab exists structures and stages ribbons
 			<p concordion:assertTrue="true">kstone 2013/05/14</p> 
@@ -152,7 +164,7 @@
 
 		<h4 id="broadQuery">Broad Queries, return only positive results</h4>
 		<p>Note: all differential queries include only "wild type" results in the query logic and in the displayed results sets.  "Wild type" means any assays which are not associated with any allele pairs, and also in situ reporter (knock-in) assays associated with a single allele pair which is heterozygous w.t. for the assayed gene.</p>
-		<p>Skip to <a href="#structures">Structures</a> | <a href="#stages">Stages</a></p>
+		<p>Skip to <a href="#structures">Structures</a> | <a href="#stages">Stages</a> | <a href="#structuresStages">Structures + Stages (3rd Ribbon)</a></p>
 
 		<h5 id="structures">Structures</h5>
 
@@ -479,7 +491,7 @@
     		</li>
     	</ol>
 
-		<h5>Structures + Stages (3rd Ribbon)</h5>
+		<h5 id="structuresStages">Structures + Stages (3rd Ribbon)</h5>
 		
 		<ol>
 
@@ -494,7 +506,7 @@
     		<ol> 			
     			<li>Query for genes with expression detected in Structure <b concordion:set="#struct1">tail</b> and Stage <b concordion:set="#stages1">25</b>, 
     				not detected or analyzed in Structure <b concordion:set="#struct2">tail</b> and Stage <b concordion:set="#stages2">26</b>.</li>
-    			<li>Verify that the following genes are returned: <i>(fully automated)</i>
+    			<li>Verify that <i>at least</i> the following genes are returned: <i>(fully automated)</i>
 				<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
 					<tr><td>Derl3</td></tr>
@@ -520,7 +532,7 @@
     		</ul>
     		<ol>
     			<li>Query for genes with expression detected in Structure <b concordion:set="#struct1">mitral valve</b> at Stage <b concordion:set="#stages1">23</b>, not detected or analyzed in Structure <b concordion:set="#struct2">aortic valve</b> at Stage <b concordion:set="#stages2">23</b>.</li>
-    			<li>Verify that the following genes are returned: <i>(fully automated)</i>
+    			<li>Verify that <i>at least</i> the following genes are returned: <i>(fully automated)</i>
 	    			<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	    			<tr><th concordion:assertEquals="#result">Gene</th></tr>
 					<tr><td>Cxcr4</td></tr>
@@ -541,8 +553,8 @@
 					<tr><td>Mxra8</td></tr>
 	    			</table> 
 				</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="false">new</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stage <b>23</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="false">new</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stage <b>23</b> are returned.<br/>
+    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stage <b>23</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stage <b>23</b> are returned.<br/>
     			Note: the gene Pdgfra is annotated to aortic valve leaflet so this term should be excluded too.</li>
     		</ol>
     		</li>
@@ -558,7 +570,7 @@
     		<ol>
     			<li>Query for genes with expression detected in Structure <b concordion:set="#struct1">mitral valve</b> and Stage <b concordion:set="#stages1">21,22,23</b>, 
     				not detected or analyzed in Structure <b concordion:set="#struct2">aortic valve</b> and Stage <b concordion:set="#stages2">23,24,25</b>.</li>
-    			<li>Verify that the following genes are returned: 
+    			<li>Verify that <i>at least</i> the following genes are returned: 
 				<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
 					<tr><td>Adarb1</td></tr>
@@ -582,14 +594,14 @@
 					<tr><td>Mxra8</td></tr>
 				</table>
 				</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="false">new</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stages <b>21,22,23</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="false">new</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stages <b>23,24,25</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stages <b>21,22,23</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stages <b>23,24,25</b> are returned.</li>
     		</ol>
     		</li>
 
 		</ol>
 
-     	<h4>Broad Queries, return positive and "negative" results</h4>
+     	<h4 id="addNegatives">Broad Queries, return positive and "negative" results</h4>
 
     	<ol>
     		<li>A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
