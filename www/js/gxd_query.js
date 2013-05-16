@@ -924,6 +924,7 @@ var clearValidation = function()
 	{
 		setVisibility('difStructureError', false);
 		setVisibility('difStageError',false);
+		setVisibility('difStructStageError',false);
 	}
 }
 
