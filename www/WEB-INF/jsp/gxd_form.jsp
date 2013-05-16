@@ -340,16 +340,16 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td class="cat2">Developmental Stage</td>
 		<td>
 		<div id="difStageClosed" style="cursor:pointer;">
-		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some <b>developmental stages</b> but not others.
+		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed at some <b>developmental stages</b> but not others.
 		</div>
 		<div id="difStageOpen" class="hide">
-		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some <b>developmental stages</b> but not others.
+		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed at some <b>developmental stages</b> but not others.
 		<br/><br/>
 		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm2" class="gxdQf">
 		<table class="noborder">
 			<tr>
 			<td colspan="2" style="vertical-align:top;">
-			Find genes where expression is detected in
+			Find genes where expression is detected at
 			</td>
 			<td>
 				<div style="padding-left:40px;">
@@ -376,7 +376,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</tr>
 		<tr>
 			<td colspan="2" style="vertical-align:top;">
-				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed in 
+				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed at 
 				<img id="gxdDifStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
 				<div id="gxdDifStageHelp"> 
 					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
@@ -426,12 +426,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td class="cat1">Structure and Stage</td>
 		<td>
 		<div id="difStructStageClosed" style="cursor:pointer;">
-		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some anatomical structures at particular stages
-			 but not in other structures at particular stages.
+		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in <b>some anatomical structures and stages</b> but not others.
 		</div>
 		<div id="difStructStageOpen" class="hide">
-		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in some anatomical structures at particular stages
-			 but not in other structures at particular stages.
+		<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/> Search for genes expressed in <b>some anatomical structures and stages</b> but not others.
 		<br/><br/>
 		<form:form commandName="gxdDifferentialQueryForm" id="gxdDifferentialQueryForm3" class="gxdQf">
 		<table class="noborder">
@@ -444,6 +442,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 			<td>
 				<div style="padding-left:40px;">
+				at<br/>
 				<div id="ageStage4">
 							<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
 	                        <form:options items="${theilerStages}" />
@@ -455,7 +454,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<tr>
 			<td colspan="2" style="vertical-align:top;">
 				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed in 
-				<img id="gxdDifStructStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
+				<img id="gxdDifStructStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" /><br/>
 				<div id="gxdDifStructStageHelp"> 
 					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
 					<div class="bd">
@@ -469,6 +468,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 			<td>
 				<div style="padding-left:40px;">
+				at<br/>
 		        <div id="ageStage4">
 							<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}">
 	                        <form:options items="${theilerStages}" />
