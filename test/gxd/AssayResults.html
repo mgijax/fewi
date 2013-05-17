@@ -24,6 +24,7 @@
     <h1>Assay Results Summary</h1>
     <ul>
         <li>User story 51, Display correct assay result data</li>
+        <li>User story 135, MGI markup in note fields
     </ul>
     <p>NOTE: MANY OF THESE TESTS NEED TO BE UPDATED SO THAT THEY RUN AUTOMATICALLY.  SEVERAL CAN BE UPDATED TO USE THE DYNAMIC DATA GOOGLE DOC. -klf 6/11/2012</p>
 </div>
@@ -61,7 +62,8 @@
 			3. Ambiguous<br/>
 			4. Not Specified<br/>
 		</li>
-		
+		<li>MGI IDs in Specimen notes will link to correct associated page</li>
+		<li>MGI IDs in Assay notes will link to correct associated page</li>
 	</ul>
 </div>
 
@@ -315,6 +317,26 @@
                 <li>Click the first image link</li>
                 <li>Click the browser back button</li>
                 <li>Make sure the query form is already closed (without accordion effect)</li>
+    		</ol>
+    		</li>
+    		<li>Test that MGI ID links in specimen notes go to the correct page
+		<p concordion:assertTrue="true">jeffc 05/17/2013</p>
+    		<ol>
+                <li>Search for MGI:5478602</li>
+                <li>Click the Expression Assay link</li>
+                <li>Once the result page displays</li>
+                <li>Find the link "MGI:5476800" located in the note for specimen 3 and click it</li>
+                <li>Verify the page displayed is for MGI:5476800</li>
+    		</ol>
+    		</li>
+    		<li>Test that MGI ID links in Assay notes go to the correct page
+		<p concordion:assertTrue="true">jeffc 05/17/2013</p>
+    		<ol>
+                <li>Search for MGI:1270923</li>
+                <li>Click the Expression Assay link</li>
+                <li>Once the result page displays, Click the link "MGI:2670369"</li>
+                <li>Find the link "MGI:2670369" located in assay notes and click it</li>
+                <li>Verify the page displayed is for MGI:2670369</li>
     		</ol>
     		</li>
             <li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
