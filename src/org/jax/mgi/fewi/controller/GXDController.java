@@ -95,8 +95,8 @@ public class GXDController {
 
 	private Logger logger = LoggerFactory.getLogger(GXDController.class);
 
-	@Autowired
-    private SolrMarkerKeyHunter mrkKeyHunter;
+	//@Autowired
+    //private SolrMarkerKeyHunter mrkKeyHunter;
 	
 	@Autowired
 	private MarkerFinder markerFinder;
@@ -162,6 +162,9 @@ public class GXDController {
 		Filter qf = this.parseGxdQueryForm(query);
 		SearchParams sp = new SearchParams();
 		sp.setFilter(qf);
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort(SortConstants.GXD_GENE));
+		sp.setSorts(sorts);
 		GxdBatchFinder batchFinder = new GxdBatchFinder(gxdFinder,sp);
 
 		logger.debug("routing to view object");
