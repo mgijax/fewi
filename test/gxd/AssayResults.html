@@ -81,11 +81,11 @@
     		</ol>
     		</li>
     		<li>Assay Results table exists with correct columns
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
-                <li>Verify columns are: Gene, Result Details, Assay Type, Anatomical System, Age, Structure, Detected?, Figure(s), Mutant Allele(s), Reference</li>
+                <li>Verify columns are: Gene, Result Details, Assay Type, Anatomical System, Age, Structure, Detected?, Images, Mutant Allele(s), Reference</li>
     		</ol>
     		</li>
     		<li>Gene column displays current gene symbol
@@ -136,52 +136,37 @@
 				</li>
     		</ol>
     		</li>
-    		<li>Figure(s) displays "pane label"
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+    		<li>Images displays "specimen label"
+		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
-                <li>1. The results for MGI:2157343 should display figure label text which is hyperlinked to an Image Detail page. Label text and ID for hyperlinked page should be as follows (structures shown in parentheses):
+                <li>1. The results for MGI:1859758 should display specimen label text which is hyperlinked to an Assay Detail page, and link should jump to that image section. Label text and ID for hyperlinked page should be as follows (structures shown in parentheses):
                 <ul>
-					<li>(TS15: lens placode) - Figure 6A - MGI:2156232</li>
-					<li>(TS15: intraretinal space) - Figure 6A - MGI:2156232</li>
-					<li>(TS15: optic cup; outer layer) - Figure 6A - MGI:2156232</li>
-					<li>(TS15: lens placode) - Figure 6C - MGI:2156232</li>
-					<li>(TS15: intraretinal space) - Figure 6C - MGI:2156232</li>
-					<li>(TS15: optic cup; outer layer) - Figure 6C - MGI:2156232</li>
-					<li>(TS17: lens placode) - Figure 6F - MGI:2156232</li>
-					<li>(TS17: intraretinal space) - Figure 6F - MGI:2156232</li>
-					<li>(TS17: optic cup; outer layer) - Figure 6F - MGI:2156232</li>
+					<li>(TS12: embryo) - 3. A - MGI:1859758</li>
+					<li>(TS12: future prosencephalon) - 4. B. - MGI:1859758</li>
 		        </ul>
 		        </li>
-				<li>The results for MGI:4461989 should display figure label text which is not hyperlinked. Label text should be as follows (structures shown in parentheses):
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+				<li>The results for MGI:4461989 should display no figure label text, because there is no jpeg. (structures shown in parentheses):
+		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
 				<ul>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3B wild type</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3B Tectonic-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3B Ptch-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3B Tectonic-/- Ptch-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3C wild type</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3C Tectonic-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3C Ptch-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3C Tectonic-/- Ptch-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3D wild type</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3D Tectonic-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3D Ptch-/-</li>
-					<li>(TS15: future spinal cord; neural tube) - Figure 3D Tectonic-/- Ptch-/-</li>
-					<li>(TS17: future spinal cord; neural tube) - Figure 3F wild type</li>
-					<li>(TS17: future spinal cord; neural tube) - Figure 3F Tectonic-/-</li>
-					<li>(TS17: future spinal cord; neural tube) - Figure 3F Rab23 opb/opb</li>
-					<li>(TS17: future spinal cord; neural tube) - Figure 3F Tect-/- Rab23 opb/opb</li>
-					<li>(TS19: future spinal cord; neural tube) - Figure S4 wild type</li>
-					<li>(TS19: future spinal cord; neural tube) - Figure S4 Tectonic-/-</li>
+					<li>(TS15: future spinal cord; neural tube)</li>
+					<li>(TS17: future spinal cord; neural tube)</li>
+					<li>(TS19: future spinal cord; neural tube)</li>
 				</ul>
 				</li>
 				<li>The results for MGI:2178971 should display no image pane label for the following structures (in parentheses):
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
 				<ul>
 					<li>(TS19: future spinal cord)</li>
 					<li>(TS19: future spinal cord)</li>
+    			</ul>
+    			</li>
+    			<li>Change query to Pax1 and go to Last page. The results for MGI:5463478 (type RNase protection) should display image pane label for the following structures (in parentheses)
+    				and link should go to assay detail page:
+		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
+				<ul>
+					<li>(TS21: embryo) - 3B Pax1</li>
     			</ul>
     			</li>
     		</ol>
