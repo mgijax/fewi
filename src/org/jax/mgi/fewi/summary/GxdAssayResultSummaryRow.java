@@ -124,7 +124,8 @@ public class GxdAssayResultSummaryRow {
 				{
 					if(!figure.equals(""))
 					{
-						formattedFigures.add(figure.replace("###FEWIURL###", fewiUrl));
+						formattedFigures.add("<a href='"+fewiUrl+"assay/"+result.getAssayMgiid()+"#"+
+								FormatHelper.makeCssSafe(figure)+"_id'>"+FormatHelper.superscript(figure)+"</a>");
 					}
 				}
 			}
