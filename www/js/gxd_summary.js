@@ -611,7 +611,7 @@ var gxdResultsTable = function() {
 		{key: "age", label: "Age", sortable: true },
 		{key: "structure", label: "Structure",sortable: true},
 		{key: "detectionLevel",label: "Detected?",sortable: true},
-		{key: "figures", label: "Figure(s)",sortable: false},
+		{key: "figures", label: "Images",sortable: false},
 		{key: "genotype",label: "Mutant Allele(s)",sortable: false},
 		{key: "reference",label: "Reference",sortable: true},
 		{key: "score",label: "score",sortable: false,hidden: true}

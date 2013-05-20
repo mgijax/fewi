@@ -53,7 +53,7 @@ public class TextGxdResultsSummary extends AbstractTextView
 				"Theiler Stage",
 				"Structure",
 				"Detected",
-				"Figure(s)",
+				"Images",
 				"Mutant Allele(s)",
 				"MGI Reference ID",
 				"PubMed ID",

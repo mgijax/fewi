@@ -61,7 +61,7 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 					"Theiler Stage",
 					"Structure",
 					"Detected",
-					"Figure(s)",
+					"Images",
 					"Mutant Allele(s)",
 					"MGI Reference ID",
 					"PubMed ID",
