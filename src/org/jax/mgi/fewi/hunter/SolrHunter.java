@@ -406,7 +406,7 @@ public class SolrHunter implements Hunter {
                 else
                 {
                 	// have to support the lazy programmer who feels the need to put multiple solr fields into one property
-                	String fieldJoinClause = pm.getJoinClause();
+                	String fieldJoinClause = " "+pm.getJoinClause()+" ";
                 	
                 	// build the multiple field list
                 	List<String> queryClauses = new ArrayList<String>();
