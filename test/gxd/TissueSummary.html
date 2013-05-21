@@ -38,8 +38,8 @@
 		<li>"+ Results" link should show count and connect to our new Expression Summary page showing all results for the gene and stage+structure for the following:
 			<ul>
 				<li>Detected = "Yes"</li>
-				<li>Detected = "Ambiguous" - NO: SUPERSEDED BY STORY 198</li>
-				<li>Detected = "Not specified" - NO: SUPERSEDED BY STORY 198</li>
+				<li>Detected = "Ambiguous" - NO: SUPERSEDED BY STORY 198, see below</li>
+				<li>Detected = "Not specified" - NO: SUPERSEDED BY STORY 198, see below</li>
 			</ul>
 		</li> 
 		<li>"- Results" link should show count and connect to our new Expression Summary page showing all results for the gene and stage+structure for the following:
@@ -73,18 +73,9 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Tissue Summary should display correct number of results for the  gene, AD term, and detection level.  <br/>Following the link from the AD Term results count on the Tissue Summary page to the corresponding Expression Results Summary page should display the same number of results.
-			<p concordion:assertTrue="false">revising... 5/21/2013</p>
-			</li>
-    		<li><i>(Note: these structure counts should NOT include child terms.) </i>
-    		Tissue Summary should display correct number of results for the  gene, AD term, and detection level.  <br/>Following the link from the AD Term results count on the Tissue Summary page to the corresponding Expression Results Summary page should display the same number of results.
-			<p concordion:assertTrue="false">revising... 5/21/2013</p>
     		<ol>
                 <li>Navigate to the specified  Marker Detail Page.</li>
                 <li>Follow the link to the Tissue Summary Page for the gene.</li>
-                <li>Verify the count of expression results shown for each item below.</li>
-                <li>Spot-check 10 rows or so to verify that the count of "Results: All" is equal to the sum of the counts in "Results: +" and "Results: -"<br/>
-			<p concordion:assertTrue="false">revising... 5/21/2013</p>
-                </li>
                 <li>Follow the results count links and verify the results set in the Expression Summary table has the same count: <br/>
 	                <table>
 								<tr>
@@ -94,7 +85,7 @@
 									<th>Results: +</th>
 									<th>Results: -</th>
 									<th>Notes: Detection Levels</th>
-									<th><p concordion:assertTrue="true">jeffc 8/13/2012</p></th>
+									<th>Tested?</th>
 								</tr>
 								<tr>
 									<td>Pax2</td>
@@ -103,7 +94,7 @@
 									<td>0</td>
 									<td>25</td>
 									<td></td>
-									<td><p concordion:assertTrue="true">jeffc 8/13/2012</p></td>
+									<td><p concordion:assertTrue="false">jeffc 8/13/2012</p></td>
 								</tr>
 								<tr>
 									<td>Pax2</td>
@@ -118,28 +109,28 @@
 									<td>Pax2</td>
 									<td>TS17: central nervous system</td>
 									<td>1</td>
-									<td>1</td>
+									<td>0</td>
 									<td>0</td>
 									<td>&quot;Ambiguous&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/13/2012</p></td>
+									<td><p concordion:assertTrue="false">revised klf 5/21/2013</p></td>
 								</tr>
 								<tr>
 									<td>Pax2</td>
 									<td>TS28: reproductive system</td>
 									<td>3</td>
-									<td>3</td>
+									<td>0</td>
 									<td>0</td>
 									<td>All &quot;Not specified&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/13/2012</p></td>
+									<td><p concordion:assertTrue="false">revised klf 5/21/2013</p></td>
 								</tr>
 								<tr>
 									<td>Shh</td>
 									<td>TS2: two-cell stage embryo</td>
 									<td>12</td>
-									<td>10</td>
+									<td>9</td>
 									<td>2</td>
-									<td>2 &quot;Absent&quot;, 1 &quot;Not specified&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/13/2012</p></td>
+									<td>9 &quot;Present&quot;, 2 &quot;Absent&quot;, 1 &quot;Not specified&quot;</td>
+									<td><p concordion:assertTrue="false">revised klf 5/21/2013</p></td>
 								</tr>
 								<tr>
 									<td>Shh</td>
