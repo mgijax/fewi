@@ -24,9 +24,9 @@
     <h1>Assay Results Summary</h1>
     <ul>
         <li>User story 51, Display correct assay result data</li>
-        <li>User story 135, MGI markup in note fields</li>
+        <li>User story 193, MGI 5.14, GXD Assay Results Summary: change figure links</li>
+        <li>User story 182, MGI 5.14, GXD Assay Results Summary: GXD summary not displaying pane labels with "&lt;""&gt;" properly</li>
     </ul>
-    <p>NOTE: MANY OF THESE TESTS NEED TO BE UPDATED SO THAT THEY RUN AUTOMATICALLY.  SEVERAL CAN BE UPDATED TO USE THE DYNAMIC DATA GOOGLE DOC. -klf 6/11/2012</p>
 </div>
 
 <div id="acceptance">
@@ -62,8 +62,8 @@
 			3. Ambiguous<br/>
 			4. Not Specified<br/>
 		</li>
-		<li>MGI IDs in Specimen notes will link to correct associated page</li>
-		<li>MGI IDs in Assay notes will link to correct associated page</li>
+		<li>Story 193: change [figure links destination] and have these links take you to the assay detail page, specifically that portion of the page that contains the specimen that figure is associated with</li>
+		<li>Story 182: display text between "&lt;" and "&gt;" as superscripted</li>
 	</ul>
 </div>
 
@@ -72,16 +72,8 @@
 	<div id="manual">
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Build table layout with a three tabs
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
-    		<ol>
-                <li>Open the GXD query page</li>
-                <li>Search for Pax6</li>
-                <li>Verify results table exists with three tabs: Genes, Assays and Assay Results</li>
-    		</ol>
-    		</li>
     		<li>Assay Results table exists with correct columns
-		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
+			<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -89,7 +81,7 @@
     		</ol>
     		</li>
     		<li>Gene column displays current gene symbol
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -100,7 +92,7 @@
     		</ol>
     		</li>
     		<li>Assay Results Tab Assay Details column displays data link and MGI ID
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -114,7 +106,7 @@
     		</ol>
     		</li>
     		<li>Detected? displays "Level" data
-		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+			<p concordion:assertTrue="true">jeffc 8/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -137,7 +129,7 @@
     		</ol>
     		</li>
     		<li>Images displays "specimen label"
-		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
+			<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -148,7 +140,7 @@
 		        </ul>
 		        </li>
 				<li>The results for MGI:4461989 should display no figure label text, because there is no jpeg. (structures shown in parentheses):
-		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
+				<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
 				<ul>
 					<li>(TS15: future spinal cord; neural tube)</li>
 					<li>(TS17: future spinal cord; neural tube)</li>
@@ -156,7 +148,7 @@
 				</ul>
 				</li>
 				<li>The results for MGI:2178971 should display no image pane label for the following structures (in parentheses):
-		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
+				<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
 				<ul>
 					<li>(TS19: future spinal cord)</li>
 					<li>(TS19: future spinal cord)</li>
@@ -164,19 +156,19 @@
     			</li>
     			<li>Change query to Pax1 and go to Last page. The results for MGI:5463478 (type RNase protection) should display image pane label for the following structures (in parentheses)
     				and link should go to assay detail page:
-		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
+				<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
 				<ul>
 					<li>(TS21: embryo) - 3B Pax1</li>
     			</ul>
     			</li>
     			<li>Images label should superscript. Query for En2.
-		<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
+				<p concordion:assertTrue="true">Passed kstone 2013/05/20</p>
 				Verify that assay (MGI:2388060) with structure "TS13:future brain" has a specimen label <b>2B En2<sup>pbdneo/pbdneo</sup></b> displaying superscript properly.
     			</li>
     		</ol>
 			</li>
     		<li>Mutant Allele(s) displays correct data
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -199,7 +191,7 @@
     		</ol>
     		</li>
     		<li>Reference displays correct data
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Tssk*</li>
@@ -212,8 +204,8 @@
 				</li>
     		</ol>
     		</li>
-    		<li>Gene symbol should not be link on Assay Results tab
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+    		<li>Gene symbol should not be linked on Assay Results tab
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6 in the nomenclature field</li>
@@ -221,7 +213,7 @@
     		</ol>
     		</li>
     		<li>Test that GENES are sorted correctly
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Cyp* in the nomenclature field</li>
@@ -241,7 +233,7 @@
     		</ol>
     		</li>
     		<li>Test that ASSAY RESULTS are sorted correctly
-		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+			<p concordion:assertTrue="true">jeffc 8/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for abcb1b in the nomenclature field(does not include insitu reporter assay type.</li>
@@ -274,7 +266,7 @@
     		</ol>
     		</li>
     		<li>Test that long marker names/symbols wrap properly
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Search for Sema5a in the nomenclature field</li>
@@ -285,7 +277,7 @@
     		</ol>
     		</li>
     		<li>Test that marker symbols and names with non-alphanumeric characters don't break the interface
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Search for Mirlet7c-1 in the nomenclature field</li>
@@ -299,7 +291,7 @@
     		</ol>
     		</li>
     		<li>Test that the accordion animation does not activate when using back button from a subsequent page
-		<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
+			<p concordion:assertTrue="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for shh</li>
@@ -308,8 +300,10 @@
                 <li>Make sure the query form is already closed (without accordion effect)</li>
     		</ol>
     		</li>
+
+<!-- MOVED THE FOLLOWING TESTS TO ASSAY DETAIL TEST SUITE
     		<li>Test that MGI ID links in specimen notes go to the correct page
-		<p concordion:assertTrue="true">jeffc 05/17/2013</p>
+			<p concordion:assertTrue="true">jeffc 05/17/2013</p>
     		<ol>
                 <li>Search for MGI:5478602</li>
                 <li>Click the Expression Assay link</li>
@@ -319,7 +313,7 @@
     		</ol>
     		</li>
     		<li>Test that MGI ID links in Assay notes go to the correct page
-		<p concordion:assertTrue="true">jeffc 05/17/2013</p>
+			<p concordion:assertTrue="true">jeffc 05/17/2013</p>
     		<ol>
                 <li>Search for MGI:1270923</li>
                 <li>Click the Expression Assay link</li>
@@ -328,6 +322,7 @@
                 <li>Verify the page displayed is for MGI:2670369</li>
     		</ol>
     		</li>
+-->
             <li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
 		</ol>
 	</div>

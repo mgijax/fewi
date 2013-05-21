@@ -37,6 +37,9 @@
         <li>User story 16, GXD Assay Detail - Results section (Blot assays)</li>
         <li>User story 19, GXD Assay Detail - Image Panes (blot assays)</li>
         <li>User story 22, GXD Assay Detail - Tweak image pane sizing/spacing</li>
+        <li>User story 54, GXD Assay Detail - support MGI markup in assay notes</li>
+        <li>User story 55, GXD Assay Detail - support MGI markup in specimen notes</li>
+        <li>User story 135, MGI markup in note fields</li>    
     </ul>
 </div>
 
@@ -112,6 +115,10 @@
 	<ul>
 		<li>US22 - the stakeholders and the team have agreed on a set of rules for (re)sizing displayed image panes (see comments to a strawman set of such rules)</li>
 		<li>US22 - the rules are implemented</li>
+	</ul>
+	<ul>
+		<li>Sto54: MGI IDs in Specimen notes will link to correct associated page</li>
+		<li>Sto55: MGI IDs in Assay notes will link to correct associated page</li>
 	</ul>
 </div>
 
@@ -260,9 +267,9 @@
     		</table>
 			</li>
 		</ol>
-		<h4 id="probeRibbon">Probe Ribbon</h4>
+		<h4 id="probeRibbon">Probe section of the Assay Ribbon</h4>
 		<ol>
-			<li>The correct data are displayed for the particular assay and assay type.
+			<li>The correct data are displayed for the particular assay and assay type. <i>Note: this section has a gray background within the Assay Ribbon.</i>
     		<table>
     		<tbody>
     		<tr>
@@ -436,8 +443,12 @@
     		</tbody>
     		</table>
 			</li>
+
 		</ol>
-		<h4 id="specimenData">Specimen data</h4>
+
+		<h4>Results Ribbon</h4>
+
+		<h5 id="specimenData">Specimen data</h5>
 		<p>Specimen data may include the following:</p>
 		<ul>
 			<li>Genetic background</li>
@@ -614,8 +625,32 @@
 				<li>Verify the specimen labels read <b>Specimen 1</b> and <b>Specimen 2</b>, they should not be blank labels</li>
 				</ul>
 			</li>
+
+    		<li>MGI ID links in Specimen notes go to the correct page
+			<p concordion:assertTrue="true">jeffc 05/17/2013</p>
+    		<ol>
+                <li>Search for MGI:5478602</li>
+                <li>Click the Expression Assay link</li>
+                <li>Once the result page displays</li>
+                <li>Find the link "MGI:5476800" located in the note for specimen 3 and click it</li>
+                <li>Verify the page displayed is for MGI:5476800</li>
+    		</ol>
+    		</li>
+
+    		<li>MGI ID links in Assay notes go to the correct page
+			<p concordion:assertTrue="true">jeffc 05/17/2013</p>
+    		<ol>
+                <li>Search for MGI:1270923</li>
+                <li>Click the Expression Assay link</li>
+                <li>Once the result page displays, Click the link "MGI:2670369"</li>
+                <li>Find the link "MGI:2670369" located in assay notes and click it</li>
+                <li>Verify the page displayed is for MGI:2670369</li>
+    		</ol>
+    		</li>
+
+
 		</ol>
-		<h4 id="BlotData">Blot data</h4>
+		<h5 id="BlotData">Blot data</h5>
 		<p>Blot Table has the following column headings:</p>
 		<span concordion:assertTrue="true">jeffc 03/11/2013</span>
 		<ul>
@@ -838,7 +873,7 @@
 				</ul>
 			</li>
 		</ol>
-		<h4 id="imagePanes">Images</h4>
+		<h5 id="imagePanes">Images</h5>
 		<ol>
 			<li>Image panes display in the results ribbon in alpha numeric order(insitu assay)
 			<p concordion:assertTrue="true">jeffc 02/28/2013</p>
