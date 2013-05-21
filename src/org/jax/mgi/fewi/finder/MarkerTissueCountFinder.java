@@ -4,10 +4,17 @@ import java.util.List;
 
 import mgi.frontend.datamodel.MarkerTissueCount;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.jax.mgi.fewi.hunter.FooKeyHunter;
 import org.jax.mgi.fewi.hunter.FooSummaryHunter;
 import org.jax.mgi.fewi.hunter.SolrMarkerTissueHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
@@ -32,45 +39,36 @@ public class MarkerTissueCountFinder {
     /*--------------------*/
 
     private Logger logger = LoggerFactory.getLogger(MarkerTissueCountFinder.class);
-
-    @Autowired
-    private FooKeyHunter fooKeyHunter;
-
-    @Autowired
-    private FooSummaryHunter fooSummaryHunter;
     
     @Autowired
-    private SolrMarkerTissueHunter tissueHunter;
-
-    @Autowired
-    private HibernateObjectGatherer<MarkerTissueCount> tissueGatherer;
+	private SessionFactory sessionFactory;
 
     /*---------------------------------*/
     /* Retrieval of multiple tissues
     /*---------------------------------*/
 
-    public SearchResults<MarkerTissueCount> getTissues(SearchParams searchParams) {
-
-        logger.debug("->getTissues");
-
-        // result object to be returned
-        SearchResults<MarkerTissueCount> searchResults = new SearchResults<MarkerTissueCount>();
-
-        logger.debug(searchParams.getFilter().toString());
-        
-        // ask the hunter to identify which objects to return
-        tissueHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
-
-        // gather objects identified by the hunter, add them to the results
-        List<MarkerTissueCount> tissueList
-          = tissueGatherer.get( MarkerTissueCount.class, searchResults.getResultKeys() );
-        searchResults.setResultObjects(tissueList);
-
-        return searchResults;
+    public List<MarkerTissueCount> getTissues(String mrkKey)
+    {
+    	return getTissues(mrkKey,null);
     }
-
-
-
+    
+	public List<MarkerTissueCount> getTissues(String mrkKey,Paginator page)
+    {
+    	Session s = sessionFactory.getCurrentSession();
+    	Criteria query = s.createCriteria(MarkerTissueCount.class).add(Restrictions.eq("markerKey", Integer.parseInt(mrkKey)));
+    	if(page!=null)
+    	{
+    		query.setFirstResult(page.getStartIndex());
+    		query.setMaxResults(page.getResults());
+    	}
+    	query.addOrder(Order.asc("sequenceNum"));
+    	return query.list();
+    }
+	
+	public Integer getTissueTotalCount(String mrkKey)
+	{
+		Session s = sessionFactory.getCurrentSession();
+    	Criteria query = s.createCriteria(MarkerTissueCount.class).add(Restrictions.eq("markerKey", Integer.parseInt(mrkKey)));
+    	return ((Number) query.setProjection(Projections.rowCount()).uniqueResult()).intValue();
+	}
 }

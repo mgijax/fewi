@@ -1,8 +1,10 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,6 +58,9 @@ public class MarkerTissueCountController {
     @Autowired
     private MarkerFinder markerFinder;
     
+    // a cache object
+    private Map<String,Integer> totalCountsCache = new HashMap<String,Integer>();
+    
     
     /* 
      * This method maps ajax requests from the reference summary page.  It 
@@ -64,8 +69,7 @@ public class MarkerTissueCountController {
      */
     @RequestMapping("/marker/report*")
     public String tissueSummaryReport(
-            HttpServletRequest request, Model model,
-            @ModelAttribute Paginator page) {
+            HttpServletRequest request, Model model) {
                 
         logger.debug("summaryReportText");
         
@@ -78,14 +82,13 @@ public class MarkerTissueCountController {
                 params.setFilter(new Filter(SearchConstants.MRK_KEY, mrkKey));
             }
             
-            //params.setPaginator(page);
-            params.setPageSize(5000);
+            Paginator page = new Paginator();
+            page.setResults(5000);
             
             // perform query, and pull out the requested objects
-            SearchResults searchResults
-              = tFinder.getTissues(params);
+            List<MarkerTissueCount> tissueCounts = tFinder.getTissues(mrkKey,page);
 
-            model.addAttribute("results", searchResults.getResultObjects());
+            model.addAttribute("results", tissueCounts);
 
             return "tissueSummaryReport";            
 
@@ -175,18 +178,14 @@ public class MarkerTissueCountController {
         params.setPaginator(page);
         
         // perform query, and pull out the requested objects
-        SearchResults searchResults
-          = tFinder.getTissues(params);
-        List<MarkerTissueCount> markerList = searchResults.getResultObjects();
+        List<MarkerTissueCount> tissueCounts = tFinder.getTissues(mrkKey,page);
 
         // create/load the list of SummaryRow wrapper objects
         List<MarkerTissueCountSummaryRow> summaryRows = new ArrayList<MarkerTissueCountSummaryRow> ();
-        Iterator<MarkerTissueCount> it = markerList.iterator();
-        
         logger.debug("About to iterate through the tissue counts");
         
-        while (it.hasNext()) {
-            MarkerTissueCount mtc = it.next();
+        for(MarkerTissueCount mtc : tissueCounts)
+        {
             if (mtc == null) {
                 logger.debug("--> Null Object");
             }else {
@@ -201,8 +200,20 @@ public class MarkerTissueCountController {
 
         // place data into JSON response, and return
         jsonResponse.setSummaryRows(summaryRows);
-        jsonResponse.setTotalCount(searchResults.getTotalCount());
+        jsonResponse.setTotalCount(getTotalTissueCount(mrkKey));
         return jsonResponse;
+    }
+    
+    public Integer getTotalTissueCount(String mrkKey)
+    {
+    	if(totalCountsCache.containsKey(mrkKey))
+    	{
+    		return totalCountsCache.get(mrkKey);
+    	}
+    	
+    	Integer tc = tFinder.getTissueTotalCount(mrkKey);
+    	totalCountsCache.put(mrkKey,tc);
+    	return tc;
     }
 
 }
