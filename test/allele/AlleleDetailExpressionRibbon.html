@@ -27,13 +27,15 @@
     <ul>
 <!--          <li>MGI 5.12 User story 128, Remove Expression Ribbon from Allele Detail Page</li>-->
 		<li>MGI 5.14 User story 163, Reinstate links to expression data from allele detail pages for that allele</li>
+		<li>MGI 5.14 User story 209, Move expression ribbon</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>ssia</li>
+		<li>sto209: The Expression Ribbon does not appear in the old location. It appears in the new location.</li>
+		<li>sto209: Moving it doesn't break other stuff on pages where the ribbon does or does not exist.</li>
 	</ul>
 </div>
 
@@ -62,10 +64,26 @@
                 <li>Follow the link and verify the Expression summary displays results containing this allele.</li>
     		</ol>
     		</li>
-    		<li><span class="regressHi">Regress</span> Ribbons alternate colors properly on the page.
- 			<p concordion:assertTrue="true">kstone 2013/05/14</p>
+    		<li><span class="regressHi">Regress</span> Expression ribbon appears below Diseases ribbon, when both exist.
+ 			<p concordion:assertTrue="false">new 5/21/2013</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=7504">Pkd1<sup>tm2Jzh</sup></a></li>
+                <li>Verify that the Expression ribbon appears below Diseases ribbon.</li>
+    		</ol>
+    		</li>
+    		<li><span class="regressHi">Regress</span> Expression ribbon appears below Phenotypes ribbon, when Disease ribbon does not exist.
+ 			<p concordion:assertTrue="false">new 5/21/2013</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=37151">Pax3<sup>tm1(cre)Joe</sup></a></li>
+                <li>Verify that the Expression ribbon appears below Phenotypes ribbon.</li>
+    		</ol>
+    		</li>
+    		<li><span class="regressHi">Regress</span> Ribbons alternate colors properly on the page.
+ 			<p concordion:assertTrue="false">retest needed 5/21/2013</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=7504">Pkd1<sup>tm2Jzh</sup></a></li>
+                <li>Verify that ribbons alternate colors: light blue left with white background on right, then darker blue left with gray background on right.</li>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=37151">Pax3<sup>tm1(cre)Joe</sup></a></li>
                 <li>Verify that ribbons alternate colors: light blue left with white background on right, then darker blue left with gray background on right.</li>
     		</ol>
     		</li>
