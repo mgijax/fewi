@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ReferenceSummary {
+	 private static Logger logger = LoggerFactory.getLogger(ReferenceSummary.class);
 	private Reference reference;
 	private String score;
 	private String pmUrl = ContextLoader.getExternalUrls().getProperty("PubMed");
@@ -17,9 +18,13 @@ public class ReferenceSummary {
 	private Highlighter titleHL = new Highlighter(null);
 	private Highlighter abstractHL = new Highlighter(null);
 	private Highlighter authorHL = new Highlighter(null);
+	private NotesTagConverter ntc;
 
 	public ReferenceSummary(Reference reference) {
 		this.reference = reference;
+		try{
+			this.ntc = new NotesTagConverter();
+		}catch(Exception e){}
 	}
 
 	public void setReference(Reference reference) {
@@ -151,14 +156,16 @@ public class ReferenceSummary {
 	}
 
 	public String getAbstract(){
-		String abs = "";
+		String abs;
 		if (this.reference.getAbstract() != null
 				&& !"".equals(this.reference.getAbstract())){
-			abs = abstractHL.highLight(this.reference.getAbstract());
+			//logger.debug("abstract before ="+this.reference.getAbstract()); 
+			abs = abstractHL.highLight(ntc.convertNotes(this.reference.getAbstract(),'|')).replaceAll("\n\n", "<p>");
+			//logger.debug("abstract after ="+abs); 
 		} else {
-			abs = abstractHL.highLight("this reference has no abstract");
+			abs = "this reference has no abstract";
 		}
-		return abs.replaceAll("\n\n", "<p>");
+		return abs;
 	}
 
 	public String getBookEdition() {
