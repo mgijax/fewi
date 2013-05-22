@@ -63,14 +63,9 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
          * to multiple fields in the index.
          */
         
-        ArrayList <String> refList = new ArrayList <String> ();
-        refList.add(IndexConstants.JNUM_ID);
-        refList.add(IndexConstants.MGI_ID);
-        refList.add(IndexConstants.PUBMED_ID);
-        
         // The 1->N Mapping should be joined with OR's
         propertyMap.put(SearchConstants.REF_ID, 
-        		new SolrPropertyMapper(refList, "OR"));
+        		new SolrPropertyMapper(IndexConstants.REF_ID));
         
         propertyMap.put(SearchConstants.REF_AUTHOR_ANY, 
         		new SolrPropertyMapper(
