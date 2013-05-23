@@ -1,0 +1,92 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Detected/Not detected search</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Detected/Not detected search</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>TR11313 - Quick Search returns Bad Link for DOI IDs</h1>
+    <ul>
+        <li>User story 127, Quick search returns bad link for DOI ids</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+		<li>All DOI ID searches from quick search  return a reference link that  works and is correct</li>
+    </ul>
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Verify a DOI ID with a slash in it returns a reference link correctly
+            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <ol>
+                <li>Open the MGI main page and enter "10.1093/hmg/dds430" in the Quick Search box</li>
+                <li>Verify the results returned has a Reference link in the Other Results by ID section</li>
+                <li>Verify clicking on the Reference link takes you to the Reference page for J:191131</li>                                
+            </ol>
+            </li>
+            <li>Verify a DOI ID with a dash in it returns a reference link correctly
+            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <ol>
+                <li>Open the MGI main page and enter "53.08.04.db04-0422" in the Quick Search box</li>
+                <li>Verify the results returned has a Reference link in the Other Results by ID section</li>
+                <li>Verify clicking on the Reference link takes you to the Reference page for J:91890</li>                                
+            </ol>
+            </li>
+            <li>Verify a DOI ID with a semicolon in it returns a reference link correctly
+            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <ol>
+                <li>Open the MGI main page and enter "10.1096/fj.05-4017fje;1" in the Quick Search box</li>
+                <li>Verify the results returned has a Reference link in the Other Results by ID section</li>
+                <li>Verify clicking on the Reference link takes you to the Reference page for J:1</li>                                
+            </ol>
+            </li>
+            <li>Verify a DOI ID with a parents in it returns a reference link correctly
+            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <ol>
+                <li>Open the MGI main page and enter "10.1016/S0002-9440(10)65297-2" in the Quick Search box</li>
+                <li>Verify the results returned has a Reference link in the Other Results by ID section</li>
+                <li>Verify clicking on the Reference link takes you to the Reference page for J:52818</li>                                
+            </ol>
+            </li>            
+
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+ 
+    </div>
+</div>
+
+</body>
+</html>
