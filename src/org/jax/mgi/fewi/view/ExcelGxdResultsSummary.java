@@ -1,31 +1,23 @@
 package org.jax.mgi.fewi.view;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-
-import mgi.frontend.datamodel.GxdAssayResult;
-import mgi.frontend.datamodel.ImagePane;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.slf4j.Logger;
@@ -36,9 +28,12 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(ExcelGxdResultsSummary.class);
 
+	// set a maximum download size for sanity's sake
+	public int MAX_ROWS = 800000;
+	
 	@Override
 	public void buildExcelDocument(
-			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
+			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 			logger.debug("buildExcelDocument");
 			String filename = "MGIgeneExpressionQuery_"+getCurrentDate();
@@ -76,12 +71,11 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 			Row row;
 			int rownum = 1;
 
-			try
-			{
 			// need this for processing genotype;
 			NotesTagConverter ntc = new NotesTagConverter();
 			while(finder.hasNextResults())
 			{
+				if(rownum > MAX_ROWS) break;
 				SearchResults<SolrAssayResult> sr = finder.getNextResults();
 				for (SolrAssayResult r: sr.getResultObjects()) {
 					row = sheet.createRow(rownum++);
@@ -128,11 +122,6 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 
 					row.createCell(14).setCellValue(r.getShortCitation());
 				}
-			}
-			}
-			catch (IOException e)
-			{
-				// meh
 			}
 
 		}
