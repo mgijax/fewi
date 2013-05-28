@@ -51,10 +51,10 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Remove the GXD Expanded query form(for test to work need URL mapping change)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">jeffc 5/28/2013</p>
     		<ol>
-                <li>Enter "http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=expressionQFexpanded" in a browser</li>
-                <li>Verify the GXD expanded query form does not get returned but forwards to GXD Differential tab?</li>
+                <li>Enter "http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=expressionQFexpanded" in a browser(tested using "http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=expressionQFexpanded")</li>
+                <li>Verify the GXD expanded query form does not get returned but forwards to GXD Differential tab?(until the URL mapper story is done you should get a blank page)</li>
     		</ol>
     		</li>
     		<li>Verify the link to GXD expanded qf is removed from the Expression pulldown
