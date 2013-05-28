@@ -111,26 +111,25 @@ public class BatchSummaryRow {
     	}
     }
     public String getChromosome() {
-    	if (batchMarkerId.getMarker() != null) {
-
-	    // first attempt to get the chromosome from the coordinates
-
-    	    MarkerLocation loc = 
-		batchMarkerId.getMarker().getPreferredCoordinates();
-    	    if (loc != null){
-		if (loc.getChromosome() != null) {
-		    return loc.getChromosome();
-		} // if coordinate's chromosome is non-null
-    	    } // if coordinates exist
-
-	    // fall back on chromosome from a cM location
-
-	    loc = batchMarkerId.getMarker().getPreferredCentimorgans();
-	    if (loc != null){
-    		if (loc.getChromosome() != null){
-    			return loc.getChromosome();
-    		} // if cM location's chromosome is non-null
-	    } // if cM location exists
+    	if (query.getLocation() && batchMarkerId.getMarker() != null) 
+    	{
+		    // first attempt to get the chromosome from the coordinates
+	
+	    	MarkerLocation loc = batchMarkerId.getMarker().getPreferredCoordinates();
+	    	if (loc != null){
+				if (loc.getChromosome() != null) {
+				    return loc.getChromosome();
+				} // if coordinate's chromosome is non-null
+	    	} // if coordinates exist
+	
+		    // fall back on chromosome from a cM location
+	
+		    loc = batchMarkerId.getMarker().getPreferredCentimorgans();
+		    if (loc != null){
+	    		if (loc.getChromosome() != null){
+	    			return loc.getChromosome();
+	    		} // if cM location's chromosome is non-null
+		    } // if cM location exists
     	} // if batchMarkerId.getMarker() != null
     	return "";
     }
@@ -163,26 +162,24 @@ public class BatchSummaryRow {
     }
 
     public String getEnsemblIds() {
+
+    	if (!query.getEnsembl()) return "";
     	List<String> l = new ArrayList<String>();
-    	if (query.getEnsembl()){
-    		l.add(DBConstants.PROVIDER_ENSEMBL);
-    	}
+    	l.add(DBConstants.PROVIDER_ENSEMBL);
     	return StringUtils.join(this.getId(l), "<br/>");
     }
 
     public String getEntrezIds() {
+    	if(!query.getEntrez()) return "";
     	List<String> l = new ArrayList<String>();
-    	if (query.getEntrez()){
-    		l.add(DBConstants.PROVIDER_ENTREZGENE);
-    	}
+    	l.add(DBConstants.PROVIDER_ENTREZGENE);
     	return StringUtils.join(this.getId(l), "<br/>");
     }
 
     public String getVegaIds() {
+    	if (!query.getVega()) return "";
     	List<String> l = new ArrayList<String>();
-    	if (query.getVega()){
-    		l.add(DBConstants.PROVIDER_VEGA);
-    	}
+    	l.add(DBConstants.PROVIDER_VEGA);
     	return StringUtils.join(this.getId(l), "<br/>");
     }
 
@@ -293,6 +290,7 @@ public class BatchSummaryRow {
     }
 
     public String getOmimTerms(){
+    	if(!query.getOmim()) return "";
     	Marker marker = batchMarkerId.getMarker();
     	List<String> omim = new ArrayList<String>();
     	if (marker != null  && omimAnnots == null){
@@ -434,6 +432,7 @@ public class BatchSummaryRow {
     }
 
     public String getRefseqIds(){
+    	if(!query.getRefseq()) return "";
     	List<String> l = new ArrayList<String>();
     	l.add(DBConstants.PROVIDER_REFSEQ);
     	l.add("Sequence DB");
@@ -441,6 +440,7 @@ public class BatchSummaryRow {
     }
 
     public String getUniprotIds(){
+    	if(!query.getUniprot()) return "";
     	List<String> l = new ArrayList<String>();
     	l.add(DBConstants.PROVIDER_SWISSPROT);
     	l.add(DBConstants.PROVIDER_TREMBL);
