@@ -1,4 +1,4 @@
-package misc;
+package reference;
 
 import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
 

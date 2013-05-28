@@ -32,6 +32,7 @@
     <h2>Acceptance Criteria</h2>
     <ul>
 		<li>All DOI ID searches from quick search  return a reference link that  works and is correct</li>
+		<li>EXCEPT: those IDs that contain a semi-colon will fail. Semi-colon and space are list delimiters.</li>
     </ul>
 </div>
 
@@ -63,6 +64,7 @@
                 <li>Verify clicking on the Reference link takes you to the Reference page for J:91890</li>                                
             </ol>
             </li>
+<!-- 
             <li>Verify a DOI ID with a semicolon in it returns a reference link correctly
             <p concordion:assertTrue="true">jeffc 05/23/2013</p>
             <ol>
@@ -71,6 +73,7 @@
                 <li>Verify clicking on the Reference link takes you to the Reference page for J:1</li>                                
             </ol>
             </li>
+-->
             <li>Verify a DOI ID with a parents in it returns a reference link correctly
             <p concordion:assertTrue="true">jeffc 05/23/2013</p>
             <ol>
