@@ -593,9 +593,6 @@ public class MarkerController {
 			"<start>", startCoordinate).replace (
 			"<end>", endCoordinate);
 	}
-	// is Marker an STS?
-	boolean isSTS=marker.getAliases()!=null && marker.getAliases().size()>0 
-			&& !marker.getMarkerType().equals("Gene");
 
 	// GBrowse
 	if (coords != null) {
@@ -611,7 +608,8 @@ public class MarkerController {
 		"<start>", startCoordinate).replace(
 		"<end>", endCoordinate);
 		
-		if(isSTS) 
+		// add tracks for special marker "types"
+		if(marker.getIsSTS()) 
 		{
 			gbrowseUrl = gbrowseUrl.replace("label=","label=STS-");
 			gbrowseThumbnailUrl = gbrowseThumbnailUrl.replace("t=","t=STS;t=");
