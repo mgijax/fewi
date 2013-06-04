@@ -593,21 +593,30 @@ public class MarkerController {
 			"<start>", startCoordinate).replace (
 			"<end>", endCoordinate);
 	}
+	// is Marker an STS?
+	boolean isSTS=marker.getAliases()!=null && marker.getAliases().size()>0 
+			&& !marker.getMarkerType().equals("Gene");
 
-        // GBrowse
-        if (coords != null) {
-        	gbrowseUrl = externalUrls.getProperty(
-			"GBrowse").replace(
-			"<chromosome>", chromosome).replace(
-			"<start>", startCoordinate).replace(
-			"<end>", endCoordinate);
-        	
-        	gbrowseThumbnailUrl = externalUrls.getProperty(
-			"GBrowse_Thumbnail").replace(
-			"<chromosome>", chromosome).replace(
-			"<start>", startCoordinate).replace(
-			"<end>", endCoordinate);
-        }
+	// GBrowse
+	if (coords != null) {
+		gbrowseUrl = externalUrls.getProperty(
+		"GBrowse").replace(
+		"<chromosome>", chromosome).replace(
+		"<start>", startCoordinate).replace(
+		"<end>", endCoordinate);
+		
+		gbrowseThumbnailUrl = externalUrls.getProperty(
+		"GBrowse_Thumbnail").replace(
+		"<chromosome>", chromosome).replace(
+		"<start>", startCoordinate).replace(
+		"<end>", endCoordinate);
+		
+		if(isSTS) 
+		{
+			gbrowseUrl = gbrowseUrl.replace("label=","label=STS-");
+			gbrowseThumbnailUrl = gbrowseThumbnailUrl.replace("t=","t=STS;t=");
+		}
+	}
 
 	// UCSC Genome Browser
 	if (coords != null) {
