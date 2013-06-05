@@ -45,7 +45,7 @@
 		<copy file="${global_config.dir}/GlobalConfig.properties" todir="./www/WEB-INF/properties" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/ehcache.xml" todir="./www/WEB-INF/classes" overwrite="true" />
 		<echo>Use ${config.dir}\${config.file}</echo>
-		<copy file="${config.dir}/${config.file}" tofile="./www/WEB-INF/properties/fewi.properties" overwrite="true" />
+		<copy file="${config.dir}/${config.file}" tofile="./www/WEB-INF/properties/fewi.properties" overwrite="false" />
 		<replace file="./www/WEB-INF/properties/fewi.properties" token="@TEMPLATE_DIR@" value="${template.dir}" />
 	</target>
 
@@ -53,7 +53,9 @@
 	<!--compile -->
 	<target name="compile" depends="prepare">
 		<echo>Compile source</echo>
-		<javac srcdir="${src.dir}" destdir="${compile.dir}" debug="on" debuglevel="lines,vars,source">
+		<javac destdir="${compile.dir}" debug="on" debuglevel="lines,vars,source">
+			<src path="${src.dir}" />
+			<exclude name="org/jax/mgi/fewi/test/**" />
 			<classpath refid="libs" />
 		</javac>
 	</target>
@@ -103,7 +105,7 @@
 		</junit>
 	</target>
 	<!-- run gxd/snp/cre tests -->
-	<target name="snp-test" depends="compile-test">
+	<target name="all-test" depends="compile-test">
 					<junit fork="yes" forkmode="once" failureproperty="junit.failure">
 						<jvmarg value="-Dconcordion.output.dir=${testoutput.dir}"/>
 						<classpath>
