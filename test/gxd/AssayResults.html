@@ -381,8 +381,9 @@
     		<ol>
     			<li>Open the GXD query page</li>
     			<li>Search for <b concordion:set="#nomen">Pecam1</b>, TS<b concordion:set="#stage">28</b>, <b concordion:set="#type">Western blot</b></li>
-    			<li>Verify all results for assay <b concordion:set="#assayId">MGI:2680816</b> are <b cc:assertAllRowsEqual="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">Not Specified</b>
-    				<br/>(Note: all results for this assay have values "Not Specified" and "Absent".)
+    			<li>Verify results for assay <b concordion:set="#assayId">MGI:2680816</b> contain <b cc:assertResultsContain="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">Not Specified</b>
+    				and <b cc:assertResultsContain="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">Yes</b>,
+    				but not <b cc:assertNoResultsContain="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">No</b>
     			</li>
     			<li>Perform a new search for <b concordion:set="#nomen">Dlx1</b>, TS<b concordion:set="#stage">28</b>,  <b concordion:set="#type">RNase protection</b></li>
     			<li>Verify the result for <b concordion:set="#assayId">MGI:1307083</b> is <b cc:assertAllRowsEqual="getAssayResultStrengths(#nomen,#type,#assayId,#stage)">Yes</b>
