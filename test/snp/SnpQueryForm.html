@@ -100,15 +100,6 @@ tr.gray td {background-color:#EEEEEE;}
                 </li>
     		</ol>
     		</li>
-    		<li>SNP Query Form runs and returns results for SAMPLE data set
- 			<p concordion:assertTrue="true">klf 2/18/2013</p>
-    		<ol>
-                <li>Verify some results can be returned for Chr 1</li>
-                <li>Verify some results can be returned for Chr 2</li>
-                <li>Verify some results can be returned for Chr 19</li>
-                <li>Verify some results can be returned for Chr Y</li>
-    		</ol>
-    		</li>
     		<li><span class="regressHi">Regress</span> SNP Query Form returns correct counts for SAMPLE data set
  			<p concordion:assertTrue="true">klf 2/18/2013</p>
     		<ol>
@@ -124,6 +115,27 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Open the SNP query form</li>
                 <li>Verify the dbSNP build listed at the top of the form says dbSNP Build 137</li>
                 <li>Verify the NCBI build listed in the Map Position ribbon says GRCm38</li>
+    		</ol>
+    		</li>
+    		<li><span class="regressHi">Regress</span> SNP query form returns correct data for SNPs associated with a marker.
+ 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+    		<ol>
+                <li>Open the SNP query form</li>
+                <li>In the Associated Genes ribbon, enter <b>Pnp</b> in the Gene Symbol/Name field and submit the query.</li>
+                <li>Verify that <b>103</b> SNPs are returned.</li>
+                <li>Return to the query form. Select "Include SNPs that map to multiple locations" and submit the query.</li>
+                <li>Verify that <b>173</b> SNPs are returned.</li>
+    		</ol>
+    		</li>
+    		<li><span class="regressHi">Regress</span> SNP query form returns correct data for SNPs associated with a coordinate range.<br/>
+    		NOTE: For coordinate queries, multi-coordinate SNPs are returned ONLY if they fall within the coordinate range queried.
+ 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+    		<ol>
+                <li>Open the SNP query form</li>
+                <li>In the Map Position ribbon, enter the coordinates of Pnp +/- 2kbp: <b>chr 14 from 50942302 to 50955412</b> and submit the query.</li>
+                <li>Verify that <b>103</b> SNPs are returned.</li>
+                <li>Return to the query form. Select "Include SNPs that map to multiple locations" and submit the query.</li>
+                <li>Verify that <b>140</b> SNPs are returned.</li>
     		</ol>
     		</li>
 		</ol>
