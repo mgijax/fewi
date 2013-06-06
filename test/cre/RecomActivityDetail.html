@@ -54,7 +54,8 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> Image link URLs appear on the Recombinase Activity Detail page
- 			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+ 			<p concordion:assertTrue="false">needs regression 6/6/13</p>
+ 			<p>Note: this test requires fake data.</p>
     		<ol>
                 <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
                 <li>Verify that images in the "Images" ribbon display linked text between the J:# and the Figure Label text.</li>
@@ -63,14 +64,15 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Image link URLs open the linked resource in a new window
- 			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+ 			<p concordion:assertTrue="false">needs regression 6/6/13</p>
     		<ol>
                 <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
                 <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the Images ribbon for Fig. Calb2 Brain (dorsal) Adult, and opens in a new window.</li>
                 <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the "Reference, Source" column wherever Fig. Calb2 Brain (dorsal) Adult is cited, and opens in a new window.</li>
-                <li>Verify "AIBS Data" is hyperlinked to connectivity.brain-map.org in the Images ribbon for Fig. Calb2 Spinal cord (wh matter) P7, and opens in a new window.</li>
+                <li>***Verify "AIBS Data" is hyperlinked to connectivity.brain-map.org in the Images ribbon for Fig. Calb2 Spinal cord (wh matter) P7, and opens in a new window.</li>
                 <li>Verify "AIBS Data" is hyperlinked to connectivity.brain-map.org in the "Reference, Source" column wherever Fig. Calb2 Spinal cord (wh matter) P7 is cited, and opens in a new window.</li>
                 <li>Verify each link opens in a new tab/window.</li>
+                <li>*** Only the one marked *** needs regression testing.</li>
     		</ol>
     		</li>
 
