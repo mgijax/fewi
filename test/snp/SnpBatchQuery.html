@@ -75,11 +75,26 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Batch Query for a marker should return the same SNPs as the Marker Detail Page link, excluding multi-coordinate SNPs.
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
+<!-- SQL FOR SNPS WITHIN 2KB FOR MARKER CYP21A1:
+select _consensussnp_key, chromosome, sequencenum, startcoordinate, ismulticoord, strand
+from snp_coord_cache
+where chromosome = '17'
+and startcoordinate >= 34799348
+and startcoordinate <= 34806561
+and ismulticoord = 0
+ -->
+                <li>Navigate to the Marker Detail Page for <b>Cyp21a1</b>.</li>
+                <li>Follow the "SNPs within 2kb" link. (Should be 38 SNPs? Chr17: 34801348-34804561)</li>
                 <li>Perform Batch Query for <b>Cyp21a1</b>.</li>
-                <li>Open a new window and navigate to the Marker Detail Page for <b>Cyp21a1</b>.</li>
-                <li>Follow the "SNPs within 2kb" link. </li>
-                <li>Perform Batch Query for <b>Cyp21a1</b>.</li>
-                <li>Verify that the list of RS IDs is the same.</li>
+                <li>Verify that the list of RS IDs is the same.<br/></li>
+                <li>Navigate to the Marker Detail Page for <b>Cib1</b>.</li>
+                <li>Follow the "SNPs within 2kb" link. (Should be 38 SNPs? Chr7: 80227156-80232813) </li>
+                <li>Perform Batch Query for <b>Cib1</b>.</li>
+                <li>Verify that the list of RS IDs is the same.<br/></li>
+                <li>Navigate to the Marker Detail Page for <b>Pnp</b>.</li>
+                <li>Follow the "SNPs within 2kb" link. (Should be 103 SNPs? Chr14:50944302-50953412) </li>
+                <li>Perform Batch Query for <b>Pnp</b>.</li>
+                <li>Verify that the list of RS IDs is the same.<br/></li>
     		</ol>
     		</li>
 		</ol>
