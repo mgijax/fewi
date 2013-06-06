@@ -75,7 +75,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> The Allele Detail Page displays a button or link by which a user may open a page to submit their notes. The button or link appears only on the page for Recombinase alleles.
- 			<p concordion:assertTrue="false">needs regression 6/6/13</p>
+ 			<p concordion:assertTrue="true">klf 6/6/13</p>
     		<ol>
                 <li>Verify button appears on <b>Pax3&lt;tm1(cre)Joe&gt;</b> allele detail page.</li>
                 <li>Verify button does NOT appear on <b>Pax6&lt;Sey&gt;</b> allele detail page.</li>
@@ -83,7 +83,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li><span class="regressHi">Regress</span> Clicking the button or link opens a form in which the user may submit text notes.
- 			<p concordion:assertTrue="false">needs regression 6/6/13</p>
+ 			<p concordion:assertTrue="true">klf 6/6/13</p>
     		<ol>
                 <li>On the <b>Pax3&lt;tm1(cre)Joe&gt;</b> allele detail page, click the user notes button.</li>
                 <li>Verify that the <b>Your Input Welcome</b> opens.</li>
@@ -92,7 +92,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li><span class="regressHi">Regress</span> Submitting the form sends the text input from the user to  Scrum-Dog (from Valinor/Cardolan), to mgi-qa (from Firien during Build Sprint), or to User Support (from Public after release).
- 			<p concordion:assertTrue="false">needs regression 6/6/13</p>
+ 			<p concordion:assertTrue="true">klf 6/6/13</p>
     		<ol>
                 <li>Enter some text in the form and click the "Submit" button.</li>
                 <li>Verify that Scrum-Dog, mgi-qa, or User Support  (depending on which build we are testing) received an email with the entered text for the specified allele.</li>
@@ -100,7 +100,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li><span class="regressHi">Regress</span> The Allele module of the EI has a notes field where the Curator may input user-submitted notes. This field saves the text notes to the database, associated with the allele.
- 			<p concordion:assertTrue="false">needs regression 6/6/13</p>
+ 			<p concordion:assertTrue="true">klf 6/6/13</p>
     		<ol>
                 <li>Open the Allele module of the EI.</li>
                 <li>Search for the record for <b>Pax3&lt;tm1(cre)Joe&gt;</b>.</li>
@@ -112,7 +112,7 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li><span class="regressHi">Regress</span> The Allele Detail Page displays the text that is saved in the database, associated with the appropriate recombinase allele.<br/>
     		See Kunagi for link to look-and-feel.
- 			<p concordion:assertTrue="true">passed klf 5/10/2013</p>
+ 			<p concordion:assertTrue="true">klf 6/6/13</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Calb2&lt;tm1(cre)Zjh&gt;</b>.</li>
                 <li>Verify that the Recombinase activity ribbon displays a "User Notes" row with an open/close toggle in the "closed" state and text: "Additional information submitted by the research community".</li>
