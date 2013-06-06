@@ -80,14 +80,14 @@ tr.gray td {background-color:#EEEEEE;}
     		<li><span class="regressHi">Regress</span> Verify dbSNP build is 137 on the snp detail page
  			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
     		<ol>
-                <li>Display the SNP detail page for rs29438715</li>
+                <li>Display the SNP detail page for rs29438715(from marker Ap1b1)</li>
                 <li>When the detail page displays verify in the ID/Version ribbon it says dbSNP Build 137</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify NCBI build is 38 on the snp detail page
  			<p concordion:assertTrue="true">klf 3/4/2013</p>
     		<ol>
-                <li>Display the SNP detail page for rs29438715</li>
+                <li>Display the SNP detail page for rs29438715(from marker Ap1b1)</li>
                 <li>When the detail page displays verify on the Genome Location and Flanking Sequence ribbon it says GRCm38</li>
                 <li>When the detail page displays verify on the Gene/Marker associations and Function classes ribbon it says GRCm38</li>
     		</ol>
@@ -95,7 +95,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<li><span class="regressHi">Regress</span> Verify GBrowse link renders correct page when SNP is mapped to 1 coordinate location.
  			<p concordion:assertTrue="true">klf 3/4/2013</p>
     		<ol>
-                <li>Display the SNP detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=snpDetail&amp;id=rs29404805">rs29404805</a>.</li>
+                <li>Display the SNP detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=snpDetail&amp;id=rs29404805">rs29404805(from marker Nefh)</a>.</li>
                 <li>Verify that the link for Mouse Genome Browser appears in the Additional resources ribbon between links to MPD and Ensembl SNP View.</li>
                 <li>Verify that the link for Mouse Genome Browser uses coordinate locations +2,000 and -2,000 bp from the SNP coordinate.</li>
                 <li>Verify that clicking the link renders the GBrowse page with the correct region of the correct chromosome.</li>
