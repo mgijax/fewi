@@ -281,7 +281,7 @@ public class AutoCompleteController {
 		logger.debug("vocab term query:" + words.toString());
 
 		SearchParams params = new SearchParams();
-		params.setPageSize(100);
+		params.setPageSize(200);
 		
 		Filter f = new Filter();
 		List<Filter> fList = new ArrayList<Filter>();

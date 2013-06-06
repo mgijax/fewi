@@ -91,14 +91,15 @@ public class SolrVocabACHunter extends SolrHunter
         {
             SolrDocument doc = (SolrDocument) iter.next();
             
-            logger.debug(doc.toString());
+            //logger.debug(doc.toString());
             // Set the result object
             String termId = (String) doc.getFieldValue(IndexConstants.VOCABAC_TERM_ID);
             String term = (String) doc.getFieldValue(IndexConstants.VOCABAC_TERM);
             boolean isSynonym = (Boolean) doc.getFieldValue(IndexConstants.VOCABAC_IS_SYNONYM);
             String originalTerm = (String) doc.getFieldValue(IndexConstants.VOCABAC_ORIGINAL_TERM);
             String rootVocab = (String) doc.getFieldValue(IndexConstants.VOCABAC_ROOT_VOCAB);
-            String displayVocab = (String) doc.getFieldValue(IndexConstants.VOCABAC_VOCAB);
+            // NOTE: not currently using the display vocab
+            //String displayVocab = (String) doc.getFieldValue(IndexConstants.VOCABAC_VOCAB);
             int markerCount = (Integer) doc.getFieldValue(IndexConstants.VOCABAC_MARKER_COUNT);
             int gxdlitMarkerCount = (Integer) doc.getFieldValue(IndexConstants.VOCABAC_GXDLIT_MARKER_COUNT);
             VocabACResult resultObject = new VocabACResult();
@@ -107,15 +108,13 @@ public class SolrVocabACHunter extends SolrHunter
             resultObject.setIsSynonym(isSynonym);
             resultObject.setOriginalTerm(originalTerm);
             resultObject.setRootVocab(rootVocab);
-            resultObject.setDisplayVocab(displayVocab);
+            //resultObject.setDisplayVocab(displayVocab);
             resultObject.setMarkerCount(markerCount);
             // check if there are any markers with gxd records
             resultObject.setHasExpressionResults(gxdlitMarkerCount>0);
             
             // Add result to SearchResults
             sr.addResultObjects(resultObject);
-            
-            
         }
     }
     
