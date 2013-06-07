@@ -274,7 +274,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 
  // enable toggle on each table item
  <c:forEach var="alleleSystem" items="${alleleSystems}" >
-  $('#${alleleSystem.cssId}').click(function(){
+  $('#${alleleSystem.cssId}','#alleleSystemtable_id').click(function(){
     $('.${alleleSystem.cssClass}','#alleleSystemtable_id').toggle();
   });
  </c:forEach>
