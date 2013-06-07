@@ -291,7 +291,7 @@ public class NotesTagConverter
         }
 
         // update for wild type
-        notes = notes.replace("<+>", "<sup>+</sup>");
+        if(!noSuperscript) notes = notes.replace("<+>", "<sup>+</sup>");
 
         return notes;
     }
