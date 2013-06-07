@@ -23,7 +23,7 @@
   **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
  -->
 
-    <title>CHANGE Test suite title</title>
+    <title>Homology Class Tests</title>
 </head>
 
 <body>
@@ -33,7 +33,7 @@
 </div>
 
 <div id="maintitle">
-    <h1>Homology Class Detail</h1>
+    <h1>Homology Class Tests</h1>
     <ul>
         <li>User story #, User story name</li>
     </ul>
@@ -42,17 +42,24 @@
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>A mouse marker may be associated with either 1 or 0 homologene clusters</li>
-	    <li>A mouse Marker Detail page links to the MGI Homology Cluster page</li>
+		<li>A mouse marker may be associated with either 1 or 0 homologene clusters or "classes"</li>
+		<li>A homology class may have only 1 species
+		<ol><li>A homology class with only mouse</li>
+		    <li>A homology class with only a single species that is not mouse (human, rat, cattle, chimp, or dog)
+		    <ol><li>Single species class at HomoloGene</li>
+		        <li>Multiple species class at HomoloGene, but single in MGI because other species are not loaded</li>
+		    </ol></li>
+		</ol></li>
+	    <li>A mouse Marker Detail page links to the Vertebrate Homology Class page</li>
 	    <li>A mouse Marker Detail page no longer displays link to old Orthology page or list of species</li>
-	    <li>A Homology Cluster page may include 1-n relationships between a mouse marker &amp; non-mouse markers</li>
-	    <li>A Homology Cluster page may include n-m relationships between mouse markers &amp; non-mouse markers</li>
-	    <li>A Homology Cluster page may include only relationships between mouse markers</li>
-	    <li>Sort order for the Homology Cluster page
+	    <li>A Homology Class page may include 1-n relationships between a mouse marker &amp; non-mouse markers</li>
+	    <li>A Homology Class page may include n-m relationships between mouse markers &amp; non-mouse markers</li>
+	    <li>A Homology Class page may include only relationships between mouse markers</li>
+	    <li>Sort order for the Homology Class page
 	        <ul><li>Primary (species) - human, mouse, rat, and remaining species in alpha order.</li>
 	            <li>Secondary (symbol) - alpha order for those species with multiple markers.</li>
 	        </ul></li>
-	    <li>Include a link to HomoloGene via the cluster ID on the new Homology page</li>
+	    <li>Include a link to HomoloGene via the class ID on the Vertebrate Homology Class page</li>
 	</ul>
 </div>
 
@@ -67,25 +74,59 @@
 <p concordion:assertTrue="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
+		<p>NOTE: Some of these tests were set up to run automated in Dec. 2012.  I added manual verifications in case the automation fails. --klf 6/7/13.</p>
+		<p>&nbsp;</p>
     	<p>List of mouse markers with associated homologene clusters (test data)</p>
 		<ul><li>C4a &amp; C4b - cluster id: 36030</li>
-		    <li>Slx &amp; Slxl1 &amp; Gm4836 - cluster id: 86004 (mouse only)</li></ul>
+		    <li>Slx &amp; Slxl1 &amp; Gm4836 - cluster id: 86036 (mouse only)</li>
+	    </ul>
 
 		<ol>   		
     		<li>Marker Detail page displays the new link when there's an associated homologene cluster.
-    		<p concordion:assertTrue="true">PASS - jlewis 12/5/2012</p> 
+    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
     		<ol>
-    			<li>Verify that markers C4a and C4b link to cluster 36030.</li>
-    			<li>Verify that markers Slx and Slxl1 and Gm4836 link to cluster 86004</li>	
-    			<li>Verify that markers Kit and Ahsp do not have working links</li>
+    			<li>Verify that markers C4a and C4b link to homology class 36030.</li>
+    			<li>Verify that markers Slx and Slxl1 and Gm4836 link to homology class 86036</li>	
+    			<li>Verify that markers Serpina1a, Serpina1b, Serpina1c, Serpina1d, Serpina1e link to homology class 20103.</li> 
+    			<li>Verify that marker Ahsp does not have working link</li>
        		</ol></li>
     		
     		<li>Marker Detail page no longer displays old link or list of species.
-    		<p concordion:assertTrue="true">PASS - jlewis 12/5/2012</p>  
+    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
     		<ol>
     			<li>Verify that markers C4a and C4b no longer have old link or list of species</li>
-    			<li>Verify that markers Pax6 and Lep no longer have old link or list of species</li> 
-       		</ol></li>
+       		</ol>
+       		</li>
+       		<li>Verify homology class <b concordion:set="#clusterId">133481</b> containing no mouse markers is returned. 
+    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
+    		    <li>Verify Homologene id is <b concordion:assertEquals="#hCluster.primaryID">133481</b>.</li>
+    			<li>Verify count of <b concordion:set="#forganism">mouse</b> genes in class is 
+    				<b concordion:assertEquals="getMarkerCountByOrganism(#hCluster, #forganism)">0</b>.</li>   
+    		</ol>
+    		</li>    		
+       		<li>Verify homology class <b concordion:set="#clusterId">86036</b> containing only mouse markers is returned. 
+    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
+    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">mouse</b>.</li>
+    			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
+    		</ol>
+    		</li>    		
+   		    <li>Verify homology class <b concordion:set="#clusterId">133546</b> containing only dog markers is returned. 
+    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
+    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">dog</b>.</li>
+    			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
+    		</ol>
+    		</li>    	
+   		    <li>Verify homology class <b concordion:set="#clusterId">133522</b> containing chimp  and chicken markers is returned. 
+    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
+    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">chimpanzee</b>.</li>
+    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">chicken</b>.</li>
+    			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">2</b>.</li>  
+    		</ol>
+    		</li>    	
 		</ol>
 	</div>
 	<div id="auto">
