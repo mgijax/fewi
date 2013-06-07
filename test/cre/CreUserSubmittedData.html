@@ -166,11 +166,25 @@
     		</ol>
     		</li>
 
-    		<li><span class="regressHi">Regress</span> The uploaded files are saved and are available to curators from the specified directory.
- 			<p concordion:assertTrue="false">new</p>
+    		<li><span class="regressHi">Regress</span> The uploaded files are saved correctly and are available in the correct directory.
+ 			<p concordion:assertTrue="true">klf 6/6/2013</p>
     		<ol>
-                <li><span style="background-color:#FFFF66;">Curators access files from the main wiki page via a link called "Submissions". We might not be able to test this until we go to Production?</span></li>
-                <li>From the main MGI wiki page, click the "Submissions" link. (or we should substitute a temporary link for testing).</li>
+    			<li>Using the submission form, upload one or more test files.</li>
+    			<li>Log-in to the appropriate server (Cardolan, Firien, etc.) and navigate to the directory "/export/{servername}/. Example: "/export/firien/". </li>
+                <li>Verify that the directory "submissions" appears with subdirectories for each year.</li>
+                <li>Click the subdirectory for the current year and then for the current month.</li>
+                <li>Verify that the directory specified in the confirmation email exists.</li>
+                <li>In the directory, verify that a file exists named "submission.txt". Verify it contains correct information from the submission form.</li>
+                <li>In the directory, verify that the test files uploaded exist.  Verify that they contain the correct contents.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> The uploaded files are saved and are available to curators from the "Submissions" link on the MGI wiki Main Page.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<p><span style="background-color:#FFFF66;">NOTE: Curators access files from the main wiki page via a link called "Submissions". We are not able to test this until we go to Public.</span></p>
+    		<ol>
+    			<li>Using the submission form, upload a test file.</li>
+                <li>From the main MGI wiki page, click the "Submissions" link.</li>
                 <li>Verify that the directory "submissions" appears with subdirectories for each year.</li>
                 <li>Click the subdirectory for 2013 and then for the current month.</li>
                 <li>Verify that the directory specified in the confirmation email exists and that it contains the submitted files.</li>
