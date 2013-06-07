@@ -290,7 +290,7 @@ NotesTagConverter ntc = new NotesTagConverter();
 
   <c:forEach var="phenoTableSystem" items="${phenoTableSystems}" >
     $('#${phenoTableSystem.cssId}','#phenotable_id').click(function(){
-      $('#phenotable_id .${phenoTableSystem.cssClass}','#phenotable_id').toggle();
+      $('.${phenoTableSystem.cssClass}','#phenotable_id').toggle();
     /*   $(this).nextAll('tr').each( function() {
 	        if ($(this).hasClass('phenoSummarySystemRow')) {
 	            return false;
