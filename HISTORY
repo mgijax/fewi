@@ -1,3 +1,4 @@
+TAG: fewi-5-1-4-6
 TAG: fewi-5-1-4-5
 TAG: fewi-5-1-4-4
 TAG: fewi-5-1-4-3
@@ -7,6 +8,7 @@ DATE: 5/28/13
 STAFF: pf,kstone
 CHANGES: merge tr11248 branch & release tags
 1) Fixed broken turnstiles on pheno+cre summary tables
+2) Fixed superscripting wildtypes in reports
 
 TAG: fewi-tr11353-BP
 DATE: 05/20/2013
