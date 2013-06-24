@@ -36,6 +36,7 @@ import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.SequenceSource;
 
+import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
@@ -105,6 +106,9 @@ public class MarkerController {
 
     @Autowired
     private IDLinker idLinker;
+    
+    @Autowired 
+    private SessionFactory sessionFactory;
 
     //--------------------------------------------------------------------//
     // public methods
@@ -211,6 +215,9 @@ public class MarkerController {
 
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("marker_detail");
+        
+        // set specific hibernate filters to omit data that does not appear on this page. (for performance)
+        sessionFactory.getCurrentSession().enableFilter("markerDetailRefs");
 
         // add an IDLinker to the mav for use at the JSP level
 	idLinker.setup();
@@ -225,22 +232,25 @@ public class MarkerController {
         
         this.dbDate(mav);
         
-        // add human homologs to model if present
-        OrganismOrtholog humanOO = null;
-        OrganismOrtholog mouseOO = null;
-	HomologyCluster homologyCluster = null;
-	List<Marker> humanHomologs = null;
-
-	mouseOO = marker.getOrganismOrtholog();
-
+    // add human homologs to model if present
+	OrganismOrtholog mouseOO = marker.getOrganismOrtholog();
 	if (mouseOO != null) {
-		homologyCluster = mouseOO.getHomologyCluster();
+		HomologyCluster homologyCluster = mouseOO.getHomologyCluster();
 		if (homologyCluster != null) {
 			mav.addObject("homologyClass", homologyCluster);
 
-			humanOO = homologyCluster.getOrganismOrtholog("human");
+			OrganismOrtholog humanOO = homologyCluster.getOrganismOrtholog("human");
 			if (humanOO != null) {
-				humanHomologs = humanOO.getMarkers();
+				List<Marker> humanHomologs = humanOO.getMarkers();
+				for(Marker hh : humanHomologs)
+				{
+					// preload these associations for better hibernate query planning
+					hh.getLocations().size();
+					hh.getAliases().size();
+					hh.getSynonyms().size();
+					hh.getBiotypeConflicts().size();
+					hh.getIds().size();
+				}
 				mav.addObject("humanHomologs", humanHomologs);
 			}
 		}
