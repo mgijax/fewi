@@ -32,7 +32,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 	private Logger logger = LoggerFactory.getLogger(BigExcelBatchSummary.class);
 	
 	private int totalCols = 2;
-
+	
 	@Override
 	protected void buildExcelDocument(Map model, SXSSFWorkbook workbook,
 			HttpServletRequest request, HttpServletResponse response)
@@ -40,8 +40,8 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		
 		logger.debug("buildExcelDocument");
 		BatchQueryForm queryForm = (BatchQueryForm)model.get("queryForm");
-		List<BatchMarkerId> results = (List<BatchMarkerId>) model.get("results");
-
+		startTimeoutPeriod();
+		
 		Sheet sheet = workbook.createSheet();		
 		genHeader(sheet.createRow(0), queryForm);
 		
@@ -49,21 +49,20 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		int rownum = 1;
 		int col;
 		
-		Marker m;
-		List<MarkerID> ids;
-		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
-		
 		row = sheet.createRow(rownum);
 
-		for (BatchMarkerId id : results) {
-			associations = new ArrayList<List<List<String>>>();
+		for (BatchMarkerId id : (List<BatchMarkerId>) model.get("results")) 
+		{
+			checkProgress(rownum);
+			List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
+			List<MarkerID> ids=null;
 			
 			row = sheet.createRow(rownum++);
 			col = 0;
 			row.createCell(col++).setCellValue(id.getTerm());
 			row.createCell(col++).setCellValue(id.getTermType());
 			
-			m = id.getMarker();			
+			Marker m = id.getMarker();			
 			
 			if (m != null){				
 				ids = m.getIds();
@@ -279,8 +278,8 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 					try {
 						workbook.setRepeatingRowsAndColumns(0,0,col,curRow,curRow + combineResults.size());
 					} catch (FormulaParseException e) {
-						logger.debug( "rowspan: " + curRow + " " + (curRow + combineResults.size()));
-						logger.debug(e.getMessage());
+						//logger.debug( "rowspan: " + curRow + " " + (curRow + combineResults.size()));
+						//logger.debug(e.getMessage());
 					}
 					
 					combineResults = null;
@@ -288,17 +287,14 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 			} else {
 				row.createCell(col++).setCellValue("No associated gene");
 			}
+			id.setMarker(null);
 		}
-		queryForm = null;
-		results = null;
-		
-		m = null;
-		ids = null;
-		associations = null;
 		
 		for (int i = 0; i < 20; i++) {
 			sheet.autoSizeColumn(i);	
 		}
+		
+		logger.info("finished processing batch excel report");
 	}
 	
 	private  Row genHeader(Row row, BatchQueryForm queryForm){

@@ -128,7 +128,7 @@ public class BatchController {
         session.removeAttribute("idSet");        
         logger.debug("sessionId: " + session.getId());
         
-        Set<String> idSet = null; 
+        List<String> idList = null; 
         MultipartFile file = queryForm.getIdFile();
 
         if (file != null && !file.isEmpty()){
@@ -148,7 +148,7 @@ public class BatchController {
             try {
             	idStream = (InputStream) file.getInputStream();
     			IOUtils.copy(idStream , writer);
-    			idSet = parseColumn(writer.toString(), col, sep);
+    			idList = parseColumn(writer.toString(), col, sep);
     			
     			writer.close();
     			idStream.close();
@@ -158,18 +158,20 @@ public class BatchController {
     			e.printStackTrace();
     		}        	    	
         } else {     	
-        	idSet = parseIds(queryForm.getIds());
+        	idList = parseIds(queryForm.getIds());
         }
 
-		if (idSet != null && idSet.size() > 0){
-			logger.debug("new id set: " + idSet.iterator().next());
-			session.setAttribute("idSet", new ArrayList<String>(idSet));
-			queryForm.setIds(StringUtils.join(idSet, "\n"));
+		if (idList != null && idList.size() > 0){
+			logger.debug("new id set: " + idList.iterator().next());
+			session.setAttribute("idSet", idList);
+			logger.debug("session timeout="+session.getMaxInactiveInterval());
+			//session.setMaxInactiveInterval(1);
+			queryForm.setIds(StringUtils.join(idList, "\n"));
 		}  
         ModelAndView mav = new ModelAndView("batch_summary");
         mav.addObject("queryString", queryForm.toQueryString());
         mav.addObject("batchQueryForm", queryForm);
-        mav.addObject("inputIdCount", idSet.size());
+        mav.addObject("inputIdCount", idList.size());
         logger.debug("processSummary done");
         return mav;
     	
@@ -217,28 +219,31 @@ public class BatchController {
         return jsonResponse;
     }
 
+    /*
+     * Testing asynchronous processing in Spring 3.2
+     */
 	@RequestMapping("/report*")
 	public ModelAndView batchSummaryReport(
-			HttpServletRequest request,
-			HttpSession session,
-			@ModelAttribute BatchQueryForm queryForm,
-            @ModelAttribute Paginator page) {
+			final HttpServletRequest request,
+			final HttpSession session,
+			final @ModelAttribute BatchQueryForm queryForm,
+            final @ModelAttribute Paginator page) {
 
-		logger.debug("batchSummaryReport");
-		logger.debug(queryForm.toString());
-
-        // perform query, and pull out the requested objects
-        SearchResults<BatchMarkerId> searchResults = 
-        	getSummaryResults(session, request, queryForm, page);
-		
-		logger.debug("results: " + searchResults.getResultObjects().size());
-		
-		ModelAndView mav = new ModelAndView("batchSummaryReport");
-		mav.addObject("queryForm", queryForm);
-		mav.addObject("totalCount", searchResults.getTotalCount());
-		mav.addObject("markerCount", searchResults.getResultSetMeta().getCount("marker"));		
-		mav.addObject("results", searchResults.getResultObjects());
-		return mav;
+			logger.debug("batchSummaryReport");
+			//logger.debug(queryForm.toString());
+	        // perform query, and pull out the requested objects
+	        SearchResults<BatchMarkerId> searchResults = 
+	        	getSummaryResults(session, request, queryForm, page);
+			
+			logger.debug("# of report results: " + searchResults.getResultObjects().size());
+			
+			ModelAndView mav = new ModelAndView("batchSummaryReport");
+			mav.addObject("queryForm", queryForm);
+			mav.addObject("totalCount", searchResults.getTotalCount());
+			mav.addObject("markerCount", searchResults.getResultSetMeta().getCount("marker"));		
+			mav.addObject("results", searchResults.getResultObjects());
+			return mav;
+				
 	}
 	
 	private SearchResults<BatchMarkerId> getSummaryResults(    		
@@ -253,7 +258,11 @@ public class BatchController {
         logger.debug("page: " + page);
         
         List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
-        if (idSet != null){
+        if(idSet == null)
+        {
+        	idSet = parseIds(query.getIds());
+        }
+        if (idSet != null && idSet.size()>0){
         	logger.debug("ids: " + idSet.size());
         	// generate params object;  add pagination, sorts, and filters
             params.setPaginator(page);
@@ -306,18 +315,18 @@ public class BatchController {
         // start filter list to add filters to
         List<Filter> filterList = new ArrayList<Filter>();
         
-        logger.debug("set ids");
+       // logger.debug("set ids");
         if (idSet.size() > 0){
         	filterList.add(new Filter(SearchConstants.BATCH_TERM, idSet, Filter.OP_IN));
         }
-        logger.debug("set type");
+        //logger.debug("set type");
         String idType = query.getIdType();
         if (idType != null && !"".equals(idType) && !"auto".equalsIgnoreCase(idType)){
         	logger.debug(idType);
         	filterList.add(new Filter(SearchConstants.BATCH_TYPE, query.getIdType().trim(), Filter.OP_EQUAL));
         }
         
-        logger.debug("build");
+        //logger.debug("build");
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
@@ -325,11 +334,11 @@ public class BatchController {
             containerFilter.setNestedFilters(filterList);
         }
 
-        logger.debug("done");
+        //logger.debug("done");
         return containerFilter;
     }
 
-    private Set<String> parseColumn(String data, int column, String delimiter) {
+    private List<String> parseColumn(String data, int column, String delimiter) {
 
         // hold strings from parsed column
     	Set<String> parsedIds = new LinkedHashSet<String>();
@@ -367,10 +376,12 @@ public class BatchController {
             }
         }
         // return array of parsed column contents
-        return parsedIds;
+        return new ArrayList<String>(parsedIds);
     }
     
-    private Set<String> parseIds(String data) {
+    private List<String> parseIds(String data) {
+    	
+    	if(data==null) return new ArrayList<String>();
     	
     	Set<String> parsedIds = new LinkedHashSet<String>();
     	
@@ -383,7 +394,6 @@ public class BatchController {
 	
 	    try {
 	    	String s = "";
-	
 			while(tok.nextToken() != StreamTokenizer.TT_EOF){
 				if (tok.ttype == StreamTokenizer.TT_NUMBER){
 					s = new Double(tok.nval).toString();
@@ -396,16 +406,18 @@ public class BatchController {
 							s.lastIndexOf(']'));
 				}
 	            if (s.endsWith(",")) {
-	            	s = s.substring(0, ( s.length() - 1) );
+	            	s = s.substring(0,s.length()-1);
 	            }
-				if (s != null && !s.trim().equals("")) {
-					parsedIds.add(s.trim());
+				if (s != null) 
+				{
+					s=s.trim();
+					if(!"".equals(s)) parsedIds.add(s);
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			logger.error("IOException parsing batch query input",e);
 			e.printStackTrace();
 		}
-		return parsedIds;
+		return new ArrayList<String>(parsedIds);
     }
 }

@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.AbstractView;
 
-public abstract class AbstractTextView extends AbstractView {
+public abstract class AbstractTextView extends AbstractReportView {
 	
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(AbstractTextView.class);
@@ -37,7 +37,12 @@ public abstract class AbstractTextView extends AbstractView {
 		// Flush to HTTP response.
 		writer.flush(); 
 		writer.close();
+	}
 	
+	public void testRenderMergedOutputModel(Map<String, Object> model,
+			HttpServletRequest request, HttpServletResponse response) throws Exception
+	{
+		
 	}
 	
 	protected abstract void buildTextDocument(Map<String, Object> model, BufferedWriter writer,

@@ -35,20 +35,18 @@ public class TextBatchSummary extends AbstractTextView {
 		System.out.println(response.getCharacterEncoding());
 		
 		BatchQueryForm queryForm = (BatchQueryForm)model.get("queryForm");
-		List<BatchMarkerId> results = (List<BatchMarkerId>) model.get("results");
-		
-		Marker m;
-		List<MarkerID> ids;
-		StringBuffer markerInfo;
-		List<List<String>> associations;
+		startTimeoutPeriod();
 		
 		writer.write(this.genHeader(queryForm));
 		writer.write("\r\n");
 		
-		for (BatchMarkerId id : results) {
-			markerInfo = new StringBuffer();
-			associations = new ArrayList<List<String>>();
-			m = id.getMarker();
+		int rownum=1;
+		for (BatchMarkerId id : (List<BatchMarkerId>) model.get("results")) {
+			checkProgress(rownum);
+			StringBuilder markerInfo = new StringBuilder();
+			List<List<String>> associations = new ArrayList<List<String>>();
+			Marker m = id.getMarker();
+			List<MarkerID> ids;
 			
 			markerInfo.append(id.getTerm() + "\t");
 			markerInfo.append(id.getTermType() + "\t");
@@ -78,7 +76,7 @@ public class TextBatchSummary extends AbstractTextView {
 				
 				// build associations matrix
 				if(queryForm.getEnsembl()){
-					logger.debug("ensembl");
+					//logger.debug("ensembl");
 					List<String> eIds = new ArrayList<String>();
 	        		if(ids != null){
 	        			for (MarkerID mId : ids) {
@@ -90,7 +88,7 @@ public class TextBatchSummary extends AbstractTextView {
 	        		associations.add(eIds);
 				}
 				if(queryForm.getEntrez()){
-					logger.debug("entrez");
+					//logger.debug("entrez");
 					List<String> eIds = new ArrayList<String>();
 		    		if(ids != null){
 		    			for (MarkerID mId : ids) {
@@ -102,7 +100,7 @@ public class TextBatchSummary extends AbstractTextView {
 		    		associations.add(eIds);
 				}
 				if(queryForm.getVega()){
-					logger.debug("vega");
+					//logger.debug("vega");
 					List<String> vIds = new ArrayList<String>();
 		    		if(ids != null){
 		    			for (MarkerID mId : ids) {
@@ -115,7 +113,7 @@ public class TextBatchSummary extends AbstractTextView {
 				}
 				
 				if(queryForm.getGo()){
-					logger.debug("go");
+					//logger.debug("go");
 					List<String> goIds = new ArrayList<String>();
 					StringBuffer go;
 	    			for (Annotation goAnnot : m.getGoAnnotations()) {
@@ -127,7 +125,7 @@ public class TextBatchSummary extends AbstractTextView {
 					}
 		    		associations.add(goIds);
 				} else if(queryForm.getMp()){
-					logger.debug("mp");
+					//logger.debug("mp");
 					List<String> mpIds = new ArrayList<String>();
 					StringBuffer mp;
 	    			for (Annotation mpAnnot : m.getMPAnnotations()) {
@@ -138,7 +136,7 @@ public class TextBatchSummary extends AbstractTextView {
 					}
 		    		associations.add(mpIds);
 				} else if(queryForm.getOmim()){
-					logger.debug("omim");
+					//logger.debug("omim");
 					List<String> omimIds = new ArrayList<String>();
 					StringBuffer omim;
 	    			for (Annotation omimAnnot : m.getOMIMAnnotations()) {
@@ -149,7 +147,7 @@ public class TextBatchSummary extends AbstractTextView {
 					}
 		    		associations.add(omimIds);
 				} else if(queryForm.getAllele()){
-					logger.debug("allele");
+					//logger.debug("allele");
 					List<String> alleles = new ArrayList<String>();
 					StringBuffer allele;
 	    			for (BatchMarkerAllele bma : m.getBatchMarkerAlleles()) {
@@ -160,7 +158,7 @@ public class TextBatchSummary extends AbstractTextView {
 					}
 		    		associations.add(alleles);
 				} else if(queryForm.getExp()){
-					logger.debug("exp");
+					//logger.debug("exp");
 					List<String> expression = new ArrayList<String>();
 					StringBuffer exp;
 	    			for (MarkerTissueCount tissue : m.getMarkerTissueCounts()) {
@@ -173,14 +171,14 @@ public class TextBatchSummary extends AbstractTextView {
 					}
 		    		associations.add(expression);
 				} else if(queryForm.getRefsnp()){
-					logger.debug("refsnp");
+					//logger.debug("refsnp");
 					List<String> refSnpIds = new ArrayList<String>();					
         			for (BatchMarkerSnp snp : m.getBatchMarkerSnps()) {
         				refSnpIds.add(snp.getSnpID());
     				}
 		    		associations.add(refSnpIds);
 				} else if(queryForm.getRefseq()){
-					logger.debug("refseq");
+					//logger.debug("refseq");
 					List<String> refSeqIds = new ArrayList<String>();
 	        		if(ids != null){
 	        			for (MarkerID mId : ids) {
@@ -192,7 +190,7 @@ public class TextBatchSummary extends AbstractTextView {
 	        		}
 		    		associations.add(refSeqIds);
 				} else if(queryForm.getUniprot()){
-					logger.debug("uniprot");
+					//logger.debug("uniprot");
 					List<String> uniProtIds = new ArrayList<String>();
 	        		if(ids != null){
 	        			for (MarkerID mId : ids) {
@@ -220,30 +218,32 @@ public class TextBatchSummary extends AbstractTextView {
 							combineResults = combineSets(combineResults, associations.get(i));
 						}				
 					}
+					for (String s: combineResults) {
+						rownum++;
+						writer.write(markerInfo.toString());
+						//markerInfo.append("\t" + s);
+						writer.write("\t" + s + "\r\n");
+					}
+				}
+				else
+				{
+					rownum++;
 				}
 
-				for (String s: combineResults) {
-					writer.write(markerInfo.toString());
-					//markerInfo.append("\t" + s);
-					writer.write("\t" + s + "\r\n");
-				}
 				markerInfo.append("\r\n");
 				combineResults = null;
 				// make sure that maker info is still printed out if there are no combined results
 				if( associations.size() == 0) writer.write(markerInfo.toString());	
 			}
 			else {
+				rownum++;
 				markerInfo.append("No associated gene");
 				markerInfo.append("\r\n");
 			}
+			id.setMarker(null);
 		}
-		queryForm = null;
-		results = null;
 		
-		m = null;
-		ids = null;
-		markerInfo = null;
-		associations = null;
+		logger.info("finished processing batch text report");
 	}
 	
 	private String genHeader(BatchQueryForm queryForm){

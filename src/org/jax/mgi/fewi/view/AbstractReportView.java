@@ -15,7 +15,7 @@ public class AbstractReportView extends AbstractView
 {
 	// set timeout and log frequency for when using checkProgress(rownum) method
 		protected long logFrequencySeconds = 1; // every second
-		protected long timeoutSeconds = 10; // a half hour
+		protected long timeoutSeconds = 1800; // a half hour
 		private static final long SECOND_TO_NANO=1000000000;
 		private Long timeoutPeriod=null;
 		private Long loggingPeriod=null;

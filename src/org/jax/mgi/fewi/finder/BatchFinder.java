@@ -29,48 +29,7 @@ public class BatchFinder {
     private Logger logger = LoggerFactory.getLogger(BatchFinder.class);
 
     @Autowired
-    private HibernateBatchSummaryHunter batchMarkerHunter;
-
-
-    /*-----------------------------------------*/
-    /* Retrieval of a , for a given ID
-    /*-----------------------------------------*/
-
-    public SearchResults<BatchMarkerId> getByID(SearchParams searchParams) {
-
-        logger.debug("->getByID()");
-
-        // result object to be returned
-        SearchResults<BatchMarkerId> searchResults = new SearchResults<BatchMarkerId>();
-
-        // ask the hunter to identify which objects to return
-        batchMarkerHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
-
-        // gather objects identified by the hunter, add them to the results
-//        markerGatherer.setType(Marker.class);
-//        List<Marker> markerList
-//          = markerGatherer.get( searchResults.getResultKeys() );
-//        searchResults.setResultObjects(markerList);
-
-        return searchResults;
-    }
-
-
-	/*--------------------------------------------*/
-	/* Retrieval of a , for a given db key
-	/*--------------------------------------------*/
-
-    public SearchResults<BatchMarkerId> getByKey(String dbKey) {
-
-        logger.debug("->getByKey()");
-
-        // result object to be returned
-        SearchResults<BatchMarkerId> searchResults = new SearchResults<BatchMarkerId>();
-        
-        return searchResults;
-    }
+    private HibernateBatchSummaryHunter<BatchMarkerId> batchMarkerHunter;
 
 
     /*---------------------------------*/
