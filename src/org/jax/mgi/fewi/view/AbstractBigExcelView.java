@@ -26,7 +26,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  * @author kstone
  *
  */
-public abstract class AbstractBigExcelView extends AbstractView
+public abstract class AbstractBigExcelView extends AbstractReportView
 {
 	private static final String EXTENSION = ".xls";
 
@@ -34,7 +34,6 @@ public abstract class AbstractBigExcelView extends AbstractView
 
 
 	private String url;
-
 
 	public AbstractBigExcelView() {
 		setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -46,8 +45,7 @@ public abstract class AbstractBigExcelView extends AbstractView
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-
+	
 	/**
 	 * Renders the view given the specified model.
 	 */
