@@ -72,7 +72,7 @@ ${templateBean.templateBodyStartHtml}
       Copyright
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
-      ${image.copyright}
+      <%=ntc.convertNotes(image.getCopyright(), '|')%>
       <a href="${configBean.FEWI_URL}reference/${reference.jnumID}">
         ${reference.jnumID}
       </a>
