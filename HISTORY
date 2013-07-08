@@ -1,3 +1,10 @@
+TAG: fewi-5-1-4-7
+DATE: 7/8/13
+STAFF: kstone
+CHANGES: 
+1) adding timeout and better logging to batch reports
+2) fixed bug on pheno image detail. Copyright text was not being note tag converted.
+
 TAG: fewi-5-1-4-6
 TAG: fewi-5-1-4-5
 TAG: fewi-5-1-4-4
