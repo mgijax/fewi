@@ -32,7 +32,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="${MGIHOME_URL}homepages/help.shtml">
+<div id="titleBarWrapper" userdoc="${configBean.MGIHOME_URL}homepages/help.shtml">
     <div name="centeredTitle">
 	  <span class="titleBarMainTitle">Glossary Term</span>
 	</div>
