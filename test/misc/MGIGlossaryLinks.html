@@ -1,0 +1,159 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Detected/Not detected search</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Detected/Not detected search</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Links to MGI Glossary within the MGI Web Interface</h1>
+    <ul>
+        <li>User story 52, Convert Glossary pages to FEWI</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+		<li>All links to MGI Glossary will use the structure http://&lt;server name&gt;/fewi/mgi/glossary/ or http://&lt;server name&gt;/fewi/mgi/glossary/&lt;key&gt;</li>
+		<li>The MGI Glossary main page will have the URL of http://<server name>/fewi/mgi/glossary/ </li>
+		<li>All links to the glossary or a term will use the new fewi link</li>
+    </ul>
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Verify the MGI Glossary link found on the MTB site goes to the new FEWI glossary
+            <p concordion:assertTrue="false">new test</p>
+            <ol>
+                <li>Advise Steve to use the new glossary link  from MTB</li>                               
+            </ol>
+            </li>
+            <li>Verify the MGI Glossary link on More Resources pulldown menu goes to the new FEWI glossary
+            <p concordion:assertTrue="false">new test</p>
+            <ol>
+                <li>Open the MGI main page and hover over the More Resources pulldown menu</li>
+                <li>Verify when hovering over MGI Glossary the link is for the new fewi glossary page</li>
+                <li>Verify clicking on the MGI Glossary link takes you to the MGI Glossary main page(fewi version)</li>                                
+            </ol>
+            </li>
+            <li>Verify the All Resources page MGI Glossary link goes to the fewi glossary
+            <p concordion:assertTrue="false">new test</p>
+            <ol>
+                <li>Open the MGI main page and hover over the More Resources pulldown menu</li>
+                <li>Click on the More Resources Index link</li>
+                <li>Verify the MGI Glossary link is for the new fewi glossary page</li>
+                <li>Verify clicking on the MGI Glossary link takes you to the MGI Glossary main page(fewi version)</li>  
+            </ol>
+            </li>
+            <li>Verify the Main Help page MGI Glossary link goes to the fewi glossary
+            <p concordion:assertTrue="false">new test</p>
+            <ol>
+                <li>Open the MGI main page and click on the Help link</li>
+                <li>Verify the link to MGI Glossary link(on General tab) is for the new fewi glossary page</li>
+                <li>Verify clicking on the MGI Glossary link takes you to the MGI Glossary main page(fewi version)</li>  
+            </ol>
+            </li>
+            <li>Verify the MGI Glossary link in the Morse book uses the correct URL
+            <p concordion:assertTrue="false">new test</p>
+            <ol>
+                <li>Open the MGI main page and hover over the More Resources pulldown link</li>
+                <li>Click on the link Online Books and then the link Origins of Inbred Mice, click the link Subject Index</li>
+                <li>Verify the link to MGI Glossary(bottom of the page) is for the new fewi glossary page</li>
+                <li>Verify clicking on the MGI Glossary link takes you to the MGI Glossary main page(fewi version)</li> 
+            </ol>
+            </li>
+            <li>Verify the MGI Glossary links in the Silver book uses the correct URL
+            <p concordion:assertTrue="false">new test</p>
+            <ol>
+                <li>Open the MGI main page and hover over the More Resources pulldown link</li>
+                <li>Click on the link Online Books and then the link Mouse Genetics, click the link Subject Index</li>
+                <li>Verify the link to MGI Glossary(bottom of the page) is for the new fewi glossary page</li>
+                <li>Verify clicking on the MGI Glossary link takes you to the MGI Glossary main page(fewi version)</li>
+                <li>Now click on the link Table of Contents and the link Appendix E. Glossary of Terms</li>
+                <li>Verify the link to MGI Glossary(top of the page) is for the new fewi glossary page</li>
+                <li>Verify clicking on the MGI Glossary link takes you to the MGI Glossary main page(fewi version)</li> 
+                <li>Return the the Appendix E. Glossary of Terms page and find the term Anonymous locus</li>
+                <li>Verify the link to Anonymous DNA Segment is for the new fewi glossary page</li>
+                <li>Verify clicking on the Anonymous DNA Segment link takes you to the MGI Glossary term(fewi version)</li>
+                <li>Verify other term links that go to MGI glossary are correct as well</li>
+            </ol>
+            </li>
+                <li>Verify the MGI Glossary link in the WK Silvers book uses the correct URL
+            <p concordion:assertTrue="false">new test</p>
+            <ol>
+                <li>Open the MGI main page and hover over the More Resources pulldown link</li>
+                <li>Click on the link Online Books and then the link The Coat Colors of Mice, click the link Subject Index</li>
+                <li>Verify the link to MGI Glossary(bottom of the page) is for the new fewi glossary page</li>
+                <li>Verify clicking on the MGI Glossary link takes you to the MGI Glossary main page(fewi version)</li> 
+            </ol>
+            </li>
+            <li>Verify the MGI Glossary links found in user docs uses the correct URL
+            <p concordion:assertTrue="false">new test</p>
+                <p>The follwing  documents have MGI Glossary links</p>
+            <ol>
+                <li>/userdocs/allele_detail_report.shtml</li>
+				<li>/userdocs/allele_help.shtml</li>
+				<li>/userdocs/allele_summary_report.shtml</li>
+				<li>/userdocs/ama_browser_help.shtml</li>
+				<li>/userdocs/anatdict_help.shtml</li>
+				<li>/userdocs/antibody_info.shtml</li>
+				<li>/userdocs/boolean_search_tips.shtml</li>
+				<li>/userdocs/clone_collections.shtml</li>
+				<li>/userdocs/estclone_help.shtml</li>
+				<li>/userdocs/go_help.shtml</li>
+				<li>/userdocs/gxd_query_results.shtml</li>
+				<li>/userdocs/gxdindex_help.shtml</li>
+				<li>/userdocs/homology_summary.shtml</li>
+				<li>/userdocs/mapping_data.shtml</li>
+				<li>/userdocs/mapping_help.shtml</li>
+				<li>/userdocs/marker_help.shtml</li>
+				<li>/userdocs/mp_browser_help.shtml</li>
+				<li>/userdocs/omim_browser_help.shtml</li>
+				<li>/userdocs/phenotype_highlevel_help.shtml</li>
+				<li>/userdocs/phenoview.shtml</li>
+				<li>/userdocs/polymorphism_help.shtml</li>
+				<li>/userdocs/probe_help.shtml</li>
+				<li>/userdocs/sequence_detail.shtml</li>
+				<li>/userdocs/sequence_help.shtml</li>
+				<li>/userdocs/sequence_summary_report.shtml</li>
+				<li>/userdocs/textsearch_tips.shtml</li>
+				<li>/userdocs/wildcard_tips.shtml </li> 
+            </ol>
+
+            
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+ 
+    </div>
+</div>
+</body>
+</html>
