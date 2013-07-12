@@ -58,7 +58,7 @@ ${templateBean.templateBodyStartHtml}
 <div id="vocabBrowser">
       <table width="100%"  border="0" cellpadding="0" cellspacing="0" bgcolor="#eeeeee">
 		<tr bgcolor="#ffffff"><td colspan="2">The current vocabulary contains human disease, syndrome, and condition terms from Online Mendelian Inheritance in Man 
-			<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=OMIM" target="new">(OMIM database)</a>.
+			<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=OMIM" target="_blank">(OMIM database)</a>.
 			<br><hr></td>
 		</tr>
         <tr>
@@ -116,7 +116,7 @@ ${templateBean.templateBodyStartHtml}
 <table>
 	<tr><th>OMIM ID</th><th>Human Disease</th></tr>
 	<c:forEach var="term" items="${terms}">
-	<tr><td><a href="http://www.ncbi.nlm.nih.gov/omim/${term.primaryId}">${term.primaryId}</a></td>
+	<tr><td><a href="http://www.ncbi.nlm.nih.gov/omim/${term.primaryId}" target="_blank">${term.primaryId}</a></td>
 	<td><a href="${configBean.FEWI_URL}disease/${term.primaryId}">
 		${term.term}</a>
 		<c:if test="${term.diseaseModelCount>0}"><span class="small">(${term.diseaseModelCount} mouse models)</span></c:if>
