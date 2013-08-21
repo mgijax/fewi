@@ -122,8 +122,8 @@ public class NotesTagConverter
 
             // Allele
             tagConversionList.add(new TagConversion("\\\\Allele\\((.*?[|].*?[|].*?)\\)",
-                String.format("<a style='white-space: normal; 'class=\"%s\" href=\"%sWIFetch?page=alleleDetail&id=%s\" %s>%s</a>",
-                "%s", javawiURL, "%s", "%s", "%s")));
+                String.format("<a style='white-space: normal; 'class=\"%s\" href=\"%sallele/%s\" %s>%s</a>",
+                "%s", fewiURL, "%s", "%s", "%s")));
 
             // AMA
             tagConversionList.add(new TagConversion("\\\\AMA\\((.*?[|].*?[|].*?)\\)",

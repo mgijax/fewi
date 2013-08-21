@@ -19,6 +19,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +58,19 @@ public class VocabularyController {
     @Autowired
     private SessionFactory sessionFactory;
     
+    @Autowired
+    private IDLinker idLinker;
     
-    /* omim vocabulary browser */
+    
+    /* OMIM vocabulary browser */
+
     @RequestMapping("/omim")
     public String getOmimBrowserIndex() 
     {
     	logger.debug("Forwarding to /vocab/omim/A");
     	return "forward:/mgi/vocab/omim/A";
     }
+
     @RequestMapping("/omim/{subsetLetter}")
     public ModelAndView getOmimBrowser(@PathVariable("subsetLetter") String subsetLetter) 
     {
@@ -79,8 +85,52 @@ public class VocabularyController {
         logger.debug("found "+terms.size()+" omim terms for the subset '"+subsetLetter+"'");
         
         ModelAndView mav = new ModelAndView("omim_browser");
+
+	idLinker.setup();
+	mav.addObject("idLinker", idLinker);
+
         mav.addObject("subsetLetter",subsetLetter);
         mav.addObject("terms",terms);
         return mav;
     }
+
+    /* PIRSF detail page */
+
+    @RequestMapping("/pirsf/{id}")
+    public ModelAndView getPirsfDetail(@PathVariable("id") String id) {
+	logger.debug("->getPirsfDetail(" + id + ") started");
+
+        // enable filter that will only return protein IDs for markers
+        sessionFactory.getCurrentSession().enableFilter("onlyProteinSequences");
+
+	List<VocabTerm> terms = vocabFinder.getTermByID(id);
+
+	if (terms.size() < 1) {
+	    return errorMav("No Term Found");
+	} else if (terms.size() > 1) {
+	    return errorMav("Duplicate ID");
+	}
+
+	VocabTerm term = terms.get(0);
+
+	ModelAndView mav = new ModelAndView("pirsf_detail");
+
+	mav.addObject("term", term);
+	mav.addObject("title", term.getTerm() + " Protein Superfamily Detail");
+
+	idLinker.setup();
+	mav.addObject("idLinker", idLinker);
+
+	return mav;
+    }
+
+    // convenience method -- construct a ModelAndView for the error page and
+    // include the given 'msg' as the error String to be reported
+    private ModelAndView errorMav (String msg) {
+	ModelAndView mav = new ModelAndView("error");
+	mav.addObject("errorMsg", msg);
+	return mav;
+    }
+
+
 }

@@ -56,10 +56,10 @@
     		<li><span class="regressHi">Regress</span> Expression Ribbon appears on Allele Detail Pages
  			<p concordion:assertTrue="true">kstone 2013/05/14</p>
     		<ol>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=7504">Pkd1<sup>tm2Jzh</sup></a></li>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/fewi/mgi/allele/key/7504">Pkd1<sup>tm2Jzh</sup></a></li>
                 <li>Verify that the Expression ribbon appears.</li>
                 <li>Follow the link and verify the Expression summary displays results containing this allele.</li>
-                <li>Navigate to the Allele Detail age for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=51253">Slc6a3&lt;tm1(cre)Xz&gt;</a></li>
+                <li>Navigate to the Allele Detail age for <a href="http://cardolan.informatics.jax.org/fewi/mgi/allele/key/51253">Slc6a3&lt;tm1(cre)Xz&gt;</a></li>
                 <li>Verify that the Expression ribbon appears. (Note: this allele also has Recombinase data and Phenotype data ribbons.)</li>
                 <li>Follow the link and verify the Expression summary displays results containing this allele.</li>
     		</ol>
@@ -67,21 +67,23 @@
     		<li><span class="regressHi">Regress</span> Expression ribbon appears below Diseases ribbon, when both exist.
  			<p concordion:assertTrue="true">passed, klf 5/21/2013</p>
     		<ol>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=7504">Pkd1<sup>tm2Jzh</sup></a></li>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/fewi/mgi/allele/key/7504">Pkd1<sup>tm2Jzh</sup></a></li>
                 <li>Verify that the Expression ribbon appears below Diseases ribbon.</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Expression ribbon appears below Phenotypes ribbon, when Disease ribbon does not exist.
  			<p concordion:assertTrue="true">passed, klf 5/21/2013</p>
     		<ol>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=37151">Pax3<sup>tm1(cre)Joe</sup></a></li>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/fewi/mgi/allele/key/37151">Pax3<sup>tm1(cre)Joe</sup></a></li>
                 <li>Verify that the Expression ribbon appears below Phenotypes ribbon.</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Ribbons alternate colors properly on the page.
  			<p concordion:assertTrue="true">passed, klf 5/21/2013</p>
     		<ol>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=7504">Pkd1<sup>tm2Jzh</sup></a></li>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/fewi/mgi/allele/key/7504">Pkd1<sup>tm2Jzh</sup></a></li>
+                <li>Verify that ribbons alternate colors: light blue left with white background on right, then darker blue left with gray background on right.</li>
+                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/fewi/mgi/allele/key/37151">Pax3<sup>tm1(cre)Joe</sup></a></li>
                 <li>Verify that ribbons alternate colors: light blue left with white background on right, then darker blue left with gray background on right.</li>
                 <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=37151">Pax3<sup>tm1(cre)Joe</sup></a></li>
                 <li>Verify that ribbons alternate colors: light blue left with white background on right, then darker blue left with gray background on right.</li>
@@ -99,7 +101,7 @@
     		</ol>
     		</li>
 		</ol>
- <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key/0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
      			<li>
     			Query for <b concordion:set="#structure">4-cell stage</b> should return 
     			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 

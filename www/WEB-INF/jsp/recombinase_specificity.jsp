@@ -189,7 +189,7 @@ ${templateBean.templateBodyStartHtml}
         <tr>
 
           <td> 
-            <a href="${configBean.JAVAWI_URL}WIFetch?page=alleleDetail&recomRibbon=open&id=${allele.primaryID}">
+            <a href="${configBean.FEWI_URL}allele/${allele.primaryID}?recomRibbon=open">
               <b><%=FormatHelper.superscript(allele.getSymbol())%></b>
             </a>
             <br>

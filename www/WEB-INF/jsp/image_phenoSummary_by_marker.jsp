@@ -132,7 +132,7 @@ Click on allele symbol for full phenotype details.
                   = (ImageAllele)pageContext.getAttribute("imageAllele"); 
               %>
               <div style='padding-top:2px; padding-bottom:2px;'>
-              <a href="${configBean.JAVAWI_URL}WIFetch?page=alleleDetail&id=${imageAllele.alleleID}">
+              <a href="${configBean.FEWI_URL}allele/${imageAllele.alleleID}">
               <%=FormatHelper.superscript(imageAllele.getAlleleSymbol())%></a>,
               ${imageAllele.alleleName}
               </div>

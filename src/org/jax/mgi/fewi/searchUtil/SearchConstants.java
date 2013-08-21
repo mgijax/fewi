@@ -30,6 +30,7 @@ public class SearchConstants {
 
     // marker constants
     public static final String MRK_KEY              = "marker_key";
+    public static final String MARKER_KEY           = "markerKey";
     public static final String MRK_ID               = "marker_id";
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_NOMENCLATURE			= "nomenclature";
@@ -73,13 +74,22 @@ public class SearchConstants {
 
     public static final String GXD_LIT_LONG_CITATION= "longCitation";
 
+    // Genotypes
+    public static final String GENOTYPE_KEY	    = "genotypeKey";
+    public static final String ALLELE_PAIRS	    = "allelePairs";
+    public static final String BACKGROUND_STRAIN    = "backgroundStrain";
 
+    // Annotations
+    public static final String ANNOTATED_TERM_ID    = "annotatedTermID";
+    public static final String JNUM_ID		    = "jnumID";
 
     // Vocab Constants
 
     public static final String VOC_VOCAB            = "vocab";
-    public static final String VOC_TERM				= "term";
+    public static final String VOC_TERM		    = "term";
     public static final String VOC_RESTRICTION      = "qualifier";
+    public static final String TERM_ID		    = "termID";
+    public static final String ANNOTATION_KEY	    = "annotationKey";
 
     // Images
 

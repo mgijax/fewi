@@ -75,6 +75,7 @@ solr.gxdImagePane.url=${solr.server1.url}gxdImagePane/
 solr.gxdDifferentialMarker.url=${solr.server1.url}gxdDifferentialMarker/
 solr.homology.url=${solr.server1.url}homology/
 solr.disease.url=${solr.server1.url}disease/
+solr.mpAnnotation.url=${solr.server1.url}mpAnnotation/
 
 # solr config parameters
 solr.soTimeout=70000

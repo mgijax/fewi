@@ -60,6 +60,7 @@ ${templateBean.templateBodyStartHtml}
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
     <c:set var="definition" value="${fn:replace(glossaryTerm.definition,'!FEWI_URL!', configBean.FEWI_URL)}" />
+    <c:set var="definition" value="${fn:replace(definition,'FEWI_URL', configBean.FEWI_URL)}" />
       ${definition}
     </td>
   </tr>

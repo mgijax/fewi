@@ -50,34 +50,38 @@ NotesTagConverter ntc = new NotesTagConverter();
 <style>
 .yui-skin-sam tr.yui-dt-even { background-color:#FFF; } /* white */
 .yui-skin-sam tr.yui-dt-odd { background-color:#f1f1f1; } /* light grey */
+td.border { border-bottom:thin solid grey; border-top:thin solid grey; border-left:thin solid grey; border-right:thin solid grey }
+td.padLR { padding-left:4px; padding-right:4px }
+td.padTop { padding-top:4px }
+.small { font-size: 80% }
 </style>
 
 <table>
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td>
-  <td NOWRAP="nowrap" style="vertical-align:top;">
+  <td class="rightBorderThinGray padLR" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td>
+  <td NOWRAP="nowrap" class="padLR" style="vertical-align:top;">
 
     <!-- begin key -->
     <TABLE WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
     <TR>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFD57A" CLASS="small">hm</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFD57A" CLASS="small" NOWRAP="nowrap">homozygous</TD>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#BCFFEB" CLASS="small">ht</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#BCFFEB" CLASS="small" NOWRAP="nowrap">heterozygous</TD>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFC7F4" CLASS="small">tg</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFC7F4" CLASS="small" NOWRAP="nowrap">involves transgenes</TD>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small">&#8730;</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">phenotype observed</TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFD57A"><span class='small'>hm</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFD57A" NOWRAP="nowrap"><span class='small'>homozygous</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#BCFFEB"><span class='small'>ht</span></TD>
+	    <TD class="border padLR" BGCOLOR="#BCFFEB" NOWRAP="nowrap"><span class='small'>heterozygous</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFC7F4"><span class='small'>tg</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFC7F4" NOWRAP="nowrap"><span class='small'>involves transgenes</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFFFFF"><span class='small'>&#8730;</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='small'>phenotype observed</span></TD>
     </TR>
     <TR>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#E7FFBC" CLASS="small">cn</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#E7FFBC" CLASS="small" NOWRAP="nowrap">conditional&nbsp;genotype&nbsp;</TD>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#E0E0FF" CLASS="small">cx</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#E0E0FF" CLASS="small" NOWRAP="nowrap">complex: > 1 genome feature</TD>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#F7DCC0" CLASS="small">ot</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#F7DCC0" CLASS="small" NOWRAP="nowrap">other: hemizygous, indeterminate,...</TD>
-      <TD style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small">N</TD>
-      <TD style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">normal phenotype</TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#E7FFBC"><span class='small'>cn</span></TD>
+	    <TD class="border padLR" BGCOLOR="#E7FFBC" NOWRAP="nowrap"><span class='small'>conditional&nbsp;genotype&nbsp;</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#E0E0FF"><span class='small'>cx</span></TD>
+	    <TD class="border padLR" BGCOLOR="#E0E0FF" NOWRAP="nowrap"><span class='small'>complex: > 1 genome feature</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#F7DCC0"><span class='small'>ot</span></TD>
+	    <TD class="border padLR" BGCOLOR="#F7DCC0" NOWRAP="nowrap"><span class='small'>other: hemizygous, indeterminate,...</span></TD>
+	    <TD class="border padLR" ALIGN="center" BGCOLOR="#FFFFFF"><span class='small'>N</span></TD>
+	    <TD class="border padLR" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='small'>normal phenotype</span></TD>
     </TR>
     </TABLE><!-- end legend -->
 
@@ -86,15 +90,15 @@ NotesTagConverter ntc = new NotesTagConverter();
 
 
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Genotypes:</span></td>
-  <td >
+  <td class="rightBorderThinGray padTop padLR" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Genotypes:</span></td>
+  <td class="padTop padLR">
     <%@ include file="/WEB-INF/jsp/phenotype_table_geno_legend.jsp" %>
   </td>
 </tr>
 
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Phenotypes:</span></td>
-  <td >
+  <td class="rightBorderThinGray padTop padLR" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Phenotypes:</span></td>
+  <td class="padTop padLR">
 
 <!-- ---------------------------------------------------------- -->
 <!-- pheno table container -->

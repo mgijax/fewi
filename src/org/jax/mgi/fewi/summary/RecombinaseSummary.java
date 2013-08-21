@@ -205,8 +205,9 @@ public class RecombinaseSummary {
         String javawiUrl = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
         StringBuffer sb = new StringBuffer();
 
-        sb.append("<a href='" + javawiUrl + "WIFetch?page=alleleDetail&recomRibbon=open&id="
-          + this.allele.getPrimaryID() + "' target='_blank'>"
+        sb.append("<a href='" + fewiUrl + "allele/"
+          + this.allele.getPrimaryID()
+	  + "?recomRibbon=open' target='_blank'>"
           + FormatHelper.superscript(this.allele.getSymbol()) + "</A>");
 		sb.append("<br/><span class='small'>");
 		sb.append(FormatHelper.superscript(this.allele.getGeneName()));
@@ -222,7 +223,7 @@ public class RecombinaseSummary {
 	{ return this.allele.getSymbol(); }
 
 	public String getSynonyms() {
-		Set<AlleleSynonym> alleleSynonyms = this.allele.getSynonyms();
+		List<AlleleSynonym> alleleSynonyms = this.allele.getSynonyms();
 		ArrayList<String> synonyms = new ArrayList<String>();
 		Iterator<AlleleSynonym> it = alleleSynonyms.iterator();
 		AlleleSynonym alleleSynonym = null;

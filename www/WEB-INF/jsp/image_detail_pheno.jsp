@@ -107,7 +107,7 @@ ${templateBean.templateBodyStartHtml}
 
             <tr class="stripe1">
               <td class="">
-                <a href="${configBean.JAVAWI_URL}WIFetch?page=alleleDetail&id=${imageAllele.alleleID}">
+                <a href="${configBean.FEWI_URL}allele/${imageAllele.alleleID}">
                 <%=FormatHelper.superscript(imageAllele.getAlleleSymbol())%>
                 </a>
               </td>

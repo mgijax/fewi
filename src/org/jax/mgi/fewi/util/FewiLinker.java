@@ -27,7 +27,7 @@ public class FewiLinker {
 
 		idUrlMap.put(ObjectTypes.MARKER,  baseUrl +"marker/%s");
 		idUrlMap.put(ObjectTypes.REFERENCE, baseUrl +"reference/%s");
-		idUrlMap.put(ObjectTypes.ALLELE, javaWiUrl +"WIFetch?page=alleleDetail&id=%s");
+		idUrlMap.put(ObjectTypes.ALLELE, baseUrl +"allele/%s");
 		idUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/%s");
 		idUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/%s");
 		idUrlMap.put(ObjectTypes.HOMOLOGY, baseUrl +"homology/%s");
@@ -44,7 +44,7 @@ public class FewiLinker {
 
 		keyUrlMap.put(ObjectTypes.MARKER,  baseUrl +"marker/key/%s");
 		keyUrlMap.put(ObjectTypes.REFERENCE, baseUrl +"reference/key/%s");
-		keyUrlMap.put(ObjectTypes.ALLELE, javaWiUrl +"WIFetch?page=alleleDetail&key=%s");
+		keyUrlMap.put(ObjectTypes.ALLELE, baseUrl +"allele/key/%s");
 		keyUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/key/%s");
 		keyUrlMap.put(ObjectTypes.PROBECLONE, pythonWiUrl +"searches/probe.cgi?%s");
 		keyUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/key/%s");

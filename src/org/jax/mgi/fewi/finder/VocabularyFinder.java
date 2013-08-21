@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.finder;
 import java.util.List;
 
 import mgi.frontend.datamodel.VocabTerm;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -30,6 +31,9 @@ public class VocabularyFinder
     
     @Autowired
 	private SessionFactory sessionFactory;
+
+    @Autowired
+    private HibernateObjectGatherer<VocabTerm> termGatherer;
 
     /* 
      * returns all vocab terms for the vocabulary beginning with the subsetLetter
@@ -60,5 +64,11 @@ public class VocabularyFinder
     	else query.add(Restrictions.ilike("term",subsetLetter+"%"));
     	query.addOrder(Order.asc("term"));
     	return query.list();
+    }
+
+    public List<VocabTerm> getTermByID(String id) {
+	logger.debug("->getTermByID(" + id + ")");
+
+	return termGatherer.get (VocabTerm.class, id, "primaryId");
     }
 }

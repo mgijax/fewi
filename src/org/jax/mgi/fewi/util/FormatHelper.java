@@ -241,7 +241,13 @@ public class FormatHelper
         else {
           seqForwardValue.append (provider);
           seqForwardValue.append ("!");
-          seqForwardValue.append (seq.getPrimaryID());
+
+	  if (seq.getPreferredGenBankID() != null) {
+              seqForwardValue.append (seq.getPreferredGenBankID().getAccID());
+	  } else {
+              seqForwardValue.append (seq.getPrimaryID());
+	  }
+
           seqForwardValue.append ("!");
           seqForwardValue.append ("!");
           seqForwardValue.append ("!");

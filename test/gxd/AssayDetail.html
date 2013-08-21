@@ -21,11 +21,11 @@
 -->
 <body>
 
-<div id="TOC">
+<div "TOC">
 	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
-<div id="maintitle">
+<div "maintitle">
     <h1>Assay Detail Test Suite</h1>
     <ul>
         <li>User story 14, GXD Assay Detail - framework and header section</li>
@@ -43,7 +43,7 @@
     </ul>
 </div>
 
-<div id="acceptance">
+<div "acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
 		<li>US14 - Standard MGI header displays and all pulldowns and hover text work correctly</li>
@@ -127,13 +127,13 @@
 <p concordion:assertTrue="false">testing assertFalse - displays as red</p>
  -->
 
-<div id="tests">
+<div "tests">
     <h2>Tests</h2>
-	<div id="manual">
+	<div "manual">
 		<h3>Manual tests</h3>
 		<p><a href="#pageBanner">Page Banner</a> | <a href="#assayRibbon">Assay Ribbon</a> | <a href="#probeRibbon">Probe Ribbon</a> 
 			| <a href="#specimenData">Specimen Data</a> | <a href="#imagePanes">Images</a> | <a href="#BlotData">Blot Data</a> | <a href="#inSituResults">In Situ Results</a></p>
-		<h4 id="pageBanner">FeWI Page Structure and Standard Page Banner Elements</h4>
+		<h4 "pageBanner">FeWI Page Structure and Standard Page Banner Elements</h4>
 		<ol>
     		<li>Basic FeWI page structure renders for an assay detail page.
     		<p concordion:assertTrue="true">klf 2/5/2013</p>
@@ -174,7 +174,7 @@
     		</ol>
 			</li>
 		</ol>
-		<h4 id="assayRibbon">Assay Ribbon</h4>
+		<h4 "assayRibbon">Assay Ribbon</h4>
 		<ol>
 			<li>The correct data are displayed for the particular assay
     		<ul>
@@ -513,9 +513,9 @@
 				</tr>
 				<tr>
 					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:2676237">MGI:2676237</a> - kstone-2013/02/25</span></td>
-					<td>S1 B (embryonic day 9.5; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a>)</td>
+					<td>S1 B (embryonic day 9.5; <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1701">Nkx2-1<sup>tm1Shk</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1701">Nkx2-1<sup>tm1Shk</sup></a>)</td>
 					<td>Not Specified</td>
-					<td><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1701">Nkx2-1<sup>tm1Shk</sup></a></td>
+					<td><a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1701">Nkx2-1<sup>tm1Shk</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1701">Nkx2-1<sup>tm1Shk</sup></a></td>
 					<td>embryonic day 9.5</td>
 					<td><i>--</i></td>
 					<td>Not Specified</td>
@@ -526,9 +526,9 @@
 				</tr>
 				<tr>
 					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:2676237">MGI:2676237</a> - kstone-2013/02/25</span></td>
-					<td>S1 C (embryonic day 9.5; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=260">Pax6<sup>Sey</sup></a>/Pax6<sup>+</sup>)</td>
+					<td>S1 C (embryonic day 9.5; <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/260">Pax6<sup>Sey</sup></a>/Pax6<sup>+</sup>)</td>
 					<td>Not Specified</td>
-					<td><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=260">Pax6<sup>Sey</sup></a>/Pax6<sup>+</sup></td>
+					<td><a href="http://www.informatics.jax.org/fewi/mgi/allele/key/260">Pax6<sup>Sey</sup></a>/Pax6<sup>+</sup></td>
 					<td>embryonic day 9.5</td>
 					<td><i>--</i></td>
 					<td>Not Specified</td>
@@ -539,9 +539,9 @@
 				</tr>
 				<tr>
 					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:1314611">MGI:1314611</a> - kstone-2013/02/25</span></td>
-					<td>double-mutant (embryonic day 11.0; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a>, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a>)</td>
+					<td>double-mutant (embryonic day 11.0; <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1693">Wnt1<sup>tm1Brd</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1693">Wnt1<sup>tm1Brd</sup></a>, <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1692">Wnt3a<sup>tm1Amc</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1692">Wnt3a<sup>tm1Amc</sup></a>)</td>
 					<td>involves: 129S1/Sv * 129S7/SvEvBrd</td>
-					<td width="200px"><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1693">Wnt1<sup>tm1Brd</sup></a><br/><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1692">Wnt3a<sup>tm1Amc</sup></a></td>
+					<td width="200px"><a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1693">Wnt1<sup>tm1Brd</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1693">Wnt1<sup>tm1Brd</sup></a><br/><a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1692">Wnt3a<sup>tm1Amc</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/1692">Wnt3a<sup>tm1Amc</sup></a></td>
 					<td>embryonic day 11.0</td>
 					<td><i>--</i></td>
 					<td>Not Specified</td>
@@ -578,9 +578,9 @@
 				</tr>
 				<tr>
 					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:5304846">MGI:5304846</a> - jeffc-02/27/2013</span></td>
-					<td> Fig.1C (postnatal adult;  <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=569731">Tg(KRT5-cre/ERT2)1Blh)</a></td>
+					<td> Fig.1C (postnatal adult;  <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>, <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/569731">Tg(KRT5-cre/ERT2)1Blh)</a></td>
 					<td> involves: 129S4/SvJaeSor * C57BL/6</td>
-					<td><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a><br/><a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=569731">Tg(KRT5-cre/ERT2)1Blh)</a></td>
+					<td><a href="http://www.informatics.jax.org/fewi/mgi/allele/key/2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/2656">Gt(ROSA)26Sor<sup>tm1Sor</sup></a><br/><a href="http://www.informatics.jax.org/fewi/mgi/allele/key/569731">Tg(KRT5-cre/ERT2)1Blh)</a></td>
 					<td>postnatal adult</td>
 					<td><i>--</i></td>
 					<td>pooled</td>
@@ -591,7 +591,7 @@
 				</tr>
 				<tr>
 					<td><span concordion:assertTrue="true"><a href="http://cardolan.informatics.jax.org/assay/MGI:4366544">MGI:4366544</a> - jeffc-02/27/2013</span></td>
-					<td>Fig.S3B (embryonic day 10.0; <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=26287">Fgf3<sup>tm1Sng</sup></a>/<a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=26287">Fgf3<sup>tm1Sng</sup></a>, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=3580">Fgf8<sup>tm1.3Mrt</sup></a>/Fgf8+, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=3581">Fgf8<sup>tm1.4Mrt</sup></a>/Fgf8+, <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=6270">Mesp1<sup>tm2(cre)Ysa</sup></a>/Mesp1+)</td>
+					<td>Fig.S3B (embryonic day 10.0; <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/26287">Fgf3<sup>tm1Sng</sup></a>/<a href="http://www.informatics.jax.org/fewi/mgi/allele/key/26287">Fgf3<sup>tm1Sng</sup></a>, <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/3580">Fgf8<sup>tm1.3Mrt</sup></a>/Fgf8+, <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/3581">Fgf8<sup>tm1.4Mrt</sup></a>/Fgf8+, <a href="http://www.informatics.jax.org/fewi/mgi/allele/key/6270">Mesp1<sup>tm2(cre)Ysa</sup></a>/Mesp1+)</td>
 					<td> involves: 129P2/OlaHsd * C57BL/6 * CBA</td>
 					<td>Fgf3<sup>tm1Sng</sup>/Fgf3<sup>tm1Sng</sup><br/>
 						Fgf8<sup>tm1.3Mrt</sup>/Fgf8<sup>+</sup><br/>
@@ -926,7 +926,7 @@
 			</li>
 		</ol>
 			
-		<h4 id="inSituResults">In Situ Results</h4>
+		<h4 "inSituResults">In Situ Results</h4>
 		<ol>
 			<li>(in situ)Table has columns of Structure, Level, Pattern, Image and Note
 			<p concordion:assertTrue="true">jeffc 2/13/2013</p>
@@ -957,7 +957,7 @@
 			
 		</ol>
 	</div>
-	<div id="auto">
+	<div "auto">
 		<h3>Automated tests</h3>
 		<ol>
     		<li>None</li>

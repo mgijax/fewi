@@ -12,9 +12,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerProbeset;
 import mgi.frontend.datamodel.MarkerAlleleAssociation;
 import mgi.frontend.datamodel.MarkerBiotypeConflict;
 import mgi.frontend.datamodel.MarkerCountSetItem;
@@ -817,6 +820,69 @@ public class MarkerController {
         mav.addObject("queryString", "refKey=" + reference.getReferenceKey());
 
         return mav;
+    }
+
+
+    //-------------------------------------//
+    // Marker's Microarray Probeset Summary
+    //-------------------------------------//
+    @RequestMapping(value="/probeset/{markerID}")
+    public ModelAndView markerProbesets(@PathVariable("markerID") String markerID) {
+
+        logger.debug("->markerProbesets started");
+        
+        // setup search parameters object
+        SearchParams searchParams = new SearchParams();
+        Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
+        searchParams.setFilter(markerIdFilter);
+
+        // find the requested marker
+        SearchResults searchResults
+          = MarkerFinder.getMarkerByID(searchParams);
+        List<Marker> markerList = searchResults.getResultObjects();
+
+        // there can be only one...
+        if (markerList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        }
+        if (markerList.size() > 1) { // dupe found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+
+	Marker marker = markerList.get(0);
+
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("marker_probeset_summary");
+
+        // add the marker to mav
+        mav.addObject("marker", marker);
+
+	// need to collect the FTP reports and sort them
+
+	HashMap<String,String> reports = new HashMap<String,String>();
+
+	Iterator<MarkerProbeset> it = marker.getProbesets().iterator();
+	MarkerProbeset probeset = null;
+
+	while (it.hasNext()) {
+	    probeset = it.next();
+	    reports.put(probeset.getPlatform(), probeset.getReportName());
+	}
+
+	ArrayList<String> reportList = new ArrayList(reports.keySet());
+	Collections.sort(reportList);
+
+	mav.addObject("reportsOrdered", reportList);
+	mav.addObject("reports", reports);
+
+	// add the date
+        this.dbDate(mav);
+
+	return mav;
     }
 
 

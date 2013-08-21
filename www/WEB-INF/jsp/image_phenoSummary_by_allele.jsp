@@ -69,7 +69,7 @@ ${templateBean.templateBodyStartHtml}
         </td>
         <td nowrap="nowrap">
           <span class="enhance" class="small">
-            <a href="${configBean.JAVAWI_URL}WIFetch?page=alleleDetail&id=${allele.primaryID}">
+            <a href="${configBean.FEWI_URL}allele/${allele.primaryID}">
             <%=FormatHelper.superscript(allele.getSymbol())%>
             </a>
           </span>

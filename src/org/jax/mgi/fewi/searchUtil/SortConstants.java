@@ -62,6 +62,9 @@ public class SortConstants {
 	public static final String VOC_BY_DAG_TERM      = "byDagTerm";
 	public static final String MARKER_DAG_TERM      = "byMarkerDagTerm";
 
+	// MP annotation page
+	public static final String GENOTYPE_TERM = "byGenotypeTerm";
+
     // faux entry;  used by webapp class template
     public static final String FOO_SORT              = "fooSort";
 }

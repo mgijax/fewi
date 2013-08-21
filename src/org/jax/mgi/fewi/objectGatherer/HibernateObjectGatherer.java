@@ -79,6 +79,14 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	}
 	
 	@Transactional(readOnly = true)
+	public List<T> get(Class<T> modelObj, String key, String fieldName) {
+
+		ArrayList<String> keys = new ArrayList<String>();
+		keys.add(key);
+		return get(modelObj,keys,fieldName,"String");
+	}
+
+	@Transactional(readOnly = true)
 	public List<T> get(Class<T> modelObj, List<String> keys, String fieldName) {
 
 		return get(modelObj,keys,fieldName,"String");
@@ -91,7 +99,8 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 	@Transactional(readOnly = true)
 	public List<T> get(Class<T> modelObj, List<String> keys, String fieldName,String fieldType) {
 
-		logger.debug("Started : objects keys - " + keys);
+		logger.debug("HibernateObjectGatherer.get() : " +
+			keys.size() + " object keys submitted");
 
 		// get necessary Hibernate objects
 		Session s = sessionFactory.getCurrentSession();
@@ -135,6 +144,8 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 			queryResults = s.createCriteria(modelObj).add(Restrictions.in(queryField, keyObjs)).list();
 		}
 
+		logger.debug("HibernateObjectGatherer.get() : Got all from database");
+
 		// load results into Map keyed by id
 		if(fieldName.equals("primary key"))
 		{
@@ -163,7 +174,7 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		resultsMap = new LinkedHashMap<String, T>();
 		
 		//logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
-		logger.debug("Finished");
+		logger.debug("HibernateObjectGatherer.get() : Re-ordered results; Finished");
 
 		return orderedResults;
 	}

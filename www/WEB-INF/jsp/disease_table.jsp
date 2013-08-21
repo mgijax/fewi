@@ -25,6 +25,12 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
 .genoButton{padding: 2px;}
 .yui-skin-sam tr.yui-dt-even { background-color:#FFF; } /* white */
 .yui-skin-sam tr.yui-dt-odd { background-color:#f1f1f1; } /* light grey */
+
+td.border { border-bottom:thin solid grey; border-top:thin solid grey; border-left:thin solid grey; border-right:thin solid grey }
+td.padLR { padding-left:4px; padding-right:4px }
+td.padTop { padding-top:4px }
+td.padSmall { padding: 2px }
+.small {font-size: 80%}
 </style>
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_imports.jsp" %>
@@ -33,13 +39,13 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
 
 <!-- Key -->
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td><td style="vertical-align:top;"><table WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
+  <td class="rightBorderThinGray padLR" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Key:</span></td><td class="padLR" style="vertical-align:top;"><table WIDTH="!" BORDER="0" CELLPADDING="1" CELLSPACING="1" BGCOLOR="#888888">
     <tr>
-      <td style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small">&#8730;</td>
-      <td style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">disease model</td>
-      <td style="padding-left:1px;padding-right:1px;" border="0" > &nbsp; </td>
-      <td style="padding-left:4px;padding-right:4px;" ALIGN="center" BGCOLOR="#FFFFFF" CLASS="small"><img src="http://www.informatics.jax.org/webshare/images/notSymbol.gif" border="0" valign="bottom"/></td>
-      <td style="padding-left:4px;padding-right:4px;" BGCOLOR="#FFFFFF" CLASS="small" NOWRAP="nowrap">expected model not found</td>
+	    <td class="border padSmall" ALIGN="center" BGCOLOR="#FFFFFF"><span class='small'>&#8730;</span></td>
+	    <td class="border padSmall" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='small'>disease model</span></td>
+	    <td style="padding-left:1px;padding-right:1px;" border="0" ><span class='small'> &nbsp; </span></td>
+      <td class="border padSmall" ALIGN="center" BGCOLOR="#FFFFFF"><img src="${configBean.WEBSHARE_URL}images/notSymbol.gif" border="0" valign="bottom"/></td>
+      <td class="border padSmall" BGCOLOR="#FFFFFF" NOWRAP="nowrap"><span class='small'>expected model not found</span></td>
     </tr>
     </table>
   </td>
@@ -47,10 +53,10 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
 
 <!-- Diseases -->
 <tr>
-  <td class="rightBorderThinGray" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;">
+  <td class="rightBorderThinGray padLR padTop" ALIGN="right" WIDTH="1%" NOWRAP="nowrap" style="vertical-align:top;">
     <font class="label">Models:</font>
   </td>
-  <td >
+  <td class="padLR padTop">
 
   <!-- diseasetable container -->
   <table class="diseasetable" id="diseasetable_id">
@@ -87,7 +93,7 @@ th.sexBorder,td.sexBorder{border-left: solid 1px #ccc;}
         <c:if test="${cell.hasCall}">
           <c:choose>
           <c:when test="${cell.callString=='N'}">
-            <img src="http://www.informatics.jax.org/webshare/images/notSymbol.gif" border="0"/>
+	  <img src="${configBean.WEBSHARE_URL}images/notSymbol.gif" border="0"/>
           </c:when>
           <c:otherwise>
   		    <c:out value="${cell.callString}" escapeXml="false"/></a>

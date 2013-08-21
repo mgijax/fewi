@@ -39,7 +39,10 @@ NotesTagConverter ntc = new NotesTagConverter();
   a.gridLink:visited {text-decoration:none; } 
   a.gridLink:hover   {text-decoration:underline; } 
 
-
+td.border { border-bottom:thin solid grey; border-top:thin solid grey; border-left:thin solid grey; border-right:thin solid grey }
+td.padLR { padding-left:4px; padding-right:4px }
+td.padTop { padding-top:4px }
+td.notBold { font-weight: normal; }
 </style>
 
 
@@ -57,12 +60,12 @@ NotesTagConverter ntc = new NotesTagConverter();
     </div>
     <table width="!" border="0" CELLPADDING="1" CELLSPACING="1" bgcolor="#888888">
       <tr>
-        <td style="padding-left:4px;padding-right:4px;" bgcolor="#FFFFFF" class="small" ALIGN="center" >&#8730;</td>
-        <td style="padding-left:4px;padding-right:4px;" bgcolor="#FFFFFF" class="small" NOWRAP="nowrap">Activity Detected</td>
-        <td style="padding-left:4px;padding-right:4px;" bgcolor="#FFFFFF" ALIGN="center" >
+        <td bgcolor="#FFFFFF" class="border padLR small notBold" ALIGN="center" >&#8730;</td>
+        <td bgcolor="#FFFFFF" class="border padLR small notBold" NOWRAP="nowrap">Activity Detected</td>
+        <td class="border padLR" bgcolor="#FFFFFF" ALIGN="center" >
           <span style="font-weight:bold; font-size:140%; line-height:60%;">-</span>
         </td>
-        <td style="padding-left:4px;padding-right:4px;" bgcolor="#FFFFFF" class="small" NOWRAP="nowrap">Activity Not Detected</td>
+        <td bgcolor="#FFFFFF" class="border padLR small notBold" NOWRAP="nowrap">Activity Not Detected</td>
       </tr>
     </table>
   </th>
@@ -84,10 +87,10 @@ NotesTagConverter ntc = new NotesTagConverter();
 
 		  <!-- Add the toggle arrows -->
           <span class="arrowRight ${alleleSystem.cssClass}">
-          	<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/>
+	    <img src="${configBean.WEBSHARE_URL}images/rightArrow.gif"/>
           </span>
           <span style="display:none;" class="arrowDown ${alleleSystem.cssClass}">
-          	<img src="http://www.informatics.jax.org/webshare/images/downArrow.gif"/>
+	    <img src="${configBean.WEBSHARE_URL}images/downArrow.gif"/>
           </span>
         <span style='padding-left:5px;'>
           ${alleleSystem.system} 

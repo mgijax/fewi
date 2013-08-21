@@ -98,6 +98,12 @@ public class ImageFinder {
     return searchResults;
   }
 
+  public Image getImageObjectByKey(int dbKey) {
+
+    logger.debug("->getImageObjectByKey()");
+    return imageGatherer.get( Image.class, "" + dbKey);
+  }
+
 
 
 

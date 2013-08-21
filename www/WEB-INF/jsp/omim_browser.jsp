@@ -1,5 +1,6 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
+<%@ page import = "org.jax.mgi.fewi.util.IDLinker" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -15,6 +16,8 @@ ${templateBean.templateHeadHtml}
       = new StyleAlternator("detailCat1","detailCat2");
     StyleAlternator rightTdStyles 
       = new StyleAlternator("detailData1","detailData2");
+    IDLinker idLinker = (IDLinker) request.getAttribute("idLinker");
+    VocabTerm term;
 %>
 
 <style type="text/css">
@@ -58,7 +61,7 @@ ${templateBean.templateBodyStartHtml}
 <div id="vocabBrowser">
       <table width="100%"  border="0" cellpadding="0" cellspacing="0" bgcolor="#eeeeee">
 		<tr bgcolor="#ffffff"><td colspan="2">The current vocabulary contains human disease, syndrome, and condition terms from Online Mendelian Inheritance in Man 
-			<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=OMIM" target="_blank">(OMIM database)</a>.
+			<a href="http://www.omim.org/" target="_blank">(OMIM database)</a>.
 			<br><hr></td>
 		</tr>
         <tr>
@@ -116,7 +119,8 @@ ${templateBean.templateBodyStartHtml}
 <table>
 	<tr><th>OMIM ID</th><th>Human Disease</th></tr>
 	<c:forEach var="term" items="${terms}">
-	<tr><td><a href="http://www.ncbi.nlm.nih.gov/omim/${term.primaryId}" target="_blank">${term.primaryId}</a></td>
+	<% term = (VocabTerm) pageContext.getAttribute("term"); %>
+	<tr><td><%= idLinker.getLink("OMIM", term.getPrimaryId()) %></td>
 	<td><a href="${configBean.FEWI_URL}disease/${term.primaryId}">
 		${term.term}</a>
 		<c:if test="${term.diseaseModelCount>0}"><span class="small">(${term.diseaseModelCount} mouse models)</span></c:if>

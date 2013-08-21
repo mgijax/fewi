@@ -344,7 +344,7 @@ td.padded { padding:4px; }
 		
 		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
 		<c:if test="${not empty pirsf}">
-		  Protein SuperFamily: <a href="${configBean.JAVAWI_URL}WIFetch?page=pirsfDetail&id=${pirsf.termID}">${pirsf.term}</a><br/>
+		  Protein SuperFamily: <a href="${configBean.FEWI_URL}vocab/pirsf/${pirsf.termID}">${pirsf.term}</a><br/>
 		</c:if>
 		<c:if test="${marker.hasOneEnsemblGeneModelID}">
 			<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>			
@@ -620,7 +620,7 @@ td.padded { padding:4px; }
 		</c:forEach>
 		<br/>
 		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
-		  Microarray probesets(<a href="${configBean.JAVAWI_URL}WIFetch?page=AffySummary&key=${marker.markerKey}">${marker.countOfMicroarrayProbesets}</a>)
+		  Microarray probesets(<a href="${configBean.FEWI_URL}marker/probeset/${marker.primaryID}">${marker.countOfMicroarrayProbesets}</a>)
 		</c:if>
       </td>
     </tr>

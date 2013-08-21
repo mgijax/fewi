@@ -264,8 +264,9 @@ public class BatchSummaryRow {
     	if (mpAnnots != null && mpAnnots.size() > 0){
     		for (BatchMarkerMpAnnotation annotation : mpAnnots) {
     			text = annotation.getMpTerm() + " (%s)";
-    			url = javawiUrl + String.format("WIFetch?page=mpAnnotSummary&markerKey=%d&id=%s",
-    					marker.getMarkerKey(), annotation.getMpId());
+			url = fewiUrl + String.format("mp/annotations/%s?markerID=%s", annotation.getMpId(), marker.getPrimaryID() );
+//    			url = javawiUrl + String.format("WIFetch?page=mpAnnotSummary&markerKey=%d&id=%s",
+//   					marker.getMarkerKey(), annotation.getMpId());
     			mp.add(String.format(noWrap, String.format(text, String.format(urlPattern, url, "details"))));
 			}
     	}
@@ -331,7 +332,7 @@ public class BatchSummaryRow {
     		}
     		String url;
     		for (BatchMarkerAllele allele : markerAlleles) {
-    			url = javawiUrl + "WIFetch?page=alleleDetail&id=" + allele.getAlleleID();
+    			url = fewiUrl + "allele/" + allele.getAlleleID();
     			alleleOutput.add(String.format(noWrap, String.format(urlPattern, url,
 						FormatHelper.superscript(allele.getAlleleSymbol()))));
 			}

@@ -11,7 +11,7 @@
   </td>
   <td class="summaryHeaderData1">
   	<% Allele myAllele = (Allele)request.getAttribute("allele"); %>
-    <a href="${configBean.JAVAWI_URL}WIFetch?page=alleleDetail&id=${allele.primaryID}" class="symbolLink">
+    <a href="${configBean.FEWI_URL}allele/${allele.primaryID}" class="symbolLink">
       <%=FormatHelper.superscript(myAllele.getSymbol())%></a><br/>
     <span>${allele.name}</span><br/>
     <span>${allele.primaryID}</span>
