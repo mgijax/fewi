@@ -4,7 +4,6 @@ import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.GxdAssayResult;
-import mgi.frontend.datamodel.GxdMarker;
 import mgi.frontend.datamodel.Marker;
 
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;

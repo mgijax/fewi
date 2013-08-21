@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.GxdAssayResult;
-import mgi.frontend.datamodel.GxdMarker;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
