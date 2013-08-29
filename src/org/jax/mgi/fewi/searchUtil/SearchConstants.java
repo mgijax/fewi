@@ -101,6 +101,10 @@ public class SearchConstants {
     // disease constants
     public static final String DISEASE_ID            = "disease_id";
     
+    // query form options' constants
+    public static final String FORM_NAME	= "form_name";
+    public static final String FIELD_NAME	= "field_name";
+
     // faux entry;  used by webapp class template
     public static final String FOO_ID            = "foo_id";
 
