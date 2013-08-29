@@ -277,7 +277,7 @@ function treeInit() {
 	return overlib(u.data.help, ANCHOR, this.id, ANCHORALIGN, 'UR', 'UL', STICKY, CAPTION, u.data.head, CSSCLASS, BGCLASS, 'catBG', FGCLASS, 'catFG', CAPCOLOR, '#002255', CAPTIONFONTCLASS, 'catCap', CLOSEFONTCLASS, 'catCapClose', DELAY, 600, WIDTH, 300, CLOSECLICK, CLOSETEXT, 'Close X');
     }
 
-    var els = categoryTree.getnodesByProperty('tree', categoryTree);
+    var els = categoryTree.getNodesByProperty('tree', categoryTree);
     var contextElements = [];
     for (e in els) {
 	contextElements.push(els[e].labelElId);
