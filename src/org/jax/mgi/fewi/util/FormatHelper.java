@@ -413,13 +413,18 @@ public class FormatHelper
 	    	sb.append (")\"");
 	    }
 	    sb.append(",expanded:");
-	    sb.append ("true");
+	    if (option.getShowExpanded() == 1) {
+	        sb.append ("true");
+	    } else {
+	        sb.append ("false");
+	    }
 	    sb.append (",key:\"");
 	    sb.append (option.getSubmitValue());
 	    sb.append ("\",head:\"");
 	    sb.append (option.getDisplayValue());
 	    sb.append ("\",help:\"");
-	    sb.append ("no help for you\"");
+	    sb.append (option.getHelpText());
+	    sb.append ("\"");
 
 	    prevIndentLevel = indentLevel;
 	}
