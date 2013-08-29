@@ -37,6 +37,7 @@ import mgi.frontend.datamodel.MarkerSequenceAssociation;
 import mgi.frontend.datamodel.MarkerSynonym;
 import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.SequenceSource;
 
 import org.hibernate.SessionFactory;
@@ -44,6 +45,7 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -105,6 +107,9 @@ public class MarkerController {
     private DbInfoFinder dbInfoFinder;
 
     @Autowired
+    private QueryFormOptionFinder queryFormOptionFinder;
+
+    @Autowired
     private ReferenceFinder referenceFinder;
 
     @Autowired
@@ -112,6 +117,10 @@ public class MarkerController {
     
     @Autowired 
     private SessionFactory sessionFactory;
+
+    private String chromosomeOptions = null;
+    private String featureTypeHtml = null;
+    private String featureTypeJson = null;
 
     //--------------------------------------------------------------------//
     // public methods
@@ -126,8 +135,47 @@ public class MarkerController {
 
         logger.debug("->getQueryForm started");
 
+	/* if we don't have a cached version of the chromosome options (for
+	 * the selction list), then we need to pull them out of the database,
+	 * generate it, and cache it
+	 */
+	if (chromosomeOptions == null) {
+	    SearchResults<QueryFormOption> chrResults =
+		queryFormOptionFinder.getQueryFormOptions("marker",
+		    "chromosome");
+	    List<QueryFormOption> chromosomes = chrResults.getResultObjects();
+
+	    StringBuffer chr = new StringBuffer();
+
+	    for (QueryFormOption chromosome : chromosomes) {
+		chr.append("<option value='");
+	        chr.append(chromosome.getSubmitValue());
+		chr.append("'>");
+		chr.append(chromosome.getDisplayValue());
+		chr.append("</option>");
+	    } 
+
+	    chromosomeOptions = chr.toString();
+	}
+
+	/* if we don't have a cached version of the feature type options (for
+	 * the feature type section, then we need to pull them out of the
+	 * database, generate it, and cache it
+	 */
+	if (featureTypeHtml == null) {
+	    SearchResults<QueryFormOption> mtResults =
+		queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
+	    List<QueryFormOption> markerTypes = mtResults.getResultObjects();
+
+	    featureTypeHtml = FormatHelper.buildHtmlTree(markerTypes);
+	    featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
+	}
+
         ModelAndView mav = new ModelAndView("marker_query");
         mav.addObject("sort", new Paginator());
+	mav.addObject("chromosomes", chromosomeOptions);
+	mav.addObject("htmlMcv", featureTypeHtml);
+	mav.addObject("jsonMcv", featureTypeJson);
         mav.addObject(new MarkerQueryForm());
         return mav;
     }

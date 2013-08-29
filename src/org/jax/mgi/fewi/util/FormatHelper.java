@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.org.mgi.shr.fe.util.TextFormat;
 
+import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceLocation;
 import mgi.frontend.datamodel.util.DatamodelUtils;
@@ -35,42 +36,8 @@ public class FormatHelper
     {
         if (verbatimString == null) { return null;}
 
-        // This could all be coded in three lines using String.replaceAll(),
-        // but that would involve multiple string traversals under the hood,
-        // along with regular expression handling.  Coding our own loop to
-        // traverse the string once should be faster.
-
-
-//        StringBuffer sb = new StringBuffer();
-//        int vsLength = verbatimString.length();
-//        char c;
-//
-//        // loop over each character
-//        for (int i = 0; i < vsLength; i++){
-//
-//            c = verbatimString.charAt (i);
-//
-//            // translate the relevant chars
-//            if (c == '<'){
-//                sb.append ("&lt;");
-//            }
-//            else if (c == '>'){
-//                sb.append ("&gt;");
-//            }
-//            else if (c == '&'){
-//                sb.append ("&amp;");
-//            }
-//            else{
-//                sb.append (c);
-//            }
-//        }
-//        return sb.toString();
-
-        // Or you could do this in one (more robust) line, because string manipulation is not where our performance is lost
-        // kstone
         return HtmlUtils.htmlEscape(verbatimString);
     }
-
 
     /** convert newline characters in a string to an html br markup.
      * @param str The string that needs newlines coverted to html line breaks
@@ -159,7 +126,6 @@ public class FormatHelper
         return plural;
     }
 
-
     /**
      * Init cap all words in a given string
      */
@@ -180,7 +146,6 @@ public class FormatHelper
         }
         return new String(data);
     }
-
 
     /**
      * for a given collection, create a comma delimited string
@@ -203,8 +168,6 @@ public class FormatHelper
 
         return commaDelimString;
     }
-
-
 
     /** returns value used to forward a sequence to either the sequence
      * retrieval too, or mouse blast select-a-sequence report
@@ -257,7 +220,6 @@ public class FormatHelper
 
         return seqForwardValue.toString();
     }
-
 
     public static String getSeqProviderForward(Sequence seq)
     {
@@ -359,5 +321,122 @@ public class FormatHelper
     {
     	return DatamodelUtils.makeCssSafe(input);
     }
+
+    /* build a tree-like structure of HTML checkboxes for a list of query form
+     * options.  (like the Feature Type vocabulary on the marker QF when the
+     * browser has javascript turned off)
+     */
+    public static String buildHtmlTree (List<QueryFormOption> options) {
+	StringBuffer sb = new StringBuffer();
+
+	int prevIndentLevel = 1;
+	int indentLevel = 1;
+
+	for (QueryFormOption option : options) {
+	    if (option.getIndentLevel() != null) {
+		indentLevel = option.getIndentLevel().intValue();
+	    }
+
+	    if (indentLevel < prevIndentLevel) {
+		sb.append ("&nbsp;<br/>");
+	    }
+
+	    for (int i = 0; i < indentLevel; i++) {
+		sb.append ("&nbsp;&nbsp;&nbsp;&nbsp;");
+	    }
+
+	    sb.append ("<input type='checkbox' name='mcv' value='");
+	    sb.append (option.getSubmitValue());
+	    sb.append ("'/><span class='ygtvlabel' style='line-height: 1.5em'>");
+	    sb.append (option.getDisplayValue());
+	    if (option.getObjectCount() != null) {
+	        sb.append (" (");
+	        sb.append (String.format("%,d", option.getObjectCount()));
+	        sb.append (")");
+	    }
+	    sb.append ("</span><br/>");
+
+	    prevIndentLevel = indentLevel;
+	}
+
+	return sb.toString();
+    }
+
+    public static String buildJsonTree (List<QueryFormOption> options) {
+	StringBuffer sb = new StringBuffer();
+
+	int prevIndentLevel = 1;
+	int indentLevel = 1;
+	boolean firstNode = true;
+
+	// start the list of nodes
+	sb.append ("[");
+
+	for (QueryFormOption option : options) {
+	    if (option.getIndentLevel() != null) {
+		indentLevel = option.getIndentLevel().intValue();
+	    }
+
+	    if (firstNode) {
+		sb.append ("{");
+		firstNode = false;
+
+	    } else if (indentLevel == prevIndentLevel) {
+		// end one node, start a sibling node
+		sb.append ("},{");
+
+	    } else if (indentLevel > prevIndentLevel) {
+		// cannot end the prior node, as we need to begin its list of
+		// child nodes
+		sb.append (",children:[{");
+
+	    } else { // (indentLevel < prevIndentLevel)
+		// close the previously open node
+		sb.append ("}");
+
+		// close one or more nodes previously left open for children
+		for (int i = indentLevel; i < prevIndentLevel; i++) {
+		    sb.append ("]}");
+		}
+
+		sb.append (",{");
+	    }
+
+	    // contents of the current node
+
+	    sb.append ("type:\"text\",");
+	    sb.append ("label:\"");
+	    sb.append (option.getDisplayValue());
+	    if (option.getObjectCount() != null) {
+	    	sb.append (" (");
+	    	sb.append (option.getObjectCount());
+	    	sb.append (")\"");
+	    }
+	    sb.append(",expanded:");
+	    sb.append ("true");
+	    sb.append (",key:\"");
+	    sb.append (option.getSubmitValue());
+	    sb.append ("\",head:\"");
+	    sb.append (option.getDisplayValue());
+	    sb.append ("\",help:\"");
+	    sb.append ("no help for you\"");
+
+	    prevIndentLevel = indentLevel;
+	}
+
+	// close final node
+	sb.append ("}");
+
+	// close any nodes which had lists of children still open
+	for (int i = 1; i < prevIndentLevel; i++) {
+	    sb.append ("]}");
+	}
+
+	// close the list of nodes itself
+	sb.append ("]");
+
+	return sb.toString();
+    }
+
 } // end of class FormatHelper
 
