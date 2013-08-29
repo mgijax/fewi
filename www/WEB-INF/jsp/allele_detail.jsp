@@ -648,6 +648,13 @@ td.right { text-align: right }
 	<c:if test="${not empty knockoutNote}">
 	  ${knockoutNote}<p>
 	</c:if>
+	<c:if test="${not empty qtlCandidateGenes}">
+	<font class="label">Candidate Genes</font><p>
+  	  <c:forEach var="qtlExpt" items="${qtlCandidateGenes}">
+	    (<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)<br/>
+	    ${qtlExpt.htmlNote}<p/>
+	  </c:forEach>
+	</c:if>
 	<c:if test="${not empty qtlExpts}">
 	<font class="label">Mapping and Phenotype information for this QTL,
 	  its variants and associated markers</font><p>

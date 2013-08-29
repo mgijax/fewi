@@ -391,12 +391,19 @@ public class AlleleController {
 	    	namesRaw = marker.getName() + "; " + namesRaw;
 	    }
 
-	    // if this is a QTL marker, then add in the QTL notes
+	    // if this is a QTL marker, then add in the QTL notes (two types)
 
 	    if ("QTL".equals(allele.getAlleleType())) {
-		List<MarkerQtlExperiment> qtlExpts = marker.getQtlExperiments();
+		List<MarkerQtlExperiment> qtlExpts = marker.getQtlMappingNotes();
 		if ((qtlExpts != null) && (qtlExpts.size() > 0)) {
 		    mav.addObject("qtlExpts", qtlExpts);
+		    hasQtlExpts = true;
+		}
+
+		List<MarkerQtlExperiment> qtlCandidateGenes =
+		    marker.getQtlCandidateGeneNotes();
+		if ((qtlCandidateGenes != null) && (qtlCandidateGenes.size() > 0)) {
+		    mav.addObject("qtlCandidateGenes", qtlCandidateGenes);
 		    hasQtlExpts = true;
 		}
 
