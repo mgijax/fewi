@@ -409,7 +409,7 @@ public class FormatHelper
 	    sb.append (option.getDisplayValue());
 	    if (option.getObjectCount() != null) {
 	    	sb.append (" (");
-	    	sb.append (option.getObjectCount());
+	    	sb.append (String.format("%,d", option.getObjectCount()));
 	    	sb.append (")\"");
 	    }
 	    sb.append(",expanded:");
