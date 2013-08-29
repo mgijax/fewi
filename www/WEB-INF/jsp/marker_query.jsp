@@ -33,7 +33,7 @@ ${templateBean.templateBodyStartHtml}
 <table class="detailStructureTable">
 
 
-<form:form method="GET" commandName="markerQueryForm" action="${configBean.WI_URL}searches/marker_report.cgi">
+<form method="GET" action="${configBean.WI_URL}searches/marker_report.cgi" id="markerQF">
 <table class="queryStructureTable">
 
   <tr><td class="queryParams1" colspan="2">
@@ -51,8 +51,7 @@ ${templateBean.templateBodyStartHtml}
     <td class="queryParams1">
     <dl>
       <dt class="qfLabel">
-        <a onclick="javascript:openUserhelpWindow(&quot;GENE_help.shtml#gene_nomenclature&quot;); return false;" href="http://rohan.informatics.jax.org/usrlocalmgi/scrum-bob-pub/userhelp/www/GENE_help.shtml#gene_nomenclature">Gene/Marker
-	  Symbol/Name</a>:
+      <a onclick="javascript:openUserhelpWindow(&quot;GENE_help.shtml#gene_nomenclature&quot;); return false;" href="${configBean.USERHELP_URL}GENE_help.shtml#gene_nomenclature">Gene/Marker Symbol/Name</a>:
       </dt>
       <dd>
         <select name="op:markerSymname" class="grayBackground"><option value="begins">begins</option><option value="=">=</option><option value="contains" selected="">contains</option></select>
@@ -66,43 +65,165 @@ ${templateBean.templateBodyStartHtml}
   </tr>
 
   <!-- row 2-->
-  <!--
   <tr>
-    <td class="queryCat2">Row 2</td>
+    <td class="queryCat2">Feature Type</td>
     <td class="queryParams2">
+     <div id="nojs">
+	     <p class='example'><br/>Click to select one or more <a href="${configBean.USERHELP_URL}marker_help.shtml#marker_type">feature types.</a><br/>
+        If no boxes are checked, then all feature types are included.<br/>
+        Counts reflect total MGI Markers in each feature type category.<br/>
+        </p>
+	${htmlMcv}
+     </div>
+     <div id="js" style="display:none;">
+        <div style="float:left;margin-right:5em;">
+            <input type="button" name="resetchecks" id="resetchecks" value="Reset Checks"/>
+            &nbsp;&nbsp;<a id='show' class='showHide'>Show</a>/<a id='hide' class='showHide'>Hide</a> all subcategories.
+            <br/><br/>
+            <div id="catSelectors" class="ygtv-checkbox"></div> 
+        </div>        
+        <p class='example'><br/>Click to select one or more 
+	<a onclick='javascript:openUserhelpWindow("${configBean.USERHELP_URL}GENE_helpl.shtml#marker_type"); return false;' href="${configBean.USERHELP_URL}GENE_help.shtml#marker_type"
+        >feature types.</a><br/>
+	If no boxes are checked, then all feature types are included.<br/>
+	Counts reflect total MGI Markers in each feature type category.<br/>
+        </p>            
+    </div>
+  <!--
       <div style="position:relative;">
         <div style="float:left; width:300px;text-align:left;">
-          <form:input path="param2" cols="40" class=""/>
         </div>
         <div style="float:left; text-align:left;">
 		Enter something param2<br/>
 		${chromosomes}
         </div>
       </div>			
+  -->
     </td>
   </tr>
-  -->
 
 
   <!-- row 3-->
-  <!--
   <tr>
-    <td class="queryCat1">Row 3</td>
+    <td class="queryCat1">Map position</td>
     <td class="queryParams1">
+  <!--
       <div style="position:relative;">
         <div style="float:left; width:300px;text-align:left;">
-          <form:input path="param2" cols="40" class=""/>
         </div>
         <div style="float:left; text-align:left;">
 		Enter something param3.<br/>
-		<form>
-			<div id="catSelectors" class="ygtv-checkbox"></div>
-		</form>
+			<div id="acatSelectors" class="ygtv-checkbox"></div>
         </div>
       </div>			
+  -->
     </td>
   </tr>
+
+  <!-- row 4-->
+  <tr>
+    <td class="queryCat2">Gene Ontology<br/>Classifications</td>
+    <td class="queryParams2">
+  <!--
+      <div style="position:relative;">
+        <div style="float:left; width:300px;text-align:left;">
+        </div>
+        <div style="float:left; text-align:left;">
+		Enter something param2<br/>
+		${chromosomes}
+        </div>
+      </div>			
   -->
+    </td>
+  </tr>
+
+
+  <!-- row 5-->
+  <tr>
+    <td class="queryCat1">Protein domains</td>
+    <td class="queryParams1">
+  <!--
+      <div style="position:relative;">
+        <div style="float:left; width:300px;text-align:left;">
+        </div>
+        <div style="float:left; text-align:left;">
+		Enter something param3.<br/>
+			<div id="bcatSelectors" class="ygtv-checkbox"></div>
+        </div>
+      </div>			
+  -->
+    </td>
+  </tr>
+
+  <!-- row 6-->
+  <tr>
+    <td class="queryCat2">Mouse phenotypes &amp;<br/>mouse models of<br/>human disease</td>
+    <td class="queryParams2">
+  <!--
+      <div style="position:relative;">
+        <div style="float:left; width:300px;text-align:left;">
+        </div>
+        <div style="float:left; text-align:left;">
+		Enter something param2<br/>
+		${chromosomes}
+        </div>
+      </div>			
+  -->
+    </td>
+  </tr>
+
+
+  <!-- row 7-->
+  <tr>
+    <td class="queryCat1">Clone collection</td>
+    <td class="queryParams1">
+  <!--
+      <div style="position:relative;">
+        <div style="float:left; width:300px;text-align:left;">
+        </div>
+        <div style="float:left; text-align:left;">
+		Enter something param3.<br/>
+			<div id="ccatSelectors" class="ygtv-checkbox"></div>
+        </div>
+      </div>			
+  -->
+    </td>
+  </tr>
+
+  <!-- row 2-->
+  <tr>
+    <td class="queryCat2">Sorting and <br/>output format</td>
+    <td class="queryParams2">
+  <!--
+      <div style="position:relative;">
+        <div style="float:left; width:300px;text-align:left;">
+        </div>
+        <div style="float:left; text-align:left;">
+		Enter something param2<br/>
+		${chromosomes}
+        </div>
+      </div>			
+  -->
+    </td>
+  </tr>
+
+
+  <!-- row 3-->
+  <tr>
+    <td class="queryCat1">Map position</td>
+    <td class="queryParams1">
+  <!--
+      <div style="position:relative;">
+        <div style="float:left; width:300px;text-align:left;">
+        </div>
+        <div style="float:left; text-align:left;">
+		Enter something param3.<br/>
+			<div id="dcatSelectors" class="ygtv-checkbox"></div>
+        </div>
+      </div>			
+  -->
+    </td>
+  </tr>
 
 
 
@@ -116,7 +237,7 @@ ${templateBean.templateBodyStartHtml}
   </tr>
   
 </table>
-</form:form>
+</form>
 
 <script type="text/javascript">
 var show = [];
@@ -265,7 +386,7 @@ function restoreTree(state) {
     for (e in ex) { categoryTree.getNodeByIndex(ex[e]).collapse(); }
 }
 
-YAHOO.util.Event.addListener('resetChecks', 'click', resetChecks);
+YAHOO.util.Event.addListener('resetchecks', 'click', resetChecks);
 YAHOO.util.Event.addListener(YAHOO.util.Dom.getElementsByClassName('reset'),
     'click', resetTree);
 
