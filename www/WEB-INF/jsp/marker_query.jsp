@@ -24,6 +24,7 @@ ${templateBean.templateBodyStartHtml}
 <div id="titleBarWrapper" userdoc="GENE_help.shtml">	
 	<span class="titleBarMainTitle">Genes and Markers Query Form</span>
 </div>
+<c:set var="helpPage" value="${configBean.USERHELP_URL}GENE_help.shtml"/>
 
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
@@ -33,7 +34,7 @@ ${templateBean.templateBodyStartHtml}
 <table class="detailStructureTable">
 
 
-<form method="GET" action="${configBean.WI_URL}searches/marker_report.cgi" id="markerQF">
+<form method="GET" action="${configBean.WI_URL}searches/marker_report.cgi" id="markerQF" onSubmit="hNodes(); return false;">
 <table class="queryStructureTable">
 
   <tr><td class="queryParams1" colspan="2">
@@ -51,7 +52,7 @@ ${templateBean.templateBodyStartHtml}
     <td class="queryParams1">
     <dl>
       <dt class="qfLabel">
-      <a onclick="javascript:openUserhelpWindow(&quot;GENE_help.shtml#gene_nomenclature&quot;); return false;" href="${configBean.USERHELP_URL}GENE_help.shtml#gene_nomenclature">Gene/Marker Symbol/Name</a>:
+      <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_nomenclature'); return false;" href="${helpPage}#gene_nomenclature">Gene/Marker Symbol/Name</a>:
       </dt>
       <dd>
         <select name="op:markerSymname" class="grayBackground"><option value="begins">begins</option><option value="=">=</option><option value="contains" selected="">contains</option></select>
@@ -83,22 +84,12 @@ ${templateBean.templateBodyStartHtml}
             <div id="catSelectors" class="ygtv-checkbox"></div> 
         </div>        
         <p class='example'><br/>Click to select one or more 
-	<a onclick='javascript:openUserhelpWindow("${configBean.USERHELP_URL}GENE_helpl.shtml#marker_type"); return false;' href="${configBean.USERHELP_URL}GENE_help.shtml#marker_type"
+	<a onclick='javascript:openUserhelpWindow("${helpPage}#marker_type"); return false;' href="${helpPage}#marker_type"
         >feature types.</a><br/>
 	If no boxes are checked, then all feature types are included.<br/>
 	Counts reflect total MGI Markers in each feature type category.<br/>
         </p>            
     </div>
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param2<br/>
-		${chromosomes}
-        </div>
-      </div>			
-  -->
     </td>
   </tr>
 
@@ -107,16 +98,28 @@ ${templateBean.templateBodyStartHtml}
   <tr>
     <td class="queryCat1">Map position</td>
     <td class="queryParams1">
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param3.<br/>
-			<div id="acatSelectors" class="ygtv-checkbox"></div>
-        </div>
-      </div>			
-  -->
+      <table>
+	<tr>
+	  <td>
+	    <dl>
+	      <dt class="qfLabel"><A onclick='javascript:openUserhelpWindow("${helpPage}#chromosome"); return false;' HREF="${helpPage}#chromosome">Chromosome(s)</A>: </dt>
+	      <dd>
+	        <select name="chromosome" multiple="" size="5" class="grayBackground">
+		  <option value="" selected="">Any</option>${chromosomes}
+		</select>
+	      </dd>
+	    </dl>
+	  </td>
+	  <td>
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+	  </td>
+	  <td>
+	  </td>
+	</tr>
+      </table>
     </td>
   </tr>
 
@@ -316,6 +319,16 @@ YAHOO.util.History.onReady(function() {
 
 YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");
 
+function addHidden (key, valu) {
+    var form = document.forms['markerQF'];
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = valu;
+    form.appendChild(input);
+    return;
+}
+
 function hNodes() {
     var hiLit = categoryTree.getNodesByProperty('highlightState', 1);
     var exp = categoryTree.getNodesByProperty('expanded', 0);
@@ -331,6 +344,7 @@ function hNodes() {
 
     // remove old feature selections from form
     var mqf = new YAHOO.util.Element('markerQF');
+
     var mcvparams = mqf.getElementsByClassName('mcv', 'input');
     for (c in mcvparams) {
 	mcvparams[c].parentNode.removeChild(mcvparams[c]);
@@ -341,12 +355,7 @@ function hNodes() {
 	var el;
 	for (var i = 0; i < hiLit.length; i++) {
 	    idx.push(hiLit[i].index);
-	    el = document.createElement('input');
-	    el.setAttribute('type', 'hidden');
-	    el.setAttribute('name', 'mcv');
-	    el.setAttribute('class', 'mcv');
-	    el.setAttribute('value', hiLit[i].data.key);
-	    YAHOO.util.Dom.insertAfter (el, YAHOO.util.Dom.getFirstChild(qf));
+	    addHidden('mcv', hiLit[i].data.key);
 	}
     }
 
