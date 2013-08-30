@@ -247,60 +247,22 @@ ${templateBean.templateBodyStartHtml}
     </td>
   </tr>
 
-
   <!-- row 7-->
   <tr>
-    <td class="queryCat1">Clone collection</td>
+    <td class="queryCat1">Sorting and <br/>output format</td>
     <td class="queryParams1">
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param3.<br/>
-			<div id="ccatSelectors" class="ygtv-checkbox"></div>
-        </div>
-      </div>			
-  -->
+      <span class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#sort_by'); return false;" href="${helpPage}#sort_by">Sort by</a>: </span>
+      <input name="sort" value="Nomenclature" checked="" type="radio">&nbsp;Nomenclature&nbsp;&nbsp;<input name="sort" value="Genome Coordinates" type="radio">&nbsp;Genome Coordinates<br/>
+    
+      <span class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#max_returned'); return false;" href="${helpPage}#max_returned">Maximum returned</a>: </span> 500 or
+      <input type="hidden" name="*limit" value="500">
+      <input name="noLimit" value="noLimit" type="checkbox"> no limit
+      <br>
+    
+      <span class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#output_format'); return false;" href="${helpPage}#output_format">Output</a>: </span>
+      <select name="format"><option value="Web">Web</option><option value="Excel">Excel</option><option value="Tab-delimited">Tab-delimited</option></select>
     </td>
   </tr>
-
-  <!-- row 2-->
-  <tr>
-    <td class="queryCat2">Sorting and <br/>output format</td>
-    <td class="queryParams2">
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param2<br/>
-		${chromosomes}
-        </div>
-      </div>			
-  -->
-    </td>
-  </tr>
-
-
-  <!-- row 3-->
-  <tr>
-    <td class="queryCat1">Map position</td>
-    <td class="queryParams1">
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param3.<br/>
-			<div id="dcatSelectors" class="ygtv-checkbox"></div>
-        </div>
-      </div>			
-  -->
-    </td>
-  </tr>
-
-
 
   <!-- Submit/Reset-->
   <tr>  
