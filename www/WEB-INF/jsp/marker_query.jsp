@@ -10,6 +10,8 @@ ${templateBean.templateHeadHtml}
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <style type="text/css">
+td.padded { padding: 4px; }
+td.top { vertical-align: top; }
 </style>
 
 <script src="http://yui.yahooapis.com/2.8.1/build/history/history-min.js"></script>
@@ -48,8 +50,8 @@ ${templateBean.templateBodyStartHtml}
 
   <!-- row 1-->
   <tr>
-    <td class="queryCat1">Gene/Marker</td>
-    <td class="queryParams1">
+    <td class="queryCat1 padded top">Gene/Marker</td>
+    <td class="queryParams1 padded top">
     <dl>
       <dt class="qfLabel">
       <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_nomenclature'); return false;" href="${helpPage}#gene_nomenclature">Gene/Marker Symbol/Name</a>:
@@ -67,8 +69,8 @@ ${templateBean.templateBodyStartHtml}
 
   <!-- row 2-->
   <tr>
-    <td class="queryCat2">Feature Type</td>
-    <td class="queryParams2">
+    <td class="queryCat2 padded top">Feature Type</td>
+    <td class="queryParams2 padded top">
      <div id="nojs">
 	     <p class='example'><br/>Click to select one or more <a href="${configBean.USERHELP_URL}marker_help.shtml#marker_type">feature types.</a><br/>
         If no boxes are checked, then all feature types are included.<br/>
@@ -96,11 +98,11 @@ ${templateBean.templateBodyStartHtml}
 
   <!-- row 3-->
   <tr>
-    <td class="queryCat1">Map position</td>
-    <td class="queryParams1">
+    <td class="queryCat1 padded top">Map position</td>
+    <td class="queryParams1 padded top">
       <table>
 	<tr>
-	  <td>
+	  <td class="padded top">
 	    <dl>
 	      <dt class="qfLabel"><A onclick='javascript:openUserhelpWindow("${helpPage}#chromosome"); return false;' HREF="${helpPage}#chromosome">Chromosome(s)</A>: </dt>
 	      <dd>
@@ -110,13 +112,48 @@ ${templateBean.templateBodyStartHtml}
 	      </dd>
 	    </dl>
 	  </td>
-	  <td>
+	  <td class="padded top">
+	    <dl>
+	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('${helpPage}#cm_offset'); return false;" href="${helpPage}#cm_offset">cM Position</a>: </dt>
+	      <dd>
+	        between
+	        <input type="hidden" name="op:offset" value="between">
+	        <input name="offset" size="13" class="grayBackground" type="text">
+	      </dd>
+	      <dd>
+	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">e.g., "10.0-40.0"</span>
+	      </dd>
+	    </dl>
 	  </td>
 	</tr>
 	<tr>
-	  <td>
-	  </td>
-	  <td>
+	  <td class="padded top" colspan="2">
+	    <dl>
+	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('${helpPage}#coordinates'); return false;" href="${helpPage}#coordinates">Genome Coordinates</a>: <span class="example">from GRCm38</span>
+	      </dt>
+	      <dd>
+	        between
+	        <input type="hidden" name="op:coords" value="between">
+	        <input name="coords" size="23" class="grayBackground" type="text">
+	        <select name="coordUnits" class="grayBackground"><option value="bp" selected="">bp</option><option value="Mbp">Mbp</option></select>
+	      </dd>
+	      <dd>
+	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">e.g., "125.618-125.622" Mbp</span>
+	      </dd>
+	      <dt class="qfLabel">
+	        <a onclick="javascript:openUserhelpWindow(${helpPage}#marker_range'); return false;" href="${helpPage}#marker_range">Marker range</a>:
+	      <span class="example">use current symbols</span>
+	      </dt>
+	      <dd>
+	        between
+	        <input name="startMarker" size="12" class="grayBackground" type="text">
+	        and <input name="endMarker" size="12" class="grayBackground" type="text">
+	      </dd>
+	      <dd>
+	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">
+		e.g., between "D19Mit32" and "Tbx10"</span>
+	      </dd>
+	    </dl>
 	  </td>
 	</tr>
       </table>
