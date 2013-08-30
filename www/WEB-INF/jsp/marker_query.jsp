@@ -216,16 +216,34 @@ ${templateBean.templateBodyStartHtml}
   <tr>
     <td class="queryCat2">Mouse phenotypes &amp;<br/>mouse models of<br/>human disease</td>
     <td class="queryParams2">
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param2<br/>
-		${chromosomes}
-        </div>
-      </div>			
-  -->
+      <dl>
+        <dt class="qfLabel">
+	  <a onclick="javascript:openUserhelpWindow('${helpPage}#phenotype'); return false;" href="${helpPage}#phenotype">Phenotype/Human Disease</a>:
+        </dt>
+        <dd>
+          <table border="0" cellpadding="2" cellspacing="0">
+	    <tr>
+	      <td>
+	        <span class="example">Enter any combination of phenotype terms,
+	          disease terms, or IDs
+	        </span><br>
+	        <textarea name="phenotypes" rows="2" cols="50"></textarea>
+	      </td>
+	      <td>
+	        <span class="example">
+			<a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml'); return false;" href="${configBean.USERHELP_URL}MISC_boolean_search_help.shtml">Hints</a>:<br>
+		using AND and OR, quotes, partial word matching, ...
+	        </span>
+	      </td>
+	    </tr>
+	  </table>
+        </dd>
+      </dl>
+      <span class="vocabLink">
+        Select <a href="javascript:childWindow=window.open('${configBean.JAVAWI_URL}WIFetch?page=phenoPopup', 'mywindow', 'status,width=350,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
+	Browse <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
+	Browse <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
+      </span>
     </td>
   </tr>
 
