@@ -198,16 +198,17 @@ ${templateBean.templateBodyStartHtml}
   <tr>
     <td class="queryCat1">Protein domains</td>
     <td class="queryParams1">
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param3.<br/>
-			<div id="bcatSelectors" class="ygtv-checkbox"></div>
-        </div>
-      </div>			
-  -->
+      <dl>
+        <dt class="qfLabel">
+	  <a onclick="javascript:openUserhelpWindow('${helpPage}#interpro'); return false;" href="${helpPage}#interpro">InterPro Protein Domains</a>:
+        </dt>
+        <dd>
+	  contains
+          <input name="interpro" size="35" class="grayBackground" type="text">
+        </dd>
+      </dl>
+      <span class="vocabLink">Browse <a href="${configBean.FTP_URL}MGI_InterProDomains.rpt">InterPro protein domains</a>
+      </span>
     </td>
   </tr>
 
