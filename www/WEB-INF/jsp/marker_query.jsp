@@ -164,16 +164,32 @@ ${templateBean.templateBodyStartHtml}
   <tr>
     <td class="queryCat2">Gene Ontology<br/>Classifications</td>
     <td class="queryParams2">
-  <!--
-      <div style="position:relative;">
-        <div style="float:left; width:300px;text-align:left;">
-        </div>
-        <div style="float:left; text-align:left;">
-		Enter something param2<br/>
-		${chromosomes}
-        </div>
-      </div>			
-  -->
+      <table>
+	<tr>
+	  <td class="padded top">
+	    <dl>
+	      <dt class="qfLabel">
+	        <a onclick="javascript:openUserhelpWindow('${helpPage}#gene_ontology&quot;); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) Classifications</a>:
+	      </dt>
+	      <dd>
+	        contains
+		<input type="hidden" name="op:go_term" value="contains">
+	        &nbsp;
+	        <input name="go_term" size="35" type="text">
+	        in
+	      </dd>
+	    </dl>
+	    <span class="vocabLink">Browse <a href="${configBean.WI_URL}searches/GO_form.shtml">Gene Ontology (GO)</a></span> 
+	  </td>
+	  <td class="padded top">
+	    <span style="line-height: 150%">
+	    <input name="_Ontology_key" value="Molecular Function" checked="" type="checkbox"> Molecular Function<br>
+	    <input name="_Ontology_key" value="Biological Process" checked="" type="checkbox"> Biological Process<br>
+	    <input name="_Ontology_key" value="Cellular Component" checked="" type="checkbox"> Cellular Component<br> 
+	    </span>
+	  </td>
+	</tr>
+      </table>
     </td>
   </tr>
 
