@@ -412,18 +412,16 @@ public class FormatHelper
 	    	sb.append (String.format("%,d", option.getObjectCount()));
 	    	sb.append (")\"");
 	    }
-	    sb.append(",expanded:");
 	    if (option.getShowExpanded() == 1) {
+	        sb.append(",expanded:");
 	        sb.append ("true");
-	    } else {
-	        sb.append ("false");
 	    }
 	    sb.append (",key:\"");
 	    sb.append (option.getSubmitValue());
 	    sb.append ("\",head:\"");
 	    sb.append (option.getDisplayValue());
 	    sb.append ("\",help:\"");
-	    sb.append (option.getHelpText());
+	    sb.append (option.getHelpText().trim());
 	    sb.append ("\"");
 
 	    prevIndentLevel = indentLevel;
