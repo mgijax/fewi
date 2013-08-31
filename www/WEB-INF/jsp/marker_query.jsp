@@ -86,7 +86,7 @@ ${templateBean.templateBodyStartHtml}
             <div id="catSelectors" class="ygtv-checkbox"></div> 
         </div>        
         <p class='example'><br/>Click to select one or more 
-	<a onclick='javascript:openUserhelpWindow("${helpPage}#marker_type"); return false;' href="${helpPage}#marker_type"
+	<a onclick='javascript:openUserhelpWindow("GENE_help.shtml#marker_type"); return false;' href="${helpPage}#marker_type"
         >feature types.</a><br/>
 	If no boxes are checked, then all feature types are included.<br/>
 	Counts reflect total MGI Markers in each feature type category.<br/>
@@ -104,7 +104,7 @@ ${templateBean.templateBodyStartHtml}
 	<tr>
 	  <td class="padded top">
 	    <dl>
-	      <dt class="qfLabel"><A onclick='javascript:openUserhelpWindow("${helpPage}#chromosome"); return false;' HREF="${helpPage}#chromosome">Chromosome(s)</A>: </dt>
+	      <dt class="qfLabel"><A onclick='javascript:openUserhelpWindow("GENE_help.shtml#chromosome"); return false;' HREF="${helpPage}#chromosome">Chromosome(s)</A>: </dt>
 	      <dd>
 	        <select name="chromosome" multiple="" size="5" class="grayBackground">
 		  <option value="" selected="">Any</option>${chromosomes}
@@ -114,7 +114,7 @@ ${templateBean.templateBodyStartHtml}
 	  </td>
 	  <td class="padded top">
 	    <dl>
-	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('${helpPage}#cm_offset'); return false;" href="${helpPage}#cm_offset">cM Position</a>: </dt>
+	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#cm_offset'); return false;" href="${helpPage}#cm_offset">cM Position</a>: </dt>
 	      <dd>
 	        between
 	        <input type="hidden" name="op:offset" value="between">
@@ -129,7 +129,7 @@ ${templateBean.templateBodyStartHtml}
 	<tr>
 	  <td class="padded top" colspan="2">
 	    <dl>
-	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('${helpPage}#coordinates'); return false;" href="${helpPage}#coordinates">Genome Coordinates</a>: <span class="example">from GRCm38</span>
+	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#coordinates'); return false;" href="${helpPage}#coordinates">Genome Coordinates</a>: <span class="example">from GRCm38</span>
 	      </dt>
 	      <dd>
 	        between
@@ -141,7 +141,7 @@ ${templateBean.templateBodyStartHtml}
 	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">e.g., "125.618-125.622" Mbp</span>
 	      </dd>
 	      <dt class="qfLabel">
-	        <a onclick="javascript:openUserhelpWindow(${helpPage}#marker_range'); return false;" href="${helpPage}#marker_range">Marker range</a>:
+	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#marker_range'); return false;" href="${helpPage}#marker_range">Marker range</a>:
 	      <span class="example">use current symbols</span>
 	      </dt>
 	      <dd>
@@ -169,7 +169,7 @@ ${templateBean.templateBodyStartHtml}
 	  <td class="padded top">
 	    <dl>
 	      <dt class="qfLabel">
-	        <a onclick="javascript:openUserhelpWindow('${helpPage}#gene_ontology&quot;); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) Classifications</a>:
+	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_ontology'); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) Classifications</a>:
 	      </dt>
 	      <dd>
 	        contains
@@ -200,7 +200,7 @@ ${templateBean.templateBodyStartHtml}
     <td class="queryParams1">
       <dl>
         <dt class="qfLabel">
-	  <a onclick="javascript:openUserhelpWindow('${helpPage}#interpro'); return false;" href="${helpPage}#interpro">InterPro Protein Domains</a>:
+	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#interpro'); return false;" href="${helpPage}#interpro">InterPro Protein Domains</a>:
         </dt>
         <dd>
 	  contains
@@ -218,7 +218,7 @@ ${templateBean.templateBodyStartHtml}
     <td class="queryParams2">
       <dl>
         <dt class="qfLabel">
-	  <a onclick="javascript:openUserhelpWindow('${helpPage}#phenotype'); return false;" href="${helpPage}#phenotype">Phenotype/Human Disease</a>:
+	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#phenotype'); return false;" href="${helpPage}#phenotype">Phenotype/Human Disease</a>:
         </dt>
         <dd>
           <table border="0" cellpadding="2" cellspacing="0">
@@ -249,7 +249,7 @@ ${templateBean.templateBodyStartHtml}
 
   <!-- row 7-->
   <tr>
-    <td class="queryCat1">Sorting and <br/>output format</td>
+	  <td class="queryCat1"><a name="output">Sorting and</a><br/>output format</td>
     <td class="queryParams1">
       <span class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#sort_by'); return false;" href="${helpPage}#sort_by">Sort by</a>: </span>
       <input name="sort" value="Nomenclature" checked="" type="radio">&nbsp;Nomenclature&nbsp;&nbsp;<input name="sort" value="Genome Coordinates" type="radio">&nbsp;Genome Coordinates<br/>
