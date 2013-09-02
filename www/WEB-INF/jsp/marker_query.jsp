@@ -35,8 +35,8 @@ ${templateBean.templateBodyStartHtml}
 
 <table class="detailStructureTable">
 
-
-<form method="GET" action="${configBean.WI_URL}searches/marker_report.cgi" id="markerQF" onSubmit="hNodes(); return false;">
+<!-- id is used internally; name is used by pheno popup -->
+<form method="GET" action="${configBean.WI_URL}searches/marker_report.cgi" id="markerQF" onSubmit="hNodes(); return false;" name="queryForm">
 <table class="queryStructureTable">
 
   <tr><td class="queryParams1" colspan="2">
@@ -129,7 +129,7 @@ ${templateBean.templateBodyStartHtml}
 	<tr>
 	  <td class="padded top" colspan="2">
 	    <dl>
-	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#coordinates'); return false;" href="${helpPage}#coordinates">Genome Coordinates</a>: <span class="example">from GRCm38</span>
+	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#coordinates'); return false;" href="${helpPage}#coordinates">Genome Coordinates</a>: <span class="example">from ${genomeBuild}</span>
 	      </dt>
 	      <dd>
 	        between
@@ -227,7 +227,7 @@ ${templateBean.templateBodyStartHtml}
 	        <span class="example">Enter any combination of phenotype terms,
 	          disease terms, or IDs
 	        </span><br>
-	        <textarea name="phenotypes" rows="2" cols="50"></textarea>
+	        <textarea name="phenotypes" rows="2" cols="60"></textarea>
 	      </td>
 	      <td>
 	        <span class="example">
@@ -240,7 +240,7 @@ ${templateBean.templateBodyStartHtml}
         </dd>
       </dl>
       <span class="vocabLink">
-        Select <a href="javascript:childWindow=window.open('${configBean.JAVAWI_URL}WIFetch?page=phenoPopup', 'mywindow', 'status,width=350,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
+        Select <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}marker/phenoPopup', 'mywindow', 'status,width=350,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
 	Browse <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
 	Browse <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
       </span>
