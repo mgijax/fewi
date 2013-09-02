@@ -118,9 +118,13 @@ public class MarkerController {
     @Autowired 
     private SessionFactory sessionFactory;
 
+    // cached data for query form
+ 
     private String chromosomeOptions = null;
     private String featureTypeHtml = null;
     private String featureTypeJson = null;
+    private String genomeBuild = null;
+    private String mpHeaders = null;
 
     //--------------------------------------------------------------------//
     // public methods
@@ -173,15 +177,61 @@ public class MarkerController {
 	    featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
 	}
 
+	// if we don't have a cached version of the build number, retrieve it
+	// and cache it
+	if (genomeBuild == null) {
+	    SearchResults<QueryFormOption> gbResults =
+		queryFormOptionFinder.getQueryFormOptions("marker",
+		"build_number");
+	    List<QueryFormOption> genomeBuilds = gbResults.getResultObjects();
+	    logger.debug("getQueryForm() received " + genomeBuilds.size()
+		+ " Genome Build options");
+
+	    if (genomeBuilds.size() > 0) {
+		genomeBuild = genomeBuilds.get(0).getDisplayValue();
+	    }
+	}
+
         ModelAndView mav = new ModelAndView("marker_query");
         mav.addObject("sort", new Paginator());
 	mav.addObject("chromosomes", chromosomeOptions);
 	mav.addObject("htmlMcv", featureTypeHtml);
 	mav.addObject("jsonMcv", featureTypeJson);
+	mav.addObject("genomeBuild", genomeBuild);
         mav.addObject(new MarkerQueryForm());
         return mav;
     }
 
+
+    //-------------------------//
+    // Marker Query Form - phenotype popup
+    //-------------------------//
+    @RequestMapping("/phenoPopup")
+    public ModelAndView phenoPopup (HttpServletRequest request) {
+	if (mpHeaders == null) {
+	    SearchResults<QueryFormOption> mpResults =
+		queryFormOptionFinder.getQueryFormOptions("allele",
+		"phenotype");
+	    List<QueryFormOption> headers = mpResults.getResultObjects();
+	    logger.debug("phenoPopup() received " + headers.size()
+		+ " MP header options");
+
+	    StringBuffer phenoHeaders = new StringBuffer();
+
+	    for (QueryFormOption header : headers) {
+		phenoHeaders.append("<option value='");
+	        phenoHeaders.append(header.getSubmitValue());
+		phenoHeaders.append("'>");
+		phenoHeaders.append(header.getDisplayValue());
+		phenoHeaders.append("</option>");
+	    } 
+	    mpHeaders = phenoHeaders.toString();
+	}
+
+	ModelAndView mav = new ModelAndView("phenotype_popup");
+	mav.addObject("mpHeaders", mpHeaders);
+	return mav;
+    } 
 
     //-------------------------//
     // Marker Query Form Summary
