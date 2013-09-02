@@ -64,6 +64,7 @@ public class QueryFormOptionFinder {
 
 	SearchParams searchParams = new SearchParams();
 	searchParams.setFilter (containerFilter);
+	searchParams.setPageSize (1000);
 
 	return this.getQueryFormOptions(searchParams);
     }
@@ -77,8 +78,6 @@ public class QueryFormOptionFinder {
 
         // ask the hunter to identify which objects to return
         queryFormOptionHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - " 
-        		+ searchResults.getResultKeys());
        
         return searchResults;
     }

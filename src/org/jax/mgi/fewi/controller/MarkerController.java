@@ -166,6 +166,8 @@ public class MarkerController {
 	    SearchResults<QueryFormOption> mtResults =
 		queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
 	    List<QueryFormOption> markerTypes = mtResults.getResultObjects();
+	    logger.debug("getQueryForm() received " + markerTypes.size()
+		+ " Feature Type options");
 
 	    featureTypeHtml = FormatHelper.buildHtmlTree(markerTypes);
 	    featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
