@@ -61,9 +61,7 @@
           to add to the query.&nbsp;<BR>
           <SPAN CLASS="small">(Multiple selections allowed.)</SPAN>
         </TD>
-        <TD ALIGN="right" VALIGN="top">
-	    <A HREF="${configBean.USERHELP_URL}phenotype_highlevel_help.shtml" TARGET="_new">
-	    <IMG SRC="${configBean.WEBSHARE_URL}images/help_small.jpg"/></A>
+	<TD ALIGN="right" VALIGN="top"><a href="javascript:childWindow=window.open('${configBean.USERHELP_URL}ALLELE_phenotype_highlevel_help.shtml', 'helpWindow', 'width=1000,height=600,resizable=yes,scrollbars=yes,alwaysRaised=yes'); childWindow.focus();"><IMG SRC="${configBean.WEBSHARE_URL}images/help_small.jpg"/></A>
         </TD>
       </TR>
     </TABLE>
