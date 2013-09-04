@@ -72,7 +72,7 @@ ${templateBean.templateBodyStartHtml}
     <td class="queryCat2 padded top">Feature Type</td>
     <td class="queryParams2 padded top">
      <div id="nojs">
-	     <p class='example'><br/>Click to select one or more <a href="${configBean.USERHELP_URL}marker_help.shtml#marker_type">feature types.</a><br/>
+	     <p class='example'><br/>Click to select one or more <a href="${configBean.USERHELP_URL}GENE_help.shtml#marker_type">feature types.</a><br/>
         If no boxes are checked, then all feature types are included.<br/>
         Counts reflect total MGI Markers in each feature type category.<br/>
         </p>
