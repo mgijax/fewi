@@ -6,7 +6,7 @@ import java.util.*;
 /* to change in each controller */
 import org.jax.mgi.fewi.finder.FooFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
-import org.jax.mgi.fewi.finder.SnpFinder;
+//import org.jax.mgi.fewi.finder.SnpFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
 import org.jax.mgi.fewi.summary.FooSummaryRow;
@@ -15,7 +15,7 @@ import org.jax.mgi.fewi.summary.FooSummaryRow;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.VocabTerm;
-import mgi.frontend.datamodel.snp.SnpStrain;
+//import mgi.frontend.datamodel.snp.SnpStrain;
 
 
 /*--------------------------------------*/
@@ -77,8 +77,8 @@ public class FooController {
     @Autowired
     private ReferenceFinder referenceFinder;
     
-    @Autowired
-	private SnpFinder snpFinder;
+//    @Autowired
+//	private SnpFinder snpFinder;
     
     @Autowired
     private VocabularyFinder vocabFinder;
@@ -124,21 +124,21 @@ public class FooController {
         return mav;
     }
     
-    @RequestMapping("/snp")
-    public ModelAndView snpSummary(HttpServletRequest request)
-    {
-        logger.debug("->snpSummary started");
-        
-    	List<SnpStrain> strains = snpFinder.getSnpStrains();
-    	for(SnpStrain snpStrain : strains)
-    	{
-    		logger.debug("found strain "+snpStrain);
-    	}
-        ModelAndView mav = new ModelAndView("foo_query");
-        mav.addObject("sort", new Paginator());
-        mav.addObject(new FooQueryForm());
-        return mav;
-    }
+//    @RequestMapping("/snp")
+//    public ModelAndView snpSummary(HttpServletRequest request)
+//    {
+//        logger.debug("->snpSummary started");
+//        
+//    	List<SnpStrain> strains = snpFinder.getSnpStrains();
+//    	for(SnpStrain snpStrain : strains)
+//    	{
+//    		logger.debug("found strain "+snpStrain);
+//    	}
+//        ModelAndView mav = new ModelAndView("foo_query");
+//        mav.addObject("sort", new Paginator());
+//        mav.addObject(new FooQueryForm());
+//        return mav;
+//    }
     
     @RequestMapping("/vocab")
     public ModelAndView vocSummary(HttpServletRequest request)
