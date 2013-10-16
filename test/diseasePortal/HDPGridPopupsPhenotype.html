@@ -1,0 +1,545 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Popup display of Phenotype Data</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<h1>Popup display of Phenotype Data</h1>
+    <ul>
+        <li>User story 33, E4: Drill Down page -  MP  Xs - debugging display</li>
+        <li>User story 95, E4: Drill down grid - MP X's - Data formatting</li>
+        <li>User story 178, Flag for background sensitivity - MP popups</li>
+    </ul>
+
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>shows the OMG genotypes</li>
+		<li>shows the specific MP terms</li>
+		<li>opens in new window, like the genotype popups (user must be able to have multiple open, see them side-by-side, etc.)</li>
+		<li>sto95: no new Acceptance Criteria</li>
+		<li>sto178: if there is a background sensitivity note attached to an MP annotation, then show a flag on the popup</li>
+		<li>sto178: flag appears in a cell if any of the actual annotations underlying that cell have a b.s. note</li>
+		<li>sto178: flag is a little exclamation point "!" in a corner of the cell</li>
+	</ul>
+
+	<h2>Specific Requirements</h2>
+	<ul>
+		<li>Popup opens in a new browser window (not a DIV within the existing browser window)</li>
+		<li><b>Column headers contain all MP terms</b> which are (1) children of the MP Header column where the user clicked and (2) have at least one annotation to One-Marker Genotypes (OMG) for the gene row where the user clicked.</li>
+		<li>MP terms in column headers are displayed in the same order as rows on the Allele Detail Page</li>
+		<li>Column headers are displayed slanted for easier reading</li>
+		<li><b>Rows contain all OMG which</b> (1) contain the gene in whose row the user clicked and (2) which have annotations to any of the MP terms displayed in header columns.
+		<ul>
+			<li>Exclude zero marker genotypes (genotypes with no marker) (currently none exist)</li>
+			<li>Exclude genotypes that have no allele pair, just a strain (only used in GXD, shouldn't have MP or OMIM annotations)</li>
+		</ul>
+		</li>
+		<li>Genotypes are displayed as "Compressed Genotypes" - strain background is ignored and genotypes having the same allelic composition are listed only once.  All annotations to any genotypes having the same allelic composition are aggregated.<br/>
+			(<i>Example: Data for all 11 homozygous genotypes of Lepr&lt;db&gt; should be aggregated as if they were one genotype.</i>)</li>
+		<li>Correct  display of compressed genotypes:
+		<ul>
+			<li>States: hemizygous vs. indeterminate - genotypes with different values should be displayed separately, not aggregated</li>
+			<li>Exists as: field (cell line, chimeric, mouse line, n/a, not specified) - genotypes with different values should be displayed separately, not aggregated</li>
+			<li>Conditionally targeted: field (yes/no) - genotypes with different values should be displayed separately, not aggregated</li>
+		</ul>
+		</li>
+		<li><b>Exclude compound genotypes</b>: they have two markers with only one "relevant" allele for each. The other allele in each pair (in the data, not biologically) is input either as null or as wildtype.</li>
+		<li><b>Exclude "slash allele" markers</b> (e.g. Dlx1/Dlx2&lt;tm2Jlr&gt;) and genotypes from all displays (but transgenes containing slashes ARE returned). (Note: we don't have a perfect definition of these &quot;slash alleles&quot; yet. That's coming in a future story.)</li>
+		<li><b>Exclude "double wildtype" markers</b>; process the genotype as if the marker and allele pair did not exist. (There may be a valid biological reason to represent an allele pair of only-wildtype alleles in a genotype, but for our purposes we can ignore the allele pair and its marker.)</li>
+		<li>See the <a href="http://prodwww.informatics.jax.org/wiki/index.php/File:CompressedGeno_Sto94_v2_20130906.jpg">wiki page</a> for a photo summarizing the rules on the whiteboard.</li>
+		<li>sto95: use Verdana font</li>
+		<li>sto95: zebra-stripe the grid</li>
+		<li>sto95: display MP terms in the same order as on Allele Detail Page (DAG-like order except each term is displayed only once and follows the shortest path)</li>
+		<li>sto95: limit the MP term column headers to 30 characters</li>
+		<li>sto95: show full MP term for column header in a tooltip</li>
+		<li>sto95: page header should use the word "and" instead of multiplication symbol "x"</li>
+		<li>sto178: add background sensitivity flag to any cell that has a background sensitivity note in ANY annotation</li>
+		<li>sto178: add legend to describe what N and ! means (normals and background sensitivity flag respectively)</li>
+	</ul>
+	
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Clicking a checkmark causes the popup to appear as a new, separate browser window (tests revised when sto95 was added)
+ 			<p concordion:assertTrue="true">revised for sto95 - klf 10/1/2013</p> 
+    		<ol>
+                <li>Open the HDP query form.</li>
+                <li>Enter <b>gata1</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of Gata1 and cellular.</li>
+                <li>Verify that a new window opens.</li>
+                <li>Verify that the window header  text is <b>Data for GATA1, Gata1 and cellular abnormalities</b> (the word "abnormalities" is appended to the header text) on a blue "ribbon" background (similar to genotype popup pages) (sto95). </li>
+                <li>Verify that the grid uses Verdana font (same font as MGI uses on Marker detail, Allele detail, and other pages). (sto95)</li>
+                <li>Verify that rows in the grid use zebra-striping (alternate gray and white background). (sto95)</li>
+                <li>Verify that column headers cut off at 30 characters followed by an ellipsis (e.g. "abnormal megakaryocyte differentiation" cuts off at "abnormal megakaryocyte differ..."). (sto95)</li>
+                <li>Verify that column headers have tooltips which display the full text (e.g., "abnormal megakaryocyte differentiation"). (sto95)</li>
+                <li>Enter <b>Gars</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of Gars and normal phenotype.</li>
+				<li>Verify that the window header  text is <b>Data for GARS, Gars and normal phenotype</b> (the word "abnormalities" is NOT appended to the header text) (sto95). </li>
+    		</ol>
+    		</li>
+    		
+    		<li>MP Term column headers should display in the shortest-path DAG order, as on the Allele Detail Page (sto95) <span style="background-color:#D079E0;">&lt;-- NEEDS AUTOMATION PLEASE.</span>
+ 			<p concordion:assertTrue="true">klf 10/1/2013</p> 
+    		<ol>
+                <li>Open the HDP query form.</li>
+                <li>Enter <b>klf1</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of klf1 and <b>hematopoietic system</b>.</li>
+                <li>Verify that column headers display MP terms in the following order:
+                <table>
+					<tr><td>abnormal embryonic erythrocyte morphology</td></tr>
+					<tr><td>abnormal erythropoiesis</td></tr>
+					<tr><td>abnormal erythrocyte morphology</td></tr>
+					<tr><td>decreased erythrocyte cell number</td></tr>
+					<tr><td>decreased hematocrit</td></tr>
+					<tr><td>decreased hemoglobin content</td></tr>
+					<tr><td>decreased mean corpuscular hemoglobin</td></tr>
+					<tr><td>anisocytosis</td></tr>
+					<tr><td>anemia</td></tr>
+					<tr><td>increased nucleated erythrocyte cell number</td></tr>
+					<tr><td>poikilocytosis</td></tr>
+					<tr><td>polychromatophilia</td></tr>
+					<tr><td>erythroblastosis</td></tr>
+					<tr><td>impaired hematopoiesis</td></tr>
+					<tr><td>increased spleen iron level</td></tr>
+					<tr><td>enlarged spleen</td></tr>
+					<tr><td>increased spleen weight</td></tr>
+					<tr><td>abnormal erythrocyte osmotic lysis</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+		
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>"Happy Path": In the popup, a checkmark appears for a &quot;compressed&quot; genotype and MP term for each OMG of the particular gene with an "abnormal" annotation.<br/>
+    			Annotations to different genotypes which aggregate to one "compressed" genotype are displayed only with the single, "compressed" genotype. 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0006228</b> (iris atrophy) in the Phenotypes and Diseases section and hit search.</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gpnmb</b> row and <b concordion:set="#column">vision/eye</b> column. <br/>
+                (Note: 3 different homozygous genotypes result in one "compressed" genotype here.)</li>
+                <li>Confirm that <b concordion:assertEquals="systemGridPopupGenoCountByPheno(#pheno,#row,#column)">1</b> genotype row is displayed.</li>
+                <li>Confirm that the pop-up column headers contain AT LEAST the following 3 terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th><th>Term ID</th></tr>
+                	<tr><td>abnormal iris morphology</td><td>MP:0001322</td></tr>
+                	<tr><td>iris atrophy</td><td>MP:0006228</td></tr>
+                	<tr><td>abnormal iris pigmentation</td><td>MP:0005102</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains the following table and no other genotypes or MP terms:
+                	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>yes</td></tr>
+                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0005102</td><td>abnormal iris pigmentation</td><td>yes</td></tr>
+                	<tr><td>Gpnmb&lt;R150X&gt;/Gpnmb&lt;R150X&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>yes</td></tr>
+                	</table>
+                </li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tyrp1</b> row and <b concordion:set="#column">vision/eye</b> column.<br/>
+                 (Note: only 1 OMG has a term matching the query. But 48 other OMGs have other terms under same "vision/eye" header. There are no "duplicate allele pairs" that result in "compressed" genotypes in this test case.)
+                </li>
+                <li>Confirm that <b concordion:assertEquals="systemGridPopupGenoCountByPheno(#pheno,#row,#column)">49</b> genotype rows are displayed.</li>
+                <li>Confirm that the pop-up column headers contain AT LEAST the following 3 terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th><th>Term ID</th></tr>
+                	<tr><td>abnormal iris morphology</td><td>MP:0001322</td></tr>
+                	<tr><td>iris atrophy</td><td>MP:0006228</td></tr>
+                	<tr><td>decreased eye pigmentation</td><td>MP:0005172</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains at least the data in the following table (there are other genotype and MP term combinations):
+                	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>yes</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>yes</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>no</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11PU&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11PU&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>no</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11R30M&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11R30M&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>no</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-12PU&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-13DT&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-13R75M&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>no</td></tr>
+                	<tr><td>Tyrp1&lt;isa&gt;/Tyrp1&lt;isa&gt;</td><td>MP:0005208</td><td>abnormal iris stroma morphology</td><td>yes</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		
+    		<li>Hemizygous genotypes: In the popup, a checkmark appears for a &quot;compressed&quot; genotype and MP term for each OMG of the particular gene with an "abnormal" annotation.
+ 			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0002842</b> (increased systemic arterial blood pressure) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Ace2</b> row and <b concordion:set="#column">cardiovascular system</b> column. <br/>
+                (Note: 3 different hemizygous genotypes result in one "compressed" genotype here.)</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Ace2&lt;tm1Cof&gt;/Y</b>.</li>
+                <li>Confirm that the pop-up column headers contain at least the following 3 terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th><th>Term ID</th></tr>
+                	<tr><td>decreased heart rate</td><td>MP:0005333</td></tr>
+                	<tr><td>hypertension</td><td>MP:0000231</td></tr>
+                	<tr><td>increased systemic arterial systolic blood pressure</td><td>MP:0006144</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains at least the data in the following table (there are other genotype and MP term combinations):
+                	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0005333</td><td>decreased heart rate</td><td>yes</td></tr>
+                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0000231</td><td>hypertension</td><td>yes</td></tr>
+                	<tr><td>Ace2&lt;tm1Cof&gt;/Y</td><td>MP:0006144</td><td>increased systemic arterial systolic blood pressure</td><td>yes</td></tr>
+                	</table>
+                </li>
+                <li>Enter <b concordion:set="#pheno">MP:0003084</b> (abnormal skeletal muscle fiber morphology) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Dmd</b> row and <b concordion:set="#column">muscle</b> column. <br/>
+                (Note: 5 homozygous, 2 heterozygous, and multiple hemizygous genotypes exist for the DMD&lt;mdx&gt; allele alone.)</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Dmd&lt;mdx&gt;/Y</b> - OK (klf 9/10/2013).</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Dmd&lt;mdx&gt;/?</b> - OK (klf 9/10/2013). </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Dmd&lt;mdx-3Cv&gt;/Y</b> - OK (klf 9/10/2013). </li>
+                <li>Confirm that the pop-up column headers contain at least the following terms - ALL OK (klf 9/10/2013):
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>abnormal muscle morphology</td></tr>
+					<tr><td>myocardial fiber degeneration</td></tr>
+					<tr><td>dilated sarcoplasmic reticulum</td></tr>
+					<tr><td>abnormal skeletal muscle morphology</td></tr>
+					<tr><td>abnormal skeletal muscle fiber morphology</td></tr>
+					<tr><td>increased skeletal muscle fiber diameter</td></tr>
+					<tr><td>increased variability of skeletal muscle fiber size</td></tr>
+					<tr><td>centrally nucleated skeletal muscle fibers</td></tr>
+					<tr><td>skeletal muscle fiber degeneration</td></tr>
+					<tr><td>skeletal muscle fiber necrosis</td></tr>
+					<tr><td>abnormal diaphragm morphology</td></tr>
+					<tr><td>abnormal intercostal muscle morphology</td></tr>
+					<tr><td>increased skeletal muscle mass</td></tr>
+					<tr><td>skeletal muscle hypertrophy</td></tr>
+					<tr><td>skeletal muscle fibrosis</td></tr>
+					<tr><td>skeletal muscle endomysial fibrosis</td></tr>
+					<tr><td>skeletal muscle necrosis</td></tr>
+					<tr><td>muscle degeneration</td></tr>
+					<tr><td>muscular atrophy</td></tr>
+					<tr><td>dystrophic muscle</td></tr>
+					<tr><td>abnormal muscle physiology</td></tr>
+					<tr><td>abnormal skeletal muscle satellite cell proliferation</td></tr>
+					<tr><td>abnormal muscle contractility</td></tr>
+					<tr><td>impaired muscle relaxation</td></tr>
+					<tr><td>impaired skeletal muscle contractility</td></tr>
+					<tr><td>abnormal muscle electrophysiology</td></tr>
+					<tr><td>abnormal muscle tone</td></tr>
+					<tr><td>myopathy</td></tr>
+                	</table>
+                </li>
+                <li>Following terms should not exist (annotated only in complex genotypes, which we exclude) - SPOT-CHECKED OK (klf 9/10/2013):<br/>
+                	(NOTE: I CREATED THIS LIST OFF ONE ALLELE OF Dmd: DMD&lt;mdx&gt;. OTHER ALLELES MIGHT PUT THESE BACK INTO PLAY. -klf 06Sep2013)
+                	<table cc:verifyNotRows="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>enlarged myocardial fiber</td></tr>
+					<tr><td>cardiac muscle necrosis</td></tr>
+					<tr><td>abnormal sarcolemma morphology</td></tr>
+					<tr><td>decreased muscle weight</td></tr>
+					<tr><td>decreased skeletal muscle weight</td></tr>
+					<tr><td>abnormal skeletal muscle fiber size</td></tr>
+					<tr><td>decreased skeletal muscle fiber size</td></tr>
+					<tr><td>decreased skeletal muscle fiber diameter</td></tr>
+					<tr><td>abnormal epaxial muscle morphology</td></tr>
+					<tr><td>abnormal hypaxial muscle morphology</td></tr>
+					<tr><td>thin diaphragm muscle</td></tr>
+					<tr><td>decreased satellite cell number</td></tr>
+					<tr><td>skeletal muscle degeneration</td></tr>
+					<tr><td>skeletal muscle interstitial fibrosis</td></tr>
+					<tr><td>cardiomyopathy</td></tr>
+					<tr><td>dilated cardiomyopathy</td></tr>
+					<tr><td>myositis</td></tr>
+					<tr><td>abnormal muscle regeneration</td></tr>
+					<tr><td>abnormal muscle relaxation</td></tr>
+					<tr><td>muscle weakness</td></tr>
+					<tr><td>progressive muscle weakness</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains at least the data in the following table (there are other genotype and MP term combinations):
+                	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th>term</th><th concordion:set="#termId">term ID</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>yes</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>yes</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>dilated sarcoplasmic reticulum</td><td>MP:0004089</td><td>no</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>yes</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>no</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>abnormal skeletal muscle morphology</td><td>MP:0000759</td><td>yes</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Dmd&lt;mdx&gt;</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>yes</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/Y</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>yes</td></tr>
+                	<tr><td>Dmd&lt;mdx&gt;/?</td><td>skeletal muscle endomysial fibrosis</td><td>MP:0009420</td><td>no</td></tr>
+                	</table>
+                </li>
+
+                <li>Enter <b concordion:set="#gene">Tg(APPswe,PSEN1dE9)85Dbo</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tg(APPswe,PSEN1dE9)85Dbo</b> row and <b concordion:set="#column">other phenotype</b> column. <br/>
+                (Note: 4 different hemizygous genotypes result in one "compressed" genotype here.)</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByGene(#gene,#row,#column)">Tg(APPswe,PSEN1dE9)85Dbo/0</b>.</li>
+                <li>Confirm that the pop-up column headers contain at least the following 3 terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByGene(#gene,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>amyloidosis</td></tr>
+                	<tr><td>cerebral amyloid angiopathy</td></tr>
+                	<tr><td>amyloid beta deposits</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains ONLY the data in the following table:
+                	<table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0000604</td><td>amyloidosis</td><td>yes</td></tr>
+                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0004254</td><td>cerebral amyloid angiopathy</td><td>yes</td></tr>
+                	<tr><td>Tg(APPswe,PSEN1dE9)85Dbo/0</td><td>MP:0003329</td><td>amyloid beta deposits</td><td>yes</td></tr>
+                	</table>
+                </li>
+
+             </ol>
+    		 </li>   
+
+    		<li>Chimeric: Genotypes with the same allele pair on different strain backgrounds are "compressed" into a single genotype.  But CHIMERIC genotypes and MOUSE LINE  genotypes are compressed into separate genotypes.
+ 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#gene">Odf2</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Odf2</b> row and <b concordion:set="#column">reproductive system</b> column. </li>
+                <li>Confirm that <b>2</b> genotype rows are displayed for <b>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</b> - OK GREAT! (klf).<i>cannot automate</i></li>
+                <li>Confirm that the pop-up column headers contain at least the following 4 terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByGene(#gene,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>kinked sperm flagellum</td></tr>
+                	<tr><td>transmission ratio distortion</td></tr>
+                	<tr><td>male infertility</td></tr>
+                	<tr><td>asthenozoospermia</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains AT LEAST the data in the following table (Note: one genotype also shows sex-specific annotations so this test will catch that too.):
+                	<!-- <table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th>type</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	 	CANNOT TEST THIS YET, SINCE WE DO NOT STORE WHETHER A GENOTYPE IS CHIMERIC OR MOUSE LINE - kstone
+                	 -->
+                	 <i>cannot automate yet</i>
+                	<table>
+                	<tr><th>genotype</th><th>type</th><th>term ID</th><th>term</th><th>checkmark?</th></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0009237</td><td>kinked sperm flagellum</td><td>yes</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0009237</td><td>kinked sperm flagellum</td><td>no</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0004179</td><td>transmission ratio distortion</td><td>no</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0004179</td><td>transmission ratio distortion</td><td>yes</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0001925</td><td>male infertility</td><td>no</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0001925</td><td>male infertility</td><td>yes</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>CHIMERIC</td><td>MP:0002675</td><td>asthenozoospermia</td><td>yes</td></tr>
+                	<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</td><td>MOUSE LINE</td><td>MP:0002675</td><td>asthenozoospermia</td><td>no</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Conditional: Genotypes with the same allele pair on different strain backgrounds are "compressed" into a single genotype.  But CONDITIONAL genotypes and NOT CONDITIONAL  genotypes are compressed into separate genotypes.
+ 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+<!-- 
+SOME DATA... SAME ALLELE PAIRS BUT ONE IS CONDITIONAL AND ONE IS NOT:
+http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=2233 - NON-CONDITIONAL GENO IS "NORMAL"
+http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=3119 - NON-CONDITIONAL GENO IS "NORMAL"
+http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=6311 - NON-CONDITIONAL GENO IS "NORMAL"
+http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=9617 - DIFF MP TERMS BUT ANNOT ROLL UP TO SAME HEADER
+ -->
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#gene">Gad1</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gad1</b> row and <b concordion:set="#column">normal phenotype</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByGene(#gene,#row,#column)">Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</b> (NOT CONDITIONAL).</li>
+                <li>Confirm that the pop-up column headers contain at least the following terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByGene(#gene,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>no abnormal phenotype detected</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains ONLY the data in the following table:
+                	<table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0002169</td><td>no abnormal phenotype detected</td><td>yes</td></tr>                	
+                	</table>
+                </li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gad1</b> row and <b concordion:set="#column">nervous system</b> column. </li>
+                <li>Confirm that <b>2</b> genotype rows are displayed: <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByGene(#gene,#row,#column)">Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</b> (CONDITIONAL) 
+                	and <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByGene(#gene,#row,#column)">Gad1&lt;tm1Rpa&gt;/Gad1&lt;+&gt;</b> (ALSO CONDITIONAL).</li>
+                <li>Confirm that the pop-up column headers contain at least the following terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByGene(#gene,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>abnormal brain interneuron morphology</td></tr>
+                	<tr><td>abnormal visual cortex morphology</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that the pop-up contains ONLY the data in the following table:
+                	<table concordion:execute="#cell = systemGridPopupCheckByGene(#gene,#row,#column,#genotypeRow,#termId)">
+                	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0004101</td><td>abnormal brain interneuron morphology</td><td>yes</td></tr>                	
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;tm1Rpa&gt;</td><td>MP:0000805</td><td>abnormal visual cortex morphology</td><td>yes</td></tr>                	
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;+&gt;</td><td>MP:0004101</td><td>abnormal brain interneuron morphology</td><td>yes</td></tr>                	
+                	<tr><td>Gad1&lt;tm1Rpa&gt;/Gad1&lt;+&gt;</td><td>MP:0000805</td><td>abnormal visual cortex morphology</td><td>no</td></tr>                	
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		
+    		<li>Slash alleles: MGI's "slash alleles"  (associated with intergenic deletions) are excluded from queries and results.  
+ 			But transgenes containing a slash in their nomenclature are still considered and returned by the query.
+ 			<p concordion:assertTrue="true">klf 9/18/2013</p> 
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0004666</b> (absent stapedial artery) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Dlx1</b> row and <b concordion:set="#column">cardiovascular system</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Dlx1&lt;tm1Jlr&gt;/Dlx1&lt;tm1Jlr&gt;</b>.</li>
+                <li>Confirm that <b>NO</b> genotype row is displayed for <b cc:assertNoResultsContain="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Dlx1/Dlx2&lt;tm2Jlr&gt;</b></li>
+                <li>Confirm that the pop-up column headers contain at least the following terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>absent stapedial artery</td></tr>
+                	</table>
+                </li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Dlx2</b> row and <b concordion:set="#column">cardiovascular system</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Dlx2&lt;tm1Jlr&gt;/Dlx2&lt;tm1Jlr&gt;</b>.</li>
+                <li>Confirm that <b>NO</b> genotype row is displayed for <b cc:assertNoResultsContain="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Dlx1/Dlx2&lt;tm2Jlr&gt;</b></li>
+                <li>Confirm that the pop-up column headers contain at least the following terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>absent stapedial artery</td></tr>
+                	</table>
+                </li>
+                <li>Clear the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0002791</b> (steatorrhea) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tg(ABCG5/ABCG8)14-2Hobb</b> row and <b concordion:set="#column">digestive/alimentary system</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="systemGridPopupGenoClustersByPheno(#pheno,#row,#column)">Tg(ABCG5/ABCG8)14-2Hobb/0</b>.</li>
+                <li>Confirm that the pop-up column headers contain at least the following terms:
+                	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>steatorrhea</td></tr>
+                	</table>
+                </li>
+			</ol>
+    		</li>
+
+			<li>Background Sensitivity Flag Legend appears on all phenotype popups
+			<i>(sto178)</i> <i>(cannot automate)</i>
+ 			<p concordion:assertTrue="true">klf 10/14/2013</p> 
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#genes">gas1</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gas1</b> row and <b concordion:set="#column">mortality/aging</b> column. </li>
+                <li>Confirm that a legend appears in the popup, somewhere above the grid, that indicates what a N represents, and what a ! represents.</li>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#genes">pax6</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Pax6</b> row and <b concordion:set="#column">cellular</b> column. </li>
+                <li>Confirm that the same legend appears in the popup, somewhere above the grid, that indicates what a N represents, and what a ! represents.</li>
+			</ol>
+    		</li>
+			<li>Background Sensitivity Flag appears in the  phenotype popups in cells where at least one genotype within the geno-cluster has an annotation to the MP term that also has a &quot;Background Sensitivity&quot; Note type. <i>(sto178)</i> <span style="background-color:#D079E0;">needs automation please</span>
+ 			<p concordion:assertTrue="true">klf 10/14/2013</p> 
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Query for <b>240300</b> (Autoimmune Polyendocrine Syndrome, Type I; APS1).</li>
+                <li>In the Grid view, click the checkmark at the intersection of the <b concordion:set="#row">Aire</b> row and <b concordion:set="#column">immune system</b> column.</li>
+                <li>In the row for <b>Aire&lt;tm1.1Doi&gt;/Aire&lt;tm1.1Doi&gt;</b>, confirm that there are or are not "!" flags for the following MP terms:
+                <table>
+                	<tr><th>MP Term</th><th>Has Note Flag</th><th>Notes to testers</th><th>Genotypes having Background Sensitivity note</th></tr>
+					<tr><td>increased T cell number </td><td>No</td><td></td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>abnormal thymus medulla morphology </td><td>No</td><td></td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>abnormal CD4-positive T cell physiology </td><td>No</td><td></td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>increased susceptibility to autoimmune disorder </td><td>No</td><td></td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>increased autoantibody level </td><td>Yes</td><td>3 of the genotypes have multiple of these notes</td><td>4 of the 5 annotated genotypes have the note</td></tr>
+					<tr><td>salivary gland inflammation </td><td>Yes</td><td>One genotype has no note of any kind</td><td>3 of the 6 annotated genotypes have the note</td></tr>
+					<tr><td>stomach inflammation </td><td>Yes</td><td>1 genotype has 2 of these notes</td><td>4 of the 7 annotated genotypes have the note</td></tr>
+					<tr><td>lacrimal gland inflammation </td><td>No</td><td></td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>pancreas inflammation </td><td>Yes</td><td>the 2 genotypes have multiple of these notes</td><td>2 of the 3 annotated genotypes have the note</td></tr>
+					<tr><td>chronic pancreas inflammation </td><td>No</td><td></td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>insulitis </td><td>No</td><td></td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>prostate gland inflammation </td><td>Yes</td><td>All annotations are sex-specific: male</td><td>1 of the 3 annotated genotypes has the note</td></tr>
+					<tr><td>thyroid inflammation </td><td>Yes</td><td></td><td>1 of the 2 annotated genotypes has the note</td></tr>
+					<tr><td>increased incidence of corneal inflammation </td><td>Yes</td><td></td><td>2 of the 3 annotated genotypes have the note</td></tr>
+					<tr><td>uveitis </td><td>No</td><td>Note</td><td>1 annotated genotype; no note</td></tr>
+					<tr><td>liver inflammation </td><td>Yes</td><td>1 genotype has 2 of these notes</td><td>all 4 annotated genotypes have the note</td></tr>
+					<tr><td>ovary inflammation </td><td>Yes</td><td>All annotations are sex-specific: female. </td><td>all 3 annotated genotypes have the note</td></tr>
+					<tr><td>lung inflammation </td><td>Yes</td><td>2 genotypes have 2 of these notes</td><td>5 of the 6 annotated genotypes have the note</td></tr>
+                </table>
+                </li>
+                <li>In the Grid view, click the checkmark at the intersection of the <b concordion:set="#row">Aire</b> row and <b concordion:set="#column">digestive/alimentary system</b> column.</li>
+                <li>In the row for <b>Aire&lt;tm1.1Doi&gt;/Aire&lt;tm1.1Doi&gt;</b>, confirm that there are or are not "!" flags for the following MP terms: <span style="background-color:#D079E0;">needs automation please</span>
+                <table>
+                	<tr><th>MP Term</th><th>Has Note Flag</th><th>Notes to testers</th><th>Genotypes having Background Sensitivity note</th></tr>
+					<tr><td>digestive/alimentary phenotype </td><td>Yes</td><td>This is a "Normal" annotation to the header</td><td>1 annotated genotype; it has the note</td></tr>
+					<tr><td>salivary gland inflammation </td><td>Yes</td><td>1 genotype has no notes at all</td><td>3 of the 6 annotated genotypes have the note</td></tr>
+					<tr><td>stomach inflammation </td><td>Yes</td><td>1 genotype has 2 of these notes</td><td>4 of the 7 annotated genotypes have the notes</td></tr>
+               	</table>
+               	</li>
+                <li>Enter <b concordion:set="#genes">gas1</b> in the Genes section and hit search. <i>(Note: May be able to delete the following 2 tests if the ones above are enough.)</i></li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gas1</b> row and <b concordion:set="#column">mortality/aging</b> column. </li>
+                <li>Confirm that there are ! flags in the following cells for geno cluster row <b>Gas&lt;tm1Fan&gt;/Gas&lt;tm1Fan&gt;</b>, 
+                		and columns <b>mortality/aging</b> and <b>partial postnatal lethality</b>.<br/>
+                		(These notes come from different genotypes. One term is normal and a header term, the other is abnormal.)</li>
+                <li>Enter <b concordion:set="#genes">slc11a2</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Slc11a2</b> row and <b concordion:set="#column">mortality/aging</b> column. </li>
+                <li>Confirm that there are ! flags in the following cells for geno cluster row <b>Slc11a2&lt;mk&gt;/Slc11a2&lt;mk&gt;</b>, 
+                		and columns <b>mortality/aging</b> and <b>partial postnatal lethality</b>.</li>
+                <li>Confirm that other terms exist, and that none of them have ! flags.</li>
+			</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

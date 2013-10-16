@@ -18,13 +18,27 @@ import org.jax.mgi.fewi.util.QueryParser;
  */
 public class VocabACSummaryRow 
 {
-
+	/*
+	 * Possible types of Vocab AC rows
+	 * 	each can have different formattedTerm text
+	 */
+	public enum ACType 
+	{
+		DEFAULT,
+		GXD,
+		DISEASE_PORTAL
+	}
+	
+	private VocabACResult vr;
+	List<Pattern> queryPatterns;
+	
 	//private VocabACResult result;
-	private String formattedTerm;
+	private String vocab;
 	private String inputTerm;
 	private String termId;
 	private int markerCount;
 	private boolean hasExpression;
+	private String formattedTerm;
 	
 	/*
 	 * empty constructor used for deserializing JSON
@@ -34,9 +48,9 @@ public class VocabACSummaryRow
 	/*
 	 * Constructor takes in a VocabACSolrHunter Result and regex patterns for matching the query tokens
 	 */
-	public VocabACSummaryRow(VocabACResult vr,List<Pattern> queryPatterns)
+	public VocabACSummaryRow(VocabACResult vr,List<Pattern> queryPatterns, ACType formatType)
 	{
-		init(vr,queryPatterns);
+		init(vr,queryPatterns, formatType);
 	}
 	
 	/*
@@ -44,7 +58,7 @@ public class VocabACSummaryRow
 	 * It is a bit more efficient to compile the regex Patterns ahead of time  and pass into the above constructor,
 	 * due to the performance cost of each compilation.
 	 */
-	public VocabACSummaryRow(VocabACResult vr,String query)
+	public VocabACSummaryRow(VocabACResult vr,String query, ACType formatType)
 	{
 		List<Pattern> ps = new ArrayList<Pattern>();
 		List<String> queryTokens = QueryParser.parseAutoCompleteSearch(query);
@@ -55,32 +69,62 @@ public class VocabACSummaryRow
 				ps.add(Pattern.compile(token,Pattern.CASE_INSENSITIVE));
 			}
 		}
-		init(vr,ps);
+		init(vr,ps,formatType);
 	}
 	
-	public void init(VocabACResult vr, List<Pattern> queryPatterns)
+	public void init(VocabACResult vr, List<Pattern> queryPatterns, ACType formatType)
 	{
+		this.vr = vr;
+		this.queryPatterns = queryPatterns;
 		this.markerCount = vr.getMarkerCount();
 		this.hasExpression = vr.getHasExpressionResults();
 		this.termId = vr.getTermId();
 		
 		//create the text that appears in input box
-		String vocab = vr.getRootVocab();
+		this.vocab = vr.getRootVocab();
 		// our rule is to display 'Function' for all GO terms
 		if(vocab.equals("GO")) vocab = "Function";
 		this.inputTerm = vr.getTerm();
 		if(!vr.getOriginalTerm().equals("") && vr.getIsSynonym()) this.inputTerm += " ["+vr.getOriginalTerm()+"]";
 		this.inputTerm += " - "+vocab;
 		
-		// create the formatted term
-		this.formattedTerm = vr.getTerm();
-		if(vr.getIsSynonym()) this.formattedTerm += " ["+vr.getOriginalTerm()+"]";
+		
+		// create the formatted term based on ACType
+		switch(formatType)
+		{
+			case DISEASE_PORTAL:
+				this.formattedTerm = this.makeDiseasePortalFormattedTerm();
+				break;
+			case GXD:
+				this.formattedTerm = this.makeGxdFormattedTerm();
+				break;
+			default:
+				this.formattedTerm = vr.getTerm();
+		}
+	}
+	
+	private String makeDiseasePortalFormattedTerm()
+	{
+		String formattedTerm = vr.getTerm();
+		if(vr.getIsSynonym()) formattedTerm += " ["+vr.getOriginalTerm()+"]";
+		
+		String termSection = "<span style=\"font-size:1em; font-style:normal;\">"+formattedTerm+"</span>";
+		String otherSection = "<span style=\"color:#ccc; font-size:80%; font-style:italic;\">"+vocab+"</span>";
+		formattedTerm = termSection + " " + otherSection;
+		
+		return formattedTerm;
+	}
+	
+	private String makeGxdFormattedTerm()
+	{
+		String formattedTerm = vr.getTerm();
+		if(vr.getIsSynonym()) formattedTerm += " ["+vr.getOriginalTerm()+"]";
 		
 		// "highlight" the user's query inside the term(s)
 		Set<String> replacements = new HashSet<String>();
 		for(Pattern p : queryPatterns)
 		{
-			Matcher m = p.matcher(this.formattedTerm);
+			Matcher m = p.matcher(formattedTerm);
 			while(m.find())
 			{
 				replacements.add(m.group());
@@ -88,21 +132,23 @@ public class VocabACSummaryRow
 		}
 		for (String replacement : replacements)
 		{
-			this.formattedTerm = this.formattedTerm.replace(replacement,"***"+replacement+"%%%");
+			formattedTerm = formattedTerm.replace(replacement,"***"+replacement+"%%%");
 		}
 		// HACK: maybe there is a better way to do this
-		this.formattedTerm = this.formattedTerm.replace("***","<b>");
-		this.formattedTerm = this.formattedTerm.replace("%%%","</b>");
+		formattedTerm = formattedTerm.replace("***","<b>");
+		formattedTerm = formattedTerm.replace("%%%","</b>");
 
-		String termSection = "<span style=\"font-size:1em; font-style:normal;\">"+this.formattedTerm+"</span>";
+		String termSection = "<span style=\"font-size:1em; font-style:normal;\">"+formattedTerm+"</span>";
 		// we need to avoid a potential data inconsistency where there might be markers with expression that we excluded from the count
 		if (!this.hasExpression || this.markerCount == 0)
 		{   
-			termSection = "<span style=\"color:#ccc; font-size:1em; font-style:normal;\">"+this.formattedTerm+"</span>";
+			termSection = "<span style=\"color:#ccc; font-size:1em; font-style:normal;\">"+formattedTerm+"</span>";
 		}
 		String otherSection = "<span style=\"color:#ccc; font-size:80%; font-style:italic;\">"
 				+this.markerCount+" genes, "+vocab+"</span>";
-		this.formattedTerm = termSection + " " + otherSection;
+		formattedTerm = termSection + " " + otherSection;
+		
+		return formattedTerm;
 	}
 	
 	
@@ -150,4 +196,5 @@ public class VocabACSummaryRow
 	public void setHasExpression(boolean hasExpression) {
 		this.hasExpression = hasExpression;
 	}
+
 }

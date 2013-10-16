@@ -1,0 +1,224 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+dt {font-weight:bold;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>HDP: Querying by Phenotype, Gene Summary output</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#definitions">Definitions</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>HDP: Querying by Phenotype, Gene Summary output</h1>
+    <ul>
+        <li>User story 14, E2: Query by phenotype, debugging display of genes</li>
+        <li>User story 135, Grid: switch from OMGs to simples</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>user can enter MP ids, names, synonyms</li>
+		<li>exact matches</li>
+		<li>results = debugging display of marker keys/IDs</li>
+		<li>the markers are those "associated with" the mp term</li>
+		<li>the rules for what "associated with" means</li>
+		<li>US135: main kind of test: things that are currently being excluded get included</li>
+	</ul>
+	<p><b>NOTE!!:</b> A marker which has multiple genotypes may be indexed to an mp term for any 1 or more of those genotypes.  Being excluded from the indexed results set by one genotype rule does not exclude the marker completely (except for <em>Gt(ROSA)26Sor</em>.)</p>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<p>For current definitions of genotypes included or excluded from the various displays, see the <a href="HDPQuerybyDiseaseGene.html">HDPQuerybyDiseaseGene</a> test suite.</p>
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="auto">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>The gene <em>Gt(ROSA)26Sor</em> is excluded from all query results displays.
+			<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Query for 'absent vitelline blood vessels', <b concordion:set="#pheno">MP:0001719</b></li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Gt(ROSA)26Sor</b> does NOT appear in the genes list.
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>"Normal" models are excluded: Markers in "Normal" models are excluded from all query results displays.
+ 			<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Query for 'cellular phenotype', <b concordion:set="#pheno">MP:0005384</b> </li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Aaas</b> does NOT appear in the genes list</li>
+    		</ol>
+    		</li>
+
+    		<li>Homozygous: A marker with a simple, homozygous genotype annotated to a MP term is returned for that MP term.
+			<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Query for 'adnormal retinal rod cell morphology', <b concordion:set="#pheno">MP:0000745</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Aars</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Hemizygous: A marker with a simple, hemizygous genotype annotated to a MP term is returned for that MP term.
+			<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Query for 'hippocampal neuron degeneration', <b concordion:set="#pheno">MP:0000811</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Tg(Camk2a-tTA)1Mmay</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Indeterminate: A marker with a simple, indeterminate (hemizygous) genotype annotated to a MP term is returned for that MP term.
+			<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Query for 'adnormal eye development', <b concordion:set="#pheno">MP:0001286</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Zranb2</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Heterozygous Wild Type: A marker with a simple, heterozygous, wild type genotype annotated to a MP term is returned for that MP term.
+			<!-- <p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>Query for 'impaired coordination', <b  concordion:set="#pheno">MP:0001405</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Ty</b> is returned.</li>
+                <li>Query for 'ataxia', <b  concordion:set="#pheno">MP:0001393</b></li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Nf1&lt;tm1Tyj&gt;</b> is not returned. (Het wild type genotype exists, but it is not "simple".)</li>
+    		</ol>
+    		</li>
+
+    		<li>Heterozygous Non-Wild Type: A marker with a simple, heterozygous, non-wild type genotype annotated to a MP term is returned with that MP term.
+			<!-- <p concordion:assertTrue="false">new test</p> -->
+		<ol>
+                <li>Query for 'decreased susceptibility to bacterial infection', <b  concordion:set="#pheno">MP:0002411</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Slc11a1</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Simple Genotype: Conditional Recombinase: When there are only 2 markers in the genotype, the genotype is conditional, and one marker's allele is "recombinase" (has a Driver note), return the non-recombinase marker for the disease. Do NOT return the recombinase marker.  (modified for sto135)
+    		<ol>
+                <li>Query for abnormal liver morphology, <b concordion:set="#pheno">MP:0000598</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Abcb7</b> is returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Tg(Alb-cre)21Mgn</b> is not returned.</li>
+                <li>Query for small embryonic telencephalon, <b concordion:set="#pheno">MP:0000936</b><br/>
+                	(Genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5314535">MGI:5314535</a> has Hesx1 recombinase and Ctnnb1 alleles, but is not Conditional, so whole genotype should be excluded. Hesx1 comes back in due to other alleles and genotypes.)
+                </li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Ctnnb1</b> is not returned.</li>
+                <li>Query for increased long adenoma incidence, <b concordion:set="#pheno">MP:0002048</b><br/>
+                	(Genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5304807">MGI:5304807</a>MGI:5304807 has Kras alleles and is Conditional, but has no recombinase alleles, so it should NOT be excluded.)
+                </li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Kras</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Simple Genotype: Transgenic Reporter: When there are only 2 markers in the genotype, and one marker's allele is of type "Transgenic (Reporter)", return the non-Transgenic (Reporter) marker for the disease. Do NOT return the Transgenic (Reporter) marker. (modified for sto135)
+    		<ol>
+                <li>Query for abnormal cerebral cortex pyrimidal cell morphology, <b concordion:set="#pheno">MP:0009969</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Nrp1</b> is returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Tg(Thy1-YFP)16Jrs</b> is not returned. 
+                	(Transgenic Reporter portion of the genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3512124">MGI:3512124</a></li> 
+    		</ol>
+    		</li>
+
+    		<li>Large, Complex Genotypes: A marker is <b>not returned</b> for a disease if it participates only in genotypes having 3 markers (3 allele &quot;pairs&quot;) that do not meet the &quot;Conditional + Reporter&quot; or &quot;Tet-Induced Conditional&quot; rules above.
+    		<ol>
+                <li>Query for dermatitis, <b concordion:set="#pheno">MP:0001194</b></li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Agreg</b> is not returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Egf</b> is not returned.</li> 
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Tgfa</b> is not returned.</li>
+                <li>All genes get ruled out by this genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:2176534">MGI:2176534</a>)</li>  
+    		</ol>
+    		</li>
+
+    		<li>Very Large, Complex Genotypes: A marker is <b>not returned</b> for a disease if it participates only in genotypes having 4 or more markers (4 or more allele &quot;pairs&quot;).
+    		<ol>
+                <li>Query for abnormal hair cycle, <b concordion:set="#pheno">MP:0000427</b></li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Myo5a</b> is not returned.</li> 
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Oca2</b> is not returned.</li>  
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Tyrp1</b> is not returned.</li>
+                <li>All genes (except Lyst) get ruled out by this genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:2661267">MGI:2661267</a>). Lyst is returned because it has a simple genotype annotated to a child term.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Test going down the DAG - verify right gene(s) returned; wrong genes are not returned.
+    			<ol>
+                <li>Query for abnormal hair cycle, <b concordion:set="#pheno">MP:0000427</b></li>
+    			<li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Acvr1b</b> is returned (annotated to child term MP:0003875 abnormal hair follicle regression)</li>
+    			<li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Esr2</b> is returned (annotated to child term MP:0003875 abnormal hair follicle regression)</li>
+    			<li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Pten</b> is not returned (annotated to child term MP:0003875 abnormal hair follicle regression, but genotype rules should exclude it?)</li>
+    			</ol>
+    		</li>
+
+    		<li>Test for other special characters in a term - make sure right gene(s) returned.
+    			<ol>
+    			<li>step</li>
+    			<li>step</li>
+    			<li>step</li>
+    			</ol>
+    		</li>
+
+    		<li>Test "alternate ID" for MP term. Both Alertnate MP ID and Fyler ID (these are human synonym IDs).
+    			<ol>
+    			<li>Open The Disease Portal query form and search for <b concordion:execute="#count = getGeneCountByPhenotype(#TEXT)">MP:0000283</b></li>
+            	<li> Verify it returns the same count of genes as <b concordion:set="#phenoId">MP:0000284</b> (the primary ID) does, 
+            		which is <b cc:assertEquals="getGeneCountByPhenotype(#phenoId)"><b concordion:echo="#count"></b></b> genes. 
+           		</li>
+    			<li>Open The Disease Portal query form and search for <b concordion:execute="#count = getGeneCountByPhenotype(#TEXT)">Fyler:0700</b></li>
+            	<li> Verify it returns the same count of genes as <b concordion:set="#phenoId">MP:0011665</b> (the primary ID) does, 
+            		which is <b cc:assertEquals="getGeneCountByPhenotype(#phenoId)"><b concordion:echo="#count"></b></b> genes. 
+           		</li>
+    			</ol>
+    		</li>
+
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

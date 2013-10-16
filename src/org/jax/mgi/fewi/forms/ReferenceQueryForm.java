@@ -15,6 +15,8 @@ public class ReferenceQueryForm {
 	private boolean inAbstract = true;
 	private String id = "";
 	private String key = "";
+	private String diseaseRelevantMarkerId = "";
+	private String diseaseId = "";
 	
 	private Integer seqKey;
 	private Integer alleleKey;
@@ -133,6 +135,20 @@ public class ReferenceQueryForm {
 	public void setKey(String key) {
 		this.key = key;
 	}
+	
+	public String getDiseaseRelevantMarkerId() {
+		return diseaseRelevantMarkerId;
+	}
+	public void setDiseaseRelevantMarkerId(String diseaseRelevantMarkerId) {
+		this.diseaseRelevantMarkerId = diseaseRelevantMarkerId;
+	}
+	public String getDiseaseId() {
+		return diseaseId;
+	}
+	public void setDiseaseId(String diseaseId) {
+		this.diseaseId = diseaseId;
+	}
+	
 	@Override
 	public String toString() {
 		return "ReferenceQueryForm [author=" + author + ", authorScope="

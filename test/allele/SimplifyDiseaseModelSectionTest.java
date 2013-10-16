@@ -8,7 +8,7 @@ import mgi.frontend.datamodel.phenotype.DiseaseTableGenotype;
 import mgi.frontend.datamodel.phenotype.PhenoTableGenotype;
 
 import org.jax.mgi.fewi.controller.AlleleController;
-import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
+import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;

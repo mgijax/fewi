@@ -37,7 +37,7 @@ public class SolrMPAnnotationHunter extends SolrHunter {
 	 * implementation.  As we only allow filtering by two fields, those
 	 * are the only ones we define here.
          */
-        propertyMap.put(SearchConstants.MARKER_KEY,
+        propertyMap.put(SearchConstants.MRK_KEY,
 		new SolrPropertyMapper(IndexConstants.MRK_KEY));
         propertyMap.put(SearchConstants.TERM_ID,
 		new SolrPropertyMapper(IndexConstants.TERM_ID));

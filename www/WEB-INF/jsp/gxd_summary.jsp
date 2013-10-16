@@ -21,6 +21,10 @@
   background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
   no-repeat right;
 }
+#resultSummary
+{
+	display:table;
+}
 #gxdLitInfo
 {
 	font-weight:bold;

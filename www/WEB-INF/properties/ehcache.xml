@@ -11,14 +11,14 @@
 	<defaultCache 
 		eternal="false" 
 		overflowToDisk="false" 
-		maxElementsInMemory="100000" 
+		maxElementsInMemory="100" 
 		memoryStoreEvictionPolicy="LRU"
 		statistics="true" />
 
 	<!-- MARKERS -->
 	<cache
 		name="mgi.frontend.datamodel.Marker"
-		maxElementsInMemory="0"
+		maxElementsInMemory="100"
 		eternal="true"
 		overflowToDisk="false"
 		statistics="true" />

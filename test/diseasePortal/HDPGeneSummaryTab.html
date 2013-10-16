@@ -1,0 +1,608 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+dt {font-weight:bold;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>HDP: Querying by Disease Genes output</title>
+</head>
+
+<body>
+<H4>This set of tests are not finished yet!!!!!!</H4>
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>HDP:  Genes Summary Tab</h1>
+    <ul>
+        <li>User story 15, E2: Gene summary tab: part 1</li>
+        <li>User story 65, E2 Bug query for diabetes shows Gt(ROSA) disease association</li>
+        <li>User story 50, E2: Gene Summary tab: part 2 (sorting)</li>
+        <li>User story 86, E3: Genes Tab: Add references column - part 1</li>
+        <li>User story 74, E3: Genes Tab: Add references column - part 2</li>
+        <li>User story 105, Show all normal in the grid for MP (BUG, show "normal" genes on genes tab)</li>
+        <li>User story 154, Genes Tab: export as tab-delimited text</li>
+        <li>User story 137, Add Links to gene and disease detail pages</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US15:Genes tab column headings are Organism, Marker Symbol, Genetic Location, Genome Coordinates, Associated Human Diseases, and Abnormal Phenotypes Reported in these Systems</li>
+		<li>US15:Display location as genetic location, genome coordinates, build identifier (version)</li>
+		<li>US15:OMIM terms are displayed for disease using the simple genotypes rule.</li>
+		<li>US15:MP headers are for main headers excluding the headers Normal Phenotype and No Phenotype Analysis.</li>
+		<li>US50: Define secondary, tertiary, .. sorts.</li>
+		<li>US50: Gene summary tab sortable by:
+			<ul>
+			<li>organism</li>
+			<li>marker symbol</li>
+			<li>genomic location</li>
+			</ul>
+		</li>
+		<li>US86: References column is added right after Phenotypes column</li>
+		<li>US86: Mouse genes show the count of all references for the gene and links to the proper reference summary page</li>
+		<li>US86: Human genes will always have this column blank</li>
+		<li>US74: Mouse Genes show the count of all references for the associated disease and links to the proper reference summary page</li>
+		<li>US74: The Reference summary page will not show references for non simple genotypes?</li>
+		<li>US105: When a gene has only normal annotations it still gets displayed on the Genes tab</li>
+		<li>US105: When a region query returns results it should include genes that have only normal annotations within its result set</li>
+		<li>US154: Genes tab has button for downloading results as text</li>
+		<li>US154: Tab delimited file created with all genes tab results</li>
+		<li>US154: Tab delimited files has data for Organism, Marker Symbol, ID, Genetic Location, Genome Coordinates, Build #, Associated Human Diseases(pipe separated), Abnormal Phenotypes Reported in these systems(pipe separated)</li>
+		<li>US137: Mouse Gene symbols link to MGI gene detail pages</li>
+		<li>US137: Human Gene symbols link to MGI homology pages</li>
+		<li>US137: Human Gene Symbols that have no associated MGI homology page will have no link</li>
+		</ul>
+	<p><b>NOTE!!:</b> A marker which has multiple genotypes may be indexed to a disease term for any 1 or more of those genotypes.  Being excluded from the indexed results set by one genotype rule does not exclude the marker completely (except for <em>Gt(ROSA)26Sor</em>.)</p>
+	<p>Sorting defined by SMEs:</p>
+	<ul>
+		<li>Organism column will be sortable: secondary sort of Marker Symbol</li>
+		<li>Marker symbol column will be sortable: no secondary sort</li>
+		<li>Genomic Location column will be sortable: primary sort of Organism and a secondary sort of Genomic Location</li>
+		<li>Homologene ID column will be sortable: secondary sort of Marker Symbol</li>
+	
+	</ul>
+
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual and Automated tests</h3>
+
+		<ol>
+    		<li>The gene tab column headers are correct (<i>cannot automate</i>)(sto15)
+    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>
+    		<ol>
+                <li>Query for Piebaldism</li>
+                <li>Verify that he Genes tab column headers are listing the headings in this order:<br/>
+                Organism<br/>
+                Marker symbol<br/>  
+                Genetic Location<br/>
+                Genome Coordinates<br/> 
+                Associated Human Diseases<br/>
+                Abnormal Phenotypes Reported in these Systems<br/>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Verify the Marker Symbol column is displaying superscript correctly
+    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>
+    		<ol>
+                <li>Query for "amyloid beta deposits", MP <b concordion:set="#phenotype">0003329</b>.</li>
+                <li>Verify that the marker symbol <b>Tg(Thy1-APP<sup>SL</sup>)28Lpr</b> is displaying the superscript correctly</li>
+    		</ol>
+    		</li>
+
+<!--    		<li>Verify display of Marker Type (<i>no need to automate</i>)
+    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that gene <b>Brca1</b> has the Marker type of <b>protein coding gene</b></li>
+                <li>Verify that gene <b>T(9;17)138Ca</b> has the Marker type of <b>reciprocal chromosomal translocation</b></li>
+                <li>Verify that gene <b>Tg(Wnt1)1Hev</b> has the Marker type of <b>transgene</b></li>
+    		</ol>
+    		</li> -->
+
+    		<li>Verify display of Location data (<i>cannot automate</i>)
+    		<p concordion:assertTrue="true">jeffc 08/12/2014</p>    		
+    		<ol>
+                <li>Query for Long QT Syndrome 1, OMIM <b concordion:set="#disease">192500</b> (<i>This is to verify mouse with chr, coordinates, strand, build</i>)</li>
+                <li>Verify that mouse location displays <b>Chr7 88.12 cM, Chr7:143107254-143427042 (+) GRCm38</b></li>
+                <li>Query for Long QT Syndrome 1, OMIM <b concordion:set="#disease">192500</b> (<i>This is to verify human with offset(p), chr, coordinates, strand, build</i>)</li>
+                <li>Verify that human Location displays<b>Chr11 p15.5, Chr11:2466221-2870340 (+) GRCh37.p10</b></li>
+                <li>Query for MP:0004704,  <b concordion:set="#phenotype">MP:0004704</b> (<i>This is to verify mouse with syntenic</i>)</li>
+                <li>Verify that mouse Location displays<b>Chr11 syntenic</b>(for mouse marker Bolt)</li>               
+                <li>Query for MP:0008994, <b concordion:set="#phenotype">MP:0008994</b> (<i>This is to verify mouse with QTL but no coordinates</i>)</li>
+                <li>Verify that mouse Location displays<b>Chr13 QTL</b>(for mouse marker vgot2)</li>                                
+                <li>Query for MP:0001864, <b concordion:set="#phenotype">MP:0001864</b> (<i>This is to verify mouse with QTL and coordinates</i>)</li>
+                <li>Verify that mouse Location displays<b>Chr4 QTL, Chr4:24322299-46332776 </b>(for mouse marker Aaom1)</li>                                
+                <li>Query for 3-hydroxy-3-Methylglutaryl-Coa Lyase Deficiency; HMGCLD, OMIM <b concordion:set="#disease">246450</b> (<i>This is to verify human with chr, offset(p) range, build</i>)</li>                
+                <li>Verify that human Location displays<b> Chr1 p36.1-p35, Chr1:24128367-24151949 (-) GRCh37.p10</b></li>                
+                <li>Query for Spermatogenic Failure 9; SPGF9, OMIM <b concordion:set="#disease">613958</b> (<i>This is to verify human with chr, offset(q), build</i>)</li>
+                <li>Verify that human Location displays <b>Chr12 q14.2, Chr12:63952693-64062354 (-) GRCh37.p10</b></li>                 
+                <li>Query for Achondrogenesis, Type IA; ACG1A, OMIM <b concordion:set="#disease">200600</b> (<i>This is to verify human with chr, offset(q) range, build</i>)</li>
+                <li>Verify that human Location displays <b>Chr14q31-q32  Chr14:92434243-92506403 (-) GRCh37.p10 </b></li>                
+                <li>Query for Ventricular Fibrillation, Paroxysmal Familial, 2, OMIM <b concordion:set="#disease">612956</b> (<i>This is to verify human with no coordinate data</i>)</li>
+                <li>Verify that human Location displays<b>Chr7 q36.2</b></li>
+    		</ol>
+    		</li>
+
+<!--     		<li>Verify the Homologene ID is correct (<i>can automate</i>)
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that the Homologene ID for gene <b concordion:execute="#marker = getMarkerByPhenotypeSymbol(#disease,#TEXT)">Bard1</b> is 
+                	<b concordion:assertEquals="#marker.homologeneId">400</b>.</li>
+                <li>Verify that the Homologene ID for gene<b concordion:execute="#marker = getMarkerByPhenotypeSymbol(#disease,#TEXT)">AKT1</b> is 
+                	<b concordion:assertEquals="#marker.homologeneId">3785</b>.</li>
+                <li>Query for Autism, Susceptibility to, X-Linked 1; AUTSX1, OMIM <b concordion:set="#disease">300425</b>.</li>
+                <li>Verify that the Homolgene ID for gene <b concordion:execute="#marker = getMarkerByPhenotypeSymbol(#disease,#TEXT)">Nlgn3</b> is 
+                	<b concordion:assertEquals="#marker.homologeneId">23133</b>.</li>
+                <li>Verify that the Himologene ID for gene<b concordion:execute="#marker = getMarkerByPhenotypeSymbol(#disease,#TEXT)">NLGN3</b> is 
+                	<b concordion:assertEquals="#marker.homologeneId">23133</b>.</li>
+    		</ol>
+    		</li>  -->
+
+    		<li>Verify the correct OMIM terms are displayed (<i>can automate</i>)
+    		<ol>
+                <li>Query for <b concordion:set="#disease">Abdominal Obesity-Metabolic Syndrome</b>.</li>
+                <li>The following diseases should appear in the gene result set  due to text matches (not complete results):
+                	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
+                	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>
+                	<tr><td>mouse</td><td>Abhd5</td><td>Chanarin-Dorfman Syndrome; CDS</td></tr>
+                	<tr><td>mouse</td><td>Bmpr1a</td><td>Ebstein Anomaly<br/> Osteoarthritis Susceptibility 1; OS1<br/>
+						Wolff-Parkinson-White Syndrome</td></tr>
+                	<tr><td>mouse</td><td>Eda</td><td>Ectodermal Dysplasia 1, Hypohidrotic, X-Linked; XHED</td></tr>
+                	<tr><td>mouse</td><td>Fgfr2</td><td>Apert Syndrome<br/>
+						Beare-Stevenson Cutis Gyrata Syndrome; BSTVS<br/>
+						Crouzon Syndrome<br/>
+						Intestinal Atresia, Multiple; MINAT<br/>
+						Pfeiffer Syndrome</td></tr>
+                	<tr><td>mouse</td><td>Lmna</td><td>Cardiomyopathy, Dilated, 1A; CMD1A<br/>
+						Charcot-Marie-Tooth Disease, Axonal, Type 2B1; CMT2B1<br/>
+						Emery-Dreifuss Muscular Dystrophy 2, Autosomal Dominant; EDMD2<br/>
+						Hutchinson-Gilford Progeria Syndrome; HGPS<br/>
+						Muscular Dystrophy, Congenital, Lmna-Related</td></tr>
+                	<tr><td>mouse</td><td>Pparg</td><td>Abdominal Obesity-Metabolic Syndrome<br/>
+						Lipodystrophy, Congenital Generalized, Type 2; CGL2<br/>
+						Lipodystrophy, Familial Partial, Type 3; FPLD3<br/>
+						Pulmonary Hypertension, Primary, 1; PPH1<br/>
+						Systemic Lupus Erythematosus; SLE</td></tr>
+                	</table>
+                </li>
+                
+                <li>Query for <b concordion:set="#disease">114480</b>.</li>
+                <li>Only the following diseases should appear in the gene result set(not complete results):
+                	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
+                	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>
+                	<tr><td>human</td><td>AKT1</td><td>Breast Cancer<br/>
+						Colorectal Cancer; CRC<br/>
+						Cowden Syndrome 6; CWS6<br/>
+						Proteus Syndrome<br/>
+						Schizophrenia; SCZD</td></tr>
+                	<tr><td>human</td><td>BRCA2</td><td>Breast Cancer<br/>
+						Breast-Ovarian Cancer, Familial, Susceptibility to, 2; BROVCA2<br/>
+						Fanconi Anemia, Complementation Group D1; FANCD1<br/>
+						Glioma Susceptibility 3; GLM3<br/>
+						Medulloblastoma; MDB<br/>
+						Pancreatic Cancer, Susceptibility to, 2<br/>
+						Prostate Cancer<br/>
+						Wilms Tumor 1; WT1</td></tr>
+                	<tr><td>human</td><td>KRAS</td><td>Bladder Cancer<br/>
+						Breast Cancer<br/>
+						Cardiofaciocutaneous Syndrome 2; CFC2<br/>
+						Gastric Cancer, Hereditary Diffuse; HDGC<br/>
+						Lung Cancer<br/>
+						Noonan Syndrome 3; NS3<br/>
+						Pancreatic Cancer<br/>
+						Schimmelpenning-Feuerstein-Mims Syndrome; SFM</td></tr>
+                	<tr><td>human</td><td>NQO2</td><td>Breast Cancer</td></tr>
+                	<tr><td>human</td><td>TP53</td><td>Adrenocortical Carcinoma, Hereditary; ADCC<br/>
+						Basal Cell Carcinoma, Susceptibility to, 7; BCC7<br/>
+						Breast Cancer<br/>
+						Colorectal Cancer; CRC<br/>
+						Glioma Susceptibility 1; GLM1<br/>
+						Hepatocellular Carcinoma<br/>
+						Li-Fraumeni Syndrome 1; LFS1<br/>
+						Nasopharyngeal Carcinoma<br/>
+						Osteogenic Sarcoma<br/>
+						Pancreatic Cancer<br/>
+						Papilloma of Choroid Plexus</td></tr>
+                	<tr><td>human</td><td>TSG101</td><td>Breast Cancer</td></tr>
+                	</table>
+                </li>
+            </ol>
+            </li>
+            
+    		<li>Verify the correct MP Header terms are displayed (<i>can automate</i>)
+    		<ol>
+                <li>Query for <b concordion:set="#disease">Abdominal Obesity-Metabolic Syndrome</b>.</li>
+                <li>Only the following diseases should appear in the gene result set(not complete results):
+                	<table concordion:execute="#mSystems=getMarkerSystemByPhenotypeSymbol(#disease,#symbol)">
+                	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mSystems">Abnormal Phenotypes</th></tr>
+                	<tr><td>mouse</td><td>Abhd5</td><td>cardiovascular system, cellular, growth/size, hematopoietic system, homeostasis/metabolism, immune system, integument, liver/biliary system, mortality/aging, muscle, skeleton</td></tr>
+                	<tr><td>mouse</td><td>Bmpr1a</td><td>behavior/neurological,
+						cardiovascular system,
+						cellular,
+						craniofacial,
+						embryogenesis,
+						endocrine/exocrine glands,
+						growth/size,
+						hearing/vestibular/ear,
+						hematopoietic system,
+						homeostasis/metabolism,
+						immune system,
+						integument,
+						limbs/digits/tail,
+						mortality/aging,
+						muscle,
+						nervous system,
+						reproductive system,
+						respiratory system,
+						skeleton,
+						tumorigenesis,
+						vision/eye</td></tr>
+                	<tr><td>mouse</td><td>Eda</td><td>cardiovascular system,
+						craniofacial,
+						digestive/alimentary system,
+						endocrine/exocrine glands,
+						growth/size,
+						immune system,
+						integument,
+						limbs/digits/tail,
+						mortality/aging,
+						nervous system,
+						pigmentation,
+						renal/urinary system,
+						reproductive system,
+						respiratory system,
+						skeleton,
+						vision/eye</td></tr>
+                	<tr><td>mouse</td><td>Fgfr2</td><td>adipose tissue,
+						behavior/neurological,
+						cardiovascular system,
+						cellular,
+						craniofacial,
+						digestive/alimentary system,
+						embryogenesis,
+						endocrine/exocrine glands,
+						growth/size,
+						hearing/vestibular/ear,
+						hematopoietic system,
+						homeostasis/metabolism,
+						immune system,
+						integument,
+						limbs/digits/tail,
+						liver/biliary system,
+						mortality/aging,
+						muscle,
+						nervous system,
+						pigmentation,
+						renal/urinary system,
+						reproductive system,
+						respiratory system,
+						skeleton,
+						tumorigenesis,
+						vision/eye</td></tr>
+                	<tr><td>mouse</td><td>Lmna</td><td>adipose tissue,
+						behavior/neurological,
+						cardiovascular system,
+						cellular,
+						craniofacial,
+						digestive/alimentary system,
+						endocrine/exocrine glands,
+						growth/size,
+						hearing/vestibular/ear,
+						hematopoietic system,
+						homeostasis/metabolism,
+						immune system,
+						integument,
+						limbs/digits/tail,
+						mortality/aging,
+						muscle,
+						nervous system,
+						pigmentation,
+						renal/urinary system,
+						reproductive system,
+						respiratory system,
+						skeleton,
+						vision/eye</td></tr>
+                	<tr><td>mouse</td><td>Pparg</td><td>adipose tissue,
+						behavior/neurological,
+						cardiovascular system,
+						cellular,
+						embryogenesis,
+						endocrine/exocrine glands,
+						growth/size,
+						hematopoietic system,
+						homeostasis/metabolism,
+						immune system,
+						integument,
+						liver/biliary system,
+						mortality/aging,
+						muscle,
+						renal/urinary system,
+						reproductive system,
+						skeleton,
+						tumorigenesis,
+						vision/eye</td></tr>
+                	</table>
+                </li>
+                <li>Query for <b concordion:set="#disease">MP:114480</b>.</li>
+                <li>Only the following MP Header terms should appear in the gene result set(not complete results)(The MP header column should be blank):
+                	<table concordion:execute="#mSystems=getMarkerSystemByPhenotypeSymbol(#disease,#symbol)">
+                	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mSystems">Abnormal Phenotypes</th></tr>
+                	<tr><td>human</td><td>AKT1</td><td></td></tr>
+                	<tr><td>human</td><td>BRCA2</td><td></td></tr>
+                	<tr><td>human</td><td>KRAS</td><td></td></tr>
+                	<tr><td>human</td><td>NQO2</td><td></td></tr>
+                	<tr><td>human</td><td>TP53</td><td></td></tr>
+                	<tr><td>human</td><td>TSG101</td><td></td></tr>
+                	</table>
+                </li>
+           </ol>
+           </li>
+
+            <li>Verify searching by a phenotype synonymn returns correct results
+    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>            
+    		<ol>
+                <li>Query for abnormal mucosa-associated lymphoid tissue morphology, MP <b concordion:set="#phenotype">0002377</b>.</li>
+                <li>Verify that the returned genes are <b>Cebpb, Id2, and Lta</b></li>
+                <li>Query for "MALT abnormalities</li>
+                <li>Verify that the returned genes are <b>Cebpb, Id2, and Lta</b></li>
+    		</ol>
+    		</li> 
+    		  
+            <li>Verify searching by Diabetes Mellitus, Permanent Neonatal; PNDM does not return Gt(ROSA)26Sor
+    		<p concordion:assertTrue="true">jeffc 08/15/2013</p>            
+    		<ol>
+                <li>Query for Diabetes Mellitus, Permanent Neonatal; PNDM, MP <b concordion:set="#disease">606176</b>.</li>
+                <li>Verify that the returned genes do not include <b>Gt(ROSA)26Sor</b></li>
+    		</ol>
+    		</li>          
+
+            <li>Verify the sort of the Organism column
+    		<p concordion:assertTrue="true">jeffc 08/12/2014</p>            
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that the default sort is by Organism??</li>
+                <li>Click the Organism header</li>
+                <li>Verify the organism column sorts by human first with a secondary sort of Marker symbol</li>
+                <li>Click the Organism header again</li>
+                <li>Verify the organism column sorts by mouse first with a secondary sort of Marker symbol</li>
+    		</ol>
+    		</li>
+
+<!--     		<li>Verify the sort of the Homologene ID column
+    		<p concordion:assertTrue="true">jeffc 08/13/2013</p>    		
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that the default sort is by Organism??</li>
+                <li>Click the Homologene ID header</li>
+                <li>Verify the Homologene ID column sorts by ascending number with a secondary sort of Marker symbol</li>
+                <li>Click the Organism header again</li>
+                <li>Verify the Homologene ID column sorts by decending number with a secondary sort of Marker symbol</li>
+    		</ol>
+    		</li>  -->   		
+
+    		<li>Verify the sort of the Marker Symbol column
+    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>    		
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that the default sort is by Organism??</li>
+                <li>Click the Marker Symbol header</li>
+                <li>Verify the Marker Symbol column sorts by ascending alpha</li>
+                <li>Click the Organism header again</li>
+                <li>Verify the Homologene ID column sorts by decending alpha</li>
+    		</ol>
+    		</li>  
+
+<!--     		<li>Verify the sort of the Marker Type column
+    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>    		
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that the default sort is by Organism??</li>
+                <li>Click the Marker Type header</li>
+                <li>Verify the Marker Type column sorts by ascending order(sort of, functions like Marker QF) with a secondary sort of Marker symbol</li>
+                <li>Click the Marker Type header again</li>
+                <li>Verify the Marker Type column sorts by decending order(sort of, functions like Marker QF) with a secondary sort of Marker symbol</li>
+    		</ol>
+    		</li>  	 -->	
+
+    		<li>Verify the sort of the Genetic Location column
+    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>    		
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that the default sort is by Organism??</li>
+                <li>Click the Genetic Location header</li>
+                <li>Verify the Genetic Location column sorts by ascending order of Orgamism with a secondary sort of Genetic Location(ascending)</li>
+                <li>Click the Genetic Location header again</li>
+                <li>Verify the Genetic Location column sorts by decending order of Organism with a secondary sort of Genetic Location(descending)</li>
+    		</ol>
+    		</li>
+    		<li>Verify the existance of the References column
+    		<p concordion:assertTrue="true">jeffc 09/06/2013</p>    		
+    		<ol>
+                <li>Query for marker <b concordion:set="#symbol">neil1</b>.</li>
+                <li>Verify the existance of the References column after the Phenotypes column</li>
+                <li>Verify the reference column for the mouse gene has a linked number</li>
+                <li>Click the linked number in the references column</li>
+                <li>Verify the references summary page that displays has the correct gene and the results match the link number</li>
+                <li>Verify the reference column for the human gene is blank</li>
+    		</ol>
+    		</li>
+    		<li>Verify the existance and accuracy of a Disease Relevant link in the References column
+    		<p concordion:assertTrue="true">jeffc 09/23/2013</p>    		
+    		<ol>
+                <li>Query for disease <b concordion:set="#disease">268220</b>.</li>
+                <li>Verify the existance of the Disease Relevant link in the References column on the Genes tab</li>
+                <li>Click the Disease Relevant link for marker <b>Myf6</b> in the references column</li>
+                <li>Verify the references summary page that displays has a Phenotypic Alleles link in the Curated Data column</li>
+                <li>Click on the Alleles link and verify the Human Disease Models column has <b>Rhabdomyosarcoma 2</b> listed one or more times(note: this is currently anotated to a cre allele via allele to omim. After data cleanup this example might go away)</li>
+                <li>Go back to the Genes tab</li>
+                <li>Click the Disease Relevant link for marker <b>Pax3</b> in the references column</li>
+                <li>Verify the references summary page that displays has a Phenotypic Alleles link in the Curated Data column for all 6 J numbers</li>
+                <li>Click on the Alleles link for J:190138 and verify the Human Disease Models column has <b>Rhabdomyosarcoma 2</b> listed one or more times(must be on Pax3 allele row)</li>
+                <li>Go back to Reference summary for Pax3 and click on the Alleles link for J:14096 and verify the Human Disease Models column does not contain <b>Rhabdomyosarcoma 2</b> but, it does have <b>Waardenburg Syndrome, type 1;WS1</b>. 
+                	This is because of its use in an annotation of homozygous Pax3&lt;Sp-2H&gt; mice to Waardenburg Syndrome, Type 1; WS1, not because of an annotation to 268220.</li>
+                <li>Go back to the Genes tab</li>
+                <li>Click the Disease Relevant link for marker <b>Trp53</b> in the references column</li>
+                <li>Verify the references summary page that displays has a Phenotypic Alleles link in the Curated Data column for all 12 J numbers</li>
+                <li>Click on the Alleles link for J:199363 and verify the Human Disease Models column has <b>Rhabdomyosarcoma 2</b> listed one or more times(must be on Trp53 allele row)</li> 
+                <li>Note: Human genes will have no Disease Relevant links</li>
+    		</ol>
+    		</li>
+    		<li>Verify the existance and accuracy of a Disease Relevant link in the References column(second example)
+    		<p concordion:assertTrue="true">jeffc 09/24/2013</p>    		
+    		<ol>
+                <li>Query for disease <b concordion:set="#disease">125700</b>.</li>
+                <li>Verify the existance of the Disease Relevant link in the References column on the Genes tab</li>
+                <li>Click the Disease Relevant link for marker <b>Avp</b> in the references column</li>
+                <li>Verify the references summary page that displays has a Phenotypic Alleles link in the Curated Data column</li>
+                <li>Click on the Alleles link  for both J:147933 and J:148012 and verify the Human Disease Models column has <b>Diabetes Insipidus, Neurohypophyseal</b> listed in each case</li>
+    		</ol>
+    		</li>
+    		<li>Verify that on the Disease Relevant link in the References column results, J numbers associated to a complex genotype do not display
+    		<p concordion:assertTrue="true">jeffc 09/23/2013</p>    		
+    		<ol>
+                <li>Query for disease <b concordion:set="#disease">229300</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Click the Disease Relevant link for marker <b>Fxn</b> in the references column</li>
+                <li>Verify the references summary page that displays does not contain the reference <b>J:114840</b></li>
+                <li>Go back to the Genes tab</li>
+                <li>Click the All link in the references column</li>
+                <li>Verify on page 2 of the results you find the reference <b>J:114840</b></li>
+                <li>Note: This J number should not be displayed on the Diseases reference page because it's connected to a complex genotype</li>
+    		</ol>
+    		</li>
+    		<li>Verify when a paper is brought back for a disease annotation that is not the disease you searched for
+    		<p concordion:assertTrue="true">jeffc 09/23/2013</p>    		
+    		<ol>
+                <li>Query for gene <b concordion:set="#gene">Tg(APPSwe,tauP301L)1Lfa</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Click the Disease Relevant link for marker <b>Tg(APPSwe,tauP301L)1Lfa</b> in the references column</li>
+                <li>Click on the Alleles link for J:197629 and verify the Human Disease Models column has no disease listed</li>
+                <li>Note: This is because the model is a complex model, All references displayed come from annotations in the allele:OMIM module.</li>
+    		</ol>
+    		</li>
+    		<li>Verify when querying for a gene that has only normal annotation confirm the gene symbol is displayed on the Genes tab(sto105)
+    		<p concordion:assertTrue="true">jeffc 10/01/2013</p>    		
+    		<ol>
+                <li>Query for gene <b concordion:set="#gene">Zfa-ps</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Verify Marker <b>Zfa-ps</b> is displayed even though no associations exist</li>
+                <li>Note: Zfa-ps is only annotationed to normal annotations</li>
+    		</ol>
+    		</li>
+    		<li>Verify when querying for a region that has genes with only normal annotations confirm these gene symbols are displayed on the Genes tab(sto105)
+    		<p concordion:assertTrue="true">jeffc 10/01/2013</p>    		
+    		<ol>
+                <li>Query for gene region <b concordion:set="#region">Chr10:52542320-52545739</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Verify Marker <b>Zfa-ps</b> is one of genes displayed, even though no associations exist</li>
+                <li>Note: Zfa-ps is only annotationed to normal annotations</li>
+    		</ol>
+    		</li>
+			<li>The Genes tab has an Export Text File button(sto154)
+    		<p concordion:assertTrue="true">passed - kstone 2013/10/08</p>
+    		<ol>
+                <li>Query for MP:0009308</li>
+                <li>Verify that the Genes tab has a <b>Text File</b> button on it's tab</li>
+                <li>Click the <b>Text file</b> button and verify the data displayed is correct and displayed in the same order as the tab data</li>
+    		</ol>
+    		</li>
+    		<li>The genes tab column headers are correct for a tab-delimited file(<i>cannot automate</i>)(sto154)
+    		<p concordion:assertTrue="true">passed - kstone 2013/10/08</p>
+    		<ol>
+                <li>Query for Cancer</li>
+                <li>Verify that the Genes tab-delimited file column headers are listing the data in this order:<br/>
+                Organism<br/>
+                Marker symbol<br/> 
+                ID<br/> 
+                Genetic Location<br/>
+                Genome Coordinates<br/> 
+                Build #<br/>
+                Associated Human Diseases(pipe separated)<br/>
+                Abnormal Phenotypes Reported in these Systems(pipe separated)<br/>
+                </li>
+    		</ol>
+    		</li>
+    		<li>The genes ID column (both mouse/human) is correct for a tab-delimited file(<i>cannot automate</i>)(sto154)
+    		<p concordion:assertTrue="true">passed - kstone 2013/10/08</p>
+    		<ol>
+                <li>Query for Smad7</li>
+                <li>Verify that the Genes tab-delimited file has the ID MGI:1100518 for Smad7 (the MGI ID)</li>
+                <li>Verify that the Genes tab-delimited file has the ID 4092 for SMAD7 (the Entrez Gene ID)</li>
+    		</ol>
+    		</li>
+    		<li>Confirm Human symbols link to their MGI Homology page(sto137)
+    		<p concordion:assertTrue="true">new test</p>
+    		<ol>
+                <li>Query for marker <b>Actb</b></li>
+                <li>Click on the Genes tab and find the Human marker <b>ACTB</b> and click it</li>
+                <li>Verify that the link takes you to the Vertebrate Homology Class page for ACTB</li>
+    		</ol>
+    		</li>	
+    		<li>Confirm Mouse symbols link to their MGI gene detail page(sto137)
+    		<p concordion:assertTrue="true">new test</p>
+    		<ol>
+                <li>Query for marker <b>Actb</b></li>
+                <li>Click on the Genes tab and find the Mouse marker <b>Actb</b> and click it</li>
+                <li>Verify that the link takes you to the Gene detail page for Actb</li>
+    		</ol>
+    		</li>	
+    		<li>Confirm a human symbol that has no MGI homology page is not a link (sto137)
+ 			<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+    		<ol>
+                <li>Query for marker <b>IGKC</b></li>
+                <li>Click on the Genes tab and find the Human marker <b>IGKC</b></li>
+                <li>Verify that the Human marker symbol <b>IGKC</b> is not a link</li>
+    		</ol>
+    		</li>
+    	</ol>	
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Basic Popup display of Disease Data</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Basic Popup display of Disease Data</h1>
+    <ul>
+        <li>User story 34, E4: Drill Down page -  OMIM Xs - debugging display</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>shows all the OMG genotypes</li>
+		<li>shows the human gene associations</li>
+		<li>shows the disease</li>
+	</ul>
+
+	<h2>Specific Requirements</h2>
+	<ul>
+		<li>See <a href="HDPGridPopupsPhenotype.html">requirements dealing with "compressed" gentoypes for Story 33</a>, E4: Drill Down page -  MP  Xs - debugging display</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Clicking a checkmark causes the popup to appear as a new, separate browser window.
+ 			<p concordion:assertTrue="true">klf 9/10/2013</p> <i>(cannot automate)</i>
+    		<ol>
+                <li>Open the HDP query form.</li>
+                <li>Enter <b>Gata1</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of <b>Gata1</b> and <b>Myelofibrosis</b>.</li>
+                <li>Verify that a new window opens.</li>
+    		</ol>
+    		</li>
+		
+    		<li>Chimeric genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Chimeric genotypes are NOT compressed with other kinds of genotypes.<br/>
+    		(Note: There are no chimeric genotypes having the same allele pair as a non-chimeric genotype, so cannot verify that these remain separated.) 
+ 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>135100</b> (Fibrodysplasia Ossificans Progressiva; FOP) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b>Acvr1</b> row and <b>Fibrodysplasia Ossificans Progressiva; FOP</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b>Acvr1&lt;tm1Emsh&gt;/Acvr1&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that human <b>ACVR1</b> IS LISTED.</li>
+                <li>Clear the query form.</li>
+                <li>Enter <b>305600</b> (Focal Dermal Hypoplasia; FDH) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b>Porcn</b> row and <b>Focal Dermal Hypoplasia; FDH</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b>Porcn&lt;tm1Vdv&gt;/Porcn&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b>Porcn&lt;tm1Vdv&gt;/Y</b> (1 genotype exists).</li>
+                <li>Confirm that human <b>PORCN</b> IS LISTED.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Conditional genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Conditional genotypes are NOT compressed with other kinds of genotypes.<br/>
+    		(Note: There are no conditional genotypes having the same allele pair as a non-conditional genotype, so cannot verify that these remain separated.)
+ 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>131200</b> (Endometriosis, Susceptibility to, 1) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b>Kras</b> row and <b>Endometriosis, Susceptibility to, 1</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b>Kras&lt;tm4Tyj&gt;/Kras&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that human <b>KRAS</b> IS NOT LISTED.</li>
+                <li>Clear the query form.</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Happy Path:  In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the particular gene with a mouse model annotation.<br/>
+    			Annotations to different genotypes which aggregate to one "compressed" genotype are displayed only with the single, "compressed" genotype. <br/>
+    			Verify human disease is listed only when association exists.
+ 			<p><i>fully automated</i></p>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">601665</b> (Obesity) in the Phenotypes and Diseases section and hit search.</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Lepr</b> row and <b concordion:set="#column">Obesity</b> column.</li>
+                <li>Confirm that <b>1</b> genotype is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Lepr&lt;db&gt;/Lepr&lt;db&gt;</b>.</li>
+                <li>Confirm that the pop-up contains AT LEAST the following data (homozygous genotypes):
+                	<table>
+                	<tr><th>genotype</th><th>term</th><th>checkmark?</th><th>notes: count of genotypes aggregated</th></tr>
+                	<tr><td cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Lepr&lt;db&gt;/Lepr&lt;db&gt;</td><td>601665 Obesity</td><td>yes</td><td>4</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that human <b cc:assertNoResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">LEPR</b> is NOT LISTED.</li>
+                <li>Clear the query form.</li>
+                <li>Enter <b concordion:set="#pheno">105830</b> (Angelman Syndrome; AS) in the Phenotypes and Diseases section and hit search.</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Ube3a</b> row and <b concordion:set="#column">Angelman Syndrome; AS</b> column.</li>
+                <li>Confirm that <b>1</b> genotype is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Ube3a&lt;tm1Alb&gt;/Ube3a&lt;+&gt;</b>.</li>
+                <li>Confirm that the pop-up contains AT LEAST the following data (heterozygous genotypes):
+                	<table>
+                	<tr><th>genotype</th><th>term</th><th>checkmark?</th><th>notes: count of genotypes aggregated</th></tr>
+                	<tr><td  cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Ube3a&lt;tm1Alb&gt;/Ube3a&lt;+&gt;</td><td>601665 Obesity</td><td>yes</td><td>2</td></tr>
+                	</table>
+                </li>
+                <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">UBE3A</b> IS LISTED.</li>
+                <li>(Future Note: Amelogenesis Imperfecta, Type IE; AI1E (OMIM ID: 301200) has a transgene hom NOT model - it isn't a cluster of multiple genotypes, but it is a NOT. Tg(Amelx)42Msnd/Tg(Amelx)42Msnd)</li>
+                <li>(Future Note: Paragangliomas 4; PGL4 (OMIM ID: 115310) has 2 simple het NOT models that should form one geno-cluster row: Sdhd&lt;tm1Jlob&gt;/Sdhd&lt;+&gt;)</li>
+    		</ol>
+    		</li>
+
+    		<li>Hemizygous genotypes: In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the particular gene with a mouse model annotation.
+ 			<p><i>fully-automated</i></p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">300624</b> (Fragile X Mental Retardation Syndrome) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Fmr1</b> row and <b concordion:set="#column">Fragile X Mental Retardation Syndrome</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Fmr1&lt;tm1Cgr&gt;/Y</b> (2 genotypes exist).</li>
+                <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">FMR1</b> IS LISTED.</li>
+                <li>Clear the query form.</li>
+                <li>Enter <b concordion:set="#pheno">152700</b> (Systemic Lupus Erythematosus; SLE) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Yaa</b> row and <b concordion:set="#column">Systemic Lupus Erythematosus; SLE</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">X/Yaa</b> (5 genotypes exist).</li>
+                <li>Clear the query form.</li>
+                <li>Enter <b concordion:set="#pheno">104300</b> (Alzheimer Disease; AD) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tg(APPswe,PSEN1dE9)85Dbo</b> row and <b concordion:set="#column">Alzheimer Disease; AD</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Tg(APPswe,PSEN1dE9)85Dbo/0</b> (3 genotypes that are disease models exist).</li>
+                <li>(Future Note: Ichthyosis, X-Linked; XLI (OMIM ID: 308100) has 2 hemizygous NOT models that should form one geno-cluster row: Foxp3&lt;sf&gt;/Y)</li>
+    		</ol>
+    		</li>
+
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

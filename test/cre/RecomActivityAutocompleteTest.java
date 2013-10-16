@@ -6,7 +6,7 @@ import java.util.List;
 import org.jax.mgi.fewi.controller.AutoCompleteController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
-import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
+import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 

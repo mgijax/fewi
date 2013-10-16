@@ -1,7 +1,7 @@
 package gxd;
 
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
+import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
 import org.jax.mgi.fewi.test.mock.MockJSONGXDAssayResult;
 

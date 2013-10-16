@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.finder;
 
+import java.util.Arrays;
 import java.util.List;
 
 import mgi.frontend.datamodel.Marker;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.sun.tools.javac.code.Attribute.Array;
 
 
 /*-------*/
@@ -72,10 +75,16 @@ public class MarkerFinder {
         return searchResults;
     }
     // convenience wrapper
-    public SearchResults<Marker> getMarkerByID(String id) {
+    public SearchResults<Marker> getMarkerByID(String id) 
+    {
         SearchParams searchParams = new SearchParams();
         searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.OP_EQUAL));
         return getMarkerByID(searchParams);
+    }
+    
+    public List<Marker> getMarkerByPrimaryId(String id)
+    {
+    	return mrkGatherer.get(Marker.class,Arrays.asList(id),"primaryID");
     }
 
     /*--------------------------------------------*/

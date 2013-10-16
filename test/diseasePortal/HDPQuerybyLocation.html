@@ -1,0 +1,265 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>HDP: Querying by Locations Genes output</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#definitions">Definitions</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>HDP: Querying by Location Genes output</h1>
+    <ul>
+        <li>User story 22, E3: Query by region</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>user can enter multiple genetic locations (chromosome + start + end coord)</li>
+		<li>user can enter single coordinates</li>
+		<li>ignore strand</li>
+		<li>user must query either mouse locations or human locations. Can't do both.</li>
+		<li>also return homologs of the mouse/human coordinates entered</li>
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="auto">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Single coordinate matches gene whose region the coordinate falls in (ignoring strand).
+    		<ol>
+                <li>Query for mouse location <b concordion:set="#mouseLoc">Chr2:155000000</b></li>
+                <li>Verify that the agouti gene is returned (it has region Chr2:154791402-155051012):
+                <table cc:verifySupersetOf="#symbol : getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th></tr>
+                	<tr><td>a</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries also bring back agouti (checking the boundaries)
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertResultsContain="#symbols">Gene symbol</th></tr>
+                	<tr><td>chr2:154791402</td><td>a</td></tr>
+                	<tr><td>chr2:154791403</td><td>a</td></tr>
+                	<tr><td>chr2:155051011</td><td>a</td></tr>
+                	<tr><td>chr2:155051012</td><td>a</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries DO NOT bring back agouti
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertNoResultsContain="#symbols">Gene symbol</th></tr>
+                	<tr><td>Chr1:155000000</td><td>a</td></tr>
+                	<tr><td>Chr3:155000000</td><td>a</td></tr>
+                	<tr><td>ChrY:155000000</td><td>a</td></tr>
+                	<tr><td>chr2:154791401</td><td>a</td></tr>
+                	<tr><td>chr2:155051013</td><td>a</td></tr>
+                	</table>
+                </li>
+                <li>Query for mouse location <b concordion:set="#mouseLoc">ChrX:145500000</b></li>
+                <li>Verify that only the Amot gene is returned (it has region ChrX:145446425-145505181):
+                <table cc:verifySupersetOf="#symbol : getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th></tr>
+                	<tr><td>Amot</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries also bring back Amot (checking the boundaries)
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertResultsContain="#symbols">Gene symbol</th></tr>
+                	<tr><td>ChrX:145446425</td><td>Amot</td></tr>
+                	<tr><td>Chrx:145446426</td><td>Amot</td></tr>
+                	<tr><td>chrx:145505180</td><td>Amot</td></tr>
+                	<tr><td>chrx:145505181</td><td>Amot</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries DO NOT bring back Amot
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertNoResultsContain="#symbols">Gene symbol</th></tr>
+                    <tr><td>Chr19:145500000</td><td>Amot</td></tr>
+                    <tr><td>ChrY:145500000</td><td>Amot</td></tr>
+                	<tr><td>Chr1:145500000</td><td>Amot</td></tr>
+                	<tr><td>ChrX:145446424</td><td>Amot</td></tr>
+                	<tr><td>chrx:145505182</td><td>Amot</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Single coordinate matches regardless of strand
+    		<ol>
+    			<li>Query for mouse location <b concordion:set="#mouseLoc">Chr11:100500000</b></li>
+                <li>Verify that only the Acly gene is returned (it has region Chr11:100476353-100528000 (-)):
+                <table cc:verifySupersetOf="#symbol : getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th></tr>
+                	<tr><td>Acly</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries also bring back Acly (checking the boundaries)
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertResultsContain="#symbols">Gene symbol</th></tr>
+                	<tr><td>chr11:100476353</td><td>Acly</td></tr>
+                	<tr><td>chr11:100528000</td><td>Acly</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries DO NOT bring back Acly
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertNoResultsContain="#symbols">Gene symbol</th></tr>
+                    <tr><td>chr11:100476352</td><td>Acly</td></tr>
+                    <tr><td>chr11:100528001</td><td>Acly</td></tr>
+                	</table>
+                </li>
+                <li>Query for mouse location <b concordion:set="#mouseLoc">Chr6:4700000</b></li>
+                <li>Verify that Aaj2 gene is returned (it has region Chr6:4503823-48726677 (no strand)):
+                <table cc:verifySupersetOf="#symbol : getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th></tr>
+                	<tr><td>Aaj2</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries also bring back Aaj2 (checking the boundaries)
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertResultsContain="#symbols">Gene symbol</th></tr>
+                	<tr><td>chr6:4503823</td><td>Aaj2</td></tr>
+                	<tr><td>chr6:48726677</td><td>Aaj2</td></tr>
+                	</table>
+                </li>
+                <li>Verify that the following queries DO NOT bring back Aaj2
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th><th cc:assertNoResultsContain="#symbols">Gene symbol</th></tr>
+                    <tr><td>chr6:4503822</td><td>Aaj2</td></tr>
+                	<tr><td>chr6:48726678</td><td>Aaj2</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>multiple coordinates via homology can be queried
+    		<ol>
+                <li>Verify that CYP2D6 gene is returned for all the following queries, due to 5 mouse markers existing in its
+                	homology class (<a href="http://cardolan.informatics.jax.org/homology/86099">homologene:86099</a>)
+                <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th>
+                		<th cc:assertResultsContain="#symbols">Human Marker</th>
+                		<th>Mouse Marker</th></tr>
+                    <tr><td>Chr15:82452377</td><td>CYP2D6</td><td>Cyp2d9</td></tr>
+                	<tr><td>Chr15:82402846</td><td>CYP2D6</td><td>Cyp2d10</td></tr>
+                	<tr><td>Chr15:82389154</td><td>CYP2D6</td><td>Cyp2d11</td></tr>
+                	<tr><td>Chr15:82555108</td><td>CYP2D6</td><td>Cyp2d12</td></tr>
+                	<tr><td>Chr15:82615965</td><td>CYP2D6</td><td>Cyp2d34</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>multiple coordinates can be entered at once
+    		<ol>
+    			<li>Query for mouse locations <b concordion:set="#mouseLoc">Chr11:105967945,ChrX:164188420,Chr4:40143081 Chr13:24831517</b></li>
+                <li>Verify that following genes are returned:
+                <table cc:verifySupersetOf="#symbol : getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Actual Region</th></tr>
+                	<tr><td>Ace</td><td>Chr11:105967945-105989964</td></tr>
+                	<tr><td>Ace2</td><td>ChrX:164139332-164188420</td></tr>
+                	<tr><td>Aco1</td><td>Chr4:40143081-40198338</td></tr>
+                	<tr><td>Acot13</td><td>Chr13:24817948-24831517</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Human coordinates can be queried as well.
+    		<ol>
+    			<li>Query for human locations <b concordion:set="#humanLoc">Chr12:10269376,Chr3:150690786</b></li>
+                <li>Verify that following genes are returned:
+                <table cc:verifySupersetOf="#symbol : getSymbolsByHumanLocation(#humanLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Associated Human Region</th><th>Organism</th></tr>
+                	<tr><td>CLEC7A</td><td>Chr12:10269376-10282868</td><td>Human</td></tr>
+                	<tr><td>Clec7a</td><td>Chr12:10269376-10282868</td><td>Mouse</td></tr>
+                	<tr><td>CLRN1</td><td>Chr3:150643950-150690786</td><td>Human</td></tr>
+                	<tr><td>Clrn1</td><td>Chr3:150643950-150690786</td><td>Mouse</td></tr>
+                	</table>
+                </li>
+                <li>Query for the same locations in mouse: <b concordion:set="#mouseLoc">Chr12:10269376,Chr3:150690786</b></li>
+                <li>Verify that following genes are returned:
+                <table cc:verifySupersetOf="#symbol : getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Associated Mouse Region</th><th>Organism</th></tr>
+                	<tr><td>Scc7</td><td>Chr3:143647225-156658471</td><td>Mouse</td></tr>
+                	<tr><td>Tmc1m3</td><td>Chr12:5368440-76984429</td><td>Mouse</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>You can query a region(s) of coordinates
+    		<ol>
+    			<li>Query for human region <b concordion:set="#humanLoc">Chr10:100175955-101989344</b></li>
+                <li>Verify that at least the following genes are returned:
+                <table cc:verifySupersetOf="#symbol : getSymbolsByHumanLocation(#humanLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Associated Human Region</th><th>Organism</th></tr>
+                	<tr><td>HPS1</td><td>Chr10:100175955-100206704 (-)</td><td>Human</td></tr>
+                	<tr><td>HPSE2</td><td>Chr10:100216834-100995632 (-)</td><td>Human</td></tr>
+                	<tr><td>COX15</td><td>Chr10:101468505-101492423 (-)</td><td>Human</td></tr>
+                	<tr><td>ABCC2</td><td>Chr10:101542463-101611662 (+)</td><td>Human</td></tr>
+                	<tr><td>CPN1</td><td>Chr10:101802065-101841642 (-)</td><td>Human</td></tr>
+                	<tr><td>CHUK</td><td>Chr10:101948124-101989344 (-)</td><td>Human</td></tr>
+                	</table>
+                </li>
+                <li>Query for human regions <b concordion:set="#humanLoc">Chr10:100175955-100995632,Chr10:101542463-101989344</b>,
+                	which is the same region as above, but excluding COX15</li>
+                <li>Verify that at least the following genes are returned:
+                <table cc:verifySupersetOf="#symbol : getSymbolsByHumanLocation(#humanLoc)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Associated Human Region</th><th>Organism</th></tr>
+                	<tr><td>HPS1</td><td>Chr10:100175955-100206704 (-)</td><td>Human</td></tr>
+                	<tr><td>HPSE2</td><td>Chr10:100216834-100995632 (-)</td><td>Human</td></tr>
+                	<tr><td>ABCC2</td><td>Chr10:101542463-101611662 (+)</td><td>Human</td></tr>
+                	<tr><td>CPN1</td><td>Chr10:101802065-101841642 (-)</td><td>Human</td></tr>
+                	<tr><td>CHUK</td><td>Chr10:101948124-101989344 (-)</td><td>Human</td></tr>
+                	</table>
+                </li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByHumanLocation(#humanLoc)">COX15</b> is NOT returned.</li>
+    		</ol>
+    		</li>
+    		<li>You can query in the following formats
+    		<ol>
+    			<li>Verify that these formats are supported: 
+    			<table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
+                	<tr><th concordion:set="#mouseLoc">Query</th>
+                		<th cc:assertResultsContain="#symbols">Marker Symbol</th></tr>
+                    <tr><td>Chr2:155000000</td><td>a</td></tr>
+                    <tr><td>Chr2:154791402-155051012</td><td>a</td></tr>
+                    <tr><td>2:154791402..155051012</td><td>a</td></tr>
+                    <tr><td>2:155051012</td><td>a</td></tr>
+                    <tr><td>chr2:155051011</td><td>a</td></tr>
+                    <tr><td>x:164139332-164188420</td><td>Ace2</td></tr>
+                    <tr><td>X:164139332..164188420</td><td>Ace2</td></tr>
+                </table>
+    			</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

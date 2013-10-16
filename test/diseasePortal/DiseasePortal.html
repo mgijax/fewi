@@ -1,0 +1,187 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<title>Disease Portal Project Work</title>
+<style>
+h5 {font-size:1em; font-variant:small-caps;}
+th {background-color:#D0E0F0;}
+</style>
+<!-- <link href="/FeWi/test/concordion.css" rel="stylesheet" type="text/css"/> -->
+
+
+</head>
+<body>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+    <h1>Disease Portal Tests</h1>
+
+	<div>
+	<h2>Functional Description</h2>
+	<ul>
+		<li>This project will implement Stage 1 of a new Genomic Medicine Portal providing improved access to and usefulness of MGI's mouse genetics and genomics data for clinical researchers in translational medicine.</li>
+	</ul>
+	
+	</div>
+
+	<div>
+	<h2>Test Suites</h2>
+	<p>Some test suites have indicators for Build Sprint regression testing in the Notes column.  A test may be marked <span class="regressHi">High</span> priority when 2 conditions are true: (1) There is a likelihood that the code could break or some error could occur.  (2) It would be very important to fix if it did.  If only one of those conditions is true, the test is marked <span class="regressLo">Low</span> priority. Otherwise, no priority is indicated.</p>
+
+		<table>
+			<tr class="blue">
+				<th>Description</th>
+				<th>Release</th>
+				<th>User story IDs</th>
+				<th>Contains Manual Tests?</th>
+				<th>Notes</th>
+			</tr>
+			<tr class="gray">
+				<td colspan="5"><h5>Query Form</h5></td>
+			</tr>
+			<tr>
+				<td colspan="5">
+				link to <a href="http://cardolan.informatics.jax.org/diseasePortal#hdp=phenotypes%3D%26results%3D100%26startIndex%3D0%26sort%3D%26dir%3Dasc%26tab%3Dundefined">disease portal query form</a>
+				</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPQuerybyDiseaseGene.html">Disease Query, Return Genes via Annotations</a></td>
+				<td>MGI 5.16</td>		
+				<td>13, 52, 135</td>
+				<td></td>
+				<td>Tests are for content only. <br/>
+					sto52 Add gene-disease associations <br/>
+					sto135 Grid: switch from OMGs to simples</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPQuerybyDiseaseDisease.html">Disease Query, Return Disease Terms</a></td>
+				<td>MGI 5.16</td>		
+				<td>17</td>
+				<td></td>
+				<td>Tests are for content only.  </td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPQuerybyPhenotypeGene.html">Phenotype Query, Return Genes via Annotations</a></td>
+				<td>MGI 5.16</td>		
+				<td>14, 135</td>
+				<td></td>
+				<td>Tests are for content only.   <br/>
+					sto135 Grid: switch from OMGs to simples</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPQuerybyPhenotypeDisease.html">Phenotype Query, Return Disease Terms via Annotations</a></td>
+				<td>MGI 5.16</td>		
+				<td>47</td>
+				<td></td>
+				<td>Tests are for content only.  </td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPQuerybyGene.html">Genes Query, Return Genes and Diseases</a></td>
+				<td>MGI 5.16</td>
+				<td>21</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPQuerybyLocation.html">Location (coordinates) Query</a></td>
+				<td>MGI 5.16</td>		
+				<td>22</td>
+				<td></td>
+				<td>Checks that correct genes are returned</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPPhenotypeAutocomplete.html">Phenotype/Disease Autocomplete</a></td>
+				<td>MGI 5.16</td>		
+				<td>19</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr class="gray">
+				<td colspan="5"><h5>Summaries</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPGeneSummaryTab.html">Genes Summary Tab</a></td>
+				<td>MGI 5.16</td>		
+				<td>15, 50, 65,  74, 86, 105, 137, 154</td>
+				<td></td>
+				<td>Includes: Part 1  (basic data), Part 2 (sorting), reference links.</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPDiseaseSummaryTab.html">Diseases Summary Tab</a></td>
+				<td>MGI 5.16</td>		
+				<td>18, 51, 75, 137, 155</td>
+				<td></td>
+				<td>Includes: Part 1  (basic data), Part 2 (sorting), reference links.</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPGridSummaryTab.html">Grid Summary Tab</a></td>
+				<td>MGI 5.16</td>		
+				<td>137</td>
+				<td></td>
+				<td></td>
+			</tr>			
+			<tr>
+				<td><a concordion:run="concordion" href="HDPTabsHelperText.html">Tabs Helper Text</a></td>
+				<td>MGI 5.16</td>		
+				<td>92</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr class="gray">
+				<td colspan="5"><h5>Grid</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPGridGene.html">Genes Display on Grid</a></td>
+				<td>MGI 5.16</td>		
+				<td>30, 135</td>
+				<td>All manual</td><td>sto135 Grid: switch from OMGs to simples</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="HDPGridDisease.html">Diseases Display on Grid</a></td>
+				<td>MGI 5.16</td>		
+				<td>32,  88, 107, 136</td>
+				<td>Lots manual</td>
+				<td>sto88: Adding "phenotypic marker"-to-OMIM annotations.<br/>
+					sto107: Adding restriction to only the genotypes with data matching the queried term.</td>
+			</tr>			
+			<tr>
+				<td><a concordion:run="concordion" href="HDPGridPhenotype.html">Phenotype Headers Display on Grid</a></td>
+				<td>MGI 5.16</td>		
+				<td>31, 105, 107</td>
+				<td></td>
+				<td>sto105: Adding display of &quot;norm&quot; annotations<br/>
+					sto107: Adding restriction to only the genotypes with data matching the queried term.</td>
+			</tr>			
+			<tr>
+				<td><a concordion:run="concordion" href="HDPGridPopupsDisease.html">Grid Popups for Gene X Disease</a></td>
+				<td>MGI 5.16</td>		
+				<td>34</td>
+				<td>3 of 5 are manual</td>
+				<td></td>
+			</tr>			
+			<tr>
+				<td><a concordion:run="concordion" href="HDPGridPopupsPhenotype.html">Grid Popups for Gene X Phenotype</a></td>
+				<td>MGI 5.16</td>		
+				<td>33, 124, 95, 178</td>
+				<td>1 must be manual, new 1 could be automated</td>
+				<td>sto95: adding LAF formatting to MP popup<br/>
+					sto178: adding background sensitivity note</td>
+			</tr>	
+				<tr>
+				<td><a concordion:run="concordion" href="HDPConcatenatedGenoCluster.html">Concatenated Genotype Cluster page</a></td>
+				<td>MGI 5.16</td>		
+				<td>145</td>
+				<td></td>
+				<td></td>
+			</tr>			
+		</table>
+	</div>
+<!-- <p>* means tests must be  updated for all newly added functionality</p>
+<p>Dynamic Data spreadsheet used for some automated tests is located at <a target="_blank" href="https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0">https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0</a>.</p> -->
+<p>Product Backlog: <a target="_blank" href="http://cardolan.informatics.jax.org:9180/kunagi/#project=d616dbe8-2312-4b4c-9049-14bb3174e7eb-1%7Cpage=ProductBacklog%7Centity=cc7c10a4-3ac0-400f-828b-43d088789980-1">kunagi</a>.</p>
+<p>Human Disease Portal Project <a target="_blank" href="http://prodwww.informatics.jax.org/wiki/index.php/sw:Scrum:_HDP1">wiki page</a></p>
+<p>Cardolan's Postgres database (Pub - MGD schema): <a target="_blank" href="http://rohan.informatics.jax.org/phpPgAdmin/">PhP Admin Page</a></p>
+</body>
+</html>

@@ -17,6 +17,7 @@ public class SolrJoinMapper {
     private String toKey="";
     private String fromIndex="";
     private String fromKey="";
+    private String toFilter ="";
    
     /**
      * Define the join mapping
@@ -37,6 +38,15 @@ public class SolrJoinMapper {
         this.fromKey = fromKey;
     }
     
+    // Include Optional filter string for the joinTo index
+    public SolrJoinMapper(String toIndexUrl,String toKey,String fromIndex,String fromKey,String childFilter) {
+        this.toIndexUrl = toIndexUrl;
+        this.toKey = toKey;
+        this.fromIndex = fromIndex;
+        this.fromKey = fromKey;
+        this.toFilter = childFilter;
+    }
+    
     public String getToIndexUrl()
     {
     	return this.toIndexUrl;
@@ -46,10 +56,18 @@ public class SolrJoinMapper {
      * Get the join clause to append to the solr query
      */
 
-    public String getJoinClause() 
+    public String getJoinClause(String queryString) 
     {
-    	return "{!join fromIndex="+fromIndex+
+    	if(this.toFilter==null || this.toFilter.trim().equals(""))
+    	{
+    		return "{!join fromIndex="+fromIndex+
     			" from="+fromKey+
-    			" to="+toKey+"} ";
+    			" to="+toKey+"} "+queryString;
+    	}
+    	// else do the nested query format to include a filter on the toIndex
+    	return "_query_:\"{!join fromIndex="+fromIndex+
+    			" from="+fromKey+
+    			" to="+toKey+
+    			" v='"+queryString.replace("\"","\\\"")+"'}\" AND "+this.toFilter;
     }
 }

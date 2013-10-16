@@ -31,7 +31,7 @@ ${templateBean.templateBodyStartHtml}
 <!-- end header bar -->
 
 <%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
-
+<c:if test="${isDiseaseRelevantSummary}"><span style="font-weight:bold;">Displaying only references relevant to disease models.</span></c:if>
 <div id="summary">
 
 	<div id="breadbox">

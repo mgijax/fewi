@@ -11,11 +11,13 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Disease;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 
 import org.jax.mgi.fewi.finder.AlleleFinder;
+import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.SequenceFinder;
@@ -32,6 +34,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.ReferenceSummary;
 import org.jax.mgi.fewi.util.Highlighter;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +72,9 @@ public class ReferenceController {
 	
 	@Autowired
 	private MarkerFinder markerFinder;
+	
+	@Autowired
+	private DiseaseFinder diseaseFinder;
 	
 	@Autowired
 	private AlleleFinder alleleFinder;
@@ -442,6 +448,68 @@ public class ReferenceController {
     	
     	return mav;   	
     }
+    
+    @RequestMapping("/diseaseRelevantMarker/{markerID}")
+	public ModelAndView referenceSummaryByMarkerIdDiseaseRelevant(
+			@PathVariable("markerID") String markerID,
+			HttpServletRequest request, Model model) {		
+		logger.debug("->referenceSummaryByMarkerIdDiseaseRelevant started: " + markerID);
+		
+        // find the requested marker
+        List<Marker> markerList = markerFinder.getMarkerByPrimaryId(markerID);
+
+        ModelAndView mav = new ModelAndView("reference_summary_marker");
+        
+        if (markerList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Marker Found");
+            return mav;
+        } else if (markerList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Duplicate ID");
+            return mav;
+        }
+        
+        mav.addObject("marker", markerList.get(0));
+                
+        // pre-generate query string
+        mav.addObject("queryString", "diseaseRelevantMarkerId=" + markerID);
+        mav.addObject("isDiseaseRelevantSummary", true);
+    	
+    	return mav;   	
+	}
+    
+    @RequestMapping("/disease/{diseaseID}")
+   	public ModelAndView referenceSummaryByDiseaseID(
+   			@PathVariable("diseaseID") String diseaseID,
+   			HttpServletRequest request, Model model) {		
+   		logger.debug("->referenceSummaryByDiseaseID started: " + diseaseID);
+   		
+   		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+
+           ModelAndView mav = new ModelAndView("reference_summary_disease");
+           
+           if (diseaseList.size() < 1) {
+               // forward to error page
+               mav = new ModelAndView("error");
+               mav.addObject("errorMsg", "No Disease Found");
+               return mav;
+           } else if (diseaseList.size() > 1) {
+               // forward to error page
+               mav = new ModelAndView("error");
+               mav.addObject("errorMsg", "Duplicate ID");
+               return mav;
+           }
+           
+           mav.addObject("disease", diseaseList.get(0));
+                   
+           // pre-generate query string
+           mav.addObject("queryString", "diseaseId=" + diseaseID);
+       	
+       	return mav;   	
+   	}
 	
 	/*
 	 * This method parses the ReferenceQueryForm bean and constructs a Filter 
@@ -457,6 +525,20 @@ public class ReferenceController {
 		
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.  
+		
+		// build diseaseRelevantMarkerId query
+		String diseaseRelevantMarkerId = query.getDiseaseRelevantMarkerId();
+		if(diseaseRelevantMarkerId != null && !diseaseRelevantMarkerId.equals(""))
+		{
+			queryList.add(new Filter(IndexConstants.REF_DISEASE_RELEVANT_MARKER_ID,
+					diseaseRelevantMarkerId,Filter.OP_EQUAL));
+		}
+		
+		String diseaseId = query.getDiseaseId();
+		if(diseaseId != null && !diseaseId.equals(""))
+		{
+			queryList.add(new Filter(IndexConstants.REF_DISEASE_ID,diseaseId,Filter.OP_EQUAL));
+		}
 		
 		//build author query filter
 		String authorText = query.getAuthor().trim();

@@ -31,9 +31,6 @@ import org.apache.solr.common.params.GroupParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.terracotta.ehcachedx.org.mortbay.log.Log;
-
-import com.google.gdata.util.common.base.StringUtil;
 
 /**
  * This is the Solr specific hunter.  It is responsible for translating
@@ -58,7 +55,7 @@ public class SolrHunter implements Hunter {
     // Which other field do we want to use as a key? (This could be collapsed)
     protected String otherString;
     // What is the name of the facet that we want to pull out
-    protected String facetString;
+    protected String facetString = null;
 
     /**
      * solr server settings from configuration
@@ -85,20 +82,24 @@ public class SolrHunter implements Hunter {
      */
 
     // Front end fields -> PropertyMappers
-    protected HashMap <String, SolrPropertyMapper> propertyMap =
-        new HashMap<String, SolrPropertyMapper>();
+    protected HashMap <String, SolrPropertyMapper> propertyMap = new HashMap<String, SolrPropertyMapper>();
 
     // Solr Fields -> Front end field mappings
-    protected HashMap <String, String> fieldToParamMap =
-        new HashMap<String, String>();
+    protected HashMap <String, String> fieldToParamMap = new HashMap<String, String>();
 
     // Front end sorts -> backend fields
-    protected HashMap <String, SolrSortMapper> sortMap =
-        new HashMap<String, SolrSortMapper>();
+    protected HashMap <String, SolrSortMapper> sortMap = new HashMap<String, SolrSortMapper>();
 
     // FEWI's filter comparison -> Solr's comparison operator
-    protected HashMap<Integer, String> filterClauseMap =
-        new HashMap<Integer, String>();
+    protected HashMap<Integer, String> filterClauseMap = new HashMap<Integer, String>();
+
+    /*
+     *  Fields to be returned in documents.
+     *  	'score' is always returned, regardless
+     *  	All fields are returned by default
+     */
+    protected List<String> returnedFields = new ArrayList<String>();
+    protected Map<String,List<String>> groupReturnedFields = new HashMap<String,List<String>>();
 
 
     /**
@@ -110,19 +111,28 @@ public class SolrHunter implements Hunter {
 
     // unique token used for highlighting
     protected final String highlightToken = "!FRAG!";
-    
+    // OR set pre/post tokens (not to be used with highlightToken)
+    // 	Setting these makes the hunter ignore the highlightToken above
+    protected String highlightPre = null;
+    protected String highlightPost = null;
+
+
+    protected boolean highlightRequireFieldMatch = true;
+    protected int highlightFragmentSize = 30000;
+    protected int highlightSnippets = 100;
+
     /**
      * Field Grouping
      */
     // Fields that can be grouped on
     protected Map<String,String> groupFields = new HashMap<String,String>();
-    
+
     /**
      * Index joining
      */
     // Indexes that can be joined on
     protected Map<String,SolrJoinMapper> joinIndices = new HashMap<String,SolrJoinMapper>();
-    
+
 
     /*----- CONSTRUCTOR -----*/
 
@@ -159,11 +169,11 @@ public class SolrHunter implements Hunter {
     public void hunt(SearchParams searchParams, SearchResults searchResults) {
     	hunt(searchParams,searchResults, null, null);
     }
-    
+
     public void hunt(SearchParams searchParams,SearchResults searchResults,String groupField) {
     	hunt(searchParams,searchResults, groupField, null);
     }
-    
+
     public void joinHunt(SearchParams searchParams,SearchResults searchResults,String joinField){
     	hunt(searchParams,searchResults, null, joinField);
     }
@@ -172,10 +182,10 @@ public class SolrHunter implements Hunter {
      * hunt
      * @param SearchParams, SearchResults, groupField
      * @return none
-     * 
+     *
      * An alternative implementation of the hunt() method.
      * Allows specification of a "group by" field.
-     * 
+     *
      */
 
     public void hunt(SearchParams searchParams, SearchResults searchResults, String groupField,String joinField) {
@@ -197,20 +207,47 @@ public class SolrHunter implements Hunter {
         }
         // Create the query string by invoking the translate filter method.
         SolrQuery query = new SolrQuery();
-        query.setHighlightRequireFieldMatch(true);
+        query.setHighlightRequireFieldMatch(this.highlightRequireFieldMatch);
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
         logger.debug("TranslatedFilters: " + queryString);
-        
+
         // If a join field is specified add the join clause to the beginning of the query string
         if(doJoin)
         {
-        	queryString = this.joinIndices.get(joinField).getJoinClause()+" "+queryString;
+        	queryString = this.joinIndices.get(joinField).getJoinClause(queryString);
         }
         query.setQuery(queryString);
+        
+        // Add group field, if passed in.
+        boolean doGrouping = false;
+        if(groupField!=null && this.groupFields.containsKey(groupField))
+        {
+        	query.set(GroupParams.GROUP, true);
+        	// ensure that the count of groups is included.
+        	query.set(GroupParams.GROUP_TOTAL_COUNT, true);
+        	query.set(GroupParams.GROUP_FIELD, groupFields.get(groupField));
+        	doGrouping = true;
+        }
 
-        // pack the score
-        query.setFields("*","score");
+        // configure which document fields to return
+        // also make sure the score comes back
+        if(!doJoin && doGrouping && this.groupReturnedFields.containsKey(groupField))
+        {
+        	List<String> docFields = new ArrayList<String>(this.groupReturnedFields.get(groupField));
+	    	docFields.add("score");
+	    	// I know the typecasting looks kludgy, but it's simpler than declaring array sizes and looping.
+	    	query.setFields((String[]) docFields.toArray(new String[0]));
+        }
+        else if(!doJoin && this.returnedFields.size()>0)
+        {
+        	List<String> docFields = new ArrayList<String>(returnedFields);
+        	docFields.add("score");
+        	// I know the typecasting looks kludgy, but it's simpler than declaring array sizes and looping.
+        	query.setFields((String[]) docFields.toArray(new String[0]));
+        }
+        else  query.setFields("*","score"); // if none specified do *
+
 
         // Add in the Sorts from the search parameters.
         addSorts(searchParams, query);
@@ -230,17 +267,8 @@ public class SolrHunter implements Hunter {
         // Add the facets, can be overwritten.
         addFacets(query);
         logger.debug("SolrQuery:" + query);
+
         
-        // Add group field, if passed in.
-        boolean doGrouping = false;
-        if(groupField!=null && this.groupFields.containsKey(groupField))
-        {
-        	query.set(GroupParams.GROUP, true); 
-        	// ensure that the count of groups is included.
-        	query.set(GroupParams.GROUP_TOTAL_COUNT, true);
-        	query.set(GroupParams.GROUP_FIELD, groupFields.get(groupField));
-        	doGrouping = true;
-        }
 
         /**
          * Run the query & package results & result count
@@ -281,8 +309,8 @@ public class SolrHunter implements Hunter {
         return ;
 
     }
-    
-    
+
+
 
     /*----- PROTECTED METHODS -----*/
 
@@ -328,7 +356,7 @@ public class SolrHunter implements Hunter {
          * allows us to handle any special cases for properties using a single
          * interface.
          */
-    	
+
         if (filter.isBasicFilter()) {
             // Check to see if the property is null or an empty string,
             // if it is, return an empty string
@@ -345,7 +373,7 @@ public class SolrHunter implements Hunter {
                 return propertyMap.get(filter.getProperty())
                     .getClause(filter);
             }
-            
+
             /** If its an IN or NOT IN, break the query down further, joining
              * thesubclauses by OR or AND as appropriate
              */
@@ -353,9 +381,9 @@ public class SolrHunter implements Hunter {
        /*
         * I am leaving the following commented out code below as a "Wall of Shame"
         * You can see the equivalent "normal" code just below it.
-        * 
+        *
         * ... As a bonus this special code actually performs roughly 300 times slower than the refactored version.
-        * I'm serious. processing 1000 values took over a second throught this code, 
+        * I'm serious. processing 1000 values took over a second throught this code,
         * 	compared to only 2 or 3 milliseconds in the normal version.
         * Ponder that for a moment...
         */
@@ -407,7 +435,7 @@ public class SolrHunter implements Hunter {
                 {
                 	// have to support the lazy programmer who feels the need to put multiple solr fields into one property
                 	String fieldJoinClause = " "+pm.getJoinClause()+" ";
-                	
+
                 	// build the multiple field list
                 	List<String> queryClauses = new ArrayList<String>();
                 	for(String listField : pm.getFieldList())
@@ -506,11 +534,18 @@ public class SolrHunter implements Hunter {
                 query.addHighlightField(field);
             }
             query.setHighlight(Boolean.TRUE);
-            query.setHighlightFragsize(30000);
-            query.setHighlightSnippets(100);
-            query.setParam("hl.simple.pre", highlightToken);
-            query.setParam("hl.simple.post", highlightToken);
-
+            query.setHighlightFragsize(this.highlightFragmentSize);
+            query.setHighlightSnippets(this.highlightSnippets);
+            if(this.highlightPre!=null)
+            {
+	            query.setParam("hl.simple.pre", this.highlightPre);
+	            query.setParam("hl.simple.post", this.highlightPost);
+            }
+            else
+            {
+            	query.setParam("hl.simple.pre", highlightToken);
+	            query.setParam("hl.simple.post", highlightToken);
+            }
         }
     }
 
@@ -607,13 +642,11 @@ public class SolrHunter implements Hunter {
 
         // A mapping of field -> set of highlighted words
         // for the result set.
-        Map<String, Set<String>> setHighlights =
-            new HashMap<String, Set<String>> ();
+        Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>> ();
 
         // A mapping of documentKey -> Mapping of FieldName
         // -> list of highlighted words.
-        Map<String, Map<String, List<String>>> highlights =
-            rsp.getHighlighting();
+        Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
 
         // A mapping of documentKey -> Row level Metadata objects.
         Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
@@ -703,21 +736,20 @@ public class SolrHunter implements Hunter {
             if (!this.highlightFields.isEmpty() && sp.includeMetaHighlight()
                     && sp.includeSetMeta()) {
 
-                Set<String> highlightKeys =
-                    highlights.get(doc.getFieldValue(keyString)).keySet();
-                Map<String, List<String>> highlightsMap =
-                    highlights.get(doc.getFieldValue(keyString));
+                Set<String> highlightKeys = highlights.get(doc.getFieldValue(keyString)).keySet();
+                Map<String, List<String>> highlightsMap = highlights.get(doc.getFieldValue(keyString));
 
-                for (String key: highlightKeys) {
+                for (String key: highlightKeys)
+                {
                     List <String> solrHighlights = highlightsMap.get(key);
-                    for (String highlightWord: solrHighlights) {
+                    for (String highlightWord: solrHighlights)
+                    {
                         Boolean inAHL = Boolean.FALSE;
                         /**
                          * Our solr highlights are surrounded by an
                          * impossible token, so split based on that.
                          */
-                        String [] fragments =
-                            highlightWord.split(highlightToken);
+                        String [] fragments = highlightWord.split(highlightToken);
 
                         /**
                          * Every other fragment will be a highlighted word
@@ -794,7 +826,7 @@ public class SolrHunter implements Hunter {
     /**
      * Version of the above method that is only called for join queries.
      * This provides a way to separate custom implementations for packaging join query results
-     * 
+     *
      * @param rsp
      * @param sr
      * @param sp
@@ -803,7 +835,7 @@ public class SolrHunter implements Hunter {
     {
     	packInformation(rsp,sr,sp);
     }
-    
+
     /**
      * packInformation
      * @param sdl
@@ -815,21 +847,21 @@ public class SolrHunter implements Hunter {
      *
      * If something more complex is required, the implementer is expected
      * to override this method with their own version.
-     * 
+     *
      * This method traverses the GroupResponse object, assuming that a group query was done.
      */
 
     protected void packInformationByGroup(QueryResponse rsp, SearchResults sr,
             SearchParams sp) {
-    	
+
     	GroupResponse gr = rsp.getGroupResponse();
     	// get the group command. In our case, there should only be one.
     	GroupCommand gc = gr.getValues().get(0);
-    	
+
     	// total count of groups
     	int groupCount = gc.getNGroups();
     	sr.setTotalCount(groupCount);
-    	
+
         // A list of all the primary keys in the document
         List<String> keys = new ArrayList<String>();
 

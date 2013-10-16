@@ -57,7 +57,12 @@ public class SolrVocabACHunter extends SolrHunter
           * */  
          propertyMap.put(SearchConstants.VOC_TERM, 
          		new SolrPropertyMapper(IndexConstants.VOCABAC_TERM));
+         
+         propertyMap.put(SearchConstants.VOC_TERM_ID, 
+          		new SolrPropertyMapper(IndexConstants.VOCABAC_TERM_ID));
    
+         propertyMap.put(SearchConstants.VOC_VOCAB, 
+          		new SolrPropertyMapper(IndexConstants.VOCABAC_VOCAB));
         /*
          * The name of the field we want to iterate through the documents for
          * and place into the output.  In this case we want to actually get a 

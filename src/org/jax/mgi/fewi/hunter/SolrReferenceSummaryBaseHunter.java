@@ -63,9 +63,15 @@ public class SolrReferenceSummaryBaseHunter extends SolrHunter {
          * to multiple fields in the index.
          */
         
+        
         // The 1->N Mapping should be joined with OR's
         propertyMap.put(SearchConstants.REF_ID, 
         		new SolrPropertyMapper(IndexConstants.REF_ID));
+        
+        propertyMap.put(IndexConstants.REF_DISEASE_RELEVANT_MARKER_ID, 
+        		new SolrPropertyMapper(IndexConstants.REF_DISEASE_RELEVANT_MARKER_ID));
+        propertyMap.put(IndexConstants.REF_DISEASE_ID, 
+        		new SolrPropertyMapper(IndexConstants.REF_DISEASE_ID));
         
         propertyMap.put(SearchConstants.REF_AUTHOR_ANY, 
         		new SolrPropertyMapper(

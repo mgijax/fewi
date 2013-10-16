@@ -3,7 +3,8 @@ package gxd;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
+
+import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdQueryParser;
 import org.junit.Test;

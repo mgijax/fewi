@@ -4,18 +4,18 @@ import java.util.*;
 
 /*------------------------------*/
 /* to change in each controller */
-/*------------------------------*/
-
-// fewi
 import org.jax.mgi.fewi.finder.FooFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.finder.SnpFinder;
+import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.FooQueryForm;
-import org.jax.mgi.fewi.forms.ReferenceQueryForm;
 import org.jax.mgi.fewi.summary.FooSummaryRow;
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.snp.SnpStrain;
 
 
 /*--------------------------------------*/
@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -75,6 +76,12 @@ public class FooController {
 
     @Autowired
     private ReferenceFinder referenceFinder;
+    
+    @Autowired
+	private SnpFinder snpFinder;
+    
+    @Autowired
+    private VocabularyFinder vocabFinder;
     
     @Value("${solr.factetNumberDefault}")
     private Integer facetLimit; 
@@ -114,6 +121,38 @@ public class FooController {
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
 
+        return mav;
+    }
+    
+    @RequestMapping("/snp")
+    public ModelAndView snpSummary(HttpServletRequest request)
+    {
+        logger.debug("->snpSummary started");
+        
+    	List<SnpStrain> strains = snpFinder.getSnpStrains();
+    	for(SnpStrain snpStrain : strains)
+    	{
+    		logger.debug("found strain "+snpStrain);
+    	}
+        ModelAndView mav = new ModelAndView("foo_query");
+        mav.addObject("sort", new Paginator());
+        mav.addObject(new FooQueryForm());
+        return mav;
+    }
+    
+    @RequestMapping("/vocab")
+    public ModelAndView vocSummary(HttpServletRequest request)
+    {
+        logger.debug("->vocSummary started");
+        
+    	List<VocabTerm> terms = vocabFinder.getVocabSubset("OMIM","Z");
+    	for(VocabTerm term : terms)
+    	{
+    		logger.debug("found term "+term.getTerm());
+    	}
+        ModelAndView mav = new ModelAndView("foo_query");
+        mav.addObject("sort", new Paginator());
+        mav.addObject(new FooQueryForm());
         return mav;
     }
 

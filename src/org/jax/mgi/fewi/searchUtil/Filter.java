@@ -329,6 +329,26 @@ public class Filter {
 	}
 
 
+	/*
+	 * A function for recursively replacing every property in a fiter with a different one.
+	 *  searches all nested filters
+	 */
+	public void replaceProperty(String propertyToReplace, String replacement)
+	{
+		replaceProperty(this,propertyToReplace,replacement);
+	}
+	// the necessary recursive function
+	private void replaceProperty(Filter f,String propertyToReplace,String replacement)
+	{
+		if(f.property != null && f.property.equals(propertyToReplace)) f.setProperty(replacement);
+		if(f.getNestedFilters()!=null)
+		{
+			for(Filter nestedF : f.getNestedFilters())
+			{
+				replaceProperty(nestedF,propertyToReplace,replacement);
+			}
+		}
+	}
 
 
 }

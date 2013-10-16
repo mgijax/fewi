@@ -30,7 +30,6 @@ public class SearchConstants {
 
     // marker constants
     public static final String MRK_KEY              = "marker_key";
-    public static final String MARKER_KEY           = "markerKey";
     public static final String MRK_ID               = "marker_id";
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_NOMENCLATURE			= "nomenclature";
@@ -87,6 +86,8 @@ public class SearchConstants {
 
     public static final String VOC_VOCAB            = "vocab";
     public static final String VOC_TERM		    = "term";
+    public static final String VOC_TERM_ID			= "termId";
+    public static final String VOC_TERM_TYPE		= "termType";
     public static final String VOC_RESTRICTION      = "qualifier";
     public static final String TERM_ID		    = "termID";
     public static final String ANNOTATION_KEY	    = "annotationKey";
@@ -100,7 +101,11 @@ public class SearchConstants {
 
     // disease constants
     public static final String DISEASE_ID            = "disease_id";
-    
+
+    // mp constants
+    public static final String MP_ID            = "mp_id";
+    public static final String MP_HEADER        = "mp_header";
+
     // query form options' constants
     public static final String FORM_NAME	= "form_name";
     public static final String FIELD_NAME	= "field_name";
@@ -127,7 +132,17 @@ public class SearchConstants {
 	public static final String POS_STRUCTURE = "posStructure";
 
 	public static final String PRIMARY_KEY = "pKey";
-	
+
 	// Homology constants
 	public static final String HOMOLOGY_ID            = "homologyID";
+	public static final String DP_GRID_CLUSTER_KEY = "gridClusterKey";
+	public static final String DP_GENO_CLUSTER_KEY = "genoClusterKey";
+
+
+	// location constants
+	public static final String MOUSE_COORDINATE = "mouseCoordinate";
+	public static final String HUMAN_COORDINATE = "humanCoordinate";
+
+	// genotype constants
+	public static final String GENOTYPE_TYPE = "genotypeType";
 }

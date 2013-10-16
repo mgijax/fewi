@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
+import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdControllerQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdQueryParser;

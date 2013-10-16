@@ -361,7 +361,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 				newList = new ArrayList<String>();
 				newList.addAll(a);
 				for (String s: list) {
-					logger.debug(s);
+					//logger.debug(s);
 					newList.add(s);
 				}
 				newResults.add(newList);

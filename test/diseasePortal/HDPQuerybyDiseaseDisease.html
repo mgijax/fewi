@@ -1,0 +1,318 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+dt {font-weight:bold;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>HDP: Querying by Disease, Disease output</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>HDP: Querying by Disease, Disease output</h1>
+    <ul>
+        <li>User story 17, E2: Query by disease, debugging display of diseases</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>user can enter OMIM ids, terms, synonyms</li>
+		<li>diseases tab shows matching diseases (debugging output)</li>
+		<li>genes displayed on gene summary tab</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual and Automated tests</h3>
+		<ol>
+    		<li>Querying with the full name of a disease returns an exact match for the disease.
+			<ol>
+    		    <li>Query for &quot;Netherton Syndrome; NETH&quot; <b concordion:set="#disease">Netherton Syndrome; NETH</b></li>
+                <li>Verify that <b cc:assertResultsContain="getTermsByDisease(#disease)">Netherton Syndrome; NETH</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Querying with one word returns all diseases containing that word in a name or synonym, <span class="hilite">and all associated markers</span>.
+    		<ol>
+                <li>Query for <b concordion:set="#disease">abdominal</b>.</li>
+                <li>At least the following diseases should appear in the result set (and many others due to matches on MP terms that return additional diseases).
+                	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
+                	<tr><td>605552</td><td>Abdominal Obesity-Metabolic Syndrome</td><td>contained in name</td></tr>
+                	<tr><td>265050</td><td>3mc Syndrome 2; 3MC2</td><td>synonym:  Oculo-Skeletal-Abdominal Syndrome</td></tr>
+                	<tr><td>100070</td><td>Aortic Aneurysm, Familial Abdominal, 1; AAA1</td><td>contained in name</td></tr>
+                	<tr><td>609782</td><td>Aortic Aneurysm, Familial Abdominal, 2; AAA2</td><td>contained in name</td></tr>
+                	<tr><td>611891</td><td>Aortic Aneurysm, Familial Abdominal, 3; AAA3</td><td>contained in name</td></tr>
+                	<tr><td>614375</td><td>Aortic Aneurysm, Familial Abdominal, 4; AAA4</td><td>contained in name</td></tr>
+                	<tr><td>226100</td><td>Endocardial Fibroelastosis and Coarctation of Abdominal Aorta</td><td>contained in name</td></tr>
+                	<tr><td>182212</td><td>Shprintzen-Goldberg Craniosynostosis Syndrome; SGS</td><td>synonym: Craniosynostosis with Arachnodactyly and Abdominal Hernias</td></tr>
+                	<tr><td>100100</td><td>Abdominal Muscles, Absence of, with Urinary Tract Abnormality and Cryptorchidism</td><td>contained in name</td></tr>
+                	<tr><td>260570</td><td>Pelger-Huet-Like Anomaly and Episodic Fever with Abdominal Pain</td><td>contained in name</td></tr>
+                	</table>
+                </li>
+                <li>Query for <b concordion:set="#disease">syndrome</b>.</li>
+                <li>At least the following diseases should appear in the result set (along with many others):
+                	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
+                	<tr><td>105650</td><td>Diamond-Blackfan Anemia; DBA</td><td>has synonym "Aase-Smith Syndrome II"</td></tr>
+                	<tr><td>270200</td><td>Sjogren-Larsson Syndrome; SLS</td><td>contained in name</td></tr>
+                	<tr><td>276600</td><td>Tyrosinemia, Type II</td><td>has synonym "Richner-Hanhart Syndrome"</td></tr>
+                	<tr><td>193520</td><td>Watson Syndrome</td><td>contained in name</td></tr>
+                	</table>
+                </li>
+                 <li>Query for <b concordion:set="#disease">parkinson</b>.</li>
+                <li>At least the following diseases should appear in the result set (along with many others):
+                	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
+                	<tr><td>556500</td><td>Parkinson Disease, Mitochondrial</td><td>contained in name</td></tr>
+                	<tr><td>614203</td><td>Parkinson Disease 17; PARK17</td><td>contained in name</td></tr>
+                	<tr><td>194200</td><td>Wolff-Parkinson-White Syndrome</td><td>contained in name</td></tr>
+                	<tr><td>606693</td><td>Kufor-Rakeb Syndrome; KRS</td><td>has synonym "Parkinson Disease 9, Autosomal Recessive; PARK9"</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Querying with a partial word <b>followed by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym.
+    		<ol>
+                <li>Query by <b concordion:set="#disease">Achroma*</b></li>
+                <li>Query should ONLY return the following diseases: 
+                	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td></tr>
+                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td></tr>
+                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td></tr>
+                	</table></li>
+    		</ol>
+    		</li>
+
+    		<li>Querying with a partial word <b>preceded by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym.
+    		<ol>
+                <li>Query by <b concordion:set="#disease">*chromatopsia</b></li>
+                <li>Query should ONLY return the following diseases: 
+                	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td></tr>
+                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td></tr>
+                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td></tr>
+                	</table></li>
+    		</ol>
+    		</li>
+
+    		<li>Querying with multiple words returns all diseases matching any of the words in the input string.
+    		<ol>
+                <li>Query by <b concordion:set="#disease">Acrocephalopolydactylous SLE</b>, should OR the two tokens and match any disease that has one of the tokens.</li>
+                <li>Query should return at least the following diseases  (and one other due to matches on an MP term that returns additional diseases): 
+                	<table cc:verifySupersetOf="#termId : getTermIdsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><td>200995</td><td>Acrocephalopolydactylous Dysplasia</td></tr>
+                	<tr><td>152700</td><td>Systemic Lupus Erythematosus; SLE</td></tr>
+                	</table></li>
+    		</ol>
+    		</li>
+
+    		<li>Querying with an ID returns all diseases matching the ID. <span class="hilite">Note: are we supporting a wildcard (partial matching) on IDs??</span>
+    		<ol>
+                <li>Query by OMIM ID <b concordion:set="#disease">114480</b></li>
+                <li>Should return ONLY one disease:
+                <table cc:verifyRowsUnordered="#termId : getTermsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">Disease Name</th></tr>
+                	<tr><td>Breast Cancer</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Querying with quotation marks returns all diseases exactly matching the string enclosed in the quotation marks.
+    		<ol>
+                <li>Query by <b concordion:set="#disease">"Parkinson Disease 11, Autosomal Dominant; PARK11"</b> in double quotes.</li>
+                <li>Should return ONLY one disease:
+                <table cc:verifyRowsUnordered="#termId : getTermsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">Disease Name</th></tr>
+                	<tr><td>Parkinson Disease 11, Autosomal Dominant; PARK11</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+    		
+    		<li>Querying for a disease with no models still brings back the disease.
+    		<ol>
+                <li>Query by Acne, Adult<b concordion:set="#disease">604324</b></li>
+                <li>Should return ONLY one disease:
+                <table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><td>604324</td><td>Acne, Adult</td></tr>
+                	</table>
+                </li>
+                <li>Count of genes returned should be <b concordion:assertEquals="getGeneCountByDisease(#disease)">0</b></li>
+    		</ol>
+    		</li>
+
+    		<li>Querying with some words in quotation marks and other words not in quotation marks returns all diseases with a term or synonym containing any of the words not enclosed by quotation marks and/or the exact phrase enclosed by the quotation marks. [We AND the enclosed string, then OR it with the rest of the string.]
+    		<ol>
+                <li>Query for <b concordion:set="#disease">"Marshall Syndrome" Smith</b>.</li>
+                <li>Should return several diseases including:
+                <table cc:verifySupersetOf="#termId : getTermsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#termId">Disease Name</th><th>Why it should have matched</th></tr>
+                	<tr><td>Marshall-Smith Syndrome; MRSHSS</td><td>Contains all of quoted text plus unquoted text</td></tr>
+                	<tr><td>Marshall Syndrome; MRSHS</td><td>Contains all of quoted text</td></tr>
+                	<tr><td>Smith-Magenis Syndrome; SMS</td><td>Contains the unquoted text</td></tr>
+                	<tr><td>Aase-Smith Syndrome I</td><td>Contains the unquoted text</td></tr>
+                	</table>
+                </li>
+                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">16</b> - the query should NOT be returning every term with "Syndrome" in it.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Querying for diseases in the "Exclude" file returns no results (first several rows of that file are shown below).
+    		<table>
+    			<tr><th>OMIM ID</th> <th>OMIM Term Name</th></tr>
+				<tr><td>306995</td>	<td>Homosexuality; HMS1</td></tr>
+				<tr><td>210750</td>	<td>Blond Hair</td></tr>
+				<tr><td>139450</td>	<td>"Hair, Curly"</td></tr>
+				<tr><td>113750</td>	<td>Hair Color 1; HCL1</td></tr>
+				<tr><td>266300</td>	<td>Hair Color 2; HCL2</td></tr>
+				<tr><td>601800</td>	<td>Hair Color 3; HCL3</td></tr>
+				<tr><td>227240</td>	<td>Eye Color 1; EYCL1</td></tr>
+				<tr><td>227220</td>	<td>Eye Color 3; EYCL3</td></tr>
+				<tr><td>314920</td>	<td>Xp24</td></tr>
+				<tr><td>314940</td>	<td>Xp37</td></tr>
+				<tr><td>314960</td>	<td>Xp40</td></tr>
+				<tr><td>192200</td>	<td>Varicose Veins</td></tr>
+				<tr><td>110300</td>	<td>ABO BLOOD GROUP</td></tr>
+				<tr><td>502000</td>	<td>Aging</td></tr>
+    		</table>
+    		<ol>
+    			<li>Query for  terms listed above: <b concordion:set="#disease">306995, 210750, 139450, 113750, 266300, 601800, 227240, 227220, 314920, 314940, 314960, 192200, 110300, 502000</b>.</li>
+                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">0</b></li>
+    		</ol>
+    		</li>
+    		
+    		<li>Querying for items which are OMIM "gene" records (prefixed with an asterisk at OMIM) returns no results (some examples shown below).
+    		<table>
+	    		<tr><th>OMIM ID</th><th>OMIM term (gene symbol)</th></tr>
+				<tr><td>300131</td><td>PLASTIN 3; PLS3 </td></tr>
+				<tr><td>300170</td><td>OFD1 GENE; OFD1 </td></tr>
+				<tr><td>300193</td><td>HIGH MOBILITY GROUP BOX 3; HMGB3 </td></tr>
+				<tr><td>300177</td><td>MELANOMA ANTIGEN, FAMILY A, 12; MAGEA12 </td></tr>
+				<tr><td>300176</td><td>MELANOMA ANTIGEN, FAMILY A, 6; MAGEA6 </td></tr>
+				<tr><td>300185</td><td>A-KINASE ANCHOR PROTEIN 4; AKAP4 </td></tr>
+				<tr><td>300111</td><td>LIM DOMAIN ONLY 6; LMO6 </td></tr>
+				<tr><td>300138</td><td>CHLORIDE INTRACELLULAR CHANNEL 2; CLIC2 </td></tr>
+				<tr><td>300112</td><td>PROTEOLIPID PROTEIN 2; PLP2 </td></tr>
+				<tr><td>300127</td><td>OLIGOPHRENIN 1; OPHN1 </td></tr>
+				<tr><td>300110</td><td>CALCIUM CHANNEL, VOLTAGE-DEPENDENT, ALPHA-1F SUBUNIT; CACNA1F </td></tr>
+				<tr><td>300118</td><td>RHO GTPase-ACTIVATING PROTEIN 6; ARHGAP6 </td></tr>
+				<tr><td>300192</td><td>SARCOMA, SYNOVIAL, X BREAKPOINT 2; SSX2 </td></tr>
+				<tr><td>300634</td><td>PDZ DOMAIN-CONTAINING 4; PDZD4 </td></tr>
+				<tr><td>300687</td><td>ERCC6-LIKE; ERCC6L </td></tr>
+				<tr><td>300647</td><td>FAMILY WITH SEQUENCE SIMILARITY 123, MEMBER B; FAM123B </td></tr>
+				<tr><td>300631</td><td>TRANSMEMBRANE PROTEIN 27; TMEM27 </td></tr>
+				<tr><td>300658</td><td>NDP GENE; NDP </td></tr>
+				<tr><td>300680</td><td>PREGNANCY-UPREGULATED, NONUBIQUITOUS, CAM KINASE; PNCK </td></tr>
+				<tr><td>303631</td><td>COLLAGEN, TYPE IV, ALPHA-6; COL4A6 </td></tr>
+				<tr><td>303630</td><td>COLLAGEN, TYPE IV, ALPHA-5; COL4A5 </td></tr>
+				<tr><td>300628</td><td>FERM DOMAIN-CONTAINING PROTEIN 7; FRMD7 </td></tr>
+				<tr><td>300620</td><td>V-SET AND IMMUNOGLOBULIN DOMAINS-CONTAINING PROTEIN 1; VSIG1 </td></tr>
+				<tr><td>300637</td><td>G ANTIGEN 12I; GAGE12I </td></tr>
+				<tr><td>300644</td><td>GALACTOSIDASE, ALPHA; GLA </td></tr>
+				<tr><td>300646</td><td>ZINC FINGER DHHC DOMAIN-CONTAINING PROTEIN 9; ZDHHC9 </td></tr>
+				<tr><td>300677</td><td>CHROMOSOME X OPEN READING FRAME 15; CXORF15 </td></tr>
+				<tr><td>300663</td><td>AUTOPHAGY 4, S CEREVISIAE, HOMOLOG OF, A; ATG4A </td></tr>
+				<tr><td>301780</td><td>ARYLSULFATASE C, ISOZYME F; ARSC2 </td></tr>
+				<tr><td>301770</td><td>ARRESTIN 3, RETINAL; ARR3 </td></tr>
+				<tr><td>305990</td><td>GLYCINE RECEPTOR, ALPHA-2 SUBUNIT; GLRA2 </td></tr>
+				<tr><td>305915</td><td>GLUTAMATE RECEPTOR, IONOTROPIC, AMPA 3; GRIA3 </td></tr>
+				<tr><td>300698</td><td>TRANSMEMBRANE PROTEIN 47; TMEM47 </td></tr>
+				<tr><td>300678</td><td>DUAL-SPECIFICITY PHOSPHATASE 21; DUSP21 </td></tr>
+				<tr><td>300632</td><td>PDZ DOMAIN-CONTAINING 11; PDZD11 </td></tr>
+				<tr><td>300684</td><td>X KELL BLOOD GROUP PRECURSOR-RELATED, X-LINKED; XKRX </td></tr>
+				<tr><td>300682</td><td>MICRO RNA 424; MIRN424 </td></tr>
+    		</table>
+    			<ol>
+    			<li>Query for OMIM gene records: <b concordion:set="#disease">300131 300170 300193 300177 300176 300185 300111 300138 300112 300127 300110 300118 300192 300634 300687 300647 300631 300658 300680 303631 303630 300628 300620 300637 300644 300646 300677 300663 301780 301770 305990 305915</b></li>
+    			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">0</b> disease terms are returned.</li>
+    			</ol>
+    		</li>
+    		
+    		<li>Querying for other types of OMIM records (prefixed with plus, pound sign, percent sign, or no prefix) returns results.
+    		<table>
+	    		<tr><th>OMIM ID</th><th>OMIM term (gene symbol)</th></tr>
+				<tr><td>+141900</td><td>HEMOGLOBIN--BETA LOCUS; HBB </td></tr>
+				<tr><td>+141800</td><td>HEMOGLOBIN--ALPHA LOCUS 1; HBA1 </td></tr>
+				<tr><td>+142830</td><td>MAJOR HISTOCOMPATIBILITY COMPLEX, CLASS I, B; HLA-B </td></tr>
+				<tr><td>#300194</td><td>AMME COMPLEX </td></tr>
+				<tr><td>#300100</td><td>ADRENOLEUKODYSTROPHY; ALD </td></tr>
+				<tr><td>#300676</td><td>MENTAL RETARDATION, X-LINKED, SYNDROMIC 14; MRXS14 </td></tr>
+				<tr><td>#300699</td><td>MENTAL RETARDATION, X-LINKED, SYNDROMIC, WU TYPE; MRXSW </td></tr>
+				<tr><td>#301835</td><td>ARTS SYNDROME; ARTS </td></tr>
+				<tr><td>%300605</td><td>RETINITIS PIGMENTOSA 34; RP34 </td></tr>
+				<tr><td>%300660</td><td>LEUKOENCEPHALOPATHY WITH METAPHYSEAL CHONDRODYSPLASIA; LKMCD </td></tr>
+				<tr><td>%300614</td><td>DEAFNESS, X-LINKED 5; DFNX5 </td></tr>
+				<tr><td>%300619</td><td>CATARACT, ATAXIA, SHORT STATURE, AND MENTAL RETARDATION </td></tr>
+				<tr><td>%300612</td><td>BROOKS-WISNIEWSKI-BROWN SYNDROME </td></tr>
+				<tr><td>300602</td><td>CLARK-BARAITSER SYNDROME </td></tr>
+				<tr><td>301800</td><td>ANUS, IMPERFORATE </td></tr>
+				<tr><td>301840</td><td>SPINOCEREBELLAR ATAXIA, X-LINKED 4 </td></tr>
+				<tr><td>303650</td><td>COLONIC ATRESIA </td></tr>
+				<tr><td>309120</td><td>SPERMATOGENIC FAILURE, X-LINKED, 2; SPGFX2 </td></tr>
+    		</table>
+    		</li>
+    			<ol>
+    			<li>Query for OMIM gene records: <b concordion:set="#disease">+141900 +141800 +142830 #300194 #300100 #300676 #300699 #301835 %300605 %300660 %300614 %300619 %300612 300602 301800 301840 303650 309120</b></li>
+    			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">18</b> disease terms are returned.</li>
+    			</ol>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

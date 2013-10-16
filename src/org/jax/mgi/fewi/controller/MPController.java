@@ -154,7 +154,7 @@ public class MPController {
 	} else {
 	    // have both an MP ID and a Marker
 
-	    Filter markerFilter = new Filter(SearchConstants.MARKER_KEY,
+	    Filter markerFilter = new Filter(SearchConstants.MRK_KEY,
 		Integer.toString(marker.getMarkerKey()) );
 
 	    List<Filter> filterList = new ArrayList<Filter>();

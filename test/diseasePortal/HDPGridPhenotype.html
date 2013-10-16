@@ -1,0 +1,526 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Grid Tab, Phenotype Header Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Grid Tab, Phenotype Header Tests</h1>
+    <ul>
+        <li>User story 31, E4: Basic grid - right hand side and MP systems</li>
+        <li>User story 107, Restrict checkmarks in grid to genotypes that satisfy the query</li>
+        <li>User story 105, Show "all normal" in the grid for MP</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto31: One column per MP system level term</li>
+		<li>sto31: Only show systems having at least one annotation in the current results</li>
+		<li>sto31: Columns ordered same as on allele detail</li>
+		<li>sto31: Each cell contains an "X" (or some icon) which represents the roll-up of MP-annotations for the given row (genes) and column (MP system).</li>
+		<li>sto31: the rollup rule is simple: if any annotations underlie the cell, put an "X" (or checkmark) there</li>
+		<li>sto31: an MP annotation "underlies" a cell iff:
+		<ul>
+			<li>the annotation's MP term is a descendant of the MP term for that column, and...</li>
+			<li>the annotation associates its MP term to a gene in that row, using the gene-to-phenotype association rules</li>
+		</ul>
+		</li>
+		<li>sto107: When querying by pheno/disaese, a checkmark should only appear in a cell when there is a genotype (OMG) that matches the query (i.e. has a matching disease/phenotype) and has that gene.</li>
+		<li>sto107: When querying by gene or region, there is no such restriction</li>
+		<li>sto105: all OMGs and their annotations should contribute to generating the grid, in particular, "normal" annotations</li>
+		<li>sto105: applies only to MP (for OMIM, see sto133)</li>
+		<li>sto105: if any/all annotations underlying a given cell are abnormal, the cell shows a checkmark. as usual</li>
+		<li>sto105: when all annotations under a given cell are all "normal", use a different symbol ("N") instead of a checkmark"</li>
+
+
+
+	</ul>
+	<h2>Logic for this tab</h2>
+	<h3>Search input in Phenotypes/Disease text box:</h3>
+	<ol>
+		<li><b>Search for text and ID matches in OMIM.</b></li>
+		<li>Find  &quot;compressed&quot; super-simple genotypes (also called OMG or One-Marker Genotypes)  &quot;genoclusters&quot; annotated to matches (without &quot;Not&quot; qualifier). (I.e., you cannot search for a &quot;Not&quot; annotation.)</li>
+		<li>Show mouse genes for these genotypes.</li>
+		<li>Show MP headers for ALL MP terms (including header terms with "Norm" qualifier (sto105)) associated to the SAME super-simple genotypes &quot;genoclusters&quot;, just above (sto107), with checkmarks.</li>
+		<li>Include human orthologs for those mouse genes.</li>
+		<li><b>Search for text and ID matches in MP.</b></li>
+		<li>Find  &quot;compressed&quot; super-simple genotypes (also called OMG or One-Marker Genotypes) &quot;genoclusters&quot; annotated to matches EXCEPT:
+		<ul>
+			<li>exclude annotations with &quot;norm&quot; qualifier (i.e., you cannot search for a &quot;Normal&quot; annotation.)</li>
+			<li>exclude annotations to MP:0003012 &quot;no phenotypic analysis&quot; (i.e., you cannot search for a &quot;no phenotypic analysis&quot; annotation.)</li>
+		</ul>
+		</li>
+		<li>Show mouse genes for these genotypes.</li>
+		<li>Show MP headers for ALL MP terms (including header terms with "Norm" qualifier (sto105)) associated to THESE super-simple genotypes (OMG) &quot;genoclusters&quot;, just above (sto107), with checkmarks, EXCEPT:
+		<ul>
+			<li>exclude annotations to "no phenotypic analysis" (MP:0003012) from the display.</li>
+			<li>exclude the header term "no phenotypic analysis" from the columns.</li>
+		</ul>
+		</li>
+		<li>When all annotations under a given MP header term for all genotypes of a given gene have the &quot;norm&quot; qualifier, display an &quot;N&quot; instead of a checkmark in the grid.</li>
+	</ol>
+	<h3>Search input in Genes text box:</h3>
+	<ol>
+		<li>Search for matching mouse markers.</li>
+		<li>Search for  matching human markers.</li>
+		<li>Search for matches in nomenclature of all organisms.</li>
+		<li>Find mouse orthologs of other organisms' matching markers, if one exists.</li>
+		<li>Find human orthologs of other organisms' matching markers, if one exists.</li>
+		<li><b>For each mouse marker (direct matches, or orthologs of matches),</b> find super-simple genotypes (OMG) &quot;genoclusters&quot;.</li>
+		<li>For each genotype, determine if MP annotation or OMIM annotation exists.</li>
+		<li>Show mouse markers where MP annotation exists for a super-simple genotype (OMG) &quot;genoclusters&quot; (include "Normal" annotations (sto105)).</li>
+		<li>Show MP headers for ALL MP terms associated (including header terms with "Norm" qualifier (sto105)) to the super-simple genotypes &quot;genoclusters&quot;, just above (sto107), with checkmarks.</li>
+		<li><b>Show all human markers</b>: matched by query or orthologs of mouse markers returned.</li>
+	</ol>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>When all annotations via all MP terms to all genotypes for a given gene and MP header have the "norm" qualifier, the gene and header appear and the grid cell displays an "N" (sto105).
+			<p concordion:assertTrue="true">pass KLF 9/27/2013 - except for two rows noted below</p><i>fully-automated</i>
+			<ol>
+				<li>Open the HDP query form</li>
+				<li>For each MP term below, verify the system header, listed gene, and display of "N":
+				<table concordion:execute="#check = gridCheckForMpHeaderByPhenotype(#pheno,#row,#column)">
+					<tr><th concordion:set="#pheno">MP term</th>
+						<th concordion:set="#column">system</th>
+						<th concordion:set="#row">gene</th>
+						<th concordion:assertEquals="#check">display "N"</th><th>Notes for tester</th></tr>
+					<tr><td>MP:0005376</td><td>homeostasis/metabolism</td><td>Gdi1</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3833426">MGI:3833426</a> - a hemizygote / Y</td></tr>
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Gdi1</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3833426">MGI:3833426</a> - a hemizygote / Y</td></tr>
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Cdkl5</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5475523">MGI:5475523</a> - a hemizygote / Y</td></tr>
+<!-- 
+	ADD THESE TESTS BACK IN WHEN WE CHANGE FROM OMG SUPER-SIMPLE GENOTYPES TO ALL SIMPLE GENOTYPES
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Lmx1b</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3833426">MGI:3833426</a> - in a <span style="background-color:#FFFF00;">&quot;simple&quot; genotype</span> with Tg(Fev-cre)1Esd/0<br/>
+																							<span style="color:#FF0000;">FAILS: RETEST WHEN ADD SIMPLE GENOTYPES TO THE GRID (klf 9/27)</span></td></tr>
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Mapk1</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5293439">MGI:5293439</a> - in a <span style="background-color:#FFFF00;">&quot;simple&quot; genotype</span> with Tg(Nes-cre)1Kag/0<br/>
+																							<span style="color:#FF0000;">FAILS: RETEST WHEN ADD SIMPLE GENOTYPES TO THE GRID (klf 9/27)</span></td></tr>
+ -->
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Olfr749</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5487682">MGI:5487682</a> - the only annotation for this gene is this "N"</td></tr>
+					<tr><td>MP:0001186</td><td>pigmentation</td><td>Pdgfra</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:2175214">MGI:2175214</a> - hom of allele Pdgfra&lt;tm1Sor&gt;<br/>
+																							genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3655071">MGI:3655071</a> - wt het of allele Pdgfra&lt;tm1Sor&gt;<br/>
+																							genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:2174692">MGI:2174692</a> - hom of allele Pdgfra&lt;tm2Sor&gt;<br/>
+																							genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3655105">MGI:3655105</a> - wt het of allele Pdgfra&lt;tm2Sor&gt;, and maybe others
+					</td></tr>
+					<tr><td>MP:0005367</td><td>renal/urinary system</td><td>Kifc3</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3038231">MGI:3038231</a> - the only annotation for this gene is this "N"</td></tr>
+					<tr><td>MP:0005367</td><td>renal/urinary system</td><td>Del(2Hoxd10-Hoxd13)38Ddu</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3810768">MGI:3810768 </a> - the only annotation for this gene is this "N"</td></tr>
+					<tr><td>MP:0005367</td><td>renal/urinary system</td><td>Ddn</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5301894">MGI:5301894</a> - the only annotation for this gene is this "N"</td></tr>
+					
+				</table>
+				</li>
+			</ol>
+    		</li>
+
+
+<!--  NOT SURE WHAT THIS TEST WAS SUPPOSED TO VERIFY. THE FOLLOWING TEST VERIFIES MP->GENOTYPE->OMIM RULES.
+		KEEPING THIS TEST CASE BECAUSE IT RETURNS ONLY A LITTLE DATA SO MAY BE USEFUL FOR SOME OTHER PURPOSE.
+ 			<li>Test that Genotype to Disease contributes to the Disease results
+ 			<p concordion:assertTrue="false">new test</p> 
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>MP:0001868</b> in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the disease columns <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b> and <b>Polycystic Ovary Syndrome 1; PCOS1</b>
+                (Note: Polycystic Ovary Syndrome 1; PCOS1 is showing no check mark)</li>
+
+    		</ol>
+    		</li>
+ -->
+
+		</ol>
+	</div>
+	
+	
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>When querying by MP term, display all phenotype headers associated to any mouse marker via ONLY super-simple genotypes (OMG) annotated to the queried term.
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0006228</b>, (iris atrophy), in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm only these phenotype header columns are displayed:
+                	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th></tr>
+                	<tr><td>pigmentation</td></tr>
+                	<tr><td>vision/eye</td></tr>
+                	</table>
+                </li> 
+                <li>Verify checkmarks for BOTH columns for <b concordion:set="#symbol">Gpnmb</b> have checks 
+                	(via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3773274">MGI:3773274</a>).
+                	<b concordion:set="#system">vision/eye</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b> 
+                	and <b concordion:set="#system">pigmentation</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b>.
+              		</li>
+                <li>Verify checkmark for <b>vision/eye</b> for <b concordion:set="#symbol">Tyrp1</b> 
+                	(via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3773275">MGI:3773275</a>).<br/>
+                		(Note also: The mouse marker Tyrp1 has human homolog TYRP1 which is directly annotated to the disease 'Albinism, Oculocutaneous, Type III; OCA3'. )
+                	<br/>For <b concordion:set="#system">vision/eye</b> there is a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b>.
+                	For <b concordion:set="#system">pigmentation</b> there is <span style="background-color:#FFFF00;">NO</span> <b cc:assertNotEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</b></li>
+                <li>Clear the query form.</li>
+                <li>Enter <b concordion:set="#pheno">MP:0000664</b> (small prostate gland anterior lobe), in the Phenotypes and Diseases section and hit search.</li>
+                <li>Click on the Grid tab and confirm AT LEAST the following phenotype header columns are displayed (data from <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=1628">Ahr&lt;tm1Bra&gt;</a> which has 4 homozygous genotypes.):
+                	<table cc:verifySupersetOf="#systems : gridMpHeadersByPhenotype(#pheno)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes to testers</th></tr>
+					<tr><td>cardiovascular system</td><td>comes from same genotype as query: <a href="http://www.informatics.jax.org/allele/genoview/MGI:4361635">MGI:4361635</a></td></tr>
+					<tr><td>endocrine/exocrine glands</td><td>comes from same genotype as query</td></tr>
+					<tr><td>growth/size</td><td>comes from same genotype as query</td></tr>
+					<tr><td>hematopoietic system</td><td>comes from a different gentoype, same geno-cluster: <a href="http://www.informatics.jax.org/allele/genoview/MGI:2661849">MGI:2661849</a></td></tr>
+					<tr><td>homeostasis/metabolism</td><td>comes from same genotype as query</td></tr>
+					<tr><td>immune system</td><td>comes from a different gentoype, same geno-cluster: <a href="http://www.informatics.jax.org/allele/genoview/MGI:4361634">MGI:4361634</a></td></tr>
+					<tr><td>integument</td><td>comes from a different gentoype, same geno-cluster: <a href="http://www.informatics.jax.org/allele/genoview/MGI:2661863">MGI:2661863</a></td></tr>
+					<tr><td>liver/biliary system</td><td>comes from same genotype as query</td></tr>
+					<tr><td>renal/urinary system</td><td>comes from same genotype as query</td></tr>
+					<tr><td>reproductive system</td><td>comes from same genotype as query</td></tr>
+					<tr><td>respiratory system</td><td>comes from a different gentoype, same geno-cluster: <a href="http://www.informatics.jax.org/allele/genoview/MGI:4361634">MGI:4361634</a></td></tr>
+					<tr><td>vision/eye</td><td>comes from same genotype as query</td></tr>
+                	</table>
+                </li>
+                <li>Verify checkmarks for <b concordion:set="#symbol">Ahr</b> for EXACTLY the following systems: 
+                	<table concordion:verifyRows="#systems : gridMpHeadersWithChecksByPhenotype(#pheno,#symbol)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th></tr>
+					<tr><td>cardiovascular system</td></tr>
+					<tr><td>endocrine/exocrine glands</td></tr>
+					<tr><td>growth/size</td></tr>
+					<tr><td>hematopoietic system</td></tr>
+					<tr><td>homeostasis/metabolism</td></tr>
+					<tr><td>immune system</td></tr>
+					<tr><td>integument</td></tr>
+					<tr><td>liver/biliary system</td></tr>
+					<tr><td>renal/urinary system	</td></tr>
+					<tr><td>reproductive system</td></tr>
+					<tr><td>respiratory system</td></tr>
+					<tr><td>vision/eye</td></tr>
+                	</table>
+           		</li>
+                <li>Clear the query form.</li>
+                <li>Enter <b concordion:set="#pheno">MP:0009167</b> (increased pancreatic islet number), in the Phenotypes and Diseases section and hit search.</li>
+                <li><span style="background-color:#FFFF00;">Verify checkmarks</span> for <b concordion:set="#symbol">Cpe</b> for ALL OF the following phenotype headers are displayed (based on hm1 and hm2 for allele <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:1856395">Cpe&lt;fat&gt;</a>):
+                	<table cc:verifySupersetOf="#systems : gridMpHeadersWithChecksByPhenotype(#pheno,#symbol)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes to tester</th></tr>
+					<tr><td>adipose tissue</td><td></td></tr>
+					<tr><td>digestive/alimentary system</td><td>Only <a href="http://www.informatics.jax.org/allele/genoview/MGI:3033165">hm1-MGI:3033165</a> has annotations.</td></tr>
+					<tr><td>endocrine/exocrine glands</td><td>Only <a href="http://www.informatics.jax.org/allele/genoview/MGI:3033164">hm2-MGI:3033164</a> has the queried term<br/>Both genotypes have terms under this header.</td></tr>
+					<tr><td>growth/size</td><td></td></tr>
+					<tr><td>homeostasis/metabolism</td><td></td></tr>
+					<tr><td>nervous system</td><td>Only <a href="http://www.informatics.jax.org/allele/genoview/MGI:3033165">hm1-MGI:3033165</a> has annotations.</td></tr>
+					<tr><td>reproductive system</td><td></td></tr>
+	                </table> 
+                </li>
+    		</ol>
+    		</li>
+    		
+    		<li>When querying by gene, display all all phenotype headers associated to a mouse marker via EVERY super-simple genotype (OMG).
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#genes">Ahr</b>in the Genes section and hit search</li>
+                <li>Click on the Grid tab and confirm AT LEAST the following genotype headers are displayed:
+                	<table cc:verifySupersetOf="#systems : gridMpHeadersByGene(#genes)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes to tester</th></tr>
+					<tr><td>cardiovascular system</td><td></td></tr>
+					<tr><td>digestive/alimentary system</td><td></td></tr>
+					<tr><td>endocrine/exocrine glands</td><td></td></tr>
+                	<tr><td>muscle</td><td>new system brought back by the additional genotypes returned</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying by chromosomal region, display all all phenotype headers associated to a mouse marker via EVERY super-simple genotype (OMG).
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#location">Chr12:35497974-35535038</b> in the Genes section, Query By Gene Region input box, and hit search</li>
+                <li>Click on the Grid tab and confirm AT LEAST the following genotype headers are displayed:
+                	<table cc:verifySupersetOf="#systems : gridMpHeadersByLocation(#location)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes to tester</th></tr>
+					<tr><td>cardiovascular system</td><td></td></tr>
+					<tr><td>digestive/alimentary system</td><td></td></tr>
+					<tr><td>endocrine/exocrine glands</td><td></td></tr>
+                	<tr><td>muscle</td><td>new system brought back by the additional genotypes returned</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li>
+
+			<li>When querying by OMIM disease term, display all phenotype headers associated to a mouse marker via any shared super-simple genotype (OMG) "genocluster". If there are no shared genotypes (between MP terms and OMIM terms), MP Headers should not be displayed.
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">600510</b>, for "Glaucoma-Related Pigment Dispersion Syndrome; GPDS1", in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm only these phenotype header columns are displayed, with checks for the appropriate marker:
+                	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th></tr>
+                	<tr><td>pigmentation</td></tr>
+                	<tr><td>vision/eye</td></tr>
+                	</table>
+                </li>
+				<li>Verify the only gene displayed is <b cc:assertValueAppearsOnlyOnce="gridMouseSymbolsByPhenotype(#pheno)">Gpnmb</b>
+					 (through genotypes <a href="http://www.informatics.jax.org/allele/genoview/MGI:3773274">MGI:3773274</a>, <a href="http://www.informatics.jax.org/allele/genoview/MGI:2178286">MGI:2178286</a>, and <a href="http://www.informatics.jax.org/allele/genoview/MGI:2178291">MGI:2178291</a>).</li>
+                <li>Confirm the phenotype header columns have checks for the appropriate marker:
+                	<table>
+                	<tr><th>MP Header</th><th>Symbol</th><th>Checkmark?</th></tr>
+                	<tr><td concordion:set="#system">pigmentation</td><td concordion:set="#symbol">Gpnmb</td><td concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</td></tr>
+                	<tr><td concordion:set="#system">vision/eye</td><td concordion:set="#symbol">Gpnmb</td><td concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#symbol,#system)">check</td></tr>
+                	</table>                
+                </li>
+                <li>Clear the form.</li>
+                <li>Enter <b concordion:set="#pheno">203290</b> for "Albinism, Oculocutaneous, Type III; OCA3" in the Phenotypes and Diseases section and hit search.</li>
+                <li>Click on the Grid tab and confirm <b concordion:assertEmpty="#systems">NO phenotype headers</b> are displayed. (The disease is associated only with a human gene. That gene has an ortholog which has MP annotations, but no genotypes can be in common.)</li>
+                <li>Confirm the disease column for <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">203290</b> "Albinism, Oculocutaneous, Type III; OCA3", is still displayed.</li>
+                <li>Clear the form.</li>
+                <li>Enter <b concordion:set="#pheno">105650</b> (Diamond-Blackfan Anemia; DBA) in the Phenotypes and Diseases section and hit search. 
+					<i>(automated)</i></li>
+                <li>Click on the Grid tab and confirm the following MP header terms are displayed:
+                	<p concordion:assertTrue="true">klf 9/26/2013</p>
+                	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
+                	<tr><td>cardiovascular system</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> annotated to disease</td></tr>
+                	<tr><td>craniofacial</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3804635">MGI:3804635</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3803603">Rpsa&lt;tm1Ells&gt;</a> annotated to disease</td></tr>
+                	<tr><td>endocrine/exocrine glands</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3804635">MGI:3804635</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3803603">Rpsa&lt;tm1Ells&gt;</a> annotated to disease</td></tr>
+                	<tr><td>growth/size</td><td>from both genotypes annotated to disease</td></tr>
+                	<tr><td>hematopoietic system</td><td>from both genotypes annotated to disease</td></tr>
+                	<tr><td>immune system</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> annotated to disease</td></tr>
+                	<tr><td>limbs/digits/tail</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> annotated to disease</td></tr>
+                	<tr><td>mortality/aging</td><td>***from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807531">MGI:3807531</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> - <br/>
+                		same "genotype cluster" as <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> but NOT annotated to disease<br/>
+                		-OR- from genotypes of mouse ortho of human annotation. :-(	</td></tr>
+                	</table>
+                </li>
+                <li>Clear the form.</li>
+                <li>Enter <b concordion:set="#pheno">271900</b> (Canavan Disease) in the Phenotypes and Diseases section and hit search. 
+					<i>(automated)</i></li>
+                <li>(Note: this disease is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:3639891">MGI:3639891</a> for Sod2&lt;tm1Cje&gt; which has 4 additional hm genotypes in the "compressed genotype cluster"<br/>
+                	and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3027206">MGI:3027206</a> for Aspa&lt;nur7&gt;<br/>
+                	and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3038607">MGI:3038607</a> for Aspa&lt;tm1Mata&gt;.)</li>
+                <li>Click on the Grid tab and confirm the following MP header terms are displayed:
+                	<p concordion:assertTrue="true">klf 9/26/2013</p>
+                	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
+					<tr><td>adipose tissue</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>behavior/neurological</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>cardiovascular system</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>cellular</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
+					<tr><td>craniofacial</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>growth/size</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>hematopoietic system</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
+					<tr><td>homeostasis/metabolism</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
+					<tr><td>integument</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>liver/biliary system</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>mortality/aging</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>muscle</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>nervous system</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>other phenotype</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
+					<tr><td>pigmentation</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>renal/urinary system</td><td>annotated to additional genotype in same "compressed genotype cluster"</td></tr>
+					<tr><td>skeleton</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>vision/eye</td><td>annotated to same genotype as disease</td></tr>
+                	</table>
+                </li>
+                <li>Clear the form.</li>
+                <li>Enter <b concordion:set="#pheno">277700</b> (Werner Disease) in the Phenotypes and Diseases section and hit search. 
+                <i>(automated)</i></li>
+                <li>(Note: this disease is annotated to Wrn&lt;tm1Led&gt; and Tg(CAG-WRN*K577M)5025Wcl.)</li>
+                <li>Click on the Grid tab and confirm the following MP header terms are displayed:
+                	<p concordion:assertTrue="true">klf 9/26/2013</p>
+                	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
+					<tr><td>adipose tissue</td><td>annotated to same genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:3665480">MGI:3665480</a>) as disease</td></tr>
+					<tr><td>cardiovascular system</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>cellular</td><td>annotated to same genotypes  (above and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3525190">MGI:3525190</a>) as disease</td></tr>
+					<tr><td>growth/size</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>homeostasis/metabolism</td><td>annotated to same genotype as disease</td></tr>
+					<tr><td>immune system</td><td>annotated to additional genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:3665481">MGI:3665481</a>) in same "compressed genotype cluster"</td></tr>
+					<tr><td>mortality/aging</td><td>annotated to additional genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:2383958">MGI:2383958</a>) in same "compressed genotype cluster"</td></tr>
+					<tr><td>tumorigenesis</td><td>annotated to additional genotypes (both the above) in same "compressed genotype cluster"</td></tr>
+                	</table>
+                </li>
+			</ol>
+			</li>
+
+    		<li>When both "abnormal" and "normal" (has "norm" qualifier) annotations exist for a term and genotype, display a checkmark in the appropriate Phenotype column (i.e., "abnormal" wins)
+    		<ol>
+                <li>Open the HDP query form.</li>
+                <li>Enter <b concordion:set="#genes">Atp8a2</b> in the Genes section and submit the query.</li>
+                <li>Click on the Grid tab and confirm these phenotype header columns are displayed:
+                <table cc:verifySupersetOf="#systems : gridMpHeadersByGene(#genes)">
+                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes</th></tr>
+                	<tr><td>behavior/neurological</td> <td>(4 genotypes from all 3 alleles)</td></tr>
+                	<tr><td>growth/size</td><td> (only genotypes MGI:3838994 and MGI:3581212)</td></tr>
+                	<tr><td>hearing/vestibular/ear</td><td>(this should be an N)</td></tr>
+                	<tr><td>homeostasis/metabolism</td><td> (only genotype MGI:3838969)</td></tr>
+                	<tr><td>integument</td><td> (only genotype MGI:3581212)</td></tr>
+                	<tr><td>mortality/aging</td><td> (one genotype from each of the 3 alleles)</td></tr>
+                	<tr><td>nervous system</td><td> (all 5 genotypes from all 3 alleles)</td></tr>
+                	<tr><td>vision/eye</td><td> (only genotype MGI:3838994)</td></tr>
+                	<tr><td>hearing/vestibular/ear</td><td>(the only annotations have the 'norm' qualifier via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3838969">MGI:3838969</a>)</td></tr>
+                	</table>
+                </li>
+<!--
+                <li>Confirm <b cc:assertNoResultsContain="gridMpHeadersByGene(#genes)">hearing/vestibular/ear</b> phenotype header does not appear (the only annotations have the 'norm' qualifier via genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3838969">MGI:3838969</a>). <br/>
+                	(<span style="background-color:#FFFF00;">Note:</span> this requirement should go away when we implement the story to show Headers with only Normal annotations.)</li>
+ 
+ -->                <li>Confirm that, for the queried gene, the column <b concordion:set="#system">behavior/neurological</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByGene(#genes,#genes,#system)">check</b>
+                	and the column <b concordion:set="#system">nervous system</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByGene(#genes,#genes,#system)">check</b>. 
+                	(These both have 'norm' and abnormal annotations via gentoype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3838969">MGI:3838969</a>)</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Test that the Grid tab displays one column per MP header, sorted alphabetically EXCEPT that "normal phenotype" comes last AND &quot;no phenotypic analysis&quot; is suppressed.
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">*</b> (wildcard) in the Phenotype/Disease section and hit search.</li>
+                <li>Click on the Grid tab and confirm MP header columns exist in the following order:
+				<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+					<tr><th concordion:assertEquals="#systems">MP Header Term</th></tr>
+					<tr><td>adipose tissue</td></tr>
+					<tr><td>behavior/neurological</td></tr>
+					<tr><td>cardiovascular system</td></tr>
+					<tr><td>cellular</td></tr>
+					<tr><td>craniofacial</td></tr>
+					<tr><td>digestive/alimentary system</td></tr>
+					<tr><td>embryogenesis</td></tr>
+					<tr><td>endocrine/exocrine glands</td></tr>
+					<tr><td>growth/size</td></tr>
+					<tr><td>hearing/vestibular/ear</td></tr>
+					<tr><td>hematopoietic system</td></tr>
+					<tr><td>homeostasis/metabolism</td></tr>
+					<tr><td>immune system</td></tr>
+					<tr><td>integument</td></tr>
+					<tr><td>limbs/digits/tail</td></tr>
+					<tr><td>liver/biliary system</td></tr>
+					<tr><td>mortality/aging</td></tr>
+					<tr><td>muscle</td></tr>
+					<tr><td>nervous system</td></tr>
+					<tr><td>other phenotype</td></tr>
+					<tr><td>pigmentation</td></tr>
+					<tr><td>renal/urinary system</td></tr>
+					<tr><td>reproductive system</td></tr>
+					<tr><td>respiratory system</td></tr>
+					<tr><td>skeleton</td></tr>
+					<tr><td>taste/olfaction</td></tr>
+					<tr><td>tumorigenesis</td></tr>
+					<tr><td>vision/eye</td></tr>
+					<tr><td>normal phenotype</td></tr>
+				</table>
+				</li>
+				<li>Confirm that the following header does not appear: 
+				<i>(automated)</i>
+				<table cc:verifyNotRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+					<tr><th concordion:assertEquals="#systems">MP Header Term</th></tr>
+					<tr><td>no phenotypic analysis</td></tr>
+				</table>
+				</li>
+    		</ol>
+    		</li>
+    		
+    		<li>A user cannot query for "no phenotypic analysis", MP:0003012 (sto105)
+			<i>(automated)</i>
+ 			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0003012</b> (no phenotypic analysis) in the Phenotypes and Diseases section and hit search</li>
+                <li>Verify that <b concordion:assertEquals="gridCountByPhenotype(#pheno)">0</b> genes are returned.</li>
+			</ol>    		
+    		</li>
+
+    		<li>Test that Alternate ID's return the same data
+ 			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0010030</b> (abnormal orbit morphology) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm these Phenotype columns are displayed:
+				<table cc:verifySupersetOf="#systems : gridMpHeadersByPhenotype(#pheno)">
+					<tr><th concordion:assertEquals="#systems">MP Header Term</th></tr>
+					<tr><td>craniofacial</td></tr>
+					<tr><td>skeleton</td></tr>
+					<tr><td>vision/eye</td></tr>
+				</table>
+				</li>
+                <li>Clear this search</li>
+                <li>Enter <b concordion:set="#pheno">MP:0005246</b> in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the Disease columns are displaying the same <b>40</b> diseases</li>
+                <li>Click on the Grid tab and confirm the same Phenotype columns are displayed:
+				<table cc:verifySupersetOf="#systems : gridMpHeadersByPhenotype(#pheno)">
+					<tr><th concordion:assertEquals="#systems">MP Header Term</th></tr>
+					<tr><td>craniofacial</td></tr>
+					<tr><td>skeleton</td></tr>
+					<tr><td>vision/eye</td></tr>
+				</table>
+				</li>
+             </ol>
+    		 </li>   
+
+			<li>Confirm a checkmark exists when a phenotype has both a normal and abnormals. (sto105)
+ 			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0004521</b> (abnormal cochlear hair cell) in the Phenotypes and Diseases section and hit search</li>
+				<li>Verify that marker <b concordion:set="#row">Actb</b> and MP header <b concordion:set="#system">hearing/vestibular/ear</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b>.<br/>
+					(Both "normal" and abnormal annotations exist for the "simple" genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4882050">MGI:4882050</a>.)
+				</li>
+			</ol>
+			</li>
+
+			<li>When querying by a phenotype or disease, a checkmark should exist only for Headers where an underlying annotation shares the same genotype as one annotated to the queried term.
+            <ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0004521</b> (abnormal cochlear hair cell) in the Phenotypes and Diseases section and hit search.</li>
+                <li>Confirm that, for <b  concordion:set="#row">Actb</b>, the column <b concordion:set="#system">hearing/vestibular/ear</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b><br/>
+                	and the column <b concordion:set="#system">nervous system</b> has a <b concordion:assertEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b>.<br/>
+                	(Both systems have annotations for the same genotypes annotated to the queried term MP:0004521.) </li>
+               <li>Confirm that, for Actb, the column <b concordion:set="#system">mortality/aging</b> has NO <b cc:assertNotEquals="gridCheckForMpHeaderByPhenotype(#pheno,#row,#system)">check</b>. <br/>
+               		(This system has no terms annotated to the same genotypes as the queried term MP:0004521.)</li>
+			</ol>    		
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

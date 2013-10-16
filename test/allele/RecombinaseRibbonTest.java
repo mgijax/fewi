@@ -5,7 +5,7 @@ import java.util.List;
 import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.RecombinaseSystemStructure;
 
-import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
+import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockRequest;
 
 

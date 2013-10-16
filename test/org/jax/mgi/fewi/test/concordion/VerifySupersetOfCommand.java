@@ -99,7 +99,7 @@ public class VerifySupersetOfCommand extends AbstractCommand {
         			tableSupport.copyCommandCallsTo(detailRow);
             		commandCall.getChildren().verify(evaluator, resultRecorder);
         			found = true;
-        			results.remove(searchResult);
+        			//results.remove(searchResult);
         		}
         	}
         	if(!found)

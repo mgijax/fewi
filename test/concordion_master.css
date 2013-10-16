@@ -6,8 +6,9 @@ table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
 table, th, td {border: 1px solid #CCCCCC;}
 td, th {padding:2px;}
 td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
-td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:30px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
 td.xl65 {background-color:#FFFF00;}
+dt {font-weight:bold;}
 
 
 h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
@@ -20,7 +21,7 @@ tr.gray td {background-color:#EEEEEE;}
 .lowlite {background-color:#FFFFDD;} /*palest yellow*/
 .man {background-color:#FFFFCC;} /*less-pale yellow*/
 
-.regressHi {background-color:#FF833A;} /*medium-orange*/
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
 .regressLo {background-color:#90DDF5;} /*light blue*/
 
 /*  p {color:blue;}

@@ -310,7 +310,7 @@ public class ImageController {
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
-	imageSearchParams.setPageSize(10000);
+        imageSearchParams.setPageSize(10000);
         imageSearchParams.setSorts(this.genDefaultSorts());
         Integer alleleKey = new Integer(allele.getAlleleKey());
         Filter alleleKeyFilter

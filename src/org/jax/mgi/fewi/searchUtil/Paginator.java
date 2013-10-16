@@ -6,7 +6,12 @@ public class Paginator {
 	private Integer results;
 	private Integer resultsDefault = 25;
 
-
+	public Paginator() {}
+	public Paginator(Integer results)
+	{
+		this.results=results;
+	}
+	
     // startIndex
 	public Integer getStartIndex() {
         if (startIndex < 0){return 0;}

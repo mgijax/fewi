@@ -3,7 +3,7 @@ package homology;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.OrganismOrtholog;
 
-import org.jax.mgi.fewi.test.concordion.BaseConcordionTest;
+import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockRequest;
 
 public class HomologyClassDetailTest extends BaseConcordionTest {

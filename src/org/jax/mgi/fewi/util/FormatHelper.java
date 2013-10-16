@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
 * provides static methods to help with formatting of JSP pages
 */
@@ -36,6 +38,7 @@ public class FormatHelper
     {
         if (verbatimString == null) { return null;}
 
+ 
         return HtmlUtils.htmlEscape(verbatimString);
     }
 
@@ -96,14 +99,14 @@ public class FormatHelper
      * @effects nothing
      * @throws nothing
      */
-    public static String superscript (String s, String start, String stop) 
+    public static String superscript (String s, String start, String stop)
     {
         return TextFormat.superscript(s,start,stop);
     }
 
     /** convenience wrapper over superscript(s, "<", ">"), which is the common use case
      */
-    public static String superscript (String s) 
+    public static String superscript (String s)
     {
         return TextFormat.superscript(s);
     }
@@ -168,6 +171,29 @@ public class FormatHelper
 
         return commaDelimString;
     }
+
+    /**
+     * for a given collection, create a pipe delimited string
+     */
+    public static String pipeDelimit (Collection c)
+    {
+        StringBuffer pipeDelimBuffer = new StringBuffer();
+
+        for (Iterator i = c.iterator(); i.hasNext(); ) 
+        {
+        	String nextValue = (String)i.next();
+            if (nextValue != null) {
+                pipeDelimBuffer.append(nextValue);
+
+                if (i.hasNext()) {
+                    pipeDelimBuffer.append(" | ");
+                }
+
+            }
+        }
+        return pipeDelimBuffer.toString();
+    }
+
 
     /** returns value used to forward a sequence to either the sequence
      * retrieval too, or mouse blast select-a-sequence report
@@ -320,6 +346,18 @@ public class FormatHelper
     public static String makeCssSafe(String input)
     {
     	return DatamodelUtils.makeCssSafe(input);
+    }
+ // returns http query string by reverse engineering HttpRequest
+    public static String queryStringFromPost(HttpServletRequest request)
+    {
+      StringBuilder sb = new StringBuilder("");
+      for (Enumeration e = request.getParameterNames();e.hasMoreElements();)
+      {
+        String param = (String) e.nextElement();
+        sb.append(param).append("=").append(request.getParameter(param)).append("&");
+      }
+      String queryString = sb.toString().substring(0, sb.length() - 1);
+      return queryString;
     }
 
     /* build a tree-like structure of HTML checkboxes for a list of query form

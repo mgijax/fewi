@@ -1,0 +1,345 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+dt {font-weight:bold;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>HDP: Querying by Disease, Gene Summary output</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#definitions">Definitions</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>HDP: Querying by Disease, Gene Summary output</h1>
+    <p style="font-size:120%; font-weight:bold;">The tests in this suite verify whether or not certain genes are returned across all the tabbed summaries in the display.</p>
+    <ul>
+        <li>User story 13, E2: Query by disease, debugging display of genes</li>
+        <li>User story 52, E2: Add new path for gene-disease associations</li>
+        <li>User story 135, Grid: switch from OMGs to simples</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US13: user can enter OMIM ids, names, synonyms</li>
+		<li>US13: exact matches</li>
+		<li>US13: results = debugging display of marker keys/IDs</li>
+		<li>US13: the markers are those "associated with" the disease</li>
+		<li>US13: the rules for what "associated with" means</li>
+		<li>US52: Allele-to-Disease annotations should be included in order to bring back markers that get excluded by "complex genotype" rules</li>
+		<li>US135: main kind of test: things that are currently being excluded get included</li>
+	</ul>
+	<p><b>NOTE!!:</b> A marker which has multiple genotypes may be indexed to a disease term for any 1 or more of those genotypes.  Being excluded from the indexed results set by one genotype rule does not exclude the marker completely (except for <em>Gt(ROSA)26Sor</em>.)</p>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<dl>
+	<dt>complex genotype</dt>
+		<dd>involves 2 or more markers</dd>
+		<dd>therefore, must also have 2 or more allele "pairs" (even though one pair could be hemizygous)</dd>
+	<dt>conditional recombinase genotype</dt>
+		<dd>a complex genotype where at least 1 allele in at least 1 of the allele pairs is a <b>recombinase</b> allele</dd>
+		<dd>AND there is a flag set by Curators to indicate a conditional genotype</dd>
+	<dt>hemizygous</dt>
+		<dd>an allele "pair" where only one allele exists, the other allele in the pair is absent</dd>
+		<dd>in MGI's data: allele1 exists, allele2 is null</dd>
+		<dd>in our context, relevant to <b>simple</b> genotypes</dd>
+		<dd>displays as <em>allele/X</em> or <em>allele/Y</em> or <em>allele/0</em></dd>
+	<dt>heterozygous</dt>
+		<dd>an allele pair where the two alleles in a single pair (for a single gene) are different</dd>
+		<dd><b>heterozygous, wild type</b>: allele1 is some type of allele, allele2 is the wild type allele for the same gene.</dd>
+		<dd><b>heterozygous, non-wild type</b>: also called "trans-het"; allele1 is some type of allele, allele2 is a different but non-wild type allele for the same gene. </dd>
+		<dd>in our context, relevant to <b>simple</b> genotypes</dd>
+	<dt>homozygous</dt>
+		<dd>an allele pair where both alleles in the pair are identical</dd>
+		<dd>in our context, relevant to <b>simple</b> genotypes</dd>
+	<dt>indeterminate</dt>
+		<dd>a special case of "hemizygous"</dd>
+		<dd>an allele "pair" where only one allele exists, the other allele in the pair is absent (in this case, unable to be determined)</dd>
+		<dd>in MGI's data: allele1 exists, allele2 is null</dd>
+		<dd>in our context, relevant to <b>simple</b> genotypes</dd>
+		<dd>displays as <em>allele/?</em></dd>
+	<dt>inducible allele</dt>
+		<dd>in MGI's data: indicated by the presence of an Inducible Note for the allele</dd>
+		<dd>(almost?) always recombinase alleles</dd>
+	<dt>OMG - One-Marker Genotype</dt>
+		<dd>see <b>super-simple genotype</b></dd>
+	<dt>recombinase allele</dt>
+		<dd>in MGI's data: indicated by the presence of a Driver Note for the allele</dd>
+	<dt>reporter genotype</dt>
+		<dd>a complex genotype where at least 1 allele in at least 1 of the allele pairs is a <b>transgenic reporter</b> allele</dd>
+		<dd>note that, although "targeted reporter" alleles exist, they may affect the phenotype of the animal so we don't include them in a "reporter genotype"</dd>
+	<dt>simple genotype</dt>
+		<dd>a particular subset of complex genotypes</dd>
+		<dd>a two-marker genotype which can be reduced to one "causal" marker by following some MGI-specific rules</dd>
+	<dt>super-simple genotype</dt>
+		<dd>also called "OMG" or One-Marker Genotype</dd>
+		<dd>a genotype having a single allele "pair" involving a single marker</dd>	
+	</dl>
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual and Automated tests</h3>
+		<h4>Testing variations on which markers are included/excluded from "simple" disease queries.</h4>
+		<ol>
+    		<li>The gene <em>Gt(ROSA)26Sor</em> is excluded from all query results displays.
+    		<ol>
+                <li>Query for Medulloblastoma; MDB, <b concordion:set="#disease">155255</b></li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Gt(ROSA)26Sor</b> does NOT appear in the genes list</li>
+    		</ol>
+    		</li>
+
+    		<li>"NOT" models are excluded: Markers present ONLY in "NOT" models are excluded from all query results displays.
+    		<ol>
+                <li>Query for Acatalasemia, OMIM <b concordion:set="#disease">614097</b> (<i>Only has model for human gene CAT, is a not model for the mouse gene Cat</i>)</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Cat</b> does NOT appear in the genes list</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">CAT</b> DOES appear in the genes list</li>
+                <li>Query for Mowat-Wilson Syndrome, OMIM <b concordion:set="#disease">235730</b> (<i>Is both positive and NOT model for Zeb2 in different genotypes.</i>)</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Zeb2</b> DOES appear in the genes list (hom genotype is a positive model so het genotype NOT model shouldn't exclude the gene completely from the results).</li>
+    		</ol>
+    		</li>
+
+    		<li>Homozygous: A marker with a simple, homozygous genotype annotated to a disease is returned for that disease.
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Cav1</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Hemizygous: A marker with a simple, hemizygous genotype annotated to a disease is returned for that disease.
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Tg(MMTV-PyVT)634Mul</b> is returned (allele/0).</li>
+                <li>Query for Autism, Susceptibility to, X-Linked 1; AUTSX1, OMIM <b concordion:set="#disease">300425</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Nlgn3</b> is returned (allele/Y).</li>
+                <li>Query for Systemic Lupus Erythematosus; SLE, OMIM <b concordion:set="#disease">152700</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Yaa</b> is returned (X/allele).</li>
+    		</ol>
+    		</li>
+
+    		<li>Indeterminate: A marker with a simple, indeterminate (hemizygous) genotype annotated to a disease is returned for that disease.
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Tg(MMTV-AURKA)#Cxd</b> is returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Heterozygous Wild Type: A marker with a simple, heterozygous, wild type genotype annotated to a disease is returned for that disease.
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b  concordion:set="#disease">114480</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Brca2</b> is returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Apc</b> is not returned. (Het wild type genotype exists, but it is not "simple".)</li>
+    		</ol>
+    		</li>
+
+    		<li>Heterozygous Non-Wild Type: A marker with a simple, heterozygous, non-wild type genotype annotated to a disease is returned for that disease. (modified for sto135)
+    		<ol>
+                <li>Query for Hepatocellular Carcinoma, OMIM <b concordion:set="#disease">114550</b>.
+                <p>Note: this is not a simple (one gene) genotype, but this test case still applies due to the Conditional (recombinase) rule, below.</p>
+                </li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Nfe2l1</b> is returned (the recombinase Tg(Alb-cre)21Mgn gets ignored; the alleles we care about are Nfe2l1&lt;tm1Jefc&gt;/Nfe2l1&lt;tm1Ywk&gt;).</li>
+                <li>Query for Diabetes Mellitus, Noninsulin-Dependent; NIDDM, OMIM <b concordion:set="#disease">125853</b>.</li>
+                <li>Verify that the gene <b cc:assertResultsContain="getSymbolsByDisease(#disease)">a</b> is returned (the gene is nonagouti MGI:87853; the genotype is A&lt;y&gt;/a, MGI:3760281).</li>
+    		</ol>
+    		</li>
+
+    		<li>Simple Genotype: Conditional Recombinase: When there are only 2 markers in the genotype, the genotype is conditional, and one marker's allele is "recombinase" (has a Driver note), return the non-recombinase marker for the disease. Do NOT return the recombinase marker.  (modified for sto135)
+    		<ol>
+                <li>Query for Glycogen Storage Disease V, OMIM ID <b concordion:set="#disease">232600</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Hif1a</b> is returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Tg(Ckmm-cre)5Khn</b> is not returned. 
+                	(Attached via the cre allele on this genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3621470">MGI:3621470</a></li> 
+    		</ol>
+    		</li>
+
+    		<li>Simple Genotype: Transgenic Reporter: When there are only 2 markers in the genotype, and one marker's allele is of type "Transgenic (Reporter)", return the non-Transgenic (Reporter) marker for the disease. Do NOT return the Transgenic (Reporter) marker. (modified for sto135)
+    		<ol>
+                <li>Query for Medulloblastoma; MDB <b concordion:set="#disease">155255</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Ptch1</b> is returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Tg(Atoh1-GFP)1Jejo</b> is not returned. 
+                	(Transgenic Reporter portion of the genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3836962">MGI:3836962</a></li> 
+                <li>Query for Teratoma, Ovarian <b concordion:set="#disease">166950</b></li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Foxo3</b> is returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Tg(HBA1-Gfp)1Ew</b> is not returned. 
+                	(Transgenic Reporter portion of the genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:4949205">MGI:4949205</a></li> 
+    		</ol>
+    		</li>
+
+    		<li>Large, Complex Genotypes: A marker is <b>not returned</b> for a disease if it participates only in genotypes having 3 markers (3 allele &quot;pairs&quot;).
+    		<ol>
+                <li>Query for Diabetes Insipidus, Nephrogenic, Autosomal <b concordion:set="#disease">125800</b></li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Nos1</b> is not returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Nos2</b> is not returned.</li> 
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Nos3</b> is not returned.</li>  
+    		</ol>
+    		</li>
+
+    		<li>Very Large, Complex Genotypes: A marker is <b>not returned</b> for a disease if it participates only in genotypes having 4 or more markers (4 or more allele &quot;pairs&quot;).
+    		<ol>
+                <li>Query for Diabetes Mellitus, Insulin-Dependent; IDDM <b concordion:set="#disease">222100</b></li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">H2</b> is not returned.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Rag1</b> is not returned.</li> 
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Tg(TcraBDC12-4.1)10Jos</b> is not returned.</li>  
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Tg(TcraBDC12-4.1)82Gse</b> is not returned.</li> 
+    		</ol>
+    		</li>
+    		
+    		<li>Homology Clusters: Only markers associated with a disease should be returned.
+    		<ol>
+    			<li>Query for Complement Component 4a Deficiency; C4AD, OMIM <b concordion:set="#disease">614380</b>.</li>
+    			<li>Verify that human <b cc:assertResultsContain="getSymbolsByDisease(#disease)">C4A</b> is returned.</li>
+    			<li>Verify that human <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">C4B</b> is not returned.</li>
+    			<li>Verify that mouse <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">C4a</b> and <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">C4b</b> are not returned.</li>
+    		</ol>
+    		</li>
+   		</ol>
+
+		<h4>Testing variations on which markers are included/excluded from "complex" disease queries.</h4>
+   		<ol>
+    		<li>Querying with the full name of a disease returns an exact match for the disease, and all associated markers.
+			<ol>
+    		    <li>Query for <b concordion:set="#disease">Netherton Syndrome; NETH</b> 256500</li>
+    		    <li>Verify that <b cc:assertResultsContain="getTermIdsByDisease(#disease)">256500</b> (Netherton Syndrome; NETH) is returned.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Dsg4</b> is returned.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Spink5</b> is returned.</li> 
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">SPINK5</b> is returned.</li>   
+    		</ol>
+    		</li>
+
+    		<li>Querying with one word returns all diseases containing that word in a name or synonym, and all associated markers.
+    		<ol>
+                <li>Query for <b concordion:set="#disease">abdominal</b>.</li>
+                <li>At least the following diseases should appear in the result set (and many others due to matches on MP terms that return additional diseases).<br/>
+                Note: The actual list of diseases returned is verified in other test suites: <a href="HDPQuerybyDiseaseDisease.html">Disease Query, Return Disease Terms</a> and <a href="HDPQuerybyPhenotypeDisease.html">Phenotype Query, Return Disease Terms via Annotations</a>
+                	<table>
+                	<tr><th>OMIM ID</th><th>Disease Name</th><th>Why matched</th></tr>
+                	<tr><td>605552</td><td>Abdominal Obesity-Metabolic Syndrome</td><td>contained in name</td></tr>
+                	<tr><td>265050</td><td>3mc Syndrome 2; 3MC2</td><td>synonym:  Oculo-Skeletal-Abdominal Syndrome</td></tr>
+                	<tr><td>100070</td><td>Aortic Aneurysm, Familial Abdominal, 1; AAA1</td><td>contained in name</td></tr>
+                	<tr><td>609782</td><td>Aortic Aneurysm, Familial Abdominal, 2; AAA2</td><td>contained in name</td></tr>
+                	<tr><td>611891</td><td>Aortic Aneurysm, Familial Abdominal, 3; AAA3</td><td>contained in name</td></tr>
+                	<tr><td>614375</td><td>Aortic Aneurysm, Familial Abdominal, 4; AAA4</td><td>contained in name</td></tr>
+                	<tr><td>226100</td><td>Endocardial Fibroelastosis and Coarctation of Abdominal Aorta</td><td>contained in name</td></tr>
+                	<tr><td>182212</td><td>Shprintzen-Goldberg Craniosynostosis Syndrome; SGS</td><td>synonym: Craniosynostosis with Arachnodactyly and Abdominal Hernias</td></tr>
+                	<tr><td>100100</td><td>Abdominal Muscles, Absence of, with Urinary Tract Abnormality and Cryptorchidism</td><td>contained in name</td></tr>
+                	<tr><td>260570</td><td>Pelger-Huet-Like Anomaly and Episodic Fever with Abdominal Pain</td><td>contained in name</td></tr>
+                	</table>
+                </li>
+                <li>NOTE: WHAT REQUIREMENT DOES THIS TEST? (klf 10/3/13) - Only the following genes <b>should appear</b> in the results set for <b concordion:set="#disease">605552,265050,100070,609782,611891,614375,226100,182212,100100,260570</b>:
+                	<table cc:verifyRowsUnordered="#symbol : getSymbolsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th></tr>
+                	<tr><td>Ctf1</td></tr>
+                	<tr><td>Gucy2c</td></tr>
+                	<tr><td>Neil1</td></tr>
+                	<tr><td>Pparg</td></tr>
+                	<tr><td>Sirt3</td></tr>
+                	<tr><td>Tg(Fabp4-Hsd11b1)7Jesf</td></tr>
+                	<tr><td>COLEC11</td></tr>
+                	<tr><td>SKI</td></tr>
+                	<tr><td>CHRM3</td></tr>
+                	<tr><td>MTTP</td></tr>
+                	<tr><td>AAA1</td></tr>
+                	<tr><td>AAA2</td></tr>
+                	<tr><td>AAA3</td></tr>
+                	<tr><td>AAA4</td></tr>                	                	
+                	</table>
+                </li>
+                <li>And the following genes <b>should NOT appear</b> in the results set:
+                	<table>
+                	<tr><th>Gene symbol</th></tr>
+                	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Apoe</td></tr>
+                	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Cyp19a1</td></tr>
+                	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">a</td></tr>
+                	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Colec11</td></tr>
+                	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Ski</td></tr>
+                	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Chrm3</td></tr>
+                	</table>
+                </li>
+                </ol>
+               </li>
+
+		</ol>
+		<h4>Testing that Allele-to-Disease annotations are included</h4>
+		<ol>
+		<li>Verify that genes with no genotype annotations get pulled in by the direct allele-to-disease annotation. <br/>
+		NOTE: THIS TEST DOES NOT SPECIFY WHERE THESE GENES SHOULD BE DISPLAYED. They should appear only in the Genes Tab, right? Or listed on the Diseases Tab too? (klf 10/3/2013)
+			<ol>
+			<li>Query for Alzheimer Disease; AD, OMIM(<b concordion:set="#disease">104300</b>)</li>
+			<li>Verify that gene <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Actb</b> is returned.
+				There is an annotation to this disease on allele (Actb&lt;tm3.1(Sirt1)Npa&gt;).
+				There are no disease annotations to this marker otherwise.</li>
+			<li>Query for Major Depressive Disorder; MDD, OMIM(<b concordion:set="#disease">608516</b>)</li>
+			<li>Verify that gene <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Tph2</b> is returned.
+				There is an annotation to this disease on allele (Tph2&lt;Arg447&gt;).
+				There are no disease annotations to this marker otherwise.</li>
+			</ol>
+		</li>
+		<li>Verify that genes with only "complex" genotype annotations also get pulled in by the direct allele-to-disease annotation. <br/>
+		NOTE: THIS TEST DOES NOT SPECIFY WHERE THESE GENES SHOULD BE DISPLAYED. They should appear only in the Genes Tab, right? Or listed on the Diseases Tab too? (klf 10/3/2013)
+			<ol>
+			<li>Query for Melanoma, Cutaneous Malignant, Susceptibility to, 1; CMM1, OMIM(<b concordion:set="#disease">155600</b>)</li>
+			<li>Verify that gene <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Braf</b> is returned.
+				There is an annotation to this disease on allele (Braf&lt;tm1Mmcm&gt;).
+				The only genotype annotated for this marker/disease is complex genotype:
+					(<a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:5447169">MGI:5447169</a>)
+			</li>
+			<li>Query for Muscular Dystrophy, Duchenne Type; DMD, OMIM(<b concordion:set="#disease">310200</b>)</li>
+			<li>Verify that gene <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Utrn</b> is returned.
+				There is an annotation to this disease on allele ( Utrn&lt;tm1Jrs&gt;).
+				The only genotype annotated for this marker/disease is complex genotype:
+					(<a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2176891">MGI:2176891</a>)
+			</li>
+			</ol>
+		</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

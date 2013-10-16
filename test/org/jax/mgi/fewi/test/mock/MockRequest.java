@@ -103,6 +103,15 @@ public class MockRequest {
 		ModelAndView mav = handler.handle(request, response, chain.getHandler());
 		return mav.getModel();
 	}
+	/*
+	 * returns a Spring Model map for the requested url
+	 */
+	public  Map<String,Object> handleRequest(MockHttpServletRequest request) throws Exception
+	{
+    	MockHttpServletResponse response = new MockHttpServletResponse();
+    	HandlerExecutionChain chain = handlerMapping.getHandler(request);
+    	return handler.handle(request, response, chain.getHandler()).getModel();
+	}
 	
 	/*
 	 * returns a filled out response object for the given request,

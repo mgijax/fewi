@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.test.concordion;
+package org.jax.mgi.fewi.test.base;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,0 +1,192 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Human Disease Portal Grid Summary Tab</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>HDP Grid Summary Tab Tests</h1>
+    <ul>
+        <li>User story 137, Add links to gene. allele and disease detail pages</li>
+        <li>User story 140, Grid: Basic Filtering</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US137: Mouse Gene symbols link to MGI gene detail pages</li>
+		<li>US137: Human Gene symbols link to MGI homology pages</li>
+		<li>US137: Human Gene Symbols that have no associated MGI homology page will have no link</li>
+		<li>US140: Existence of check boxes for both rows and columns, Go button, reset button, and Invert button</li>
+		<li>US140: Only checked rows and columns with data are returned</li>
+		<li>US140: The Reset button should remove all checks for both rows and columns</li>
+		<li>US140: The Invert button should flip the results by returning all rows and columns that do not have a check</li>
+		<li>US140: Results returned on the Grid Tab should be reflected on the Genes and Disease Tabs too</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Confirm Human symbols link to their MGI Homology page(sto137)
+    		<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+    		<ol>
+                <li>Query for marker <b>Actb</b></li>
+                <li>Click on the Grid tab and find the Human marker <b>ACTB</b> and click it</li>
+                <li>Verify that the link takes you to the Vertebrate Homology Class page for ACTB</li>
+    		</ol>
+    		</li>	
+    		<li>Confirm Mouse symbols link to their MGI gene detail page(sto137)
+    		<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+    		<ol>
+                <li>Query for marker <b>Actb</b></li>
+                <li>Click on the Grid tab and find the Mouse marker <b>Actb</b> and click it</li>
+                <li>Verify that the link takes you to the Gene detail page for Actb</li>
+    		</ol>
+    		</li>
+    		<li>Confirm a human symbol that has no MGI homology page is not a link(sto137)
+ 			<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+    		<ol>
+                <li>Query for marker <b>IGKC</b></li>
+                <li>Click on the Grid tab and find the Human marker <b>IGKC</b></li>
+                <li>Verify that the Human marker symbol <b>IGKC</b> is not a link</li>
+    		</ol>
+    		</li>
+    		<li>Confirm the existance of check boxes for rows and columns, A Go button, a Reset button and an Invert button(sto140)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for marker <b>casp3</b></li>
+                <li>Verify that each row has a check box after it's marker symbol</li>
+                <li>Verify that each column has a check box below its term name</li>
+                <li>Verify the existence of a <b>Go?</b> button</li>
+                <li>Verify the existence of a <b>Reset</b> button</li>
+                <li>Verify the existence of an <b>Invert</b> button</li>
+    		</ol>
+    		</li>
+    		<li>Confirm the correct results are returned when selecting rows and columns(sto140)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<li>Query for marker <b>casp3</b></li>
+                <li>Place checkmarks for markers <b>Casp3</b> <b>Tg(ACTA1-Casp3*)10.2Spc</b> and <b>Tg(Casp3)18Fine</b></li>
+                <li>Place checkmarks for phenotypes <b>muscle</b> and <b>nervous system</b></li>
+                <li>Verify the existence of a <b>Go?</b> button</li>
+                <li>Verify the existence of a <b>Reset</b> button</li>
+                <li>Verify the existence of an <b>Invert</b> button</li>
+    		</ol>
+    		</li>
+    		<li>Confirm the Reset button returned everything back to the original query results(sto140)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<li>Query for marker <b>????</b></li>
+                <li>Place checkmarks for markers <b>???</b> <b>???</b> and <b>???</b></li>
+                <li>Place checkmarks for phenotypes <b>muscle</b> and <b>nervous system</b></li>
+                <li>Press the <b>Go?</b> button</li>
+                <li>Verify the results have been filtered</li>
+                <li>Press the <b>Reset</b> button
+                <li>Verify the results have been reset to the original query results</li>
+    		</ol>
+    		</li>
+    		<li>Confirm the Invert button reverses the filtered results(sto140)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<li>Query for marker <b>????</b></li>
+                <li>Place checkmarks for markers <b>???</b> <b>???</b> and <b>???</b></li>
+                <li>Place checkmarks for phenotypes <b>???</b> and <b>???</b></li>
+                <li>Press the <b>Go?</b> button</li>
+                <li>Verify the results have been filtered</li>
+                <li>Press the <b>Invert</b> button
+                <li>Verify the results have been reversed to display the results of all items there were not checked</li>
+    		</ol>
+    		</li> 
+    		<li>Confirm that filtering is applied across all 3 tabs(sto140)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<li>Query for marker <b>????</b></li>
+                <li>Place checkmarks for markers <b>???</b> <b>???</b> and <b>???</b></li>
+                <li>Place checkmarks for phenotypes <b>???</b> and <b>???</b></li>
+                <li>Place checkmarks for diseases <b>???</b> and <b>???</b></li>
+                <li>Press the <b>Go?</b> button</li>
+                <li>Verify the results have been filtered</li>
+                <li>Click on the Genes tab and confirm only genes <b>???</b>, <b>???</b> are returned</li>
+                <li>Click on the Diseases tab and confirm only diseases <b>???</b>, <b>???</b> are returned</li>
+    		</ol>
+    		</li>   
+    		<li>Confirm that a second filter sort on columns works(sto140)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<li>Query for Phenotype <b>diabetes</b></li>
+                <li>Place checkmarks for phenotypes <b>immune system</b>, <b>pigmentation</b> and <b>vision/eye</b></li>
+                <li>Press the <b>Go?</b> button</li>
+                <li>Verify the results have been filtered</li>
+                <li>Now place a check mark on phenotype <b>vision/eye</b> and press the <b>Go?</b> button</li>
+                <li>Verify the only phenotype column returned is <b>vision/eye</b></li>
+    		</ol>
+    		</li>  		
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

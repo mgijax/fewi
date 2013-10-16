@@ -1,0 +1,428 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Query By Genes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a><a href="#acceptance">Acceptance Criteria</a><a href="#manual">Manual Tests</a><a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Query By Genes</h1>
+    <ul>
+        <li>User story 21, Query by gene (part 1)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+	<li>Query input:
+		<ul>
+		<li>* single input box</li> 
+		<li>* user can enter symbols, names, IDs, synonyms</li>
+		<li>* multiples allowed</li>
+		<li>All marker accession IDs can be queried, with the following exceptions: 
+			(ABA,"Download from QTL Archive",FuncBase,GEO,GENSAT,HomoloGene,RIKEN Cluster,UniGene)</li>
+		<li>Exclude 'BAC/YAC end' and 'DNA Segment' marker type, unless they have data.</li>
+		</ul>
+	</li>
+	<li>Results:
+		<ul>
+		<li>* genes tab shows matching genes from the selected (or both) species and their orthologs from the other species</li>
+		<li>* for mouse genes on the genes tab, the disease tab includes diseases via geneotype annotations (rules apply) and also via direct allele annotations</li>
+		<li>* for human genes on the genes tab, the disease tab includes annotated human diseases</li>
+		<li>* each disease on the disease tab shows the associated mouse and human genes from the genes tab</li>
+		</ul>
+	</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a><a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Can input symbol, name, synonym text or accession ID (any associated directly with the marker, including homologene ID) and return text-matching mouse, human markers.
+<!-- 			<p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>I believe this test is covered by automated tests below</li>
+                
+    		</ol>
+    		</li>
+
+    		<li>Can input symbol, name, synonym text or accession ID and return human and mouse orthologs of text matches to any organism.
+<!-- 			<p concordion:assertTrue="false">new test</p> -->
+    		<ol>
+                <li>I believe this test is covered by automated tests below</li>
+                
+    		</ol>
+    		</li>
+
+    		<li>For all returned human and mouse markers, return diseases using previous rules.
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>
+    		<ol>
+                <li>Open the Human Disease query form</li>
+                <li>Query for the Marker symbol <b>Msx2</b> in the Genes query box</li>
+                <li>Verify that 12 genes are returned in the Genes tab</li>
+                <li>Click on the Disease tab and verify that only 4 diseases(Craniosynostosis, Parental Foramina with Cleidocranial Dysplysia, Parental Formanina, Peters Anomaly) are returned. 
+                	<b>Saethe-Chotzen Syndrome</b> and <b>Tooth Agenesis Selective 1</b> should not be returned as they are associated to complex genotypes.</li>
+    		</ol>
+    		</li>
+
+    		<li>White-space and commas separate tokens which are combined by OR. Other special characters separate tokens which are combined by AND.
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>
+    		<ol>
+                <li>Open the Human Disease query form</li>
+                <li>Query for the Marker name <b>Sonic hedge hog</b> in the Genes query box</li>
+                <li>Verify that 5 genes are returned in the Genes tab</li>
+                <li>Query for the Marker name <b>Sonic,hedge,hog</b> in the Genes query box</li>
+                <li>Verify that the same 5 genes are returned in the Genes tab</li>
+                
+    		</ol>
+    		</li>
+
+    		<li>Mouse and human genes which have no disease or MP annotations but which are text-matched are also returned.
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>
+    		<ol>
+                <li>Open the Human Disease query form</li>
+                <li>Query for the Mouse Marker <b>cyp2d9</b> in the Genes query box</li>
+                <li>Verify that this mouse marker is returned in the Genes tab but has no disease of phenotype associated to it</li>
+                <li>Query for the human Marker <b>NKAIN2</b> in the Genes query box</li>
+                <li>Verify that this human marker is returned in the Genes tab but has no disease of phenotype associated to it</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Lists are supported (comma- or space-delimited).
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p> 		
+    		<ol>
+                <li>Open the Human Disease query form</li>
+                <li>Query for <b>Bean1, MGI:95661</b> in the Genes query box</li>
+                <li>Verify that 4 genes are returned in the Genes tab</li>
+                <li>The four genes should be <b>Bean1, Gata1, BEAN1, and GATA1</b></li>
+    		</ol>
+    		</li>
+
+    		<li>Mixed inputs (e.g., a symbol and an ID) are supported.
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p><i class="hilite">Duplicate of Above Test?</i> 		
+    		<ol>
+                <li>Open the Human Disease query form</li>
+                <li>Query for the Human Marker name <b>Bean1</b>and the MGI ID <b>MGI:95661</b> in the Genes query box</li>
+                <li>Verify that 4 genes are returned in the Genes tab</li>
+                <li>The four genes should be <b>Bean1, Gata1, BEAN1, and GATA1</b></li>
+    		</ol>
+    		</li>
+
+    		<li>Text that matches Boolean operators is treated only as text, not as Booleans.
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>  		
+    		<ol>
+    			<li>Open the Human Disease query form</li>
+                <li>Query for the name <b>paired and box</b> in the Genes query box</li>
+                <li>Verify that results returned do not "and" paired with box</li>
+    		</ol>
+    		</li>
+
+    		<li>Text that matches typical Stop Words is treated only as text, not as Stop Words (e.g., "as", "if", "a", "the").
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p> 		
+    		<ol>
+    			<li>Open the Human Disease query form</li>
+                <li>Query for the name <b>myosin IF</b> in the Genes query box</li>
+                <li>Verify that results returned match off of myosin or IF and does not ignore IF results</li>
+    		</ol>
+    		</li>
+		
+		    <li>Old symbols and old names are used in searches for Genes.
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>	    
+    		<ol>
+                <li>Open the Human Disease query form</li>
+                <li>Query for the old Marker name <b>"optic coloboma"</b> in the Genes query box</li>
+                <li>Verify that 3 genes(Cm, Onc1, Pax2) are returned in the Genes tab(Pax2 has an old name that matches)</li>
+                <li>Query for the old Marker symbol <b>cat</b> in the Genes query box</li>
+                <li>Verify that the gene <b>Mip</b> is returned in the Gene results(cat is an old symbol for Mip)</li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<!-- <li>User can query by homologene IDs
+			<ol>
+				<li>Query by the homologene ID <a concordion:set="#geneId" href="http://cardolan.informatics.jax.org/homology/86099">86099</a>
+					 should return the following markers in the homology class
+                <table cc:verifyRowsUnordered="#symbol : getSymbolsByGene(#geneId)">
+                	<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+	 				<tr><td>Cyp2d9</td></tr>
+	 				<tr><td>Cyp2d10</td></tr>
+	 				<tr><td>Cyp2d11</td></tr>
+	 				<tr><td>Cyp2d12</td></tr>
+	 				<tr><td>Cyp2d34</td></tr>
+	 				<tr><td>CYP2D6</td></tr>
+	 			</table>
+	 			</li>
+			</ol>
+			</li> -->
+    		<li>User can query by any type of accession ID that is associated with a marker
+    		<ol>
+                <li>Queries by the following IDs should return the appropriate <i>mouse</i> marker
+                <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Marker ID</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th>
+                	<th>Type of ID</th></tr>
+	 				<!-- <tr><td>11287</td><td>Pzp</td><td>ABA</td></tr> -->
+					<tr><td>10570741</td><td>Defb1</td><td>Affy 1.0 ST</td></tr>
+					<tr><td>1457120_at</td><td>Gm12167</td><td>Affy 430 2.0</td></tr>
+					<tr><td>102065_at</td><td>Fcna</td><td>Affy U74</td></tr>
+					<tr><td>MGI:88264</td><td>Capn2</td><td>ArrayExpress</td></tr>
+					<tr><td>CCDS22831.1</td><td>Folr4</td><td>Consensus CDS Project</td></tr>
+					<tr><td>TC1572537</td><td>Fam32a</td><td>DFCI</td></tr>
+					<tr><td>DT.97391691</td><td>H3f3b</td><td>DoTS</td></tr>
+					<!-- <tr><td>"Dorward 2005"</td><td>Gct1</td><td>Download data from the QTL Archive</td></tr> -->
+					<tr><td>3.6.4.12</td><td>Chd7</td><td>EC</td></tr>
+					<tr><td>ENSMUSG00000076252</td><td>Mir302b</td><td>Ensembl Gene Model</td></tr>
+					<tr><td>ENSMUSP00000134610</td><td>Hoxa7</td><td>Ensembl Protein</td></tr>
+					<tr><td>ENSMUST00000144653</td><td>Ttc33</td><td>Ensembl Transcript</td></tr>
+					<tr><td>105763</td><td>AA960008</td><td>Entrez Gene</td></tr>
+					<!-- <tr><td>3588286</td><td>4930415L06Rik</td><td>FuncBase</td></tr> -->
+					<!-- <tr><td>67933</td><td>Hcfc2</td><td>GENSAT</td></tr>
+					<tr><td>72439</td><td>2610007B07Rik</td><td>GEO</td></tr> -->
+					<tr><td>MGI:2443685</td><td>5830411N06Rik</td><td>MGI</td></tr>
+					<tr><td>MI0000570</td><td>Mir22hg</td><td>miRBase</td></tr>
+					<tr><td>54373</td><td>Prss16</td><td>NCBI Gene Model</td></tr>
+					<tr><td>NT_039718</td><td>Apex2</td><td>NCBI Gene Model Evidence</td></tr>
+					<tr><td>U043246</td><td>Tmc8</td><td>NIA Mouse Gene Index</td></tr>
+					<tr><td>1WII</td><td>Elof1</td><td>PDB</td></tr>
+					<tr><td>PR:000004206</td><td>Arfgap1</td><td>Protein Ontology</td></tr>
+					<tr><td>XM_892842</td><td>Anapc15-ps</td><td>RefSeq</td></tr>
+					<!-- <tr><td>2202</td><td>Zfp329</td><td>RIKEN Cluster</td></tr> -->
+					<tr><td>AI480946</td><td>Lctl</td><td>Sequence DB</td></tr>
+					<tr><td>Q8BJ37</td><td>Tdp1</td><td>SWISS-PROT</td></tr>
+					<tr><td>Q3TUE8</td><td>Abat</td><td>TrEMBL</td></tr>
+					<!-- <tr><td>399829</td><td>Rps3a1</td><td>UniGene</td></tr> -->
+					<tr><td>OTTMUSG00000005850</td><td>Ttc19</td><td>VEGA Gene Model</td></tr>
+					<tr><td>OTTMUSP00000052052</td><td>Iqch</td><td>VEGA Protein</td></tr>
+					<tr><td>OTTMUST00000026576</td><td>Gm20878</td><td>VEGA Transcript</td></tr>
+                </table>
+                </li>
+                <li>Queries by the following IDs should return the appropriate <i>human</i> marker
+                <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Marker ID</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th>
+                	<th>Type of ID</th></tr>
+					<tr><td>729991</td><td>MEF2BNB</td><td>Entrez Gene</td></tr>
+					<!-- <tr><td>154215</td><td>NKAIN2</td><td>GENSAT</td></tr> -->
+					<tr><td>HGNC:36824</td><td>RPL37AP6</td><td>HGNC</td></tr>
+					<tr><td>NX_Q99884</td><td>SLC6A7</td><td>neXtProt</td></tr>
+					<tr><td>606810</td><td>PRODH</td><td>OMIM</td></tr>
+					<tr><td>PSD-95</td><td>DLGAP2</td><td>RatMap</td></tr>
+					<tr><td>NM_005282</td><td>GPR4</td><td>RefSeq</td></tr>
+					<tr><td>AK131274</td><td>ZNF704</td><td>Sequence DB</td></tr>
+					<tr><td>A6NI03</td><td>TRIM64B</td><td>SWISS-PROT</td></tr>
+                </table>
+                </li>
+                <li>Queries by the following IDs of a mouse/human marker's ortholog should return that mouse/human marker
+               <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Ortholog ID</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th>
+                	<th>Ortholog Symbol</th><th>Ortholog Organism</th><th>Type of ID</th></tr>
+					<tr><td>10364494</td><td>FSTL3</td><td>human</td><td>Fstl3</td><td>mouse</td><td>Affy 1.0 ST</td></tr>
+					<tr><td>1419001_at</td><td>BAAT</td><td>human</td><td>Baat</td><td>mouse</td><td>Affy 430 2.0</td></tr>
+					<tr><td>167953_i_at</td><td>MROH8</td><td>human</td><td>Mroh8</td><td>mouse</td><td>Affy U74</td></tr>
+					<tr><td>MGI:3836251</td><td>Zfp934</td><td>mouse</td><td>Gm14139</td><td>mouse</td><td>ArrayExpress</td></tr>
+					<tr><td>CCDS26368.1</td><td>HIST1H3J</td><td>human</td><td>Hist1h3a</td><td>mouse</td><td>Consensus CDS Project</td></tr>
+					<tr><td>TC1580129</td><td>WNT5A</td><td>human</td><td>Wnt5a</td><td>mouse</td><td>DFCI</td></tr>
+					<tr><td>DT.94198586</td><td>RNF114</td><td>human</td><td>Rnf114</td><td>mouse</td><td>DoTS</td></tr>
+					<tr><td>2.3.1.15</td><td>GPAT2</td><td>human</td><td>Gpat2</td><td>mouse</td><td>EC</td></tr>
+					<tr><td>ENSMUSG00000067855</td><td>Gm7347</td><td>mouse</td><td>Speer3</td><td>mouse</td><td>Ensembl Gene Model</td></tr>
+					<tr><td>ENSMUSP00000118666</td><td>Zfp951</td><td>mouse</td><td>Gm14419</td><td>mouse</td><td>Ensembl Protein</td></tr>
+					<tr><td>ENSMUST00000153210</td><td>Gm3604</td><td>mouse</td><td>Gm4724</td><td>mouse</td><td>Ensembl Transcript</td></tr>
+					<tr><td>281345</td><td>NCF1</td><td>human</td><td>NCF1</td><td>cattle</td><td>Entrez Gene</td></tr>
+					<tr><td>770022</td><td>HIST2H3A</td><td>human</td><td>LOC770022</td><td>chicken</td><td>Entrez Gene</td></tr>
+					<tr><td>473776</td><td>Utp14a</td><td>mouse</td><td>UTP14A</td><td>chimpanzee</td><td>Entrez Gene</td></tr>
+					<tr><td>477375</td><td>Ebf2</td><td>mouse</td><td>EBF2</td><td>dog</td><td>Entrez Gene</td></tr>
+					<tr><td>729991</td><td>2310045N01Rik</td><td>mouse</td><td>MEF2BNB</td><td>human</td><td>Entrez Gene</td></tr>
+					<tr><td>434172</td><td>Gm21136</td><td>mouse</td><td>Gm5592</td><td>mouse</td><td>Entrez Gene</td></tr>
+					<tr><td>29686</td><td>SCN1B</td><td>human</td><td>Scn1b</td><td>rat</td><td>Entrez Gene</td></tr>
+					<tr><td>699563</td><td>MDM4</td><td>human</td><td>MDM4</td><td>rhesus macaque</td><td>Entrez Gene</td></tr>
+					<tr><td>767662</td><td>SLC25A38</td><td>human</td><td>slc25a38a</td><td>zebrafish</td><td>Entrez Gene</td></tr>
+					<!-- <tr><td>3030126</td><td>Olfr295</td><td>mouse</td><td>Olfr292</td><td>mouse</td><td>FuncBase</td></tr> -->
+					<tr><td>HGNC:34080</td><td>FAM157A</td><td>human</td><td>FAM157B</td><td>human</td><td>HGNC</td></tr>
+					<tr><td>MGI:3646143</td><td>Vmn1r95</td><td>mouse</td><td>Vmn1r158</td><td>mouse</td><td>MGI</td></tr>
+					<tr><td>107849</td><td>Prl2c2</td><td>mouse</td><td>Prl2c5</td><td>mouse</td><td>NCBI Gene Model</td></tr>
+					<tr><td>NT_039433</td><td>NSMCE4A</td><td>human</td><td>Nsmce4a</td><td>mouse</td><td>NCBI Gene Model Evidence</td></tr>
+					<tr><td>NX_Q96B01</td><td>Rad51ap1</td><td>mouse</td><td>RAD51AP1</td><td>human</td><td>neXtProt</td></tr>
+					<tr><td>U021931</td><td>FAM20B</td><td>human</td><td>Fam20b</td><td>mouse</td><td>NIA Mouse Gene Index</td></tr>
+					<tr><td>2L9C</td><td>Mup18</td><td>mouse</td><td>Mup20</td><td>mouse</td><td>PDB</td></tr>
+					<tr><td>PR:000009284</td><td>KIDINS220</td><td>human</td><td>Kidins220</td><td>mouse</td><td>Protein Ontology</td></tr>
+					<tr><td>RGD:2466</td><td>Cyp2b10</td><td>mouse</td><td>Cyp2b1</td><td>rat</td><td>Rat Genome Database</td></tr>
+					<tr><td>PSD-95</td><td>Dlgap2</td><td>mouse</td><td>DLGAP2</td><td>human</td><td>RatMap</td></tr>
+					<tr><td>NM_174237</td><td>AK3</td><td>human</td><td>AK3</td><td>cattle</td><td>RefSeq</td></tr>
+					<tr><td>NM_001030804</td><td>EIF1AY</td><td>human</td><td>EIF1AY</td><td>chicken</td><td>RefSeq</td></tr>
+					<tr><td>XP_003318920</td><td>ZNF467</td><td>human</td><td>ZNF467</td><td>chimpanzee</td><td>RefSeq</td></tr>
+					<tr><td>NP_001003296</td><td>Cav1</td><td>mouse</td><td>CAV1</td><td>dog</td><td>RefSeq</td></tr>
+					<tr><td>NM_181509</td><td>Map1lc3a</td><td>mouse</td><td>MAP1LC3A</td><td>human</td><td>RefSeq</td></tr>
+					<tr><td>NP_031433</td><td>ADCYAP1R1</td><td>human</td><td>Adcyap1r1</td><td>mouse</td><td>RefSeq</td></tr>
+					<tr><td>NP_001162610</td><td>CKAP2</td><td>human</td><td>Ckap2</td><td>rat</td><td>RefSeq</td></tr>
+					<tr><td>XP_001110399</td><td>PES1</td><td>human</td><td>PES1</td><td>rhesus macaque</td><td>RefSeq</td></tr>
+					<tr><td>NM_001256694</td><td>TOX</td><td>human</td><td>tox</td><td>zebrafish</td><td>RefSeq</td></tr>
+					<tr><td>AF362071</td><td>Dhrs9</td><td>mouse</td><td>DHRS9</td><td>cattle</td><td>Sequence DB</td></tr>
+					<tr><td>AB087266</td><td>Sod1</td><td>mouse</td><td>SOD1</td><td>chimpanzee</td><td>Sequence DB</td></tr>
+					<tr><td>AF126157</td><td>Prop1</td><td>mouse</td><td>PROP1</td><td>dog</td><td>Sequence DB</td></tr>
+					<tr><td>BC040126</td><td>Trmt1</td><td>mouse</td><td>TRMT1</td><td>human</td><td>Sequence DB</td></tr>
+					<tr><td>AF272948</td><td>GPR84</td><td>human</td><td>Gpr84</td><td>mouse</td><td>Sequence DB</td></tr>
+					<tr><td>AF167412</td><td>SLC26A4</td><td>human</td><td>Slc26a4</td><td>rat</td><td>Sequence DB</td></tr>
+					<tr><td>P15497</td><td>Apoa1</td><td>mouse</td><td>APOA1</td><td>cattle</td><td>SWISS-PROT</td></tr>
+					<tr><td>Q5F3C8</td><td>Plekho1</td><td>mouse</td><td>PLEKHO1</td><td>chicken</td><td>SWISS-PROT</td></tr>
+					<tr><td>O77485</td><td>Fut2</td><td>mouse</td><td>FUT2</td><td>chimpanzee</td><td>SWISS-PROT</td></tr>
+					<tr><td>E2QXF3</td><td>Rpl15</td><td>mouse</td><td>RPL15</td><td>dog</td><td>SWISS-PROT</td></tr>
+					<tr><td>Q86UY8</td><td>Nt5dc3</td><td>mouse</td><td>NT5DC3</td><td>human</td><td>SWISS-PROT</td></tr>
+					<tr><td>Q8VF13</td><td>OR5T1</td><td>human</td><td>Olfr1094</td><td>mouse</td><td>SWISS-PROT</td></tr>
+					<tr><td>P80432</td><td>Cox7c</td><td>mouse</td><td>Cox7c</td><td>rat</td><td>SWISS-PROT</td></tr>
+					<tr><td>Q6UIM1</td><td>ZNHIT3</td><td>human</td><td>ZNHIT3</td><td>rhesus macaque</td><td>SWISS-PROT</td></tr>
+					<tr><td>A5PF44</td><td>Garnl3</td><td>mouse</td><td>garnl3</td><td>zebrafish</td><td>SWISS-PROT</td></tr>
+					<tr><td>J3QN17</td><td>Gm20808</td><td>mouse</td><td>Gm20918</td><td>mouse</td><td>TrEMBL</td></tr>
+					<tr><td>OTTMUSG00000036252</td><td>Gm3468</td><td>mouse</td><td>Gm8279</td><td>mouse</td><td>VEGA Gene Model</td></tr>
+					<tr><td>OTTMUSP00000024452</td><td>ATP1A2</td><td>human</td><td>Atp1a2</td><td>mouse</td><td>VEGA Protein</td></tr>
+					<tr><td>OTTMUST00000012837</td><td>JMJD4</td><td>human</td><td>Jmjd4</td><td>mouse</td><td>VEGA Transcript</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>The following accession IDs are excluded / not supported
+    		<ol>
+                <li>Queries by the following IDs should not return the following markers
+                <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Marker ID</th>
+                	<th cc:assertNoResultsContain="#symbols">Marker Symbol</th>
+                	<th>Type of ID</th></tr>
+                	<tr><td>414125</td><td>Rpl26-ps1</td><td>ABA</td></tr>
+	 				<tr><td>"Dorward 2005"</td><td>Gct1</td><td>Download data from the QTL Archive</td></tr>
+	 				<tr><td>3588286</td><td>4930415L06Rik</td><td>FuncBase</td></tr>
+	 				<tr><td>86099</td><td>Cyp2d9</td><td>HomoloGene</td></tr>
+	 				<tr><td>2202</td><td>Zfp329</td><td>RIKEN Cluster</td></tr>
+	 				<tr><td>399829</td><td>Rps3a1</td><td>UniGene</td></tr>
+				</table>
+				</li>
+			</ol>
+			</li>
+    		<li>User can query by marker symbols
+    		<ol>
+    			<li>Queryies by the following <i>symbols</i> should bring back the appropriate marker
+    			<table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Marker Symbol</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th></tr>
+                	<tr><td>TNR</td><td>TNR</td><td>human</td></tr>
+ 					<tr><td>Kit</td><td>Kit</td><td>mouse</td></tr>
+                </table>
+                </li>
+                <li>Queries by the following <i>symbols</i> of a mouse/human marker's ortholog should return that mouse/human marker
+               <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Ortholog Symbol</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th>
+                	<th>Ortholog Symbol</th><th>Ortholog Organism</th></tr>
+	 				<tr><td>ACADL</td><td>Acadl</td><td>mouse</td><td>ACADL</td><td>cattle</td></tr>
+					<tr><td>CIT</td><td>CIT</td><td>human</td><td>CIT</td><td>chicken</td></tr>
+					<tr><td>TRPM6</td><td>TRPM6</td><td>human</td><td>TRPM6</td><td>chimpanzee</td></tr>
+					<tr><td>SERPINB11</td><td>SERPINB11</td><td>human</td><td>SERPINB11</td><td>dog</td></tr>
+					<tr><td>PAXBP1</td><td>Paxbp1</td><td>mouse</td><td>PAXBP1</td><td>human</td></tr>
+					<tr><td>Vmn1r120</td><td>Vmn1r127</td><td>mouse</td><td>Vmn1r120</td><td>mouse</td></tr>
+					<tr><td>Paqr9</td><td>Paqr9</td><td>mouse</td><td>Paqr9</td><td>rat</td></tr>
+					<tr><td>ZNF157</td><td>Zfp810</td><td>mouse</td><td>ZNF157</td><td>rhesus macaque</td></tr>
+					<tr><td>npnt</td><td>NPNT</td><td>human</td><td>npnt</td><td>zebrafish</td></tr>
+                </table>
+                </li>
+            </ol>
+            </li>
+            <li>User can query by marker names
+    		<ol>
+    			<li>Queryies by the following <i>names</i> should bring back the appropriate marker
+    			<table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Marker Name</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th></tr>
+                	<tr><td>"tenascin R"</td><td>TNR</td><td>human</td></tr>
+ 					<tr><td>"thymocyte selection associated family member 2"</td><td>THEMIS2</td><td>mouse</td></tr>
+                </table>
+                </li>
+                <li>Queries by the following <i>names</i> of a mouse/human marker's ortholog should return that mouse/human marker
+               <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Ortholog Name</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th>
+                	<th>Ortholog Symbol</th><th>Ortholog Organism</th></tr>
+	 				<tr><td>"acyl-CoA dehydrogenase, long chain"</td><td>Acadl</td><td>mouse</td><td>ACADL</td><td>cattle</td></tr>
+					<tr><td>"angio-associated, migratory cell protein"</td><td>Aamp</td><td>mouse</td><td>AAMP</td><td>chicken</td></tr>
+					<tr><td>"RNA binding motif protein, Y-linked, family 1, member A1"</td><td>RBMY1A1</td><td>human</td><td>RBMY1F</td><td>chimpanzee</td></tr>
+					<tr><td>"protocadherin beta 7"</td><td>Pcdhb15</td><td>mouse</td><td>PCDHB7</td><td>dog</td></tr>
+					<tr><td>"chromosome 19 open reading frame 69"</td><td>Gm7092</td><td>mouse</td><td>C19orf69</td><td>human</td></tr>
+					<tr><td>"mitogen-activated protein kinase-activated protein kinase 3"</td><td>MAPKAPK3</td><td>human</td><td>Mapkapk3</td><td>mouse</td></tr>
+					<tr><td>"similar to formin-like 2 isoform B"</td><td>Fmnl2</td><td>mouse</td><td>RGD1560248</td><td>rat</td></tr>
+					<tr><td>"Snf2-related CREBBP activator protein"</td><td>Srcap</td><td>mouse</td><td>SRCAP</td><td>rhesus macaque</td></tr>
+					<tr><td>"ribosomal protein S15a"</td><td>Rps15a</td><td>mouse</td><td>rps15a</td><td>zebrafish</td></tr>
+                </table>
+                </li>
+            </ol>
+            </li>
+            
+    		<li>User can query by marker synonyms
+    		<ol>
+    			<li>Queryies by the following <i>synonyms</i> should bring back the appropriate marker
+    			<table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Marker Synonym</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th></tr>
+                	<tr><td>A2MD</td><td>A2M</td><td>human</td></tr>
+ 					<tr><td>GA_x6K02T2PSCP-2531299-2530355</td><td>Olfr131</td><td>mouse</td></tr>
+                </table>
+                </li>
+    			<li>Queries by the following <i>synonyms</i> of a mouse/human marker's ortholog should return that mouse/human marker
+               <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+                	<tr><th concordion:set="#geneId">Ortholog Synonym</th>
+                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th>
+                	<th>Ortholog Symbol</th><th>Ortholog Organism</th></tr>
+				 	<tr><td>ABLL</td><td>Abl2</td><td>mouse</td><td>ABL2</td><td>cattle</td></tr>
+					<tr><td>TRAPPC11</td><td>TRAPPC11</td><td>human</td><td>C4H4ORF41</td><td>chicken</td></tr>
+					<tr><td>SMN2</td><td>SMN1</td><td>human</td><td>SMN1</td><td>chimpanzee</td></tr>
+					<tr><td>RNUXA</td><td>PHAX</td><td>human</td><td>PHAX</td><td>dog</td></tr>
+					<tr><td>GC2</td><td>Slc25a18</td><td>mouse</td><td>SLC25A18</td><td>human</td></tr>
+					<tr><td>6030405N23Rik</td><td>Gm13279</td><td>mouse</td><td>Ifnz</td><td>mouse</td></tr>
+					<tr><td>RGD1560911</td><td>Efcab4a</td><td>mouse</td><td>Efcab4a</td><td>rat</td></tr>
+					<tr><td>C9orf5</td><td>Tmem245</td><td>mouse</td><td>TMEM245</td><td>rhesus macaque</td></tr>
+					<tr><td>cbs</td><td>CBS</td><td>human</td><td>cbsb</td><td>zebrafish</td></tr>
+				</table>
+				</li>
+	    		</ol>
+    		</li>
+    		<li>User should not be able to bring back genes of marker types 'BAC/YAC end' or 'DNA Segment', unless they have data.
+    		<ol>
+    			<li>Query by 'BAC/YAC end' <b concordion:set="#geneId">316G10SP6</b> should not return gene <b cc:assertNoResultsContain="getSymbolsByGene(#geneId)">316G10SP6</b></li>
+    			<li>Query by 'DNA Segment' <b concordion:set="#geneId">D1Mit1001</b> should not return gene <b cc:assertNoResultsContain="getSymbolsByGene(#geneId)">D1Mit1001</b></li>
+    			<li>Query by 'DNA Segment' <b concordion:set="#geneId">D17Aus9</b> <i>should</i> return gene <b cc:assertResultsContain="getSymbolsByGene(#geneId)">D17Aus9</b>,
+    				because it has phenotype data in this genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/">MGI:3719867</a></li>
+	    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

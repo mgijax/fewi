@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.GxdAssayResult;
 
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Filters;
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
@@ -26,6 +30,7 @@ import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow;
+import org.jax.mgi.fewi.summary.VocabACSummaryRow.ACType;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -259,23 +264,48 @@ public class AutoCompleteController {
 		
 		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query);
 		List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
-		
-        for (VocabACResult result : results.getResultObjects()) {
-			if (result != null){
-				VocabACSummaryRow row = new VocabACSummaryRow(result,query);
-				summaryRows.add(row);
-			} else {
-				logger.debug("--> Null Object");
-			}
-		}
-		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = makeJsonResponse(results,query);
+//		
+//        for (VocabACResult result : results.getResultObjects()) {
+//			if (result != null){
+//				VocabACSummaryRow row = new VocabACSummaryRow(result,query,ACType.GXD);
+//				summaryRows.add(row);
+//			} else {
+//				logger.debug("--> Null Object");
+//			}
+//		}
+		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = makeJsonResponse(results,query,ACType.GXD);
 		return jsonResponse;
 	}
 
-	
-	public @ResponseBody SearchResults<VocabACResult> getVocabAutoCompleteResults(
+	//autocomplete for the disease portal phenotypes query
+	@RequestMapping("/diseasePortal/phenotypes")
+	public @ResponseBody JsonSummaryResponse<VocabACSummaryRow> vocabHDPPhenotypesAutoComplete(
 			@RequestParam("query") String query) {
 		
+		// filter specific vocabs for this autocomplete
+		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.OP_IN);
+		
+		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
+		List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
+		
+//        for (VocabACResult result : results.getResultObjects()) {
+//			if (result != null){
+//				VocabACSummaryRow row = new VocabACSummaryRow(result,query,ACType.DISEASE_PORTAL);
+//				summaryRows.add(row);
+//			} else {
+//				logger.debug("--> Null Object");
+//			}
+//		}
+		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = makeJsonResponse(results,query,ACType.DISEASE_PORTAL);
+		return jsonResponse;
+	}
+	
+	public SearchResults<VocabACResult> getVocabAutoCompleteResults(String query) 
+	{
+		return getVocabAutoCompleteResults(query,new ArrayList<Filter>());
+	}
+	public SearchResults<VocabACResult> getVocabAutoCompleteResults(String query,List<Filter> additionalFilters) 
+	{	
 		// split input on any non-alpha characters
 		Collection<String> words = QueryParser.parseAutoCompleteSearch(query);
 		logger.debug("vocab term query:" + words.toString());
@@ -283,13 +313,14 @@ public class AutoCompleteController {
 		SearchParams params = new SearchParams();
 		params.setPageSize(100);
 		
-		Filter f = new Filter();
 		List<Filter> fList = new ArrayList<Filter>();
 		for (String q : words) {
 			Filter termFilter = new Filter(SearchConstants.VOC_TERM,q,Filter.OP_GREEDY_BEGINS);
 			fList.add(termFilter);
 		}
-		f.setNestedFilters(fList,Filter.FC_AND);
+		if(additionalFilters!=null) fList.addAll(additionalFilters);
+		
+		Filter f = Filter.and(fList);
 		
 		params.setFilter(f);
 		
@@ -309,7 +340,7 @@ public class AutoCompleteController {
 	/*
 	 * precompiles the regex pattern matchers and then builds the html formatted responses
 	 */
-	public JsonSummaryResponse<VocabACSummaryRow> makeJsonResponse(SearchResults<VocabACResult> results,String query)
+	public JsonSummaryResponse<VocabACSummaryRow> makeJsonResponse(SearchResults<VocabACResult> results,String query,ACType formatType)
 	{
 		List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
 		
@@ -324,7 +355,7 @@ public class AutoCompleteController {
 		// build the html formatted summary objects
         for (VocabACResult result : results.getResultObjects()) {
 			if (result != null){
-				VocabACSummaryRow row = new VocabACSummaryRow(result,ps);
+				VocabACSummaryRow row = new VocabACSummaryRow(result,ps,formatType);
 				summaryRows.add(row);
 			} else {
 				logger.debug("--> Null Object");
@@ -335,5 +366,76 @@ public class AutoCompleteController {
 		jsonResponse.setTotalCount(results.getTotalCount());
 		
 		return jsonResponse;
+	}
+	
+	/*
+	 *  resolves a list of IDs into their matching terms
+	 *  I.e. you pass in a comma or whitespace separated list of IDs (and terms). 
+	 *  	Any token, matching an ID, will be replaced with the term it matches.
+	 */
+	@RequestMapping("/vocabTerm/resolve")
+	public @ResponseBody String resolveVocabTermId(
+			@RequestParam("ids") String ids) 
+	{
+		/*
+		 *  Honestly, I am too lazy to figure out how to get StringUtils.replaceEach() to do case-insensitive matching (which I don't think it does).
+		 *  	So, to satisfy the curators who feel the need to have lowercase MP IDs resolved in "you searched for" text,
+		 *  		which can only come through users (not autocomplete),
+		 *  		I am putting in this hack.
+		 *  	-kstone
+		 */
+		ids = ids.replaceAll("mp","MP");
+		
+		SearchResults<VocabACResult> results = resolveVocabTermIdQuery(ids);
+		if(results==null) return ids;
+		
+		// if there are any hits, map them here
+		Set<String> duplicates = new HashSet<String>();
+		// build parallel lists of search -> replacement strings
+		String[] searchList = new String[results.getTotalCount()];
+		String[] replacementList = new String[results.getTotalCount()];
+		int index = 0;
+		for(VocabACResult result : results.getResultObjects())
+		{
+			String termId = result.getTermId();
+			if(duplicates.contains(termId)) continue;
+			duplicates.add(termId);
+			
+			String replacement = result.getTermId() + "("+result.getOriginalTerm()+")";
+			replacementList[index] = replacement;
+			searchList[index] = result.getTermId();
+			index++;
+		}
+		
+		// replace each search string with its corresponding replacement string
+		// 	I.e. every occurrence of searchList[0] is replaced by replacementList[0], and so on
+		String resolvedIds = StringUtils.replaceEach(ids,searchList,replacementList);
+		return resolvedIds;
+	}
+	
+	private SearchResults<VocabACResult> resolveVocabTermIdQuery(String ids)
+	{
+		// filter specific vocabs for this autocomplete
+		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
+		
+		List<Filter> filters = new ArrayList<Filter>();
+		
+		if(idTokens.size()>0)
+		{
+			List<Filter> idFilters = new ArrayList<Filter>();
+			for(String idToken : idTokens)
+			{
+				idFilters.add(new Filter(SearchConstants.VOC_TERM_ID,idToken,Filter.OP_EQUAL));
+			}
+			filters.add(Filter.or(idFilters));
+		}
+		if(filters.size()<=0) return null; // do nothing if we have no filters
+		
+		SearchParams params = new SearchParams();
+		params.setFilter(Filter.and(filters));
+		params.setPageSize(10000); // set to a high number to ensure we get all the results
+		
+		SearchResults<VocabACResult> results = autocompleteFinder.getVocabAutoComplete(params);
+		return results;
 	}
 }

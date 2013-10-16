@@ -18,6 +18,7 @@ public class WebTemplate {
 
     String headHtml;
     String bodyStartHtml;
+    String bodyStartHdpHtml;
     String bodyStopHtml;
     String cssFiles = new String();
     String jsFiles = new String();
@@ -43,6 +44,9 @@ public class WebTemplate {
     }
     public String getTemplateBodyStartHtml() {
         return this.bodyStartHtml;
+    }
+    public String getTemplateBodyStartHdpHtml() {
+        return this.bodyStartHdpHtml;
     }
     public String getTemplateBodyStopHtml() {
         return this.bodyStopHtml;
@@ -107,6 +111,7 @@ public class WebTemplate {
         try {
             headHtml = setTemplate("templateHead.html");
             bodyStartHtml = setTemplate("templateBodyStart.html");
+            bodyStartHdpHtml = setTemplate("templateHdpBodyStart.html");
             bodyStopHtml = setTemplate("templateBodyStop.html");
         }
         catch (Exception exc) {

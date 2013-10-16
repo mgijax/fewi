@@ -23,7 +23,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 
 public class SolrPropertyMapper 
 {
-    ArrayList <String> fieldList = new ArrayList<String>();
+    List <String> fieldList = new ArrayList<String>();
     // The default operand is equals.
     int operand = 0;
     protected String singleField = "";
@@ -35,7 +35,7 @@ public class SolrPropertyMapper
      * @param joinClause
      */
     
-    public SolrPropertyMapper(ArrayList<String> fieldList, String joinClause) {
+    public SolrPropertyMapper(List<String> fieldList, String joinClause) {
         this.fieldList = fieldList;
         this.joinClause = joinClause;
     }

@@ -1,0 +1,252 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Grid Tab, Genes Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Grid Tab, Genes Tests </h1>
+    <ul>
+        <li>User story 30, E4: Basic grid - left side and framework</li>
+        <li>User story 135, Grid: switch from OMGs to simples</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>A new Tab will be added for this Grid data</li>
+		<li>Mouse and Human genes will display on the same row but under separate columns</li>
+		<li>Genes shown on this Tab should be for super simple genotypes only</li>
+		<li>Clusters with multiple human or mouse markers appear as comma separated list</li>
+		<li>US135: main kind of test: things that are currently being excluded get included</li>
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<p>For current definitions of genotypes included or excluded from the various displays, see the <a href="HDPQuerybyDiseaseGene.html">HDPQuerybyDiseaseGene</a> test suite.</p>
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>The Grid tab exists.
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/23</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>gata1</b> in the Genes section and hit search</li>
+                <li>Click on the Grid tab and confirm the columns titled <b>Human Marker Symbol</b> and <b>Mouse Marker Symbol</b> exist</li>
+    		</ol>
+    		</li>
+		
+    		<li>Grid homology clusters with multiple markers appear as comma separated list
+ 			<p concordion:assertTrue="true">passed - kstone - 2013/08/23</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>Zfp110</b> in the Genes section and hit search</li>
+                <li>Click on the Grid tab and confirm that there is one row with two mouse markers in it, displayed as <b>Zfp110, Zfp369</b>.
+                	Zfp110 and Zfp369 are in this homology cluster with ID <a href="http://cardolan.informatics.jax.org/homology/128519">128519</a>.</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>The results exclude Gt(Rosa)26Sor.
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#genes">Rosa</b> in the Genes section and hit search</li>
+                <li>Click on the Grid tab and verify the following marker does not appear: <b cc:assertNoResultsContain="gridAllSymbolsByGene(#genes)">Gt(ROSA)26Sor</b>.</li>
+               	
+    		</ol>
+    		</li>
+    		<li>The grid returns both mouse and human gene when you display a disease associated to a human gene
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">166700</b> for (Buschke-Ollendorff Syndrome; BOS) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the human marker column contains marker <b cc:assertResultsContain="gridHumanSymbolsByPhenotype(#pheno)">LEMD3</b> 
+                	and the Mouse marker column contains marker <b cc:assertResultsContain="gridMouseSymbolsByPhenotype(#pheno)">Lemd3</b>
+                	(The mouse marker is not associated to this disease but is part of the cluster)</li>
+    		</ol>
+    		</li>
+
+ 			<li>The grid returns both mouse and human gene when you display a disease associated to a mouse gene
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">116860</b> for (Cerebral Cavernous Malformations; CCM) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the human marker column contains markers 
+	                <table cc:verifySupersetOf="#symbol : gridHumanSymbolsByPhenotype(#pheno)">
+	                	<tr><th concordion:assertEquals="#symbol">Symbol</th></tr>
+	                	<tr><td>KRIT1</td></tr>
+	                	<tr><td>CCM2</td></tr>
+	                </table> 
+                and the Mouse marker column contains markers 
+                	<table cc:verifySupersetOf="#symbol : gridMouseSymbolsByPhenotype(#pheno)">
+	                	<tr><th concordion:assertEquals="#symbol">Symbol</th></tr>
+	                	<tr><td>Krit1</td></tr>
+	                	<tr><td>Ccm2</td></tr>
+	                </table>
+                (The human markers are not associated to this disease but are part of the cluster)</li>
+    		</ol>
+    		</li>
+
+    		<li>The grid returns both mouse and human gene when you display a phenotype associated to a mouse gene
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0010803</b> for (abnormal stomach enteroendocrine cell morphology) in the Phenotypes and Diseases section and hit search</li>
+               	<li>Click on the Grid tab and confirm the human marker column contains markers 
+	                <table cc:verifySupersetOf="#symbol : gridHumanSymbolsByPhenotype(#pheno)">
+	                	<tr><th concordion:assertEquals="#symbol">Symbol</th></tr>
+	                	<tr><td>ATP4A</td></tr>
+	                	<tr><td>AGR2</td></tr>
+	                	<tr><td>PDX1</td></tr>
+	                	<tr><td>CCKBR</td></tr>
+	                </table> 
+                and the Mouse marker column contains markers 
+                	<table cc:verifySupersetOf="#symbol : gridMouseSymbolsByPhenotype(#pheno)">
+	                	<tr><th concordion:assertEquals="#symbol">Symbol</th></tr>
+	                	<tr><td>Atp4a</td></tr>
+	                	<tr><td>Agr2</td></tr>
+	                	<tr><td>Pdx1</td></tr>
+	                	<tr><td>Cckbr</td></tr>
+	     				<tr><td>Nkx6-3</td></tr>
+	                </table>
+                (Note no Human marker for Nkx6-3 because it does not have an association to the mouse marker)</li>
+    		</ol>
+    		</li>
+
+    		<li>The grid includes markers that <i>have</i> simple genotypes for phenotypes/diseases, but do <i>not have</i> any super-simple genotypes that match the query.
+    		<i>Change for sto135</i>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0004091</b> (abnormal Z lines) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Actg1</b>.
+                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4881929">MGI:4881929</a>, which is not 'super-simple'.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>The grid excludes results annotated to Conditional Recombinase genotypes but includes results annotated to super-simple genotypes (OMG).
+    		<i>Change for sto135</i>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0004521</b> (abnormal cochlear hair cell stereociliary bundle morphology) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Actg1</b>.
+                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4882053">MGI:4882053</a>, which IS 'super-simple' (OMG).</li>
+                <li>Enter <b concordion:set="#pheno">MP:0009404</b> (centrally nucleated skeletal muscle fibers) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Actg1</b>.
+                	It is annotated to this term via the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4881929">MGI:4881929</a>, which is not 'super-simple'.</li>
+    		</ol>
+    		</li>
+
+    		<li>Markers with no homology cluster are displayed
+    		<ol>
+                <li>Open the HDP query form</li>
+                 <li>Enter <b concordion:set="#genes">hpmd</b> in the Genes section and hit search</li>
+                 <li>Verify that <b cc:assertResultsContain="gridAllSymbolsByGene(#genes)">hpmd</b> appears on the grid, with no marker in the human column.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>The grid includes results annotated to  simple Transgenic Reporter genotypes as well as super-simple (OMG) genotypes, but excludes complex genotypes.
+    		<i>Changed for sto135</i>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0002652</b> (thin myocardium) in the Phenotypes and Diseases section and hit search. (<i>all automated.</i>)</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Cacnb2</b>.<br/>
+                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762359">MGI:3762359</a> (genotype contains a transgenic reporter which gets ignored).</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Adrbk1</b>.<br/>
+                	It is annotated to this term via the super-simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2654809">MGI:2654809</a> (homozygous, OMG).</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES NOT contain the marker <b cc:assertNoResultsContain="gridAllSymbolsByPhenotype(#pheno)">Ccm2l</b>.<br/>
+                	It is annotated to this term via the super-simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:5439509">MGI:5439509</a> (complex: has 3 markers)<br/>
+                	and also the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:5439507">MGI:5439507</a> (complex: has 2 markers and cannot be simplified).</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES NOT contain the marker <b cc:assertNoResultsContain="gridAllSymbolsByPhenotype(#pheno)">Heg1</b>.<br/>
+                	It is annotated to this term via the super-simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:5439509">MGI:5439509</a> (complex: has 3 markers)<br/>
+                	and also the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:5439507">MGI:5439507</a> (complex: has 2 markers and cannot be simplified).</li>
+                <li>Enter <b concordion:set="#pheno">MP:0004076</b> (abnormal vitelline vascular remodeling) in the Phenotypes and Diseases section and hit search. (<i>automated.</i>)</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Cacnb2</b>.<br/>
+                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762359">MGI:3762359</a> (genotype contains a transgenic reporter which gets ignored)<br/>
+                	and also via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762360">MGI:3762360</a> (contains a recombinase allele which gets ignored, and genotype is conditional).</li>
+                <li>Enter <b concordion:set="#pheno">MP:0000269</b> (abnormal heart looping) in the Phenotypes and Diseases section and hit search. (<i>automated.</i>)</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Cacnb2</b>.<br/>
+                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3762359">MGI:3762359</a> (genotype contains a transgenic reporter which gets ignored).</li>
+    		</ol>
+    		</li>
+
+    		<li>The grid excludes results annotated to complex genotypes but includes results annotated to simple or super-simple (OMG) genotypes. 
+    		<i>Changed for sto135</i>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">MP:0001327</b> (decreased retinal photoreceptor cell number) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES contain the marker <b cc:assertResultsContain="gridAllSymbolsByPhenotype(#pheno)">Atxn7</b> .<br/>
+                	It is annotated to this term via the simple genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2651696">MGI:2651696</a>, which IS 'super-simple' (OMG).</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES NOT contain the marker <b cc:assertNoResultsContain="gridAllSymbolsByPhenotype(#pheno)">Abca4</b>.<br/>
+                	It is annotated to this term via the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4410294">MGI:4410294</a>, which is not 'simple': it has 2 markers.</li>
+                <li>Click on the Grid tab and confirm the mouse marker column DOES NOT contain the marker <b cc:assertNoResultsContain="gridAllSymbolsByPhenotype(#pheno)">Ascl1</b>.<br/>
+                	It is annotated to this term via the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4420920">MGI:4420920</a>, which is not 'simple': it has 2 markers<br/>
+                	and genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:4420916">MGI:4420916</a> which has 3 markers.</li>
+    		</ol>
+    		</li>
+
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
