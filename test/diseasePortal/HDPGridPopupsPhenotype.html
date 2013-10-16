@@ -50,6 +50,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 33, E4: Drill Down page -  MP  Xs - debugging display</li>
         <li>User story 95, E4: Drill down grid - MP X's - Data formatting</li>
         <li>User story 178, Flag for background sensitivity - MP popups</li>
+        <li>User story 135, Grid: switch from OMGs to simples</li>
     </ul>
 
 
@@ -63,6 +64,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto178: if there is a background sensitivity note attached to an MP annotation, then show a flag on the popup</li>
 		<li>sto178: flag appears in a cell if any of the actual annotations underlying that cell have a b.s. note</li>
 		<li>sto178: flag is a little exclamation point "!" in a corner of the cell</li>
+		<li>sto135: main kind of test: things that are currently being excluded get included</li>
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -98,6 +100,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto95: page header should use the word "and" instead of multiplication symbol "x"</li>
 		<li>sto178: add background sensitivity flag to any cell that has a background sensitivity note in ANY annotation</li>
 		<li>sto178: add legend to describe what N and ! means (normals and background sensitivity flag respectively)</li>
+		<li>sto135: correct display of MP term column headers to same as Allele Detail Page (since we now include both "simple" and "super-simple [OMG]" genotypes)</li>
 	</ul>
 	
 </div>
@@ -132,8 +135,8 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		
-    		<li>MP Term column headers should display in the shortest-path DAG order, as on the Allele Detail Page (sto95) <span style="background-color:#D079E0;">&lt;-- NEEDS AUTOMATION PLEASE.</span>
- 			<p concordion:assertTrue="true">klf 10/1/2013</p> 
+    		<li>MP Term column headers should display in the shortest-path DAG order, as on the Allele Detail Page. If a "normal" annotation to a header term appears, the header term should display in the first column. (sto95, modified for sto135) <span style="background-color:#D079E0;">&lt;-- NEEDS AUTOMATION PLEASE.</span>
+ 			<p concordion:assertTrue="true">klf 10/16/2013</p> 
     		<ol>
                 <li>Open the HDP query form.</li>
                 <li>Enter <b>klf1</b> in the Genes section and hit search.</li>
@@ -160,6 +163,15 @@ tr.gray td {background-color:#EEEEEE;}
 					<tr><td>abnormal erythrocyte osmotic lysis</td></tr>
                 </table>
                 </li>
+                <li>Clear the search. Enter <b>Mecp2</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of Mecp2 and <b>mortality/aging</b>.</li>
+                <li>Verify that column headers display MP terms in the following order:
+                <table>
+					<tr><td>mortality/aging</td></tr>
+					<tr><td>premature death</td></tr>
+					<tr><td>partial preweaning lethality</td></tr>
+				</table>
+				</li>
     		</ol>
     		</li>
 		
