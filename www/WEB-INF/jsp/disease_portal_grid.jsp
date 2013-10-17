@@ -103,7 +103,7 @@
 		<c:forEach var="mpHeaderCol" items="${mpHeaderColumns}" varStatus="status">
 			<th class="vb"><div><c:out value="${mpHeaderCol}" escapeXml="false" /></div>
 			<div style="position:relative;">
-			<div class="<c:out value="${status.last && not empty diseaseColumns ? 'partialDoubleRight': 'partialRight'}"/>"</div>
+			<div class="<c:out value="${status.last && not empty diseaseColumns ? 'partialDoubleRight': 'partialRight'}"/>"></div>
 			</div></th>
 			<c:if test="${status.last}"><c:set var="lastColImage" value="${mpHeaderCol}"/></c:if>
 	    </c:forEach>
