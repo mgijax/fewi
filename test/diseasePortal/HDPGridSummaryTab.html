@@ -140,11 +140,10 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Confirm the Invert button reverses the filtered results(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
-				<li>Query for marker <b>????</b></li>
-                <li>Place checkmarks for markers <b>???</b> <b>???</b> and <b>???</b></li>
-                <li>Place checkmarks for phenotypes <b>???</b> and <b>???</b></li>
+				<li>Query for marker <b>shh</b></li>
+                <li>Place checkmarks for marker <b>Tg(Shh)#Dje</b></li>
                 <li>Press the <b>Go?</b> button</li>
-                <li>Verify the results have been filtered</li>
+                <li>Verify the results have been filtered and show just this marker and only the 4 columns <b>behavior/neurological, cellular, hearing/vestibular/ear, nervous system</b></li>
                 <li>Press the <b>Invert</b> button</li>
                 <li>Verify the results have been reversed to display the results of all items there were not checked</li>
     		</ol>
@@ -152,15 +151,16 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Confirm that filtering is applied across all 3 tabs(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
-				<li>Query for marker <b>????</b></li>
-                <li>Place checkmarks for markers <b>???</b> <b>???</b> and <b>???</b></li>
-                <li>Place checkmarks for phenotypes <b>???</b> and <b>???</b></li>
-                <li>Place checkmarks for diseases <b>???</b> and <b>???</b></li>
+				<li>Query for phenotype <b>MP:0004521</b></li>
+                <li>Place checkmarks for markers <b>Casp3</b> <b>Tomt</b> and <b>Tshr</b></li>
+                <li>Place checkmarks for phenotypes <b>cellular</b> and <b>growth/size</b></li>
                 <li>Press the <b>Go?</b> button</li>
-                <li>Verify the results have been filtered</li>
-                <li>Click on the Genes tab and confirm only genes <b>???</b>, <b>???</b> are returned</li>
-                <li>Click on the Diseases tab and confirm only diseases <b>???</b>, <b>???</b> are returned</li>
-    		</ol>
+                <li>Verify the results list <b>Casp3</b> associated to <b>cellular</b> and <b>growth/size</b></li>
+                <li>Verify the results list <b>Tomt</b> associated to just <b>growth/size</b></li>
+                <li>Verify the results list <b>Tshr</b> associated to <b>cellular</b> and <b>growth/size</b></li>
+                <li>Click on the Genes tab and confirm that only these 3 markers are displayed</li>
+                <li>Click on the Disease tab and confirm no diseases are displayed</li>
+            </ol>
     		</li>   
     		<li>Confirm that a second filter sort on columns works(sto140)
  			<p concordion:assertTrue="false">new test</p>
@@ -176,12 +176,14 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Confirm that filtering is applied across all pages(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
-				<li>Query for marker <b>????</b></li>
-                <li>Place checkmarks for markers <b>???</b> <b>???</b> and <b>???</b></li>
-                <li>Place checkmarks for phenotypes <b>???</b> and <b>???</b></li>
-                <li>Place checkmarks for diseases <b>???</b> and <b>???</b></li>
+				<li>Query for phenotype <b>MP:0004521</b></li>
+                <li>Place checkmarks for markers <b>Casp3</b> <b>Tomt</b> and <b>Tshr</b></li>
+                <li>Place checkmarks for phenotypes <b>cellular</b> and <b>growth/size</b></li>
                 <li>Press the <b>Go?</b> button</li>
-                <li>Verify the results have been filtered across all pages</li>
+                <li>Verify the results list <b>Casp3</b> associated to <b>cellular</b> and <b>growth/size</b></li>
+                <li>Verify the results list <b>Tomt</b> associated to just <b>growth/size</b></li>
+                <li>Verify the results list <b>Tshr</b> associated to <b>cellular</b> and <b>growth/size</b></li>
+                <li>Note: markers Tomt and Tshr are listed on the second page of results</li>
     		</ol>
     		</li> 		
 		</ol>
