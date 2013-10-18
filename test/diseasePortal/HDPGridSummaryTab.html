@@ -119,20 +119,19 @@ tr.gray td {background-color:#EEEEEE;}
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
 				<li>Query for marker <b>casp3</b></li>
-                <li>Place checkmarks for markers <b>Casp3</b> <b>Tg(ACTA1-Casp3*)10.2Spc</b> and <b>Tg(Casp3)18Fine</b></li>
+                <li>Place checkmarks for markers <b>Casp3</b>, <b>Tg(ACTA1-Casp3*)10.2Spc</b> and <b>Tg(Casp3)18Fine</b></li>
                 <li>Place checkmarks for phenotypes <b>muscle</b> and <b>nervous system</b></li>
-                <li>Verify the existence of a <b>Go?</b> button</li>
-                <li>Verify the existence of a <b>Reset</b> button</li>
-                <li>Verify the existence of an <b>Invert</b> button</li>
+                <li>Verify the results are correct. You should return marker <b>Casp3</b> with both <b>muscle</b> and <b>nervous system</b> checked</li>
+                <li>You should also return marker <b>Tg(Casp3)18Fine</b> with just <b>nervous system</b> checked</li>
+                <li>Marker <b>Tg(ACTA1-Casp3*)10.2Spc</b> should not be returned at all</li>
     		</ol>
     		</li>
     		<li>Confirm the Reset button returned everything back to the original query results(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
-				<li>Query for marker <b>????</b></li>
-                <li>Place checkmarks for markers <b>???</b> <b>???</b> and <b>???</b></li>
+				<li>Query for marker <b>Casp3</b></li>
+                <li>Place checkmarks for markers <b>Casp3</b>, <b>Tg(ACTA1-Casp3*)10.2Spc</b> and <b>Tg(Casp3)18Fine</b></li>
                 <li>Place checkmarks for phenotypes <b>muscle</b> and <b>nervous system</b></li>
-                <li>Press the <b>Go?</b> button</li>
                 <li>Verify the results have been filtered</li>
                 <li>Press the <b>Reset</b> button</li>
                 <li>Verify the results have been reset to the original query results</li>
