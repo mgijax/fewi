@@ -68,6 +68,11 @@
   }
   .gridCheck:hover { background-color: #BCD;}
   
+  .gridHl
+  {
+  	background-color: #bcd;
+  }
+  
   /* #filterButtons
   {
   	position: absolute;
@@ -117,10 +122,10 @@
 	<tr>
 	<th style="background-color:#DDE;">F</th>
 	<c:forEach var="mpHeader" items="${mpHeaders}" varStatus="status">
-		<th><input class="gridCheck" type="checkbox" filter="fHeader" value="${mpHeader}"/></th>		
+		<th><input class="gridCheck" type="checkbox" filter="fHeader" value="${mpHeader}" colid="mp_${status.count}" /></th>		
 	</c:forEach>
 	<c:forEach var="diseaseName" items="${diseaseNames}" varStatus="status">
-		<th><input class="gridCheck" type="checkbox" filter="fHeader" value="${diseaseName}"/></th>
+		<th><input class="gridCheck" type="checkbox" filter="fHeader" value="${diseaseName}" colid="d_${status.count}"/></th>
 	</c:forEach>
 	</tr>
 	
@@ -144,7 +149,7 @@
 		<td><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>
             
         <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status">
-              <td class="<c:if test="${status.last && not empty gridCluster.diseaseCells}">rightDoubleBorder</c:if>" >
+              <td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}">rightDoubleBorder</c:if>" >
                 <c:if test="${mpHeader.hasPopup}">
                     <div title="click to see data represented in this cell" class="gridCellLink"
                          onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&mpHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}')
@@ -154,7 +159,7 @@
             </c:forEach>
 
             <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status">
-            <td>
+            <td class="d_${status.count}">
 	          <c:if test="${disease.hasPopup}">
                     <div title="click to see data represented in this cell" class="gridCellLink"
                          onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termId=${disease.termId}&term=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.termId}')

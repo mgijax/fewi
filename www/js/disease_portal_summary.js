@@ -257,6 +257,7 @@ function GridFilter()
 	this.headerFilterId = "fHeader";
 	this.fields = [this.geneFilterId,this.headerFilterId];
 	this.filterDelim = "|";
+	this.highlightCssClass = "gridHl";
 	
 	// state variables
 	this.filtersActive = false;
@@ -446,12 +447,36 @@ function GridFilter()
 		_self.filtersActive=false;
 	}
 	
+	this.highlightField = function(checkBox,fieldName)
+	{
+		if(checkBox)
+		{
+			if(fieldName == "fGene")
+			{
+				// toggle row class
+				// get tr
+				checkBox.parent().parent().toggleClass(_self.highlightCssClass);
+			}
+			else if(fieldName == "fHeader")
+			{
+				// toggle column class
+				var colCss = checkBox.attr("colid");
+				if(colCss)
+				{
+					$("."+colCss).toggleClass(_self.highlightCssClass);
+				}
+			}
+		}
+	}
+	
 	// event handler for clicking a filter checkbox
 	this.gridCheckClick = function(e)
 	{
-		
 		var checkBox = $(this);
 		var fieldName = checkBox.attr("filter");
+		
+		_self.highlightField(checkBox,fieldName);
+		
 		var filtersObject = _self.getFiltersObject();
 		if(filtersObject[fieldName])
 		{
