@@ -21,11 +21,11 @@
 -->
 <body>
 
-<div "TOC">
+<div id="TOC">
 	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
-<div "maintitle">
+<div id="maintitle">
     <h1>Assay Detail Test Suite</h1>
     <ul>
         <li>User story 14, GXD Assay Detail - framework and header section</li>
@@ -43,7 +43,7 @@
     </ul>
 </div>
 
-<div "acceptance">
+<div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
 		<li>US14 - Standard MGI header displays and all pulldowns and hover text work correctly</li>
@@ -127,13 +127,13 @@
 <p concordion:assertTrue="false">testing assertFalse - displays as red</p>
  -->
 
-<div "tests">
+<div id="tests">
     <h2>Tests</h2>
-	<div "manual">
+	<div id="manual">
 		<h3>Manual tests</h3>
 		<p><a href="#pageBanner">Page Banner</a> | <a href="#assayRibbon">Assay Ribbon</a> | <a href="#probeRibbon">Probe Ribbon</a> 
 			| <a href="#specimenData">Specimen Data</a> | <a href="#imagePanes">Images</a> | <a href="#BlotData">Blot Data</a> | <a href="#inSituResults">In Situ Results</a></p>
-		<h4 "pageBanner">FeWI Page Structure and Standard Page Banner Elements</h4>
+		<h4 id="pageBanner">FeWI Page Structure and Standard Page Banner Elements</h4>
 		<ol>
     		<li>Basic FeWI page structure renders for an assay detail page.
     		<p concordion:assertTrue="true">klf 2/5/2013</p>
@@ -174,7 +174,7 @@
     		</ol>
 			</li>
 		</ol>
-		<h4 "assayRibbon">Assay Ribbon</h4>
+		<h4 id="assayRibbon">Assay Ribbon</h4>
 		<ol>
 			<li>The correct data are displayed for the particular assay
     		<ul>
@@ -926,7 +926,7 @@
 			</li>
 		</ol>
 			
-		<h4 "inSituResults">In Situ Results</h4>
+		<h4 id="inSituResults">In Situ Results</h4>
 		<ol>
 			<li>(in situ)Table has columns of Structure, Level, Pattern, Image and Note
 			<p concordion:assertTrue="true">jeffc 2/13/2013</p>
@@ -950,14 +950,13 @@
 				<li>Visit assay <a href="http://cardolan.informatics.jax.org/assay/MGI:1859758">MGI:1859758</a>.</li>
 				<li>Results for specimen <b>3.A</b> should display <b>Figure 3A</b> in the Image column</li>
 				<li>Visit assay <a href="http://cardolan.informatics.jax.org/assay/MGI:3776837">MGI:3776837</a>.</li>
-				<li>Results for specimen <b>7.A</b> should display <b>Figure 7A</b> in the Image column()</li>
-				
+				<li>Results for specimen <b>7.A</b> should display <b>Figure 7A</b> in the Image column()</li>				
     		</ul>
     		</li>
 			
 		</ol>
 	</div>
-	<div "auto">
+	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
     		<li>None</li>
