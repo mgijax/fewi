@@ -51,36 +51,32 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Verify Phenotype summary table display rows for dieases that have models in the table.
- 			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
-                <li>Verify in the Phenotype Summary section Under the Affected systems column, the last entry is Disease Models.</li>
+                <li>Verify after the Phenotype Summary is a section called Disease Models.</li>
     		</ol>
     		</li>
 
     		<li>Verify Disease names link to disease details.
- 			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
-                <li>Click on the <b>arrow</b> link beside the Disease Models section in the Phenotype Summary section.</li>
-                <li>Verify Diseases display directly under the Disease Model heading</li>
-                <li>Click on the first disease(Breast Cancer) link.</li>
+                <li>Click on the first disease(Breast Cancer) link. in the Disease Model section</li>
                 <li>Verify this takes you to the Human Disease and Mouse Model Detail page for the term <b>breast cancer</b></li>
     		</ol>
     		</li>
 		    <li>Verify diseases are Sorted alphabetically on name.
- 			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Trp53<sup>tm1Tyj</sup> (MGI:1857263).</li>
-                <li>Click on the <b>arrow</b> link beside the Disease Models section in the Phenotype Summary section.</li>
-                <li>Verify Diseases display directly under the Disease Model heading</li>
-                <li>Verify the disease terms listed are in alphabetical order</li>
+                <li>Verify the disease terms listed in the Disease Model section are in alphabetical order</li>
     		</ol>
     		</li>
- 		    <li>Verify you can Open/close (single summary level : Disease).
+<!-- 		    <li>Verify you can Open/close (single summary level : Disease).(this test is obsolete-jeffc 10/21/2013)
  			<p concordion:assertTrue="true">Passed - kstone 9-26-2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
@@ -91,7 +87,7 @@
                 <li>Verify the diseases list is collapsed</li>
 
     		</ol>
-    		</li>   		
+    		</li> -->  		
 		</ol>
 	</div>
 	<div id="auto">

@@ -103,7 +103,7 @@
     		</li>
 
     		<li>Verify genotype popup links go to correct genotype popup
- 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p> - <i>cannot automate</i>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p> - <i>cannot automate</i>
 
     		<ol>
                 <li>Open the test Web Interface.</li>
@@ -131,7 +131,7 @@
     		</ol>
     		</li>
 		    <li><span class="regressHi">Regress</span> Verify that genotype columns are split into M/F sexes where applicable, and left as a single column in standard cases
- 			<p concordion:assertTrue="true">passed jeffc 10/15/2012</p> - <i>semi-automated</i>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p> - <i>semi-automated</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
@@ -139,36 +139,36 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify that sex groupings under each genotype display all providers that have annotations (either MGI or WTSI for now)(is blank if only MGI results)
- 			<p concordion:assertTrue="true">passed jeffc 10/15/2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
-                <li>Navigate to the Allele Detail Page for Slc16a2<sup>tm1.1Sref</sup> (MGI:3687950).</li>
+                <li>Navigate to the Allele Detail Page for Fas<sup>lpr</sup> (MGI:1856334).</li>
                 <li>Go to the Phenotype Summary section of the page</li>
-                <li>Verify genotype hm1 has a heading for both Male and Female</li>
+                <li>Verify genotype cx77 has a heading for both Male and Female</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
                 <li>Go to the Phenotype Summary section of the page</li>
                 <li>Verify that genotypes hm2 and hm10 have a heading for both Male and Female but no WTSI and MGI headings because the data is all for MGI only.</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify for a given genotype, sex and provider that a checkmark always wins over an N.
- 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
-                <li>Navigate to the Allele Detail Page for Slc16a2<sup>tm1.1Sref</sup> (MGI:3687950).</li>
+                <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
                 <li>Expand the terms to show sub-terms</li>
-                <li>Verify that sub-term abnormal circulating triiodothyronine level display a <b>checkmark</b> for genotype <b>ot3</b>. (if you look at the annotations for this genotype in the EI you will notice there are two annotation  for this sub-term, a normal and a none entry)</li>
-                <li>Verify that sub-term decreased triiodothyronine level is N for genotype <b>ot2</b> but since the other sub-terms are checkmarks the high-level term homeostasis/metabolism is a checkmark</li>
+                <li>Verify that sub-term growth/size phenotype display a <b>checkmark</b> for genotype <b>cx25</b>. (if you look at the annotations for this genotype in the EI you will notice there are two annotation  for this sub-term, a normal and a none entry)</li>
+                <li>Verify that sub-term growth/size phenotype is N for genotype <b>cx25</b> but since the other sub-terms are checkmarks the high-level term homeostasis/metabolism is a checkmark</li>
     		</ol>
     		</li>
 
     		<li>Verify that checkmarks and N symbols are links
- 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
                 <li>Click on the checkmark for term <b>immune system</b> for genotype <b>hm5</b></li>
                 <li>Verify the Genotype popup page displays at the heading for immune system</li>
-                <li>Click on the <b>N</b> for term growth/Size of genotype <b>tg33</b></li>
+                <li>Click on the <b>N</b> for term growth/Size of genotype <b>cx25</b></li>
                 <li>Verify the Genotype popup page displays at the heading for growth/size</li>
                 <li>Navigate to the Allele Detail Page for Taf7l<sup>tm1.1Jw</sup> (MGI:3710399).</li>
                 <li>Click on the checkmark for term <b>decreased testis weight</b> for genotype <b>ot2</b> under header endocrine/exocrine glands</li>
@@ -178,7 +178,7 @@
     		</ol>
     		</li>
     		<li><span class="regressLo">Regress</span> Verify that toggling works by clicking the system names, and also the "hide"/"show" buttons
- 			<p concordion:assertTrue="true">Passed jeffc 10/15/2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
@@ -189,7 +189,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify that the Phenotype summary section does not display when there are no MP annotations for an allele
- 			<p concordion:assertTrue="true">Passed jeffc 10/30/2012</p>
+ 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for a<sup>j</sup> (MGI:1856428).</li>
