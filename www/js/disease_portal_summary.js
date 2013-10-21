@@ -366,8 +366,13 @@ function GridFilter()
 							if(boxes.length>0)
 							{
 								var box = $(boxes[0]);
-								box.attr("checked","checked");
+								// not sure how to avoid the double checked=true
+								// because of the order of event handlers, the checked flag needs to be set first,
+								// 	however, calling click() somehow also toggles the check symbol.
+								// hence, we have double checked=true calls.
+								box.prop("checked",true);
 								box.click();
+								box.prop("checked",true);
 							}
 						}
 					}
