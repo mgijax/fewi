@@ -178,19 +178,20 @@ th {background-color:#D0E0F0;}
 				<td></td>
 			</tr>			
 			<tr class="gray">
-				<td colspan="5"><h5>Code Merge</h5></td>
+				<td colspan="5"><h5>Code Merge - Sanity Checks</h5></td>
 			</tr>
 			<tr>
-				<td>Sanity Checks for merge to trunk</td>
+				<td>
+				<ul>
+					<li><span concordion:assertTrue="true">Alpha tests from release 5.15</span> - klf 10/21/2013</li>
+					<li><span concordion:assertTrue="false">Rerun automated tests and selected manual tests</span></li>
+				</ul>
+				
+				</td>
 				<td>MGI 5.16</td>		
 				<td>129</td>
 				<td></td>
-				<td>
-				<ul>
-					<li>Rerun Alpha Tests for 5.15 release - PASS (klf 10/21/2013)</li>
-					<li>Rerun automated tests and selected manual tests</li>
-				</ul>
-				</td>
+				<td>Tests following merge to trunk after 5.15 release.</td>
 			</tr>			
 
 
