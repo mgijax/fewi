@@ -149,7 +149,7 @@
 		<td><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>
             
         <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status">
-              <td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}">rightDoubleBorder</c:if>" >
+              <td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder</c:if>" >
                 <c:if test="${mpHeader.hasPopup}">
                     <div title="click to see data represented in this cell" class="gridCellLink"
                          onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&mpHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}')
