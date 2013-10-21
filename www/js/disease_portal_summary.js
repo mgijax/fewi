@@ -1,8 +1,3 @@
-
-
-
-
-
 // --------- some global configurable variables ----------
 
 // The YUI components required for setting up the data table and
@@ -258,6 +253,7 @@ function GridFilter()
 	this.fields = [this.geneFilterId,this.headerFilterId];
 	this.filterDelim = "|";
 	this.highlightCssClass = "gridHl";
+	this.checkBoxClass = "gridCheck";
 	
 	// state variables
 	this.filtersActive = false;
@@ -337,6 +333,47 @@ function GridFilter()
 			}
 		}
 		return filtersObject;
+	}
+	
+//	this.isFilterActive = function(fieldName,filterValue)
+//	{
+//		var filtersObj = _self.getFiltersObject();
+//		if(fieldName in filtersObj)
+//		{
+//			var filters = filtersObj[fieldName];
+//			return $.inArray(filterValue,filters)>=0;
+//		}
+//	}
+	/*
+	 * Goes through all active filters, then reselects any that are on the visible grid
+	 */
+	this.reselectActiveBoxes = function()
+	{
+		if(_self.isState(_self.gridState.working))
+		{
+			var filtersObj = _self.getFiltersObject();
+			for(fieldName in filtersObj)
+			{
+				if($.inArray(fieldName,_self.fields)>=0)
+				{
+					var filters = filtersObj[fieldName];
+					for(var i=0; i<filters.length; i++)
+					{
+						var filterValue = filters[i];
+						if(filterValue)
+						{
+							var boxes = $("[filter="+fieldName+"]").filter("[value='"+filterValue+"']");
+							if(boxes.length>0)
+							{
+								var box = $(boxes[0]);
+								box.attr("checked","checked");
+								box.click();
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	this.toggleFiltersIndicator = function(show)
@@ -491,8 +528,10 @@ function GridFilter()
 			}
 			
 			// either add or remove this filters depending on the "checked" attribute
+			var inArrayIndex = $.inArray(value, filters);
+			if(inArrayIndex >= 0) filters.splice( inArrayIndex, 1 );
+			
 			if(checkBox.is(":checked")) filters.push(value);
-			else filters.splice( $.inArray(value, filters), 1 );
 			
 			filtersObject[fieldName] = filters;
 		}

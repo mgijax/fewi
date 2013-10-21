@@ -251,4 +251,10 @@ $("#filterSubmit").click(gridFilterSubmitClick);
 // add the click handler (from disease_portal_summary.js) to the gridCheck filters
 $(".gridCheck").click(gridCheckClick);
 
+// reselect any filters that may be active
+if(_GF)
+{
+	_GF.reselectActiveBoxes();
+}
+
 </script>
