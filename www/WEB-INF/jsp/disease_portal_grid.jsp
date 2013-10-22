@@ -96,7 +96,7 @@
 	<tr>
 	  <th rowspan="2">Human Marker</th>
 	  <th rowspan="2">
-	  	<div style="position:relative; padding-top: 20px;">
+	  	<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
 		  	<div id="filterButtons"><button id="filterSubmit">Submit Filters</button>
 		  			
 		  			<!-- <button class="hide" id="filterReset">Reset Active Filters</button>--></div></div>
