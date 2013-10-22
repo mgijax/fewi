@@ -47,7 +47,7 @@
   { 
   	position: absolute;
 	bottom: -4px;
-	width: 23px;
+	width: 22px;
 	height: 14px;
 	border-right: 4px solid #AAA;
   }
