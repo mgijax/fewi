@@ -59,10 +59,10 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>US137: Mouse Gene symbols link to MGI gene detail pages</li>
 		<li>US137: Human Gene symbols link to MGI homology pages</li>
 		<li>US137: Human Gene Symbols that have no associated MGI homology page will have no link</li>
-		<li>US140: Existence of check boxes for both rows and columns, Go button, reset button, and Invert button</li>
+		<li>US140: Existence of check boxes for both rows and columns, Submit Filters button, reset button</li>
 		<li>US140: Only checked rows and columns with data are returned</li>
 		<li>US140: The Reset button should remove all checks for both rows and columns</li>
-		<li>US140: The Invert button should flip the results by returning all rows and columns that do not have a check</li>
+<!--		<li>US140: The Invert button should flip the results by returning all rows and columns that do not have a check</li> no longer required -->
 		<li>US140: Results returned on the Grid Tab should be reflected on the Genes and Disease Tabs too</li>
 		<li>US140: Filtering should be applied across multiple pages</li>
 	</ul>
@@ -104,15 +104,14 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify that the Human marker symbol <b>IGKC</b> is not a link</li>
     		</ol>
     		</li>
-    		<li>Confirm the existance of check boxes for rows and columns, A Go button, a Reset button and an Invert button(sto140)
+    		<li>Confirm the existance of check boxes for rows and columns, A Submit Filters button, a Reset button(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Query for marker <b>casp3</b></li>
                 <li>Verify that each row has a check box after it's marker symbol</li>
                 <li>Verify that each column has a check box below its term name</li>
-                <li>Verify the existence of a <b>Go?</b> button</li>
+                <li>Verify the existence of a <b>Submit Filters</b> button</li>
                 <li>Verify the existence of a <b>Reset</b> button</li>
-                <li>Verify the existence of an <b>Invert</b> button</li>
     		</ol>
     		</li>
     		<li>Confirm the correct results are returned when selecting rows and columns(sto140)
@@ -137,24 +136,24 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify the results have been reset to the original query results</li>
     		</ol>
     		</li>
-    		<li>Confirm the Invert button reverses the filtered results(sto140)
+<!--      		<li>Confirm the Invert button reverses the filtered results(sto140) Invert button no longer required
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
 				<li>Query for marker <b>shh</b></li>
                 <li>Place checkmarks for marker <b>Tg(Shh)#Dje</b></li>
-                <li>Press the <b>Go?</b> button</li>
+                <li>Press the <b></b> button</li>
                 <li>Verify the results have been filtered and show just this marker and only the 4 columns <b>behavior/neurological, cellular, hearing/vestibular/ear, nervous system</b></li>
                 <li>Press the <b>Invert</b> button</li>
                 <li>Verify the results have been reversed to display the results of all items there were not checked</li>
     		</ol>
-    		</li> 
+    		</li> -->
     		<li>Confirm that filtering is applied across all 3 tabs(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Place checkmarks for markers <b>Casp3</b> <b>Tomt</b> and <b>Tshr</b></li>
                 <li>Place checkmarks for phenotypes <b>cellular</b> and <b>growth/size</b></li>
-                <li>Press the <b>Go?</b> button</li>
+                <li>Press the <b>Submit Filters</b> button</li>
                 <li>Verify the results list <b>Casp3</b> associated to <b>cellular</b> and <b>growth/size</b></li>
                 <li>Verify the results list <b>Tomt</b> associated to just <b>growth/size</b></li>
                 <li>Verify the results list <b>Tshr</b> associated to <b>cellular</b> and <b>growth/size</b></li>
@@ -167,9 +166,9 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
 				<li>Query for Phenotype <b>diabetes</b></li>
                 <li>Place checkmarks for phenotypes <b>immune system</b>, <b>pigmentation</b> and <b>vision/eye</b></li>
-                <li>Press the <b>Go?</b> button</li>
+                <li>Press the <b>Submit Filters</b> button</li>
                 <li>Verify the results have been filtered</li>
-                <li>Now place a check mark on phenotype <b>vision/eye</b> and press the <b>Go?</b> button</li>
+                <li>Now place a check mark on phenotype <b>vision/eye</b> and press the <b>Submit Filters</b> button</li>
                 <li>Verify the only phenotype column returned is <b>vision/eye</b></li>
     		</ol>
     		</li>  
@@ -179,7 +178,7 @@ tr.gray td {background-color:#EEEEEE;}
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Place checkmarks for markers <b>Casp3</b> <b>Tomt</b> and <b>Tshr</b></li>
                 <li>Place checkmarks for phenotypes <b>cellular</b> and <b>growth/size</b></li>
-                <li>Press the <b>Go?</b> button</li>
+                <li>Press the <b>Submit Filters</b> button</li>
                 <li>Verify the results list <b>Casp3</b> associated to <b>cellular</b> and <b>growth/size</b></li>
                 <li>Verify the results list <b>Tomt</b> associated to just <b>growth/size</b></li>
                 <li>Verify the results list <b>Tshr</b> associated to <b>cellular</b> and <b>growth/size</b></li>
