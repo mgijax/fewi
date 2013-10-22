@@ -69,7 +69,7 @@ td.yui-dt-col-coordinate
         <div class="innertube" style="width:500px">
             <div id="searchSummary"> <!-- filled via js --> </div>
             <div id="breadbox"><div id="gridFilterIndicator" class="hide">
-            	<span id="filterReset" class="filterItem">Grid Filters Activated</span>
+            	<span id="filterReset" class="filterItem">Remove Filters</span>
             </div></div>
         </div>
     </div>

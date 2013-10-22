@@ -49,10 +49,10 @@
 	bottom: -4px;
 	width: 23px;
 	height: 14px;
-	border-right: 2px solid #AAA;
+	border-right: 4px solid #AAA;
   }
   #hdpGridTable .rightBorder { border-right: 1px solid #AAA;}
-  #hdpGridTable .rightDoubleBorder { border-right: 2px solid #AAA;}
+  #hdpGridTable .rightDoubleBorder { border-right: 4px solid #AAA;}
   .diseaseButton
   {
   	width:10px;
@@ -96,10 +96,9 @@
 	<tr>
 	  <th rowspan="2">Human Marker</th>
 	  <th rowspan="2">
-	  	<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
-		  	<div id="filterButtons"><button id="filterSubmit">Submit Filters</button>
-		  			
-		  			<!-- <button class="hide" id="filterReset">Reset Active Filters</button>--></div></div>
+	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
+		  		<div id="filterButtons"><button id="filterSubmit">Submit Filters</button>
+		  	</div></div>
 		  	<br/>Mouse Marker
 	  	</th>
 	  <th style="border-right: none;"></th>
@@ -122,7 +121,9 @@
 	<tr>
 	<th style="background-color:#DDE;">F</th>
 	<c:forEach var="mpHeader" items="${mpHeaders}" varStatus="status">
-		<th><input class="gridCheck" type="checkbox" filter="fHeader" value="${mpHeader}" colid="mp_${status.count}" /></th>		
+		<th <c:if test="${status.last && not empty diseaseColumns}">class="rightDoubleBorder"</c:if>>
+			<input class="gridCheck" type="checkbox" filter="fHeader" value="${mpHeader}" colid="mp_${status.count}" />
+		</th>		
 	</c:forEach>
 	<c:forEach var="diseaseName" items="${diseaseNames}" varStatus="status">
 		<th><input class="gridCheck" type="checkbox" filter="fHeader" value="${diseaseName}" colid="d_${status.count}"/></th>

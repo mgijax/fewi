@@ -27,7 +27,7 @@
     <TR STYLE="">
 
       <TD >
-        <a href="javascript:newWindow('${configBean.HOMEPAGES_URL}')" style='margin-left:2px; margin-right:10px;'><img src="http://www.informatics.jax.org/webshare/images/mgi_logo.gif" 
+        <a href="${configBean.HOMEPAGES_URL}" style='margin-left:2px; margin-right:10px;'><img src="http://www.informatics.jax.org/webshare/images/mgi_logo.gif" 
           alt="Mouse Genome Informatics" border="0" width="100"></a>  
       </TD>
 
