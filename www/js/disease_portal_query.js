@@ -290,7 +290,7 @@ function reverseEngineerFormInput(request)
 				}
 				else if(input.tagName=="TEXTAREA")
 				{
-					input.value = decodeURIComponent(params[key].trim());
+					input.value = decodeURIComponent($.trim(params[key]));
 				}
 			}
 		}
