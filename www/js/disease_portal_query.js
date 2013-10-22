@@ -57,8 +57,8 @@ var resetQF = function (e) {
 	form.locations.value = "";
 	form.organism[0].checked = true;
 	
-	form.fGene.value = "";
-	form.fHeader.value = "";
+	//form.fGene.value = "";
+	//form.fHeader.value = "";
 	if(_GF && !_GF.isState(_GF.gridState.working)) _GF.resetFields();
 	
 	// clear the validation errors
