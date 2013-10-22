@@ -59,9 +59,9 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>US137: Mouse Gene symbols link to MGI gene detail pages</li>
 		<li>US137: Human Gene symbols link to MGI homology pages</li>
 		<li>US137: Human Gene Symbols that have no associated MGI homology page will have no link</li>
-		<li>US140: Existence of check boxes for both rows and columns, Submit Filters button, reset button</li>
+		<li>US140: Existence of check boxes for both rows and columns, Submit Filters button, Remove Filters button</li>
 		<li>US140: Only checked rows and columns with data are returned</li>
-		<li>US140: The Reset button should remove all checks for both rows and columns</li>
+		<li>US140: The Remove Filters button should remove all checks for both rows and columns</li>
 <!--		<li>US140: The Invert button should flip the results by returning all rows and columns that do not have a check</li> no longer required -->
 		<li>US140: Results returned on the Grid Tab should be reflected on the Genes and Disease Tabs too</li>
 		<li>US140: Filtering should be applied across multiple pages</li>
@@ -104,14 +104,14 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify that the Human marker symbol <b>IGKC</b> is not a link</li>
     		</ol>
     		</li>
-    		<li>Confirm the existance of check boxes for rows and columns, A Submit Filters button, a Reset button(sto140)
+    		<li>Confirm the existance of check boxes for rows and columns, A Submit Filters button, a Remove Filters button(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Query for marker <b>casp3</b></li>
                 <li>Verify that each row has a check box after it's marker symbol</li>
                 <li>Verify that each column has a check box below its term name</li>
                 <li>Verify the existence of a <b>Submit Filters</b> button</li>
-                <li>Verify the existence of a <b>Reset</b> button</li>
+                <li>Verify the existence of a <b>Remove Filters</b> button</li>
     		</ol>
     		</li>
     		<li>Confirm the correct results are returned when selecting rows and columns(sto140)
@@ -125,14 +125,14 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Marker <b>Tg(ACTA1-Casp3*)10.2Spc</b> should not be returned at all</li>
     		</ol>
     		</li>
-    		<li>Confirm the Reset button returned everything back to the original query results(sto140)
+    		<li>Confirm the Remove Filters button returned everything back to the original query results(sto140)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
 				<li>Query for marker <b>Casp3</b></li>
                 <li>Place checkmarks for markers <b>Casp3</b>, <b>Tg(ACTA1-Casp3*)10.2Spc</b> and <b>Tg(Casp3)18Fine</b></li>
                 <li>Place checkmarks for phenotypes <b>muscle</b> and <b>nervous system</b></li>
                 <li>Verify the results have been filtered</li>
-                <li>Press the <b>Reset</b> button</li>
+                <li>Press the <b>Remove Filters</b> button</li>
                 <li>Verify the results have been reset to the original query results</li>
     		</ol>
     		</li>
