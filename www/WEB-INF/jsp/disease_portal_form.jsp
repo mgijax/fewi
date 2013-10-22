@@ -129,8 +129,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 		</tr>	
 	 </table>	
-	 <input type="hidden" name="fGene"/>
-	 <input type="hidden" name="fHeader"/>
+	 <input type="hidden" name="fGene" id="fGene" />
+	 <input type="hidden" name="fHeader" id="fHeader" />
 	</form:form>
 </div>
 </div>
