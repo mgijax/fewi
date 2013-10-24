@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-<%@ page import = "java.net.URLEncoder" %>
+<%@ page import = "org.springframework.web.util.UriUtils" %>
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
@@ -10,7 +10,7 @@
 <%
 	String queryString = (String) request.getAttribute("queryString");
 	// need to url encode the querystring
-	request.setAttribute("encodedQueryString", URLEncoder.encode(queryString, "UTF-8"));
+	request.setAttribute("encodedQueryString", UriUtils.encodeQuery(queryString,"UTF-8"));
 %>
 
 <style type="text/css">
@@ -92,6 +92,7 @@
   }
 </style>
 
+<div style="font-size:150%">${encodedQueryString}</div>
 
 <div id="hdpGridTableWrap">
 	<c:if test="${empty gridClusters}">No genes found that match your search criteria.
