@@ -92,8 +92,6 @@
   }
 </style>
 
-<div style="font-size:150%">${encodedQueryString}</div>
-
 <div id="hdpGridTableWrap">
 	<c:if test="${empty gridClusters}">No genes found that match your search criteria.
 		<br/>
