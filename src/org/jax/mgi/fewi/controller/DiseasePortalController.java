@@ -280,7 +280,7 @@ public class DiseasePortalController
 
 		for(SolrVocTerm mpTerm : mpTerms)
 		{
-			// use 50 max characters for the popup
+			// use 30 max characters for the popup
 			mpTermColumnsToDisplay.add(this.getRotatedTextImgTag(mpTerm.getTerm(),30));
 			termColIds.add(mpTerm.getPrimaryId());
 			termColNames.add(mpTerm.getTerm());
@@ -637,8 +637,9 @@ public class DiseasePortalController
 
 		params.setSorts(Arrays.asList(new Sort(DiseasePortalFields.BY_TERM_DAG)));
 		params.setPageSize(300); // I'm not sure we want to display more than this...
-		params.setFilter(this.parseSystemPopup(query));
-
+		//params.setFilter(this.parseSystemPopup(query));
+		params.setFilter(this.parseQueryForm(query));
+		
 		// perform query and return results as json
 		logger.debug("getGridMpTermColumns finished");
 		SearchResults<SolrVocTerm> results = hdpFinder.huntGridMPTermsGroup(params);
@@ -656,8 +657,10 @@ public class DiseasePortalController
 
 		params.setSorts(Arrays.asList(new Sort(SortConstants.DP_BY_MRK_SYMBOL)));
 		params.setPageSize(1000);
-		params.setFilter(this.parseSystemPopup(query));
+		//params.setFilter(this.parseSystemPopup(query));
+		params.setFilter(this.parseQueryForm(query));
 
+		
 		// perform query and return results as json
 		logger.debug("getGridHumanMarkers finished");
 		SearchResults<SolrDiseasePortalMarker> results = hdpFinder.huntGridHumanMarkerGroup(params);
@@ -779,8 +782,9 @@ public class DiseasePortalController
 
 		// determine and set the requested sorts, filters, and pagination
 //		params.setFilter(this.parseQueryForm(query));
-		params.setFilter(this.parseSystemPopup(query));
-
+		//params.setFilter(this.parseSystemPopup(query));
+		params.setFilter(this.parseQueryForm(query));
+		
 		// perform query
 		logger.debug("getSummaryResultsByGene finished");
 
