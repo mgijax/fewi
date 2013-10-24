@@ -685,7 +685,7 @@ public class DiseasePortalController
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 		params.setIncludeSetMeta(true);
-		params.setIncludeMetaHighlight(doHighlight);
+		//params.setIncludeMetaHighlight(doHighlight);
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 
@@ -719,7 +719,7 @@ public class DiseasePortalController
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 		params.setIncludeSetMeta(true);
-		params.setIncludeMetaHighlight(doHighlight);
+		//params.setIncludeMetaHighlight(doHighlight);
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 		List<Sort> sorts = new ArrayList<Sort>();
@@ -749,7 +749,7 @@ public class DiseasePortalController
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 		params.setIncludeSetMeta(true);
-		params.setIncludeMetaHighlight(true);
+		//params.setIncludeMetaHighlight(true);
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 		List<Sort> sorts = new ArrayList<Sort>();

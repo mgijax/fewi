@@ -5,9 +5,9 @@
 var defaultSort = "";
 
 //default page size for each summary
-var GRID_PAGE_SIZE = 50;
-var GENES_PAGE_SIZE = 100;
-var DISEASES_PAGE_SIZE = 100;
+var GRID_PAGE_SIZE = 250;
+var GENES_PAGE_SIZE = 250;
+var DISEASES_PAGE_SIZE = 250;
 var DEFAULT_PAGE_SIZE = GENES_PAGE_SIZE;
 
 // Shortcut variable for the YUI history manager
@@ -198,7 +198,7 @@ var generateGrid = function(request)
 			// set up the paginator controls for the grid
 			var pRequest = parseRequest(lastGridRequest);
 			var paginator = mgiTab.createPaginator(
-						[50,100,250], // rows per page options
+						[250,500,1000], // rows per page options
 						Number(pRequest['results']) || GRID_PAGE_SIZE, // rows per page
 						totalCount, // totalCount
 						Number(pRequest['startIndex']) || 0 // recordOffset
@@ -610,33 +610,6 @@ var displaySummaryHelpText = function()
 
 }
 
-// This function is only used for debugging.
-var populateTerms = function()
-{
-	var url = fewiurl+"diseasePortal/terms/json?"+querystring;
-	var displayTerms = function(data)
-	{
-		if("summaryRows" in data && "totalCount" in data)
-		{
-			var items = [];
-			$.each(data["summaryRows"], function(key, val) {
-			    items.push('<li id="' + key + '">' + val + '</li>');
-			});
-
-			$("#termsDebug").html("<span>Total count = "+data["totalCount"]+"</span>");
-			$('<ul/>', {
-				'class': 'termsList',
-				html: items.join('')
-			  }).appendTo('#termsDebug');
-		}
-	}
-	$.ajax({
-		dataType: "json",
-		url: url,
-		success: displayTerms
-	});
-}
-
 //----------- functions for configuring the datatables -------------------
 //
 //genes results table population function
@@ -649,7 +622,7 @@ var genesResultsTable = function() {
 
 	// Column definitions
 	var columnDefs = [
-	    {key: "highlightedFields", label: "Why Matched", sortable: false },
+	    //{key: "highlightedFields", label: "Why Matched", sortable: false },
 		{key: "organism", label: "Organism", sortable: true },
 		{key: "symbol", label: "Marker Symbol", sortable: true },
 		{key: "location", label: "Genetic Location", sortable: true },
@@ -667,7 +640,7 @@ var genesResultsTable = function() {
 	hdpDataSource.responseSchema = {
 		resultsList: "summaryRows",
 		fields: [
-		    {key: "highlightedFields"},
+		    //{key: "highlightedFields"},
 			{key: "organism"},
 			{key: "symbol"},
 			{key: "location"},
@@ -691,7 +664,7 @@ var genesResultsTable = function() {
 
 
 	var paginator = mgiTab.createPaginator(
-			[50,100,250,500], // rows per page options
+			[250,500,1000], // rows per page options
 			GENES_PAGE_SIZE // rows per page
 	);
 
@@ -794,7 +767,7 @@ var diseasesResultsTable = function() {
 	// Column definitions
 	var columnDefs = [
 	// sortable:true enables sorting
-	    {key: "highlightedFields", label: "Why Matched", sortable: false },
+	    //{key: "highlightedFields", label: "Why Matched", sortable: false },
 		{key: "disease", label: "Disease", sortable: true },
 		{key: "diseaseId", label: "OMIM ID", sortable: true },
 		{key: "diseaseModels", label: "Mouse Models", sortable: false },
@@ -811,7 +784,7 @@ var diseasesResultsTable = function() {
 	hdpDataSource.responseSchema = {
 		resultsList: "summaryRows",
 		fields: [
-		    {key: "highlightedFields"},
+		    //{key: "highlightedFields"},
 			{key: "disease"},
 			{key: "diseaseId"},
 			{key: "diseaseModels"},
@@ -833,7 +806,7 @@ var diseasesResultsTable = function() {
 	hdpDataSource.connXhrMode = "cancelStaleRequests";
 
 	var paginator = mgiTab.createPaginator(
-			[50,100,250,500], // rows per page options
+			[250,500,1000], // rows per page options
 			GENES_PAGE_SIZE // rows per page
 	);
 

@@ -80,6 +80,16 @@
 	right: -150px;
   } */
   button { cursor: pointer; }
+  
+  #hdpGridTable .tooltip 
+  {
+	border: 2px solid teal;
+	background-color: yellow;
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	white-space: nowrap;
+  }
 </style>
 
 
@@ -152,9 +162,10 @@
         <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status">
               <td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder</c:if>" >
                 <c:if test="${mpHeader.hasPopup}">
-                    <div title="click to see data represented in this cell" class="gridCellLink"
+                    <div class="gridCellLink"
                          onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&mpHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}')
                          ; return false;">${mpHeader.displayMark}</div>
+                    <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>System: <b>${mpHeader.term}</b><br/>click for more details</div></div> 
                 </c:if>
               </td>
             </c:forEach>
@@ -162,9 +173,10 @@
             <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status">
             <td class="d_${status.count}">
 	          <c:if test="${disease.hasPopup}">
-                    <div title="click to see data represented in this cell" class="gridCellLink"
+                    <div class="gridCellLink"
                          onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termId=${disease.termId}&term=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.termId}')
                          ; return false;">${disease.displayMark}</div>
+                    <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b><br/>click for more details</div></div> 
 	          </c:if>
               </td>
             </c:forEach>
@@ -257,5 +269,14 @@ if(_GF)
 {
 	_GF.reselectActiveBoxes();
 }
+
+// add the tooltip on hover (in,out) event handlers
+$(".gridCellLink").hover(function(e){
+	var tdDiv = $(this);
+	tdDiv.siblings().find(".tooltip").show();
+},function(e){
+	var tdDiv = $(this);
+	tdDiv.siblings().find(".tooltip").hide();
+});
 
 </script>

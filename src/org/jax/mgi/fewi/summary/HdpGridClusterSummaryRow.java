@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.summary;
 
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterMarker;
@@ -62,6 +63,16 @@ public class HdpGridClusterSummaryRow {
     	return gridCluster.getGridClusterKey();
     }
 
+    public String getTitle()
+    {
+    	List<String> symbols = new ArrayList<String>(this.getHumanSymbols());
+    	for(SolrDpGridClusterMarker m : this.getMouseMarkers())
+    	{
+    		symbols.add(m.getSymbol());
+    	}
+    	return StringUtils.join(symbols,", ");
+    }
+    
     public List<String> getHumanSymbols()
     {
     	return gridCluster.getHumanSymbols();
