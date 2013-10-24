@@ -182,6 +182,9 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,SearchConstants.DP_GENO_CLUSTER_KEY);
+
+		//hdpHunter.joinHunt(params, results, "diseasePortalAnnotationHeaders");
+		
         logger.debug("->keys from hunter - " + results.getResultKeys());
 
         // gather objects identified by the hunter, add them to the results
