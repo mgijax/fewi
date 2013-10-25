@@ -140,47 +140,6 @@ tr.gray td {background-color:#EEEEEE;}
 				<li>Verify that the window header  text is <b>Data for GARS, Gars and normal phenotype</b> (the word "abnormalities" is NOT appended to the header text) (sto95). </li>
     		</ol>
     		</li>
-    		
-    		<li>MP Term column headers should display in the shortest-path DAG order, as on the Allele Detail Page. If a "normal" annotation to a header term appears, the header term should display in the first column. (sto95, modified for sto135) <span style="background-color:#D079E0;">&lt;-- NEEDS AUTOMATION PLEASE.</span>
- 			<p concordion:assertTrue="true">klf 10/16/2013</p> 
-    		<ol>
-                <li>Open the HDP query form.</li>
-                <li>Enter <b>klf1</b> in the Genes section and hit search.</li>
-                <li>On the grid tab, click the checkmark at the intersection of klf1 and <b>hematopoietic system</b>.</li>
-                <li>Verify that column headers display MP terms in the following order:
-                <table>
-					<tr><td>abnormal embryonic erythrocyte morphology</td></tr>
-					<tr><td>abnormal erythropoiesis</td></tr>
-					<tr><td>abnormal erythrocyte morphology</td></tr>
-					<tr><td>decreased erythrocyte cell number</td></tr>
-					<tr><td>decreased hematocrit</td></tr>
-					<tr><td>decreased hemoglobin content</td></tr>
-					<tr><td>decreased mean corpuscular hemoglobin</td></tr>
-					<tr><td>anisocytosis</td></tr>
-					<tr><td>anemia</td></tr>
-					<tr><td>increased nucleated erythrocyte cell number</td></tr>
-					<tr><td>poikilocytosis</td></tr>
-					<tr><td>polychromatophilia</td></tr>
-					<tr><td>erythroblastosis</td></tr>
-					<tr><td>impaired hematopoiesis</td></tr>
-					<tr><td>increased spleen iron level</td></tr>
-					<tr><td>enlarged spleen</td></tr>
-					<tr><td>increased spleen weight</td></tr>
-					<tr><td>abnormal erythrocyte osmotic lysis</td></tr>
-                </table>
-                </li>
-                <li>Clear the search. Enter <b>Mecp2</b> in the Genes section and hit search.</li>
-                <li>On the grid tab, click the checkmark at the intersection of Mecp2 and <b>mortality/aging</b>.</li>
-                <li>Verify that column headers display MP terms in the following order:
-                <table>
-					<tr><td>mortality/aging</td></tr>
-					<tr><td>premature death</td></tr>
-					<tr><td>partial preweaning lethality</td></tr>
-				</table>
-				</li>
-    		</ol>
-    		</li>
-		
 		</ol>
 	</div>
 	<div id="auto">
@@ -555,6 +514,50 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
                 		and columns <b>mortality/aging</b> and <b>partial postnatal lethality</b>.</li>
                 <li>Confirm that other terms exist, and that none of them have ! flags.</li>
 			</ol>
+    		</li>
+    		
+    		<li>MP Term column headers should display in the shortest-path DAG order, as on the Allele Detail Page. 
+    			If a "normal" annotation to a header term appears, the header term should display in the first column. (sto95, modified for sto135)
+ 			<p concordion:assertTrue="true">klf 10/16/2013</p> (automated)
+    		<ol>
+                <li>Open the HDP query form.</li>
+                <li>Enter <b concordion:set="#genes">klf1</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of <b concordion:set="#row">Klf1</b> 
+                	and <b concordion:set="#column">hematopoietic system</b>.</li>
+                <li>Verify that column headers display MP terms in the following order:
+                <table concordion:verifyRows="#terms : systemGridPopupTermsByGene(#genes,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Term</th></tr>
+					<tr><td>abnormal embryonic erythrocyte morphology</td></tr>
+					<tr><td>abnormal erythropoiesis</td></tr>
+					<tr><td>abnormal erythrocyte morphology</td></tr>
+					<tr><td>decreased erythrocyte cell number</td></tr>
+					<tr><td>decreased hematocrit</td></tr>
+					<tr><td>decreased hemoglobin content</td></tr>
+					<tr><td>decreased mean corpuscular hemoglobin</td></tr>
+					<tr><td>anisocytosis</td></tr>
+					<tr><td>anemia</td></tr>
+					<tr><td>increased nucleated erythrocyte cell number</td></tr>
+					<tr><td>poikilocytosis</td></tr>
+					<tr><td>polychromatophilia</td></tr>
+					<tr><td>erythroblastosis</td></tr>
+					<tr><td>impaired hematopoiesis</td></tr>
+					<tr><td>increased spleen iron level</td></tr>
+					<tr><td>enlarged spleen</td></tr>
+					<tr><td>increased spleen weight</td></tr>
+					<tr><td>abnormal erythrocyte osmotic lysis</td></tr>
+                </table>
+                </li>
+                <li>Clear the search. Enter <b concordion:set="#genes">Mecp2</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of <b concordion:set="#row">Mecp2</b> and <b concordion:set="#column">mortality/aging</b>.</li>
+                <li>Verify that column headers display MP terms in the following order:
+                <table concordion:verifyRows="#terms : systemGridPopupTermsByGene(#genes,#row,#column)">
+                	<tr><th concordion:assertEquals="#terms">Header</th></tr>
+					<tr><td>mortality/aging</td></tr>
+					<tr><td>premature death</td></tr>
+					<tr><td>partial preweaning lethality</td></tr>
+				</table>
+				</li>
+    		</ol>
     		</li>
 		</ol>
  	</div>
