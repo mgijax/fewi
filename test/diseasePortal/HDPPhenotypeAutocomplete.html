@@ -13,7 +13,7 @@
  -->
 
 
-    <title>HDP: Phenotype/Disease Autocomplete</title>
+    <title>Phenotype/Disease Autocomplete</title>
 </head>
 
 <body>
@@ -23,9 +23,10 @@
 </div>
 
 <div id="maintitle">
-    <h1>HDP: Phenotype/Disease Autocomplete</h1>
+    <h1>Phenotype/Disease Autocomplete</h1>
     <ul>
-        <li>19 - E2: Autocomplete for disease and phenotype - part 1 (simple)</li>
+        <li>sto19 - E2: Autocomplete for disease and phenotype - part 1 (simple)</li>
+        <li>sto117 - Grid: Disease clumps : front end</li>
     </ul>
 </div>
 
@@ -42,6 +43,7 @@
 		<li>Reuses the GXD vocab autocomplete, as already tested in <a href="../gxd/VocabularyAutocomplete.html">gxd/VocabAutocomplete.html</a>,
 			but only includes OMIM and Mammalian Phenotype.
 		</li>
+		<li>sto117: query semantics unchanged; groups are for display purposes only</li>
 	</ul>
 </div>
 
@@ -62,7 +64,7 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Autocomplete exists and displays correct information
-    		<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>
+    		<p concordion:assertTrue="false">modified 10/25/2013</p>
     		<ol>
                 <li>Open <a href="http://cardolan.informatics.jax.org/diseasePortal">disease portal query form</a> </li>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
@@ -77,6 +79,7 @@
                 	is displayed with the text <i>[increased susceptibility to systemic lupus erythematosus] Mammalian Phenotype,
                 	the brackets indicating that you matched a synonym.</i>
                 </li>
+                <li>Verify that the "disease clumping" term <b>Systemic Lupus Erythematosus</b> (with no abbreviation) does not appear in the autocomplete. (sto117)</li>
             </ol>
             </li>
             <li>Autocomplete populates box with IDs
