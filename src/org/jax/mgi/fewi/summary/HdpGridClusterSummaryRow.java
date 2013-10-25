@@ -8,6 +8,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterMarker;
 
 import org.jax.mgi.fewi.util.DBConstants;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper;
 import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper.GridCell;
@@ -70,7 +71,7 @@ public class HdpGridClusterSummaryRow {
     	{
     		symbols.add(m.getSymbol());
     	}
-    	return StringUtils.join(symbols,", ");
+    	return FormatHelper.superscript(StringUtils.join(symbols,", "));
     }
     
     public List<String> getHumanSymbols()
