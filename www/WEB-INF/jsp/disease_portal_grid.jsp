@@ -83,13 +83,14 @@
   
   #hdpGridTable .tooltip 
   {
-	border: 2px solid #666;
-	background-color: #FcFcFc;
+	border: 1px solid #808080;
+	background-color: #FFFFCA;
 	font-size: 90%;
 	position: absolute;
 	top: 8px;
 	left: 8px;
 	white-space: nowrap;
+	padding: 2px;
   }
 </style>
 
