@@ -62,7 +62,7 @@ tr.gray td {background-color:#EEEEEE;}
 	<p>Logic is as follows:</p>
 	<ol>
 		<li>Input text matches an MP term, synonym or ID.</li>
-		<li>If matched MP term is a top-level term  (annotations will have "normal" qualifier), stop.</li>
+		<!--  <li>If matched MP term is a top-level term  (annotations will have "normal" qualifier), stop.</li> -->
 		<li>Find all genotypes associated with the MP term - don't exclude any.</li>
 		<li>Find all diseases associated with those genotypes.</li>
 		<li>Exclude any diseases that are "NOT" models (have "NOT" qualifier).</li>
@@ -121,11 +121,11 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 
-    		<li>Diseases that are associated with a genotype that is annotated to a matched MP term top-level term (having the "normal" qualifier) are excluded.<br/>
+    		<li>Diseases that are associated with a genotype that is annotated to a matched MP term top-level term (having the "normal" qualifier) are NOT excluded.<br/>
     		(Note: diseases excluded by one genotype relationship may be returned by another, so getting the right test case is tricky.)
     		<ol>
                 <li>Query for cardiovascular system phenotype <b concordion:set="#pheno">MP:0005385</b>.</li>
-                <li>Verify that Vitamin E, Familial Isolated Deficiency Of; VED, OMIM <b cc:assertNoResultsContain="getTermIdsByPhenotype(#pheno)">277460</b> is not returned. (See genotype MGI:2174791.)</li>
+                <li>Verify that Vitamin E, Familial Isolated Deficiency Of; VED, OMIM <b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">277460</b> is returned. (See genotype MGI:2174791.)</li>
     		</ol>
     		</li>
 

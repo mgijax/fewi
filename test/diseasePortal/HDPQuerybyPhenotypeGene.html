@@ -91,11 +91,11 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 
-    		<li>"Normal" models are excluded: Markers in "Normal" models are excluded from all query results displays.
+    		<li>"Normal" models are excluded: Markers in "Normal" models are not excluded from all query results displays.
  			<!-- <p concordion:assertTrue="false">new test</p> -->
     		<ol>
                 <li>Query for 'cellular phenotype', <b concordion:set="#pheno">MP:0005384</b> </li>
-                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Aaas</b> does NOT appear in the genes list</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Aaas</b> does appear in the genes list</li>
     		</ol>
     		</li>
 

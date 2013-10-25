@@ -321,7 +321,7 @@ tr.gray td {background-color:#EEEEEE;}
 					<i>(automated)</i></li>
                 <li>Click on the Grid tab and confirm the following MP header terms are displayed:
                 	<p concordion:assertTrue="true">klf 9/26/2013</p>
-                	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
+                	<table cc:verifySupersetOf="#systems : gridMpHeadersByPhenotype(#pheno)">
                 	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
                 	<tr><td>cardiovascular system</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> annotated to disease</td></tr>
                 	<tr><td>craniofacial</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3804635">MGI:3804635</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3803603">Rpsa&lt;tm1Ells&gt;</a> annotated to disease</td></tr>
