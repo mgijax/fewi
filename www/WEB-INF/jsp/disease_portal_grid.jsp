@@ -88,7 +88,7 @@
 	font-size: 90%;
 	position: absolute;
 	top: 8px;
-	left: 8px;
+	left: -50px;
 	white-space: nowrap;
 	padding: 2px;
   }
