@@ -51,7 +51,9 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 32, E4: Basic grid - right hand side and OMIM Terms</li>
         <li>User story 88, E3: Phenotype-only genes - load and display in HDP pages</li>
         <li>User story 107, Restrict checkmarks in grid to genotypes that satisfy the query</li>
+        <li>sto135: Grid: switch from OMGs to simples</li>
         <li>User story 136, Grid: don't always return all diseases for human genes</li>
+        <li>sto117: Grid: Disease clumps : front end</li>
     </ul>
 </div>
 
@@ -63,29 +65,41 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>Disease columns are displayed alphabetically</li>
 		<li>Each cell contains an X (or some icon) to indicate the rollup of underlying annotations</li>
 		<li>Both mouse genotype-to-disease and human gene-to-disease annotations may contribute to the rollup for a given cell</li>
-		<li>Phenotype queries only brings back diseases that have a super-simple genotype shared with the term matching the MP query</li>
+		<li>Phenotype queries only brings back diseases that have a super-simple genotype  (OMG) or simple genotype shared with the term matching the MP query</li>
 		<li>sto88: Phenotype only genes will display in HDP associated to their relevant disease</li>
 		<li>sto88: Phenotype only genes will not be associated on the Human Disease and Mouse model detail page</li>
+		<li>sto135: main kind of test: things that are currently being excluded get included</li>
+		<li>sto136: <i>no acceptance tests specified</i></li>
 		<li>sto107: When querying by pheno/disease, a checkmark should only appear in a cell when there is a genotype (OMG) that matches the query (i.e. has a matching disease/phenotype) and has that gene.</li>
 		<li>sto107: When querying by gene or region, there is no such restriction</li>
+		<li>sto117: query semantics unchanged; groups are for display purposes only</li>
+		<li>sto117: grid disease columns show clump terms rather than indiviual diseases</li>
+		<li>sto117: cells are rollups of the checkmarks for the individual matching diseases</li>
+		<li>sto117: the counts used for coloring the cell are the sums of counts for the underlying individual disease cells</li>
+		<li>sto117: popups show the individual matching diseases for the group, the matching genotypes, and the matching human genes</li>
+		<li>sto117: specific formatting not specified here</li>
 	</ul>
 	<h2>Logic for this tab</h2>
 	<h3>Search input in Phenotypes/Disease text box:</h3>
 	<ol>
 		<li><b>Search for matches in OMIM.</b></li>
-		<li>Exclude "Not" annotations. (You cannot search for a &quot;Not&quot; annotation.)</li>
-		<li>Find  &quot;compressed&quot; super-simple genotypes (also called OMG or One-Marker Genotypes)  &quot;genoclusters&quot; annotated to matches.</li>
+		<li>Exclude "Not" annotations. (You cannot search for a &quot;Not&quot; disease annotation.)</li>
+		<li>Find  &quot;compressed&quot; super-simple genotype (also called OMG or One-Marker Genotype)   and simple genotype  (sto135) &quot;genoclusters&quot; annotated to matches.</li>
 		<li>List mouse genes for these genotypes  &quot;genoclusters&quot;.</li>
-		<li>List diseases (that were matches  to the query and associated to super-simple genotypes &quot;genoclusters&quot;, above (sto107)), with checkmarks.</li>
+		<li>Retrieve diseases (that were matches  to the query and associated to super-simple  or simple genotypes &quot;genoclusters&quot;, above (sto107)).</li>
+		<li>Retrieve count of individual genotype-to-disease term annotations  (sto117) for each &quot;genocluster&quot;, above.</li>
+		<li>List &quot;disease clumps&quot; for the retrieved diseases (sto117).</li> 
+		<li>Calculate sum of genotype-to-disease term annotations for a &quot;disease clump&quot; and homology class (all genotypes). </li>
+		<li>Display heatmap color-coding in place of checkmarks (sto117).</li>
 		<li>Include human orthologs for those mouse genes.</li>
-		<li>List diseases associated with the human orthologs, with checkmarks.</li>
+		<li>List diseases  that match query (sto136)  as &quot;disease clumps&quot; (sto117) associated with the human orthologs, with heatmap coloring (sto117). Use split-cell colors if both human and mouse annotations exist.</li>
 		<li><b>Search for matches in MP.</b></li>
-		<li>Exclude "Normal" annotations. (You cannot search for a &quot;Normal&quot; annotation.)</li>
-		<li>Find  &quot;compressed&quot; super-simple genotypes (also called OMG or One-Marker Genotypes)  &quot;genoclusters&quot; annotated to matches.</li>
+		<li>Include &quot;Normal&quot; annotations. (You <b><i>can</i></b> search for a &quot;Normal&quot; MP annotation (sto105).)</li>
+		<li>Find  &quot;compressed&quot; super-simple genotype (also called OMG or One-Marker Genotype)  and simple genotype (sto135) &quot;genoclusters&quot; annotated to matches.</li>
 		<li>List mouse genes for these genotypes  &quot;genoclusters&quot;.</li>
-		<li>List diseases that are associated to the SAME super-simple genotypes &quot;genoclusters&quot;, just above (sto107), with checkmarks.</li>
+		<li>List diseases that are associated to the SAME super-simple  and simple genotypes &quot;genoclusters&quot;, just above (sto107).</li>
 		<li>Include human orthologs for those mouse genes.</li>
-		<li>List diseases associated with the human orthologs, with checkmarks.</li>
+		<li>List diseases  that match query (sto136) associated with the human orthologs, with heatmap coloring (sto117). Use split-cell colors if both human and mouse annotations exist.</li>
 	</ol>
 	<h3>Search input in Genes text box:</h3>
 	<ol>
@@ -94,11 +108,11 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>Search for matches in nomenclature of all organisms.</li>
 		<li>Find mouse orthologs of other organisms' matching markers, if one exists.</li>
 		<li>Find human orthologs of other organisms' matching markers, if one exists.</li>
-		<li><b>For each mouse marker (direct matches, or orthologs of matches),</b> find super-simple genotypes (OMG) &quot;genoclusters&quot;.</li>
+		<li><b>For each mouse marker (direct matches, or orthologs of matches),</b> find super-simple genotype (OMG)  and simple genotype  (sto135) &quot;genoclusters&quot;.</li>
 		<li>For each genotype &quot;genocluster&quot;, determine if MP annotation (including "norm" annotations (sto105)) or OMIM annotation (excluding "Not" annotations) exists.</li>
-		<li>List mouse markers where MP or OMIM annotation exists for a super-simple genotype (OMG) &quot;genoclusters&quot;.</li>
-		<li>List the annotated diseases, with checkmarks, excluding "Not" annotations.</li>
-		<li><b>For each human marker (direct matches, or orthologs of matches),</b> list annotated diseases, with checkmarks.</li>
+		<li>List mouse markers where MP or OMIM annotation exists for a super-simple genotype (OMG) or simple genotype (sto135) &quot;genoclusters&quot;.</li>
+		<li>List the annotated diseases as &quot;disease clumps&quot; (sto117), excluding "Not" annotations, using heatmap coloring (sto117). Use split-cell colors if both human and mouse annotations exist.</li>
+		<li><b>For each human marker (direct matches, or orthologs of matches),</b> list annotated diseases, with heatmap coloring (sto117). Use split-cell colors if both human and mouse annotations exist.</li>
 	</ol>
 </div>
 
@@ -114,92 +128,80 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>The Grid tab displays one column per disease, sorted alphabetically
- 			<p concordion:assertTrue="true">klf 8/27/2013</p> 
+    		<li>The Grid tab displays one column per disease, sorted alphabetically (<i>modified for sto117</i>)
+ 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">gata1</b> in the Genes section and hit search</li>
-                <li>Click on the Grid tab and confirm there are 5 disease columns displayed:
-                <table cc:verifyRowsUnordered="#diseaseIds : gridDiseaseIdsByGene(#genes)">
-                	<tr><th concordion:assertEquals="#diseaseIds">OMIM ID</th><th>Disease</th></tr>
-                	<tr><td>300835</td><td>Anemia, X-Linked, with or without Neutropenia and/or Platelet Abnormalities;</td></tr>
-                	<tr><td>190685</td><td>Down Syndrome</td></tr>
-                	<tr><td>314050</td><td>Thrombocytopenia with Beta-Thalassemia X-Linked; XLTT</td></tr>
-                	<tr><td>300367</td><td>Thrombocytopenia, X-Linked, with or without Dyserythropoietic Anemia;</td></tr>
-                	<tr><td>254450</td><td>Myelofibrosis</td></tr>
+                <li>Click on the Grid tab and confirm there are 5 disease columns displayed with the correct DISEASE CLUMP names:
+                <table>
+                	<tr><th>Disease Clump</th><th>OMIM ID</th><th>Disease</th></tr>
+                	<tr><td>Anemia, X-Linked, with or without Neutropenia and/or Platelet Abnormalities;</td><td>300835</td><td>Anemia, X-Linked, with or without Neutropenia and/or Platelet Abnormalities;</td></tr>
+                	<tr><td>Down Syndrome</td><td>190685</td><td>Down Syndrome</td></tr>
+                	<tr><td>Thrombocytopenia</td><td>314050</td><td>Thrombocytopenia with Beta-Thalassemia X-Linked; XLTT</td></tr>
+                	<tr><td>Congenital Dyserythropoietic Anemia</td><td>300367</td><td>Thrombocytopenia, X-Linked, with or without Dyserythropoietic Anemia;</td></tr>
+                	<tr><td>Myelofibrosis</td><td>254450</td><td>Myelofibrosis</td></tr>
                 </table>
                 </li>
     		</ol>
     		</li>
 		
-    		<li>A Transgene gets associated to a disease on the grid 
- 			<p concordion:assertTrue="true">klf 8/27/2013</p> 
+    		<li>A Transgene gets associated to a disease on the grid (<i>modified for sto117</i>)
+ 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">605552</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the Mouse marker column contains marker <b concordion:set="#row">Tg(Fabp4-Hsd11b1)7Jesf</b></li>
-				<li>Confirm the disease column Abdorminal Obesity - Metabolic Syndrome (<b concordion:set="#column">605552</b>) has a 
-					<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b> for this marker row</li>
+				<li>Confirm the disease column <b>Abdorminal Obesity - Metabolic Syndrome</b> has a <b>colored cell</b> for this marker row</li>
     		</ol>
     		</li>
     		
-    		<li>Either a human or a mouse marker can contribute to the check for a disease
- 			<p concordion:assertTrue="true">klf 8/27/2013</p> 
+    		<li>Either a human or a mouse marker can contribute to the disease column (<i>modified for sto117</i>)
+ 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">ACAT2</b> in the Genes section and hit search</li>
                 <li>Click on the Grid tab and confirm the Gene listed is human gene <b concordion:set="#row">ACAT2</b></li>
-                <li>Verify that the disease Acetyl-Coa Acetyltransferase-2 Deficiency; ACAT2D (OMIM <b concordion:set="#column">614055</b>) has a 
-                	<b concordion:assertEquals="gridCheckForDiseaseByGene(#genes,#row,#column)">check</b> for this gene. (The only annotation is to that human gene.)</li>
+                <li>Verify that the disease <b>Acetyl-Coa Acetyltransferase-2 Deficiency</b> has a <b>colored cell</b> for this gene. (The only annotation is to this human gene.)</li>
                 <li>Clear this search</li>
                 <li>Enter <b concordion:set="#genes">Lyn</b> in the Genes section and hit search</li>
                 <li>Click on the Grid tab and confirm the Gene listed is mouse gene <b concordion:set="#row">Lyn</b></li>
-                <li>Verify that the disease Systemic Lupus Erythematosus; SLE (OMIM <b concordion:set="#column">152700</b>) has a 
-                	<b concordion:assertEquals="gridCheckForDiseaseByGene(#genes,#row,#column)">check</b> for this gene. (The human ortholog LYN is not annotated to this disease.)</li>
+                <li>Verify that the disease <b>Systemic Lupus Erythematosus</b> has a <b>colored cell</b> for this gene. (The human ortholog LYN is not annotated to this disease.)</li>
     		</ol>
     		</li>
 
-    		<li>Alternate ID's return the same data
- 			<p concordion:assertTrue="true">klf 8/27/2013</p> 
+    		<li>Alternate IDs return the same data (<i>modidified for sto117</i>)
+ 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
  			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010030</b> (abnormal orbit morphology) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the Disease columns are displaying <b concordion:execute="#count1 = gridDiseaseCountByPhenotype(#pheno)">40</b> (or more) diseases</li>
+                <li>Click on the Grid tab and confirm the Disease columns are displaying <b concordion:execute="#count1 = gridDiseaseCountByPhenotype(#pheno)">9</b> diseases</li>
                 <li>Clear this search</li>
                 <li>Enter <b concordion:set="#pheno">MP:0005246</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the Disease columns are displaying the same <b cc:assertEquals="gridDiseaseCountByPhenotype(#pheno)"><b concordion:echo="#count1"></b></b> diseases</li>
              </ol>
     		 </li>   
     		     		
-    		<li>Multiple annotations to the same disease rolls up to one check
- 			<p concordion:assertTrue="true">klf 8/27/2013</p> 
+    		<li>Multiple annotations to the same disease rolls up to one check (<i>modified for sto117</i>)
+ 			<p concordion:assertTrue="fasle">modified 10/25/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0001870, MP:0001873</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease column Autoimmune Polyendocrine Syndrome, Type I; APS1 
-                		(<b cc:assertValueAppearsOnlyOnce="gridDiseaseIdsByPhenotype(#pheno)">240300</b>) appears just once, 
-                	even though both Phenotype terms are associated to this disease for mouse marker Aire 
-                	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3793700">MGI:3793700</a> has both MP terms; 
-                	genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3576481">MGI:3576481</a> has just one of the terms).</li>
+                <li>Click on the Grid tab and confirm the disease column <b>Autoimmune Diseases</b> appears just once.</li> 
+				<li>In the row for the homology class containing <b>AIRE, Aire</b>, for the column <b>Autoimmune Diseases</b>:
+				<ul>
+					<li>Verify the orange triangle representing <b>1</b> human annotation appears.</li>
+					<li>Verify the blue color representing <b>8</b> mouse annotations appears.</li>
+					<li>(Note: <a href="http://cardolan.informatics.jax.org/diseasePortal/genoCluster/view/5644">this genotype cluster</a> has both MP terms in several distinct genotypes; 
+                	<a href="http://cardolan.informatics.jax.org/diseasePortal/genoCluster/view/29974">this genotype cluster</a> has just one of the terms in one genotype. <br/>
+                	<a href="http://cardolan.informatics.jax.org/allele/MGI:2182940">One more genotype</a> of Aire is annotated once to the disease, but not to the queried phenotypes, so it is excluded.)</li>
+				</ul>
+				</li>
     		</ol>
     		</li>
 
-<!--  NOT SURE WHAT THIS TEST WAS SUPPOSED TO VERIFY. THE FOLLOWING TEST VERIFIES MP->GENOTYPE->OMIM RULES.
-		KEEPING THIS TEST CASE BECAUSE IT RETURNS ONLY A LITTLE DATA SO MAY BE USEFUL FOR SOME OTHER PURPOSE.
- 			<li>Test that Genotype to Disease contributes to the Disease results
- 			<p concordion:assertTrue="false">new test</p> 
-			<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b>MP:0001868</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease columns <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b> and <b>Polycystic Ovary Syndrome 1; PCOS1</b>
-                (Note: Polycystic Ovary Syndrome 1; PCOS1 is showing no check mark)</li>
-
-    		</ol>
-    		</li>
- -->
-    		
-    		<li>When the query matches a phenotype term, only diseases that share a super-simple genotype  &quot;genocluster&quot; with MP terms matching your query are returned for a mouse marker (sto107).
- 			<i>updated for sto135</i>
+    		<li>When the query matches a phenotype term, only diseases that share a super-simple or simple genotype  &quot;genocluster&quot; with MP terms matching your query are returned for a mouse marker (sto107).
+ 			<br/><i>updated for sto135</i> - <span class="hilite">NEED TO MODIFY FOR STO117 - LEFT OFF HERE</span>
  			<p concordion:assertTrue="true">klf 09/25/2013</p> 
     					<ol>
                 <li>Open the HDP query form</li>
