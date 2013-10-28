@@ -51,7 +51,7 @@
     <!-- JDBC DataSource for local environments -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SingleConnectionDataSource" destroy-method="destroy">
         <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://mgi-testdb4.jax.org:5432/fe_stable"/>
+        <property name="url" value="jdbc:postgresql://mgi-testdb4.jax.org:5432/fe_dev"/>
         <property name="username" value="mgd_public"/>
         <property name="password" value="mgdpub"/>
         <property name="suppressClose" value="true"/>
@@ -59,7 +59,7 @@
 
     <!-- Hibernate SessionFactory -->
     <bean id="sessionFactory" 
-        class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
+        class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
         p:dataSource-ref="dataSource">
         <property name="hibernateProperties">
             <props>
@@ -70,12 +70,15 @@
                 </prop>
                 <prop key="hibernate.cache.use_query_cache">true</prop>
                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
-                <prop key="hibernate.cache.region.provider_class">
+                <!-- <prop key="hibernate.cache.region.provider_class">
                     net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory
-                </prop> 
-                <prop key="hibernate.cache.provider_class">
+                </prop> --> 
+                <!-- <prop key="hibernate.cache.provider_class">
                     org.hibernate.cache.EhCacheProvider
-                </prop>     
+                </prop> -->     
+                <prop key="hibernate.cache.region.factory_class">
+                	org.hibernate.cache.ehcache.EhCacheRegionFactory
+                </prop>
             </props>
         </property>
         <property name="packagesToScan">
@@ -86,7 +89,7 @@
     </bean>
 
     <bean id="transactionManager" 
-        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager"
         p:sessionFactory-ref="sessionFactory"/>
 
     <!-- 
