@@ -36,7 +36,7 @@
 		<li>user can enter Disease term and gene symbol</li>
 		<li>user can enter MP term and genetic locations </li>
 		<li>user can enter Disease term and genetic locations</li>
-		<li>user can enter gene and genetic locations?</li>
+		<li>user can enter gene and genetic locations</li>
 
 	</ul>
 </div>
@@ -70,13 +70,6 @@
                 <li>Click on the Grid tab and verify you only return Gene <b>Pde6c</b>, MP terms <b>nervous system and vision/eye</b>, Disease term <b>Achromatopsia 2; ACHM2</b></li>
     		</ol>
     		</li>
-    		<li>Confirm searching with a gene symbol and a genomic location returns correct results(sto186)
-    		<p concordion:assertTrue="false">new test</p>
-    		<ol>
-                <li>Query for gene <b>Tailq2</b> and genome location <b>chr2:155000000</b></li>
-                <li>Click on the Grid tab and verify you only return Gene <b>RTailq2</b>, MP term <b>limbs/digits/tail</b></li>
-    		</ol>
-    		</li>
     		<li>Confirm searching with an MP term and a genomic location returns correct results(sto186)
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
@@ -89,6 +82,13 @@
     		<ol>
                 <li>Query for term <b>Obesity</b> and genome location <b>Chr9:57143256</b></li>
                 <li>Click on the Grid tab and verify you only return Gene <b>Neil1</b>, MP term <b>growth/size</b>, and Disease <b>Obesity</b></li>
+    		</ol>
+    		</li>
+    		<li>Confirm searching with a gene symbol and a genomic location returns correct results(sto186)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for gene <b>Tailq2</b> and genome location <b>chr2:155000000</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>RTailq2</b>, MP term <b>limbs/digits/tail</b></li>
     		</ol>
     		</li>
     	</ol>
