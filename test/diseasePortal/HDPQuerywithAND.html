@@ -1,0 +1,101 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>HDP: Querying by Locations Genes output</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#definitions">Definitions</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>HDP: Support using <b>and</b> between the query options</h1>
+    <ul>
+        <li>User story 186, Support AND (officially)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>user can enter MP term and gene symbol</li>
+		<li>user can enter Disease term and gene symbol</li>
+		<li>user can enter MP term and genetic locations </li>
+		<li>user can enter Disease term and genetic locations</li>
+		<li>user can enter gene and genetic locations?</li>
+
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="auto">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<ol>
+    		<li>Confirm searching with an MP term and a gene symbol returns correct results(sto186)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for <b>MP:0004521</b> and marker <b>cldn14</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>Cldn14</b>, MP terms <b>behavior/neurological(N), hearing/vestibular/ear, and nervous system</b>, Disease term <b>Deafness, Autosomal Recessive 29; DFNB29</b></li>
+    		</ol>
+    		</li>
+    		<li>Confirm searching with a Disease term and a gene symbol returns correct results(sto186)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for <b>Achroma*</b> and marker <b>Pde6c</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>Pde6c</b>, MP terms <b>nervous system and vision/eye</b>, Disease term <b>Achromatopsia 2; ACHM2</b></li>
+    		</ol>
+    		</li>
+    		<li>Confirm searching with a gene symbol and a genomic location returns correct results(sto186)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for gene <b>Tailq2</b> and genome location <b>chr2:155000000</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>RTailq2</b>, MP term <b>limbs/digits/tail</b></li>
+    		</ol>
+    		</li>
+    		<li>Confirm searching with an MP term and a genomic location returns correct results(sto186)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for term <b>MP:0005378</b> and genome location <b>Chr2:154791401</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>Gnf1</b>, MP terms <b>adipose tissue, growth/size, and skeleton</b></li>
+    		</ol>
+    		</li>
+    		<li>Confirm searching with an Disease term and a genomic location returns correct results(sto186)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for term <b>Obesity</b> and genome location <b>Chr9:57143256</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>Neil1</b>, MP term <b>growth/size</b>, and Disease <b>Obesity</b></li>
+    		</ol>
+    		</li>
+    	</ol>
+		<h3>Automated tests</h3>
+
+	</div>
+</div>
+
+</body>
+</html>
