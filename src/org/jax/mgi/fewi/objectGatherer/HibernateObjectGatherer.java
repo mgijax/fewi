@@ -151,14 +151,15 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 		{
 		String id;
 			for (T r : queryResults) {
-				id = meta.getIdentifier(r, s.getEntityMode()).toString();
+				id = s.getIdentifier(r).toString();
+				//id = meta.getIdentifier(r, s.getEntityMode()).toString();
 				resultsMap.put(id, r);
 			}
 		}
 		else
 		{
 			for (T r : queryResults) {
-				String key = meta.getPropertyValue(r, fieldName, s.getEntityMode()).toString();
+				String key = meta.getPropertyValue(r, fieldName).toString();
 				resultsMap.put(key, r);
 			}
 		}

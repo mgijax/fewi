@@ -6,7 +6,21 @@ import java.util.*;
 /* to be changed for each Finder */
 /*-------------------------------*/
 
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerSequenceAssociation;
+import mgi.frontend.datamodel.MarkerTissueCount;
 import mgi.frontend.datamodel.Sequence;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Example;
+import org.hibernate.NullPrecedence;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.jax.mgi.fewi.hunter.HibernateSequenceHunter;
 import org.jax.mgi.fewi.hunter.SolrSequenceKeyHunter;
 import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
 
@@ -15,6 +29,7 @@ import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
 /*----------------------------------------*/
 
 // fewi
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -41,12 +56,15 @@ public class SequenceFinder {
 	/*--------------------*/
 
     private Logger logger = LoggerFactory.getLogger(SequenceFinder.class);
+    
+    //@Autowired
+    //private SolrSequenceKeyHunter sequenceHunter;
+    
+    @Autowired 
+    private HibernateSequenceHunter hibernateSequenceHunter;
 
-    @Autowired
-    private SolrSequenceKeyHunter sequenceHunter;
-
-    @Autowired
-    private SolrSequenceSummaryHunter solrSequenceSummaryHunter;
+    //@Autowired
+    //private SolrSequenceSummaryHunter solrSequenceSummaryHunter;
 
     @Autowired
     private HibernateObjectGatherer<Sequence> sequenceGatherer;
@@ -59,20 +77,27 @@ public class SequenceFinder {
     public SearchResults<Sequence> getSequenceByID(SearchParams searchParams) {
 
         logger.debug("->SequenceFinder.getSequenceByID()");
-
-        // result object to be returned
         SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
 
         // ask the hunter to identify which objects to return
-        sequenceHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
-
-        // gather objects identified by the hunter, add them to the results
-        List<Sequence> seqList = sequenceGatherer.get( Sequence.class, searchResults.getResultKeys() );
-        searchResults.setResultObjects(seqList);
+        hibernateSequenceHunter.hunt(searchParams, searchResults, false);
+        logger.debug("->hunter found these resultKeys - "+ searchResults.getResultKeys());
 
         return searchResults;
+
+//        // result object to be returned
+//        SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
+//
+//        // ask the hunter to identify which objects to return
+//        sequenceHunter.hunt(searchParams, searchResults);
+//        logger.debug("->hunter found these resultKeys - "
+//          + searchResults.getResultKeys());
+//
+//        // gather objects identified by the hunter, add them to the results
+//        List<Sequence> seqList = sequenceGatherer.get( Sequence.class, searchResults.getResultKeys() );
+//        searchResults.setResultObjects(seqList);
+//
+//        return searchResults;
     }
 
 
@@ -101,23 +126,37 @@ public class SequenceFinder {
 
     public SearchResults<Sequence> getSequences(SearchParams searchParams) {
 
+    	return getSequencesByHibernate(searchParams);
+//        logger.debug("->SequenceFinder.getSequences()");
+//
+//        // result object to be returned
+//        SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
+//
+//        // ask the hunter to identify which objects to return
+//        solrSequenceSummaryHunter.hunt(searchParams, searchResults);
+//        logger.debug("->hunter found these resultKeys - "
+//          + searchResults.getResultKeys());
+//
+//        // gather objects identified by the hunter, add them to the results
+//        List<Sequence> seqList = sequenceGatherer.get( Sequence.class, searchResults.getResultKeys() );
+//        searchResults.setResultObjects(seqList);
+//
+//        return searchResults;
+    }
+
+    
+    
+    public SearchResults<Sequence> getSequencesByHibernate(SearchParams searchParams) {
+
         logger.debug("->SequenceFinder.getSequences()");
 
         // result object to be returned
         SearchResults<Sequence> searchResults = new SearchResults<Sequence>();
 
         // ask the hunter to identify which objects to return
-        solrSequenceSummaryHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
-
-        // gather objects identified by the hunter, add them to the results
-        List<Sequence> seqList = sequenceGatherer.get( Sequence.class, searchResults.getResultKeys() );
-        searchResults.setResultObjects(seqList);
+        hibernateSequenceHunter.hunt(searchParams, searchResults);
+        logger.debug("->hunter found these resultKeys - "+ searchResults.getResultKeys());
 
         return searchResults;
     }
-
-
-
 }

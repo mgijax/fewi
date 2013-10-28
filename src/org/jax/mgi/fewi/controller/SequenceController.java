@@ -147,11 +147,19 @@ public class SequenceController {
             Iterator<SequenceID> it = ids.iterator();
 
             // first is the primary ID;  skip it - we only want secondary IDs
-            it.next();
+            // --- this logic is false, there is no way to know which one will come first - kstone
+            //it.next();
+            // added correct logic below
 
             // make list of secondary IDs
             while (it.hasNext()) {
               SequenceID secondaryID = it.next();
+              
+              if(sequence.getPrimaryID() != null && sequence.getPrimaryID().equals(secondaryID.getAccID()))
+              {
+            	  // skip the primary ID.
+            	  continue;
+              }
               otherIDs.add(secondaryID);
             }
 
