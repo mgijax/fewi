@@ -65,6 +65,8 @@ tr.gray td {background-color:#EEEEEE;}
 <!--		<li>US140: The Invert button should flip the results by returning all rows and columns that do not have a check</li> no longer required -->
 		<li>US140: Results returned on the Grid Tab should be reflected on the Genes and Disease Tabs too</li>
 		<li>US140: Filtering should be applied across multiple pages</li>
+		<li>US189: Hovering over a phenotype checkmark displays the gene(s) and System involved</li>
+		<li>US189: Hovering over a disease checkmark displays the gene(s) and Disease term involved</li>
 	</ul>
 </div>
 
@@ -185,7 +187,23 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify the results list <b>Tshr</b> associated to <b>cellular</b> and <b>growth/size</b></li>
                 <li>Note: markers Tomt and Tshr are listed on the second page of results</li>
     		</ol>
-    		</li> 		
+    		</li> 
+    		<li>Confirm that the popup on hover works correctly for a phenotype(sto189)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<li>Query for phenotype <b>MP:0004521</b></li>
+                <li>Hover over the checkmark for <b>Actb</b> and phenotype <b>nervous system</b></li>
+                <li>Verify the popup text says: <i>Gene(s): <b>ACYB, Actb</b> System: <b>nervous system</b></i></li>               
+    		</ol>
+    		</li>
+    		<li>Confirm that the popup on hover works correctly for a disease(sto189)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<li>Query for phenotype <b>MP:0004521</b></li>
+                <li>Hover over the checkmark for <b>Bbs1</b> and disease <b>Obesity</b></li>
+                <li>Verify the popup text says: <i>Gene(s): <b>BBS1, Bbs1</b> Disease: <b>Obesity</b></i></li>
+    		</ol>
+    		</li>		
 		</ol>
 	</div>
 	<div id="auto">
