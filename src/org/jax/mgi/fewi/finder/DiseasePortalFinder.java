@@ -70,9 +70,9 @@ public class DiseasePortalFinder
 	}
 
 	// Group results by term id to return the distinct matching diseases (but only diseases that would appear on Grid)
-	public SearchResults<SolrVocTerm> getGridDiseases(SearchParams params)
+	public SearchResults<String> getGridDiseases(SearchParams params)
 	{
-		SearchResults<SolrVocTerm> results = huntGridDiseasesGroup(params);
+		SearchResults<String> results = huntGridDiseasesGroup(params);
 		return results;
 	}
 
@@ -241,9 +241,9 @@ public class DiseasePortalFinder
 		return results;
 	}
 	// get distinct list of diseases for the grid
-	private SearchResults<SolrVocTerm> huntGridDiseasesGroup(SearchParams params)
+	private SearchResults<String> huntGridDiseasesGroup(SearchParams params)
 	{
-		SearchResults<SolrVocTerm> results = new SearchResults<SolrVocTerm>();
+		SearchResults<String> results = new SearchResults<String>();
 		// make sure that only documents with OMIM type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
@@ -255,7 +255,7 @@ public class DiseasePortalFinder
 		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
 		params.setFilter(modifiedFilter);
 
-		hdpHunter.hunt(params, results,SearchConstants.VOC_TERM_ID);
+		hdpHunter.hunt(params, results,DiseasePortalFields.TERM_HEADER);
 		return results;
 	}
 

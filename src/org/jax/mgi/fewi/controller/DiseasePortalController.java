@@ -161,16 +161,15 @@ public class DiseasePortalController
       	List<SolrDpGridCluster> gridClusters = searchResults.getResultObjects();
 
       	// search for diseases in result set - make column headers and ID list
-      	List<SolrVocTerm> diseases = this.getGridDiseaseColumns(request, query);
+      	List<String> diseaseNames = this.getGridDiseaseColumns(request, query);
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
 		List<String> diseaseIds = new ArrayList<String>();
-		List<String> diseaseNames = new ArrayList<String>();
-		for(SolrVocTerm vt : diseases)
+		for(String disease : diseaseNames)
 		{
-			String headerText = vt.getTerm();
+			String headerText = disease;
 			diseaseColumnsToDisplay.add(this.getRotatedTextImgTag(headerText));
-			diseaseIds.add(vt.getPrimaryId());
-			diseaseNames.add(vt.getTerm());
+			//diseaseIds.add(vt.getPrimaryId());
+			//diseaseNames.add(disease);
 		}
 
       	// search for mp headers in result set & make column headers
@@ -211,7 +210,7 @@ public class DiseasePortalController
             	GridMapper mpHeaderMapper = new GridMapper(mpHeaders, genoInResults);
 
             	// map the diseases & mp headers for this grid row
-            	GridMapper diseaseMapper = new GridMapper(diseaseIds, genoInResults);
+            	GridMapper diseaseMapper = new GridMapper(diseaseNames, genoInResults);
 
             	// add this row
             	HdpGridClusterSummaryRow summaryRow = new HdpGridClusterSummaryRow(gc,diseaseMapper,mpHeaderMapper);
@@ -585,7 +584,7 @@ public class DiseasePortalController
 		return hdpFinder.getGridClusters(params);
 	}
 
-	public List<SolrVocTerm> getGridDiseaseColumns(
+	public List<String> getGridDiseaseColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query)
 	{
@@ -601,7 +600,7 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridDiseaseColumns finished");
-		SearchResults<SolrVocTerm> results = hdpFinder.getGridDiseases(params);
+		SearchResults<String> results = hdpFinder.getGridDiseases(params);
 
 		return results.getResultObjects();
 	}

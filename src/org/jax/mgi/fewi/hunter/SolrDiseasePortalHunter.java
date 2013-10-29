@@ -550,11 +550,19 @@ public class SolrDiseasePortalHunter extends SolrHunter
             DiseasePortalFields.GENO_CLUSTER_KEY,
             "termType:header")
         );
+        // create one for just the terms in the annotation index
+        this.joinIndices.put("diseasePortalAnnotationTerms", new SolrJoinMapper(diseasePortalAnnotationUrl,
+            DiseasePortalFields.GENO_CLUSTER_KEY,
+            "diseasePortal",
+            DiseasePortalFields.GENO_CLUSTER_KEY,
+            "termType:term")
+        );
         // create a way to also join on markerKey
         this.joinIndices.put("diseasePortalAnnotationByMarker", new SolrJoinMapper(diseasePortalAnnotationUrl,
-                DiseasePortalFields.MARKER_KEY,
+                "humanJoinKey",
                 "diseasePortal",
-                DiseasePortalFields.MARKER_KEY)
+                "humanJoinKey",
+                "termType:header")
             );
 	}
 }
