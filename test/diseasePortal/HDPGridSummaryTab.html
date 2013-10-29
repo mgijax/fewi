@@ -36,7 +36,7 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 
 
-    <title>Human Disease Portal Grid Summary Tab</title>
+    <title>HDP Grid Summary Tab</title>
 </head>
 
 <body>
@@ -50,6 +50,8 @@ tr.gray td {background-color:#EEEEEE;}
     <ul>
         <li>User story 137, Add links to gene. allele and disease detail pages</li>
         <li>User story 140, Grid: Basic Filtering</li>
+        <li>User story 189, Grid: add hover text for grid cells</li>
+        
     </ul>
 </div>
 
@@ -188,20 +190,38 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Note: markers Tomt and Tshr are listed on the second page of results</li>
     		</ol>
     		</li> 
-    		<li>Confirm that the popup on hover works correctly for a phenotype(sto189)
- 			<p concordion:assertTrue="false">new test</p>
+    		<li>Confirm that hovering over a cell with a phenotype checkmark or coloring triggers the popup text (sto189)
+ 			<p concordion:assertTrue="true">klf 10/29/2013</p>
     		<ol>
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Hover over the checkmark for <b>Actb</b> and phenotype <b>nervous system</b></li>
-                <li>Verify the popup text says: <i>Gene(s): <b>ACYB, Actb</b> System: <b>nervous system</b></i></li>               
+                <li>Verify the popup has 2 lines of text: <br/>
+                	Gene(s): <b>ACTB, Actb</b> <br/>
+                	System: <b>nervous system</b>
+                </li>   
+                <li>Query for gene <b>C4a</b></li>
+                <li>Hover over the checkmark for <b>C4a</b> and phenotype <b>cardiovascular system</b></li>
+                <li>Verify the popup has 2 lines of text: <br/>
+                	Gene(s): <b>C4B, C4A, C4b, C4a</b> <br/>
+                	System: <b>cardiovascular system</b>
+                </li>      
     		</ol>
     		</li>
-    		<li>Confirm that the popup on hover works correctly for a disease(sto189)
- 			<p concordion:assertTrue="false">new test</p>
+    		<li>Confirm that hovering over a cell with a disease checkmark or coloring triggers the popup text (sto189)
+ 			<p concordion:assertTrue="true">klf 10/29/2013</p>
     		<ol>
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Hover over the checkmark for <b>Bbs1</b> and disease <b>Obesity</b></li>
-                <li>Verify the popup text says: <i>Gene(s): <b>BBS1, Bbs1</b> Disease: <b>Obesity</b></i></li>
+                <li>Verify the popup has 2 lines of text: <br/>
+                	Gene(s): <b>BBS1, Bbs1</b> <br/>
+                	Disease: <b>Obesity</b>
+                </li>
+                <li>Query for gene <b>Ada</b></li>
+                <li>Hover over the checkmark for <b>Ada</b> and disease <b>Severe Combined Immunodeficiency, Autosomal Recessive,...</b></li>
+                <li>Verify the popup has 2 lines of text: <br/>
+                	Gene(s): <b>ADA, Ada</b> <br/>
+                	Disease: <b>Severe Combined Immunodeficiency, Autosomal Recessive, T Cell-Negative, B Cell-Negative, Nk Cell-Negative, Due to Adenosine Deaminase Deficiency</b>
+                </li>
     		</ol>
     		</li>		
 		</ol>
