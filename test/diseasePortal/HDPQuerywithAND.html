@@ -13,7 +13,7 @@
  -->
 
 
-    <title>HDP: Querying by Locations Genes output</title>
+    <title>HDP: Support AND</title>
 </head>
 
 <body>
@@ -56,42 +56,51 @@
 <p concordion:assertTrue="false">testing assertFalse - displays as red</p>
  -->
 		<ol>
-    		<li>Confirm searching with an MP term and a gene symbol returns correct results(sto186)
-    		<p concordion:assertTrue="false">new test</p>
+    		<li>Confirm searching with an MP term and a gene symbol returns correct results (sto186)
+    		<p concordion:assertTrue="true">klf 10/29/2013</p>
     		<ol>
-                <li>Query for <b>MP:0004521</b> and marker <b>cldn14</b></li>
+                <li>Query for phenotype/disease <b>MP:0004521</b> (abnormal cochlear hair cell stereociliary bundle morphology) and marker <b>cldn14</b></li>
                 <li>Click on the Grid tab and verify you only return Gene <b>Cldn14</b>, MP terms <b>behavior/neurological(N), hearing/vestibular/ear, and nervous system</b>, Disease term <b>Deafness, Autosomal Recessive 29; DFNB29</b></li>
     		</ol>
     		</li>
-    		<li>Confirm searching with a Disease term and a gene symbol returns correct results(sto186)
-    		<p concordion:assertTrue="false">new test</p>
+
+    		<li>Confirm searching with a Disease term and a gene symbol returns correct results (sto186)
+    		<p concordion:assertTrue="true">klf 10/29/2013</p>
     		<ol>
-                <li>Query for <b>Achroma*</b> and marker <b>Pde6c</b></li>
+                <li>Query for phenotype/disease <b>Achroma*</b> and marker <b>Pde6c</b></li>
                 <li>Click on the Grid tab and verify you only return Gene <b>Pde6c</b>, MP terms <b>nervous system and vision/eye</b>, Disease term <b>Achromatopsia 2; ACHM2</b></li>
     		</ol>
     		</li>
-    		<li>Confirm searching with an MP term and a genomic location returns correct results(sto186)
-    		<p concordion:assertTrue="false">new test</p>
+
+    		<li>Confirm searching with an MP term and a genomic location returns correct results (sto186)
+    		<p concordion:assertTrue="true">klf 10/29/2013</p>
     		<ol>
-                <li>Query for term <b>MP:0005378</b> and genome location <b>Chr2:154791401</b></li>
+                <li>Query for term <b>MP:0002089</b> (abnormal postnatal growth/weight/body size) and genome location <b>Chr2:154791401</b></li>
                 <li>Click on the Grid tab and verify you only return Gene <b>Gnf1</b>, MP terms <b>adipose tissue, growth/size, and skeleton</b></li>
     		</ol>
     		</li>
-    		<li>Confirm searching with an Disease term and a genomic location returns correct results(sto186)
-    		<p concordion:assertTrue="false">new test</p>
+
+    		<li>Confirm searching with an Disease term and a genomic location returns correct results (sto186)
+    		<p concordion:assertTrue="true">klf 10/29/2013</p>
     		<ol>
-                <li>Query for term <b>Obesity</b> and genome location <b>Chr9:57143256</b></li>
-                <li>Click on the Grid tab and verify you only return Gene <b>Neil1</b>, MP term <b>growth/size</b>, and Disease <b>Obesity</b></li>
+                <li>Query for term <b>Obesity</b> and genome location <b>Chr5:146582151-146585239</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>Gpr12</b>, <br/>
+                	MP terms <b>adipose tissue</b>, <b>behavior/neurological</b>, <b>growth/size</b>, <b>homeostasis/metabolism</b>, and <b>liver/biliary system</b><br/>
+                	and Disease <b>Obesity</b>.
+                </li>
     		</ol>
     		</li>
-    		<li>Confirm searching with a gene symbol and a genomic location returns correct results(sto186)
-    		<p concordion:assertTrue="false">new test</p>
+
+    		<li>Confirm searching with a gene symbol and a genomic location returns correct results (sto186)
+    		<p concordion:assertTrue="true">klf 10/29/2013</p>
     		<ol>
-                <li>Query for gene <b>Tailq2</b> and genome location <b>chr2:155000000</b></li>
-                <li>Click on the Grid tab and verify you only return Gene <b>RTailq2</b>, MP term <b>limbs/digits/tail</b></li>
+                <li>Query for gene <b>Tail*</b> and genome location <b>chr2:155000000</b></li>
+                <li>Click on the Grid tab and verify you only return Gene <b>Tailq2</b>, MP term <b>limbs/digits/tail</b></li>
     		</ol>
     		</li>
     	</ol>
+
+
 		<h3>Automated tests</h3>
 
 	</div>
