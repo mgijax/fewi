@@ -68,7 +68,7 @@ public class SolrDpGenoInResult implements HdpGridAnnotation
 	@Override
 	public String getTermIdentifier() 
 	{
-		if("header".equals(termType) && !"OMIM".equals(vocabName)) return term;
+		if("header".equals(termType)) return term;
 		return termId;
 	}
 }
