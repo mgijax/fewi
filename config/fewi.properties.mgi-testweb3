@@ -76,6 +76,7 @@ solr.disease.url=${solr.server1.url}disease/
 solr.mpAnnotation.url=${solr.server1.url}mpAnnotation/
 solr.gxdDifferentialMarker.url=${solr.server1.url}gxdDifferentialMarker/
 solr.gxdImagePane.url=${solr.server1.url}gxdImagePane/
+solr.mpAnnotation.url=${solr.server1.url}mpAnnotation/
 solr.disease_portal.url=${solr.server1.url}diseasePortal/
 solr.disease_portal_annotation.url=${solr.server1.url}diseasePortalAnnotation/
 
