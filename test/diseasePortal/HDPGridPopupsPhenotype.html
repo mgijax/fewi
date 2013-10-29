@@ -51,7 +51,9 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 95, E4: Drill down grid - MP X's - Data formatting</li>
         <li>User story 178, Flag for background sensitivity - MP popups</li>
         <li>User story 135, Grid: switch from OMGs to simples</li>
-        <li>User story 185, Restrict popup to query terms</li>
+        <li>User story 185, BUG: genoclusters in popups should only be those that matched the query</li>
+
+
     </ul>
 
 
@@ -66,8 +68,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto178: flag appears in a cell if any of the actual annotations underlying that cell have a b.s. note</li>
 		<li>sto178: flag is a little exclamation point "!" in a corner of the cell</li>
 		<li>sto135: main kind of test: things that are currently being excluded get included</li>
-		<li>sto185: when phenotypes/diseases are queried, we only displayed the genoclusters that match, 
-			and only columns that have data for the matched genoclusters</li>
+		<li>sto185: when phenotypes/diseases are queried, we only displayed the genoclusters that match, and only columns that have data for the matched genoclusters</li>
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -145,7 +146,7 @@ tr.gray td {background-color:#EEEEEE;}
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
-    		<li>"Happy Path": In the popup, a checkmark appears for a &quot;compressed&quot; genotype and MP term for each OMG of the particular gene with an "abnormal" annotation.<br/>
+    		<li>"Happy Path": In the popup, a checkmark appears for a &quot;compressed&quot; genotype and MP term for each OMG/simple  genotype of the particular gene with an "abnormal" annotation.<br/>
     			Annotations to different genotypes which aggregate to one "compressed" genotype are displayed only with the single, "compressed" genotype. 
     		<ol>
                 <li>Open the HDP query form</li>
@@ -172,9 +173,9 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tyrp1</b> row and <b concordion:set="#column">vision/eye</b> column.<br/>
                  (Note: only 1 OMG has a term matching the query. But 48 other OMGs have other terms under same "vision/eye" header. There are no "duplicate allele pairs" that result in "compressed" genotypes in this test case.)
                 </li>
-                <li>Confirm that <b concordion:assertEquals="systemGridPopupGenoCountByPheno(#pheno,#row,#column)">1</b> genotype rows are displayed.
+                <li>Confirm that <b concordion:assertEquals="systemGridPopupGenoCountByPheno(#pheno,#row,#column)">1</b> genotype row is displayed.
                 	the other 48 are absent, because they do not match the query (sto185)</li>
-                <li>Confirm that the pop-up column headers contain AT LEAST the following 2 terms (sto185):
+                <li>Confirm that the pop-up column headers contain ONLY the following 2 terms (sto185):
                 	<table cc:verifySupersetOf="#terms : systemGridPopupTermsByPheno(#pheno,#row,#column)">
                 	<tr><th concordion:assertEquals="#terms">Term</th><th>Term ID</th></tr>
                 	<tr><td>abnormal iris morphology</td><td>MP:0001322</td></tr>
@@ -182,13 +183,13 @@ tr.gray td {background-color:#EEEEEE;}
                 	<!--  REMOVED, BECAUSE GENOTYPE THIS BELONGS TO DOES NOT MATCH QUERY <tr><td>decreased eye pigmentation</td><td>MP:0005172</td></tr> -->
                 	</table>
                 </li>
-                <li>Confirm that the pop-up contains at least the data in the following table (there are other genotype and MP term combinations) (sto185):
+                <li>Confirm that the pop-up contains ONLY the data in the following table (there are other genotype and MP term combinations which should not be returned) (sto185):
                 	<table concordion:execute="#cell = systemGridPopupCheckByPheno(#pheno,#row,#column,#genotypeRow,#termId)">
                 	<tr><th concordion:set="#genotypeRow">genotype</th><th concordion:set="#termId">term ID</th><th>term</th><th concordion:assertEquals="#cell">checkmark?</th></tr>
                 	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0001322</td><td>abnormal iris morphology</td><td>yes</td></tr>
                 	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>yes</td></tr>
-                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>no</td></tr>
-                	<!-- <tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11PU&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
+                	<!-- <tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>no</td></tr>
+                	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11PU&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
                 	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11PU&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>no</td></tr>
                 	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11R30M&gt;</td><td>MP:0005172</td><td>decreased eye pigmentation</td><td>yes</td></tr>
                 	<tr><td>Tyrp1&lt;b&gt;/Tyrp1&lt;b-11R30M&gt;</td><td>MP:0006228</td><td>iris atrophy</td><td>no</td></tr>
