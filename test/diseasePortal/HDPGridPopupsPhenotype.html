@@ -75,10 +75,10 @@ tr.gray td {background-color:#EEEEEE;}
 	<ul>
 		<li>Popup opens in a new browser window (not a DIV within the existing browser window)</li>
 		<li><b>Column headers contain all MP terms</b> which are (1) children of the MP Header column where the user clicked 
-			and (2) have at least one annotation to One-Marker Genotypes (OMG) for the gene row where the user clicked and that match your query.</li>
+			and (2) have at least one annotation to One-Marker Genotypes (OMG)  or &quot;simple&quot; genotype (can be logically resolved to one allele/marker) for the gene row where the user clicked and that match your query.</li>
 		<li>MP terms in column headers are displayed in the same order as rows on the Allele Detail Page</li>
 		<li>Column headers are displayed slanted for easier reading</li>
-		<li><b>Rows contain all OMG which</b> (1) contain the gene in whose row the user clicked,
+		<li><b>Rows contain all OMG/simple genotypes  which</b> (1) contain the gene in whose row the user clicked,
 			(2) which have annotations to any of the MP terms displayed in header columns,
 			and (3) match your query.
 		<ul>
@@ -108,6 +108,8 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto178: add background sensitivity flag to any cell that has a background sensitivity note in ANY annotation</li>
 		<li>sto178: add legend to describe what N and ! means (normals and background sensitivity flag respectively)</li>
 		<li>sto135: correct display of MP term column headers to same as Allele Detail Page (since we now include both "simple" and "super-simple [OMG]" genotypes)</li>
+		<li>sto185: display only genotypes associated with the queried pheno or disease term.</li>
+		<li>sto185: display additional phenotypes or diseases only if they are associated with a genotype annotated to the queried pheno or disease term.</li>
 	</ul>
 	
 </div>
