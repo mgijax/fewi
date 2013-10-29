@@ -49,6 +49,7 @@ tr.gray td {background-color:#EEEEEE;}
     <h1>Popup: Disease Data</h1>
     <ul>
         <li>User story 34, E4: Drill Down page -  OMIM Xs - debugging display</li>
+        <li>User story 185, BUG: genoclusters in popups should only be those that matched the query</li>
         <li><span class="hilite">NEED TO MODIFY FOR STO117</span></li>
     </ul>
 </div>
@@ -59,6 +60,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>shows all the OMG genotypes</li>
 		<li>shows the human gene associations</li>
 		<li>shows the disease</li>
+		<li>sto185: when phenotypes/diseases are queried, we only displayed the genoclusters that match, and only columns that have data for the matched genoclusters</li>
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -120,15 +122,27 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Clear the query form.</li>
     		</ol>
     		</li>
+    		
+    		<li>The only diseases displayed either match the queried term OR a share a geno-cluster with a phenotype/disease matching the queried term. The only genotypes displayed are associated directly with the queried term. Additional genotypes of a marker are excluded. (sto185)
+ 			<p concordion:assertTrue="true">klf 10/29/2013</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>270150</b> (Sjogren Syndrome) in the Phenotypes and Diseases section and <b>Aire</b> in the Genes section and hit search.</li>
+                <li>Verify the only diseases listed are <b>Sjogren Syndrome</b> and <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b> (which shares a genotype with Sjogren Syndrome).</li>
+                <li>Verify <b>Guillain-Barre Syndrome, Familial; GBS</b> is NOT listed (annotated to a different genotype of Aire).</li>
+                <li>Click the checkmark or colored cell for <b>Aire</b> and <b>Sjogren Syndrome</b>; verify the genotype in the Disease Popup is <b>Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>.</li>
+                <li>Click the checkmark or colored cell for <b>Aire</b> and <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b>; verify the same genotype appears (<b>Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>) in the Disease Popup.</li>
+    		</ol>
+    		</li>
 
 		</ol>
 	</div>
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
-    		<li>Happy Path:  In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the particular gene with a mouse model annotation.<br/>
+    		<li>Happy Path:  In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG/simple  genotype of the particular gene with a mouse model annotation.<br/>
     			Annotations to different genotypes which aggregate to one "compressed" genotype are displayed only with the single, "compressed" genotype. <br/>
-    			Verify human disease is listed only when association exists.
+    			Verify human disease is listed only when association exists AND disease name or synonym matches queried term (if pheno/disease query input).
  			<p><i>fully automated</i></p>
     		<ol>
                 <li>Open the HDP query form</li>
