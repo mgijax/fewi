@@ -146,13 +146,3 @@
 </table>
 <div id="hdpSystemPopupTablePadder"><c:out value="${lastColImage}" escapeXml="false" /></div>
 </div>
-
-<br/><br/>
-<c:if test="${not empty humanMarkers}">
-<tr><th>Human Marker</th></tr>
-<c:forEach var="humanMarker" items="${humanMarkers}" varStatus="status">
-        <tr><td>
-        ${humanMarker.symbol}
-        </td></tr>
-</c:forEach>
-</c:if>
