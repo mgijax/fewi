@@ -166,7 +166,7 @@
                     <div class="gridCellLink"
                          onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}')
                          ; return false;">${mpHeader.displayMark}</div>
-                    <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>System: <b>${mpHeader.term}</b></div></div> 
+                    <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Phenotype: <b>${mpHeader.term}</b></div></div> 
                 </c:if>
               </td>
             </c:forEach>
