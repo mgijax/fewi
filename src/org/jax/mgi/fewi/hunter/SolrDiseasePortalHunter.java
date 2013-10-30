@@ -266,7 +266,8 @@ public class SolrDiseasePortalHunter extends SolrHunter
 		        DiseasePortalFields.MARKER_DISEASE,
 		        DiseasePortalFields.MARKER_SYSTEM,
 		        DiseasePortalFields.MARKER_ALL_REF_COUNT,
-		        DiseasePortalFields.MARKER_DISEASE_REF_COUNT));
+		        DiseasePortalFields.MARKER_DISEASE_REF_COUNT,
+		        DiseasePortalFields.MARKER_IMSR_COUNT));
         groupReturnedFields.put(DiseasePortalFields.TERM_HEADER,Arrays.asList(DiseasePortalFields.TERM_HEADER));
         groupReturnedFields.put(SearchConstants.VOC_TERM_ID,Arrays.asList(DiseasePortalFields.TERM_ID,
 		        DiseasePortalFields.TERM,
