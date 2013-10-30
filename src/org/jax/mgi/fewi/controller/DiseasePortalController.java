@@ -36,6 +36,7 @@ import org.jax.mgi.fewi.summary.DiseasePortalDiseaseSummaryRow;
 import org.jax.mgi.fewi.summary.DiseasePortalMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.HdpGenoBySystemPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
+import org.jax.mgi.fewi.summary.HdpMarkerBySystemPopupRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -302,7 +303,7 @@ public class DiseasePortalController
 		mav.addObject("genoClusters", genoClusters);
 		mav.addObject("mpTermColumns", mpTermColumnsToDisplay);
 		mav.addObject("mpTerms", termColNames);
-		mav.addObject("mpHeader", query.getMpHeader());
+		mav.addObject("mpHeader", query.getTermHeader());
 		mav.addObject("gridClusterString",gridClusterString);
 
    		return mav;
@@ -317,8 +318,7 @@ public class DiseasePortalController
     public ModelAndView gridDiseaseCell(
       HttpServletRequest request,
       HttpServletResponse response,
-      @ModelAttribute DiseasePortalQueryForm query,
-      @RequestParam("term") String term)
+      @ModelAttribute DiseasePortalQueryForm query)
     {
     	logger.debug("->gridDiseaseCell started");
 
@@ -347,14 +347,83 @@ public class DiseasePortalController
         List<HdpGenoCluster> genoClusters = searchResults.getResultObjects();
     	logger.debug("->gridDiseaseCell; number of genoClusters=" + genoClusters.size());
 
-    	List<SolrDiseasePortalMarker> humanMarkers = this.getGridHumanMarkers(request,query);
 
+    	List<SolrVocTerm> diseaseTerms = this.getGridDiseaseTermColumns(request,query);
+      	List<String> diseaseTermColumnsToDisplay = new ArrayList<String>();
+		List<String> termColIds = new ArrayList<String>();
+		List<String> termColNames = new ArrayList<String>(); // needed to automated tests
+
+		for(SolrVocTerm diseaseTerm : diseaseTerms)
+		{
+			// use 30 max characters for the popup
+			diseaseTermColumnsToDisplay.add(this.getRotatedTextImgTag(diseaseTerm.getTerm(),30));
+			termColIds.add(diseaseTerm.getPrimaryId());
+			termColNames.add(diseaseTerm.getTerm());
+		}
+    	
+		List<HdpGenoBySystemPopupRow> popupRows = new ArrayList<HdpGenoBySystemPopupRow>();
+		// map the columns with the data
+		for(HdpGenoCluster gc : genoClusters)
+		{
+			logger.debug("genoClusterKey = "+gc.getGenoClusterKey());
+			// map the diseases with column info
+			GridMapper diseaseMapper = new GridMapper(termColIds, gc.getDiseases());
+			HdpGenoBySystemPopupRow popupRow = new HdpGenoBySystemPopupRow(gc, diseaseMapper);
+			popupRows.add(popupRow);
+		}
+		
+		// get the human marker data as well
+    	List<SolrDiseasePortalMarker> humanMarkers = this.getGridHumanMarkers(request,query);
+    	SearchParams sp = new SearchParams();
+    	sp.setFilter(this.parseQueryForm(query));
+    	sp.setPageSize(10000);
+    	SearchResults<SolrDpGenoInResult> sr = hdpFinder.searchAnnotationsInPopupResults(sp);
+    	// map the results by marker key
+    	Map<Integer,List<SolrDpGenoInResult>> humanResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
+    	for(SolrDpGenoInResult gir : sr.getResultObjects())
+    	{
+    		Integer mKey = gir.getMarkerKey();
+    		if(mKey!=null)
+    		{
+        		logger.info("found human data for marker key "+mKey);
+    			if(!humanResults.containsKey(mKey))
+    			{
+    				humanResults.put(mKey,new ArrayList<SolrDpGenoInResult>());
+    			}
+    			humanResults.get(mKey).add(gir);
+    		}
+    	}
+    	
+    	List<HdpMarkerBySystemPopupRow> humanPopupRows = new ArrayList<HdpMarkerBySystemPopupRow>();
+    	for(SolrDiseasePortalMarker humanMarker : humanMarkers)
+    	{
+    		Integer mKey = Integer.parseInt(humanMarker.getMarkerKey());
+    		List<SolrDpGenoInResult> data = new ArrayList<SolrDpGenoInResult>();
+    		if(humanResults.containsKey(mKey))
+    		{
+    			data = humanResults.get(mKey);
+    		}
+    		else
+    		{
+    			logger.info("error-> missing data for human marker key "+mKey);
+    		}
+    		GridMapper diseaseMapper = new GridMapper(termColIds, data);
+			HdpMarkerBySystemPopupRow popupRow = new HdpMarkerBySystemPopupRow(humanMarker, diseaseMapper);
+			humanPopupRows.add(popupRow);
+    	}
+    	
       	// setup view object
       	ModelAndView mav = new ModelAndView("disease_portal_grid_disease_popup");
+
+		mav.addObject("popupRows", popupRows);
+		mav.addObject("humanPopupRows", humanPopupRows);
 		mav.addObject("genoClusters", genoClusters);
 		mav.addObject("humanMarkers",humanMarkers);
-		mav.addObject("diseaseName",term);
 		mav.addObject("diseaseId",query.getTermId());
+		mav.addObject("gridClusterString",gridClusterString);
+		mav.addObject("diseaseTermColumns", diseaseTermColumnsToDisplay);
+		mav.addObject("diseaseTerms", termColNames);
+		mav.addObject("diseaseHeader", query.getTermHeader());
 		mav.addObject("gridClusterString",gridClusterString);
 
    		return mav;
@@ -644,6 +713,26 @@ public class DiseasePortalController
 		SearchResults<SolrVocTerm> results = hdpFinder.huntGridMPTermsGroup(params);
 		return results.getResultObjects();
 	}
+	
+	public List<SolrVocTerm> getGridDiseaseTermColumns(
+			HttpServletRequest request,
+			@ModelAttribute DiseasePortalQueryForm query)
+	{
+		logger.debug("getGenoClusters disease term column query: " + query.toString());
+
+		// parse the various query parameter to generate SearchParams object
+		SearchParams params = new SearchParams();
+
+		params.setSorts(Arrays.asList(new Sort(DiseasePortalFields.TERM)));
+		params.setPageSize(300); // I'm not sure we want to display more than this...
+		//params.setFilter(this.parseSystemPopup(query));
+		params.setFilter(this.parseQueryForm(query));
+		
+		// perform query and return results as json
+		logger.debug("getGridDiseaseTermColumns finished");
+		SearchResults<SolrVocTerm> results = hdpFinder.huntGridDiseaseTermsGroup(params);
+		return results.getResultObjects();
+	}
 
 	public List<SolrDiseasePortalMarker> getGridHumanMarkers(
 			HttpServletRequest request,
@@ -888,11 +977,11 @@ public class DiseasePortalController
 			qFilters.add(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey,Filter.OP_EQUAL));
 		}
 
-        // mpHeader
-		String mpHeader = query.getMpHeader();
-		if(notEmpty(mpHeader))
+        // termHeader
+		String termHeader = query.getTermHeader();
+		if(notEmpty(termHeader))
 		{
-			qFilters.add(new Filter(SearchConstants.MP_HEADER, mpHeader,Filter.OP_EQUAL));
+			qFilters.add(new Filter(SearchConstants.MP_HEADER, termHeader,Filter.OP_EQUAL));
 		}
 
         // termId
@@ -937,11 +1026,11 @@ public class DiseasePortalController
 			qFilters.add( new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.OP_EQUAL));
 		}
 
-        // mpHeader
-		String mpHeader = query.getMpHeader();
-		if(notEmpty(mpHeader))
+        // termHeader
+		String termHeader = query.getTermHeader();
+		if(notEmpty(termHeader))
 		{
-			qFilters.add(new Filter(SearchConstants.MP_HEADER, mpHeader,Filter.OP_EQUAL));
+			qFilters.add(new Filter(SearchConstants.MP_HEADER, termHeader,Filter.OP_EQUAL));
 		}
 
 		// termId
@@ -1091,6 +1180,7 @@ public class DiseasePortalController
 
 			for(HdpGridAnnotation annot : gridAnnotations)
 			{
+				//logger.info("found annot for "+annot.getTerm()+" "+annot.getTermIdentifier());
 				String annotId = annot.getTermIdentifier();
 				if(annotationMap.containsKey(annotId)) continue;
 				if(notEmpty(annot.getQualifier()))
@@ -1107,6 +1197,7 @@ public class DiseasePortalController
 			// the map; create blank cells for no-matches
 			for(String colId : colIdList)
 			{
+				//logger.debug("found column for "+colId);
 				GridCell gc = new GridCell();
 
 				HdpGridAnnotation annot=null;
@@ -1121,7 +1212,8 @@ public class DiseasePortalController
 				
 				if(annot!=null)
 				{
-					//logger.info("colID="+colId+",term="+annot.getTerm()+",qual="+annot.getQualifier()+".");
+					//logger.debug("mapped cell for "+)
+					//logger.info("mapped cell for colID="+colId+",term="+annot.getTerm()+",qual="+annot.getQualifier()+".");
 					gc.setTerm(annot.getTerm());
 					gc.setTermId(annot.getTermId());
 					gc.setHasPopup();

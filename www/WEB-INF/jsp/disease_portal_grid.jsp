@@ -164,7 +164,7 @@
               <td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder</c:if>" >
                 <c:if test="${mpHeader.hasPopup}">
                     <div class="gridCellLink"
-                         onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&mpHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}')
+                         onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}')
                          ; return false;">${mpHeader.displayMark}</div>
                     <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>System: <b>${mpHeader.term}</b></div></div> 
                 </c:if>
@@ -175,7 +175,7 @@
             <td class="d_${status.count}">
 	          <c:if test="${disease.hasPopup}">
                     <div class="gridCellLink"
-                         onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termId=${disease.termId}&term=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.termId}')
+                         onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}')
                          ; return false;">${disease.displayMark}</div>
                     <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> 
 	          </c:if>

@@ -522,6 +522,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
           SolrDpGenoInResult genoInResult = new SolrDpGenoInResult();
           genoInResult.setGridClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY));
           genoInResult.setGenoClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GENO_CLUSTER_KEY));
+          genoInResult.setMarkerKey((Integer) doc.getFieldValue(DiseasePortalFields.MARKER_KEY));
           genoInResult.setTerm((String) doc.getFieldValue(DiseasePortalFields.TERM));
           genoInResult.setTermId((String) doc.getFieldValue(DiseasePortalFields.TERM_ID));
           genoInResult.setTermType((String) doc.getFieldValue(DiseasePortalFields.TERM_TYPE));
@@ -563,6 +564,13 @@ public class SolrDiseasePortalHunter extends SolrHunter
                 "diseasePortal",
                 "humanJoinKey",
                 "termType:header")
+            );
+        // create a way to also join on markerKey
+        this.joinIndices.put("diseasePortalAnnotationByMarkerTerm", new SolrJoinMapper(diseasePortalAnnotationUrl,
+                "humanJoinKey",
+                "diseasePortal",
+                "humanJoinKey",
+                "termType:term")
             );
 	}
 }

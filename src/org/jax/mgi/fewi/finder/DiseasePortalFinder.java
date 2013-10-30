@@ -121,6 +121,37 @@ public class DiseasePortalFinder
 		
 		return results;
 	}
+	
+	public SearchResults<SolrDpGenoInResult> searchAnnotationsInPopupResults(SearchParams params) 
+	{
+		SearchResults<SolrDpGenoInResult> results = new SearchResults<SolrDpGenoInResult>();
+		
+		// need to ensure that only docs come back that have a grid cluster
+		Filter originalFilter = params.getFilter();
+//		Filter modifiedFilter = Filter.and(
+//				Arrays.asList(originalFilter,
+//					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+//				)
+//		);
+//		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+//		params.setFilter(modifiedFilter);
+//		
+//		hdpHunter.joinHunt(params, results, "diseasePortalAnnotationHeaders");
+		
+		// need to also include the disease->human marker annotations somehow
+		Filter modifiedFilter = Filter.and(
+				Arrays.asList(originalFilter,
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD),
+					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.OP_EQUAL),
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.OP_EQUAL)
+				)
+		);
+		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+		params.setFilter(modifiedFilter);
+		hdpHunter.joinHunt(params, results, "diseasePortalAnnotationByMarkerTerm");
+		
+		return results;
+	}
 
 	// ---- counts ----
 	public Integer getGridClusterCount(SearchParams params)
@@ -286,6 +317,25 @@ public class DiseasePortalFinder
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
 					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+				)
+			);
+		// replace the term search property with a disease specific one that includes mp terms that map to diseases
+		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+		params.setFilter(modifiedFilter);
+
+		hdpHunter.hunt(params, results,SearchConstants.VOC_TERM_ID);
+		return results;
+	}
+	
+	// get distinct list of disease terms for the grid drill down
+	public SearchResults<SolrVocTerm> huntGridDiseaseTermsGroup(SearchParams params)
+	{
+		SearchResults<SolrVocTerm> results = new SearchResults<SolrVocTerm>();
+		// make sure that only documents with Disease type are included in the group
+		Filter modifiedFilter = Filter.and(
+				Arrays.asList(params.getFilter(),
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.OP_EQUAL),
 					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
 				)
 			);

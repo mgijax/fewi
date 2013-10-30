@@ -17,7 +17,7 @@ public class DiseasePortalQueryForm
     private String locations;
     private String organism = MOUSE;
     private String gridClusterKey;
-    private String mpHeader;
+    private String termHeader;
     private String termId;
     
     // Filter queries
@@ -73,11 +73,11 @@ public class DiseasePortalQueryForm
 	public void setGridClusterKey(String gridClusterKey) {
 		this.gridClusterKey = gridClusterKey;
 	}
-	public String getMpHeader() {
-		return mpHeader;
+	public String getTermHeader() {
+		return termHeader;
 	}
-	public void setMpHeader(String mpHeader) {
-		this.mpHeader = mpHeader;
+	public void setTermHeader(String termHeader) {
+		this.termHeader = termHeader;
 	}
 
 	public String getTermId() {
@@ -114,8 +114,8 @@ public class DiseasePortalQueryForm
 	public String toString() {
 		return "DiseasePortalQueryForm [phenotypes=" + phenotypes + ", genes="
 				+ genes + ", locations=" + locations + ", organism=" + organism
-				+ ", gridClusterKey=" + gridClusterKey + ", mpHeader="
-				+ mpHeader + ", termId=" + termId + ", fGene=" + fGene
+				+ ", gridClusterKey=" + gridClusterKey + ", termHeader="
+				+ termHeader + ", termId=" + termId + ", fGene=" + fGene
 				+ ", fHeader=" + fHeader + ", organismOptions="
 				+ organismOptions + "]";
 	}
