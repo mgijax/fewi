@@ -630,6 +630,7 @@ var genesResultsTable = function() {
 		{key: "disease", label: "Associated Human Diseases", sortable: false, width:240 },
 		{key: "system", label: "Abnormal Mouse Phenotypes<br/> Reported in these Systems", sortable: false },
 		{key: "allRefCount", label: "References", sortable: false },
+		{key: "imsrCount", label: "IMSR", sortable: false },
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];
 
@@ -648,6 +649,7 @@ var genesResultsTable = function() {
 			{key: "disease"},
 			{key: "system"},
 			{key: "allRefCount"},
+			{key: "imsrCount"},
 			{key: "score"}
 		],
 		metaFields: {

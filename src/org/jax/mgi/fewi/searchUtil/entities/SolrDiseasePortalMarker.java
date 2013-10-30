@@ -16,6 +16,7 @@ public class SolrDiseasePortalMarker
 	String markerId = new String();
 	Integer allRefCount = 0;
 	Integer diseaseRefCount = 0;
+	Integer imsrCount = 0;
 	List<String> disease;
 	List<String> system;
 
@@ -108,5 +109,13 @@ public class SolrDiseasePortalMarker
 	}
 	public void setDiseaseRefCount(Integer diseaseRefCount) {
 		this.diseaseRefCount = diseaseRefCount;
+	}
+	
+	// IMSR count
+	public Integer getImsrCount() {
+		return imsrCount;
+	}
+	public void setImsrCount(Integer imsrCount) {
+		this.imsrCount = imsrCount;
 	}
 }

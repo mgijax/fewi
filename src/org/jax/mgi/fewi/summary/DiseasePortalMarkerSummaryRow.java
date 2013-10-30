@@ -33,6 +33,7 @@ public class DiseasePortalMarkerSummaryRow {
 
     // config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+    String imsrUrl = ContextLoader.getConfigBean().getProperty("IMSRURL");
 
     private String score;
 
@@ -166,5 +167,21 @@ public class DiseasePortalMarkerSummaryRow {
             	.append("</a></span>");
         }
     	return refDisplay.toString();
+    }
+    
+    public String getImsrCount(){
+    	if("human".equalsIgnoreCase(solrDiseasePortalMarker.getOrganism())) return "";
+    	
+    	StringBuffer countDisplay = new StringBuffer();
+        if(solrDiseasePortalMarker.getImsrCount()!=null && solrDiseasePortalMarker.getImsrCount() > 0)
+        {	
+            countDisplay.append("<a href=\"")
+            		.append(imsrUrl)
+            		.append("summary?states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm&gaccid=")
+            		.append(solrDiseasePortalMarker.getMgiId()).append("\">")
+            	.append(solrDiseasePortalMarker.getImsrCount())
+            	.append("</a>");
+        }
+    	return countDisplay.toString();
     }
 }

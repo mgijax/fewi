@@ -414,6 +414,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
                 dpMarker.setSystem((List<String>)sd.getFieldValue(DiseasePortalFields.MARKER_SYSTEM));
                 dpMarker.setAllRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_ALL_REF_COUNT));
                 dpMarker.setDiseaseRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_DISEASE_REF_COUNT));
+                dpMarker.setImsrCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_IMSR_COUNT));
                 
         		sr.addResultObjects(dpMarker);
         		keyToGroupKeyMap.put(uniqueKey,markerKey.toString());
