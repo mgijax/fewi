@@ -140,14 +140,26 @@
     <%  // unhappily resorting to scriptlet
     Genotype genotype = (Genotype)request.getAttribute("scriptGeno");
 	String allComp = new String();
+	String ifChimeric = new String();
+	String ifConditional = new String();
 	if ( (genotype != null) && (genotype.getCombination1() != null) ) {
       allComp = genotype.getCombination1().trim();
       allComp = ntc.convertNotes(allComp, '|',true);
     }
-    %>
+	if ( genotype.getExistsAs().equals("Chimeric") ) {
+		ifChimeric = " (chimeric)";
+	}
+	if ( genotype.getIsConditional() == 1) {
+		ifConditional = " (conditional)";
+	}
+
+	%>
 	<tr class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" onClick="window.open('${configBean.FEWI_URL}diseasePortal/genoCluster/view/${popupRow.genoClusterKey}'); return true;">
     <td style="color:blue;"> 
-    <%=allComp%>
+      <%=allComp%>
+      <span style="color:black;"> 
+        <%=ifChimeric%><%=ifConditional%> 
+      </span>
     </td>
 
     <c:forEach var="mpTerm" items="${popupRow.mpCells}" varStatus="status">
