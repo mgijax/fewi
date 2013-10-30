@@ -78,7 +78,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<h3>Manual and Automated tests</h3>
 
 		<ol>
-    		<li>Verify a "Feedback" button exists on the Human Disease Query page(sto108)
+    		<li>Verify a "Provide Feedback" button exists on the Human Disease Query page(sto108)
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page</li>
@@ -91,19 +91,22 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Open the Human Disease query page</li>
                 <li>Hover of the "Provide Feedback" button</li>
-                <li>Verify  a popup displays with this text, "???"</li>
+                <li>Verify  a popup displays with this text, "We welcome your feedback and suggestions. Click here to contact us"</li>
     		</ol>
     		</li>
 
-    		<li><li>Verify clicking the "Feedback" button displays a feedback form and all fields are editable (sto108)
+    		<li><li>Verify clicking the "Provide Feedback" button displays a feedback form and all fields are editable (sto108)
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Provide Feedback" button</li>
                 <li>Verify a form displays with the following fields:
                 <ul>
-                	<li>
-                	<li>
-                	<li>
+                	<li>Subject</li>
+                	<li>First Name</li>
+                	<li>Last Name</li>
+                	<li>Institution</li>
+                	<li>E-mail Address</li>
+                	<li>Your Comments:</li>
                 </ul></li>
     		</ol>
     		</li>
