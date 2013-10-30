@@ -175,7 +175,7 @@ public class DiseasePortalMarkerSummaryRow {
     	StringBuffer countDisplay = new StringBuffer();
         if(solrDiseasePortalMarker.getImsrCount()!=null && solrDiseasePortalMarker.getImsrCount() > 0)
         {	
-            countDisplay.append("<a href=\"")
+            countDisplay.append("<a target=\"_blank\" href=\"")
             		.append(imsrUrl)
             		.append("summary?states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm&gaccid=")
             		.append(solrDiseasePortalMarker.getMgiId()).append("\">")
