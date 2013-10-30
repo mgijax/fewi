@@ -828,7 +828,8 @@ public class DiseasePortalController
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
-		params.setPageSize(5000); // if this is too low, you can change it, but damn that's a lot of genotypes
+		params.setSorts(Arrays.asList(new Sort(DiseasePortalFields.BY_GENOCLUSTER)));
+		params.setPageSize(10000); // if this is too low, you can change it, but damn that's a lot of genotypes
 
 		// determine and set the requested sorts, filters, and pagination
 //		params.setFilter(this.parseQueryForm(query));

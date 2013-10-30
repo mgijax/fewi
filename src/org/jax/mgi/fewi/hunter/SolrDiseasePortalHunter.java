@@ -169,6 +169,8 @@ public class SolrDiseasePortalHunter extends SolrHunter
         sortMap.put(DiseasePortalFields.BY_TERM_DAG, new SolrSortMapper(DiseasePortalFields.BY_TERM_DAG));
         sortMap.put(SortConstants.VOC_TERM_ID, new SolrSortMapper(DiseasePortalFields.TERM_ID));
         sortMap.put(SortConstants.VOC_TERM_HEADER, new SolrSortMapper(DiseasePortalFields.BY_MP_HEADER));
+        sortMap.put(DiseasePortalFields.BY_GENOCLUSTER, new SolrSortMapper(DiseasePortalFields.BY_GENOCLUSTER));
+
 
          /*
           * Groupings
