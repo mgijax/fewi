@@ -52,8 +52,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 178, Flag for background sensitivity - MP popups</li>
         <li>User story 135, Grid: switch from OMGs to simples</li>
         <li>User story 185, BUG: genoclusters in popups should only be those that matched the query</li>
-
-
+        <li>User story 196, Tagging of Genotypes in popups</li>
     </ul>
 
 
@@ -69,6 +68,8 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto178: flag is a little exclamation point "!" in a corner of the cell</li>
 		<li>sto135: main kind of test: things that are currently being excluded get included</li>
 		<li>sto185: when phenotypes/diseases are queried, we only displayed the genoclusters that match, and only columns that have data for the matched genoclusters</li>
+		<li>sto196: Chimeric genotypes are identified on the Genocluster popup page</li>
+		<li>sto196: Conditional genotypes are identified on the Genocluster popup page</li>
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -562,6 +563,22 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
 				</li>
     		</ol>
     		</li>
+    		<li>Verify that Chimeric Genotypes are followed by the word <b>(Chimeric)</b> (sto196)
+ 			<p concordion:assertTrue="false">new test</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#gene">Odf2</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Odf2</b> row and <b concordion:set="#column">reproductive system</b> column. </li>
+                <li>Confirm that <b>2</b> genotype rows are displayed for <b>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</b> and the second one is followed by <b>(Chimeric)</b></li>
+                
+            <li>Verify that Conditional Genotypes are followed by the word <b>(Conditional)</b> (sto196)
+ 			<p concordion:assertTrue="false">new test</p> 
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#gene">Gad1</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gad1</b> row and <b concordion:set="#column">embryogenesis abnormalities</b> column. </li>
+                <li>Confirm that the first genotype row displays <b>Gad1&lt;tm1.1Byc&gt;/Gad1&lt;tm1Rpa&gt; Tg(Nes-cre)1Kln/0</b> and this genotype is followed by <b>(Conditional)</b></li>
+            </ol>
 		</ol>
  	</div>
 </div>
