@@ -560,16 +560,16 @@ public class SolrDiseasePortalHunter extends SolrHunter
         );
         // create a way to also join on markerKey
         this.joinIndices.put("diseasePortalAnnotationByMarker", new SolrJoinMapper(diseasePortalAnnotationUrl,
-                "humanJoinKey",
+                DiseasePortalFields.HUMAN_DISEASE_JOIN_KEY,
                 "diseasePortal",
-                "humanJoinKey",
+                DiseasePortalFields.HUMAN_DISEASE_JOIN_KEY,
                 "termType:header")
             );
         // create a way to also join on markerKey
         this.joinIndices.put("diseasePortalAnnotationByMarkerTerm", new SolrJoinMapper(diseasePortalAnnotationUrl,
-                "humanJoinKey",
+        		DiseasePortalFields.HUMAN_DISEASE_JOIN_KEY,
                 "diseasePortal",
-                "humanJoinKey",
+                DiseasePortalFields.HUMAN_DISEASE_JOIN_KEY,
                 "termType:term")
             );
 	}

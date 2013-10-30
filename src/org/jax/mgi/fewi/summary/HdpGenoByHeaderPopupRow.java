@@ -1,16 +1,13 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.List;
 
-import mgi.frontend.datamodel.HdpGenoCluster;
 import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.HdpGenoCluster;
 
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper;
-import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper.GridCell;
-
-import javax.persistence.Column;
+import org.jax.mgi.fewi.util.HdpGridMapper;
+import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,17 +15,17 @@ import org.slf4j.LoggerFactory;
 /**
  * wrapper around a HdpGenoCluster and column controls
  */
-public class HdpGenoBySystemPopupRow {
+public class HdpGenoByHeaderPopupRow {
 
 	//-------------------
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(HdpGenoBySystemPopupRow.class);
+    private Logger logger = LoggerFactory.getLogger(HdpGenoByHeaderPopupRow.class);
 
 	// encapsulated row object
 	private HdpGenoCluster genoCluster;
-	private GridMapper mpMapper;
+	private HdpGridMapper gridMapper;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -39,9 +36,9 @@ public class HdpGenoBySystemPopupRow {
 	//-------------
 
 
-    public HdpGenoBySystemPopupRow (HdpGenoCluster genoCluster, GridMapper mpMapper) {
+    public HdpGenoByHeaderPopupRow (HdpGenoCluster genoCluster, HdpGridMapper gridMapper) {
     	this.genoCluster = genoCluster;
-    	this.mpMapper = mpMapper;
+    	this.gridMapper = gridMapper;
     }
 
     public Genotype getGenotype()
@@ -49,9 +46,9 @@ public class HdpGenoBySystemPopupRow {
     	return genoCluster.getGenotype();
     }
 
-    public List<GridCell> getMpCells()
+    public List<GridCell> getGridCells()
     {
-    	return mpMapper.getGridCells();
+    	return gridMapper.getGridCells();
     }
 
     public HdpGenoCluster getGenoCluster()
@@ -63,12 +60,4 @@ public class HdpGenoBySystemPopupRow {
     {
     	return genoCluster.getGenoClusterKey();
     }
-
-    public List<GridCell> getMpHeaderCells()
-    {
-    	return mpMapper.getGridCells();
-    }
-
-
-
 }

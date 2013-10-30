@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.HdpGenoCluster;
-import mgi.frontend.datamodel.HdpGenoClusterAnnotation;
-import mgi.frontend.datamodel.HdpGridAnnotation;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
@@ -34,12 +32,13 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterM
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.summary.DiseasePortalDiseaseSummaryRow;
 import org.jax.mgi.fewi.summary.DiseasePortalMarkerSummaryRow;
-import org.jax.mgi.fewi.summary.HdpGenoBySystemPopupRow;
+import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
 import org.jax.mgi.fewi.summary.HdpMarkerBySystemPopupRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
@@ -54,7 +53,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -208,10 +206,10 @@ public class DiseasePortalController
             	// for this grid cluster, gather (from pre-computed set) of which
             	// genotype clusters were involved
             	List<SolrDpGenoInResult> genoInResults = gridClusterToGenoInResults.get(gc.getGridClusterKey());
-            	GridMapper mpHeaderMapper = new GridMapper(mpHeaders, genoInResults);
+            	HdpGridMapper mpHeaderMapper = new HdpGridMapper(mpHeaders, genoInResults);
 
             	// map the diseases & mp headers for this grid row
-            	GridMapper diseaseMapper = new GridMapper(diseaseNames, genoInResults);
+            	HdpGridMapper diseaseMapper = new HdpGridMapper(diseaseNames, genoInResults);
 
             	// add this row
             	HdpGridClusterSummaryRow summaryRow = new HdpGridClusterSummaryRow(gc,diseaseMapper,mpHeaderMapper);
@@ -237,7 +235,7 @@ public class DiseasePortalController
 
 
     //--------------------------//
-    // Grid - System Cell Popup
+    // Grid - Phenotype System Cell Popup
     //--------------------------//
 
     @RequestMapping(value="/gridSystemCell")
@@ -248,31 +246,14 @@ public class DiseasePortalController
     {
     	logger.debug("->gridSystemCell started");
 
-    	//  TODO: this hack could be way simpler. I just hacked this together for Kim real quick - kstone
-    	String gridClusterString = "";
-    	DiseasePortalQueryForm dpQf = new DiseasePortalQueryForm();
-    	dpQf.setGridClusterKey(query.getGridClusterKey());
-    	SearchResults<SolrDpGridCluster> gridClusters = this.getGridClusters(request,dpQf,new Paginator(1));
-    	if(gridClusters.getResultObjects().size()>0)
-    	{
-    		SolrDpGridCluster gridCluster = gridClusters.getResultObjects().get(0);
-    		List<String> symbols = new ArrayList<String>();
-    		for(String humanSymbol : gridCluster.getHumanSymbols())
-    		{
-    			symbols.add(humanSymbol);
-    		}
-    		for(SolrDpGridClusterMarker m : gridCluster.getMouseMarkers())
-    		{
-    			symbols.add(m.getSymbol());
-    		}
-    		gridClusterString = StringUtils.join(symbols,", ");
-    	}
-    	// end hack
+    	String gridClusterString = getGridClusterTitle(query.getGridClusterKey());
 
+    	// get the geno cluster rows
         SearchResults<HdpGenoCluster> searchResults = this.getGenoClusters(request, query);
         List<HdpGenoCluster> genoClusters = searchResults.getResultObjects();
-    	logger.debug("->gridSystemCell; number of genoClusters=" + genoClusters.size());
+    	//logger.debug("->gridSystemCell; number of genoClusters=" + genoClusters.size());
 
+        // get the mp term columns
     	List<SolrVocTerm> mpTerms = this.getGridMpTermColumns(request,query);
       	List<String> mpTermColumnsToDisplay = new ArrayList<String>();
 		List<String> termColIds = new ArrayList<String>();
@@ -286,14 +267,14 @@ public class DiseasePortalController
 			termColNames.add(mpTerm.getTerm());
 		}
 
-
-		List<HdpGenoBySystemPopupRow> popupRows = new ArrayList<HdpGenoBySystemPopupRow>();
+		// cross reference them
+		List<HdpGenoByHeaderPopupRow> popupRows = new ArrayList<HdpGenoByHeaderPopupRow>();
 		// map the columns with the data
 		for(HdpGenoCluster gc : genoClusters)
 		{
 			// map the diseases with column info
-			GridMapper mpMapper = new GridMapper(termColIds, gc.getMpTerms());
-			HdpGenoBySystemPopupRow popupRow = new HdpGenoBySystemPopupRow(gc, mpMapper);
+			HdpGridMapper mpMapper = new HdpGridMapper(termColIds, gc.getMpTerms());
+			HdpGenoByHeaderPopupRow popupRow = new HdpGenoByHeaderPopupRow(gc, mpMapper);
 			popupRows.add(popupRow);
 		}
 
@@ -301,9 +282,9 @@ public class DiseasePortalController
       	ModelAndView mav = new ModelAndView("disease_portal_grid_system_popup");
 		mav.addObject("popupRows", popupRows);
 		mav.addObject("genoClusters", genoClusters);
-		mav.addObject("mpTermColumns", mpTermColumnsToDisplay);
-		mav.addObject("mpTerms", termColNames);
-		mav.addObject("mpHeader", query.getTermHeader());
+		mav.addObject("termColumns", mpTermColumnsToDisplay);
+		mav.addObject("terms", termColNames);
+		mav.addObject("termHeader", query.getTermHeader());
 		mav.addObject("gridClusterString",gridClusterString);
 
    		return mav;
@@ -322,32 +303,13 @@ public class DiseasePortalController
     {
     	logger.debug("->gridDiseaseCell started");
 
-    	//  TODO: this hack could be way simpler. I just hacked this together for Kim real quick - kstone
-    	String gridClusterString = "";
-    	DiseasePortalQueryForm dpQf = new DiseasePortalQueryForm();
-    	dpQf.setGridClusterKey(query.getGridClusterKey());
-    	SearchResults<SolrDpGridCluster> gridClusters = this.getGridClusters(request,dpQf,new Paginator(1));
-    	if(gridClusters.getResultObjects().size()>0)
-    	{
-    		SolrDpGridCluster gridCluster = gridClusters.getResultObjects().get(0);
-    		List<String> symbols = new ArrayList<String>();
-    		for(String humanSymbol : gridCluster.getHumanSymbols())
-    		{
-    			symbols.add(humanSymbol);
-    		}
-    		for(SolrDpGridClusterMarker m : gridCluster.getMouseMarkers())
-    		{
-    			symbols.add(m.getSymbol());
-    		}
-    		gridClusterString = StringUtils.join(symbols,", ");
-    	}
-    	// end hack
+    	String gridClusterString = getGridClusterTitle(query.getGridClusterKey());
 
+    	// gather the geno cluster rows
         SearchResults<HdpGenoCluster> searchResults = this.getGenoClusters(request, query);
         List<HdpGenoCluster> genoClusters = searchResults.getResultObjects();
-    	logger.debug("->gridDiseaseCell; number of genoClusters=" + genoClusters.size());
 
-
+        // gather the disease columns
     	List<SolrVocTerm> diseaseTerms = this.getGridDiseaseTermColumns(request,query);
       	List<String> diseaseTermColumnsToDisplay = new ArrayList<String>();
 		List<String> termColIds = new ArrayList<String>();
@@ -361,14 +323,15 @@ public class DiseasePortalController
 			termColNames.add(diseaseTerm.getTerm());
 		}
     	
-		List<HdpGenoBySystemPopupRow> popupRows = new ArrayList<HdpGenoBySystemPopupRow>();
+		// cross reference them
+		List<HdpGenoByHeaderPopupRow> popupRows = new ArrayList<HdpGenoByHeaderPopupRow>();
 		// map the columns with the data
 		for(HdpGenoCluster gc : genoClusters)
 		{
-			logger.debug("genoClusterKey = "+gc.getGenoClusterKey());
+			//logger.debug("genoClusterKey = "+gc.getGenoClusterKey());
 			// map the diseases with column info
-			GridMapper diseaseMapper = new GridMapper(termColIds, gc.getDiseases());
-			HdpGenoBySystemPopupRow popupRow = new HdpGenoBySystemPopupRow(gc, diseaseMapper);
+			HdpGridMapper diseaseMapper = new HdpGridMapper(termColIds, gc.getDiseases());
+			HdpGenoByHeaderPopupRow popupRow = new HdpGenoByHeaderPopupRow(gc, diseaseMapper);
 			popupRows.add(popupRow);
 		}
 		
@@ -394,6 +357,7 @@ public class DiseasePortalController
     		}
     	}
     	
+    	// cross reference the human marker data
     	List<HdpMarkerBySystemPopupRow> humanPopupRows = new ArrayList<HdpMarkerBySystemPopupRow>();
     	for(SolrDiseasePortalMarker humanMarker : humanMarkers)
     	{
@@ -407,7 +371,7 @@ public class DiseasePortalController
     		{
     			logger.info("error-> missing data for human marker key "+mKey);
     		}
-    		GridMapper diseaseMapper = new GridMapper(termColIds, data);
+    		HdpGridMapper diseaseMapper = new HdpGridMapper(termColIds, data);
 			HdpMarkerBySystemPopupRow popupRow = new HdpMarkerBySystemPopupRow(humanMarker, diseaseMapper);
 			humanPopupRows.add(popupRow);
     	}
@@ -418,12 +382,10 @@ public class DiseasePortalController
 		mav.addObject("popupRows", popupRows);
 		mav.addObject("humanPopupRows", humanPopupRows);
 		mav.addObject("genoClusters", genoClusters);
-		mav.addObject("humanMarkers",humanMarkers);
-		mav.addObject("diseaseId",query.getTermId());
 		mav.addObject("gridClusterString",gridClusterString);
-		mav.addObject("diseaseTermColumns", diseaseTermColumnsToDisplay);
-		mav.addObject("diseaseTerms", termColNames);
-		mav.addObject("diseaseHeader", query.getTermHeader());
+		mav.addObject("termColumns", diseaseTermColumnsToDisplay);
+		mav.addObject("terms", termColNames);
+		mav.addObject("termHeader", query.getTermHeader());
 		mav.addObject("gridClusterString",gridClusterString);
 
    		return mav;
@@ -663,7 +625,7 @@ public class DiseasePortalController
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 
-		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM)));
+		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM_HEADER)));
 		params.setPageSize(200); // I'm not sure we want to display more than this...
 		params.setFilter(this.parseQueryForm(query));
 
@@ -964,41 +926,6 @@ public class DiseasePortalController
         return sorts;
     }
 
-	// parses the query parameters for popups
-	private Filter parseSystemPopup(DiseasePortalQueryForm query)
-	{
-		//return parseQueryForm(query);
-		List<Filter> qFilters = new ArrayList<Filter>();
-
-        // grid cluster key
-		String gridClusterKey = query.getGridClusterKey();
-		if(notEmpty(gridClusterKey))
-		{
-			qFilters.add(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey,Filter.OP_EQUAL));
-		}
-
-        // termHeader
-		String termHeader = query.getTermHeader();
-		if(notEmpty(termHeader))
-		{
-			qFilters.add(new Filter(SearchConstants.MP_HEADER, termHeader,Filter.OP_EQUAL));
-		}
-
-        // termId
-		String termId = query.getTermId();
-		if(notEmpty(termId))
-		{
-			qFilters.add(new Filter(SearchConstants.VOC_TERM_ID, termId,Filter.OP_EQUAL));
-		}
-
-		if(qFilters.size()>0)
-		{
-			return Filter.and(qFilters);
-		}
-		return new Filter(SearchConstants.PRIMARY_KEY,"###NONE###",Filter.OP_HAS_WORD);
-	}
-
-
 	// parses the query parameters pass into main queries
 	private Filter parseQueryForm(DiseasePortalQueryForm query)
 	{
@@ -1044,7 +971,7 @@ public class DiseasePortalController
 		String phenotypes = query.getPhenotypes();
 		if(notEmpty(phenotypes))
 		{
-			Filter phenoFilter = generateNomenFilter(SearchConstants.VOC_TERM, phenotypes);
+			Filter phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
 			if(phenoFilter != null) qFilters.add(phenoFilter);
 		}
 
@@ -1052,7 +979,7 @@ public class DiseasePortalController
 		String genes = query.getGenes();
 		if(notEmpty(genes))
 		{
-			Filter genesFilter = generateNomenFilter(SearchConstants.MRK_NOMENCLATURE, genes);
+			Filter genesFilter = generateHdpNomenFilter(SearchConstants.MRK_NOMENCLATURE, genes);
 			if(genesFilter != null) qFilters.add(genesFilter);
 		}
 
@@ -1088,8 +1015,7 @@ public class DiseasePortalController
 	private boolean notEmpty(String str)
 	{ return str!=null && !str.equals(""); }
 
-	//TODO: refactor to a common place
-	private Filter generateNomenFilter(String property, String query){
+	private Filter generateHdpNomenFilter(String property, String query){
 		//logger.debug("splitting nomenclature query into tokens");
 		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query,false,"\"");
 		Filter nomenFilter = new Filter();
@@ -1155,147 +1081,35 @@ public class DiseasePortalController
 		params.setPageSize(0);
 		return hdpFinder.getDiseaseCount(params);
 	}
-
-	// a class for mapping columns to data for making rows in the Grid
-	public class GridMapper
+	
+	// -----------------------------------------------------------------//
+	// Utility Methods for specific information
+	// -----------------------------------------------------------------//
+	private String getGridClusterTitle(String gridClusterKey)
 	{
-		private List<String> colIdList;
-		private List<HdpGridAnnotation> gridAnnotations;
-		private List<GridCell> gridCells = new ArrayList<GridCell>();
-
-		public GridMapper(List<String> colIdList,List<? extends HdpGridAnnotation> gridAnnotations)
+		logger.debug("resolving grid cluster key("+gridClusterKey+") gene symbols");
+		String gridClusterString = "";
+		DiseasePortalQueryForm dpQf = new DiseasePortalQueryForm();
+		dpQf.setGridClusterKey(gridClusterKey);
+		SearchParams sp = new SearchParams();
+		sp.setPageSize(1);
+		sp.setFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.OP_EQUAL));
+		SearchResults<SolrDpGridCluster> gridClusters = hdpFinder.getGridClusters(sp);
+		if(gridClusters.getResultObjects().size()>0)
 		{
-			this.colIdList = colIdList;
-			this.gridAnnotations = new ArrayList<HdpGridAnnotation>(gridAnnotations);
-			init();
+			SolrDpGridCluster gridCluster = gridClusters.getResultObjects().get(0);
+			List<String> symbols = new ArrayList<String>();
+			for(String humanSymbol : gridCluster.getHumanSymbols())
+			{
+				symbols.add(humanSymbol);
+			}
+			for(SolrDpGridClusterMarker m : gridCluster.getMouseMarkers())
+			{
+				symbols.add(m.getSymbol());
+			}
+			gridClusterString = StringUtils.join(symbols,", ");
 		}
-
-
-		private void init()
-		{
-			// map annotations by term ID
-			// keep two separate maps, one for abnormal annotations, one for normal
-			Map<String,HdpGridAnnotation> annotationMap = new HashMap<String,HdpGridAnnotation>();
-			Map<String,HdpGridAnnotation> normalMap = new HashMap<String,HdpGridAnnotation>();
-
-			for(HdpGridAnnotation annot : gridAnnotations)
-			{
-				//logger.info("found annot for "+annot.getTerm()+" "+annot.getTermIdentifier());
-				String annotId = annot.getTermIdentifier();
-				if(annotationMap.containsKey(annotId)) continue;
-				if(notEmpty(annot.getQualifier()))
-				{
-					normalMap.put(annotId,annot);
-				}
-				else
-				{
-					annotationMap.put(annotId,annot);
-				}
-			}
-
-			// create cells by looking up if termId has an annotation in
-			// the map; create blank cells for no-matches
-			for(String colId : colIdList)
-			{
-				//logger.debug("found column for "+colId);
-				GridCell gc = new GridCell();
-
-				HdpGridAnnotation annot=null;
-				// get annotation summary if it exists for this cell
-				if(annotationMap.containsKey(colId)) annot = annotationMap.get(colId);
-				else if(normalMap.containsKey(colId))
-				{
-					// set normal if it is normal
-					annot = normalMap.get(colId);
-					gc.setIsNormal();
-				}
-				
-				if(annot!=null)
-				{
-					//logger.debug("mapped cell for "+)
-					//logger.info("mapped cell for colID="+colId+",term="+annot.getTerm()+",qual="+annot.getQualifier()+".");
-					gc.setTerm(annot.getTerm());
-					gc.setTermId(annot.getTermId());
-					gc.setHasPopup();
-					
-					// set background note if it is a HdpGenoClusterAnnotation
-					if(annot instanceof HdpGenoClusterAnnotation
-							&& ((HdpGenoClusterAnnotation)annot).getHasBackgroundNote())
-					{
-						gc.setHasBackgroundNote();
-					}
-				}
-				gridCells.add(gc);
-			}
-		}
-
-		public List<GridCell> getGridCells()
-		{
-			return gridCells;
-		}
-
-		public class GridCell
-		{
-			private String term="";
-			private String termId="";
-			private Boolean isNormal = false;
-			private Boolean hasPopup = false;
-			private Boolean hasBackgroundNote = false;
-
-			public String getTerm()
-			{
-				return term;
-			}
-			public void setTerm(String term)
-			{
-				this.term=term;
-			}
-			public String getTermId()
-			{
-				return termId;
-			}
-			public void setTermId(String termId)
-			{
-				this.termId=termId;
-			}
-			public void setIsNormal()
-			{
-				this.isNormal = true;
-			}
-			public Boolean getIsNormal()
-			{
-				return isNormal;
-			}
-			public void setHasPopup()
-			{
-				this.hasPopup = true;
-			}
-			public Boolean getHasPopup()
-			{
-				return hasPopup;
-			}
-			public void setHasBackgroundNote()
-			{
-				this.hasBackgroundNote = true;
-			}
-			public Boolean getHasBackgroundNote()
-			{
-				return hasBackgroundNote;
-			}
-
-			// encapsulate how we generate a display mark
-			public String getDisplayMark()
-			{
-				if(getHasPopup())
-				{
-					if(getIsNormal()) return "N";
-					return "&#8730;";
-				}
-
-				return "";
-			}
-			
-		}
-
+		return gridClusterString;
 	}
+
 }

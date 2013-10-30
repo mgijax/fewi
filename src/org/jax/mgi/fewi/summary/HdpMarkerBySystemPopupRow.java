@@ -1,17 +1,11 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.List;
 
-import mgi.frontend.datamodel.HdpGenoCluster;
-import mgi.frontend.datamodel.Genotype;
-
-import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper;
-import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper.GridCell;
-
-import javax.persistence.Column;
+import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
+import org.jax.mgi.fewi.util.HdpGridMapper;
+import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +23,7 @@ public class HdpMarkerBySystemPopupRow {
 
 	// encapsulated row object
 	private SolrDiseasePortalMarker marker;
-	private GridMapper gridMapper;
+	private HdpGridMapper gridMapper;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -40,7 +34,7 @@ public class HdpMarkerBySystemPopupRow {
 	//-------------
 
 
-    public HdpMarkerBySystemPopupRow (SolrDiseasePortalMarker marker, GridMapper gridMapper) {
+    public HdpMarkerBySystemPopupRow (SolrDiseasePortalMarker marker, HdpGridMapper gridMapper) {
     	this.marker = marker;
     	this.gridMapper = gridMapper;
     }

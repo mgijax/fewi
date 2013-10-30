@@ -1,18 +1,16 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterMarker;
-
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper;
-import org.jax.mgi.fewi.controller.DiseasePortalController.GridMapper.GridCell;
-
+import org.jax.mgi.fewi.util.HdpGridMapper;
+import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +28,8 @@ public class HdpGridClusterSummaryRow {
 
 	// encapsulated row object
 	private SolrDpGridCluster gridCluster;
-	private GridMapper diseaseRowMapper;
-	private GridMapper mpHeaderRowMapper;
+	private HdpGridMapper diseaseRowMapper;
+	private HdpGridMapper mpHeaderRowMapper;
 	private List<SolrDpGenoInResult> genoInResults;
 	private List<String> genoTerms;
 	// config values
@@ -43,7 +41,7 @@ public class HdpGridClusterSummaryRow {
 	//-------------
 
 
-    public HdpGridClusterSummaryRow (SolrDpGridCluster gridCluster,GridMapper diseaseRowMapper, GridMapper mpHeaderRowMapper) {
+    public HdpGridClusterSummaryRow (SolrDpGridCluster gridCluster,HdpGridMapper diseaseRowMapper, HdpGridMapper mpHeaderRowMapper) {
     	this.gridCluster = gridCluster;
     	this.diseaseRowMapper = diseaseRowMapper;
     	this.mpHeaderRowMapper = mpHeaderRowMapper;
