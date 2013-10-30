@@ -25,6 +25,6 @@
 
 <!-- Table and Wrapping div -->
 
-<div id="hdpSystemPopupHeader">Data for ${gridClusterString} and ${termHeader}<</div>
+<div id="hdpSystemPopupHeader">Data for ${gridClusterString} and ${termHeader}</div>
 
 <%@ include file="/WEB-INF/jsp/disease_portal_grid_popup_grid.jsp" %>

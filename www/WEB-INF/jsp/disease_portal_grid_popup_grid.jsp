@@ -139,7 +139,7 @@
 		<tr class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
 			<c:if test="${hasHomologeneId}">onClick="window.open('${configBean.FEWI_URL}homology/${popupRow.marker.homologeneId}'); return true;"</c:if> >
 	    
-	    <td <c:if test="${!hasHomologeneId}">style="color:blue;"</c:if> > 
+	    <td <c:if test="${hasHomologeneId}">style="color:blue;"</c:if> > 
 	    ${popupRow.marker.symbol}
 	    </td>
 	
