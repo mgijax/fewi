@@ -57,6 +57,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 105, Show all normal in the grid for MP (BUG, show "normal" genes on genes tab)</li>
         <li>User story 154, Genes Tab: export as tab-delimited text</li>
         <li>User story 137, Add Links to gene and disease detail pages</li>
+        <li>User story 84, Genes tab: AIMSR column</li>
     </ul>
 </div>
 
@@ -88,6 +89,10 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>US137: Mouse Gene symbols link to MGI gene detail pages</li>
 		<li>US137: Human Gene symbols link to MGI homology pages</li>
 		<li>US137: Human Gene Symbols that have no associated MGI homology page will have no link</li>
+		<li>US84: Add an IMSR column right after the References column</li>
+		<li>US84: Mouse IMSR counts is the number of mutations for this gene</li>
+		<li>US84: Human genes will not have IMSR counts</li>
+		<li>US84: IMSR counts will link to IMSR returning correct results</li>
 		</ul>
 	<p><b>NOTE!!:</b> A marker which has multiple genotypes may be indexed to a disease term for any 1 or more of those genotypes.  Being excluded from the indexed results set by one genotype rule does not exclude the marker completely (except for <em>Gt(ROSA)26Sor</em>.)</p>
 	<p>Sorting defined by SMEs:</p>
@@ -598,6 +603,49 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Query for marker <b>IGKC</b></li>
                 <li>Click on the Genes tab and find the Human marker <b>IGKC</b></li>
                 <li>Verify that the Human marker symbol <b>IGKC</b> is not a link</li>
+    		</ol>
+    		</li>
+    		<li>Verify the existance of an IMSR column on the Genes tab(sto84)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Verify the existance of an IMSR column right after the References column</li>
+    		</ol>
+    		</li> 
+    		<li>Verify IMSR mouse gene counts are correct (sto84)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Verify the following is correct:(numbers can be confirmed by checking any of the Markers allele pages IMSR section)
+                <table concordion:execute="#mSystems=getMarkerSystemByPhenotypeSymbol(#disease,#symbol)">
+                	<tr><th concordion:set="#symbol">Marker Symbol</th><th>IMSR</th></tr>
+                	<tr><td>Bard1</td><td>16</td></tr>
+                	<tr><td>Brca1</td><td>41</td></tr>
+                	<tr><td>Brca2</td><td>32</td></tr>
+                	<tr><td>Cav1</td><td>3</td></tr>
+                	<tr><td>Eef1a1</td><td>48</td></tr>
+                	<tr><td>Erbb2</td><td>7</td></tr>
+                	</table>
+                </li>
+    		</ol>
+    		</li> 
+    		<li>Verify Human genes have no counts in the IMSR column on the Genes tab(sto84)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Verify the IMSR column is blank for all human genes</li>
+    		</ol>
+    		</li>
+    		<li>Verify the IMSR counts are links to the IMSR website(sto84)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
+                <li>Click on the Genes tab</li>
+                <li>Click on the count link found for Gene <b>Bard1</b> found in the IMSR column</li>
+                <li>Verify it takes you to IMSR and the query returned is for <b>Bard1</b> and the number of  results returned matches the IMSR count found on the HDP Genes tab</li>
     		</ol>
     		</li>
     	</ol>	
