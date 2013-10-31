@@ -276,11 +276,11 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">FMR1</b> IS LISTED.</li>
                 <li>Clear the query form.</li>
                 <li>Enter <b concordion:set="#pheno">152700</b> (Systemic Lupus Erythematosus; SLE) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Yaa</b> row and <b concordion:set="#column">Systemic Lupus Erythematosus; SLE</b> column. </li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Yaa</b> row and <b concordion:set="#column">Systemic Lupus Erythematosus</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">X/Yaa</b> (5 genotypes exist).</li>
                 <li>Clear the query form.</li>
                 <li>Enter <b concordion:set="#pheno">104300</b> (Alzheimer Disease; AD) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tg(APPswe,PSEN1dE9)85Dbo</b> row and <b concordion:set="#column">Alzheimer Disease; AD</b> column. </li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Tg(APPswe,PSEN1dE9)85Dbo</b> row and <b concordion:set="#column">Alzheimer Disease</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Tg(APPswe,PSEN1dE9)85Dbo/0</b> (3 genotypes that are disease models exist).</li>
                 <li>(Future Note: Ichthyosis, X-Linked; XLI (OMIM ID: 308100) has 2 hemizygous NOT models that should form one geno-cluster row: Foxp3&lt;sf&gt;/Y)</li>
     		</ol>
