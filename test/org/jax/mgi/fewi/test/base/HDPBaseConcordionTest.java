@@ -473,6 +473,16 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	List<HdpGenoCluster> genoClusters = mq.getDiseasePopupGenoClusters(markerRow,diseaseCol);
     	return genoClusters.size();
     }
+    public Integer diseaseGridPopupGenoCountByGene(String genes,String markerRow,String diseaseCol) throws Exception
+    {
+    	// set the form
+    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
+    	mq.setGenes(genes);
+    	
+    	// get the grid cluster key
+    	List<HdpGenoCluster> genoClusters = mq.getDiseasePopupGenoClusters(markerRow,diseaseCol);
+    	return genoClusters.size();
+    }
     public List<String> diseaseGridPopupGenoClustersByPheno(String phenotype,String markerRow,String diseaseCol) throws Exception
     {
     	// set the form
@@ -648,12 +658,16 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     private String popupDiseaseGridCheckFor(MockHdpHttpQuery mq,String geneSymbol,String header,String genotype,String termId) throws Exception
     {
     	List<HdpGenoByHeaderPopupRow> popupRows = mq.getDiseasePopupRows(geneSymbol,header);
-    	return popupGridCheckFor(popupRows, genotype, termId);
+    	String check = popupGridCheckFor(popupRows, genotype, termId);
+    	if("yes".equalsIgnoreCase(check)) check = "check";
+    	return check;
     }
     private String popupDiseaseHumanGridCheckFor(MockHdpHttpQuery mq,String geneSymbol,String header,String genotype,String termId) throws Exception
     {
     	List<HdpMarkerByHeaderPopupRow> popupRows = mq.getDiseaseMarkerPopupRows(geneSymbol,header);
-    	return popupMarkerGridCheckFor(popupRows, genotype, termId);
+    	String check = popupMarkerGridCheckFor(popupRows, genotype, termId);
+    	if("yes".equalsIgnoreCase(check)) check = "check";
+    	return check;
     }
     private String popupGridCheckFor(List<HdpGenoByHeaderPopupRow> popupRows,String genotype,String termId) throws Exception
     {

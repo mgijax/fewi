@@ -103,96 +103,129 @@ tr.gray td {background-color:#EEEEEE;}
 		
     		<li>Chimeric genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Chimeric genotypes are NOT compressed with other kinds of genotypes.<br/>
     		(Note: There are no chimeric genotypes having the same allele pair as a non-chimeric genotype, so cannot verify that these remain separated.) 
- 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+ 			<p concordion:assertTrue="true">klf 9/10/2013</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>135100</b> (Fibrodysplasia Ossificans Progressiva; FOP) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b>Acvr1</b> row and <b>Fibrodysplasia Ossificans Progressiva; FOP</b> column. </li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Acvr1&lt;tm1Emsh&gt;/Acvr1&lt;+&gt;</b> (1 genotype exists).</li>
-                <li>Confirm that human <b>ACVR1</b> IS LISTED.</li>
+                <li>Enter <b concordion:set="#pheno">135100</b> (Fibrodysplasia Ossificans Progressiva; FOP) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Acvr1</b> row and <b concordion:set="#column">Fibrodysplasia Ossificans Progressiva; FOP</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for 
+                	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Acvr1&lt;tm1Emsh&gt;/Acvr1&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">ACVR1</b> IS LISTED.</li>
                 <li>Clear the query form.</li>
-                <li>Enter <b>305600</b> (Focal Dermal Hypoplasia; FDH) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b>Porcn</b> row and <b>Focal Dermal Hypoplasia; FDH</b> column. </li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Porcn&lt;tm1Vdv&gt;/Porcn&lt;+&gt;</b> (1 genotype exists).</li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Porcn&lt;tm1Vdv&gt;/Y</b> (1 genotype exists).</li>
-                <li>Confirm that human <b>PORCN</b> IS LISTED.</li>
+                <li>Enter <b concordion:set="#pheno">305600</b> (Focal Dermal Hypoplasia; FDH) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Porcn</b> row and <b concordion:set="#column">Focal Dermal Hypoplasia; FDH</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for 
+                	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Porcn&lt;tm1Vdv&gt;/Porcn&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for 
+                	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Porcn&lt;tm1Vdv&gt;/Y</b> (1 genotype exists).</li>
+                <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">PORCN</b> IS LISTED.</li>
     		</ol>
     		</li>
     		
     		<li>Conditional genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Conditional genotypes are NOT compressed with other kinds of genotypes.<br/>
     		(Note: There are no conditional genotypes having the same allele pair as a non-conditional genotype, so cannot verify that these remain separated.)
- 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+ 			<p concordion:assertTrue="true">klf 9/10/2013</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>131200</b> (Endometriosis, Susceptibility to, 1) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b>Kras</b> row and <b>Endometriosis, Susceptibility to, 1</b> column. </li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Kras&lt;tm4Tyj&gt;/Kras&lt;+&gt;</b> (1 genotype exists).</li>
-                <li>Confirm that human <b>KRAS</b> IS NOT LISTED.</li>
+                <li>Enter <b concordion:set="#pheno">131200</b> (Endometriosis, Susceptibility to, 1) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Kras</b> row and <b concordion:set="#column">Endometriosis, Susceptibility to, 1</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for 
+                	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Kras&lt;tm4Tyj&gt;/Kras&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">KRAS</b> IS NOT LISTED.</li>
                 <li>Clear the query form.</li>
     		</ol>
     		</li>
     		
     		<li>The only diseases displayed either match the queried term OR a share a geno-cluster with a phenotype/disease matching the queried term. The only genotypes displayed are associated directly with the queried term. Additional genotypes of a marker are excluded. (sto185)
- 			<p concordion:assertTrue="true">klf 10/29/2013</p> 
+ 			<p concordion:assertTrue="true">klf 10/29/2013</p> <i>(semi-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>270150</b> (Sjogren Syndrome) in the Phenotypes and Diseases section and <b>Aire</b> in the Genes section and hit search.</li>
+                <li>Enter <b concordion:set="#pheno">270150</b> (Sjogren Syndrome) in the Phenotypes and Diseases section and <b>Aire</b> in the Genes section and hit search.</li>
                 <li>Verify the only diseases listed are <b>Sjogren Syndrome</b> and <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b> (which shares a genotype with Sjogren Syndrome).</li>
                 <li>Verify <b>Guillain-Barre Syndrome, Familial; GBS</b> is NOT listed (annotated to a different genotype of Aire).</li>
-                <li>Click the checkmark or colored cell for <b>Aire</b> and <b>Sjogren Syndrome</b>; verify the genotype in the Disease Popup is <b>Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>.</li>
-                <li>Click the checkmark or colored cell for <b>Aire</b> and <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b>; verify the same genotype appears (<b>Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>) in the Disease Popup.</li>
+                <li>Click the checkmark or colored cell for <b concordion:set="#row">Aire</b> and <b concordion:set="#column">Sjogren Syndrome</b>; 
+                	verify the genotype in the Disease Popup is <b cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>.</li>
+                <li>Click the checkmark or colored cell for <b concordion:set="#row">Aire</b> and <b concordion:set="#column">Autoimmune Polyendocrine Syndrome, Type I; APS1</b>; 
+                	verify the same genotype appears (<b cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>) in the Disease Popup.</li>
     		</ol>
     		</li>
 
     		<li>Verify that Chimeric Genotypes are followed by the word <b>(Chimeric)</b> (sto196)
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:assertTrue="false">new test</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>135100</b> (Fibrodysplasia Ossificans Progressiva; FOP) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b>Acvr1</b> row and <b>Fibrodysplasia Ossificans Progressiva; FOP</b> column. </li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Acvr1&lt;tm1Emsh&gt;/Acvr1&lt;+&gt;</b> and is followed by <b>(Chimeric)</b>.</li>
+                <li>Enter <b concordion:set="#pheno">135100</b> (Fibrodysplasia Ossificans Progressiva; FOP) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Acvr1</b> row and <b concordion:set="#column">Fibrodysplasia Ossificans Progressiva; FOP</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for 
+                	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Acvr1&lt;tm1Emsh&gt;/Acvr1&lt;+&gt;</b> and is followed by <b>(Chimeric)</b>.</li>
             </ol>
             </li>
                 
             <li>Verify that Conditional Genotypes are followed by the word <b>(Conditional)</b> (sto196)
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:assertTrue="false">new test</p> <i>(semi-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>131200</b> (Endometriosis, Susceptibility to, 1) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b>Kras</b> row and <b>Endometriosis, Susceptibility to, 1</b> column. </li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Kras&lt;tm4Tyj&gt;/Kras&lt;+&gt;</b> and this genotype is followed by <b>(Conditional)</b>.</li>
+                <li>Enter <b concordion:set="#pheno">131200</b> (Endometriosis, Susceptibility to, 1) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Kras</b> row and <b concordion:set="#column">Endometriosis, Susceptibility to, 1</b> column. </li>
+                <li>Confirm that <b>1</b> genotype row is displayed for 
+                	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Kras&lt;tm4Tyj&gt;/Kras&lt;+&gt;</b> and this genotype is followed by <b>(Conditional)</b>.</li>
             </ol>
             </li>
             
             <li>Verify that disease "clumps" in the main grid are expanded into all disease terms and associated with all mouse genotypes and human genes in the popup when querying by gene. (sto117)
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:assertTrue="false">new test</p> <i>(semi-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>Col1a1</b> in the Genes section and hit search.</li>
+                <li>Enter <b concordion:set="#genes">Col1a1</b> in the Genes section and hit search.</li>
                 <li>Confirm that the Grid displays the disease column <b>Osteogenesis Imperfecta</b>.</li>
-                <li>Click the checkmark or colored cell at the intersection of the <b>Col1a1</b> row and <b>Osteogenesis Imperfecta</b> column (5 genotype annotations to 3 disease terms). </li>
-                <li>Confirm that Popup displays <b>4</b> columns for <b>Osteogenesis Imperfecta, Type I</b>, <b>Osteogenesis Imperfecta, Type II</b>, <b>Osteogenesis Imperfecta, Type III</b>, and <b>Osteogenesis Imperfecta, Type IV</b>.</li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Col1a1&lt;Aga2&gt;/Col1a1&lt;+&gt;</b> with checkmarks or colored cells for disease terms <b>Osteogenesis Imperfecta, Type II</b>, and <b>Osteogenesis Imperfecta, Type III</b>.</li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Col1a1&lt;tm1Jcm&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type II</b>.</li>
-                <li>Confirm that <b>1</b> gentoype row is displayed for <b>Col1a1&lt;tm1.1Jcm&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type I</b>.</li>
-                <li>Confirm that <b>1</b> gentoype row is displayed for <b>Col1a1&lt;Mov13&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type I</b>.</li>               
-                <li>Confirm that the human gene <b>COL1A1</b> is displayed with a checkmark or colored cell for all <b>4</b> disease terms.</li>
+                <li>Click the checkmark or colored cell at the intersection of the <b concordion:set="#row">Col1a1</b> row and <b concordion:set="#column">Osteogenesis Imperfecta</b> column (5 genotype annotations to 3 disease terms). </li>
+                <li>Confirm that Popup displays <b>4</b> columns 
+                	for <b>Osteogenesis Imperfecta, Type I</b>, <b>Osteogenesis Imperfecta, Type II</b>, <b>Osteogenesis Imperfecta, Type III</b>, and <b>Osteogenesis Imperfecta, Type IV</b>.</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b concordion:set="#genoRow">Col1a1&lt;Aga2&gt;/Col1a1&lt;+&gt;</b> 
+                	and for disease terms Osteogenesis Imperfecta, Type II (<b concordion:set="#diseaseCol">166210</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupCheckByGene(#genes,#row,#column,#genoRow,#diseaseCol)">check</b>, 
+                	and Osteogenesis Imperfecta, Type III (<b concordion:set="#diseaseCol">259420</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupCheckByGene(#genes,#row,#column,#genoRow,#diseaseCol)">check</b>.</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b concordion:set="#genoRow">Col1a1&lt;tm1Jcm&gt;/Col1a1&lt;+&gt;</b> 
+                	and for disease term Osteogenesis Imperfecta, Type II (<b concordion:set="#diseaseCol">166210</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupCheckByGene(#genes,#row,#column,#genoRow,#diseaseCol)">check</b>.</li>
+                <li>Confirm that <b>1</b> gentoype row is displayed for <b concordion:set="#genoRow">Col1a1&lt;tm1.1Jcm&gt;/Col1a1&lt;+&gt;</b>
+                	 and for disease term Osteogenesis Imperfecta, Type I (<b concordion:set="#diseaseCol">166200</b>) there is a 
+                	 	<b concordion:assertEquals="diseaseGridPopupCheckByGene(#genes,#row,#column,#genoRow,#diseaseCol)">check</b>.</li>
+                <li>Confirm that <b>1</b> gentoype row is displayed for <b concordion:set="#genoRow">Col1a1&lt;Mov13&gt;/Col1a1&lt;+&gt;</b>
+                	 and for disease term Osteogenesis Imperfecta, Type I (<b concordion:set="#diseaseCol">166200</b>) there is a 
+                	 	<b concordion:assertEquals="diseaseGridPopupCheckByGene(#genes,#row,#column,#genoRow,#diseaseCol)">check</b>.</li>               
+                <li>Confirm that the human gene <b concordion:set="#humanRow">COL1A1</b> is displayed 
+                	and for disease terms Osteogenesis Imperfecta, Type I (<b concordion:set="#diseaseCol">166200</b>) there is a 
+                	 	<b concordion:assertEquals="diseaseGridPopupHumanCheckByGene(#genes,#row,#column,#humanRow,#diseaseCol)">check</b>,
+                	and Osteogenesis Imperfecta, Type II (<b concordion:set="#diseaseCol">166210</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupHumanCheckByGene(#genes,#row,#column,#humanRow,#diseaseCol)">check</b>, 
+                	and Osteogenesis Imperfecta, Type III (<b concordion:set="#diseaseCol">259420</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupHumanCheckByGene(#genes,#row,#column,#humanRow,#diseaseCol)">check</b>, 
+                	and Osteogenesis Imperfecta, Type IV (<b concordion:set="#diseaseCol">166220</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupHumanCheckByGene(#genes,#row,#column,#humanRow,#diseaseCol)">check</b>.</li>
             </ol>
             </li>
 
             <li>Verify that disease "clumps" in the main grid are expanded into disease terms matching the query and associated with mouse genotypes and human genes matching the query in the popup when querying by disease term. (sto117)
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:assertTrue="false">new test</p> <i>(semi-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>259420</b> (Osteogenesis Imperfecta, Type III) in the Phenotypes and Diseases section and hit search.</li>
+                <li>Enter <b concordion:set="#pheno">259420</b> (Osteogenesis Imperfecta, Type III) in the Phenotypes and Diseases section and hit search.</li>
                 <li>Confirm that the Grid displays the disease column <b>Osteogenesis Imperfecta</b>.</li>
-                <li>Click the checkmark or colored cell at the intersection of the <b>Col1a1</b> row and <b>Osteogenesis Imperfecta</b> column (1 genotype is annotated to this disease term, and another term in this disease "clump"). </li>
+                <li>Click the checkmark or colored cell at the intersection of the <b concordion:set="#row">Col1a1</b> row and <b concordion:set="#column">Osteogenesis Imperfecta</b> column (1 genotype is annotated to this disease term, and another term in this disease "clump"). </li>
                 <li>Confirm that Popup displays <b>2</b> columns for <b>Osteogenesis Imperfecta, Type II</b>,  and <b>Osteogenesis Imperfecta, Type III</b>.</li>
-                <li>Confirm that <b>1</b> genotype row is displayed for <b>Col1a1&lt;Aga2&gt;/Col1a1&lt;+&gt;</b> with checkmarks or colored cells for disease terms <b>Osteogenesis Imperfecta, Type II</b>, and <b>Osteogenesis Imperfecta, Type III</b>.</li>
+                <li>Confirm that <b>1</b> genotype row is displayed for <b concordion:set="#genoRow">Col1a1&lt;Aga2&gt;/Col1a1&lt;+&gt;</b> 
+                	and for disease terms Osteogenesis Imperfecta, Type II (<b concordion:set="#diseaseCol">166220</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupCheckByPhenotype(#pheno,#row,#column,#genoRow,#diseaseCol)">check</b>, 
+                	and for Osteogenesis Imperfecta, Type III (<b concordion:set="#diseaseCol">259420</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupCheckByPhenotype(#pheno,#row,#column,#genoRow,#diseaseCol)">check</b>.</li>
                 <li>Confirm that <b>0</b> genotype rows are displayed for <b>Col1a1&lt;tm1Jcm&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type II</b>.</li>
                 <li>Confirm that <b>0</b> gentoype rows are displayed for <b>Col1a1&lt;tm1.1Jcm&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type I</b>.</li>
                 <li>Confirm that <b>0</b> gentoype rows are displayed for <b>Col1a1&lt;Mov13&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type I</b>.</li>               
-                <li>Confirm that the human gene <b>COL1A1</b> is displayed with a checkmark or colored cell for all <b>1</b> disease term: <b>Osteogenesis Imperfecta, Type III</b>.</li>
+                <li>Confirm that the human gene <b concordion:set="#humanRow">COL1A1</b> is displayed 
+                	and for all disease term: Osteogenesis Imperfecta, Type III (<b concordion:set="#diseaseCol">259420</b>) there is a 
+                		<b concordion:assertEquals="diseaseGridPopupHumanCheckByPhenotype(#pheno,#row,#column,#humanRow,#diseaseCol)">check</b>.</li>
             </ol>
             </li>
 
