@@ -34,7 +34,7 @@ import org.jax.mgi.fewi.summary.DiseasePortalDiseaseSummaryRow;
 import org.jax.mgi.fewi.summary.DiseasePortalMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
-import org.jax.mgi.fewi.summary.HdpMarkerBySystemPopupRow;
+import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -358,7 +358,7 @@ public class DiseasePortalController
     	}
     	
     	// cross reference the human marker data
-    	List<HdpMarkerBySystemPopupRow> humanPopupRows = new ArrayList<HdpMarkerBySystemPopupRow>();
+    	List<HdpMarkerByHeaderPopupRow> humanPopupRows = new ArrayList<HdpMarkerByHeaderPopupRow>();
     	for(SolrDiseasePortalMarker humanMarker : humanMarkers)
     	{
     		Integer mKey = Integer.parseInt(humanMarker.getMarkerKey());
@@ -372,7 +372,7 @@ public class DiseasePortalController
     			logger.info("error-> missing data for human marker key "+mKey);
     		}
     		HdpGridMapper diseaseMapper = new HdpGridMapper(termColIds, data);
-			HdpMarkerBySystemPopupRow popupRow = new HdpMarkerBySystemPopupRow(humanMarker, diseaseMapper);
+			HdpMarkerByHeaderPopupRow popupRow = new HdpMarkerByHeaderPopupRow(humanMarker, diseaseMapper);
 			humanPopupRows.add(popupRow);
     	}
     	

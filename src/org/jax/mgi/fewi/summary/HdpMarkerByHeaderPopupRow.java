@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 /**
  * wrapper around a HdpGenoCluster and column controls
  */
-public class HdpMarkerBySystemPopupRow {
+public class HdpMarkerByHeaderPopupRow {
 
 	//-------------------
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(HdpMarkerBySystemPopupRow.class);
+    private Logger logger = LoggerFactory.getLogger(HdpMarkerByHeaderPopupRow.class);
 
 	// encapsulated row object
 	private SolrDiseasePortalMarker marker;
@@ -34,7 +34,7 @@ public class HdpMarkerBySystemPopupRow {
 	//-------------
 
 
-    public HdpMarkerBySystemPopupRow (SolrDiseasePortalMarker marker, HdpGridMapper gridMapper) {
+    public HdpMarkerByHeaderPopupRow (SolrDiseasePortalMarker marker, HdpGridMapper gridMapper) {
     	this.marker = marker;
     	this.gridMapper = gridMapper;
     }
