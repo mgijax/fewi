@@ -10,6 +10,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterMarker;
 import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
+import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
 import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -157,6 +158,42 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
     	request.setMethod("GET");
 		
     	return (List<HdpGenoByHeaderPopupRow>) mr.handleRequest(request).get("popupRows");
+	}
+	public List<HdpGenoByHeaderPopupRow> getDiseasePopupRows(String geneSymbol,String diseaseCol) throws Exception
+	{
+		this.pageSize=50;
+		// generate a grid request, and iterate through the rows, cols to find the correct data to build the popup link
+		List<HdpGridClusterSummaryRow> clusters = this.getGridClusters();
+		Integer gridClusterKey = gridClusterKeyByMarker(clusters,geneSymbol);
+
+		if(gridClusterKey==null) return new ArrayList<HdpGenoByHeaderPopupRow>();
+		
+		MockHttpServletRequest request = generateRequest();
+		request.addParameter("gridClusterKey",gridClusterKey.toString());
+		request.addParameter("termHeader",diseaseCol);
+		
+		request.setRequestURI(this.diseasePopupUrl);
+    	request.setMethod("GET");
+		
+    	return (List<HdpGenoByHeaderPopupRow>) mr.handleRequest(request).get("popupRows");
+	}
+	public List<HdpMarkerByHeaderPopupRow> getDiseaseMarkerPopupRows(String geneSymbol,String diseaseCol) throws Exception
+	{
+		this.pageSize=50;
+		// generate a grid request, and iterate through the rows, cols to find the correct data to build the popup link
+		List<HdpGridClusterSummaryRow> clusters = this.getGridClusters();
+		Integer gridClusterKey = gridClusterKeyByMarker(clusters,geneSymbol);
+
+		if(gridClusterKey==null) return new ArrayList<HdpMarkerByHeaderPopupRow>();
+		
+		MockHttpServletRequest request = generateRequest();
+		request.addParameter("gridClusterKey",gridClusterKey.toString());
+		request.addParameter("termHeader",diseaseCol);
+		
+		request.setRequestURI(this.diseasePopupUrl);
+    	request.setMethod("GET");
+		
+    	return (List<HdpMarkerByHeaderPopupRow>) mr.handleRequest(request).get("humanPopupRows");
 	}
 	public List<String> getSystemPopupTerms(String geneSymbol,String systemCol) throws Exception
 	{

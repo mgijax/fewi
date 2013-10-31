@@ -13,6 +13,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterM
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
+import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
 import org.jax.mgi.fewi.test.mock.MockHdpControllerQuery;
 import org.jax.mgi.fewi.test.mock.MockHdpHttpQuery;
 import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
@@ -426,6 +427,42 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return this.popupMpGridCheckFor(mq,markerRow,systemCol,genotypeRow,mpCol);
     }
     
+    // return whether or not a cell in the Disease popup has a check
+    public String diseaseGridPopupCheckByGene(String genes,String markerRow,String diseaseHeader,String genotypeRow,String diseaseCol) throws Exception
+    {
+    	// set the form
+    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
+    	mq.setGenes(genes);
+    	
+    	return this.popupDiseaseGridCheckFor(mq,markerRow,diseaseHeader,genotypeRow,diseaseCol);
+    }
+    // return whether or not a cell in the Disease popup has a check
+    public String diseaseGridPopupCheckByPhenotype(String phenotype,String markerRow,String diseaseHeader,String genotypeRow,String diseaseCol) throws Exception
+    {
+    	// set the form
+    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
+    	mq.setPhenotypes(phenotype);
+    	
+    	return this.popupDiseaseGridCheckFor(mq,markerRow,diseaseHeader,genotypeRow,diseaseCol);
+    }
+    // return whether or not a cell in the Disease popup has a check
+    public String diseaseGridPopupHumanCheckByGene(String genes,String markerRow,String diseaseHeader,String humanPopupRow,String diseaseCol) throws Exception
+    {
+    	// set the form
+    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
+    	mq.setGenes(genes);
+    	
+    	return this.popupDiseaseHumanGridCheckFor(mq,markerRow,diseaseHeader,humanPopupRow,diseaseCol);
+    }
+    // return whether or not a cell in the Disease popup has a check
+    public String diseaseGridPopupHumanCheckByPhenotype(String phenotype,String markerRow,String diseaseHeader,String humanPopupRow,String diseaseCol) throws Exception
+    {
+    	// set the form
+    	MockHdpHttpQuery mq = getMockQuery().diseasePortalHttp();
+    	mq.setPhenotypes(phenotype);
+    	
+    	return this.popupDiseaseHumanGridCheckFor(mq,markerRow,diseaseHeader,humanPopupRow,diseaseCol);
+    }
     public Integer diseaseGridPopupGenoCountByPheno(String phenotype,String markerRow,String diseaseCol) throws Exception
     {
     	// set the form
@@ -473,7 +510,10 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return markerSymbols;
     }
     
+    // ###############################################
     // --------------private helper methods ----------
+    // ###############################################
+    
     private List<String> getGeneSymbols(MockHdpControllerQuery mq) throws Exception
     {
 		SearchResults<SolrDiseasePortalMarker> markers = mq.getGenes();
@@ -599,11 +639,27 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return mpHeadersWithChecks;
     }
     
-    private String popupMpGridCheckFor(MockHdpHttpQuery mq,String geneSymbol,String mpHeader,String genotype,String termId) throws Exception
+    
+    private String popupMpGridCheckFor(MockHdpHttpQuery mq,String geneSymbol,String header,String genotype,String termId) throws Exception
+    {
+    	List<HdpGenoByHeaderPopupRow> popupRows = mq.getSystemPopupRows(geneSymbol,header);
+    	return popupGridCheckFor(popupRows, genotype, termId);
+    }
+    private String popupDiseaseGridCheckFor(MockHdpHttpQuery mq,String geneSymbol,String header,String genotype,String termId) throws Exception
+    {
+    	List<HdpGenoByHeaderPopupRow> popupRows = mq.getDiseasePopupRows(geneSymbol,header);
+    	return popupGridCheckFor(popupRows, genotype, termId);
+    }
+    private String popupDiseaseHumanGridCheckFor(MockHdpHttpQuery mq,String geneSymbol,String header,String genotype,String termId) throws Exception
+    {
+    	List<HdpMarkerByHeaderPopupRow> popupRows = mq.getDiseaseMarkerPopupRows(geneSymbol,header);
+    	return popupMarkerGridCheckFor(popupRows, genotype, termId);
+    }
+    private String popupGridCheckFor(List<HdpGenoByHeaderPopupRow> popupRows,String genotype,String termId) throws Exception
     {
     	NotesTagConverter ntc = new NotesTagConverter();
     	boolean foundGeno = false;
-    	for(HdpGenoByHeaderPopupRow popupRow : mq.getSystemPopupRows(geneSymbol,mpHeader))
+    	for(HdpGenoByHeaderPopupRow popupRow : popupRows)
     	{
     		String genotypeDisplay = ntc.convertNotes(popupRow.getGenotype().getCombination1(),'|',true,true).trim();
     		if(genotypeDisplay.equals(genotype))
@@ -619,6 +675,28 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     		}
     	}
     	if(!foundGeno) return "row does not exist";
+    	// otherwise return no, because we can't easily determine if the column exists or not
+    	return "no";
+    }
+    private String popupMarkerGridCheckFor(List<HdpMarkerByHeaderPopupRow> popupRows,String marker,String termId) throws Exception
+    {
+    	boolean foundMarker = false;
+    	for(HdpMarkerByHeaderPopupRow popupRow : popupRows)
+    	{
+    		String symbol = popupRow.getMarker().getSymbol();
+    		if(symbol.equals(marker))
+    		{
+    			foundMarker = true;
+	    		for(GridCell cell : popupRow.getGridCells())
+	    		{
+	    			if(cell.getTermId().equals(termId))
+	    			{
+	    				return cell.getHasPopup() ? "yes" : "no";
+	    			}
+	    		}
+    		}
+    	}
+    	if(!foundMarker) return "row does not exist";
     	// otherwise return no, because we can't easily determine if the column exists or not
     	return "no";
     }
