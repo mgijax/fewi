@@ -183,7 +183,7 @@ tr.gray td {background-color:#EEEEEE;}
     		 </li>   
     		     		
     		<li>Multiple annotations to the same disease rolls up to one check (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="fasle">modified 10/25/2013</p> 
+ 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0001870, MP:0001873</b> in the Phenotypes and Diseases section and hit search</li>
@@ -206,23 +206,21 @@ tr.gray td {background-color:#EEEEEE;}
     					<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010632</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease column Myelodysplastic Syndrome; MDS 
-                	(<b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">614286</b>) DOES exist.</li>
+                <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Myelodysplastic Syndrome; MDS</b> DOES exist.</li>
                 <li>Confirm that mouse marker <b>Bap1</b> is associated here. 
                 	(Genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5439657">MGI:5439657</a> is a 'simple' genotype.)</li>
                 <li>Enter <b concordion:set="#pheno">MP:0011099</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease column Beta-Thalassemia 
-                	(OMIM <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">613985</b>) exists.</li>
-                <li>Confirm that mouse marker <b concordion:set="#row">Klf1</b> is associated with Beta-Thalassemia (OMIM <b concordion:set="#column">613985</b>) 
+                <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Beta-Thalassemia</b> exists.</li>
+                <li>Confirm that mouse marker <b concordion:set="#row">Klf1</b> is associated with <b concordion:set="#column">Beta-Thalassemia</b> 
                 	and has a <b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b>
                 	(via 'super-simple' or 'OMG' genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).</li>
                 <li>Enter <b concordion:set="#pheno">MP:0003841</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease columns Hutchinson-Gilford Progeria Syndrome; HGPS (<b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">176670</b>) 
+                <li>Click on the Grid tab and confirm the disease columns <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Hutchinson-Gilford Progeria Syndrome; HGPS</b> 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:4459466">MGI:4459466</a> is super-simple (OMG) 
                 	and the human ortholog is also associated with this disease) <br/>
-                	and Muenke Syndrome; MNKES (<b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">602849</b>) 
+                	and <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Muenke Syndrome; MNKES</b>
                 	(has several super-simple genotypes and also the human ortholog annotated) are displayed.</li>
-                <li>Confirm disease Apert Syndrome (<b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">101200</b>) is displayed 
+                <li>Confirm disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Apert Syndrome</b> is displayed 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3604025">MGI:3604025</a> is in common and is simple ).</li>
                 <li>Enter <b concordion:set="#pheno">MP:0001853</b> (heart inflammation) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and verify AT LEAST the following diseases are listed:
@@ -231,16 +229,16 @@ tr.gray td {background-color:#EEEEEE;}
                 	<tr><td>Werner Syndrome; WRN</td><td>277700</td><td>the MP term is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:3665481">hm3, MGI:3665481</a> of Wrn&lt;tm1Led&gt;<br/>the disease is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:3665480">hm1, MGI:3665480</a> </td></tr>
                 	</table>
                 </li>
-                <li>Verify that for <b concordion:set="#column">277700</b> Werner Syndrome; WRN, the gene <b concordion:set="#row">Wrn</b> has a 
+                <li>Verify that for <b concordion:set="#column">Werner Syndrome; WRN</b>, the gene <b concordion:set="#row">Wrn</b> has a 
                 	<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b>.</li> 
                 <li>Enter <b concordion:set="#pheno">MP:0001873</b> (stomach inflammation) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and verify AT LEAST the following diseases are listed:
                 	<table>
                 	<tr><th>Disease</th><th>OMIM ID</th><th>Notes to tester</th></tr>
-                	<tr><td>Aicardi-Goutieres Syndrome 1; AGS1</td><td>225750</td><td>the MP term is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:5317328">hm2, MGI:5317328</a> of Trex1&lt;tm1Tld&gt;<br/>the disease is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:3053060">hm1, MGI:3053060</a> </td></tr>
+                	<tr><td>Aicardi-Goutieres syndrome</td><td>225750</td><td>the MP term is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:5317328">hm2, MGI:5317328</a> of Trex1&lt;tm1Tld&gt;<br/>the disease is annotated to <a href="http://www.informatics.jax.org/allele/genoview/MGI:3053060">hm1, MGI:3053060</a> </td></tr>
                 	</table>
                 </li>
-                <li>Verify that for <b concordion:set="#column">225750</b> Aicardi-Goutieres Syndrome 1; AGS1, the gene <b concordion:set="#row">Trex1</b> has a 
+                <li>Verify that for <b concordion:set="#column">Aicardi-Goutieres syndrome</b>, the gene <b concordion:set="#row">Trex1</b> has a 
                 	<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b>.</li>
     		</ol>
     		</li>
@@ -288,10 +286,9 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010954</b> (abnormal cellular respiration) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease Leber Optic Atrophy, OMIM: 
-                	<b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">535000</b> is displayed.</li>
+                <li>Click on the Grid tab and confirm the disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Optic Atrophy</b> is displayed.</li>
                 <li>Confirm the gene <b concordion:set="#row">mt-Nd6</b> <b>is displayed</b> and has a 
-                	<span class="hide" concordion:set="#column">535000</span>
+                	<span class="hide" concordion:set="#column">Optic Atrophy</span>
                 	<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b> for this disease (same exact genotype for both MP and OMIM annotations).</li>
               	</ol>
 			</li>
@@ -302,7 +299,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">603221</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the Human marker column contains marker <b concordion:set="#row">MYP3</b> 
-                	and the Disease column Myopia 3, Autosomal Dominant; MYP3 (<b concordion:set="#column">603221</b>) has a 
+                	and the Disease column <b concordion:set="#column">Myopia</b> has a 
                 	<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b> for this marker row</li>
                 <li>Click on the Genes tab and confirm the only Marker is human marker <b>MYP3</b> and it is associated to Human disease <b>Myopia 3, Autosomal Dominant; MYP3</b></li>
                 <li>Click on the Disease tab and confirm the only disease is <b>Myopia 3, Autosomal Dominant; MYP3</b> and it is associated to Human Marker <b>MYP3</b></li>
@@ -333,29 +330,35 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
 			<li>Test that a Phenotype-only gene displays correctly when returned with other annotation types (sto88)
- 			(contains 1005, 1006, 1012 annoatations)<p concordion:assertTrue="true">passed - jeffc 2013/09/18</p> 
+ 			(contains 1005, 1006, 1012 annoatations)<p concordion:assertTrue="true">passed - kstone 2013/10/31</p>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>268220</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the Human marker column contains markers <b>FOXO1, PAX3, PAX7</b> and the Disease column <b>Rhabdomyosarcoma 2; RMS2</b> has a check for these marker rows. Note: markers Myf6 and Cdkn2a are not displayed because they have cre alleles and marker trp53 is excluded because it's a conditional allele</li>
-                <li>Click on the Genes tab and confirm the only Human markers are <b>FOXO1, PAX3, PAX7</b> and are all associated to Human disease <b>Rhabdomyosarcoma 2; RMS2</b></li>
+                <li>Enter <b>268220</b> (Rhabdomyosarcoma 2; RMS2) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the Human marker column contains markers <b>FOXO1, PAX3, PAX7</b> 
+                	and the Disease clump column <b>Rhabdomyosarcoma</b> has a check for these marker rows. 
+                		Note: markers Myf6 and Cdkn2a are not displayed because they have cre alleles and marker trp53 is excluded because it's a conditional allele</li>
+                <li>Click on the Genes tab and confirm the only Human markers are <b>FOXO1, PAX3, PAX7</b> and are all associated to Human disease <b>Rhabdomyosarcoma</b></li>
                 <li>Click on the Disease tab and confirm the only disease is <b>Rhabdomyosarcoma 2; RMS2</b> the Human Markers associated are <b>FOXO1, PAX3, PAX7</b> and the mouse markers associated are <b>Myf6, Pax3, Trp53</b></li>
     		</ol>
     		</li>
 			<li>Test that a Phenotype search displays only diseases associated to the search, not all human gene homologs (sto136)
- 			<p concordion:assertTrue="true">jeffc 10/07/2013</p> 
+ 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>MP:0004753</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the Human marker <b>SNCA</b> has no checks for a Disease column. ()<b>Parkinson Disease 1, Autosomal Dominant; PARK1</b> should not be associated to this human marker</li>
+                <li>Click on the Grid tab and confirm the Human marker <b concordion:set="#row">SNCA</b> 
+                	for the Disease clump column <b concordion:set="#column">Parkinson Disease</b> (clump for Parkinson Disease 1, Autosomal Dominant; PARK1)
+                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b>, because it should not be associated to this human marker</li>
     		</ol>
     		</li> 
     		<li>Test that a Disease search displays only diseases associated to the search, not all human gene homologs (sto136)
- 			<p concordion:assertTrue="true">jeffc 10/07/2013</p> 
+ 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>222100</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the Human marker <b>CDK4</b> has no checks in the Disease column for <b>Melanoma, Cutaneous Malignant, Suspceptibility to, 3: CMM3</b> even thought it's associated to this human marker</li>
+                <li>Enter <b concordion:set="#pheno">222100</b> (Melanoma, Cutaneous Malignant, Suspceptibility to, 3: CMM3) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the Human marker <b concordion:set="#row">CDK4</b> 
+                	for the Disease clump column for <b concordion:set="#diseaseId">Diabetes mellitus, insulin-dependent</b>
+                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b> even though it's associated to this human marker</li>
     		</ol>
     		</li>   		
 		</ol>
@@ -368,9 +371,9 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0006228</b>, for iris atrophy, in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column 
-                	Albinism, Oculocutaneous, Type III; OCA3 (<b cc:assertNoResultsContain="gridDiseaseIdsByPhenotype(#pheno)">203290</b>) is not displayed.</li>
+                	<b cc:assertNoResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Albinism, Oculocutaneous</b> is not displayed.</li>
                 <li>Also verify that the row with TYRP1/<b concordion:set="#symbol">Tyrp1</b> human/mouse markers has no 
-               		<span class="hide" concordion:set="#diseaseId">203290</span>
+               		<span class="hide" concordion:set="#diseaseId">Albinism, Oculocutaneous</span>
                 	<b concordion:assertEmpty="gridCheckForDiseaseByPhenotype(#pheno,#symbol,#diseaseId)">check</b> under this disease.
                 	(The mouse marker Tyrp1 is annotated to 'iris atrophy' via the genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:3773275">MGI:3773275</a>,
                 		and human marker TYRP1 is directly annotated to the disease 'Albinism, Oculocutaneous, Type III; OCA3')</li>
@@ -381,9 +384,9 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">Actb</b> in the Genes section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column 
-                	Alzheimer Disease; AD (<b cc:assertResultsContain="gridDiseaseIdsByGene(#genes)">104300</b>) is displayed.</li>
+                	<b cc:assertResultsContain="gridDiseaseIdsByGene(#genes)">Alzheimer disease</b> is displayed.</li>
                 <li>Verify that the row for human/mouse markers ACTB/<b concordion:set="#symbol">Actb</b> does NOT have a 
-                	<span class="hide" concordion:set="#diseaseId">104300</span>
+                	<span class="hide" concordion:set="#diseaseId">Alzheimer disease</span>
                 	<b cc:assertNotEquals="gridCheckForDiseaseByGene(#genes,#symbol,#diseaseId)">check</b> for that disease.
                 	(Actb is annotated to that disease via Allele annotation, and nothing else.)</li>
     		</ol>
