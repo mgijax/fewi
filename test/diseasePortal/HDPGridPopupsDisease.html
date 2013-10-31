@@ -131,7 +131,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Kras</b> row and <b concordion:set="#column">Endometriosis, Susceptibility to, 1</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for 
                 	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Kras&lt;tm4Tyj&gt;/Kras&lt;+&gt;</b> (1 genotype exists).</li>
-                <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">KRAS</b> IS NOT LISTED.</li>
+                <li>Confirm that human <b cc:assertNoResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">KRAS</b> IS NOT LISTED.</li>
                 <li>Clear the query form.</li>
     		</ol>
     		</li>
@@ -216,7 +216,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click the checkmark or colored cell at the intersection of the <b concordion:set="#row">Col1a1</b> row and <b concordion:set="#column">Osteogenesis Imperfecta</b> column (1 genotype is annotated to this disease term, and another term in this disease "clump"). </li>
                 <li>Confirm that Popup displays <b>2</b> columns for <b>Osteogenesis Imperfecta, Type II</b>,  and <b>Osteogenesis Imperfecta, Type III</b>.</li>
                 <li>Confirm that <b>1</b> genotype row is displayed for <b concordion:set="#genoRow">Col1a1&lt;Aga2&gt;/Col1a1&lt;+&gt;</b> 
-                	and for disease terms Osteogenesis Imperfecta, Type II (<b concordion:set="#diseaseCol">166220</b>) there is a 
+                	and for disease terms Osteogenesis Imperfecta, Type II (<b concordion:set="#diseaseCol">166210</b>) there is a 
                 		<b concordion:assertEquals="diseaseGridPopupCheckByPhenotype(#pheno,#row,#column,#genoRow,#diseaseCol)">check</b>, 
                 	and for Osteogenesis Imperfecta, Type III (<b concordion:set="#diseaseCol">259420</b>) there is a 
                 		<b concordion:assertEquals="diseaseGridPopupCheckByPhenotype(#pheno,#row,#column,#genoRow,#diseaseCol)">check</b>.</li>
@@ -224,7 +224,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Confirm that <b>0</b> gentoype rows are displayed for <b>Col1a1&lt;tm1.1Jcm&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type I</b>.</li>
                 <li>Confirm that <b>0</b> gentoype rows are displayed for <b>Col1a1&lt;Mov13&gt;/Col1a1&lt;+&gt;</b> with checkmark or colored cell for disease term <b>Osteogenesis Imperfecta, Type I</b>.</li>               
                 <li>Confirm that the human gene <b concordion:set="#humanRow">COL1A1</b> is displayed 
-                	and for all disease term: Osteogenesis Imperfecta, Type III (<b concordion:set="#diseaseCol">259420</b>) there is a 
+                	and for disease term: Osteogenesis Imperfecta, Type III (<b concordion:set="#diseaseCol">259420</b>) there is a 
                 		<b concordion:assertEquals="diseaseGridPopupHumanCheckByPhenotype(#pheno,#row,#column,#humanRow,#diseaseCol)">check</b>.</li>
             </ol>
             </li>
