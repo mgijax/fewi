@@ -171,30 +171,13 @@
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </td>
-		<td><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>
-            
-        <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status">
-              <td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if><c:if test="${mpHeader.hasPopup}"> gridCellLink mpBin_${mpHeader.mpBin} </c:if>"
-              	<c:if test="${mpHeader.hasPopup}"> onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}')
-                         ; return false;"</c:if>>
-                <c:if test="${mpHeader.hasPopup}">
-                    <div>${mpHeader.mpMark}</div>
-                    <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Phenotype: <b>${mpHeader.term}</b></div></div> 
-                </c:if>
-              </td>
-            </c:forEach>
-
-            <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status">
-	            <td class="d_${status.count} <c:if test="${disease.hasPopup}"> gridCellLink </c:if>"
-	            	<c:if test="${disease.hasPopup}">onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}')
-	                         ; return false;"</c:if>>
-		          	<c:if test="${disease.hasPopup}">
-	                    <div>${disease.displayMark}</div>
-	                    <div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> 
-		          </c:if>
-	            </td>
-            </c:forEach>
-
+		<td><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>   
+        <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status"><c:if test="${not mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if>"></td></c:if>
+        	<c:if test="${mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if> gridCellLink mpBin_${mpHeader.mpBin}" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}'); return false;">
+        		${mpHeader.mpMark}<div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Phenotype: <b>${mpHeader.term}</b></div></div> </td></c:if></c:forEach>
+        <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status"><c:if test="${not disease.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if>"></td></c:if>
+	        <c:if test="${disease.hasPopup}"><td class="d_${status.count} gridCellLink" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}'); return false;">
+	            ${disease.displayMark}<div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> </td></c:if></c:forEach>
 	  </tr>
 	</c:forEach>
 	
