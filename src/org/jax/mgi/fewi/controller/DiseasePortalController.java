@@ -381,6 +381,7 @@ public class DiseasePortalController
 
 		mav.addObject("popupRows", popupRows);
 		mav.addObject("humanPopupRows", humanPopupRows);
+		mav.addObject("humanMarkers", humanMarkers); // for tests
 		mav.addObject("genoClusters", genoClusters);
 		mav.addObject("gridClusterString",gridClusterString);
 		mav.addObject("termColumns", diseaseTermColumnsToDisplay);

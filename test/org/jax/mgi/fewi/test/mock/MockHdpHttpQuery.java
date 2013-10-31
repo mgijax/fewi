@@ -68,7 +68,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		request.setRequestURI(this.gridUrl);
     	request.setMethod("GET");
     	
-    	return (List<String>) mr.handleRequest(request).get("diseaseIds");
+    	return (List<String>) mr.handleRequest(request).get("diseaseNames");
 	}
 	
 	public List<String> getMpHeaderColumns() throws Exception
@@ -94,8 +94,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
 		MockHttpServletRequest request = generateRequest();
 		request.addParameter("gridClusterKey",gridClusterKey.toString());
-		request.addParameter("term",diseaseCol);
-		request.addParameter("termId",diseaseId);
+		request.addParameter("termHeader",diseaseCol);
 		
 		request.setRequestURI(this.diseasePopupUrl);
     	request.setMethod("GET");
@@ -115,8 +114,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
 		MockHttpServletRequest request = generateRequest();
 		request.addParameter("gridClusterKey",gridClusterKey.toString());
-		request.addParameter("term",diseaseCol);
-		request.addParameter("termId",diseaseId);
+		request.addParameter("termHeader",diseaseCol);
 		
 		request.setRequestURI(this.diseasePopupUrl);
     	request.setMethod("GET");
@@ -135,7 +133,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
 		MockHttpServletRequest request = generateRequest();
 		request.addParameter("gridClusterKey",gridClusterKey.toString());
-		request.addParameter("mpHeader",systemCol);
+		request.addParameter("termHeader",systemCol);
 		
 		request.setRequestURI(this.systemPopupUrl);
     	request.setMethod("GET");
@@ -153,7 +151,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
 		MockHttpServletRequest request = generateRequest();
 		request.addParameter("gridClusterKey",gridClusterKey.toString());
-		request.addParameter("mpHeader",systemCol);
+		request.addParameter("termHeader",systemCol);
 		
 		request.setRequestURI(this.systemPopupUrl);
     	request.setMethod("GET");
@@ -171,12 +169,12 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
 		MockHttpServletRequest request = generateRequest();
 		request.addParameter("gridClusterKey",gridClusterKey.toString());
-		request.addParameter("mpHeader",systemCol);
+		request.addParameter("termHeader",systemCol);
 		
 		request.setRequestURI(this.systemPopupUrl);
     	request.setMethod("GET");
 		
-    	return (List<String>) mr.handleRequest(request).get("mpTerms");
+    	return (List<String>) mr.handleRequest(request).get("terms");
 	}
 	
 	
