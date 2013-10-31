@@ -179,13 +179,13 @@ public class DiseasePortalController
 			mpHeaderColumnsToDisplay.add(this.getRotatedTextImgTag(mpHeader));
 		}
 
-		logger.info("diseasePortal/grid -> mapping Solr data to gridClusters");
+		logger.info("diseasePortal/grid -> querying solr for grid data");
       	// Search for the genotype clusters used to generate the result set
       	// and save as map for later
-      	List<SolrDpGenoInResult> annotationsInResults
-      	  = this.getAnnotationsInResults(query,searchResults.getResultKeys());
-        Map<Integer,List<SolrDpGenoInResult>> gridClusterToGenoInResults
-          = new HashMap<Integer,List<SolrDpGenoInResult>>();
+      	List<SolrDpGenoInResult> annotationsInResults = this.getAnnotationsInResults(query,searchResults.getResultKeys());
+        Map<Integer,List<SolrDpGenoInResult>> gridClusterToGenoInResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
+        
+        logger.info("diseasePortal/grid -> mapping Solr data to gridClusters");
         for(SolrDpGenoInResult dpa : annotationsInResults)
         {
         	// map each genocluster/header combo to its corresponding gridcluster key
