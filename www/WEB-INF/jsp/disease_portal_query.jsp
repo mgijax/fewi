@@ -108,10 +108,10 @@ ${templateBean.templateBodyStartHdpHtml}
 	<div class="yourInputButton">
 		<form name="YourInputForm">
 			<input class="searchToolButton" 
-			value="Your Input Welcome" 
+			value="Provide Feedback"  
 			name="yourInputButton" 
 			onclick='window.open("${configBean.MGIHOME_URL}feedback/feedback_form.cgi?")' 
-			onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" 
+			onmouseover="return overlib('We welcome your feedback and suggestions. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" 
 			onmouseout="nd();" 
 			type="button">
 		</form>
