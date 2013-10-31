@@ -557,8 +557,8 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     	return symbols;
     }
     
-    // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseId combination
-    private String gridCheckForDisease(MockHdpHttpQuery mq,String geneSymbol,String diseaseId) throws Exception
+    // returns "" or "check" if there is a hit for the query + geneSymbol + diseaseCluster combination
+    private String gridCheckForDisease(MockHdpHttpQuery mq,String geneSymbol,String diseaseCluster) throws Exception
     {
     	for(HdpGridClusterSummaryRow cluster : mq.getGridClusters())
     	{
@@ -574,7 +574,7 @@ public class HDPBaseConcordionTest extends BaseConcordionTest
     			{
     				for(GridCell cell : cluster.getDiseaseCells())
     				{
-    					if(diseaseId.equals(cell.getTermId()))
+    					if(diseaseCluster.equals(cell.getTerm()))
     					{
     						if(cell.getHasPopup())
     						{
