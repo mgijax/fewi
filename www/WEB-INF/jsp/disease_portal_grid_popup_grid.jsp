@@ -70,6 +70,7 @@
   }
   .row1 { background-color: #F1F1F1; }
 
+  #hdpSystemPopupTable .humanHeaderRow { background-color: #DFEFFF; }
 </style>
 
 
@@ -79,8 +80,15 @@
 
 <!-- Column Headers -->
 <tr>
-  <th>Genotype</th>
-	
+	<c:choose>
+		<c:when  test="${empty popupRows and not empty humanPopupRows}">
+			<!-- if we have genes, but no genotypes, display "Gene" header -->
+			<th>Human Gene</th>
+		</c:when>
+		<c:otherwise>
+	  		<th>Genotype</th>
+	  	</c:otherwise>
+	</c:choose>
   <!--  header columns -->
   <c:set var="lastColImage" />
   <c:forEach var="headerCol" items="${termColumns}" varStatus="status">
@@ -132,6 +140,12 @@
 
 <c:if test="${not empty humanPopupRows}">
 	<!-- Add human data if it has been set -->
+	<c:if test="${not empty popupRows}">
+		<!-- Add "Gene" header if we have Genotypes above -->
+		<tr class="humanHeaderRow"><th>Human Gene</th>
+			<c:forEach var="termColumn" items="${termColumns}"><td></td></c:forEach>
+		</tr>
+	</c:if>
 	<c:forEach var="popupRow" items="${humanPopupRows}" varStatus="status">
 	
 		<c:set var="hasHomologeneId" value="${not empty popupRow.marker.homologeneId}"/>
