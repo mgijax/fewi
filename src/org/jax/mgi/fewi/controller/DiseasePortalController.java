@@ -179,6 +179,7 @@ public class DiseasePortalController
 			mpHeaderColumnsToDisplay.add(this.getRotatedTextImgTag(mpHeader));
 		}
 
+		logger.info("diseasePortal/grid -> mapping Solr data to gridClusters");
       	// Search for the genotype clusters used to generate the result set
       	// and save as map for later
       	List<SolrDpGenoInResult> annotationsInResults
@@ -195,6 +196,7 @@ public class DiseasePortalController
             gridClusterToGenoInResults.get(dpa.getGridClusterKey()).add(dpa);
         }
 
+		logger.info("diseasePortal/grid -> creating grid row objects");
 		// create grid row objects
 		List<HdpGridClusterSummaryRow> summaryRows = new ArrayList<HdpGridClusterSummaryRow>();
 		for(SolrDpGridCluster gc : gridClusters)
@@ -230,6 +232,7 @@ public class DiseasePortalController
 		mav.addObject("mpHeaderColumns", mpHeaderColumnsToDisplay);
 		mav.addObject("mpHeaders", mpHeaders);
 
+		logger.info("diseasePortal/grid -> off to MAV");
    		return mav;
     }
 
