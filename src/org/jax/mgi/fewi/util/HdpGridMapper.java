@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
+
 import mgi.frontend.datamodel.HdpGenoClusterAnnotation;
 import mgi.frontend.datamodel.HdpGridAnnotation;
 
@@ -46,7 +48,17 @@ public class HdpGridMapper {
 		{
 			//logger.info("found annot for "+annot.getTerm()+" "+annot.getTermIdentifier());
 			String annotId = annot.getTermIdentifier();
-			if(annotationMap.containsKey(annotId)) continue;
+			if(annotationMap.containsKey(annotId))
+			{
+				if(annot.getAnnotCount()>0)
+				{
+					// aggregate all the annot counts that we come accross for this column in this row
+					HdpGridAnnotation prevAnnot = annotationMap.get(annotId);
+					Integer newAnnotCount = prevAnnot.getAnnotCount() + annot.getAnnotCount();
+					prevAnnot.setAnnotCount(newAnnotCount);
+				}
+				continue;
+			}
 			if(notEmpty(annot.getQualifier()))
 			{
 				normalMap.put(annotId,annot);
@@ -88,6 +100,8 @@ public class HdpGridMapper {
 				{
 					gc.setHasBackgroundNote();
 				}
+				
+				gc.setAnnotCount(annot.getAnnotCount());
 			}
 			gridCells.add(gc);
 		}
@@ -110,6 +124,7 @@ public class HdpGridMapper {
 		private Boolean isNormal = false;
 		private Boolean hasPopup = false;
 		private Boolean hasBackgroundNote = false;
+		private int annotCount = 0;
 
 		public String getTerm()
 		{
@@ -151,8 +166,36 @@ public class HdpGridMapper {
 		{
 			return hasBackgroundNote;
 		}
+		
+		public void setAnnotCount(int annotCount)
+		{
+			this.annotCount = annotCount;
+		}
+		
+		public int getAnnotCount()
+		{
+			return annotCount;
+		}
+		
+		public int getMpBin()
+		{
+			return calculateMpBinSize(this.annotCount);
+		}
 
+		// encapsulate how we generate a display mark in the main grid
+		public String getMpMark()
+		{
+			if(getHasPopup())
+			{
+				if(getIsNormal()) return "N";
+				return ""; // don't display check mark here
+			}
+
+			return "";
+		}
+		
 		// encapsulate how we generate a display mark
+		// for the popup
 		public String getDisplayMark()
 		{
 			if(getHasPopup())
@@ -164,6 +207,18 @@ public class HdpGridMapper {
 			return "";
 		}
 		
+		
+	}
+	
+	/*
+	 * Method to calculate bin size based on number of annotations
+	 */
+	public int calculateMpBinSize(int annotCount)
+	{
+		if(annotCount<2) return 1;
+		if(annotCount<4) return 2;
+		if(annotCount<100) return 3;
+		return 4;
 	}
 	
 	/* convenience method */
