@@ -315,7 +315,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Clear the form.</li>
                 <li>Enter <b concordion:set="#pheno">203290</b> for "Albinism, Oculocutaneous, Type III; OCA3" in the Phenotypes and Diseases section and hit search.</li>
                 <li>Click on the Grid tab and confirm <b concordion:assertEmpty="#systems">NO phenotype headers</b> are displayed. (The disease is associated only with a human gene. That gene has an ortholog which has MP annotations, but no genotypes can be in common.)</li>
-                <li>Confirm the disease column for <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">203290</b> "Albinism, Oculocutaneous, Type III; OCA3", is still displayed.</li>
+                <li>Confirm the disease column for <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Albinism, Oculocutaneous</b>, is still displayed.</li>
                 <li>Clear the form.</li>
                 <li>Enter <b concordion:set="#pheno">105650</b> (Diamond-Blackfan Anemia; DBA) in the Phenotypes and Diseases section and hit search. 
 					<i>(automated)</i></li>
