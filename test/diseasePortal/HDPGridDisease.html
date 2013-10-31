@@ -282,7 +282,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 			<li>When querying by phenotype, a disease associated with a mitochondrial gene and genotype should be returned. (Mitochondrial genotypes do not have Allele2 in our database.) 
- 			<p concordion:assertTrue="true">klf 09/25/2013</p> 
+ 			<p concordion:assertTrue="true">kstone 2013/10/31</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010954</b> (abnormal cellular respiration) in the Phenotypes and Diseases section and hit search</li>
@@ -294,7 +294,7 @@ tr.gray td {background-color:#EEEEEE;}
 			</li>
     		
     		<li>Test that a Phenotype-only  Human gene displays correctly in the HDP tabs (sto88)
- 			<p concordion:assertTrue="true">passed - kstone 2013/09/16</p> 
+ 			<p concordion:assertTrue="true">passed - kstone 2013/10/31</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">603221</b> in the Phenotypes and Diseases section and hit search</li>
@@ -307,23 +307,23 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Test that a Phenotype-only Human gene does not get associated to the Disease on the Human Disease and Mouse Model Detail page (sto88)
- 			<p concordion:assertTrue="true">passed - kstone 2013/09/16</p> 
+ 			<p concordion:assertTrue="true">passed - kstone 2013/10/31</p> 
  			<i>(cannot automate)</i>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>603221</b> in the Quick Search bos and press Quick Search</li>
                 <li>When results display click on the link <b>Myopia 3, Autosomal Dominant; MYP3</b></li>
                 <li>Verify the Human Disease and Mouse Model detail page for OMIM ID 603221 displays</li>
-                <li>Verify in the <b>Genes and mouse models</b> section that human marker <b>MYP3</b> is not displayed</li>
+                <li>Verify in the <b>Genes and mouse models</b> section that human marker <b>MYP3</b> is NOT displayed</li>
     		</ol>
     		</li>
 
     		<li>Test that a Phenotype-only Human gene displays correctly when returned with other annotation types (sto88)
- 			<p concordion:assertTrue="true">passed - kstone 2013/09/16</p> 
+ 			<p concordion:assertTrue="true">passed - kstone 2013/10/31</p> 
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>108800</b> in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the Human marker column contains markers <b>CYR61, NTF3, ASD1</b> and the Disease column <b>Atrial Septal Defect 1;ASD1</b> has a check for these marker rows</li>
+                <li>Enter <b>108800</b> (Atrial Septal Defect 1;ASD1) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the Human marker column contains markers <b>CYR61, NTF3, ASD1</b> and the Disease clump column <b>Atrial Septal Defect</b> has a check for these marker rows</li>
                 <li>Click on the Genes tab and confirm the only Human Marker is human marker <b>ASD1</b> and it is associated to Human disease <b>Atrial Septal Defect 1;ASD1</b></li>
                 <li>Click on the Disease tab and confirm the only disease is <b>Atrial Septal Defect 1;ASD1</b> the only Human Marker associated is <b>ASD1</b></li>
     		</ol>
