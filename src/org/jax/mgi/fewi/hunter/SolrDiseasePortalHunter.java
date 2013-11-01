@@ -533,6 +533,8 @@ public class SolrDiseasePortalHunter extends SolrHunter
           genoInResult.setVocabName((String) doc.getFieldValue(DiseasePortalFields.VOCAB_NAME));
           genoInResult.setQualifier((String) doc.getFieldValue(DiseasePortalFields.TERM_QUALIFIER));
           genoInResult.setAnnotCount((Integer) doc.getFieldValue(DiseasePortalFields.ANNOT_COUNT));
+          genoInResult.setHumanAnnotCount((Integer) doc.getFieldValue(DiseasePortalFields.HUMAN_ANNOT_COUNT));
+
           sr.addResultObjects(genoInResult);
         }
     }

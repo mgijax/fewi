@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jax.mgi.fewi.controller.DiseasePortalController;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import mgi.frontend.datamodel.HdpGenoClusterAnnotation;
 import mgi.frontend.datamodel.HdpGridAnnotation;
@@ -20,6 +23,9 @@ import mgi.frontend.datamodel.HdpGridAnnotation;
  *  @author kstone
  */
 public class HdpGridMapper {
+	
+	private Logger logger = LoggerFactory.getLogger(HdpGridMapper.class);
+	
 	private List<String> colIdList;
 	private List<HdpGridAnnotation> gridAnnotations;
 	private List<GridCell> gridCells = new ArrayList<GridCell>();
@@ -56,6 +62,14 @@ public class HdpGridMapper {
 					HdpGridAnnotation prevAnnot = annotationMap.get(annotId);
 					Integer newAnnotCount = prevAnnot.getAnnotCount() + annot.getAnnotCount();
 					prevAnnot.setAnnotCount(newAnnotCount);
+				}
+				// set the human annotation count separately
+				if(annot.getHumanAnnotCount()>0)
+				{
+					HdpGridAnnotation prevAnnot = annotationMap.get(annotId);
+					//logger.debug("adding prevHAC= "+prevAnnot.getHumanAnnotCount()+" to newHAC= "+annot.getHumanAnnotCount());
+					Integer newHumanAnnotCount = prevAnnot.getHumanAnnotCount() + annot.getHumanAnnotCount();
+					prevAnnot.setHumanAnnotCount(newHumanAnnotCount);
 				}
 				continue;
 			}
@@ -101,6 +115,7 @@ public class HdpGridMapper {
 					gc.setHasBackgroundNote();
 				}
 				
+				gc.setHumanAnnotCount(annot.getHumanAnnotCount());
 				gc.setAnnotCount(annot.getAnnotCount());
 			}
 			gridCells.add(gc);
@@ -125,6 +140,7 @@ public class HdpGridMapper {
 		private Boolean hasPopup = false;
 		private Boolean hasBackgroundNote = false;
 		private int annotCount = 0;
+		private int humanAnnotCount = 0;
 
 		public String getTerm()
 		{
@@ -177,9 +193,32 @@ public class HdpGridMapper {
 			return annotCount;
 		}
 		
+		public void setHumanAnnotCount(int humanAnnotCount)
+		{
+			this.humanAnnotCount = humanAnnotCount;
+		}
+		
+		public int getHumanAnnotCount()
+		{
+			return humanAnnotCount;
+		}
+		
 		public int getMpBin()
 		{
 			return calculateMpBinSize(this.annotCount);
+		}
+		
+		// get the bin size for disease / mouse
+		public int getDiMouseBin()
+		{
+			return calculateDiseaseBinSize(this.annotCount);
+		}
+		// get the bin size for disease / human
+		public int getDiHumanBin()
+		{
+			int humanBin = calculateDiseaseBinSize(this.humanAnnotCount);
+			if(humanBin>0 && annotCount<1) humanBin += 4; // we shift the numbering up to get to the styles for full color squares
+			return humanBin;
 		}
 
 		// encapsulate how we generate a display mark in the main grid
@@ -193,6 +232,18 @@ public class HdpGridMapper {
 
 			return "";
 		}
+		// encapsulate how we generate a display mark in the main grid
+		public String getDiseaseMark()
+		{
+			if(getHasPopup())
+			{
+				if(getIsNormal()) return "N";
+				return ""; // don't display check mark here
+			}
+
+			return "";
+		}
+		
 		
 		// encapsulate how we generate a display mark
 		// for the popup
@@ -211,10 +262,22 @@ public class HdpGridMapper {
 	}
 	
 	/*
-	 * Method to calculate bin size based on number of annotations
+	 * Method to calculate bin size for MP terms based on number of annotations
 	 */
 	public int calculateMpBinSize(int annotCount)
 	{
+		if(annotCount<2) return 1;
+		if(annotCount<4) return 2;
+		if(annotCount<100) return 3;
+		return 4;
+	}
+	
+	/*
+	 * Method to calculate bin size for diseases based on number of annotations
+	 */
+	public int calculateDiseaseBinSize(int annotCount)
+	{
+		if(annotCount<1) return 0;
 		if(annotCount<2) return 1;
 		if(annotCount<4) return 2;
 		if(annotCount<100) return 3;

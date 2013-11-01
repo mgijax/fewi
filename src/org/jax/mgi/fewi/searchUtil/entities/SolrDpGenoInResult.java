@@ -15,6 +15,7 @@ public class SolrDpGenoInResult implements HdpGridAnnotation
 	String vocabName;
 	String qualifier;
 	Integer annotCount;
+	Integer humanAnnotCount;
 
 	// grid cluster key
 	public Integer getGridClusterKey() {return gridClusterKey;}
@@ -72,6 +73,14 @@ public class SolrDpGenoInResult implements HdpGridAnnotation
 	}
 	public void setAnnotCount(Integer annotCount) {
 		this.annotCount = annotCount;
+	}
+	
+	// humanAnnotCount
+	public Integer getHumanAnnotCount() {
+		return humanAnnotCount==null ? 0 : humanAnnotCount;
+	}
+	public void setHumanAnnotCount(Integer humanAnnotCount) {
+		this.humanAnnotCount = humanAnnotCount;
 	}
 	
 	@Override

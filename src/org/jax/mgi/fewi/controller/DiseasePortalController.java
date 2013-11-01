@@ -183,17 +183,23 @@ public class DiseasePortalController
       	// Search for the genotype clusters used to generate the result set
       	// and save as map for later
       	List<SolrDpGenoInResult> annotationsInResults = this.getAnnotationsInResults(query,searchResults.getResultKeys());
-        Map<Integer,List<SolrDpGenoInResult>> gridClusterToGenoInResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
+        Map<Integer,List<SolrDpGenoInResult>> gridClusterToMPResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
+        Map<Integer,List<SolrDpGenoInResult>> gridClusterToDiseaseResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
+
         
         logger.info("diseasePortal/grid -> mapping Solr data to gridClusters");
         for(SolrDpGenoInResult dpa : annotationsInResults)
         {
+        	// configure which map to use based on vocab name
+        	Map<Integer,List<SolrDpGenoInResult>> dataMap = gridClusterToMPResults;
+        	if("OMIM".equals(dpa.getVocabName())) dataMap = gridClusterToDiseaseResults;
+        	
         	// map each genocluster/header combo to its corresponding gridcluster key
-            if (!gridClusterToGenoInResults.containsKey(dpa.getGridClusterKey()))
+            if (!dataMap.containsKey(dpa.getGridClusterKey()))
             {
-            	gridClusterToGenoInResults.put(dpa.getGridClusterKey(),new ArrayList<SolrDpGenoInResult>());
+            	dataMap.put(dpa.getGridClusterKey(),new ArrayList<SolrDpGenoInResult>());
             }
-            gridClusterToGenoInResults.get(dpa.getGridClusterKey()).add(dpa);
+            dataMap.get(dpa.getGridClusterKey()).add(dpa);
         }
 
 		logger.info("diseasePortal/grid -> creating grid row objects");
@@ -202,22 +208,37 @@ public class DiseasePortalController
 		for(SolrDpGridCluster gc : gridClusters)
 		{
             // ensure the cross-reference genoInResults list exists for this row
-            if (gridClusterToGenoInResults.containsKey(gc.getGridClusterKey()))
+			boolean foundGridCluster=false;
+			
+			List<SolrDpGenoInResult> mpResults = new ArrayList<SolrDpGenoInResult>();
+			List<SolrDpGenoInResult> diseaseResults = new ArrayList<SolrDpGenoInResult>();
+			
+            if (gridClusterToMPResults.containsKey(gc.getGridClusterKey()))
             {
-            	//logger.info("mapping gc key "+gc.getGridClusterKey());
-            	// for this grid cluster, gather (from pre-computed set) of which
-            	// genotype clusters were involved
-            	List<SolrDpGenoInResult> genoInResults = gridClusterToGenoInResults.get(gc.getGridClusterKey());
-            	HdpGridMapper mpHeaderMapper = new HdpGridMapper(mpHeaders, genoInResults);
+            	foundGridCluster = true;
+            	mpResults = gridClusterToMPResults.get(gc.getGridClusterKey());
+            } 
+            if (gridClusterToDiseaseResults.containsKey(gc.getGridClusterKey()))
+            {
+            	foundGridCluster = true;
+            	diseaseResults = gridClusterToDiseaseResults.get(gc.getGridClusterKey());
+            }
+            if(!foundGridCluster)
+            {
+              logger.debug("->ERROR:: grid cluster key "+gc.getGridClusterKey()+" not found in solr set");
+            }
+            else
+            {
+            	// map the grid cluster rows and the MP/Disease data to their respective columns via the GridMapper class
+        		//logger.info("diseasePortal/grid -> mapping mp column objects");
+            	HdpGridMapper mpHeaderMapper = new HdpGridMapper(mpHeaders, mpResults);
 
-            	// map the diseases & mp headers for this grid row
-            	HdpGridMapper diseaseMapper = new HdpGridMapper(diseaseNames, genoInResults);
-
+        		//logger.info("diseasePortal/grid -> mapping disease column objects");
+            	HdpGridMapper diseaseMapper = new HdpGridMapper(diseaseNames, diseaseResults);
+            	
             	// add this row
             	HdpGridClusterSummaryRow summaryRow = new HdpGridClusterSummaryRow(gc,diseaseMapper,mpHeaderMapper);
             	summaryRows.add(summaryRow);
-            } else {
-              logger.debug("->ERROR:: grid cluster key "+gc.getGridClusterKey()+" not found in solr set");
             }
 		}
 

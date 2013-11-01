@@ -45,6 +45,7 @@
 	margin-top: 6px;
 	font-size: 10px;
 	font-weight: bold;
+	padding: 0px;
   }
   #hdpGridTable .gridCellLink
   {
@@ -54,8 +55,8 @@
   }
   #hdpGridTable .mk
   {
-  	padding-top: 2px;
-  	padding-left: 2px;
+  	padding-top: 6px;
+  	padding-left: 6px;
   }
   
   #hdpGridTable .vb .partialRight
@@ -124,6 +125,23 @@
   #hdpGridTable .mpBin_2 { background-color: #879EBA; }
   #hdpGridTable .mpBin_3 { background-color: #49648B; }
   #hdpGridTable .mpBin_4 { background-color: #002255; }
+  
+  #hdpGridTable .dMBin_0 {}
+  #hdpGridTable .dMBin_1 { background-color: #C6D6E8; }
+  #hdpGridTable .dMBin_2 { background-color: #879EBA; }
+  #hdpGridTable .dMBin_3 { background-color: #49648B; }
+  #hdpGridTable .dMBin_4 { background-color: #002255; }
+  
+  
+  #hdpGridTable .dHBin_0 {}
+  #hdpGridTable .dHBin_1 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px 0px; }
+  #hdpGridTable .dHBin_2 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -44px; }
+  #hdpGridTable .dHBin_3 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -90px; }
+  #hdpGridTable .dHBin_4 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -134px; }
+  #hdpGridTable .dHBin_5 { background-color: #ffdab3; }
+  #hdpGridTable .dHBin_6 { background-color: #efcaa3; }
+  #hdpGridTable .dHBin_7 { background-color: #dfba93; }
+  #hdpGridTable .dHBin_8 { background-color: #cfaa83; }
 </style>
 
 <div id="hdpGridTableWrap">
@@ -195,8 +213,8 @@
         	<c:if test="${mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if> cc mpBin_${mpHeader.mpBin}" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}'); return false;">
         		<div class="gridCellLink"><div class="mk">${mpHeader.mpMark}</div></div><div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Phenotype: <b>${mpHeader.term}</b></div></div> </td></c:if></c:forEach>
         <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status"><c:if test="${not disease.hasPopup}"><td class="dc d_${status.count} <c:if test="${status.last}"> rightBorder </c:if>"></td></c:if>
-	        <c:if test="${disease.hasPopup}"><td class="dc d_${status.count} cc <c:if test="${status.last}"> rightBorder </c:if>" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}'); return false;">
-	            <div class="gridCellLink"><div class="mk">${disease.displayMark}</div></div><div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> </td></c:if></c:forEach>
+	        <c:if test="${disease.hasPopup}"><td class="dc d_${status.count} cc <c:if test="${status.last}"> rightBorder </c:if> dMBin_${disease.diMouseBin}" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}'); return false;">
+	            <div class="dHBin_${disease.diHumanBin} gridCellLink"><div class="mk">${disease.diseaseMark}</div></div><div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> </td></c:if></c:forEach>
 	  </tr>
 	</c:forEach>
 	
