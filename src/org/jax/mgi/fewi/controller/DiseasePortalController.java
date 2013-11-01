@@ -630,7 +630,7 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 
 		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM_HEADER)));
-		params.setPageSize(200); // I'm not sure we want to display more than this...
+		params.setPageSize(1000); // I'm not sure we want to display more than this...
 		params.setFilter(this.parseQueryForm(query));
 
 		// perform query and return results as json

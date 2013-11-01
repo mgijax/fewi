@@ -30,9 +30,11 @@
   #hdpGridTablePadder{ display: table-cell; }
   #hdpGridTablePadder img { visibility: hidden; }
    
-  #hdpGridTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; vertical-align:bottom;}
+  #hdpGridTable th {border: 1px solid #AAA; border-top: none; padding: 4px 3px; vertical-align:bottom;}
   #hdpGridTable th > div { width:20px; overflow: visible; }
-  #hdpGridTable td {border: 1px solid #AAA; padding: 4px 4px; }
+  #hdpGridTable td {border: 1px solid #DDD; padding: 2px 1px 0px 3px; height: 20px; }
+  #hdpGridTable tr .dc {border-left-color: #BFE4FF; border-right-color: #BFE4FF; }
+  #hdpGridTable tr .vb .dc { border-right-color: #BFE4FF; }
   #hdpGridTable .vb { vertical-align: bottom; border-left: none; border-right: none;}
   #hdpGridTable .gridCellLink 
   {
@@ -47,7 +49,7 @@
   { 
   	position: absolute;
 	bottom: -4px;
-	width: 24px;
+	width: 23px;
 	height: 14px;
 	border-right: 1px solid #AAA;
   }
@@ -55,12 +57,12 @@
   { 
   	position: absolute;
 	bottom: -4px;
-	width: 22px;
+	width: 19px;
 	height: 14px;
-	border-right: 4px solid #AAA;
+	border-right: 8px solid #DDD;
   }
-  #hdpGridTable .rightBorder { border-right: 1px solid #AAA;}
-  #hdpGridTable .rightDoubleBorder { border-right: 4px solid #AAA;}
+  #hdpGridTable .rightBorder { border-right: 1px solid #DDD;}
+  #hdpGridTable .rightDoubleBorder { border-right: 8px solid #DDD;}
   .diseaseButton
   {
   	width:10px;
@@ -69,16 +71,20 @@
   	cursor:pointer;
   	border: solid 1px black;
   }
-  .row1 { background-color: #F1F1F1; }
+  .row1 
+  { 
+  	border-top: 2px solid #DDD;
+  }
   .gridCheck
   {
   	cursor: pointer;
   }
-  .gridCheck:hover { background-color: #BCD;}
+  .gridCheck:hover { background-color: #FFFFCC;}
+  #hdpGridTable tr .rcb { width: 18px; }
   
   .gridHl
   {
-  	background-color: #bcd;
+  	background-color: #FFFFCC;
   }
   
   /* #filterButtons
@@ -118,7 +124,7 @@
 	
 	<!-- Row of Column Headers -->
 	<tr>
-	  <th rowspan="2">Human Marker</th>
+	  <th rowspan="2" style="white-space: nowrap;">Human Marker</th>
 	  <th rowspan="2">
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
 		  		<div id="filterButtons"><button id="filterSubmit">Submit Filters</button>
@@ -138,7 +144,7 @@
 		<!-- disease columns -->
 		<c:forEach var="diseaseCol" items="${diseaseColumns}" varStatus="status">
 			<th class="vb"><div><c:out value="${diseaseCol}" escapeXml="false" /></div>
-			<div style="position:relative;"><div class="partialRight"></div></div></th>
+			<div style="position:relative;"><div class="dc partialRight"></div></div></th>
 			<c:if test="${status.last}"><c:set var="lastColImage" value="${diseaseCol}"/></c:if>
 	    </c:forEach>
 	</tr>
@@ -150,7 +156,7 @@
 		</th>		
 	</c:forEach>
 	<c:forEach var="diseaseName" items="${diseaseNames}" varStatus="status">
-		<th><input class="gridCheck" type="checkbox" filter="fHeader" value="${diseaseName}" colid="d_${status.count}"/></th>
+		<th class="dc"><input class="gridCheck" type="checkbox" filter="fHeader" value="${diseaseName}" colid="d_${status.count}"/></th>
 	</c:forEach>
 	</tr>
 	
@@ -171,12 +177,12 @@
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </td>
-		<td><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>   
+		<td class="rcb"><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>   
         <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status"><c:if test="${not mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if>"></td></c:if>
         	<c:if test="${mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if> gridCellLink mpBin_${mpHeader.mpBin}" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}'); return false;">
         		${mpHeader.mpMark}<div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Phenotype: <b>${mpHeader.term}</b></div></div> </td></c:if></c:forEach>
-        <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status"><c:if test="${not disease.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if>"></td></c:if>
-	        <c:if test="${disease.hasPopup}"><td class="d_${status.count} gridCellLink" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}'); return false;">
+        <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status"><c:if test="${not disease.hasPopup}"><td class="dc d_${status.count} <c:if test="${status.last}"> rightBorder </c:if>"></td></c:if>
+	        <c:if test="${disease.hasPopup}"><td class="dc d_${status.count} gridCellLink <c:if test="${status.last}"> rightBorder </c:if>" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}'); return false;">
 	            ${disease.displayMark}<div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> </td></c:if></c:forEach>
 	  </tr>
 	</c:forEach>

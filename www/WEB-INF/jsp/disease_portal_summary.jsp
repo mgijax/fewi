@@ -83,10 +83,19 @@ td.yui-dt-col-coordinate
     </ul>
     <div class="yui-content">
     	<div>
-    		<div class="summary-helptext shared-helptext">
-    			Overview of mouse and human homologs matching your search query with disease and phenotype associations. 
-    			<br/>Results are limited to single locus mouse mutations but may contain background-dependent associations annotated in MGI. 
-    			<br/>All human data are obtained from NCBI and OMIM.
+    		<div class="">
+    			<div id="legendArea" style="background-color:#F7F7F7; border:2px solid #AAA; width:700px; margin-bottom: 4px;">
+			    	<div style="padding:5px 2px;">
+			            	<div style="font-weight:bold; display: inline-block;">Legend:</div>
+			                <div style="width:20px; height:20px; background-color: #49648B; display: inline-block;"></div>
+			            	<div style="display:inline-block;"> - Terms are annotated to genes in <strong style="background-color:#ffdab3; color:#000; font-size:12px;">human</strong>/<strong style="background-color: #49648B; color:#FFF; font-size:12px;">mouse</strong>. Darker colors indicate more annotations.</div>
+			        </div>
+			        <div style="margin-left:65px;"><span style=" border:1px solid; border-left-color:#FF0000; border-right-color:#FF0000; border-bottom-color:#CCC; border-top-color:#CCC;">&nbsp;&nbsp;&nbsp;</span> - Affected system contains the queried term.</div>
+			        <div style="display:block; margin-left:65px;"><strong>N</strong> - No abnormal phenotype observed.</div>
+		    		<div class="summary-helptext shared-helptext" style="color:#000; padding:4px 2px; font-style:normal;">
+		    			<span style="font-weight:bold;">NOTE:</span> Genes may have additional phenotypes. Query by gene or location for complete characterization.
+		    		</div>
+			        </div>
     		</div>
 	        <div id="griddata"></div>
 	        <div id="griddata_loading"><img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...</div>
