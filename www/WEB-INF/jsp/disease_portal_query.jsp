@@ -73,6 +73,9 @@ td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
 	border:2px solid #005;
 }
 
+#diseasePortalQueryForm .queryCat1 { background-color: #ffeac3; }
+#diseasePortalQueryForm .queryCat2 { background-color: #dfba93; }
+
 </style>
 <!--[if IE]>
 <style>
@@ -119,7 +122,7 @@ ${templateBean.templateBodyStartHdpHtml}
 </div>
 
 
-<div id="outer">    
+<div id="outer" style="background-color: #ffdab3;">    
     <div id="toggleQF" class="summaryControl" style="display:none"><span id="toggleImg" class="qfExpand" style="margin-right:15px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
     <div id="qwrap">
     	<%@ include file="/WEB-INF/jsp/disease_portal_form.jsp" %>
@@ -127,7 +130,7 @@ ${templateBean.templateBodyStartHdpHtml}
 </div>
 <br clear="all" />
 <div class="summaryControl" style="display:none;">
-	<div id="resultbar" class="bluebar">Results</div>
+	<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
 		<%@ include file="/WEB-INF/jsp/disease_portal_summary.jsp" %>
 	
 	</div>
