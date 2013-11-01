@@ -27,6 +27,8 @@
   	border-spacing:0px; 
   	border-collapse:collapse; 
   }
+  #hdpGridTable a { text-decoration: none; }
+  
   #hdpGridTablePadder{ display: table-cell; }
   #hdpGridTablePadder img { visibility: hidden; }
    
