@@ -38,15 +38,26 @@
   #hdpGridTable tr .dc {border-left-color: #BFE4FF; border-right-color: #BFE4FF; }
   #hdpGridTable tr .vb .dc { border-right-color: #BFE4FF; }
   #hdpGridTable .vb { vertical-align: bottom; border-left: none; border-right: none;}
-  #hdpGridTable .gridCellLink 
+  #hdpGridTable .cc 
   {
-  	cursor: pointer;
   	color: #000;
 	margin-right: 8px;
 	margin-top: 6px;
 	font-size: 10px;
 	font-weight: bold;
   }
+  #hdpGridTable .gridCellLink
+  {
+  	cursor: pointer;
+  	width: 100%;
+  	height: 100%;
+  }
+  #hdpGridTable .mk
+  {
+  	padding-top: 2px;
+  	padding-left: 2px;
+  }
+  
   #hdpGridTable .vb .partialRight
   { 
   	position: absolute;
@@ -181,11 +192,11 @@
 	    </td>
 		<td class="rcb"><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>   
         <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status"><c:if test="${not mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if>"></td></c:if>
-        	<c:if test="${mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if> gridCellLink mpBin_${mpHeader.mpBin}" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}'); return false;">
-        		${mpHeader.mpMark}<div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Phenotype: <b>${mpHeader.term}</b></div></div> </td></c:if></c:forEach>
+        	<c:if test="${mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if> cc mpBin_${mpHeader.mpBin}" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}'); return false;">
+        		<div class="gridCellLink"><div class="mk">${mpHeader.mpMark}</div></div><div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Phenotype: <b>${mpHeader.term}</b></div></div> </td></c:if></c:forEach>
         <c:forEach var="disease" items="${gridCluster.diseaseCells}" varStatus="status"><c:if test="${not disease.hasPopup}"><td class="dc d_${status.count} <c:if test="${status.last}"> rightBorder </c:if>"></td></c:if>
-	        <c:if test="${disease.hasPopup}"><td class="dc d_${status.count} gridCellLink <c:if test="${status.last}"> rightBorder </c:if>" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}'); return false;">
-	            ${disease.displayMark}<div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> </td></c:if></c:forEach>
+	        <c:if test="${disease.hasPopup}"><td class="dc d_${status.count} cc <c:if test="${status.last}"> rightBorder </c:if>" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridDiseaseCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${disease.term}', '${gridCluster.gridClusterKey}', '${disease.term}'); return false;">
+	            <div class="gridCellLink"><div class="mk">${disease.displayMark}</div></div><div style="position: relative;"><div class="hide tooltip">Gene(s): <b>${gridCluster.title}</b><br/>Disease: <b>${disease.term}</b></div></div> </td></c:if></c:forEach>
 	  </tr>
 	</c:forEach>
 	
@@ -278,10 +289,10 @@ if(_GF)
 // add the tooltip on hover (in,out) event handlers
 $(".gridCellLink").hover(function(e){
 	var tdDiv = $(this);
-	tdDiv.children().find(".tooltip").show();
+	tdDiv.siblings().find(".tooltip").show();
 },function(e){
 	var tdDiv = $(this);
-	tdDiv.children().find(".tooltip").hide();
+	tdDiv.siblings().find(".tooltip").hide();
 });
 
 </script>
