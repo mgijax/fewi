@@ -129,7 +129,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<h3>Manual tests</h3>
 		<ol>
     		<li>The Grid tab displays one column per disease, sorted alphabetically (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
+ 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">gata1</b> in the Genes section and hit search</li>
@@ -147,31 +147,31 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 		
     		<li>A Transgene gets associated to a disease on the grid (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
+ 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">605552</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the Mouse marker column contains marker <b concordion:set="#row">Tg(Fabp4-Hsd11b1)7Jesf</b></li>
-				<li>Confirm the disease column <b>Abdorminal Obesity - Metabolic Syndrome</b> has a <b>colored cell</b> for this marker row</li>
+				<li>Confirm the disease column <b>Abdorminal Obesity - Metabolic Syndrome</b> has a <b>checkmark or colored cell</b> for this marker row</li>
     		</ol>
     		</li>
     		
     		<li>Either a human or a mouse marker can contribute to the disease column (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
+ 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">ACAT2</b> in the Genes section and hit search</li>
                 <li>Click on the Grid tab and confirm the Gene listed is human gene <b concordion:set="#row">ACAT2</b></li>
-                <li>Verify that the disease <b>Acetyl-Coa Acetyltransferase-2 Deficiency</b> has a <b>colored cell</b> for this gene. (The only annotation is to this human gene.)</li>
+                <li>Verify that the disease <b>Acetyl-Coa Acetyltransferase-2 Deficiency</b> has a <b>checkmark or colored cell</b> for this gene. (The only annotation is to this human gene.)</li>
                 <li>Clear this search</li>
                 <li>Enter <b concordion:set="#genes">Lyn</b> in the Genes section and hit search</li>
                 <li>Click on the Grid tab and confirm the Gene listed is mouse gene <b concordion:set="#row">Lyn</b></li>
-                <li>Verify that the disease <b>Systemic Lupus Erythematosus</b> has a <b>colored cell</b> for this gene. (The human ortholog LYN is not annotated to this disease.)</li>
+                <li>Verify that the disease <b>Systemic Lupus Erythematosus</b> has a <b>checkmark or colored cell</b> for this gene. (The human ortholog LYN is not annotated to this disease.)</li>
     		</ol>
     		</li>
 
     		<li>Alternate IDs return the same data (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
+ 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
  			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010030</b> (abnormal orbit morphology) in the Phenotypes and Diseases section and hit search</li>
@@ -183,15 +183,15 @@ tr.gray td {background-color:#EEEEEE;}
     		 </li>   
     		     		
     		<li>Multiple annotations to the same disease rolls up to one check (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="false">modified 10/25/2013</p> 
+ 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0001870, MP:0001873</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column <b>Autoimmune Diseases</b> appears just once.</li> 
 				<li>In the row for the homology class containing <b>AIRE, Aire</b>, for the column <b>Autoimmune Diseases</b>:
 				<ul>
-					<li>Verify the orange triangle representing <b>1</b> human annotation appears.</li>
-					<li>Verify the blue color representing <b>8</b> mouse annotations appears.</li>
+					<li>Verify the orange triangle representing <b>1</b> human annotation appears.(just a checkmark for now(sto117))</li>
+					<li>Verify the blue color representing <b>8</b> mouse annotations appears.(just a checkmark for now(sto117))</li>
 					<li>(Note: <a href="http://cardolan.informatics.jax.org/diseasePortal/genoCluster/view/5644">this genotype cluster</a> has both MP terms in several distinct genotypes; 
                 	<a href="http://cardolan.informatics.jax.org/diseasePortal/genoCluster/view/29974">this genotype cluster</a> has just one of the terms in one genotype. <br/>
                 	<a href="http://cardolan.informatics.jax.org/allele/MGI:2182940">One more genotype</a> of Aire is annotated once to the disease, but not to the queried phenotypes, so it is excluded.)</li>
