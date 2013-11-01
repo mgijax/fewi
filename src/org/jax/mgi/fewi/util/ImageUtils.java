@@ -168,10 +168,14 @@ public class ImageUtils
 	 */
     public static String getRotatedTextImageTag(String text,double rotationAngle,String tagAttributes) throws Exception
     {
-    	byte[] imageBytes = rotatedTextToImageBytes(text,rotationAngle);
-    	byte[] b64ImageBytes = new org.apache.commons.codec.binary.Base64().encode(imageBytes);
+    	String filename = genImageFileName(text);
+    	createRotatedTextImageFile(text,rotationAngle,filename);
+    	String imgTag = "<img src=\""+rotatedImageUrl+filename+"\" />";
     	
-    	String imgTag = "<img src=\"data:image/png;base64,"+new String(b64ImageBytes)+"\" />";
+//    	byte[] imageBytes = rotatedTextToImageBytes(text,rotationAngle);
+//    	byte[] b64ImageBytes = new org.apache.commons.codec.binary.Base64().encode(imageBytes);
+//    	
+//    	String imgTag = "<img src=\"data:image/png;base64,"+new String(b64ImageBytes)+"\" />";
     	return imgTag;
     	
     }
@@ -188,7 +192,18 @@ public class ImageUtils
  
     	String filename = genImageFileName(text,maxCharacters);
     	
-        File f = new File(imagesFilePath+filename);
+    	createRotatedTextImageFile(imgText,rotationAngle,filename);
+		
+    	String imgTag = "<img title=\""+text+"\" src=\""+rotatedImageUrl+filename+"\" />";
+    	return imgTag;
+    }
+    
+    /*
+     * generates a rotated text image file if the filename does not currently exist
+     */
+    private static void createRotatedTextImageFile(String imgText,double rotationAngle,String filename) throws Exception
+    {
+    	File f = new File(imagesFilePath+filename);
 
         if (!f.exists()) {
 			f.createNewFile();
@@ -201,9 +216,6 @@ public class ImageUtils
 			fop.flush();
 			fop.close();
         }
-		
-    	String imgTag = "<img title=\""+text+"\" src=\""+rotatedImageUrl+filename+"\" />";
-    	return imgTag;
     }
     
     private static String genImageFileName(String text,int extra)
