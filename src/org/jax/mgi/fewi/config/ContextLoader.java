@@ -31,11 +31,16 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
     private static Properties externalUrls = null;
 
     private static Configuration propertiesConfig = null;
+    
+    private static String webInfPath = null;
 
     private Logger logger = LoggerFactory.getLogger(ContextLoader.class);
 
     @Autowired
     private WebTemplate webTemplate;
+    
+	@Autowired
+	ServletContext servletContext;
 
     @PostConstruct
     public void init() {
@@ -56,7 +61,12 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
         } catch (IOException e) {
             logger.error("File not found.");
         }
-
+        
+        /*
+         *  Find the absolute path to the web-inf directory during deployment
+         */
+        File webInfDir = new File( servletContext.getRealPath("/WEB-INF/") );
+        webInfPath = webInfDir.getAbsolutePath();
     }
 
     public static Properties getConfigBean(){
@@ -76,6 +86,11 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 
     public static Configuration getPropertiesConfig() {
         return propertiesConfig;
+    }
+    
+    public static String getWebInfPath()
+    {
+    	return webInfPath;
     }
 
     public static IDLinker getIDLinker(){

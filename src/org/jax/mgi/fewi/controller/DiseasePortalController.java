@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -66,7 +68,7 @@ import com.google.common.cache.CacheBuilder;
 @RequestMapping(value="/diseasePortal")
 public class DiseasePortalController
 {
-
+	
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(DiseasePortalController.class);
 
@@ -90,26 +92,30 @@ public class DiseasePortalController
 
 
 
-	// Support for generating the grid columns in vertical/rotated format
-   Cache<String, String> rotatedTextCache = CacheBuilder.newBuilder()
-	       .maximumSize(10000)
-	       .expireAfterWrite(30, TimeUnit.MINUTES).build();
+//	// Support for generating the grid columns in vertical/rotated format
+//   Cache<String, String> rotatedTextCache = CacheBuilder.newBuilder()
+//	       .maximumSize(10000)
+//	       .expireAfterWrite(30, TimeUnit.MINUTES).build();
    	public String getRotatedTextImgTag(String text)
    	{
    		return getRotatedTextImgTag(text,30);
    	}
 	public String getRotatedTextImgTag(String text,int maxChars)
-	{
-		String rotatedText = rotatedTextCache.getIfPresent(text);
-		if(rotatedText != null) return rotatedText;
+	{	
+		//String rotatedText = rotatedTextCache.getIfPresent(text);
+		//if(rotatedText != null) return rotatedText;
 
 		try{
 			String rotatedTextTag = ImageUtils.getRotatedTextImageTagAbbreviated(text,310.0,maxChars);
 
-			rotatedTextCache.put(text,rotatedTextTag);
+			//rotatedTextCache.put(text,rotatedTextTag);
 
 			return rotatedTextTag;
-		}catch(Exception e){}
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("error genning image",e);
+			
+		}
 
 		return "";
 	}

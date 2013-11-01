@@ -8,6 +8,9 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -146,6 +149,10 @@ public class ImageUtils
 	
 	
 	//========== The following code is for generating text images =====================
+    
+    public static String imagesFilePath = ContextLoader.getWebInfPath()+"/../images/hdp/";
+	private static String rotatedImagePath = "assets/images/hdp/";
+	private static String rotatedImageUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + rotatedImagePath;
 	
 	/*
 	 * Takes in a text string and rotation angle (vertical is 270.0)
@@ -168,6 +175,8 @@ public class ImageUtils
     	return imgTag;
     	
     }
+
+    
     /*
      * This version will abbreviate the text (with an ellipsis) if it exceeds maxCharacters
      * 	The original text will be inserted on img tag as a title
@@ -176,13 +185,34 @@ public class ImageUtils
     {
     	String imgText = text;
     	if(text.length() > maxCharacters) imgText = text.substring(0,maxCharacters-1)+"...";
+ 
+    	String filename = genImageFileName(text,maxCharacters);
     	
-    	byte[] imageBytes = rotatedTextToImageBytes(imgText,rotationAngle);
-    	byte[] b64ImageBytes = new org.apache.commons.codec.binary.Base64().encode(imageBytes);
-    	
-    	String imgTag = "<img title=\""+text+"\" src=\"data:image/png;base64,"+new String(b64ImageBytes)+"\" />";
+        File f = new File(imagesFilePath+filename);
+
+        if (!f.exists()) {
+			f.createNewFile();
+        }
+        if(f.length()==0)
+        {
+	    	byte[] imageBytes = rotatedTextToImageBytes(imgText,rotationAngle);
+	    	FileOutputStream fop = new FileOutputStream(f);
+	        fop.write(imageBytes);
+			fop.flush();
+			fop.close();
+        }
+		
+    	String imgTag = "<img title=\""+text+"\" src=\""+rotatedImageUrl+filename+"\" />";
     	return imgTag;
-    	
+    }
+    
+    private static String genImageFileName(String text,int extra)
+    {
+    	return genImageFileName(text+"_"+extra);
+    }
+    private static String genImageFileName(String text)
+    {
+    	return text.hashCode()+".png";
     }
     
     /*
@@ -212,7 +242,29 @@ public class ImageUtils
 	 */
     public static byte[] rotatedTextToImageBytes(String text,double rotationAngle) throws Exception
     {
-        Rectangle2D bounds = getTextBounds(text);
+        BufferedImage rotatedImage = rotatedTextToImage(text,rotationAngle);
+
+        byte[] imageInByte;
+        imageInByte = convertImageToBytes(rotatedImage);
+        return imageInByte;
+    }
+    
+    private static byte[] convertImageToBytes(BufferedImage image) throws Exception
+    {
+    	// convert to indexed format for performance
+    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+        //ImageIO.write( image, "png", baos );
+        PngEncoder pe = new PngEncoder(PngEncoder.COLOR_TRUECOLOR_ALPHA);
+        pe.encode(image, baos);
+        baos.flush();
+        byte[] imageInByte = baos.toByteArray();
+        return imageInByte;
+    }
+    
+    public static BufferedImage rotatedTextToImage(String text,double rotationAngle) throws Exception
+    {
+    	Rectangle2D bounds = getTextBounds(text);
         
         // calculate the size of the text
         int height = (int) bounds.getHeight();
@@ -231,23 +283,7 @@ public class ImageUtils
         g2.drawString(text,0,y);
 
         BufferedImage rotatedImage = rotate(buffer, rotationAngle, transparentColor);
-
-        byte[] imageInByte;
-        imageInByte = convertImageToBytes(rotatedImage);
-        return imageInByte;
-    }
-    
-    private static byte[] convertImageToBytes(BufferedImage image) throws Exception
-    {
-    	// convert to indexed format for performance
-    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		
-        //ImageIO.write( image, "png", baos );
-        PngEncoder pe = new PngEncoder(PngEncoder.COLOR_TRUECOLOR_ALPHA);
-        pe.encode(image, baos);
-        baos.flush();
-        byte[] imageInByte = baos.toByteArray();
-        return imageInByte;
+        return rotatedImage;
     }
 
      /**
