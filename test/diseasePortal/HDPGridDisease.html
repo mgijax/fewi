@@ -201,24 +201,24 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>When the query matches a phenotype term, only diseases that share a super-simple or simple genotype  &quot;genocluster&quot; with MP terms matching your query are returned for a mouse marker (sto107), and the disease column headers are "clump" names (sto117), and cells reflect the number of underlying annotations (sto117) for those common genotypes.
- 			<br/><i>updated for sto135, 117</i>
- 			<p concordion:assertTrue="false">modified for sto117</p> 
+ 			<br/><i>updated for sto135, 117 (semi-automated)</i>
+ 			<p concordion:assertTrue="true">klf 11/04/2013</p> 
     					<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010632</b> (cardiac muscle necrosis) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Myelodysplastic Syndrome; MDS</b> DOES exist.</li>
                 <li>Confirm that mouse marker <b>Bap1</b> is associated with this disease. 
                 	(Genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5439657">MGI:5439657</a> is a 'simple' genotype.)</li>
-                <li>Confirm that the count associated with Bap1 and Myelodysplastic Syndrome; MDS is <b>1</b>.</li>
-                <li>Confirm that the disease column <b>Familial Arrhythmogenic Right Ventricular Dysplasia</b> exists.</li>
-                <li>Confirm that mouse marker <b>Jup</b> is associated with this disease.</li>
-                <li>Confirm that the count associated with Jup and Familial Arrhythmogenic Right Ventricular Dysplasia is <b>1</b> (not 2; only 1 genotype is common to the MP term and the disease).<br/></li>
+                <li>Confirm that the count associated with Bap1 and Myelodysplastic Syndrome; MDS is <b>1</b>. (<span concordion:assertTrue="true">klf</span>)</li>
+                <li>Confirm that the disease column <b>Familial Arrhythmogenic Right Ventricular Dysplasia</b> exists. (<span concordion:assertTrue="true">klf</span>)</li>
+                <li>Confirm that mouse marker <b>Jup</b> is associated with this disease. (<span concordion:assertTrue="true">klf</span>)</li>
+                <li>Confirm that the count associated with Jup and Familial Arrhythmogenic Right Ventricular Dysplasia is <b>1</b> (<span concordion:assertTrue="true">klf</span>) (not 2; only 1 genotype is common to the MP term and the disease).<br/><br/></li>
 
                 <li>Enter <b concordion:set="#pheno">MP:0011099</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Beta-Thalassemia</b> exists.</li>
                 <li>Confirm that mouse marker <b concordion:set="#row">Klf1</b> is associated with <b concordion:set="#column">Beta-Thalassemia</b> 
                 	and has a <b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b>
-                	(via 'super-simple' or 'OMG' genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).<br/></li>
+                	(via 'super-simple' or 'OMG' genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).<br/><br/></li>
                 	
                 <li>Enter <b concordion:set="#pheno">MP:0003841</b> (abnormal lambdoidal suture morphology) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease columns <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Hutchinson-Gilford Progeria Syndrome; HGPS</b> 
@@ -228,9 +228,9 @@ tr.gray td {background-color:#EEEEEE;}
                 	(has several super-simple genotypes and also the human ortholog annotated) are displayed.</li>
                 <li>Confirm disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Apert Syndrome</b> is displayed 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3604025">MGI:3604025</a> is in common and is simple ).</li>
-                <li>Confirm that the gene <b>Fgfr2</b> is associated with <b>Apert Syndrome</b> and that the associated count is <b>4</b> (not 6).</li>
-                <li>Confirm that the gene <b>Fgfr3</b> is associated with <b>Muenke Syndrome; MNKES</b> and that the associated count is <b>6</b> (all genotypes have annotations to both disease and MP term).</li>
-                <li>Confirm that the gene <b>Lmna</b> is associated with <b>Hutchinson-Gilford Progeria Syndrome; HGPS</b> and that the associated count is <b>1</b> (not 5).<br/></li>
+                <li>Confirm that the gene <b>Fgfr2</b> is associated with <b>Apert Syndrome</b> and that the associated count is <b>4</b> (not 6). (<span concordion:assertTrue="true">klf</span>)</li>
+                <li>Confirm that the gene <b>Fgfr3</b> is associated with <b>Muenke Syndrome; MNKES</b> and that the associated count is <b>3</b> (not 6). (<span concordion:assertTrue="true">klf</span>)</li>
+                <li>Confirm that the gene <b>Lmna</b> is associated with <b>Hutchinson-Gilford Progeria Syndrome; HGPS</b> and that the associated count is <b>1</b> (not 5). (<span concordion:assertTrue="true">klf</span>)<br/><br/></li>
                 
                 <li>Enter <b concordion:set="#pheno">MP:0001853</b> (heart inflammation) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and verify AT LEAST the following diseases are listed:
@@ -351,26 +351,6 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click on the Disease tab and confirm the only disease is <b>Rhabdomyosarcoma 2; RMS2</b> the Human Markers associated are <b>FOXO1, PAX3, PAX7</b> and the mouse markers associated are <b>Myf6, Pax3, Trp53</b></li>
     		</ol>
     		</li>
-			<li>Test that, for human genes, a Phenotype search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
- 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
-    		<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b>MP:0004753</b> ((abnormal miniature excitatory postsynaptic currents) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the Human marker <b concordion:set="#row">SNCA</b> 
-                	for the Disease clump column <b concordion:set="#column">Parkinson Disease</b> (clump for Parkinson Disease 1, Autosomal Dominant; PARK1)
-                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b>, because the disease name/ID does not match the search</li>
-    		</ol>
-    		</li> 
-    		<li>Test that, for human genes, a Disease search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
- 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
-    		<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#pheno">222100</b> (Melanoma, Cutaneous Malignant, Suspceptibility to, 3: CMM3) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the Human marker <b concordion:set="#row">CDK4</b> 
-                	for the Disease clump column for <b concordion:set="#diseaseId">Diabetes mellitus, insulin-dependent</b>
-                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b> even though it's associated to this human marker</li>
-    		</ol>
-    		</li>   		
 		</ol>
 	</div>
 	<div id="auto">
@@ -401,6 +381,26 @@ tr.gray td {background-color:#EEEEEE;}
                 	(Actb is annotated to that disease via Allele annotation, and nothing else.)</li>
     		</ol>
     		</li>
+			<li>Test that, for human genes, a Phenotype search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
+ 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>MP:0004753</b> ((abnormal miniature excitatory postsynaptic currents) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the Human marker <b concordion:set="#row">SNCA</b> 
+                	for the Disease clump column <b concordion:set="#column">Parkinson Disease</b> (clump for Parkinson Disease 1, Autosomal Dominant; PARK1)
+                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b>, because the disease name/ID does not match the search</li>
+    		</ol>
+    		</li> 
+    		<li>Test that, for human genes, a Disease search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
+ 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#pheno">222100</b> (Melanoma, Cutaneous Malignant, Suspceptibility to, 3: CMM3) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm the Human marker <b concordion:set="#row">CDK4</b> 
+                	for the Disease clump column for <b concordion:set="#diseaseId">Diabetes mellitus, insulin-dependent</b>
+                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b> even though it's associated to this human marker</li>
+    		</ol>
+    		</li>   		
 		</ol>
  	</div>
 </div>
