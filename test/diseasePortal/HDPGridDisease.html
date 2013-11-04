@@ -200,21 +200,27 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 
-    		<li>When the query matches a phenotype term, only diseases that share a super-simple or simple genotype  &quot;genocluster&quot; with MP terms matching your query are returned for a mouse marker (sto107).
- 			<br/><i>updated for sto135</i> - <span class="hilite">NEED TO MODIFY FOR STO117 - LEFT OFF HERE</span>
- 			<p concordion:assertTrue="true">klf 09/25/2013</p> 
+    		<li>When the query matches a phenotype term, only diseases that share a super-simple or simple genotype  &quot;genocluster&quot; with MP terms matching your query are returned for a mouse marker (sto107), and the disease column headers are "clump" names (sto117), and cells reflect the number of underlying annotations (sto117) for those common genotypes.
+ 			<br/><i>updated for sto135, 117</i>
+ 			<p concordion:assertTrue="false">modified for sto117</p> 
     					<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#pheno">MP:0010632</b> in the Phenotypes and Diseases section and hit search</li>
+                <li>Enter <b concordion:set="#pheno">MP:0010632</b> (cardiac muscle necrosis) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Myelodysplastic Syndrome; MDS</b> DOES exist.</li>
-                <li>Confirm that mouse marker <b>Bap1</b> is associated here. 
+                <li>Confirm that mouse marker <b>Bap1</b> is associated with this disease. 
                 	(Genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5439657">MGI:5439657</a> is a 'simple' genotype.)</li>
+                <li>Confirm that the count associated with Bap1 and Myelodysplastic Syndrome; MDS is <b>1</b>.</li>
+                <li>Confirm that the disease column <b>Familial Arrhythmogenic Right Ventricular Dysplasia</b> exists.</li>
+                <li>Confirm that mouse marker <b>Jup</b> is associated with this disease.</li>
+                <li>Confirm that the count associated with Jup and Familial Arrhythmogenic Right Ventricular Dysplasia is <b>1</b> (not 2; only 1 genotype is common to the MP term and the disease).<br/></li>
+
                 <li>Enter <b concordion:set="#pheno">MP:0011099</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Beta-Thalassemia</b> exists.</li>
                 <li>Confirm that mouse marker <b concordion:set="#row">Klf1</b> is associated with <b concordion:set="#column">Beta-Thalassemia</b> 
                 	and has a <b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b>
-                	(via 'super-simple' or 'OMG' genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).</li>
-                <li>Enter <b concordion:set="#pheno">MP:0003841</b> in the Phenotypes and Diseases section and hit search</li>
+                	(via 'super-simple' or 'OMG' genotype <a href="http://cardolan.informatics.jax.org/allele/genoview/MGI:2181627">MGI:2181627</a>).<br/></li>
+                	
+                <li>Enter <b concordion:set="#pheno">MP:0003841</b> (abnormal lambdoidal suture morphology) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease columns <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Hutchinson-Gilford Progeria Syndrome; HGPS</b> 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:4459466">MGI:4459466</a> is super-simple (OMG) 
                 	and the human ortholog is also associated with this disease) <br/>
@@ -222,6 +228,10 @@ tr.gray td {background-color:#EEEEEE;}
                 	(has several super-simple genotypes and also the human ortholog annotated) are displayed.</li>
                 <li>Confirm disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Apert Syndrome</b> is displayed 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3604025">MGI:3604025</a> is in common and is simple ).</li>
+                <li>Confirm that the gene <b>Fgfr2</b> is associated with <b>Apert Syndrome</b> and that the associated count is <b>4</b> (not 6).</li>
+                <li>Confirm that the gene <b>Fgfr3</b> is associated with <b>Muenke Syndrome; MNKES</b> and that the associated count is <b>6</b> (all genotypes have annotations to both disease and MP term).</li>
+                <li>Confirm that the gene <b>Lmna</b> is associated with <b>Hutchinson-Gilford Progeria Syndrome; HGPS</b> and that the associated count is <b>1</b> (not 5).<br/></li>
+                
                 <li>Enter <b concordion:set="#pheno">MP:0001853</b> (heart inflammation) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and verify AT LEAST the following diseases are listed:
                 	<table>
@@ -244,7 +254,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>When the query matches a disease term, only MP Headers that share a super-simple genotype  &quot;genocluster&quot; with terms matching your query are returned for a mouse marker (sto107).
-    		<p concordion:assertTrue="true">klf 9/26/2013</p>
+    		<p concordion:assertTrue="true">klf 9/26/2013</p>  - <span class="hilite">NEED TO MODIFY FOR STO117 - LEFT OFF HERE</span>
     		<ol>
     			<li>Open the HDP query form.</li>
     			<li>Enter <b concordion:set="#pheno">306955</b> (Heterotaxy, Visceral, 1, X-Linked; HTX1) in the Phenotypes and Diseases section and hit search.</li>
