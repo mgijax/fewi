@@ -139,9 +139,9 @@
   #hdpGridTable .dHBin_3 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -90px; }
   #hdpGridTable .dHBin_4 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -134px; }
   #hdpGridTable .dHBin_5 { background-color: #ffdab3; }
-  #hdpGridTable .dHBin_6 { background-color: #efcaa3; }
-  #hdpGridTable .dHBin_7 { background-color: #dfba93; }
-  #hdpGridTable .dHBin_8 { background-color: #cfaa83; }
+  #hdpGridTable .dHBin_6 { background-color: #f7be76; }
+  #hdpGridTable .dHBin_7 { background-color: #fba039; }
+  #hdpGridTable .dHBin_8 { background-color: #ff8700; }
 </style>
 
 <div id="hdpGridTableWrap">
