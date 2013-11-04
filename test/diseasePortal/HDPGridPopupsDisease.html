@@ -101,38 +101,41 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 		
-    		<li>Chimeric genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Chimeric genotypes are NOT compressed with other kinds of genotypes.<br/>
+    		<li>Chimeric genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Chimeric genotypes are NOT compressed with other kinds of genotypes. (sto196)<br/>
     		(Note: There are no chimeric genotypes having the same allele pair as a non-chimeric genotype, so cannot verify that these remain separated.) 
- 			<p concordion:assertTrue="true">klf 9/10/2013</p> <i>(fully-automated)</i>
+ 			<p concordion:assertTrue="false">modified for sto196</p> <i>(semi-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">135100</b> (Fibrodysplasia Ossificans Progressiva; FOP) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Acvr1</b> row and <b concordion:set="#column">Fibrodysplasia Ossificans Progressiva; FOP</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for 
                 	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Acvr1&lt;tm1Emsh&gt;/Acvr1&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that the text "<b>(chimeric)</b>" appears following the genotype.</li>
                 <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">ACVR1</b> IS LISTED.</li>
                 <li>Clear the query form.</li>
                 <li>Enter <b concordion:set="#pheno">305600</b> (Focal Dermal Hypoplasia; FDH) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Porcn</b> row and <b concordion:set="#column">Focal Dermal Hypoplasia; FDH</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for 
                 	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Porcn&lt;tm1Vdv&gt;/Porcn&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that the text "<b>(chimeric)</b>" appears following the genotype.</li>
                 <li>Confirm that <b>1</b> genotype row is displayed for 
                 	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Porcn&lt;tm1Vdv&gt;/Y</b> (1 genotype exists).</li>
                 <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">PORCN</b> IS LISTED.</li>
+                <li>Confirm that the text "<b>(chimeric)</b>" appears following the genotype.</li>
     		</ol>
     		</li>
     		
-    		<li>Conditional genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Conditional genotypes are NOT compressed with other kinds of genotypes.<br/>
+    		<li>Conditional genotypes - In the popup, a checkmark appears for a &quot;compressed&quot; genotype and OMIM term for each OMG of the gene with mouse disease model annotations.  Conditional genotypes are NOT compressed with other kinds of genotypes. (sto196)<br/>
     		(Note: There are no conditional genotypes having the same allele pair as a non-conditional genotype, so cannot verify that these remain separated.)
- 			<p concordion:assertTrue="true">klf 9/10/2013</p> <i>(fully-automated)</i>
+ 			<p concordion:assertTrue="false">modified for sto196</p> <i>(semi-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">131200</b> (Endometriosis, Susceptibility to, 1) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Kras</b> row and <b concordion:set="#column">Endometriosis, Susceptibility to, 1</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for 
                 	<b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Kras&lt;tm4Tyj&gt;/Kras&lt;+&gt;</b> (1 genotype exists).</li>
+                <li>Confirm that the text "<b>(conditional)</b>" appears following the genotype.</li>
                 <li>Confirm that human <b cc:assertNoResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">KRAS</b> IS NOT LISTED.</li>
-                <li>Clear the query form.</li>
     		</ol>
     		</li>
     		
