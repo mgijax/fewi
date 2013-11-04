@@ -65,8 +65,12 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
         /*
          *  Find the absolute path to the web-inf directory during deployment
          */
-        File webInfDir = new File( servletContext.getRealPath("/WEB-INF/") );
-        webInfPath = webInfDir.getAbsolutePath();
+        String webInfRealPath = servletContext.getRealPath("/WEB-INF/");
+        if(webInfRealPath!=null)
+        {
+        	File webInfDir = new File( webInfRealPath );
+        	webInfPath = webInfDir.getAbsolutePath();
+        }
     }
 
     public static Properties getConfigBean(){
