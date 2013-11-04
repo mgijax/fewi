@@ -60,10 +60,10 @@ tr.gray td {background-color:#EEEEEE;}
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>One column per disease</li>
+		<li>One column per disease &quot;clump&quot; (sto117)</li>
 		<li>Disease columns are to the right of Phenotype columns(phenotype columns not implemented yet)</li>
 		<li>Disease columns are displayed alphabetically</li>
-		<li>Each cell contains an X (or some icon) to indicate the rollup of underlying annotations</li>
+		<li>Each cell contains an X (or some icon or color) to indicate the rollup of underlying annotations</li>
 		<li>Both mouse genotype-to-disease and human gene-to-disease annotations may contribute to the rollup for a given cell</li>
 		<li>Phenotype queries only brings back diseases that have a super-simple genotype  (OMG) or simple genotype shared with the term matching the MP query</li>
 		<li>sto88: Phenotype only genes will display in HDP associated to their relevant disease</li>
@@ -351,6 +351,18 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click on the Disease tab and confirm the only disease is <b>Rhabdomyosarcoma 2; RMS2</b> the Human Markers associated are <b>FOXO1, PAX3, PAX7</b> and the mouse markers associated are <b>Myf6, Pax3, Trp53</b></li>
     		</ol>
     		</li>
+    		
+    		<li>Disease terms are displayed in "clumped" columns (sto117)
+    		<p concordion:assertTrue="true">klf 11/04/2013</p>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>Alzheimer</b> in the Phenotypes and Diseases section and hit search</li>
+                <li>Verify that the disease column <b>Alzheimer Disease</b> is displayed.</li>
+                <li>Verify that the disease column <b>Alzheimer Disease 3</b> is NOT displayed. (Psen1 has mouse annotations.)</li>
+                <li>Verify that the disease column <b>Alzheimer Disease 5</b> is NOT displayed. (AD5 has a human annotation.)</li>
+    		</ol>
+    		</li>
+    		
 		</ol>
 	</div>
 	<div id="auto">
