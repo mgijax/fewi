@@ -253,8 +253,8 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		
-    		<li>When the query matches a disease term, only MP Headers that share a super-simple genotype  &quot;genocluster&quot; with terms matching your query are returned for a mouse marker (sto107).
-    		<p concordion:assertTrue="true">klf 9/26/2013</p>  - <span class="hilite">NEED TO MODIFY FOR STO117 - LEFT OFF HERE</span>
+    		<li>When the query matches a disease term, only MP Headers that share a super-simple  or simple genotype  &quot;genocluster&quot; with terms matching your query are returned for a mouse marker (sto107).
+    		<p concordion:assertTrue="true">klf 9/26/2013</p>
     		<ol>
     			<li>Open the HDP query form.</li>
     			<li>Enter <b concordion:set="#pheno">306955</b> (Heterotaxy, Visceral, 1, X-Linked; HTX1) in the Phenotypes and Diseases section and hit search.</li>
@@ -351,17 +351,17 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click on the Disease tab and confirm the only disease is <b>Rhabdomyosarcoma 2; RMS2</b> the Human Markers associated are <b>FOXO1, PAX3, PAX7</b> and the mouse markers associated are <b>Myf6, Pax3, Trp53</b></li>
     		</ol>
     		</li>
-			<li>Test that a Phenotype search displays only diseases associated to the search, not all human gene homologs (sto136)
+			<li>Test that, for human genes, a Phenotype search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
  			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
-                <li>Enter <b>MP:0004753</b> in the Phenotypes and Diseases section and hit search</li>
+                <li>Enter <b>MP:0004753</b> ((abnormal miniature excitatory postsynaptic currents) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the Human marker <b concordion:set="#row">SNCA</b> 
                 	for the Disease clump column <b concordion:set="#column">Parkinson Disease</b> (clump for Parkinson Disease 1, Autosomal Dominant; PARK1)
-                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b>, because it should not be associated to this human marker</li>
+                	has no <b cc:assertNotEquals="gridCheckForDiseaseByPhenotype(#genes,#symbol,#diseaseId)">check</b>, because the disease name/ID does not match the search</li>
     		</ol>
     		</li> 
-    		<li>Test that a Disease search displays only diseases associated to the search, not all human gene homologs (sto136)
+    		<li>Test that, for human genes, a Disease search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
  			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
