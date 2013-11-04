@@ -140,11 +140,15 @@ ${templateBean.templateBodyStartHdpHtml}
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
-	var querystring = "${querystring}";
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_query.js"></script>
+
+<script type="text/javascript">
+	var querystring = "${querystring}";
+</script>
+
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_summary.js"></script>
 
 

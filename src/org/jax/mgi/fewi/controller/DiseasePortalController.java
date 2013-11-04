@@ -52,6 +52,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -113,13 +114,18 @@ public class DiseasePortalController
             HttpServletRequest request) {
 
     	logger.debug("generating generic DiseasePortal summary");
-		logger.debug("query string: " + request.getQueryString());
+    	
+    	String queryString = request.getQueryString();
+    	// if the queryString is empty, this might be a POST request
+    	if(!notEmpty(queryString)) queryString = FormatHelper.queryStringFromPost(request);
+    	
+		logger.debug("query string: " + queryString);
 		logger.debug("query form: " + query);
+		
 
 		ModelAndView mav = new ModelAndView("disease_portal_query");
-		String querystring = request.getQueryString();
-		if(notEmpty(querystring) && !querystring.contains("tab=")) querystring += "&tab=genestab";
-		mav.addObject("querystring", querystring);
+		if(notEmpty(queryString) && !queryString.contains("tab=")) queryString += "&tab=gridtab";
+		mav.addObject("querystring", queryString);
 		return mav;
 
     }

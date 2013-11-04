@@ -347,6 +347,7 @@ public class FormatHelper
     {
     	return DatamodelUtils.makeCssSafe(input);
     }
+    
  // returns http query string by reverse engineering HttpRequest
     public static String queryStringFromPost(HttpServletRequest request)
     {
