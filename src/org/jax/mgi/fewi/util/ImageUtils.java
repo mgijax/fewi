@@ -150,7 +150,7 @@ public class ImageUtils
 	
 	//========== The following code is for generating text images =====================
     
-    public static String imagesFilePath = ContextLoader.getWebInfPath()+"/../images/hdp/";
+    private static String imagesFilePath = "/../images/hdp/"; // relative to web-inf
 	private static String rotatedImagePath = "assets/images/hdp/";
 	private static String rotatedImageUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + rotatedImagePath;
 	
@@ -203,7 +203,11 @@ public class ImageUtils
      */
     private static void createRotatedTextImageFile(String imgText,double rotationAngle,String filename) throws Exception
     {
-    	File f = new File(imagesFilePath+filename);
+    	// do nothing if we can't find web-inf path
+    	if(ContextLoader.getWebInfPath()==null || ContextLoader.getWebInfPath().equals("")) return;
+    	
+    	String fullImageFilePath = ContextLoader.getWebInfPath()+imagesFilePath;
+    	File f = new File(fullImageFilePath+filename);
 
         if (!f.exists()) {
 			f.createNewFile();
