@@ -1,0 +1,138 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Grid Tab, Phenotype Header Tests</title>
+</head>
+
+<body>
+<H1>This test suite is still under construction!!!!!!!</H1>
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Grid Tab, Color Coding Phenotype Cells Test</h1>
+    <ul>
+        <li>User story 168, color coding - MP</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto168: MP cells will be color coded based on number of items in a bin. 1 annotation, 2-5 annotations, 6-99 annotations, and 99 + annotations</li>
+		<li>sto168: Verify color coding when one term  has several J numbers </li>
+		<li>sto168: Verify no annotations leaved a cell as white</li>
+		<li>sto168: Verify normals can still  have color coded cells</li>
+		<li>sto168: Verify normals with other annotations include all the annotations for cell coloring</li>
+	</ul>
+
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>When ???(sto168).
+			<p concordion:assertTrue="false">new test</p>
+			<ol>
+				<li>Open the HDP query form</li>
+				<li>For each MP term below, verify the system header, listed gene, and display of "N":
+				<table concordion:execute="#check = gridCheckForMpHeaderByPhenotype(#pheno,#row,#column)">
+					<tr><th concordion:set="#pheno">MP term</th>
+						<th concordion:set="#column">system</th>
+						<th concordion:set="#row">gene</th>
+						<th concordion:assertEquals="#check">display "N"</th><th>Notes for tester</th></tr>
+					<tr><td>MP:0005376</td><td>homeostasis/metabolism</td><td>Gdi1</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3833426">MGI:3833426</a> - a hemizygote / Y, color bin 1</td></tr>
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Gdi1</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3833426">MGI:3833426</a> - a hemizygote / Y, color bin 1</td></tr>
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Cdkl5</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5475523">MGI:5475523</a> - a hemizygote / Y</td></tr>
+<!-- 
+	ADD THESE TESTS BACK IN WHEN WE CHANGE FROM OMG SUPER-SIMPLE GENOTYPES TO ALL SIMPLE GENOTYPES
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Lmx1b</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3833426">MGI:3833426</a> - in a <span style="background-color:#FFFF00;">&quot;simple&quot; genotype</span> with Tg(Fev-cre)1Esd/0<br/>
+																							<span style="color:#FF0000;">FAILS: RETEST WHEN ADD SIMPLE GENOTYPES TO THE GRID (klf 9/27)</span></td></tr>
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Mapk1</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5293439">MGI:5293439</a> - in a <span style="background-color:#FFFF00;">&quot;simple&quot; genotype</span> with Tg(Nes-cre)1Kag/0<br/>
+																							<span style="color:#FF0000;">FAILS: RETEST WHEN ADD SIMPLE GENOTYPES TO THE GRID (klf 9/27)</span></td></tr>
+ -->
+					<tr><td>MP:0005394</td><td>taste/olfaction</td><td>Olfr749</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5487682">MGI:5487682</a> - the only annotation for this gene is this "N"</td></tr>
+					<tr><td>MP:0001186</td><td>pigmentation</td><td>Pdgfra</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:2175214">MGI:2175214</a> - hom of allele Pdgfra&lt;tm1Sor&gt;<br/>
+																							genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3655071">MGI:3655071</a> - wt het of allele Pdgfra&lt;tm1Sor&gt;<br/>
+																							genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:2174692">MGI:2174692</a> - hom of allele Pdgfra&lt;tm2Sor&gt;<br/>
+																							genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3655105">MGI:3655105</a> - wt het of allele Pdgfra&lt;tm2Sor&gt;, and maybe others
+					</td></tr>
+					<tr><td>MP:0005367</td><td>renal/urinary system</td><td>Kifc3</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3038231">MGI:3038231</a> - the only annotation for this gene is this "N"</td></tr>
+					<tr><td>MP:0005367</td><td>renal/urinary system</td><td>Del(2Hoxd10-Hoxd13)38Ddu</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3810768">MGI:3810768 </a> - the only annotation for this gene is this "N"</td></tr>
+					<tr><td>MP:0005367</td><td>renal/urinary system</td><td>Ddn</td><td>N</td><td> genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5301894">MGI:5301894</a> - the only annotation for this gene is this "N"</td></tr>					
+				</table>
+				</li>
+			</ol>
+    		</li>
+
+
+ 			<li>??? (sto168)
+ 			<p concordion:assertTrue="false">new test</p> 
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>MP:0001868</b> in the Phenotypes and Diseases section and hit search</li>
+                <li>Click on the Grid tab and confirm ???</li>
+
+    		</ol>
+    		</li>
+
+
+		</ol>
+	</div>
+	
+	
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
