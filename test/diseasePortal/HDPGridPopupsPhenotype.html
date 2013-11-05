@@ -53,6 +53,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 135, Grid: switch from OMGs to simples</li>
         <li>User story 185, BUG: genoclusters in popups should only be those that matched the query</li>
         <li>User story 196, Tagging of Genotypes in popups</li>
+        <li>User story 195, Sort order of Genotypes in popups</li>
     </ul>
 
 
@@ -70,6 +71,9 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto185: when phenotypes/diseases are queried, we only displayed the genoclusters that match, and only columns that have data for the matched genoclusters</li>
 		<li>sto196: Chimeric genotypes are identified on the Genocluster popup page</li>
 		<li>sto196: Conditional genotypes are identified on the Genocluster popup page</li>
+		<li>sto195: Genoclusters in a popup are sorted by allele state first, then alpha be (1st) allele symbol.</li>
+		<li>sto195: use "smart" alpha sorting</li>
+		<li>sto195: The sort order of states is: hom, het, hemi, conditional [chimeric: let them fall where they may]</li>	
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -111,6 +115,26 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto135: correct display of MP term column headers to same as Allele Detail Page (since we now include both "simple" and "super-simple [OMG]" genotypes)</li>
 		<li>sto185: display only genotypes associated with the queried pheno or disease term.</li>
 		<li>sto185: display additional phenotypes or diseases only if they are associated with a genotype annotated to the queried pheno or disease term.</li>
+		<li>sto195: genotype order should be as follows (per Sue in 10/30/2013 email and verbally 11/5/2013):
+		<ol>
+			<li>Non-conditional genotypes in the order below</li>
+			<li>Conditional genotypes in the order below</li>
+		</ol>
+		Then within each of those groupings ...
+		<ol>
+			<li>Homozygous</li>
+			<li>Homoplasmic (mitochondrial genes)</li>
+			<li>Heterozygous</li>
+			<li>Heteroplasmic (mitochondrial genes)</li>
+			<li>Hemizygous X</li>
+			<li>Hemizygous Y</li>
+			<li>Hemizygous insertion</li>
+			<li>Indeterminate</li>
+			<li>Hemizygous deletion (this can only be used in a compound genotype and therefore should not ever appear in a "simple" genotype)</li>
+		</ol>
+		</li>
+		<li>sto195: Chimeric genotypes should be labeled as such, but are not considered specially in the sort order (per Sue)</li>
+		<li>sto195: "Extra" alleles (recombinase or transgenic reporter) should not be considered in the sort order (per Sue)</li>
 	</ul>
 	
 </div>
@@ -587,6 +611,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
 				</li>
     		</ol>
     		</li>
+
 			<li>Chimeric genotypes are identified on the Genocluster popup page(sto196)
  			<p concordion:assertTrue="true">jeffc 11/01/2013</p> 
 			<ol>
@@ -596,6 +621,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
                 <li>Confirm that the second listing of <b>Odf2<sup>GT(XL169)Byg</sup>/Odf2<sup>+</sup></b> is followed by the word <B>chimeric</B></li>
 			</ol>
     		</li>
+
 			<li>Conditional genotypes are identified on the Genocluster popup page(sto196)
  			<p concordion:assertTrue="true">jeffc 11/01/2013</p> 
 			<ol>
@@ -604,7 +630,107 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gad1</b> row and <b concordion:set="#column">embryogenesis</b> column. </li>
                 <li>Confirm that the listing of <b>Gad1<sup>tm1.1Bgc</sup>/Gad1<sup>tm1Rpa</sup> Tg(nes-cre)1Kln/0</b> is followed by the word <B>conditional</B></li>
 			</ol>
-    		</li>    		
+    		</li>
+    		
+    		<li>Genotypes are listed in the order specified in "Specific Requirements", above. (sto195)
+ 			<p concordion:assertTrue="false">new</p> 
+			<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b concordion:set="#genes">Odf2</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Odf2</b> row and <b concordion:set="#column">reproductive system</b> column. </li>
+                <li>Confirm that genotypes are listed in the following order:
+                <table>
+                	<tr><th>Genotype</th></tr>
+					<tr><td>Odf2&lt;Gt(RRO072)Byg&gt;/Odf2&lt;Gt(RRO072)Byg&gt;	</td></tr>
+					<tr><td>Odf2&lt;Gt(RRO072)Byg&gt;/Odf2&lt;+&gt;	</td></tr>
+					<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;	</td></tr>
+					<tr><td>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt; (chimeric)	</td></tr>
+					<tr><td>Odf2&lt;tm1.2Sats&gt;/Odf2&lt;+&gt;	</td></tr>
+					<tr><td>Odf2&lt;tm1.1Sats&gt;/Odf2&lt;tm1.2Sats&gt; Tg(CAG-cre)13Miya/0 (conditional)	</td></tr>
+                </table>
+                </li>
+                <li>Clear the search form.<br/><br/></li>
+                <li>Enter <b concordion:set="#genes">Fas</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Fas</b> row and <b concordion:set="#column">cellular abnormalities</b> column. </li>
+                <li>Confirm that genotypes are listed in the following order:
+                <table>
+                	<tr><th>Genotype</th></tr>
+					<tr><td>Fas&lt;lpr&gt;/Fas&lt;lpr&gt;</td></tr>
+					<tr><td>Fas&lt;lpr-cg&gt;/Fas&lt;lpr-cg&gt;</td></tr>
+					<tr><td>Fas&lt;tm1Dlo&gt;/Fas&lt;tm1Dlo&gt;</td></tr>
+					<tr><td>Fas&lt;tm1Osa&gt;/Fas&lt;tm1Osa&gt;</td></tr>
+					<tr><td>Fas&lt;tm1Ach&gt;/Fas&lt;tm1Ach&gt;  Tg(Lck-cre)548Jxm/?(conditional)</td></tr>
+					<tr><td>Fas&lt;tm1Ach&gt;/Fas&lt;tm1Ach&gt;  Tg(GZMB-cre)1Jcb/?(conditional)</td></tr>
+					<tr><td>Fas&lt;tm1Ach&gt;/Fas&lt;tm1Ach&gt;  Tg(Itgax-cre,-EGFP)4097Ach/?(conditional)</td></tr>
+					<tr><td>Fas&lt;tm1Cgn&gt;/Fas&lt;tm1Cgn&gt;  Tg(Cd4-cre)1Cwi/0(conditional)</td></tr>
+					<tr><td>Cd19&lt;tm1(cre)Cgn&gt;/Cd19&lt;+&gt;  Fas&lt;lpr&gt;/Fas&lt;tm1Cgn&gt;  Tg(Cd4-cre)1Cwi/0(conditional)</td></tr>
+					<tr><td>Fas&lt;lpr&gt;/Fas&lt;tm1Cgn&gt;  Tg(Cd4-cre)1Cwi/0(conditional)</td></tr>
+                </table>
+                </li>
+                <li>Clear the search form.<br/><br/></li>
+                <li>Enter <b concordion:set="#genes">Olfr*</b> in the Genes section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Olfr17</b> row and <b concordion:set="#column">nervous system</b> column. </li>
+                <li>Confirm that genotypes are listed in the following order:
+                <table>
+                	<tr><th>Genotype</th></tr>
+					<tr><td>Olfr17&lt;tm1Mom&gt;/Olfr17&lt;tm1Mom&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm1Mom&gt;/Olfr17&lt;tm7Mom&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm4Mom&gt;/Olfr17&lt;tm4Mom&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm1Rax&gt;/Olfr17&lt;+&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm2(Olfr19)Mom&gt;/Olfr17&lt;+&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm2(Olfr713)Rax&gt;/Olfr17&lt;+&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm3(Olfr151)Rax&gt;/Olfr17&lt;+&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm3Mom&gt;/Olfr17&lt;+&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm4(Olfr6)Rax&gt;/Olfr17&lt;+&gt;</td></tr>
+					<tr><td>Olfr17&lt;tm5(rtTA)Rax&gt;/Olfr17&lt;+&gt;  Tg(tetO-tetX,lacZ)1Gogo/?</td></tr>
+					<tr><td>Olfr17&lt;tm5(rtTA)Rax&gt;/Olfr17&lt;+&gt;  Tg(tetO-Kcnj2,lacZ)1Gogo/?</td></tr>
+                </table>
+                </li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Olfr160</b> row and <b concordion:set="#column">nervous system</b> column. </li>
+                <li>Confirm that genotypes are listed in the following order - NEED TO FIX THIS AND CHECK IT OUT WITH SUE (klf 11/5/2013):
+                <table>
+                	<tr><th>Genotype</th></tr>
+					<tr><td>Olfr151&lt;tm12(Olfr16)Mom&gt;/Olfr151&lt;tm12(Olfr16)Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm13(Olr226)Mom&gt;/Olfr151&lt;tm13(Olr226)Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm14(Adrb2)Mom&gt;/Olfr151&lt;tm14(Adrb2)Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm15(V1rb2)Mom&gt;/Olfr151&lt;tm15(V1rb2)Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm16(Olfr160/Olfr161)Mom&gt;/Olfr151&lt;tm16(Olfr160/Olfr161)Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm17Mom&gt;/Olfr151&lt;tm17Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm18Mom&gt;/Olfr151&lt;tm18Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm19Mom&gt;/Olfr151&lt;tm19Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm20Mom&gt;/Olfr151&lt;tm20Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm21Mom&gt;/Olfr151&lt;tm21Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm23Mom&gt;/Olfr151&lt;tm23Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm29Mom&gt;/Olfr151&lt;tm29Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm30Mom&gt;/Olfr151&lt;tm30Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm31Mom&gt;/Olfr151&lt;tm31Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm32Mom&gt;/Olfr151&lt;tm32Mom&gt;</td></tr>
+					<tr><td>Olfr160&lt;tm2Mom&gt;/Olfr160&lt;tm2Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm1Mom&gt;/Olfr151&lt;tm26Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm1Mom&gt;/Olfr151&lt;tm4Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm1Mom&gt;/Olfr151&lt;tm5Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm1Mom&gt;/Olfr151&lt;tm8Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm1Mom&gt;/Olfr151&lt;tm6Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm2Mom&gt;/Olfr151&lt;tm26Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm2Mom&gt;/Olfr151&lt;tm11(Olfr160)Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm2Mom&gt;/Olfr151&lt;tm4Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm2Mom&gt;/Olfr151&lt;tm8Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm2Mom&gt;/Olfr151&lt;tm9Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm2Mom&gt;/Olfr151&lt;tm10Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm3Mom&gt;/Olfr151&lt;tm26Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm4Mom&gt;/Olfr151&lt;tm25Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm5Mom&gt;/Olfr151&lt;tm25Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm6Mom&gt;/Olfr151&lt;tm25Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm7Mom&gt;/Olfr151&lt;tm25Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm8Mom&gt;/Olfr151&lt;tm25Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm9Mom&gt;/Olfr151&lt;tm25Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm10Mom&gt;/Olfr151&lt;tm25Mom&gt;</td></tr>
+					<tr><td>Olfr151&lt;tm26Mom&gt;/Olfr151&lt;+</td></tr>
+					<tr><td>Olfr151&lt;tm26Mom&gt;/Olfr151&lt;tm29Mom&gt;</td></tr>
+                </table>
+                </li>
+			</ol>
+    		</li>
 		</ol>
  	</div>
 </div>
