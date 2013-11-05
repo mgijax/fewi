@@ -46,20 +46,20 @@ tr.gray td {background-color:#EEEEEE;}
 </div>
 
 <div id="maintitle">
-    <h1>Grid Tab, Color Coding Phenotype Cells Test</h1>
+    <h1>Grid Tab, Color Coding Disease Cells Test</h1>
     <ul>
-        <li>User story 168, color coding - MP</li>
+        <li>User story 138, color coding - Diseases</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>sto168: MP cells will be color coded based on number of items in a bin. 1 annotation, 2-5 annotations, 6-99 annotations, and 99 + annotations</li>
-		<li>sto168: Verify color coding when one term  has several J numbers </li>
-		<li>sto168: Verify no annotations leaves a cell as white</li>
-		<li>sto168: Verify normals can still  have color coded cells</li>
-		<li>sto168: Verify normals do not effect cell coloring when a genotype has both normal and abnormal annotations</li>
+		<li>sto138: Disease cells will be color coded based on number of items in a bin. 1 annotation, 2-5 annotations, 6-99 annotations, and 99 + annotations for both Mouse and Human</li>
+		<li>sto138: Verify color coding when one term  has several J numbers </li>
+		<li>sto138: Verify no annotations leaves a cell as white</li>
+		<li>sto138: Verify normals can still  have color coded cells</li>
+		<li>sto138: Verify normals do not effect cell coloring when a genotype has both normal and abnormal annotations</li>
 	</ul>
 
 </div>
@@ -76,18 +76,20 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Confirm the different bin colors are correct for the number of annotations(sto168).
+    		<li>Confirm the different bin colors are correct for the number of annotations(sto138).
 			<p concordion:assertTrue="false">new test</p>
 			<ol>
 				<li>Open the HDP query form</li>
-				<li>For each MP term below, verify the cell color is correct:
+				<li>For each Disease term below, verify the cell color is correct:
 				<table concordion:execute="#check = gridCheckForMpHeaderByPhenotype(#pheno,#row,#column)">
-					<tr><th concordion:set="#pheno">MP term</th>
+					<tr><th concordion:set="#disease">Disease term</th>
 						<th concordion:set="#column">system</th>
 						<th concordion:set="#row">gene</th>
 						<th concordion:assertEquals="#check">Bin Color</th><th>Notes for tester</th></tr>
-					<tr><td>MP:0005376</td><td>growth/size</td><td>Aaas</td><td>1</td><td> color bin 1</td></tr>
-					<tr><td>MP:0005376</td><td>nervous system</td><td>Abca4</td><td>2</td><td> color bin 2</td></tr>
+					<tr><td>608089</td><td>Endometrial Cancer</td><td>Pten</td><td>1/1</td><td> color bin 1 human/mouse</td></tr>
+					<tr><td>114480</td><td>Breast Cancer</td><td>Brac2</td><td>1</td><td> color bin 1 human/ color bin 1 mouse</td></tr>
+					<tr><td>cancer</td><td>Breast Cancer</td><td>Brac2</td><td>2</td><td> color bin 2 human/ color bin 1 mouse</td></tr>
+					<tr><td>cancer</td><td>Breast Cancer</td><td>Kras</td><td>2</td><td> color bin 1 human/ color bin 2 mouse</td></tr>
 					<tr><td>MP:0005376</td><td>endocrine/exocrine glands</td><td>Abca5</td><td>3</td><td> color bin 3 (6 annotations)</td></tr>
 					<tr><td>MP:0005376</td><td>homeostasis/metabolism</td><td>Apoe</td><td>4</td><td> color bin 4 (166 annotations)</td></tr>
 					</table>
