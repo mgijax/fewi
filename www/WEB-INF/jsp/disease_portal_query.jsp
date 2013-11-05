@@ -144,6 +144,8 @@ ${templateBean.templateBodyStartHdpHtml}
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_query.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_autocomplete.js"></script>
+
 
 <script type="text/javascript">
 	var querystring = "${querystring}";
