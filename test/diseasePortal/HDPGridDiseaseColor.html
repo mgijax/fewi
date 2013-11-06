@@ -40,7 +40,7 @@ tr.gray td {background-color:#EEEEEE;}
 </head>
 
 <body>
-<H1>This test suite is still under construction!!!!!!!</H1>
+
 <div id="TOC">
 	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
@@ -56,10 +56,7 @@ tr.gray td {background-color:#EEEEEE;}
     <h2>Acceptance Criteria</h2>
 	<ul>
 		<li>sto138: Disease cells will be color coded based on number of items in a bin. 1 annotation, 2-5 annotations, 6-99 annotations, and 99 + annotations for both Mouse and Human</li>
-		<li>sto138: Verify color coding when one term  has several J numbers </li>
-		<li>sto138: Verify no annotations leaves a cell as white</li>
-		<li>sto138: Verify normals can still  have color coded cells</li>
-		<li>sto138: Verify normals do not effect cell coloring when a genotype has both normal and abnormal annotations</li>
+		<li>sto138: Verify no disease leaves a cell as white</li>
 	</ul>
 
 </div>
@@ -87,44 +84,17 @@ tr.gray td {background-color:#EEEEEE;}
 						<th concordion:set="#row">gene</th>
 						<th concordion:assertEquals="#check">Bin Color</th><th>Notes for tester</th></tr>
 					<tr><td>608089</td><td>Endometrial Cancer</td><td>Pten</td><td>1/1</td><td> color bin 1 human/mouse</td></tr>
-					<tr><td>114480</td><td>Breast Cancer</td><td>Brac2</td><td>1</td><td> color bin 1 human/ color bin 1 mouse</td></tr>
-					<tr><td>cancer</td><td>Breast Cancer</td><td>Brac2</td><td>2</td><td> color bin 2 human/ color bin 1 mouse</td></tr>
-					<tr><td>cancer</td><td>Breast Cancer</td><td>Kras</td><td>2</td><td> color bin 1 human/ color bin 2 mouse</td></tr>
-					<tr><td>MP:0005376</td><td>endocrine/exocrine glands</td><td>Abca5</td><td>3</td><td> color bin 3 (6 annotations)</td></tr>
-					<tr><td>MP:0005376</td><td>homeostasis/metabolism</td><td>Apoe</td><td>4</td><td> color bin 4 (166 annotations)</td></tr>
+					<tr><td>114480</td><td>Breast Cancer</td><td>Brac2</td><td>1/1</td><td> color bin 1 human/ color bin 1 mouse</td></tr>
+					<tr><td>cancer</td><td>Breast Cancer</td><td>Brac2</td><td>2/1</td><td> color bin 2 human/ color bin 1 mouse</td></tr>
+					<tr><td>cancer</td><td>Breast Cancer</td><td>Kras</td><td>1/2</td><td> color bin 1 human/ color bin 2 mouse</td></tr>
+					<tr><td>-</td><td>Schizophrenia</td><td>DISC1</td><td>2/3</td><td> color bin 2 human/color bin 2 mouse</td></tr>
+					<tr><td>-</td><td>Diabetes Mellitus, Noninsulin-Dependent</td><td>HNF1A</td><td>2</td><td> color bin 2 human</td></tr>
+					<tr><td>-</td><td>Obesity</td><td>Lepr</td><td>3</td><td> color bin 3 mouse (has 13 genotypes)</td></tr>
 					</table>
 				</li>
 			</ol>
     		</li>
 
-
- 			<li>Confirm correct bin color when one term has multiple J numbers (sto168)
- 			<p concordion:assertTrue="false">new test</p> 
-			<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b>Zic3</b> in the Genes section and hit search</li>
-                <li>Click on the Grid tab and confirm the cell for Zic3 and reproductive system is bin color 2 not bin color 1</li>
-				<li>Even though this term is only listed once it is listing 3 J numbers for it</li>
-    		</ol>
-    		</li>
- 			<li>Confirm normals still show an "N" but the background can be shaded (sto168)
- 			<p concordion:assertTrue="false">new test</p> 
-			<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b>Chr10:<b concordion:set="#region">52542320-52545739</b></b> in the gene region section and hit search</li>
-                <li>Click on the Grid tab and confirm the cell for Zfa-ps and reproductive system is bin color 2</li>
-				<li>There are 3 normal terms for this genotype</li>
-    		</ol>
-    		</li>
- 			<li>Confirm normals do not change the background shading when both normal and abnormal annotations exist (sto168)
- 			<p concordion:assertTrue="false">new test</p> 
-			<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b>Diabetes</b> in the Phenotypes section and hit search</li>
-                <li>Click on the Grid tab and confirm the cell for Fas and immune system is bin color 3</li>
-				<li>This term has both normal and abnormal annotations</li>
-    		</ol>
-    		</li>
 		</ol>
 	</div>
 	
