@@ -181,6 +181,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
         this.groupFields.put(SearchConstants.MRK_KEY,DiseasePortalFields.MARKER_KEY);
         this.groupFields.put(DiseasePortalFields.TERM_HEADER,DiseasePortalFields.TERM_HEADER);
         this.groupFields.put(SearchConstants.VOC_TERM_ID,DiseasePortalFields.TERM_ID_GROUP);
+        this.groupFields.put("bareMarkerKey",DiseasePortalFields.MARKER_KEY);
 
 
         /*
@@ -277,6 +278,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
 		        DiseasePortalFields.DISEASE_REF_COUNT,
 		        DiseasePortalFields.TERM_MOUSESYMBOL,
 		        DiseasePortalFields.TERM_HUMANSYMBOL));
+        groupReturnedFields.put("bareMarkerKey",Arrays.asList(DiseasePortalFields.MARKER_KEY));
 
         /*
          * The name of the field we want to iterate through the documents for
@@ -400,24 +402,27 @@ public class SolrDiseasePortalHunter extends SolrHunter
         		//sr.addResultObjects(markerKey);
         		if(markerKey != null) keys.add(markerKey.toString());
 
-                // create and fill data entity
-        		SolrDiseasePortalMarker dpMarker = new SolrDiseasePortalMarker();
-        		dpMarker.setMarkerKey(markerKey.toString());
-                dpMarker.setOrganism((String)sd.getFieldValue(DiseasePortalFields.ORGANISM));
-                dpMarker.setHomologeneId((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGENE_ID));
-                dpMarker.setSymbol((String)sd.getFieldValue(DiseasePortalFields.MARKER_SYMBOL));
-                dpMarker.setMgiId((String)sd.getFieldValue(DiseasePortalFields.MARKER_MGI_ID));
-               // dpMarker.setType((String)sd.getFieldValue(DiseasePortalFields.MARKER_FEATURE_TYPE));
-                dpMarker.setLocation((String)sd.getFieldValue(DiseasePortalFields.LOCATION_DISPLAY));
-                dpMarker.setCoordinate((String)sd.getFieldValue(DiseasePortalFields.COORDINATE_DISPLAY));
-                dpMarker.setCoordinateBuild((String)sd.getFieldValue(DiseasePortalFields.BUILD_IDENTIFIER));
-                dpMarker.setDisease((List<String>)sd.getFieldValue(DiseasePortalFields.MARKER_DISEASE));
-                dpMarker.setSystem((List<String>)sd.getFieldValue(DiseasePortalFields.MARKER_SYSTEM));
-                dpMarker.setAllRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_ALL_REF_COUNT));
-                dpMarker.setDiseaseRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_DISEASE_REF_COUNT));
-                dpMarker.setImsrCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_IMSR_COUNT));
-                
-        		sr.addResultObjects(dpMarker);
+        		if(!sp.getFetchKeysOnly())
+        		{
+	                // create and fill data entity
+	        		SolrDiseasePortalMarker dpMarker = new SolrDiseasePortalMarker();
+	        		dpMarker.setMarkerKey(markerKey.toString());
+	                dpMarker.setOrganism((String)sd.getFieldValue(DiseasePortalFields.ORGANISM));
+	                dpMarker.setHomologeneId((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGENE_ID));
+	                dpMarker.setSymbol((String)sd.getFieldValue(DiseasePortalFields.MARKER_SYMBOL));
+	                dpMarker.setMgiId((String)sd.getFieldValue(DiseasePortalFields.MARKER_MGI_ID));
+	               // dpMarker.setType((String)sd.getFieldValue(DiseasePortalFields.MARKER_FEATURE_TYPE));
+	                dpMarker.setLocation((String)sd.getFieldValue(DiseasePortalFields.LOCATION_DISPLAY));
+	                dpMarker.setCoordinate((String)sd.getFieldValue(DiseasePortalFields.COORDINATE_DISPLAY));
+	                dpMarker.setCoordinateBuild((String)sd.getFieldValue(DiseasePortalFields.BUILD_IDENTIFIER));
+	                dpMarker.setDisease((List<String>)sd.getFieldValue(DiseasePortalFields.MARKER_DISEASE));
+	                dpMarker.setSystem((List<String>)sd.getFieldValue(DiseasePortalFields.MARKER_SYSTEM));
+	                dpMarker.setAllRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_ALL_REF_COUNT));
+	                dpMarker.setDiseaseRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_DISEASE_REF_COUNT));
+	                dpMarker.setImsrCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_IMSR_COUNT));
+	                
+	        		sr.addResultObjects(dpMarker);
+        		}
         		keyToGroupKeyMap.put(uniqueKey,markerKey.toString());
 
         	}

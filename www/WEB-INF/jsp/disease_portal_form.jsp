@@ -118,6 +118,11 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	          <div><form:textarea path="locations" style="height:60px; width:500px;" class=""/></div>
 	          <div><b>in</b></div> <div style="width:6em;"><form:radiobuttons class="organism" path="organism" items="${diseasePortalQueryForm.organismOptions}" /></div>
 	        </div>
+	        <br>
+	       	  <div style="margin-left: 20px; text-align:left;" id="locationsFileDiv">
+	        	Or Upload a VCF File: <input id="locationsFileInput" type="file" name="locationsFile">
+	        	<input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
+	          </div>
 	      </div>			
 	    </td>
 	  </tr>	

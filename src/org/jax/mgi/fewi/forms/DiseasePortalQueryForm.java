@@ -1,7 +1,11 @@
 package org.jax.mgi.fewi.forms;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 /*-------*/
 /* class */
@@ -19,6 +23,7 @@ public class DiseasePortalQueryForm
     private String gridClusterKey;
     private String termHeader;
     private String termId;
+    private Boolean useLocationsFile = false;
     
     // Filter queries
     private String fGene;
@@ -29,6 +34,19 @@ public class DiseasePortalQueryForm
     // Constants
     public static final String HUMAN = "human";
     public static final String MOUSE = "mouse";
+    
+    // constants for file processing
+    public static final String LOCATIONS_FILE_VAR = "locationsFile";
+    public static final String LOCATIONS_FILE_VAR_MOUSE_KEYS = "locationsFileMouseKeys";
+    public static final String LOCATIONS_FILE_VAR_HUMAN_KEYS = "locationsFileHumanKeys";
+
+    public static List<String> ACCEPTABLE_FILE_VARS;
+    static
+    {
+    	ACCEPTABLE_FILE_VARS = Arrays.asList(LOCATIONS_FILE_VAR);
+    }
+    public static final String VCF_FILE_TYPE = "vcf";
+
 
     public DiseasePortalQueryForm()
     {
@@ -95,6 +113,14 @@ public class DiseasePortalQueryForm
 		this.organismOptions = organismOptions;
 	}
 	
+	public Boolean getUseLocationsFile() {
+		return useLocationsFile;
+	}
+
+	public void setUseLocationsFile(Boolean useLocationsFile) {
+		this.useLocationsFile = useLocationsFile;
+	}
+
 	public String getFGene() {
 		return fGene;
 	}
@@ -109,7 +135,7 @@ public class DiseasePortalQueryForm
 	public void setFHeader(String fHeader) {
 		this.fHeader = fHeader;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "DiseasePortalQueryForm [phenotypes=" + phenotypes + ", genes="

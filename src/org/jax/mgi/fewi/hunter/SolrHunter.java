@@ -210,7 +210,7 @@ public class SolrHunter implements Hunter {
         query.setHighlightRequireFieldMatch(this.highlightRequireFieldMatch);
         String queryString =
             translateFilter(searchParams.getFilter(), propertyMap);
-        logger.debug("TranslatedFilters: " + queryString);
+        if(!searchParams.getSuppressLogs()) logger.debug("TranslatedFilters: " + queryString);
 
         // If a join field is specified add the join clause to the beginning of the query string
         if(doJoin)
@@ -266,7 +266,7 @@ public class SolrHunter implements Hunter {
 
         // Add the facets, can be overwritten.
         addFacets(query);
-        logger.debug("SolrQuery:" + query);
+        if(!searchParams.getSuppressLogs()) logger.debug("SolrQuery:" + query);
 
         
 
@@ -660,7 +660,7 @@ public class SolrHunter implements Hunter {
         if (this.facetString != null) {
             for (Count c: rsp.getFacetField(facetString).getValues()) {
                 facet.add(c.getName());
-                logger.debug(c.getName());
+                if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
         }
 
@@ -891,7 +891,7 @@ public class SolrHunter implements Hunter {
         if (this.facetString != null) {
             for (Count c: rsp.getFacetField(facetString).getValues()) {
                 facet.add(c.getName());
-                logger.debug(c.getName());
+                if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
         }
 

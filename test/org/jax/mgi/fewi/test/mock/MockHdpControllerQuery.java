@@ -13,6 +13,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
@@ -36,30 +37,33 @@ public class MockHdpControllerQuery extends AbstractMockHdpQuery
 	public SearchResults<SolrDiseasePortalMarker> getGenes() throws Exception
 	{
 		MockHttpServletRequest request = generateRequest();
+		MockHttpSession session = new MockHttpSession();
 
 		Paginator page = new Paginator();
 		page.setResults(this.pageSize);
 		
-		return hdpController.getSummaryResultsByGene(request, this.qf, page);
+		return hdpController.getSummaryResultsByGene(request, this.qf, page,session);
 	}	
 	
 	public SearchResults<SolrVocTerm> getDiseases() throws Exception
 	{
 		MockHttpServletRequest request = generateRequest();
+		MockHttpSession session = new MockHttpSession();
 
 		Paginator page = new Paginator();
 		page.setResults(this.pageSize);
 		
-		return hdpController.getSummaryResultsByDisease(request, this.qf, page);
+		return hdpController.getSummaryResultsByDisease(request, this.qf, page,session);
 	}	
 	
 	public SearchResults<SolrVocTerm> getPhenotypes() throws Exception
 	{
 		MockHttpServletRequest request = generateRequest();
+		MockHttpSession session = new MockHttpSession();
 
 		Paginator page = new Paginator();
 		page.setResults(this.pageSize);
 		
-		return hdpController.getSummaryResultsByDisease(request, this.qf, page);
+		return hdpController.getSummaryResultsByDisease(request, this.qf, page,session);
 	}	
 }

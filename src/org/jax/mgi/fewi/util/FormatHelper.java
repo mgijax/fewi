@@ -357,7 +357,8 @@ public class FormatHelper
         String param = (String) e.nextElement();
         sb.append(param).append("=").append(request.getParameter(param)).append("&");
       }
-      String queryString = sb.toString().substring(0, sb.length() - 1);
+      String queryString = sb.toString();
+      if(queryString.length()>0) queryString = queryString.substring(0, sb.length() - 1);
       return queryString;
     }
 

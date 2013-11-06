@@ -50,16 +50,31 @@ YAHOO.util.Event.addListener(qfId, "submit", interceptSubmit);
 //Wire up the functionality to reset the query form
 //
 var resetQF = function (e) {
-	if (e) YAHOO.util.Event.preventDefault(e); 
+	var fromButtonClick = false;
+	if (e)
+	{
+		YAHOO.util.Event.preventDefault(e); 
+		fromButtonClick = true;
+	}
+	
 	var form = YAHOO.util.Dom.get(qfId);
 	form.phenotypes.value = "";
 	form.genes.value = "";
 	form.locations.value = "";
 	form.organism[0].checked = true;
+	form.locationsFileName.value = "";
 	
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
 	if(_GF && !_GF.isState(_GF.gridState.working)) _GF.resetFields();
+	
+	if(fromButtonClick)
+	{
+		if (typeof resetLocationsFields == 'function')
+		{
+			resetLocationField();
+		}
+	}
 	
 	// clear the validation errors
 	clearValidation();
@@ -107,6 +122,12 @@ var updateQuerySummary = function() {
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
 		ysfText += organism+" locations matching [<b>"+$('<div/>').text(values["locations"]).html()+"</b>]";
+	}
+	if ("locationsFileName" in values && values["locationsFileName"]!="")
+	{
+		ysfText += "<br/>"
+		var organism = values["organism"] == "human" ? "Human" : "Mouse";
+		ysfText += organism+" locations matching [<b>file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
 	}
 	
 	summaryDiv.append(ysfText);
@@ -167,6 +188,12 @@ var getQueryString = function()
 		params.push("locations="+values["locations"]);
 		params.push("organism="+values["organism"]);
 	}
+	if("locationsFileName" in values && values["locationsFileName"]!="")
+	{
+		params.push("locationsFileName="+values["locationsFileName"]);
+		params.push("organism="+values["organism"]);
+	}
+	
 	// try to add grid filters if they exist
 	var hasGridFilters = false;
 	if(!_GF.isState(_GF.gridState.working))

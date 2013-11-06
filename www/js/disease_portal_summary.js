@@ -147,9 +147,6 @@ handleNavigation = function (request, calledLocally, fromInit)
 			// refresh tab counts
 			refreshTabCounts();
 
-			// decide which help messages to display
-			displaySummaryHelpText();
-
 			// wire up any download buttons
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
@@ -595,19 +592,6 @@ var refreshTabCounts = function()
     {	success:handleCountRequest,
     	failure:function(o){}
     },querystring);
-}
-
-
-var displaySummaryHelpText = function()
-{
-	var params = mgiParseRequest(window.querystring);
-	$(".pheno-helptext, .genes-helptext").hide();
-	// show phenotypes text for phenotype/disease search
-	if("phenotypes" in params && params["phenotypes"] != "") $(".pheno-helptext").show();
-	// show genes text for gene nomen search OR gene location search
-	if(("genes" in params && params["genes"] != "")
-		|| ("locations" in params && params["locations"] != "")) $(".genes-helptext").show();
-
 }
 
 //----------- functions for configuring the datatables -------------------

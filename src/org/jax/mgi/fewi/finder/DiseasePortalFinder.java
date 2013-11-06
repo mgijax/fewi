@@ -42,8 +42,7 @@ public class DiseasePortalFinder
 	// Group results by marker key to return the distinct matching marker keys
 	public List<String> getMarkerKeys(SearchParams params)
 	{
-		SearchResults<String> results = new SearchResults<String>();
-		hdpHunter.hunt(params, results,SearchConstants.MRK_KEY);
+		SearchResults<SolrDiseasePortalMarker> results = this.huntMarkersGroup(params,true);
 
 		return results.getResultKeys();
 	}
@@ -227,6 +226,8 @@ public class DiseasePortalFinder
 
 	// markers
 	private SearchResults<SolrDiseasePortalMarker> huntMarkersGroup(SearchParams params)
+	{ return huntMarkersGroup(params,false); }
+	private SearchResults<SolrDiseasePortalMarker> huntMarkersGroup(SearchParams params,boolean justKeys)
 	{
 		SearchResults<SolrDiseasePortalMarker> results
 		  = new SearchResults<SolrDiseasePortalMarker>();
@@ -246,7 +247,8 @@ public class DiseasePortalFinder
 			);
 		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
 		params.setFilter(modifiedFilter);
-		hdpHunter.hunt(params, results,SearchConstants.MRK_KEY);
+		if(justKeys) hdpHunter.hunt(params, results,"bareMarkerKey");
+		else hdpHunter.hunt(params, results,SearchConstants.MRK_KEY);
 		params.setFilter(originalFilter);
 		return results;
 	}

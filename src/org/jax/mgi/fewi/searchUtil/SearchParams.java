@@ -27,6 +27,8 @@ public class SearchParams {
 	private boolean includeMetaScore = false;
 	private boolean includeMetaHighlight = false;
 	private boolean includeGenerated = false;
+	private boolean fetchKeysOnly = false;
+	private boolean suppressLogs = false;
 
     //////////////////////////////////////////////////////////////////////////
     //  BASIC ACCESSORS
@@ -133,5 +135,21 @@ public class SearchParams {
 	
 	public void setIncludeGenerated(boolean includeGenerated) {
 		this.includeGenerated = includeGenerated;
+	}
+
+	public boolean getFetchKeysOnly() {
+		return fetchKeysOnly;
+	}
+
+	public void setFetchKeysOnly(boolean fetchKeysOnly) {
+		this.fetchKeysOnly = fetchKeysOnly;
+	}
+
+	public boolean getSuppressLogs() {
+		return suppressLogs;
+	}
+
+	public void setSuppressLogs(boolean suppressLogs) {
+		this.suppressLogs = suppressLogs;
 	}
 }
