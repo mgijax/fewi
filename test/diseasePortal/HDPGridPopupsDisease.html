@@ -52,6 +52,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 185, BUG: genoclusters in popups should only be those that matched the query</li>
         <li>sto117: Grid: Disease clumps : front end</li>
         <li>User story 196, Tagging of Genotypes in popups</li>
+        <li>User story 195, Sort order of Genotypes in popups</li>
     </ul>
 </div>
 
@@ -70,11 +71,16 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto117: the counts used for coloring the cell are the sums of counts for the underlying individual disease cells</li>
 		<li>sto117: popups show the individual matching diseases for the group, the matching genotypes, and the matching human genes</li>
 		<li>sto117: specific formatting not specified here</li>
+		<li>sto196: Chimeric genotypes are identified on the Genocluster popup page</li>
+		<li>sto196: Conditional genotypes are identified on the Genocluster popup page</li>
+		<li>sto195: Genoclusters in a popup are sorted by allele state first, then alpha be (1st) allele symbol.</li>
+		<li>sto195: use "smart" alpha sorting</li>
+		<li>sto195: The sort order of states is: hom, het, hemi, conditional [chimeric: let them fall where they may]</li>	
 	</ul>
 
 	<h2>Specific Requirements</h2>
 	<ul>
-		<li>See <a href="HDPGridPopupsPhenotype.html">requirements dealing with which gentoypes</a> and associated phenotype or disease data to display.</li>
+		<li>See <a href="HDPGridPopupsPhenotype.html">specific requirements</a>  dealing with which genotypes and associated phenotype or disease data to display, order, labeling, and other details.</li>
 	</ul>
 </div>
 
@@ -231,6 +237,52 @@ tr.gray td {background-color:#EEEEEE;}
                 		<b concordion:assertEquals="diseaseGridPopupHumanCheckByPhenotype(#pheno,#row,#column,#humanRow,#diseaseCol)">check</b>.</li>
             </ol>
             </li>
+
+			<li>Verify genotypes are displayed in the correct order (sto195).
+ 			<p concordion:assertTrue="true">klf 11/05/2013</p>
+    		<ol>
+                <li>Open the HDP query form</li>
+                <li>Enter <b>300624</b> (Fragile X Mental Retardation Syndrome) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b>Fmr1</b> row and <b>Fragile X Mental Retardation Syndrome</b> column. </li>
+                <li>Confirm that genotypes are listed in the following order: <span concordion:assertTrue="true">(OK klf)</span>
+                <table>
+                	<tr><th>Genotype</th></tr>
+					<tr><td>Fmr1tm&lt;tm1Cgr&gt;/Fmr1tm&lt;tm1Cgr&gt;</td></tr>
+					<tr><td>Fmr1tm&lt;tm1.1Cidz&gt;/Y </td></tr>
+					<tr><td>Fmr1tm&lt;tm1Cgr&gt;/Y </td></tr>
+					<tr><td>Fmr1tm&lt;tm1Rbd&gt;/Y </td></tr>
+					<tr><td>Fmr1tm&lt;tm1Usdn&gt;/Y </td></tr>
+					<tr><td>Fmr1tm&lt;tm1Cidz&gt;/Fmr1tm&lt;tm1Cidz&gt;  Tg(Pcp2-cre)2Mpin/0 (conditional)</td></tr>
+                </table>
+                </li>
+                <li>Clear the query form.<br/><br/></li>
+                <li>Enter <b>300100</b> (Adrenoleukodystrophy) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b>Abcd1</b> row and <b>Adrenoleukodystrophy</b> column. </li>
+                <li>Confirm that genotypes are listed in the following order: <span concordion:assertTrue="true">(OK klf)</span>
+                <table>
+                	<tr><th>Genotype</th></tr>
+					<tr><td> Abcd&lt;1tm1Kan&gt;/Abcd1&lt;tm1Kan &gt;</td></tr>
+					<tr><td> Abcd1&lt;tm1Kds&gt;/Abcd1&lt;tm1Kds &gt;</td></tr>
+					<tr><td> Abcd1&lt;tm1Ymd&gt;/Abcd1&lt;tm1Ymd &gt;</td></tr>
+					<tr><td> Abcd1&lt;tm1Kan&gt;/Y </td></tr>
+					<tr><td> Abcd1&lt;tm1Kds&gt;/Y </td></tr>
+					<tr><td> Abcd1&lt;tm1Ymd&gt;/Y </td></tr>
+                </table>
+                </li>
+                <li>Clear the query form.<br/><br/></li>
+                <li>Enter <b>300755</b> (Agammaglobulinemia, X-Linked; XLA) in the Phenotypes and Diseases section and hit search</li>
+                <li>Click the checkmark at the intersection of the <b>Abcd1</b> row and <b>Agammaglobulinemia</b> column. </li>
+                <li>Confirm that genotypes are listed in the following order: <span concordion:assertTrue="true">(OK klf)</span>
+                <table>
+                	<tr><th>Genotype</th></tr>
+					<tr><td>Btk&lt;tm1Wk&gt;/Btk&lt;tm1Wk&gt; </td></tr>
+					<tr><td>Btk&lt;xid&gt;/Btk&lt;xid&gt; </td></tr>
+					<tr><td>Btk&lt;tm1Gs&gt;/Y </td></tr>
+					<tr><td>Btk&lt;xid&gt;/Y </td></tr>
+                </table>
+                </li>
+            </ol>
+			</li>
 
 		</ol>
 	</div>
