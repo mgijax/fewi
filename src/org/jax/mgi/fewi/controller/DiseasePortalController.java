@@ -168,6 +168,8 @@ public class DiseasePortalController
 		
 		if(DiseasePortalQueryForm.ACCEPTABLE_FILE_VARS.contains(field))
 		{
+			// clear the session variable for this field
+			session.setAttribute(field,null);
 	        try {
 				String dataString="";
 	        	if(DiseasePortalQueryForm.VCF_FILE_TYPE.equalsIgnoreCase(type))
@@ -178,6 +180,7 @@ public class DiseasePortalController
 	        		
 	        		if(!notEmpty(dataString))
 	        		{
+	        			logger.debug("no coordinates found in VCF file");
 	        			mav.addObject("error","No coordinates found in VCF file. Ensure file is in the correct format.");
 	    				return mav;
 	        		}
@@ -201,6 +204,7 @@ public class DiseasePortalController
 		        		if((mouseMarkerKeysFromLocationsFile==null || mouseMarkerKeysFromLocationsFile.size()==0)
 		        				&& (humanMarkerKeysFromLocationsFile==null || humanMarkerKeysFromLocationsFile.size()==0))
 		        		{
+		        			logger.debug("no matching genes found in VCF file");
 		        			mav.addObject("error","None of the provided coordinates matched a gene region in either human or mouse.");
 		    				return mav;
 		        		}
@@ -209,10 +213,7 @@ public class DiseasePortalController
 	        	}
 
 	        	// save the data in the session;
-	        	if(notEmpty(dataString))
-	        	{
-	        		session.setAttribute(field,dataString);
-	        	}
+	        	session.setAttribute(field,dataString);
 			} catch (IOException e) {
 				logger.error("error reading HDP upload file",e);
 				mav.addObject("error","file reading IOException");
@@ -229,6 +230,7 @@ public class DiseasePortalController
 		
 		if(!notEmpty(file.getOriginalFilename()))
 		{
+			logger.debug("resetting file upload");
 	        mav.addObject("success","file upload reset");
 			return mav;
 		}
@@ -1136,9 +1138,6 @@ public class DiseasePortalController
 		String locations = query.getLocations();
 		
 		// add any file data that may be in the session
-		String locFileData = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
-		
-		
 		String locationsFileSet = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
 		List<String> markerKeysFromLocationsFile= DiseasePortalQueryForm.HUMAN.equals(query.getOrganism())
 				? (List<String>) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS)
