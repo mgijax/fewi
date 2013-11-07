@@ -72,7 +72,7 @@ var resetQF = function (e) {
 	{
 		if (typeof resetLocationsFields == 'function')
 		{
-			resetLocationField();
+			resetLocationsFields();
 		}
 	}
 	

@@ -1,12 +1,11 @@
 package org.jax.mgi.fewi.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.HdpGenoCluster;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
@@ -194,17 +192,24 @@ public class DiseasePortalController
 	        		if(notEmpty(dataString) && DiseasePortalQueryForm.LOCATIONS_FILE_VAR.equals(field))
 	        		{
 		        		logger.debug("converting file locations to mouse marker keys");
-		        		List<String> mouseMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(dataString,DiseasePortalQueryForm.MOUSE);
+		        		List<String> locationQueryTokens = QueryParser.tokeniseOnWhitespaceAndComma(dataString);
+		        		List<String> mouseMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(locationQueryTokens,DiseasePortalQueryForm.MOUSE);
 		        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_MOUSE_KEYS,mouseMarkerKeysFromLocationsFile);
 		        		logger.debug("finished converting file locations to mouse marker keys");
 		        		logger.debug("found "+mouseMarkerKeysFromLocationsFile.size()+" mouse marker keys");
 		        		
 		        		logger.debug("converting file locations to human marker keys");
-		        		List<String> humanMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(dataString,DiseasePortalQueryForm.HUMAN);
+		        		List<String> humanMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(locationQueryTokens,DiseasePortalQueryForm.HUMAN);
 		        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS,humanMarkerKeysFromLocationsFile);
 		        		logger.debug("finished converting file locations to human marker keys");
 		        		logger.debug("found "+humanMarkerKeysFromLocationsFile.size()+" human marker keys");
 		        		
+		        		if((mouseMarkerKeysFromLocationsFile==null || mouseMarkerKeysFromLocationsFile.size()==0)
+		        				&& (humanMarkerKeysFromLocationsFile==null || humanMarkerKeysFromLocationsFile.size()==0))
+		        		{
+		        			mav.addObject("error","None of the provided coordinates matched a gene region in either human or mouse.");
+		    				return mav;
+		        		}
 		        		dataString = "true";
 	        		}
 	        	}
@@ -219,7 +224,8 @@ public class DiseasePortalController
 				mav.addObject("error","file reading IOException");
 				return mav;
 			} catch (Exception e) {
-				mav.addObject("error",e.getMessage());
+				logger.error("error processing HDP upload file",e);
+				mav.addObject("error","Server threw Exception, "+e.getMessage());
 				return mav;
 			}
 		}   	
@@ -1276,39 +1282,55 @@ public class DiseasePortalController
 		return gridClusterString;
 	}
 	
-	private List<String> convertLocationsToMarkerKeys(String locations,String organism)
+	private List<String> convertLocationsToMarkerKeys(List<String> locationCoordinateTokens,String organism)
 	{
-		List<String> markerKeys = new ArrayList<String>();
-		if(notEmpty(locations))
+		/*
+		 *  There is some limit on the number of coordinates we can query Solr with at a time.
+		 *  All I know is that SolrJ throws a weird javabin format error at numbers exceeding roughly 37,000 coordinates
+		 */
+		Integer maxLocationsInAQuery = 30000; 
+		Set<String> markerKeys = new HashSet<String>();
+		if(locationCoordinateTokens!=null && locationCoordinateTokens.size()>0)
 		{
-			SearchParams sp = new SearchParams();
-			sp.setPageSize(100000); // there should be no limit on this
-			sp.setFetchKeysOnly(true);
-			sp.setSuppressLogs(true);
-			
-			List<String> tokens = QueryParser.tokeniseOnWhitespaceAndComma(locations);
-			List<Filter> locationFilters = new ArrayList<Filter>();
-			//logger.debug("location tokens : "+StringUtils.join(tokens,","));
-			// decide whether to query mouse or human
-			String coordField = DiseasePortalQueryForm.HUMAN.equals(organism)
-					? SearchConstants.HUMAN_COORDINATE : SearchConstants.MOUSE_COORDINATE;
-			for(String token : tokens)
+			int chunks = (int) Math.ceil(locationCoordinateTokens.size() / maxLocationsInAQuery);
+			if(chunks==0) chunks=1;
+			for(int i=0; i<chunks; i++)
 			{
-				String spatialQueryString = SolrLocationTranslator.getQueryValue(token);
-				if(notEmpty(spatialQueryString))
+				// chunk through the list 
+				int offsetStart = (i) * maxLocationsInAQuery;
+				int offsetEnd = (i+1) * maxLocationsInAQuery;
+				if(locationCoordinateTokens.size() < offsetEnd) offsetEnd = locationCoordinateTokens.size();
+				List<String> tokens = locationCoordinateTokens.subList(offsetStart,offsetEnd);
+				
+				SearchParams sp = new SearchParams();
+				sp.setPageSize(100000); // there should be no limit on this
+				sp.setFetchKeysOnly(true);
+				sp.setSuppressLogs(true);
+				
+				List<Filter> locationFilters = new ArrayList<Filter>();
+				//logger.debug("location tokens : "+StringUtils.join(tokens,","));
+				// decide whether to query mouse or human
+				String coordField = DiseasePortalQueryForm.HUMAN.equals(organism)
+						? SearchConstants.HUMAN_COORDINATE : SearchConstants.MOUSE_COORDINATE;
+				for(String token : tokens)
 				{
-					locationFilters.add(new Filter(coordField,spatialQueryString,Filter.OP_HAS_WORD));
+					String spatialQueryString = SolrLocationTranslator.getQueryValue(token);
+					if(notEmpty(spatialQueryString))
+					{
+						locationFilters.add(new Filter(coordField,spatialQueryString,Filter.OP_HAS_WORD));
+					}
+				}
+		
+				if(locationFilters.size()>0)
+				{
+					sp.setFilter(Filter.or(locationFilters));
+					// query solr for the matching marker keys
+					if(chunks==1) return hdpFinder.getMarkerKeys(sp);
+					else markerKeys.addAll(hdpFinder.getMarkerKeys(sp));
 				}
 			}
-	
-			if(locationFilters.size()>0)
-			{
-				sp.setFilter(Filter.or(locationFilters));
-				// query solr for the matching marker keys
-				markerKeys = hdpFinder.getMarkerKeys(sp);
-			}
 		}
-		return markerKeys;
+		return new ArrayList(markerKeys);
 	}
 
 }

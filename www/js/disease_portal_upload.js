@@ -47,7 +47,8 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
         
         // also add the alertBox dialog
         var alertDiv = "<div class=\"hide\" id=\""+_self.alertBoxId+"\" style=\"position:relative;\">";
-        	alertDiv += "<div style=\"position:absolute;top: -200px;left: 200px;background-color: #ffeac3; border: 1px solid black; border-radius:4px; text-align: center;padding: 20px;\">";
+        	alertDiv += "<div style=\"position:absolute;top: -200px;left: 200px;background-color: #ffeac3; border: 1px solid black; "+
+        			"border-radius:4px; text-align: center;padding: 20px;max-height:400px;max-width:800px;overflow:auto;\">";
 	            alertDiv += "<div id=\""+_self.alertBoxContentId+"\"></div>";
 	            alertDiv += "<br><button id=\""+_self.alertBoxCloseId+"\" style=\"padding:4px;cursor:pointer;\">OK</button>";
             alertDiv += "</div>";
@@ -80,27 +81,47 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
     	iframeJq.contents().find("#"+_self.hiddenFieldInputId).val("locationsFile");
     	
     	iframeJq.contents().find("#"+_self.hiddenFormId).submit();
+
+    	if(!files && !filename) return;
     	
     	_self.disableForm();
-    	_self.popAlert("<img src=\"http://www.informatics.jax.org/assets/images/loading.gif\" height=\"24\" width=\"24\"> Processing file. Please wait.",true);
-    	var interval_id = setInterval(function(){
+    	_self.popWaiting("Processing file and caching data matches. Please wait.");
+    	_self.interval_id = setInterval(function(){
     		var iframeJq = $("#"+_self.iframeId);
     		var success = iframeJq.contents().find("#success").text();
     		var error = iframeJq.contents().find("#error").text();
     		if(success || error)
     		{
     			//_self.enableForm();
-    			clearInterval(interval_id);
+    			clearInterval(_self.interval_id);
     			if(success)
     			{
     				_self.popAlert(success);
     			}
     			else
     			{
+    				// handle spefic errors from uploadFile service
     				_self.popAlert("ERROR:"+error);
     				// reset the locations file fields
     				_self.resetLocationsFields();
     			}
+    		}
+    		// handle more generic sever exceptions
+    		var bodyText = iframeJq.contents().find("body").text();
+    		if(bodyText.indexOf("Exception")>0)
+    		{
+    			clearInterval(_self.interval_id);
+    			
+    			if(bodyText.indexOf("MaxUploadSizeExceededException")>0)
+    			{
+    				_self.popAlert("ERROR: Max file upload limit of 10MB exceeded.");
+    			}
+    			else
+    			{
+    				_self.popAlert(iframeJq.contents().find("body").html());
+    			}
+    			// reset the locations file fields
+				_self.resetLocationsFields();
     		}
     	},_self.uploadPollInterval);
     }
@@ -129,6 +150,10 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
     	else $("#"+_self.alertBoxCloseId).show();
     	$("#"+_self.alertBoxContentId).html(msg);
     	$("#"+_self.alertBoxId).show();
+    }
+    _self.popWaiting = function(msg)
+    {
+    	_self.popAlert("<img src=\"http://www.informatics.jax.org/assets/images/loading.gif\" height=\"24\" width=\"24\"> "+msg,true);
     }
 }
 
