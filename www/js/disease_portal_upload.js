@@ -82,7 +82,7 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
     	
     	iframeJq.contents().find("#"+_self.hiddenFormId).submit();
 
-    	if(!files && !filename) return;
+    	if((!files || files.length<1) && !filename) return;
     	
     	_self.disableForm();
     	_self.popWaiting("Processing file and caching data matches. Please wait.");
@@ -157,11 +157,14 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
     }
 }
 
-var resetLocationsFields;
+var resetLocationsFileFields;
 var HDP_FUW;
 $(function(){
 	HDP_FUW = new HDPFileUploadWidget("diseasePortalQueryForm",fewiurl+"diseasePortal/uploadFile");
-	resetLocationsFields=HDP_FUW.resetLocationsFields;
+	resetLocationsFileFields=function(){
+		HDP_FUW.resetLocationsFields();
+		HDP_FUW.setLocationsFileSession();
+	}
 	
 	$("#locationsFileInput").change(HDP_FUW.setLocationsFileSession);
 });

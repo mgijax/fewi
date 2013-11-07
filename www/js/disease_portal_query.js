@@ -70,9 +70,9 @@ var resetQF = function (e) {
 	
 	if(fromButtonClick)
 	{
-		if (typeof resetLocationsFields == 'function')
+		if (typeof resetLocationsFileFields == 'function')
 		{
-			resetLocationsFields();
+			resetLocationsFileFields();
 		}
 	}
 	

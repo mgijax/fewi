@@ -166,12 +166,6 @@ public class DiseasePortalController
 		logger.debug("file type: " + type);
 		logger.debug("filename: " + file.getOriginalFilename());
 		
-		if(!notEmpty(file.getOriginalFilename()))
-		{
-	        mav.addObject("success","file upload reset");
-			return mav;
-		}
-		
 		if(DiseasePortalQueryForm.ACCEPTABLE_FILE_VARS.contains(field))
 		{
 	        try {
@@ -231,6 +225,14 @@ public class DiseasePortalController
 		}   	
 		
         logger.debug("-> diseasePortal -> uploadFile -> POST finished");    
+        
+		
+		if(!notEmpty(file.getOriginalFilename()))
+		{
+	        mav.addObject("success","file upload reset");
+			return mav;
+		}
+		
         mav.addObject("success","file successfuly processed");
 		return mav;
     }
