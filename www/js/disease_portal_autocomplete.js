@@ -39,63 +39,64 @@ function extractLast( term ) {
 	return split( term ).pop();
 }
 
-//var fewiurl = "http://cardolan.informatics.jax.org/";
-var phenotypesACUrl = fewiurl+"autocomplete/diseasePortal/phenotypes?query=";
-var disableColor = "#CCC";
-$.support.cors = true;
-
-// this section resets how tabbing works, so that it allows multiple autocomplete selections
-// NOTE: the ID of the phenotypes search box must be "phenotypes"
-var phenotypesAC = $( "#phenotypes" ).bind( "keydown", function( event ) {
-	if ( event.keyCode === $.ui.keyCode.TAB &&
-			$( this ).data( "ui-autocomplete" ).menu.active ) {
-		event.preventDefault();
-	}
-})
-// this section set the jquery UI autocomplete feature
-.autocomplete({
-source: function( request, response ) {
-	$.ajax({
-		url: phenotypesACUrl+extractLast( request.term ),
-		dataType: "json",
-		success: function( data ) {
-			response($.map(data["summaryRows"], function( item ) {
-				// this function handles the json response.
-				// we redefine the data format we will use in the render functions
-				return {label: item.termId, formattedTerm: item.formattedTerm};
-			}));
+$(function(){
+	//var fewiurl = "http://cardolan.informatics.jax.org/";
+	var phenotypesACUrl = fewiurl+"autocomplete/diseasePortal/phenotypes?query=";
+	var disableColor = "#CCC";
+	$.support.cors = true;
+	
+	// this section resets how tabbing works, so that it allows multiple autocomplete selections
+	// NOTE: the ID of the phenotypes search box must be "phenotypes"
+	var phenotypesAC = $( "#phenotypes" ).bind( "keydown", function( event ) {
+		if ( event.keyCode === $.ui.keyCode.TAB &&
+				$( this ).data( "ui-autocomplete" ).menu.active ) {
+			event.preventDefault();
 		}
-	});
-},
-focus: function() {
-	// prevent value inserted on focus
-	return false;
-},
-minLength: 2, // number of characters to trigger autocomplete
-select: function( event, ui ) {
-	// the select function is called when user selects an item
-	var terms = split( this.value );
-	// remove the current input
-	terms.pop();
-	// add the selected item
-	terms.push( ui.item.value );
-	// add placeholder to get the comma-and-space at the end
-	terms.push( "" );
-	this.value = terms.join( ", " );
-	return false;
-}
-}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-	// the render item function is how the item displays in the autocomplete
-	var value = item.formattedTerm;
-	return $('<li></li>')
-		.data("item.autocomplete",item)
-		.append("<a>" + value + "</a>")
-		.appendTo(ul);
-	// adding the item this way makes it disabled
-//	return $('<li class="ui-menu-item disabled" style="color:#CCC;"></li>')
-//		.data("item.autocomplete", item)
-//		.append('<span>'+value+'</span>')
-//		.appendTo(ul);
-};
-
+	})
+	// this section set the jquery UI autocomplete feature
+	.autocomplete({
+	source: function( request, response ) {
+		$.ajax({
+			url: phenotypesACUrl+extractLast( request.term ),
+			dataType: "json",
+			success: function( data ) {
+				response($.map(data["summaryRows"], function( item ) {
+					// this function handles the json response.
+					// we redefine the data format we will use in the render functions
+					return {label: item.termId, formattedTerm: item.formattedTerm};
+				}));
+			}
+		});
+	},
+	focus: function() {
+		// prevent value inserted on focus
+		return false;
+	},
+	minLength: 2, // number of characters to trigger autocomplete
+	select: function( event, ui ) {
+		// the select function is called when user selects an item
+		var terms = split( this.value );
+		// remove the current input
+		terms.pop();
+		// add the selected item
+		terms.push( ui.item.value );
+		// add placeholder to get the comma-and-space at the end
+		terms.push( "" );
+		this.value = terms.join( ", " );
+		return false;
+	}
+	}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+		// the render item function is how the item displays in the autocomplete
+		var value = item.formattedTerm;
+		return $('<li></li>')
+			.data("item.autocomplete",item)
+			.append("<a>" + value + "</a>")
+			.appendTo(ul);
+		// adding the item this way makes it disabled
+	//	return $('<li class="ui-menu-item disabled" style="color:#CCC;"></li>')
+	//		.data("item.autocomplete", item)
+	//		.append('<span>'+value+'</span>')
+	//		.appendTo(ul);
+	};
+});
 
