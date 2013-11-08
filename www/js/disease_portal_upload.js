@@ -4,15 +4,14 @@
 *
 *   @author kstone
 */
-function HDPFileUploadWidget(originalFormId,uploadActionUrl)
+function HDPFileUploadWidget(originalFormId)
 {
     this.formId = originalFormId;
-    this.action = uploadActionUrl;
     
     // CONSTANTS
     this.originalFileInputId = "locationsFileInput";
     this.originalFileNameInputId = "locationsFileName";
-    this.iframeId = "hiddenFileForm_IF";
+    this.iframeId = "hiddenfileform_if";
     this.iframeContentId = this.iframeId + "_content";
     this.hiddenFormId = "hiddenFileForm";
     this.hiddenFileInputId = "hiddenFile";
@@ -32,16 +31,7 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
         // set up any hidden elements we need for form submitals
         var hiddenDiv = "<div class=\"hide\">";
             // add the iframe we will use for form submital
-            hiddenDiv += "<iframe id=\""+_self.iframeId+"\" src=\"about:blank\"></iframe>"
-            hiddenDiv += "<div id=\""+_self.iframeContentId+"\">";
-                hiddenDiv += "<form id=\""+_self.hiddenFormId+"\" method=\"POST\" enctype=\"multipart/form-data\" "+
-                    "action=\""+_self.action+"\">";
-                    hiddenDiv += "<input id=\""+_self.hiddenFileInputId+"\" type=\"file\" name=\"file\" value=\"\">";
-                    hiddenDiv += "<input id=\""+_self.hiddenFieldInputId+"\" type=\"hidden\" name=\"field\" value=\"\">";
-                    hiddenDiv += "<input id=\""+_self.hiddenTypeInputId+"\" type=\"hidden\" name=\"type\" value=\"\">";
-                hiddenDiv += "</form>";
-            //add the hidden form
-            hiddenDiv += "</div>";
+            hiddenDiv += "<iframe id=\""+_self.iframeId+"\" name=\""+_self.iframeId+"\" src=\"about:blank\"></iframe>";
         hiddenDiv += "</div>";
         qFormParent.append(hiddenDiv);
         
@@ -67,20 +57,12 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
     {
     	var files = null;
     	if(this.files) files = this.files;
-    	var filename = $("#"+_self.originalFileInputId).val();
+
+    	var originalFileInputJq = $("#"+_self.originalFileInputId);
+    	var filename = originalFileInputJq.val();
     	$("#"+_self.originalFileNameInputId).val(filename);
     	
-    	// copy the hidden form contents into the iframe
-    	var formHtml = $("#"+_self.iframeContentId).html();
-    	$('#'+_self.iframeId).contents().find('html').html(formHtml);
-    	
-    	// copy the selected file to the hidden file form
-    	var iframeJq = $("#"+_self.iframeId);
-    	iframeJq.contents().find("#"+_self.hiddenFileInputId)[0].files = files;
-    	//$("#hiddenFile").val(filename);
-    	iframeJq.contents().find("#"+_self.hiddenFieldInputId).val("locationsFile");
-    	
-    	iframeJq.contents().find("#"+_self.hiddenFormId).submit();
+    	$("#"+_self.hiddenFormId).submit();
 
     	if((!files || files.length<1) && !filename) return;
     	
@@ -139,8 +121,8 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
     
     _self.resetLocationsFields = function()
     {
-    	$("#locationsFileInput").val("");
-		$("#locationsFileInput")[0].files=null;
+		var fileInput = $("#locationsFileInput");
+		fileInput.replaceWith( fileInput = fileInput.clone( true ) );
 		$("#locationsFileName").val("");
     }
     
@@ -158,9 +140,16 @@ function HDPFileUploadWidget(originalFormId,uploadActionUrl)
 }
 
 var resetLocationsFileFields;
+var repositionUploadWidgets = function()
+{
+	$("#locationsFileDiv").position({of:$("#locationsFileHome"),my:"right"});
+}
 var HDP_FUW;
 $(function(){
-	HDP_FUW = new HDPFileUploadWidget("diseasePortalQueryForm",fewiurl+"diseasePortal/uploadFile");
+	// position the upload inside the proper div
+	repositionUploadWidgets();
+	
+	HDP_FUW = new HDPFileUploadWidget("diseasePortalQueryForm");
 	resetLocationsFileFields=function(){
 		HDP_FUW.resetLocationsFields();
 		HDP_FUW.setLocationsFileSession();

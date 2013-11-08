@@ -119,10 +119,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	          <div><b>in</b></div> <div style="width:6em;"><form:radiobuttons class="organism" path="organism" items="${diseasePortalQueryForm.organismOptions}" /></div>
 	        </div>
 	        <br>
-	       	  <div style="margin-left: 20px; text-align:left;" id="locationsFileDiv">
-	        	Or Upload a VCF File: <input id="locationsFileInput" type="file" name="locationsFile">
-	        	<input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
-	          </div>
+	       	  <div style="height:50px;width:0px;" id="locationsFileHome"></div>
 	      </div>			
 	    </td>
 	  </tr>	
@@ -136,7 +133,17 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	 </table>	
 	 <input type="hidden" name="fGene" id="fGene" />
 	 <input type="hidden" name="fHeader" id="fHeader" />
+     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
 	</form:form>
+	<!-- This will be positioned inside of locationsFileHome. We need it out here, because you can't define a form inside of another. -->
+	<div id="locationsFileDiv" style="position: relative; top: -69px; left: 142px;">
+		<form id="hiddenFileForm" name="hiddenFileForm" target="hiddenfileform_if" action="${configBean.FEWI_URL}diseasePortal/uploadFile" 
+			enctype="multipart/form-data" method="POST">
+       		Or Upload a VCF File: <input id="locationsFileInput" type="file" name="file">
+       		<input type="hidden" name="field" value="locationsFile">
+       		<input type="hidden" name="type" value="vcf">
+       	</form>
+	</div>
 </div>
 </div>
 </div>

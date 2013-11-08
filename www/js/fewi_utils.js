@@ -404,6 +404,7 @@ var MGIQFAnimator = function(formId,qwrapId,toggleId)
 		 	YAHOO.util.Dom.setStyle(_self.qwrapId, 'height', attributes["height"]["to"]+'px');
 		 	animComplete();
 		 }
+		 if(typeof repositionUploadWidgets == 'function') repositionUploadWidgets();
 	}
 
 	//Attache the animation handler to the toggleQF div
