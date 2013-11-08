@@ -15,7 +15,7 @@ var QFHeight = 100; // height of the qf during animation (should be close to the
 //Instead of submitting the form, do an AJAX request
 var interceptSubmit = function(e) 
 {
-	YAHOO.util.Event.preventDefault(e);	
+	e.preventDefault();
 	
 	if (!runValidation()){
 		// Do not allow any content to overflow the outer
@@ -42,7 +42,7 @@ var interceptSubmit = function(e)
 			hdpDataTable.setAttributes({ width: "100%" }, true);
 	}
 };
-YAHOO.util.Event.addListener(qfId, "submit", interceptSubmit);
+$("#"+qfId).on("submit",interceptSubmit);
 
 
 //----- functions for resetting the queryform
@@ -53,7 +53,7 @@ var resetQF = function (e) {
 	var fromButtonClick = false;
 	if (e)
 	{
-		YAHOO.util.Event.preventDefault(e); 
+		e.preventDefault(); 
 		fromButtonClick = true;
 	}
 	
@@ -80,7 +80,7 @@ var resetQF = function (e) {
 	clearValidation();
 };
 
-YAHOO.util.Event.addListener(qfId, "reset", resetQF);
+$("#"+qfId).on("reset",resetQF);
 
 var runValidation  = function()
 {

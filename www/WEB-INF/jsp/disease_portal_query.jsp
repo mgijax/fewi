@@ -101,8 +101,8 @@ ${templateBean.templateBodyStartHdpHtml}
 
 
 <!-- iframe for history manager's use -->
-<iframe id="yui-history-iframe" src="/fewi/blank.html"></iframe>
-<input id="yui-history-field" type="hidden">
+<iframe id="yui-history-iframe" name="yui-history-iframe" src="/fewi/blank.html"></iframe>
+<input id="yui-history-field" name="yui-history-field" type="hidden">
 
 
 <!-- header bar -->

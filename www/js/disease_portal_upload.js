@@ -58,6 +58,9 @@ function HDPFileUploadWidget(originalFormId)
     	var files = null;
     	if(this.files) files = this.files;
 
+    	// reset the iframe content
+    	$("#"+_self.iframeId).contents().find("html").html("");
+    	
     	var originalFileInputJq = $("#"+_self.originalFileInputId);
     	var filename = originalFileInputJq.val();
     	$("#"+_self.originalFileNameInputId).val(filename);
