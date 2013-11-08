@@ -20,8 +20,7 @@ var interceptSubmit = function(e)
 	if (!runValidation()){
 		// Do not allow any content to overflow the outer
 		// div when it is hiding
-		var outer = YAHOO.util.Dom.get('outer');
-		YAHOO.util.Dom.setStyle(outer, 'overflow', 'hidden');
+		$("#outer").css("overflow","hidden");
 
 		if(_GF) _GF.init();
 		
