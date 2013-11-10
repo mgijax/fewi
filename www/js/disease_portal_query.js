@@ -52,7 +52,7 @@ var resetQF = function (e) {
 	var fromButtonClick = false;
 	if (e)
 	{
-		e.preventDefault(); 
+		if(typeof e.preventDefault == 'function') e.preventDefault(); 
 		fromButtonClick = true;
 	}
 	
@@ -77,6 +77,7 @@ var resetQF = function (e) {
 	
 	// clear the validation errors
 	clearValidation();
+	return false;
 };
 
 $("#"+qfId).on("reset",resetQF);

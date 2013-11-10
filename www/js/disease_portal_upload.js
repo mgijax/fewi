@@ -155,7 +155,13 @@ $(function(){
 	HDP_FUW = new HDPFileUploadWidget("diseasePortalQueryForm");
 	resetLocationsFileFields=function(){
 		HDP_FUW.resetLocationsFields();
-		HDP_FUW.setLocationsFileSession();
+		/*
+		 *  Setting a timeout here shouldn't make a damn difference, 
+		 *  	but there is a weird race condition with YUI's history manager
+		 *  	when called inside the reset button's event handler.
+		 *  I'm just glad that this at least solves it.
+		 */
+		setTimeout(HDP_FUW.setLocationsFileSession,200); 
 	}
 	
 	$("#locationsFileInput").change(HDP_FUW.setLocationsFileSession);
