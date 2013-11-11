@@ -62,7 +62,10 @@ function HDPFileUploadWidget(originalFormId)
     	$("#"+_self.iframeId).contents().find("html").html("");
     	
     	var originalFileInputJq = $("#"+_self.originalFileInputId);
+    	// get the filename
     	var filename = originalFileInputJq.val();
+    	filename = _self.resolveFilename(filename);
+    	// set file name in hidden input
     	$("#"+_self.originalFileNameInputId).val(filename);
     	
     	$("#"+_self.hiddenFormId).submit();
@@ -139,6 +142,18 @@ function HDPFileUploadWidget(originalFormId)
     _self.popWaiting = function(msg)
     {
     	_self.popAlert("<img src=\"http://www.informatics.jax.org/assets/images/loading.gif\" height=\"24\" width=\"24\"> "+msg,true);
+    }
+    _self.resolveFilename = function(filename)
+    {
+    	// strips any directory info off the filename
+    	if(filename)
+    	{
+    		var slashIdx = filename.lastIndexOf("/");
+    		if(slashIdx>=0) filename = filename.substr(slashIdx+1);
+    		var backSlashIdx = filename.lastIndexOf("\\");
+    		if(backSlashIdx>=0) filename = filename.substr(backSlashIdx+1);
+    	}
+    	return filename;
     }
 }
 

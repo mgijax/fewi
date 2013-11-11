@@ -23,7 +23,7 @@ public class DiseasePortalQueryForm
     private String gridClusterKey;
     private String termHeader;
     private String termId;
-    private Boolean useLocationsFile = false;
+    private String locationsFileName;
     
     // Filter queries
     private String fGene;
@@ -37,6 +37,7 @@ public class DiseasePortalQueryForm
     
     // constants for file processing
     public static final String LOCATIONS_FILE_VAR = "locationsFile";
+    public static final String LOCATIONS_FILE_VAR_NAME = "locationsFileName";
     public static final String LOCATIONS_FILE_VAR_MOUSE_KEYS = "locationsFileMouseKeys";
     public static final String LOCATIONS_FILE_VAR_HUMAN_KEYS = "locationsFileHumanKeys";
 
@@ -113,12 +114,12 @@ public class DiseasePortalQueryForm
 		this.organismOptions = organismOptions;
 	}
 	
-	public Boolean getUseLocationsFile() {
-		return useLocationsFile;
+	public String getLocationsFileName() {
+		return locationsFileName;
 	}
 
-	public void setUseLocationsFile(Boolean useLocationsFile) {
-		this.useLocationsFile = useLocationsFile;
+	public void setLocationsFileName(String locationsFileName) {
+		this.locationsFileName = locationsFileName;
 	}
 
 	public String getFGene() {

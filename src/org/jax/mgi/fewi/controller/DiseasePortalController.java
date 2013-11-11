@@ -164,71 +164,81 @@ public class DiseasePortalController
 		}
 		logger.debug("file field: " + field);		
 		logger.debug("file type: " + type);
-		logger.debug("filename: " + file.getOriginalFilename());
+		String filename = file.getOriginalFilename();
+		logger.debug("filename: " + filename);
 		
 		if(DiseasePortalQueryForm.ACCEPTABLE_FILE_VARS.contains(field))
 		{
 			// clear the session variable for this field
 			session.setAttribute(field,null);
-	        try {
-				String dataString="";
-	        	if(DiseasePortalQueryForm.VCF_FILE_TYPE.equalsIgnoreCase(type))
-	        	{
-	        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
-					dataString = FileProcessor.processVCFCoordinates(file);
-	        		logger.debug("finished processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
-	        		
-	        		if(!notEmpty(dataString))
-	        		{
-	        			logger.debug("no coordinates found in VCF file");
-	        			mav.addObject("error","No coordinates found in VCF file. Ensure file is in the correct format.");
-	    				return mav;
-	        		}
-	        		
-	        		// translate the coordinates into matching marker keys
-	        		if(notEmpty(dataString) && DiseasePortalQueryForm.LOCATIONS_FILE_VAR.equals(field))
-	        		{
-		        		logger.debug("converting file locations to mouse marker keys");
-		        		List<String> locationQueryTokens = QueryParser.tokeniseOnWhitespaceAndComma(dataString);
-		        		List<String> mouseMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(locationQueryTokens,DiseasePortalQueryForm.MOUSE);
-		        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_MOUSE_KEYS,mouseMarkerKeysFromLocationsFile);
-		        		logger.debug("finished converting file locations to mouse marker keys");
-		        		logger.debug("found "+mouseMarkerKeysFromLocationsFile.size()+" mouse marker keys");
+
+			// set the filename
+			if(DiseasePortalQueryForm.LOCATIONS_FILE_VAR.equals(field))
+			{
+				session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME,filename);
+			}
+			if(notEmpty(filename))
+			{
+		        try {
+					String dataString="";
+		        	if(DiseasePortalQueryForm.VCF_FILE_TYPE.equalsIgnoreCase(type))
+		        	{
+		        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
+						dataString = FileProcessor.processVCFCoordinates(file);
+		        		logger.debug("finished processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
 		        		
-		        		logger.debug("converting file locations to human marker keys");
-		        		List<String> humanMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(locationQueryTokens,DiseasePortalQueryForm.HUMAN);
-		        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS,humanMarkerKeysFromLocationsFile);
-		        		logger.debug("finished converting file locations to human marker keys");
-		        		logger.debug("found "+humanMarkerKeysFromLocationsFile.size()+" human marker keys");
-		        		
-		        		if((mouseMarkerKeysFromLocationsFile==null || mouseMarkerKeysFromLocationsFile.size()==0)
-		        				&& (humanMarkerKeysFromLocationsFile==null || humanMarkerKeysFromLocationsFile.size()==0))
+		        		if(!notEmpty(dataString))
 		        		{
-		        			logger.debug("no matching genes found in VCF file");
-		        			mav.addObject("error","None of the provided coordinates matched a gene region in either human or mouse.");
+		        			logger.debug("no coordinates found in VCF file");
+		        			mav.addObject("error","No coordinates found in VCF file. Ensure file is in the correct format.");
 		    				return mav;
 		        		}
-		        		dataString = "true";
-	        		}
-	        	}
-
-	        	// save the data in the session;
-	        	session.setAttribute(field,dataString);
-			} catch (IOException e) {
-				logger.error("error reading HDP upload file",e);
-				mav.addObject("error","file reading IOException");
-				return mav;
-			} catch (Exception e) {
-				logger.error("error processing HDP upload file",e);
-				mav.addObject("error","Server threw Exception, "+e.getMessage());
-				return mav;
+		        		
+		        		// translate the coordinates into matching marker keys
+		        		if(notEmpty(dataString) && DiseasePortalQueryForm.LOCATIONS_FILE_VAR.equals(field))
+		        		{
+			        		logger.debug("converting file locations to mouse marker keys");
+			        		List<String> locationQueryTokens = QueryParser.tokeniseOnWhitespaceAndComma(dataString);
+			        		List<String> mouseMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(locationQueryTokens,DiseasePortalQueryForm.MOUSE);
+			        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_MOUSE_KEYS,mouseMarkerKeysFromLocationsFile);
+			        		logger.debug("finished converting file locations to mouse marker keys");
+			        		logger.debug("found "+mouseMarkerKeysFromLocationsFile.size()+" mouse marker keys");
+			        		
+			        		logger.debug("converting file locations to human marker keys");
+			        		List<String> humanMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(locationQueryTokens,DiseasePortalQueryForm.HUMAN);
+			        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS,humanMarkerKeysFromLocationsFile);
+			        		logger.debug("finished converting file locations to human marker keys");
+			        		logger.debug("found "+humanMarkerKeysFromLocationsFile.size()+" human marker keys");
+			        		
+			        		if((mouseMarkerKeysFromLocationsFile==null || mouseMarkerKeysFromLocationsFile.size()==0)
+			        				&& (humanMarkerKeysFromLocationsFile==null || humanMarkerKeysFromLocationsFile.size()==0))
+			        		{
+			        			logger.debug("no matching genes found in VCF file");
+			        			mav.addObject("error","None of the provided coordinates matched a gene region in either human or mouse.");
+			    				return mav;
+			        		}
+			        		dataString = "true";
+		        		}
+		        	}
+	
+		        	// save the data in the session;
+		        	session.setAttribute(field,dataString);
+				} catch (IOException e) {
+					logger.error("error reading HDP upload file",e);
+					mav.addObject("error","file reading IOException");
+					return mav;
+				} catch (Exception e) {
+					logger.error("error processing HDP upload file",e);
+					mav.addObject("error","Server threw Exception, "+e.getMessage());
+					return mav;
+				}
 			}
 		}   	
 		
         logger.debug("-> diseasePortal -> uploadFile -> POST finished");    
         
 		
-		if(!notEmpty(file.getOriginalFilename()))
+		if(!notEmpty(filename))
 		{
 			logger.debug("resetting file upload");
 	        mav.addObject("success","file upload reset");
@@ -1138,12 +1148,14 @@ public class DiseasePortalController
 		String locations = query.getLocations();
 		
 		// add any file data that may be in the session
+		String locationsFileName = query.getLocationsFileName();
+		boolean useLocationsFile = locationsFileName!=null && locationsFileName.equals((String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 		String locationsFileSet = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
 		List<String> markerKeysFromLocationsFile= DiseasePortalQueryForm.HUMAN.equals(query.getOrganism())
 				? (List<String>) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS)
 						: (List<String>) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_MOUSE_KEYS);
 		
-		boolean hasMarkerKeysFromLocationsFile = notEmpty(locationsFileSet) && markerKeysFromLocationsFile!=null && markerKeysFromLocationsFile.size()>0;
+		boolean hasMarkerKeysFromLocationsFile = useLocationsFile && notEmpty(locationsFileSet) && markerKeysFromLocationsFile!=null && markerKeysFromLocationsFile.size()>0;
 		
 		if(notEmpty(locations) || hasMarkerKeysFromLocationsFile)
 		{
