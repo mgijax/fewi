@@ -184,6 +184,7 @@ public class DiseasePortalController
 		        	if(DiseasePortalQueryForm.VCF_FILE_TYPE.equalsIgnoreCase(type))
 		        	{
 		        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
+
 						dataString = FileProcessor.processVCFCoordinates(file);
 		        		logger.debug("finished processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
 		        		

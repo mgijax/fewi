@@ -26,6 +26,7 @@ public class FileProcessor
 	 private static char VCF_COL_DELIM = '\t';
 	 private static int VCF_CHROMOSOME_COL = 0;
 	 private static int VCF_COORDINATE_COL = 1;
+	 private static int VCF_FILTER_COL = 6;
 	 private static int VCF_ROW_LIMIT = 100000;
 	 
 	 /*
@@ -40,6 +41,7 @@ public class FileProcessor
 		 StringBuilder sb = new StringBuilder("");
 		 String line;
 		 int count=0;
+		 int coordCount=0;
 		 while ((line = bufferedReader.readLine()) != null)
 		 {
 			 if(count++ > VCF_ROW_LIMIT) break;
@@ -47,11 +49,22 @@ public class FileProcessor
 			 // ignore comment lines
 			 if(line.length()<1) continue;
 			 if(line.charAt(0) == VCF_COMMENT_CHAR) continue;
-			 
-			 // we will work backwards from the highest column number to limit how much of the file we need to read.
+
 			 int coordColStringIndex = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_COORDINATE_COL);
 			 if(coordColStringIndex<2) continue; // this must be atleast 2 to have any values
 			 
+			 // check the filter column if it exists
+			 int filterColStart = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_FILTER_COL-1);
+			 if(filterColStart>0)
+			 {
+				 int filterColStop = line.indexOf(VCF_COL_DELIM,filterColStart+1);
+				 
+				 String filter = line.substring(filterColStart+1,filterColStop);
+				 //logger.debug("filter="+filter);
+				 if(!"pass".equalsIgnoreCase(filter)) { continue; } // skip this row for not having a passing filter
+			 }
+			 
+			 // look at the first two columns for the chromosome and coordinate
 			 String chromCoordSubStr = line.substring(0,coordColStringIndex);
 			 int chromColStringIndex =  chromCoordSubStr.indexOf(VCF_COL_DELIM);
 			 String chromosome = chromCoordSubStr.substring(0,chromColStringIndex);
@@ -60,10 +73,12 @@ public class FileProcessor
 			 
 			 if(!"".equals(chromosome)) sb.append(chromosome).append(":");
 			 sb.append(coordinate).append(",");
+			 coordCount += 1;
 		 }
 		 bufferedReader.close();
 		 inputStream.close();
-		 
+
+		 logger.debug("found "+coordCount+" coordinates in vcf file");
 		 return sb.toString();
 	 }
 	 
