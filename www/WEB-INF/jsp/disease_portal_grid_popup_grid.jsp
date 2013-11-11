@@ -41,7 +41,7 @@
   #hdpSystemPopupTablePadder img { visibility: hidden; }
   #hdpSystemPopupTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; }
   #hdpSystemPopupTable th > div { width:20px; overflow: visible; }
-  #hdpSystemPopupTable td {border: 1px solid #AAA; padding: 4px 4px;}
+  #hdpSystemPopupTable td {border: 1px solid #DDD; padding: 4px 4px;}
   #hdpSystemPopupTable .vb { vertical-align: bottom; border-left: none; border-right: none;}
   #hdpSystemPopupTable .vb .partialRight
   { 
@@ -68,7 +68,7 @@
   	background-color: #FFFFCC;
   	cursor: pointer;
   }
-  .row1 { background-color: #F1F1F1; }
+  .row1 { border-top: 2px solid #DDD; }
 
   #hdpSystemPopupTable .humanHeaderRow { background-color: #DFEFFF; }
   #hdpSystemPopupTable .cc
