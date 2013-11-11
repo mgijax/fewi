@@ -67,6 +67,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	width:300px;
 	text-align:left;
 }
+#alertBoxPosition
+{
+	top: -200px;left: 200px;
+}
 <![endif]-->
 
 </style>

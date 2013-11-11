@@ -37,7 +37,7 @@ function HDPFileUploadWidget(originalFormId)
         
         // also add the alertBox dialog
         var alertDiv = "<div class=\"hide\" id=\""+_self.alertBoxId+"\" style=\"position:relative;\">";
-        	alertDiv += "<div style=\"position:absolute;top: -200px;left: 200px;background-color: #ffeac3; border: 1px solid black; "+
+        	alertDiv += "<div id=\"alertBoxPosition\" style=\"position:absolute;background-color: #ffeac3; border: 1px solid black; "+
         			"border-radius:4px; text-align: center;padding: 20px;max-height:400px;max-width:800px;overflow:auto;\">";
 	            alertDiv += "<div id=\""+_self.alertBoxContentId+"\"></div>";
 	            alertDiv += "<br><button id=\""+_self.alertBoxCloseId+"\" style=\"padding:4px;cursor:pointer;\">OK</button>";
