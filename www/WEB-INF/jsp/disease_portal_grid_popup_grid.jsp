@@ -70,7 +70,7 @@
   }
   .row1 { border-top: 2px solid #DDD; }
 
-  #hdpSystemPopupTable .humanHeaderRow { background-color: #DFEFFF; }
+  #hdpSystemPopupTable .humanHeaderRow { background-color: #EFEFEF; }
   #hdpSystemPopupTable .cc
   {
         color: #000;
