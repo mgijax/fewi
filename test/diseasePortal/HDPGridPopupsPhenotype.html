@@ -54,6 +54,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 185, BUG: genoclusters in popups should only be those that matched the query</li>
         <li>User story 196, Tagging of Genotypes in popups</li>
         <li>User story 195, Sort order of Genotypes in popups</li>
+        <li>User story 171, Popups: headers and styling</li>
     </ul>
 
 
@@ -74,6 +75,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto195: Genoclusters in a popup are sorted by allele state first, then alpha be (1st) allele symbol.</li>
 		<li>sto195: use "smart" alpha sorting</li>
 		<li>sto195: The sort order of states is: hom, het, hemi, conditional [chimeric: let them fall where they may]</li>	
+		<li>sto171: [none specified]</li>
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -138,6 +140,14 @@ tr.gray td {background-color:#EEEEEE;}
 		</li>
 		<li>sto195: Chimeric genotypes should be labeled as such, but are not considered specially in the sort order (per Sue)</li>
 		<li>sto195: "Extra" alleles (recombinase or transgenic reporter) should not be considered in the sort order (per Sue)</li>
+		<li>sto171: grid uses "color bins" to represent the number of annotations for a genotype cluster (aggregating all genotypes within the cluster) to a particular MP term (not including child terms)
+		<ul>
+			<li>Bin 1 = 1 annotation</li>
+			<li>Bin 2 = 2-5 annotations</li>
+			<li>Bin 3 = 6-99 annotations</li>
+			<li>Bin 4 = 100+ annotations</li>
+		</ul>
+		</li>
 	</ul>
 	
 </div>
@@ -170,6 +180,57 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>On the grid tab, click the checkmark at the intersection of Gars and normal phenotype.</li>
 				<li>Verify that the window header  text is <b>Data for GARS, Gars and normal phenotype</b> (the word "abnormalities" is NOT appended to the header text) (sto95). </li>
     		</ol>
+    		</li>
+    		
+    		<li>Bin colors correctly represent the number of annotations to a term for a genotype cluster (sto171)
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>Open the HDP query form.</li>
+                <li>Enter <b>Ldlr</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of Ldlr and homestasis/metabolism.</li>
+                <li>Verify that for the genocluster <b>Ldlr&lt;tm1Her&gt;/Ldlr&lt;tm1Her&gt;</b>, the following terms have the correct annotation count bin colors:
+                <table>
+                	<tr><th>MP term</th><th>Bin color number</th><th>(Count of annotations)</th></tr>
+                	<tr><td>homeostasis/metabolism phenotype</td><td>Bin 1</td><td>1</td></tr>
+                	<tr><td>increased cholesterol level</td><td>Bin 1</td><td>1</td></tr>
+                	<tr><td>impaired glucose tolerance</td><td>Bin 2</td><td>2</td></tr>
+                	<tr><td>abnormal circulating cholesterol level</td><td>Bin 2</td><td>3</td></tr>
+                	<tr><td>increased circulating triglyceride level</td><td>Bin 3</td><td>6</td></tr>
+                	<tr><td>increased circulating LDL cholesterol level</td><td>Bin 3</td><td>9</td></tr>
+                	<tr><td>increased circulating cholesterol level</td><td>Bin 3</td><td>11</td></tr>
+                </table>
+                </li>
+                <li>Clear the query<br/><br/></li>
+                <li>Enter <b>Ift88</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of Ift88 and liver/biliary system.</li>
+                <li>Verify that for the genocluster <b>Ift88&lt;Tg737Rpw&gt;/Ift88&lt;Tg737Rpw&gt;</b>, the following terms have the correct annotation count bin colors:
+                <table>
+                	<tr><th>MP term</th><th>Bin color number</th><th>(Count of annotations)</th></tr>
+                	<tr><td>abnormal bile duct morphology</td><td>Bin 2</td><td>5</td></tr>
+                </table>
+                </li>
+            </ol>
+    		</li>
+    		
+    		<li>Correct onMouseover behavior for the genotype cluster rows...
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>NEED TO NAIL THIS DOWN.</li>
+            </ol>
+    		</li>
+
+    		<li>Correct Popup Window Header look and text...
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>NEED TO NAIL THIS DOWN.</li>
+            </ol>
+    		</li>
+
+    		<li>Correct legend look and text...
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>NEED TO NAIL THIS DOWN.</li>
+            </ol>
     		</li>
 
 <!-- DUPLICATIVE TEST CASES FROM SOME IN THE "AUTOMATED" SECTION BELOW
