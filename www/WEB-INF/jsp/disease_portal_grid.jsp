@@ -182,12 +182,12 @@
 	<tr>
 	<th style="background-color:#DDE;">F</th>
 	<c:forEach var="mpHeader" items="${mpHeaders}" varStatus="status">
-		<th <c:if test="${status.last && not empty diseaseColumns}">class="rightDoubleBorder"</c:if>>
+		<th class="mp_${status.count} <c:if test="${status.last && not empty diseaseColumns}"> rightDoubleBorder </c:if>">
 			<input class="gridCheck" type="checkbox" filter="fHeader" value="${mpHeader}" colid="mp_${status.count}" />
 		</th>		
 	</c:forEach>
 	<c:forEach var="diseaseName" items="${diseaseNames}" varStatus="status">
-		<th class="dc"><input class="gridCheck" type="checkbox" filter="fHeader" value="${diseaseName}" colid="d_${status.count}"/></th>
+		<th class="d_${status.count} dc"><input class="gridCheck" type="checkbox" filter="fHeader" value="${diseaseName}" colid="d_${status.count}"/></th>
 	</c:forEach>
 	</tr>
 	

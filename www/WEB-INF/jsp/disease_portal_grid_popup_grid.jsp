@@ -65,7 +65,7 @@
   
   tr.genoRow:hover
   {
-  	background-color: #cde;
+  	background-color: #FFFFCC;
   	cursor: pointer;
   }
   .row1 { background-color: #F1F1F1; }
@@ -96,12 +96,6 @@
   #hdpSystemPopupTable .mpBin_2 { background-color: #879EBA; }
   #hdpSystemPopupTable .mpBin_3 { background-color: #49648B; }
   #hdpSystemPopupTable .mpBin_4 { background-color: #002255; }
-  
-  #hdpSystemPopupTable .dMBin_0 {}
-  #hdpSystemPopupTable .dMBin_1 { background-color: #C6D6E8; }
-  #hdpSystemPopupTable .dMBin_2 { background-color: #879EBA; }
-  #hdpSystemPopupTable .dMBin_3 { background-color: #49648B; }
-  #hdpSystemPopupTable .dMBin_4 { background-color: #002255; }
   
   
   #hdpSystemPopupTable .dHBin_0 {}
@@ -194,7 +188,7 @@
 	
 		<c:set var="hasHomologeneId" value="${not empty popupRow.marker.homologeneId}"/>
 		
-		<tr title="click genotype row for more phenotype details" class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
+		<tr <c:if test="${hasHomologeneId}">title="click gene for homology details"</c:if> class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
 			<c:if test="${hasHomologeneId}">onClick="window.open('${configBean.FEWI_URL}homology/${popupRow.marker.homologeneId}'); return true;"</c:if> >
 	    
 	    <td <c:if test="${hasHomologeneId}">style="color:blue;"</c:if> > 
@@ -202,11 +196,12 @@
 	    </td>
 	
 	    <c:forEach var="cell" items="${popupRow.gridCells}" varStatus="status">
-	      <td><div class="cell_outer">
-	                <c:if test="${cell.hasPopup}">
-	                    <div>${cell.displayMark}</div>
-	                </c:if>
-	      </div>
+	      <td class="cc dHBin_${cell.diHumanBin}">
+                <c:if test="${cell.hasPopup}">
+                    <div class="gridCellLink">
+						<div class="mk">${cell.diseaseMark}</div>
+					</div>
+                </c:if>
 	      </td>
 	    </c:forEach>
 	    </tr>
