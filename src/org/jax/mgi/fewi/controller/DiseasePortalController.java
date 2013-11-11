@@ -376,7 +376,7 @@ public class DiseasePortalController
     {
     	logger.debug("->gridSystemCell started");
 
-    	String gridClusterString = getGridClusterTitle(query.getGridClusterKey());
+    	String gridClusterString = getGridClusterTitleForPopup(query.getGridClusterKey());
 
     	// get the geno cluster rows
         SearchResults<HdpGenoCluster> searchResults = this.getGenoClusters(request, query,session);
@@ -434,7 +434,7 @@ public class DiseasePortalController
     {
     	logger.debug("->gridDiseaseCell started");
 
-    	String gridClusterString = getGridClusterTitle(query.getGridClusterKey());
+    	String gridClusterString = getGridClusterTitle(query.getGridClusterKey(),true);
 
     	// gather the geno cluster rows
         SearchResults<HdpGenoCluster> searchResults = this.getGenoClusters(request, query,session);
@@ -1256,7 +1256,11 @@ public class DiseasePortalController
 	// -----------------------------------------------------------------//
 	// Utility Methods for specific information
 	// -----------------------------------------------------------------//
-	private String getGridClusterTitle(String gridClusterKey)
+	private String getGridClusterTitleForPopup(String gridClusterKey)
+	{
+		return getGridClusterTitle(gridClusterKey,false);
+	}
+	private String getGridClusterTitle(String gridClusterKey,boolean includeHumanSymbols)
 	{
 		logger.debug("resolving grid cluster key("+gridClusterKey+") gene symbols");
 		String gridClusterString = "";
@@ -1270,9 +1274,12 @@ public class DiseasePortalController
 		{
 			SolrDpGridCluster gridCluster = gridClusters.getResultObjects().get(0);
 			List<String> symbols = new ArrayList<String>();
-			for(String humanSymbol : gridCluster.getHumanSymbols())
+			if(includeHumanSymbols)
 			{
-				symbols.add(humanSymbol);
+			    for(String humanSymbol : gridCluster.getHumanSymbols())
+			    {
+				    symbols.add(humanSymbol);
+			    }
 			}
 			for(SolrDpGridClusterMarker m : gridCluster.getMouseMarkers())
 			{

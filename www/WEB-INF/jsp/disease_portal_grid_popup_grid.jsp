@@ -71,6 +71,49 @@
   .row1 { background-color: #F1F1F1; }
 
   #hdpSystemPopupTable .humanHeaderRow { background-color: #DFEFFF; }
+  #hdpSystemPopupTable .cc
+  {
+        color: #000;
+        margin-right: 8px;
+        margin-top: 6px;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 0px;
+  }
+  #hdpSystemPopupTable .gridCellLink
+  {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+  }
+  #hdpSystemPopupTable .mk
+  {
+        padding-top: 6px;
+        padding-left: 6px;
+  }
+  #hdpSystemPopupTable .mpBin_0 { }
+  #hdpSystemPopupTable .mpBin_1 { background-color: #C6D6E8; }
+  #hdpSystemPopupTable .mpBin_2 { background-color: #879EBA; }
+  #hdpSystemPopupTable .mpBin_3 { background-color: #49648B; }
+  #hdpSystemPopupTable .mpBin_4 { background-color: #002255; }
+  
+  #hdpSystemPopupTable .dMBin_0 {}
+  #hdpSystemPopupTable .dMBin_1 { background-color: #C6D6E8; }
+  #hdpSystemPopupTable .dMBin_2 { background-color: #879EBA; }
+  #hdpSystemPopupTable .dMBin_3 { background-color: #49648B; }
+  #hdpSystemPopupTable .dMBin_4 { background-color: #002255; }
+  
+  
+  #hdpSystemPopupTable .dHBin_0 {}
+  #hdpSystemPopupTable .dHBin_1 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px 0px; } 
+  #hdpSystemPopupTable .dHBin_2 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -44px; }
+  #hdpSystemPopupTable .dHBin_3 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -90px; }
+  #hdpSystemPopupTable .dHBin_4 { background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px -134px; }
+  #hdpSystemPopupTable .dHBin_5 { background-color: #ffdab3; }
+  #hdpSystemPopupTable .dHBin_6 { background-color: #f7be76; }
+  #hdpSystemPopupTable .dHBin_7 { background-color: #fba039; }
+  #hdpSystemPopupTable .dHBin_8 { background-color: #ff8700; }
+
 </style>
 
 
@@ -118,7 +161,7 @@
 		ifConditional = " (conditional)";
 	}
 	%>
-	<tr class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" onClick="window.open('${configBean.FEWI_URL}diseasePortal/genoCluster/view/${popupRow.genoClusterKey}'); return true;">
+	<tr title="click row to see phenotype details" class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" onClick="window.open('${configBean.FEWI_URL}diseasePortal/genoCluster/view/${popupRow.genoClusterKey}'); return true;">
     <td style="color:blue;"> 
       <%=allComp%>
       <span style="color:black;"> 
@@ -127,12 +170,13 @@
     </td>
 
     <c:forEach var="cell" items="${popupRow.gridCells}" varStatus="status">
-      <td><div class="cell_outer">
-                <c:if test="${cell.hasPopup}">
-                    <div>${cell.displayMark}</div>
-                    <c:if test="${cell.hasBackgroundNote}"><div class="bsn">!</div></c:if>
-                </c:if>
-      </div>
+      <td class="cc mpBin_${cell.mpBin}">
+	    <c:if test="${cell.hasPopup}">
+		    <div class="gridCellLink">
+			    <div class="mk">${cell.mpMark}</div>
+		    </div>
+		<c:if test="${cell.hasBackgroundNote}"><div class="bsn">!</div></c:if>
+	    </c:if>
       </td>
     </c:forEach>
     </tr>
@@ -150,7 +194,7 @@
 	
 		<c:set var="hasHomologeneId" value="${not empty popupRow.marker.homologeneId}"/>
 		
-		<tr class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
+		<tr title="click genotype row for more phenotype details" class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
 			<c:if test="${hasHomologeneId}">onClick="window.open('${configBean.FEWI_URL}homology/${popupRow.marker.homologeneId}'); return true;"</c:if> >
 	    
 	    <td <c:if test="${hasHomologeneId}">style="color:blue;"</c:if> > 

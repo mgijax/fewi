@@ -266,6 +266,7 @@ public class HdpGridMapper {
 	 */
 	public int calculateMpBinSize(int annotCount)
 	{
+		if(annotCount<1) return 0;
 		if(annotCount<2) return 1;
 		if(annotCount<6) return 2;
 		if(annotCount<100) return 3;
