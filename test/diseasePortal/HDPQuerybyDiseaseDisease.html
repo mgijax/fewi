@@ -314,6 +314,7 @@ tr.gray td {background-color:#EEEEEE;}
     			</ol>
     			
     		<li>All diseases are returned when searching with just a stop word (sto58).
+    		<p concordion:assertTrue="true">klf 11/12/2013</p>
     		<ol>
                 <li>Query for <b concordion:set="#disease">disease</b></li>
                 <li>Verify that all 7,000 plus diseases are returned.</li>
@@ -321,9 +322,10 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Correct diseases are returned when searching with a stop word and a disease term(sto58).
+    		<p concordion:assertTrue="true">klf 11/12/2013</p>
     		<ol>
                 <li>Query for <b concordion:set="#disease">parkinson disease</b></li>
-                <li>Verify that 27 diseases are returned, all connected with parkinson.</li>
+                <li>Verify that 23 diseases are returned, all connected with parkinson.</li>
     		</ol>
     		</li>
 		</ol>
