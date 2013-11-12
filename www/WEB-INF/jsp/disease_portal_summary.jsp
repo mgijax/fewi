@@ -91,7 +91,7 @@ td.yui-dt-col-coordinate
 			                	<div style="width:100%;height:100%; background: url('${configBean.FEWI_URL}assets/images/hdp/human_cell_sprite.gif') 0px 0px;"></div></div>
 			            	<div style="display:inline-block;"> - Terms are annotated to genes in <strong style="background-color:#ffdab3; color:#000; font-size:12px;">human</strong>/<strong style="background-color: #49648B; color:#FFF; font-size:12px;">mouse</strong>. Darker colors indicate more annotations.</div>
 			        </div>
-			        <div style="margin-left:65px;"><span style=" border:1px solid; border-left-color:#FF0000; border-right-color:#FF0000; border-bottom-color:#CCC; border-top-color:#CCC;">&nbsp;&nbsp;&nbsp;</span> - Affected system contains the queried term.</div>
+			        <div style="margin-left:65px; display:none;"><span style=" border:1px solid; border-left-color:#FF0000; border-right-color:#FF0000; border-bottom-color:#CCC; border-top-color:#CCC;">&nbsp;&nbsp;&nbsp;</span> - Affected system contains the queried term.</div>
 			        <div style="display:block; margin-left:65px;"><strong>N</strong> - No abnormal phenotype observed.</div>
 		    		<div class="summary-helptext shared-helptext" style="color:#000; padding:4px 2px; font-style:normal;">
 		    			<span style="font-weight:bold;">NOTE:</span> Genes may have additional phenotypes. Query by gene or location for complete characterization.
