@@ -49,15 +49,17 @@ tr.gray td {background-color:#EEEEEE;}
     <h1>HDP: Querying by Phenotype, Disease output</h1>
     <ul>
         <li>User story 47, Query by phenotype - return diseases</li>
+        <li>User story 58, E2: Stop words for Disease/Pheno query</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>diseases displayed on disease tab</li>
-		<li>disease tab includes all diseases for all genotypes annotated to matching MP terms.</li>
-		<li>still excludes NOTs and normals</li>
+		<li>diseases displayed on disease tab(sto47)</li>
+		<li>disease tab includes all diseases for all genotypes annotated to matching MP terms.(sto47)</li>
+		<li>still excludes NOTs and normals(sto47)</li>
+		<li>Stop words get ignored and display all data when used by themselves(sto58)</li>
 	</ul>
 	<p>Logic is as follows:</p>
 	<ol>
@@ -126,6 +128,43 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Query for cardiovascular system phenotype <b concordion:set="#pheno">MP:0005385</b>.</li>
                 <li>Verify that Vitamin E, Familial Isolated Deficiency Of; VED, OMIM <b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">277460</b> is returned. (See genotype MGI:2174791.)</li>
+    		</ol>
+    		</li>
+    		<li>All genes are returned when searching with just a stop word (sto58).
+    		<ol>
+                <li>Query for <b concordion:set="#phenotype">syndrome</b></li>
+                <li>Verify that all 113,000 plus genes are returned.</li>
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">type</b></li>
+                <li>Verify that all 113,000 plus genes are returned.</li>
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">phenotype</b></li>
+                <li>Verify that all 113,000 plus genes are returned.</li>
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">abnormal</b></li>
+                <li>Verify that all 113,000 plus genes are returned.</li>
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">system</b></li>
+                <li>Verify that all 113,000 plus genes are returned.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Correct phenotypes are returned when searching with a stop word and a phenotype term(sto58).
+    		<ol>
+                <li>Query for <b concordion:set="#phenotype">heterotaxia syndrome</b></li>
+                <li>Verify that 81 genes are returned, all connected with heterotaxia syndrome.</li>
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">abnormal type I vestibular cell</b></li>
+                <li>Verify that 4 genes are returned, all connected with abnormal type I vestibular cell.</li>
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">other phenotype</b></li>
+                <li>Verify that over 4,000 genes are returned, all connected with other phenotype?.</li> 
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">abnormal SA</b></li>
+                <li>Verify that 35 genes are returned, all connected with abnormal SA.</li>  
+                <li>Reset the query form</li>
+                <li>Query for <b concordion:set="#phenotype">abnormal digestive ssystem development</b></li>
+                <li>Verify that 67 genes are returned, all connected with abnormal digestive ssystem development.</li>             
     		</ol>
     		</li>
 

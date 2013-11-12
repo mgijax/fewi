@@ -50,15 +50,17 @@ tr.gray td {background-color:#EEEEEE;}
     <h1>HDP: Querying by Disease, Disease output</h1>
     <ul>
         <li>User story 17, E2: Query by disease, debugging display of diseases</li>
+        <li>User story 58, E2: Stop words for Disease/Pheno query</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>user can enter OMIM ids, terms, synonyms</li>
-		<li>diseases tab shows matching diseases (debugging output)</li>
-		<li>genes displayed on gene summary tab</li>
+		<li>user can enter OMIM ids, terms, synonyms(sto17)</li>
+		<li>diseases tab shows matching diseases (debugging output)(sto17)</li>
+		<li>genes displayed on gene summary tab(sto17)</li>
+		<li>Stop words get ignored and display all data when used by themselves(sto58)</li>
 	</ul>
 </div>
 
@@ -310,6 +312,20 @@ tr.gray td {background-color:#EEEEEE;}
     			<li>Query for OMIM gene records: <b concordion:set="#disease">+141900 +141800 +142830 #300194 #300100 #300676 #300699 #301835 %300605 %300660 %300614 %300619 %300612 300602 301800 301840 303650 309120</b></li>
     			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">18</b> disease terms are returned.</li>
     			</ol>
+    			
+    		<li>All diseases are returned when searching with just a stop word (sto58).
+    		<ol>
+                <li>Query for <b concordion:set="#disease">disease</b></li>
+                <li>Verify that all 7,000 plus diseases are returned.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Correct diseases are returned when searching with a stop word and a disease term(sto58).
+    		<ol>
+                <li>Query for <b concordion:set="#disease">parkinson disease</b></li>
+                <li>Verify that 27 diseases are returned, all connected with parkinson.</li>
+    		</ol>
+    		</li>
 		</ol>
 	</div>
 </div>
