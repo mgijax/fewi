@@ -290,30 +290,25 @@ tr.gray td {background-color:#EEEEEE;}
  			<p concordion:assertTrue="false">new</p> 
     		<ol>
                 <li>Open the HDP query form.</li>
-                <li>Enter <b>Some Gene</b> in the Genes section and hit search.</li>
-                <li>On the grid tab, click the checkmark at the intersection of That Gene and Some Disease.</li>
-                <li>Verify that for the genocluster <b>Some Genotype</b>, the following terms have the correct annotation count bin colors:
+                <li>Enter <b>Lyst Ift88 Npc1 Smpd1 Traf3ip2 Aire Tg(Th-MYCN)41Waw Myo7a</b> in the Genes section and hit search.</li>
+                <li>On the grid tab, click the checkmark at the intersection of the Gene and Disease Cluster name specified in the table below.</li>
+                <li>Verify that the following terms have the correct annotation count bin colors:
                 <table>
-                	<tr><th>Disease term</th><th>Bin color number</th><th>(Count of annotations)</th></tr>
-                	<tr><td>Something</td><td>Bin 1</td><td>1</td></tr>
-                </table>
-                </li>
-                <li>Clear the query<br/><br/></li>
-                <li>Enter <b>Some Gene</b> in the Genes section and hit search.</li>
-                <li>On the grid tab, click the checkmark at the intersection of That Gene and Some Disease.</li>
-                <li>Verify that for the genocluster <b>Some Genotype</b>, the following terms have the correct annotation count bin colors:
-                <table>
-                	<tr><th>Disease term</th><th>Bin color number</th><th>(Count of annotations)</th></tr>
-                	<tr><td>Something</td><td>Bin 1</td><td>1</td></tr>
-                </table>
-                </li>
-                <li>Clear the query<br/><br/></li>
-                <li>Enter <b>Some Gene</b> in the Genes section and hit search.</li>
-                <li>On the grid tab, click the checkmark at the intersection of That Gene and Some Disease.</li>
-                <li>Verify that for the genocluster <b>SOME HUMAN GENE</b>, the following terms have the correct annotation count bin colors:
-                <table>
-                	<tr><th>Disease term</th><th>Bin color number</th><th>(Count of annotations)</th></tr>
-                	<tr><td>Something</td><td>Bin 1</td><td>1</td></tr>
+                	<tr><th>Gene</th><th>Cluster name</th><th>Disease term</th><th>Genotype</th><th>Bin color number</th><th>(Count of annotations)</th></tr>
+					<tr><td>Aire</td>	<td>Guillain-Barre Syndrome, Familial; GBS</td>	<td>Guillain-Barre Syndrome, Familial; GBS</td>	<td>Aire&lt;tm1Mand&gt;/Aire&lt;+&gt;</td>	<td>Bin 1</td>	<td>1</td></tr>
+					<tr><td>Aire</td>	<td>Autoimmune Diseases</td>	<td>Autoimmune Polyendocrine Syndrome, Type I; APS1</td>	<td>Aire&lt;tm1.1Doi&gt;/Aire&lt;tm1.1Doi&gt;</td>	<td>Bin 2</td>	<td>5</td></tr>
+					<tr><td>Ift88</td>	<td>Polycystic Kidney Disease</td>	<td>Polycystic Kidney Disease, Autosomal Recessive; ARPKD</td>	<td>Ift88&lt;Tg737Rpw&gt;/Ift88&lt;Tg737Rpw&gt;</td>	<td>Bin 3</td>	<td>9</td></tr>
+					<tr><td>Lyst</td>	<td>Storage Pool Platelet Disease</td>	<td>Storage Pool Platelet Disease</td>	<td>Lyst&lt;bg-J&gt;/Lyst&lt;bg-J&gt;</td>	<td>Bin 1</td>	<td>1</td></tr>
+					<tr><td>Lyst</td>	<td>Chediak-Higashi Syndrome; CHS</td>	<td>Chediak-Higashi Syndrome; CHS</td>	<td>Lyst&lt;bg&gt;/Lyst&lt;bg&gt;</td>	<td>Bin 3</td>	<td>9</td></tr>
+					<tr><td>Myo7a</td>	<td>Usher Syndrome</td>	<td>Usher Syndrome, Type I; USH1</td>	<td>Myo7a&lt;816SB&gt;/Myo7a&lt;816SB&gt;</td>	<td>Bin 2</td>	<td>2</td></tr>
+					<tr><td>Myo7a</td>	<td>Usher Syndrome</td>	<td>Usher Syndrome, Type I; USH1</td>	<td>Myo7a&lt;sh1&gt;/Myo7a&lt;sh1&gt;</td>	<td>Bin 2</td>	<td>2</td></tr>
+					<tr><td>Npc1</td>	<td>Niemann-Pick Disease</td>	<td>Niemann-Pick Disease, Type C1; NPC1</td>	<td>Npc1&lt;m1N&gt;/Npc1&lt;m1N&gt;</td>	<td>Bin 3</td>	<td>9</td></tr>
+					<tr><td>Smpd1</td>	<td>Niemann-Pick Disease</td>	<td>Niemann-Pick Disease, Type A</td>	<td>Smpd1&lt;tm1Esc&gt;/Smpd1&lt;tm1Esc&gt;</td>	<td>Bin 3</td>	<td>6</td></tr>
+					<tr><td>Smpd1</td>	<td>Niemann-Pick Disease</td>	<td>Niemann-Pick Disease, Type B</td>	<td>Smpd1&lt;tm1Esc&gt;/Smpd1&lt;tm1Esc&gt;</td>	<td>Bin 3</td>	<td>6</td></tr>
+					<tr><td>SMPD1</td>	<td>Niemann-Pick Disease</td>	<td>Niemann-Pick Disease, Type A</td>	<td>(none - human gene)</td>	<td>Human Bin 1</td>	<td>1</td></tr>
+					<tr><td>SMPD1</td>	<td>Niemann-Pick Disease</td>	<td>Niemann-Pick Disease, Type B</td>	<td>(none - human gene)</td>	<td>Human Bin 1</td>	<td>1</td></tr>
+					<tr><td>Tg(Th-MYCN)41Waw</td>	<td>Neuroblastoma</td>	<td>Neuroblastoma, Susceptibility to</td>	<td>Tg(Th-MYCN)41Waw/0</td>	<td>Bin 2</td>	<td>3</td></tr>
+					<tr><td>Traf3ip2</td>	<td>Dermatitis, Atopic</td>	<td>Dermatitis, Atopic</td>	<td>Traf3ip2&lt;adjm&gt;/Traf3ip2&lt;adjm&gt;</td>	<td>Bin 2</td>	<td>5</td></tr>
                 </table>
                 </li>
             </ol>
