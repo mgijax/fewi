@@ -180,7 +180,7 @@
 	    </c:forEach>
 	</tr>
 	<tr>
-	<th style="background-color:#DDE;">F</th>
+	<th><img title="filter: select rows or columns to keep" src="${configBean.FEWI_URL}assets/images/hdp/filterIcon.png"></th>
 	<c:forEach var="mpHeader" items="${mpHeaders}" varStatus="status">
 		<th class="mp_${status.count} <c:if test="${status.last && not empty diseaseColumns}"> rightDoubleBorder </c:if>">
 			<input class="gridCheck" type="checkbox" filter="fHeader" value="${mpHeader}" colid="mp_${status.count}" />
@@ -296,7 +296,7 @@ $("#filterSubmit").click(gridFilterSubmitClick);
 	$("#filterReset").show();
 } */
 // add the click handler (from disease_portal_summary.js) to the gridCheck filters
-$(".gridCheck").click(gridCheckClick);
+$(".gridCheck").click(gridCheckClick).attr("title","check to keep after filtering");
 
 // reselect any filters that may be active
 if(_GF)
