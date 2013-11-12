@@ -287,7 +287,7 @@ tr.gray td {background-color:#EEEEEE;}
 			</li>
 
     		<li>Bin colors correctly represent the number of annotations to a term for a genotype cluster (sto171)
- 			<p concordion:assertTrue="false">new</p> 
+ 			<p concordion:assertTrue="true">klf 11/12/13</p> 
     		<ol>
                 <li>Open the HDP query form.</li>
                 <li>Enter <b>Lyst Ift88 Npc1 Smpd1 Traf3ip2 Aire Tg(Th-MYCN)41Waw Myo7a</b> in the Genes section and hit search.</li>
@@ -315,23 +315,20 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Correct onMouseover behavior for the genotype cluster rows...
- 			<p concordion:assertTrue="false">new</p> 
+ 			<p concordion:assertTrue="true">klf 11/12/13</p> 
     		<ol>
-                <li>NEED TO NAIL THIS DOWN.</li>
+                <li>Entire row turns pale yellow color.</li>
+                <li>Tooltip says "click row to see phenotype details".</li>
+                <li>Row separating human genes from mouse genotypes says "Human Gene" in boldface and has a medium-gray background.</li>
+                <li>Tooltip for human gene row says "click gene for homology details"</li>
             </ol>
     		</li>
 
     		<li>Correct Popup Window Header look and text...
- 			<p concordion:assertTrue="false">new</p> 
+ 			<p concordion:assertTrue="klf">11/12/13</p> 
     		<ol>
-                <li>NEED TO NAIL THIS DOWN.</li>
-            </ol>
-    		</li>
-
-    		<li>Correct legend look and text...
- 			<p concordion:assertTrue="false">new</p> 
-    		<ol>
-                <li>NEED TO NAIL THIS DOWN.</li>
+                <li>Text says "Data for <b><i>Human gene symbol</i></b>, <b><i>Mouse gene symbol</i></b> and <b><i>disease cluster name</i></b>. (No bold or italics - that is for this test case only.)</li>
+                <li>Text is larger font on a light blue background with a black border.</li>
             </ol>
     		</li>
 
