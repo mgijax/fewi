@@ -57,11 +57,11 @@
   	font-weight: bold;
   	font-size: 120%;
   	font-family: serif;
-  	top: -2px;
-  	right: -1px;
+  	top: -8px;
+  	right: 2px;
   	position: absolute;
   }
-  .cell_outer { position: relative; }
+  .cell_outer { position: relative; width:100%;height:100%;}
   
   tr.genoRow:hover
   {
@@ -164,14 +164,14 @@
     </td>
 
     <c:forEach var="cell" items="${popupRow.gridCells}" varStatus="status">
-      <td class="cc mpBin_${cell.mpBin}">
+      <td class="cc mpBin_${cell.mpBin}"><div class="cell_outer">
 	    <c:if test="${cell.hasPopup}">
 		    <div class="gridCellLink">
 			    <div class="mk">${cell.mpMark}</div>
 		    </div>
 		<c:if test="${cell.hasBackgroundNote}"><div class="bsn">!</div></c:if>
 	    </c:if>
-      </td>
+      </div></td>
     </c:forEach>
     </tr>
 </c:forEach>
@@ -196,13 +196,13 @@
 	    </td>
 	
 	    <c:forEach var="cell" items="${popupRow.gridCells}" varStatus="status">
-	      <td class="cc dHBin_${cell.diHumanBin}">
+	      <td class="cc dHBin_${cell.diHumanBin}"><div class="cell_outer">
                 <c:if test="${cell.hasPopup}">
                     <div class="gridCellLink">
 						<div class="mk">${cell.diseaseMark}</div>
 					</div>
                 </c:if>
-	      </td>
+          </div></td>
 	    </c:forEach>
 	    </tr>
 	
