@@ -755,7 +755,7 @@ public class DiseasePortalController
 
 		// determine and set the requested sorts, filters, and pagination
 // TODO - setup sorts and pagination
-		params.setSorts(this.genMarkerSorts(request));
+		params.setSorts(this.genGridSorts(request,query));
 		params.setPaginator(page);
 		params.setFilter(this.parseQueryForm(query,session));
 
@@ -1051,6 +1051,33 @@ public class DiseasePortalController
           sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, true));
           sorts.add(new Sort(SortConstants.DP_BY_MRK_SYMBOL, false));
 		}
+
+        return sorts;
+    }
+    
+    // generate the sorts for the marker tab
+    private List<Sort> genGridSorts(HttpServletRequest request,DiseasePortalQueryForm query) {
+
+        logger.debug("->genGridSorts started");
+
+        List<Sort> sorts = new ArrayList<Sort>();
+
+        if(query.getHasLocationsQuery())
+        {
+        	logger.debug("using location sort");
+        	String organism = query.getOrganism();
+        	boolean orgSort = "human".equalsIgnoreCase(organism) ? false : true;
+        	
+        	sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, orgSort));
+	        sorts.add(new Sort(SortConstants.DP_BY_LOCATION, false));
+        }
+        else
+        {
+	        // default sort is by organism then gene symbol
+	        sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, true));
+	        sorts.add(new Sort(SortConstants.DP_BY_MRK_SYMBOL, false));
+        }
+        
 
         return sorts;
     }

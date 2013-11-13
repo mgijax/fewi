@@ -121,6 +121,11 @@ public class DiseasePortalQueryForm
 	public void setLocationsFileName(String locationsFileName) {
 		this.locationsFileName = locationsFileName;
 	}
+	
+	public boolean getHasLocationsQuery()
+	{
+		return (locations!=null && !locations.equals("")) || (locationsFileName!=null && !locationsFileName.equals(""));
+	}
 
 	public String getFGene() {
 		return fGene;
