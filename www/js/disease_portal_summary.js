@@ -609,8 +609,8 @@ var genesResultsTable = function() {
 	    //{key: "highlightedFields", label: "Why Matched", sortable: false },
 		{key: "organism", label: "Organism", sortable: true },
 		{key: "symbol", label: "Marker Symbol", sortable: true },
-		{key: "location", label: "Genetic Location", sortable: true },
-		{key: "coordinate", label: "Genome Coordinates", sortable: false },
+		{key: "location", label: "Genetic Location", sortable: false },
+		{key: "coordinate", label: "Genome Coordinates", sortable: true },
 		{key: "disease", label: "Associated Human Diseases", sortable: false, width:240 },
 		{key: "system", label: "Abnormal Mouse Phenotypes<br/> Reported in these Systems", sortable: false },
 		{key: "allRefCount", label: "References", sortable: false },
@@ -697,7 +697,7 @@ var genesResultsTable = function() {
 		}
 
 		oPayload.sortedBy = {
-			key: (pRequest['sort']) || "organism",
+			key: (pRequest['sort']) || "symbol",
 			dir: (pRequest['dir']) ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc"
 				// Convert from server value to DataTable format
 		};

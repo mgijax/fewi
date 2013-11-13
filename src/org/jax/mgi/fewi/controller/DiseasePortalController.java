@@ -1035,21 +1035,22 @@ public class DiseasePortalController
         else if ("symbol".equalsIgnoreCase(sortRequested))
         {
           sorts.add(new Sort(SortConstants.DP_BY_MRK_SYMBOL, desc));
+          sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, asc));
         }
         else if ("type".equalsIgnoreCase(sortRequested))
         {
           sorts.add(new Sort(SortConstants.DP_BY_MRK_TYPE, desc));
           sorts.add(new Sort(SortConstants.DP_BY_MRK_SYMBOL, false));
         }
-        else if ("location".equalsIgnoreCase(sortRequested))
+        else if ("coordinate".equalsIgnoreCase(sortRequested))
         {
           sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, asc));
           sorts.add(new Sort(SortConstants.DP_BY_LOCATION, desc));
         }
         else
         { // default sort
-          sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, true));
           sorts.add(new Sort(SortConstants.DP_BY_MRK_SYMBOL, false));
+          sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, true));
 		}
 
         return sorts;
