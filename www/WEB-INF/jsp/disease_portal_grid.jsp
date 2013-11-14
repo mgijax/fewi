@@ -158,7 +158,7 @@
 	  <th rowspan="2" style="white-space: nowrap;">Human Marker</th>
 	  <th rowspan="2">
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
-		  		<div id="filterButtons"><button id="filterSubmit">Submit Filters</button>
+		  		<div id="filterButtons"><button id="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Submit Filters</button>
 		  	</div></div>
 		  	<br/>Mouse Marker
 	  	</th>
