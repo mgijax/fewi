@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="http://www.informatics.jax.org/webshare/css/mgi.css" type="text/css">
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/jquery-1.10.2.min.js"></script>
 
 <style type="text/css">
 

@@ -1,5 +1,4 @@
 <!-- jquery library (for the ageStage tab widget) -->
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
 
 <style>
 #gxdQueryForm table tr td table tr td ul li span { font-size: 10px; font-style: italic; }
