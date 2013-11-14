@@ -147,7 +147,7 @@ ${templateBean.templateBodyStartHdpHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_autocomplete.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_upload.js"></script>
 <% 	
- 	String queryString = (String) request.getAttribute("queryString");
+ 	String queryString = (String) request.getAttribute("querystring");
 	// need to url encode the querystring
 	request.setAttribute("encodedQueryString", FormatHelper.encodeQueryString(queryString));
 %>
