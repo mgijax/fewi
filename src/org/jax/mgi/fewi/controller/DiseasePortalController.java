@@ -191,7 +191,7 @@ public class DiseasePortalController
 		        		if(!notEmpty(dataString))
 		        		{
 		        			logger.debug("no coordinates found in VCF file");
-		        			mav.addObject("error","No coordinates found in VCF file. Ensure file is in the correct format.");
+		        			mav.addObject("error","No coordinates found in VCF file after processing.");
 		    				return mav;
 		        		}
 		        		
@@ -214,7 +214,7 @@ public class DiseasePortalController
 			        		if((mouseMarkerKeysFromLocationsFile==null || mouseMarkerKeysFromLocationsFile.size()==0)
 			        				&& (humanMarkerKeysFromLocationsFile==null || humanMarkerKeysFromLocationsFile.size()==0))
 			        		{
-			        			logger.debug("no matching genes found in VCF file");
+			        			logger.debug("No matching genes found in VCF file after processing");
 			        			mav.addObject("error","None of the provided coordinates matched a gene region in either human or mouse.");
 			    				return mav;
 			        		}
@@ -226,7 +226,7 @@ public class DiseasePortalController
 		        	session.setAttribute(field,dataString);
 				} catch (IOException e) {
 					logger.error("error reading HDP upload file",e);
-					mav.addObject("error","file reading IOException");
+					mav.addObject("error","File reading IOException");
 					return mav;
 				} catch (Exception e) {
 					logger.error("error processing HDP upload file",e);
@@ -246,7 +246,7 @@ public class DiseasePortalController
 			return mav;
 		}
 		
-        mav.addObject("success","file successfuly processed");
+        mav.addObject("success","File successfully processed.");
 		return mav;
     }
 
