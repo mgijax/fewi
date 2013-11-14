@@ -102,7 +102,7 @@ function HDPFileUploadWidget(originalFormId)
     			
     			if(bodyText.indexOf("MaxUploadSizeExceededException")>0)
     			{
-    				_self.popAlert("ERROR: Max file upload limit of 10MB exceeded.");
+    				_self.popAlert("ERROR: Max file upload limit of 20MB exceeded.");
     			}
     			else
     			{
