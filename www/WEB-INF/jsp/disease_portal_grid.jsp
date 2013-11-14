@@ -1,5 +1,4 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-<%@ page import = "org.springframework.web.util.UriUtils" %>
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
@@ -10,7 +9,7 @@
 <%
 	String queryString = (String) request.getAttribute("queryString");
 	// need to url encode the querystring
-	request.setAttribute("encodedQueryString", UriUtils.encodeQuery(queryString,"UTF-8"));
+	request.setAttribute("encodedQueryString", FormatHelper.encodeQueryString(queryString));
 %>
 
 <style type="text/css">

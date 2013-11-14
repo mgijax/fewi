@@ -1,23 +1,26 @@
 package org.jax.mgi.fewi.util;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.jax.mgi.fewi.util.DBConstants;
-import org.jax.org.mgi.shr.fe.util.TextFormat;
+import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceLocation;
 import mgi.frontend.datamodel.util.DatamodelUtils;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.jax.org.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.HtmlUtils;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.util.UriUtils;
 
 /**
 * provides static methods to help with formatting of JSP pages
@@ -481,5 +484,14 @@ public class FormatHelper
 	return sb.toString();
     }
 
+    public static String encodeQueryString(String query)
+    {
+    	try {
+			return UriUtils.encodeQuery(query,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error("query encode failed",e);
+			return query;
+		}
+    }
 } // end of class FormatHelper
 

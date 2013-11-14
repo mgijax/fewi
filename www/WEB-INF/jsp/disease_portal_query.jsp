@@ -145,10 +145,14 @@ ${templateBean.templateBodyStartHdpHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_autocomplete.js"></script>
-<%-- <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_upload.js"></script>
- --%>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_upload.js"></script>
+<% 	
+ 	String queryString = (String) request.getAttribute("queryString");
+	// need to url encode the querystring
+	request.setAttribute("encodedQueryString", FormatHelper.encodeQueryString(queryString));
+%>
 <script type="text/javascript">
-	var querystring = "${querystring}";
+	var querystring = "${encodedQueryString}";
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_summary.js"></script>
