@@ -26,8 +26,9 @@ public class FileProcessor
 	 private static char VCF_COL_DELIM = '\t';
 	 private static int VCF_CHROMOSOME_COL = 0;
 	 private static int VCF_COORDINATE_COL = 1;
+	 private static int VCF_ID_COL = 2;
 	 private static int VCF_FILTER_COL = 6;
-	 private static int VCF_ROW_LIMIT = 100000;
+	 private static int VCF_ROW_LIMIT = 200000;
 	 
 	 /*
 	  * Reads throught a VCF file to find all the coordinates.
@@ -53,6 +54,18 @@ public class FileProcessor
 			 int coordColStringIndex = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_COORDINATE_COL);
 			 if(coordColStringIndex<2) continue; // this must be atleast 2 to have any values
 			 
+			 // check if ID column exists
+			 int idColStringStart = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_ID_COL-1);
+			 if(idColStringStart>0)
+			 {
+				 int idColStringStop = line.indexOf(VCF_COL_DELIM,idColStringStart+1);
+				 
+				 String id = line.substring(idColStringStart+1,idColStringStop);
+				 //logger.debug("id="+id);
+				// skip this row for having an id (we want to remove known variants)
+				 if(!"".equals(id) && !".".equals(id)) { continue; } 
+			 }
+			 
 			 // check the filter column if it exists
 			 int filterColStart = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_FILTER_COL-1);
 			 if(filterColStart>0)
@@ -61,7 +74,8 @@ public class FileProcessor
 				 
 				 String filter = line.substring(filterColStart+1,filterColStop);
 				 //logger.debug("filter="+filter);
-				 if(!"pass".equalsIgnoreCase(filter)) { continue; } // skip this row for not having a passing filter
+				 // skip this row for not having a non-passing filter
+				 if(!"".equals(filter) && !".".equals(filter) && !"pass".equalsIgnoreCase(filter)) { continue; } 
 			 }
 			 
 			 // look at the first two columns for the chromosome and coordinate
