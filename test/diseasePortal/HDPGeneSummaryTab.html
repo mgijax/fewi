@@ -195,15 +195,6 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>The following diseases should appear in the gene result set  due to text matches (not complete results):
                 	<table concordion:execute="#mDiseases = getMarkerDiseaseByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mDiseases">Disease</th></tr>
-                	<tr><td>mouse</td><td>Abhd5</td><td>Chanarin-Dorfman Syndrome; CDS</td></tr>
-                	<tr><td>mouse</td><td>Bmpr1a</td><td>Ebstein Anomaly<br/> Osteoarthritis Susceptibility 1; OS1<br/>
-						Wolff-Parkinson-White Syndrome</td></tr>
-                	<tr><td>mouse</td><td>Eda</td><td>Ectodermal Dysplasia 1, Hypohidrotic, X-Linked; XHED</td></tr>
-                	<tr><td>mouse</td><td>Fgfr2</td><td>Apert Syndrome<br/>
-						Beare-Stevenson Cutis Gyrata Syndrome; BSTVS<br/>
-						Crouzon Syndrome<br/>
-						Intestinal Atresia, Multiple; MINAT<br/>
-						Pfeiffer Syndrome</td></tr>
                 	<tr><td>mouse</td><td>Lmna</td><td>Cardiomyopathy, Dilated, 1A; CMD1A<br/>
 						Charcot-Marie-Tooth Disease, Axonal, Type 2B1; CMT2B1<br/>
 						Emery-Dreifuss Muscular Dystrophy 2, Autosomal Dominant; EDMD2<br/>
@@ -266,70 +257,6 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Only the following diseases should appear in the gene result set(not complete results):
                 	<table concordion:execute="#mSystems=getMarkerSystemByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mSystems">Abnormal Phenotypes</th></tr>
-                	<tr><td>mouse</td><td>Abhd5</td><td>cardiovascular system, cellular, growth/size, hematopoietic system, homeostasis/metabolism, immune system, integument, liver/biliary system, mortality/aging, muscle, skeleton</td></tr>
-                	<tr><td>mouse</td><td>Bmpr1a</td><td>behavior/neurological,
-						cardiovascular system,
-						cellular,
-						craniofacial,
-						embryogenesis,
-						endocrine/exocrine glands,
-						growth/size,
-						hearing/vestibular/ear,
-						hematopoietic system,
-						homeostasis/metabolism,
-						immune system,
-						integument,
-						limbs/digits/tail,
-						mortality/aging,
-						muscle,
-						nervous system,
-						reproductive system,
-						respiratory system,
-						skeleton,
-						tumorigenesis,
-						vision/eye</td></tr>
-                	<tr><td>mouse</td><td>Eda</td><td>cardiovascular system,
-						craniofacial,
-						digestive/alimentary system,
-						endocrine/exocrine glands,
-						growth/size,
-						immune system,
-						integument,
-						limbs/digits/tail,
-						mortality/aging,
-						nervous system,
-						pigmentation,
-						renal/urinary system,
-						reproductive system,
-						respiratory system,
-						skeleton,
-						vision/eye</td></tr>
-                	<tr><td>mouse</td><td>Fgfr2</td><td>adipose tissue,
-						behavior/neurological,
-						cardiovascular system,
-						cellular,
-						craniofacial,
-						digestive/alimentary system,
-						embryogenesis,
-						endocrine/exocrine glands,
-						growth/size,
-						hearing/vestibular/ear,
-						hematopoietic system,
-						homeostasis/metabolism,
-						immune system,
-						integument,
-						limbs/digits/tail,
-						liver/biliary system,
-						mortality/aging,
-						muscle,
-						nervous system,
-						pigmentation,
-						renal/urinary system,
-						reproductive system,
-						respiratory system,
-						skeleton,
-						tumorigenesis,
-						vision/eye</td></tr>
                 	<tr><td>mouse</td><td>Lmna</td><td>adipose tissue,
 						behavior/neurological,
 						cardiovascular system,
