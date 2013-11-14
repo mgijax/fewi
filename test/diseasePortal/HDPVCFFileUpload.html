@@ -55,14 +55,29 @@ tr.gray td {background-color:#EEEEEE;}
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
+		<li>location query offers a file upload option</li>
+		<li>the reset button should also reset the file upload (right now it doesn't?)</li>
+		<li>only one input (text entry or file upload) is supported. E.g.:
+		<ul>
+			<li>if text entered, disable file upload</li>
+			<li>if file specified, disable text entry</li>
+		</ul>
+		</li>
+		<li>only VCF files support (for now)</li>
+		<li>hard-coded (not user settable) filters apply:
+		<ul>
+			<li>the FILTER column must empty for ALL rows, or must contain "PASS" in this row</li>
+			<li>the ID column must be empty </li>
+			<li>(Remember that "." counts as empty)</li>
+		</ul>
+		</li>
+<!-- REPLACED ITEMS BELOW WITH ACCEPTANCE CRITERIA FROM THE KUNAGI STORY
         <li>US158: Add an upload file option to the HDP query form</li>
         <li>US158: Confirm you can upload a file of format type VCF</li>
         <li>US158: Confirm you can upload a VCF file with human data</li>
         <li>US158: Confirm you can upload a VCF file with mouse data</li>
         <li>US158: Confirm you get an error when trying to upload a corrupted VCF file</li>
-        <li>US158: Confirm ???</li>
-        <li>US158: Confirm ???</li>
-        <li>US158: Confirm ???</li>
+ -->
 	</ul>
 
 </div>
@@ -82,71 +97,90 @@ tr.gray td {background-color:#EEEEEE;}
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page</li>
-                <li>Verify the existence of a "Browse" button located in the lower left corner of the form</li>
-    		</ol>
-    		</li>
-
-    		<li>Verify you can upload a file of format type VCF(sto158)
-    		<p concordion:assertTrue="false">new test</p>
-    		<ol>
-                <li>Open the Human Disease query page</li>
-                <li>Hover of the "Provide Feedback" button</li>
-                <li>Verify  a popup displays with this text, "We welcome your feedback and suggestions. Click here to contact us"</li>
+                <li>Verify the existence of a "Choose File" button.</li>
     		</ol>
     		</li>
 
     		<li>Verify you can upload a VCF file with human data (sto158)
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
-                <li>Open the Human Disease query page and click the "Browse" button</li>
+                <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>human1.vcf</b></li>
                 <li>Verify the file is loaded properly by getting the popup <b>file successfully processed</b></li>
                 <li>Click the "OK" button on the popup</li>
-                <li>Verify ???</li>
+                <li>Verify the filename <b>human1.vcf</b> is displayed on the form page.</li>
     		</ol>
     		</li>
 
     		<li>Verify you can upload a VCF file with mouse data (sto158)
     		<p concordion:assertTrue="false">new test</p>    		
     		<ol>
-                <li>Open the Human Disease query page and click the "Browse" button</li>
+                <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>mouse1.vcf</b></li>
                 <li>Verify the file is loaded properly by getting the popup <b>file successfully processed</b></li>
                 <li>Click the "OK" button on the popup</li>
-                <li>Verify ???</li>
+                <li>Verify the filename <b>mouse1.vcf</b> is displayed on the form page.</li>
     		</ol>
     		</li>
 
-     		<li>Verify you get an error when trying to upload a corrupted VCF file (sto158)
+     		<li>Verify you get an error when trying to upload a VCF file with no data (sto158)
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
-                <li>Open the Human Disease query page and click the "Browse" button</li>
+                <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>error.vcf</b></li>
                 <li>Verify you get the error message <b>ERROR: No coordinates found in VCF file. Ensure file is in the correct format.</b></li>
     		</ol>
     		</li>
 
-    		<li>Verify ??? (sto158)
-<!--     		<p concordion:assertTrue="true">jeffc 10/31/2013</p>  -->
+     		<li>Verify VCF file upload preprocesses the file keeping only "PASS" (case-insensitive), "." (dot) or null in Column 7 ("FILTER" column) (sto158)
+    		<p concordion:assertTrue="false">new test</p>
     		<ol>
-                <li>Open the Human Disease query page and click the "Browse" button</li>
-                <li></li>     
-                <li></li>
-                <li></li>
-                <li></li>
-            </ol>
-            </li>
+                <li>Open the Human Disease query page and click the "Choose File" button</li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>human1-testPass6pass4Dot3.vcf</b></li>
+                <li>This file should upload without error.  Select "human" coordinates and click "GO".</li>
+                <li>The search should result in 6 rows in the Grid and 19 genes on the Genes tab.</li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>human1-testgoodRows15.vcf</b></li>
+                <li>This file should upload without error.  Select "human" coordinates and click "GO".</li>
+                <li>Verify that the search results in the same 6 rows in the Grid and 19 genes on the Genes tab.</li>
+    		</ol>
+    		</li>
             
-    		<li>Verify ??? (sto158)
-<!--      		<p concordion:assertTrue="true">jeffc 10/13/2013</p> -->
+     		<li>Verify VCF file upload preprocesses the file keeping only rows with "." (dot) or null in Column 3 ("ID" column) (sto158)
+    		<p concordion:assertTrue="false">new test</p>
     		<ol>
-                <li>Open the Human Disease query page and click the "Browse" button</li>
-                <li></li>     
-                <li></li>
-                <li></li>
-                <li></li>
-           </ol>
-           </li>
+                <li>Open the Human Disease query page and click the "Choose File" button</li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>FILENAME_HERE.vcf</b></li>
+                <li>Verify...</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify files over 20MB are rejected.
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify files get processed up to 200,000 lines.
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify files with coordinates outside any genes return -no results- OR -error message- <i>(I forget which we are doing)</i>.
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
     	</ol>	
 	</div>
 </div>
