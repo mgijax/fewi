@@ -46,7 +46,7 @@ public class FileProcessor
 		 while ((line = bufferedReader.readLine()) != null)
 		 {
 			 if(count++ > VCF_ROW_LIMIT) break;
-			 
+			 //logger.debug("line="+line);
 			 // ignore comment lines
 			 if(line.length()<1) continue;
 			 if(line.charAt(0) == VCF_COMMENT_CHAR) continue;
@@ -60,10 +60,13 @@ public class FileProcessor
 			 {
 				 int idColStringStop = line.indexOf(VCF_COL_DELIM,idColStringStart+1);
 				 
-				 String id = line.substring(idColStringStart+1,idColStringStop);
-				 //logger.debug("id="+id);
-				// skip this row for having an id (we want to remove known variants)
-				 if(!"".equals(id) && !".".equals(id)) { continue; } 
+				 if(idColStringStop>idColStringStart)
+				 {
+					 String id = line.substring(idColStringStart+1,idColStringStop);
+					 //logger.debug("id="+id);
+					// skip this row for having an id (we want to remove known variants)
+					 if(!"".equals(id) && !".".equals(id)) { continue; } 
+				 }
 			 }
 			 
 			 // check the filter column if it exists
@@ -72,10 +75,13 @@ public class FileProcessor
 			 {
 				 int filterColStop = line.indexOf(VCF_COL_DELIM,filterColStart+1);
 				 
-				 String filter = line.substring(filterColStart+1,filterColStop);
-				 //logger.debug("filter="+filter);
-				 // skip this row for not having a non-passing filter
-				 if(!"".equals(filter) && !".".equals(filter) && !"pass".equalsIgnoreCase(filter)) { continue; } 
+				 if(filterColStop>filterColStart)
+				 {
+					 String filter = line.substring(filterColStart+1,filterColStop);
+					 //logger.debug("filter="+filter);
+					 // skip this row for not having a non-passing filter
+					 if(!"".equals(filter) && !".".equals(filter) && !"pass".equalsIgnoreCase(filter)) { continue; }
+				 }
 			 }
 			 
 			 // look at the first two columns for the chromosome and coordinate
@@ -95,7 +101,6 @@ public class FileProcessor
 		 logger.debug("found "+coordCount+" coordinates in vcf file");
 		 return sb.toString();
 	 }
-	 
 	 
 	 /*
 	  * utility function to get nth occurance of a character in a sourceString 
