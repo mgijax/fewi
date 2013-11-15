@@ -52,7 +52,7 @@ public class FileProcessor
 			 if(line.charAt(0) == VCF_COMMENT_CHAR) continue;
 
 			 int coordColStringIndex = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_COORDINATE_COL);
-			 if(coordColStringIndex<2) continue; // this must be atleast 2 to have any values
+			 if(coordColStringIndex<2){ continue; }// this must be atleast 2 to have any values
 			 
 			 // check if ID column exists
 			 int idColStringStart = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_ID_COL-1);
@@ -111,5 +111,17 @@ public class FileProcessor
 		 while (n-- > 0 && pos != -1)
 			 pos = sourceString.indexOf(character, pos+1);
 		 return pos;
+	 }
+	 
+	 public static String printChars(String s)
+	 {
+		 char[] chars = s.toCharArray();
+		 StringBuilder charVals = new StringBuilder();;
+		 for(int i=0; i<chars.length; i++)
+		 {
+			int cInt = (int)chars[i];
+			charVals.append(cInt).append(",");
+		 }
+		 return charVals.toString();
 	 }
 }
