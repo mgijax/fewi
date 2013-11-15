@@ -93,7 +93,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<h3>Manual and Automated tests</h3>
 
 		<ol>
-    		<li>Verify a "Browse" button exists on the Human Disease Query page(sto158)
+    		<li>Verify a "Choose File" button exists on the Human Disease Query page(sto158)
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page</li>
@@ -127,7 +127,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
-                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>error.vcf</b></li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>error.vcf</b></li>
                 <li>Verify you get the error message <b>ERROR: No coordinates found in VCF file. Ensure file is in the correct format.</b></li>
     		</ol>
     		</li>
@@ -136,10 +136,10 @@ tr.gray td {background-color:#EEEEEE;}
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
-                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>human1-testPass6pass4Dot3.vcf</b></li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>human1-testPass6pass4Dot3.vcf</b></li>
                 <li>This file should upload without error.  Select "human" coordinates and click "GO".</li>
                 <li>The search should result in 6 rows in the Grid and 19 genes on the Genes tab.</li>
-                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>human1-testgoodRows15.vcf</b></li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>human1-testgoodRows15.vcf</b></li>
                 <li>This file should upload without error.  Select "human" coordinates and click "GO".</li>
                 <li>Verify that the search results in the same 6 rows in the Grid and 19 genes on the Genes tab.</li>
     		</ol>
@@ -149,17 +149,20 @@ tr.gray td {background-color:#EEEEEE;}
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
-                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>FILENAME_HERE.vcf</b></li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>FILENAME_HERE.vcf</b></li>
                 <li>Verify...</li>
     		</ol>
     		</li>
     		
-    		<li>Verify files over 20MB are rejected.
+    		<li>Verify files over 25MB are rejected.
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Open the Human Disease query page and click the "Choose File" button</li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>VeryVeryLargeFile_human.vcf</b></li>
+                <li>Verify an error message is displayed like "ERROR: Max file upload limit of 25MB exceeded."</li>
+                <li>Verify clicking the "OK" button dismisses the error message.</li>
+                <li>Verify the filename "VeryVeryLargeFile_human.vcf" is NOT displayed on the interface.</li>
+                <li>Verify clicking the "GO" button returns no data (i.e., the file was not processed and uploaded).</li> 
     		</ol>
     		</li>
     		
