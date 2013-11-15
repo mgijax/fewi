@@ -57,11 +57,11 @@
   	font-weight: bold;
   	font-size: 120%;
   	font-family: serif;
-  	top: -8px;
-  	right: 2px;
+  	top: -4px;
+  	right: 4px;
   	position: absolute;
   }
-  .cell_outer { position: relative; width:100%;height:100%;}
+  .cell_outer { position: relative; width:100%;height:18px;}
   
   tr.genoRow:hover
   {
