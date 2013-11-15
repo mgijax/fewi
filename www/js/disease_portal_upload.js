@@ -76,8 +76,8 @@ function HDPFileUploadWidget(originalFormId)
     	_self.popWaiting("Processing file and caching data matches. Please wait.");
     	_self.interval_id = setInterval(function(){
     		var iframeJq = $("#"+_self.iframeId);
-    		var success = iframeJq.contents().find("#success").text();
-    		var error = iframeJq.contents().find("#error").text();
+    		var success = iframeJq.contents().find("#success").html();
+    		var error = iframeJq.contents().find("#error").html();
     		if(success || error)
     		{
     			//_self.enableForm();

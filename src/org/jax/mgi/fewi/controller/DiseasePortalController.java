@@ -246,7 +246,7 @@ public class DiseasePortalController
 			return mav;
 		}
 		
-        mav.addObject("success","File successfully processed.");
+        mav.addObject("success","File successfully processed. <br/>Please verify your organism selection before hitting \"GO\".");
 		return mav;
     }
 
