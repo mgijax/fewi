@@ -160,7 +160,7 @@ function HDPFileUploadWidget(originalFormId)
 var resetLocationsFileFields;
 var repositionUploadWidgets = function()
 {
-	$("#locationsFileDiv").position({of:$("#locationsFileHome"),my:"right"});
+	//$("#locationsFileDiv").position({of:$("#locationsFileHome"),my:"right"});
 }
 var HDP_FUW;
 $(function(){
