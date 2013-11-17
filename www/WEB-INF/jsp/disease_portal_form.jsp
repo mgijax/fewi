@@ -71,6 +71,13 @@ span.smallGrey { font-size: 75%; color: #999999; }
 {
 	top: -200px;left: 200px;
 }
+#hiddenFileForm span
+{
+	padding-left: 50px;
+	font-style: italic;
+	color: yellowgreen;
+	font-weight: bold;
+}
 <![endif]-->
 
 </style>
@@ -137,13 +144,14 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	 </table>	
 	 <input type="hidden" name="fGene" id="fGene" />
 	 <input type="hidden" name="fHeader" id="fHeader" />
-     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
+     <input id="locationsFileName" type="hidden" name="locationsFileName" value="">
 	</form:form>
 	<!-- This will be positioned inside of locationsFileHome. We need it out here, because you can't define a form inside of another. -->
 	<div id="locationsFileDiv" style="position: relative; top: -69px; left: 142px;">
 		<form id="hiddenFileForm" name="hiddenFileForm" target="hiddenfileform_if" action="${configBean.FEWI_URL}diseasePortal/uploadFile" 
 			enctype="multipart/form-data" method="POST">
        		Or Upload a VCF File: <input id="locationsFileInput" type="file" name="file">
+       		<c:if test="${not empty locationsFileName}"><br/><span id="locationsFileNotify">(Using cached file [${locationsFileName}])</span></c:if>
        		<input type="hidden" name="field" value="locationsFile">
        		<input type="hidden" name="type" value="vcf">
        	</form>

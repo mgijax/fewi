@@ -55,6 +55,7 @@ function HDPFileUploadWidget(originalFormId)
     
     _self.setLocationsFileSession = function(e)
     {
+		$("#locationsFileNotify").hide();
     	var files = null;
     	if(this.files) files = this.files;
 

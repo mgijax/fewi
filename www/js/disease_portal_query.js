@@ -127,14 +127,37 @@ var updateQuerySummary = function() {
 	{
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
-		ysfText += organism+" locations matching [<b>file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
+		ysfText += organism+" locations matching [<b id=\"ysf-locationsFile\">file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
 	}
 	
 	summaryDiv.append(ysfText);
 	
 	// make sure IDs turn into terms (just for the display purposes)
 	resolveVocabTermIds();
+	
+	// check if file upload is still cached
+	checkFileUploadCache();
 };
+
+
+/*
+ * makes an ajax request to adjust the display of "phenotypes" field in
+ * the "you searched for" section.
+ * 	It resolves any term IDs into their term names.
+ * 	This only really needs to be used if the user had autocomplete interaction...
+ */ 
+var checkFileUploadCache = function()
+{
+	var data = querystring;
+	var request = $.ajax({
+		url:fewiurl+"diseasePortal/isFileCached",
+		type: "post",
+		data: data
+	});
+	request.done(function (response, textStatus, jqXHR){
+		if(textStatus=="success") $("#ysf-locationsFile").append("&nbsp;<span style=\"color:red;\">"+response+"</span>");
+    })
+}
 
 
 //--------- Functions for controlling opening the summary and rolling up the form (without animation) ---------------
