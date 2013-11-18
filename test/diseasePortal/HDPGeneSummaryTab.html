@@ -58,6 +58,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 154, Genes Tab: export as tab-delimited text</li>
         <li>User story 137, Add Links to gene and disease detail pages</li>
         <li>User story 84, Genes tab: AIMSR column</li>
+        <li>User story 210, Genes tab: default sort order</li>
     </ul>
 </div>
 
@@ -335,10 +336,10 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>          
 
             <li>Verify the sort of the Organism column
-    		<p concordion:assertTrue="true">jeffc 08/12/2014</p>            
+    		<p concordion:assertTrue="true">lec 11/18/2013</p>            
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
-                <li>Verify that the default sort is by Organism??</li>
+                <li>Verify that the default sort is by Marker Symbol, then Organism</li>
                 <li>Click the Organism header</li>
                 <li>Verify the organism column sorts by human first with a secondary sort of Marker symbol</li>
                 <li>Click the Organism header again</li>
@@ -347,10 +348,10 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 <!--     		<li>Verify the sort of the Homologene ID column
-    		<p concordion:assertTrue="true">jeffc 08/13/2013</p>    		
+    		<p concordion:assertTrue="true">lec 11/18/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
-                <li>Verify that the default sort is by Organism??</li>
+                <li>Verify that the default sort is by Marker Symbol, then Organism</li>
                 <li>Click the Homologene ID header</li>
                 <li>Verify the Homologene ID column sorts by ascending number with a secondary sort of Marker symbol</li>
                 <li>Click the Organism header again</li>
@@ -362,7 +363,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<p concordion:assertTrue="true">lec 11/18/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
-                <li>Verify that the default sort is by Marker Symbol (ascending alpha), then Organism</li>
+                <li>Verify that the default sort is by Marker Symbol, then Organism</li>
                 <li>Click the Organism header again</li>
                 <li>Verify the Homologene ID column sorts by decending alpha</li>
                 <li>Click the Marker Symbol header</li>
@@ -371,10 +372,10 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>  
 
 <!--     		<li>Verify the sort of the Marker Type column
-    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>    		
+    		<p concordion:assertTrue="true">lec 11/18/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
-                <li>Verify that the default sort is by Organism??</li>
+                <li>Verify that the default sort is by Marker Symbol, then Organism</li>
                 <li>Click the Marker Type header</li>
                 <li>Verify the Marker Type column sorts by ascending order(sort of, functions like Marker QF) with a secondary sort of Marker symbol</li>
                 <li>Click the Marker Type header again</li>
