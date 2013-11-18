@@ -47,6 +47,8 @@
 		<echo>Use ${config.dir}\${config.file}</echo>
 		<copy file="${config.dir}/${config.file}" tofile="./www/WEB-INF/properties/fewi.properties" overwrite="false" />
 		<replace file="./www/WEB-INF/properties/fewi.properties" token="@TEMPLATE_DIR@" value="${template.dir}" />
+		<echo>Use ${config.dir}\${web_xml.file}</echo>
+		<copy file="${config.dir}/${web_xml.file}" tofile="./www/WEB-INF/web.xml" overwrite="false" />
 	</target>
 
 
