@@ -1214,14 +1214,16 @@ public class DiseasePortalController
 					}
 				}
 			}
-			if(hasMarkerKeysFromLocationsFile)
-			{
-				logger.debug("making a query with marker keys matched via locations file");
-				locationFilters.add(new Filter(SearchConstants.MRK_KEY,markerKeysFromLocationsFile,Filter.OP_IN));
-			}
-
+			
 			if(locationFilters.size()>0) qFilters.add(Filter.or(locationFilters));
 		}
+		
+		if(hasMarkerKeysFromLocationsFile)
+		{
+			//logger.debug("making a query with marker keys matched via locations file");
+			qFilters.add(new Filter(SearchConstants.MRK_KEY,markerKeysFromLocationsFile,Filter.OP_IN));
+		}
+
 
 		if(qFilters.size()>0)
 		{
