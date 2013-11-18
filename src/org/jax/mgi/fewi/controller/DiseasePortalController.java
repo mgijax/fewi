@@ -89,8 +89,8 @@ public class DiseasePortalController
 	public String getQueryForm(Model model,
 			HttpSession session) {
 		model.addAttribute(new DiseasePortalQueryForm());
-		String locationsData = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
-		if(notEmpty(locationsData)) model.addAttribute("locationsFileName","somename");
+		//String locationsData = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
+		//if(notEmpty(locationsData)) model.addAttribute("locationsFileName",);
 		
 		return "disease_portal_query";
 	}
@@ -138,11 +138,21 @@ public class DiseasePortalController
 		if(notEmpty(queryString) && !queryString.contains("tab=")) queryString += "&tab=gridtab";
 		mav.addObject("querystring", queryString);
 		
-		String locationsData = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
-		if(notEmpty(locationsData)) mav.addObject("locationsFileName","somename");
+		boolean useLocationsFile = DiseasePortalController.usingLocationsQuery(query,session);
+		if(useLocationsFile) mav.addObject("locationsFileName",(String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 		
 		return mav;
 
+    }
+    
+    @RequestMapping("/isFileCached")
+    public @ResponseBody String checkIfLocationsFileIsCached(HttpServletRequest request,
+    		HttpSession session,
+    		@ModelAttribute DiseasePortalQueryForm query)
+    {
+    	boolean useLocationsFile = DiseasePortalController.usingLocationsQuery(query,session);
+    	if(!useLocationsFile) return "(Warning: File must be re-uploaded to see results)";
+    	return "";
     }
     
     @RequestMapping("/uploadFile")
@@ -1177,8 +1187,7 @@ public class DiseasePortalController
 		String locations = query.getLocations();
 		
 		// add any file data that may be in the session
-		String locationsFileName = query.getLocationsFileName();
-		boolean useLocationsFile = locationsFileName!=null && locationsFileName.equals((String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
+		boolean useLocationsFile = usingLocationsQuery(query,session);
 		String locationsFileSet = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
 		List<String> markerKeysFromLocationsFile= DiseasePortalQueryForm.HUMAN.equals(query.getOrganism())
 				? (List<String>) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS)
@@ -1380,6 +1389,12 @@ public class DiseasePortalController
 			}
 		}
 		return new ArrayList(markerKeys);
+	}
+	
+	private static boolean usingLocationsQuery(DiseasePortalQueryForm query, HttpSession session)
+	{
+		String locationsFileName = query.getLocationsFileName();
+		return locationsFileName!=null && locationsFileName.equals((String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 	}
 
 }
