@@ -340,6 +340,7 @@ public class BatchController {
 
     private List<String> parseColumn(String data, int column, String delimiter) {
 
+    	int maxRows = 200000;
         // hold strings from parsed column
     	Set<String> parsedIds = new LinkedHashSet<String>();
 
@@ -347,13 +348,15 @@ public class BatchController {
         String[] rows = data.replaceAll("\r", "\n").split("\n");
         // column cells
         String[] cols;
-
+        
         // If a column is requested, loop through the rows and parse the
         // contents of the requested column.
         if (column > 0) {
             // holds contents of requested column
             String col;
             for (int i = 0; i < rows.length; i++) {
+            	if(i>maxRows) break; // make sure there is some limit to how much we will process
+            	
                 if (!delimiter.equals("")) {
                     // split cols by delimiter
                     cols = rows[i].split(delimiter);
