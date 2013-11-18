@@ -66,7 +66,7 @@ function formatForwardArgs() {
     document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
 
     // ensure we have a valid value for Flank before proceeding
-    if (!isIntegerFlank(document.sequenceForm.flank1.value)) {
+    if (document.sequenceForm.flank1 && !isIntegerFlank(document.sequenceForm.flank1.value)) {
         return 1;
     }
     document.sequenceForm.submit();
@@ -74,7 +74,7 @@ function formatForwardArgs() {
 
 function formatFastaArgs() {
     // ensure we have a valid value for Flank before proceeding
-    if (!isIntegerFlank(document.markerCoordForm.flank1.value)) {
+    if (document.markerCoordForm.flank1 && !isIntegerFlank(document.markerCoordForm.flank1.value)) {
         return 1;
     }
     document.markerCoordForm.submit();
