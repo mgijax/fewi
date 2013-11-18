@@ -141,10 +141,9 @@ var updateQuerySummary = function() {
 
 
 /*
- * makes an ajax request to adjust the display of "phenotypes" field in
+ * makes an ajax request to adjust the display of "locationsFile" field in
  * the "you searched for" section.
- * 	It resolves any term IDs into their term names.
- * 	This only really needs to be used if the user had autocomplete interaction...
+ * 	It displays a warning if there is no cached version of the file, which is required to return any results.
  */ 
 var checkFileUploadCache = function()
 {
