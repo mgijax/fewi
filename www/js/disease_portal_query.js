@@ -60,7 +60,7 @@ var resetQF = function (e) {
 	form.phenotypes.value = "";
 	form.genes.value = "";
 	form.locations.value = "";
-	form.organism[0].checked = true;
+	form.organism[1].checked = true;
 	form.locationsFileName.value = "";
 	
 	//form.fGene.value = "";
@@ -74,7 +74,10 @@ var resetQF = function (e) {
 			resetLocationsFileFields();
 		}
 	}
-	
+
+	// don't forget to match the mirrored organism radio
+	$("#organismMouse2").prop("checked",true);
+
 	// clear the validation errors
 	clearValidation();
 	return false;
@@ -282,6 +285,7 @@ function reverseEngineerFormInput(request)
 						{
 							var radioInput = jqInput[i];
 							radioInput.checked = radioInput.value == params[key];
+							$(radioInput).trigger("change");
 						}
 					}
 					// do check boxes

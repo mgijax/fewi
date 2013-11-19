@@ -1,4 +1,24 @@
 <style>
+/* styles for autocomplete */.ui-autocomplete {
+  max-height: 300px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+        font-size:90%;
+}
+/* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+* html .ui-autocomplete {
+  height: 300px;
+} 
+.ui-menu .ui-menu-item {
+        padding-left:0.4em;
+} 
+.ui-menu .ui-menu-item a {
+        padding:0px;
+} 
+
 span.smallGrey { font-size: 75%; color: #999999; }
 
 #locationsDiv 
@@ -59,17 +79,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
     display: none;
 }
 
-.redNot{ font-size:110%; color:red; font-weight:bold; }
 .hide { display:none; }
-.anatomyAC
-{
-	padding:2px 0px 12px 20px; 
-	width:300px;
-	text-align:left;
-}
 #alertBoxPosition
 {
-	top: -200px;left: 200px;
+	top: 120px;left: 260px;
 }
 #hiddenFileForm span
 {
@@ -131,7 +144,7 @@ textarea {resize:none; background-color:#FFE4B5;}
         <span class='queryHeaderText'>Search by genes</span>
       </div>
       <div style="position:absolute; top:60px; left:6px; ">
-      <form:textarea path="phenotypes" style="height:80px; width:240px;" class=""/>
+      <form:textarea path="genes" style="height:80px; width:240px;" class=""/>
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Bmp4">Bmp4</a>,
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Pax*">Pax*</a>,
@@ -200,6 +213,7 @@ textarea {resize:none; background-color:#FFE4B5;}
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
         <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh37)</label>
         <label><input id="organismMouse2" name="organismIgnore" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
+      	<c:if test="${not empty locationsFileName}"><br/><span id="locationsFileNotify">(Using cached file [${locationsFileName}])</span></c:if>
       </div>
 	    <input type="hidden" name="field" value="locationsFile">
 	    <input type="hidden" name="type" value="vcf">
@@ -209,13 +223,28 @@ textarea {resize:none; background-color:#FFE4B5;}
 
 
     </div>
-  </div>
+  </div> <!-- hdpQueryFormWrapper -->
+</div> <!-- hdpPageWrapper -->
+</div> <!-- standard-qf -->
+</div> <!-- yui-content -->
+</div> <!--  diseasePortalSearch -->
 
-
-
-
-	
-
-</div>
-</div>
-</div>
+<script type="text/javascript">
+var _idMap = {"organismHuman1":"organismHuman2",
+        "organismHuman2":"organismHuman1",
+        "organismMouse2":"organismMouse1",
+        "organismMouse1":"organismMouse2",
+        };
+$(function(){
+        // wire up the two radio buttons to mirror each other
+        $("input.organism").change(function(e){
+                var id = $(this).attr("id");
+                var checked = $(this).prop("checked");
+                if(checked && id in _idMap)
+                {
+                        mirrorId = _idMap[id];
+                        $("#"+mirrorId).prop("checked",true);
+                }
+        });
+});
+</script>
