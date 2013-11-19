@@ -61,7 +61,7 @@
 
 <table id="hdpSystemPopupLegend">
 <tr>
-	<td>N</td><td>Indicates Normal Phenotype</td></tr><tr>
+	<td>*</td><td>Aspects of the system are reported to show a normal phenotype</td></tr><tr>
 	<td class="bsn_legend">!</td><td>Indicates phenotype varies with strain background</td>
 </tr>
 </table>

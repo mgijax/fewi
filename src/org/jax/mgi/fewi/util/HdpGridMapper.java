@@ -232,6 +232,18 @@ public class HdpGridMapper {
 
 			return "";
 		}
+		
+		public String getMpPopupMark()
+		{
+			if(getHasPopup())
+			{
+				if(getIsNormal()) return "*";
+				return ""; // don't display check mark here
+			}
+
+			return "";
+		}
+		
 		// encapsulate how we generate a display mark in the main grid
 		public String getDiseaseMark()
 		{

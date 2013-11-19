@@ -167,7 +167,7 @@
       <td class="cc mpBin_${cell.mpBin}"><div class="cell_outer">
 	    <c:if test="${cell.hasPopup}">
 		    <div class="gridCellLink">
-			    <div class="mk">${cell.mpMark}</div>
+			    <div class="mk">${cell.mpPopupMark}</div>
 		    </div>
 		<c:if test="${cell.hasBackgroundNote}"><div class="bsn">!</div></c:if>
 	    </c:if>
