@@ -149,8 +149,26 @@ tr.gray td {background-color:#EEEEEE;}
     		<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
-                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>FILENAME_HERE.vcf</b></li>
-                <li>Verify...</li>
+                <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>human1-TEST-rsIDTestCol3.vcf</b></li>
+                <li>This file should upload without error.  Select "human" coordinates and click "GO".</li>
+                <li>Verify that the following genes ARE the ONLY genes returned in the Grid (<i>not in correct order</i>):
+                <table>
+                	<tr><th>Gene symbol</th></tr>
+                	<tr><td>PRMT6</td></tr>
+                	<tr><td>NOTCH2</td></tr>
+                	<tr><td>ADAR</td></tr>
+                	<tr><td>SH2D2A</td></tr>
+                	<tr><td>NTRK1</td></tr>
+                </table>
+                </li>
+                <li>Verify that the following genes ARE NOT returned in the Grid (<i>not in correct order</i>):
+                <table>
+                	<tr><th>Gene symbol</th></tr>
+                	<tr><td>DDR2</td></tr>
+                	<tr><td>RGL1</td></tr>
+                	<tr><td>HMCN1</td></tr>
+                </table>
+                </li>
     		</ol>
     		</li>
     		
