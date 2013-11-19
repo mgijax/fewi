@@ -94,6 +94,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>US84: Mouse IMSR counts is the number of mutations for this gene</li>
 		<li>US84: Human genes will not have IMSR counts</li>
 		<li>US84: IMSR counts will link to IMSR returning correct results</li>
+		<li>US210: Make Gene Tab default sort Alpha by Symbol with a secondary sort of Species</li>
 		</ul>
 	<p><b>NOTE!!:</b> A marker which has multiple genotypes may be indexed to a disease term for any 1 or more of those genotypes.  Being excluded from the indexed results set by one genotype rule does not exclude the marker completely (except for <em>Gt(ROSA)26Sor</em>.)</p>
 	<p>Sorting defined by SMEs:</p>
@@ -359,7 +360,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>  -->   		
 
-    		<li>Verify the sort of the Marker Symbol column
+    		<li>Verify the sort of the Marker Symbol column (sto210)
     		<p concordion:assertTrue="true">lec 11/18/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
