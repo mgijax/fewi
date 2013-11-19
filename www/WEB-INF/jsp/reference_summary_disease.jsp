@@ -26,7 +26,7 @@ ${templateBean.templateBodyStartHtml}
 <!-- begin header bar -->
 <div id="titleBarWrapper" userdoc="reference_help.shtml#results_refqf ">	
 	<!--myTitle -->
-	<span class="titleBarMainTitle">References associated with this ${disease.disease}</span>
+	<span class="titleBarMainTitle">References associated with ${disease.disease}</span>
 </div>
 <!-- end header bar -->
 
