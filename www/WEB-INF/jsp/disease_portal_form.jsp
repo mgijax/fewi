@@ -174,7 +174,7 @@ textarea {resize:none; background-color:#FFE4B5;}
 
     </form:form>
 
-    <div style="position:absolute; top:220px; left:20px; ">
+    <div style="position:absolute; top:220px; left:20px; width:600px;">
       <div style='font-size:150%;'>
         ------------------------------------------------------------------------
       </div>
