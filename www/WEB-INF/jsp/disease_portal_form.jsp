@@ -79,7 +79,36 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	font-weight: bold;
 }
 <![endif]-->
+</style>
 
+<style>
+textarea {resize:none; background-color:#FFE4B5;}
+#hdpPageWrapper {
+  width: 820px;
+  height: 330px;
+  position: relative;
+  margin: 0 auto;
+  font-family: Verdana,Arial,Helvetica;
+  /*background-color:#DDDDDD;*/
+}
+#hdpQueryFormWrapper{
+  left:6px;
+  width: 804px;
+  height: 320px;
+  border:2px solid;
+  border-radius:22px;
+  position:absolute;
+  background-color:#D0E0F0;
+}
+.formButtons{
+  font-family:Verdana, Arial,Helvetica;
+  color:#002255;
+  font-weight:bolder;
+  border: 1px #7D95B9 solid;
+  padding:2px;
+  cursor: pointer;
+  background-color:#FFE4B5;
+}
 </style>
 
 <div id="diseasePortalSearch" class="yui-navset">
@@ -88,74 +117,105 @@ span.smallGrey { font-size: 75%; color: #999999; }
 </ul>
 <div class="yui-content">
 <div id="standard-qf">
-	<form:form method="GET" commandName="diseasePortalQueryForm" action="${configBean.FEWI_URL}diseasePortal/summary">
-	<table WIDTH="100%" class="pad5 borderedTable">		
-		<tr>
-			<td colspan="2" align="left">
-				<input class="buttonLabel" value="Search" type="submit" id="submit1">
-				&nbsp;&nbsp;
-				<input type="reset" id="reset1">
-			</td>
-		</tr>	
-	  <!-- row 1-->
-	  <tr>
-	    <td class="queryCat1">Phenotypes and Diseases</td>
-	    <td class="queryParams1">
-	      <div style="position:relative;">
-	      	<div style="text-align:left;">
-	          Query by Phenotypes or Diseases (OMIM). <i>Can be terms or IDs.</i>
-	        </div>
-	        <div style="padding-left: 20px; text-align:left;">
-	          <form:textarea path="phenotypes" style="height:60px; width:500px;" class=""/>
-	        </div>
 
-	      </div>			
-	    </td>
-	  </tr>	
-	  <tr>
-	    <td class="queryCat2">Genes</td>
-	    <td class="queryParams2">
-	      <div style="position:relative;">
-	      	<div style="text-align:left;">
-	          Query by gene nomenclature. <i>Can be symbols,names or IDs.</i>
-	        </div>
-	        <div style="padding-left: 20px; text-align:left;">
-	          <form:textarea path="genes" style="height:60px; width:500px;" class=""/>
-	        </div>
-	        <br/><div style="text-align:left;">
-	          Query by gene region. (e.g. 13:22210730-22311689)
-	        </div>
-	        <div style="margin-left: 20px; text-align:left;" id="locationsDiv">
-	          <div><form:textarea path="locations" style="height:60px; width:500px;" class=""/></div>
-	          <div><b>in</b></div> <div style="width:6em;"><form:radiobuttons class="organism" path="organism" items="${diseasePortalQueryForm.organismOptions}" /></div>
-	        </div>
-	        <br>
-	       	  <div style="height:50px;width:0px;" id="locationsFileHome"></div>
-	      </div>			
-	    </td>
-	  </tr>	
-	  <tr>
-			<td colspan="2" align="left">
-				<input class="buttonLabel" value="Search" type="submit" id="submit2">
-				&nbsp;&nbsp;
-				<input type="reset" id="reset2">
-			</td>
-		</tr>	
-	 </table>	
-	 <input type="hidden" name="fGene" id="fGene" />
-	 <input type="hidden" name="fHeader" id="fHeader" />
+	
+<div id="hdpPageWrapper" >
+
+  <div id="hdpQueryFormWrapper" >
+    <div class='relativePos' >
+    <form:form method="GET" commandName="diseasePortalQueryForm" action="${configBean.FEWI_URL}diseasePortal/summary">
+
+    <div style="position:absolute; top:2px; left:2px; width:250px;">
+    <div class='relativePos'>
+      <div style="position:absolute; top:6px; left:15px; ">
+        <span class='queryHeaderText'>Search by genes</span>
+      </div>
+      <div style="position:absolute; top:60px; left:6px; ">
+      <form:textarea path="phenotypes" style="height:80px; width:240px;" class=""/>
+      Ex:
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Bmp4">Bmp4</a>,
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Pax*">Pax*</a>,
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=NM_013627">NM_013627</a>
+      <br/><br/>
+      Enter symbols, names or ids.<br/>
+      Use * for wildcard.
+      </div>
+    </div>
+    </div>
+
+    <div style="position:absolute; top:2px; left:254px; width:300px;">
+    <div class='relativePos'>
+      <div style="position:absolute; top:6px; left:15px; ">
+        <span class='queryHeaderText'>Search by genome locations</span></br>
+        <div style='margin-left:6px; padding-top:5px;'>
+        <label><input id="organismHuman1" name="organism" class="organism" type="radio" value="human"/>Human(GRCh37)</label>
+        <label><input id="organismMouse1" name="organism" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
+        </div>
+      </div>
+      <div style="position:absolute; top:60px; left:6px; ">
+      <textarea id="locations" name="locations" style="height:80px; width:280px;"></textarea>
+      Ex:
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?locations=Chr12:3000000-10000000">Chr12:3000000-10000000</a>
+      <br/><br/>
+      Need to convert genome build?<br/>
+      Use this <a href='http://www.ncbi.nlm.nih.gov/genome/tools/remap#tab=asm'>converter tool</a>.
+      </div>
+    </div>
+    </div>
+
+    <div style="position:absolute; top:2px; left:546px; width:250px;">
+    <div class='relativePos'>
+      <div style="position:absolute; top:6px; left:15px; ">
+        <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span>
+      </div>
+      <div style="position:absolute; top:60px; left:6px; ">
+      <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
+      Ex:
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=diabetes">diabetes</a>,
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>
+      <br/><br/>
+      Select from autocomplete or continue typing.  Use quotes for exact match.
+      </div>
+    </div>
+    </div>
+
      <input id="locationsFileName" type="hidden" name="locationsFileName" value="">
-	</form:form>
-	<!-- This will be positioned inside of locationsFileHome. We need it out here, because you can't define a form inside of another. -->
-	<div id="locationsFileDiv" style="position: relative; top: -69px; left: 142px;">
-		<form id="hiddenFileForm" name="hiddenFileForm" target="hiddenfileform_if" action="${configBean.FEWI_URL}diseasePortal/uploadFile" 
-			enctype="multipart/form-data" method="POST">
-       		Or Upload a VCF File: <input id="locationsFileInput" type="file" name="file">
-       		<c:if test="${not empty locationsFileName}"><br/><span id="locationsFileNotify">(Using cached file [${locationsFileName}])</span></c:if>
-       		<input type="hidden" name="field" value="locationsFile">
-       		<input type="hidden" name="type" value="vcf">
-       	</form>
-	</div> 
+    <input style="position:absolute; top:225px; left:700px; width:60px; font-size:20px;"
+      name="submit" class="formButtons" value="GO" type="submit"><br/>
+    <input class="formButtons"
+      style="position:absolute; top:265px; left:700px; width:60px; font-size:14px;" type="reset" >
+
+    </form:form>
+
+    <div style="position:absolute; top:220px; left:20px; ">
+      <div style='font-size:150%;'>
+        ------------------------------------------------------------------------
+      </div>
+      <form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
+		id="hiddenFileForm" name="hiddenFileForm" target="hiddenfileform_if">
+       <div style='font-size:150%; margin-top:12px; margin-left:20px;'>
+        Upload a VCF File: <input id="locationsFileInput" type="file" name="file">
+      </div>
+      <div style='margin-left:220px; padding-top:5px;'>
+	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
+        <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh37)</label>
+        <label><input id="organismMouse2" name="organismIgnore" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
+      </div>
+	    <input type="hidden" name="field" value="locationsFile">
+	    <input type="hidden" name="type" value="vcf">
+      </form>
+    </div>
+
+
+
+    </div>
+  </div>
+
+
+
+
+	
+
 </div>
 </div>
 </div>

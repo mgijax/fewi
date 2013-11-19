@@ -106,8 +106,8 @@ ${templateBean.templateBodyStartHdpHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="DISEASEPORTAL_help.shtml">	
-	<span class="titleBarMainTitle">Human Disease Portal</span>
+<div id="titleBarWrapper" userdoc="disease_connection_help.shtml">	
+	<span class="titleBarMainTitle"></span>
 	<div class="yourInputButton">
 		<form name="YourInputForm">
 			<input class="searchToolButton" 
