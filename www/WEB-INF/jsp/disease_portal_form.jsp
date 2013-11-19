@@ -1,24 +1,4 @@
 <style>
-/* styles for autocomplete */.ui-autocomplete {
-  max-height: 300px;
-  overflow-y: auto;
-  /* prevent horizontal scrollbar */
-  overflow-x: hidden;
-        font-size:90%;
-}
-/* IE 6 doesn't support max-height
- * we use height instead, but this forces the menu to always be this tall
- */
-* html .ui-autocomplete {
-  height: 300px;
-} 
-.ui-menu .ui-menu-item {
-        padding-left:0.4em;
-} 
-.ui-menu .ui-menu-item a {
-        padding:0px;
-} 
-
 span.smallGrey { font-size: 75%; color: #999999; }
 
 #locationsDiv 
@@ -124,13 +104,7 @@ textarea {resize:none; background-color:#FFE4B5;}
 }
 </style>
 
-<div id="diseasePortalSearch" class="yui-navset">
-<ul class="yui-nav">
-    <li class="selected"><a href="#disease-portal-search"><em>Human Disease Search</em></a></li>
-</ul>
-<div class="yui-content">
-<div id="standard-qf">
-
+<div id="diseasePortalSearch">
 	
 <div id="hdpPageWrapper" >
 
@@ -225,8 +199,6 @@ textarea {resize:none; background-color:#FFE4B5;}
     </div>
   </div> <!-- hdpQueryFormWrapper -->
 </div> <!-- hdpPageWrapper -->
-</div> <!-- standard-qf -->
-</div> <!-- yui-content -->
 </div> <!--  diseasePortalSearch -->
 
 <script type="text/javascript">

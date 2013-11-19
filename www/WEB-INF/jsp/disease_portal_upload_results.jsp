@@ -3,8 +3,9 @@
 <c:if test="${not empty success}"><div id="success">${success}</div></c:if>
 <c:if test="${not empty error}">
 	<div id="error">${error}
-		<br/>Refer to our <a target="_blank" href="${configBean.USERDOCS_URL}disease_connection_help.shtml#vcf" 
+		<br/>Sometimes this is due to an incompatible file format (Unicode text).
+		Refer to our <a target="_blank" href="${configBean.USERDOCS_URL}disease_connection_help.shtml#vcf" 
 			onclick="javascript:openUserhelpWindow('disease_connection_help.shtml#vcf'); return false;">help doc</a> 
-			for any questions about file formats.
+			for any questions about data-processing or file formats.
 	</div>
 </c:if>
