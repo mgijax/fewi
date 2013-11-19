@@ -166,10 +166,10 @@ textarea {resize:none; background-color:#FFE4B5;}
     </div>
     </div>
 
-     <input id="locationsFileName" type="hidden" name="locationsFileName" value="">
-    <input style="position:absolute; top:225px; left:700px; width:60px; font-size:20px;"
+     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
+    <input id="submit1" style="position:absolute; top:225px; left:700px; width:60px; font-size:20px;"
       name="submit" class="formButtons" value="GO" type="submit"><br/>
-    <input class="formButtons"
+    <input id="reset1" class="formButtons"
       style="position:absolute; top:265px; left:700px; width:60px; font-size:14px;" type="reset" >
 
     </form:form>
