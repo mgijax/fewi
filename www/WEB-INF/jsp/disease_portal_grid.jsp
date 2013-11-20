@@ -33,10 +33,11 @@
    
   #hdpGridTable th {border: 1px solid #AAA; border-top: none; padding: 4px 3px; vertical-align:bottom;}
   #hdpGridTable th > div { width:20px; overflow: visible; }
-  #hdpGridTable td {border: 1px solid #DDD; padding: 2px 1px 0px 3px; height: 20px; }
+  #hdpGridTable td {border: 1px solid #DDD; height: 20px; }
   #hdpGridTable tr .dc {border-left-color: #BFE4FF; border-right-color: #BFE4FF; }
   #hdpGridTable tr .vb .dc { border-right-color: #BFE4FF; }
   #hdpGridTable .vb { vertical-align: bottom; border-left: none; border-right: none;}
+  #hdpGridTable td .mc { padding: 2px 1px 0px 3px; }
   #hdpGridTable .cc 
   {
   	color: #000;
@@ -192,21 +193,21 @@
 	
 	<c:forEach var="gridCluster" items="${gridClusters}" varStatus="gcStatus">
 	  <tr class="${gcStatus.index % 2 == 0 ? 'row1' : 'row2'}">
-	    <td>
+	    <td><div class="mc">
 	      <c:forEach var="humanSymbol" items="${gridCluster.humanSymbols}" varStatus="status">
 		      <% String humanSymbol = (String) pageContext.getAttribute("humanSymbol"); %>
 		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}"><%= FormatHelper.superscript(humanSymbol) %></a></c:if>
 		      <c:if test="${ empty gridCluster.homologeneId}"><%= FormatHelper.superscript(humanSymbol) %></c:if>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
-	    </td>
-	    <td>
+	    </div></td>
+	    <td><div class="mc">
 	      <c:forEach var="mouseMarker" items="${gridCluster.mouseMarkers}" varStatus="status">
 	      	  <% SolrDpGridClusterMarker mouseMarker = (SolrDpGridClusterMarker) pageContext.getAttribute("mouseMarker"); %>
 		      <a href="${configBean.FEWI_URL}marker/key/${mouseMarker.markerKey}"><%= FormatHelper.superscript(mouseMarker.getSymbol()) %></a>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
-	    </td>
+	    </div></td>
 		<td class="rcb"><input class="gridCheck" type="checkbox" filter="fGene" value="${gridCluster.gridClusterKey}"/></td>   
         <c:forEach var="mpHeader" items="${gridCluster.mpHeaderCells}" varStatus="status"><c:if test="${not mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if>"></td></c:if>
         	<c:if test="${mpHeader.hasPopup}"><td class="mp_${status.count} <c:if test="${status.last && not empty gridCluster.diseaseCells}"> rightDoubleBorder </c:if> cc mpBin_${mpHeader.mpBin}" onClick="javascript:popupGenotypeSystem ('${configBean.FEWI_URL}diseasePortal/gridSystemCell?${encodedQueryString}&gridClusterKey=${gridCluster.gridClusterKey}&termHeader=${mpHeader.term}', '${gridCluster.gridClusterKey}', '${mpHeader.term}'); return false;">
