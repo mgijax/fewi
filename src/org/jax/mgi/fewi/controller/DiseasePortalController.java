@@ -1075,12 +1075,20 @@ public class DiseasePortalController
 
         if(query.getHasLocationsQuery())
         {
-        	logger.debug("using location sort");
         	String organism = query.getOrganism();
-        	boolean orgSort = "human".equalsIgnoreCase(organism) ? false : true;
+        	if("human".equalsIgnoreCase(organism))
+        	{        	
+        		logger.debug("using human location sort");
+            	sorts.add(new Sort(DiseasePortalFields.GRID_BY_HUMAN_LOCATION, false));
+    	        sorts.add(new Sort(DiseasePortalFields.GRID_BY_MOUSE_LOCATION, false));
+        	}
+        	else
+        	{        		
+        		logger.debug("using mouse location sort");
+    	        sorts.add(new Sort(DiseasePortalFields.GRID_BY_MOUSE_LOCATION, false));
+        		sorts.add(new Sort(DiseasePortalFields.GRID_BY_HUMAN_LOCATION, false));
+        	}
         	
-        	sorts.add(new Sort(SortConstants.DP_BY_ORGANISM, orgSort));
-	        sorts.add(new Sort(SortConstants.DP_BY_LOCATION, false));
         }
         else
         {

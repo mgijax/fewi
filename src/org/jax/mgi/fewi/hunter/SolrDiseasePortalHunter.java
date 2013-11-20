@@ -157,6 +157,11 @@ public class SolrDiseasePortalHunter extends SolrHunter
         /*
          * Setup the sort mapping.
          */
+         
+         // grid sorts
+         sortMap.put(DiseasePortalFields.GRID_BY_MOUSE_LOCATION, new SolrSortMapper(DiseasePortalFields.GRID_BY_MOUSE_LOCATION));
+         sortMap.put(DiseasePortalFields.GRID_BY_HUMAN_LOCATION, new SolrSortMapper(DiseasePortalFields.GRID_BY_HUMAN_LOCATION));
+         
          // marker sorts
         sortMap.put(SortConstants.DP_BY_MRK_SYMBOL, new SolrSortMapper(DiseasePortalFields.BY_MARKER_SYMBOL));
         sortMap.put(SortConstants.DP_BY_MRK_TYPE, new SolrSortMapper(DiseasePortalFields.BY_MARKER_TYPE));
