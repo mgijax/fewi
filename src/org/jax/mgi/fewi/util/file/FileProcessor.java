@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.util;
+package org.jax.mgi.fewi.util.file;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,20 +39,22 @@ public class FileProcessor
 		 InputStream inputStream = vcf.getInputStream();
 		 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		 
+		 VcfProcessorOutput vpo = new VcfProcessorOutput();
+		 
 		 StringBuilder sb = new StringBuilder("");
 		 String line;
 		 int count=0;
-		 int coordCount=0;
 		 while ((line = bufferedReader.readLine()) != null)
 		 {
 			 if(count++ > VCF_ROW_LIMIT) break;
 			 //logger.debug("line="+line);
 			 // ignore comment lines
-			 if(line.length()<1) continue;
-			 if(line.charAt(0) == VCF_COMMENT_CHAR) continue;
+			 vpo.addProcessedRow();
+			 if(line.length()<1) { vpo.kickRowWithNoData(); continue; }
+			 if(line.charAt(0) == VCF_COMMENT_CHAR) { vpo.kickRowWithNoData(); continue; }
 
 			 int coordColStringIndex = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_COORDINATE_COL);
-			 if(coordColStringIndex<2){ continue; }// this must be atleast 2 to have any values
+			 if(coordColStringIndex<2){ vpo.kickRowWithNoData(); continue; }// this must be atleast 2 to have any values
 			 
 			 // check if ID column exists
 			 int idColStringStart = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_ID_COL-1);
@@ -65,7 +67,7 @@ public class FileProcessor
 					 String id = line.substring(idColStringStart+1,idColStringStop);
 					 //logger.debug("id="+id);
 					// skip this row for having an id (we want to remove known variants)
-					 if(!"".equals(id) && !".".equals(id)) { continue; } 
+					 if(!"".equals(id) && !".".equals(id)) { vpo.kickRowWithId(); continue; } 
 				 }
 			 }
 			 
@@ -80,7 +82,7 @@ public class FileProcessor
 					 String filter = line.substring(filterColStart+1,filterColStop);
 					 //logger.debug("filter="+filter);
 					 // skip this row for not having a non-passing filter
-					 if(!"".equals(filter) && !".".equals(filter) && !"pass".equalsIgnoreCase(filter)) { continue; }
+					 if(!"".equals(filter) && !".".equals(filter) && !"pass".equalsIgnoreCase(filter)) { vpo.kickRowWithNotPass(); continue; }
 				 }
 			 }
 			 
@@ -91,14 +93,17 @@ public class FileProcessor
 			 String coordinate = chromCoordSubStr.substring(chromColStringIndex+1);
 			 //logger.debug("processed line "+count+" chromosome="+chromosome+",coordinate="+coordinate);
 			 
+			 // we don't want to include any data with single/double quotes. It messes up Solr
+			 if(hasQuotes(chromosome) || hasQuotes(coordinate)) { vpo.kickRowWithNoData(); continue; }
+			 
 			 if(!"".equals(chromosome)) sb.append(chromosome).append(":");
 			 sb.append(coordinate).append(",");
-			 coordCount += 1;
+			 vpo.addRowWithCoordinate();
 		 }
 		 bufferedReader.close();
 		 inputStream.close();
 
-		 logger.debug("found "+coordCount+" coordinates in vcf file");
+		 logger.debug("vpo = "+vpo);
 		 return sb.toString();
 	 }
 	 
@@ -123,5 +128,10 @@ public class FileProcessor
 			charVals.append(cInt).append(",");
 		 }
 		 return charVals.toString();
+	 }
+	 
+	 public static boolean hasQuotes(String str)  
+	 {  
+		 return str.indexOf('\'')>=0 || str.indexOf('\"')>=0;
 	 }
 }

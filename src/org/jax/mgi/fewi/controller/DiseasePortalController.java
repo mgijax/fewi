@@ -39,11 +39,11 @@ import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
 import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
-import org.jax.mgi.fewi.util.FileProcessor;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.jax.mgi.fewi.util.file.FileProcessor;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.slf4j.Logger;
@@ -119,29 +119,36 @@ public class DiseasePortalController
     //----------------------------//
 
     @RequestMapping("/summary")
-    public ModelAndView genericSummary(
+    public String genericSummary(
 		    @ModelAttribute DiseasePortalQueryForm query,
             HttpServletRequest request,
-            HttpSession session) {
+            HttpSession session,
+            Model model) {
 
     	logger.debug("generating generic DiseasePortal summary");
     	
     	String queryString = request.getQueryString();
     	// if the queryString is empty, this might be a POST request
     	if(!notEmpty(queryString)) queryString = FormatHelper.queryStringFromPost(request);
+		else 
+		{
+			// if this is a GET, resubmit as a POST
+			request.setAttribute("query", query);
+			return "forward:mgi/diseasePortal/summary"; 
+		}
     	
 		logger.debug("query string: " + queryString);
 		logger.debug("query form: " + query);
 		
 
-		ModelAndView mav = new ModelAndView("disease_portal_query");
+		//ModelAndView mav = new ModelAndView("disease_portal_query");
 		if(notEmpty(queryString) && !queryString.contains("tab=")) queryString += "&tab=gridtab";
-		mav.addObject("querystring", queryString);
+		model.addAttribute("querystring", queryString);
 		
 		boolean useLocationsFile = DiseasePortalController.usingLocationsQuery(query,session);
-		if(useLocationsFile) mav.addObject("locationsFileName",(String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
+		if(useLocationsFile) model.addAttribute("locationsFileName",(String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 		
-		return mav;
+		return "disease_portal_query";
 
     }
     
