@@ -1,0 +1,411 @@
+/*
+* Autocomplete styles
+*/
+.ui-autocomplete {
+  max-height: 300px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+	font-size:90%;
+}
+/* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+* html .ui-autocomplete {
+  height: 300px;
+}
+.ui-menu .ui-menu-item {
+	padding-left:0.4em;
+}
+.ui-menu .ui-menu-item a {
+	padding:0px;
+}
+
+/* style shortcuts */
+.left { float: left; }
+.right { float: right; }
+.hide { display: none; }
+table.noborder, table.noborder td , table.noborder th { border: none; }
+  
+button { cursor: pointer; }
+
+/* summary tab-nav styles */
+#resultSummary {border:0;padding-left:5px; text-align: left; font-size: 12px;}
+#resultSummary .selected a,
+#resultSummary .selected a:focus,
+#resultSummary .selected a:hover{ margin-left: 0px;border:1px solid #808080;border-bottom:solid 1px #eee; color:black; background:none; background-color:#eee;}
+#resultSummary .yui-content{background-color:#eee;border:1px solid #808080; border-top: none;}
+#resultSummary .yui-nav {border-bottom:solid 1px black;}
+
+
+body.yui-skin-sam .yui-panel .hd,
+body.yui-skin-sam .yui-ac-hd { background:none; background-color:#025; color:#fff; font-weight: bold;}
+body.yui-skin-sam .yui-ac-hd {padding: 5px;}
+body.yui-skin-sam div#outer {overflow:visible;}
+
+.yui-dt table {width: 100%;}
+
+td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
+
+.yui-skin-sam .yui-tt .bd
+{
+	background-color:#ddf; 
+	color:#005;
+	border:2px solid #005;
+}
+
+
+/* summary */
+.hl
+{
+	font-size:80%;
+}
+.yui-skin-sam .yui-dt-liner
+{
+	padding: 4px 4px 4px 4px;
+}
+td.yui-dt-col-coordinate
+{
+	white-space: nowrap;
+}
+.diseaseList li
+{
+	list-style-type: circle;
+	padding: 0px;
+	margin-left: 16px; 
+}
+/* #griddata { overflow-x: auto; } */
+
+
+#resultSummary
+{
+	display:table;
+}
+#filterReset 
+{ 
+	cursor: pointer; 
+}
+#gridFilterIndicator
+{
+	margin: 8px;
+}
+
+
+/* Form */
+#locationsDiv 
+{
+	display: table;
+}
+#locationsDiv div
+{
+	display: table-cell;
+	vertical-align: middle;
+	padding: 0px 6px;
+}
+.organism
+{
+	margin-left: 6px;
+	margin-right: 3px;
+}
+#alertBoxPosition
+{
+	top: 120px;left: 260px;
+}
+#hiddenFileForm span
+{
+	padding-left: 50px;
+	font-style: italic;
+	color: yellowgreen;
+	font-weight: bold;
+}
+
+textarea {resize:none; background-color:#FFE4B5;}
+#hdpPageWrapper {
+  width: 820px;
+  height: 330px;
+  position: relative;
+  margin: 0 auto;
+  font-family: Verdana,Arial,Helvetica;
+  /*background-color:#DDDDDD;*/
+}
+#hdpQueryFormWrapper{
+  left:6px;
+  width: 804px;
+  height: 320px;
+  border:2px solid;
+  border-radius:22px;
+  position:absolute;
+  background-color:#D0E0F0;
+}
+.formButtons{
+  font-family:Verdana, Arial,Helvetica;
+  color:#002255;
+  font-weight:bolder;
+  border: 1px #7D95B9 solid;
+  padding:2px;
+  cursor: pointer;
+  background-color:#FFE4B5;
+}
+
+
+/* popups */
+ #hdpSystemPopupHeader{ 
+    min-height:32px; 
+    min-width:500px;
+    background-color:#DFEFFF; 
+    margin-bottom:12px;
+    padding:3px;
+    border:thin solid #002255;
+    font-family: Verdana,Arial,Helvetica; 
+    font-size: 20px;
+  }
+  #hdpSystemPopupWrap
+  {
+  	display: table;
+  	border: 2px solid #AAA; 
+  	background-color:#FFF; 
+  	font-family: Verdana,Arial,Helvetica;
+  }
+  #hdpSystemPopupTable 
+  { 
+  	display: table-cell;
+  	border-spacing:0px; 
+  	border-collapse:collapse; 
+  	font-family: Verdana,Arial,Helvetica;
+  	font-size: 12px;
+  }
+  #hdpSystemPopupHeader{ 
+    min-height:32px; 
+    min-width:500px;
+    background-color:#DFEFFF; 
+    margin-bottom:12px;
+    padding:3px;
+    border:thin solid #002255;
+    font-family: Verdana,Arial,Helvetica; 
+    font-size: 20px;
+  }
+  #hdpSystemPopupTablePadder{ display: table-cell; }
+  #hdpSystemPopupTablePadder img { visibility: hidden; }
+  #hdpSystemPopupTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; }
+  #hdpSystemPopupTable th > div { width:20px; overflow: visible; }
+  #hdpSystemPopupTable td {border: 1px solid #DDD; padding: 4px 4px;}
+  #hdpSystemPopupTable .vb { vertical-align: bottom; border-left: none; border-right: none;}
+  #hdpSystemPopupTable .vb .partialRight
+  { 
+  	position: absolute;
+	bottom: -4px;
+	width: 24px;
+	height: 14px;
+	border-right: 1px solid #AAA;
+  }
+  .cell_outer { position: relative; width:100%;height:18px;}
+  
+  tr.genoRow:hover
+  {
+  	background-color: #FFFFCC;
+  	cursor: pointer;
+  }
+  .row1 { border-top: 2px solid #DDD; }
+
+  #hdpSystemPopupTable .humanHeaderRow { background-color: #EFEFEF; }
+  #hdpSystemPopupTable .cc
+  {
+        color: #000;
+        margin-right: 8px;
+        margin-top: 6px;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 0px;
+  }
+  #hdpSystemPopupTable .gridCellLink
+  {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+  }
+  #hdpSystemPopupTable .mk
+  {
+        padding-top: 6px;
+        padding-left: 6px;
+  }
+  #hdpSystemPopupTable .mpBin_0 { }
+  #hdpSystemPopupTable .mpBin_1 { background-color: #C6D6E8; }
+  #hdpSystemPopupTable .mpBin_2 { background-color: #879EBA; }
+  #hdpSystemPopupTable .mpBin_3 { background-color: #49648B; }
+  #hdpSystemPopupTable .mpBin_4 { background-color: #002255; }
+  
+  
+  #hdpSystemPopupTable .dHBin_0 {}
+  #hdpSystemPopupTable .dHBin_1 { background: url('../images/hdp/human_cell_sprite.gif') 0px 0px; } 
+  #hdpSystemPopupTable .dHBin_2 { background: url('../images/hdp/human_cell_sprite.gif') 0px -44px; }
+  #hdpSystemPopupTable .dHBin_3 { background: url('../images/hdp/human_cell_sprite.gif') 0px -90px; }
+  #hdpSystemPopupTable .dHBin_4 { background: url('../images/hdp/human_cell_sprite.gif') 0px -134px; }
+  #hdpSystemPopupTable .dHBin_5 { background-color: #ffdab3; }
+  #hdpSystemPopupTable .dHBin_6 { background-color: #f7be76; }
+  #hdpSystemPopupTable .dHBin_7 { background-color: #fba039; }
+  #hdpSystemPopupTable .dHBin_8 { background-color: #ff8700; }
+  
+  
+  #hdpSystemPopupHeader{ 
+    min-height:32px; 
+    min-width:500px;
+    background-color:#DFEFFF; 
+    margin-bottom:12px;
+    padding:3px;
+    border:thin solid #002255;
+    font-family: Verdana,Arial,Helvetica; 
+    font-size: 20px;
+  }
+  #hdpSystemPopupLegend
+  {
+  	display: table-cell;
+  	border-spacing:0px; 
+  	border-collapse:collapse; 
+  	font-family: Verdana,Arial,Helvetica;
+  	font-size: 12px;
+  	background-color: #DFEFFF;
+  	margin-bottom: 8px;
+  }
+  #hdpSystemPopupLegend td
+  {
+  	border: solid 1px black;
+  	padding: 0px 4px;
+  }
+  .bsn_legend
+  {
+ 	color: #FF8300;
+  	font-weight: bold;
+  	font-size: 120%;
+  	font-family: serif;
+  }
+  /* style for the backgroudn sensitivity note */
+  .bsn
+  {
+  	color: #FF8300;
+  	font-weight: bold;
+  	font-size: 120%;
+  	font-family: serif;
+  	top: -4px;
+  	right: 4px;
+  	position: absolute;
+  }
+  
+  
+  /* Grid */
+  #hdpGridTableWrap
+  {
+  	display: table;
+  	border: 2px solid #AAA; 
+  	background-color:#FFF; 
+  }
+
+  #hdpGridTable 
+  { 
+  	display: table-cell;
+  	border-spacing:0px; 
+  	border-collapse:collapse; 
+  }
+  #hdpGridTable a { text-decoration: none; }
+  
+  #hdpGridTablePadder{ display: table-cell; }
+  #hdpGridTablePadder img { visibility: hidden; }
+   
+  #hdpGridTable th {border: 1px solid #AAA; border-top: none; padding: 4px 3px; vertical-align:bottom;}
+  #hdpGridTable th > div { width:20px; overflow: visible; }
+  #hdpGridTable td {border: 1px solid #DDD; height: 20px; }
+  #hdpGridTable tr .dc {border-left-color: #BFE4FF; border-right-color: #BFE4FF; }
+  #hdpGridTable tr .vb .dc { border-right-color: #BFE4FF; }
+  #hdpGridTable .vb { vertical-align: bottom; border-left: none; border-right: none;}
+  #hdpGridTable td .mc { padding: 2px 1px 0px 3px; }
+  #hdpGridTable .cc 
+  {
+  	color: #000;
+	margin-right: 8px;
+	margin-top: 6px;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 0px;
+  }
+  #hdpGridTable .gridCellLink
+  {
+  	cursor: pointer;
+  	width: 100%;
+  	height: 100%;
+  }
+  #hdpGridTable .mk
+  {
+  	padding-top: 6px;
+  	padding-left: 6px;
+  }
+  
+  #hdpGridTable .vb .partialRight
+  { 
+  	position: absolute;
+	bottom: -4px;
+	width: 23px;
+	height: 14px;
+	border-right: 1px solid #AAA;
+  }
+  #hdpGridTable .vb .partialDoubleRight
+  { 
+  	position: absolute;
+	bottom: -4px;
+	width: 19px;
+	height: 14px;
+	border-right: 8px solid #DDD;
+  }
+  #hdpGridTable .rightBorder { border-right: 1px solid #DDD;}
+  #hdpGridTable .rightDoubleBorder { border-right: 8px solid #DDD;}
+  .diseaseButton
+  {
+  	width:10px;
+  	height:10px;
+  	background-color: blue;
+  	cursor:pointer;
+  	border: solid 1px black;
+  }
+  .gridCheck
+  {
+  	cursor: pointer;
+  }
+  .gridCheck:hover { background-color: #FFFFCC;}
+  #hdpGridTable tr .rcb { width: 18px; }
+  
+  .gridHl
+  {
+  	background-color: #FFFFCC;
+  }
+  
+  #hdpGridTable .tooltip 
+  {
+	border: 1px solid #808080;
+	background-color: #FFFFCA;
+	font-size: 90%;
+	position: absolute;
+	top: 8px;
+	left: -50px;
+	white-space: nowrap;
+	padding: 2px;
+  }
+  
+  #hdpGridTable .mpBin_1 { background-color: #C6D6E8; }
+  #hdpGridTable .mpBin_2 { background-color: #879EBA; }
+  #hdpGridTable .mpBin_3 { background-color: #49648B; }
+  #hdpGridTable .mpBin_4 { background-color: #002255; }
+  
+  #hdpGridTable .dMBin_0 {}
+  #hdpGridTable .dMBin_1 { background-color: #C6D6E8; }
+  #hdpGridTable .dMBin_2 { background-color: #879EBA; }
+  #hdpGridTable .dMBin_3 { background-color: #49648B; }
+  #hdpGridTable .dMBin_4 { background-color: #002255; }
+  
+  
+  #hdpGridTable .dHBin_0 {}
+  #hdpGridTable .dHBin_1 { background: url('../images/hdp/human_cell_sprite.gif') 0px 0px; }
+  #hdpGridTable .dHBin_2 { background: url('../images/hdp/human_cell_sprite.gif') 0px -44px; }
+  #hdpGridTable .dHBin_3 { background: url('../images/hdp/human_cell_sprite.gif') 0px -90px; }
+  #hdpGridTable .dHBin_4 { background: url('../images/hdp/human_cell_sprite.gif') 0px -134px; }
+  #hdpGridTable .dHBin_5 { background-color: #ffdab3; }
+  #hdpGridTable .dHBin_6 { background-color: #f7be76; }
+  #hdpGridTable .dHBin_7 { background-color: #fba039; }
+  #hdpGridTable .dHBin_8 { background-color: #ff8700; }

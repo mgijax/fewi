@@ -11,72 +11,16 @@ ${templateBean.templateHeadHtml}
 
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 
 <!-- import jquery UI specifically for this page -->
 <link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 <script src="${configBean.WEBSHARE_URL}js/jquery-ui-1.10.2.custom.min.js"></script>
 
+<%-- Please add styles to disease_portal.css
 <style>
-.ui-autocomplete {
-  max-height: 300px;
-  overflow-y: auto;
-  /* prevent horizontal scrollbar */
-  overflow-x: hidden;
-	font-size:90%;
-}
-/* IE 6 doesn't support max-height
- * we use height instead, but this forces the menu to always be this tall
- */
-* html .ui-autocomplete {
-  height: 300px;
-}
-.ui-menu .ui-menu-item {
-	padding-left:0.4em;
-}
-.ui-menu .ui-menu-item a {
-	padding:0px;
-}
-
-.left { float: left; }
-.right { float: right; }
-
-#resultSummary {border:0;padding-left:5px; text-align: left; font-size: 12px;}
-#resultSummary .selected a,
-#resultSummary .selected a:focus,
-#resultSummary .selected a:hover{ margin-left: 0px;border:1px solid #808080;border-bottom:solid 1px #eee; color:black; background:none; background-color:#eee;}
-#resultSummary .yui-content{background-color:#eee;border:1px solid #808080; border-top: none;}
-#resultSummary .yui-nav {border-bottom:solid 1px black;}
-
-#diseasePortalSearch {border:0;padding-left:5px; text-align: left; font-size: 12px;}
-#diseasePortalSearch .selected a,
-#diseasePortalSearch .selected a:focus,
-#diseasePortalSearch .selected a:hover{ margin-left: 0px;border:1px solid #808080;border-bottom:solid 1px #eee; color:black; background:none; background-color:#eee;}
-#diseasePortalSearch .yui-content{background-color:#eee;border:1px solid #808080; border-top: none;}
-#diseasePortalSearch .yui-nav {border-bottom:solid 1px black;}
-
-table.noborder, table.noborder td , table.noborder th { border: none; }
-
-
-body.yui-skin-sam .yui-panel .hd,
-body.yui-skin-sam .yui-ac-hd { background:none; background-color:#025; color:#fff; font-weight: bold;}
-body.yui-skin-sam .yui-ac-hd {padding: 5px;}
-body.yui-skin-sam div#outer {overflow:visible;}
-
-.yui-dt table {width: 100%;}
-
-td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
-
-.yui-skin-sam .yui-tt .bd
-{
-	background-color:#ddf; 
-	color:#005;
-	border:2px solid #005;
-}
-
-#diseasePortalQueryForm .queryCat1 { background-color: #ffeac3; }
-#diseasePortalQueryForm .queryCat2 { background-color: #dfba93; }
-
 </style>
+--%>
 <!--[if IE]>
 <style>
 
@@ -122,7 +66,7 @@ ${templateBean.templateBodyStartHdpHtml}
 </div>
 
 
-<div id="toggleControl" style="background-color: #ffdab3; border: solid 1px black;">    
+<div id="toggleControl" style="background-color: #ffdab3; border: solid 1px #7F7F7F;">    
     <div id="toggleQF" class="summaryControl" style="display:none; padding: 8px 10px;"><span id="toggleImg" class="qfExpand" style="margin-right:15px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
 </div>
 <div id="outer" style="border:none; background-color: transparent;"><div id="qwrap" style="margin-top: 10px;"><%@ include file="/WEB-INF/jsp/disease_portal_form.jsp" %></div></div>

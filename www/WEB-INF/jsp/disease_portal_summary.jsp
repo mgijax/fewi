@@ -1,24 +1,4 @@
 <style>
-.hl
-{
-	font-size:80%;
-}
-.yui-skin-sam .yui-dt-liner
-{
-	padding: 4px 4px 4px 4px;
-}
-td.yui-dt-col-coordinate
-{
-	white-space: nowrap;
-}
-.diseaseList li
-{
-	list-style-type: circle;
-	padding: 0px;
-	margin-left: 16px; 
-}
-/* #griddata { overflow-x: auto; } */
-
 .yui-skin-sam .yui-dt th{
   background:url(${configBean.WEBSHARE_URL}images/cre/SpriteYuiOverRide.png)
   repeat-x 0 -1300px;
@@ -40,28 +20,6 @@ td.yui-dt-col-coordinate
   background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
   no-repeat right;
 }
-#resultSummary
-{
-	display:table;
-}
-#filterReset 
-{ 
-	cursor: pointer; 
-}
-#gridFilterIndicator
-{
-	margin: 8px;
-}
-
-.summary-helptext
-{
-	color: purple;
-	font-size:100%;
-	font-style:italic;
-}
-.hide {display: none;}
-
-
 </style>
 <div id="summary">
     <div id="paginationTop" style="float:right;">&nbsp;</div>

@@ -3,51 +3,7 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
-
-<style type="text/css">
-  #hdpSystemPopupHeader{ 
-    min-height:32px; 
-    min-width:500px;
-    background-color:#DFEFFF; 
-    margin-bottom:12px;
-    padding:3px;
-    border:thin solid #002255;
-    font-family: Verdana,Arial,Helvetica; 
-    font-size: 20px;
-  }
-  #hdpSystemPopupLegend
-  {
-  	display: table-cell;
-  	border-spacing:0px; 
-  	border-collapse:collapse; 
-  	font-family: Verdana,Arial,Helvetica;
-  	font-size: 12px;
-  	background-color: #DFEFFF;
-  	margin-bottom: 8px;
-  }
-  #hdpSystemPopupLegend td
-  {
-  	border: solid 1px black;
-  	padding: 0px 4px;
-  }
-  .bsn
-  {
-  	color: #FF8300;
-  	font-weight: bold;
-  	font-size: 120%;
-  	font-family: serif;
-  	top: -2px;
-  	right: -1px;
-  	position: absolute;
-  }
-  .bsn_legend
-  {
- 	color: #FF8300;
-  	font-weight: bold;
-  	font-size: 120%;
-  	font-family: serif;
-  }
-</style>
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 
 <script>
 	// change window title on page load

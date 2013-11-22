@@ -1,21 +1,4 @@
 <style>
-span.smallGrey { font-size: 75%; color: #999999; }
-
-#locationsDiv 
-{
-	display: table;
-}
-#locationsDiv div
-{
-	display: table-cell;
-	vertical-align: middle;
-	padding: 0px 6px;
-}
-.organism
-{
-	margin-left: 6px;
-	margin-right: 3px;
-}
 .tab-nav
 {
 	float: left;
@@ -57,50 +40,6 @@ span.smallGrey { font-size: 75%; color: #999999; }
 .inactive-content
 {
     display: none;
-}
-
-.hide { display:none; }
-#alertBoxPosition
-{
-	top: 120px;left: 260px;
-}
-#hiddenFileForm span
-{
-	padding-left: 50px;
-	font-style: italic;
-	color: yellowgreen;
-	font-weight: bold;
-}
-<![endif]-->
-</style>
-
-<style>
-textarea {resize:none; background-color:#FFE4B5;}
-#hdpPageWrapper {
-  width: 820px;
-  height: 330px;
-  position: relative;
-  margin: 0 auto;
-  font-family: Verdana,Arial,Helvetica;
-  /*background-color:#DDDDDD;*/
-}
-#hdpQueryFormWrapper{
-  left:6px;
-  width: 804px;
-  height: 320px;
-  border:2px solid;
-  border-radius:22px;
-  position:absolute;
-  background-color:#D0E0F0;
-}
-.formButtons{
-  font-family:Verdana, Arial,Helvetica;
-  color:#002255;
-  font-weight:bolder;
-  border: 1px #7D95B9 solid;
-  padding:2px;
-  cursor: pointer;
-  background-color:#FFE4B5;
 }
 </style>
 
