@@ -134,7 +134,7 @@ public class DiseasePortalController
 		{
 			// if this is a GET, resubmit as a POST
 			request.setAttribute("query", query);
-			return "forward:mgi/diseasePortal/summary"; 
+			return "forward:/mgi/diseasePortal/summary"; 
 		}
     	
 		logger.debug("query string: " + queryString);
