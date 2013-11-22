@@ -130,12 +130,12 @@ public class DiseasePortalController
     	String queryString = request.getQueryString();
     	// if the queryString is empty, this might be a POST request
     	if(!notEmpty(queryString)) queryString = FormatHelper.queryStringFromPost(request);
-		else 
-		{
-			// if this is a GET, resubmit as a POST
-			request.setAttribute("query", query);
-			return "forward:/mgi/diseasePortal/summary"; 
-		}
+//		else 
+//		{
+//			// if this is a GET, resubmit as a POST
+//			request.setAttribute("query", query);
+//			return "forward:/mgi/diseasePortal/summary"; 
+//		}
     	
 		logger.debug("query string: " + queryString);
 		logger.debug("query form: " + query);
