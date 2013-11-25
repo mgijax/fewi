@@ -122,8 +122,37 @@
       </div>
       <form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
 		id="hiddenFileForm" name="hiddenFileForm" target="hiddenfileform_if">
-       <div style='font-size:150%; margin-top:12px; margin-left:20px;'>
-        Upload a VCF File: <input id="locationsFileInput" type="file" name="file">
+       <div style='margin-top:6px; margin-left:20px;'>
+        <span style="font-size:150%;">Upload a VCF File: <input id="locationsFileInput" type="file" name="file"></span>
+        <img id="locationsFileHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
+		<div id="locationsFileHelp"> 
+			<div class="hd">VCF File Uploading Tips</div> 
+			<div class="bd">
+				<p>The file upload functionality will be expanded in coming releases. For now, the following restrictions are in place:</p>
+				<ul>
+					<li>Files are assumed to be in VCf v.4.0 or later format:
+						<ul>
+							<li>Column 1 = chromosome</li>
+							<li>Column 2 = coordinate</li>
+							<li>Column 3 = SNP ID (if any)</li>
+							<li>Column 7 = Filter value</li>
+						</ul>
+					</li>
+					<li>Files over 25MB cannot be processed</li>
+					<li>Only the first 200,000 lines of a file can be processed</li>
+					<li>Lines containing a SNP ID (RS ID) in column 3 are rejected
+						<br/>(emphasizing only unknown variants)
+					</li>
+					<li>Lines containing values other than "pass", ".", or no value (null) in column 7 are rejected</li>
+				</ul>
+				<p>If your file contains SNP IDs in column 3 and you wish to include those rows in the search, 
+					please edit the file to remove the IDs (leaving column 3 empty).
+					Save as a tab-delimited file in a format other than Unicode.
+				</p>
+				<p>If your file is larger than 25MB or has more than 200,000 lines, please edit the file to break it into smaller files.
+					Save as a tab-delimited file in a format other than Unicode.</p>
+			</div> 
+		</div> 
       </div>
       <div style='margin-left:220px; padding-top:5px;'>
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->

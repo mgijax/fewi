@@ -11,6 +11,12 @@ var qfId = "diseasePortalQueryForm";
 var QFHeight = 100; // height of the qf during animation (should be close to the actual pixel height, but need not be exact)
 
 
+// register any help panels
+YAHOO.namespace("hdp.container"); 
+YAHOO.hdp.container.panelVcf = new YAHOO.widget.Panel("locationsFileHelp", { width:"520px", draggable:false, visible:false, constraintoviewport:true } ); 
+YAHOO.hdp.container.panelVcf.render(); 
+YAHOO.util.Event.addListener("locationsFileHelpImg", "mouseover", YAHOO.hdp.container.panelVcf.show, YAHOO.hdp.container.panelVcf, true); 
+
 // ---------- functions for handling form submit action -----------
 //Instead of submitting the form, do an AJAX request
 var interceptSubmit = function(e) 

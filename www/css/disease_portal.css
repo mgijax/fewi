@@ -111,12 +111,19 @@ td.yui-dt-col-coordinate
 {
 	top: 120px;left: 260px;
 }
-#hiddenFileForm span
+#locationsFileNotify
 {
 	padding-left: 50px;
 	font-style: italic;
 	color: yellowgreen;
 	font-weight: bold;
+}
+#locationsFileHelpImg
+{
+	height: 24px;
+	position: relative;
+	left: 100px;
+	top: 4px;
 }
 
 textarea {resize:none; background-color:#FFE4B5;}
