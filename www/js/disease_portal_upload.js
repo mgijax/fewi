@@ -131,7 +131,7 @@ function HDPFileUploadWidget(originalFormId)
     
     _self.resetLocationsFields = function()
     {
-		var fileInput = $("#locationsFileInput");
+		var fileInput = $("#locationsFileInput").val("");
 		fileInput.replaceWith( fileInput = fileInput.clone( true ) );
 		$("#locationsFileName").val("");
     }
