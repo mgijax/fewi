@@ -5,6 +5,7 @@ package org.jax.mgi.fewi.util.file;
  */
 public class VcfProcessorOutput 
 {
+	private String coordinates = "";
 	private int rowsProcessed = 0;
 	private int rowsKicked = 0;
 	private int rowsKickedWithId = 0;
@@ -12,7 +13,9 @@ public class VcfProcessorOutput
 	private int rowsKickedWithNoData = 0;
 	private int rowsWithCoordinates = 0;
 	
-	
+	public String getCoordinates() {
+		return coordinates;
+	}
 	public int getRowsProcessed() {
 		return rowsProcessed;
 	}
@@ -32,6 +35,10 @@ public class VcfProcessorOutput
 		return rowsWithCoordinates;
 	}
 	
+	public void setCoordinates(String coordinates)
+	{
+		this.coordinates = coordinates;
+	}
 	public void addProcessedRow()
 	{
 		rowsProcessed += 1;

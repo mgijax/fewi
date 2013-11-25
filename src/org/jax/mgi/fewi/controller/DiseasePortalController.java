@@ -44,6 +44,7 @@ import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
+import org.jax.mgi.fewi.util.file.VcfProcessorOutput;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.slf4j.Logger;
@@ -202,8 +203,10 @@ public class DiseasePortalController
 		        	{
 		        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
 
-						dataString = FileProcessor.processVCFCoordinates(file);
+						VcfProcessorOutput vpo = FileProcessor.processVCFCoordinates(file);
+						dataString = vpo.getCoordinates();
 		        		logger.debug("finished processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
+		        		mav.addObject("vcfOutput",vpo);
 		        		
 		        		if(!notEmpty(dataString))
 		        		{
@@ -221,12 +224,14 @@ public class DiseasePortalController
 			        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_MOUSE_KEYS,mouseMarkerKeysFromLocationsFile);
 			        		logger.debug("finished converting file locations to mouse marker keys");
 			        		logger.debug("found "+mouseMarkerKeysFromLocationsFile.size()+" mouse marker keys");
+			        		mav.addObject("mouseMatch",mouseMarkerKeysFromLocationsFile.size());
 			        		
 			        		logger.debug("converting file locations to human marker keys");
 			        		List<String> humanMarkerKeysFromLocationsFile = convertLocationsToMarkerKeys(locationQueryTokens,DiseasePortalQueryForm.HUMAN);
 			        		session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS,humanMarkerKeysFromLocationsFile);
 			        		logger.debug("finished converting file locations to human marker keys");
 			        		logger.debug("found "+humanMarkerKeysFromLocationsFile.size()+" human marker keys");
+			        		mav.addObject("humanMatch",humanMarkerKeysFromLocationsFile.size());
 			        		
 			        		if((mouseMarkerKeysFromLocationsFile==null || mouseMarkerKeysFromLocationsFile.size()==0)
 			        				&& (humanMarkerKeysFromLocationsFile==null || humanMarkerKeysFromLocationsFile.size()==0))
@@ -263,7 +268,7 @@ public class DiseasePortalController
 			return mav;
 		}
 		
-        mav.addObject("success","File successfully processed. <br/>Please verify your organism selection before hitting \"GO\".");
+        mav.addObject("success","File successfully processed.");
 		return mav;
     }
 

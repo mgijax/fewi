@@ -61,7 +61,7 @@ function HDPFileUploadWidget(originalFormId)
 
     	// reset the iframe content
     	$("#"+_self.iframeId).contents().find("html").html("");
-    	
+
     	var originalFileInputJq = $("#"+_self.originalFileInputId);
     	// get the filename
     	var filename = originalFileInputJq.val();
@@ -70,6 +70,7 @@ function HDPFileUploadWidget(originalFormId)
     	$("#"+_self.originalFileNameInputId).val(filename);
     	
     	$("#"+_self.hiddenFormId).submit();
+    	console.log("files="+files+", filename="+filename);
 
     	if((!files || files.length<1) && !filename) return;
     	
@@ -79,6 +80,8 @@ function HDPFileUploadWidget(originalFormId)
     		var iframeJq = $("#"+_self.iframeId);
     		var success = iframeJq.contents().find("#success").html();
     		var error = iframeJq.contents().find("#error").html();
+
+    		console.log("success="+success+", error="+error);
     		if(success || error)
     		{
     			//_self.enableForm();

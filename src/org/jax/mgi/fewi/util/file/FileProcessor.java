@@ -34,7 +34,7 @@ public class FileProcessor
 	  * Reads throught a VCF file to find all the coordinates.
 	  * 	Appends them all to the result string as comma separated list.
 	  */
-	 public static String processVCFCoordinates(MultipartFile vcf) throws IOException
+	 public static VcfProcessorOutput processVCFCoordinates(MultipartFile vcf) throws IOException
 	 {
 		 InputStream inputStream = vcf.getInputStream();
 		 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -104,7 +104,8 @@ public class FileProcessor
 		 inputStream.close();
 
 		 logger.debug("vpo = "+vpo);
-		 return sb.toString();
+		 vpo.setCoordinates(sb.toString());
+		 return vpo;
 	 }
 	 
 	 /*
