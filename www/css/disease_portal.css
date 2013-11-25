@@ -305,7 +305,7 @@ textarea {resize:none; background-color:#FFE4B5;}
   	border-spacing:0px; 
   	border-collapse:collapse; 
   }
-  #hdpGridTable a { text-decoration: none; }
+  #hdpGridTableWrap a { text-decoration: none; }
   
   #hdpGridTablePadder{ display: table-cell; }
   #hdpGridTablePadder img { visibility: hidden; }
@@ -409,3 +409,16 @@ textarea {resize:none; background-color:#FFE4B5;}
   #hdpGridTable .dHBin_6 { background-color: #f7be76; }
   #hdpGridTable .dHBin_7 { background-color: #fba039; }
   #hdpGridTable .dHBin_8 { background-color: #ff8700; }
+  
+  #filterIcon { cursor: pointer; }
+  #moreDiseases 
+  {
+  	position: relative;
+	top: -40px;
+	left: -20px;
+	white-space: nowrap;
+	padding-right: 6px;
+	font-weight: bold;
+	cursor: pointer;
+	color: rgb(0, 0, 238);
+  }

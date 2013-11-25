@@ -24,6 +24,7 @@ public class DiseasePortalQueryForm
     private String termHeader;
     private String termId;
     private String locationsFileName;
+    private int numDCol=100;
     
     // Filter queries
     private String fGene;
@@ -140,6 +141,14 @@ public class DiseasePortalQueryForm
 
 	public void setFHeader(String fHeader) {
 		this.fHeader = fHeader;
+	}
+	
+	public void setNumDCol(int num) {
+		this.numDCol = num;
+	}
+	
+	public int getNumDCol() {
+		return this.numDCol;
 	}
 	
 	@Override

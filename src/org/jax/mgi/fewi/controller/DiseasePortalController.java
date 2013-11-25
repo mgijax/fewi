@@ -298,7 +298,10 @@ public class DiseasePortalController
       	List<SolrDpGridCluster> gridClusters = searchResults.getResultObjects();
 
       	// search for diseases in result set - make column headers and ID list
-      	List<String> diseaseNames = this.getGridDiseaseColumns(request, query,session);
+      	SearchResults<String> diseaseNamesResults = this.getGridDiseaseColumns(request, query,session);
+      	List<String> diseaseNames = diseaseNamesResults.getResultObjects();
+      	boolean moreDiseasesNotShown = diseaseNamesResults.getTotalCount() > diseaseNames.size();
+      			
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
 		List<String> diseaseIds = new ArrayList<String>();
 		for(String disease : diseaseNames)
@@ -388,6 +391,7 @@ public class DiseasePortalController
 		mav.addObject("diseaseColumns", diseaseColumnsToDisplay);
 		mav.addObject("diseaseIds", diseaseIds); // for testing
 		mav.addObject("diseaseNames",diseaseNames);
+		mav.addObject("moreDiseases",moreDiseasesNotShown);
 		mav.addObject("mpHeaderColumns", mpHeaderColumnsToDisplay);
 		mav.addObject("mpHeaders", mpHeaders);
 
@@ -787,7 +791,7 @@ public class DiseasePortalController
 		return hdpFinder.getGridClusters(params);
 	}
 
-	public List<String> getGridDiseaseColumns(
+	public SearchResults<String> getGridDiseaseColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			HttpSession session)
@@ -799,14 +803,14 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 
 		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM_HEADER)));
-		params.setPageSize(500); // I'm not sure we want to display more than this...
+		params.setPageSize(query.getNumDCol());
 		params.setFilter(this.parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("getGridDiseaseColumns finished");
 		SearchResults<String> results = hdpFinder.getGridDiseases(params);
 
-		return results.getResultObjects();
+		return results;
 	}
 
 	public List<String> getGridMpHeaderColumns(

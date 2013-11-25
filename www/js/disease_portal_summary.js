@@ -112,6 +112,12 @@ handleNavigation = function (request, calledLocally, fromInit)
 	{
 		var doNewQuery = (querystring != previousQueryString) || _GF.submitActive;
 		_GF.submitActive=false;
+
+		if(doNewQuery)
+		{
+			// reset the max disease col field
+			$("#numDCol").val("");
+		}
 		
 		// only reset the previousQueryString if there is a query to do
 		previousQueryString = querystring;
@@ -563,6 +569,16 @@ function resetFiltersClick(e)
 }
 // click handler for the gridCheck filters
 var gridCheckClick = _GF.gridCheckClick;
+
+// function for resetting the disease column limit
+function gridMoreDiseasesClick(e)
+{
+	$("#numDCol").val("2000");
+	window.querystring=getQueryString();
+	
+	// selecting the grid tab initiates the proper sequence of events for submitting a new query
+	resultsTabs.selectTab(0);
+}
 
 
 // ------- Function for handling the tab counts --------

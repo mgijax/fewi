@@ -219,6 +219,8 @@ var getQueryString = function()
 		params.push("organism="+values["organism"]);
 	}
 	
+	if("numDCol" in values && values["numDCol"]!="") params.push("numDCol="+values["numDCol"]);
+	
 	// try to add grid filters if they exist
 	var hasGridFilters = false;
 	if(!_GF.isState(_GF.gridState.working))

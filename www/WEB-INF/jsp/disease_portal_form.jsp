@@ -105,9 +105,10 @@
     </div>
     </div>
 
-     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
-     <input type="hidden" name="fGene" id="fGene" />
-	 <input type="hidden" name="fHeader" id="fHeader" />
+    <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
+    <input type="hidden" name="fGene" id="fGene" />
+	<input type="hidden" name="fHeader" id="fHeader" />
+	<input type="hidden" name="numDCol" id=numDCol />
     <input id="submit1" style="position:absolute; top:225px; left:700px; width:60px; font-size:20px;"
       name="submit" class="formButtons" value="GO" type="submit"><br/>
     <input id="reset1" class="formButtons"

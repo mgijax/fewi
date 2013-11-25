@@ -30,7 +30,7 @@
 	  <th rowspan="2" style="white-space: nowrap;">Human Marker</th>
 	  <th rowspan="2">
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
-		  		<div id="filterButtons"><button id="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Submit Filters</button>
+		  		<div id="filterButtons"><button class="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Submit Filters</button>
 		  	</div></div>
 		  	<br/>Mouse Marker
 	  	</th>
@@ -52,7 +52,7 @@
 	    </c:forEach>
 	</tr>
 	<tr>
-	<th><img title="filter: select rows or columns to keep" src="${configBean.FEWI_URL}assets/images/hdp/filterIcon.png"></th>
+	<th><img id="filterIcon" class="filterSubmit" title="filter: select rows or columns to keep" src="${configBean.FEWI_URL}assets/images/hdp/filterIcon.png"></th>
 	<c:forEach var="mpHeader" items="${mpHeaders}" varStatus="status">
 		<th class="mp_${status.count} <c:if test="${status.last && not empty diseaseColumns}"> rightDoubleBorder </c:if>">
 			<input class="gridCheck" type="checkbox" filter="fHeader" value="${mpHeader}" colid="mp_${status.count}" />
@@ -92,6 +92,7 @@
 	
 	</table>
 	<div id="hdpGridTablePadder"><c:out value="${lastColImage}" escapeXml="false" /></div>
+	<c:if test="${moreDiseases}"><div id="moreDiseases" title="Click to rebuild grid with no disease column limit"><a>See more diseases not shown</a></div></c:if>
 	</c:if>
 </div>
 
@@ -161,7 +162,8 @@ function popupGenotypeDisease (url, gridClusterKey, termId)
 }
 
 // add the click handler (from disease_portal_summary.js) to the submit button
-$("#filterSubmit").click(gridFilterSubmitClick);
+$(".filterSubmit").click(gridFilterSubmitClick);
+$("#moreDiseases").click(gridMoreDiseasesClick);
 /* if(isGFiltersSet())
 {
 	//$("#filterSubmit").hide();
