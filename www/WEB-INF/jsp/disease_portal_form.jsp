@@ -158,7 +158,7 @@
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
         <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh37)</label>
         <label><input id="organismMouse2" name="organismIgnore" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
-      	<c:if test="${not empty locationsFileName}"><br/><span id="locationsFileNotify">(Using cached file [${locationsFileName}])</span></c:if>
+      	<div id="locationsFileNotify"><c:if test="${not empty locationsFileName}"><span >(Using cached file [${locationsFileName}])</span></c:if></div>
       </div>
 	    <input type="hidden" name="field" value="locationsFile">
 	    <input type="hidden" name="type" value="vcf">

@@ -163,8 +163,24 @@ var checkFileUploadCache = function()
 		data: data
 	});
 	request.done(function (response, textStatus, jqXHR){
-		if(textStatus=="success") $("#ysf-locationsFile").append("&nbsp;<span style=\"color:red;\">"+response+"</span>");
+		if(textStatus=="success")
+		{
+			// display warning if it doesn't exist
+			$("#ysf-locationsFile").append("&nbsp;<span style=\"color:red;\">"+response+"</span>");
+			
+			// update the cached message
+		    var values = serializeQF();
+			if (response=="" && "locationsFileName" in values && values["locationsFileName"]!="")
+			{
+				$("#locationsFileNotify").show().html("<span>(Using cached file ["+values["locationsFileName"]+"])</span>");
+			}
+			else
+			{
+				$("#locationsFileNotify").hide().html("");
+			}
+		}
     })
+
 }
 
 

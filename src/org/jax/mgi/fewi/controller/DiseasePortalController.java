@@ -90,9 +90,9 @@ public class DiseasePortalController
 	public String getQueryForm(Model model,
 			HttpSession session) {
 		model.addAttribute(new DiseasePortalQueryForm());
-		//String locationsData = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
-		//if(notEmpty(locationsData)) model.addAttribute("locationsFileName",);
+		model.addAttribute("locationsFileName","");
 		
+		logger.debug("/diseasePortal --> GET");
 		return "disease_portal_query";
 	}
 
