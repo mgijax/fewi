@@ -76,7 +76,7 @@ function HDPFileUploadWidget(originalFormId)
     	
     	_self.disableForm();
     	_self.popWaiting("Processing file and caching data matches. Please wait.");
-    	$("#"+_self.iframeId).load(function(e){
+    	$("#"+_self.iframeId).one("load",function(e){
     		var iframeJq = $(this);
     		var success = iframeJq.contents().find("#success").html();
     		var error = iframeJq.contents().find("#error").html();
