@@ -70,7 +70,7 @@ function HDPFileUploadWidget(originalFormId)
     	$("#"+_self.originalFileNameInputId).val(filename);
     	
     	$("#"+_self.hiddenFormId).submit();
-    	console.log("files="+files+", filename="+filename);
+    	//console.log("files="+files+", filename="+filename);
 
     	if((!files || files.length<1) && !filename) return;
     	
@@ -81,7 +81,7 @@ function HDPFileUploadWidget(originalFormId)
     		var success = iframeJq.contents().find("#success").html();
     		var error = iframeJq.contents().find("#error").html();
 
-    		console.log("success="+success+", error="+error);
+    		//console.log("success="+success+", error="+error);
     		if(success || error)
     		{
     			//_self.enableForm();
@@ -131,7 +131,13 @@ function HDPFileUploadWidget(originalFormId)
     
     _self.resetLocationsFields = function()
     {
-		var fileInput = $("#locationsFileInput").val("");
+    	var fileInput = $("#locationsFileInput");
+		try{
+			fileInput.val("");
+		} catch (err){
+			// do nothing. This only happens on some browsers.
+			// And when this error does happen, we don't need the above line anyway.
+		}
 		fileInput.replaceWith( fileInput = fileInput.clone( true ) );
 		$("#locationsFileName").val("");
     }
