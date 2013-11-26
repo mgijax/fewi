@@ -76,10 +76,12 @@ function HDPFileUploadWidget(originalFormId)
     	
     	_self.disableForm();
     	_self.popWaiting("Processing file and caching data matches. Please wait.");
-    	_self.interval_id = setInterval(function(){
-    		var iframeJq = $("#"+_self.iframeId);
+    	$("#"+_self.iframeId).load(function(e){
+    		var iframeJq = $(this);
     		var success = iframeJq.contents().find("#success").html();
     		var error = iframeJq.contents().find("#error").html();
+    		//var iframe = document.getElementById('frameId');
+    		//var html = iframe.contentDocument.getElementsByTagName('body')[0].innerHTML;
 
     		//console.log("success="+success+", error="+error);
     		if(success || error)
@@ -115,7 +117,47 @@ function HDPFileUploadWidget(originalFormId)
     			// reset the locations file fields
 				_self.resetLocationsFields();
     		}
-    	},_self.uploadPollInterval);
+    	});
+//    	_self.interval_id = setInterval(function(){
+//    		var iframeJq = $("#"+_self.iframeId);
+//    		var success = iframeJq.contents().find("#success").html();
+//    		var error = iframeJq.contents().find("#error").html();
+//
+//    		//console.log("success="+success+", error="+error);
+//    		if(success || error)
+//    		{
+//    			//_self.enableForm();
+//    			clearInterval(_self.interval_id);
+//    			if(success)
+//    			{
+//    				_self.popAlert(success);
+//    			}
+//    			else
+//    			{
+//    				// handle spefic errors from uploadFile service
+//    				_self.popAlert("ERROR:"+error);
+//    				// reset the locations file fields
+//    				_self.resetLocationsFields();
+//    			}
+//    		}
+//    		// handle more generic sever exceptions
+//    		var bodyText = iframeJq.contents().find("body").text();
+//    		if(bodyText.indexOf("Exception")>0)
+//    		{
+//    			clearInterval(_self.interval_id);
+//    			
+//    			if(bodyText.indexOf("MaxUploadSizeExceededException")>0)
+//    			{
+//    				_self.popAlert("ERROR: Max file upload limit of 25MB exceeded.");
+//    			}
+//    			else
+//    			{
+//    				_self.popAlert(iframeJq.contents().find("body").html());
+//    			}
+//    			// reset the locations file fields
+//				_self.resetLocationsFields();
+//    		}
+//    	},_self.uploadPollInterval);
     }
     
     _self.disableForm = function()
