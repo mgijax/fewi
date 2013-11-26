@@ -67,9 +67,9 @@ ${templateBean.templateBodyStartHdpHtml}
 
 
 <div id="toggleControl" style="background-color: #ffdab3; border: solid 1px #7F7F7F;">    
-    <div id="toggleQF" class="summaryControl" style="display:none; padding: 8px 10px;"><span id="toggleImg" class="qfExpand" style="margin-right:15px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
+    <div id="toggleQF" class="summaryControl" style="display:none; padding: 8px 10px;"><span id="toggleImg" class="qfExpand" style="margin:0px 15px 0px 0px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
 </div>
-<div id="outer" style="border:none; background-color: transparent;"><div id="qwrap" style="margin-top: 10px;"><%@ include file="/WEB-INF/jsp/disease_portal_form.jsp" %></div></div>
+<div id="outer" style="border:none; background-color: transparent; width:100%;"><div id="qwrap" style="margin-top: 10px;"><%@ include file="/WEB-INF/jsp/disease_portal_form.jsp" %></div></div>
 <br clear="all" />
 <div class="summaryControl" style="display:none;">
 	<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
