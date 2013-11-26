@@ -191,7 +191,7 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   #hdpSystemPopupTablePadder{ display: table-cell; }
   #hdpSystemPopupTablePadder img { visibility: hidden; }
-  #hdpSystemPopupTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; }
+  #hdpSystemPopupTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; vertical-align: bottom;}
   #hdpSystemPopupTable th > div { width:20px; overflow: visible; }
   #hdpSystemPopupTable td {border: 1px solid #DDD; padding: 4px 4px;}
   #hdpSystemPopupTable .vb { vertical-align: bottom; border-left: none; border-right: none;}

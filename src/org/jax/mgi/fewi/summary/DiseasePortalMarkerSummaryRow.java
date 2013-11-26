@@ -38,7 +38,7 @@ public class DiseasePortalMarkerSummaryRow {
     private String score;
 
     private List<String> highlightedFields;
-    
+
     //-------------
     // constructors
     //-------------
@@ -59,12 +59,12 @@ public class DiseasePortalMarkerSummaryRow {
     public String getScore(){
         return score;
     }
-    
+
     public void setHighlightedFields(List<String> highlightedFields)
 	{
 		this.highlightedFields = highlightedFields;
 	}
-	
+
 	public String getHighlightedFields()
 	{
 		if(highlightedFields==null) return "";
@@ -85,7 +85,7 @@ public class DiseasePortalMarkerSummaryRow {
     		}
     		url = fewiUrl + "homology/key/" + solrDiseasePortalMarker.getMarkerKey();
     	}
-    	
+
     	String displayText = "<a href=\""+url+"/\">"+
         		symbol+"</a>";
         return displayText;
@@ -152,9 +152,9 @@ public class DiseasePortalMarkerSummaryRow {
 
     public String getAllRefCount(){
     	if("human".equalsIgnoreCase(solrDiseasePortalMarker.getOrganism())) return "";
-    	
+
     	StringBuffer refDisplay = new StringBuffer();
-        refDisplay.append("All: <a href=\"").append(fewiUrl).append("reference/marker/");
+        refDisplay.append("All Mouse: <a href=\"").append(fewiUrl).append("reference/marker/");
         refDisplay.append(solrDiseasePortalMarker.getMgiId()).append("\">");
         refDisplay.append(solrDiseasePortalMarker.getAllRefCount());
         refDisplay.append("</a>");
@@ -168,13 +168,13 @@ public class DiseasePortalMarkerSummaryRow {
         }
     	return refDisplay.toString();
     }
-    
+
     public String getImsrCount(){
     	if("human".equalsIgnoreCase(solrDiseasePortalMarker.getOrganism())) return "";
-    	
+
     	StringBuffer countDisplay = new StringBuffer();
         if(solrDiseasePortalMarker.getImsrCount()!=null && solrDiseasePortalMarker.getImsrCount() > 0)
-        {	
+        {
             countDisplay.append("<a target=\"_blank\" href=\"")
             		.append(imsrUrl)
             		.append("summary?states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm&gaccid=")

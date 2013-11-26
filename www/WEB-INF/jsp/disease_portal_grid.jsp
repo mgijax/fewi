@@ -27,12 +27,13 @@
 	
 	<!-- Row of Column Headers -->
 	<tr>
-	  <th rowspan="2" style="white-space: nowrap;">Human Marker</th>
+	  <th rowspan="2" style="white-space: nowrap;">Human Gene</th>
 	  <th rowspan="2">
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
-		  		<div id="filterButtons"><button class="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Submit Filters</button>
+		  		<div id="filterButtons">
+		  		<button style="width:160px;" class="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Apply Filters:&#x00A;Retain selected col/rows</button>
 		  	</div></div>
-		  	<br/>Mouse Marker
+		  	<br/>Mouse Gene
 	  	</th>
 	  <th style="border-right: none;"></th>
 		<!--  mp header columns -->

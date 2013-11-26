@@ -41,13 +41,13 @@ mgiTab._rp.getExtraParams = function()
 	var params = [];
 	var currentTab = mgiTab.getCurrentTab();
 	if(currentTab) params.push("tab="+currentTab);
-	
+
 //	if(_GFilters && _GFActive)
 //	{
 //		if(_GFilters.fGene) params.push("fGene="+(_GFilters.fGene.join("|")));
 //		if(_GFilters.fHeader) params.push("fHeader="+(_GFilters.fHeader.join("|")));
 //	}
-	
+
 	return params.join("&");
 }
 var generateRequest = mgiTab._rp.generateRequest;
@@ -118,7 +118,7 @@ handleNavigation = function (request, calledLocally, fromInit)
 			// reset the max disease col field
 			$("#numDCol").val("");
 		}
-		
+
 		// only reset the previousQueryString if there is a query to do
 		previousQueryString = querystring;
 
@@ -145,7 +145,7 @@ handleNavigation = function (request, calledLocally, fromInit)
 		{
 			// set the gridState for filters to postSubmit
 			_GF.setState(_GF.gridState.postSubmit);
-			
+
 			// Update the "you searched for" text
 			if (typeof updateQuerySummary == 'function')
 				updateQuerySummary();
@@ -242,7 +242,7 @@ function StateHandler(states)
 		var state = states[i];
 		this[state] = state;
 		// set the current state to be the first one
-		if(i==0) this.state = state; 
+		if(i==0) this.state = state;
 	}
 }
 //------ functions for handling the grid filters ------------
@@ -257,7 +257,7 @@ function GridFilter()
 	this.filterDelim = "|";
 	this.highlightCssClass = "gridHl";
 	this.checkBoxClass = "gridCheck";
-	
+
 	// state variables
 	this.filtersActive = false;
 	this.submitActive = false;
@@ -276,9 +276,9 @@ function GridFilter()
 		var field = this.fields[i];
 		this.fieldStates[field] = new StateHandler(["postSubmit","working"]);
 	}
-	
-	this.setState = function(state) 
-	{ 
+
+	this.setState = function(state)
+	{
 		this.gridState.state = state;
 		// if postSubmit, then set the individual fieldStates as well.
 		if(state == this.gridState.postSubmit)
@@ -299,10 +299,10 @@ function GridFilter()
 	{
 		if(field in this.fieldStates) return this.fieldStates[field].state == state;
 	}
-	
+
 	// define closure for functions
 	var _self = this;
-	
+
 	// getter functions for the input fields
 	// 	REQUIRES: hidden input fields with the above names (fGene and fHeader)
 	this.getField = function(fieldName)
@@ -314,7 +314,7 @@ function GridFilter()
 		}
 		return null;
 	}
-	
+
 	// returns an object representing the hidden fields
 	// RETURN FORMAT: {fGene : [filter1,filter2,...], fHeader : [filter1,filter2,...]}
 	this.getFiltersObject = function()
@@ -337,7 +337,7 @@ function GridFilter()
 		}
 		return filtersObject;
 	}
-	
+
 //	this.isFilterActive = function(fieldName,filterValue)
 //	{
 //		var filtersObj = _self.getFiltersObject();
@@ -383,15 +383,15 @@ function GridFilter()
 			}
 		}
 	}
-	
+
 	this.toggleFiltersIndicator = function(show)
 	{
 		var filterIndicatorDiv = $("#"+_self.filterIndicatorId);
-		
+
 		if(show==true) filterIndicatorDiv.show();
 		else filterIndicatorDiv.hide();
 	}
-	
+
 	// save the modified filters object to the hidden input fields
 	// FORMAT (same object as above): {fGene : [filter1,filter2,...], fHeader : [filter1,filter2,...]}
 	this.saveFiltersObject = function(filtersObject)
@@ -410,7 +410,7 @@ function GridFilter()
 			}
 		}
 	}
-	
+
 	// reset/clear the hidden input fields
 	this.resetFields = function()
 	{
@@ -423,12 +423,12 @@ function GridFilter()
 			}
 		}
 	}
-	
+
 	// check the hidden inputs to see if fields have been set yet
 	this.isFieldsSet = function()
 	{
 		//window.querystring=getQueryString();
-		
+
 		for(var i=0; i<_self.fields.length; i++)
 		{
 			var fieldName = _self.fields[i];
@@ -444,38 +444,38 @@ function GridFilter()
 		}
 		return false;
 	}
-	
+
 	this.inactivate = function()
 	{
 		_self.filtersActive = false;
 	}
-	
+
 	this.init = function()
 	{
 		_self.resetFields();
 		_self.inactivate();
 	}
-	
+
 	// submit the current filters (if there are any)
 	this.submit = function(doReset)
 	{
 		if(_self.isFieldsSet() || doReset)
 		{
-			if(doReset) 
+			if(doReset)
 			{
 				_self.init();
 				window.querystring = getQueryString();
 			}
-			
+
 			mgiTab.newQueryState = true;
-			
+
 			if(typeof resultsTabs != 'undefined')
-			{	
+			{
 				_self.setState(_self.gridState.preSubmit);
 				_self.filtersActive = true;
 				_self.submitActive=true;
 				window.querystring=getQueryString();
-			
+
 				// selecting the grid tab initiates the proper sequence of events for submitting a new query
 				resultsTabs.selectTab(0);
 			}
@@ -486,12 +486,12 @@ function GridFilter()
 		}
 	}
 	this.resetFilters = function()
-	{ 
-		_self.submit(true); 
+	{
+		_self.submit(true);
 		_self.init();
 		_self.filtersActive=false;
 	}
-	
+
 	this.highlightField = function(checkBox,fieldName)
 	{
 		if(checkBox)
@@ -513,34 +513,34 @@ function GridFilter()
 			}
 		}
 	}
-	
+
 	// event handler for clicking a filter checkbox
 	this.gridCheckClick = function(e)
 	{
 		var checkBox = $(this);
 		var fieldName = checkBox.attr("filter");
-		
+
 		_self.highlightField(checkBox,fieldName);
-		
+
 		var filtersObject = _self.getFiltersObject();
 		if(filtersObject[fieldName])
 		{
 			var filters = filtersObject[fieldName];
 			var value = checkBox.attr("value");
 			if(_self.isFieldState(fieldName,_self.gridState.postSubmit))
-			{ 
+			{
 				// if this is post submit, clear this field, but not the other.
 				filters = [];
 				_self.setFieldState(fieldName,_self.gridState.working);
 				_self.setState(_self.gridState.working);
 			}
-			
+
 			// either add or remove this filters depending on the "checked" attribute
 			var inArrayIndex = $.inArray(value, filters);
 			if(inArrayIndex >= 0) filters.splice( inArrayIndex, 1 );
-			
+
 			if(checkBox.is(":checked")) filters.push(value);
-			
+
 			filtersObject[fieldName] = filters;
 		}
 		_self.saveFiltersObject(filtersObject);
@@ -575,7 +575,7 @@ function gridMoreDiseasesClick(e)
 {
 	$("#numDCol").val("2000");
 	window.querystring=getQueryString();
-	
+
 	// selecting the grid tab initiates the proper sequence of events for submitting a new query
 	resultsTabs.selectTab(0);
 }
@@ -624,13 +624,13 @@ var genesResultsTable = function() {
 	var columnDefs = [
 	    //{key: "highlightedFields", label: "Why Matched", sortable: false },
 		{key: "organism", label: "Organism", sortable: true },
-		{key: "symbol", label: "Marker Symbol", sortable: true },
+		{key: "symbol", label: "Gene Symbol", sortable: true },
 		{key: "location", label: "Genetic Location", sortable: false },
 		{key: "coordinate", label: "Genome Coordinates", sortable: true },
 		{key: "disease", label: "Associated Human Diseases", sortable: false, width:240 },
 		{key: "system", label: "Abnormal Mouse Phenotypes<br/> Reported in these Systems", sortable: false },
-		{key: "allRefCount", label: "References", sortable: false },
-		{key: "imsrCount", label: "Find Mice (IMSR)", sortable: false },
+		{key: "allRefCount", label: "References in MGI", sortable: false },
+		{key: "imsrCount", label: "Mice With Mutations<br/> In this Gene (IMSR)", sortable: false },
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];
 
@@ -773,9 +773,9 @@ var diseasesResultsTable = function() {
 		{key: "disease", label: "Disease", sortable: true },
 		{key: "diseaseId", label: "OMIM ID", sortable: true },
 		{key: "diseaseModels", label: "Mouse Models", sortable: false },
-		{key: "mouseMarkers", label: "Associated Mouse Markers", sortable: false },
-		{key: "humanMarkers", label: "Associated Human Markers", sortable: false },
-		{key: "refCount", label: "References", sortable: false },
+		{key: "mouseMarkers", label: "Associated Mouse Genes", sortable: false },
+		{key: "humanMarkers", label: "Associated Human Genes", sortable: false },
+		{key: "refCount", label: "References using <br/>Mouse Models", sortable: false },
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];
 

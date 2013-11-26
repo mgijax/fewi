@@ -28,7 +28,7 @@
 			<th>Human Gene</th>
 		</c:when>
 		<c:otherwise>
-	  		<th>Genotype</th>
+	  		<th>Mouse Genotype</th>
 	  	</c:otherwise>
 	</c:choose>
   <!--  header columns -->
