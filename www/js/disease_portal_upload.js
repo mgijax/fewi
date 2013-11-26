@@ -31,7 +31,7 @@ function HDPFileUploadWidget(originalFormId)
         // set up any hidden elements we need for form submitals
         var hiddenDiv = "<div class=\"hide\">";
             // add the iframe we will use for form submital
-            hiddenDiv += "<iframe id=\""+_self.iframeId+"\" name=\""+_self.iframeId+"\" src=\"/fewi/blank.html\"></iframe>";
+            hiddenDiv += "<iframe id=\""+_self.iframeId+"\" name=\""+_self.iframeId+"\" src=\""+fewiurl+"/fewi/blank.html\"></iframe>";
         hiddenDiv += "</div>";
         qFormParent.append(hiddenDiv);
         
