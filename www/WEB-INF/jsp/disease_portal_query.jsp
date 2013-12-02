@@ -6,9 +6,9 @@
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 ${templateBean.templateHeadHtml}
 
-<title>Human Disease Portal</title>
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Human – Mouse Disease Connection</title>
 
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
