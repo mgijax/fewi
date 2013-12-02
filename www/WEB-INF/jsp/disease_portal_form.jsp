@@ -139,7 +139,7 @@
 						</ul>
 					</li>
 					<li>Files over 25MB cannot be processed</li>
-					<li>Only the first 200,000 lines of a file can be processed</li>
+					<li>Only the first 100,000 lines of a file can be processed</li>
 					<li>Lines containing a SNP ID (RS ID) in column 3 are rejected
 						<br/>(emphasizing only unknown variants)
 					</li>
@@ -149,7 +149,7 @@
 					please edit the file to remove the IDs (leaving column 3 empty).
 					Save as a tab-delimited file in a format other than Unicode.
 				</p>
-				<p>If your file is larger than 25MB or has more than 200,000 lines, please edit the file to break it into smaller files.
+				<p>If your file is larger than 25MB or has more than 100,000 lines, please edit the file to break it into smaller files.
 					Save as a tab-delimited file in a format other than Unicode.</p>
 			</div> 
 		</div> 
