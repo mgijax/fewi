@@ -5,13 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jax.mgi.fewi.controller.DiseasePortalController;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
+import mgi.frontend.datamodel.hdp.HdpGenoClusterAnnotation;
+import mgi.frontend.datamodel.hdp.HdpGridAnnotation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import mgi.frontend.datamodel.HdpGenoClusterAnnotation;
-import mgi.frontend.datamodel.HdpGridAnnotation;
 
 /*
  *  A class for mapping columns to data for making rows in the Grid

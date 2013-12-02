@@ -1,8 +1,9 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
-import mgi.frontend.datamodel.*;
+import mgi.frontend.datamodel.hdp.*;
 
 import org.jax.mgi.fewi.hunter.SolrDiseasePortalHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -11,15 +12,14 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /*
  * Centered around retrieving Human Disease Portal data in various forms

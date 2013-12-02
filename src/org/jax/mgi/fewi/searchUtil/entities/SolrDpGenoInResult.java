@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.*;
 
-import mgi.frontend.datamodel.HdpGridAnnotation;
+import mgi.frontend.datamodel.hdp.HdpGridAnnotation;
 
 public class SolrDpGenoInResult implements HdpGridAnnotation
 {

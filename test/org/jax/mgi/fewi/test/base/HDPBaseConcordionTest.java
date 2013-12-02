@@ -3,7 +3,7 @@ package org.jax.mgi.fewi.test.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import mgi.frontend.datamodel.HdpGenoCluster;
+import mgi.frontend.datamodel.hdp.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.controller.DiseasePortalController;

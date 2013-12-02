@@ -3,7 +3,7 @@ package org.jax.mgi.fewi.summary;
 import java.util.List;
 
 import mgi.frontend.datamodel.Genotype;
-import mgi.frontend.datamodel.HdpGenoCluster;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.HdpGridMapper;

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import mgi.frontend.datamodel.HdpGenoCluster;
+import mgi.frontend.datamodel.hdp.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
