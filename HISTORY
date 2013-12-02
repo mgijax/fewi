@@ -1,10 +1,11 @@
-TAG: fewi-5-1-6-1,fewi-5-1-6-2,fewi-5-1-6-3,fewi-5-1-6-4
+TAG: fewi-5-1-6-1,fewi-5-1-6-2,fewi-5-1-6-3,fewi-5-1-6-4,fewi-5-1-6-5
 DATE: 11/20/13
 STAFF: pf,kstone
 CHANGES: 
 1) alpha test tag for human disease
 2) BUG FIX: Filters not working on grid
 3) fixing display issues for Alpha
+4) fixing a VCF file upload bug
 
 TAG: fewi-tr11468-BP
 DATE: 10/07/2013
