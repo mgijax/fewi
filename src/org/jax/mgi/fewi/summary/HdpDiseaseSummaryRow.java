@@ -23,12 +23,12 @@ import org.slf4j.LoggerFactory;
 /**
  * wrapper around a marker;  represents on row in summary
  */
-public class DiseasePortalDiseaseSummaryRow {
+public class HdpDiseaseSummaryRow {
 	//-------------------
 		// instance variables
 		//-------------------
 
-	  private Logger logger = LoggerFactory.getLogger(DiseasePortalDiseaseSummaryRow.class);
+	  private Logger logger = LoggerFactory.getLogger(HdpDiseaseSummaryRow.class);
 
 		// encapsulated row object
 		private SolrVocTerm term;
@@ -44,7 +44,7 @@ public class DiseasePortalDiseaseSummaryRow {
 		// constructors
 		//-------------
 
-	  public DiseasePortalDiseaseSummaryRow (SolrVocTerm term) {
+	  public HdpDiseaseSummaryRow (SolrVocTerm term) {
 	  	this.term = term;
 	  }
 

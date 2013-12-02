@@ -1,22 +1,23 @@
 package org.jax.mgi.fewi.controller;
 
+import java.io.IOException;
 import java.util.List;
-import java.io.*;
 
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
+import mgi.frontend.datamodel.OrganismOrtholog;
 
-import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.HomologyFinder;
+import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.util.TextFileReader;
-import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.GOGraphConverter;
+import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.jax.mgi.fewi.util.TextFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +163,22 @@ public class HomologyController {
         
         //pull out the HomologyCluster, and add to mav
         HomologyCluster homology = homologyList.get(0);
+        
+        
+        //logger.debug("PRE_INIT SEQUENCES");
+        // kstone - Somehow pre-looping through the markers and sequences makes the MAV do half as many queries on average.
+        // I have no idea why, but it cuts a second or two off the load time.
+        homology.getOrthologs().size();
+        for(OrganismOrtholog oo : homology.getOrthologs())
+        {
+        	oo.getMarkers().size();
+        	for(Marker m : oo.getMarkers())
+        	{
+        		m.getSequenceAssociations().size();
+        	}
+        }
+        //logger.debug("SEQUENCES INITIALISED");
+        
         mav.addObject("homology", homology);
 
         return mav;

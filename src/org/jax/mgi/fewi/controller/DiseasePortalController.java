@@ -32,8 +32,8 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
-import org.jax.mgi.fewi.summary.DiseasePortalDiseaseSummaryRow;
-import org.jax.mgi.fewi.summary.DiseasePortalMarkerSummaryRow;
+import org.jax.mgi.fewi.summary.HdpDiseaseSummaryRow;
+import org.jax.mgi.fewi.summary.HdpMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
 import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
@@ -582,7 +582,7 @@ public class DiseasePortalController
     //----------------------------//
 
 	@RequestMapping("/markers/json")
-	public @ResponseBody JsonSummaryResponse<DiseasePortalMarkerSummaryRow> geneSummaryJson(
+	public @ResponseBody JsonSummaryResponse<HdpMarkerSummaryRow> geneSummaryJson(
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
@@ -592,8 +592,8 @@ public class DiseasePortalController
 		  = this.getSummaryResultsByGene(request, query, page,session,true);
         List<SolrDiseasePortalMarker> mList = searchResults.getResultObjects();
 
-        List<DiseasePortalMarkerSummaryRow> summaryRows
-          = new ArrayList<DiseasePortalMarkerSummaryRow>();
+        List<HdpMarkerSummaryRow> summaryRows
+          = new ArrayList<HdpMarkerSummaryRow>();
 
         Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
 
@@ -601,7 +601,7 @@ public class DiseasePortalController
         {
 			if (m != null)
 			{
-				DiseasePortalMarkerSummaryRow summaryRow = new DiseasePortalMarkerSummaryRow(m);
+				HdpMarkerSummaryRow summaryRow = new HdpMarkerSummaryRow(m);
 				if(highlights.containsKey(m.getMarkerKey()))
 				{
 					summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(m.getMarkerKey())));
@@ -611,8 +611,8 @@ public class DiseasePortalController
 				logger.debug("--> Null Object");
 			}
 		}
-        JsonSummaryResponse<DiseasePortalMarkerSummaryRow> jsonResponse
-        		= new JsonSummaryResponse<DiseasePortalMarkerSummaryRow>();
+        JsonSummaryResponse<HdpMarkerSummaryRow> jsonResponse
+        		= new JsonSummaryResponse<HdpMarkerSummaryRow>();
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
 
@@ -654,20 +654,20 @@ public class DiseasePortalController
     //----------------------------//
 
 	@RequestMapping("/diseases/json")
-	public @ResponseBody JsonSummaryResponse<DiseasePortalDiseaseSummaryRow> diseaseSummaryJson(
+	public @ResponseBody JsonSummaryResponse<HdpDiseaseSummaryRow> diseaseSummaryJson(
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page)
 	{
 		SearchResults<SolrVocTerm> searchResults = this.getSummaryResultsByDisease(request,query,page,session,true);
-        List<DiseasePortalDiseaseSummaryRow> termList = new ArrayList<DiseasePortalDiseaseSummaryRow>();
+        List<HdpDiseaseSummaryRow> termList = new ArrayList<HdpDiseaseSummaryRow>();
 
         Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
 
         for(SolrVocTerm term : searchResults.getResultObjects())
         {
-        	DiseasePortalDiseaseSummaryRow summaryRow = new DiseasePortalDiseaseSummaryRow(term);
+        	HdpDiseaseSummaryRow summaryRow = new HdpDiseaseSummaryRow(term);
         	if(highlights.containsKey(term.getPrimaryId()))
 			{
 				summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(term.getPrimaryId())));
@@ -675,8 +675,8 @@ public class DiseasePortalController
         	termList.add(summaryRow);
         }
 
-        JsonSummaryResponse<DiseasePortalDiseaseSummaryRow> jsonResponse
-        		= new JsonSummaryResponse<DiseasePortalDiseaseSummaryRow>();
+        JsonSummaryResponse<HdpDiseaseSummaryRow> jsonResponse
+        		= new JsonSummaryResponse<HdpDiseaseSummaryRow>();
         jsonResponse.setSummaryRows(termList);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
 
