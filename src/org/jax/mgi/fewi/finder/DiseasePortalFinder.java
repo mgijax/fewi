@@ -12,8 +12,8 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.slf4j.Logger;
@@ -55,9 +55,9 @@ public class DiseasePortalFinder
 	}
 
 	// Group results by grid clusters
-	public SearchResults<SolrDpGridCluster> getGridClusters(SearchParams params)
+	public SearchResults<SolrHdpGridCluster> getGridClusters(SearchParams params)
 	{
-		SearchResults<SolrDpGridCluster> results = huntGridClustersGroup(params);
+		SearchResults<SolrHdpGridCluster> results = huntGridClustersGroup(params);
 		return results;
 	}
 
@@ -90,9 +90,9 @@ public class DiseasePortalFinder
 	}
 
 	// annotation results for given request - via join
-	public SearchResults<SolrDpGenoInResult> searchAnnotationsInGridResults(SearchParams params) 
+	public SearchResults<SolrHdpGridData> searchAnnotationsInGridResults(SearchParams params) 
 	{
-		SearchResults<SolrDpGenoInResult> results = new SearchResults<SolrDpGenoInResult>();
+		SearchResults<SolrHdpGridData> results = new SearchResults<SolrHdpGridData>();
 		
 		// need to ensure that only docs come back that have a grid cluster
 		Filter originalFilter = params.getFilter();
@@ -121,9 +121,9 @@ public class DiseasePortalFinder
 		return results;
 	}
 	
-	public SearchResults<SolrDpGenoInResult> searchAnnotationsInPopupResults(SearchParams params) 
+	public SearchResults<SolrHdpGridData> searchAnnotationsInPopupResults(SearchParams params) 
 	{
-		SearchResults<SolrDpGenoInResult> results = new SearchResults<SolrDpGenoInResult>();
+		SearchResults<SolrHdpGridData> results = new SearchResults<SolrHdpGridData>();
 		
 		// need to ensure that only docs come back that have a grid cluster
 		Filter originalFilter = params.getFilter();
@@ -155,7 +155,7 @@ public class DiseasePortalFinder
 	// ---- counts ----
 	public Integer getGridClusterCount(SearchParams params)
 	{
-		SearchResults<SolrDpGridCluster> results = huntGridClustersGroup(params);
+		SearchResults<SolrHdpGridCluster> results = huntGridClustersGroup(params);
 		return results.getTotalCount();
 	}
 	public Integer getMarkerCount(SearchParams params)
@@ -175,9 +175,9 @@ public class DiseasePortalFinder
     //////////////////////////////////////////////////////////////////////////
 
 	// grid clusters
-	private SearchResults<SolrDpGridCluster> huntGridClustersGroup(SearchParams params)
+	private SearchResults<SolrHdpGridCluster> huntGridClustersGroup(SearchParams params)
 	{
-		SearchResults<SolrDpGridCluster> results = new SearchResults<SolrDpGridCluster>();
+		SearchResults<SolrHdpGridCluster> results = new SearchResults<SolrHdpGridCluster>();
 
 		// make sure that only documents with grid cluster keys are included in the
 		// group (otherwise you get a weird off-by-one error in the count)

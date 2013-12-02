@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
@@ -27,10 +27,10 @@ public class HdpGridClusterSummaryRow {
     private Logger logger = LoggerFactory.getLogger(HdpGridClusterSummaryRow.class);
 
 	// encapsulated row object
-	private SolrDpGridCluster gridCluster;
+	private SolrHdpGridCluster gridCluster;
 	private HdpGridMapper diseaseRowMapper;
 	private HdpGridMapper mpHeaderRowMapper;
-	private List<SolrDpGenoInResult> genoInResults;
+	private List<SolrHdpGridData> genoInResults;
 	private List<String> genoTerms;
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -41,13 +41,13 @@ public class HdpGridClusterSummaryRow {
 	//-------------
 
 
-    public HdpGridClusterSummaryRow (SolrDpGridCluster gridCluster,HdpGridMapper diseaseRowMapper, HdpGridMapper mpHeaderRowMapper) {
+    public HdpGridClusterSummaryRow (SolrHdpGridCluster gridCluster,HdpGridMapper diseaseRowMapper, HdpGridMapper mpHeaderRowMapper) {
     	this.gridCluster = gridCluster;
     	this.diseaseRowMapper = diseaseRowMapper;
     	this.mpHeaderRowMapper = mpHeaderRowMapper;
     }
 
-    public SolrDpGridCluster getGridCluster()
+    public SolrHdpGridCluster getGridCluster()
     {
     	return gridCluster;
     }

@@ -28,9 +28,9 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.summary.DiseasePortalDiseaseSummaryRow;
 import org.jax.mgi.fewi.summary.DiseasePortalMarkerSummaryRow;
@@ -294,8 +294,8 @@ public class DiseasePortalController
       	ModelAndView mav = new ModelAndView("disease_portal_grid");
 
       	// search for grid cluster objects
-      	SearchResults<SolrDpGridCluster> searchResults = this.getGridClusters(request, query, page,session);
-      	List<SolrDpGridCluster> gridClusters = searchResults.getResultObjects();
+      	SearchResults<SolrHdpGridCluster> searchResults = this.getGridClusters(request, query, page,session);
+      	List<SolrHdpGridCluster> gridClusters = searchResults.getResultObjects();
 
       	// search for diseases in result set - make column headers and ID list
       	SearchResults<String> diseaseNamesResults = this.getGridDiseaseColumns(request, query,session);
@@ -323,22 +323,22 @@ public class DiseasePortalController
 		logger.info("diseasePortal/grid -> querying solr for grid data");
       	// Search for the genotype clusters used to generate the result set
       	// and save as map for later
-      	List<SolrDpGenoInResult> annotationsInResults = this.getAnnotationsInResults(query,searchResults.getResultKeys(),session);
-        Map<Integer,List<SolrDpGenoInResult>> gridClusterToMPResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
-        Map<Integer,List<SolrDpGenoInResult>> gridClusterToDiseaseResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
+      	List<SolrHdpGridData> annotationsInResults = this.getAnnotationsInResults(query,searchResults.getResultKeys(),session);
+        Map<Integer,List<SolrHdpGridData>> gridClusterToMPResults = new HashMap<Integer,List<SolrHdpGridData>>();
+        Map<Integer,List<SolrHdpGridData>> gridClusterToDiseaseResults = new HashMap<Integer,List<SolrHdpGridData>>();
 
         
         logger.info("diseasePortal/grid -> mapping Solr data to gridClusters");
-        for(SolrDpGenoInResult dpa : annotationsInResults)
+        for(SolrHdpGridData dpa : annotationsInResults)
         {
         	// configure which map to use based on vocab name
-        	Map<Integer,List<SolrDpGenoInResult>> dataMap = gridClusterToMPResults;
+        	Map<Integer,List<SolrHdpGridData>> dataMap = gridClusterToMPResults;
         	if("OMIM".equals(dpa.getVocabName())) dataMap = gridClusterToDiseaseResults;
         	
         	// map each genocluster/header combo to its corresponding gridcluster key
             if (!dataMap.containsKey(dpa.getGridClusterKey()))
             {
-            	dataMap.put(dpa.getGridClusterKey(),new ArrayList<SolrDpGenoInResult>());
+            	dataMap.put(dpa.getGridClusterKey(),new ArrayList<SolrHdpGridData>());
             }
             dataMap.get(dpa.getGridClusterKey()).add(dpa);
         }
@@ -346,13 +346,13 @@ public class DiseasePortalController
 		logger.info("diseasePortal/grid -> creating grid row objects");
 		// create grid row objects
 		List<HdpGridClusterSummaryRow> summaryRows = new ArrayList<HdpGridClusterSummaryRow>();
-		for(SolrDpGridCluster gc : gridClusters)
+		for(SolrHdpGridCluster gc : gridClusters)
 		{
             // ensure the cross-reference genoInResults list exists for this row
 			boolean foundGridCluster=false;
 			
-			List<SolrDpGenoInResult> mpResults = new ArrayList<SolrDpGenoInResult>();
-			List<SolrDpGenoInResult> diseaseResults = new ArrayList<SolrDpGenoInResult>();
+			List<SolrHdpGridData> mpResults = new ArrayList<SolrHdpGridData>();
+			List<SolrHdpGridData> diseaseResults = new ArrayList<SolrHdpGridData>();
 			
             if (gridClusterToMPResults.containsKey(gc.getGridClusterKey()))
             {
@@ -508,10 +508,10 @@ public class DiseasePortalController
     	SearchParams sp = new SearchParams();
     	sp.setFilter(this.parseQueryForm(query,session));
     	sp.setPageSize(10000);
-    	SearchResults<SolrDpGenoInResult> sr = hdpFinder.searchAnnotationsInPopupResults(sp);
+    	SearchResults<SolrHdpGridData> sr = hdpFinder.searchAnnotationsInPopupResults(sp);
     	// map the results by marker key
-    	Map<Integer,List<SolrDpGenoInResult>> humanResults = new HashMap<Integer,List<SolrDpGenoInResult>>();
-    	for(SolrDpGenoInResult gir : sr.getResultObjects())
+    	Map<Integer,List<SolrHdpGridData>> humanResults = new HashMap<Integer,List<SolrHdpGridData>>();
+    	for(SolrHdpGridData gir : sr.getResultObjects())
     	{
     		Integer mKey = gir.getMarkerKey();
     		if(mKey!=null)
@@ -519,7 +519,7 @@ public class DiseasePortalController
         		logger.info("found human data for marker key "+mKey);
     			if(!humanResults.containsKey(mKey))
     			{
-    				humanResults.put(mKey,new ArrayList<SolrDpGenoInResult>());
+    				humanResults.put(mKey,new ArrayList<SolrHdpGridData>());
     			}
     			humanResults.get(mKey).add(gir);
     		}
@@ -530,7 +530,7 @@ public class DiseasePortalController
     	for(SolrDiseasePortalMarker humanMarker : humanMarkers)
     	{
     		Integer mKey = Integer.parseInt(humanMarker.getMarkerKey());
-    		List<SolrDpGenoInResult> data = new ArrayList<SolrDpGenoInResult>();
+    		List<SolrHdpGridData> data = new ArrayList<SolrHdpGridData>();
     		if(humanResults.containsKey(mKey))
     		{
     			data = humanResults.get(mKey);
@@ -740,7 +740,7 @@ public class DiseasePortalController
     // Public convenience methods
     //--------------------------------------------------------------------//
 
-	public List<SolrDpGenoInResult> getAnnotationsInResults(
+	public List<SolrHdpGridData> getAnnotationsInResults(
 			@ModelAttribute DiseasePortalQueryForm query,
 			List<String> gridClusterKeys,
 			HttpSession session)
@@ -756,14 +756,14 @@ public class DiseasePortalController
 
 		// perform query
 		logger.debug("getAnnotationsInResults finished");
-		SearchResults<SolrDpGenoInResult> results = hdpFinder.searchAnnotationsInGridResults(params);
+		SearchResults<SolrHdpGridData> results = hdpFinder.searchAnnotationsInGridResults(params);
 
-        List<SolrDpGenoInResult> annotations = results.getResultObjects();
+        List<SolrHdpGridData> annotations = results.getResultObjects();
 
 		return annotations;
 	}
 
-	public SearchResults<SolrDpGridCluster> getGridClusters(
+	public SearchResults<SolrHdpGridCluster> getGridClusters(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
@@ -1345,10 +1345,10 @@ public class DiseasePortalController
 		SearchParams sp = new SearchParams();
 		sp.setPageSize(1);
 		sp.setFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.OP_EQUAL));
-		SearchResults<SolrDpGridCluster> gridClusters = hdpFinder.getGridClusters(sp);
+		SearchResults<SolrHdpGridCluster> gridClusters = hdpFinder.getGridClusters(sp);
 		if(gridClusters.getResultObjects().size()>0)
 		{
-			SolrDpGridCluster gridCluster = gridClusters.getResultObjects().get(0);
+			SolrHdpGridCluster gridCluster = gridClusters.getResultObjects().get(0);
 			List<String> symbols = new ArrayList<String>();
 			if(includeHumanSymbols)
 			{

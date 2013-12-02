@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.*;
 
-public class SolrDpGridCluster
+public class SolrHdpGridCluster
 {
 	Integer gridClusterKey;
 	String homologeneId;

@@ -25,11 +25,11 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDpGenoInResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
@@ -378,7 +378,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
         		Integer gridClusterKey = (Integer)sd.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY);
 
         		// Grid cluster is to be filled out by Hibernate (since it is too complex), so we just add the result keys here.
-        		SolrDpGridCluster gridCluster = new SolrDpGridCluster();
+        		SolrHdpGridCluster gridCluster = new SolrHdpGridCluster();
         		
         		gridCluster.setGridClusterKey(gridClusterKey);
         		gridCluster.setHomologeneId((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGENE_ID));
@@ -533,7 +533,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
           SolrDocument doc = (SolrDocument) iter.next();
 
           // fill data object, and add to SearchResults
-          SolrDpGenoInResult genoInResult = new SolrDpGenoInResult();
+          SolrHdpGridData genoInResult = new SolrHdpGridData();
           genoInResult.setGridClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY));
           genoInResult.setGenoClusterKey((Integer) doc.getFieldValue(DiseasePortalFields.GENO_CLUSTER_KEY));
           genoInResult.setMarkerKey((Integer) doc.getFieldValue(DiseasePortalFields.MARKER_KEY));

@@ -4,7 +4,7 @@ import java.util.*;
 
 import mgi.frontend.datamodel.hdp.HdpGridAnnotation;
 
-public class SolrDpGenoInResult implements HdpGridAnnotation
+public class SolrHdpGridData implements HdpGridAnnotation
 {
 	Integer gridClusterKey;
 	Integer genoClusterKey;
