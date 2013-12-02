@@ -44,14 +44,10 @@
 
       <TD class='comboAndStrain'>
         <span class="genotypeCombo">
-        <%
-        	genotype.getCombination1();
- 			ntc.convertNotes(genotype.getCombination1(), '|');       
-        %>
-		<%=FormatHelper.newline2HTMLBR(ntc.useNewWindows(ntc.convertNotes(genotype.getCombination1(), '|')))%>
+		<fewi:genotype newWindow="${true}" value="${genotype}" />
         </span>
         <br/>
-        <%=FormatHelper.superscript(genotype.getBackgroundStrain())%>
+        <fewi:super value="${genotype.backgroundStrain}" />
         <c:if test="${genotype.isConditional==1}"><br/><br/>Conditional</c:if>
         
         
@@ -59,7 +55,7 @@
           <br/>
           <br/>
           <span class="cellLines">
-          cell line(s): <%=FormatHelper.superscript(genotype.getCellLines())%>
+          cell line(s): <fewi:super value="${genotype.cellLines}" />
           </span>
         </c:if>  
       </TD>

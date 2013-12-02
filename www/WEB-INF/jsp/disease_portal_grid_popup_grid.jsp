@@ -6,11 +6,6 @@
 
 <!-- Assumes title and header are set -->
 
-<% 
-  // Genotype genotype = (Genotype)request.getAttribute("genotype"); 
-  NotesTagConverter ntc = new NotesTagConverter();
-%>
-
 <style type="text/css">
  
 </style>

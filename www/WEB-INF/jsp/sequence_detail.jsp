@@ -78,7 +78,7 @@ ${templateBean.templateBodyStartHtml}
     <b>Sequence<br>description<br>from provider</b>
   </td>
   <td class="${rightTdStyles.next}" >
-    <%=FormatHelper.formatVerbatim(sequence.getDescription())%>
+    <fewi:verbatim value="${sequence.description}" />
   </td>
 </tr>
 
@@ -299,11 +299,10 @@ ${templateBean.templateBodyStartHtml}
     </tr>
 
     <c:forEach var="probe" items="${probes}" >
-      <% Probe myProbe = (Probe)pageContext.getAttribute("probe"); %>
       <tr>
         <td>
           <a href="${configBean.WI_URL}searches/probe.cgi?${probe.probeKey}">
-          <%=FormatHelper.formatVerbatim(myProbe.getName())%>
+          <fewi:verbatim value="${probe.name}" />
           </a>
         </td>
         <td>
