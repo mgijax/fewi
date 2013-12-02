@@ -111,10 +111,10 @@ td.yui-dt-col-coordinate
 }
 #locationsFileNotify
 {
-	padding-left: 50px;
 	font-style: italic;
 	color: black;
 	font-weight: bold;
+	white-space: nowrap;
 }
 #locationsFileHelpImg
 {
