@@ -60,7 +60,7 @@ public class SolrHunter implements Hunter {
     /**
      * solr server settings from configuration
      */
-    protected HttpSolrServer server = null;
+    protected HttpSolrServer curServer = null;
     @Value("${solr.soTimeout}")
     protected Integer solrSoTimeout;
     @Value("${solr.connectionTimeout}")
@@ -203,7 +203,8 @@ public class SolrHunter implements Hunter {
         }
         else
         {
-        	qServer = createSolrConnection();
+        	if (this.curServer==null) this.curServer = createSolrConnection();
+        	qServer = this.curServer;
         }
         // Create the query string by invoking the translate filter method.
         SolrQuery query = new SolrQuery();
@@ -486,15 +487,13 @@ public class SolrHunter implements Hunter {
      * as needed.
      */
 
-    protected void setupSolrConnection()
-    {
-    	this.server = createSolrConnection(solrUrl);
-    }
     protected HttpSolrServer createSolrConnection()
     {
     	return createSolrConnection(solrUrl);
     }
-    protected HttpSolrServer createSolrConnection(String url) {
+    protected HttpSolrServer createSolrConnection(String url) 
+    {
+    	HttpSolrServer server=null;
         logger.debug("solrUrl->" + url);
         try { server = new HttpSolrServer(url);}
         catch (Exception e) {

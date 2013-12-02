@@ -1372,7 +1372,7 @@ public class DiseasePortalController
 		 *  There is some limit on the number of coordinates we can query Solr with at a time.
 		 *  All I know is that SolrJ throws a weird javabin format error at numbers exceeding roughly 37,000 coordinates
 		 */
-		Integer maxLocationsInAQuery = 30000; 
+		Integer maxLocationsInAQuery = 1000; 
 		Set<String> markerKeys = new HashSet<String>();
 		if(locationCoordinateTokens!=null && locationCoordinateTokens.size()>0)
 		{
@@ -1380,6 +1380,7 @@ public class DiseasePortalController
 			if(chunks==0) chunks=1;
 			for(int i=0; i<chunks; i++)
 			{
+				if(i>0) logger.debug("convertLocationsToMarkerKeys-> Chunking through coordinate query. "+(chunks-i)+" chunks left.");
 				// chunk through the list 
 				int offsetStart = (i) * maxLocationsInAQuery;
 				int offsetEnd = (i+1) * maxLocationsInAQuery;
