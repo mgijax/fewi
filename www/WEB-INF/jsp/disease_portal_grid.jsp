@@ -3,7 +3,6 @@
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
 <%@ page import = "org.jax.mgi.fewi.controller.DiseasePortalController" %>
-<%@ page import = "org.jax.mgi.fewi.searchUtil.entities.SolrDpGridCluster.SolrDpGridClusterMarker" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 
 <%
@@ -68,16 +67,14 @@
 	  <tr class="${gcStatus.index % 2 == 0 ? 'row1' : 'row2'}">
 	    <td><div class="mc">
 	      <c:forEach var="humanSymbol" items="${gridCluster.humanSymbols}" varStatus="status">
-		      <% String humanSymbol = (String) pageContext.getAttribute("humanSymbol"); %>
-		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}"><%= FormatHelper.superscript(humanSymbol) %></a></c:if>
-		      <c:if test="${ empty gridCluster.homologeneId}"><%= FormatHelper.superscript(humanSymbol) %></c:if>
+		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}"><fewi:super value="${humanSymbol}"/></a></c:if>
+		      <c:if test="${ empty gridCluster.homologeneId}"><fewi:super value="${humanSymbol}"/></c:if>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </div></td>
 	    <td><div class="mc">
 	      <c:forEach var="mouseMarker" items="${gridCluster.mouseMarkers}" varStatus="status">
-	      	  <% SolrDpGridClusterMarker mouseMarker = (SolrDpGridClusterMarker) pageContext.getAttribute("mouseMarker"); %>
-		      <a href="${configBean.FEWI_URL}marker/key/${mouseMarker.markerKey}"><%= FormatHelper.superscript(mouseMarker.getSymbol()) %></a>
+		      <a href="${configBean.FEWI_URL}marker/key/${mouseMarker.markerKey}"><fewi:super value="${mouseMarker.symbol}"/></a>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </div></td>

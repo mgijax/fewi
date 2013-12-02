@@ -43,28 +43,12 @@
 </tr>
 
 <c:forEach var="popupRow" items="${popupRows}" varStatus="status">
-    <c:set var="scriptGeno" value="${popupRow.genotype}" scope="request"/>
-    <%  // unhappily resorting to scriptlet
-    Genotype genotype = (Genotype)request.getAttribute("scriptGeno");
-	String allComp = new String();
-	String ifChimeric = new String();
-	String ifConditional = new String();
-	if ( (genotype != null) && (genotype.getCombination1() != null) ) {
-      allComp = genotype.getCombination1().trim();
-      allComp = ntc.convertNotes(allComp, '|',true);
-    }
-	if ( genotype.getExistsAs().equals("Chimeric") ) {
-		ifChimeric = " (chimeric)";
-	}
-	if ( genotype.getIsConditional() == 1) {
-		ifConditional = " (conditional)";
-	}
-	%>
+    <c:set var="genotype" value="${popupRow.genotype}" scope="request"/>
 	<tr title="click row to see phenotype details" class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" onClick="window.open('${configBean.FEWI_URL}diseasePortal/genoCluster/view/${popupRow.genoClusterKey}'); return true;">
     <td style="color:blue;"> 
-      <%=allComp%>
+      <fewi:genotype value="${genotype}" noLink="${true}" />
       <span style="color:black;"> 
-        <%=ifChimeric%><%=ifConditional%> 
+        <c:if test="${genotype.existsAs eq 'Chimeric'}"> (Chimeric)</c:if><c:if test="${genotype.isConditional eq 1}"> (conditional)</c:if>
       </span>
     </td>
 
