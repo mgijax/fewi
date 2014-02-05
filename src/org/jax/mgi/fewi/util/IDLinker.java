@@ -3,11 +3,9 @@ package org.jax.mgi.fewi.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,8 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** An IDLinker is an object devoted to making links for accession IDs, using
- * a properties file to map from a logical database to its various actual
- * databases.
+ * a properties file (and hibernate actual_database table) to map from a logical 
+ * database to its various actual databases.
+ * 
+ * NOTE: externalurls.properties file is intended to override any actual_database values in fe.
+ * 	Please do not change this.
  */
 @Component
 public class IDLinker {
@@ -49,14 +50,8 @@ public class IDLinker {
 
 	private boolean initialized = false;
 
-	//--- Constructors ---
-
-	/** construct our IDLinker using data from externalUrls.properties file
-	 */
-	public IDLinker() {}
-
-	public void setup() {
-
+	public void setup() 
+	{
 		if (this.initialized) { return; }
 
 		if (cachedLdbToAdb.size() > 0) {
@@ -66,193 +61,130 @@ public class IDLinker {
 
 		try {
 			config = ContextLoader.getExternalUrls();
-					// new PropertiesConfiguration("properties/externalUrls.properties");
 		} catch (Exception e) {
-			logger.debug ("Failed to read externalUrls.properties");
-			logger.debug (e.toString());
+			logger.error("Failed to read externalUrls.properties",e);
 		};
 
 
-		// used to iterate through properties in externalUrls:
-		String name;	// property name
-		String value;	// property value
-		String prefix;	// property name minus any ".*" suffix
-		ActualDB adb;	// the ActualDB object for given 'name'
-
-		List<ActualDB> adbs;	// list of ActualDBs for this
-					// ...logical db
+		List<ActualDB> adbs;	// list of ActualDBs for this logical db
 
 		// used to cache our ActualDB objects by actual db name
-		HashMap<String,ActualDB> allAdbs =
-			new HashMap<String,ActualDB>();
+		HashMap<String,ActualDB> allAdbs = new HashMap<String,ActualDB>();
 
-		// For precedence, we want the URLs in the database to be
-		// preferred over those URLs from the properties file.  So, we
-		// initialize our ActualDB objects with data from the file and
-		// then go through and update with URLs from the database (and
-		// add any actual databases that weren't in the properties
-		// file).
+		// For each logical database, collect and populate a List of ActualDB objects
 
-		// For each logical database, collect and populate a List of
-		// ActualDB objects:
-
-		// look for ${myName} notation for config values that need
-		// to be inserted
+		// look for ${myName} notation for config values that need to be inserted
 		Pattern hasName = Pattern.compile("\\$\\{([A-Za-z0-9_]+)\\}");
-		Matcher hasNameMatcher = null;
-		String configValue = null;
-
 		Properties configBean = ContextLoader.getConfigBean();
 
-		for (Object key: config.keySet()){
-			name = (String)key;
-			value = config.getProperty(name);
+		for (Object key: config.keySet())
+		{
+			String name = (String)key;
+			String value = config.getProperty(name);
 
-			hasNameMatcher = hasName.matcher(value);
-			if (hasNameMatcher.find()) {
-				configValue = configBean.getProperty(
-					hasNameMatcher.group(1));
-				if (configValue != null) {
-					value = value.replaceFirst(
-						"\\$\\{([A-Za-z0-9_]+)\\}",
-						configValue);
+			Matcher hasNameMatcher = hasName.matcher(value);
+			// not sure what this section does - kstone
+			if (hasNameMatcher.find()) 
+			{
+				String configValue = configBean.getProperty(hasNameMatcher.group(1));
+				if (configValue != null) 
+				{
+					value = value.replaceFirst("\\$\\{([A-Za-z0-9_]+)\\}",configValue);
 				}
 			}
 
-			prefix = name.replaceAll("\\..*", "");
+			String prefix = name.replaceAll("\\..*", "");
 
-			if (allAdbs.containsKey(prefix)) {
-				adb = allAdbs.get(prefix);
-			} else {
-				adb = new ActualDB(prefix);
-				allAdbs.put(prefix, adb);
-			}
+			// get the matching ActualDB object for this prefix
+			if (!allAdbs.containsKey(prefix)) allAdbs.put(prefix,new ActualDB(prefix)); 
+			ActualDB adb = allAdbs.get(prefix);
 
-			if (name.endsWith(".ldb")) {
-				if (this.ldbToAdb.containsKey(value)) {
-					adbs = this.ldbToAdb.get(value);
-				} else {
+			// set various portions of the actualdb object, depending on the type of config suffix
+			if (name.endsWith(".ldb")) 
+			{
+				// add this actualdb to this appropriate logicaldb mapping
+				if (!this.ldbToAdb.containsKey(value)) 
+				{
 					adbs = new ArrayList<ActualDB>();
 					this.ldbToAdb.put(value, adbs);
 					this.ldbToAdb.put(prefix, adbs);
-				}
-				adbs.add(adb);
-			} else if (name.endsWith(".name")) {
+				} 
+				this.ldbToAdb.get(value).add(adb);
+			} 
+			else if (name.endsWith(".name")) 
+			{
 				adb.setDisplayName(value);
-			} else if (name.endsWith(".order")) {
+			} 
+			else if (name.endsWith(".order")) 
+			{
 				adb.setOrderVal(value);
-			} else {
+			} 
+			else 
+			{
 				adb.setUrl(value);
 			}
 		}
 
-//		for (Iterator iter =  config.getKeys(); iter.hasNext();) {
-//			name = (String) iter.next();
-//			value = config.getString(name);
-//
-//			hasNameMatcher = hasName.matcher(value);
-//			if (hasNameMatcher.find()) {
-//				configValue = configBean.getProperty(
-//					hasNameMatcher.group(1));
-//				if (configValue != null) {
-//					value = value.replaceFirst(
-//						"\\$\\{([A-Za-z0-9_]+)\\}",
-//						configValue);
-//				}
-//			}
-//
-//			prefix = name.replaceAll("\\..*", "");
-//
-//			if (allAdbs.containsKey(prefix)) {
-//				adb = allAdbs.get(prefix);
-//			} else {
-//				adb = new ActualDB(prefix);
-//				allAdbs.put(prefix, adb);
-//			}
-//
-//			if (name.endsWith(".ldb")) {
-//				if (this.ldbToAdb.containsKey(value)) {
-//					adbs = this.ldbToAdb.get(value);
-//				} else {
-//					adbs = new ArrayList<ActualDB>();
-//					this.ldbToAdb.put(value, adbs);
-//					this.ldbToAdb.put(prefix, adbs);
-//				}
-//				adbs.add(adb);
-//			} else if (name.endsWith(".name")) {
-//				adb.setDisplayName(value);
-//			} else if (name.endsWith(".order")) {
-//				adb.setOrderVal(value);
-//			} else {
-//				adb.setUrl(value);
-//			}
-//		}
-
 		// Now go through those from the database.  If the actual db
-		// wasn't in the file, add an entry for it.  If it was in the
-		// file, then update the URL specified in the file.
+		// wasn't in the file, add an entry for it.  
 
 		// get the logical/actual database info from the database
-		Map<String,List> fromDb = getActualDbsFromDatabase();
+		Map<String,List<ActualDatabase>> fromDb = getActualDbsFromDatabase();
 
-		boolean gotSomeFromDb = false;
-		if (fromDb.size() > 0) {
-			gotSomeFromDb = true;
-		}
+		boolean gotSomeFromDb = fromDb.size() > 0;
 
-		Set<String> ldbs = fromDb.keySet();
-		Iterator<String> it = ldbs.iterator();
-		String ldb = null;
-		List<ActualDatabase> adbs1 = null;
-		String adbName = null;
-		String ldbName = null;
+		for (String ldb : fromDb.keySet()) 
+		{	
+			ActualDB adb=null;	// the ActualDB object for given 'name'
+			List<ActualDatabase> adbs1 = fromDb.get(ldb);
 
-		while (it.hasNext()) {
-			ldb = it.next();
-			adbs1 = fromDb.get(ldb);
-
-			for (ActualDatabase adb1: adbs1) {
-				adbName = adb1.getActualDb().replaceAll(
-					" ", "_");
-				ldbName = adb1.getLogicalDb();
+			for (ActualDatabase adb1: adbs1) 
+			{
+				String adbName = adb1.getActualDb().replaceAll(" ", "_");
+				String ldbName = adb1.getLogicalDb();
 
 				// skip updating MGI from the database, as
 				// those entries are set for production
-				if (adbName.equals("MGI")) {
-					// skip it
-				} else if (ldbName.startsWith("MGI")) {
-					// skip it
-				} else if (allAdbs.containsKey(adbName)) {
-					// update URL for an actual database
-					// that was in the properties file
-
-					adb = allAdbs.get(adbName);
-					adb.setUrl(adb1.getUrl());
-				} else {
-					// add an actual database that was not
-					// in the properties file
-
+				if (adbName.equals("MGI"))  continue; // skip it
+				if (ldbName.startsWith("MGI")) continue; // skip it
+				
+				if (allAdbs.containsKey(adbName)) 
+				{
+					continue;
+					// As of 2014/02/05 we use the properties file as the definitive resource for external urls in the fewi. - kstone+pf
+					// update URL for an actual database that was in the properties file
+					//adb = allAdbs.get(adbName);
+					//adb.setUrl(adb1.getUrl());
+				} 
+				else 
+				{
+					// add an actual database that was not in the properties file
 					adb = new ActualDB(adbName);
 					adb.setUrl (adb1.getUrl());
 					adb.setDisplayName (adbName);
 					adb.setOrderVal (
 						adb1.getSequenceNum());
 
-					if (this.ldbToAdb.containsKey (
-					    ldbName)) {
+					if (this.ldbToAdb.containsKey(ldbName)) 
+					{
 						adbs = this.ldbToAdb.get(ldbName);
-					} else {
+					} 
+					else 
+					{
 					    adbs = new ArrayList<ActualDB>();
 					    this.ldbToAdb.put(ldbName, adbs);
 					}
 					boolean seenIt = false;
-					for (ActualDB a: adbs) {
-					    if (a.getName().equals(adbName)) {
-						seenIt = true;
+					for (ActualDB a: adbs) 
+					{
+					    if (a.getName().equals(adbName))
+					    {
+					    	seenIt = true;
 					    }
 					    logger.debug ("Compare: *" + adbName + "* and *" + a.getName() + "*");
 					}
-					if (!seenIt) {
+					if (!seenIt) 
+					{
 					    adbs.add(adb);
 					}
 				}
@@ -260,24 +192,20 @@ public class IDLinker {
 		}
 
 		// Now go through and duplicate each logical database's entry with a
-		// lowercase version of itself to make this more resilient to db
-		// changes:
+		// lowercase version of itself to make this more resilient to db changes
 
-		String ldbLower;
-		ldb = null;
-		HashMap<String,List<ActualDB>> lowerMap =
-			new HashMap<String,List<ActualDB>> ();
+		HashMap<String,List<ActualDB>> lowerMap = new HashMap<String,List<ActualDB>> ();
 
-		it = this.ldbToAdb.keySet().iterator();
-		while (it.hasNext()) {
-			ldb = it.next();
+		for (String ldb : this.ldbToAdb.keySet()) 
+		{
 			adbs = this.ldbToAdb.get(ldb);
 			Collections.sort(adbs);
 			lowerMap.put(ldb.toLowerCase(), this.ldbToAdb.get(ldb));
 		}
 		this.ldbToAdb.putAll(lowerMap);
 
-		if (gotSomeFromDb) {
+		if (gotSomeFromDb) 
+		{
 			cachedLdbToAdb = this.ldbToAdb;
 			this.initialized = true;
 		}
@@ -321,7 +249,7 @@ public class IDLinker {
 	/** get a mapping from the database where:
 	 * 	{ logical db : [ ActualDatabase objects ] }
 	 */
-	private Map<String,List> getActualDbsFromDatabase() {
+	private Map<String,List<ActualDatabase>> getActualDbsFromDatabase() {
 		// get all the ActualDatabase objects from the database
 
 		if (this.actualDatabaseFinder == null) {
@@ -332,7 +260,7 @@ public class IDLinker {
 
 		String ldbName = null;
 		String adbName = null;
-		HashMap<String,List> byLdb = new HashMap<String,List>();
+		HashMap<String,List<ActualDatabase>> byLdb = new HashMap<String,List<ActualDatabase>>();
 		List<ActualDatabase> adbs = null;
 
 		// bring them into a HashMap
@@ -428,15 +356,13 @@ public class IDLinker {
 		if (adbs == null) {
 			return id;
 		}
-		Iterator<ActualDB> it = adbs.iterator();
 		StringBuffer sb = new StringBuffer();
-		ActualDB adb;
 		String href;
 		boolean isFirst = true;
 		HashMap<String,String> done = new HashMap<String,String>();
 
-		while (it.hasNext()) {
-			adb = it.next();
+		for (ActualDB adb : adbs) 
+		{
 			if (!done.containsKey(adb.getName())) {
 			href = this.makeLink (adb.getUrl(), id, adb.getDisplayName());
 			if (!isFirst) {
