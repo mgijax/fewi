@@ -1,6 +1,8 @@
 package org.jax.mgi.fewi.finder;
 
 import java.util.List;
+import java.util.Comparator;
+import java.util.Collections;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.GxdAssayResult;
@@ -8,6 +10,11 @@ import mgi.frontend.datamodel.Marker;
 
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdSystemFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdWildtypeFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdTheilerStageFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -35,6 +42,21 @@ public class GxdFinder
 	@Autowired
 	private SolrGxdDifferentialHunter gxdDifferentialHunter;
 
+	@Autowired
+	private SolrGxdSystemFacetHunter gxdSystemFacetHunter;
+	
+	@Autowired
+	private SolrGxdAssayTypeFacetHunter gxdAssayTypeFacetHunter;
+	
+	@Autowired
+	private SolrGxdDetectedFacetHunter gxdDetectedFacetHunter;
+	
+	@Autowired
+	private SolrGxdTheilerStageFacetHunter gxdTheilerStageFacetHunter;
+	
+	@Autowired
+	private SolrGxdWildtypeFacetHunter gxdWildtypeFacetHunter;
+	
 //    /*
 //	 * Only returning keys to start
 //	 */
@@ -120,4 +142,35 @@ public class GxdFinder
         gxdDifferentialHunter.hunt(params, searchResults);
         return searchResults.getResultKeys();
 	}
+
+	public SearchResults<String> getSystemFacet(SearchParams params) {
+	    SearchResults<String> results = new SearchResults<String>();
+	    gxdSystemFacetHunter.hunt(params, results);
+	    return results;
+	}
+
+	public SearchResults<String> getAssayTypeFacet(SearchParams params) {
+	    SearchResults<String> results = new SearchResults<String>();
+	    gxdAssayTypeFacetHunter.hunt(params, results);
+	    return results;
+	}
+
+	public SearchResults<String> getDetectedFacet(SearchParams params) {
+	    SearchResults<String> results = new SearchResults<String>();
+	    gxdDetectedFacetHunter.hunt(params, results);
+	    return results;
+	}
+
+	public SearchResults<String> getWildtypeFacet(SearchParams params) {
+	    SearchResults<String> results = new SearchResults<String>();
+	    gxdWildtypeFacetHunter.hunt(params, results);
+	    return results;
+	}
+
+	public SearchResults<String> getTheilerStageFacet(SearchParams params) {
+	    SearchResults<String> results = new SearchResults<String>();
+	    gxdTheilerStageFacetHunter.hunt(params, results);
+	    return results;
+	}
 }
+

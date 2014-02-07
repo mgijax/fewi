@@ -1,3 +1,8 @@
+function log(msg) {
+    // log a message to the browser console
+    setTimeout(function() { throw new Error(msg); }, 0);
+}
+
 // Form display toggle
 //   false = form is displayed
 var qDisplay = false;
@@ -25,35 +30,44 @@ YAHOO.util.Event.addListener("gxdDifStructStageHelpImage", "mouseout", YAHOO.gxd
 
 //GXD tooltips
 var tsTooltips = {
-		1:"One cell egg",
-		2:"Beginning of cell division",
-		3:"Morula",
-		4:"Advanced division/segmentation",
-		5:"Blastocyst",
+		1:"One cell stage",
+		2:"Beginning of cell division; 2-4 cells",
+		3:"Morula; 4-16 cells",
+		4:"Blastocyst (inner cell mass apparent); 16-40 cells",
+		5:"Blastocyst (zona free)",
 		6:"Implantation",
 		7:"Formation of egg cylinder",
 		8:"Differentiation of egg cylinder",
-		9:"Advanced endometrial reaction; prestreak",
-		10:"Amnion; midstreak",
-		11:"Neural plate, presomite stage; no allantoic bud",
-		12:"First somites; late head fold",
-		13:"Turning",
-		14:"Formation & closure anterior neuropore",
-		15:"Formation of posterior neuropore, forelimb bud",
-		16:"Closure post. neuropore, hindlimb & tail bud",
-		17:"Deep lens indentation",
-		18:"Closure lens vesicle",
-		19:"Complete separation of lens vesicle",
-		20:"Earliest sign of fingers",
-		21:"Anterior footplate indented, marked pinna",
-		22:"Fingers separate distally",
-		23:"Toes separate",
-		24:"Reposition of umbillical hernia",
-		25:"Fingers and toes joined together",
+		9:"Prestreak; early streak",
+		10:"Midstreak; late streak; allantoic bud first appears; amnion forms",
+		11:"Neural plate stage; elongated allantoic bud; early headfold; late headfold",
+		12:"1-7 somites",
+		13:"8-12 somites; turning of embryo",
+		14:"13-20 somites; formation and closure of anterior neuropore",
+		15:"21-29 somites; formation of posterior neuropore and forelimb bud",
+		16:"30-34 somites; closure of posterior neuropore; formation of hindlimb and tail bud",
+		17:"35-39 somites; deep indentation of lens vesicle",
+		18:"40-44 somites; closure of lens vesicle",
+		19:"45-47 somites; complete separation of lens vesicle",
+		20:"48-51 somites; earliest sign of handplate digits",
+		21:"52-55 somites; indentation of handplate",
+		22:"56-~60 somites; distal separation of handplate digits",
+		23:"Separation of footplate digits",
+		24:"Reposition of umbilical hernia",
+		25:"Digits joined together; skin wrinkled",
 		26:"Long whiskers",
+		27:"Newborn mouse",
 		28:"Postnatal development"
 		};
-var tsBoxIDs = ["theilerStage","difTheilerStage1","difTheilerStage2"];
+
+// only include those with special handling (to be added before right paren)
+var tsTooltipTitles = {
+	27:"; P0-P3",
+	28:"; P4-adult"
+};
+
+var tsBoxIDs = ["theilerStage","difTheilerStage1","difTheilerStage2",
+    "difTheilerStage3","difTheilerStage4"];
 for(var j=0;j<tsBoxIDs.length;j++)
 {
 	var tsBox = YAHOO.util.Dom.get(tsBoxIDs[j]);
@@ -65,7 +79,12 @@ for(var j=0;j<tsBoxIDs.length;j++)
 			// check if we've defined the tooltip for this option
 			if(tsTooltips[option.value])
 			{
-				var ttText = "<b>"+option.text+"</b>"+
+				var ttTitle = option.text;
+				if (tsTooltipTitles[option.value]) {
+				    ttTitle = ttTitle.replace(")",
+					tsTooltipTitles[option.value] + ")");
+				}
+				var ttText = "<b>" + ttTitle + "</b>"+
 					"<br/>"+tsTooltips[option.value];
 				var tt = new YAHOO.widget.Tooltip("tsTT_"+j+"_"+i,{context:option, text:ttText,showdelay:1000});
 			}
@@ -287,8 +306,8 @@ var updateQuerySummary = function() {
 		var el = new YAHOO.util.Element(document.createElement('span'));
 		var selectedStages = parseStageOptions("difTheilerStage1","0");
 		var detectedStages = [];
-		var detectedStagesText = "Developmental stage(s):";
-		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> Developmental stage";
+		var detectedStagesText = "developmental stage(s):";
+		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> developmental stage";
 		else
 		{
 			for(var i=0;i<selectedStages.length;i++)
@@ -299,19 +318,19 @@ var updateQuerySummary = function() {
 		}
 		var selectedDifStages = parseStageOptions("difTheilerStage2","-1");
 		var notDetectedStages = [];
-		var notDetectedStagesText = "Developmental stage(s):";
-		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any Developmental stage not selected above</b>";
+		var notDetectedStagesText = "developmental stage(s):";
+		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
 		else
 		{
 			for(var i=0;i<selectedDifStages.length;i++)
 			{
 				notDetectedStages.push("<b>TS:"+selectedDifStages[i]+"</b>");
 			}
-			notDetectedStagesText += " ("+notDetectedStages.join(" or ")+")";
+			notDetectedStagesText += " ("+notDetectedStages.join(", ")+")";
 		}
 		
 		var htmlText = "Detected at " +detectedStagesText+
-				"<br/>but not detected or assayed at "+notDetectedStagesText;
+				"<br/>but not detected or assayed in any of the "+notDetectedStagesText;
 		el.set('innerHTML',htmlText);
 		el.appendTo(searchParams);
 	}
@@ -323,8 +342,8 @@ var updateQuerySummary = function() {
 		// parse the stages input
 		var selectedStages = parseStageOptions("difTheilerStage3","0");
 		var detectedStages = [];
-		var detectedStagesText = "Developmental stage(s):";
-		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> Developmental stage";
+		var detectedStagesText = "developmental stage(s):";
+		if(selectedStages=="Any") detectedStagesText = "<b>Any</b> developmental stage";
 		else
 		{
 			for(var i=0;i<selectedStages.length;i++)
@@ -335,15 +354,15 @@ var updateQuerySummary = function() {
 		}
 		var selectedDifStages = parseStageOptions("difTheilerStage4","-1");
 		var notDetectedStages = [];
-		var notDetectedStagesText = "Developmental stage(s):";
-		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any Developmental stage not selected above</b>";
+		var notDetectedStagesText = "developmental stage(s):";
+		if(selectedDifStages=="Any") notDetectedStagesText = "<b>Any developmental stage not selected above</b>";
 		else
 		{
 			for(var i=0;i<selectedDifStages.length;i++)
 			{
 				notDetectedStages.push("<b>TS:"+selectedDifStages[i]+"</b>");
 			}
-			notDetectedStagesText += " ("+notDetectedStages.join(" or ")+")";
+			notDetectedStagesText += " ("+notDetectedStages.join(", ")+")";
 		}
 		
 		el.set('innerHTML',"Detected in <b>"+YAHOO.util.Dom.get('difStructure3').value+"</b>" +
@@ -352,7 +371,7 @@ var updateQuerySummary = function() {
 				"<br/>but not detected or assayed in <b>"+
 					YAHOO.util.Dom.get('difStructure4').value+"</b>"+
 				"<span class=\"smallGrey\"> includes synonyms & substructures</span>"+
-				"<br/>at "+notDetectedStagesText);
+				"<br/>in any of the "+notDetectedStagesText);
 		el.appendTo(searchParams);
 	}
 	else
@@ -434,7 +453,15 @@ var updateQuerySummary = function() {
 			b = new YAHOO.util.Element(document.createElement('b'));
 			b.appendChild(document.createTextNode(YAHOO.util.Dom.get('structure').value));
 			el.appendChild(b);
-	
+
+/* disabled until such time as we want to use the picklist for searching by ID
+ *
+ *			if (YAHOO.util.Dom.get('structureID').value != "") {
+ *			    el.appendChild(document.createTextNode(" (searched by ID)"));
+ *			} else {
+ *			    el.appendChild(document.createTextNode(" (searched by text)"));
+ *			}
+ */	
 			var sp = new YAHOO.util.Element(document.createElement('span'));
 			sp.addClass("smallGrey");
 			sp.appendChild(document.createTextNode(" includes synonyms & substructures"));
@@ -524,7 +551,7 @@ var updateQuerySummary = function() {
 			}
 	
 			el = new YAHOO.util.Element(document.createElement('span'));
-			el.appendChild(document.createTextNode("at Developmental stage(s): "));
+			el.appendChild(document.createTextNode("at developmental stage(s): "));
 	
 			// ensure that "Any" is displayed if somehow no ages are selected
 			if (_stages.length == 0) {
@@ -758,6 +785,9 @@ var interceptSubmit = function(e) {
 			gxdDataTable.setAttributes({ width: "100%" }, true);
 	    
 		toggleQF(openSummaryControl);
+
+		clearAllFilters();
+		prepFilters();
 	}
 };
 
@@ -1088,16 +1118,32 @@ YAHOO.util.Event.addListener(YAHOO.util.Dom.get("vocabTerm"), "keypress", clearV
     };
 })();
 
+/* get a string for a Theiler Stage range
+ */
+function tsRange(startStage, endStage) {
+    var ts = "TS" + startStage;
+    if (startStage != endStage) {
+	ts = ts + "-" + endStage;
+    }
+    return ts;
+}
+
 /*
  * Anatomical Dictionary Auto Complete Section
  */
 function makeStructureAC(inputID,containerID){
     // Use an XHRDataSource
-    var oDS = new YAHOO.util.XHRDataSource(fewiurl + "autocomplete/structure");
+    var oDS = new YAHOO.util.XHRDataSource(fewiurl + "autocomplete/emapa");
     // Set the responseType
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     // Define the schema of the JSON results
     oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym"]};
+
+/* disabled until we opt to use the picklist selection for searching by ID
+ *
+ *    oDS.responseSchema = {resultsList: "resultObjects", fields:["structure", "synonym","isStrictSynonym","accID","startStage","endStage"]};
+ */
+
     //oDS.maxCacheEntries = 10;
     oDS.connXhrMode = "cancelStaleRequests";
 
@@ -1109,28 +1155,58 @@ function makeStructureAC(inputID,containerID){
     oAC.minQueryLength = 2;
     oAC.maxResultsDisplayed = 500;
     oAC.forceSelection = true;
+
+/* disabled until we want to use the picklist for searching by IDs and also
+ * to allow free text entry
+ *    oAC.forceSelection = false;
+ */
+
     //oAC.delimChar = ";";
+    
+    // blank out the hidden ID field upon entering the structure box
+    var removeSelectedID = function(oSelf) {
+	    //log("removeSelectedID() called");
+	    var idBox = YAHOO.util.Dom.get("structureID");
+ 	    idBox.value = "";
+    };
+    oAC.textboxFocusEvent.subscribe(removeSelectedID);
     
     // try to set the input field after itemSelect event
     oAC.suppressInputUpdate = true;
     var selectionHandler = function(sType, aArgs) { 
+	    //log("selectionHandler() called");
 	    var myAC = aArgs[0]; // reference back to the AC instance 
 	    var elLI = aArgs[1]; // reference to the selected LI element 
 	    var oData = aArgs[2]; // object literal of selected item's result data 
 	    //populate input box with another value (the base structure name)
 	    var structure = oData[1]; // 0 = term, 1 = ACtext
 	    var inputBox = YAHOO.util.Dom.get(inputID);
- 	    inputBox.value = structure;
+	    inputBox.value = structure;
+
+/* disabled until such time as we want a selected structure from the pick
+ * list to be a search by ID
+ *
+ *	    inputBox.value = structure + " " + tsRange(oData[4], oData[5]);
+ *
+ *	    var accID = oData[3];
+ *	    var idBox = YAHOO.util.Dom.get("structureID");
+ *	    idBox.value = accID;
+ */
     }; 
     oAC.itemSelectEvent.subscribe(selectionHandler); 
-    
+
     oAC.formatResult = function(oResultData, sQuery, sResultMatch) {
-    	 
     	   // some other piece of data defined by schema
     	   var synonym = oResultData[1];
     	   var isStrictSynonym = oResultData[2];
     	  var value = synonym;
     	  if(isStrictSynonym) value += " <span style=\"color:#222; font-size:0.8em; font-style:normal;\">[synonym]</span>";
+
+/* disabled until we want to use the picklist for searching by ID, at which
+ * point we will also need Theiler Stage specified
+ *	  value = value + " <span style=\"color:#222; font-size:0.8em; font-style:normal;\">" + tsRange(oResultData[4], oResultData[5]) + "</span>";
+ */
+
     	  return (value);
     	}; 
     	
@@ -1297,6 +1373,8 @@ function reverseEngineerFormInput(request)
 	var formID = "#gxdQueryForm";
 	var foundDifStruct=false;
 	var foundDifStage=false;
+	var filters = {};	// filters[filter name] = [ values ]
+
 	for(var key in params)
 	{
 		if(key == "detected")
@@ -1430,9 +1508,15 @@ function reverseEngineerFormInput(request)
 						}
 					}
 				}
+			} else if (isFilterable(key)) {
+			    // deal with filters (no form fields for them)
+
+			    filters[key] = params[key];
 			}
 		}
 	}
+	resetFacets(filters);
+	prepFilters(request);	// need to reset the URLs for the filters
 	assayTypesCheck();
 	return foundParams;
 }

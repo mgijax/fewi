@@ -243,7 +243,7 @@ public class GXDLitController {
                 
         mav.addObject("marker", marker);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
-        mav.addObject("geneResult", new StyleAlternator("","stripe3"));
+        mav.addObject("geneResult", new StyleAlternator("","stripe3Gxd"));
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
@@ -344,7 +344,7 @@ public class GXDLitController {
 
         mav.addObject("reference", reference);
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
-        mav.addObject("geneResult", new StyleAlternator("","stripe3"));
+        mav.addObject("geneResult", new StyleAlternator("","stripe3Gxd"));
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
@@ -400,7 +400,7 @@ public class GXDLitController {
         List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, null,analysisData);
        
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
-        mav.addObject("geneResult", new StyleAlternator("","stripe3"));
+        mav.addObject("geneResult", new StyleAlternator("","stripe3Gxd"));
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
@@ -477,7 +477,7 @@ public class GXDLitController {
         	}
         }
         mav.addObject("stripe", new StyleAlternator("stripe1","stripe2"));
-        mav.addObject("geneResult", new StyleAlternator("","stripe3"));
+        mav.addObject("geneResult", new StyleAlternator("","stripe3Gxd"));
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);

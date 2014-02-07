@@ -85,10 +85,12 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_help.shtml#summary">	
-	<span class="titleBarMainTitle">Gene Expression Data</span>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml#summary">	
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
+<c:set var="isGxd" value="Gxd"/>
 <%@ include file="/WEB-INF/jsp/allele_header.jsp" %>
 
 
@@ -104,6 +106,10 @@ ${templateBean.templateBodyStartHtml}
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>
+<script type="text/javascript">
+prepFilters();
+</script>
 
 
 ${templateBean.templateBodyStopHtml}

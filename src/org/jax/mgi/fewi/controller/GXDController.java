@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.Comparator;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
 // MGI classes
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.VocabTerm;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.GxdAssayResult;
 import mgi.frontend.datamodel.Marker;
@@ -28,6 +31,7 @@ import org.jax.mgi.fewi.finder.GxdFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.MarkerBatchIDFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
@@ -38,6 +42,7 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
@@ -63,6 +68,7 @@ import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -89,6 +95,18 @@ import org.springframework.web.servlet.ModelAndView;
 public class GXDController {
 
 	// --------------------//
+	// static variables
+	// --------------------//
+	
+	// value for the isWildType field in gxdResult index
+	private static String WILD_TYPE = "wild type";
+
+	// values for defining how we sort facet results
+	private static String ALPHA = "alphabetic";	// sort alphabetically
+	private static String RAW = "raw";		// as returned by solr
+	private static String DETECTED = "detected";	// custom case
+
+	// --------------------//
 	// instance variables
 	// --------------------//
 
@@ -109,8 +127,13 @@ public class GXDController {
 	private GxdFinder gxdFinder;
 
 	@Autowired
+	private VocabularyFinder vocabFinder;
+
+	@Autowired
 	private GXDLitController gxdLitController;
 
+	@Value("${solr.factetNumberDefault}")
+	private Integer facetLimit;
 
 	// -----------------------------------------------------------------//
 	// public methods mapped to URLs
@@ -169,6 +192,7 @@ public class GXDController {
 		logger.debug("routing to view object");
 		ModelAndView mav = new ModelAndView("gxdResultsSummaryReport");
 		mav.addObject("resultFinder", batchFinder);
+		mav.addObject("queryString", request.getQueryString());
 		return mav;
 
     }
@@ -213,10 +237,53 @@ public class GXDController {
 		logger.debug("routing to view object");
 		ModelAndView mav = new ModelAndView("gxdMarkersSummaryReport");
 		mav.addObject("markerFinder", batchFinder);
+		mav.addObject("queryString", request.getQueryString());
 		return mav;
 
     }
 
+
+	/*
+	 * Summary by EMAPA/EMAPS ID
+	 */
+    @RequestMapping(value="/structure/{emapID}")
+    public ModelAndView summeryByStructureId(
+		  HttpServletRequest request,
+		  @PathVariable("emapID") String emapID) {
+
+        logger.debug("->summaryByStructureId started");
+
+        // setup view object
+        ModelAndView mav = new ModelAndView("gxd_summary_by_structure");
+
+	// setup search parameters object to gather the requested term
+        SearchParams searchParams = new SearchParams();
+        Filter idFilter = new Filter(SearchConstants.STRUCTURE_ID, emapID);
+        searchParams.setFilter(idFilter);
+
+        // find the requested structure
+        List<VocabTerm> structureList = vocabFinder.getTermByID(emapID);
+
+        // there can be only one...
+        if (structureList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No anatomy term found for " + emapID);
+            return mav;
+        }
+        if (structureList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Multiple anatomy terms found for " + emapID);
+            return mav;
+        }
+        VocabTerm structure = structureList.get(0);
+        mav.addObject("structure", structure);
+	mav.addObject("queryString", request.getQueryString());
+
+        logger.debug("summaryByStructureId routing to view ");
+	return mav;
+    }
 
 	/*
 	 * Summary by Reference
@@ -256,9 +323,10 @@ public class GXDController {
         }
         Reference reference = referenceList.get(0);
         mav.addObject("reference", reference);
+	mav.addObject("queryString", request.getQueryString());
 
         logger.debug("summeryByRefId routing to view ");
-		return mav;
+	return mav;
     }
 
 
@@ -301,9 +369,10 @@ public class GXDController {
         }
         Allele allele = alleleList.get(0);
         mav.addObject("allele", allele);
+	mav.addObject("queryString", request.getQueryString());
 
         logger.debug("summeryByAllId routing to view ");
-		return mav;
+	return mav;
     }
 
 
@@ -345,6 +414,7 @@ public class GXDController {
         }
         Marker marker = markerList.get(0);
         mav.addObject("marker", marker);
+	mav.addObject("queryString", request.getQueryString());
 
 		// handle requests for a specific Theiler Stage
         String theilerStage = request.getParameter("theilerStage");
@@ -733,6 +803,19 @@ public class GXDController {
 			return null;
 		}
 
+		// special handling for Theiler Stage 27:
+		// 1. if used in concert with other stages, ignore it
+		// 2. if used alone, cannot map to GXD Lit Index, so bail
+		List<Integer> stages = query.getTheilerStage();
+		if (stages.contains(27)) {
+			stages.remove(stages.indexOf(27));
+			logger.debug("Removed TS 27 from list of stages");
+			if (stages.size() == 0) {
+				logger.debug("No more stages; cannot map to lit index");
+				return null;
+			}
+		}
+
 		boolean setLitQuery = false;
 
 		GxdLitQueryForm gxdLitForm = new GxdLitQueryForm();
@@ -761,7 +844,9 @@ public class GXDController {
 			gxdLitForm.setVocabTerm(query.getVocabTerm());
 		}
 
-		List<Integer> stages = query.getTheilerStage();
+		// Map Theiler stages to their corresponding ages, so we can
+		// link to the GXD Literature Index using ages (embryonic days)
+
 		if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
 		{
 			setLitQuery=true;
@@ -785,6 +870,10 @@ public class GXDController {
 			}
 			gxdLitForm.setAge(new ArrayList<String>(mappedAges));
 		}
+
+		// special handling of embryonic day-based ages, so we expand
+		// 'any age' to be an OR-ed list, and so Postnatal becomes A.
+		// These are so we can link to the GXD Literature Index.
 
 		List<String> ages = query.getAge();
 		if(ages.size() > 0 && !ages.contains(GxdQueryForm.ANY_AGE))
@@ -1067,7 +1156,7 @@ public class GXDController {
 		}
 		
 		// all results MUST be wild type (broad definition)
-		queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, "true"));
+		queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
 		
 		return Filter.and(queryFilters);
 	}
@@ -1107,6 +1196,35 @@ public class GXDController {
 
 		logger.debug("get params");
 
+		// ---------------------------
+		// restrict results by filters (added to facetList)
+		// ---------------------------
+
+		if (query.getSystemFilter().size() > 0) {
+		    facetList.add(new Filter(FacetConstants.GXD_SYSTEM,
+			query.getSystemFilter(), Filter.OP_IN));
+		}
+
+		if (query.getAssayTypeFilter().size() > 0) {
+		    facetList.add(new Filter(FacetConstants.GXD_ASSAY_TYPE,
+			query.getAssayTypeFilter(), Filter.OP_IN));
+		}
+
+		if (query.getDetectedFilter().size() > 0) {
+		    facetList.add(new Filter(FacetConstants.GXD_DETECTED,
+			query.getDetectedFilter(), Filter.OP_IN));
+		}
+
+		if (query.getTheilerStageFilter().size() > 0) {
+		    facetList.add(new Filter(FacetConstants.GXD_THEILER_STAGE,
+			query.getTheilerStageFilter(), Filter.OP_IN));
+		}
+
+		if (query.getWildtypeFilter().size() > 0) {
+		    facetList.add(new Filter(FacetConstants.GXD_WILDTYPE,
+			query.getWildtypeFilter(), Filter.OP_IN));
+		}
+
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.
 		// the first this we need to check is if we have differential params
@@ -1127,6 +1245,10 @@ public class GXDController {
 			// add the 2nd part of the differential query (I.e. what results to display for the given markers)
 			queryFilters.add(makeDifferentialPart2Filter(query));
 			
+			if (facetList.size() > 0) {
+			    queryFilters.addAll(facetList);
+			}
+
 			return Filter.and(queryFilters);
 			// NOTE: THIS WAS A DIFFERENTIAL QUERY, THE BELOW CODE ONLY APPLIES TO STANDARD QUERY FORM
 		}
@@ -1147,10 +1269,20 @@ public class GXDController {
 			Filter structureKeyFilter = new Filter(SearchConstants.STRUCTURE_KEY, structureKey);
 			queryFilters.add(structureKeyFilter);
 		}
+
+		// special case...  if we have a structure ID and a structure,
+		// then we need to search by the ID and skip the structure.
+
+		boolean usedStructureID = false;
+
 		if(structureID !=null && !structureID.equals("")) {
-			Filter structureIdFilter = new Filter(SearchConstants.STRUCTURE_ID, structureID);
-			queryFilters.add(structureIdFilter);
+		    usedStructureID = true;
+
+		    Filter structureIdFilter = new Filter (
+			SearchConstants.STRUCTURE_ID, structureID);
+		    queryFilters.add(structureIdFilter);
 		}
+
 		if(annotatedStructureKey !=null && !annotatedStructureKey.equals("")) {
 			Filter annotatedStructureKeyFilter = new Filter(GxdResultFields.ANNOTATED_STRUCTURE_KEY, annotatedStructureKey);
 			queryFilters.add(annotatedStructureKeyFilter);
@@ -1220,10 +1352,13 @@ public class GXDController {
 
 			queryFilters.add(Filter.or(dFilters));
 		}
-		// anatomical structure section
+
+		// anatomical structure section -- only use if we didn't
+		// already include a structure ID in the search
+
 		String structure = query.getStructure();
 
-		if(structure!=null && !structure.equals(""))
+		if(!usedStructureID && structure!=null && !structure.equals(""))
 		{
 			logger.debug("splitting structure query into tokens");
 			Filter sFilter = makeStructureSearchFilter(SearchConstants.STRUCTURE,structure);
@@ -1255,18 +1390,20 @@ public class GXDController {
 			if( !(ages.contains(GxdQueryForm.EMBRYONIC) && ages.contains(GxdQueryForm.POSTNATAL)))
 			{
 				List<Filter> ageFilters = new ArrayList<Filter>();
-				//postnatal means TS 28
+				//postnatal means TS 28 (and TS 27)
 				if(ages.contains(GxdQueryForm.POSTNATAL))
 				{
-					// same as TS 28
+					// same as TS 28 (and TS 27)
 					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.OP_HAS_WORD));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.OP_HAS_WORD));
 				}
 				//embryonic means TS 1-26
 				// if they selected embryonic, none of the age selections matter
 				if(ages.contains(GxdQueryForm.EMBRYONIC))
 				{
-					// Same as TS 1-26 or NOT TS 28
+					// Same as TS 1-26 or NOT (TS 28 or TS 27)
 					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.OP_NOT_EQUAL));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.OP_NOT_EQUAL));
 				}
 				else
 				{
@@ -1297,7 +1434,7 @@ public class GXDController {
 			}
 		}
 		if ((query.getIsWildType() != null && "true".equals(query.getIsWildType()))){
-			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, "true"));
+			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
 		} else if (query.getMutatedIn() != null && !"".equals(query.getMutatedIn())) {
 			Filter mutatedInFilter = generateNomenFilter(SearchConstants.GXD_MUTATED_IN, query.getMutatedIn());
 			if (mutatedInFilter != null) queryFilters.add(mutatedInFilter);
@@ -1324,7 +1461,11 @@ public class GXDController {
 		Filter gxdFilter = new Filter();
 		if(queryFilters.size() > 0)
 		{
+			queryFilters.addAll(facetList);
 			gxdFilter.setNestedFilters(queryFilters,Filter.FC_AND);
+		}
+		else if (facetList.size() > 0) {
+			gxdFilter.setNestedFilters(facetList, Filter.FC_AND);
 		}
 		else
 		{
@@ -1644,4 +1785,153 @@ public class GXDController {
 			return gxdFinder.searchImages(params);
 		}
 	}
+
+	// ---------------------------
+	// facets for GXD Summary page
+	// ---------------------------
+
+	private Map<String, List<String>> facetGeneric (GxdQueryForm query,
+		BindingResult result, String facetType) {
+
+	    logger.debug(query.toString());
+	    String order = ALPHA;
+
+	    SearchParams params = new SearchParams();
+	    params.setFilter(this.parseGxdQueryForm(query));
+
+	    SearchResults<String> facetResults = null;
+
+	    if (FacetConstants.GXD_SYSTEM.equals(facetType)) {
+		facetResults = gxdFinder.getSystemFacet(params);
+
+	    } else if (FacetConstants.GXD_ASSAY_TYPE.equals(facetType)) {
+		facetResults = gxdFinder.getAssayTypeFacet(params);
+
+	    } else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
+		facetResults = gxdFinder.getDetectedFacet(params);
+		order = DETECTED;
+
+	    } else if (FacetConstants.GXD_THEILER_STAGE.equals(facetType)) {
+		facetResults = gxdFinder.getTheilerStageFacet(params);
+		order = RAW;
+
+	    } else if (FacetConstants.GXD_WILDTYPE.equals(facetType)) {
+		facetResults = gxdFinder.getWildtypeFacet(params);
+	    }
+
+	    return this.parseFacetResponse(facetResults, order);
+	}
+
+	/* gets a list of systems for the system facet list, returned as JSON
+	 */
+	@RequestMapping("/facet/system")
+	public @ResponseBody Map<String, List<String>> facetSystem(
+		@ModelAttribute GxdQueryForm query,
+		BindingResult result) {
+
+	    return this.facetGeneric(query, result, FacetConstants.GXD_SYSTEM);
+	}
+
+	/* gets a list of assay types for the system facet list, returned as
+	 * JSON
+	 */
+	@RequestMapping("/facet/assayType")
+	public @ResponseBody Map<String, List<String>> facetAssayType(
+		@ModelAttribute GxdQueryForm query,
+		BindingResult result) {
+
+	    return this.facetGeneric(query, result,
+		FacetConstants.GXD_ASSAY_TYPE);
+	}
+
+	/* gets a list of detection levels for the system facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/detected")
+	public @ResponseBody Map<String, List<String>> facetDetected(
+		@ModelAttribute GxdQueryForm query,
+		BindingResult result) {
+
+	    return this.facetGeneric(query, result,
+		FacetConstants.GXD_DETECTED);
+	}
+
+	/* gets a list of theiler stages for the system facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/theilerStage")
+	public @ResponseBody Map<String, List<String>> facetTheilerStage(
+		@ModelAttribute GxdQueryForm query,
+		BindingResult result) {
+
+	    return this.facetGeneric(query, result,
+		FacetConstants.GXD_THEILER_STAGE);
+	}
+
+	/* gets a list of wild type values for the system facet list, returned
+	 * as JSON
+	 */
+	@RequestMapping("/facet/wildtype")
+	public @ResponseBody Map<String, List<String>> facetWildtype(
+		@ModelAttribute GxdQueryForm query,
+		BindingResult result) {
+
+	    return this.facetGeneric(query, result,
+		FacetConstants.GXD_WILDTYPE);
+	}
+
+	private Map<String, List<String>> parseFacetResponse (
+		SearchResults<String> facetResults, String order) {
+
+	    Map<String, List<String>> m = new HashMap<String, List<String>>();
+	    List<String> l = new ArrayList<String>();
+
+	    if (facetResults.getRawResultFacets().size() >= facetLimit) {
+		l.add("Too many results to display. Modify your search or try another filter first.");
+		m.put("error", l);
+	    } else if (facetResults.getRawResultFacets().size() == 0) {
+		l.add("No values in results to filter.");
+		m.put("error", l);
+	    } else if (ALPHA.equals(order)) {
+		m.put("resultFacets", facetResults.getResultFacets());
+	    } else if (RAW.equals(order)) {
+		m.put("resultFacets", facetResults.getRawResultFacets());
+	    } else {
+		// DETECTED.equals(order)
+
+		List<String> values = facetResults.getRawResultFacets();
+		Collections.sort (values, new DetectedComparator());
+		facetResults.setResultFacets(values);
+		m.put("resultFacets", facetResults.getRawResultFacets());
+	    }
+	    return m;
+	}
+
+    private class DetectedComparator implements Comparator<String> {
+
+	private List<String> orderedItems = Arrays.asList (
+	    new String[] { "Yes", "No", "Ambiguous", "Not Specified" });
+
+	public int compare (String a, String b) {
+	    int aIndex = orderedItems.indexOf(a);
+	    int bIndex = orderedItems.indexOf(b);
+
+	    // normal case: both a and b were in the orderedItems list
+
+	    if ((aIndex >= 0) && (bIndex >= 0)) {
+		if (aIndex < bIndex) { return -1; }
+		else if (aIndex > bIndex) { return 1; }
+		else { return 0; }
+	    }
+
+	    // secondary cases: only one of them was in the list
+	    
+	    if (aIndex >= 0) { return -1; }
+	    if (bIndex >= 0) { return 1; }
+
+	    // tertiary case: neither was in the list -- sort alpha
+
+	    return a.compareToIgnoreCase(b);
+	}
+    }
 }

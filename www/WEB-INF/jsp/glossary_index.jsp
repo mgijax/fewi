@@ -50,22 +50,21 @@ There are a number of useful online glossaries in addition to this one:
 <UL>
   <li>
 The
-<a href="${configBean.WI_URL}searches/anatdict_form.shtml">
-Mouse Anatomical Dictionary Browser</a>
+<a href="${configBean.FEWI_URL}vocab/gxd/anatomy">
+Mouse Developmental Anatomy Browser</a>
 displays anatomical terms of the mouse in a hierarchical manner for a series
-of developmental stages, using
-standard anatomical nomenclature.
+of developmental stages, using standard anatomical nomenclature.
   </li>
   <li>
 The
 <a href="${configBean.WI_URL}searches/AMA_form.shtml">
-Adult Mouse Anatomical Dictionary Browser</a> provides standardized
+Adult Mouse Anatomy Browser</a> provides standardized
 nomenclature for anatomical structures in the postnatal mouse
 (Theiler stage 28).
   </li>
   <li>
 The
-<a href="http://www.geneontology.org/ontology/GO.defs">Gene Ontology
+<a href="http://www.geneontology.org">Gene Ontology
 definitions</a> page provides current definitions of all terms used
 in the Gene Ontology Project.
   </li>
@@ -78,7 +77,7 @@ and illustrations.
   </li>
   <li>
 The
-<a href="http://www.ornl.gov/TechResources/Human_Genome/glossary/">
+<a href="http://web.ornl.gov/sci/techresources/Human_Genome/glossary.shtml">
 Genome Glossary</a> for the Human Genome Project defines many
 basic genetic terms.
   </li>
@@ -88,12 +87,6 @@ The
 at <a href="${configBean.FEWI_URL}glossary/ncbi">NCBI</a>
 contains useful definitions of many terms, organized as a hierarchical
 <a href="${configBean.FEWI_URL}glossary/controlled_vocabulary">controlled vocabulary</a>.
-  </li>
-  <li>
-The
-<a href="http://cancerweb.ncl.ac.uk/omd/">On-line Medical Dictionary</a>
-provides definitions for hundreds of medical terms used in describing
-mammalian phenotypes, both human and mouse.
   </li>
   <li>
 The

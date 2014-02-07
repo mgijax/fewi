@@ -14,9 +14,9 @@ ${templateBean.templateHeadHtml}
     Image image = (Image)request.getAttribute("image");
 
     StyleAlternator leftTdStyles 
-      = new StyleAlternator("detailCat1","detailCat2");
+      = new StyleAlternator("detailCat1Gxd","detailCat2Gxd");
     StyleAlternator rightTdStyles 
-      = new StyleAlternator("detailData1","detailData2");
+      = new StyleAlternator("detailData1Gxd","detailData2Gxd");
 
     NotesTagConverter ntc = new NotesTagConverter();
 %>
@@ -31,10 +31,10 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_query_results_help.shtml#images">	
-  <span class="titleBarMainTitle">Gene Expression Image Detail </span>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_query_results_help.shtml#images">	
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Image Detail</span>
 </div>
-
 
 <!-- structural table -->
 <table class="detailStructureTable">
@@ -108,21 +108,21 @@ ${templateBean.templateBodyStartHtml}
       <td class="<%=rightTdStyles.getNext() %>" >
 
 	<table class="mgitable">
-	  <tr class="stripe2">
-	    <td class="resultsHeader" style="background-color:#D0E0F0">
+	  <tr class="stripe2Gxd">
+	    <td class="resultsHeader" style="background-color:#EBCA6D">
 	      Label
 	    </td>
-	    <td class="resultsHeader" style="background-color:#D0E0F0">
+	    <td class="resultsHeader" style="background-color:#EBCA6D">
 	       Assay & Result Details (Gene Symbol)
 	    </td>
-	    <td class="resultsHeader" style="background-color:#D0E0F0">
+	    <td class="resultsHeader" style="background-color:#EBCA6D">
 	      Spatial Mapping
 	    </td>
 	  </tr>
 
           <c:forEach var="imagePane" items="${imagePaneList}" >
 
-            <tr class="stripe1">
+            <tr class="stripe1Gxd">
               <td class="">
                <% // pull to scriptlet context
                  ImagePane thisImageAllele = (ImagePane)pageContext.getAttribute("imagePane"); 

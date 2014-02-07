@@ -69,6 +69,7 @@ solr.creAlleleSystem.url=${solr.server1.url}creAlleleSystem/
 solr.creAssayResult.url=${solr.server1.url}creAssayResult/
 solr.gxdLitIndex.url=${solr.server1.url}gxdLitIndex/
 solr.structure_ac.url=${solr.server1.url}structureAC/
+solr.emapa_ac.url=${solr.server1.url}emapaAC/
 solr.vocab_term_ac.url=${solr.server1.url}vocabTermAC/
 solr.gxd_result.url=${solr.server1.url}gxdResult/
 solr.gxdImagePane.url=${solr.server1.url}gxdImagePane/
@@ -76,6 +77,7 @@ solr.gxdDifferentialMarker.url=${solr.server1.url}gxdDifferentialMarker/
 solr.homology.url=${solr.server1.url}homology/
 solr.disease.url=${solr.server1.url}disease/
 solr.mpAnnotation.url=${solr.server1.url}mpAnnotation/
+solr.anatomyTerm.url=${solr.server1.url}anatomyAC/
 solr.disease_portal.url=${solr.server1.url}diseasePortal/
 solr.disease_portal_annotation.url=${solr.server1.url}diseasePortalAnnotation/
 

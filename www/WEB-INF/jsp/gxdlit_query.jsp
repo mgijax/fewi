@@ -10,9 +10,9 @@ ${templateBean.templateHeadHtml}
 ${templateBean.templateBodyStartHtml}
 
 <!-- begin header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_literature_help.shtml">	
-	<!--myTitle -->
-	<span class="titleBarMainTitle">Gene Expression Literature Search</span>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_literature_help.shtml">	
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Literature Search</span>
 </div>
 <!-- end header bar -->
 
@@ -29,7 +29,7 @@ ${templateBean.templateBodyStartHtml}
 	</tr>
 
 	<TR CLASS="stripe1">
-		<TD CLASS="cat1">Gene Symbol/Name</TD>
+		<TD CLASS="cat1Gxd">Gene Symbol/Name</TD>
 		<TD>
 			<div>
 				<div id="nomenDic" style="position:relative; z-index:100; float:left; width:300px;text-align:left;">
@@ -49,7 +49,7 @@ ${templateBean.templateBodyStartHtml}
 	</TR>
 	
 	<TR CLASS="stripe2">
-		<TD CLASS="cat2">Assay type</TD>
+		<TD CLASS="cat2Gxd">Assay type</TD>
 		<TD>
 			<div>
 				<div style="float:left; width:300px;text-align:left;">
@@ -62,7 +62,7 @@ ${templateBean.templateBodyStartHtml}
 	</TR>
 	
 	<TR CLASS="stripe1">
-		<TD CLASS="cat1">Age</TD>
+		<TD CLASS="cat1Gxd">Age</TD>
 		<TD>
 			<div>
 				<div style="float:left; width:60px;text-align:left;">
@@ -75,7 +75,7 @@ ${templateBean.templateBodyStartHtml}
 	</TR>	
 
 	<TR CLASS="stripe2">
-		<TD CLASS="cat2">Author</TD>
+		<TD CLASS="cat2Gxd">Author</TD>
 		<TD>
 			<div>
 				<div style="float:left; width:300px;text-align:left;">
@@ -94,7 +94,7 @@ ${templateBean.templateBodyStartHtml}
 	</TR>
 
 	<TR CLASS="stripe1">
-		<TD CLASS="cat1">Journal</TD>
+		<TD CLASS="cat1Gxd">Journal</TD>
 		<TD>
 			<div style="float:left;width:300px;text-align:left;">
 				<div>
@@ -117,7 +117,7 @@ ${templateBean.templateBodyStartHtml}
 		</TD>
 	</TR>
 	<tr  CLASS="stripe2">
-		<td CLASS="cat2">Year</td>
+		<td CLASS="cat2Gxd">Year</td>
 		<td>
 			<div style="height:5.5em;">
 				<div style="float:left;width:300px;text-align:left;">
@@ -138,7 +138,7 @@ ${templateBean.templateBodyStartHtml}
 		</td>
 	</tr>
 	<tr  CLASS="stripe1">
-		<td CLASS="cat1">Text</td>
+		<td CLASS="cat1Gxd">Text</td>
 		<td>
 			<div style="height:5em;">
 				<div style="float:left;width:300px;text-align:left;">

@@ -242,7 +242,7 @@ function toggleSpecimenInfo(idToHide, idToShow) {
 
             <tr>
             <td style=''> 
-              <a href="${configBean.WI_URL}searches/anatdict.cgi?id=${specimenResult.structureMgdKey}">${specimenResult.structure}</a>
+              <a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${specimenResult.structureTerm.primaryId}">${specimenResult.structure}</a>
             </td>
             <td style=''>
               ${specimenResult.level}

@@ -26,14 +26,15 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_literature_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_literature_help.shtml">	
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Literature Summary</span>
 </div>
 
 <!-- header table -->
 <table class="summaryHeader">
 <tbody><tr>
-  <td class="summaryHeaderCat1">
+  <td class="summaryHeaderCat1Gxd">
        <div style="padding-top: 5px;">Assay</div>
        <div style="padding-top: 7px;">Age</div>
   </div></td>

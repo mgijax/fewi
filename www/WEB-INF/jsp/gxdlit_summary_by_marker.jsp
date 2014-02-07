@@ -25,11 +25,13 @@ ${templateBean.templateBodyStartHtml}
 <input id="yui-history-field" type="hidden">
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_literature_help.shtml">	
-	<span class="titleBarMainTitle">Gene Expression Literature Summary</span>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_literature_help.shtml">	
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Literature Summary</span>
 </div>
 
-<jsp:include page="marker_header.jsp"></jsp:include><br>
+<c:set var="isGxd" value="Gxd"/>
+<%@ include file="/WEB-INF/jsp/marker_header.jsp" %><br>
 
 <span class="count">${totalCount} 
 <c:if test="${totalCount == limit}"> of ${limit}+ </c:if> 
@@ -40,7 +42,7 @@ matching records from ${refCount} references.</span><br><br>
 
 <c:if test="${not empty pairTable}">
 	<table class="outline">
-	<tr class="outline stripe3">
+	<tr class="outline stripe3Gxd">
 	<!-- Setup the age header -->
 	<td class="outline"><a href="${configBean.USERHELP_URL}EXPRESSION_literature_help.shtml#irbaa" onClick='openUserhelpWindow("EXPRESSION_literature_help.shtml#irbaa"); return false;'">Age</a></td>
 	<c:forEach var="age" items="${pairTable.ages}">

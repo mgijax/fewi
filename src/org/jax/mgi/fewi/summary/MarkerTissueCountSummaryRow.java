@@ -47,7 +47,7 @@ public class MarkerTissueCountSummaryRow {
 
   // structure field
   public String getStructure() {
-    return "<a href=\"" + pywiUrl + "searches/anatdict.cgi?id=" +mtc.getStructureKey() + "\">" + "TS" + mtc.getStructure() + "</a>";
+    return "<a href=\"" + fewiUrl + "vocab/gxd/anatomy/" +mtc.getStructureTerm().getPrimaryId() + "\">" + mtc.getStructure() + "</a>";
   }
 
 

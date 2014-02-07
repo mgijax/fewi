@@ -6,12 +6,7 @@
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 ${templateBean.templateHeadHtml}
 
-<title>${marker.symbol} Gene Expression Results - GXD</title>
-
-<meta name="description" content="View gene expression results for ${marker.symbol} with assay type, age, structure, image, mutant allele, reference" />
-<meta name="keywords" content="MGI, GXD, ${marker.symbol}, mice, mouse, murine, mus musculus, gene expression assay, immunohistochemistry, in situ reporter, blot, RNA in situ, RNase, RT-PCR, Northern blot, Western blot" />
-<meta name="robots" content="NOODP" />
-<meta name="robots" content="NOYDIR" />
+<title>Mouse Gene Expression Data Search</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -100,18 +95,17 @@ ${templateBean.templateBodyStartHtml}
 <!-- marker header table -->
 <table class="summaryHeader">
 	<tr >
-	  <td class="summaryHeaderCat1Gxd">
-	       <div style="padding-top:7px;">Symbol</div>
-	       <div style="padding-top:3px;">Name</div>
-	       <div style="padding-top:2px;">ID</span>
+	  <td class="summaryHeaderCat1Gxd" style="vertical-align:bottom">
+		  <div style="padding-top:7px; font-weight: bold"><b>Structure</b></div>
+	       <div style="padding-top:3px; font-weight: bold">Present at</div>
+	       <div style="padding-top:2px; font-weight: bold">ID</span>
 	  </td>
-	  <td class="summaryHeaderData1">
-	    <a style="font-size:large;  font-weight: bold;" 
-	      href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a>
-	    <br/>
-	    <span style="font-weight: bold;">${marker.name}</span>
-	    <br/>
-	    <span style="">${marker.primaryID}</span>
+	  <td class="summaryHeaderData1" style="vertical-align:bottom">
+	    <div style="">
+		<a style="font-size:large;  font-weight: bold;" href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structure.primaryID}">${structure.term}</a>
+		<span style="color: gray; font-size: 90%">includes substructures</span></div>
+	    <div style="padding-top:3px;">${structure.stageRange}</div>
+	    <div style="padding-top:2px;">${structure.primaryID}</div>
 	  </td>
 	</tr>
 </table>
@@ -124,15 +118,10 @@ ${templateBean.templateBodyStartHtml}
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var mgiMarkerId = "${marker.primaryID}";
-    var searchedStage = "${theilerStage}";
-    var searchedAssayType = "${assayType}";
-    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}";
+    var querystring = "structureID=${structure.primaryID}&tab=${tab}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_by_marker_query.js">
-</script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>
 <script type="text/javascript">

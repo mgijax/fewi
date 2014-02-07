@@ -25,6 +25,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
+import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
@@ -196,6 +197,110 @@ public class AutoCompleteController {
 		return params;
 	}
 
+	/*
+	 * This method handles requests for the EMAPA strucure autocomplete
+	 * fields on the GXD query form.  Results are returned as JSON.
+	 */
+	@RequestMapping("/emapa")
+	public @ResponseBody SearchResults<EmapaACResult>
+	    emapaAutoCompleteRequest(
+		HttpServletResponse response,
+		@RequestParam("query") String query) {
+
+		AjaxUtils.prepareAjaxHeaders(response);
+		return performEmapaAutoComplete(query);
+	}
+	
+	/* method for use by automated testing, to mimic the above method
+	 */
+	public @ResponseBody SearchResults<EmapaACResult>
+	    emapaAutoComplete(String query) {
+		return performEmapaAutoComplete(query);
+	}
+
+	/* float any results that begins with the given query string up to the
+	 * top of the results
+	 */
+	private SearchResults<EmapaACResult> floatBeginsMatches (String query,
+	    SearchResults<EmapaACResult> searchResults) {
+	
+	    if (query == null) { return searchResults; }
+
+	    ArrayList<EmapaACResult> begins = new ArrayList<EmapaACResult>();
+	    ArrayList<EmapaACResult> other = new ArrayList<EmapaACResult>();
+	    String queryLower = query.toLowerCase();
+
+	    for (EmapaACResult result : searchResults.getResultObjects()) {
+		if (result.getSynonym().toLowerCase().startsWith(queryLower)) {
+		    begins.add(result);
+		} else {
+		    other.add(result);
+		}
+	    }
+
+	    begins.addAll(other);
+	    searchResults.setResultObjects(begins);
+	    return searchResults;
+	}
+
+	/* method to actually perform the EMAPA search for the autocomplete,
+	 * called by the two methods above
+	 */
+	private SearchResults<EmapaACResult> performEmapaAutoComplete(
+		String query) {
+
+	    // split input on any non-alpha characters
+	    Collection<String> words =
+		QueryParser.parseAutoCompleteSearch(query);
+
+	    logger.debug("structure query:" + words.toString());
+				
+	    // if no query string, return an empty result set
+
+	    if(words.size() == 0) {
+		SearchResults<EmapaACResult> sr =
+		    new SearchResults<EmapaACResult>();
+		sr.setTotalCount(0);
+		return sr;
+	    }
+
+	    // otherwise, do the search and request the top 200 matches
+	    SearchParams params = new SearchParams();
+	    params.setPageSize(200);
+				
+	    Filter f = new Filter();
+	    List<Filter> fList = new ArrayList<Filter>();
+
+	    // build an AND-ed list of tokens for BEGINS searching in fList
+
+	    for (String q : words) {
+		Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
+		    Filter.OP_GREEDY_BEGINS);
+		fList.add(wordFilter);
+	    }
+
+	    f.setNestedFilters(fList,Filter.FC_AND);
+				
+	    params.setFilter(f);
+				
+	    // default sorts are "score","autocomplete text"
+
+	    List<Sort> sorts = new ArrayList<Sort>();
+				
+	    sorts.add(new Sort("score", true));
+	    sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
+	    params.setSorts(sorts);
+				
+	    SearchResults<EmapaACResult> results =
+		autocompleteFinder.getEmapaAutoComplete(params);
+
+	    // need a unique list of terms.
+
+	    results.uniqueifyResultObjects();
+
+	    results = floatBeginsMatches(query, results);
+	    return results;
+	}
 	
 	/*
 	 * This method maps requests for structure auto complete results. The results

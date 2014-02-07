@@ -3,6 +3,11 @@ package org.jax.mgi.fewi.finder;
 import java.util.List;
 
 import mgi.frontend.datamodel.VocabTerm;
+import org.jax.mgi.fewi.hunter.SolrAnatomyTermHunter;
+import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 
 import org.hibernate.Criteria;
@@ -30,10 +35,13 @@ public class VocabularyFinder
     private Logger logger = LoggerFactory.getLogger(VocabularyFinder.class);
     
     @Autowired
-	private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     @Autowired
     private HibernateObjectGatherer<VocabTerm> termGatherer;
+
+    @Autowired
+    private SolrAnatomyTermHunter anatomyTermHunter;
 
     /* 
      * returns all vocab terms for the vocabulary beginning with the subsetLetter
@@ -70,5 +78,25 @@ public class VocabularyFinder
 	logger.debug("->getTermByID(" + id + ")");
 
 	return termGatherer.get (VocabTerm.class, id, "primaryId");
+    }
+
+    /** get the anatomy terms which match the given search parameters
+     * (for searching on the new anatomy browser)
+     */
+    public SearchResults<SolrAnatomyTerm> getAnatomyTerms (
+	SearchParams searchParams) {
+
+	logger.debug("->VocabularyFinder.getAnatomyTerms()");
+
+	// result object to be returned
+	SearchResults<SolrAnatomyTerm> searchResults =
+	    new SearchResults<SolrAnatomyTerm>();
+
+	// ask the hunter to identify which objects to return
+	anatomyTermHunter.hunt(searchParams, searchResults);
+	logger.debug("->hunter found "
+	    + searchResults.getResultObjects().size() + " anatomy terms");
+
+	return searchResults;
     }
 }

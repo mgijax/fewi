@@ -7,13 +7,17 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceLocation;
+import mgi.frontend.datamodel.VocabTerm;
+import mgi.frontend.datamodel.VocabTermEmapInfo;
 import mgi.frontend.datamodel.util.DatamodelUtils;
+import org.jax.mgi.fewi.util.TreeNode;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jax.org.mgi.shr.fe.util.TextFormat;
@@ -30,6 +34,100 @@ public class FormatHelper
 
     // logger for the class
     private static Logger logger = LoggerFactory.getLogger(FormatHelper.class);
+
+    // maps from Theiler stage (Integer) to corresponding DPC String
+    private static HashMap<Integer,String> tsToDPC = null;
+
+    // maps from Theiler stage (Integer) to stage description
+    private static HashMap<Integer,String> tsToDescription = null;
+
+    // populate tsToDPC
+    private static void populateTsToDPC() {
+	tsToDPC = new HashMap<Integer,String>();
+
+	tsToDPC.put(0, "Any developmental stage");
+    	tsToDPC.put(1, "(0.0-2.5 dpc)");
+    	tsToDPC.put(2, "(1.0-2.5 dpc)");
+    	tsToDPC.put(3, "(1.0-3.5 dpc)");
+    	tsToDPC.put(4, "(2.0-4.0 dpc)");
+    	tsToDPC.put(5, "(3.0-5.5 dpc)");
+    	tsToDPC.put(6, "(4.0-5.5 dpc)");
+    	tsToDPC.put(7, "(4.5-6.0 dpc)");
+    	tsToDPC.put(8, "(5.0-6.5 dpc)");
+    	tsToDPC.put(9, "(6.25-7.25 dpc)");
+    	tsToDPC.put(10, "(6.5-7.75 dpc)");
+    	tsToDPC.put(11, "(7.25-8.0 dpc)");
+    	tsToDPC.put(12, "(7.5-8.75 dpc)");
+    	tsToDPC.put(13, "(8.0-9.25 dpc)");
+    	tsToDPC.put(14, "(8.5-9.75 dpc)");
+    	tsToDPC.put(15, "(9.0-10.25 dpc)");
+    	tsToDPC.put(16, "(9.5-10.75 dpc)");
+    	tsToDPC.put(17, "(10.0-11.25 dpc)");
+    	tsToDPC.put(18, "(10.5-11.25 dpc)");
+    	tsToDPC.put(19, "(11.0-12.25 dpc)");
+    	tsToDPC.put(20, "(11.5-13.0 dpc)");
+    	tsToDPC.put(21, "(12.5-14.0 dpc)");
+    	tsToDPC.put(22, "(13.5-15.0 dpc)");
+    	tsToDPC.put(23, "(15 dpc)");
+    	tsToDPC.put(24, "(16 dpc)");
+    	tsToDPC.put(25, "(17 dpc)");
+    	tsToDPC.put(26, "(18 dpc)");
+    	tsToDPC.put(27, "(newborn)");
+    	tsToDPC.put(28, "(postnatal)");
+	return;
+    }
+
+    public static String getDPC (int theilerStage) {
+	if (tsToDPC == null) { populateTsToDPC(); }
+
+	if (tsToDPC.containsKey(theilerStage)) {
+	    return tsToDPC.get(theilerStage);
+	}
+	return null;
+    }
+
+    private static void populateTsToDescription() {
+	tsToDescription = new HashMap<Integer,String>();
+
+	tsToDescription.put(1, "One cell stage");
+	tsToDescription.put(2, "Beginning of cell division; 2-4 cells");
+	tsToDescription.put(3, "Morula; 4-16 cells");
+	tsToDescription.put(4, "Blastocyst (inner cell mass apparent); 16-40 cells");
+	tsToDescription.put(5, "Blastocyst (zona free)");
+	tsToDescription.put(6, "Implantation");
+	tsToDescription.put(7, "Formation of egg cylinder");
+	tsToDescription.put(8, "Differentiation of egg cylinder");
+	tsToDescription.put(9, "Prestreak; early streak");
+	tsToDescription.put(10, "Midstreak; late streak; allantoic bud first appears; amnion forms");
+	tsToDescription.put(11, "Neural plate stage; elongated allantoic bud; early headfold; late headfold");
+	tsToDescription.put(12, "1-7 somites");
+	tsToDescription.put(13, "8-12 somites; turning of embryo");
+	tsToDescription.put(14, "13-20 somites; formation and closure of anterior neuropore");
+	tsToDescription.put(15, "21-29 somites; formation of posterior neuropore and forelimb bud");
+	tsToDescription.put(16, "30-34 somites; closure of posterior neuropore; formation of hindlimb and tail bud");
+	tsToDescription.put(17, "35-39 somites; deep indentation of lens vesicle");
+	tsToDescription.put(18, "40-44 somites; closure of lens vesicle");
+	tsToDescription.put(19, "45-47 somites; complete separation of lens vesicle");
+	tsToDescription.put(20, "48-51 somites; earliest sign of handplate digits");
+	tsToDescription.put(21, "52-55 somites; indentation of handplate");
+	tsToDescription.put(22, "56-~60 somites; distal separation of handplate digits");
+	tsToDescription.put(23, "Separation of footplate digits");
+	tsToDescription.put(24, "Reposition of umbilical hernia");
+	tsToDescription.put(25, "Digits joined together; skin wrinkled");
+	tsToDescription.put(26, "Long whiskers");
+	tsToDescription.put(27, "Newborn mouse");
+	tsToDescription.put(28, "Postnatal development");
+	return;
+    }
+
+    public static String getDescription (int theilerStage) {
+	if (tsToDescription == null) { populateTsToDescription(); }
+
+	if (tsToDescription.containsKey(theilerStage)) {
+	    return tsToDescription.get(theilerStage);
+	}
+	return null;
+    }
 
     /** convert 'verbatimString' to its HTML equivalent
     * @param verbatimString string of data in verbatim format (where what
@@ -482,6 +580,85 @@ public class FormatHelper
 	sb.append ("]");
 
 	return sb.toString();
+    }
+
+    /* build the default JSON tree for the given anatomy term (for the anatomy
+     * term detail page).  This shows the term's default parent (open),
+     * siblings (closed), and following the trail of ancestors (closed) from
+     * the default parent up through its default parent (and so on) until
+     * reaching the root node.  The JSON format we are generating is:
+     * [
+     *   { type:"text",
+     *     label:"HTML string to display for the node",
+     *     expanded:true or false,
+     *     key:"database key for term",
+     *	   head:"minimal label",
+     *	   help:"help text for mouse-over",
+     *	   children: [ { other similar nodes for children, recursively } ]
+     *	   }
+     * ]
+     */
+    public static String buildDefaultJsonTree (VocabTerm anatomyTerm) {
+	TreeNode startNode = new TreeNode(anatomyTerm);
+	startNode.setExpanded(true);
+//	startNode.setHighlighted(true);
+	startNode.setSelected(true);
+
+	// add children of the starting node
+
+	for (VocabTerm child : anatomyTerm.getChildren()) {
+		startNode.addChild (new TreeNode(child));
+	}
+
+	// add immediate parent of the starting node
+	
+	VocabTerm parent = anatomyTerm.getDefaultParent();
+	if (parent == null) {
+		// startNode is a root (no parent), so just return it
+		return "[" + startNode.getJson() + "]"; 
+	}
+
+	TreeNode parentNode = new TreeNode(parent);
+	parentNode.setExpanded(true);
+	parentNode.setIsOnDefaultPath(true);
+
+	// add siblings of the starting node
+	
+	for (VocabTerm sibling : parent.getChildren()) {
+		if (sibling.getTermKey() == anatomyTerm.getTermKey()) {
+			parentNode.addChild(startNode);
+		} else {
+			parentNode.addChild(new TreeNode(sibling));
+		}
+	}
+
+	// add other ancestors from the parent up to the root
+	
+	VocabTerm priorParent = parent.getDefaultParent();
+	TreeNode priorParentNode = null;
+
+	while (priorParent != null) {
+		priorParentNode = new TreeNode(priorParent);
+		priorParentNode.setIsOnDefaultPath(true);
+		priorParentNode.setExpanded(true);
+
+		// siblings of the ancestor node...
+
+		for (VocabTerm otherChild : priorParent.getChildren()) {
+		    if (otherChild.getTermKey() == parent.getTermKey()) {
+			priorParentNode.addChild(parentNode);
+		    } else {
+			priorParentNode.addChild(new TreeNode(otherChild));
+		    }
+		}
+
+		parent = priorParent;
+		parentNode = priorParentNode;
+
+		priorParent = parent.getDefaultParent();
+	}
+
+	return "[" + parentNode.getJson() + "]";
     }
 
     public static String encodeQueryString(String query)

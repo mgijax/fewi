@@ -166,6 +166,13 @@ public class SearchResults<T> {
     }
 
     /**
+	 * Get facets in raw order (not alphanumeric)
+	 */
+	public List<String> getRawResultFacets() {
+        return resultFacets;
+    }
+
+    /**
 	 * Set facets
 	 */
     public void setResultFacets(List<String> resultFacets) {

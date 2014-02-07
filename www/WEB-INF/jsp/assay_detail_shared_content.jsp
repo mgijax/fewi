@@ -1,9 +1,12 @@
 <!-- all imports are declared in the wrapping jsp either assay_gel_detail or assay_insitu_detail -->
 ${templateBean.templateHeadHtml}
 
-<title>${assay.markerSymbol} ${assay.assayType} Data</title>
+<title>${assay.markerSymbol} ${assay.assayType} Gene Expression Assay - GXD</title>
 
-<meta name="keywords" content="mouse, mice, murine, Mus, ${assay.markerSymbol}, ${assay.assayType}"> 
+<meta name="description" content="View ${assay.assayType} gene expression results for ${assay.markerSymbol} with structure, expression level, image, reference."/>
+<meta name="keywords" content="MGI, GXD, mouse, mice, murine, Mus musculus, ${assay.markerSymbol}, gene expression, ${assay.assayType}"/> 
+<meta name="robots" content="NOODP" />
+<meta name="robots" content="NOYDIR" />
 
 <!-- <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script> -->
 
@@ -11,9 +14,9 @@ ${templateBean.templateHeadHtml}
 
 <%
     StyleAlternator leftTdStyles 
-      = new StyleAlternator("detailCat1","detailCat2");
+      = new StyleAlternator("detailCat1Gxd","detailCat2Gxd");
     StyleAlternator rightTdStyles 
-      = new StyleAlternator("detailData1","detailData2");
+      = new StyleAlternator("detailData1Gxd","detailData2Gxd");
 %>
 <% ExpressionAssay assay = (ExpressionAssay) request.getAttribute("assay"); %>
 
@@ -21,16 +24,21 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_query_results_help.shtml#detail">	
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_query_results_help.shtml#detail">	
+	<div id="gxdLogoDiv">
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+	</div>
+	<div id="gxdCenteredTitle">
+	  <span class="titleBarMainTitleGxd">Gene Expression Data</span><br/>
+	  Assay Details
+	</div>
+    <div id="headerRightGxd">
 	<div class="yourInputButton">
 		<form name="YourInputForm">
 			<input class="searchToolButton" value="Your Input Welcome" name="yourInputButton" onclick='window.open("${configBean.MGIHOME_URL}feedback/feedback_form.cgi?accID=${assay.primaryID}")' onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
 		</form>
 	</div>
-    <div name="centeredTitle">
-	  <span class="titleBarMainTitle">Gene Expression Data</span><br/>
-	  Assay Details
-	</div>
+    </div>
 </div>
 
 

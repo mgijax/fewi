@@ -316,6 +316,29 @@ public class MarkerController {
 	    }
 	}
 
+	// search engine optimization data
+	ArrayList<String> seoKeywords = new ArrayList<String>();
+	ArrayList<String> seoDataTypes = new ArrayList<String>();
+	StringBuffer seoDescription = new StringBuffer();
+
+	seoDescription.append("View mouse ");
+	seoDescription.append(marker.getSymbol());
+
+	seoKeywords.add("MGI");
+	seoKeywords.add(marker.getSymbol());
+	seoKeywords.add(marker.getName());
+	seoKeywords.add("mouse");
+	seoKeywords.add("mice");
+	seoKeywords.add("murine");
+	seoKeywords.add("Mus musculus");
+	seoKeywords.add(marker.getMarkerType());
+	seoKeywords.add(marker.getMarkerSubtype());
+
+	for (MarkerSynonym s : marker.getSynonyms()) {
+	    seoKeywords.add(s.getSynonym());
+	}
+	seoKeywords.add(marker.getPrimaryID());
+
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("marker_detail");
         
@@ -341,6 +364,7 @@ public class MarkerController {
 		HomologyCluster homologyCluster = mouseOO.getHomologyCluster();
 		if (homologyCluster != null) {
 			mav.addObject("homologyClass", homologyCluster);
+			seoDataTypes.add("homology");
 
 			OrganismOrtholog humanOO = homologyCluster.getOrganismOrtholog("human");
 			if (humanOO != null) {
@@ -359,31 +383,12 @@ public class MarkerController {
 		}
 	}
 
-/*        if (marker.getOrganismOrtholog()().size() > 0){
-*        	for (MarkerOrthology mo: marker.getOrthologousMarkers()) {
-*        		if (mo.getOtherOrganism().equalsIgnoreCase("human")){
-*        	        SearchResults<Marker> orthalogResults
-*        	        	= MarkerFinder.getMarkerByKey(String.valueOf(mo.getOtherMarkerKey()));
-*        	        if (orthalogResults.getResultObjects().size() > 0) {
-*        	        	humanOrtholog = orthalogResults.getResultObjects().get(0);
-*        	        	if (humanOrtholog.getSynonyms().size() > 0) {
-*        	        		List<String> humanSynonyms = new ArrayList<String>();
-*        	        		for (MarkerSynonym syn: humanOrtholog.getSynonyms()){
-*        	        			humanSynonyms.add(syn.getSynonym());
-*        	        		}
-*        	        		mav.addObject("humanSynonyms", humanSynonyms.toArray(new String[humanSynonyms.size()]));
-*        	        	}
-*        	        	if (humanOrtholog.getPreferredCoordinates() != null){
-*            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCoordinates());
-*        	        	} else if (humanOrtholog.getPreferredCytoband() != null) {
-*            	        	mav.addObject("humanLocation", humanOrtholog.getPreferredCytoband());
-*        	        	}
-*        	        	mav.addObject("humanOrtholog", humanOrtholog);
-*        	        }       			
-*        		}
-*        	}
-*        }
-*/
+	// phenotypes keyword needs to come before function
+
+	if (marker.getMPAnnotations().size() > 0) {
+	    seoDataTypes.add("phenotypes");
+	}
+
         // We need to pull out the GO terms we want to use as teasers for
         // each ontology.  (This is easier in Java than JSTL, so we do
         // it here.)
@@ -395,6 +400,8 @@ public class MarkerController {
         List<mgi.frontend.datamodel.Annotation> fAnnot = this.noDuplicates(
         		marker.getGoFunctionAnnotations());
         	
+	boolean hasGO = false;
+
         if (!pAnnot.isEmpty()) {
         	if (pAnnot.size() > 2) {
         		mav.addObject ("processAnnot3", pAnnot.get(2));
@@ -403,6 +410,7 @@ public class MarkerController {
         		mav.addObject ("processAnnot2", pAnnot.get(1));
         	}
        		mav.addObject ("processAnnot1", pAnnot.get(0));
+		hasGO = true;
         }
 
         if (!fAnnot.isEmpty()) {
@@ -413,6 +421,7 @@ public class MarkerController {
         		mav.addObject ("functionAnnot2", fAnnot.get(1));
         	}
        		mav.addObject ("functionAnnot1", fAnnot.get(0));
+		hasGO = true;
         }
         
         if (!cAnnot.isEmpty()) {
@@ -423,7 +432,12 @@ public class MarkerController {
         		mav.addObject ("componentAnnot2", cAnnot.get(1));
         	}
        		mav.addObject ("componentAnnot1", cAnnot.get(0));
+		hasGO = true;
         }
+
+	if (hasGO) {
+		seoDataTypes.add("function");
+	}
 
         // need to pull out and re-package the expression counts for assays
         // and results
@@ -453,6 +467,29 @@ public class MarkerController {
         mav.addObject ("gxdAssayTypes", gxdAssayTypes);
         mav.addObject ("gxdAssayCounts", gxdAssayCounts);
         mav.addObject ("gxdResultCounts", gxdResultCounts);
+
+	// expression, sequences, polymorphisms, proteins, references keywords
+	
+	if ((gxdAssayTypes.size() > 0) ||
+		(marker.getCountOfGxdLiterature() > 0)) {
+	    seoDataTypes.add("expression");
+	}
+
+	if (marker.getCountOfSequences() > 0) {
+	    seoDataTypes.add("sequences");
+	}
+
+	if (marker.getPolymorphismCountsByType().size() > 0) {
+	    seoDataTypes.add("polymorphisms");
+	}
+
+	if (marker.getProteinAnnotations().size() > 0) {
+	    seoDataTypes.add("proteins");
+	}
+
+	if (marker.getCountOfReferences() > 0) {
+	    seoDataTypes.add("references");
+	}
 
         // pull out the strain/species and provider links for each 
         // representative sequence
@@ -584,6 +621,7 @@ public class MarkerController {
         String markerType = marker.getMarkerType();
        	MarkerLocation location = marker.getPreferredCoordinates();
        	List<MarkerSequenceAssociation> seqs = marker.getSequenceAssociations();
+	boolean hadCoords = false;
        	
         if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
        		if ((location != null) &&
@@ -596,8 +634,22 @@ public class MarkerController {
        				idLinker.getLink("KnockoutMouse", marker.getPrimaryID(),
        						marker.getSymbol()) );
        			logicalDBs.add("International Mouse Knockout Project Status");
+			seoDescription.append(" Chr");
+			seoDescription.append(location.getChromosome());
+			seoDescription.append(":");
+			seoDescription.append(location.getStartCoordinate().longValue());
+			seoDescription.append("-");
+			seoDescription.append(location.getEndCoordinate().longValue());
+			hadCoords = true;
        		}
        	}
+
+	if (!hadCoords) {
+	    if (!"UN".equals(marker.getChromosome())) {
+		seoDescription.append(" Chr");
+		seoDescription.append(marker.getChromosome());
+	    }
+	}
         
         // links to genome browsers (complex rules so put them here and
         // keep the JSP simple)
@@ -842,6 +894,37 @@ public class MarkerController {
         	    }
         	}
             }
+	}
+
+	// SEO meta tags
+
+	if (seoDataTypes.size() > 0) {
+	    seoDescription.append(" with: ");
+
+	    boolean isFirst = true;
+	    for (String dt : seoDataTypes) {
+		if (!isFirst) {
+		    seoDescription.append(", ");
+		}
+		seoDescription.append(dt);
+		isFirst = false;
+	    }
+	}
+
+
+	mav.addObject("seoDescription", seoDescription);
+
+	if (seoKeywords.size() > 0) {
+	    StringBuffer seoKeywordString = new StringBuffer();
+	    boolean isFirst = true;
+	    for (String keyword : seoKeywords) {
+		if (!isFirst) {
+		    seoKeywordString.append(", ");
+		}
+		seoKeywordString.append(keyword);
+		isFirst = false;
+	    }
+	    mav.addObject("seoKeywords", seoKeywordString);
 	}
 
 	// finally, add the minimap URL to the mav

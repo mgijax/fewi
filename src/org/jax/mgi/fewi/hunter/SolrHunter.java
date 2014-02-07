@@ -548,6 +548,8 @@ public class SolrHunter implements Hunter {
         }
     }
 
+    /* add a request for Solr facets to the given 'query'
+     */
     protected void addFacets(SolrQuery query) {
         if (facetString != null) {
             query.addFacetField(facetString);
@@ -661,7 +663,7 @@ public class SolrHunter implements Hunter {
                 facet.add(c.getName());
                 if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
-        }
+	}
 
         /**
          * Iterate through the response documents, extracting the information
@@ -892,7 +894,7 @@ public class SolrHunter implements Hunter {
                 facet.add(c.getName());
                 if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
-        }
+	}
 
         /**
          * Iterate through the response documents, extracting the information

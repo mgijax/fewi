@@ -5,12 +5,12 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Expression Tissue Summary - MGI</title>
+<title>${marker.symbol} Gene Expression Tissue Summary - GXD</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<meta name="description" content="Gene Expression tissue results associated with genome feature {gene symbol}">
-<meta name="keywords" content="MGI, mouse, gene, expression, GXD, tissue, MGI gene, MGI expression, GXD tissue, expression tissue, GXD gene tissue, MGI gene expression, MGI gene expression tissue"> 
+<meta name="description" content="GXD Gene Expression tissue results for ${marker.symbol}"/>
+<meta name="keywords" content="MGI, GXD, mouse, mice, Mus musculus, murine, gene, expression, tissue, ${marker.symbol}"/>
 <meta name="robots" content="NOODP"/>
 <meta name="robots" content="NOYDIR"/> 
 
@@ -33,12 +33,13 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="EXPRESSION_tissue_results_help.shtml">	
-  <span class="titleBarMainTitle">Gene Expression Tissue Summary</span>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_tissue_results_help.shtml">	
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Tissue Summary</span>
 </div>
 
-
-<jsp:include page="marker_header.jsp"></jsp:include><br>
+<c:set var="isGxd" value="Gxd"/>
+<%@ include file="/WEB-INF/jsp/marker_header.jsp" %><br>
 
 <div id="summary">
 
@@ -63,7 +64,7 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 </div>
 
-<div id="toolbar" class="bluebar" style="width:544px; min-width: 400px">
+<div id="toolbar" class="goldbar" style="width:544px; min-width: 400px">
 	<div id="downloadDiv">
 		<span class="label">Export:</span> <a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
 		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a> 
@@ -77,6 +78,11 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- data table div: filled by YUI, called via js below -->
+<style type="text/css">
+.yui-skin-sam .yui-dt th {
+    background:#EBCA6D;
+}
+</style>
 <div id="dynamicdata"></div>
 
 <div id="paginationWrap" style="width: 468px">

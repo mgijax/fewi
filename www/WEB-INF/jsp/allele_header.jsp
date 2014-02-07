@@ -4,7 +4,7 @@
 <!-- header table -->
 <table class="summaryHeader">
 <tr >
-  <td class="summaryHeaderCat1">
+  <td class="summaryHeaderCat1${isGxd}">
        <span class="label">Allele Symbol</span><br/>
        <span class="label">Allele Name</span><br/>
        <span class="label">ID</span>

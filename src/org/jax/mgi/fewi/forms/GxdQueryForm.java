@@ -49,7 +49,6 @@ public class GxdQueryForm
     private String probeKey = "";
     private String antibodyKey = "";
 
-
 	// differential specific fields
     private String difStructure = "";
     
@@ -62,6 +61,18 @@ public class GxdQueryForm
 	private List<String> difAge = new ArrayList<String>();
 	public final static String ANY_AGE_NOT_ABOVE = "NOT_ABOVE";
     
+    // filters for a result set
+    private List<String> systemFilter = new ArrayList<String>();
+    private List<String> assayTypeFilter = new ArrayList<String>();
+    private List<String> detectedFilter = new ArrayList<String>();
+    private List<String> theilerStageFilter = new ArrayList<String>();
+    private List<String> wildtypeFilter = new ArrayList<String>();
+
+
+    //--------
+    // methods
+    //--------
+
 	public GxdQueryForm() {
 
 		detectedOptions.put("Yes", "detected in ");
@@ -142,6 +153,7 @@ public class GxdQueryForm
     	theilerStages.put(24, "TS 24 (16 dpc)");
     	theilerStages.put(25, "TS 25 (17 dpc)");
     	theilerStages.put(26, "TS 26 (18 dpc)");
+    	theilerStages.put(27, "TS 27 (newborn)");
     	theilerStages.put(28, "TS 28 (postnatal)");
 
     	theilerStage.add(ANY_STAGE);
@@ -399,6 +411,46 @@ public class GxdQueryForm
 		
 		return difTheilerStage;
 	}
+
+	//----------------------------
+	// setters/getters for filters
+	//----------------------------
+
+	public List<String> getSystemFilter() {
+	    return systemFilter;
+	}
+	public void setSystemFilter(List<String> systemFilter) {
+	    this.systemFilter = systemFilter;
+	}
+
+	public List<String> getAssayTypeFilter() {
+	    return assayTypeFilter;
+	}
+	public void setAssayTypeFilter(List<String> assayTypeFilter) {
+	    this.assayTypeFilter = assayTypeFilter;
+	}
+
+	public List<String> getDetectedFilter() {
+	    return detectedFilter;
+	}
+	public void setDetectedFilter(List<String> detectedFilter) {
+	    this.detectedFilter = detectedFilter;
+	}
+
+	public List<String> getTheilerStageFilter() {
+	    return theilerStageFilter;
+	}
+	public void setTheilerStageFilter(List<String> theilerStageFilter) {
+	    this.theilerStageFilter = theilerStageFilter;
+	}
+
+	public List<String> getWildtypeFilter() {
+	    return wildtypeFilter;
+	}
+	public void setWildtypeFilter(List<String> wildtypeFilter) {
+	    this.wildtypeFilter = wildtypeFilter;
+	}
+
 	@Override
 	public String toString() {
 		return "GxdQueryForm [theilerStages=" + theilerStages
@@ -413,6 +465,11 @@ public class GxdQueryForm
 				+ ", markerMgiId=" + markerMgiId + ", jnum=" + jnum
 				+ ", probeKey=" + probeKey
 				+ ", antibodyKey=" + antibodyKey
+				+ ", systemFilter=" + systemFilter
+				+ ", assayTypeFilter=" + assayTypeFilter
+				+ ", detectedFilter=" + detectedFilter
+				+ ", theilerStageFilter=" + theilerStageFilter
+				+ ", wildtypeFilter=" + wildtypeFilter
 				+ "]";
 	}
 

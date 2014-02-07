@@ -80,15 +80,48 @@ border-collapse: collapse;
 }
 </style>
 <div id="summary">
+	<div id="breadbox">
+		<div id="contentcolumn">
+			<div class="innertube">
+		            <jsp:include page="gxd_summary_filters.jsp"></jsp:include><br>
+				<div id="filterSummary" class="filters" style="display:none">
+					<span class="label">Filtered by:</span>
+					&nbsp;<span id="defaultText"  style="display:none;">No filters selected.</span>
+					<span id="filterList"></span><br/>					
+					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> result(s) match after applying filter(s)</span>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div id="paginationTop" style="float:right;">&nbsp;</div>
-
-    <div id="querySummary" style="float:none;margin-left:0;">
+<!--    <div id="querySummary" style="float:none;margin-left:0;">
         <div class="innertube" style="width:500px">
+-->
+    <div id="querySummary">
+        <div class="innertube">
             <div id="searchSummary"> <!-- filled via js --> </div>
         </div>
     </div>
-    <br clear="all" />
+
+
+    <div class="facetFilter">
+	<div id="facetDialog">
+	    <div class="hd">Filter</div>
+	    <div class="bd">
+		<form:form method="GET" action="${configBean.FEWI_URL}gxd">
+		<img src="/fewi/mgi/assets/images/loading.gif">
+		</form:form>
+	    </div>
+	</div>
+    </div>
+
+    <div id="rightcolumn">
+        <div class="innertube">
+	    <div id="paginationTop">&nbsp;</div>
+	</div>
+    </div>
+
+	    <br clear="all" />
     </div>
 <div id="resultSummary" class="yui-navset">
     <ul class="yui-nav">
@@ -98,8 +131,8 @@ border-collapse: collapse;
         <li><a id="imagestab" href="#images"><em>Images (<span id="totalImagesCount"></span>)</em></a></li>
     </ul>
     <div class="yui-content">
-        <div>
-        	<div id="toolbar" class="bluebar">
+        <div id="goldbarDiv">
+        	<div id="toolbar" class="goldbar">
 	        	<div id="downloadDiv">
                     <span class="label">Export:</span>
                     <a id="markersTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
@@ -113,7 +146,7 @@ border-collapse: collapse;
 	        <div id="assaysdata"></div>
         </div>
         <div>
-            <div id="toolbar" class="bluebar">
+            <div id="toolbar" class="goldbar">
                 <div id="downloadDiv">
                     <span class="label">Export:</span>
                     <a id="resultsTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
@@ -123,7 +156,7 @@ border-collapse: collapse;
             <div id="resultsdata"></div>
         </div>
         <div>
-        	<div id="toolbar" class="bluebar">
+        	<div id="toolbar" class="goldbar">
                     <span style="text-align:right;" class="label">Expression images in MGI are copyrighted; click on an image for details about their use.</span>
                 </div>
 	        <div id="imagesdata"></div>

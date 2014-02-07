@@ -103,7 +103,7 @@ ${templateBean.templateHeadHtml}
 	      <td>
 	      	<c:forEach var="structure" items="${gelLane.structures}" varStatus="strStatus">
 	      		<c:if test="${strStatus.index>0}"><br/></c:if>
-	      		<a href="${configBean.WI_URL}searches/anatdict.cgi?id=${structure.mgdStructureKey}">${structure.printname}</a>
+	      		<a href="${configBean.FEWI_URL}vocab/gxd/anatomy/${structure.primaryId}">${structure.printname}</a>
 	      	</c:forEach>
 		  </td>
 	      <!--  bands data -->

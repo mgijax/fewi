@@ -3,10 +3,12 @@ package org.jax.mgi.fewi.finder;
 import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
 import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
 import org.jax.mgi.fewi.hunter.SolrStructureACHunter;
+import org.jax.mgi.fewi.hunter.SolrEmapaACHunter;
 import org.jax.mgi.fewi.hunter.SolrVocabACHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
+import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class AutocompleteFinder
 	
 	@Autowired
 	private SolrStructureACHunter structureACHunter;
+	
+	@Autowired
+	private SolrEmapaACHunter emapaACHunter;
 	
 	@Autowired
 	private SolrVocabACHunter vocabACHunter;
@@ -50,6 +55,18 @@ public class AutocompleteFinder
 		SearchResults<StructureACResult> results = new SearchResults<StructureACResult>();
 		structureACHunter.hunt(params, results);
 		return results;
+	}
+
+	/* retrieves autocomplete list for EMAPA terms in the GXD query form
+	 */
+	public SearchResults<EmapaACResult> getEmapaAutoComplete(
+	    SearchParams params) {
+
+	    SearchResults<EmapaACResult> results =
+		new SearchResults<EmapaACResult>();
+
+	    emapaACHunter.hunt(params, results);
+	    return results;
 	}
 	
 	/* retrieves the autocomplete list for vocab terms */

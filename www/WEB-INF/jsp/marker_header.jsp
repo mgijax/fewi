@@ -3,7 +3,7 @@
 <!-- header table -->
 <table class="summaryHeader">
 <tr>
-  <td class="summaryHeaderCat1">
+  <td class="summaryHeaderCat1${isGxd}">
        <span class="label">Symbol</span><br/>
        <span class="label">Name</span><br/>
        <span class="label">ID</span>

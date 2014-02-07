@@ -119,10 +119,11 @@ public class SearchConstants {
     public static final String GXD_ASSAY_KEY = "assayKey";
     public static final String GXD_ASSAY_ID = "assayID";
     public static final String GXD_ASSAY_TYPE = "assayType";
-	public static final String GXD_THEILER_STAGE = "stage";
-	public static final String GXD_DETECTED = "detected";
+	public static final String GXD_THEILER_STAGE = "theilerStage";
+	public static final String GXD_DETECTED = "detectionLevel";
 	public static final String GXD_MUTATED_IN = "mutatedIn";
 	public static final String GXD_IS_WILD_TYPE = "isWildType";
+	public static final String SYNONYM = "synonym";
 	public static final String STRUCTURE = "structure";
 	public static final String STRUCTURE_EXACT = "structureExact";
 	public static final String STRUCTURE_KEY = "structureKey";
@@ -130,6 +131,7 @@ public class SearchConstants {
 	public static final String PROBE_KEY = "probeKey";
 	public static final String ANTIBODY_KEY = "antibodyKey";
 	public static final String POS_STRUCTURE = "posStructure";
+	public static final String ANATOMICAL_SYSTEM = "anatomicalSystem";
 
 	public static final String PRIMARY_KEY = "pKey";
 

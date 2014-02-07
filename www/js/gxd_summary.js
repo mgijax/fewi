@@ -1,3 +1,8 @@
+function gsLog(msg) {
+    // log a message to the browser console
+//    setTimeout(function() { throw new Error(msg); }, 0);
+}
+
 // The YUI components required for setting up the data table and 
 // source to do the AJAX call
 var gxdDataTable;
@@ -92,6 +97,15 @@ function handleTabViewActiveTabChange (e) {
 }
 resultsTabs.addListener("activeTabChange", handleTabViewActiveTabChange);
 
+function getQueryStringWithFilters() {
+    var filterString = getFilterCriteria();
+    var querystringWithFilters = querystring;
+    if (filterString) {
+	querystringWithFilters = querystringWithFilters + "&" + filterString;
+    }
+    return querystringWithFilters;
+}
+
 // refresh all four counts in each tab via AJAX
 // store the request objects to verify the correct IDs;
 var resultsRq,assaysRs,genesRq,imagesRq;
@@ -114,19 +128,21 @@ function refreshTabCounts()
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 	
-    resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystring,
+    var querystringWithFilters = getQueryStringWithFilters();
+
+    resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
     {	success:handleCountRequest,
     	failure:function(o){}
     },null);
-    assaysRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystring,
+    assaysRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystringWithFilters,
     {	success:handleCountRequest,
     	failure:function(o){}
     },null);
-    genesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystring,
+    genesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystringWithFilters,
     {	success:handleCountRequest,
     	failure:function(o){}
     },null);
-    imagesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/images/totalCount?"+querystring,
+    imagesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/images/totalCount?"+querystringWithFilters,
     {	success:handleCountRequest,
     	failure:function(o){}
     },null);
@@ -142,7 +158,7 @@ function refreshGxdLitLink()
 		{
 			var gxdLitUrl = fewiurl+"gxd/gxdLitForward?"+querystring;
 			YAHOO.util.Dom.get("gxdLitInfo").innerHTML = "<a href=\""+gxdLitUrl+"\">"+o.responseText+"</a>"+
-				" Gene Expression Literature Records match your query.";
+				" Gene Expression Literature Records match your unfiltered query.";
 		}
 	};
 	
@@ -179,6 +195,8 @@ function parseRequest(request){
 
 //Returns a request string for consumption by the DataSource
 var generateRequest = function(sortedBy, startIndex, results, facets) {
+	// 'facets' appears to be unused by any calling code
+
 	var sort = defaultSort;
 	var dir = 'asc';
 
@@ -195,6 +213,7 @@ var generateRequest = function(sortedBy, startIndex, results, facets) {
 	var tabParams = "tab="+getCurrentTab();
 	var stateParams = "results="+results+"&startIndex="+startIndex+"&sort="+sort+"&dir="+dir;
 	var facetParams = [];
+/*
 	for (key in facets){
 		list = facets[key];
 		for(var i=0; i < list.length; i++){
@@ -202,6 +221,8 @@ var generateRequest = function(sortedBy, startIndex, results, facets) {
 		}
 	}
 	var facets = facetParams.join("&");
+*/
+	var facets = getFilterCriteria();
 	var query = [];
 	if(querystring) query.push(querystring);
 	if(stateParams) query.push(stateParams);
@@ -211,7 +232,8 @@ var generateRequest = function(sortedBy, startIndex, results, facets) {
 };
 
 // a globabl variable to help the summary know when to generate a new datatable
-var previousQueryString = "";
+var previousQueryString = "none";
+var previousFilterString = "none";
 var previousGAState = "";
 // Called by Browser History Manager to trigger a new state
 handleNavigation = function (request, calledLocally) {
@@ -225,6 +247,13 @@ handleNavigation = function (request, calledLocally) {
 	
 	var currentTab = getCurrentTab();
 	
+	// collect any filters and ensure that we use them
+	var filters = {};
+	for (k in values) {
+	    if (isFilterable(k)) { filters[k] = values[k]; }
+	}
+	if (filters) { resetFacets(filters); }
+
 	var foundParams = true;
 	// test if there is a form that needs to be populated
 	if (typeof reverseEngineerFormInput == 'function')
@@ -267,6 +296,8 @@ handleNavigation = function (request, calledLocally) {
 		// this is how we handle an empty request.
 		if(typeof closeSummaryControl == 'function')
 			closeSummaryControl();
+
+		if (doNewQuery) { refreshTabCounts(); }
 	}
 	else
 	{
@@ -286,40 +317,46 @@ handleNavigation = function (request, calledLocally) {
 			argument : {} // Pass in container for population at runtime via doBeforeLoadData
 		});
 		
-		if (doNewQuery)
-		{
-			refreshTabCounts();
-			
-			refreshGxdLitLink();
+		var querystringWithFilters = getQueryStringWithFilters();
+		if (querystringWithFilters != previousFilterString) {
+		    previousFilterString = querystringWithFilters;
 
 			// Wire up report and batch buttons
 			var resultsTextReportButton = YAHOO.util.Dom.get('resultsTextDownload');
 			if (!YAHOO.lang.isNull(resultsTextReportButton)) {
-				resultsTextReportButton.setAttribute('href', fewiurl + 'gxd/report.txt?' + querystring);
+				resultsTextReportButton.setAttribute('href', fewiurl + 'gxd/report.txt?' + querystringWithFilters);
 			}
 			var resultsExcelReportButton = YAHOO.util.Dom.get('resultsExcelDownload');
 			if (!YAHOO.lang.isNull(resultsExcelReportButton)) {
-				resultsExcelReportButton.setAttribute('href', fewiurl + 'gxd/report.xlsx?' + querystring);
+				resultsExcelReportButton.setAttribute('href', fewiurl + 'gxd/report.xlsx?' + querystringWithFilters);
 			}
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
-				markersTextReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.txt?' + querystring);
+				markersTextReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.txt?' + querystringWithFilters);
 			}
 			var markersExcelReportButton = YAHOO.util.Dom.get('markersExcelDownload');
 			if (!YAHOO.lang.isNull(markersExcelReportButton)) {
-				markersExcelReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.xlsx?' + querystring);
+				markersExcelReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.xlsx?' + querystringWithFilters);
 			}
 			var markersBatchForward = YAHOO.util.Dom.get('markersBatchForward');
 			if (!YAHOO.lang.isNull(markersBatchForward)) {
-				markersBatchForward.setAttribute('href', fewiurl + 'gxd/batch?' + querystring);
+				markersBatchForward.setAttribute('href', fewiurl + 'gxd/batch?' + querystringWithFilters);
 			}
+		}
+
+		if (doNewQuery)
+		{
+			refreshTabCounts();
+			refreshGxdLitLink(); 
 		}
 		
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
 		var GAState = "/gxd/summary/"+tabState+"?"+querystring;
 		if(GAState != previousGAState)
 		{
+			try {
 			gaA_pageTracker._trackPageview(GAState);
+			} catch (e) {};
 			previousGAState = GAState;
 		}
 	}
@@ -436,6 +473,9 @@ var gxdGenesTable = function (oCallback) {
  
 	gxdDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
+
+		extractFilters(pRequest);
+
 		var meta = oResponse.meta;
 		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
 
@@ -566,6 +606,7 @@ var gxdAssaysTable = function() {
 		
 	gxdDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
+		extractFilters(pRequest);
 		var meta = oResponse.meta;
 		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
 		//   updateCount(oPayload.totalRecords);
@@ -703,6 +744,7 @@ var gxdResultsTable = function() {
 
 	gxdDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
+		extractFilters(pRequest);
 		var meta = oResponse.meta;
 		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
 		//   updateCount(oPayload.totalRecords);
@@ -711,15 +753,35 @@ var gxdResultsTable = function() {
 			setText(filterCount, YAHOO.util.Number.format(oPayload.totalRecords, numConfig));
 		}
 
+		var sortKey = "gene";
+		if ('sort' in pRequest) {
+		    sortKey = pRequest['sort'][0];
+		}
+
+		var sortDir = "yui-dt-desc";
+		if ('dir' in pRequest) {
+		    sortDir = "yui-dt-" + pRequest['dir'][0];
+		}
+
 		oPayload.sortedBy = {
-			key: pRequest['sort'][0] || "gene",
-			dir: pRequest['dir'][0] ? "yui-dt-" + pRequest['dir'][0] : "yui-dt-desc"
+			key: sortKey,
+			dir: sortDir
 				// Convert from server value to DataTable format
 		};
 
+		var rowCount = myPaginator.getRowsPerPage();
+		if ('results' in pRequest) {
+		    rowCount = Number(pRequest['results'][0]);
+		}
+
+		var offset = 0;
+		if ('startIndex' in pRequest) {
+		    offset = Number(pRequest['startIndex'][0]);
+		}
+
 		oPayload.pagination = {
-			rowsPerPage: Number(pRequest['results'][0]) || myPaginator.getRowsPerPage(),
-			recordOffset: Number(pRequest['startIndex'][0]) || 0
+			rowsPerPage: rowCount,
+			recordOffset: offset
 		};
 
 		return true;
@@ -817,6 +879,7 @@ var gxdImagesTable = function() {
 		
 	gxdDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
+		extractFilters(pRequest);
 		var meta = oResponse.meta;
 		oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
 		//   updateCount(oPayload.totalRecords);

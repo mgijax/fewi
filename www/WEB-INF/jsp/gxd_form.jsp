@@ -109,7 +109,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 
 	<tr class="stripe1">
-		<td class="cat1">Genes</td>
+		<td class="cat1Gxd">Genes</td>
 		<td>
 		<table class="noborder" cellpadding='0' cellspacing='0'>
 		<tr>
@@ -133,9 +133,9 @@ span.smallGrey { font-size: 75%; color: #999999; }
 					<div class="bd">
 						<p>You can find sets of genes associated with terms in MGI's vocabularies and ontologies:</p>
 						<ul>
-							<li>Function - Gene Ontology (<a href="">GO</a>)</li>
-							<li>Phenotype - Mammalian Phenotype Ontology (<a href="">MP</a>)</li>
-							<li>Disease - Online Mendelian Inheritance in Man (<a href="">OMIM</a>)</li>
+							<li>Function - Gene Ontology (<a href="${configBean.WI_URL}searches/GO_form.shtml">GO</a>)</li>
+							<li>Phenotype - Mammalian Phenotype Ontology (<a href="${configBean.WI_URL}searches/MP_form.shtml">MP</a>)</li>
+							<li>Disease - Online Mendelian Inheritance in Man (<a href="${configBean.FEWI_URL}vocab/omim/">OMIM</a>)</li>
 						</ul>
 					</div> 
 				</div> 
@@ -172,7 +172,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 
 <!-- 	<tr class="stripe2">
-		<td class="cat2">Chromosomal location</TD>
+		<td class="cat2Gxd">Chromosomal location</TD>
 		<td>
 			<div style="width:300px;text-align:left;">
 				inputs go here
@@ -181,7 +181,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr> -->
 
 	<tr class="stripe2">
-		<td class="cat2">Anatomical structure or stage</td>
+		<td class="cat2Gxd">Anatomical structure or stage</td>
 		<td>
 			<table class="noborder">
 			<tr>
@@ -196,6 +196,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<td valign="middle">
 			<div style="width:300px;text-align:left; right-padding:10px;" id="structureAutoComplete">
 				<form:input id="structure" path="structure" style="width:270px;"></form:input>
+				<input type="hidden" id="structureID" name="structureID" value=""/>
 				<div id="structureContainer"></div>
 			</div>
 			<div id="structureHelp" style="display:none;" class="example">Continue typing to add another structure.</div>
@@ -228,7 +229,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 
  	<tr class="stripe1">
-		<td class="cat1">Mutant / wild type</td>
+		<td class="cat1Gxd">Mutant / wild type</td>
 		<td>
 				<div style="width:500px;text-align:left;">
 				Find expression data in ...
@@ -250,7 +251,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td>
 	</tr>
 	<tr class="stripe2">
-		<td class="cat2">Assay types</td>
+		<td class="cat2Gxd">Assay types</td>
 		<td>
 			<label id="allAssayTypeLabel"><input type="checkbox" id="assayType-ALL" name="assayType-ALL" class="assayType-ALL" checked="true"/> 
 				Find expression data in any assay type</label>
@@ -289,7 +290,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <div id="differential-qf">
 <table class="pad5 borderedTable" width="100%">
 	<tr class="stripe1">
-		<td class="cat1">Anatomical Structure</td>
+		<td class="cat1Gxd">Anatomical Structure</td>
 		<td>
 			<div id="difStructClosed" style="cursor:pointer;" class="hide">
 			<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in some <b>anatomical structures</b> but not others.
@@ -336,7 +337,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td>
 	</tr>
 	<tr class="stripe2">
-		<td class="cat2">Developmental Stage</td>
+		<td class="cat2Gxd">Developmental Stage</td>
 		<td>
 		<div id="difStageClosed" style="cursor:pointer;">
 		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed at some <b>developmental stages</b> but not others.
@@ -422,7 +423,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td>
 	</tr>
 	<tr class="stripe1">
-		<td class="cat1">Structure and Stage</td>
+		<td class="cat1Gxd">Structure and Stage</td>
 		<td>
 		<div id="difStructStageClosed" style="cursor:pointer;">
 		<img src="http://www.informatics.jax.org/webshare/images/rightArrow.gif"/> Search for genes expressed in <b>some anatomical structures and stages</b> but not others.
