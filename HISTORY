@@ -1,3 +1,9 @@
+TAG: fewi-5-1-7-2
+DATE: 02/10/2014
+STAFF: jsb
+CHANGES: 
+1) fixed bug where multi-word searches couldn't get through Apache in anatomy browser
+
 TAG: fewi-5-1-7-1
 DATE: 02/07/2014
 STAFF: jsb
