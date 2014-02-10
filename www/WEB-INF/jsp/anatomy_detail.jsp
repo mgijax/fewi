@@ -524,7 +524,7 @@ function refreshSearchPane() {
 	searchTerm = searchTermBox.value;
     }
 
-    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomySearch/" +
+    var sUrl = "${configBean.FEWI_URL}vocab/gxd/anatomySearch?term=" +
 	searchTerm;
     fetchAndCall (sUrl, fillSearchPane);
 }

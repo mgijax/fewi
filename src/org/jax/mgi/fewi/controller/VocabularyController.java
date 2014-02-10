@@ -167,17 +167,14 @@ public class VocabularyController {
 
     /* search pane for GXD anatomy browser (EMAPA terms only) */
 
-    @RequestMapping("/gxd/anatomySearch/")
-    public ModelAndView getAnatomySearchPaneEmpty() {
-	logger.debug("->getAnatomySearchPaneEmpty() started");
-	ModelAndView mav = new ModelAndView("anatomy_search");
-	return mav;
-    }
+    @RequestMapping("/gxd/anatomySearch")
+    public ModelAndView getAnatomySearchPane(@RequestParam("term") String term) {
+	if ((term == null) || term.equals("")) {
+	    logger.debug("->getAnatomySearchPaneEmpty() started");
+	    ModelAndView mav = new ModelAndView("anatomy_search");
+	    return mav;
+	}
 
-    /* search pane for GXD anatomy browser (EMAPA terms only) */
-
-    @RequestMapping("/gxd/anatomySearch/{term}")
-    public ModelAndView getAnatomySearchPane(@PathVariable("term") String term) {
 	logger.debug("->getAnatomySearchPane(" + term + ") started");
 
 	// clean up the term a little by:
