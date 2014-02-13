@@ -32,6 +32,7 @@ ${templateBean.templateHeadHtml}
 var fewiurl = "${configBean.FEWI_URL}";
 </script>
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
+<script type="text/javascript" src='${configBean.FEWI_URL}assets/js/ie_hack.js'></script>
 <script type="text/javascript" src='${configBean.FEWI_URL}assets/js/anatomy_detail.js'></script>
     
 <script language="Javascript">
@@ -643,9 +644,12 @@ YAHOO.util.Event.onDOMReady(function () {
 	resizePanes();
 });
 
-window.addEventListener ('resize', function(event) {
+// IE8 does not support this addEventListener call, so just ignore the error
+try {
+    window.addEventListener ('resize', function(event) {
 	resizePanes();
-});
+    });
+} catch (e) {};
 </script>
 
 ${templateBean.templateBodyStopHtml}

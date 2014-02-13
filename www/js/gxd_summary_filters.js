@@ -418,6 +418,7 @@ var populateFilterSummary = function() {
 	    el.setAttribute('class', 'filterItem');
 	    el.setAttribute('id', k + ':' + inner[v]);
 	    el.setAttribute('style', '{padding-top:2px; padding-left:2px}');
+	    el.setAttribute('title', 'click to remove this filter');
 	    var val = k.charAt(0).toUpperCase() + k.slice(1);
 	    val = val.replace('Filter', '') + ': ' + inner[v].replace('*', ',');
 	    val = decode(val);
