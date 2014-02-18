@@ -1,3 +1,10 @@
+TAG: fewi-5-1-7-3
+DATE: 02/18/2014
+STAFF: jsb
+CHANGES: 
+1) added tooltip to filter removal buttons for IE9
+2) fixed auto-select bug in anatomy browser search fo IE8
+
 TAG: fewi-5-1-7-2
 DATE: 02/10/2014
 STAFF: jsb
