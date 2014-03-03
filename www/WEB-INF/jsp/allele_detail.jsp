@@ -387,13 +387,19 @@ td.right { text-align: right }
 		   if (seq != null) {
 		     primaryID = seq.getPrimaryID();
 		     logicalDB = seq.getLogicalDB();
+
+		     // hack so we can handle TIGM one way for MCL and a
+		     // different way for sequence tags
+		     if ("TIGM".equals(logicalDB)) {
+			 logicalDB = "TIGM_SequenceTag";
+		     }
 		   } else {
 		     // should not happen
 		     primaryID = "none";
 		     logicalDB = "GenBank";
 		   }
 		%>
-		(<%= idLinker.getLink (logicalDB, primaryID, logicalDB) %>)
+		(<%= idLinker.getLink (logicalDB, primaryID, logicalDB).replace("TIGM_SequenceTag", "TIGM") %>)
 	      </td>
 	      <c:if test='${not empty representativeSeq.preferredGenBankID}'>
 	        <td class='seqTag'>${representativeSeq.preferredGenBankID.accID}
