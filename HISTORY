@@ -1,3 +1,9 @@
+TAG: fewi-5-1-7-5
+DATE: 03/03/2014
+STAFF: jsb
+CHANGES: 
+1) added special handling for TIGM vs TIGM_SequenceTag on allele detail page
+
 TAG: fewi-5-1-7-4
 DATE: 03/03/2014
 STAFF: jsb
