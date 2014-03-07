@@ -36,6 +36,7 @@ import mgi.frontend.datamodel.MarkerIDOtherMarker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerProbeset;
 import mgi.frontend.datamodel.MarkerSequenceAssociation;
+import mgi.frontend.datamodel.MarkerSynonym;
 import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Reference;
@@ -57,7 +58,6 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
-import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
@@ -142,68 +142,14 @@ public class MarkerController {
     public ModelAndView getQueryForm() {
 
         logger.debug("->getQueryForm started");
-
-	/* if we don't have a cached version of the chromosome options (for
-	 * the selction list), then we need to pull them out of the database,
-	 * generate it, and cache it
-	 */
-	if (chromosomeOptions == null) {
-	    SearchResults<QueryFormOption> chrResults =
-		queryFormOptionFinder.getQueryFormOptions("marker",
-		    "chromosome");
-	    List<QueryFormOption> chromosomes = chrResults.getResultObjects();
-
-	    StringBuffer chr = new StringBuffer();
-
-	    for (QueryFormOption chromosome : chromosomes) {
-		chr.append("<option value='");
-	        chr.append(chromosome.getSubmitValue());
-		chr.append("'>");
-		chr.append(chromosome.getDisplayValue());
-		chr.append("</option>");
-	    } 
-
-	    chromosomeOptions = chr.toString();
-	}
-
-	/* if we don't have a cached version of the feature type options (for
-	 * the feature type section, then we need to pull them out of the
-	 * database, generate it, and cache it
-	 */
-	if (featureTypeHtml == null) {
-	    SearchResults<QueryFormOption> mtResults =
-		queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
-	    List<QueryFormOption> markerTypes = mtResults.getResultObjects();
-	    logger.debug("getQueryForm() received " + markerTypes.size()
-		+ " Feature Type options");
-
-	    featureTypeHtml = FormatHelper.buildHtmlTree(markerTypes);
-	    featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
-	    
-	    initQueryForm(markerTypes);
-	}
-
-	// if we don't have a cached version of the build number, retrieve it
-	// and cache it
-	if (genomeBuild == null) {
-	    SearchResults<QueryFormOption> gbResults =
-		queryFormOptionFinder.getQueryFormOptions("marker",
-		"build_number");
-	    List<QueryFormOption> genomeBuilds = gbResults.getResultObjects();
-	    logger.debug("getQueryForm() received " + genomeBuilds.size()
-		+ " Genome Build options");
-
-	    if (genomeBuilds.size() > 0) {
-		genomeBuild = genomeBuilds.get(0).getDisplayValue();
-	    }
-	}
+        initQueryForm();
 
         ModelAndView mav = new ModelAndView("marker_query");
         mav.addObject("sort", new Paginator());
-	mav.addObject("chromosomes", chromosomeOptions);
-	mav.addObject("htmlMcv", featureTypeHtml);
-	mav.addObject("jsonMcv", featureTypeJson);
-	mav.addObject("genomeBuild", genomeBuild);
+        mav.addObject("chromosomes", chromosomeOptions);
+        mav.addObject("htmlMcv", featureTypeHtml);
+        mav.addObject("jsonMcv", featureTypeJson);
+        mav.addObject("genomeBuild", genomeBuild);
         mav.addObject(new MarkerQueryForm());
         return mav;
     }
@@ -309,10 +255,17 @@ public class MarkerController {
         }
 
         initQueryForm();
+        
         ModelAndView mav = new ModelAndView("marker_summary");
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
 
+    	mav.addObject("chromosomes", chromosomeOptions);
+    	mav.addObject("htmlMcv", featureTypeHtml);
+    	mav.addObject("jsonMcv", featureTypeJson);
+    	mav.addObject("genomeBuild", genomeBuild);
+        mav.addObject(new MarkerQueryForm());
+        
         return mav;
     }
 
@@ -321,6 +274,55 @@ public class MarkerController {
     	ModelAndView mav = new ModelAndView("error");
         mav.addObject("errorMsg", msg);
         return mav;
+    }
+    
+    // Marker Summary (By Refernce) Shell
+    //------------------------------------//
+    @RequestMapping(value="/reference/key/{refKey}")
+    public ModelAndView markerSummeryByRefKey(
+          HttpServletRequest request,
+          @PathVariable("refKey") String refKey)
+    {
+        logger.debug("->markerSummeryByRefKey started");
+
+        // setup view object
+        ModelAndView mav = new ModelAndView("marker_summary_reference");
+
+		// setup search parameters object to gather the requested marker
+        SearchParams referenceSearchParams = new SearchParams();
+        Filter refIdFilter = new Filter(SearchConstants.REF_KEY, refKey);
+        referenceSearchParams.setFilter(refIdFilter);
+
+        // find the requested reference
+        SearchResults<Reference> referenceSearchResults = referenceFinder.searchReferences(referenceSearchParams);
+        List<Reference> referenceList = referenceSearchResults.getResultObjects();
+
+        // there can be only one...
+        if (referenceList.size() < 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No reference found for " + refKey);
+            return mav;
+        }
+        if (referenceList.size() > 1) {
+            // forward to error page
+            mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Dupe reference found for " + refKey);
+            return mav;
+        }
+        Reference reference = referenceList.get(0);
+
+        // prep query form for summary js request
+        MarkerQueryForm query = new MarkerQueryForm();
+        request.setAttribute("refKey",refKey);
+
+        // package data, and send to view layer
+        mav.addObject("reference", reference);
+		mav.addObject("queryForm",query);
+		mav.addObject("queryString", "refKey=" + refKey);
+
+        logger.debug("markerSummeryByRefKey routing to view ");
+		return mav;
     }
 
     //--------------------//
@@ -1623,11 +1625,65 @@ public class MarkerController {
     }
     private void initQueryForm()
     {
-    	if(!MarkerQueryForm.initialized)
-    	{
-    		SearchResults<QueryFormOption> mtResults = queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
-    		initQueryForm(mtResults.getResultObjects());
+    	/* if we don't have a cached version of the chromosome options (for
+    	 * the selction list), then we need to pull them out of the database,
+    	 * generate it, and cache it
+    	 */
+    	if (chromosomeOptions == null) {
+    	    SearchResults<QueryFormOption> chrResults =
+    		queryFormOptionFinder.getQueryFormOptions("marker",
+    		    "chromosome");
+    	    List<QueryFormOption> chromosomes = chrResults.getResultObjects();
+
+    	    StringBuffer chr = new StringBuffer();
+
+    	    for (QueryFormOption chromosome : chromosomes) {
+    		chr.append("<option value='");
+    	        chr.append(chromosome.getSubmitValue());
+    		chr.append("'>");
+    		chr.append(chromosome.getDisplayValue());
+    		chr.append("</option>");
+    	    } 
+
+    	    chromosomeOptions = chr.toString();
     	}
+
+    	/* if we don't have a cached version of the feature type options (for
+    	 * the feature type section, then we need to pull them out of the
+    	 * database, generate it, and cache it
+    	 */
+    	if (featureTypeHtml == null) {
+    	    SearchResults<QueryFormOption> mtResults =
+    		queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
+    	    List<QueryFormOption> markerTypes = mtResults.getResultObjects();
+    	    logger.debug("getQueryForm() received " + markerTypes.size()
+    		+ " Feature Type options");
+
+    	    featureTypeHtml = FormatHelper.buildHtmlTree(markerTypes);
+    	    featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
+    	    
+    	    initQueryForm(markerTypes);
+    	}
+
+    	// if we don't have a cached version of the build number, retrieve it
+    	// and cache it
+    	if (genomeBuild == null) {
+    	    SearchResults<QueryFormOption> gbResults =
+    		queryFormOptionFinder.getQueryFormOptions("marker",
+    		"build_number");
+    	    List<QueryFormOption> genomeBuilds = gbResults.getResultObjects();
+    	    logger.debug("getQueryForm() received " + genomeBuilds.size()
+    		+ " Genome Build options");
+
+    	    if (genomeBuilds.size() > 0) {
+    		genomeBuild = genomeBuilds.get(0).getDisplayValue();
+    	    }
+    	}
+//    	if(!MarkerQueryForm.initialized)
+//    	{
+//    		SearchResults<QueryFormOption> mtResults = queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
+//    		initQueryForm(mtResults.getResultObjects());
+//    	}
     }
     
    private long bdToLong(BigDecimal bd)
