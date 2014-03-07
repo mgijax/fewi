@@ -1,0 +1,154 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>EI Simple Vocabulary module</title>
+</head>
+
+<body>
+<!--  declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+  --> 
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>EI Allele Derivation module </h1>
+    <ul>
+        <li>User story 102, E5: EI Allele-Cell line derivation Names</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US102: Verify the derivation type pulldown list is correct</li>
+		<li>US102: Verify the derivation names are correct for types Targeted and Transgenic</li>
+		<li>US102: Verify creating a derivation from a mutant cell line performs correctly</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify the Derivation Type pulldown list is correct
+    		<p concordion:assertTrue="true">jeffc 02/03/2014</p>
+    			<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Allele Derivation module button</li>
+                <li>Display the Derivation Type pulldown list</li>
+                <li>Verify the results are:
+                <ol><li>Search All</li>
+                <li>Chemically and radiation induced</li>
+                <li>Chemically induced (ENU)</li>
+                <li>Chemically induced (other)</li>
+                <li>Endonuclease-mediated</li>
+                <li>Gene trapped</li>
+                <li>Not Applicable</li>
+                <li>Not Specified</li>
+                <li>Other</li>
+                <li>QTL</li>
+                <li>Radiation induced</li>
+                <li>Spontaneous</li>
+                <li>Targeted</li>
+                <li>Transgenic</li>
+                <li>Transposon induced</li>
+           		</ol></li>
+    		</ol>
+    		</li>
+    		<li>Verify Targeted Derivation names are correct
+ 			<p concordion:assertTrue="true">jeffc 02/03/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Allele Derivation module button</li>
+                <li>Click on the Derivation Type and select <b>Targeted</b></li>
+                <li>Verify the search results contain no names using:
+                <ul>
+					<li>Flox/Frt</li>
+					<li>knock-in</li>
+					<li>knock-out</li>
+					<li>other</li>
+					<li>reporter</li>
+                </ul></li>
+    		</ol>
+    		</li>
+    		<li>Verify Transgenic Derivation names are correct
+ 			<p concordion:assertTrue="true">jeffc 02/03/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Allele Derivation module button</li>
+                <li>Click on the Derivation Type and select <b>Targeted</b></li>
+                <li>Verify the search results contain no names using:
+                <ul>
+					<li>cre/flp</li>
+					<li>random, expressed</li>
+					<li>random, gene disruption</li>
+					<li>reporter</li>
+					<li>transposase</li>
+                </ul></li>
+    		</ol>
+    		</li>
+    		<li>Verify creating a derivation from mutant cell line is correct
+ 			<p concordion:assertTrue="true">jeffc 02/03/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Allele module button</li>
+                <li>From the Edit menu, select <b>Mutant cell line</b></li>
+                <li>Enter Creator <b>Achim Gossler</b>, Parent cell line <b>2A</b>, Cell Line Type <b>Embryonic Stem Cell</b>, Deriation Type <b>Targeted</b>, Vetor Names <b>eFlpROSAbetageo</b>, Vector Type <b>enhancer trap</b>, and Allele Symbol <b>Pros1&lt;tm1.2Grl&gt;</b> and click Add</li>
+                <li>Go to the Allele Derivation module and search for the creator <b>Achim Gossler</b></li>
+                <li>Verify one of the results is for <b>Achim Gossler Targeted Library 2A129S1/SvImj eFlpROSAbetageo</b>.</li>
+    		</ol>
+    		</li>
+
+
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

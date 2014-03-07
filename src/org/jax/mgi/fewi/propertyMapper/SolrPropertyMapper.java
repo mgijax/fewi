@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.propertyMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.searchUtil.Filter;
 
 /**
@@ -79,21 +80,16 @@ public class SolrPropertyMapper
     }
     public String getClause(String value,int operator,boolean negate) 
     {
-        String outClause = "";
-        
         if (!singleField.equals("")) {
-            outClause = handleOperand(operator, value, singleField,negate);
+            return handleOperand(operator, value, singleField,negate);
         }
-        else {
-            for (String field: fieldList) {
-                if (outClause.equals("")) {
-                   outClause = handleOperand(operator, value, field,negate); 
-                }
-                else {
-                   outClause += " " + joinClause + " " + handleOperand(operator, value, field,negate);
-                }
-            }
+        // else handle multiple fields
+    	List<String> outClauses = new ArrayList<String>();
+        for (String field: fieldList) {
+        	outClauses.add(handleOperand(operator, value, field));
         }
+        String outClause = "("+StringUtils.join(outClauses," "+joinClause+" ")+")";
+        if(negate) return "(*:* -"+outClause+")";
         return outClause;
     }
     
@@ -136,6 +132,9 @@ public class SolrPropertyMapper
         }
         else if (operand == Filter.OP_NOT_EQUAL) {
             val =  "*:* -" + field + ":" + value;
+        }
+        else if (operand == Filter.OP_NOT_HAS) {
+            val =  "-" + field + ":\"" + value + "\"";
         }
         else if (operand == Filter.OP_BEGINS) {
             val =  field + ":" + value + "*";

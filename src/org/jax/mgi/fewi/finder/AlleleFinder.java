@@ -4,9 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
-import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.AllelePhenoSummary;
 
+import org.hibernate.SessionFactory;
+import org.jax.mgi.fewi.hunter.SolrAlleleCollectionFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleKeyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -23,6 +24,9 @@ public class AlleleFinder {
 
     @Autowired
     private SolrAlleleKeyHunter alleleHunter;
+    
+    @Autowired
+    private SolrAlleleCollectionFacetHunter alleleCollectionFacetHunter;
 
     @Autowired
     private HibernateObjectGatherer<Allele> alleleGatherer;
@@ -30,6 +34,8 @@ public class AlleleFinder {
     @Autowired
     private HibernateObjectGatherer<AllelePhenoSummary> phenoGatherer;
 
+    @Autowired
+	private SessionFactory sessionFactory;
 
     /////////////////////////////////////////////////////////////////////////
     //  Retrieval of an allele, for a given ID
@@ -84,5 +90,14 @@ public class AlleleFinder {
         return searchResults;
     }
 
+    
+    /*
+     * Facet functions
+     */
+    public SearchResults<String> getCollectionFacet(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		alleleCollectionFacetHunter.hunt(params, results);
+		return results;
+	}
 
 }

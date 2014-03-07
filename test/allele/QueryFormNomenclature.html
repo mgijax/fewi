@@ -1,0 +1,413 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+
+    <title>Allele Query Form Nomenclature</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Query Form Nomenclature</h1>
+    <ul>
+        <li>User story 37, Query form: nomenclature</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>one box to query by gene and allele nomenclature</li>
+		<li>wildcards supported, including in the middle</li>
+		<li>symbols, names, synonyms, olds, possibly specific homologs (?)</li>
+	</ul>
+</div>
+
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+	<p>Query against...</p>
+	<ul>
+		<li>mouse marker symbol, name, synonyms</li>
+		<li>human marker symbol, name synonyms</li>
+		<li>no other orthologs</li>
+		<li>old and current symbols, names</li>
+		<li>symbol, name and synonyms for alleles (no concept of "old")</li>
+		<li>tokens are AND'ed together</li>
+		<li>we will not support lists at this time</li>
+		<li>may have issue with asterisk as literal character in Tg symbols, but we'll just try these rules for now and see how it works</li>
+		<li>use default sort defined elsewhere</li>
+	</ul>
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+
+    		<li>Verify you can search for alleles by an old marker symbol, a current marker symbol
+    		<p concordion:assertTrue="true">passed - 2014/01/27 kstone</p>
+    		<ol>
+    			<li>Enter the old marker symbol <b>Hhg1</b> in the Nomenclature field and Search</li>
+    			<li>Verify you return results with marker alleles beginning Shh since this is the old name for marker symbol <b>Shh</b></li>
+    			<li>Enter the marker symbol <b>gata1</b> in the Nomenclature field and Search</li>
+    			<li>Verify you return results with marker symbol <b>gata1</b> displaying somewhere in the symbol, you should return about 32 results</li>
+    		</ol>
+    		</li>
+    		<li>Verify you can search for alleles by an old marker name, a current marker name, or a marker synonym
+    		<p concordion:assertTrue="true">passed - 2014/01/27 kstone</p>
+    		<ol>
+    			<li>Enter the marker name <b>programmed cell death 1 ligand 1</b> in the Nomenclature field and Search</li>
+    			<li>Verify you return results with marker alleles beginning Cd274 or Pdcd1lg1 since this is the old name for marker name <b>CD274 antigen</b></li>
+    			<li>Enter the marker name <b>enolase 4</b> in the Nomenclature field and Search</li>
+    			<li>Verify you return results with marker alleles beginning Eno4 since this is the current name for marker <b>Eno4</b></li>
+                <li>Enter the marker synonym <b>Iis3</b> in the Nomenclature field and Search</li>
+                <li>Verify you return alleles <b>Igs3<sup>tm1.1(ACTB-EGFP*)Luo</sup></b> and <b>Igs3<sup>tm2.1(ACTB-EGFP*,-tdTomato)Luo</sup></b> because Iis3 is a synonym of Igs3</li>
+    		</ol>
+    		</li>
+    		<li>Verify you can search for alleles by allele symbol, allele name or an allele synonym
+    		<p concordion:assertTrue="true">passed - 2014/01/27 kstone</p>
+    		<ol>
+    			<li>Enter the allele symbol <b>ABCB8<sup>f</sup></b> in the Nomenclature field and Search</li>
+    			<li>Verify you return the result <b>Abcb8<sup>tm1Hard</sup></b> since <b>ABCB8<sup>f</sup></b> is the old symbol for this allele</li>
+    			<li>Enter the allele symbol <b>Shh<sup>Dsh</sup></b> in the Nomenclature field and Search</li>
+    			<li>Verify you return the result <b>Shh<sup>Dsh</sup></b> since this is the current symbol for this allele</li>
+    			<li>Enter the allele name <b>aryl-hydrocarbon receptor</b> in the Nomenclature field and Search</li>
+    			<li>Verify you return over 200 results and all the results have <b>aryl-hydrocarbon receptor</b> in the name field</li>
+                <li>Enter the Allele synonym <b>short digits</b> in the Nomenclature field and Search</li>
+                <li>Verify you return alleles starting with <b>Shh</b>,  because short digits is a synonym of Shh</li>
+    		</ol>
+    		</li>
+   		
+		</ol>		
+
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<li>Testing that Human Gene symbols return correct alleles
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">AGTR1</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these alleles are returned</th></tr>
+				        <tr><td>Agtr1a&lt;tm1.1Cof&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1.1Uky&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1Afu&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1Ecl&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1Tma&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1Uky&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1Unc&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm2Tma&gt;</td></tr>
+				        <tr><td>Hprt&lt;tm1(Ggt1-Agtr1)Cof&gt;</td></tr>
+				        <tr><td>Hprt&lt;tm343(Ple270-icre/ERT2)Ems&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1e(EUCOMM)Hmgu&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>Agtr1a&lt;tm2e(EUCOMM)Hmgu&gt;</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+    		<li>Testing to see that a match via human synonym are returned. SMMCI is a synonym for Sonic Hedgehog in Human.
+    		<ol>
+				<li>open the allele query form</li>
+				<li>type <b concordion:set="#query">SMMCI</b> (a synonym of sonic hedgehog in human) in to the nomenclature field</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">30</b> results are returned</li>
+				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+					    <tr><td>Shh&lt;Dsh&gt;</td></tr>
+					    <tr><td>Shh&lt;Dz&gt;</td></tr>
+					    <tr><td>Shh&lt;Hx&gt;</td></tr>
+					    <tr><td>Shh&lt;Hxl3&gt;</td></tr>
+					    <tr><td>Shh&lt;M101116&gt;</td></tr>
+					    <tr><td>Shh&lt;M101117&gt;</td></tr>
+					    <tr><td>Shh&lt;M101192&gt;</td></tr>
+					    <tr><td>Shh&lt;Rgsc1155&gt;</td></tr>
+					    <tr><td>Shh&lt;Rgsc1197&gt;</td></tr>
+					    <tr><td>Shh&lt;Rgsc1198&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1(cre/ERT2)Tshim&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1(EGFP/cre)Cjt&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1.1Dje&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1.1Rseg&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1Ahk&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1Amc&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1Chg&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1Ptch&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1Tmj&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1Tshir&gt;</td></tr>
+					    <tr><td>Shh&lt;tm2(cre/ERT2)Cjt&gt;</td></tr>
+					    <tr><td>Shh&lt;tm2.1Amc&gt;</td></tr>
+					    <tr><td>Shh&lt;tm2Amc&gt;</td></tr>
+					    <tr><td>Shh&lt;tm2Chg&gt;</td></tr>
+					    <tr><td>Shh&lt;tm3(cre)Chg&gt;</td></tr>
+					    <tr><td>Shh&lt;tm3Amc&gt;</td></tr>
+					    <tr><td>Shh&lt;tm5Amc&gt;</td></tr>	
+					    <tr><td>Shh&lt;tm6Amc&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1(KOMP)Vlcg&gt;</td></tr>
+					    <tr><td>Shh&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>				    					    					    					    					    					    
+					</table>
+				</li>
+    		</ol>
+    		</li>
+    			<li>Testing to be sure that only PUBLIC mouse genes are present
+				<ol>
+					<li>open the Allele query form</li>
+					<li>Type <b concordion:set="#query">Aasm1</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getAlleleSymbolsByNomen(#query)">Aasm1</b> is not returned</li>
+					<li>return to the GXD query form and clear the nomenclature field</li>
+					<li>Type <b concordion:set="#query">Aasm2</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getAlleleSymbolsByNomen(#query)">Aasm2</b> is not returned</li>
+					<li>return to the GXD query form and clear the nomenclature field</li>
+					<li>Type <b concordion:set="#query">Aasm3</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getAlleleSymbolsByNomen(#query)">Aasm3</b> is not returned</li>
+					<li>return to the GXD query form and clear the nomenclature field</li>
+					<li>Type <b concordion:set="#query">Glcr</b> in the nomenclature field</li>
+					<li>verify that <b cc:assertNoResultsContain="getAlleleSymbolsByNomen(#query)">Glcr</b> is not returned</li>
+				</ol>    		
+    			</li>	
+    			<li>Testing to verify that tokens are combined using AND not OR
+				<ol>
+				<li>open the Allele query form</li>
+				<li>type <b concordion:set="#query">RIKEN 0610009D07</b> in the nomenclature field</li>
+				<li>Verify that only 0610009D07Rik alleles are returned
+					<table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+					    <tr><td>0610009D07Rik&lt;Gt(128E2)Cmhd&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;Gt(EUCE0208f11)Hmgu&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;Gt(OST16110)Lex&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;Gt(OST19950)Lex&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;Gt(OST20610)Lex&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;Gt(OST21852)Lex&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;Gt(OST24671)Lex&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+					    <tr><td>0610009D07Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+					</table>
+				</li>
+				</ol>    		
+    			</li>    		
+    		<li>Testing case insensitivity
+			<ol>
+				<li>open the Allele query form</li>
+				<li>type <b concordion:execute="#count = getAlleleCountByNomen(#TEXT)">SHH</b> in the nomenclature field</li>
+				<li>verify that <b>the results set returned for each search is the same</b></li>
+				<li>Return to the Allele query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getAlleleCountByNomen(#TEXT)">ShH</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+				<li>Return to the Allele query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getAlleleCountByNomen(#TEXT)">sHh</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+				<li>Return to the Allele query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getAlleleCountByNomen(#TEXT)">shh</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+				<li>Return to the Allele query form and clear the nomenclature field</li>
+				<li>type <b concordion:execute="#count2 = getAlleleCountByNomen(#TEXT)">Shh</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertTrue="#count2.equals(#count)">the results set returned for each search is the same</b></li>
+			</ol>    		
+    		</li>
+    		<li>Testing that query does AND tokens across symbol, synonym or name "fields"
+			<ol>
+				<li>open the Allele query form</li>
+				<li>type <b concordion:set="#query">Pax6 paired</b> in the nomenclature field</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">0</b> matching genes are returned</li>
+			</ol>    		
+    		</li>
+    		<li>Testing the search by synonym feature for a synonym containing a special character
+			<ol>
+				<li>open the Allele query form</li>
+				<li>type <b concordion:set="#query">GF-1</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">18</b> alleles, with symbol <b>Gata1</b> at the beginning, are returned, GF-1 is a synonym of gata1</li>
+			</ol>
+    		</li>
+    		<li>Testing that searching by human synonym works
+			<ol>
+				<li>open the Alele query form</li>
+				<li>type <b concordion:set="#query">MRTL</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">27</b> results are returned. MRTL is a human synonym of myc</li>
+			</ol>    		
+    		</li>
+			<li>Testing the search by wildcard option against symbols,names and synonyms
+			<ol>
+			<li>open the Allele query form</li>
+
+				<li>Type <b concordion:set="#query">Ddt*</b> in the nomenclature field and press the search button</li>
+				<li>verify that only the alleles with <b>Ddt</b> are returned
+					<table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
+					    <tr><td>Ddt&lt;tm1(KOMP)Vlcg&gt;</td></tr>
+					</table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing a related synonym
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">Iis3</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">2</b> alleles, with symbol <b>Igs3</b>, are returned</li>
+			</ol>
+			</li>			
+
+			<li>Testing that AND, OR, and NOT aren't treated as Booleans
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">pax6 and shh</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">pax6 or shh</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">paired AND box</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">paired OR box</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">0</b> matching genes are returned</li>
+				<li>Type <b concordion:set="#query">paired NOT box</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">0</b> matching genes are returned</li>
+			</ol>
+			</li>
+			<li>Testing that punctuation and extraneous wildcards are removed (ignored)
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">dopachrome@#$%^&amp;*()_-+={}[]\|`~;':",./&lt;&gt;?</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">11</b> alleles returned with the symbol <b>Dct</b></li>
+				<li>Type <b concordion:set="#query">*dopachrome ***tautome*</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">11</b> alleles is returned with the symbol <b>Dct</b></li>
+				<li>Type <b concordion:set="#query">*****</b> in the nomenclature field and press the search button</li>
+				<li>verify that <b cc:assertEquals="getAlleleCountByNomen(#query)">0</b> matching alleles are returned</li>
+			</ol>
+			</li>
+			<li>Testing that empty nomenclature search is handled
+			<ol>
+				<li>open the Allele query form </li>
+				<li>enter "<span concordion:set="#query"></span>" (i.e. leave the field blank) then press the search button</li>
+				<li>verify that <b cc:assertEquals="getAlleleCountByNomen(#query)">0</b> alleles are returned</li>
+			</ol>
+			</li>
+			<li>Testing Nonsense: absurdly long input matching nothing in our database
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">5AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</b> in the nomenclature field and press the search button</li>
+				<li>verify that the user interface displays properly, <b concordion:assertEquals="getAlleleCountByNomen(#query)">0</b> matching genes are returned, and <b>the page displays a standard "no alleles found" message</b> It Should not break the query page</li>
+			</ol>
+			</li>
+			<li>Testing that the same alleles are returned regardless of word order
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">cDNA 0610009L18</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these alleles are returned</th></tr>
+				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				    </table>
+				</li>
+				<li>Type <b concordion:set="#query">0610009L18 cDNA</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these alleles are returned</th></tr>
+				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing that genes are returned when words are farther apart in the Name string (two tokens are not treated as a phrase query)
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">RIKEN 0610009L18</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these alleles are returned</th></tr>
+				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing that wildcards work in different places of the string
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">*IKEN 0610009L1*</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				    </table>
+				</li>
+				<li>Type <b concordion:set="#query">RIKE* *610009L18</b> in the nomenclature field and press the search button</li>
+				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+			<li>Testing that English possessive (single quote character) doesn't break the query
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">"Dickie's Small Eye"</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">53</b> alleles are returned with the symbol <b>Pax6</b>in them</li>
+			</ol>
+			</li>
+			<li>Testing that unusual characters within an Allele symbol doesn't break the query
+			<ol>
+				<li>open the Allele query form</li>
+				<li>Type <b concordion:set="#query">Skor2&lt;Tn(sb-Tyr)1799B.CA7Ove&gt;</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">1</b> allele is returned with the symbol <b>Skor2</b> in it</li>
+			</ol>
+			</li>
+
+    		 <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

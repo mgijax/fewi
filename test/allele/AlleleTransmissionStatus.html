@@ -24,15 +24,44 @@
     <h1>Allele Transmission Status Updates</h1>
     <ul>
         <li>User story 88, Update transmission state for alleles of genotypes with MP annotations</li>
+        <li>User story 85, Load the IMSR feed file in MGI</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
-	<ul>
-		<li>none</li>
+	<ul>    
+    <li>(MGI 5.18) US85- Alleles that have transmission status of cell line but have IMSR links get changed to a transmission state of Germ line</li>
+    <li>(MGI 5.18) US85- All these alleles are assigned the reference J:204812</li> 
+	<li>(sto85) sets transmission status to "germline" and sets the J# to a (TBD) value</li>
+	<li>(sto85) runs periodically (TBD)</li>
+	<li>(sto85) generates appropriate log messages</li>
+	<li>(sto85) verify that the "broken" public reports and stats have been fixed</li>
 	</ul>
 </div>
+
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<dl>
+		<dt>Term</dt>
+		<dd>Definition text 1</dd>
+		<dd>Definition text 2</dd>
+	</dl>
+</div>
+
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+
+	<h3>IMSR germline load:</h3>
+	<ul>
+	<li>We regularly download <a href="http://emnet.informatics.jax.org:48080/imsrwi/imsrwi/report/mgiCounts.txt">an IMSR report</a> of alleles and their mouse line and cell line counts.</li>
+	<li>We update the Transmission Status for alleles having the value "cell line" in MGI's database, but appearing in the IMSR report with a count for mouse lines.</li>
+	<li>Reports, statistics, and web page displays all run off the values in MGI's database (rather than having "wrong" values and "correcting" them in the software).</li>
+	</ul>
+</div>
+
 
 
 
@@ -124,17 +153,95 @@
     		<ol>
     			<li>See <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/logs/sangerload.test.sorted.log">Test results.</a></li>
     			<li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - Verify that tests with the following labels pass:
-    			<ul>
-    				<li>CellLine: Notch1&lt;tm1a(EUCOMM)Wtsi&gt;</li>
-    				<li>Chimeric:  none to test<!-- Med12&lt;tm1.2Hsch&gt; HAS NO HTMP DATA, NOT A GOOD TEST. NO CHIMERAS HAVE HTMP DATA AT THIS TIME. klf 12/20/12 --></li>
-    				<li>Germline: Acacb&lt;tm1a(EUCOMM)Wtsi&gt; <!-- Fadd&lt;tm2Wnt&gt; THIS ONE SHOULD BE GERMLINE-OLD klf 12/20/12 --></li>
-    				<li>GermlineOld:  <!-- Cbx2&lt;tm1Ykf&gt; HAS NO HTMP DATA, NOT A GOOD TEST klf 12/20/12 --> Mro&lt;tm1H&gt;</li>
-    				<li>NotApplicable: Ap3d1&lt;mh-2J&gt; and Apaf1&lt;fog&gt;</li>
-    				<li>NotSpecified: Braf&lt;tm2.1Cpri&gt; and Cfp&lt;tm2.2Song&gt;</li>
-    			</ul>
+	    			<ul>
+	    				<li>CellLine: Notch1&lt;tm1a(EUCOMM)Wtsi&gt;</li>
+	    				<li>Chimeric:  none to test<!-- Med12&lt;tm1.2Hsch&gt; HAS NO HTMP DATA, NOT A GOOD TEST. NO CHIMERAS HAVE HTMP DATA AT THIS TIME. klf 12/20/12 --></li>
+	    				<li>Germline: Acacb&lt;tm1a(EUCOMM)Wtsi&gt; <!-- Fadd&lt;tm2Wnt&gt; THIS ONE SHOULD BE GERMLINE-OLD klf 12/20/12 --></li>
+	    				<li>GermlineOld:  <!-- Cbx2&lt;tm1Ykf&gt; HAS NO HTMP DATA, NOT A GOOD TEST klf 12/20/12 --> Mro&lt;tm1H&gt;</li>
+	    				<li>NotApplicable: Ap3d1&lt;mh-2J&gt; and Apaf1&lt;fog&gt;</li>
+	    				<li>NotSpecified: Braf&lt;tm2.1Cpri&gt; and Cfp&lt;tm2.2Song&gt;</li>
+	    			</ul>
     			</li>
+<!--    			<li>Alleles with J:204812  all have a transmission status of Germline (sto85)
+		    		<ol>
+		    			<li>See <a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/sto85/imsr.txt">List of Alleles changed</a></li>
+		    			<li><span concordion:assertTrue="true">passed. -klf 2/13/2014</span> 
+			    				<table>
+										<tr>
+											<th>MGI ID</th>
+											<th>Allele Symbol</th>
+											<th>J Number</th>
+											<th>Transmission status</th>
+											<th>Status</th>
+										</tr>
+										<tr>
+											<td>MGI:4880999</td>
+											<td>Brd1&lt;tm1a(EUCOMM)Hmgu&gt;</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td>Approved</td>
+										</tr>
+										<tr>
+											<td>MGI:4306549</td>
+											<td>Car14&lt;Gt(OST403484)Lex&gt;</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td><b>Autoload</b></td>
+										</tr>
+										<tr>
+											<td>MGI:3977154</td>
+											<td>Cers4&lt;Gt(IST10892E9)Tigm&gt;</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td><b>Autoload</b></td>
+										</tr>
+										<tr>
+											<td>MGI:4842934</td>
+											<td>Fus&lt;tm1(KOMP)Vlcg&gt;</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td>Approved</td>
+										</tr>
+										<tr>
+											<td>MGI:4048729</td>
+											<td>Gt(IST12071A4)Tigm</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td><b>Autoload</b></td>
+										</tr>
+										<tr>
+											<td>MGI:4820334</td>
+											<td>Ldlrad4&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td>Approved</td>
+										</tr>
+										<tr>
+											<td>MGI:4881170</td>
+											<td>Nobox&lt;tm1(KOMP)Vlcg&gt;</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td>Approved</td>
+										</tr>
+										<tr>
+											<td>MGI:4820338</td>
+											<td>Ttll11&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+											<td>204812</td>
+											<td>Germline</td>
+											<td>Approved</td>
+										</tr>
+									</table></li>
+		    		</ol>
+		    	</li>
+    		<li>The number of alleles referenced agrees with the IMSR feed load.
+ 			<p concordion:assertTrue="true">passed. -klf 2/13/2014</p> 
+    		<ol>
+                <li>Display the reference data for J:204812</li>
+                <li>Verify the Alleles link agrees with the number IMSR feed load changes. This number should be <b>1667</b> right now</li>
     		</ol>
-    		</li>
+    		</li>	 -->	    	
+			</ol>
+			</li> 
 		</ol>
 	</div>
 	<div id="auto">

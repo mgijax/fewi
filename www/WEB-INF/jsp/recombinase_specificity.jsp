@@ -205,6 +205,7 @@ ${templateBean.templateBodyStartHtml}
             <span class="small" style="font-weight:bold">Driver:</span> ${allele.driver}
             <br>
             <span class="small" style="font-weight:bold">Type:</span> ${allele.alleleType}
+            <c:if test="${not empty allele.alleleSubType}">(${allele.alleleSubType})</c:if>
           </td>
 
         </tr>
@@ -245,6 +246,15 @@ ${templateBean.templateBodyStartHtml}
         </span>
       </td>
     </tr>
+    
+    <c:if test="${not empty allele.collection}">
+	  <tr>
+	    <td class="rightBorderThinGray" align="right" valign="middle" nowrap="nowrap">
+	    	<span class="creDataCat">Collection:</span>
+	    </td>
+	    <td class="">${allele.collection}</td>
+	  </tr>
+	</c:if>
 
     <tr>
       <td class="rightBorderThinGray" align="right" valign="middle" nowrap="nowrap">

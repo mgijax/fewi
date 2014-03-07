@@ -1,0 +1,198 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Summary from Reference Links</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Summary from Reference Links</h1>
+    <ul>
+        <li>User story 42, E4: Links from other pages (not marker detail) (Release 5.18)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto42: Links from other places in wi need to go to new url.</li>
+		<li>sto42: references -&gt; alleles</li>
+		<li><del>sto42: links to new QF from minihome</del></li>
+		<li>sto42: links to new QF from search menu</li>
+	</ul>
+	<h3>Changes:</h3>
+	<ul>
+		<li>sto42: We decided to collect all mgihome, userhelp, and faq modifications in story 120 (and therefore, the minihome requirement moves there).</li>
+		<li>sto42: Also found/fixed a link on the all searches menu page in the python wi.</li>
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<p>See the <a href="../allele/AlleleSummary.html">Allele Summary</a> test suite for genotype definitions.</p>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>For a reference's &quot;Phenotypic Alleles&quot; hyperlinked count, the summary includes all alleles associated with that reference, EXCLUDING only wild type alleles.
+ 			<p concordion:assertTrue="true">passed. -klf 2014-01-27</p>
+    		<ol>
+                <li>Navigate to J:202293.</li>
+                <li>Follow the link labeled Phenotypic Alleles. Verify the total is <b>2</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Lrp6&lt;Gt(Ex187)Byg&gt;</td></tr>
+                	<tr><td>Tg(CAG-Venus*)1Hadj</td></tr>
+                </table>
+                </li>
+
+                <li>Navigate to J:126863.</li>
+                <li>Follow the link labeled Phenotypic Alleles. Verify the total is <b>3</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+					<tr><th>Allele</th></tr>
+					<tr><td>Tg(SOD1)2Gur</td></tr>
+					<tr><td>Tg(SOD1*G93A)1Gur</td></tr>
+					<tr><td>Tg(TacLIZa)A1Jsh</td></tr>
+                </table>
+                </li>
+
+                <li>Navigate to J:163248.</li>
+                <li>Follow the link labeled Phenotypic Alleles. Verify the total is <b>5</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+					<tr><th>Allele</th></tr>
+					<tr><td>Csf3r&lt;tm1Link&gt;</td></tr>
+					<tr><td>Cybb&lt;tm1Din&gt;</td></tr>
+					<tr><td>Lyz2&lt;tm1.1Graf&gt;</td></tr>
+					<tr><td>Nos2&lt;tm1Mrl&gt;</td></tr>
+					<tr><td>Tg(Itgax-Venus)1Mnz</td></tr>
+				</table>
+                </li>
+
+                <li>Navigate to J:180210.</li>
+                <li>Follow the link labeled Phenotypic Alleles. Verify the total is <b>1</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+					<tr><th>Allele</th></tr>
+					<tr><td>Apc&lt;Min&gt;</td></tr>
+				</table>
+                </li>
+
+                <li>Navigate to J:197040.</li>
+                <li>Follow the link labeled Phenotypic Alleles. Verify the total is <b>17</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+					<tr><th>Allele</th></tr>
+					<tr><td>Apc&lt;Min&gt;</td></tr>
+					<tr><td>Apc&lt;tm1.1Alew&gt;</td></tr>
+					<tr><td>Apc&lt;tm1.1Ecrm&gt;</td></tr>
+					<tr><td>Apc&lt;tm1.1Klne&gt;</td></tr>
+					<tr><td>Apc&lt;tm1.1Tno&gt;</td></tr>
+					<tr><td>Apc&lt;tm1.1Tyj&gt;</td></tr>
+					<tr><td>Apc&lt;tm1Cip&gt;</td></tr>
+					<tr><td>Apc&lt;tm1Hsa&gt;</td></tr>
+					<tr><td>Apc&lt;tm1Mmt&gt;</td></tr>
+					<tr><td>Apc&lt;tm1Rak&gt;</td></tr>
+					<tr><td>Apc&lt;tm1Rfo&gt;</td></tr>
+					<tr><td>Apc&lt;tm2.1Alew&gt;</td></tr>
+					<tr><td>Apc&lt;tm2.1Rak&gt;</td></tr>
+					<tr><td>Apc&lt;tm2Rfo&gt;</td></tr>
+					<tr><td>Apc&lt;tm2Tno&gt;</td></tr>
+					<tr><td>Apc&lt;tm3Mmt&gt;</td></tr>
+					<tr><td>Apc&lt;tm4Mmt&gt;</td></tr>
+                </table>
+                </li>
+
+                <li>Navigate to J:200824.</li>
+                <li>Follow the link labeled Phenotypic Alleles. Verify the total is <b>4</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+					<tr><th>Allele</th></tr>
+					<tr><td>Apc&lt;Min&gt;</td></tr>
+					<tr><td>Msh2&lt;tm1Mak&gt;</td></tr>
+					<tr><td>Nos2&lt;tm1Mrl&gt;</td></tr>
+					<tr><td>Tg(TacLIZa)A1Jsh</td></tr>
+				</table>
+                </li>
+
+    		</ol>
+    		</li>
+
+
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

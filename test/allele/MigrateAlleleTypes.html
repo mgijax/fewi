@@ -1,0 +1,1151 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+
+<style>
+body {width:1280px;}
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Migrate Allele Types</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Migrate Allele Types</h1>
+    <ul>
+        <li>User story 21, E5: Implement schema changes</li>
+        <li>User story 112, E5: Revise /rerun migration for transgenes</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>updated type vocab to generation types</li>
+		<li>added allele attribute vocabulary</li>
+		<li>migration rules implemented</li>
+		<li>data migration script written and run</li>
+		<li>alleles have their new types and their new attributes</li>
+		<li>cell line derivations have their new types</li>
+		<li>verify via SQL</li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Requirements</h2>
+	<p>Rules for Allele Types (Generation Types) and Subtypes (Attributes) are found in wiki pages.</p>
+	<ul>
+		<li><a href="http://mgiwiki/mediawiki/index.php/Allele_Type_Definitions">Allele Type Definitions</a></li>
+		<li><a href="http://mgiwiki/mediawiki/index.php/index.php/Allele_Type_Data_Migration">Allele Types Data Migration</a> (general rules) - revised for sto112</li>
+		<li><a href="http://mgiwiki/mediawiki/index.php/Loaded_Alleles-_Type/Attribute_Data_Migration">Loaded Alleles- Type/Attribute Data Migration</a> (IKMC allele rules)</li>
+	</ul>
+
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>The vocabulary for Allele (Generation) Types exists and contains the values specified below.
+ 			<p concordion:assertTrue="true">klf 2/4/2014</p>
+    		<ol>
+                <li>Query the Sybase VOC_Vocab table to verify the Allele Type vocabulary exists.</li>
+                <li>Query the Sybase VOC_Term table to verify the following terms exist for that vocabulary <i>(updated list as of 2/3/2014)</i>:
+                <ul>
+					<li>Chemically and radiation induced</li>
+					<li>Chemically induced (ENU)</li>
+					<li>Chemically induced (other)</li>
+					<li>Endonuclease-mediated</li>
+					<li>Gene trapped</li>
+					<li>Not Applicable</li>
+					<li>Not Specified</li>
+					<li>Other</li>
+					<li>QTL</li>
+					<li>Radiation induced</li>
+					<li>Spontaneous</li>
+					<li>Targeted</li>
+					<li>Transgenic</li>
+					<li>Transposon induced</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>The vocabulary for Allele Attributes (Subtypes) exists and contains the values specified below.
+ 			<p concordion:assertTrue="true">klf 2/4/2014</p>
+    		<ol>
+                <li>Query the Sybase VOC_Vocab table to verify the Allele Subtype vocabulary exists.</li>
+                <li>Query the Sybase VOC_Term table to verify the following terms exist for that vocabulary <i>(updated list as of 2/3/2014)</i>:<br/>
+                (Note: "Humanized <i>sequence</i>" and "<i>Knockdown</i>" were changes inserted into the PostgreS side but not Sybase on 2/3/2014.) 
+                <ul>
+					<li>Conditional ready</li>
+					<li>Constitutively Active</li>
+					<li>Dominant Negative</li>
+					<li>Humanized sequence</li>
+					<li>Hypomorph</li>
+					<li>Inducible</li>
+					<li>Inserted expressed sequence</li>
+					<li>Knockdown</li>
+					<li>Modified Isoform(s)</li>
+					<li>No Functional Change</li>
+					<li>Not Applicable</li>
+					<li>Not Specified</li>
+					<li>Null/knockout</li>
+					<li>Recombinase</li>
+					<li>Reporter</li>
+					<li>RMCE-Ready</li>
+					<li>Transposase</li>
+					<li>Transposon Concatemer</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+			<li>Counts for Allele Types after migration rules are applied match predicted values from before migration:	(<i>Example data as of 12/18/2013)</i>:
+			<table>
+						<tr>
+							<th>_Allele_Type_key</th>
+							<th>term</th>
+							<th>Total Before (example)</th>
+							<th>Total After (example)</th>
+						</tr>
+						<tr>
+							<td>847115</td>
+							<td>Spontaneous</td>
+							<td>2,075</td>
+							<td>2,075</td>
+						</tr>
+						<tr>
+							<td>847116</td>
+							<td>Targeted (knock-out)</td>
+							<td>16,632</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847117</td>
+							<td>Targeted (knock-in)</td>
+							<td>3,409</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847118</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>18,090</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847119</td>
+							<td>Targeted (Reporter)</td>
+							<td>15,199</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847120</td>
+							<td>Targeted (other)</td>
+							<td>628</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847121</td>
+							<td>Gene trapped</td>
+							<td>684,329</td>
+							<td>684,329</td>
+						</tr>
+						<tr>
+							<td>847122</td>
+							<td>Chemically induced (ENU)</td>
+							<td>3,127</td>
+							<td>3,127</td>
+						</tr>
+						<tr>
+							<td>847123</td>
+							<td>Chemically induced (other)</td>
+							<td>153</td>
+							<td>153</td>
+						</tr>
+						<tr>
+							<td>847124</td>
+							<td>Chemically and radiation induced</td>
+							<td>62</td>
+							<td>62</td>
+						</tr>
+						<tr>
+							<td>847125</td>
+							<td>Radiation induced</td>
+							<td>527</td>
+							<td>527</td>
+						</tr>
+						<tr>
+							<td>847126</td>
+							<td>Transgenic (random, gene disruption)</td>
+							<td>197</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847127</td>
+							<td>Transgenic (random, expressed)</td>
+							<td>4,356</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847128</td>
+							<td>Transgenic (Cre/Flp)</td>
+							<td>1,487</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847129</td>
+							<td>Transgenic (Reporter)</td>
+							<td>1,652</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>847130</td>
+							<td>QTL</td>
+							<td>8,614</td>
+							<td>8,614</td>
+						</tr>
+						<tr>
+							<td>847131</td>
+							<td>Not Applicable</td>
+							<td>17,896</td>
+							<td>17,896</td>
+						</tr>
+						<tr>
+							<td>847132</td>
+							<td>Not Specified</td>
+							<td>30,386</td>
+							<td>30,386</td>
+						</tr>
+						<tr>
+							<td>2327160</td>
+							<td>Transgenic (Transposase)</td>
+							<td>11</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>2327161</td>
+							<td>Transposon induced</td>
+							<td>41</td>
+							<td>41</td>
+						</tr>
+						<tr>
+							<td>NEW</td>
+							<td>Targeted</td>
+							<td>0</td>
+							<td>53,958</td>
+						</tr>
+						<tr>
+							<td>NEW</td>
+							<td>Transgenic</td>
+							<td>0</td>
+							<td>7,703</td>
+						</tr>
+						<tr>
+							<td>NEW</td>
+							<td>Endonuclease-mediated</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+					</table>
+ 			<p concordion:assertTrue="true">klf 12/30/2013</p>
+    		<ol>
+                <li>Confirm the migration script <a href="http://rohan.informatics.jax.org/usrlocalmgi/scrum-dog/dbutils/mgidbmigration/TR11515/alleletype/alleletype-after-SQL.csh.log">counts match before and after</a>.</li>
+    		</ol>
+			</li>
+
+			<li>Counts for Cell Line Derivation Types after migration rules are applied match predicted values from before migration.
+ 			<p concordion:assertTrue="true">klf 12/30/2013</p>
+    		<ol>
+                <li>Confirm the migration script <a href="http://rohan.informatics.jax.org/usrlocalmgi/scrum-dog/dbutils/mgidbmigration/TR11515/alleletype/alleletype-after-SQL.csh.log">cell line counts match before and after</a>.</li>
+    		</ol>
+			</li>
+
+    		<li>The following alleles are assigned to the indicated Allele Type (what curators call Generation Type) and have the appropriate Subtype values (what curators call Attributes). 
+    		<table>
+						<tr>
+							<th style="width: 19em;">Allele symbol</th>
+							<th style="width: 9em;">MGI ID</th>
+							<th>Old allele type</th>
+							<th>New allele type (generation type)</th>
+							<th>New subtypes (attributes) - comma-delimited list</th>
+							<th>Notes for tester</th>
+						</tr>
+						<tr>
+							<td>a</td>
+							<td>MGI:1855937</td>
+							<td>Spontaneous</td>
+							<td>Spontaneous</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Btnt2</td>
+							<td>MGI:5487551</td>
+							<td>Spontaneous</td>
+							<td>Spontaneous</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Vps52&lt;t-w5+Art&gt;</td>
+							<td>MGI:5469354</td>
+							<td>Spontaneous</td>
+							<td>Spontaneous</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>2010111I01Rik&lt;Gt(GT411)Lmf&gt;</td>
+							<td>MGI:4357693</td>
+							<td>Gene trapped</td>
+							<td>Gene trapped</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Atg16l1&lt;Gt(BC0122)Wtsi&gt;</td>
+							<td>MGI:3818574</td>
+							<td>Gene trapped</td>
+							<td>Gene trapped</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>12aex</td>
+							<td>MGI:3578166</td>
+							<td>Chemically induced (ENU)</td>
+							<td>Chemically induced (ENU)</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>b2b1625.2Clo</td>
+							<td>MGI:5489925</td>
+							<td>Chemically induced (ENU)</td>
+							<td>Chemically induced (ENU)</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Myo5a&lt;d-n3Btlr&gt;</td>
+							<td>MGI:5515382</td>
+							<td>Chemically induced (ENU)</td>
+							<td>Chemically induced (ENU)</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>a&lt;10R&gt;</td>
+							<td>MGI:2384104</td>
+							<td>Chemically induced (other)</td>
+							<td>Chemically induced (other)</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Mut1446</td>
+							<td>MGI:5442340</td>
+							<td>Chemically induced (other)</td>
+							<td>Chemically induced (other)</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Atp7a&lt;Mo-10H&gt;</td>
+							<td>MGI:1856322</td>
+							<td>Chemically and radiation induced</td>
+							<td>Chemically and radiation induced</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Vm</td>
+							<td>MGI:5320605</td>
+							<td>Chemically and radiation induced</td>
+							<td>Chemically and radiation induced</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Bmp5&lt;se-15THO-I&gt;</td>
+							<td>MGI:2153987</td>
+							<td>Radiation induced</td>
+							<td>Radiation induced</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Tyrp1&lt;b-11PU&gt;</td>
+							<td>MGI:1857374</td>
+							<td>Radiation induced</td>
+							<td>Radiation induced</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Arpc3&lt;Tn(sb-lacZ,GFP)T5.117Jtak&gt;</td>
+							<td>MGI:3613188</td>
+							<td>Transposon induced</td>
+							<td>Transposon induced</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>In(15Rictor;Slc1a3)1Ove</td>
+							<td>MGI:5287026</td>
+							<td>Transposon induced</td>
+							<td>Transposon induced</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Cdh23&lt;Ahl+&gt;</td>
+							<td>MGI:2665714</td>
+							<td>QTL</td>
+							<td>QTL</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Cmcs&lt;CBA/N&gt;</td>
+							<td>MGI:3522316</td>
+							<td>QTL</td>
+							<td>QTL</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Acadvl-rs1&lt;+&gt;</td>
+							<td>MGI:2436697</td>
+							<td>Not Applicable</td>
+							<td>Not Applicable</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Acads&lt;a&gt;</td>
+							<td>MGI:3029771</td>
+							<td>Not Applicable</td>
+							<td>Not Applicable</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Emv1&lt;a&gt;</td>
+							<td>MGI:3579288</td>
+							<td>Not Applicable</td>
+							<td>Not Applicable</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>4930405L22Rik&lt;+&gt;</td>
+							<td>MGI:5482780</td>
+							<td>Not Specified</td>
+							<td>Not Specified</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Mitf&lt;Mi&gt;</td>
+							<td>MGI:1856085</td>
+							<td>Not Specified</td>
+							<td>Not Specified</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Ts(10&lt;16&gt;)232Dn</td>
+							<td>MGI:3698134</td>
+							<td>Not Specified</td>
+							<td>Not Specified</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Blm&lt;tm2Khor&gt;</td>
+							<td>MGI:3620978</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td><i>allele in progress</i></td>
+						</tr>
+						<tr>
+							<td>App&lt;tm1Tsuz&gt;-deleted</td>
+							<td>MGI:3769587</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td><i>allele deleted</i></td>
+						</tr>
+						<tr>
+							<td>Braf&lt;tm1.1Cpri&gt;</td>
+							<td>MGI:3612534</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td><i>allele deleted</i></td>
+						</tr>
+						<tr>
+							<td>Braf&lt;tm2.1Cpri&gt;</td>
+							<td>MGI:5440060</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td><i>allele reserved</i></td>
+						</tr>
+						<tr>
+							<td>Ace&lt;tm3Unc&gt;</td>
+							<td>MGI:2155951</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Gng7&lt;tm1(cre)Mmsh&gt;</td>
+							<td>MGI:3833955</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td>Recombinase</td>
+							<td>(sto112)</td>
+						</tr>
+						<tr>
+							<td>Gng7&lt;tm2(cre/PGR)Mmsh&gt;</td>
+							<td>MGI:3833956</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td>Inducible, Recombinase</td>
+							<td><i>has Inducible Note</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Grin2c&lt;tm2(icre)Mwa&gt;</td>
+							<td>MGI:5306941</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td>Recombinase</td>
+							<td>(sto112)</td>
+						</tr>
+						<tr>
+							<td>Gt(ROSA)26Sor&lt;tm1(cre/ERT)Brn&gt;</td>
+							<td>MGI:2445311</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td>Inducible, Recombinase</td>
+							<td><i>has Inducible Note</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Cdkn2a&lt;tm2Rdp&gt;</td>
+							<td>MGI:2384176</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td><i>allele in progress</i></td>
+						</tr>
+						<tr>
+							<td>Adamts4&lt;tm2Lex&gt;</td>
+							<td>MGI:3529334</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td><i>allele deleted</i></td>
+						</tr>
+						<tr>
+							<td>Zscan21&lt;tm2Htz&gt;</td>
+							<td>MGI:3526148</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td><i>allele reserved</i></td>
+						</tr>
+						<tr>
+							<td>Adar&lt;tm2Knk&gt;</td>
+							<td>MGI:5436438</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td><i>germ line transmission = chimeric</i></td>
+						</tr>
+						<tr>
+							<td>Bid&lt;tm1.1Ast&gt;</td>
+							<td>MGI:4440571</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Bmpr2&lt;tm1.2Enl&gt;</td>
+							<td>MGI:3574813</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Drd2&lt;tm1Mrub&gt;</td>
+							<td>MGI:5313252</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready, No functional change</td>
+							<td><i>allele in progress</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Brca1&lt;tm2Brn&gt;</td>
+							<td>MGI:3762183</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready, No functional change</td>
+							<td><i>allele deleted</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Gt(ROSA)26Sor&lt;tm4(CAG-GFP*)Nat&gt;</td>
+							<td>MGI:5449932</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready, No functional change</td>
+							<td><i>allele reserved</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Ankrd17&lt;tm1Yty&gt;</td>
+							<td>MGI:4360511</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready, No functional change</td>
+							<td> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Rdh1&lt;tm1Jln&gt;</td>
+							<td>MGI:3804064</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready, No functional change</td>
+							<td><i>allele reserved; germ line transmission = cell
+									line</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Gopc&lt;tm1Tno&gt;</td>
+							<td>MGI:2386792</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Reporter, Null/knockout</td>
+							<td><i>allele in progress</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Dvl2&lt;tm2Awb&gt;</td>
+							<td>MGI:3603160</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Reporter, Null/knockout</td>
+							<td><i>allele deleted</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Abca3&lt;tm1Dgen&gt;</td>
+							<td>MGI:3757572</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Reporter, Null/knockout</td>
+							<td> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Cbln1&lt;tm1.2Mmsh&gt;</td>
+							<td>MGI:4839626</td>
+							<td>Targeted (other)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Shank3&lt;tm1.1Pfw&gt;</td>
+							<td>MGI:5085999</td>
+							<td>Targeted (other)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Del(1)Tg(250OVE)Mm</td>
+							<td>MGI:1857960</td>
+							<td>Transgenic (random, gene disruption)</td>
+							<td>Transgenic</td>
+							<td><i>none</i></td>
+							<td><i>allele in progress</i></td>
+						</tr>
+						<tr>
+							<td>Amn&lt;amn&gt;</td>
+							<td>MGI:2135304</td>
+							<td>Transgenic (random, gene disruption)</td>
+							<td>Transgenic</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Pcgf3&lt;TgTn(sb-cHS4,Tyr)2349AOve&gt;</td>
+							<td>MGI:5287257</td>
+							<td>Transgenic (random, gene disruption)</td>
+							<td>Transgenic</td>
+							<td><i>none</i></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Tg(HA-T)#Men</td>
+							<td>MGI:3039900</td>
+							<td>Transgenic (random, expressed)</td>
+							<td>Transgenic</td>
+							<td>Inserted expressed sequence</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Tg(hAGT)2041Sig</td>
+							<td>MGI:2447399</td>
+							<td>Transgenic (random, expressed)</td>
+							<td>Transgenic</td>
+							<td>Inserted expressed sequence</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Tg(Vav1-cre)1Nki</td>
+							<td>MGI:4398921</td>
+							<td>Transgenic (Cre/Flp)</td>
+							<td>Transgenic</td>
+							<td>Recombinase</td>
+							<td><i>allele in progress; has no Driver Note</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(Prm-cre)#Og</td>
+							<td>MGI:5284868</td>
+							<td>Transgenic (Cre/Flp)</td>
+							<td>Transgenic</td>
+							<td>Recombinase</td>
+							<td><i>allele in progress</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(Sox10-icre/ERT2)2Dimo</td>
+							<td>MGI:5431880</td>
+							<td>Transgenic (Cre/Flp)</td>
+							<td>Transgenic</td>
+							<td>Inducible, Recombinase</td>
+							<td><i>allele in progress; has Inducible Note</i> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(Nppa-cre)4Vmc</td>
+							<td>MGI:3710255</td>
+							<td>Transgenic (Cre/Flp)</td>
+							<td>Transgenic</td>
+							<td>Recombinase</td>
+							<td> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(Pcp2-cre/ERT2,-ALPP)1Alj</td>
+							<td>MGI:4360711</td>
+							<td>Transgenic (Cre/Flp)</td>
+							<td>Transgenic</td>
+							<td>Inducible, Recombinase</td>
+							<td><i>has Inducible Note</i>  (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(CAG-EGFP,CAG-EBFP)19Sro</td>
+							<td>MGI:3527457</td>
+							<td>Transgenic (Reporter)</td>
+							<td>Transgenic</td>
+							<td>Reporter</td>
+							<td><i>allele in progress</i>  (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(Eif1-EGFP)LC125Gsat</td>
+							<td>MGI:4940583</td>
+							<td>Transgenic (Reporter)</td>
+							<td>Transgenic</td>
+							<td>Reporter</td>
+							<td> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(Atoh1-sb11)1Mtay </td>
+							<td>MGI:5316979</td>
+							<td>Transgenic (Transposase)</td>
+							<td>Transgenic</td>
+							<td>Transposase</td>
+							<td> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Tg(Prm1-sb16)BFsp</td>
+							<td>MGI:5305593</td>
+							<td>Transgenic (Transposase)</td>
+							<td>Transgenic</td>
+							<td>Transposase</td>
+							<td> (sto112)</td>
+						</tr>
+						<tr>
+							<td>Lrp6&lt;tm1(KOMP)Vlcg&gt;</td>
+							<td>MGI:5312373</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>no logical DB for KOMP Regeneron Project. Follows
+									general rules.</i></td>
+						</tr>
+						<tr>
+							<td>Abcd4&lt;tm1(KOMP)Vlcg&gt;</td>
+							<td>MGI:5051119</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>KOMP Regeneron Project</i></td>
+						</tr>
+						<tr>
+							<td>Acd&lt;tm1(KOMP)Mbp&gt;</td>
+							<td>MGI:5287769</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>KOMP CSD Project</i></td>
+						</tr>
+						<tr>
+							<td>Aatk&lt;tm1(NCOM)Mfgc&gt;</td>
+							<td>MGI:4880525</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>NorComm Project</i></td>
+						</tr>
+						<tr>
+							<td>Abca16&lt;tm1(NCOM)Cmhd&gt;</td>
+							<td>MGI:4880137</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>NorComm Project</i></td>
+						</tr>
+						<tr>
+							<td>Rbm8a&lt;tm1(EUCOMM)Hmgu&gt;</td>
+							<td>MGI:5520227</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>EuComm Project; allele deleted</i></td>
+						</tr>
+						<tr>
+							<td>Dnajc9&lt;tm1(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:4881080</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>EuComm Project</i></td>
+						</tr>
+						<tr>
+							<td>Alg10b&lt;tm2(KOMP)Vlcg&gt;</td>
+							<td>MGI:4881093</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>KOMP Regeneron Project</i></td>
+						</tr>
+						<tr>
+							<td>Cdk1&lt;tm2(NCOM)Cmhd&gt;</td>
+							<td>MGI:4936837</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>NorComm Project</i></td>
+						</tr>
+						<tr>
+							<td>Fktn&lt;tm2(FCMD)Ttd&gt;</td>
+							<td>MGI:3690337</td>
+							<td>Targeted (knock-in)</td>
+							<td>Targeted</td>
+							<td><i>none</i></td>
+							<td><i>general rules</i></td>
+						</tr>
+						<tr>
+							<td>Brms1&lt;tm3(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:5050951</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>EuComm Project</i></td>
+						</tr>
+						<tr>
+							<td>Aar2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:4842831</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter, Conditional ready</td>
+							<td><i>EuComm Project; rules for all tm1a alleles;
+									allele deleted</i></td>
+						</tr>
+						<tr>
+							<td>Abca7&lt;tm1a(EUCOMM)Hmgu&gt;</td>
+							<td>MGI:5304884</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter, Conditional ready</td>
+							<td><i>EuComm Project; rules for all tm1a alleles;
+									allele deleted</i></td>
+						</tr>
+						<tr>
+							<td>BC049715&lt;tm1a(KOMP)Mbp&gt;</td>
+							<td>MGI:4462503</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter, Conditional ready</td>
+							<td><i>KOMP CSD Project; rules for all tm1a alleles</i></td>
+						</tr>
+						<tr>
+							<td>Notch4&lt;tm1a(NCOM)Mfgc&gt;</td>
+							<td>MGI:5513805</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter, Conditional ready</td>
+							<td><i>no logical DB for NorComm Project; rules for all
+									tm1a alleles</i></td>
+						</tr>
+						<tr>
+							<td>Rpa1&lt;tm1b(KOMP)Wtsi&gt;</td>
+							<td>MGI:5446173</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>no logical DB for KOMP Project; rules for all
+									tm1b alleles</i></td>
+						</tr>
+						<tr>
+							<td>S100a14&lt;tm1b(EUCOMM)Hmgu&gt;</td>
+							<td>MGI:5513816</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>no logical DB for EuComm Project; rules for all
+									tm1b alleles</i></td>
+						</tr>
+						<tr>
+							<td>Rab39&lt;tm1b(KOMP)Wtsi&gt;</td>
+							<td>MGI:5505641</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>no logical DB for KOMP Project; rules for all
+									tm1b alleles</i></td>
+						</tr>
+						<tr>
+							<td>Ptprv&lt;tm1b(NCOM)Mfgc&gt;</td>
+							<td>MGI:5513815</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>no logical DB for NorComm Project; rules for all
+									tm1b alleles</i></td>
+						</tr>
+						<tr>
+							<td>Lman1&lt;tm1c(KOMP)Wtsi&gt;</td>
+							<td>MGI:5501339</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready</td>
+							<td><i>no logical DB for KOMP Project; rules for all
+									tm1c alleles</i>; allele reserved</td>
+						</tr>
+						<tr>
+							<td>Fbxo9&lt;tm1c(EUCOMM)Hmgu&gt;</td>
+							<td>MGI:5513777</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready</td>
+							<td><i>no logical DB for EuComm Project; rules for all
+									tm1c alleles</i></td>
+						</tr>
+						<tr>
+							<td>Zfp260&lt;tm1c(NCOM)Mfgc&gt;</td>
+							<td>MGI:5513840</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Conditional ready</td>
+							<td><i>no logical DB for NorComm Project; rules for all
+									tm1c alleles</i></td>
+						</tr>
+						<tr>
+							<td>Lman1&lt;tm1d(KOMP)Wtsi&gt;</td>
+							<td>MGI:5501340</td>
+							<td>Targeted (other)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td><i>no logical DB for KOMP Project; rules for all
+									tm1d alleles; allele reserved</i></td>
+						</tr>
+						<tr>
+							<td>B9d1&lt;tm1d(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:5301332</td>
+							<td>Targeted (knock-out)</td>
+							<td>Targeted</td>
+							<td>Null/knockout</td>
+							<td><i>no logical DB for EuComm Project; rules for all
+									tm1d alleles; </i></td>
+						</tr>
+						<tr>
+							<td>Abca7&lt;tm1e(EUCOMM)Hmgu&gt;</td>
+							<td>MGI:5304868</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>EuComm Project; rules for all tm1e alleles;
+									allele deleted</i></td>
+						</tr>
+						<tr>
+							<td>Bax&lt;tm1e(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:4842290</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>EuComm Project; rules for all tm1e alleles</i></td>
+						</tr>
+						<tr>
+							<td>Bbc3&lt;tm1e(KOMP)Wtsi&gt;</td>
+							<td>MGI:4419747</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>KOMP-CSD Project; rules for all tm1e alleles</i></td>
+						</tr>
+						<tr>
+							<td>BC026585&lt;tm1e(KOMP)Mbp&gt;</td>
+							<td>MGI:4843593</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>KOMP-CSD Project; rules for all tm1e alleles</i></td>
+						</tr>
+						<tr>
+							<td>AI182371&lt;tm2a(KOMP)Wtsi&gt;</td>
+							<td>MGI:5286211</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter, Conditional ready</td>
+							<td><i>KOMP CSD Project; rules for all tm2a alleles</i></td>
+						</tr>
+						<tr>
+							<td>AI467606&lt;tm2a(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:5473064</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter, Conditional ready</td>
+							<td><i>EuComm Project; rules for all tm2a alleles</i></td>
+						</tr>
+						<tr>
+							<td>Sdha&lt;tm2b(KOMP)Wtsi&gt;</td>
+							<td>MGI:5498775</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>no logical DB for KOMP Project; rules for all
+									tm2b alleles</i></td>
+						</tr>
+						<tr>
+							<td>Slc29a1&lt;tm2b(NCOM)Mfgc&gt;</td>
+							<td>MGI:5513821</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>no logical DB for NorComm Project; rules for all
+									tm2b alleles</i></td>
+						</tr>
+						<tr>
+							<td>Eea1&lt;tm2e(EUCOMM)Hmgu&gt;</td>
+							<td>MGI:5307115</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>EuComm Project; rules for all tm2e alleles</i></td>
+						</tr>
+						<tr>
+							<td>Efemp2&lt;tm2e(KOMP)Wtsi&gt;</td>
+							<td>MGI:4455542</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>KOMP-CSD Project; rules for all tm2e alleles</i></td>
+						</tr>
+						<tr>
+							<td>Incenp&lt;tm3a(EUCOMM)Hmgu&gt;</td>
+							<td>MGI:5296586</td>
+							<td>Targeted (Floxed/Frt)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter, Conditional ready</td>
+							<td><i>EuComm Project; rules for all tm3a alleles</i></td>
+						</tr>
+						<tr>
+							<td>Atf5&lt;tm3e(EUCOMM)Wtsi&gt;</td>
+							<td>MGI:5511899</td>
+							<td>Targeted (Reporter)</td>
+							<td>Targeted</td>
+							<td>Null/knockout, Reporter</td>
+							<td><i>EuComm Project; rules for all tm3e alleles</i></td>
+						</tr>
+					</table>
+					<p concordion:assertTrue="true">klf 2/4/2014</p>
+    		<ol>
+                <li>Confirm the <a href="http://rohan.informatics.jax.org/usrlocalmgi/scrum-dog/dbutils/mgidbmigration/TR11515/alleletype/alleletypeTests.csh.log.sorted">migration script tests passed</a>.</li>
+                <li>Confirm the alleles listed above display the correct Types and Subtypes.<br/>
+                NOTE: Some alleles appear in the EI but not in the Cardolan WI. Others of the same type do appear, so I marked the test as passing. Investigating the "missing" alleles. -klf 2/4/2014</li>
+    		</ol>
+    		</li>
+
+		</ol>		
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

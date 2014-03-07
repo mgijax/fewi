@@ -98,7 +98,8 @@ public class Filter {
 	    OP_ENDS = 10,
 	    OP_CONTAINS = 11,
 	    OP_HAS_WORD = 12,
-	    OP_WORD_BEGINS = 13;
+	    OP_WORD_BEGINS = 13,
+	    OP_NOT_HAS = 14;
 
 	// advanced operators
 	public static final int
@@ -157,6 +158,9 @@ public class Filter {
 	public List<Filter> getNestedFilters() {
 		return nestedFilters;
 	}
+	public void addNestedFilter(Filter nestedFilter) {
+		this.nestedFilters.add(nestedFilter);
+	}
 	public void setNestedFilters(List<Filter> nestedFilters) {
 		this.nestedFilters = nestedFilters;
 	}
@@ -183,7 +187,7 @@ public class Filter {
 	public boolean hasNestedFilters() {
 
 		boolean hasNested = false;
-		if (!nestedFilters.isEmpty()) {
+		if (nestedFilters!=null && !nestedFilters.isEmpty()) {
 			hasNested = true;
 		}
 		return hasNested;
@@ -192,7 +196,7 @@ public class Filter {
 	public boolean isBasicFilter() {
 
 		boolean isBasic = true;
-		if (!nestedFilters.isEmpty()) {
+		if (nestedFilters!=null && !nestedFilters.isEmpty()) {
 			isBasic = false;
 		}
 		return isBasic;

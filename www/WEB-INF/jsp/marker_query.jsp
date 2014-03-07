@@ -36,7 +36,7 @@ ${templateBean.templateBodyStartHtml}
 <table class="detailStructureTable">
 
 <!-- id is used internally; name is used by pheno popup -->
-<form method="GET" action="${configBean.WI_URL}searches/marker_report.cgi" id="markerQF" onSubmit="hNodes(); return false;" name="queryForm">
+<form method="GET" action="${configBean.FEWI_URL}marker/summary" id="markerQF" onSubmit="hNodes(); return false;" name="queryForm">
 <table class="queryStructureTable">
 
   <tr><td class="queryParams1" colspan="2">
@@ -57,11 +57,9 @@ ${templateBean.templateBodyStartHtml}
       <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_nomenclature'); return false;" href="${helpPage}#gene_nomenclature">Gene/Marker Symbol/Name</a>:
       </dt>
       <dd>
-        <select name="op:markerSymname" class="grayBackground"><option value="begins">begins</option><option value="=">=</option><option value="contains" selected="">contains</option></select>
-	&nbsp;
-	<input name="markerSymname" size="25" class="grayBackground" type="text">
-	search in
-	<select name="symnameBreadth" class="grayBackground"><option value="C">current symbols/names</option><option value="CM" selected="">current &amp; old symbols/names, synonyms, alleles, homologs</option></select>
+        contains 
+		<input name="nomen" size="25" class="grayBackground" type="text">
+		in current & old symbols/names, synonyms, alleles, homologs
       </dd>
     </dl>
     </td>
@@ -118,7 +116,7 @@ ${templateBean.templateBodyStartHtml}
 	      <dd>
 	        between
 	        <input type="hidden" name="op:offset" value="between">
-	        <input name="offset" size="13" class="grayBackground" type="text">
+	        <input name="cm" size="13" class="grayBackground" type="text">
 	      </dd>
 	      <dd>
 	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">e.g., "10.0-40.0"</span>
@@ -134,7 +132,7 @@ ${templateBean.templateBodyStartHtml}
 	      <dd>
 	        between
 	        <input type="hidden" name="op:coords" value="between">
-	        <input name="coords" size="23" class="grayBackground" type="text">
+	        <input name="coordinate" size="23" class="grayBackground" type="text">
 	        <select name="coordUnits" class="grayBackground"><option value="bp" selected="">bp</option><option value="Mbp">Mbp</option></select>
 	      </dd>
 	      <dd>
@@ -175,7 +173,7 @@ ${templateBean.templateBodyStartHtml}
 	        contains
 		<input type="hidden" name="op:go_term" value="contains">
 	        &nbsp;
-	        <input name="go_term" size="35" type="text">
+	        <input name="go" size="35" type="text">
 	        in
 	      </dd>
 	    </dl>
@@ -227,7 +225,7 @@ ${templateBean.templateBodyStartHtml}
 	        <span class="example">Enter any combination of phenotype terms,
 	          disease terms, or IDs
 	        </span><br>
-	        <textarea name="phenotypes" rows="2" cols="60"></textarea>
+	        <textarea name="phenotype" rows="2" cols="60"></textarea>
 	      </td>
 	      <td>
 	        <span class="example">
@@ -244,23 +242,6 @@ ${templateBean.templateBodyStartHtml}
 	Browse <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
 	Browse <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
       </span>
-    </td>
-  </tr>
-
-  <!-- row 7-->
-  <tr>
-	  <td class="queryCat1"><a name="output">Sorting and</a><br/>output format</td>
-    <td class="queryParams1">
-      <span class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#sort_by'); return false;" href="${helpPage}#sort_by">Sort by</a>: </span>
-      <input name="sort" value="Nomenclature" checked="" type="radio">&nbsp;Nomenclature&nbsp;&nbsp;<input name="sort" value="Genome Coordinates" type="radio">&nbsp;Genome Coordinates<br/>
-    
-      <span class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#max_returned'); return false;" href="${helpPage}#max_returned">Maximum returned</a>: </span> 500 or
-      <input type="hidden" name="*limit" value="500">
-      <input name="noLimit" value="noLimit" type="checkbox"> no limit
-      <br>
-    
-      <span class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#output_format'); return false;" href="${helpPage}#output_format">Output</a>: </span>
-      <select name="format"><option value="Web">Web</option><option value="Excel">Excel</option><option value="Tab-delimited">Tab-delimited</option></select>
     </td>
   </tr>
 

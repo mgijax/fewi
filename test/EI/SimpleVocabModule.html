@@ -1,0 +1,289 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>EI Simple Vocabulary module</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>EI Simple Vocabulary module </h1>
+    <ul>
+        <li>User story 16, EI Allele Module supports collections(simple vocab piece)</li>
+        <li>User story 22, E5: EI Allele and Cell Line modules(simple vocab piece)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US16: Verify a Vocabulary Name called <b>Allele Collection</b> exists</li>
+		<li>US16: Verify the correct terms are listed in the Allele Collection</li>
+		<li>US16: Verify you can add a new term to the Allele Collection</li>
+		<li>US16: Verify you can change a term's name in the Allele Collection</li>
+		<li>US16: Verify you can delete a collection term that is not used</li>
+		<li>US16: Verify you can not delete a collection term that is being used</li>
+		<li>US22: Verify a Vocabulary Name called <b>Allele Type</b> exists</li>
+		<li>US22: Verify the correct terms are listed in the Allele Type</li>
+		<li>US22: Verify you can not add an Allele Type term</li>
+		<li>US22: Verify you can not delete an Allele Type term</li>
+		<li>US22: Verify you can not modify an Allele Type term</li>
+		<li>US22: Verify a Vocabulary Name called <b>Allele Subtype</b> exists</li>
+		<li>US22: Verify the correct terms are listed in the Allele Subtype</li>
+		<li>US22: Verify you can not add an Allele Subtype term</li>
+		<li>US22: Verify you can not delete an Allele Subtype term</li>
+		<li>US22: Verify you can not modify an Allele Subtype term</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify a Vocabulary Name called <b>Allele Collection</b> exists
+    		<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Verify Search Results contains <b>Allele Collection</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify the correct terms are listed in the Allele Collection
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele Collection</b></li>
+                <li>Verify the Collection has these terms:
+                <ul>
+					<li>Australian PhenomeBank</li>
+					<li>B2B/CvDC</li>
+					<li>Beutler Mutagenix</li>
+					<li>Deltagen</li>
+					<li>EUCOMM</li>
+					<li>GENSAT</li>
+					<li>Harwell ENU Mutagenesis</li>
+					<li>KOMP-CSD</li>
+					<li>KOMP-Regeneron</li>
+					<li>Lexicon</li>
+					<li>Mutagenesis for Dev. Defects</li>
+					<li>Neuroscience Blueprint cre</li>
+					<li>NorCOMM</li>
+					<li>Not Specified</li>					
+					<li>Pleiades Promoter Project</li>
+					<li>RIKEN GSC ENU Project</li>
+					<li>Sanger Inst. Gene Trap Res.</li>
+					<li>Sanger miRNA knockouts</li>
+                </ul></li>
+    		</ol>
+    		</li>
+
+    		<li>Verify you can add a new term to the Allele Collection
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele Collection</b></li>
+                <li>Enter <b>Test Collection</b> in the first empty Term field and click Modify</li>
+                <li>Verify the new term <b>Test Collection</b> in now listed </li>
+    		</ol>
+    		</li>
+
+		    <li>Verify you can change a term's name in the Allele Collection
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele Collection</b></li>
+                <li>Click on the term <b>Test Collection</b> and replace it with <b>Please delete me</b>, tab out of the field and click Modify</li>
+                <li>Verify the term now says <b>Please delete me</b></li>
+    		</ol>
+    		</li>
+		    <li>Verify you can delete a collection term that is not being used
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele Collection</b></li>
+                <li>Click on the term <b>Please delete me</b>, Click on <b>Delete Row</b> and click Modify</li>
+                <li>Verify the term <b>Please delete me</b> has been removed</li>
+    		</ol>
+    		</li>
+		    <li>Verify you can not delete a collection term that is being used
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele Collection</b></li>
+                <li>Click on the term <b>EUCOMM</b>, Click on <b>Delete Row</b>  and click Modify</li>
+                <li>Verify you get the status report <b>Allele Collection is referenced in Allele Record(s)</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify the existence of a Vocabulary Name called <b>Allele Type</b>(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele type</b></li>
+                <li>Verify the list contains these items:
+                <ol>
+                <li>Chemically and radiation induced</li>
+                <li>Chemically induced (ENU)</li>
+                <li>Chemically induced (other)</li>
+                <li>Endonuclease-mediated</li>
+                <li>Gene trapped</li>
+                <li>Not Applicable</li>
+                <li>Not Specified</li>
+                <li>Other (see notes)</li>
+                <li>Radiation induced</li>
+                <li>Spontaneous</li>
+                <li>Targeted</li>
+                <li>Transgenic</li>
+                <li>Transposon induced</li>
+                </ol></li>
+    		</ol>
+    		</li>
+    		<li>Verify you can not add a new term to the Allele type(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele type</b></li>
+                <li>Verify the <b>Add</b> button is disabled making it impossible to add a term</li>
+    		</ol>
+    		</li>
+    		<li>Verify you can not delete a term to the Allele type(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele type</b></li>
+                <li>Verify the <b>Delete</b> button is disabled making it impossible to delete a term</li>
+    		</ol>
+    		</li>
+    		<li>Verify you can not modify a term in the Allele type list(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele type</b></li>
+                <li>Verify the <b>Modify</b> button is disabled making it impossible to modify a term</li>
+    		</ol>
+    		</li>
+    		<li>Verify the existence of a Vocabulary Name called <b>Allele Subtype</b>(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele subtype</b></li>
+                <li>Verify the list contains these items:
+                <ol>
+                <li>Conditional ready</li>
+                <li>Constitutively Active</li>
+                <li>Dominant Negative</li>
+                <li>Humanized</li>
+                <li>Hypomorph</li>
+                <li>Inducible</li>
+                <li>Inserted expressed sequence</li>
+                <li>Modified Isoform(s)</li>
+                <li>No Functional Change</li>
+                <li>Not Applicable</li>
+                <li>Not Specified</li>
+                <li>Null/knockout</li>
+                <li>Recombinase</li>
+                <li>Reporter</li>
+                <li>RMCE-Ready</li>
+                <li>Transposase</li>
+                <li>Transposon Concatemer</li>
+                </ol></li>
+    		</ol>
+    		</li>
+    		<li>Verify you can not add a new term to the Allele Subtype list(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2015</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele type</b></li>
+                <li>Verify the <b>Add</b> button is disabled making it impossible to add a term</li>
+    		</ol>
+    		</li>
+    		<li>Verify you can not delete a term from the Allele Subtype list(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele Subtype</b></li>
+                <li>Verify the <b>Delete</b> button is disabled making it impossible to delete a term</li>
+    		</ol>
+    		</li>
+    		<li>Verify you can not modify a term in the Allele Subtype list(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Simple Vocabulary module button</li>
+                <li>Click on the Search Result <b>Allele Subtype</b></li>
+                <li>Verify the <b>Modify</b> button is disabled making it impossible to modify a term</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

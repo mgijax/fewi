@@ -1,0 +1,160 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+	dt {font-size:13px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Query Form Categories</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Query Form Categories</h1>
+    <ul>
+        <li>User story #18, E3: Query Form: Add Collection selection to Allele query form (Release 5.18)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>(MGI 5.18)(sto18)Allele collection on query form in checkbox list </li>
+		<li>(MGI 5.18)(sto18)Allele collection has no default selection</li>
+		<li>(MGI 5.18)(sto18)Allele collections are multi select</li>
+<!-- 		<li>(MGI 5.18)(sto18)Allele collection list is generated dynamically</li> -->
+
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+<!-- 	<dl>
+		<dt>One-Marker Genotype (OMG)</dt>
+		<dd>Only 1 allele pair is present in the genotype and both are alleles of the same marker.</dd>
+		<dd>May include hom, het+wt or "trans-het" (two different alleles of the same marker).</dd>
+		
+		<dt>Complex Genotype</dt>
+		<dd>Two or more allele pairs are present in the genotype.</dd>
+		<dd>Genotype involves the alleles of 2 or more markers.</dd>
+		
+		<dt>Conditional Genotype</dt>
+		<dd>A genotype where the is_conditional flag (set by curators) is true.</dd>
+	</dl> -->
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+			<li>Verify a collection list exists in the Categories section of the query form(sto18)
+ 			<p concordion:assertTrue="true">jeffc 01/21/2014</p>
+    		<ol>
+                <li>Open the Allele query form</li>
+                <li>Verify the Categories section of the form contains a scrollable checkbox list called <b>Collections</b></li>
+    		</ol>
+			</li>
+			
+			<li>Verify the collection list is correct(sto18)
+ 			<p concordion:assertTrue="true">jeffc 01/21/2014</p>
+    		<ol>
+                <li>Open the Allele query form</li>
+                <li>Verify the Collection list contains the following items in alpha order:
+                <ol>
+                <li>Austrailian PhenomeBank</li>
+                <li>B2B/CvDC</li>
+                <li>Beutler Mutagenix</li>
+                <li>Deltagen</li>
+                <li>EUCOMM</li>
+                <li>GENSAT</li>
+                <li>Harwell ENU Mutagenesis</li>
+                <li>KOMP-CSD</li>
+                <li>KOMP-Regeneron</li>
+                <li>Lexicon</li>
+                <li>Mutagenesis for Dev. Defects</li>
+                <li>Neuroscience Blueprint cre</li>
+                <li>NorCOMM</li>
+                <li>Pleiades Promoter Project</li>
+                <li>RIKEN GSC ENU Project</li>
+                <li>Sanger Inst. Gene Trap Res.</li>
+                <li>Sanger miRNA knockouts</li>
+                </ol></li>
+    		</ol>			
+			</li>
+
+    		<li>Verify you can query by a single collection and multiple collections(sto18)
+    		<p concordion:assertTrue="true">jeffc 01/21/2014</p>
+    		<ol>
+    			<li>Open the Allele query form</li>
+    			<li>Select the collection <b>Australian PhenomeBank</b> and click the search</li>
+    			<li>Verify you return <b>51</b> results (EI has 54 but 3 of them are wild-type)</li>
+    			<li>Select the collection <b>Beutler Mutagenesis</b>, leaving <b>Australian PhenomeBank</b> still selected and click the search</li>
+    			<li>Verify the results returns <b>242</b> results</li>
+    		</ol>
+    		</li>
+
+<!--     		<li>Verify any addition to the collection list in the EI is picked up by the WI(sto18)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li></li>
+                <li></li>
+                <li></li>
+    		</ol>
+    		</li>  -->
+
+		</ol>
+	</div>
+
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

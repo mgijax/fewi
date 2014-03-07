@@ -1,0 +1,309 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Summary from Marker Detail Links</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Summary from Marker Detail Links</h1>
+    <ul>
+        <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto75: links to "all alleles"</li>
+		<li>sto75: links to per allele type</li>
+		<li>sto75: assume use exact same allele types here as in the db</li>
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<p>See the <a href="../allele/AlleleSummary.html">Allele Summary</a> test suite for genotype definitions.</p>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>For a marker and given Allele Type hyperlinked count, the report includes all alleles for that marker having the Allele Type.
+ 			<p concordion:assertTrue="true">passed. -klf 2014-01-24</p>
+    		<ol>
+                <li>Navigate to the marker detail page for Pax6 (MGI:97490)</li>
+                <li>Follow the link labeled "All Alleles". Verify the total is <b>55</b> alleles.</li>
+                <li>Follow the link labeled "Chemically and radiation induced". Verify the total is <b>3</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Pax6&lt;8Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;Sey-2H&gt;</td></tr>
+                	<tr><td>Pax6&lt;Sey-3H&gt;</td></tr>
+                </table>
+                </li>
+                <li>Follow the link labeled "Chemically induced (ENU)". Verify the total is <b>24</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Pax6&lt;10Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;1Jrt&gt;</td></tr>
+                	<tr><td>Pax6&lt;2Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;3Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;4Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;5Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;6Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;7Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;ADD4802&gt;</td></tr>
+                	<tr><td>Pax6&lt;Aey11&gt;-deleted</td></tr>
+                	<tr><td>Pax6&lt;Aey80&gt;</td></tr>
+                	<tr><td>Pax6&lt;Coop&gt;</td></tr>
+                	<tr><td>Pax6&lt;Leca1&gt;</td></tr>
+                	<tr><td>Pax6&lt;Leca2&gt;</td></tr>
+                	<tr><td>Pax6&lt;Leca3&gt;</td></tr>
+                	<tr><td>Pax6&lt;Leca4&gt;</td></tr>
+                	<tr><td>Pax6&lt;m1Lsli&gt;</td></tr>
+                	<tr><td>Pax6&lt;Mhdaaey11&gt;</td></tr>
+                	<tr><td>Pax6&lt;Mhdaaey18&gt;</td></tr>
+                	<tr><td>Pax6&lt;Rgsc123&gt;</td></tr>
+                	<tr><td>Pax6&lt;Rgsc20&gt;</td></tr>
+                	<tr><td>Pax6&lt;Rgsc242&gt;</td></tr>
+                	<tr><td>Pax6&lt;Sey-4H&gt;</td></tr>
+                	<tr><td>Pax6&lt;Sey-Neu&gt;</td></tr>
+                </table>
+                </li>
+                <li>Follow the link labeled "Chemically induced (other)". Verify the total is <b>1</b> allele.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Pax6&lt;9Neu&gt;</td></tr>
+                </table>
+                </li>
+                <li>Follow the link labeled "Gene trapped". Verify the total is <b>7</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Pax6&lt;Gt(E049H01)Wrst&gt;</td></tr>
+                	<tr><td>Pax6&lt;Gt(E217B04)Wrst&gt;</td></tr>
+                	<tr><td>Pax6&lt;Gt(IST10876G11)Tigm&gt;</td></tr>
+                	<tr><td>Pax6&lt;Gt(IST14506C8)Tigm&gt;</td></tr>
+                	<tr><td>Pax6&lt;Gt(IST14982A1)Tigm&gt;</td></tr>
+                	<tr><td>Pax6&lt;Gt(OST128284)Lex&gt;</td></tr>
+                	<tr><td>Pax6&lt;Gt(OST419734)Lex&gt;</td></tr>
+                </table>
+                </li>
+                <li>Follow the link labeled "Not Specified". Verify the total is <b>2</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Pax6&lt;11Neu&gt;-deleted</td></tr>
+                	<tr><td>Pax6&lt;12Neu&gt;-deleted</td></tr>
+                </table>
+                </li>
+                <li>Follow the link labeled "Radiation induced". Verify the total is <b>2</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Pax6&lt;132-14Neu&gt;</td></tr>
+                	<tr><td>Pax6&lt;Sey-H&gt;</td></tr>
+                </table>
+                </li>
+                <li>Follow the link labeled "Spontaneous". Verify the total is <b>3</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Pax6&lt;13Neu&gt;-deleted</td></tr>
+                	<tr><td>Pax6&lt;Sey-Dey&gt;</td></tr>
+                	<tr><td>Pax6&lt;Sey&gt;</td></tr>
+                </table>
+                </li>
+                <li>Follow the link labeled "Targeted". Verify the total is <b>13</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>jeff</td></tr>
+                	<tr><td>jeff</td></tr>
+                	<tr><td>Pax6&lt;tm1.1Ued&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm1.1Xzh&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm1.2Xzh&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm1Gfs&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm1Lan&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm1Pgr&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm1Ued&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm2(Pax6_i5a,Pax2)Xzh&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm2.1(Pax6_i5a,Pax2)Xzh&gt;</td></tr>
+                	<tr><td>Pax6&lt;tm2Pgr&gt;</td></tr>
+                </table>
+                </li>
+                <li>Navigate to the marker detail page for Abcc8 (MGI:1352629)</li>
+                <li>Follow the link labeled <b>All Alleles</b>. Verify the total is <b>7</b> alleles.</li>
+                <li>Follow the link labeled <b>Targeted</b>. Verify the total is <b>7</b> alleles.</li>
+                <li>Navigate to the marker detail page for Kit (MGI:96677)</li>
+                <li>Follow the link labeled <b>All Alleles</b>. Verify the total is <b>152</b> alleles.</li>
+                <li>Follow the link labeled <b>Not Applicable</b>. Verify the total is <b>1</b> allele.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Kit&lt;W-tox&gt;-deleted</td></tr>
+                </table>
+                </li>
+                <li>Navigate to the marker detail page for Apoe (MGI:88057)</li>
+                <li>Follow the link labeled <b>All Alleles</b>. Verify the total is <b>40</b> alleles.</li>
+                <li>Follow the link labeled <b>Transgenic</b>. Verify the total is <b>1</b> allele.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Apoe&lt;Tg(rtTA)1Gaga&gt;</td></tr>
+                </table>
+                </li>
+                <li>Navigate to the marker detail page for Skor2 (MGI:3645984)</li>
+                <li>Follow the link labeled <b>All Alleles</b>. Verify the total is <b>4</b> alleles.</li>
+                <li>Follow the link labeled <b>Transposon induced</b>. Verify the total is <b>3</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Skor2&lt;Tn(sb-Tyr)1799B.CA3Ove&gt;</td></tr>
+                	<tr><td>Skor2&lt;Tn(sb-Tyr)1799B.CA7BOve&gt;</td></tr>
+                	<tr><td>Skor2&lt;Tn(sb-Tyr)1799B.CA7Ove&gt;</td></tr>
+                </table>
+                </li>
+                <li>Navigate to the marker detail page for Atp5a1 (MGI:88115)</li>
+                <li>Follow the link labeled <b>All Alleles</b>. Verify the total is <b>16</b> alleles.</li>
+                <li>Follow the link labeled <b>QTL</b>. Verify the total is <b>2</b> alleles.</li>
+                <li>Verify the following alleles are displayed:
+                <table>
+                	<tr><th>Allele symbol</th></tr>
+                	<tr><td>Atp5a1&lt;Mom2-C57BL/6J&gt;</td></tr>
+                	<tr><td>Atp5a1&lt;Mom2-DBA/2J&gt;</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>For a marker, from the hyperlinked count for alleles associated with disease models (OMIM annotations), the report includes all alleles of all types from any genotypes annotated to disease models EXCLUDING only "Not" annotations. Listings in the "Human Disease Models" column DISPLAY ONLY disease terms where the allele participates in an OMG or "Simple" genotype, and SUPPRESS disease terms where the allele participates in a "Complex" genotype.
+ 			<p concordion:assertTrue="true">passed. -klf 2014-01-24</p>
+    		<ol>
+                <li>Navigate to the marker detail page for Apoe (MGI:88057)</li>
+                <li>Follow the link labeled <b>Alleles Annotated to Human Diseases</b>. Verify the total is <b>5</b> alleles.</li>
+                <li>Verify the following alleles and diseases are displayed:
+                <table>
+                	<tr><th>Allele symbol</th><th>Diseases (ONLY these should be displayed)</th></tr>
+                	<tr><td>Apoe&lt;shl&gt;</td><td>Apolipoprotein E; APOE</td></tr>
+                	<tr><td>Apoe&lt;tm1(APOE*2)Mae&gt;</td><td>Apolipoprotein E; APOE</td></tr>
+                	<tr><td>Apoe&lt;tm1Lmh&gt;</td><td>Apolipoprotein E; APOE</td></tr>
+                	<tr><td>Apoe&lt;tm1Unc&gt;</td><td>Apolipoprotein E; APOE</td></tr>
+                	<tr><td>Apoe&lt;tm3(APOE*4)Mae&gt;</td><td>Macular Degeneration, Age-Related, 1; ARMD1</td></tr>
+                </table>
+                <p>Note: Apoe has 2 alleles involved in Complex genotypes for additional disease terms. These disease terms will not be displayed. But disease terms where the alleles are in OMGs or Simple genotypes should be displayed.</p>
+                </li>
+                <li>Navigate to the marker detail page for Kit (MGI:96677)</li>
+                <li>Follow the link labeled <b>Alleles Annotated to Human Diseases</b>. Verify the total is <b>6</b> alleles.</li>
+                <li>Verify the following alleles and diseases are displayed:
+                <table>
+                	<tr><th>Allele symbol</th><th>Diseases (ONLY these should be displayed)</th></tr>
+                	<tr><td>Kit&lt;tm1Bpr&gt;</td><td>Gastrointestinal Stromal Tumor; GIST</td></tr>
+                	<tr><td>Kit&lt;tm1Shta&gt;</td><td>Gastrointestinal Stromal Tumor; GIST</td></tr>
+                	<tr><td>Kit&lt;tm2Bsm&gt;</td><td>Gastrointestinal Stromal Tumor; GIST</td></tr>
+                	<tr><td>Kit&lt;tm4.1Bsm&gt;</td><td>Gastrointestinal Stromal Tumor; GIST</td></tr>
+                	<tr><td>Kit&lt;W-sh&gt;</td><td></td></tr>
+                	<tr><td>Kit&lt;Wps&gt;</td><td>Piebald Trait; PBT</td></tr>
+                </table>
+                <p>Note: Kit has 1 allele (Kit&lt;W-sh&gt;) involved ONLY in an annotation with a complex genotype so no disease term will be displayed.</p>
+                </li>
+                <li>Navigate to the marker detail page for Psen1 (MGI:1202717)</li>
+                <li>Follow the link labeled <b>Alleles Annotated to Human Diseases</b>. Verify the total is <b>10</b> alleles.</li>
+                <li>Verify the following alleles and diseases are displayed:
+                <table>
+                	<tr><th>Allele symbol</th><th>Diseases (ONLY these should be displayed)</th></tr>
+					<tr><td>Psen1&lt;tm1Bdes&gt;</td><td>Alzheimer Disease; AD 104300</td></tr>
+					<tr><td>Psen1&lt;tm1Dgf&gt;</td><td></td></tr>
+					<tr><td>Psen1&lt;tm1Jzt&gt;</td><td>Alzheimer Disease; AD 104300; Alzheimer Disease 4 606889</td></tr>
+					<tr><td>Psen1&lt;tm1Lpr&gt;</td><td></td></tr>
+					<tr><td>Psen1&lt;tm1Mpm&gt;</td><td>Alzheimer Disease; AD 104300; Alzheimer Disease 3 607882</td></tr>
+					<tr><td>Psen1&lt;tm1Pcw&gt;</td><td>Alzheimer Disease; AD 104300; Alzheimer Disease 3 607882</td></tr>
+					<tr><td>Psen1&lt;tm1Shn&gt;</td><td>Alzheimer Disease; AD 104300; Alzheimer Disease 3 607882</td></tr>
+					<tr><td>Psen1&lt;tm1Tak&gt;</td><td>Alzheimer Disease; AD 104300</td></tr>
+					<tr><td>Psen1&lt;tm1Vln&gt;</td><td>Alzheimer Disease; AD 104300; Alzheimer Disease 3 607882</td></tr>
+					<tr><td>Psen1&lt;tm1Zhe&gt;</td><td></td></tr>
+                </table>
+                <p>Note: Psen1 has 3 alleles involved ONLY in complex genotypes so no disease term will be displayed. One allele (Psen1&lt;Beds&gt;) has additional annotations for complex genotypes; those disease terms (Keratosis, Seborrheic 182000; Systemic Lupus Erythematosus; SLE 152700) should not be displayed.</p>
+                </li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

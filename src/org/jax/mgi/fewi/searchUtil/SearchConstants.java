@@ -39,6 +39,14 @@ public class SearchConstants {
     public static final String ALL_SYSTEM           = "allele_system";
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
+    public static final String ALL_TYPE				= "allele_type";
+	public static final String ALL_SUBTYPE 			= "allele_subtype";
+    public static final String ALL_IS_WILD_TYPE		= "is_wild_type";
+    public static final String ALL_COLLECTION		= "collection";
+    public static final String ALL_PHENOTYPE		= "allPhenotype";
+	public static final String ALL_NOMEN 			= "allNomen";
+	public static final String ALL_HAS_OMIM			 = "hasOMIM";
+	public static final String ALL_IS_CELLLINE		 = "isCellLine";
 
     // Accession
 
@@ -144,7 +152,12 @@ public class SearchConstants {
 	// location constants
 	public static final String MOUSE_COORDINATE = "mouseCoordinate";
 	public static final String HUMAN_COORDINATE = "humanCoordinate";
-
+    public static final String START_COORD = "startCoord";
+    public static final String END_COORD = "endCoord";
+    public static final String CHROMOSOME = "chromosome";
+    public static final String CM_OFFSET = "cmOffset";
+    public static final String CYTOGENETIC_OFFSET = "cytogeneticOffset";
+	
 	// genotype constants
 	public static final String GENOTYPE_TYPE = "genotypeType";
 }

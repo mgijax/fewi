@@ -1,0 +1,105 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>All Genotypes Popup Test Suite</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Molecular Image Detail Page Test Suite</h1>
+    <ul>
+        <li>User story #55, Molecular Images: Molecular Image Detail page</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>clicking on a Molecular Image thumbnail takes you to it's Molecular Image Detail page</li>
+		<li>A Molecular Image Detail page contains:
+			<ul>
+				<li>Title</li>
+				<li>Full size image</li>
+				<li>Image caption</li>
+				<li>Copyright</li>
+				<li>Associated Allele, the symbol is linked to allele detail page</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Clicking on a Molecular image thumbnail takes you to its Molecular Image detail page
+ 			<p concordion:assertTrue="true">jeffc 02/10/2014</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Dock2&lt;mu&gt;</b></li>
+                <li>Click on the image  displayed in the Molecular Description section</li>
+                <li>Verify this takes you to the correct Molecular Image detail page</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify the details of Molecular Image detail pages
+			<p concordion:assertTrue="true">jeffc 02/10/2014</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail Page for <b>Map2k7&lt;tm1Pngr&gt;</b></li>
+                <li>Click on the image  displayed in the Molecular Description section</li>
+                <li>Verify the page title says <b>Molecular Image Detail</b></li>
+                <li>Verify the image is full size and the correct image</li>
+                <li>Verify the caption reads correctly</li>
+                <li>Verify the copyright reads: <b>This image is from Kishimoto H, J Biol Chem 2003 May 9;278(19):16595-601 and is displayed with the permission of the American Society for Biochemistry and Molecular Biology who owns the Copyright. Full text from JBC. J:83279</b> The J number should be linked  to its reference page</li>
+                <li>Verify the Allele symbol(s) are correct</li>
+                <li>Verify clicking on the allele symbol takes you to the correct allele detail page</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -345,8 +345,8 @@ public class SolrHunter implements Hunter {
      */
 
     protected String translateFilter(Filter filter, HashMap<String,
-            SolrPropertyMapper> propertyMap) {
-
+            SolrPropertyMapper> propertyMap) 
+    {
         /**
          * This is the end case for the recursion.  If we are at a node in the
          * tree generate the chunk of query string for that node and return
@@ -357,73 +357,37 @@ public class SolrHunter implements Hunter {
          * allows us to handle any special cases for properties using a single
          * interface.
          */
-
+    	String filterProperty = filter.getProperty();
+    	SolrPropertyMapper pm;
+    	if(!propertyMap.containsKey(filterProperty))
+    	{
+    		logger.warn("No Solr Property Mapper for field: "+filterProperty);
+    		pm = new SolrPropertyMapper(filterProperty);
+    	}
+    	else pm = propertyMap.get(filter.getProperty());
+        
+    	
         if (filter.isBasicFilter()) {
             // Check to see if the property is null or an empty string,
             // if it is, return an empty string
-
-            if (filter.getProperty() == null ||
-                    filter.getProperty().equals("")) {
-
-                return "";
+            if (filterProperty == null || filterProperty.equals("")) 
+            {
+            	return "";
             }
 
             // If its not an IN or NOT IN, get the query clause and return it
             if (filter.getOperator() != Filter.OP_IN
-                    && filter.getOperator() != Filter.OP_NOT_IN) {
-                return propertyMap.get(filter.getProperty())
-                    .getClause(filter);
+                    && filter.getOperator() != Filter.OP_NOT_IN) 
+            {
+                return pm.getClause(filter);
             }
 
             /** If its an IN or NOT IN, break the query down further, joining
              * thesubclauses by OR or AND as appropriate
              */
-
-       /*
-        * I am leaving the following commented out code below as a "Wall of Shame"
-        * You can see the equivalent "normal" code just below it.
-        *
-        * ... As a bonus this special code actually performs roughly 300 times slower than the refactored version.
-        * I'm serious. processing 1000 values took over a second throught this code,
-        * 	compared to only 2 or 3 milliseconds in the normal version.
-        * Ponder that for a moment...
-        */
-//            else {
-//
-//                int operator;
-//                String joinClause = "";
-//                if (filter.getOperator() == Filter.OP_NOT_IN) {
-//                    operator = Filter.OP_NOT_EQUAL;
-//                    joinClause = " AND ";
-//                }
-//                else {
-//                    operator = Filter.OP_EQUAL;
-//                    joinClause = " OR ";
-//                }
-//
-//                // Create the subclause, surround it in parens
-//
-//                String output = "(";
-//                Boolean first = Boolean.TRUE;
-//                for (String value: filter.getValues()) {
-//                    if (first) {
-//                        output += propertyMap.get(filter.getProperty())
-//                            .getClause(value, operator);
-//
-//                        first = Boolean.FALSE;
-//                    }
-//                    else {
-//                        output += joinClause
-//                            + propertyMap.get(filter.getProperty())
-//                                .getClause(value, operator);
-//                    }
-//                }
-//                return output + ")";
-//            }
             else
             {
                 String joinClause = "\" OR \"";
-                SolrPropertyMapper pm = propertyMap.get(filter.getProperty());
                 String field = pm.getField();
                 // NOT IN should not be supported for solr queries. It is not used anywhere in our codebase
                 //if (filter.getOperator() == Filter.OP_NOT_IN) joinClause = " AND ";
@@ -663,7 +627,7 @@ public class SolrHunter implements Hunter {
                 facet.add(c.getName());
                 if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
-	}
+        }
 
         /**
          * Iterate through the response documents, extracting the information
@@ -894,7 +858,7 @@ public class SolrHunter implements Hunter {
                 facet.add(c.getName());
                 if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
-	}
+        }
 
         /**
          * Iterate through the response documents, extracting the information

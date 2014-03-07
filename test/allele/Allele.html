@@ -1,26 +1,54 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
 <head>
-<title>Allele Detail and Summary Tests</title>
+<title>Allele Test Suites</title>
 <style>
-</style>
-<!-- <link href="/FeWi/test/concordion.css" rel="stylesheet" type="text/css"/> -->
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:20px;}
+td.xl65 {background-color:#FFFF00;}
+dt {font-weight:bold;}
 
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- <link href="/FeWi/test/concordion_master.css" rel="stylesheet" type="text/css"/> -->
 
 </head>
 <body>
-<!-- 
-declare strict doctype to look for disallowed html errors
+<!--  declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
--->
+ -->
 
-    <h1>Allele Detail and Summary Tests</h1>
+    <h1>Allele Test Suites</h1>
+    <h2>Includes Loads, Data Migrations, WI Detail Page, Queries, and Summary Pages</h2>
 
 	<div>
 	<h2>Functional Description</h2>
+	<p>For recombinase alleles (alleles which possess a Driver Note), the Recombinase Activity ribbon incorporates:</p>
+	<ul>
+		<li>Display is pulled from the FEWI</li>
+		<li>Recombinase activity in all Anatomical Systems and Structures is summarized in an overview grid, similar to the Phenotype annotations grid</li>
+		<li>Users may submit observations about the recombinase allele which may be entered by curators and displayed here.</li>
+	</ul>
 	<p>For the Allele Detail Page, the Phenotype Summary grid incorporates:</p>
 	<ul>
 		<li>Pulling the display from the FEWI</li>
@@ -30,18 +58,13 @@ declare strict doctype to look for disallowed html errors
 		<li>Displaying MP annotations loaded automatically from WTSI (Sanger) and Europhenome High-Throughput Phenotyping projects</li>
 		<li>Modifying the page such that Phenotype-by-Genotype text is contained only in pop-up pages, one per Genotype</li> 
 	</ul>
-	<p>For recombinase alleles (alleles which possess a Driver Note), the Recombinase Activity ribbon incorporates:</p>
-	<ul>
-		<li>Display is pulled from the FEWI</li>
-		<li>Recombinase activity in all Anatomical Systems and Structures is summarized in an overview grid, similar to the Phenotype annotations grid</li>
-		<li>Users may submit observations about the recombinase allele which may be entered by curators and displayed here.</li>
-	</ul>
 	
 	</div>
 
 	<div>
-	<h2>Test Suites</h2>
+	<h2>Allele Test Suites</h2>
 	<p>Some test suites have indicators for Build Sprint regression testing in the Notes column.  A test may be marked <span class="regressHi">High</span> priority when 2 conditions are true: (1) There is a likelihood that the code could break or some error could occur.  (2) It would be very important to fix if it did.  If only one of those conditions is true, the test is marked <span class="regressLo">Low</span> priority. Otherwise, no priority is indicated.</p>
+	<p>Skip to tests for <a href="#loads">loads/data migrations</a> | <a href="#EI">EI</a> | <a href="#WI">WI</a> | <a href="#other">other things</a>. </p>
 <!-- 
 Possible test cases:
 Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. Curated one ref to the allele (for MP annots?).
@@ -56,10 +79,34 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				<th>Notes</th>
 			</tr>
 			<tr class="gray">
-				<td colspan="5"><h5>Loads</h5></td>
+				<td colspan="5"><h5 id="loads" style="display:inline;">Loads/Data Migrations</h5> . . . <span style="display:inline; font-size:0.83em;">Sybase backend is at DEV_MGI..mgd_dev.</span></td>
 			</tr>
+
 			<tr>
-				<td>Sanger data loads:
+				<td>Data migration for release 5.18 HTMP-II
+				<ul>
+					<li><a concordion:run="concordion" href="LoadAlleleCollections.html">Load Allele Collections </a></li>
+					<li><a concordion:run="concordion" href="MigrateAlleleTypes.html">Migrate Allele Types, Subtypes (Attributes) </a></li>
+					<li><a concordion:run="concordion" href="DerivativeAlleleLoad.html">Derivative Allele Load</a></li>
+				</ul>
+				</td>
+				<td>5.18</td>
+				<td>15, 21, 112, 140, 141, 142, 144</td>
+				<td>All</td>
+				<td><i>New Data Migration tests for Release 5.18 go in this row.</i></td>
+			</tr>
+
+			<tr>
+				<td>New Allele and MP data loads for release 5.18 HTMP-II
+				</td>
+				<td>5.18</td>
+				<td></td>
+				<td></td>
+				<td><i>New Allele and MP Data Load tests for Release 5.18 go in this row.</i></td>
+			</tr>
+
+			<tr>
+				<td>Old Sanger and Europhenome data loads from release 5.12:
 				<p><a concordion:run="concordion" href="LoadGenotypes.html">Write
 						a parser and loader for genotypes in Sanger file</a></p>
 					<p>See also <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/sangermpload.test/">Load-testing index page</a>:</p>
@@ -97,21 +144,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 					<ul>
 						<li><a concordion:run="concordion" href="EISangerLoadCellLines.html">Verify correct data were loaded using the EI</a></li>
 					</ul>
-				</td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td>Yes</td>
-				<td>
-				<ul>
-					<li>Manual tests done. 9/13 klf.</li>
-					<li>Automated data-load-testing added 10/26/12.</li>
-					<li> <span concordion:assertTrue="true">Loading scripts refactored. (klf 11/7/12)</span></li>
-					<li><span concordion:assertTrue="true">Story 88 allele transmission status tests. (klf 12/6/12)</span></li>
-				</ul>
-				</td>
-			</tr>
-			<tr>
-				<td>
+					<p> </p>
 					<p><a concordion:run="concordion" href="EurophenomeLoad.html">Parse and load Europhenome MP annots</a></p> 
 					<p>See also <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/">Europhenome load-testing index page</a>:</p>
 					<ul>
@@ -128,27 +161,50 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 						</li>
 						<li><a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload/logs/europhenoload.test.log">Results of tests for all annotations in the Europhenome (real) input file</a></li>
 					</ul>
+
+
+
 				</td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
-				<td></td>
+				<td>Yes</td>
 				<td>
+				<ul>
+					<li>Manual tests done. 9/13 klf.</li>
+					<li>Automated data-load-testing added 10/26/12.</li>
+					<li> <span concordion:assertTrue="true">Loading scripts refactored. (klf 11/7/12)</span></li>
+					<li><span concordion:assertTrue="true">Story 88 allele transmission status tests. (klf 12/6/12)</span></li>
+				</ul>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
+				<p> </p>
 				<ul>
 					<li><span concordion:assertTrue="true">Set up test file when we added Europhenome data, incl. genotypes, cell lines, and sex-specificity. (klf 11/9/12)</span></li>
 					<li><span concordion:assertTrue="true">Tests for sex-specific duplicate rows. (klf 12/11/2012)</span></li>
 				</ul>
+				
 				</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="AlleleTransmissionStatus.html">Allele Transmission Status Update (WI verifications)</a></td>
-				<td>MGI 5.12</td>
-				<td></td>
+				<td>5.12, 5.18</td>
+				<td>85</td>
 				<td>Yes</td>
-				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</td>
+				<td><ul><li>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</li>
+				<li>Includes tests for Loading the IMSR feed file</li></ul></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="LoadUsedFCReferences.html">Add a &quot;Used-FC&quot; reference type for alleles with HTMP annots (WI verifications)</a></td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td>Yes</td>
 				<td><ul>
@@ -159,50 +215,99 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 			</tr>
 			
 			<tr class="gray">
-				<td colspan="5"><h5>EI</h5></td>
+				<td colspan="5"><h5 id="EI" style="display:inline;">EI</h5> . . . <span style="display:inline; font-size:0.83em;">Sybase backend is at DEV_MGI..mgd_dev. Scrumdog EI points here.</span></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="EIMPmoduleSexSpecificity.html">Modify EI for Sex
 						Specificity</a></td>
-				<td>MGI 5.12</td>		
+				<td>5.12</td>		
 				<td></td>
 				<td>Yes</td>
 				<td>Manual tests done. 8/28 Jeffc</td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion"
-					href="EIAddModCellLines.html">EI: Search/display and Add/modify Cell Lines</a></td>
-				<td>MGI 5.12</td>
+				<td><a concordion:run="concordion" href="EIAddModCellLines.html">EI: Search/display and Add/modify Cell Lines</a></td>
+				<td>5.12</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion"
-					href="EINormalAnnotations.html">EI: Normal qualifier for any MP Term</a></td>
-				<td>MGI 5.12</td>	
+				<td><a concordion:run="concordion" href="EINormalAnnotations.html">EI: Normal qualifier for any MP Term</a></td>
+				<td>5.12</td>	
 				<td></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr class="gray">
-				<td colspan="5"><h5>WI: Allele Detail Page</h5></td>
+				<td colspan="5"><h5 id="WI">WI: Allele Detail Page</h5></td>
 			</tr>
 			<tr>
-				<td>Expression Ribbon:
+				<td>Nomenclature ribbon
 				<ul>
-					<li><a concordion:run="concordion" href="AlleleDetailExpressionRibbon.html">Reinstate Expression ribbon</a></li>
+					<li>Includes Primary Image for Allele</li>
 				</ul>
 				</td>
-				<td>MGI 5.14</td>
-				<td>163</td>
-				<td>Yes</td>
-				<td><ul>
-					<li>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</li>
-					<li><i>Passed regression tests 2013/05/14 - kstone</i></li>
-					</ul>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleDetailMutationOriginRibbon.html">Mutation origin (Transgene  origin) ribbon</a>
+				<p>Includes:</p>
+				<ul>
+					<li>Mutant Cell Line</li>
+					<li>Germline Transmission</li>
+					<li>Parent Cell Line</li>
+					<li>Strain of Origin</li>
+					<li>Collection</li>
+				</ul>
 				</td>
+				<td>5.18</td>
+				<td></td>
+				<td></td>
+				<td>
+				<ul>
+					<li>sto17 "Collection" value</li>
+				</ul>
+				</td>
+			</tr>			
+			<tr>
+				<td><a concordion:run="concordion" href="AlleleDetailMutationDescriptionRibbon.html">Mutation description (Transgene  description) ribbon</a>
+				<p>Includes:</p>
+				<ul>
+					<li>Allele type</li>
+					<li>Allele subtypes</li>
+					<li>Mutations</li>
+				</ul>
+				</td>
+				<td>5.18</td>
+				<td>24, 54</td>
+				<td></td>
+				<td>
+				<ul>
+					<li>sto24 "Allele Subtypes" display</li>
+					<li>sto54 molecular images displayed</li>
+				</ul>
+				</td>
+			</tr>
+
+			<tr>
+				<td>Mutation description ribbon
+				<p>Includes:</p>
+				<ul>
+					<li>Allele Type (to be Generation Type + Attributes)</li>
+					<li>Mutation (text + Mutation Details section)</li>
+					<li>Sequence Tags (for Gene Trapped Alleles (<a href="http://www.informatics.jax.org/allele/MGI:4077572">example</a>))</li>
+					<li>Genome Context (includes GBrowse image; for Gene Trapped Alleles (<a href="http://www.informatics.jax.org/allele/MGI:4077572">example</a>))</li>
+				</ul>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<td>Recombinase Ribbon:
@@ -211,7 +316,7 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 					<li><a concordion:run="concordion" href="CreUserSubmittedNotes.html">User-submitted notes</a></li>
 				</ul>
 				</td>
-				<td>MGI 5.14</td>
+				<td>5.14</td>
 				<td>141, 143, 144, 155, 185, 189, 190</td>
 				<td></td>
 				<td>Note: These test suites comes from release 5.14 GXD/Cre/SNP Project.<br/>
@@ -224,10 +329,9 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 					<li><a concordion:run="concordion" href="AlleleDetailPhenoSummary.html">Modify Phenotype Summary grid</a></li>
 					<li><a concordion:run="concordion" href="AlleleDetailPhenoSummary2.html">Phenotype Summary Grid - Right-side MP content</a> (includes Normals)</li>
 					<li><a concordion:run="concordion" href="DisplayEurophenomeData.html">Display Europhenome MP Annotations</a></li>
-					<li><a concordion:run="concordion" href="RenameEurophenomeAbbreviation.html">Change label for Europhenome from "Euro" to "EuPh"</a></li>
 				</ol>
 				</td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td>Yes</td>
 				<td>1. Contains automated tests that are <span class="regressHi">high priority</span> for regression.</td>
@@ -241,12 +345,11 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 					<li><a concordion:run="concordion" href="GenotypePopupSexSpecificity.html">Genotype Popup Window - Add Sex-Specificity</a></li>
 					<li><a concordion:run="concordion" href="GenotypePopupLegend.html">Genotype Popup Window - Add Legend</a></li>
 					<li><a concordion:run="concordion" href="GenotypePopupCellLines.html">Genotype Popup Window - Add Cell Lines</a></li>
-					<li><a concordion:run="concordion" href="GenotypePopupRemoveSource.html">Genotype Popup Window - Remove Source text</a></li>
 					<li><a concordion:run="concordion" href="AllGenotypesPopup.html">WI Popup Window: all genotypes with MP, OMIM, images</a></li>
 					<li><a concordion:run="concordion" href="GenotypePopupJnumbers.html">WI: Fewer J numbers for notes</a></li>
 				</ul>
 				</td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -257,17 +360,32 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 					<li><a concordion:run="concordion" href="SimplifyDiseaseModelSection.html">Simplify Disease Models on Allele Detail</a></li>
 				</ul>
 				</td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td></td>
 				<td></td>
+			</tr>
+			<tr>
+				<td>Expression Ribbon:
+				<ul>
+					<li><a concordion:run="concordion" href="AlleleDetailExpressionRibbon.html">Reinstate Expression ribbon</a></li>
+				</ul>
+				</td>
+				<td>5.14</td>
+				<td>163</td>
+				<td>Yes</td>
+				<td><ul>
+					<li>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</li>
+					<li><i>Passed regression tests 2013/05/14 - kstone</i></li>
+					</ul>
+				</td>
 			</tr>
 			<tr>
 				<td>Find Mice Ribbon:
 				<ul>
 					<li><a concordion:run="concordion" href="IMSRRibbonSection.html">Move "Find Mice" ribbon</a></li>
 				</ul></td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td></td>
 				<td><ul>
@@ -277,32 +395,105 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 				</td>
 			</tr>
 			<tr>
+				<td>Notes ribbon</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>References ribbon</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
 				<td>Look and Feel changes:
 				<ul>
 					<li><a concordion:run="concordion" href="AlleleDetailLookAndFeelChanges.html">Look and Feel updates to Allele Detail Page</a></li>
 					<li><a concordion:run="concordion" href="AlleleDetailSuppressImages.html">Molecular Images should not be included on Allele detail</a></li>
+					<li><a concordion:run="concordion" href="AlleleDetailLookAndFeelChanges.html">Update SEO logic for Allele Detail Page</a></li>
 				</ul>
 				</td>
-				<td>MGI 5.12</td>
-				<td></td>
-				<td></td>
+				<td>5.12, 5.18</td>
+				<td>104</td>
+				<td>Yes</td>
 				<td>
 				<ul>
-					<li>MGI 5.12: added CSS story 143 12/19/2012</li>
+					<li>5.12: added CSS story 143 12/19/2012</li>
 					<li>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</li>
 					<li><i>passed regression tests 2013/05/14 - kstone</i></li>
 				</ul>
 				</td>
 			</tr>
 			<tr class="gray">
-				<td colspan="5"><h5>WI: Other Pages</h5></td>
+				<td colspan="5"><h5>WI: Allele Query and Summary Pages</h5></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="AlleleSummaryChanges.html">Simplify Allele Summary Page</a></td>
-				<td>MGI 5.12</td>
+				<td><a concordion:run="concordion" href="AlleleSummary.html">Allele Summary Page tests:</a> 
+				<ul>
+					<li>General (e.g., "You searched for")</li>
+					<li>Phenotypes &amp; Diseases</li>
+					<li>Column Sorting</li>
+				</ul>
+				</td>
+				<td>5.12, 5.18</td>
+				<td>121<br/>32, 35, 58, 24, 41, 115,<br/>150</td>
+				<td>All</td>
+				<td>
+				<ul>
+					<li><i>modifying test suite from release 5.12</i></li>
+					<li>includes Genotype definitions</li>
+					<li>includes query logic</li>
+				</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>Allele Query/Summary: <a concordion:run="concordion" href="QueryFormNomenclature.html">Nomenclature</a></td>
+				<td>5.18</td>
+				<td>37</td>
+				<td>All</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Allele Query/Summary: Location (see <a concordion:run="concordion" href="AlleleSummary.html">Allele Summary Page tests</a>)</td>
+				<td>5.18</td>
+				<td>38</td>
+				<td>All</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Allele Query/Summary: Categories (includes...)
+				<ul>
+					<li><a concordion:run="concordion" href="QueryFormTypesSubtypes.html">Types, Attributes (Subtypes)</a></li>
+					<li><a concordion:run="concordion" href="QueryFormCollections.html">Collections</a></li>
+				</ul>
+				</td>
+				<td>5.18</td>
+				<td>18, 25</td>
 				<td></td>
 				<td></td>
+			</tr>
+			<tr>
+				<td>Allele Summaries Not From Query Form:
+				<ul>
+					<li><a concordion:run="concordion" href="AlleleSummaryFromMarker.html">Allele Summary from Marker Detail Page</a></li>
+					<li><a concordion:run="concordion" href="AlleleSummaryFromReference.html">Allele Summary from Reference Page</a></li>
+				</ul>
+				</td>
 				<td></td>
+				<td><ul><li>75</li><li>42</li></ul></td>
+				<td></td>
+				<td>
+				<ul>
+					<li>See <a href="../marker/MarkerDetailAllelesRibbon.html">Marker Detail Alleles Ribbon</a> test suite for text, counts, and links on the Marker Detail page.</li>
+					<li>See <a href="../reference/CuratedDataAllelesLink.html">Curated Data Alleles Link</a> test suite for text, counts and links on the References page.</li>
+				</ul>
+				</td>
+			</tr>
+			<tr class="gray">
+				<td colspan="5"><h5>WI: Other Pages</h5></td>
 			</tr>
 			<tr>
 				<td>Sanity checking:
@@ -312,29 +503,50 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 						<li><span concordion:assertTrue="true">Code merge sanity checks: EI (klf 12/18/12)</span></li>
 					</ul>
 				</td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td></td>
 				<td>
 				<ul>
 					<li>Tested for merging Scrumbob Squarepants trunk changes up to our branch (sto119) - included fake coordinates data for 4 markers</li>
-					<li>Tested again for merging our branch changes down to the trunk (sto130) - included fake coordiantes data</li>
+					<li>Tested again for merging our branch changes down to the trunk (sto130) - included fake coordinates data</li>
 				</ul>
 				</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="HumanDiseaseDetailSuppressRosa.html">Suppress Gene Gt(ROSA)26Sor on Disease Detail page</a></td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td></td>
 				<td></td>
 			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="QuickSearch.html">Display of Generation Type for quick search results</a></td>
+				<td>5.18</td>
+				<td>109</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="MolecularImageDetail.html">Molecular Image Detail page</a></td>
+				<td>5.18</td>
+				<td>55</td>
+				<td></td>
+				<td>This is a new page as of this release</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="RemoveAlleleSets.html">Remove code for "Allele Sets"</a></td>
+				<td>5.18</td>
+				<td>110</td>
+				<td></td>
+				<td>Grouping of alleles is handled with Generation Type (Allele Type), Allele Attributes (Subtypes), and Allele Collections as of MGI 5.18.  Will need to verify for PROD and Public changes during Build Sprint.</td>
+			</tr>
 			<tr class="gray">
-				<td colspan="5"><h5>Build Sprint: Other Tests</h5></td>
+				<td colspan="5"><h5 id="other">Build Sprint: Other Tests</h5></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="FirienBuildSprintTests.html">Build Sprint tests for Firien</a></td>
-				<td>MGI 5.12</td>
+				<td>5.12</td>
 				<td></td>
 				<td></td>
 				<td>These are tests that fail on Cardolan due to differences in the install.  We need to run them on Firien during the Build Sprint.  Concordion instrumentation has been removed in the other test suites.</td>
@@ -343,8 +555,8 @@ Allele Aspa<tm1a(EUCOMM)Wtsi> has multiple cell lines, multiple MP annotations. 
 	</div>
 <!-- <p>* means tests must be  updated for all newly added functionality</p>
 <p>Dynamic Data spreadsheet used for some automated tests is located at <a target="_blank" href="https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0">https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0</a>.</p> -->
-<p>Product Backlog: <a target="_blank" href="http://cardolan.informatics.jax.org:9180/kunagi/login.html">kunagi</a>.</p>
-<p>High-Throughput MP Project <a target="_blank" href="http://prodwww.informatics.jax.org/wiki/index.php/sw:Scrum:_High-Throughput_MP_Data">wiki page</a></p>
+<p>Product Backlog: <a target="_blank" href="http://cardolan.informatics.jax.org:9180/kunagi/#project=76e62de2-6c07-491a-8a99-43c187cb51e0-1|page=ProductBacklog">kunagi</a>.</p>
+<p>High-Throughput MP Project, part II <a target="_blank" href="http://mgiwiki/mediawikiindex.php/sw:Scrum:_High-Throughput_MP_Data_II">wiki page</a></p>
 <p>Cardolan's Postgres database (Pub - MGD schema): <a target="_blank" href="http://rohan.informatics.jax.org/phpPgAdmin/">PhP Admin Page</a></p>
 </body>
 </html>

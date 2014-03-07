@@ -122,12 +122,4 @@ public class TextGxdResultsSummary extends AbstractTextView
 		return str;
 	}
 
-	private  final static String getCurrentDate()   {
-		Date date = new Date();
-		DateFormat df = new SimpleDateFormat( "yyyyMMdd_HHmmss" ) ;
-		//df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;
-        String formattedDate = df.format(date);
-        return (formattedDate);
-	}
-
 }

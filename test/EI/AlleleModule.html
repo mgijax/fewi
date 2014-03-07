@@ -1,0 +1,270 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>EI MP module</title>
+</head>
+
+<body>
+<!--  declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ --> 
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>EI Allele module </h1>
+    <ul>
+        <li>User story 16, EI Allele module supports collections</li>
+        <li>User story 22, E5: EI Allele and Cell Line modules</li>
+        <li>User story 85, E7: Load the IMSR feed file in MGI</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>US16: Verify a collection list exists</li>
+		<li>US16: Verify you can search by collection list</li>
+		<li>US16: Verify you can add a collection to an Allele</li>
+		<li>US16: Verify you can delete(set to not specified) a collection to an Allele</li>
+		<li>US16: Verify you can change(modify) the collection selection for an Allele</li>
+		<li>US22: Verify you can search by Generation type</li>
+		<li>US22: Verify you can search by Allele Attribute</li>
+		<li>US22: Verify you can change generation type to an Allele</li>
+		<li>US22: Verify you can add an allele attribute to an Allele</li>
+		<li>US22: Verify you can change an allele attribute of an Allele</li>
+		<li>US22: Verify you can add multiple allele attributes to an Allele</li>
+		<li>US85: Verify alleles using J:204812 all have the TRansmission status of Germline</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify a collection list exists
+    		<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Verify the existence of a Collection list located just under Germ Line Transmission</li>
+                <li>Verify clicking on the collection box displays the collection list</li>
+    		</ol>
+    		</li>
+		</ol>
+		<ol>
+    		<li>Verify you can search by collection list
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the collection option <b>Beutler Mutagenix</b> and click Search</li>
+                <li>Verify you return 191 results and they all have a collection of <b>Beutler Mutagenix</b></li>
+                <li>Clear the form</li>
+                <li>Select the collection option <b>NorCOMM</b> and click Search</li>
+                <li>Verify you return 580 results and they all have a collection of <b>NorCOMM</b></li>
+    		</ol>
+    		</li>
+		</ol>
+		<ol>
+    		<li>Verify you can add a collection to an Allele
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the option <b>In Progress</b> in the status field and click Search</li>
+                <li>Click on the result <b>Amz1<sup>m1Clo</sup></b> and change the collection from <b>B2B/CvDC</b> to <b>Not Specified</b> and click <b>Modify</b></li>
+                <li>Verify no errors post and the collection is now <b>Not Specified</b></li>
+    		</ol>
+    		</li>
+		</ol>	
+		<ol>
+		    <li>Verify you can delete(set to not specified) a collection to an Allele
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>This was tested in the test above</li>
+    		</ol>
+    		</li>
+		</ol>
+		<ol>
+		    <li>Verify you can change the collection selection for an Allele
+ 			<p concordion:assertTrue="true">jeffc 1/02/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the option <b>Reserved</b> in the status field and click Search</li>
+                <li>Click on the result <b>Wars<sup>tukku</sup></b> and change the collection from <b>Not Specified</b> to <b>Australian PhenomeBank</b> and click <b>Modify</b></li>
+                <li>Verify no errors post and the collection is now <b>Australian PhenomeBank</b></li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify you can search by Generation type(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the Generation option <b>Spontaneous</b> and click Search</li>
+                <li>Verify you return over 2000 results and they all have a Generation of <b>Spontaneous</b></li>
+    		</ol>
+    		</li>
+    		<li>Verify you can search by Allele Attribute(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the Allele Attribute option <b>Inducible</b> and click Search</li>
+                <li>Verify you return 509 results and they all have the Allele Attribute of <b>Inducible</b></li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify you can add an Allele Attribute to an allele(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the Generation option <b>Spontaneous</b> and click Search</li>
+                <li>Select the search result <b>Adre</b> and add the Allele Attribute <b>Not Specified</b> to this allele</li>
+                <li>Click the <b>Modify</b> button</li>
+                <li>Verify the Allele Attribute <b>Not Specified</b> has been added</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify you can delete an Allele Attribute of an allele(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the Generation option <b>Spontaneous</b> and click Search</li>
+                <li>Select the search result <b>Adre</b> and delete the Allele Attribute <b>Not Specified</b> to this allele</li>
+                <li>Click the <b>Modify</b> button</li>
+                <li>Verify the Allele Attribute <b>Not Specified</b> has been deleted</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify you can change the Allele Attribute of an allele(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the Generation option <b>Transgenic</b> and click Search</li>
+                <li>Select the search result <b>Tg(Agrn)72Rwb</b> and change the Allele Attribute to <b>Not Specified</b></li>
+                <li>Click the <b>Modify</b> button</li>
+                <li>Verify the Allele Attribute is now <b>Not Specified</b></li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify you can add multiple Allele Attributes to an allele(sto22)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Select the Generation option <b>Spontaneous</b> and click Search</li>
+                <li>Select the search result <b>Adre</b> and add the Allele Attributes <b>Inducible</b> and <b>Inserted expressed sequence</b></li>
+                <li>Click the <b>Modify</b> button</li>
+                <li>Verify both Allele Attributes are now applied</li>
+    		</ol>
+    		</li>    		
+    		
+    		<li>Verify you can add an Allele with Generation type of Gene Trapped and no Parent cell line and defaults are applied(sto22)(same behavior for Targeted)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Create a new allele selecting Generation of <b>Gene Trapped</b>, Germ Line Transmission of <b>Not Specified</b></li>
+                <li>Click the <b>Add</b> button, then select the new allele from the search results</li>
+                <li>Verify Mutant Cell, Parent Cell Line, Parent Cell Line Strain, and Strain of Origin are all set to <b>Not Specified</b></li>
+                <li>Reset the form</li>
+                <li>Create a new allele selecting Generation of <b>Targeted</b>, Germ Line Transmission of <b>Not Specified</b></li>
+                <li>Click the <b>Add</b> button, then select the new allele from the search results</li>
+                <li>Verify Mutant Cell, Parent Cell Line, Parent Cell Line Strain, and Strain of Origin are all set to <b>Not Specified</b></li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify you can add an Allele with Generation type of Gene Trapped, no Mutant Cell Line,no Parent cell line and defaults are applied to Derivations(sto22)(same behavior for Targeted)
+ 			<p concordion:assertTrue="true">jeffc 01/15/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Create a new allele selecting Generation of <b>Gene Trapped</b>, Germ Line Transmission of <b>Not Specified</b></li>
+                <li>Click the <b>Add</b> button, then select the new allele from the search results</li>
+                <li>Verify Mutant Cell, Parent Cell Line, Parent Cell Line Strain, and Strain of Origin are all set to <b>Not Specified</b></li>
+                <li>Under the <b>Edit</b> menu select <b>Mutant Cell LIne</b>, when the screen displays search for your derivation by using your user name and date</li>
+                <li>Verify the Allele Symbol is correct and that Mutant Cell Line,Creator,Parent cell line,Parent cell line strain, Vector names, and Vector type are all set to <b>Not Specified</b></li>
+                <li>Return to the Allele module and reset the form</li>
+                <li>Create a new allele selecting Generation of <b>Targeted</b>, Germ Line Transmission of <b>Not Specified</b></li>               
+                <li>Click the <b>Add</b> button, then select the new allele from the search results</li>
+                <li>Verify Mutant Cell, Parent Cell Line, Parent Cell Line Strain, and Strain of Origin are all set to <b>Not Specified</b></li>
+                <li>Under the <b>Edit</b> menu select <b>Mutant Cell LIne</b>, when the screen displays search for your derivation by using your user name and date</li>
+                <li>Verify the Allele Symbol is correct and that Mutant Cell Line,Creator,Parent cell line,Parent cell line strain, Vector names, and Vector type are all set to <b>Not Specified</b></li>
+    		</ol>
+    		</li>      		
+    		<li>Verify alleles using J:204812 have a transmission status of Germline (MGI5.18 sto85)
+ 			<p concordion:assertTrue="true">jeffc 02/11/2014</p>
+    		<ol>
+                <li>Open the Scrum-dog EI</li>
+                <li>Log in to the Scrum-dog EI</li>
+                <li>Click on the Alleles module button</li>
+                <li>Enter the J number <b>204812</b> in the Citation J# column and click Search</li>
+                <li>Verify you return 1667 results and they all have a Germ Line Transmission of <b>Germline</b></li>
+                <li>Verify all the results have a Citation Transmission type using J# 204812</li>
+    		</ol>
+    		</li>
+    		
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

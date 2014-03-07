@@ -1,0 +1,133 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Mutation Origin Ribbon on Allele Detail Page</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+<!--      <h1>Remove Expression Ribbon from Allele Detail Page</h1>-->
+    <h1>Mutation Origin Ribbon on Allele Detail Page</h1>
+    <ul>
+<!--          <li>MGI 5.12 User story 128, Remove Expression Ribbon from Allele Detail Page</li>-->
+		<li>(MGI 5.18) User story 17, E3: Display collection on allele detail and cre specificity pages</li>
+		<li>(MGI 5.18) User story 85, E7: Load the IMSR feed file in MGI</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>an allele's collection is displayed on the detail page(sto17)</li>
+		<li>a cre allele's collection is displayed on the cre specificity page(sto17)</li>
+		<li>if no collection, nothing displayed (!)(sto17)</li>
+		<li>Alleles with transmission type of cell line but have a strain count for IMSR have their transmission type changed to Germline</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><span class="regressHi">Regress: high priority</span></p>
+    <p><span class="regressLo">Regress: low priority</span></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li><span class="regressHi">Regress</span> Collection appears in Mutation Origin ribbon on Allele Detail Pages.
+ 			<p concordion:assertTrue="true">passed. klf 2013-12-31</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for <b>0610037L13Rik&lt;tm1(KOMP)Vlcg&gt;</b> (MGI:3847523)</li>
+                <li>Verify that the Collection value <b>KOMP-Regeneron</b> appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Acan&lt;b2b183Clo&gt;</b> (MGI:5297419)</li>
+                <li>Verify that the Collection value <b>B2B/CvDC</b>  appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Adamts20&lt;hip&gt;</b> (MGI:3847117)</li>
+                <li>Verify that the Collection value <b>Australian PhenomeBank</b>  appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Dbx1&lt;tm1.1(cre)Mull&gt;</b> (MGI:5014205)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b>  appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Tg(ACTFLPe)9205Dym</b> (MGI:2448985)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b> appears as the last item in the Transgene Origin ribbon.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.
+ 			<p concordion:assertTrue="true">passed. klf 2013-12-31</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for <b>Pax6&lt;2Neu&gt;</b> (MGI:2156812)</li>
+                <li>Verify that <b>no Collection value</b> appears in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Tg(GFAP-cre)#Gtm</b> (MGI:3057344)</li>
+                <li>Verify that <b>no Collection value</b> appears in the Transgene Origin ribbon.</li>
+    		</ol>
+    		</li>
+
+<!--     		<li>Verify that alleles with IMSR links there were transmission type Cell line are now reported as Germline
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+				<table>
+				<tr><th>MGI ID</th><th>Symbol</th><th>Transmission</th></tr>
+				<tr><td>MGI:4820338</td><td>Ttll11&lt;tm1a(EUCOMM)Wtsi&gt;</td><td>Germline</td></tr>
+				<tr><td>MGI:5008118</td><td>Fgd4&lt;tm1(KOMP)Vlcg&gt;</td><td>Germline</td></tr>
+				<tr><td>MGI:4434822</td><td>Snx29&lt;tm1a(EUCOMM)Hmgu&gt;</td><td>Germline</td></tr>
+				<tr><td>MGI:4867977</td><td>Uts2b&lt;tm1(KOMP)Mbp&gt;</td><td>Germline</td></tr>
+				<tr><td>MGI:3880669</td><td>Akap13&lt;Gt(CSJ306)Byg&gt;</td><td>Germline</td></tr>
+				<tr><td>MGI:3953334</td><td>Cks1b&lt;Gt(IST10526D7)Tigm&gt;</td><td>Germline</td></tr>
+				<tr><td>MGI:5467725</td><td>Myh9&lt;tm7Rsad&lt;</td><td>Germline</td></tr>
+				<tr><td>MGI:4172220</td><td>Hhip&lt;Gt(OST67903)Lex&gt;</td><td>Germline</td></tr>
+				</table>
+    		</ol>
+    		</li>  -->
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key/0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

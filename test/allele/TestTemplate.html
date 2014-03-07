@@ -28,6 +28,9 @@ tr.gray td {background-color:#EEEEEE;}
 
 .regressHi {background-color:#FFAB57;} /*medium-orange*/
 .regressLo {background-color:#90DDF5;} /*light blue*/
+
+dt {font-size:13px;}
+
 </style>
 <!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
@@ -50,13 +53,37 @@ tr.gray td {background-color:#EEEEEE;}
     <ul>
         <li>User story #, User story name</li>
     </ul>
+    <p>Skip to <a href="#acceptance">Acceptance Criteria</a> |  <a href="#definitions">Definitions</a> | <a href="#logic">Logic Summary</a> | <a href="#tests">Tests</a></p>
+
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>Acc crit 1</li>
-		<li>Acc crit 2</li>
+		<li>(sto##) Acc crit 1</li>
+		<li>(sto##) Acc crit 2</li>
+	</ul>
+</div>
+
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<dl>
+		<dt>Term</dt>
+		<dd>Definition text 1</dd>
+		<dd>Definition text 2</dd>
+	</dl>
+</div>
+
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+
+	<h3>Page, Section, Input Field, Output Type, or Other Item Being Described:</h3>
+	<p>Description of what chunk of logic is being defined...</p>
+	<ul>
+		<li>some logic</li>
+		<li>some logic</li>
 	</ul>
 </div>
 
@@ -91,13 +118,6 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 		</ol>
- <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
-     			<li>
-    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
-    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
-    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
-    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
-  -->
  	</div>
 </div>
 

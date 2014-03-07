@@ -27,7 +27,19 @@
 	<target name="isServer" unless="config.file">
 		<property name="config.file" value="fewi.properties.${env.SERVER_NAME}"/>
 	</target>
-
+	 
+	<!-- Need to build ANTLR Lexers and Parsers for our search parsing -->
+	<!-- Antlr3 is called here -->
+	<target name="antlr">
+		<java classname="org.antlr.Tool" fork="true" failonerror="true">
+			<arg value="-verbose"/>
+			<arg value="-o"/>
+			<arg path="${src.dir}/org/jax/mgi/fewi/antlr/BooleanSearch"/>
+			<arg path="${src.dir}/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearch.g"/>
+			<classpath refid="libs" />
+		</java>
+	</target>
+	
 	<!--clean -->
 	<target name="clean">
 		<delete dir="${compile.dir}" />
@@ -53,7 +65,7 @@
 
 
 	<!--compile -->
-	<target name="compile" depends="prepare">
+	<target name="compile" depends="prepare, antlr">
 		<echo>Compile source</echo>
 		<javac destdir="${compile.dir}" debug="on" debuglevel="lines,vars,source">
 			<src path="${src.dir}" />

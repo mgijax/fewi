@@ -5,7 +5,6 @@ import java.util.List;
 
 import mgi.frontend.datamodel.Marker;
 
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.hunter.SolrMarkerIDHunter;
 import org.jax.mgi.fewi.hunter.SolrMarkerKeyHunter;
 import org.jax.mgi.fewi.hunter.SolrMarkerSummaryHunter;
@@ -14,12 +13,11 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.sun.tools.javac.code.Attribute.Array;
 
 
 /*-------*/
@@ -145,4 +143,18 @@ public class MarkerFinder {
         return searchResults;
     }
     
+    /*
+     * Retrieval for marker summary
+     */
+    public SearchResults<SolrSummaryMarker> getSummaryMarkers(SearchParams searchParams)
+    {
+    	logger.debug("->getSummaryMarkers()");
+
+        // result objects to be returned
+        SearchResults<SolrSummaryMarker> searchResults = new SearchResults<SolrSummaryMarker>();
+
+        markerSummaryHunter.hunt(searchParams,searchResults);
+
+        return searchResults;
+    }
 }

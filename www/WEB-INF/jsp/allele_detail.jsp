@@ -284,10 +284,18 @@ td.right { text-align: right }
 	<td class="padded" width="*">${backgroundStrain}</td>
 	</tr>
 	</c:if>
+	
+	<c:if test="${not empty allele.collection}">
+	  <tr>
+	    <td class="rightBorderThinGray label padded right"><font class="label">Collection:</font></td>
+	    <td class="padded">${allele.collection}</td>
+	  </tr>
+	</c:if>
 
       </table>
       ${fixedDivClose}
     </td>
+    
   </tr>
   </c:if>
 
@@ -297,6 +305,13 @@ td.right { text-align: right }
     <td class="<%=leftTdStyles.getNext() %>">
       <a name="${typeCategory}Description"></a>${typeCategory}<br>description</td>
     <td class="<%=rightTdStyles.getNext() %>">
+    	<c:if test="${not empty molecularThumbnail and not empty molecularThumbnail.pixeldbNumericID}">
+	    	<div style="float: right; margin-right: 20px;">
+	    		<a href="${configBean.FEWI_URL}image/molecular/${molecularImage.mgiID}">
+	    			<img src='${configBean.PIXELDB_URL}${molecularThumbnail.pixeldbNumericID}'>
+	    		</a>
+	    	</div>
+    	</c:if>
       ${fixedDivOpen}
       <table>
 	<c:set var="typeLabel" value="Allele"/>
@@ -305,7 +320,7 @@ td.right { text-align: right }
 	</c:if>
 	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${typeLabel} Type:</font>&nbsp;</td>
 	<td width="1%">&nbsp;</td>
-	<td class="padded" width="*">${allele.alleleType}</td>
+	<td class="padded" width="*">${allele.alleleType} <c:if test="${not empty allele.alleleSubType}">(${allele.alleleSubType})</c:if></td>
 	</tr>
 
 	<!-- comma-delimited set of mutations -->
@@ -342,6 +357,16 @@ td.right { text-align: right }
 	</tr>
 	</c:if>
 
+	<c:if test="${not empty allele.incidentalMutations}">
+	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Incidental Mutations:</font>&nbsp;</td>
+	<td width="1%">&nbsp;</td>
+	<td class="padded" width="*">Data available: 
+		<c:forEach items="${allele.incidentalMutations}" var="filename" varStatus="imStatus">
+			<c:if test="${imStatus.index>0}">, </c:if><a href="${configBean.FTP_BASE_URL}incidental_muts/${filename}">${filename}</a>
+		</c:forEach></td>
+	</tr>
+	</c:if>
+	
 	<c:if test="${(not empty allele.inheritanceMode) and (allele.inheritanceMode != 'Not Applicable')}">
 	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Inheritance:</font>&nbsp;</td>
 	<td width="1%">&nbsp;</td>

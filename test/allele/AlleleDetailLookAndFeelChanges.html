@@ -26,6 +26,7 @@
         <li>User story 123, Look and Feel Updates to Allele Detail Page</li>
         <li>User story 143, Clean up CSS</li>
         <li>User story 152, Subsection labels for Phenotype ribbon and Disease models ribbon</li>
+        <li>User story 104, E5: Update SEO logic for Allele Detail (MGI 5.18)</li>
     </ul>
 </div>
 
@@ -137,6 +138,15 @@
 			<li><span concordion:assertTrue="true">jeffc 01/02/2013</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup>Disease models ribbon</b> has the subsection labels Key: and Models: properly located in the top of each subsection</li>
 		</ul>
 		</li>
+		
+		<li>SEO changes for MGI 5.18
+			<ul>
+			<li>a) <b>Targeted</b> and <b>Transgenic</b> types will use the same keywords - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
+			<li>b) <b>Other</b> type will be suppressed from the title - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
+			<li>c) The type <b>Other</b> will not be added as a keyword(just like NA and NS) - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
+			<li>d) <b>Other</b> type will not use the keywords "mutant" and "mutation"(just like NA and QTLs) - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
+			</ul>
+		</li>		
 		</ol>
 	</div>
 	<div id="auto">

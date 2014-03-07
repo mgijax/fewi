@@ -74,10 +74,15 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto105: applies only to MP (for OMIM, see sto133)</li>
 		<li>sto105: if any/all annotations underlying a given cell are abnormal, the cell shows a checkmark. as usual</li>
 		<li>sto105: when all annotations under a given cell are all "normal", use a different symbol ("N") instead of a checkmark"</li>
-
-
-
 	</ul>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<p>For current definitions of genotypes included or excluded from the various displays, see the <a href="HDPQuerybyDiseaseGene.html">HDPQuerybyDiseaseGene</a> test suite.</p>
+</div>
+
+
+
 	<h2>Logic for this tab</h2>
 	<h3>Search input in Phenotypes/Disease text box:</h3>
 	<ol>
@@ -316,25 +321,6 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Enter <b concordion:set="#pheno">203290</b> for "Albinism, Oculocutaneous, Type III; OCA3" in the Phenotypes and Diseases section and hit search.</li>
                 <li>Click on the Grid tab and confirm <b concordion:assertEmpty="#systems">NO phenotype headers</b> are displayed. (The disease is associated only with a human gene. That gene has an ortholog which has MP annotations, but no genotypes can be in common.)</li>
                 <li>Confirm the disease column for <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Albinism, Oculocutaneous</b>, is still displayed.</li>
-                <li>Clear the form.</li>
-                <li>Enter <b concordion:set="#pheno">105650</b> (Diamond-Blackfan Anemia; DBA) in the Phenotypes and Diseases section and hit search. 
-					<i>(automated)</i></li>
-                <li>Click on the Grid tab and confirm the following MP header terms are displayed:
-                	<p concordion:assertTrue="true">klf 9/26/2013</p>
-                	<table cc:verifySupersetOf="#systems : gridMpHeadersByPhenotype(#pheno)">
-                	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
-                	<tr><td>cardiovascular system</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> annotated to disease</td></tr>
-                	<tr><td>craniofacial</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3804635">MGI:3804635</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3803603">Rpsa&lt;tm1Ells&gt;</a> annotated to disease</td></tr>
-                	<tr><td>endocrine/exocrine glands</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3804635">MGI:3804635</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3803603">Rpsa&lt;tm1Ells&gt;</a> annotated to disease</td></tr>
-                	<tr><td>growth/size</td><td>from both genotypes annotated to disease</td></tr>
-                	<tr><td>hematopoietic system</td><td>from both genotypes annotated to disease</td></tr>
-                	<tr><td>immune system</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> annotated to disease</td></tr>
-                	<tr><td>limbs/digits/tail</td><td>from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> annotated to disease</td></tr>
-                	<tr><td>mortality/aging</td><td>***from <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807531">MGI:3807531</a> of <a href="http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;id=MGI:3776022">Mfsd7b&lt;tm1.1Jlab&gt;</a> - <br/>
-                		same "genotype cluster" as <a href="http://www.informatics.jax.org/allele/genoview/MGI:3807528">MGI:3807528</a> but NOT annotated to disease<br/>
-                		-OR- from genotypes of mouse ortho of human annotation. :-(	</td></tr>
-                	</table>
-                </li>
                 <li>Clear the form.</li>
                 <li>Enter <b concordion:set="#pheno">271900</b> (Canavan Disease) in the Phenotypes and Diseases section and hit search. 
 					<i>(automated)</i></li>

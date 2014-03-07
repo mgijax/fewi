@@ -5,7 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% IDLinker idLinker = (IDLinker)request.getAttribute("idLinker"); %>
-    
+
 ${templateBean.templateHeadHtml}
 
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
@@ -33,11 +33,11 @@ function toggleHomologyDetails ()
 <%  // Pull detail object into servlet scope
     // EXAMPLE - Marker marker = (Marker)request.getAttribute("marker");
 
-    StyleAlternator leftTdStyles 
+    StyleAlternator leftTdStyles
       = new StyleAlternator("detailCat1","detailCat2");
-    StyleAlternator rightTdStyles 
+    StyleAlternator rightTdStyles
       = new StyleAlternator("detailData1","detailData2");
-    
+
 %>
 
 <style>
@@ -89,12 +89,12 @@ function formatFastaArgs() {
 ${templateBean.templateBodyStartHtml}
 
 <style type="text/css">
-td.padded { padding:4px; } 
+td.padded { padding:4px; }
 </style>
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="GENE_detail_help.shtml">	
+<div id="titleBarWrapper" userdoc="GENE_detail_help.shtml">
 	<div class="yourInputButton">
 		<form name="YourInputForm">
 			<input class="searchToolButton" value="Your Input Welcome" name="yourInputButton" onclick='window.open("${configBean.MGIHOME_URL}feedback/feedback_form.cgi?accID=${marker.primaryID}&amp;dataDate=<fmt:formatDate type='date' value='${databaseDate}' dateStyle='short'/>")' onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
@@ -182,8 +182,8 @@ td.padded { padding:4px; }
 
   <!-- ROW4 -->
   <c:set var="hasGeneticLocation" value="0"/>
-  <c:if test="${(not empty marker.preferredCentimorgans) 
-  		or (not empty marker.preferredCytoband) 
+  <c:if test="${(not empty marker.preferredCentimorgans)
+  		or (not empty marker.preferredCytoband)
   		or (marker.countOfMappingExperiments > 0)}">
     <tr>
       <td class="<%=leftTdStyles.getNext() %>">
@@ -195,15 +195,15 @@ td.padded { padding:4px; }
         <c:if test="${not empty marker.preferredCentimorgans}">
           <c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
             Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
-            <c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">              
+            <c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
               <c:set var="hasGeneticLocation" value="1"/>
               <c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
-            
+
               <c:if test="${not empty miniMap}">
         	    <div style="float:right;text-align:left;"><a href="${linkmapUrl}"><img src="${miniMap}" border="0"></a></div>
               </c:if>
 			  <c:if test="${marker.markerType == 'QTL'}">
-			    cM position of peak correlated region/marker: 
+			    cM position of peak correlated region/marker:
 			  </c:if>
               <fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<c:if test="${not empty marker.preferredCytoband}">, cytoband ${marker.preferredCytoband.cytogeneticOffset}</c:if>
               <br/>
@@ -211,7 +211,7 @@ td.padded { padding:4px; }
             </c:if>
             <c:if test="${marker.preferredCentimorgans.cmOffset == -1.0}">
 			  <c:if test="${marker.markerType == 'QTL'}">
-			    cM position of peak correlated region/marker: 
+			    cM position of peak correlated region/marker:
 			  </c:if>
 			  Syntenic
             </c:if>
@@ -231,7 +231,7 @@ td.padded { padding:4px; }
           cytoband ${marker.preferredCytoband.cytogeneticOffset}<br/>
         </c:if>
         <c:if test="${not empty qtlIDs}">
-        	Download data from the QTL Archive: 
+        	Download data from the QTL Archive:
 			<c:forEach var="qtlID" items="${qtlIDs}" varStatus="status">
 			  ${qtlID}<c:if test="${!status.last}">, </c:if>
 			</c:forEach>
@@ -261,22 +261,22 @@ td.padded { padding:4px; }
       <td class="<%=rightTdStyles.getNext() %>">
         <table width="100%">
         <tr><td>
-        <c:if test="${not empty marker.preferredCoordinates}"> 
+        <c:if test="${not empty marker.preferredCoordinates}">
         Chr${chromosome}:${startCoord}-${endCoord}
           ${marker.preferredCoordinates.mapUnits}<c:if test="${not empty marker.preferredCoordinates.strand}">, ${marker.preferredCoordinates.strand} strand</c:if><br/>
-        <c:if test="${empty marker.preferredCoordinates}"> 
+        <c:if test="${empty marker.preferredCoordinates}">
           ${marker.preferredCoordinates.mapUnits}<br/>
         </c:if>
         </c:if>
         <c:if test="${not empty marker.qtlNote}">
           ${marker.qtlNote}<br/>
         </c:if>
-        <c:if test="${not empty marker.preferredCoordinates}"> 
+        <c:if test="${not empty marker.preferredCoordinates}">
         From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br/>
 	<p/>
         </c:if>
 
-        <c:if test="${not empty marker.preferredCoordinates}"> 
+        <c:if test="${not empty marker.preferredCoordinates}">
 	    <form name="markerCoordForm" method="GET" action="${configBean.SEQFETCH_URL}">
 	    <c:set var="length" value="${marker.preferredCoordinates.endCoordinate - marker.preferredCoordinates.startCoordinate + 1}"/>
 	    <c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${startCoord}!${endCoord}!!"/>
@@ -291,7 +291,7 @@ td.padded { padding:4px; }
 
 	    <input type="hidden" name="seq1" value="${seqfetchParms}">
 	    <input type="button" value="Get FASTA" onClick="formatFastaArgs()">
-	    &nbsp;&nbsp;${lengthStr} bp 
+	    &nbsp;&nbsp;${lengthStr} bp
 	    &nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb flank
 	    </form>
 	    <p/>
@@ -346,20 +346,20 @@ td.padded { padding:4px; }
 	  HomoloGene:${homologyClass.primaryID}&nbsp;&nbsp;<a href="${configBean.FEWI_URL}homology/${homologyClass.primaryID}">Vertebrate Homology Class</a><br/>
 	  <c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if> </c:forEach><p/>
 	</c:if>
-		
+
 		<c:set var="pirsf" value="${marker.pirsfAnnotation}"/>
 		<c:if test="${not empty pirsf}">
 		  Protein SuperFamily: <a href="${configBean.FEWI_URL}vocab/pirsf/${pirsf.termID}">${pirsf.term}</a><br/>
 		</c:if>
 		<c:if test="${marker.hasOneEnsemblGeneModelID}">
-			<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>			
+			<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>
 			<c:set var="genetreeUrl" value="${fn:replace(genetreeUrl, '<model_id>', marker.ensemblGeneModelID.accID)}"/>
 			Gene Tree: <a href="${configBean.GENETREE_URL}${marker.ensemblGeneModelID.accID}">${marker.symbol}</a><br/>
 		</c:if>
       </td>
     </tr>
   </c:if>
-  
+
   <!-- Human Homologs ribbon -->
   <c:if test="${not empty humanHomologs}">
     <tr >
@@ -427,12 +427,12 @@ td.padded { padding:4px; }
 				'<td><a href=\'${fn:replace(urls.OMIM, '@@@@', annotation.termID)}\' target=\'_blank\'>${annotation.termID}</a></td></tr>' +
 			</c:forEach>
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${hMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Human ${humanHomolog.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${humanHomolog.countOfHumanDiseases}</a>)
-		Disease<c:if test="${humanHomolog.countOfHumanDiseases > 0}">s</c:if> Associated with Human ${humanHomolog.symbol} 
+		Disease<c:if test="${humanHomolog.countOfHumanDiseases > 0}">s</c:if> Associated with Human ${humanHomolog.symbol}
 	  </td></tr>
 	  </c:if>
 	  </c:forEach>
 
-	</table> 
+	</table>
     </td></tr>
   </c:if>
 
@@ -444,10 +444,10 @@ td.padded { padding:4px; }
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
         <c:if test="${marker.countOfAlleles > 0}">
-		  <c:set var="alleleUrl" value="${configBean.WI_URL}searches/allele_report.cgi?_Marker_key=${marker.markerKey}"/>
-		  All alleles(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) : 
+		  <c:set var="alleleUrl" value="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}"/>
+		  All alleles(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) :
 		  <c:forEach var="item" items="${marker.alleleCountsByType}">
-		    ${item.countType}(<a href="${alleleUrl}&alleleSet=${item.countType}">${item.count}</a>)
+		    ${item.countType}(<a href="${alleleUrl}&alleleType=${item.countType}">${item.count}</a>)
 		  </c:forEach>
 		  <br/>
 		</c:if>
@@ -484,7 +484,7 @@ td.padded { padding:4px; }
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${mMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Mouse ${marker.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
-		  Alleles Annotated to Human Diseases(<a href="${configBean.WI_URL}searches/allele_report.cgi?_Marker_key=${marker.markerKey}&omimOnly=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
+		  Alleles Annotated to Human Diseases(<a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
 		  Phenotype Images(<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a>)
@@ -526,7 +526,7 @@ td.padded { padding:4px; }
 		</c:if>
 		<c:set var="funcbaseID" value="${marker.funcBaseID}"/>
 		<c:if test="${not empty funcbaseID}">
-		  External Resources: 
+		  External Resources:
 		  <a href="${fn:replace(urls.FuncBase, '@@@@', funcbaseID.accID)}">FuncBase</a><br/>
 		</c:if>
       </td>
@@ -570,7 +570,7 @@ td.padded { padding:4px; }
 		</c:if>
 		<br/>
 		<c:if test="${not empty marker.gxdResultCountsByStage}">
-		  Theiler Stages: 
+		  Theiler Stages:
 		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">
 		  	<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?theilerStage=${item.countType}">${item.countType}</a><c:if test="${!status.last}">,</c:if>
 		  </c:forEach>
@@ -586,14 +586,14 @@ td.padded { padding:4px; }
 		      <tr><td style="padding-left:4em;padding-right:1em;">${assayType}</td>
 		        <td align="right"><a href="${gxdResultUrl}${assayType}">${gxdResultCounts[assayType]}</a></td>
 		      </tr>
-		    </c:forEach> 
+		    </c:forEach>
 		  </table>
 		</c:if>
-		
+
 		<c:if test="${marker.countOfCdnaSources > 0}">cDNA source data(<a href="${configBean.WI_URL}searches/estclone_report.cgi?_Marker_key=${marker.markerKey}&sort=Tissue">${marker.countOfCdnaSources}</a>)<br/></c:if>
-		
+
 		<c:if test="${not (empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
-		  External Resources: 
+		  External Resources:
 		  <c:if test="${not empty allenID}">
 		    <a href="${fn:replace (externalUrls.Allen_Brain_Atlas, '@@@@', allenID)}" target="_new">Allen Institute</a>&nbsp;&nbsp;
 		  </c:if>
@@ -632,7 +632,7 @@ td.padded { padding:4px; }
 		  <c:if test="${fn:startsWith(item.countType, 'All')}">
 		    <c:set var="reagentType" value=""/>
 		  </c:if>
-		  ${item.countType}(<a href="${reagentUrl}${reagentType}">${item.count}</a>) 
+		  ${item.countType}(<a href="${reagentUrl}${reagentType}">${item.count}</a>)
 		</c:forEach>
 		<br/>
 		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
@@ -653,6 +653,23 @@ td.padded { padding:4px; }
 		  <c:forEach var="item" items="${logicalDBs}">
 			<tr><td>${item}</td><td>${otherIDs[item]}</td></tr>
 		  </c:forEach>
+		</table>
+      </td>
+    </tr>
+  </c:if>
+  
+   <!-- Incidental Mutation links -->
+  <c:if test="${not empty marker.incidentalMutations}">
+    <tr >
+      <td class="<%=leftTdStyles.getNext() %>">
+        Incidental Mutations
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+		<table>
+		Data available:
+		  <c:forEach items="${marker.incidentalMutations}" var="filename" varStatus="imStatus">
+			<c:if test="${imStatus.index>0}">, </c:if><a href="${configBean.FTP_BASE_URL}incidental_muts/${filename}">${filename}</a>
+		</c:forEach>
 		</table>
       </td>
     </tr>
@@ -709,7 +726,7 @@ td.padded { padding:4px; }
 		</form>
 		<c:set var="seqUrl" value="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}"/>
 		<c:if test="${marker.countOfSequences > 0}">
-		  All sequences(<a href="${seqUrl}">${marker.countOfSequences}</a>) 
+		  All sequences(<a href="${seqUrl}">${marker.countOfSequences}</a>)
 		</c:if>
 		<c:if test="${marker.countOfRefSeqSequences > 0}">
 		  RefSeq(<a href="${seqUrl}?provider=RefSeq">${marker.countOfRefSeqSequences}</a>)
@@ -746,7 +763,7 @@ td.padded { padding:4px; }
   					<c:set var="countText" value="${item.countType}"/>
   				</c:otherwise>
   			</c:choose>
-  			
+
 		    <c:set var="isSnp" value="1"/>
 		    <c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
 		    <c:if test="${not empty configBean.SNP_BUILD}">
@@ -758,14 +775,14 @@ td.padded { padding:4px; }
 		      <c:set var="pad" value="&nbsp;&nbsp;&nbsp;"/>
 		    </c:if>
 		  </c:if>
-		  
+
 		  ${pad}${countText}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
 		  <c:if test="${status.first and (empty isSnp)}">: </c:if>
 		</c:forEach>
       </td>
     </tr>
   </c:if>
-  
+
   <!-- ROW14 -->
   <c:set var="proteinAnnotations" value="${marker.proteinAnnotations}"/>
   <c:if test="${not empty proteinAnnotations}">
@@ -836,12 +853,12 @@ td.padded { padding:4px; }
       </td>
       <td class="<%=rightTdStyles.getNext() %>" >
 		<c:forEach var="item" items="${otherMgiIDs}" varStatus="status">
-		  ${item.accID}<c:if test="${not status.last}">, </c:if> 
+		  ${item.accID}<c:if test="${not status.last}">, </c:if>
 		</c:forEach>
       </td>
     </tr>
   </c:if>
- 
+
 <!-- close structural table and page template-->
 </table>
 ${templateBean.templateBodyStopHtml}

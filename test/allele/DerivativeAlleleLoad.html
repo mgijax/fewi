@@ -1,0 +1,581 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+	
+dt {font-size:13px;}
+
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Derivative Allele Load Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<h1>Derivative Allele Load Tests</h1>
+    <ul>
+        <li>User story #140, E1: Implement DAL load for tmX alleles</li>
+        <li>User story #141, E1: Implement DAL load for tmXe alleles</li>
+        <li>User story #142, E1: Implement DAL load for tmXa alleles</li>
+        <li>User story #144, E1: Implement DAL update branches</li>
+    </ul>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>(sto140) File parsing and QC implemented</li>
+		<li>(sto140) DAL tested on dev</li>
+		<li>(sto140) tmX.1 and tmX.2 alleles created properly from tmX</li>
+		<li>(sto140) test file output and supplied to Vivek</li>
+		<li>(sto140) the "update" branch just writes to report output</li>
+		<li>(sto141) tmXe.1 alleles properly created from tmXe alleles</li>
+		<li>(sto141) handle new alleles only</li>
+		<li>(sto141) updates to existing alleles: just write to report for now</li>
+		<li>(sto142) tmXb's and tmXc's correctly created from tmXa's</li>
+		<li>(sto142) only handle new alleles for now</li>
+		<li>(sto142) updates to existing alleles written to report</li>
+		<li>(sto144) For updates to alleles add new mcl associations</li>
+		<li>(sto144) For updates to alleles add new colony names</li>
+	</ul>
+</div>
+
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<dl>
+		<dt>Term</dt>
+		<dd>Definition text 1</dd>
+		<dd>Definition text 2</dd>
+	</dl>
+</div>
+
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+
+	<h3>Derivative Allele Load:</h3>
+	<ul>
+		<li>MGI must load data from IKMC for alleles which are "derived from" other, targeted, alleles which are already in MGI's database.  In some cases, we will be creating new allele records. In other cases, we will be updating records by adding data to existing fields.   These alleles will be publicly available. Eventually, phenotyping data for these alleles is expected via a future load  coming from IMPC.</li>
+		<li>For allele records already existing in MGI's database, we will add new data only to alleles with status = Approved or Reserved. If the existing allele status is Reserved, the new IKMC data will be added and the status will be updated to Approved.</li>
+		<li>See: <a href="http://mgiwiki.jax.org/mediawiki/index.php/File:Logic_IkmcDerivAlleleLoad_20140210_lowqual.jpg">IKMC Derivative Allele Load - Logic Diagram</a></li>
+		<li>For rules on which data values are loaded to MGD, see: <a href="http://mgiwiki.jax.org/mediawiki/index.php/sw:DerivativeAlleleLoad#Rules.2FMapping_for_Creating_Allele_Data_for_Input_File">sw:DerivativeAlleleLoad</a></li>
+		<li>NOTE: Rules implemented for all but the special case of &quot;tmXe <i>surprise</i> alleles&quot; (alleles listed in the IKMC source file as tmXa but were determined to be tmXe after application of &quot;cre&quot; recombinase).</li>
+	</ul>
+</div>
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+			<li>QC TEST - Rows marked <b>fail</b> get skipped (in skip file), and <b>pass</b> rows do not, from the 
+				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_pass_fail.txt">DAL_pass_fail.txt</a> file
+				(<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_pass_fail.xlsx">Excel</a>)
+ 			<p concordion:assertTrue="true">passed - kstone 2014/02/20</p>
+ 			<br/>Tests results can be found here: <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test/logs/test.skip.log">skip.log</a>,
+ 				<a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test/logs/test.exist.log">exist.log</a>
+ 				(Note: examples end up in exist.log due to previous load runs)
+			<ol>
+				<li>Run load using the above DAL_pass_fail.txt file.</li>
+				<li>Last two columns describe the test, and determine if the row should be skipped or not (I.e. pass/fail)</li>
+				<li>Compare to results in <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test/logs/test.skip.log">skip log</a></li>
+				<li>Verify that only the rows marked <b>fail</b> are skipped</li>
+				<li>Verify that all the rows marked <b>pass</b> are not skipped (they appear either in "exists file" or "alleles-to-create file" below)</li>
+			</ol>
+			</li>
+			<li>ALLELE CREATION LOGIC TEST - Rows marked <b>fail</b> get skipped (in duplicate file), and <b>pass</b> rows do not, from the 
+				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_logic.txt">DAL_test_logic.txt</a> file
+				(<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_logic.xlsx">Excel</a>)
+ 			<p concordion:assertTrue="true">passed - kstone 2014/02/20</p>
+ 			<br/>Tests results can be found here: <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/logs/test.skip.log">skip.log</a>,
+ 				<a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/logs/test.exist.log">exist.log</a>
+ 			(Note: valid alleles end up in exist.log due to previous load runs)
+			<ol>
+				<li>Run load using the above DAL_test_logic.txt file.</li>
+				<li>Last two columns describe the test, and determine if the row should be skipped or not (I.e. pass/fail)</li>
+				<li>Compare to results in <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/logs/test.exist.log">exists file</a> (file of duplicates)</li>
+				<li>Check in <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/input/mgi_allele_test.txt">alleles-to-create file</a></li>
+				<li>Verify that all the rows marked <b>pass</b> are in the created file (to be sent to generic allele loader)</li>
+				<li>Verify that all the rows marked <b>fail</b> are skipped, and appear in the duplicate file</li>
+			</ol>
+			</li>
+			<li>IKMC DATA LOAD - Appropriate allele data get loaded into MGD
+ 			<p concordion:assertTrue="true">passed. -klf 2/21/2014 </p>
+			<p>Rows not used to create new allele records are found here: <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/ikmc/logs/ikmc.skip.log">skip.log</a>,
+ 				<a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/ikmc/logs/ikmc.exist.log">exist.log</a>
+ 				(Note: these are "live" files and will update each time the load script is re-run.)</p>
+			<ol>
+				<li>Run the real sanger load file (<a href="https://www.mousephenotype.org/imits/v2/reports/mgi_modification_allele_report.tsv">found here</a>)</li>
+				<li>For each of the alleles in the first table, verify through the EI that the correct data is created, as defined in the second table.
+					<br/>Input File
+					<table>
+					<tr><td>Test ID</td><td>Field 6</td><td>Field 8</td><td>Field 9</td><td>Field 11</td><td>Field 12</td></tr>
+					<tr><td>1</td><td>tm1(KOMP)Vlcg</td><td>MGI:3847537</td><td>11975A-D3</td><td>BL3034-1</td><td>cre</td></tr>
+					<tr><td>2</td><td>tm1(KOMP)Wtsi</td><td>MGI:4431454</td><td>EPD0468_3</td><td>BL3208-1</td><td>cre</td></tr>
+					<tr><td>3</td><td>tm1a(KOMP)Wtsi</td><td>MGI:4364091</td><td>EPD0207_2_C09</td><td>Tead1 EPD0207_2_C09-2</td><td>cre</td></tr>
+					<tr><td>4</td><td>tm2a(KOMP)Wtsi</td><td>MGI:4451395</td><td>EPD0515_2_B12</td><td>UCD-EPD0515_2_B12-1-1</td><td>cre</td></tr>
+					<tr><td>5</td><td>tm2a(EUCOMM)Hmgu</td><td>MGI:4435696</td><td>HEPD0547_7_F08</td><td>H-Hipk2-F08-TM1B</td><td>cre</td></tr>
+					<tr><td>6</td><td>tm2a(EUCOMM)Wtsi</td><td>MGI:4432368</td><td>EPD0160_2_A08</td><td>MMAF</td><td>flp</td></tr>
+					<tr><td>7</td><td>tm3a(EUCOMM)Wtsi</td><td>MGI:5050924</td><td>EPD0802_4_B03</td><td>4933411G11Rik &amp;lt;EPD0802_4_B03&amp;gt;-1</td><td>cre</td></tr>
+					<tr><td>8</td><td>tm1e(KOMP)Wtsi</td><td>MGI:4451603</td><td>EPD0515_1_G05</td><td>TCPA0049Cre</td><td>cre</td></tr>
+					<tr><td>9</td><td>tm1e(EUCOMM)Hmgu</td><td>MGI:4455930</td><td>HEPD0617_5_F12</td><td>H-FGF7-F12-TM1B</td><td>cre</td></tr>
+					</table>
+					
+					<br/>Created Allele Records (file is <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/ikmc/input/mgi_allele_ikmc.txt">here</a> - "live" file, will update each time the load script is re-run)
+					<br/>All records must have these fields the same
+					<ol>
+						<li>Allele Status - <b>Approved</b></li>
+						<li>Transmission - <b>Germline</b></li>
+						<li>Original Reference J# - <b>J:204739</b></li>
+						<li>Transmission Reference J# - <b>J:204739</b></li>
+						<li>Molecular Reference J# - <b>J:204739</b></li>
+						<li>Inheritance - <b>Not Applicable</b></li>
+						<li>Mixed - <b>No</b></li>
+						<li>Extinct - <b>No</b></li>
+						<li>Created By - <b>ikmc_alleleload</b></li>
+					</ol>
+					<br/>The following fields are created uniquely for each allele
+					<br/><i>(Mrk=Marker,Mol=Molecular)</i>
+					<table>
+					<tr><th>Test ID</th><th>MGI Mrk ID</th><th>Symbol</th><th>Name</th>
+						<th>Type (new)</th><th>Type (old)</th><th>Subtypes**</th><th>Collection**</th>
+						<th>Strain&#160;of&#160;Origin</th><th>Cell&#160;Line&#160;ID</th><th>Mol Note</th>
+						<th>IKMC&#160;Colony&#160;Note</th><th>Mol&#160;Mutation</th>
+					</tr>
+					<tr><td>1</td><td>MGI:101863</td><td>Aldoc&lt;tm1.1(KOMP)Vlcg&gt;</td><td>targeted mutation 1.1, Velocigene</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>KOMP-Regeneron</td>
+						<td>C57BL/6NTac</td><td>11975A-D3</td>
+						<td>Cre-mediated excision of the parental Aldoc<sup>tm1(KOMP)Vlcg</sup> allele resulted in the removal of the neomycin selection cassette and critical exon(s) leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies</td>
+						<td>BL3034-1</td><td>Insertion, Intragenic deletion</td>
+					</tr>
+					<tr><td>2</td><td>MGI:1915958</td><td>Rabl2&lt;tm1.1(KOMP)Wtsi&gt;</td><td>targeted mutation 1.1, Wellcome Trust Sanger Institute</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>KOMP-CSD</td>
+						<td>C57BL/6N-A&lt;tm1Brd&gt;</td><td>EPD0468_3_F12</td>
+						<td>Cre-mediated excision of the parental Rabl2<sup>tm1(KOMP)Wtsi</sup> allele resulted in the removal of the neomycin selection cassette and critical exon(s) leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies</td>
+						<td>BL3208-1</td><td>Insertion, Intragenic deletion</td>
+					</tr>
+					<tr><td>3</td><td>MGI:101876</td><td>Tead1&lt;tm1b(KOMP)Wtsi&gt;</td><td>targeted mutation 1b, Wellcome Trust Sanger Institute</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>KOMP-CSD</td>
+						<td>C57BL/6N</td><td>EPD0207_2_C09</td>
+						<td>Cre-mediated excision of the parental Tead1<sup>tm1a(KOMP)Wtsi</sup> allele resulted in the removal of the promoter-driven neomycin selection cassette and critical exon(s) leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.</td>
+						<td>Tead1 EPD0207_2_C09-2</td><td>Insertion, Intragenic deletion</td>
+					</tr>
+					<tr><td>4</td><td>MGI:105060</td><td>Dgkg&lt;tm2b(KOMP)Wtsi&gt;</td><td>targeted mutation 2b, Wellcome Trust Sanger Institute</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>KOMP-CSD</td>
+						<td>C57BL/6N-A&lt;tm1Brd&gt;</td><td>EPD0515_2_B12</td>
+						<td>Cre-mediated excision of the parental Dgkg<sup>tm2a(KOMP)Wtsi</sup> allele resulted in the removal of the promoter-driven neomycin selection cassette and critical exon(s) leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.</td>
+						<td>UCD-EPD0515_2_B12-1-1</td><td>Insertion, Intragenic deletion</td>
+					</tr>
+					<tr><td>5</td><td>MGI:1314872</td><td>Hipk2&lt;tm2b(EUCOMM)Hmgu&gt;</td><td>targeted mutation 2b, Helmholtz Zentrum Muenchen GmbH</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>EUCOMM</td>
+						<td>C57BL/6N</td><td>HEPD0547_7_F08</td>
+						<td>Cre-mediated excision of the parental Hipk2<sup>tm2a(EUCOMM)Hmgu</sup> allele resulted in the removal of the promoter-driven neomycin selection cassette and critical exon(s) leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.</td>
+						<td>H-Hipk2-F08-TM1B</td><td>Insertion, Intragenic deletion</td>
+					</tr>
+					<tr><td>6</td><td>MGI:1351645</td><td>Prmt5&lt;tm2c(EUCOMM)Wtsi&gt;</td><td>targeted mutation 2c, Wellcome Trust Sanger Institute</td>
+						<td>Targeted</td><td>Targeted (Flox/Frt)</td><td>Conditional ready</td><td>EUCOMM</td>
+						<td>C57BL/6N-A&lt;tm1Brd&gt;</td><td>EPD0160_2_A08</td>
+						<td>Flp-mediated excision of the parental Prmt5<sup>tm2a(EUCOMM)Wtsi</sup> allele resulted in the removal of the promoter-driven neomycin selection cassette and the inserted lacZ reporter sequence, leaving behind the loxP-flanked critical exon(s).  Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.</td>
+						<td>MMAF</td><td>Insertion</td>
+					</tr>
+					<tr><td>7</td><td>MGI:3612701</td><td>4933411G11Rik&lt;tm3b(EUCOMM)Wtsi&gt;</td><td>targeted mutation 3b, Wellcome Trust Sanger Institute</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>EUCOMM</td>
+						<td>C57BL/6N-A&lt;tm1Brd&gt;</td><td>EPD0802_4_B03</td>
+						<td>Cre-mediated excision of the parental 4933411G11Rik<sup>tm3a(EUCOMM)Hmgu</sup> allele resulted in the removal of the promoter-driven neomycin selection cassette and critical exon(s) leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.</td>
+						<td>4933411G11Rik &amp;lt;EPD0802_4_B03&amp;gt;-1</td><td>Insertion, Intragenic deletion</td>
+					</tr>
+					<tr><td>8</td><td>MGI:1915138</td><td>Tmem100&lt;tm1e.1(KOMP)Wtsi&gt;</td><td>targeted mutation 1e.1, Wellcome Trust Sanger Institute</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>KOMP-CSD</td>
+						<td>C57BL/6N-A&lt;tm1Brd&gt;</td><td>EPD0515_1_G05</td><td>Cre-mediated excision of the parental Tmem100<sup>tm1e(KOMP)Wtsi</sup> allele resulted in the removal of the promoter-driven neomycin selection cassette leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.</td>
+						<td>TCPA0049Cre</td><td>Insertion</td>
+					</tr>
+					<tr><td>9</td><td>MGI:95521</td><td>Fgf7&lt;tm1e.1(EUCOMM)Hmgu&gt;</td><td>targeted mutation 1e.1, Helmholtz Zentrum Muenchen GmbH</td>
+						<td>Targeted</td><td>Targeted (Reporter)</td><td>Null/knockout, Reporter</td><td>EUCOMM</td>
+						<td>C57BL/6N-A&lt;tm1Brd&gt;</td><td>HEPD0617_5_F12</td>
+						<td>Cre-mediated excision of the parental Fgf7<sup>tm1e(KOMP)Wtsi</sup> allele resulted in the removal of the promoter-driven neomycin selection cassette leaving behind the inserted lacZ reporter sequence. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.</td>
+						<td>H-FGF7-F12-TM1B</td><td>Insertion</td>
+					</tr>
+					</table>
+					<p>**Note: Allele Subtypes and Allele Collection are not relevant to the old schema but will need to be tested when we migrate/load these alleles in the new schema. </p>
+				</li>
+			</ol>
+			</li>
+
+ 
+			<li>ALLELE UPDATE LOGIC TEST for alleles previously in MGI's database - Rows marked <b>fail</b> get skipped, and <b>pass</b> rows get processed as indicated, from the 
+				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_updateMGI_logic.txt">DAL_test_updateMGI_logic.txt</a> file. (sto144)
+ 			<p concordion:assertTrue="true">passed. klf 2014-03-04</p>
+			<ol>
+				<li>Run load using the above DAL_test_updateMGI_logic.txt file.</li>
+<!-- PASSED THESE TESTS USING EI ONLY. 
+				<li>Check in <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/input/mgi_allele_test.txt">alleles-to-create file</a>.&lt;- <i>CORRECT FILE LOCATION?</i></li>
+				<li>Verify that all the rows marked <b>pass</b> are in the created file (to be sent to generic allele loader).</li> 
+ -->
+				<li>Load the database with these alleles.</li>
+				<li>Verify in the EI that the data specified in the test input file get created (may be multiple cell lines or colony names).</li>
+			</ol>
+			</li>
+
+			<li>ALLELE UPDATE LOGIC TEST for alleles just created in IKMC file - Rows marked <b>fail</b> get skipped, and <b>pass</b> rows get processed as indicated, from the 
+				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_updateIKMC_logic.txt">DAL_test_updateIKMC_logic.txt</a> file. (sto144)
+ 			<p concordion:assertTrue="true">passed. klf 2014-03-04</p>
+			<ol>
+				<li>Run load using the above DAL_test_updateIKMC_logic.txt file.</li>
+<!--  PASSED THESE TESTS USING EI ONLY. 
+				<li>Check in <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/input/mgi_allele_test.txt">alleles-to-create file</a>.&lt;- <i>CORRECT FILE LOCATION?</i></li>
+				<li>Verify that all the rows marked <b>pass</b> are in the created file (to be sent to generic allele loader).</li>
+ -->
+				<li>Load the database with these alleles.</li>
+				<li>Verify in the EI that the data specified in the test input file get created (may be multiple cell lines or colony names).</li>
+			</ol>
+			</li>
+
+
+			<li>IKMC DATA LOAD - Appropriate allele data get updated in MGD (sto144)
+ 			<p concordion:assertTrue="true">passed. klf 2014-03-05</p>
+			<ol>
+				<li>Run the real sanger load file (<a href="https://www.mousephenotype.org/imits/v2/reports/mgi_modification_allele_report.tsv">found here</a>)</li>
+				<li>Created/Updated Allele Records (file is <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/ikmc/input/mgi_allele_ikmc.txt">here</a> - "live" file, will update each time the load script is re-run).&lt;- <i>CORRECT FILE LOCATION?</i></li>
+				<li>For each of the alleles in the first table, verify through the EI that the correct data is UPDATED (Mutant Cell Line, Colony Name), as defined in the second table.
+					<br/>Input File
+					<table>
+					<tr><th>Test ID</th><th>Field 6</th><th>Field 8</th><th>Field 9</th><th>Field 11</th><th>Field 12</th></tr>
+					<tr><td>1</td><td>tm1a(EUCOMM)Wtsi</td><td>MGI:4842516</td><td>EPD0636_5_C05</td><td>TCPA0163Cre</td><td>cre</td></tr>
+					<tr><td>2</td><td>tm1(KOMP)Vlcg</td><td>MGI:4399699</td><td>13867A-D12</td><td>JR18611</td><td>cre</td></tr>
+					<tr><td>2a</td><td>tm1(KOMP)Vlcg</td><td>MGI:4399699</td><td>13867A-D12</td><td>JAX-13867A-D12-1-1</td><td>cre</td></tr>
+					<tr><td>3</td><td>tm1(KOMP)Mbp</td><td>MGI:4454046</td><td>DEPD00513_4_C01</td><td>JR18664</td><td>cre</td></tr>
+					<tr><td>3a</td><td>tm1(KOMP)Mbp</td><td>MGI:4454046</td><td>DEPD00513_4_D01</td><td>JR21482</td><td>cre</td></tr>
+					<tr><td>4</td><td>tm1a(EUCOMM)Wtsi</td><td>MGI:4456034</td><td>EPD0560_5_B04</td><td>GSF-EPD0560_5_B04-2-1</td><td>cre</td></tr>
+					<tr><td>4a</td><td>tm1a(EUCOMM)Wtsi</td><td>MGI:4456034</td><td>EPD0560_5_B04</td><td>GSF-EPD0560_5_B04-2-2</td><td>cre</td></tr>
+					<tr><td>5</td><td>tm1a(KOMP)Wtsi</td><td>MGI:4362963</td><td>EPD0129_3_F05</td><td>TCPA0712Cre</td><td>cre</td></tr>
+					<tr><td>5a</td><td>tm1a(KOMP)Wtsi</td><td>MGI:4362963</td><td>EPD0129_3_C05</td><td>TCPA0711Cre</td><td>cre</td></tr>
+					</table>
+				
+					<br/>The following fields are created/updated uniquely for each allele 
+					<br/><i>(Mrk=Marker,Mol=Molecular)</i> 
+					<table>
+								<tr>
+									<th>Test ID</th>
+									<th>MGI Mrk ID</th>
+									<th>Symbol</th>
+									<th>Name</th>
+									<th>Type (new)</th>
+									<th>Type (old)</th>
+									<th>Subtypes**</th>
+									<th>Collection**</th>
+									<th>Strain&#160;of&#160;Origin</th>
+									<th>Cell&#160;Line&#160;ID</th>
+									<th>Mol Note</th>
+									<th>IKMC&#160;Colony&#160;Note</th>
+									<th>Mol&#160;Mutation</th>
+									<th>Note&#160;to&#160;tester</th>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td>MGI:103075</td>
+									<td>Wee1&lt;tm1b(EUCOMM)Wtsi&gt;</td>
+									<td>targeted mutation 1b, Wellcome Trust Sanger Institute<br/>
+										<span style="color:#FFFFFF;">ThisStupidTrickForcesCellToBeWider</span></td>
+									<td>Targeted</td>
+									<td>Targeted (Reporter)</td>
+									<td>Null/knockout, Reporter</td>
+									<td>Sanger Inst. Gene Trap Res.</td>
+									<td>C57BL/6N-A<sup>tm1Brd</sup></td>
+									<td>EPD0636_5_C05</td>
+									<td>Cre excision of MGI:4842516 tm1a allele removes the promoter-driven neo and critical exon(s) leaving behind the lacZ reporter                                                                                                                                  
+<!-- LOAD WOULD GENERATE NEW MOLECULAR NOTE TEXT:
+									Cre-mediated excision of the parental Wee1<sup>tm1a(EUCOMM)Wtsi</sup>
+										allele resulted in the removal of the promoter-driven neomycin
+										selection cassette and critical exon(s) leaving behind the
+										inserted lacZ reporter sequence. Further information on
+										targeting strategies used for this and other KOMP alleles can
+										be found at http://www.knockoutmouse.org/aboutkompstrategies
+ -->
+									</td>
+									<td>TCPA0163Cre</td>
+									<td>Insertion, Intragenic deletion</td>
+									<td>Allele already existed in MGI. Load should add the
+										Colony Note. Load should leave the Molecular Note as-is.</td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>MGI:1313271</td>
+									<td>Stk16&lt;tm1.1(KOMP)Vlcg&gt;</td>
+									<td>targeted mutation 1.1, Velocigene</td>
+									<td>Targeted</td>
+									<td>Targeted (Reporter)</td>
+									<td>Null/knockout, Reporter</td>
+									<td>KOMP-Regeneron</td>
+									<td>C57BL/6NTac</td>
+									<td>13867A-D12</td>
+									<td>The insertion of Velocigene cassette ZEN-Ub1 created a deletion of size 2690bp between positions 75207907-75210596 of Chromosome 1 (Genome Build37) and subsequent cre expression excised the neomycin selection cassette.  
+<!-- LOAD WOULD GENERATE NEW MOLECULAR NOTE TEXT:
+									Cre-mediated excision of the parental Stk16<sup>tm1(KOMP)Vlcg</sup>
+										allele resulted in the removal of the neomycin selection
+										cassette and critical exon(s) leaving behind the inserted lacZ
+										reporter sequence. Further information on targeting strategies
+										used for this and other KOMP alleles can be found at
+										http://www.knockoutmouse.org/aboutkompstrategies
+ -->
+									</td>
+									<td>JR18611|JAX-13867A-D12-1-1</td>
+									<td>Insertion, Intragenic deletion</td>
+									<td>Allele already existed in MGI. Load should add 2
+										values in Colony Note. Load should leave the Molecular Note as-is.</td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>MGI:1913333</td>
+									<td>Setd6&lt;tm1.1(KOMP)Mbp&gt;</td>
+									<td>targeted mutation 1.1, Mouse Biology Program, UCDavis</td>
+									<td>Targeted</td>
+									<td>Targeted (Reporter)</td>
+									<td>Null/knockout, Reporter</td>
+									<td>KOMP-CSD</td>
+									<td>C57BL/6N-A<sup>tm1Brd</sup></td>
+									<td>DEPD00513_4_C01, DEPD00513_4_D01</td>
+									<td>The insertion of the L1L2_Bact_P cassette created a deletion of size 2021 starting at position 95716345 and ending at position 95718366 of Chromosome 8 (Genome Build GRCm38).  This deletion results in the removal of functionally critical exon(s).  The cassette is composed of an FRT site followed by lacZ sequence and a loxP site.  This first loxP site is followed by neomycin under the control of the human beta-actin promoter, SV40 polyA, a second FRT site and a second loxP site. Subsequent cre expression excised this neomycin resistance cassette. Further information on targeting strategies used for this and other KOMP alleles can be found at http://www.knockoutmouse.org/aboutkompstrategies.  
+<!-- LOAD WOULD GENERATE NEW MOLECULAR NOTE TEXT:
+									Cre-mediated excision of the parental Setd6<sup>tm1(KOMP)Mbp</sup>
+										allele resulted in the removal of the neomycin selection
+										cassette and critical exon(s) leaving behind the inserted lacZ
+										reporter sequence. Further information on targeting strategies
+										used for this and other KOMP alleles can be found at
+										http://www.knockoutmouse.org/aboutkompstrategies
+
+ -->									</td>
+									<td>JR18664|JR21482</td>
+									<td>Insertion, Intragenic deletion</td>
+									<td>Allele already existed in MGI. Load should add 1 value
+										for Cell Line (DEPD00513_4_C01) and 2 values in Colony Note. Load should leave the Molecular Note as-is.</td>
+								</tr>
+								<tr>
+									<td>4</td>
+									<td>MGI:102849</td>
+									<td>Klkb1&lt;tm1b(EUCOMM)Wtsi&gt;</td>
+									<td>targeted mutation 1b, Wellcome Trust Sanger Institute</td>
+									<td>Targeted</td>
+									<td>Targeted (Reporter)</td>
+									<td>Null/knockout, Reporter</td>
+									<td>EUCOMM</td>
+									<td>C57BL/6N-A<sup>tm1Brd</sup></td>
+									<td>EPD0560_5_B04</td>
+									<td>Cre-mediated excision of the parental Klkb1<sup>tm1a(EUCOMM)Wtsi</sup>
+										allele resulted in the removal of the promoter-driven neomycin
+										selection cassette and critical exon(s) leaving behind the
+										inserted lacZ reporter sequence. Further information on
+										targeting strategies used for this and other KOMP alleles can
+										be found at http://www.knockoutmouse.org/aboutkompstrategies
+									</td>
+									<td>GSF-EPD0560_5_B04-2-1|GSF-EPD0560_5_B04-2-2</td>
+									<td>Insertion, Intragenic deletion</td>
+									<td>Allele created by IKMC load. Load should add 1 value
+										for Cell Line and 2 values in Colony Note.</td>
+								</tr>
+								<tr>
+									<td>5</td>
+									<td>MGI:1346349</td>
+									<td>Sh3bp2<sup>tm1b(KOMP)Wtsi</sup></td>
+									<td>targeted mutation 1b, Wellcome Trust Sanger Institute</td>
+									<td>Targeted</td>
+									<td>Targeted (Reporter)</td>
+									<td>Null/knockout, Reporter</td>
+									<td>KOMP-CSD</td>
+									<td>C57BL/6N</td>
+									<td>EPD0129_3_F05, EPD0129_3_C05</td>
+									<td>Cre-mediated excision of the parental Sh3bp2<sup>tm1a(KOMP)Wtsi</sup>
+										allele resulted in the removal of the promoter-driven neomycin
+										selection cassette and critical exon(s) leaving behind the
+										inserted lacZ reporter sequence. Further information on
+										targeting strategies used for this and other KOMP alleles can
+										be found at http://www.knockoutmouse.org/aboutkompstrategies
+									</td>
+									<td>TCPA0712Cre|TCPA0711Cre</td>
+									<td>Insertion, Intragenic deletion</td>
+									<td>Allele created by IKMC load. Load should add 2 values
+										for Cell Line and 2 values in Colony Note.</td>
+								</tr>
+							</table>
+						</li>
+					</ol>
+			</li>
+
+			<li>When data are added via the IKMC load to alleles with status of "Reserved", the status is udpated to "Approved". (sto144)
+ 			<p concordion:assertTrue="true">passed. klf 2014-03-05</p>
+ 			<p>The IKMC load file contains the following data for  creating an allele which already exists in MGD  with status "Reserved" : (Rab36&lt;tm1b(KOMP)Wtsi&gt;):</p>
+ 					<table>
+					<tr><th>Field 2</th><th>Field 6</th><th>Field 8</th><th>Field 9</th><th>Field 11</th><th>Field 12</th></tr>
+					<tr><td>MGI:1924127</td><td>tm1a(KOMP)Wtsi</td><td>MGI:4364152</td><td>EPD0107_5_F04</td><td>JR23664</td><td>cre</td></tr>
+ 					</table>
+ 			
+ 				<ol>
+ 					<li>Find the <b>derivative</b> "tm1b" allele record in the EI.</li>
+ 					<li>Verify that the Mutant Cell Line is <b>EPD0107_5_F04</b>.</li>
+ 					<li>Verify that the IKMC Allele Colony Name Note is <b>JR23664</b>.</li>
+ 					<li>Verify that the Status is now <b>Approved</b>. (Compare to <a href="http://prodwww.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&amp;key=837154">prod WI</a> where the status is <b>Reserved</b>.) </li>
+ 				</ol>
+			</li>
+			
+			<li>A file containing colony names, MGI IDs, and allele symbols is available for IKMC to update their data. (sto144 / sto 145)
+ 			<p concordion:assertTrue="true">passed. klf 2014-03-05</p>
+ 			<ol>
+ 				<li>Navigate to the FTP directory <a href="ftp://ftp.informatics.jax.org/pub/IKMC/mgi_allele_ikmc.txt.current">ftp://ftp.informatics.jax.org/pub/IKMC/mgi_allele_ikmc.txt.current</a>.</li>
+ 				<li>Verify that a text file exists.</li>
+ 				<li>Verify that the text file has the same number of rows as the IKMC input file less any rows reported to the Skip log.</li>
+ 				<li>Verify that the following data exist in the report (alleles already existing in MGI which this load updated)
+ 				<table>
+								<tr>
+									<th>Test ID</th>
+									<th>Column 1: Colony Name</th>
+									<th>Column 2: MGI ID</th>
+									<th>Column 3: Allele Symbol</th>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td>JR24026</td>
+									<td>MGI:5515625</td>
+									<td>&lt;tm1b(KOMP)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>TCPA0163Cre</td>
+									<td>MGI:5513834</td>
+									<td>&lt;tm1b(EUCOMM)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>JR23020</td>
+									<td>MGI:5493275</td>
+									<td>&lt;tm1.1(KOMP)Vlcg&gt;</td>
+								</tr>
+								<!-- ZZEF1 ENDS UP IN SKIP FILE BECAUSE NO MGI ID FOR THE PARENT ALLELE EXISTS IN THE IKMC DOWNLOAD FILE.
+ 					<tr><td>JR22366</td><td>MGI:5474781</td><td>Zzef1&lt;tm2.1(KOMP)Vlcg&gt;</td></tr>
+ 					<tr><td>BL3102-1</td><td>MGI:5474781</td><td>Zzef1&lt;tm2.1(KOMP)Vlcg&gt;</td></tr>
+
+ -->
+							</table>
+						</li>
+ 				<li>Verify that the following data exist in the report (new allele records created  or updated by this load)
+ 				<table>
+								<tr>
+									<th>Test ID</th>
+									<th>Column 1: Colony Name</th>
+									<th>Column 2: MGI ID</th>
+									<th>Column 3: Allele Symbol</th>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td>1700019B03Rik &amp;lt;EPD0639_2_A03&amp;gt;-1</td>
+									<td>new ID - verify same as in EI</td>
+									<td>&lt;tm3b(KOMP)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>P4161-EPD0592_3_B02-1</td>
+									<td>new ID - verify same as in EI</td>
+									<td>&lt;tm1b(EUCOMM)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>BL1469</td>
+									<td>new ID - verify same as in EI</td>
+									<td>&lt;tm1.1(KOMP)Vlcg&gt;</td>
+								</tr>
+								<tr>
+									<td>4</td>
+									<td>MMAF</td>
+									<td>new ID - verify same as in EI</td>
+									<td>&lt;tm2c(EUCOMM)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>5</td>
+									<td>ET6689</td>
+									<td>new ID - verify same as in EI</td>
+									<td>&lt;tm1b(KOMP)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>6</td>
+									<td>RIKEN_EPD0025_5_A08</td>
+									<td>same ID as row 5 above</td>
+									<td>&lt;tm1b(KOMP)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>7</td>
+									<td>H-AP4E1-A08-TM1B</td>
+									<td>same ID as row 5 above</td>
+									<td>&lt;tm1b(KOMP)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>8</td>
+									<td>MYFZ-2</td>
+									<td>same ID as row 5 above</td>
+									<td>&lt;tm1b(KOMP)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>9</td>
+									<td>MUCH</td>
+									<td>same ID as row 5 above</td>
+									<td>&lt;tm1b(KOMP)Wtsi&gt;</td>
+								</tr>
+								<tr>
+									<td>10</td>
+									<td>JR21510</td>
+									<td>same ID as row 5 above</td>
+									<td>&lt;tm1b(KOMP)Wtsi&gt;</td>
+								</tr>
+							</table>
+						</li>
+ 			</ol>
+			</li>
+
+		</ol>
+	</div>
+	
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+			<li>Test 1
+			<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+            </ol>
+    		</li>
+    		<li>Test 2
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

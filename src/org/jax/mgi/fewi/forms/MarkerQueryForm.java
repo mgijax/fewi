@@ -1,58 +1,138 @@
 package org.jax.mgi.fewi.forms;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /*-------*/
 /* class */
 /*-------*/
 
-public class MarkerQueryForm {
-
-
+public class MarkerQueryForm 
+{
+	public static boolean initialized=false;
+	public static Map<String,String> markerTypeKeyToDisplayMap;
+	
+	
     //--------------------//
     // instance variables
     //--------------------//
-    private String param1;
-    private String param2;
-    private String param3;
+    private String nomen;
+    private String phenotype;
+    private String go;
+    private String interpro;
+    private List<String> featureType;
+    private List<String> mcv;
+    private List<String> chromosome;
+    private String coordinate;
+    private String coordUnit;
+    private String cm;
+    
+    private String startMarker;
+    private String endMarker;
+    
 
-
+	
+	public static void setMarkerTypeKeyToDisplayMap(Map<String,String> markerTypeKeyToDisplayMap)
+	{
+		MarkerQueryForm.markerTypeKeyToDisplayMap=markerTypeKeyToDisplayMap;
+	}
+	
+	// converts mcv keys submitted to displayable text values
+	public List<String> getMcvDisplay()
+	{
+		List<String> displayValues = new ArrayList<String>();
+		for(String key : this.getMcv())
+		{
+			if(MarkerQueryForm.markerTypeKeyToDisplayMap.containsKey(key))
+			{
+				displayValues.add(MarkerQueryForm.markerTypeKeyToDisplayMap.get(key));
+			}
+		}
+		return displayValues;
+	}
+	
     //--------------------//
     // accessors
     //--------------------//
-
-    // parameter 1
-    public String getParam1() {
-        return param1;
-    }
-    public void setParam1(String param1) {
-        this.param1 = param1;
-    }
-
-    // parameter 2
-    public String getParam2() {
-        return param2;
-    }
-    public void setParam2(String param2) {
-        this.param2 = param2;
-    }
-
-    // parameter 3
-    public String getParam3() {
-        return param3;
-    }
-    public void setParam3(String param3) {
-        this.param3 = param3;
-    }
-
-
-    //--------------------//
-    // toString
-    //--------------------//
-    @Override
-    public String toString() {
-        return "Marker2QueryForm ["
-            + (param1 != null ? "param1=" + param1 + ", " : "")
-            + (param2 != null ? "param2=" + param2 + ", " : "")
-            + (param3 != null ? "param3=" + param3 + ", " : "")
-            + "]";
-    }
+	public String getNomen() {
+		return nomen;
+	}
+	public List<String> getFeatureType() {
+		return featureType;
+	}
+	public List<String> getChromosome() {
+		return chromosome;
+	}
+	public String getCoordinate() {
+		return coordinate;
+	}
+	public String getCoordUnit() {
+		return coordUnit;
+	}
+	public String getCm() {
+		return cm;
+	}
+	public void setNomen(String nomen) {
+		this.nomen = nomen;
+	}
+	public void setFeatureType(List<String> featureType) {
+		this.featureType = featureType;
+	}
+	
+	public List<String> getMcv() {
+		return mcv;
+	}
+	public void setMcv(List<String> mcv) {
+		this.mcv = mcv;
+	}
+	public void setChromosome(List<String> chromosome) {
+		this.chromosome = chromosome;
+	}
+	public void setCoordinate(String coordinate) {
+		this.coordinate = coordinate;
+	}
+	public void setCoordUnit(String coordUnit) {
+		this.coordUnit = coordUnit;
+	}
+	public void setCm(String cm) {
+		this.cm = cm;
+	}
+	public String getStartMarker() {
+		return startMarker;
+	}
+	public String getEndMarker() {
+		return endMarker;
+	}
+	public void setStartMarker(String startMarker) {
+		this.startMarker = startMarker;
+	}
+	public void setEndMarker(String endMarker) {
+		this.endMarker = endMarker;
+	}
+	
+	public String getGo() {
+		return go;
+	}
+	public String getInterpro() {
+		return interpro;
+	}
+	public void setGo(String go) {
+		this.go = go;
+	}
+	public void setInterpro(String interpro) {
+		this.interpro = interpro;
+	}
+	public String getPhenotype() {
+		return phenotype;
+	}
+	public void setPhenotype(String phenotype) {
+		this.phenotype = phenotype;
+	}
+	@Override
+	public String toString() {
+		return "MarkerQueryForm [nomen=" + nomen + ", featureType="
+				+ featureType + ", chromosome=" + chromosome + ", coordinate="
+				+ coordinate + ", coordUnit=" + coordUnit + ", cm=" + cm + "]";
+	}
 }

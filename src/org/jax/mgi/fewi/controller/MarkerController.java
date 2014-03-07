@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,12 +12,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,28 +28,27 @@ import javax.servlet.http.HttpServletRequest;
 import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MarkerProbeset;
 import mgi.frontend.datamodel.MarkerAlleleAssociation;
 import mgi.frontend.datamodel.MarkerBiotypeConflict;
 import mgi.frontend.datamodel.MarkerCountSetItem;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerIDOtherMarker;
 import mgi.frontend.datamodel.MarkerLocation;
-import mgi.frontend.datamodel.MarkerOrthology;
+import mgi.frontend.datamodel.MarkerProbeset;
 import mgi.frontend.datamodel.MarkerSequenceAssociation;
-import mgi.frontend.datamodel.MarkerSynonym;
 import mgi.frontend.datamodel.OrganismOrtholog;
-import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.QueryFormOption;
+import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.SequenceSource;
 
 import org.hibernate.SessionFactory;
+import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
-import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
-import org.jax.mgi.fewi.forms.FooQueryForm;
+import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.forms.AlleleQueryForm;
 import org.jax.mgi.fewi.forms.MarkerQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.ObjectTypes;
@@ -56,12 +58,14 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
 import org.jax.mgi.fewi.util.FewiLinker;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.jax.mgi.fewi.util.ProviderLinker;
+import org.jax.mgi.fewi.util.QueryParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +105,7 @@ public class MarkerController {
       = LoggerFactory.getLogger(MarkerController.class);
 
     @Autowired
-    private MarkerFinder MarkerFinder;
+    private MarkerFinder markerFinder;
     
     @Autowired
     private DbInfoFinder dbInfoFinder;
@@ -175,6 +179,8 @@ public class MarkerController {
 
 	    featureTypeHtml = FormatHelper.buildHtmlTree(markerTypes);
 	    featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
+	    
+	    initQueryForm(markerTypes);
 	}
 
 	// if we don't have a cached version of the build number, retrieve it
@@ -238,11 +244,71 @@ public class MarkerController {
     //-------------------------//
     @RequestMapping("/summary")
     public ModelAndView markerSummary(HttpServletRequest request,
-            @ModelAttribute FooQueryForm queryForm) {
-
+            @ModelAttribute MarkerQueryForm queryForm) 
+    {
         logger.debug("->markerSummary started");
         logger.debug("queryString: " + request.getQueryString());
+        
+        // flag any errors for start and end marker, if specified
+        String startMarker = queryForm.getStartMarker();
+        String endMarker = queryForm.getEndMarker();
+        if(notEmpty(startMarker) || notEmpty(endMarker))
+        {
+        	if(!notEmpty(startMarker))
+        	{
+        		return errorMav("start marker not specified");
+        	}
+        	else if(!notEmpty(endMarker))
+        	{
+        		return errorMav("end marker not specified");
+        	}
+        	// query for the start and end markers to check their coordinates and chromosomes
+        	// check that we can find the start marker
+        	SearchParams sp = new SearchParams();
+        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.OP_EQUAL));
+        	SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
+        	if(sr.getTotalCount()<1)
+        	{
+        		return errorMav("start marker <b>"+startMarker+"</b> not found");
+        	}
+        	else if(sr.getTotalCount()>1)
+        	{
+        		return errorMav("start marker symbol <b>"+startMarker+"</b> matches multiple markers");
+        	}
+        	SolrSummaryMarker startMarkerObj = sr.getResultObjects().get(0);
+        	
+        	// check that we can find the end marker
+        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.OP_EQUAL));
+        	sr = markerFinder.getSummaryMarkers(sp);
+        	if(sr.getTotalCount()<1)
+        	{
+        		return errorMav("end marker <b>"+endMarker+"</b> not found");
+        	}
+        	else if(sr.getTotalCount()>1)
+        	{
+        		return errorMav("end marker symbol <b>"+endMarker+"</b> matches multiple markers");
+        	}
+        	SolrSummaryMarker endMarkerObj = sr.getResultObjects().get(0);
+        	
+        	// check chromosome
+        	if(!startMarkerObj.getChromosome().equals(endMarkerObj.getChromosome()))
+        	{
+        		return errorMav("Marker <b>"+startMarker+"("+startMarkerObj.getChromosome()+")</b> not on same chromosome as " +
+        				"<b>"+endMarker+"("+endMarkerObj.getChromosome()+")</b>");
+        	}
+        	
+        	// check that coordinate exist for both
+        	if(!notEmpty(startMarkerObj.getCoordStart()) || !notEmpty(startMarkerObj.getCoordEnd()))
+        	{
+        		return errorMav("start marker <b>"+startMarker+"</b> has no coordinates");
+        	}
+        	if(!notEmpty(endMarkerObj.getCoordStart()) || !notEmpty(endMarkerObj.getCoordEnd()))
+        	{
+        		return errorMav("end marker <b>"+endMarker+"</b> has no coordinates");
+        	}
+        }
 
+        initQueryForm();
         ModelAndView mav = new ModelAndView("marker_summary");
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
@@ -250,6 +316,12 @@ public class MarkerController {
         return mav;
     }
 
+    private ModelAndView errorMav(String msg)
+    {
+    	ModelAndView mav = new ModelAndView("error");
+        mav.addObject("errorMsg", msg);
+        return mav;
+    }
 
     //--------------------//
     // Marker Detail By ID
@@ -265,8 +337,7 @@ public class MarkerController {
         searchParams.setFilter(markerIdFilter);
 
         // find the requested marker
-        SearchResults searchResults
-          = MarkerFinder.getMarkerByID(searchParams);
+        SearchResults searchResults = markerFinder.getMarkerByID(searchParams);
         List<Marker> markerList = searchResults.getResultObjects();
 
         // there can be only one...
@@ -946,8 +1017,7 @@ public class MarkerController {
         logger.debug("->markerDetailByKey started");
 
         // find the requested marker
-        SearchResults searchResults
-          = MarkerFinder.getMarkerByKey(dbKey);
+        SearchResults searchResults = markerFinder.getMarkerByKey(dbKey);
         List<Marker> markerList = searchResults.getResultObjects();
 
         // there can be only one...
@@ -1020,8 +1090,7 @@ public class MarkerController {
         searchParams.setFilter(markerIdFilter);
 
         // find the requested marker
-        SearchResults searchResults
-          = MarkerFinder.getMarkerByID(searchParams);
+        SearchResults searchResults = markerFinder.getMarkerByID(searchParams);
         List<Marker> markerList = searchResults.getResultObjects();
 
         // there can be only one...
@@ -1075,9 +1144,9 @@ public class MarkerController {
     @RequestMapping("/json")
     public @ResponseBody JsonSummaryResponse<MarkerSummaryRow> seqSummaryJson(
             HttpServletRequest request,
-			@ModelAttribute FooQueryForm query,
-            @ModelAttribute Paginator page) {
-
+			@ModelAttribute MarkerQueryForm query,
+            @ModelAttribute Paginator page) throws org.antlr.runtime.RecognitionException 
+            {
         logger.debug("->JsonSummaryResponse started");
 
         // parameter parsing
@@ -1086,6 +1155,12 @@ public class MarkerController {
         // generate search parms object;  add pagination, sorts, and filters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
+        // if we have nomen query, do text highlighting
+        if(notEmpty(query.getNomen()))
+        {
+	        params.setIncludeMetaHighlight(true);
+	        params.setIncludeSetMeta(true);
+        }
         params.setSorts(this.genSorts(request));
         params.setFilter(this.genFilters(query));
         
@@ -1094,26 +1169,19 @@ public class MarkerController {
         }        
 
         // perform query, and pull out the requested objects
-        SearchResults searchResults
-          = MarkerFinder.getMarkers(params);
-        List<Marker> markerList = searchResults.getResultObjects();
+        SearchResults<SolrSummaryMarker> searchResults = markerFinder.getSummaryMarkers(params);
+        List<SolrSummaryMarker> markerList = searchResults.getResultObjects();
 
         // create/load the list of SummaryRow wrapper objects
-        List<MarkerSummaryRow> summaryRows = new ArrayList<MarkerSummaryRow> ();
-        Iterator<Marker> it = markerList.iterator();
-        while (it.hasNext()) {
-            Marker marker = it.next();
-            if (marker == null) {
-                logger.debug("--> Null Object");
-            }else {
-                summaryRows.add(new MarkerSummaryRow(marker));
-            }
+        List<MarkerSummaryRow> summaryRows = new ArrayList<MarkerSummaryRow>();
+        for(SolrSummaryMarker marker : markerList)
+        {
+        	//logger.info("marker="+marker);
+        	summaryRows.add(new MarkerSummaryRow(marker));
         }
-
         // The JSON return object will be serialized to a JSON response.
         // Client-side JavaScript expects this object
-        JsonSummaryResponse<MarkerSummaryRow> jsonResponse
-          = new JsonSummaryResponse<MarkerSummaryRow>();
+        JsonSummaryResponse<MarkerSummaryRow> jsonResponse = new JsonSummaryResponse<MarkerSummaryRow>();
 
         // place data into JSON response, and return
         jsonResponse.setSummaryRows(summaryRows);
@@ -1121,6 +1189,32 @@ public class MarkerController {
         return jsonResponse;
     }
 
+  //--------------------------------//
+    // Allele Summary Tab-Delim Report
+    //--------------------------------//
+    @RequestMapping("/report*")
+    public ModelAndView markerSummaryExport(
+            HttpServletRequest request,
+			@ModelAttribute MarkerQueryForm query) throws org.antlr.runtime.RecognitionException
+	{
+
+    	logger.debug("generating report");
+
+        SearchParams sp = new SearchParams();
+        sp.setPageSize(250000);
+        sp.setFilter(this.genFilters(query));
+        List<Sort> sorts = new ArrayList<Sort>();
+        sorts.add(new Sort("bySymbol"));
+        sp.setSorts(sorts);
+        SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
+
+        List<SolrSummaryMarker> markers = sr.getResultObjects();
+
+		ModelAndView mav = new ModelAndView("markerSummaryReport");
+		mav.addObject("markers", markers);
+		return mav;
+
+    }
 
 
     //--------------------------------------------------------------------//
@@ -1197,17 +1291,14 @@ public class MarkerController {
     }
 
     // generate the sorts
-    private List<Sort> genSorts(HttpServletRequest request) {
-
+    private List<Sort> genSorts(HttpServletRequest request)
+    {
         logger.debug("->genSorts started");
 
         List<Sort> sorts = new ArrayList<Sort>();
 
         // retrieve requested sort order; set default if not supplied
         String sortRequested = request.getParameter("sort");
-        if (sortRequested == null) {
-            sortRequested = SortConstants.FOO_SORT;
-        }
 
         String dirRequested  = request.getParameter("dir");
         boolean desc = false;
@@ -1215,48 +1306,206 @@ public class MarkerController {
             desc = true;
         }
 
-        Sort sort = new Sort(sortRequested, desc);
-        sorts.add(sort);
-
-        logger.debug ("sort: " + sort.toString());
+        if("symbol".equalsIgnoreCase(sortRequested))
+        {
+        	sorts.add(new Sort("bySymbol", desc));
+        }
+        else if("location".equalsIgnoreCase(sortRequested))
+        {
+        	sorts.add(new Sort("byLocation", desc));
+        }
+        else
+        {
+        	// default is by symbol
+        	sorts.add(new Sort("bySymbol",false));
+        }
         return sorts;
     }
 
     // generate the filters
-    private Filter genFilters(FooQueryForm query){
-
+    private Filter genFilters(MarkerQueryForm query) throws org.antlr.runtime.RecognitionException
+    {
         logger.debug("->genFilters started");
         logger.debug("QueryForm -> " + query);
 
-
         // start filter list to add filters to
-        List<Filter> filterList = new ArrayList<Filter>();
+        List<Filter> queryFilters = new ArrayList<Filter>();
 
-        String param1 = query.getParam1();
-        String param2 = query.getParam2();
+        String nomen = query.getNomen();
+        if(notEmpty(nomen))
+        {
+        	 Filter nomenFilter = generateNomenFilter("markerNomen",nomen);
+			 if(nomenFilter!=null) queryFilters.add(nomenFilter);
+        }
+        
+        // Phenotypes
+		 String phenotype = query.getPhenotype();
+		 if(notEmpty(phenotype))
+		 {
+			 queryFilters.add(BooleanSearch.buildSolrFilter("phenotype",phenotype));
+		 }
+		 
+		 //InterPro
+		 String interpro = query.getInterpro();
+		 if(notEmpty(interpro))
+		 {
+			 queryFilters.add(new Filter("interpro",interpro,Filter.OP_EQUAL));
+		 }
+		 //GO
+		 String go = query.getGo();
+		 if(notEmpty(go))
+		 {
+			 queryFilters.add(new Filter("go",go,Filter.OP_EQUAL));
+		 }
+        
+        // feature type
+        Filter featureTypeFilter = makeListFilter(query.getFeatureType(),"featureType");
+		if(featureTypeFilter!=null) queryFilters.add(featureTypeFilter);
+        
+		Filter mcvFilter = makeListFilter(query.getMcv(),"featureTypeKey");
+		if(mcvFilter!=null) queryFilters.add(mcvFilter);
+		
+        // Chromosome
+		 List<String> chr = query.getChromosome();
+		 if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY))
+		 {
+			 Filter chrFilter = makeListFilter(chr,"chromosome");
+			 if(chrFilter!=null) queryFilters.add(chrFilter);
+		 }
+		 
+		 // Coordinate Search
+		 String coord = query.getCoordinate();
+		 String coordUnit = query.getCoordUnit();
+		 if(notEmpty(coord))
+		 {
+			 queryFilters.add(genCoordFilter(coord,coordUnit));
+		 }
+		 
+		 // CM Search
+		 String cm = query.getCm();
+		 if(notEmpty(cm))
+		 {
+			 cm = cm.trim();
+			 // split on either -, periods, or whitespaces
+			 String[] cmTokens = cm.split("\\s*(-|\\.\\.|\\s+)\\s*");
+			 Double start=null,end=null;
+			 try
+			 {
+				 BigDecimal startDec = QueryParser.parseDoubleInput(cmTokens[0]);
+				 start=startDec.doubleValue();
+				 // support single coordinate by setting end to be same as start
+				 if(cmTokens.length<2) end=start;
+				 else
+				 {
+					 BigDecimal endDec = QueryParser.parseDoubleInput(cmTokens[1]);
+					 end = endDec.doubleValue();
+				 }
+			 }catch(Exception e)
+			 {
+				 // ignore any errors, we just won't do a cm query
+				 logger.debug("failed to parse cm",e);
+			 }
+			 if(start!=null && end!=null)
+			 {
+				 Filter endF = new Filter(SearchConstants.CM_OFFSET,end.toString(),Filter.OP_LESS_OR_EQUAL);
+				 Filter startF = new Filter(SearchConstants.CM_OFFSET,start.toString(),Filter.OP_GREATER_OR_EQUAL);
+				 queryFilters.add(Filter.and(Arrays.asList(endF,startF)));
+			 }
+			 else
+			 {
+				 queryFilters.add(new Filter("markerKey","-9999",Filter.OP_EQUAL));
+			 }
+		 }
+		 
+		String startMarker = query.getStartMarker();
+        String endMarker = query.getEndMarker();
+        if(notEmpty(startMarker) && notEmpty(endMarker))
+        {
+        	// query for the start and end markers to check their coordinates and chromosomes
+        	// check that we can find the start marker
+        	SearchParams sp = new SearchParams();
+        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.OP_EQUAL));
+        	SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
+        	if(sr.getTotalCount()>0)
+        	{
+        		SolrSummaryMarker startMarkerObj = sr.getResultObjects().get(0);
+        		// check that we can find the end marker
+            	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.OP_EQUAL));
+            	sr = markerFinder.getSummaryMarkers(sp);
+            	if(sr.getTotalCount()>0)
+            	{
+            		SolrSummaryMarker endMarkerObj = sr.getResultObjects().get(0);
+            		
+            		if(notEmpty(startMarkerObj.getChromosome()) 
+            				&& notEmpty(startMarkerObj.getCoordStart()) 
+            				&& notEmpty(startMarkerObj.getCoordEnd())
+            				&& notEmpty(endMarkerObj.getChromosome())
+            				&& notEmpty(endMarkerObj.getCoordStart()) 
+            				&& notEmpty(endMarkerObj.getCoordEnd()))
+            		{
+            			Integer startCoord = Math.min(startMarkerObj.getCoordStart(),endMarkerObj.getCoordStart());
+            			Integer endCoord = Math.max(startMarkerObj.getCoordEnd(),endMarkerObj.getCoordEnd());
 
-        //
-        if ((param1 != null) && (!"".equals(param1))) {
-            filterList.add(new Filter (SearchConstants.MRK_ID, param1,
-                Filter.OP_EQUAL));
+            			String coordString = startCoord+"-"+endCoord;
+            			logger.info("build coord string from markers "+startMarker+" to "+endMarker+" = "+coordString);
+            			Filter chromosomeFilter = new Filter("chromosome",startMarkerObj.getChromosome(),Filter.OP_EQUAL);
+            			Filter coordFilter = genCoordFilter(coordString,"bp");
+            			queryFilters.add(Filter.and(Arrays.asList(chromosomeFilter,coordFilter)));
+            		}
+            	}
+        	}
         }
 
-        //
-        if ((param2 != null) && (!"".equals(param2))) {
-            filterList.add(new Filter (SearchConstants.MRK_ID, param2,
-                Filter.OP_EQUAL));
-        }
-
-        // if we have filters, collapse them into a single filter
-        Filter containerFilter = new Filter();
-        if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
-            containerFilter.setNestedFilters(filterList);
-        }
-
-        return containerFilter;
+        if(queryFilters.size()<1) return new Filter("markerKey","-99999",Filter.OP_EQUAL);
+        return Filter.and(queryFilters);
     }
 
+    private Filter genCoordFilter(String coord, String coordUnit)
+    {
+    	coord = coord.trim();
+    	BigDecimal unitMultiplier = new BigDecimal(1);
+    	if(AlleleQueryForm.COORD_UNIT_MBP.equalsIgnoreCase(coordUnit))
+    	{
+			 // convert to Mbp
+			unitMultiplier = new BigDecimal(1000000);
+    	}
+    	// split on either -, periods, or whitespaces
+    	String[] coordTokens = coord.split("\\s*(-|\\.\\.|\\s+)\\s*");
+    	Long start=null,end=null;
+    	try
+    	{
+			 logger.info("parsing: "+coordTokens[0]);
+			 BigDecimal startDec = QueryParser.parseDoubleInput(coordTokens[0]);
+			 startDec = startDec.multiply(unitMultiplier);
+			 start = bdToLong(startDec);
+			 logger.info("into "+start);
+			 // support single coordinate by setting end to be same as start
+			 if(coordTokens.length<2) end=start;
+			 else
+			 {
+				 BigDecimal endDec = QueryParser.parseDoubleInput(coordTokens[1]);
+				 logger.info("parsing: "+coordTokens[1]);
+				 endDec = endDec.multiply(unitMultiplier);
+				 end = bdToLong(endDec);
+				 logger.info("into "+end);
+			}
+    	}catch(Exception e)
+    	{
+			 // ignore any errors, we just won't do a coord query
+			 logger.debug("failed to parse coordinates",e);
+    	}
+    	if(start!=null && end!=null)
+    	{
+			 Filter endF = new Filter(SearchConstants.START_COORD,end.toString(),Filter.OP_LESS_OR_EQUAL);
+			 Filter startF = new Filter(SearchConstants.END_COORD,start.toString(),Filter.OP_GREATER_OR_EQUAL);
+			 return Filter.and(Arrays.asList(endF,startF));
+    	}
+    	else
+    	{
+			 return new Filter("markerKey","-9999",Filter.OP_EQUAL);
+    	}
+    }
+    
     /** return a List comparable to 'annotations' but with the duplicate
      * terms stripped out.  Also strip out any annotations with a NOT
      * qualifier.
@@ -1305,5 +1554,97 @@ public class MarkerController {
      */
     protected static int getMinimapCacheCount() {
 	return minimaps.size();
+    }
+    
+    
+    private Filter generateNomenFilter(String property, String query){
+		logger.debug("splitting nomenclature query into tokens");
+		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query);
+		List<Filter> nomenFilters = new ArrayList<Filter>();
+		// we want to group all non-wildcarded tokens into one solr phrase search
+		List<String> nomenTokens = new ArrayList<String>();
+		String phraseSearch = "";
+
+		for(String nomen : nomens) {
+			if(nomen.endsWith("*") || nomen.startsWith("*")) {
+				nomenTokens.add(nomen);
+			} else {
+				phraseSearch += nomen+" ";
+			}
+		}
+
+		if(!phraseSearch.trim().equals("")) {
+			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
+			nomenTokens.add("\""+phraseSearch+"\"~100");
+		}
+
+		for(String nomenToken : nomenTokens) {
+			logger.debug("token="+nomenToken);
+			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
+			nomenFilters.add(nFilter);
+		}
+
+		if(nomenFilters.size() > 0) {
+			// add the nomenclature search filter
+			return Filter.and(nomenFilters);
+		}
+		// We don't want to return an empty filter object, because it screws up Solr.
+		return null;
+	}
+    
+    private Filter makeListFilter(List<String> values, String searchConstant)
+    {
+    	Filter f = null;
+   		if(values!=null && values.size()>0)
+   		{
+   			 List<Filter> vFilters = new ArrayList<Filter>();
+   			 for(String value : values)
+   			 {
+   				vFilters.add(new Filter(searchConstant,value,Filter.OP_EQUAL));
+   			 }
+   			 f = Filter.or(vFilters);
+   		}
+   		return f;
+    }
+
+    
+    private void initQueryForm(List<QueryFormOption> options)
+    {
+    	if(!MarkerQueryForm.initialized)
+    	{
+    		// do stuff
+    		Map<String,String> mcvToDisplay = new HashMap<String,String>();
+    		for(QueryFormOption option : options)
+    		{
+    			mcvToDisplay.put(option.getSubmitValue(),option.getDisplayValue());
+    		}
+    		MarkerQueryForm.setMarkerTypeKeyToDisplayMap(mcvToDisplay);
+    	}
+    }
+    private void initQueryForm()
+    {
+    	if(!MarkerQueryForm.initialized)
+    	{
+    		SearchResults<QueryFormOption> mtResults = queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
+    		initQueryForm(mtResults.getResultObjects());
+    	}
+    }
+    
+   private long bdToLong(BigDecimal bd)
+   {
+	   if(bd.compareTo(new BigDecimal(Integer.MAX_VALUE)) > 0) return Integer.MAX_VALUE;
+	   return bd.longValue();
+   }
+    private boolean notEmpty(String s)
+    {
+    	return s!=null && !s.equals("");
+    } 
+    private boolean notEmpty(Integer i)
+    {
+    	return i!=null && i>0;
+    }
+    private boolean notEmpty(List l)
+    {
+    	return l!=null && l.size()>0;
     }
 }

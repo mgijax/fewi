@@ -139,7 +139,7 @@ public class ReferenceSummary {
         	sb.append(String.format("<li>Genome features: <a href=\"%ssearches/marker_report_by_reference.cgi?%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfMarkers()));
         }
         if(reference.getCountOfAlleles() > 0){
-        	sb.append(String.format("<li>Phenotypic alleles: <a href=\"%ssearches/allele_report.cgi?_Refs_key=%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfAlleles()));
+        	sb.append(String.format("<li>Phenotypic alleles: <a href=\"%sallele/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfAlleles()));
         }
         if(reference.getCountOfMappingResults() > 0){
         	sb.append(String.format("<li>Mapping data: <a href=\"%ssearches/mapdata_report_by_reference.cgi?%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfMappingResults()));
@@ -159,9 +159,9 @@ public class ReferenceSummary {
 		String abs;
 		if (this.reference.getAbstract() != null
 				&& !"".equals(this.reference.getAbstract())){
-			//logger.debug("abstract before ="+this.reference.getAbstract()); 
+			//logger.debug("abstract before ="+this.reference.getAbstract());
 			abs = abstractHL.highLight(ntc.convertNotes(this.reference.getAbstract(),'|')).replaceAll("\n\n", "<p>");
-			//logger.debug("abstract after ="+abs); 
+			//logger.debug("abstract after ="+abs);
 		} else {
 			abs = "this reference has no abstract";
 		}

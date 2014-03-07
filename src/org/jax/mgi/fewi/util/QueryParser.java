@@ -1,8 +1,12 @@
 package org.jax.mgi.fewi.util;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +16,64 @@ import java.util.Set;
  */
 public class QueryParser 
 {
+	/**
+	 * removes unmatched characters from original String
+	 */
+	public static String removeUnmatched(String original,char character)
+	{ 
+		int numChars=0;
+		int lastCharIdx=-1;
+		for (int i=0; i < original.length(); i++)
+		{
+		    char c = original.charAt(i);
+		    if(c==character)
+		    {
+		    	numChars+=1;
+		    	lastCharIdx=i;
+		    }
+		}
+
+		// now remove the last unmatched character from original
+		StringBuilder newString = new StringBuilder(original);
+		if((numChars%2) ==1)
+		{
+			newString.replace(lastCharIdx,lastCharIdx+1,"");
+		}
+		return newString.toString();
+	}
+	public static String removeUnmatched(String original,char leftChar,char rightChar)
+	{
+		List<Integer> leftIndices = new ArrayList<Integer>();
+		List<Integer> rightIndices = new ArrayList<Integer>();
+		for (int i=0; i < original.length(); i++)
+		{
+		    char c = original.charAt(i);
+		    if(c==leftChar)
+		    {
+		    	leftIndices.add(i);
+		    }
+		    else if(c==rightChar)
+		    {
+		    	if(leftIndices.size()>0) leftIndices.remove(leftIndices.size()-1);
+		    	else rightIndices.add(i);
+		    }
+		}
+
+		// now remove all unmatched characters from original
+		StringBuilder newString = new StringBuilder(original);
+		leftIndices.addAll(rightIndices);
+		Collections.sort(leftIndices);
+		int cnt=0;
+		for(Integer unmatchedIdx : leftIndices)
+		{
+			unmatchedIdx -= cnt;
+			newString.replace(unmatchedIdx,unmatchedIdx+1,"");
+			cnt+=1;
+		}
+		
+		return newString.toString();
+	}
+	
 	public static List<String> tokeniseOnWhitespace(String query)
 	{
 		List<String> tokens = new ArrayList<String>(Arrays.asList(query.trim().split("\\s+")));
@@ -120,4 +182,18 @@ public class QueryParser
 		return new ArrayList<String>(finalTokens);
 	}
 	
+	
+	 public static BigDecimal parseDoubleInput(String dblString) throws ParseException
+     {
+     	// Create a DecimalFormat that fits your requirements
+     	DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+     	symbols.setDecimalSeparator('.');
+     	String pattern = "#.#";
+     	DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+     	decimalFormat.setParseBigDecimal(true);
+
+     	// parse the string
+     	BigDecimal bigDecimal = (BigDecimal) decimalFormat.parse(dblString);
+     	return bigDecimal;
+     }
 }

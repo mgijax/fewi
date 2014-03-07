@@ -1,0 +1,265 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+	dt {font-size:13px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Query Form Types, Attributes</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Query Form Types, Attributes</h1>
+    <ul>
+        <li>User story #25, E5: Allele query form : allele types &amp; subtypes (Release 5.18)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>(MGI 5.18)(sto25) user can select any number of allele types</li>
+		<li>(MGI 5.18)(sto25) returned alleles must be one of those types</li>
+		<li>(MGI 5.18)(sto25) user can select any number of allele attributes</li>
+		<li>(MGI 5.18)(sto25) returned alleles must have ALL/ANY (TBD) of the selected attributes</li>
+		<li>(MGI 5.18)(sto25) logical AND between the fields</li>
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+</div>
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+	<ul>
+		<li>wild type alleles are excluded from the query and the display</li>
+		<li>alleles which do not have a marker association in the database are excluded from the query and the display</li>
+		<li>every allele has 1 Generation Type value</li>
+		<li>an allele may have 0 to many "Attribute" values</li>
+		<li>Generation Type and Attribute value combinations set by the initial data migration scripts (Jan. 2014) are found at these wiki pages:
+		<ul>
+			<li><a href="http://mgiwiki/mediawiki/index.php/Allele_Type_Data_Migration">Allele Type Data Migration</a></li>
+			<li><a href="http://mgiwiki/mediawiki/index.php/Loaded_Alleles-_Type/Attribute_Data_Migration">Loaded Alleles- Type/Attribute Data Migration</a></li>
+		</ul>
+		</li>
+	</ul>
+</div>
+
+
+<!-- 
+Some helpful SQL: uses 2 Views to get the Marker key, Type and Subtype for alleles along with their Symbol, Name, and Allele key, and whether allele is Wild Type.
+select v._Allele_key, v.isWildType, v.symbol, v.alleleType, s.term as Subtype, v._Marker_key, v.name
+from ALL_Allele_Strain_View v, ALL_Allele_SubType_View s
+where v._Allele_key = s._Allele_key
+order by v._Marker_key, v._Allele_key
+
+ -->
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+			<li>Verify the list of Allele Types is correct. Only the values listed here should be displayed as options (some values available in the database are suppressed on the QF):
+ 			<p concordion:assertTrue="true">passed - kstone 2014/02/04</p>
+    		<ol>
+                <li>Open the Allele query form</li>
+                <li>Verify the Categories section of the form contains a checkbox list called <b>Generation Method</b>.</li>
+                <li>Verify the Generation Types list contains the following items in alpha order:
+                <ol>
+					<li>Chemically induced (ENU)</li>
+					<li>Chemically induced (other)</li>
+					<li>Chemically and radiation induced</li>
+					<li>Endonuclease-mediated</li>
+					<li>Gene trapped</li>
+					<li>QTL</li>
+					<li>Radiation induced</li>
+					<li>Spontaneous</li>
+					<li>Targeted</li>
+					<li>Transgenic</li>
+					<li>Transposon induced</li>
+                </ol>
+                </li>
+				<li>Verify the Generation Types list excludes the following items:
+				<ul>
+					<li>Not Applicable</li>
+					<li>Not Specified</li>
+					<li>Other</li>
+				</ul>
+				</li>
+    		</ol>			
+			</li>
+			
+			<li>Each Generation Type selection on the query interface returns the correct set of alleles from the database. (Exclude wild types, alleles without a marker key.)
+    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<ol>
+    			<li>Using the PostgreS <b>pub_stable</b> database, obtain counts for each Generation Type:
+    			<ul>
+					<li>select t.term allele_type, count(*) HowMany</li> 
+					<li>from all_allele a join</li>
+					<li>voc_term t on t._term_key=a._allele_type_key</li>
+					<li>where iswildtype=0</li> 
+					<li>and exists (select 1 from all_marker_assoc ama where a._allele_key=ama._allele_key)</li>
+					<li>group by allele_type</li>
+					<li>order by allele_type</li>
+    			</ul>
+    			</li>
+    			<li>Using the Allele Query Form, query for each Generation Type individually.</li>
+    			<li>Verify that the counts match.</li>
+    		</ol>
+			</li>
+
+    		<li>Selections of multiple Generation Types are combined using Boolean OR.
+    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<ol>
+    			<li>Open the Allele query form.</li>
+    			<li>Select <b>Chemically induced (ENU)</b> and <b>Chemically induced (other)</b> and click the search button.</li>
+    			<li>Verify the total number of alleles returned is the sum of those two sets from above.</li>
+    			<li>Keeping the two selections above, also select <b>Spontaneous</b>.</li>
+    			<li>Verify the total number of alleles returned is the sum of those three sets from above.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify the list of Allele Attributes is correct. Only the values listed here should be displayed as options (some values available in the database are suppressed on the QF):
+    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<ol>
+                <li>Open the Allele query form</li>
+                <li>Verify the Categories section of the form contains groups of checkbox lists corresponding to MGI's "Attributes".</li>
+                <li>Verify the "Attributes" lists contain the following items (grouped, but without group headings):
+                <ol>
+					<li>Conditional ready</li>
+					<li>Recombinase</li>
+					<li>RMCE-Ready</li>
+				</ol>
+				</li>
+				<li>...second group
+				<ol>
+					<li>Inserted expressed sequence</li>
+					<li>Humanized sequence</li>
+					<li>Reporter</li>
+					<li>Transposase</li>
+					<li>Transposon Concatemer</li>
+				</ol>
+				</li>
+				<li>...third group
+				<ol>
+					<li>Constitutively Active</li>
+					<li>Dominant Negative</li>
+					<li>Hypomorph</li>
+					<li>Inducible</li>
+					<li>Knockdown</li>
+					<li>Modified Isoform(s)</li>
+					<li>Null/knockout</li>
+					<li>No Functional Change</li>
+                </ol>
+                </li>
+				<li>Verify the "Attributes" lists exclude the following items:
+				<ul>
+					<li>Not Applicable</li>
+					<li>Not Specified</li>
+				</ul>
+				</li>
+    		</ol>			
+    		</li>
+
+			<li>Each "Attribute" selection on the query interface returns the correct set of alleles from the database. (Exclude wild types, alleles without a marker key.)
+    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<ol>
+    			<li>Using the PostgreS <b>pub_stable</b> database, obtain counts for each Generation Type:
+    			<ul>
+					<li>select t.term allele_subtype, count(*) HowMany</li> 
+					<li>from all_allele a join</li> 
+					<li>voc_annot va on (va._object_key=a._allele_key and va._annottype_key=1014) join</li>
+					<li>voc_term t on t._term_key=va._term_key</li>
+					<li>where iswildtype=0</li> 
+					<li>and exists (select 1 from all_marker_assoc ama where a._allele_key=ama._allele_key)</li>
+					<li>group by allele_subtype</li>
+					<li>order by allele_subtype</li>
+    			</ul>
+    			</li>
+    			<li>Using the Allele Query Form, query for each "Attribute" individually.</li>
+    			<li>Verify that the counts match.</li>
+    		</ol>
+			</li>
+
+    		<li>Selections of multiple "Attributes" are combined using Boolean OR.
+    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<ol>
+    			<li>Open the Allele query form.</li>
+    			<li>Select <b>Reporter</b> and <b>Recombinase</b> and click the search button.</li>
+    			<li>Verify the total number of alleles returned is the sum of those two sets from above.</li>
+    			<li>Select the collection <b>Conditional ready</b> and <b>No functional change</b> and click the search button.</li>
+    			<li>Verify the total number of alleles returned is the same value as that of the Conditional ready set alone (Note: all alleles that are "No functional change" should also have "Conditional ready" as of Jan 2014).</li>
+    			<li>Keeping the two selections above, also select <b>Transposase</b>.</li>
+    			<li>Verify the total number of alleles returned is the sum of those three sets from above.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Generation Type selections are combined with "Attribute" selections using Boolean AND.
+    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<ol>
+    			<li>Open the Allele query form.</li>
+    			<li>Select <b>QTL</b> from the Generation Types and <b>Reporter</b> from the "Attributes" and click the search button.</li>
+    			<li>Verify you return <b>0</b> results (no alleles of this Generation Type have this "Attribute" in the database).</li>
+    			<li>Select <b>Targeted</b> and <b>Transgenic</b> from the Generation Types and <b>Reporter</b> from the "Attributes" and click the search button.</li>
+    			<li>Verify the total number of alleles returned is equal to the number of Reporter alleles from above (all alleles having the "Attribute" Reporter are either of Generation Type Targeted or Transgenic).</li>
+    		</ol>
+    		</li>
+    		
+		</ol>
+	</div>
+
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -21,16 +21,6 @@ th {background-color:#D0E0F0;}
 	<div>
 	<h2>Functional Description</h2>
 	<p>none</p>
-<!-- 
-	<p>For the Cre Pages, we plan to modify the Cre activity query, the display of the summary page, and add an overview summary of all recombinase activity for an allele:</p>
-	<ul>
-		<li>Allow more detailed querying for recombinase activity by using the AD structures rather than Anatomical Systems</li>
-		<li>Simplify display of query summaries</li>
-		<li>Create an overview summary of all activity data for each recombinase allele</li>
-		<li>Clean up links to external image sources from the Recombinase Specificy (detail) Page</li>
-	</ul>
-
- -->	
 	</div>
 
 	<div>
@@ -71,13 +61,31 @@ th {background-color:#D0E0F0;}
 				<td>sto127</td>
 				<td></td>
 				<td></td>
-			</tr>			
+			</tr>
+			<tr class="gray">
+				<td colspan="5"><h5>WI - References Page</h5></td>
+			</tr>
+			<tr>
+				<td>Curated Data column:
+				<ul>
+					<li><a concordion:run="concordion" href="CuratedDataAllelesLink.html">Alleles count</a></li>
+				</ul>
+				</td>
+				<td>MGI 5.18</td>
+				<td>42</td>
+				<td></td>
+				<td>
+				<ul>
+					<li>Rel. 5.18: Moving allele summary to the FEWI.</li>
+					<li>See also <a href="../allele/AlleleSummaryFromReference.html">Allele Summary from Reference</a> test suite for tests of which alleles are returned.</li>
+				</ul>
+				</td>
+			</tr>
+
 		</table>
 	</div>
 <!-- <p>* means tests must be  updated for all newly added functionality</p>
 <p>Dynamic Data spreadsheet used for some automated tests is located at <a target="_blank" href="https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0">https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=0</a>.</p> -->
-<p>Product Backlog: <a target="_blank" href="http://cardolan.informatics.jax.org:9180/kunagi/login.html">kunagi</a>.</p>
-<p>GXD_Cre_Snp Project <a target="_blank" href="http://prodwww.informatics.jax.org/wiki/index.php/sw:Scrum:_GXD_Cre_Snp">wiki page</a></p>
 <p>Cardolan's Postgres database (Pub - MGD schema): <a target="_blank" href="http://rohan.informatics.jax.org/phpPgAdmin/">PhP Admin Page</a></p>
 </body>
 </html>

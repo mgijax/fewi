@@ -29,15 +29,19 @@
 <div id="maintitle">
     <h1>Recombinase Activity Detail tests</h1>
     <ul>
-        <li>User story 154, Cre: Improved visibility/consistency for external image links</li>
+        <li>MGI 5.16, User story 154, Cre: Improved visibility/consistency for external image links</li>
+        <li>MGI 5.18, User story 17, E3: Display collection on allele detail and cre specificity pages</li>
+        <li>MGI 5.18, User story 24, E5: Display subtypes on allele detail and cre specificity pages</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>Acc crit 1</li>
-		<li>Acc crit 2</li>
+		<li>sto17: an allele's collection is displayed on the detail page</li>
+		<li>sto17: a cre allele's collection is displayed on the cre specificity page</li>
+		<li>sto17: if no collection, nothing displayed (!)</li>
+		<li>sto24: a cre allele's subtypes are displayed on the cre specificity page (NOTE: there are no cre alleles without a subtype)</li>
 	</ul>
 </div>
 
@@ -53,6 +57,34 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
+    		<li><span class="regressHi">Regress</span> Collection appears in Allele Information ribbon on Recombinase Specificity Pages, between Molecular Description and Find Mice.
+ 			<p concordion:assertTrue="true">passed. -klf 2014-01-02</p> (sto17)
+    		<ol>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Dbx1&lt;tm1.1(cre)Mull&gt;</b> (MGI:5014205)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b>  appears in the correct place.</li>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Tg(ACTFLPe)9205Dym</b> (MGI:2448985)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b> appears in the correct place.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.
+ 			<p concordion:assertTrue="true">passed. -klf 2014-01-02</p> (sto17)
+    		<ol>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Hprt&lt;tm1(cre)Mnn&gt;</b> (MGI:2181632)</li>
+                <li>Verify that <b>no Collection value</b> appears.</li>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Tg(CMV-cre/ERT)1Ipc</b> (MGI:2387570)</li>
+                <li>Verify that <b>no Collection value</b> appears.</li>
+    		</ol>
+    		</li>
+    		<li><span class="regressHi">Regress</span> Allele Subtypes appear in Allele Information ribbon after Type as comma delimited list.
+ 			<p concordion:assertTrue="true">passed - kstone 2014/01/23</p> (sto24)
+    		<ol>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for 
+                	<a href="http://cardolan.informatics.jax.org//recombinase/specificity?id=MGI:4420223&amp;systemKey=4856343">Gad2&lt;tm2(cre)Zjh&gt;</a></li>
+                <li>Verify that the subtypes value <b>(Inserted expressed sequence, Recombinase)</b>  appears in the correct place.</li>
+    		</ol>
+    		</li>
+
     		<li><span class="regressHi">Regress</span> Image link URLs appear on the Recombinase Activity Detail page
  			<p concordion:assertTrue="true">klf 6/6/13</p>
  			<p>Note: this test requires fake data.</p>

@@ -1,0 +1,1711 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+	.hilite {background-color:#FFFF00;}
+	td.xl65 {background-color:#FFFF00;}
+	td>ul {padding-right: 0px; padding-bottom:1px; padding-top:0px; margin-left:30px; padding-left:30px;}
+	td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:6px;}
+	dt {font-size:13px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Allele Query and Summary</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#definitions">Definitions</a> | <a href="#logic">Logic Summary</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Allele Query and Summary</h1>
+    <ul>
+        <li>User story #106, Simplify Allele Summary (Release 5.12)</li>
+        <li>User story #32, E4: Summary display (Release 5.18)</li>
+        <li>User story #38, E4: Query form: location (Release 5.18)</li>
+        <li>User story #35, E4: Query form: phenotype/disease box</li>
+        <li>User story #58, E4: Summary sorting (Release 5.18)</li>
+        <li>User story #24, E5: Allele Subtypes display (Release 5.18)</li>
+        <li>User story #41, E4: Summary: tab delimited download (Release 5.18)</li>
+        <li>User story #114, E5: Pheno/Disease Query – add Allele “General” Note Type</li>
+        <li>User story #81, E4: Make coordinate type-in more flexible</li>
+        <li>User story #121, E4: You Searched For</li>
+        <li>User story #115, Allele Summary – modify logic for disease/pheno query and summary display</li>
+        <li>User story #150, E4: Add sort on Human Disease Column (Release 5.18)</li>
+        <li>User story #122, E4: Query form on Summary page (Release 5.18)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>(MGI 5.12) The first 4 columns (allele symbol, chromosome, synonyms, and category) remain the same.</li>
+		<li>(MGI 5.12) The last column (background) is removed entirely.</li>
+		<li>(MGI 5.12) The affected systems column is combined (unioned) for all the genotypes for that allele. (Duplicated terms listed only once.)</li>
+		<li>(MGI 5.12) Likewise, the similar diseases column is combined.</li>
+		<li>(MGI 5.12) To restate, the results table has 6 columns:
+			<ul>
+				<li>Allele Symbol / Gene; Allele Name</li>
+				<li>Chr</li>
+				<li>Synonyms</li>
+				<li>Category</li>
+				<li>Affected Anatomical Systems</li>
+				<li>Similar Human Diseases</li>
+			</ul>
+		</li>
+		<li>(MGI 5.12) Each row represents one allele. Genotype specific data are unioned in generating the last two columns.</li>
+		<li>(sto32) allele summary page is in the fewi</li>
+		<li>(sto32) paginated</li>
+		<li>(sto32) no sort requirement</li>
+		<li>(sto32) some specific (TBD) query</li>
+		<li>(sto32) verify same alleles, same data, not necessarily same order</li>
+		<li>(sto38) query form includes inputs for specifying location</li>
+		<li>(sto38) returns alleles for specified location</li>
+		<li>(sto35) includes tool/popup for selecting systems</li>
+		<li>(sto35) MP term ids, alt ids, term text, annotation notes</li>
+		<li>(sto35) OMIM term ids, alt ids, term text, annotation notes</li>
+		<li>(sto35) ASSUME: exclude nots/normals</li>
+		<li>(sto35) ASSUME: that querying by pheno/disease does NOT affect what systems are displayed on the summary! (I.e, all get displayed)</li>
+		<li>(sto35) ASSUME: booleans supported</li>
+		<li>(sto58) Default sort oder is by Transmission status with a secondary sort of Allele Symbol</li>
+		<li>(sto58) Only the Allele Symbol, Category, and Chromosome columns are sortable</li>
+		<li>(sto24) If allele has subtypes, display them in Category column, between Allele Type and the optional Transmission display</li>
+		<li>(sto41) summary table displays a download button</li>
+		<li>(sto41) user gets same data as shown in summary plus allele's MGI id</li>
+		<li>(sto114) the Allele "General note" is included in the indexing that supports the pheno/disease query</li>
+		<li>(sto81) allow arbitrary spaces and either a single "-" or ".." to separate the start and end coodinates, e.g. the following are all equivalent:
+		<ul>
+			<li>12345-23456</li>
+			<li>12345 - 23456</li>
+			<li>12345 .. 23456</li>
+			<li>12345 23456</li>
+		</ul>
+		</li>
+		<li>(sto121) no Acceptance Criteria</li>
+		<li>(sto115) query by pheno/disease should return ALL alleles (except wildtype) associated with genotypes annotated to matching terms.</li>
+		<li>(sto115) for summary display of systems and diseases, apply the rules, i.e., only for OMG/complex genotypes</li>
+		<li>(MGI 5.18)(sto150) Human Disease Model column will be sorted by smart alpha with a secondary  sort of Allele symbol</li>
+		<li>(MGI 5.18)(sto122) Allele Query form is added to top of summary page</li>
+		<li>(MGI 5.18)(sto122) Query form can be opened or closed</li>
+		<li>(MGI 5.18)(sto122) Wuery form can maintain user's entered values</li>
+	</ul>
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<dl>
+		<dt>One-Marker Genotype (OMG)</dt>
+		<dd>Only 1 allele pair is present in the genotype and both are alleles of the same marker.</dd>
+		<dd>May include hom, het+wt or "trans-het" (two different alleles of the same marker).</dd>
+		
+		<dt>Simple Genotype</dt>
+		<dd>A genotype which can be resolved to the allele pair of one "causal" marker.</dd>
+		<dd>A genotype which, after ignoring or removing Recombinase alleles and Reporter alleles, contains only 1 allele pair having both alleles from the same marker.</dd>
+		
+		<dt>Complex Genotype</dt>
+		<dd>A genotype having two or more allele pairs from two or more markers present.</dd>
+		<dd>MGI's "compound" genotypes are treated as "complex" genotypes (in the database, each allele is recorded as an allele pair).</dd>
+		
+		<dt>Conditional Genotype</dt>
+		<dd>A genotype where the is_conditional flag (set by curators) is true.</dd>
+		<dd>These genotypes are complex; they always involve alleles of at least 2 markers.</dd>
+	</dl>
+</div>
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+
+	<h3>Allele Query:</h3>
+	<p>Describes which data we are querying against...</p>
+
+	<h4>Phenotype/Disease input</h4>
+	<ul>
+		<li><b>Exclude</b> genotype-phenotype annotations with qualifier "normal".</li>
+		<li><b>Exclude</b> genotype-OMIM annotations with qualifier "Not".</li>
+<!-- Including more complex annotations will come later
+		<li>??? Include allele-OMIM annotations ???
+		<ul>
+			<li>??? Only where qualifier is <i>null</i> ???  Or all of them ??? (I.e., exclude the Therapy annotations?)</li>
+		</ul>
+		</li>
+ -->
+		<li>Include annotations to genotypes having 2 alleles of only 1 marker (OMG).</li>
+		<li>Include annotations to conditional genotypes.</li>
+		<li><del>Exclude annotations to all other complex genotypes (genotypes having the alleles of 2 or more markers).</del></li>
+		<li>Include annotations to all kinds of genotypes. (sto115)</li>
+		<li>Input is matched against:
+		<ul>
+			<li>MP terms used in annotations</li>
+			<li>MP synonyms</li>
+			<li>MP IDs</li>
+			<li>OMIM terms used in annotations</li>
+			<li>OMIM synonyms</li>
+			<li>OMIM IDs</li>
+			<li>MP annotation notes text:
+			<ul>
+				<li>General notes</li>
+				<li>Background Sensitivity notes</li>
+				<li>Normal notes</li>
+			</ul>
+			</li>
+			<li>"General" allele notes</li>
+			<li>TEXT-QTL notes</li>
+		</ul>
+		</li>
+
+		<li>Boolean AND, OR, and NOT are supported when entered in uppercase. Otherwise, these words are treated as text strings.</li>
+		<li>Double-quotation marks are treated as phrase queries.</li>
+		<li>Parentheses for grouping text strings are supported. Nested parentheses are allowed.</li>
+		<li>We use the MGI-modified Stop Word list from the Quick Search.</li>
+		<li>Non-alpha-numeric characters are ignored, delimiting tokens.</li>
+		<li>Text string tokens are ORed together unless the user specifies otherwise (enters Boolean ANDs, NOTs, parentheses, etc.)</li>
+		<li>Token order matters only if the user enters double-quotation marks to indicate a phrase query.</li>
+	</ul>
+	<h4>Location input</h4>
+	<ul>
+		<li>Multiselect is supported for chromosomes.</li>
+		<li>Chromosome selections are combined using OR.</li>
+		<li>Dash or hyphen character must separate values in cM position and Genome Coordinates input fields.</li>
+		<li>Inputs are combined using AND.</li>
+	</ul>
+
+
+	<h3>Allele Summary display:</h3>
+	<p>Describes which data are displayed...</p>
+	<ul>
+		<li>Display a row for each non-Wild Type allele for all returned genotypes (including Gt(ROSA)26Sor alleles).</li>
+		<li><b>Do not display</b> phenotype headers and disease terms where allele is in non-Conditional Complex genotypes.</li>
+		<li><b>Display</b> phenotype headers and disease terms where:
+		<ul>
+			<li>allele is in OMG</li>
+			<li>allele is in Conditional genotypes (includes recombinase alleles, transgenes, and any other kinds of alleles)</li>
+		</ul>
+		</li>
+		<li>When allele is annotated to term "No phenotypic analysis"  in OMG or Conditional genotype, and no other terms in ANY genotypes, display "No Phenotypic Analysis".</li>
+		<li>When allele is annotated to term "Normal phenotype"   or its children in OMG or Conditional genotype, and no other terms in ANY genotypes, display "No Abnormal Phenotype Observed".</li>
+		<li>When allele has "N" annotations (annotated to header terms) in OMG or Conditional genotype, and no other  annotated terms in ANY genotypes, display "No Abnormal Phenotype Observed".</li>
+		<li>Display phenotype headers and disease terms for <b>all</b> OMG and Conditional genotypes of an allele on the summary. Do not limit the display to data associated with only those genotypes brought back by the query.<br/>
+			(I.e., if a query matched data associated with 1 gentoype, but the allele participates in 10 genotypes, also display data associated with the other 9 genotypes.)</li>
+<!-- More complex rules for excluding and including alleles will come later
+		<li>Exclude alleles which are Type=Transgenic, Subtype=Reporter, and no other Subtypes.</li>
+		<li>Exclude alleles which are Type=Transgenic, Subtype includes Recombinase.</li>
+		<li>Exclude alleles which are Type=Targeted, Subtype includes Recombinase EXCEPT when present as the only allele.<br/>
+			(I.e., only display the recombinase allele if the genotype is OMG and homozygous, or OMG and het+wt for the recombinase allele.)</li>
+ -->
+	</ul>
+	
+	<h3>Allele Summary Downloadable Reports</h3>
+	<p>We must manipulate some data before sending it to the report file.</p>
+	<ul>
+		<li>For Allele Synonyms column, use pipe character as list items delimiter.</li>
+		<li>For Abnormal Phenotypes Reported in these Systems column, use pipe character as list items delimiter.</li>
+		<li>For Human Disease Models column, add OMIM ID and use pipe character as list items delimiter.</li>
+	</ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<h4>General</h4>
+		<ol>
+    		<li>Verify column heading labels are:(sto32)
+    		<ul>
+    			<li>Allele Symbol [break] Gene; Allele Name</li>
+    			<li>Chr</li>
+    			<li>Synonyms</li>
+    			<li>Category</li>
+    			<li>Abnormal Phenotypes Reported in these Systems</li>
+    			<li>Human Disease Models</li>
+    		</ul>
+ 			<p concordion:assertTrue="true">passed -klf 2013-12-30</p>
+    		</li>
+
+    		<li>Reproduce data from Public for each allele in columns for "Allele Symbol // Gene; Allele Name", "Chr", "Synonyms", "Category".(sto32)(sto122)
+ 			<p concordion:assertTrue="true">passed -jeffc 2014-03-02</p>
+ 			<ol>
+ 				<li>Verify that the row for <b>Mitf<sup>Mi</sup></b> contains the following:(sto32)
+ 				<table>
+ 					<tr><th>Allele Symbol<br/>Gene; Allele Name</th><th>Chr</th><th>Synonyms</th><th>Category</th></tr>
+ 					<tr><td>Mitf<sup>Mi</sup><br/>microphthalmia-associated transcription factor; microphthalmia<br/>[camera icon]</td><td>6</td><td>m, mi</td><td>Not Specified</td></tr>
+ 				</table>
+ 				</li>
+ 			</ol>
+    		</li>
+
+    		<li>Make the "Allele Symbol...", "Abnormal Phenotypes...", and "Human Disease Models" columns roughly equal in width.(sto32)
+ 			<p concordion:assertTrue="true">passed -klf 2013-12-30</p>
+    		</li>
+
+			<li>Verify the display is paginated.(sto32)
+ 			<p concordion:assertTrue="true">passed -klf 2013-12-30</p>
+    		<ol>
+                <li>Submit a query for <b>chrX</b></li>
+                <li>Verify the display is paginated and that pagination works correctly.</li>
+    		</ol>			
+			</li>
+			
+    		<li>Verify that allele subtypes are displayed in the category column after the generated type (if there are subtypes)
+ 			<p concordion:assertTrue="true">passed - kstone 2014/01/23</p> (sto24)
+    		<ol>
+    			<li>Do a nomenclature query for <a href="http://cardolan.informatics.jax.org/allele/summary?nomen=grhpr">Grhpr</a></li>
+    			<li>Verify that allele <b>Grhpr&lt;Gt(OST383093)Lex&gt;</b> has only <b>Gene trapped</b> in the Category column. <i>It has no subtypes or transmission status display.</i></li>
+    			<li>Verify that allele <b>Grhpr&lt;tm1(KOMP)Vlcg&gt;</b> has only <b>Targeted</b> 
+    				followed by <b>(Null/knockout, Reporter)</b>  
+    				followed by <b>(Cell Line)</b> in the Category column. </li>
+    		</ol>
+    		</li>
+		</ol>
+		
+		<h4>&quot;You searched for&quot; display</h4>
+		<ol>
+			<li>"You searched for" text displays the inputs used to conduct a search. (sto121)(sto122):
+			<ul>
+				<li>The block of "You searched for" text appears beside the block of pagination controls, wrapped.  No extra white space appears between the block of "You searched for" text and the summary results.</li>  
+				<li>Only the user's input text or selections are displayed in boldface. Field labels (e.g., "Nomenclature" are not displayed in boldface.)</li>
+				<li>"Helper text" is displayed in font that is one size smaller and gray.</li>
+				<li>The first field (e.g., "Nomenclature" or &quot;Phenotype&quot;) is labeled as-is. Subsequent fields have "AND" preceding their label to make it clear to the User which data were AND'ed together.</li>
+				<li>Multi-select values are displayed with preceding text "any of" and are comma-delimited in square brackets.</li>
+			</ul>
+			<p concordion:assertTrue="true">passed - jeffc 2014/03/02</p>
+			<ol>
+				<li>Open the Allele Query Form.</li>
+				<li>Query for the following inputs:
+				<ul>
+					<li>Phenotypes/Diseases: Alzheimer</li>
+					<li>Nomenclature: Alz*</li>
+					<li>Location: chromosomes 2,3,4,5,6</li>
+					<li>Generation Method: select Chemically induced (ENU), Chemically induced (other), Chemically and radiation induced, Gene trapped, QTL</li>
+					<li>Allele Attributes: select Conditional ready, Recombinase, Inserted expressed sequence, Reporter, Transposase</li>
+					<li>Collection: select Australian PhenomeBank, B2B/CvDC, Beutler Mutagenix, Deltagen, EUCOMM, GENSAT, Harwell ENU Mutagenesis, KOMP-CSD, KOMP-Regeneron, Lexicon</li>
+				</ul>
+				</li>
+				<li>Submit the query.</li>
+				<li>Verify that the selections and inputs above are displayed as described.</li>
+			</ol>
+			</li>
+			
+			<li>"You searched for" text does not display for Allele Summary for Marker or Allele Summary for Reference. (sto121)
+			<p concordion:assertTrue="true">passed - kstone 2014/02/11</p>
+			<ol>
+				<li>Navigate to the Marker Detail Page for Pax6.</li>
+				<li>Follow the link for the Allele Summary.</li>
+				<li>Verify that no "You searched for" section appears.</li>
+				<li>Verify that the Marker Header Ribbon appears.</li>
+				<li>Navigate back to the Marker Detail Page for Pax6.</li>
+				<li>Follow the link for All References.</li>
+				<li>On the References Page, follow the link for J:193244.</li>
+				<li>Verify that no "You searched for" section appears.</li>
+				<li>Verify that the Reference Header Ribbon appears.</li>
+			</ol>
+			</li>
+		</ol>
+		<h4>Downloadable Output</h4>
+		<ol>
+
+			<li>The allele report can be downloaded in tab-delimited format.(sto41)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-01-28</p>
+    		<ol>
+                <li>Submit a query for <b>chrX</b>.</li>
+                <li>Click the button labeled "Text File".</li>
+                <li>Verify the downloaded file can be opened and is in tab-delimited format.</li>
+                <li>Verify that the same number of alleles on the Allele Summary appears in the downloaded file (9,228 alleles on 1/27/2014).</li>
+                <li>Verify that the downloaded file contains the following columns:
+                <table>
+                	<tr><th>Column</th></tr>
+                	<tr><td>MGI Allele ID</td></tr>
+                	<tr><td>Allele symbol</td></tr>
+                	<tr><td>Allele name</td></tr>
+                	<tr><td>Chromosome</td></tr>
+                	<tr><td>Synonyms</td></tr>
+                	<tr><td>Allele type</td></tr>
+                	<tr><td>Allele attributes</td></tr>
+                	<tr><td>Transmission</td></tr>
+                	<tr><td>Abnormal phenotypes reported in these systems</td></tr>
+                	<tr><td>Human Disease Models</td></tr>
+                </table>
+                </li>
+                <li>Verify that the following alleles exist in the downloaded file, with associated info:
+                <p>NOTE: the last allele, Zrsr2&lt;tm1a(EUCOMM)Wtsi&gt;, is &quot;Deleted&quot; so it will not exist in Public data.</p>
+                <table>
+				<tr>
+					<th>MGI Allele ID</th>
+					<th>Allele Symbol</th>
+					<th>Allele Name</th>
+					<th>Chromosome</th>
+					<th>Synonyms</th>
+					<th>Allele type</th>
+					<th>Allele attributes</th>
+					<th>Transmission</th>
+					<th>Abnormal phenotypes reported in these systems</th>
+					<th>Human Disease Models</th>
+				</tr>
+				<tr>
+					<td>MGI:3628655</td>
+					<td>Abcb7&lt;tm1.1Mdf&gt;</td>
+					<td>targeted mutation 1.1, Mark D Fleming</td>
+					<td>X</td>
+					<td>Abcb7&lt;-&gt;</td>
+					<td>Targeted</td>
+					<td>Null/knockout</td>
+					<td>Germline</td>
+					<td>cellular | mortality/aging</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:3628654</td>
+					<td>Abcb7&lt;tm1Mdf&gt;</td>
+					<td>targeted mutation 1, Mark D Fleming</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready</td>
+					<td>Germline</td>
+					<td>cardiovascular | embryogenesis | growth/size | homeostasis | liver/biliary | mortality/aging</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4433571</td>
+					<td>Abcd1&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+					<td>targeted mutation 1a, Wellcome Trust Sanger Institute</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready, Null/knockout, Reporter</td>
+					<td>Germline</td>
+					<td>hematopoietic | other | vision/eye</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:2179253</td>
+					<td>Aggr2&lt;A/J&gt;</td>
+					<td>A/J</td>
+					<td>X</td>
+					<td></td>
+					<td>QTL</td>
+					<td></td>
+					<td></td>
+					<td>behavior</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4129850</td>
+					<td>Akap17b&lt;Gt(RRI131)Byg&gt;</td>
+					<td>gene trap RRI131, BayGenomics</td>
+					<td>X</td>
+					<td></td>
+					<td>Gene trapped</td>
+					<td></td>
+					<td>Chimeric</td>
+					<td>craniofacial | embryogenesis | growth/size | nervous system</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:3034098</td>
+					<td>Ar&lt;tm1Verh&gt;</td>
+					<td>targeted mutation 1, Guido Verhoeven</td>
+					<td>X</td>
+					<td>AR&lt;fl&gt; | ARflox | AR&lt;flox&gt; | AR&lt;loxP-exon2-loxP&gt;</td>
+					<td>Targeted</td>
+					<td>Conditional ready</td>
+					<td>Germline</td>
+					<td>adipose | cellular | endocrine/exocrine | growth/size | homeostasis | immune | reproductive | tumorigenesis</td>
+					<td>Diabetes Mellitus, Noninsulin-Dependent; NIDDM 125853 | Prostate Cancer 176807</td>
+				</tr>
+				<tr>
+					<td>MGI:4880890</td>
+					<td>Zmat1&lt;tm1a(KOMP)Wtsi&gt;</td>
+					<td>targeted mutation 1a, Wellcome Trust Sanger Institute</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready, Null/knockout, Reporter</td>
+					<td>Cell Line</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4197613</td>
+					<td>Zmym3&lt;Gt(OST130993)Lex&gt;</td>
+					<td>gene trap OST130993, Lexicon Genetics</td>
+					<td>X</td>
+					<td></td>
+					<td>Gene trapped</td>
+					<td></td>
+					<td>Cell Line</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4842786</td>
+					<td>Zrsr2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+					<td>targeted mutation 1a, Wellcome Trust Sanger Institute</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready, Null/knockout, Reporter</td>
+					<td>Cell Line</td>
+					<td></td>
+					<td></td>
+				</tr>
+                </table>
+                </li>
+    		</ol>			
+			</li>
+
+			<li>The allele report can be downloaded in Excel format.(sto41)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-01-28</p>
+    		<ol>
+                <li>Submit a query for <b>chrX</b>.</li>
+                <li>Click the button labeled "Excel File".</li>
+                <li>Verify the downloaded file can be opened with Excel.</li>
+                <li>Verify that the same number of alleles on the Allele Summary appears in the downloaded file (9,228 alleles on 1/27/2014).</li>
+                <li>Verify that the downloaded file contains the following columns (SAME AS ABOVE):
+                <table>
+                	<tr><th>Column</th></tr>
+                	<tr><td>MGI Allele ID</td></tr>
+                	<tr><td>Allele symbol</td></tr>
+                	<tr><td>Allele name</td></tr>
+                	<tr><td>Chromosome</td></tr>
+                	<tr><td>Synonyms</td></tr>
+                	<tr><td>Allele type</td></tr>
+                	<tr><td>Allele attributes</td></tr>
+                	<tr><td>Transmission</td></tr>
+                	<tr><td>Abnormal phenotypes reported in these systems</td></tr>
+                	<tr><td>Human Disease Models</td></tr>
+                </table>
+                </li>
+                <li>Verify that the following alleles exist in the downloaded file, with associated info (SAME AS ABOVE):
+                <p>NOTE: the last allele, Zrsr2&lt;tm1a(EUCOMM)Wtsi&gt;, is &quot;Deleted&quot; so it will not exist in Public data.</p>
+                <table>
+				<tr>
+					<th>MGI Allele ID</th>
+					<th>Allele Symbol</th>
+					<th>Allele Name</th>
+					<th>Chromosome</th>
+					<th>Synonyms</th>
+					<th>Allele type</th>
+					<th>Allele attributes</th>
+					<th>Transmission</th>
+					<th>Abnormal phenotypes reported in these systems</th>
+					<th>Human Disease Models</th>
+				</tr>
+				<tr>
+					<td>MGI:3628655</td>
+					<td>Abcb7&lt;tm1.1Mdf&gt;</td>
+					<td>targeted mutation 1.1, Mark D Fleming</td>
+					<td>X</td>
+					<td>Abcb7&lt;-&gt;</td>
+					<td>Targeted</td>
+					<td>Null/knockout</td>
+					<td>Germline</td>
+					<td>cellular | mortality/aging</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:3628654</td>
+					<td>Abcb7&lt;tm1Mdf&gt;</td>
+					<td>targeted mutation 1, Mark D Fleming</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready</td>
+					<td>Germline</td>
+					<td>cardiovascular | embryogenesis | growth/size | homeostasis | liver/biliary | mortality/aging</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4433571</td>
+					<td>Abcd1&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+					<td>targeted mutation 1a, Wellcome Trust Sanger Institute</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready, Null/knockout, Reporter</td>
+					<td>Germline</td>
+					<td>hematopoietic | other | vision/eye</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:2179253</td>
+					<td>Aggr2&lt;A/J&gt;</td>
+					<td>A/J</td>
+					<td>X</td>
+					<td></td>
+					<td>QTL</td>
+					<td></td>
+					<td></td>
+					<td>behavior</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4129850</td>
+					<td>Akap17b&lt;Gt(RRI131)Byg&gt;</td>
+					<td>gene trap RRI131, BayGenomics</td>
+					<td>X</td>
+					<td></td>
+					<td>Gene trapped</td>
+					<td></td>
+					<td>Chimeric</td>
+					<td>craniofacial | embryogenesis | growth/size | nervous system</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:3034098</td>
+					<td>Ar&lt;tm1Verh&gt;</td>
+					<td>targeted mutation 1, Guido Verhoeven</td>
+					<td>X</td>
+					<td>AR&lt;fl&gt; | ARflox | AR&lt;flox&gt; | AR&lt;loxP-exon2-loxP&gt;</td>
+					<td>Targeted</td>
+					<td>Conditional ready</td>
+					<td>Germline</td>
+					<td>adipose | cellular | endocrine/exocrine | growth/size | homeostasis | immune | reproductive | tumorigenesis</td>
+					<td>Diabetes Mellitus, Noninsulin-Dependent; NIDDM 125853 | Prostate Cancer 176807</td>
+				</tr>
+				<tr>
+					<td>MGI:4880890</td>
+					<td>Zmat1&lt;tm1a(KOMP)Wtsi&gt;</td>
+					<td>targeted mutation 1a, Wellcome Trust Sanger Institute</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready, Null/knockout, Reporter</td>
+					<td>Cell Line</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4197613</td>
+					<td>Zmym3&lt;Gt(OST130993)Lex&gt;</td>
+					<td>gene trap OST130993, Lexicon Genetics</td>
+					<td>X</td>
+					<td></td>
+					<td>Gene trapped</td>
+					<td></td>
+					<td>Cell Line</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>MGI:4842786</td>
+					<td>Zrsr2&lt;tm1a(EUCOMM)Wtsi&gt;</td>
+					<td>targeted mutation 1a, Wellcome Trust Sanger Institute</td>
+					<td>X</td>
+					<td></td>
+					<td>Targeted</td>
+					<td>Conditional ready, Null/knockout, Reporter</td>
+					<td>Cell Line</td>
+					<td></td>
+					<td></td>
+				</tr>
+                </table>
+                </li>
+    		</ol>			
+			</li>
+
+   		</ol>
+   		
+   		<h4>Sorting</h4>
+   		<ol>
+			<li>Verify the default sort order of the Allele summary is by Transmission status with a secondary sort of Allele Symbol(sto58)
+ 			<p concordion:assertTrue="true">jeffc 01/23/2014</p>
+    		<ol>
+                <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
+                <li>Verify <b>18 alleles</b> return with Chemically induced alles first, Targeted second, QTL third and Targeted(cell line) always last</li>
+    		</ol>
+			</li>
+
+			<li>Verify the Allele Symbol sort is by smart alpha(sto58)
+ 			<p concordion:assertTrue="true">jeffc 01/23/2014</p>
+    		<ol>
+                <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
+                <li>Verify <b>18 alleles</b> are returned</li>
+                <li>Click on the Allele Symbol header</li>
+                <li>Verify the results are now sorted by Allele Symbol smart alpha</li>
+                <li>Submit a query for <b>9-XY</b></li>
+                <li>Verify you return over 190,000 alleles</li>
+                <li>Click on the Allele Symbol header</li>
+                <li>Verify the results are now sorted by Allele Symbol smart alpha, starts with 0(actual first result is 33cex)</li>
+                <li>Click on the <b>last</b> link and confirm the last entry begins with Z</li>
+                <li>Click on the Allele Symbol header a second time</li>
+                <li>Verify the Allele Symbol results are now sorted by reverse alpha</li>
+    		</ol>
+			</li>
+
+			<li>Verify the Chromosome column sort order of the Allele summary is by smart alpha with a secondary sort of Allele Symbol(sto58)
+ 			<p concordion:assertTrue="true">jeffc 01/24/2014</p>
+    		<ol>
+                <li>Submit a query for <b>9-Unknown</b></li>
+                <li>Verify you return over 199,000 alleles</li>
+                <li>Click on the Chromosome column header</li>
+                <li>Verify the results are now sorted by Chromosome(smart alpha) with a secondary sort of Allele Symbol(smart alpha), starts with 9</li>
+                <li>Click on the <b>last</b> link and confirm the last entry has a chromosome of Y</li>
+                <li>Click on the Chromosome header a second time</li>
+                <li>Verify the Chromosome results are now sorted by reverse alpha</li>
+    		</ol>
+			</li>
+
+			<li>Verify the Category column sort order of the Allele summary is by Generation type (smart alpha) with a secondary sort of Allele Symbol(sto58)
+ 			<p concordion:assertTrue="true">jeffc 01/23/2014</p>
+    		<ol>
+                <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
+                <li>Verify <b>18 alleles</b> return with Chemically induced alleles first, Targeted second, QTL third and Targeted(cell line) always last</li>
+                <li>Click on the Category column header</li>
+                <li>Verify the Category column is now sorted Chemically induced alleles first, QTL second and Targeted/Targeted(cell line)  last</li>
+                <li>Click on the Category column header a second time</li>
+                <li>Verify the Category column is now sorted in reverse order</li>
+    		</ol>
+			</li>
+			<li>Verify the Human Disease Models column sort order of the Allele summary is by Alpha (smart alpha) with a secondary sort of allele symbol(sto150)
+ 			<p concordion:assertTrue="true">jeffc 02/25/2014</p>
+    		<ol>
+                <li>Submit a query for <b>naturity-onset diabetes of the young</b> in the <b>Phenotypes/Disease</b> section</li>
+                <li>After the results display set Rows per page to <b>500</b></li>
+                <li>Click on the Human Disease Model column header</li>
+                <li>Scroll to the disease term <b>Autism</b></li>
+                <li>Verify all the autism disease terms are sorted by <b>Allele Symbol</b></li>
+                <li>Scroll to the disease term <b>Autism, Susceptibility to</b></li>
+                <li>Verify the sorted order is: 
+                	<ol><li>Autism, Susceptibility to, 9; AUTS9</li>
+                	<li>Autism, Susceptibility to, 17; AUTS17</li>
+                	<li>Autism, Susceptibility to, X-Linked 1; AUTSX1</li>
+                	</ol>
+                	</li>
+                <li>Click the Human Disease Model column header a second time</li>
+                <li>Verify the column is now sorted in reverse order (the alleles with no disease would be first)(secondary sort is not reverse order)</li>
+    		</ol>
+			</li>
+		</ol>
+
+
+		<h4>Location Search</h4>
+		<ol>
+			<li>Verify a query by coordinates returns the same alleles as on Public(sto32)(sto122)
+ 			<p concordion:assertTrue="true">passed -jeffc 2014-03-02</p>
+    		<ol>
+                <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
+                <li>Verify <b>18 alleles</b> appear for the markers Eccp, Pax9, Slc25a21, Splwt1, Tbqt3, and Tmc1m3.</li>
+    		</ol>
+			</li>
+
+    		<li>Searching by chromosome returns the correct alleles now we have moved it to the FeWI (sto38)
+ 			<p concordion:assertTrue="true">passed -jefc 2014-03-02</p>
+    		<table>
+	    		<tr><th>Chromosome</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
+	    		<tr><td>18</td><td>11089 </td><td>11090</td></tr>
+	    		<tr><td>19</td><td>11653 </td><td>11651</td></tr>
+	    		<tr><td>Y</td><td>149 </td><td>149</td></tr>
+	    		<tr><td>19,Y</td><td> </td><td>11800</td></tr>
+	    		<tr></tr>
+    		</table>
+    		</li>
+    		
+<!--     		<li>Verify searching with Cytogenetic band works correctly  
+    		</li>(this feature has been removed by MGI5.18-->
+    		
+    		<li>Seaching with cm Position returns the correct alleles. cM values may be separated by a space or a dash. (revised for sto81)
+ 			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+    		<table>
+	    		<tr><th>Chromosome</th><th>cM</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
+	    		<tr><td>19</td><td>50 - 75</td><td>507</td><td>507</td></tr>
+	    		<tr><td>X</td><td>30-50</td><td>2758</td><td>2758</td></tr>
+    		</table>
+    		</li>
+    		
+    		<li>Searching with Genome Coordinates returns the correct alleles. Genome coordinate values may be separated by a space or a dash. (revised for sto81)
+ 			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+    		<table>
+	    		<tr><th>Chromosome</th><th>Coordinates</th><th></th><th>Python Result</th><th>FEWI Result</th></tr>
+	    		<tr><td>3</td><td>(&gt;=) 125618205<br/>125618205-999999999</td><td>bp</td><td>4323</td><td>4323</td></tr>
+	    		<tr><td>3</td><td>(&lt;=) 125618205<br/>1-125618205</td><td>bp</td><td>12743</td><td>12743</td></tr>
+	    		<tr><td>3</td><td> 125618205 - 125622026</td><td>bp</td><td>11</td><td>11</td></tr>
+	    		<tr><td>3</td><td> 125.618 - 125.622</td><td>Mbp</td><td>11</td><td>11</td></tr>
+	    		<tr><td>3</td><td> 125.618 - 99999</td><td>Mbp</td><td>4323</td><td>4323</td></tr>
+	    		<tr><td>3</td><td> 125.618..99999</td><td>Mbp</td><td>4323</td><td>4323</td></tr>
+<!-- Not supporting less-than or greater-than entry using a single numeric with a character. User must begin "1-" or end "-99999999", respectively. 
+ 	    		<tr><td>3</td><td>(&gt;=) 125.618</td><td>Mbp</td><td>4323</td><td>4323</td></tr>
+	    		<tr><td>3</td><td>(&lt;=) 125.618</td><td>Mbp</td><td>12743</td><td>12731</td></tr>
+ -->    		</table>
+			</li>
+		</ol>
+
+	<h4>Phenotypes/Disease Search and Display Tests</h4>
+		<ol>
+			<li>Searching by MP or OMIM ID excludes alleles associated with "normal" and "Not" annotations. (sto35)
+			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+    		<table>
+	    		<tr>
+	    			<th>ID</th>
+	    			<th>Term</th>
+	    			<th>EXCLUDED Alleles</th>
+	    			<th>Notes to testers</th>
+	    		</tr>
+	    		<tr>
+	    			<td>MP:0005394</td>
+	    			<td>taste/olfaction phenotype</td>
+	    			<td>
+	    			<ul>
+	    				<li>Syn1&lt;tm1Lli&gt;</li>
+	    				<li>Syn2&lt;tm1Kao&gt;</li>
+	    				<li>Syn3&lt;tm1Jfe&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>The markers Syn1, Syn2, and Syn3 should be absent.  No other alleles of these markers are annotated  to this phenotype term or its children.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>100800</td>
+	    			<td>Achondroplasia; ACH</td>
+	    			<td>Fgfr3&lt;tm1Dor&gt;</td>
+	    			<td>Other alleles of Fgfr3 should be displayed.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>102200</td>
+	    			<td>Pituitary Adenoma, Growth Hormone-Secreting</td>
+	    			<td>Fbn1&lt;Tsk&gt;</td>
+	    			<td>The marker Fbn1 should be absent; no other Fbn1 alleles are annotated to this disease.</td>
+	    		</tr>
+    		</table>
+    		<br/>
+			</li>
+
+    		<li>Querying by Phenotype returns alleles annotated to the term via any kind of genotype (OMG, Conditional, or Non-Conditional Complex).<br/>
+    		The affected systems column displays a comma separated list of systems for all OMG or Conditional genotypes of each allele, but not systems associated with Non-Conditional Complex genotypes. (sto115)  
+ 			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>  
+    		<ol>
+    			<li>
+    			<table>
+	    			<tr>
+	    				<th>Query for...</th>
+	    				<th>Allele</th>
+	    				<th>Return allele? (Y/N)</th>
+	    				<th>"Affected System" terms</th>
+	    				<th>Display "Affected System" terms? (Y/N)</th>
+	    				<th>notes to tester</th>
+    				</tr>
+    				<tr>
+    					<td>decreased splenocyte proliferation <b>MP:0009335</b></td>
+    					<td>Hprt&lt;b-m3&gt;</td>
+    					<td>yes</td>
+    					<td>behavior/neurological, nervous system</td>
+    					<td>yes</td>
+    					<td>queried term is under hematopoietic system and immune system but annotation is to COMPLEX genotype; allele also annotated to &quot;phenotypic reversion&quot; as OMG het</td>
+    				</tr>
+    				<tr>
+    					<td>decreased splenocyte proliferation <b>MP:0009335</b></td>
+    					<td>Hprt&lt;b-m3&gt;</td>
+    					<td>yes</td>
+    					<td>cellular, hematopoietic system, immune system</td>
+    					<td>no</td>
+    					<td>queried term is under hematopoietic system and immune system but annotation is to COMPLEX genotype; allele also annotated to &quot;phenotypic reversion&quot; as OMG het</td>
+    				</tr>
+    				<tr>
+    					<td>alveolitis <b>MP:0010922</b> </td>
+    					<td>Apoe&lt;tm1Unc&gt;</td>
+    					<td>yes</td>
+    					<td>cardiovascular system, hematopoietic system, immune system, respiratory system</td>
+    					<td>yes</td>
+    					<td>annotation for the queried term is to a 3-marker CONDITIONAL genotype; MANY other affected systems also displayed</td>
+    				</tr>
+    				<tr>
+    					<td>alveolitis <b>MP:0010922</b> </td>
+    					<td>Apoe&lt;tm1Unc&gt;</td>
+    					<td>yes</td>
+    					<td>limb/digits/tail, other phenotype, reproductive system</td>
+    					<td>no</td>
+    					<td>annotation for the queried term is to a 3-marker CONDITIONAL genotype; but annotations for this allele in these 3 systems involve only complex genotypes</td>
+    				</tr>
+    				<tr>
+    					<td>abnormal homeostasis <b>MP:0001764</b> </td>
+    					<td>Lrp1&lt;tm2Her&gt;</td>
+    					<td>yes</td>
+    					<td>adipose tissue, behavior/neurological, cardiovascular system, growth/size, hematopoietic system, homeostasis/metabolism, immune system, liver/biliary system, mortality/aging, muscle, nervous system, other phenotype, reproductive system, skeleton</td>
+    					<td>yes</td>
+    					<td>all genotypes of this allele are CONDITIONAL</td>
+    				</tr>
+<!-- NOT IN TEST DATABASE 2/18/2014 
+    				<tr>
+    					<td>abnormal mast cell physiology <b>MP:0002423</b> </td>
+    					<td>Abcc1&lt;tm1Bor&gt;</td>
+    					<td>yes</td>
+    					<td>hematopoietic system, homeostasis/metabolism, immune system, mortality/aging</td>
+    					<td>yes</td>
+    					<td>annotation to queried term is in OMG; annotations to nervous system, other phenotype are in COMPLEX genotypes</td>
+    				</tr>
+    				<tr>
+    					<td>abnormal mast cell physiology <b>MP:0002423</b> </td>
+    					<td>Abcc1&lt;tm1Bor&gt;</td>
+    					<td>yes</td>
+    					<td>nervous system, other phenotype</td>
+    					<td>no</td>
+    					<td>annotation to queried term is in OMG; annotations to nervous system, other phenotype are in COMPLEX genotypes</td>
+    				</tr>
+-->
+    			</table>
+    			</li>
+    		</ol>
+    		</li>
+    		
+<!-- TEST REMOVED AS OF STO115 
+    		<li>Verify that <b>ONLY</b> MP and OMIM annotation data associated with <b>Simple</b> (single allele pair, homozygous, heterozygous, etc.) and <b>Conditionally Targeted</b> genotypes are displayed for an allele, but that searching for annotations associated with other types of genotypes <b>still does return</b> the allele.(sto32) - NEED TO UPDATE FOR STO115 TO INCLUDE COMPLEX NON-CONDITIONAL GENOTYPES
+ 			 <p concordion:assertTrue="true">passed. -klf 2013-12-30</p>
+    		<ol>
+                <li>For the allele <b>Atf1<sup>tm1Gsc</sup></b>,<br/>  
+                Display:
+                <ul>
+                	<li>cellular</li>
+                	<li>nervous system</li>
+                </ul>
+                Do not display:
+                <ul>
+                	<li>embryogenesis</li>
+                	<li>mortality/aging</li>
+                </ul>
+                </li>
+                <li>For the allele <b>Atoh1<sup>tm2Hzo</sup></b>,<br/>
+                Display: 
+                <ul>
+                	<li>digestive/alimentary</li>
+                	<li>endocrine/exocrine</li>
+                	<li>hearing/vestibular/ear</li>
+                	<li>homeostasis</li>
+                	<li>mortality/aging</li>
+                	<li>nervous system</li>
+                	<li>respiratory</li>
+                </ul>
+                Do not display:
+                <ul>
+                	<li>cellular</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+-->
+
+    		<li>Verify that MP and OMIM annotations associated with <b>Complex</b> (multiple allele pair), not conditionally-targeted genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.(sto32) (updated for sto115)
+    		<p concordion:assertTrue="true">passed. -klf 2014-03-02</p>
+    		<ol>
+                <li>For the allele <b>Kras<sup>tm1Mok</sup></b>, do not display MP header terms associated with complex (multi-gene) genotypes unless they are ALSO associated with a simple or a conditional genotype.<br/>
+                Do not display:
+                <ul>
+                	<li>homeostasis</li>
+                	<li>immune</li>
+                </ul>
+                Do display:
+                <ul>
+                	<li>cardiovascular</li>
+                	<li>cellular</li>
+                	<li>embryogenesis</li>
+                	<li>growth/size</li>
+                	<li>mortality/aging</li>
+                	<li>muscle</li>
+                	<li>nervous system</li>
+                </ul> 
+                </li>
+                <li>For the allele <b>Kras<sup>tm1Tyj</sup></b>,<br/>
+                Do not display:
+                <ul>
+                	<li>limbs/digits/tail</li>
+                	<li>vision/eye</li>
+                </ul>
+                Do display:
+                <ul>
+                	<li>cardiovascular</li>
+                	<li>cellular</li>
+                	<li>embryogenesis</li>
+                	<li>growth/size</li>
+                	<li>hematopoietic</li>
+                	<li>homeostasis</li>
+                	<li>integument</li>
+                	<li>liver/biliary</li>
+                	<li>mortality/aging</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Verify that MP and OMIM associations with <b>Compound</b> genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.(sto32)  (updated for sto115)
+    		<p concordion:assertTrue="true">passed -jeffc 2014-03-02</p>
+    		<ol>
+                <li>For the allele <b>Del(2)49Ddu</b>, verify that <b>no data appears</b> in the columns for Affected Analytical Systems or Similar Human Diseases</li>
+    		</ol>
+    		</li>
+    		
+			<li>Searching by MP or OMIM ID includes alleles from appropriate genotypes. (sto35) (updated for sto115)
+			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+    		<table>
+	    		<tr>
+	    			<th>ID</th>
+	    			<th>Term</th>
+	    			<th>Returned Alleles</th>
+	    			<th>Notes to testers</th>
+	    		</tr>
+	    		<tr>
+	    			<td>135100</td>
+	    			<td>Fibrodysplasia Ossificans Progressiva; FOP</td>
+	    			<td>Acvr1&lt;tm1Emsh&gt;</td>
+	    			<td>OMG het/wt.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>135100</td>
+	    			<td>Fibrodysplasia Ossificans Progressiva; FOP</td>
+	    			<td>Tg(Eno2-Bmp4)3Jake</td>
+	    			<td>&quot;Simple&quot; transgene in a hemizygous genotype.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>135100</td>
+	    			<td>Fibrodysplasia Ossificans Progressiva; FOP</td>
+	    			<td>Tg(CAG-LacZ,-ACVR1*,-EGFP)35-1Mis</td>
+	    			<td>This transgene includes a reporter as well as a mutant protein.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>137580</td>
+	    			<td>Gilles De La Tourette Syndrome; GTS</td>
+	    			<td>Slitrk1&lt;tm1Jaru&gt;</td>
+	    			<td>OMG hom.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>137580</td>
+	    			<td>Gilles De La Tourette Syndrome; GTS</td>
+	    			<td>Tg(DRD1-ctxA)7Burt</td>
+	    			<td>&quot;Simple&quot; transgene in hemizygous genotype.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>137580</td>
+	    			<td>Gilles De La Tourette Syndrome; GTS</td>
+	    			<td>Tg(mI56i-cre,EGFP)1Kc</td>
+	    			<td>This transgene is a recombinase and a reporter. The Conditional genotype includes the Met allele.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>137580</td>
+	    			<td>Gilles De La Tourette Syndrome; GTS</td>
+	    			<td>Met&lt;tm1Sst&gt;</td>
+	    			<td>This allele is in a Conditional genotype with the recombinase/reporter transgene.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>101200</td>
+	    			<td>Apert Syndrome</td>
+	    			<td>
+	    			<ul>
+	    				<li>Fgfr2&lt;tm2Cxd&gt;</li>
+	    				<li>Fgfr2&lt;tm1Ewj&gt;</li>
+	    				<li>Fgfr2&lt;tm2Ewj&gt;</li> 
+	    			</ul>
+	    			</td>
+	    			<td>All 3 of these alleles are in Conditional genotypes annotated to the term.  Fgfr2&lt;tm2Ewj&gt; is also in an OMG annotated to the term.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>101200</td>
+	    			<td>Apert Syndrome</td>
+	    			<td>Tg(EIIa-cre)C5379Lmgd</td>
+	    			<td>This recombinase allele is in a Conditional genotype with 3 different Fgfr2 alleles.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>101200</td>
+	    			<td>Apert Syndrome</td>
+	    			<td>
+	    			<ul>
+	    				<li>Spry2&lt;tm1Ayos&gt;</li>
+	    				<li>Spry4&lt;tm1Ayos&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>These alleles are in a COMPLEX genotype together that is annotated to this term. They are returned by the query but DISEASE IS NOT DISPLAYED. (sto115)</td>
+	    		</tr>
+    		</table>
+			</li>
+
+			<li>Searching by MP or OMIM alternate ID includes alleles from appropriate genotypes. (sto35) 
+			(updated for sto115)<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+    		<table>
+	    		<tr>
+	    			<th>Alternate ID</th>
+	    			<th>Term</th>
+	    			<th>Returned Alleles</th>
+	    			<th>Notes to testers</th>
+	    		</tr>
+	    		<tr>
+	    			<td>Fyler:0540</td>
+	    			<td>persistent truncus arteriosus type iv</td>
+	    			<td>b2b1854Clo<br/>
+	    				b2b1941Clo</td>
+	    			<td>These are the only alleles annotated to this term.  Our ID is MP:0011664.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Fyler:540</td>
+	    			<td>persistent truncus arteriosus type iv</td>
+	    			<td>b2b1854Clo<br/>
+	    				b2b1941Clo</td>
+	    			<td>Same as above, but different alternate ID. These are the only alleles annotated to this term. The term has no child terms.  Our ID is MP:0011664.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>601649</td>
+	    			<td>Saethre-Chotzen Syndrome; SCS</td>
+	    			<td>Twist1&lt;Pde&gt;<br/>
+	    				Twist1&lt;Pas&gt;<br/>
+	    				Twist1&lt;tm1Bhr&gt;<br/>
+	    				Msx2&lt;tm1Rilm&gt;</td>
+	    			<td>Alternate ID for Saethre-Chotzen Syndrome; SCS (101400). Four alleles annotated to this disease.  The Msx2 allele is part of a COMPLEX genotype; allele is returne but DISEASE TERM IS NOT DISPLAYED (sto115).</td>
+	    		</tr>
+			</table>
+			</li>
+
+			<li>Searching by MP or OMIM terms  or synonyms returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)<br/>
+				(Note: includes tests for plain text, text including non-alphanumeric characters, and text strings that include non-Boolean &quot;and&quot;, &quot;or&quot;, and &quot;not&quot; as plain words.)
+			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+    		<table>
+	    		<tr>
+	    			<th>MP or OMIM Term or Synonym Text</th>
+	    			<th>Included Alleles</th>
+	    			<th>Notes to testers</th>
+	    		</tr>
+	    		<tr>
+	    			<td>Ossificans</td>
+	    			<td>
+	    			<ul>
+						<li>Acvr1&lt;tm1Emsh&gt;</li>
+						<li>Tg(Eno2-Bmp4)3Jake</li>
+						<li>Tg(CAG-LacZ,-ACVR1*,-EGFP)35-1Mis</li>
+	    			</ul>
+	    			</td>
+	    			<td>The only matching term is Fibrodysplasia Ossificans Progressiva; FOP (135100)</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Tremor/Ataxia Syndrome</td>
+	    			<td>
+	    			<ul>
+		    			<li>Fmr1&lt;tm2Cgr&gt;</li>
+		    			<li>Tg(Pcp2-FMR1*)1Dln</li>
+	    			</ul>
+	    			</td>
+	    			<td>Part of the name of Fragile X Tremor/Ataxia Syndrome; FXTAS (300623).<br/>
+	    				These are the only 2 alleles annotated but without quotation marks, <b>1,845 alleles</b> are returned because of <i>Syndrome</i>.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Ataxia/Tremor Syndrome</td>
+	    			<td>
+	    			<ul>
+	    				<li>Fmr1&lt;tm2Cgr&gt;</li>
+	    				<li>Tg(Pcp2-FMR1*)1Dln</li>
+	    			</ul>
+	    			</td>
+	    			<td>Permutation of the name of Fragile X Tremor/Ataxia Syndrome; FXTAS (300623). Should return same alleles.<br/>
+	    				These are the only 2 alleles annotated but without quotation marks, <b>same 1,845 alleles</b> as above are returned because of <i>Syndrome</i>.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"Ataxia/Tremor Syndrome"</td>
+	    			<td><i>none</i></td>
+	    			<td>Permutation of the name of Fragile X Tremor/Ataxia Syndrome; FXTAS (300623) but includes quoted string. Should NOT return same alleles.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"Bones and/or Mirror"</td>
+	    			<td>
+	    			<ul>
+						<li>cl</li>
+						<li>Dbf</li>
+						<li>Fkbp8&lt;tm1Kei&gt;</li>
+						<li>Fras1&lt;bl&gt;</li>
+						<li>Grip1&lt;eb&gt;</li>
+						<li>Pitx1&lt;tm1Rsd&gt;</li>
+						<li>pma</li>
+						<li>Ret&lt;tm1Kln&gt;</li>
+						<li>skc3</li>
+						<li>Tcirg1&lt;oc&gt;</li>
+						<li>vsd</li>
+	    			</ul>
+	    			</td>
+	    			<td>Words found in Clubfoot, Congenital, with or without Deficiency of Long Bones and/or Mirror-Image Polydactyly; CCF (119800).<br/>
+	    				The Ret allele is in a genotype which includes the recombinase transgene.<br/>
+	    				13 alleles annotated to this disease.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Bones AND Mirror</td>
+	    			<td>
+	    			<ul>
+						<li>cl</li>
+						<li>Dbf</li>
+						<li>Fkbp8&lt;tm1Kei&gt;</li>
+						<li>Fras1&lt;bl&gt;</li>
+						<li>Grip1&lt;eb&gt;</li>
+						<li>Pitx1&lt;tm1Rsd&gt;</li>
+						<li>pma</li>
+						<li>Ret&lt;tm1Kln&gt;</li>
+						<li>skc3</li>
+						<li>Tcirg1&lt;oc&gt;</li>
+						<li>vsd</li>
+						<li>...and more...</li>
+	    			</ul>
+	    			</td>
+	    			<td>Words in the name of Clubfoot, Congenital, with or without Deficiency of Long Bones and/or Mirror-Image Polydactyly; CCF (119800).<br/>
+	    				This genotype includes the recombinase transgene.<br/>
+	    				Should include same alleles as above, plus more from Notes combined with MP or OMIM annotations.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Hypohidrotic/Hair/Tooth</td>
+	    			<td>
+	    			<ul>
+	    				<li>Edar&lt;dl&gt;</li>
+	    				<li>Edar&lt;Tg(OVE1B)Ove&gt;</li>
+	    				<li>Eda&lt;Ta&gt;</li>
+	    				<li>Eda&lt;Ta-6J&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>Part of the name of Ectodermal Dysplasia 10b, Hypohidrotic/Hair/Tooth Type, Autosomal Recessive; ECTD10B (224900),<br/>
+	    				2 alleles annotated to this disease.<br/>
+	    				Part of synonym for Ectodermal Dysplasia 1, Hypohidrotic, X-Linked; XHED (305100)<br/>
+	    				2 alleles annotated to this disease.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"Acrocephalosyndactyly, Type III; ACS3"</td>
+	    			<td>
+	    			<ul>
+						<li>Twist1&lt;Pde&gt;</li>
+						<li>Twist1&lt;Pas&gt;</li>
+						<li>Twist1&lt;tm1Bhr&gt;</li>
+						<li>EXCLUDE: Msx2&lt;tm1Rilm&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>Synonym for Saethre-Chotzen Syndrome; SCS (101400). 4 alleles annotated to this disease but Msx2&lt;tm1Rilm&gt; is only part of a complex genotype, so not returned.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>&quot;ethanol aversion&quot;</td>
+	    			<td>
+	    			<ul>
+						<li>Cacna1b&lt;tm1Hssh&gt;</li>
+						<li>Ccl2&lt;tm1Rol&gt;</li>
+						<li>Ccl3&lt;tm1Unc&gt;</li>
+						<li>Ccr2&lt;tm1Mae&gt;</li>
+						<li>Drd2&lt;tm1Low&gt;</li>
+						<li>Npy2r&lt;tm1Pern&gt;</li>
+						<li>Tg(Camk2a-Fyn-531)1Nko</li>
+	    			</ul>
+					</td>
+	    			<td>Synonym for &quot;alcohol aversion&quot; (MP:0002570).  Total should be <b>7 alleles</b>.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"BALB/cByJ"</td>
+	    			<td>These from MP Notes:
+	    			<ul>
+						<li>Acads&lt;del-J&gt;</li>
+						<li>Axd</li>
+						<li>Celf4&lt;Ff&gt;</li>
+						<li>Col1a2&lt;tm1.1Mcbr&gt;</li>
+						<li>Hld</li>
+						<li>Lvs</li>
+						<li>Mcoln3&lt;Va-J&gt;</li>
+						<li>Phex&lt;Hyp-Duk&gt;</li>
+						<li>Rpe65&lt;C57BL/6J&gt;</li>
+						<li>Smad6&lt;tm1Glvn&gt;</li>
+						<li>Tsed</li>
+						<li>Tyr&lt;c-2J&gt;</li>
+	    			</ul>
+	    			<p>And these from TEXT-QTL Notes:</p>
+	    			<ul>
+	    				<li>Abmm&lt;DBA/2J&gt;</li>
+	    				<li>Ccrs4&lt;BTBR&gt;</li>
+	    			</ul>
+					</td>
+	    			<td>This text is not found in any MP or OMIM term, only in MP annotation Notes (General and Background Sensitivity, returning <b>12 alleles</b>) and TEXT-QTL notes, returning a total of <b>743 alleles</b>.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>&quot;however germ cell apoptosis"</td>
+	    			<td>Fts</td>
+	    			<td>This phrase is found only in Normal notes and only for this allele.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"decreased IgG2a level"</td>
+	    			<td>
+	    			<ul>
+	    				<li>Aicda&lt;tm1Hon&gt;</li>
+	    				<li>Bach2&lt;tm1Igar&gt;</li>
+	    				<li>Card11&lt;m1Btlr&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>Should return same set of <b>107 alleles</b> as MP:0008496.  Should NOT tokenize before and after the case-changes or the "2" in "IgG2a".</td>
+	    		</tr>
+	    		<tr>
+	    			<td>IgG2b</td>
+	    			<td>Around 200 alleles</td>
+	    			<td>Should return DIFFERENT set of alleles from query for <i>Ig G 2 b</i> (44,045 alleles) and <i>IgG 2 b</i> (43,944 alleles).  Our query should NOT tokenize before and after the case-changes or the "2".</td>
+	    		</tr>
+    		</table>
+			</li>
+			<li>Searching by phenotype can match text in an allele's "General" note. (sto114)
+			<p concordion:assertTrue="true">passed - jeffc 2014/03/02</p>
+				<ul>
+					<li>Do a phenotype/disease query for <a href="http://cardolan.informatics.jax.org/allele/summary?phenotype=S74469"><b>S74469</b></a></li>
+					<li>Verify that <b>A&lt;iy&gt;</b> is returned. (<i>Has general note "Genbank ID for this mutation: S74469"</i>)</li>
+				</ul>
+			</li>
+
+			<li>Searching by combinations of MP or OMIM terms, synonyms or IDs using Booleans returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)
+			(updated for sto115)<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+    		<table>
+	    		<tr>
+	    			<th>MP or OMIM Term<br/>
+	    				(Note quotation marks, parentheses, etc.)</th>
+	    			<th>Included Alleles</th>
+	    			<th>Notes to testers</th>
+	    		</tr>
+	    		<tr>
+	    			<td>Netherton Chanarin</td>
+	    			<td>
+	    			<ul>
+	    				<li>Dsg4&lt;lah&gt;</li>
+	    				<li>Spink5&lt;tm1Drh&gt;</li>
+	    				<li>Spink5&lt;tm1Hov&gt;</li>
+	    				<li>F2rl1&lt;tm1Cgh&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>These words belong to 2 separate OMIM terms. Query should OR them together returning <b>7 alleles</b>. F2rl1 allele is included but DISEASE IS NOT DISPLAYED due to COMPLEX genotype with Spink5&lt;tm1Hov&gt;. (sto115)</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Netherton OR Chanarin</td>
+	    			<td>
+	    			<ul>
+	    				<li>Dsg4&lt;lah&gt;</li>
+	    				<li>F2rl1&lt;tm1Cgh&gt;</li>
+	    				<li>Spink5&lt;tm1Drh&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>Should get same result as above: <b>7 alleles</b>.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"split foot"</td>
+	    			<td></td>
+	    			<td>There should be no allele results.There are 2 matching OMIM terms but they have no annotations.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"enhanced behavioral response to cocaine" AND "enhanced behavioral response to alcohol"</td>
+	    			<td>Only these:
+	    			<ul>
+	    				<li>Drd4&lt;tm1Dkg&gt;</li>
+	    				<li>hipr</li>
+	    				<li>Ppp1r1b&lt;tm1Aaf&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>ANDing two MP terms. 30 alleles are annotated to &quot;...cocaine&quot; (MP:0009754).  38 alleles are annotated to &quot;...alcohol&quot; (MP:0009751) or its child term &quot;hyperactivity...&quot; (MP:0002629). Only these <b>3 alleles</b> are annotated to both terms.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>MP:0009754 AND MP:0009751</td>
+	    			<td>Only these:
+	    			<ul>
+	    				<li>Drd4&lt;tm1Dkg&gt;</li>
+	    				<li>hipr</li>
+	    				<li>Ppp1r1b&lt;tm1Aaf&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>ANDing the IDs of the two terms above. Should return same set of <b>3 alleles</b>. (These alleles are annotated to the child term of &quot;...alcohol&quot;.)</td>
+	    		</tr>
+	    		<tr>
+	    			<td>MP:0009754 OR MP:0009751</td>
+	    			<td>
+	    			<ul>
+	    				<li>Actre1&lt;BALB/cJ&gt;</li>
+	    				<li>Aldh2&lt;Gt(OST7285)Lex&gt;</li>
+	    				<li>Camk4&lt;tm1Gsc&gt;</li>
+	    				<li>Drd4&lt;tm1Dkg&gt;</li>
+	    				<li>hipr</li>
+	    				<li>Tg(Drd1a-cre)1Gsc</li>
+	    				<li>Tg(Drd2-EGFP)S118Gsat</li>
+	    				<li>Unc79&lt;Lwt&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>ORing the IDs of the two terms above.  Should return all alleles annotated to just one  of the terms in addition to the 3 annotated to both terms.  Total should be <b>63 alleles</b>.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>MP:0009754 AND NOT MP:0009751</td>
+	    			<td>
+	    			<ul>
+	    				<li>Camk4&lt;tm1Gsc&gt;</li>
+	    				<li>Chrm4&lt;tm2.1Jwe&gt;</li>
+	    				<li>Clock&lt;m1Jt&gt;</li>
+	    				<li><i>Exclude: </i> Drd4&lt;tm1Dkg&gt;</li>
+	    				<li><i>Exclude:</i> hipr</li>
+	    				<li><i>Exclude:</i> Ppp1r1b&lt;tm1Aaf&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>Combining the IDs of the two terms above with NOT.  Should exclude the set of 3 alleles for the AND case, returning alleles annotated only to the first ID ("...cocaine").  Total should be <b>27 alleles</b>.</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"response to cocaine"</td>
+	    			<td>
+	    			<ul>
+	    				<li>Camk4&lt;tm1Gsc&gt;</li>
+	    				<li>Chrm4&lt;tm2.1Jwe&gt;</li>
+	    				<li>Clock&lt;m1Jt&gt;</li>
+						<li>EXCLUDE: Creb1&lt;tm3Gsc&gt;</li>
+	    				<li>Datd&lt;C57BL/6J&gt;</li>
+	    				<li>Datd&lt;DBA/2J&gt;</li>
+	    				<li>Dlg4&lt;tm2.1Grnt&gt;</li>
+	    				<li>En1&lt;tm2(cre)Wrst&gt;</li>
+						<li>Grm5&lt;tm1Fcq&gt;</li>
+						<li>Gt(ROSA)26Sor&lt;tm1(EYFP)Cos&gt;</li>
+						<li>Per2&lt;tm1Brd&gt;</li>
+						<li>Slc6a3&lt;tm1(cre)Xz&gt;</li>
+	    				<li>Slc6a3&lt;tm1.1(cre)Bkmn&gt;</li>
+						<li>Tg(Drd1a-cre)EY262Gsat</li>
+						<li>Tg(Drd1a-EGFP)X60Gsat</li>
+						<li>EXCLUDE: Tg(Camk2a-cre)1Gsc</li>
+	    			</ul>
+					</td>
+	    			<td><p>Should return alleles annotated to the term shown above, alleles annotated to "impaired behavioral response to cocaine" (MP:0009758), and alleles associated with annotations having notes containing this text from any of 3 Notes Types (General, Normal, and Background Sensitivity). Total should be <b>61 alleles</b>.</p>
+	    				<p>Creb1 and Tg(Camk2a-cre)1Gsc alleles are excluded because the matching text appears in a note that is associated with a Normal annotation, which we exclude.</p> 
+	    				<p>Two Cyfip alleles present in a trans-het genotype added to production 1/9/2014 so we are returning them where Public is not. Data will appear on public after 1/20/2014?</p>
+	    				<p>Two Datd QTL alleles are included because matching text appears in the &quot;TEXT-QTL&quot; note.</p>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"response to morphine"</td>
+	    			<td>Oprd1&lt;tm1Jep&gt;<br/>...and more</td>
+	    			<td>Annotated to the term in COMPLEX genotype only. Allele should be returned by the query.  Header is displayed because additional terms appear for other genotypes. (sto115)</td>
+	    		</tr>
+	    		<tr>
+	    			<td>"enhanced behavioral response to cocaine" AND NOT (Parkinson OR Autism)</td>
+	    			<td>
+	    			<ul>
+	    				<li>EXCLUDE: Dlg4&lt;tm2.1Grnt&gt;</li>
+	    				<li>EXCLUDE: En1&lt;tm2(cre)Wrst&gt;</li>
+	    				<li>EXCLUDE: Slc6a3&lt;tm1.1(cre)Bkmn&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>Should return only <b>27 alleles</b>. </td>
+	    		</tr>
+	    		<tr>
+	    			<td>"response to cocaine" AND NOT behavior</td>
+	    			<td><i>none</i></td>
+	    			<td>There aren't any alleles that have the  exact phrase "response to cocaine" but do not also have the word "behavior" in a Note or Annotation somewhere. </td>
+	    		</tr>
+	    		<tr>
+	    			<td>(cocaine AND response AND to) AND NOT behavior</td>
+	    			<td>Nr1i3&lt;tm1Ddm&gt;</td>
+	    			<td>Only one allele has the words contained in the phrase "response to cocaine" but does not also have the word "behavior". </td>
+	    		</tr>
+    		</table>
+			</li>
+			
+			<li>Searching by MP or OMIM terms  or synonyms or MP Notes text disregards "words" on MGI's modified Stop Words list. (sto35)<br/>
+				(Note: This should be the same Stop Words list we are using for the Quick Search.  See <a href="http://prodwww.informatics.jax.org/wiki/index.php/TR:7754_Requirements">Search Tool Requirements</a> wiki page.<br/>
+				This list is:  <i>a, an, and, are, as, be, but, if, is, it, such, that, the, their, then, there, these, they, this, was, will</i>.<br/>
+				Excluded from the list, therefore, treated as words are: <i>at, by, for, in, into, no, not, of, on, or, to, with</i>.)
+			<p concordion:assertTrue="true">passsed. -jeffc 2014-03-02</p>
+			<table>
+			<tr>
+				<th>Input</th>
+				<th>Included Alleles Returned</th>
+				<th>Notes to Testers</th>
+			</tr>
+			<tr>
+				<td>a, an, and, are, as, be, but, if, is, it, or</td>
+				<td>lots</td>
+				<td>These are Stop Words so they should be ignored. The query should return all annotated alleles.</td>
+			</tr>
+			<tr>
+				<td>such, that, the, their, then, there, these, they, this, was, will</td>
+				<td>lots</td>
+				<td>These are Stop Words so they should be ignored. The query should return all annotated alleles.</td>
+			</tr>
+			<tr>
+				<td>at, by, for, in, into, no</td>
+				<td>different list</td>
+				<td>These are not Stop Words so they should be respected.  The query should return only alleles having one or more of these words in an annotated term.</td>
+			</tr>
+			<tr>
+				<td>not, of, on,  to, with</td>
+				<td>different list</td>
+				<td>These are not Stop Words so they should be respected.  The query should return only alleles having one or more of these words in an annotated term.</td>
+			</tr>
+			<tr>
+				<td>in AND by AND of AND for AND grows AND &quot;sparse coat&quot;</td>
+				<td>
+				<ul>
+					<li>Ass1&lt;bar&gt;</li>
+					<li>Ass1&lt;fold&gt;</li>
+					<li>Gsdma3&lt;Dfl&gt;</li>
+				</ul>
+				</td>
+				<td><p>Only these 3 alleles contain all the terms.  &quot;In&quot;, &quot;By&quot;,  &quot;Of&quot;, and &quot;For&quot; are not Stop Words so they should be respected.</p>
+					<p>The note text which returns the Ass1 alleles is: <i>enough hair grows in by 3 weeks of age for a sparse coat</i>. The portion of note text which returns the Gsdma3 allele is: <i>...a second sparse coat re-grows but is lost by 4 months of age...</i>.</p>
+					<p>Searching with just <i>grows AND "sparse coat"</i> returns 3 additional alleles.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>differentiation AND is AND perturbed AND  such AND that AND they AND differentiate AND into AND hybrid</td>
+				<td>
+				<ul>
+					<li>Onecut1&lt;tm1Flem&gt;</li>
+					<li>Pten&lt;tm1Hwu&gt;</li>
+					<li>Tfap2a&lt;tm2Will&gt;</li>
+				</ul>
+				</td>
+				<td>The text <i>differentiation is perturbed such that they differentiate into hybrid</i> is found in an MP Note.  "Is", "Such", "That", and "They" are Stop Words and should produce the same results if they are not included in the query.  Returns only these <b>3 alleles.</b></td>
+			</tr>
+			</table>
+			</li>			
+
+			<li>The "Anatomical Systems Affected by Phenotypes" pop-up tool populates the Pheno/Disease input field with the MP IDs of the selected systems.
+			<p concordion:assertTrue="true">passed. -klf 2014-01-20</p>
+			<table>
+			<tr>
+				<th>Selected Text</th>
+				<th>Expected MP ID</th>
+			</tr>
+			<tr>
+				<td>adipose tissue</td>
+				<td>MP:0005375</td>
+			</tr>
+			<tr>
+				<td>behavioral/neurological</td>
+				<td>MP:0005386</td>
+			</tr>
+			<tr>
+				<td>cardiovascular system</td>
+				<td>MP:0005385</td>
+			</tr>
+			<tr>
+				<td>no phenotypic analysis</td>
+				<td>MP:0003012</td>
+			</tr>
+			<tr>
+				<td>normal phenotype</td>
+				<td>MP:0002873</td>
+			</tr>
+			<tr>
+				<td>vision/eye </td>
+				<td>MP:0005391</td>
+			</tr>
+			<tr>
+				<td>tumorigenesis </td>
+				<td>MP:0002006</td>
+			</tr>
+			<tr>
+				<td>taste/olfaction </td>
+				<td>MP:0005394</td>
+			</tr>
+			</table>
+			</li>
+
+			<li>The "Anatomical Systems Affected by Phenotypes" pop-up tool adds the selected MP IDs to whatever text is already in the Pheno/Disease input field
+			<p concordion:assertTrue="true">passed. -klf 2014-01-20</p>
+			<ol>
+				<li>Enter some text in the Phenotypes/Diseases form input text area.</li>
+				<li>Open the "Anatomical Systems Affected by Phenotypes" pop-up tool.</li>
+				<li>Select a checkbox and click "Add to query".</li>
+				<li>Verify that the MP IDs are added to the existing text in the form text area.</li>
+			</ol>
+			</li>
+
+    		<li>When allele is annotated to term "Normal phenotype"   or its children in OMG or Conditional genotype, and no other terms in ANY genotypes, display "no abnormal phenotype observed". (sto115)
+			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>  
+			<ol>
+				<li>From the Allele Query Form, submit a Nomenclature query for the items listed below. Verify that for the listed allele, the "Abnormal Phenotypes Reported in these Systems" column displays the listed text.
+				<table>
+					<tr>
+						<th>Nomenclature field</th>
+						<th>Allele on summary</th>
+						<th>"Systems" column text:<br/>
+						<b>no abnormal phenotype observed</b></th>
+						<th>notes to tester</th>
+					</tr>
+					<tr>
+						<td>Alkbh8</td>
+						<td>Alkbh8&lt;tm1Klng&gt; (MGI:4822190)</td>
+						<td>yes</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Aph1b</td>
+						<td>Aph1b&lt;tm1Bdes&gt; (MGI:3522628)</td>
+						<td>yes</td>
+						<td>in OMG and in complex geno with MGI:3530442 Aph1c&lt;tm1.1Bdes&gt; - only annot for either allele</td>
+					</tr>
+					<tr>
+						<td>Aph1c</td>
+						<td>Aph1c&lt;tm1.1Bdes&gt; (MGI:3530442)</td>
+						<td>yes</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Hprt</td>
+						<td>Hprt&lt;tm1.1Pobe&gt; (MGI:3582526)</td>
+						<td>yes</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Hprt</td>
+						<td>Hprt&lt;tm1Dwm&gt; MGI:4462242</td>
+						<td>yes</td>
+						<td>annotated to &quot;phenotypic reversion&quot;, child of &quot;normal phenotype&quot;, in two OMGs, and no other terms</td>
+					</tr>
+					<tr>
+						<td>Vps52</td>
+						<td>Vps52&lt;t-w5+Art&gt; MGI:5469354</td>
+						<td>no</td>
+						<td>annotated to &quot;phenotypic reversion&quot;, child of &quot;normal phenotype&quot; in COMPLEX genotypes, and no other terms</td>
+					</tr>
+					<tr>
+						<td>Hprt</td>
+						<td>Hprt&lt;b-m3&gt; (MGI:1857299)</td>
+						<td>no</td>
+						<td>annotated to &quot;phenotypic reversion&quot;, child of &quot;normal phenotype&quot; in one genotype, but has abnormal annotations in other genotypes</td>
+					</tr>
+					<tr>
+						<td>Hprt</td>
+						<td>Hprt&lt;tm1(Agt)Sig&gt; (MGI:2449451)</td>
+						<td>no</td>
+						<td>only annotation is a "normal" annotation so column should be blank (those annotations get ignored)</td>
+					</tr>
+					<tr>
+						<td>Abr</td>
+						<td>Abr&lt;tm1Jhg&gt; (MGI:2388713)</td>
+						<td>no</td>
+						<td>has "no abnormal phenotype detected" annot in OMG, but has MP annotations in COMPLEX genotype with Bcr&lt;tm1Hkp&gt;, so should not display this way</td>
+					</tr>
+					<tr>
+						<td>Etn2</td>
+						<td>Etn2&lt;Sd&gt; (MGI:1857746)</td>
+						<td>no</td>
+						<td>has "no abnormal phenotype detected" annot but many others too, so should not display this way</td>
+					</tr>
+				</table>
+				</li>
+			</ol>
+    		</li>
+    		
+    		<li>When allele is annotated to term "No phenotypic analysis"  in OMG or Conditional genotype, and no other terms in ANY genotypes, display "No Phenotypic Analysis". (sto115)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-02-18</p>  
+			<ol>
+				<li>From the Allele Query Form, submit a Nomenclature query for the items listed below. Verify that for the listed allele, the "Abnormal Phenotypes Reported in these Systems" column displays the listed text.
+				<table>
+					<tr>
+						<th>Nomenclature field</th>
+						<th>Allele on summary</th>
+						<th>"Systems" column text:<br/>
+						<b>no phenotypic analysis</b></th>
+						<th>notes to tester</th>
+					</tr>
+					<tr>
+						<td>Ano6</td>
+						<td>Ano6&lt;tm1.1Naga&gt; (MGI:5538269)</td>
+						<td>yes</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Ezh2</td>
+						<td>Ezh2&lt;tm1Sho&gt; (MGI:3790775)</td>
+						<td>yes</td>
+						<td>has 2 geno but this is only annot</td>
+					</tr>
+					<tr>
+						<td>Hprt</td>
+						<td>Hprt&lt;tm11Aird&gt; (MGI:5514145)</td>
+						<td>yes</td>
+						<td>only annotation and is in an OMG</td>
+					</tr>
+					<tr>
+						<td>Acvr1b</td>
+						<td>Acvr1b&lt;tm1.2Pbe&gt; (MGI:5441234)</td>
+						<td>yes</td>
+						<td>in a CONDITIONAL genotype; this is the only annotation</td>
+					</tr>
+					<tr>
+						<td>Col6a1</td>
+						<td>Col6a1&lt;tm1Yah&gt; (MGI:4868459)</td>
+						<td>no</td>
+						<td>in a COMPLEX Non-Conditional genotype; this is the only annotation - we do not display COMPLEX annotations; cell should be blank</td>
+					</tr>
+					<tr>
+						<td>Prmt2</td>
+						<td>Prmt2&lt;tm1Yah&gt; (MGI:4868409)</td>
+						<td>no</td>
+						<td>in two COMPLEX Non-Conditional genotypes; this is the only annotation - we do not display COMPLEX annotations; cell should be blank</td>
+					</tr>
+					<tr>
+						<td>Cstb</td>
+						<td>Cstb&lt;tm1Yah&gt; (MGI:4868410)</td>
+						<td>no</td>
+						<td>annotated to this term in a COMPLEX Non-Conditional genotypes; but all other annotations are "N" so should be reported as &quot;no abnormal phenotype observed&quot;</td>
+					</tr>
+					<tr>
+						<td>Etn2</td>
+						<td>Etn2&lt;Sd&gt; (MGI:1857746)</td>
+						<td>no</td>
+						<td>has "no phenotypic analysis" annot but many others too, so should not display this way</td>
+					</tr>
+					<tr>
+						<td>Emx2</td>
+						<td>Emx2&lt;tm2(cre)Sia&gt; (MGI:3579416)</td>
+						<td>no</td>
+						<td>has "no phenotypic analysis" in a CONDITIONAL genotype but many others too in another CONDITIONAL genotype, so should not display this way</td>
+					</tr>
+				</table>
+				</li>
+			</ol>
+    		</li>
+
+    		<li>Verify that diseases column displays unique comma separated list of diseases for each genotype (sto32) (updated for sto115)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-03-02</p>
+    		<ol>
+                <li>Verify that the row for allele <b>Hprt<sup>b-m3</sup></b> displays <b>Lesch-Nyhan Syndrome; LNS 300322</b> under Similar Human Diseases. (<i>3-marker Conditional genotype</i>)</li>
+                <li>Verify that disease names are linked to their Disease Detail page, but ID numbers are not linked.</li>
+                <li>Verify that the row for allele <b>Hprt<sup>tm1(cre)Mnn</sup></b> displays <b>Focal Dermal Hypoplasia; FDH 305600</b> under Similar Human Diseases.</li>
+                <li>Verify that the row for allele <b>Mitf<sup>Mi-H</sup></b> displays <b>Albinism, Ocular, with Sensorineural Deafness 103470; Tietz Syndrome 103500; Waardenburg Syndrome, Type 2A; WS2A 193510</b> under Similar Human Diseases.</li>
+                <li>Verify that the row for allele <b>Tg(Thy1-MAPT)183Gotz</b> DOES NOT displays <b>Alzheimer Disease; AD 104300; Cerebral Amyloid Angiopathy, App-Related 605714</b> under Similar Human Diseases. (<i>annotated via COMPLEX genotypes</i>)</li>
+                <li>Verify that the row for allele <b>Mapt<sup>tm1(EGFP)Klt</sup></b> DOES NOT displays <b>Alzheimer Disease; AD 104300</b> under Similar Human Diseases. (<i>annotated via COMPLEX genotypes</i>)</li>
+    		</ol>
+    		</li>
+
+    		<li>Verify that disease column excludes "Not" annotations when there are no other annotations for a disease term for a given allele (sto32) (updated for sto115)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-03-02</p>
+    		<ol>
+                <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> displays <b>I<b>chthyosis and Male Hypogonadism 308200, </b>Immunodysregulation, Polyendocrinopathy, and Enteropathy, X-Linked; 304790, Wiskott-Aldrich Syndrome; WAS 301000</b> under Similar Human Diseases.</li>
+                <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> DOES NOT display <b>Ichthyosis, X-Linked; XLI OMIM ID: 308100</b>  under Similar Human Diseases.</li>
+                <li>Verify that the row for allele <b>Nos1<sup>tm1Plh</sup></b> displays <b>Achalasia, Familial Esophageal 200400, Pyloric Stenosis, Infantile Hypertrophic, 1; IHPS1 179010</b> (<i>Note: there is an annotation and a "Not" annotation for Pyloric Stenosis, so this disease SHOULD appear</i>).</li>
+            </ol>
+    		</li>
+
+
+		</ol>
+	</div>
+
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
+     			<li>
+    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
+    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
+    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
+    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
+  -->
+ 	</div>
+</div>
+
+</body>
+</html>

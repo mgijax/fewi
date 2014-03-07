@@ -85,9 +85,11 @@ public class HdpDiseaseSummaryRow {
 		      return term.getPrimaryId();
 		}
 		
-		public Integer getDiseaseModels()
+		public String getDiseaseModels()
 		{
-			return term.getDiseaseModelCount();
+			// links to disease models page
+			String url = fewiUrl + "disease/models/" + term.getPrimaryId();
+			return "<a href=\""+url+"\">"+term.getDiseaseModelCount()+"</a>";
 		}
 		
 		public String getMouseMarkers(){

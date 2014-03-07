@@ -10,6 +10,12 @@ ${templateBean.templateHeadHtml}
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <style type="text/css">
+.ysf
+	{
+		font-weight: bold;
+		text-decoration: underline;
+		font-size: 110%;
+	}
 </style>
 
 <script>
@@ -28,36 +34,46 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitle">Marker Query Summary</span>
 </div>
 
+<div id="summary">
+	<div id="breadbox" style="">
+		<div id="contentcolumn">
+			<div class="innertube">
+				<div id="filterSummary" class="filters">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="querySummary" style="width:700px;">
+		<div class="innertube">
+		<div id="query-ysf">
+			<span class="ysf">You searched for...</span>
+			<%@ include file="/WEB-INF/jsp/marker_ysf.jsp" %>
+		</div>
+		</div>
+	</div>
+	<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+	</div>
+</div>
 
-<!-- header table -->
-<table class="summaryHeader">
-<tr >
-  <td class="summaryHeaderCat1">
-      Query Catagory
-  </td>
-  <td class="summaryHeaderData1">
-      Query Info     
-  </td>
-</tr>
-</table>
-
-
-<!-- paginator -->
-<table style="width:100%;">
-  <tr>
-    <td class="paginator">
-      <div id="paginationTop">&nbsp;</div>
-    </td>
-  </tr>
-</table>
-
+<div id="toolbar" class="bluebar" style="">
+	<div id="downloadDiv">
+		<span class="label">Export:</span>
+		<a id="textDownload"  class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+        <a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+	</div>
+</div>
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
 
-<!-- including this file will start the data injection -->
 <script type="text/javascript">
-  <%@ include file="/js/marker_summary.js" %>
+window.querystring="${queryString}";
+window.fewiurl="${configBean.FEWI_URL}";
+window.doHighlights=false;
+<c:if test="${not empty queryForm.nomen}">window.doHighlights=true</c:if>
 </script>
-
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_summary.js"></script>
 ${templateBean.templateBodyStopHtml}
 

@@ -1,5 +1,8 @@
 package org.jax.mgi.fewi.view;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,5 +70,12 @@ public class AbstractReportView extends AbstractView
 			{
 				super(message);
 			}
+		}
+		protected  final static String getCurrentDate()   {
+			Date date = new Date();
+			DateFormat df = new SimpleDateFormat( "yyyyMMdd_HHmmss" ) ;
+			//df.setTimeZone( TimeZone.getTimeZone( "EST" )  ) ;
+	        String formattedDate = df.format(date);
+	        return (formattedDate);
 		}
 }

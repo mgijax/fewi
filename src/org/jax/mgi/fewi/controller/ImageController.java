@@ -110,6 +110,35 @@ public class ImageController {
         // generate and return mav for pheno detail
         return getPhenoDetailMAV(image);
     }
+    
+    // Access Via Image ID
+    @RequestMapping(value="/molecular/{imageID:.+}", method = RequestMethod.GET)
+    public ModelAndView molecularImageDetailByID(@PathVariable("imageID") String imageID) 
+    {
+        logger.debug("->molecularImageDetailByID started");
+        
+        // find the requested image
+        List<Image> imageList = this.getImageForID(imageID);
+
+        // ensure we found an image
+        if (imageList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Image Found");
+            return mav;
+        }
+
+        //pull out the image
+        Image image = imageList.get(0);
+        
+        // generate ModelAndView object to be passed to detail page
+        ModelAndView mav = new ModelAndView("image_detail_generic");
+        mav.addObject("image", image);
+        mav.addObject("imageType","Molecular");
+        mav.addObject("imageAlleleList", image.getImageAlleles());
+        mav.addObject("reference", image.getReference());
+
+        return mav;
+    }
 
 
     // Access Via Image DB Key
@@ -637,10 +666,11 @@ public class ImageController {
     private ModelAndView getPhenoDetailMAV (Image image) {
 
         // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("image_detail_pheno");
+        ModelAndView mav = new ModelAndView("image_detail_generic");
 
         mav.addObject("image", image);
-
+        mav.addObject("imageType","Phenotype");
+        
         // package associated alleles
         List<ImageAllele> imageAlleleList = image.getImageAlleles();
         if (!imageAlleleList.isEmpty()) {

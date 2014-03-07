@@ -1,9 +1,8 @@
 package org.jax.mgi.fewi.test.mock;
 
+import org.jax.mgi.fewi.controller.AlleleController;
 import org.jax.mgi.fewi.controller.DiseasePortalController;
 import org.jax.mgi.fewi.controller.GXDController;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /*
  * A useful way to encapsulate the inner workings of how mock queries get created
@@ -20,6 +19,14 @@ public class MockQueryFactory
 	public MockQueryFactory(MockRequest mr)
 	{
 		this.mr=mr;
+	}
+	
+	/*
+	 * Allele Mock Queries
+	 */
+	public MockAlleleControllerQuery alleleController(AlleleController controller) throws Exception
+	{
+		return new MockAlleleControllerQuery(controller);
 	}
 	
 	/*

@@ -94,7 +94,7 @@ tr.gray td {background-color:#EEEEEE;}
 
 		<ol>
     		<li>Verify a "Choose File" button exists on the Human Disease Query page(sto158)
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">passed. -klf Dec 2013</p>
     		<ol>
                 <li>Open the Human Disease query page</li>
                 <li>Verify the existence of a "Choose File" button.</li>
@@ -102,7 +102,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Verify you can upload a VCF file with human data (sto158)
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">passed. -klf Dec 2013</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>human1.vcf</b></li>
@@ -113,7 +113,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Verify you can upload a VCF file with mouse data (sto158)
-    		<p concordion:assertTrue="false">new test</p>    		
+    		<p concordion:assertTrue="true">passed. -klf Dec 2013</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_From_Comp_Sci and click on the file <b>mouse1.vcf</b></li>
@@ -124,7 +124,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
      		<li>Verify you get an error when trying to upload a VCF file with no data (sto158)
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">passed. -klf Dec 2013</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>error.vcf</b></li>
@@ -133,7 +133,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
      		<li>Verify VCF file upload preprocesses the file keeping only "PASS" (case-insensitive), "." (dot) or null in Column 7 ("FILTER" column) (sto158)
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">passed. -klf Dec 2013</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>human1-testPass6pass4Dot3.vcf</b></li>
@@ -146,7 +146,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
             
      		<li>Verify VCF file upload preprocesses the file keeping only rows with "." (dot) or null in Column 3 ("ID" column) (sto158)
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">passed. -klf Dec 2013</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>human1-TEST-rsIDTestCol3.vcf</b></li>
@@ -173,7 +173,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Verify files over 25MB are rejected.
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">passed. -klf Dec 2013</p>
     		<ol>
                 <li>Open the Human Disease query page and click the "Choose File" button</li>
                 <li>Navigate to the TR directory /wts_projects/11400/11423/data_files/VCF_Files_for_Testing and click on the file <b>VeryVeryLargeFile_human.vcf</b></li>
@@ -181,24 +181,6 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify clicking the "OK" button dismisses the error message.</li>
                 <li>Verify the filename "VeryVeryLargeFile_human.vcf" is NOT displayed on the interface.</li>
                 <li>Verify clicking the "GO" button returns no data (i.e., the file was not processed and uploaded).</li> 
-    		</ol>
-    		</li>
-    		
-    		<li>Verify files get processed up to 200,000 lines.
-    		<p concordion:assertTrue="false">new test</p>
-    		<ol>
-                <li>Step</li>
-                <li>Step</li>
-                <li>Step</li>
-    		</ol>
-    		</li>
-    		
-    		<li>Verify files with coordinates outside any genes return -no results- OR -error message- <i>(I forget which we are doing)</i>.
-    		<p concordion:assertTrue="false">new test</p>
-    		<ol>
-                <li>Step</li>
-                <li>Step</li>
-                <li>Step</li>
     		</ol>
     		</li>
 

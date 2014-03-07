@@ -74,6 +74,15 @@ public class SortConstants {
 	public static final String DP_BY_LOCATION       = "byMarkerLocation";
 	public static final String DP_BY_HOMOLOGENE_ID       = "byHomologeneId";
 
+	
+	// Allele
+	public static final String ALL_BY_TRANSMISSION = "byTransmission";	
+	public static final String ALL_BY_SYMBOL = "bySymbol";
+	public static final String ALL_BY_TYPE = "byType";
+	public static final String ALL_BY_CHROMOSOME = "byChr";
+	public static final String ALL_BY_DISEASE = "byDisease";
+
+	
     // faux entry;  used by webapp class template
     public static final String FOO_SORT              = "fooSort";
 }
