@@ -16,11 +16,11 @@ th {background-color:#D0E0F0;}
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
 -->
 
-    <h1>Marker Tests</h1>
+    <h1>Common Elements Tests</h1>
 
 	<div>
 	<h2>Functional Description</h2>
-	<p>Test suites related to the Marker Detail, Marker Query and Marker Summary pages and functionality</p>
+	<p>Test suites related to the design, pages, links, and functionality of elements common to most or all of MGI's web pages</p>
 	</div>
 
 	<div>
@@ -35,9 +35,11 @@ th {background-color:#D0E0F0;}
 				<th width="85px">Contains Manual Tests?</th>
 				<th>Notes</th>
 			</tr>
+<!-- Example header row from a different page 
 			<tr class="gray">
 				<td colspan="5"><h5>EI</h5></td>
 			</tr>
+-->
 <!-- Example row from a different package
 			<tr>
 				<td><a concordion:run="concordion" href="CreImageExtLinksEI.html">Cre Images</a></td>
@@ -47,117 +49,66 @@ th {background-color:#D0E0F0;}
 				<td>Will need retesting when we move to Production.<br/>Marked for regression testing.</td>
 			</tr>
  -->
+
+			<tr class="gray">
+				<td colspan="5"><h5>WI: Navigation Bar (drop-down menus)</h5></td>
+			</tr>
 			<tr>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
+				<td>Search menu
+				<ul>
+					<li><a concordion:run="concordion" href="MouseMine.html">Mouse Mine</a></li>
+				</ul>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Download menu</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>More Resources menu
+				<ul>
+					<li><a concordion:run="concordion" href="MGIGlossaryLinks.html">MGI Glossary</a></li>
+				</ul>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Static links:
+				<ul>
+					<li>Submit Data</li>
+					<li>Find Mice (IMSR)</li>
+					<li>Analysis Tools</li>
+					<li>Contact Us</li>
+				</ul>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 
 			<tr class="gray">
-				<td colspan="5"><h5>WI: Marker Detail Page</h5></td>
+				<td colspan="5"><h5>WI: Other Common Page-Header Elements</h5></td>
 			</tr>
 			<tr>
-				<td>Nomenclature, Synonyms, Feature Type Ribbons</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Genetic map Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Sequence map Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Vertebrate homology Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Human homologs Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion" href="MarkerDetailAllelesRibbon.html">Alleles and phenotypes Ribbon</a></td>
+				<td><a concordion:run="concordion" href="QuickSearch.html">Quick Search</a></td>
 				<td>MGI 5.18</td>
-				<td>75,  105</td>
+				<td>109</td>
 				<td>Yes</td>
-				<td>See <a href="../allele/AlleleSummaryFromMarker.html">Allele Summary From Marker</a> test suite for contents on the Allele Summary pages.<br/>This test suite does not yet include the "Human Diseases Modeled.." or "Pheno Images" links. -klf 1/24/2014</td>
-			</tr>
-			<tr>
-				<td>Gene Ontology (GO) classifications Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
 				<td></td>
 			</tr>
 			<tr>
-				<td>Expression Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Molecular reagents Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Other database links Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Sequences Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Polymorphisms Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Protein-related information Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>References Ribbon</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Other accession IDs Ribbon</td>
+				<td>Minihome Tabs</td>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -165,18 +116,7 @@ th {background-color:#D0E0F0;}
 			</tr>
 
 			<tr class="gray">
-				<td colspan="5"><h5>WI: Marker Summary Page</h5></td>
-			</tr>
-			<tr>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-				<td>asdf</td>
-			</tr>
-
-			<tr class="gray">
-				<td colspan="5"><h5>WI: Other Pages</h5></td>
+				<td colspan="5"><h5>WI: Common Page-Footer Elements</h5></td>
 			</tr>
 			<tr>
 				<td>asdf</td>
