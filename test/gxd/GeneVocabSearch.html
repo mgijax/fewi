@@ -340,11 +340,11 @@ order by m.symbol
             <li>Selecting a GO synonym returns the genes which have expression data and are annotated to the correct term for the selected synonym
             <ol>
                 <li>Ener the term '<b>malic enzyme</b>'</li>
-                <li>Select the term &quot;<b>'malic' enzyme [malate dehydrogenase (decarboxylating) activity]</b>&quot; (<b concordion:set="#query">GO:0004471</b>) </li>
+                <li>Select the term &quot;<b>'malic' enzyme [malate dehydrogenase (decarboxylating) (NADP+) activity]</b>&quot; (<b concordion:set="#query">GO:0004473</b>) </li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Me1</b> should be returned.</li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Me2</b> should not be returned.</li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Me3</b> should not be returned.<br/>
-                (Me2 and Me3 are associated with different terms having the same &quot;'malic' enzyme&quot; synonym.)</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Me3</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Me2</b> should not be returned.<br/>
+                (Me2 is associated with a different term having the same &quot;malic enzyme&quot; synonym.)</li>
             </ol>
             </li>
             <li>Selecting a GO term where genes annotated to that term appear in the GXD lit index, but do not have fully coded assay results, should not be returned
