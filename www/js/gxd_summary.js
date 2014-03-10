@@ -109,8 +109,17 @@ function getQueryStringWithFilters() {
 // refresh all four counts in each tab via AJAX
 // store the request objects to verify the correct IDs;
 var resultsRq,assaysRs,genesRq,imagesRq;
+window.previousTabQuery="";
 function refreshTabCounts()
 {
+    var querystringWithFilters = getQueryStringWithFilters();
+    if(querystringWithFilters==window.previousTabQuery)
+    {
+    	// don't refresh counts if query is the same. 
+    	return;
+    }
+    window.previousTabQuery=querystringWithFilters;
+    
 	 //get the tab counts via ajax
 	var handleCountRequest = function(o)
 	{
@@ -127,8 +136,6 @@ function refreshTabCounts()
 	YAHOO.util.Dom.get("totalAssaysCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
-	
-    var querystringWithFilters = getQueryStringWithFilters();
 
     resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
     {	success:handleCountRequest,
@@ -318,7 +325,8 @@ handleNavigation = function (request, calledLocally) {
 		});
 		
 		var querystringWithFilters = getQueryStringWithFilters();
-		if (querystringWithFilters != previousFilterString) {
+		if (querystringWithFilters != previousFilterString) 
+		{
 		    previousFilterString = querystringWithFilters;
 
 			// Wire up report and batch buttons
