@@ -385,6 +385,7 @@
 				        <tr><td>Pax4</td></tr>
 				        <tr><td>Pax5</td></tr>
 				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax6os1</td></tr>
 				        <tr><td>Pax7</td></tr>
 				        <tr><td>Pax8</td></tr>
 				        <tr><td>Pax9</td></tr>
@@ -399,6 +400,7 @@
 				        <tr><td>Pax4</td></tr>
 				        <tr><td>Pax5</td></tr>
 				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax6os1</td></tr>
 				        <tr><td>Pax7</td></tr>
 				        <tr><td>Pax8</td></tr>
 				        <tr><td>Pax9</td></tr>
@@ -409,18 +411,10 @@
 			<li>Testing that genes are returned when words are farther apart in the Name string (two tokens are not treated as a phrase query)
 			<ol>
 				<li>open the GXD query form</li>
-				<li>Type <b concordion:set="#query">paired gene</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">paired strand</b> in the nomenclature field and press the search button</li>
 				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
-				        <tr><td>Pax1</td></tr>
-				        <tr><td>Pax2</td></tr>
-				        <tr><td>Pax3</td></tr>
-				        <tr><td>Pax4</td></tr>
-				        <tr><td>Pax5</td></tr>
-				        <tr><td>Pax6</td></tr>
-				        <tr><td>Pax7</td></tr>
-				        <tr><td>Pax8</td></tr>
-				        <tr><td>Pax9</td></tr>
+				        <tr><td>Pax6os1</td></tr>
 				    </table>
 				</li>
 			</ol>
@@ -437,23 +431,16 @@
 				        <tr><td>Pax4</td></tr>
 				        <tr><td>Pax5</td></tr>
 				        <tr><td>Pax6</td></tr>
+				        <tr><td>Pax6os1</td></tr>
 				        <tr><td>Pax7</td></tr>
 				        <tr><td>Pax8</td></tr>
 				        <tr><td>Pax9</td></tr>
 				    </table>
 				</li>
-				<li>Type <b concordion:set="#query">pair* *ne</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">pair* *and</b> in the nomenclature field and press the search button</li>
 				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
-				        <tr><td>Pax1</td></tr>
-				        <tr><td>Pax2</td></tr>
-				        <tr><td>Pax3</td></tr>
-				        <tr><td>Pax4</td></tr>
-				        <tr><td>Pax5</td></tr>
-				        <tr><td>Pax6</td></tr>
-				        <tr><td>Pax7</td></tr>
-				        <tr><td>Pax8</td></tr>
-				        <tr><td>Pax9</td></tr>
+				        <tr><td>Pax6os1</td></tr>
 				    </table>
 				</li>
 			</ol>
