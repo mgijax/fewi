@@ -419,11 +419,28 @@ and vm1._term_key in (6113,120,1098)
 and vm2._term_key not in (6113,120,1098)
 and vm1.annottype like 'GO%'
 and vm2.annottype like 'GO%'
+
+component=120,GO:0005575
+function=1098,GO:0003674
+process=6113,GO:0008150
+
+GENES that should not be returned
+select distinct mm.symbol, gx._marker_key
+from gxd_expression gx, mrk_marker mm, voc_marker_cache vm1
+where vm1._marker_key = mm._marker_key
+and mm._marker_key = gx._marker_key
+and gx.isforgxd = 1
+and vm1._term_key in (6113,120,1098)
+and vm1.annottype like 'GO%'
+and not exists(select 1 from voc_marker_cache vm2 where
+	vm2._marker_key=mm._marker_key
+	and vm2.annottype like 'GO%'
+	and vm2._term_key not in (6113,120,1098))
  -->
             <ol>
                 <li>Select the molecular_function term '<b>molecular_function</b>' (<b concordion:set="#query">GO:0003674</b>) </li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should not be returned.</li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctla2a</b> should not be returned (lost its annotations).</li>
+                <!-- NO EXAMPLES EXIST ANYMORE <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctla2a</b> should not be returned (lost its annotations).</li> -->
                 <li>Select the biological_process term '<b>biological_process</b>' (<b concordion:set="#query">GO:0008150</b>) </li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Ctxn1</b> should not be returned.</li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Bglap3</b> should be returned (it has IEA annotations to child terms).</li>
