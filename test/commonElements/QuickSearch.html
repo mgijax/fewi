@@ -1,0 +1,102 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+
+    <title>Detected/Not detected search</title>
+</head>
+
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Detected/Not detected search</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Changes needed for the Quick Search</h1>
+    <ul>
+        <li>User story 109, Search Tool Indexer</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+		<li>Allele Types will now use Generation type in the QuickSearch product</li>
+		<li>The wording for the Type column in quick search results are:
+		                <table>
+                	<tr><th>Text</th></tr>
+                	<tr><td>Chemically induced allele</td></tr>
+                	<tr><td>Endonuclease-mediated allele</td></tr>
+                	<tr><td>Gene trapped allele</td></tr>
+                	<tr><td>Other allele</td></tr>
+                	<tr><td>QTL</td></tr>
+                	<tr><td>Radiation induced allele</td></tr>
+                	<tr><td>Spontaneous allele</td></tr>
+                	<tr><td>Targeted allele</td></tr>                	
+                	<tr><td>Transgene</td></tr> 
+                	<tr><td>Transposon induced allele</td></tr>              	                	                	                	
+                </table>
+		</li>
+		<li>Note: all chemically induced alleles are combined. Not Applicable and Not specified show no type</li>
+    </ul>    
+</div>
+
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <ol>
+            <li>Verify the Type column results from a quick search result
+            <p concordion:assertTrue="true">jeffc 02/06/2014</p>
+            <ol>
+                <li>Open the MGI main page and enter Pax6 in the Quick Search box, Press search</li>
+                <li>When the results display click the <b>Show all ..</b> link</li>
+                <li>Verify the following results:
+                <table>
+                	<tr><th>Allele symbol</th><th>Search Type</th><th>Generation Type</th><th>Note</th></tr>
+                	<tr><td>Pax6&lt;Sey-3H&gt;</td><td>Chemically induced allele</td><td>Chemically and radiation induced</td><td></td></tr>
+                	<tr><td>Pax6&lt;Sey-Neu&gt;</td><td>Chemically induced allele</td><td>Chemically induced (ENU)</td><td></td></tr>
+                	<tr><td>Pax6&lt;9Neu&gt;</td><td>Chemically induced allele</td><td>Chemically induced (other)</td><td></td></tr>
+                	<tr><td>Pax6&lt;Coop&gt;</td><td>Endonuclease-mediated allele</td><td>Endonuclease-mediated</td><td>Made up data</td></tr>
+                	<tr><td>Pax6&lt;Gt(E049H01)Wrst&gt;</td><td>Gene trapped allele</td><td>Gene trapped</td><td></td></tr>
+                	<tr><td>Pax6&lt;Aey80&gt;</td><td>Other</td><td>Other</td><td>Made up data</td></tr>
+                	<tr><td>chab1&lt;AKR/J&gt;</td><td>QTL</td><td>QTL</td><td>do chab1 quicksearch to obtain</tr>
+                	<tr><td>Pax6&lt;Sey-H&gt;</td><td>Radiation induced allele</td><td>Radiation induced</td><td></td></tr>
+                	<tr><td>Pax6&lt;Sey&gt;</td><td>Spontaneous allele</td><td>Spontaneous</td><td></td></tr>
+                	<tr><td>Pax6&lt;tm1Pgr&gt;</td><td>Targeted allele</td><td>Targeted</td><td></td></tr>
+                	<tr><td>Tg(Pax6-cre,GFP)2Pgr</td><td>Transgene</td><td>Transgenic</td><td></td></tr> 
+               	    <tr><td>cript&lt;Tn(sb-rtTA)2427.SB1Ove&gt;</td><td>Transposon induced allele</td><td>Transposon induced</td><td>do cript quichsearch to obtain</tr>
+               	    <tr><td>none exist</td><td></td><td>Not Applicable</td><td>They exist in data but not visable in WI</tr>
+               	    <tr><td>Pax6&lt;Neu11&gt;-deleted</td><td>column will be blank</td><td>Not Specified</td><td>Only displayed on production data search</tr>             	                	
+                </table>                
+                </li>                                
+            </ol>
+            </li>
+
+        </ol>
+    </div>
+    <div id="auto">
+        <h3>Automated tests</h3>
+ 
+    </div>
+</div>
+
+</body>
+</html>
