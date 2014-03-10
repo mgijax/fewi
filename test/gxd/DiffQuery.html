@@ -623,9 +623,9 @@
  				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">detrusor muscle of bladder</b> are returned, 
  					but no <i>positive results</i> for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">detrusor muscle of bladder</b>. <i>(fully automated)</i></li>
  				<li>Verify that query for structure "A", but not detected or analyzed in "B" does not return negatives for children of the query term (it should only search directly annotated "absent" results).
- 				<br/>Query for genes with expression detected in <b  concordion:set="#struct1">pronephros</b>, not detected or analyzed in <b  concordion:set="#struct2">oropharynx-derived pituitary gland</b>.</li>
+ 				<br/>Query for genes with expression detected in <b  concordion:set="#struct1">pronephros</b>, not detected or analyzed in <b  concordion:set="#struct2">oral region-derived pituitary</b>.</li>
                 <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pronephros</b> are returned. <i>(fully automated)</i></li>
- 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">oropharynx-derived pituitary gland</b> are returned, 
+ 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">oral region-derived pituitary</b> are returned, 
  					but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">Rathke's pouch</b>. <i>(fully automated)</i></li>
  			</ol>
     		</li>
