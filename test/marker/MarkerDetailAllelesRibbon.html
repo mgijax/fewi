@@ -30,6 +30,7 @@
     <h1>Alleles Ribbon Tests</h1>
     <ul>
         <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
+        <li>User story 105, E5: Allele and marker detail pages in prod wi (Release 5.18)</li>
     </ul>
 </div>
 
@@ -39,6 +40,7 @@
 		<li>sto75: links to "all alleles"</li>
 		<li>sto75: links to per allele type</li>
 		<li>sto75: assume use exact same allele types here as in the db</li>
+		<li>sto105: none</li>
 	</ul>
 </div>
 
@@ -54,8 +56,8 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>For a marker, a label and link is generated for each Allele Type having alleles. The linked text is the count of all alleles for that marker having the Allele Type.
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-24</p>
+    		<li>For a marker, a label and link is generated for each Allele Type having alleles. The linked text is the count of all alleles for that marker having the Allele Type. The change is also supported on Prod. (sto105)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-03-10</p>
     		<ol>
                 <li>Navigate to the marker detail page for Pax6 (MGI:97490)</li>
                 <li>Verify the following Allele Types and counts:
@@ -67,10 +69,10 @@
 					<tr><td>Chemically induced (other)</td><td>1</td></tr>
 					<tr><td>Gene trapped</td><td>7</td></tr>
 					<tr><td>Not Applicable</td><td></td></tr>
-					<tr><td>Not Specified</td><td>2</td></tr>
+					<tr><td>Not Specified</td><td></td></tr>
 					<tr><td>QTL</td><td></td></tr>
 					<tr><td>Radiation induced</td><td>2</td></tr>
-					<tr><td>Spontaneous</td><td>3</td></tr>
+					<tr><td>Spontaneous</td><td>5</td></tr>
 					<tr><td>Targeted</td><td>11</td></tr>
 					<tr><td>Transgenic</td><td></td></tr>
 					<tr><td>Transposon induced</td><td></td></tr>
@@ -88,17 +90,17 @@
                 <li>Verify the following Allele Types and counts:
                 <table>
                 	<tr><th>Allele Type</th><th>Count</th></tr>
-                	<tr><td>All alleles</td><td>149</td></tr>
-					<tr><td>Chemically and radiation induced</td><td>1</td></tr>
+                	<tr><td>All alleles</td><td>150</td></tr>
+					<tr><td>Chemically and radiation induced</td><td></td></tr>
 					<tr><td>Chemically induced (ENU)</td><td>17</td></tr>
 					<tr><td>Chemically induced (other)</td><td>1</td></tr>
 					<tr><td>Gene trapped</td><td>39</td></tr>
-					<tr><td>Not Applicable</td><td></td></tr>
+					<tr><td>Not Applicable</td><td>1</td></tr>
 					<tr><td>Not Specified</td><td></td></tr>
 					<tr><td>QTL</td><td></td></tr>
 					<tr><td>Radiation induced</td><td>2</td></tr>
 					<tr><td>Spontaneous</td><td>71</td></tr>
-					<tr><td>Targeted</td><td>18</td></tr>
+					<tr><td>Targeted</td><td>19</td></tr>
 					<tr><td>Transgenic</td><td></td></tr>
 					<tr><td>Transposon induced</td><td></td></tr>
                 </table>
@@ -164,7 +166,7 @@
                 <li>Verify the following Allele Types and counts:
                 <table>
                 	<tr><th>Allele Type</th><th>Count</th></tr>
-                	<tr><td>All alleles</td><td>5</td></tr>
+                	<tr><td>All alleles</td><td>6</td></tr>
 					<tr><td>Chemically and radiation induced</td><td></td></tr>
 					<tr><td>Chemically induced (ENU)</td><td>1</td></tr>
 					<tr><td>Chemically induced (other)</td><td>1</td></tr>
@@ -173,7 +175,7 @@
 					<tr><td>Not Specified</td><td></td></tr>
 					<tr><td>QTL</td><td></td></tr>
 					<tr><td>Radiation induced</td><td></td></tr>
-					<tr><td>Spontaneous</td><td>2</td></tr>
+					<tr><td>Spontaneous</td><td>3</td></tr>
 					<tr><td>Targeted</td><td>1</td></tr>
 					<tr><td>Transgenic</td><td></td></tr>
 					<tr><td>Transposon induced</td><td></td></tr>
@@ -182,8 +184,8 @@
     		</ol>
     		</li>
 
-    		<li>For a marker, a label and link is generated for alleles associated with disease models (OMIM annotations). The linked text is the count of all alleles of all types from any genotypes annotated to disease models EXCLUDING only "Not" annotations. No text or link appears if there are no OMIM-annotated alleles.
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-24</p>
+    		<li>For a marker, a label and link is generated for alleles associated with disease models (OMIM annotations). The linked text is the count of all alleles of all types from any genotypes annotated to disease models EXCLUDING only "Not" annotations. No text or link appears if there are no OMIM-annotated alleles. The change is also supported on Prod. (sto105)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-03-10</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the count for Alleles Annotated to Human Diseases:
