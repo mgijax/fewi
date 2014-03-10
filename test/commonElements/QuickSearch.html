@@ -68,123 +68,150 @@
     <div id="manual">
         <h3>Manual tests</h3>
         <ol>
-            <li>Verify the Type column results from a quick search result
-            <p concordion:assertTrue="true">jeffc 02/06/2014</p>
+            <li>For alleles, the "Type" column from a Quick Search displays the modified text from above, based on the allele's Generation Type. The allele's Subtypes (Attributes), if any, are ignored.
+            <p concordion:assertTrue="true">klf 2014-03-10</p>
             <ol>
                 <li>Open the MGI main page and enter the text indicated in the table below into the Quick Search box, Press search</li>
                 <li>When the results display click the <b>Show all ..</b> link</li>
                 <li>Verify the following results:
                 <table>
-								<tr>
-									<th>Search for...</th>
-									<th>Allele symbol</th>
-									<th>Search Type</th>
-									<th>Generation Type</th>
-									<th>Note</th>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Sey-3H&gt;</td>
-									<td>Chemically induced allele</td>
-									<td>Chemically and radiation induced</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Sey-Neu&gt;</td>
-									<td>Chemically induced allele</td>
-									<td>Chemically induced (ENU)</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;9Neu&gt;</td>
-									<td>Chemically induced allele</td>
-									<td>Chemically induced (other)</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Coop&gt;</td>
-									<td>Endonuclease-mediated allele</td>
-									<td>Endonuclease-mediated</td>
-									<td>Made up data</td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Gt(E049H01)Wrst&gt;</td>
-									<td>Gene trapped allele</td>
-									<td>Gene trapped</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Aey80&gt;</td>
-									<td>Other</td>
-									<td>Other</td>
-									<td>Made up data</td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Sey-H&gt;</td>
-									<td>Radiation induced allele</td>
-									<td>Radiation induced</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Sey&gt;</td>
-									<td>Spontaneous allele</td>
-									<td>Spontaneous</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;tm1Pgr&gt;</td>
-									<td>Targeted allele</td>
-									<td>Targeted</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Tg(Pax6-cre,GFP)2Pgr</td>
-									<td>Transgene</td>
-									<td>Transgenic</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>Pax6</td>
-									<td>Pax6&lt;Neu11&gt;-deleted</td>
-									<td>column will be blank</td>
-									<td>Not Specified</td>
-									<td>Only displayed on production data search</td>
-								</tr>
-								<tr>
-									<td>chab1</td>
-									<td>chab1&lt;AKR/J&gt;</td>
-									<td>QTL</td>
-									<td>QTL</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>cript</td>
-									<td>cript&lt;Tn(sb-rtTA)2427.SB1Ove&gt;</td>
-									<td>Transposon induced allele</td>
-									<td>Transposon induced</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td>none exist</td>
-									<td></td>
-									<td>Not Applicable</td>
-									<td>They exist in data but not visible in WI</td>
-								</tr>
-							</table>
-						</li>                                
-            </ol>
+					<tr>
+						<th>Search for...</th>
+						<th>Allele symbol</th>
+						<th>Search Type</th>
+						<th>Generation Type</th>
+						<th>Note</th>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey-3H&gt;</td>
+						<td>Chemically induced allele</td>
+						<td>Chemically and radiation induced</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey-Neu&gt;</td>
+						<td>Chemically induced allele</td>
+						<td>Chemically induced (ENU)</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;9Neu&gt;</td>
+						<td>Chemically induced allele</td>
+						<td>Chemically induced (other)</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Gt(E049H01)Wrst&gt;</td>
+						<td>Gene trapped allele</td>
+						<td>Gene trapped</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey-H&gt;</td>
+						<td>Radiation induced allele</td>
+						<td>Radiation induced</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey&gt;</td>
+						<td>Spontaneous allele</td>
+						<td>Spontaneous</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;tm1Pgr&gt;</td>
+						<td>Targeted allele</td>
+						<td>Targeted</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Tg(Pax6-cre,GFP)2Pgr</td>
+						<td>Transgene</td>
+						<td>Transgenic</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Neu11&gt;-deleted</td>
+						<td>column will be blank</td>
+						<td>Not Specified</td>
+						<td>Only displayed on production data search</td>
+					</tr>
+					<tr>
+						<td>chab1</td>
+						<td>chab1&lt;AKR/J&gt;</td>
+						<td>QTL</td>
+						<td>QTL</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>cript</td>
+						<td>cript&lt;Tn(sb-rtTA)2427.SB1Ove&gt;</td>
+						<td>Transposon induced allele</td>
+						<td>Transposon induced</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>none exist</td>
+						<td>Not Applicable</td>
+						<td>Not Applicable</td>
+						<td>They exist in data but not visible in WI</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>none exist</td>
+						<td>Endonuclease-mediated allele</td>
+						<td>Endonuclease-mediated</td>
+						<td>None exist yet</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>none exist</td>
+						<td>Other</td>
+						<td>Other</td>
+						<td>None exist yet</td>
+					</tr>
+				</table>
+				</li>
+	            </ol>
             </li>
 
+			<li>Expression data is displayed associated with EMAPA terms in the Quick Search.
+            <p concordion:assertTrue="false">new 2014-03-10</p>
+            <p>Some example terms which have changed between the AD and EMAPA/EMAPS:</p>
+            <table>
+            <tr>
+            	<th>AD Term</th>
+            	<th>EMAPA Term</th>
+            </tr>
+            <tr>
+            	<td>TS12: vitelline vein<br/> ...through...<br/> TS18: vitelline vein</td>
+            	<td>vitelline vein embryonic part TS12-18</td>
+            </tr>
+            <tr>
+            	<td>TS15: mesonephros mesenchyme<br/> ...through...<br/> TS16: mesonephros mesenchyme</td>
+            	<td>mesonephros associated mesenchyme TS15-16</td>
+            </tr>
+            <tr>
+            	<td>TS15: telencephalon<br/> ...through...<br/> TS16: telencephalon</td>
+            	<td>early telencephalon TS15-16</td>
+            </tr>
+            <tr>
+            	<td>asdf</td>
+            	<td>adsf</td>
+            </tr>
+            </table>
+            
+			</li>
         </ol>
     </div>
     <div id="auto">
