@@ -155,8 +155,16 @@ function refreshTabCounts()
     },null);
 }
 
+window.previousGxdLitQuery=""
 function refreshGxdLitLink()
 {
+    if(querystring==window.previousGxdLitQuery)
+    {
+    	// don't refresh gxd lit count if query is the same. 
+    	return;
+    }
+    window.previousGxdLitQuery=querystring;
+    
 	// Fire off an AJAX call to generate the link
 	var handleGxdLitCount = function(o)
 	{
@@ -304,7 +312,7 @@ handleNavigation = function (request, calledLocally) {
 		if(typeof closeSummaryControl == 'function')
 			closeSummaryControl();
 
-		if (doNewQuery) { refreshTabCounts(); }
+		refreshTabCounts(); 
 	}
 	else
 	{
@@ -351,12 +359,8 @@ handleNavigation = function (request, calledLocally) {
 				markersBatchForward.setAttribute('href', fewiurl + 'gxd/batch?' + querystringWithFilters);
 			}
 		}
-
-		if (doNewQuery)
-		{
-			refreshTabCounts();
-			refreshGxdLitLink(); 
-		}
+		refreshTabCounts();
+		refreshGxdLitLink(); 
 		
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
 		var GAState = "/gxd/summary/"+tabState+"?"+querystring;
