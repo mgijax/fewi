@@ -116,8 +116,6 @@
     		<li>Testing to be sure that only genes having expression data which are not excluded as Cre data are present
 			<ol>
 				<li>open the GXD query form</li>
-				<li>type the character <b concordion:set="#query">Gt(ROSA)26Sor</b> in the nomenclature field and press Search</li>
-				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
 				<li>type the character <b concordion:set="#query">Ighg1</b> in the nomenclature field and press Search</li>
 				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
 			</ol>   		
