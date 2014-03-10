@@ -420,9 +420,8 @@
     			 which is <b cc:assertEquals="#count1"><b concordion:echo="#count2"></b></b></li>
     			<li>Query for <b concordion:set="#structure">body mesenchyme</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
     			<li>Query for <b concordion:set="#structure">wall mesenchyme</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
-    			<li>Query for <b concordion:set="#structure">cranial facial</b> (modified from actual synonym) should include <b cc:assertResultsContain="getStructures(#structure)">cranio-facial muscle</b> in the return set</li>
-    			<li>Query for <b concordion:set="#structure">cranial&amp;facial</b> (modified from actual synonym) should include <b cc:assertResultsContain="getStructures(#structure)">cranio-facial muscle</b> in the return set</li>
-    			<li>Query for <b concordion:set="#structure">cranial/facial</b> (modified from actual synonym) should include <b cc:assertResultsContain="getStructures(#structure)">cranio-facial muscle</b> in the return set</li>
+    			<li>Query for <b concordion:set="#structure">body&amp;wall mesenchyme</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
+    			<li>Query for <b concordion:set="#structure">body/wall mesenchyme</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
     			<li>See tests including <i>Bowman's capsule</i>, above, for apostrophe.</li>
     		</ol>
     		</li>
@@ -437,8 +436,6 @@
     			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4-8CellStageEmbryoResults"></b></b> assay results.</li>
     			<li>Query for <b concordion:set="#structure">3rd branchial arch</b> should return 
     			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor3rdBranchialArchResults"></b></b> assay results.</li>
-    			<li>Query for <b concordion:set="#structure">2nd arch branchial groove</b> should return 
-    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor2ndArchBranchialGrooveResults"></b></b> assay results.</li>
     			<li>Query for <b concordion:set="#structure">digit 1 metacarpus</b> should return 
     			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForDigit1MetacarpusResults"></b></b> assay results.</li>
     		</ol>
