@@ -37,9 +37,7 @@ public class TheilerStageSearchTest extends BaseConcordionTest {
 		try {
 	    	if (stages.equals("All")) {
 	    		for (int i = 1; i<=28; i++) {
-	    			if (i != 27) {
 	            		ts.add(new Integer(i));
-	    			}    			
 	    		}    		
 	    	} else {
 	    		for (String s : stages.replaceAll(" ", "").split(",")) {
