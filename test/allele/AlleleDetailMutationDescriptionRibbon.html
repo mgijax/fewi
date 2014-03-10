@@ -38,6 +38,7 @@
 <!--          <li>MGI 5.12 User story 128, Remove Expression Ribbon from Allele Detail Page</li>-->
 		<li>MGI 5.18 User story 24, E3: Display allele subtypes on allele detail and cre specificity pages</li>
 		<li>MGI 5.18 User story 54, Molecular Images: show thumbnail on Allele Detail page</li>
+		<li>MGI 5.18 User story 105, E5: Allele and marker detail pages in prod wi</li>
     </ul>
 </div>
 
@@ -49,6 +50,7 @@
 		<li>sto54 - is single molecular image for an allele display on allele detail page</li>
 		<li>sto54 - if more than one molecular image for an allele display first image only</li>
 		<li>sto54 - display molecular image in the mutation description ribbon floated to the right</li>
+		<li>sto105 - none</li>
 	</ul>
 </div>
 
@@ -67,33 +69,34 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> Allele subtypes appear in Mutation Description ribbon on Allele Detail Pages 
-    			as a comma separated list following the allele type.
- 			<p concordion:assertTrue="true">passed - kstone 2014/01/23</p> (sto24)
+    			as a comma separated list following the allele type. (sto24)<br/> The types but not the subtypes are supported on Prod. (sto105)
+    			<p concordion:assertTrue="true">passed - klf 2014-03-10</p> 
     		<ol>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/allele/MGI:1857168">Kdr&lt;tm1Jrt&gt;</a></li>
-                <li>Verify that the subtype value <b>(Reporter)</b> appears after Allele Type in the Mutation Description ribbon.</li>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/allele/MGI:2183410">Olig2&lt;tm1(cre/Esr1*)Htak&gt;</a></li>
-                <li>Verify that the subtype value <b>(Inducible, Inserted expressed sequence, Recombinase)</b> appears after Allele Type in the Mutation Description ribbon.</li>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/allele/MGI:1891501">Tg(BCL2)1TSK</a></li>
-                <li>Verify that the subtype value <b>(Inserted expressed sequence)</b> appears after Transgene Type in the Transgene Description ribbon.</li>
+                <li>Navigate to the Allele Detail page for Kdr&lt;tm1Jrt&gt; (MGI:1857168) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1857168">link</a>)</li>
+                <li>Verify that the subtype value <b>(Null/knockout, Reporter)</b> appears after Allele Type <b>Targeted</b> in the Mutation Description ribbon.</li>
+                <li>Navigate to the Allele Detail page for Olig2&lt;tm1(cre/Esr1*)Htak&gt; (MGI:2183410) (<a href="http://cardolan.informatics.jax.org/allele/MGI:2183410">link</a>)</li>
+                <li>Verify that the subtype value <b>(Inducible, Recombinase)</b> appears after Allele Type <b>Targeted</b> in the Mutation Description ribbon.</li>
+                <li>Navigate to the Allele Detail page for Tg(BCL2)1TSK (MGI:1891501) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1891501">link</a>)</li>
+                <li>Verify that the subtype value <b>(Inserted expressed sequence)</b> appears after Transgene Type <b>Transgenic</b> in the Transgene Description ribbon.</li>
     		</ol>
     		</li>
 
-    		<li><span class="regressHi">Regress</span> Allele Subtypes do not appear when the allele is not assigned to a subtype.
- 			<p concordion:assertTrue="true">passed - kstone 2014/01/23</p> (sto24)
+    		<li><span class="regressHi">Regress</span> Allele Subtypes do not appear when the allele is not assigned to a subtype. (sto24)<br/>
+    		Also true on Prod. (sto105)
+ 			<p concordion:assertTrue="true">passed - klf 2014-03-10</p> 
     		<ol>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/allele/MGI:3577251">Lith20&lt;SM/J&gt;</a></li>
+                <li>Navigate to the Allele Detail page for Lith20&lt;SM/J&gt; (MGI:3577251) (<a href="http://cardolan.informatics.jax.org/allele/MGI:3577251">link</a>)</li>
                 <li>Verify that <b>no subtype value</b> appears in the Mutation Description ribbon following the Allele Type: QTL.</li>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/allele/MGI:1856421">Dst&lt;Tg4&gt;</a></li>
+                <li>Navigate to the Allele Detail page for Dst&lt;Tg4&gt; (MGI:1856421) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1856421">link</a>)</li>
                 <li>Verify that <b>no subtype value</b> appears in the Transgene description ribbon following the Transgene Type: Transgenic.</li>
     		</ol>
     		</li>
-    		<li>Allele Detail page displays molecular image in the molecular description ribbon.
- 			<p concordion:assertTrue="true">jeffc 02/06/2014</p> (sto54)
+    		<li>Allele Detail page displays molecular image in the molecular description ribbon.  (sto54)
+ 			<p concordion:assertTrue="true">klf 2014-03-10</p>
     		<ol>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/allele/MGI:">Tgm3&lt;tm1Sjo&gt;</a></li>
+                <li>Navigate to the Allele Detail page for Tgm3&lt;tm1Sjo&gt; (MGI:5436399) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5436399">link</a>)</li>
                 <li>Verify that molecular image MGI:5503313 displays in the right side of the molecular description ribbon</li>
-                <li>Navigate to the Allele Detail page for <a href="http://cardolan.informatics.jax.org/allele/MGI:5319388">Dock2&lt;mu&gt;</a></li>
+                <li>Navigate to the Allele Detail page for Dock2&lt;mu&gt; (MGI:5319388) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5319388">link</a>)</li>
                 <li>Verify that molecular image MGI:5466533 or MGI:5466535 displays in the right side of the molecular description ribbon</li>
     		</ol>
     		</li>
@@ -109,14 +112,7 @@
     		</ol>
     		</li>
 		</ol>
- <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key/0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
-     			<li>
-    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
-    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
-    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
-    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
-  -->
- 	</div>
+  	</div>
 </div>
 
 </body>
