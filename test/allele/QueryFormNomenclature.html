@@ -215,19 +215,11 @@ tr.gray td {background-color:#EEEEEE;}
     			<li>Testing to verify that tokens are combined using AND not OR
 				<ol>
 				<li>open the Allele query form</li>
-				<li>type <b concordion:set="#query">RIKEN 0610009D07</b> in the nomenclature field</li>
-				<li>Verify that only 0610009D07Rik alleles are returned
-					<table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				<li>type <b concordion:set="#query">RIKEN 0610031J06</b> in the nomenclature field</li>
+				<li>Verify that only 0610031J06Rik alleles are returned
+					<table cc:verifyRowsUnordered="#result : getMarkerSymbolsByNomen(#query)">
 						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
-					    <tr><td>0610009D07Rik&lt;Gt(128E2)Cmhd&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;Gt(EUCE0208f11)Hmgu&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;Gt(OST16110)Lex&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;Gt(OST19950)Lex&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;Gt(OST20610)Lex&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;Gt(OST21852)Lex&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;Gt(OST24671)Lex&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
-					    <tr><td>0610009D07Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+					    <tr><td>0610031J06Rik</td></tr>
 					</table>
 				</li>
 				</ol>    		

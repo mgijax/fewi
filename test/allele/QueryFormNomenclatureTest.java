@@ -1,7 +1,9 @@
 package allele;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import mgi.frontend.datamodel.Allele;
 
@@ -26,6 +28,19 @@ public class QueryFormNomenclatureTest extends BaseConcordionTest {
 			alleleSymbols.add(a.getSymbol());
 		}
 		return alleleSymbols;
+	}
+	
+	public List<String> getMarkerSymbolsByNomen(String nomen) throws Exception
+	{
+		MockAlleleControllerQuery mq = this.getMockQuery().alleleController(alleleController);
+		mq.setNomen(nomen);
+		
+		Set<String> symbols = new HashSet<String>();
+		for(Allele a : mq.getAlleles().getResultObjects())
+		{
+			symbols.add(a.getMarker().getSymbol());
+		}
+		return new ArrayList<String>(symbols);
 	}
 	
 	public String getFirstAlleleSymbolByNomen(String nomen) throws Exception
