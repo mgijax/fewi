@@ -11,23 +11,25 @@
     li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
     p {margin:2px 0px;}
 </style>
-
-    <title>Quick Search Test Suite</title>
 <!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
 -->
+
+
+    <title>Quick Search Tests</title>
+
 </head>
 
 <body>
 
 <div id="TOC">
-    <p>Contents: <a href="#maintitle">Detected/Not detected search</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+    <p>Contents: <a href="#maintitle">Quick Search Tests</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#definitions">Definitions</a> | <a href="#logic">Logic Summary</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
 <div id="maintitle">
-    <h1>Changes needed for the Quick Search</h1>
+    <h1>Quick Search Tests</h1>
     <ul>
         <li>User story 109, Search Tool Indexer</li>
     </ul>
@@ -36,25 +38,44 @@
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
     <ul>
-		<li>Allele Types will now use Generation type in the QuickSearch product</li>
-		<li>The wording for the Type column in quick search results are:
-		                <table>
-                	<tr><th>Text</th></tr>
-                	<tr><td>Chemically induced allele</td></tr>
-                	<tr><td>Endonuclease-mediated allele</td></tr>
-                	<tr><td>Gene trapped allele</td></tr>
-                	<tr><td>Other allele</td></tr>
-                	<tr><td>QTL</td></tr>
-                	<tr><td>Radiation induced allele</td></tr>
-                	<tr><td>Spontaneous allele</td></tr>
-                	<tr><td>Targeted allele</td></tr>                	
-                	<tr><td>Transgene</td></tr> 
-                	<tr><td>Transposon induced allele</td></tr>              	                	                	                	
-                </table>
+		<li>(sto109) none</li>
+    </ul>    
+</div>
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<dl>
+		<dt>Term</dt>
+		<dd>Definition text 1.</dd>
+		<dd>Definition text 2.</dd>
+	</dl>
+</div>
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+
+    <ul>
+		<li>Allele Types will now use Generation Type in the QuickSearch product (MGI 5.18)</li>
+		<li>The wording for the Type column in quick search results is:
+			<table>
+            	<tr><th>Text</th></tr>
+            	<tr><td>Chemically induced allele</td></tr>
+            	<tr><td>Endonuclease-mediated allele</td></tr>
+            	<tr><td>Gene trapped allele</td></tr>
+            	<tr><td>Other allele</td></tr>
+            	<tr><td>QTL</td></tr>
+            	<tr><td>Radiation induced allele</td></tr>
+            	<tr><td>Spontaneous allele</td></tr>
+            	<tr><td>Targeted allele</td></tr>                	
+            	<tr><td>Transgene</td></tr> 
+            	<tr><td>Transposon induced allele</td></tr>              	                	                	                	
+        	</table>
 		</li>
 		<li>Note: all chemically induced alleles are combined. Not Applicable and Not specified show no type</li>
     </ul>    
+
 </div>
+
 
 <!-- To insert manual test results, use the following:
 <p concordion:assertTrue="true">testing assertTrue - displays as green</p>
@@ -185,33 +206,65 @@
 	            </ol>
             </li>
 
-			<li>Expression data is displayed associated with EMAPA terms in the Quick Search.
+			<li>Expression data is displayed associated with EMAPA/EMAPS terms in the Quick Search.
             <p concordion:assertTrue="false">new 2014-03-10</p>
             <p>Some example terms which have changed between the AD and EMAPA/EMAPS:</p>
             <table>
-            <tr>
-            	<th>AD Term</th>
-            	<th>EMAPA Term</th>
-            </tr>
-            <tr>
-            	<td>TS12: vitelline vein<br/> ...through...<br/> TS18: vitelline vein</td>
-            	<td>vitelline vein embryonic part TS12-18</td>
-            </tr>
-            <tr>
-            	<td>TS15: mesonephros mesenchyme<br/> ...through...<br/> TS16: mesonephros mesenchyme</td>
-            	<td>mesonephros associated mesenchyme TS15-16</td>
-            </tr>
-            <tr>
-            	<td>TS15: telencephalon<br/> ...through...<br/> TS16: telencephalon</td>
-            	<td>early telencephalon TS15-16</td>
-            </tr>
-            <tr>
-            	<td>asdf</td>
-            	<td>adsf</td>
-            </tr>
-            </table>
-            
-			</li>
+						<tr>
+							<th>AD Term</th>
+							<th>EMAPA Term</th>
+							<th>EMAPA ID</th>
+						</tr>
+						<tr>
+							<td>TS12: vitelline vein<br /> ...through...<br /> TS18:
+								vitelline vein
+							</td>
+							<td>vitelline vein embryonic part TS12-18</td>
+							<td>EMAPA:16244</td>
+						</tr>
+						<tr>
+							<td>TS15: mesonephros mesenchyme<br /> ...through...<br />
+								TS16: mesonephros mesenchyme
+							</td>
+							<td>mesonephros associated mesenchyme TS15-16</td>
+							<td>EMAPA:16745</td>
+						</tr>
+						<tr>
+							<td>TS15: telencephalon<br /> ...through...<br /> TS16:
+								telencephalon
+							</td>
+							<td>early telencephalon TS15-16</td>
+							<td>EMAPA:16652</td>
+						</tr>
+						<tr>
+							<td>asdf</td>
+							<td>adsf</td>
+							<td>asdf</td>
+						</tr>
+					</table>
+					<ol>
+						<li>Navigate to the Quick Search and search for <b>vitelline vein embryonic part</b>.</li>
+						<li>Verify the Vocabulary Terms "bucket" displays <b>vitelline vein embryonic part TS12-18</b>.</li>
+						<li>Verify the Genome Features "bucket" displays the following markers, associated with the stage-specific EMAPS terms for this EMAPA term:
+						<ul>
+							<li>Abi3bp</li>
+							<li>Aplnr</li>
+							<li>Chst15</li>
+							<li>Gata4</li>
+							<li>Hhex</li>
+							<li>Kdr</li>
+							<li>Pitx2</li>
+							<li>Rps28</li>
+							<li>Stab2</li>
+							<li>Tagln2</li>
+							<li>Tal1</li>
+							<li>Tgfb1</li>
+							<li>Tgfb2</li>
+						</ul>
+						</li>
+					</ol>
+
+				</li>
         </ol>
     </div>
     <div id="auto">
