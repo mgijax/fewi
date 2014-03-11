@@ -329,17 +329,18 @@
     		<li>Text matching a Synonym which maps to 2 or more different Terms in different Stages returns all results for all such Terms and all their descendant Terms in all Stages
     		<ol>
  				<li>
- 				Query for the Synonym <b concordion:set="#structure">blastocyst</b> should return
- 				<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForBlastocystResults"></b></b> assay results,
- 				<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countForBlastocystAssays"></b></b> assays, and
- 				<b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countForBlastocystGenes"></b></b> genes.
+ 				Query for the Synonym <b concordion:set="#structure">oogonia</b> should return
+ 				<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForOogoniaResults"></b></b> assay results,
+ 				<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countForOogoniaAssays"></b></b> assays, and
+ 				<b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countForOogoniaGenes"></b></b> genes.
     			</li>
-    			<li>Query for the Synonym <b concordion:set="#structure">blastocyst</b> should return data ONLY for the following Terms and child Terms:
-    				<table cc:verifySubsetOf="#results : getTSStructures(#structure)">
+    			<li>Query for the Synonym <b concordion:set="#structure">oogonia</b> should return data AT LEAST for the following Terms and child Terms:
+    				<table cc:verifySupersetOf="#results : getStructures(#structure)">
     				<tr><th cc:assertEquals="#results">Term</th></tr>
-    				<tr><td>TS4: inner cell mass</td></tr>
-    				<tr><td>TS5: embryo</td></tr>
-    				<tr><td>TS5: inner cell mass</td></tr>
+    				<tr><td>meiotic germ cell of ovary</td></tr>
+    				<tr><td>germ cell of ovary</td></tr>
+    				<tr><td>premeiotic germ cell of ovary</td></tr>
+    				<tr><td>unfertilized egg</td></tr>
     				</table>
     			</li>
     		</ol>
