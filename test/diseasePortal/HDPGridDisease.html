@@ -396,7 +396,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click on the Grid tab and confirm the disease column 
                 	<b cc:assertResultsContain="gridDiseaseIdsByGene(#genes)">Alzheimer disease</b> is displayed.</li>
                 <li>Verify that the row for human/mouse markers ACTB/<b concordion:set="#symbol">Actb</b> does NOT have a 
-                	<span class="hide" concordion:set="#diseaseId">Alzheimer disease</span>
+                	<span class="hide" concordion:set="#diseaseId">Alzheimer Disease</span>
                 	<b cc:assertNotEquals="gridCheckForDiseaseByGene(#genes,#symbol,#diseaseId)">check</b> for that disease.
                 	(Actb is annotated to that disease via Allele annotation, and nothing else.)</li>
     		</ol>
