@@ -348,7 +348,7 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
 				<li>open the Allele query form</li>
 				<li>Type <b concordion:set="#query">RIKEN 0610009L18</b> in the nomenclature field and press the search button</li>
-				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				<li><table cc:verifyRowsUnordered="#result : getMarkerSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only alleles with these markers are returned</th></tr>
 				        <tr><td>0610009L18Rik</td></tr>
 				    </table>
