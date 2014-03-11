@@ -379,17 +379,6 @@
     		<ol>
     			<li>Query for <b concordion:set="#structure">abdomen</b> also includes results for <b cc:assertResultsContain="getStructures(#structure)">abdomen muscle</b>.</li>
     			<li>Query for <b concordion:set="#structure">incisor epithelium</b> also includes results for <b cc:assertResultsContain="getStructures(#structure)">lower jaw incisor epithelium</b></li>
-    			<li>Query for <b concordion:set="#structure">B-lymphocyte</b> includes results ONLY for <i>(not sure all have data, but no other terms should be present in results)</i> 
-    			<table cc:verifySubsetOf="#result : getStructures(#structure)">
-	    			<tr><th cc:assertEquals="#result">Term</th></tr>
-	    			<tr><td>B-lymphocyte</td></tr>
-	    			<tr><td>pro-B-lymphocyte</td></tr>
-	    			<tr><td>pre-B-lymphocyte</td></tr>
-	    			<tr><td>immature B-lymphocyte</td></tr>
-	    			<tr><td>memory B-lymphocyte</td></tr>
-	    			<tr><td>antibody secreting B-lymphocyte</td></tr>
-    			</table>
-    			</li>
     		</ol>
     		</li>
     		<li><!-- Stop Words are ignored and do not affect results (e.g., choosing a Term or Synonym containing "in" or "of" should also match Terms and Synonyms with the remaining tokens but do not contain "in" or "of") -->
