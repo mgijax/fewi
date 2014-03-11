@@ -163,7 +163,7 @@
     		<tr><td>uterus</td><td>Is a term and also a synonym (for uterine horn).</td><td><b cc:dynamicData="creUterusAlleleCount"></b></td></tr>
     		</table>
     		</li>
-    		<li>Test that terms in autocomplete with cre data are marked appropriately
+    		<li>Terms in autocomplete with cre data are marked appropriately (font is black)
     		<ol>
     			<li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
                 	<b cc:assertResultsContain="getTermsWithCre(#struct)">trigeminal V nerve</b> which is marked as having cre data.</li>
@@ -171,13 +171,13 @@
                 	<b cc:assertResultsContain="getTermsWithCre(#struct)">trigeminal V nerve mandibular division</b> which is marked as having cre data.</li>
     		</ol>
     	</li>
-    	<li>Test that terms in autocomplete with NO cre data are marked appropriately
+    	<li>Terms in autocomplete with NO cre data are marked appropriately (font is gray)
     		<ol>
-				<li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
-                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">trigeminal V nerve maxillary division</b>
+				<li>Typing in the box: <b concordion:set="#struct">kidney capsule</b> brings up
+                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">renal capsule</b>
                 		 which is marked as <b>not</b> having cre data.</li>
-                <li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
-                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">trigeminal V nerve mandibular division lingual branch</b>
+                <li>Typing in the box: <b concordion:set="#struct">brain</b> brings up
+                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">brain nucleus</b>
                 		 which is marked as <b>not</b> having cre data.</li>
     		</ol>
     	</li>
