@@ -394,7 +394,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">Actb</b> in the Genes section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column 
-                	<b cc:assertResultsContain="gridDiseaseIdsByGene(#genes)">Alzheimer disease</b> is displayed.</li>
+                	<b cc:assertResultsContain="gridDiseaseIdsByGene(#genes)">Alzheimer Disease</b> is displayed.</li>
                 <li>Verify that the row for human/mouse markers ACTB/<b concordion:set="#symbol">Actb</b> does NOT have a 
                 	<span class="hide" concordion:set="#diseaseId">Alzheimer Disease</span>
                 	<b cc:assertNotEquals="gridCheckForDiseaseByGene(#genes,#symbol,#diseaseId)">check</b> for that disease.
