@@ -366,21 +366,89 @@
                 </table>
                 </li>
                 <li>Queries by the following <i>names</i> of a mouse/human marker's ortholog should return that mouse/human marker
-               <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
-                	<tr><th concordion:set="#geneId">Ortholog Name</th>
-                	<th cc:assertResultsContain="#symbols">Marker Symbol</th><th>Marker Organism</th>
-                	<th>Ortholog Symbol</th><th>Ortholog Organism</th></tr>
-	 				<tr><td>"acyl-CoA dehydrogenase, long chain"</td><td>Acadl</td><td>mouse</td><td>ACADL</td><td>cattle</td></tr>
-					<tr><td>"angio-associated, migratory cell protein"</td><td>Aamp</td><td>mouse</td><td>AAMP</td><td>chicken</td></tr>
-					<tr><td>"RNA binding motif protein, Y-linked, family 1, member A1"</td><td>RBMY1A1</td><td>human</td><td>RBMY1F</td><td>chimpanzee</td></tr>
-					<tr><td>"protocadherin beta 7"</td><td>Pcdhb15</td><td>mouse</td><td>PCDHB7</td><td>dog</td></tr>
-					<tr><td>"ATPase, Class VI, type 11A"</td><td>Atp11a</td><td>mouse</td><td>C19orf69</td><td>human</td></tr>
-					<tr><td>"mitogen-activated protein kinase-activated protein kinase 3"</td><td>MAPKAPK3</td><td>human</td><td>Mapkapk3</td><td>mouse</td></tr>
-					<tr><td>"similar to formin-like 2 isoform B"</td><td>Fmnl2</td><td>mouse</td><td>RGD1560248</td><td>rat</td></tr>
-					<tr><td>"Snf2-related CREBBP activator protein"</td><td>Srcap</td><td>mouse</td><td>SRCAP</td><td>rhesus macaque</td></tr>
-					<tr><td>"ribosomal protein S15a"</td><td>Rps15a</td><td>mouse</td><td>rps15a</td><td>zebrafish</td></tr>
-                </table>
-                </li>
+               <table
+								concordion:execute="#symbols = getSymbolsByGene(#geneId)">
+								<tr>
+									<th concordion:set="#geneId">Ortholog Name</th>
+									<th cc:assertResultsContain="#symbols">Marker Symbol</th>
+									<th>Marker Organism</th>
+									<th>Ortholog Symbol</th>
+									<th>Ortholog Organism</th>
+								</tr>
+								<tr>
+									<td>"acyl-CoA dehydrogenase, long chain"</td>
+									<td>Acadl</td>
+									<td>mouse</td>
+									<td>ACADL</td>
+									<td>cattle</td>
+								</tr>
+								<tr>
+									<td>"angio-associated, migratory cell protein"</td>
+									<td>Aamp</td>
+									<td>mouse</td>
+									<td>AAMP</td>
+									<td>chicken</td>
+								</tr>
+								<tr>
+									<td>"RNA binding motif protein, Y-linked, family 1, member
+										A1"</td>
+									<td>RBMY1A1</td>
+									<td>human</td>
+									<td>RBMY1F</td>
+									<td>chimpanzee</td>
+								</tr>
+								<tr>
+									<td>"protocadherin beta 7"</td>
+									<td>Pcdhb15</td>
+									<td>mouse</td>
+									<td>PCDHB7</td>
+									<td>dog</td>
+								</tr>
+								<tr>
+									<td>"ATPase, Class VI, type 11A"</td>
+									<td>Atp11a</td>
+									<td>mouse</td>
+									<td>C19orf69</td>
+									<td>human</td>
+								</tr>
+								<tr>
+									<td>"mitogen-activated protein kinase-activated protein
+										kinase 3"</td>
+									<td>MAPKAPK3</td>
+									<td>human</td>
+									<td>Mapkapk3</td>
+									<td>mouse</td>
+								</tr>
+								<tr>
+									<td>"similar to formin-like 2 isoform B"</td>
+									<td>Fmnl2</td>
+									<td>mouse</td>
+									<td>RGD1560248</td>
+									<td>rat</td>
+								</tr>
+								<tr>
+									<td>"Snf2-related CREBBP activator protein"</td>
+									<td>Srcap</td>
+									<td>mouse</td>
+									<td>SRCAP</td>
+									<td>rhesus macaque</td>
+								</tr>
+								<tr>
+									<td>"ribosomal protein S15a"</td>
+									<td>Rps15a</td>
+									<td>mouse</td>
+									<td>rps15a</td>
+									<td>zebrafish</td>
+								</tr>
+								<tr>
+									<td>"inhibitor of kappa light polypeptide gene enhancer in B-cells, kinase gamma"</td>
+									<td>IKBKG</td>
+									<td>human</td>
+									<td>Ikbkg</td>
+									<td>mouse</td>
+								</tr>
+							</table>
+						</li>
             </ol>
             </li>
             
