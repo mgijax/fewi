@@ -396,8 +396,7 @@
     		A Stop Words list IS in effect.  Stop Words ("and","from","of","or","the","their","to") are ignored by the search algorithm.<br/>
     		<ol>
     		<!-- I used SQL to hunt for terms containing "of" or "in" then I hunted for terms cotaining some of the same words until I found these by inspection -->
-     			<li>Query for <b concordion:set="#structure">mature renal corpuscle</b> should return results for <b cc:assertResultsContain="getStructures(#structure)">Bowman's capsule of mature renal corpuscle</b> 
-     			and <b cc:assertResultsContain="getStructures(#structure)">mature renal corpuscle Bowman's capsule</b>.</li>
+     			<li>Query for <b concordion:set="#structure">mature renal corpuscle</b> should return results for <b cc:assertResultsContain="getStructures(#structure)">Bowman's capsule of mature renal corpuscle</b>.</li>
     			<li>Query for <b concordion:set="#structure">Bowman's capsule of mature renal corpuscle</b> should return results including <b cc:assertResultsContain="getStructures(#structure)">mature renal corpuscle Bowman's capsule</b></li>
     			<!-- THERE ARE NO RESULTS WITH THIS TERM <li>Query for <b concordion:set="#structure">mesenchyme derived from neural crest</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">neural crest-derived mesenchyme in lateral migration pathway</b></li> -->
      			<li>Query for <b concordion:execute="#count1 = getResultCount(#TEXT)">s-shaped body medial segment</b></li>
