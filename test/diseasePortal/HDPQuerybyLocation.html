@@ -195,9 +195,9 @@
                 <li>Verify that following genes are returned:
                 <table cc:verifySupersetOf="#symbol : getSymbolsByHumanLocation(#humanLoc)">
                 	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Associated Human Region</th><th>Organism</th></tr>
-                	<tr><td>CLEC7A</td><td>Chr12:10269376-10282868</td><td>Human</td></tr>
+                	<tr><td>CLEC7A</td><td>Chr12:10116777-10130269</td><td>Human</td></tr>
                 	<tr><td>Clec7a</td><td>Chr12:10269376-10282868</td><td>Mouse</td></tr>
-                	<tr><td>CLRN1</td><td>Chr3:150643950-150690786</td><td>Human</td></tr>
+                	<tr><td>CLRN1</td><td>Chr3:150926163-150972999</td><td>Human</td></tr>
                 	<tr><td>Clrn1</td><td>Chr3:150643950-150690786</td><td>Mouse</td></tr>
                 	</table>
                 </li>
@@ -213,16 +213,15 @@
     		</li>
     		<li>You can query a region(s) of coordinates
     		<ol>
-    			<li>Query for human region <b concordion:set="#humanLoc">Chr10:100175955-101989344</b></li>
+    			<li>Query for human region <b concordion:set="#humanLoc">Chr10:98416198-100229610</b></li>
                 <li>Verify that at least the following genes are returned:
                 <table cc:verifySupersetOf="#symbol : getSymbolsByHumanLocation(#humanLoc)">
                 	<tr><th concordion:assertEquals="#symbol">Gene symbol</th><th>Associated Human Region</th><th>Organism</th></tr>
-                	<tr><td>HPS1</td><td>Chr10:100175955-100206704 (-)</td><td>Human</td></tr>
-                	<tr><td>HPSE2</td><td>Chr10:100216834-100995632 (-)</td><td>Human</td></tr>
-                	<tr><td>COX15</td><td>Chr10:101468505-101492423 (-)</td><td>Human</td></tr>
-                	<tr><td>ABCC2</td><td>Chr10:101542463-101611662 (+)</td><td>Human</td></tr>
-                	<tr><td>CPN1</td><td>Chr10:101802065-101841642 (-)</td><td>Human</td></tr>
-                	<tr><td>CHUK</td><td>Chr10:101948124-101989344 (-)</td><td>Human</td></tr>
+                	<tr><td>HPS1</td><td>Chr10:98416198-98446963 (-)</td><td>Human</td></tr>
+                	<tr><td>COX15</td><td>Chr10:99696131-99732666 (-)</td><td>Human</td></tr>
+                	<tr><td>ABCC2</td><td>Chr10:99782694-99851905 (+)</td><td>Human</td></tr>
+                	<tr><td>CPN1</td><td>Chr10:100042308-100081885 (-)</td><td>Human</td></tr>
+                	<tr><td>CHUK</td><td>Chr10:100188366-100229610 (-)</td><td>Human</td></tr>
                 	</table>
                 </li>
                 <li>Query for human regions <b concordion:set="#humanLoc">Chr10:100175955-100995632,Chr10:101542463-101989344</b>,
