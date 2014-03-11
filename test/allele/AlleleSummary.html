@@ -266,7 +266,7 @@
 			</li>
 			
     		<li>Verify that allele subtypes are displayed in the category column after the generated type (if there are subtypes)
- 			<p concordion:assertTrue="true">passed - kstone 2014/01/23</p> (sto24)
+ 			<p concordion:assertTrue="true">passed - jeffc 03/10/2014</p> (sto24)
     		<ol>
     			<li>Do a nomenclature query for <a href="http://cardolan.informatics.jax.org/allele/summary?nomen=grhpr">Grhpr</a></li>
     			<li>Verify that allele <b>Grhpr&lt;Gt(OST383093)Lex&gt;</b> has only <b>Gene trapped</b> in the Category column. <i>It has no subtypes or transmission status display.</i></li>
@@ -324,7 +324,7 @@
 		<ol>
 
 			<li>The allele report can be downloaded in tab-delimited format.(sto41)
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-28</p>
+ 			<p concordion:assertTrue="true">passed. jeffc 03/10/2014</p>
     		<ol>
                 <li>Submit a query for <b>chrX</b>.</li>
                 <li>Click the button labeled "Text File".</li>
@@ -474,7 +474,7 @@
 			</li>
 
 			<li>The allele report can be downloaded in Excel format.(sto41)
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-28</p>
+ 			<p concordion:assertTrue="true">passed. -jeffc 03/10/2014</p>
     		<ol>
                 <li>Submit a query for <b>chrX</b>.</li>
                 <li>Click the button labeled "Excel File".</li>
@@ -628,7 +628,7 @@
    		<h4>Sorting</h4>
    		<ol>
 			<li>Verify the default sort order of the Allele summary is by Transmission status with a secondary sort of Allele Symbol(sto58)
- 			<p concordion:assertTrue="true">jeffc 01/23/2014</p>
+ 			<p concordion:assertTrue="true">jeffc 03/10/2014</p>
     		<ol>
                 <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
                 <li>Verify <b>18 alleles</b> return with Chemically induced alles first, Targeted second, QTL third and Targeted(cell line) always last</li>
@@ -636,7 +636,7 @@
 			</li>
 
 			<li>Verify the Allele Symbol sort is by smart alpha(sto58)
- 			<p concordion:assertTrue="true">jeffc 01/23/2014</p>
+ 			<p concordion:assertTrue="true">jeffc 03/10/2014</p>
     		<ol>
                 <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
                 <li>Verify <b>18 alleles</b> are returned</li>
@@ -653,7 +653,7 @@
 			</li>
 
 			<li>Verify the Chromosome column sort order of the Allele summary is by smart alpha with a secondary sort of Allele Symbol(sto58)
- 			<p concordion:assertTrue="true">jeffc 01/24/2014</p>
+ 			<p concordion:assertTrue="true">jeffc 03/10/2014</p>
     		<ol>
                 <li>Submit a query for <b>9-Unknown</b></li>
                 <li>Verify you return over 199,000 alleles</li>
@@ -666,7 +666,7 @@
 			</li>
 
 			<li>Verify the Category column sort order of the Allele summary is by Generation type (smart alpha) with a secondary sort of Allele Symbol(sto58)
- 			<p concordion:assertTrue="true">jeffc 01/23/2014</p>
+ 			<p concordion:assertTrue="true">jeffc 03/10/2014</p>
     		<ol>
                 <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
                 <li>Verify <b>18 alleles</b> return with Chemically induced alleles first, Targeted second, QTL third and Targeted(cell line) always last</li>
@@ -677,7 +677,7 @@
     		</ol>
 			</li>
 			<li>Verify the Human Disease Models column sort order of the Allele summary is by Alpha (smart alpha) with a secondary sort of allele symbol(sto150)
- 			<p concordion:assertTrue="true">jeffc 02/25/2014</p>
+ 			<p concordion:assertTrue="true">jeffc 03/10/2014</p>
     		<ol>
                 <li>Submit a query for <b>naturity-onset diabetes of the young</b> in the <b>Phenotypes/Disease</b> section</li>
                 <li>After the results display set Rows per page to <b>500</b></li>
@@ -701,7 +701,7 @@
 		<h4>Location Search</h4>
 		<ol>
 			<li>Verify a query by coordinates returns the same alleles as on Public(sto32)(sto122)
- 			<p concordion:assertTrue="true">passed -jeffc 2014-03-02</p>
+ 			<p concordion:assertTrue="true">passed -jeffc 03-10-2014</p>
     		<ol>
                 <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
                 <li>Verify <b>18 alleles</b> appear for the markers Eccp, Pax9, Slc25a21, Splwt1, Tbqt3, and Tmc1m3.</li>
@@ -709,12 +709,12 @@
 			</li>
 
     		<li>Searching by chromosome returns the correct alleles now we have moved it to the FeWI (sto38)
- 			<p concordion:assertTrue="true">passed -jefc 2014-03-02</p>
+ 			<p concordion:assertTrue="true">passed -jefc 03-10-2014</p>
     		<table>
 	    		<tr><th>Chromosome</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
-	    		<tr><td>18</td><td>11089 </td><td>11090</td></tr>
-	    		<tr><td>19</td><td>11653 </td><td>11651</td></tr>
-	    		<tr><td>Y</td><td>149 </td><td>149</td></tr>
+	    		<tr><td>18</td><td>11089 </td><td>11100</td></tr>
+	    		<tr><td>19</td><td>11653 </td><td>11671</td></tr>
+	    		<tr><td>Y</td><td>150 </td><td>150</td></tr>
 	    		<tr><td>19,Y</td><td> </td><td>11800</td></tr>
 	    		<tr></tr>
     		</table>
@@ -724,24 +724,24 @@
     		</li>(this feature has been removed by MGI5.18-->
     		
     		<li>Seaching with cm Position returns the correct alleles. cM values may be separated by a space or a dash. (revised for sto81)
- 			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+ 			<p concordion:assertTrue="true">passed. -jeffc 03-10-2014</p>
     		<table>
 	    		<tr><th>Chromosome</th><th>cM</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
 	    		<tr><td>19</td><td>50 - 75</td><td>507</td><td>507</td></tr>
-	    		<tr><td>X</td><td>30-50</td><td>2758</td><td>2758</td></tr>
+	    		<tr><td>X</td><td>30-50</td><td>2770</td><td>2770</td></tr>
     		</table>
     		</li>
     		
     		<li>Searching with Genome Coordinates returns the correct alleles. Genome coordinate values may be separated by a space or a dash. (revised for sto81)
- 			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+ 			<p concordion:assertTrue="true">passed. -jeffc 03-10-2014</p>
     		<table>
 	    		<tr><th>Chromosome</th><th>Coordinates</th><th></th><th>Python Result</th><th>FEWI Result</th></tr>
-	    		<tr><td>3</td><td>(&gt;=) 125618205<br/>125618205-999999999</td><td>bp</td><td>4323</td><td>4323</td></tr>
-	    		<tr><td>3</td><td>(&lt;=) 125618205<br/>1-125618205</td><td>bp</td><td>12743</td><td>12743</td></tr>
+	    		<tr><td>3</td><td>(&gt;=) 125618205<br/>125618205-999999999</td><td>bp</td><td>4330</td><td>4330</td></tr>
+	    		<tr><td>3</td><td>(&lt;=) 125618205<br/>1-125618205</td><td>bp</td><td>12768</td><td>12768</td></tr>
 	    		<tr><td>3</td><td> 125618205 - 125622026</td><td>bp</td><td>11</td><td>11</td></tr>
 	    		<tr><td>3</td><td> 125.618 - 125.622</td><td>Mbp</td><td>11</td><td>11</td></tr>
-	    		<tr><td>3</td><td> 125.618 - 99999</td><td>Mbp</td><td>4323</td><td>4323</td></tr>
-	    		<tr><td>3</td><td> 125.618..99999</td><td>Mbp</td><td>4323</td><td>4323</td></tr>
+	    		<tr><td>3</td><td> 125.618 - 99999</td><td>Mbp</td><td>4330</td><td>4330</td></tr>
+	    		<tr><td>3</td><td> 125.618..99999</td><td>Mbp</td><td>4330</td><td>4330</td></tr>
 <!-- Not supporting less-than or greater-than entry using a single numeric with a character. User must begin "1-" or end "-99999999", respectively. 
  	    		<tr><td>3</td><td>(&gt;=) 125.618</td><td>Mbp</td><td>4323</td><td>4323</td></tr>
 	    		<tr><td>3</td><td>(&lt;=) 125.618</td><td>Mbp</td><td>12743</td><td>12731</td></tr>
@@ -752,7 +752,7 @@
 	<h4>Phenotypes/Disease Search and Display Tests</h4>
 		<ol>
 			<li>Searching by MP or OMIM ID excludes alleles associated with "normal" and "Not" annotations. (sto35)
-			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+			<p concordion:assertTrue="true">passed. -jeffc 03-10-2014</p>
     		<table>
 	    		<tr>
 	    			<th>ID</th>
@@ -790,7 +790,7 @@
 
     		<li>Querying by Phenotype returns alleles annotated to the term via any kind of genotype (OMG, Conditional, or Non-Conditional Complex).<br/>
     		The affected systems column displays a comma separated list of systems for all OMG or Conditional genotypes of each allele, but not systems associated with Non-Conditional Complex genotypes. (sto115)  
- 			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>  
+ 			<p concordion:assertTrue="true">passed. -jeffc 03-10-2014</p>  
     		<ol>
     			<li>
     			<table>
@@ -902,7 +902,7 @@
 -->
 
     		<li>Verify that MP and OMIM annotations associated with <b>Complex</b> (multiple allele pair), not conditionally-targeted genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.(sto32) (updated for sto115)
-    		<p concordion:assertTrue="true">passed. -klf 2014-03-02</p>
+    		<p concordion:assertTrue="true">passed. -jeffc 03-10-2014</p>
     		<ol>
                 <li>For the allele <b>Kras<sup>tm1Mok</sup></b>, do not display MP header terms associated with complex (multi-gene) genotypes unless they are ALSO associated with a simple or a conditional genotype.<br/>
                 Do not display:
@@ -944,14 +944,14 @@
     		</li>
 
     		<li>Verify that MP and OMIM associations with <b>Compound</b> genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.(sto32)  (updated for sto115)
-    		<p concordion:assertTrue="true">passed -jeffc 2014-03-02</p>
+    		<p concordion:assertTrue="true">passed -jeffc 03-10-2014</p>
     		<ol>
                 <li>For the allele <b>Del(2)49Ddu</b>, verify that <b>no data appears</b> in the columns for Affected Analytical Systems or Similar Human Diseases</li>
     		</ol>
     		</li>
     		
 			<li>Searching by MP or OMIM ID includes alleles from appropriate genotypes. (sto35) (updated for sto115)
-			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+			<p concordion:assertTrue="true">passed. -jeffc 03-10-2014</p>
     		<table>
 	    		<tr>
 	    			<th>ID</th>
@@ -1034,7 +1034,7 @@
 			</li>
 
 			<li>Searching by MP or OMIM alternate ID includes alleles from appropriate genotypes. (sto35) 
-			(updated for sto115)<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+			(updated for sto115)<p concordion:assertTrue="false">displaying a disease term when it should not -jeffc 03-10-2014</p>
     		<table>
 	    		<tr>
 	    			<th>Alternate ID</th>
@@ -1063,14 +1063,14 @@
 	    				Twist1&lt;Pas&gt;<br/>
 	    				Twist1&lt;tm1Bhr&gt;<br/>
 	    				Msx2&lt;tm1Rilm&gt;</td>
-	    			<td>Alternate ID for Saethre-Chotzen Syndrome; SCS (101400). Four alleles annotated to this disease.  The Msx2 allele is part of a COMPLEX genotype; allele is returne but DISEASE TERM IS NOT DISPLAYED (sto115).</td>
+	    			<td>Alternate ID for Saethre-Chotzen Syndrome; SCS (101400). Four alleles annotated to this disease.  The Msx2 allele is part of a COMPLEX genotype; allele is returned but DISEASE TERM IS NOT DISPLAYED (sto115).</td>
 	    		</tr>
 			</table>
 			</li>
 
 			<li>Searching by MP or OMIM terms  or synonyms returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)<br/>
 				(Note: includes tests for plain text, text including non-alphanumeric characters, and text strings that include non-Boolean &quot;and&quot;, &quot;or&quot;, and &quot;not&quot; as plain words.)
-			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+			<p concordion:assertTrue="false">issue with excludes -jeffc 03-10-2014</p>
     		<table>
 	    		<tr>
 	    			<th>MP or OMIM Term or Synonym Text</th>
@@ -1249,7 +1249,7 @@
     		</table>
 			</li>
 			<li>Searching by phenotype can match text in an allele's "General" note. (sto114)
-			<p concordion:assertTrue="true">passed - jeffc 2014/03/02</p>
+			<p concordion:assertTrue="true">passed - jeffc 03-10-2014</p>
 				<ul>
 					<li>Do a phenotype/disease query for <a href="http://cardolan.informatics.jax.org/allele/summary?phenotype=S74469"><b>S74469</b></a></li>
 					<li>Verify that <b>A&lt;iy&gt;</b> is returned. (<i>Has general note "Genbank ID for this mutation: S74469"</i>)</li>
@@ -1257,7 +1257,7 @@
 			</li>
 
 			<li>Searching by combinations of MP or OMIM terms, synonyms or IDs using Booleans returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)
-			(updated for sto115)<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>
+			(updated for sto115)<p concordion:assertTrue="false">issue with using "and" -jeffc 2014-03-02</p>
     		<table>
 	    		<tr>
 	    			<th>MP or OMIM Term<br/>
@@ -1275,7 +1275,7 @@
 	    				<li>F2rl1&lt;tm1Cgh&gt;</li>
 	    			</ul>
 	    			</td>
-	    			<td>These words belong to 2 separate OMIM terms. Query should OR them together returning <b>7 alleles</b>. F2rl1 allele is included but DISEASE IS NOT DISPLAYED due to COMPLEX genotype with Spink5&lt;tm1Hov&gt;. (sto115)</td>
+	    			<td>These words belong to 2 separate OMIM terms. Query should OR them together returning <b>8 alleles</b>. F2rl1 allele is included but DISEASE IS NOT DISPLAYED due to COMPLEX genotype with Spink5&lt;tm1Hov&gt;. (sto115)</td>
 	    		</tr>
 	    		<tr>
 	    			<td>Netherton OR Chanarin</td>
@@ -1286,7 +1286,7 @@
 	    				<li>Spink5&lt;tm1Drh&gt;</li>
 	    			</ul>
 	    			</td>
-	    			<td>Should get same result as above: <b>7 alleles</b>.</td>
+	    			<td>Should get same result as above: <b>8 alleles</b>.</td>
 	    		</tr>
 	    		<tr>
 	    			<td>"split foot"</td>
@@ -1329,7 +1329,7 @@
 	    				<li>Unc79&lt;Lwt&gt;</li>
 	    			</ul>
 	    			</td>
-	    			<td>ORing the IDs of the two terms above.  Should return all alleles annotated to just one  of the terms in addition to the 3 annotated to both terms.  Total should be <b>63 alleles</b>.</td>
+	    			<td>ORing the IDs of the two terms above.  Should return all alleles annotated to just one  of the terms in addition to the 3 annotated to both terms.  Total should be <b>67 alleles</b>.</td>
 	    		</tr>
 	    		<tr>
 	    			<td>MP:0009754 AND NOT MP:0009751</td>
@@ -1343,7 +1343,7 @@
 	    				<li><i>Exclude:</i> Ppp1r1b&lt;tm1Aaf&gt;</li>
 	    			</ul>
 	    			</td>
-	    			<td>Combining the IDs of the two terms above with NOT.  Should exclude the set of 3 alleles for the AND case, returning alleles annotated only to the first ID ("...cocaine").  Total should be <b>27 alleles</b>.</td>
+	    			<td>Combining the IDs of the two terms above with NOT.  Should exclude the set of 3 alleles for the AND case, returning alleles annotated only to the first ID ("...cocaine").  Total should be <b>29 alleles</b>.</td>
 	    		</tr>
 	    		<tr>
 	    			<td>"response to cocaine"</td>
@@ -1367,7 +1367,7 @@
 						<li>EXCLUDE: Tg(Camk2a-cre)1Gsc</li>
 	    			</ul>
 					</td>
-	    			<td><p>Should return alleles annotated to the term shown above, alleles annotated to "impaired behavioral response to cocaine" (MP:0009758), and alleles associated with annotations having notes containing this text from any of 3 Notes Types (General, Normal, and Background Sensitivity). Total should be <b>61 alleles</b>.</p>
+	    			<td><p>Should return alleles annotated to the term shown above, alleles annotated to "impaired behavioral response to cocaine" (MP:0009758), and alleles associated with annotations having notes containing this text from any of 3 Notes Types (General, Normal, and Background Sensitivity). Total should be <b>62 alleles</b>.</p>
 	    				<p>Creb1 and Tg(Camk2a-cre)1Gsc alleles are excluded because the matching text appears in a note that is associated with a Normal annotation, which we exclude.</p> 
 	    				<p>Two Cyfip alleles present in a trans-het genotype added to production 1/9/2014 so we are returning them where Public is not. Data will appear on public after 1/20/2014?</p>
 	    				<p>Two Datd QTL alleles are included because matching text appears in the &quot;TEXT-QTL&quot; note.</p>
@@ -1387,7 +1387,7 @@
 	    				<li>EXCLUDE: Slc6a3&lt;tm1.1(cre)Bkmn&gt;</li>
 	    			</ul>
 	    			</td>
-	    			<td>Should return only <b>27 alleles</b>. </td>
+	    			<td>Should return only <b>29 alleles</b>. </td>
 	    		</tr>
 	    		<tr>
 	    			<td>"response to cocaine" AND NOT behavior</td>
@@ -1406,7 +1406,7 @@
 				(Note: This should be the same Stop Words list we are using for the Quick Search.  See <a href="http://prodwww.informatics.jax.org/wiki/index.php/TR:7754_Requirements">Search Tool Requirements</a> wiki page.<br/>
 				This list is:  <i>a, an, and, are, as, be, but, if, is, it, such, that, the, their, then, there, these, they, this, was, will</i>.<br/>
 				Excluded from the list, therefore, treated as words are: <i>at, by, for, in, into, no, not, of, on, or, to, with</i>.)
-			<p concordion:assertTrue="true">passsed. -jeffc 2014-03-02</p>
+			<p concordion:assertTrue="false">issue with using "and" -jeffc 2014-03-02</p>
 			<table>
 			<tr>
 				<th>Input</th>
@@ -1462,7 +1462,7 @@
 			</li>			
 
 			<li>The "Anatomical Systems Affected by Phenotypes" pop-up tool populates the Pheno/Disease input field with the MP IDs of the selected systems.
-			<p concordion:assertTrue="true">passed. -klf 2014-01-20</p>
+			<p concordion:assertTrue="true">passed. -jeffc 03-11-2014</p>
 			<table>
 			<tr>
 				<th>Selected Text</th>
@@ -1504,7 +1504,7 @@
 			</li>
 
 			<li>The "Anatomical Systems Affected by Phenotypes" pop-up tool adds the selected MP IDs to whatever text is already in the Pheno/Disease input field
-			<p concordion:assertTrue="true">passed. -klf 2014-01-20</p>
+			<p concordion:assertTrue="true">passed. -jeffc 03-11-2014</p>
 			<ol>
 				<li>Enter some text in the Phenotypes/Diseases form input text area.</li>
 				<li>Open the "Anatomical Systems Affected by Phenotypes" pop-up tool.</li>
@@ -1514,7 +1514,7 @@
 			</li>
 
     		<li>When allele is annotated to term "Normal phenotype"   or its children in OMG or Conditional genotype, and no other terms in ANY genotypes, display "no abnormal phenotype observed". (sto115)
-			<p concordion:assertTrue="true">passed. -jeffc 2014-03-02</p>  
+			<p concordion:assertTrue="true">passed. -jeffc 03-11-2014</p>  
 			<ol>
 				<li>From the Allele Query Form, submit a Nomenclature query for the items listed below. Verify that for the listed allele, the "Abnormal Phenotypes Reported in these Systems" column displays the listed text.
 				<table>
@@ -1591,7 +1591,7 @@
     		</li>
     		
     		<li>When allele is annotated to term "No phenotypic analysis"  in OMG or Conditional genotype, and no other terms in ANY genotypes, display "No Phenotypic Analysis". (sto115)
- 			<p concordion:assertTrue="true">passed. -klf 2014-02-18</p>  
+ 			<p concordion:assertTrue="true">passed. -jeffc 03-11-2014</p>  
 			<ol>
 				<li>From the Allele Query Form, submit a Nomenclature query for the items listed below. Verify that for the listed allele, the "Abnormal Phenotypes Reported in these Systems" column displays the listed text.
 				<table>
@@ -1662,7 +1662,7 @@
     		</li>
 
     		<li>Verify that diseases column displays unique comma separated list of diseases for each genotype (sto32) (updated for sto115)
- 			<p concordion:assertTrue="true">passed. -klf 2014-03-02</p>
+ 			<p concordion:assertTrue="true">passed. -jeffc 03-11-2014</p>
     		<ol>
                 <li>Verify that the row for allele <b>Hprt<sup>b-m3</sup></b> displays <b>Lesch-Nyhan Syndrome; LNS 300322</b> under Similar Human Diseases. (<i>3-marker Conditional genotype</i>)</li>
                 <li>Verify that disease names are linked to their Disease Detail page, but ID numbers are not linked.</li>
@@ -1674,7 +1674,7 @@
     		</li>
 
     		<li>Verify that disease column excludes "Not" annotations when there are no other annotations for a disease term for a given allele (sto32) (updated for sto115)
- 			<p concordion:assertTrue="true">passed. -klf 2014-03-02</p>
+ 			<p concordion:assertTrue="true">passed. -jeffc 03-11-2014</p>
     		<ol>
                 <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> displays <b>I<b>chthyosis and Male Hypogonadism 308200, </b>Immunodysregulation, Polyendocrinopathy, and Enteropathy, X-Linked; 304790, Wiskott-Aldrich Syndrome; WAS 301000</b> under Similar Human Diseases.</li>
                 <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> DOES NOT display <b>Ichthyosis, X-Linked; XLI OMIM ID: 308100</b>  under Similar Human Diseases.</li>
