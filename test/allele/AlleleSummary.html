@@ -709,7 +709,7 @@
 			</li>
 
     		<li>Searching by chromosome returns the correct alleles now we have moved it to the FeWI (sto38)
- 			<p concordion:assertTrue="true">passed -jefc 03-10-2014</p>
+ 			<p concordion:assertTrue="true">passed -jeffc 03-10-2014</p>
     		<table>
 	    		<tr><th>Chromosome</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
 	    		<tr><td>18</td><td>11089 </td><td>11100</td></tr>
@@ -1034,7 +1034,7 @@
 			</li>
 
 			<li>Searching by MP or OMIM alternate ID includes alleles from appropriate genotypes. (sto35) 
-			(updated for sto115)<p concordion:assertTrue="false">displaying a disease term when it should not -jeffc 03-10-2014</p>
+			(updated for sto115)<p concordion:assertTrue="true">passed -jeffc 03-10-2014</p>
     		<table>
 	    		<tr>
 	    			<th>Alternate ID</th>
@@ -1070,7 +1070,7 @@
 
 			<li>Searching by MP or OMIM terms  or synonyms returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)<br/>
 				(Note: includes tests for plain text, text including non-alphanumeric characters, and text strings that include non-Boolean &quot;and&quot;, &quot;or&quot;, and &quot;not&quot; as plain words.)
-			<p concordion:assertTrue="false">issue with excludes -jeffc 03-10-2014</p>
+			<p concordion:assertTrue="true">passed -jeffc 03-10-2014</p>
     		<table>
 	    		<tr>
 	    			<th>MP or OMIM Term or Synonym Text</th>
@@ -1257,7 +1257,7 @@
 			</li>
 
 			<li>Searching by combinations of MP or OMIM terms, synonyms or IDs using Booleans returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)
-			(updated for sto115)<p concordion:assertTrue="false">issue with using "and" -jeffc 2014-03-02</p>
+			(updated for sto115)<p concordion:assertTrue="true">passed -jeffc 03-11-2014</p>
     		<table>
 	    		<tr>
 	    			<th>MP or OMIM Term<br/>
@@ -1406,7 +1406,7 @@
 				(Note: This should be the same Stop Words list we are using for the Quick Search.  See <a href="http://prodwww.informatics.jax.org/wiki/index.php/TR:7754_Requirements">Search Tool Requirements</a> wiki page.<br/>
 				This list is:  <i>a, an, and, are, as, be, but, if, is, it, such, that, the, their, then, there, these, they, this, was, will</i>.<br/>
 				Excluded from the list, therefore, treated as words are: <i>at, by, for, in, into, no, not, of, on, or, to, with</i>.)
-			<p concordion:assertTrue="false">issue with using "and" -jeffc 2014-03-02</p>
+			<p concordion:assertTrue="true">passed -jeffc 03-11-2014</p>
 			<table>
 			<tr>
 				<th>Input</th>
