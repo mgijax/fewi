@@ -31,6 +31,7 @@
     <ul>
         <li>User story 115, Cre: improved anatomy search (no autocomplete)</li>
         <li>User story 136, Cre: improved anatomy search (with autocomplete)</li>
+        <li>User story 127 (HTMP2), Cre: use EMAP vocabulary instead of AD</li>
     </ul>
 </div>
 
@@ -108,7 +109,7 @@
 				<ul>
 				<li>Typing <b>br fa</b> returns terms (and/or synonyms) containg multiple tokens.</li>
 				<li>Each term (or synonym) contains a token beginning with "br" AND a token beginning with "fa", in either order.</li>
-				<li>There are no other AD terms or synonyms containing tokens beginning with "br" AND "fa" in either order. (Need SQL query against all terms and synonyms in the AD.)</li>
+				<li>There are no other EMAP terms or synonyms containing tokens beginning with "br" AND "fa" in either order. (Need SQL query against all terms and synonyms in the EMAP.)</li>
 				</ul>
 			</li>
 			<li>Autocomplete does not match across a term and its synonym.
@@ -173,8 +174,8 @@
     	</li>
     	<li>Terms in autocomplete with NO cre data are marked appropriately (font is gray)
     		<ol>
-				<li>Typing in the box: <b concordion:set="#struct">kidney capsule</b> brings up
-                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">renal capsule</b>
+				<li>Typing in the box: <b concordion:set="#struct">renal pelvis smooth muscle</b> brings up
+                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">renal pelvis smooth muscle</b>
                 		 which is marked as <b>not</b> having cre data.</li>
                 <li>Typing in the box: <b concordion:set="#struct">brain</b> brings up
                 	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">brain nucleus</b>
