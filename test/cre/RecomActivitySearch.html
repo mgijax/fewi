@@ -166,18 +166,21 @@
     		</li>
     		<li>Terms in autocomplete with cre data are marked appropriately (font is black)
     		<ol>
-    			<li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
+    			<li>Enter input: <b concordion:set="#struct">trigeminal nerve</b>. Verify the autocomplete displays
                 	<b cc:assertResultsContain="getTermsWithCre(#struct)">trigeminal V nerve</b> which is marked as having cre data.</li>
-                <li>Typing in the box: <b concordion:set="#struct">trigeminal nerve</b> brings up
+                <li>Enter input: <b concordion:set="#struct">trigeminal nerve</b>. Verify the autocomplete displays
                 	<b cc:assertResultsContain="getTermsWithCre(#struct)">trigeminal V nerve mandibular division</b> which is marked as having cre data.</li>
     		</ol>
     	</li>
     	<li>Terms in autocomplete with NO cre data are marked appropriately (font is gray)
     		<ol>
-				<li>Typing in the box: <b concordion:set="#struct">renal pelvis smooth muscle</b> brings up
+				<li>Enter input: <b concordion:set="#struct">kidney capsule</b>. Verify the autocomplete displays
+                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">kidney capsule [syn. of renal capsule]</b>
+                	     which is marked as <b>not</b> having cre data.</li>
+				<li>Enter input: <b concordion:set="#struct">renal pelvis smooth muscle</b>. Verify the autocomplete displays
                 	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">renal pelvis smooth muscle</b>
                 		 which is marked as <b>not</b> having cre data.</li>
-                <li>Typing in the box: <b concordion:set="#struct">brain</b> brings up
+                <li>Enter input: <b concordion:set="#struct">brain</b>. Verify the autocomplete displays
                 	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">brain nucleus</b>
                 		 which is marked as <b>not</b> having cre data.</li>
     		</ol>
