@@ -48,6 +48,7 @@
         <li>User story #115, Allele Summary – modify logic for disease/pheno query and summary display</li>
         <li>User story #150, E4: Add sort on Human Disease Column (Release 5.18)</li>
         <li>User story #122, E4: Query form on Summary page (Release 5.18)</li>
+        <li>User story #181, BUG: QTL-Text notes: inappropriate associations in searches (Release 5.18)</li>
     </ul>
 </div>
 
@@ -102,7 +103,8 @@
 		<li>(MGI 5.18)(sto150) Human Disease Model column will be sorted by smart alpha with a secondary  sort of Allele symbol</li>
 		<li>(MGI 5.18)(sto122) Allele Query form is added to top of summary page</li>
 		<li>(MGI 5.18)(sto122) Query form can be opened or closed</li>
-		<li>(MGI 5.18)(sto122) Wuery form can maintain user's entered values</li>
+		<li>(MGI 5.18)(sto122) Query form can maintain user's entered values</li>
+		<li>(MGI 5.18)(sto181) searching by "(cocaine AND response AND to) AND NOT behavior" finds Datd&lt;C57BL/6J&gt; but not Chrna3&lt;tm1.1Hwrt&gt; .</li>
 	</ul>
 </div>
 
@@ -146,7 +148,6 @@
  -->
 		<li>Include annotations to genotypes having 2 alleles of only 1 marker (OMG).</li>
 		<li>Include annotations to conditional genotypes.</li>
-		<li><del>Exclude annotations to all other complex genotypes (genotypes having the alleles of 2 or more markers).</del></li>
 		<li>Include annotations to all kinds of genotypes. (sto115)</li>
 		<li>Input is matched against:
 		<ul>
@@ -164,7 +165,7 @@
 			</ul>
 			</li>
 			<li>"General" allele notes</li>
-			<li>TEXT-QTL notes</li>
+			<li>TEXT-QTL notes - only for alleles where Type = "QTL"</li>
 		</ul>
 		</li>
 
@@ -174,6 +175,7 @@
 		<li>We use the MGI-modified Stop Word list from the Quick Search.</li>
 		<li>Non-alpha-numeric characters are ignored, delimiting tokens.</li>
 		<li>Text string tokens are ORed together unless the user specifies otherwise (enters Boolean ANDs, NOTs, parentheses, etc.)</li>
+		<li>To obtain "typical" NOT behavior, User must enter AND NOT.</li>
 		<li>Token order matters only if the user enters double-quotation marks to indicate a phrase query.</li>
 	</ul>
 	<h4>Location input</h4>
@@ -1028,7 +1030,7 @@
 	    				<li>Spry4&lt;tm1Ayos&gt;</li>
 	    			</ul>
 	    			</td>
-	    			<td>These alleles are in a COMPLEX genotype together that is annotated to this term. They are returned by the query but DISEASE IS NOT DISPLAYED. (sto115)</td>
+	    			<td>These alleles are in a COMPLEX genotype together that is annotated to this term. They are returned by the query but THIS DISEASE IS NOT DISPLAYED. (sto115)</td>
 	    		</tr>
     		</table>
 			</li>
@@ -1063,7 +1065,7 @@
 	    				Twist1&lt;Pas&gt;<br/>
 	    				Twist1&lt;tm1Bhr&gt;<br/>
 	    				Msx2&lt;tm1Rilm&gt;</td>
-	    			<td>Alternate ID for Saethre-Chotzen Syndrome; SCS (101400). Four alleles annotated to this disease.  The Msx2 allele is part of a COMPLEX genotype; allele is returned but DISEASE TERM IS NOT DISPLAYED (sto115).</td>
+	    			<td>Alternate ID for Saethre-Chotzen Syndrome; SCS (101400). Four alleles annotated to this disease.  The Msx2 allele is part of a COMPLEX genotype; allele is returned but THIS DISEASE TERM IS NOT DISPLAYED (sto115).</td>
 	    		</tr>
 			</table>
 			</li>
@@ -1257,7 +1259,7 @@
 			</li>
 
 			<li>Searching by combinations of MP or OMIM terms, synonyms or IDs using Booleans returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)
-			(updated for sto115)<p concordion:assertTrue="true">passed -jeffc 03-11-2014</p>
+			(updated for sto115 and sto181)<p concordion:assertTrue="true">passed -klf 03-13-2014</p>
     		<table>
 	    		<tr>
 	    			<th>MP or OMIM Term<br/>
@@ -1396,8 +1398,20 @@
 	    		</tr>
 	    		<tr>
 	    			<td>(cocaine AND response AND to) AND NOT behavior</td>
-	    			<td>Nr1i3&lt;tm1Ddm&gt;</td>
-	    			<td>Only one allele has the words contained in the phrase "response to cocaine" but does not also have the word "behavior". </td>
+	    			<td>
+	    			<ul>
+	    				<li>Nr1i3&lt;tm1Ddm&gt;</li>
+	    				<li>Datd&lt;C57BL/6J&gt;</li>
+	    				<li>Datd&lt;DBA/2J&gt;</li>
+	    				<li>EXCLUDE: Chrna3&lt;tm1.1Hwrt&gt;</li>
+	    				<li>EXCLUDE: Igh&lt;tm1.1Erpi&gt;</li>
+	    			</ul>
+	    			</td>
+	    			<td>Alleles may have the words "cocaine", "response", and "to" in separate Notes or annotated Terms but must not also have the word "behavior". <br/>
+	    				Searching TEXT-QTL Mapping Experiment Notes occurs only for allele with Allele Type = QTL. Other alleles with matching text in TEXT-QTL Notes must not be returned. (sto181)<br/>
+	    				(Examples: Chrna3&lt;tm1.1Hwrt&gt; has "response to" in one TEXT-QTL experiment note (J:39049) associated with marker Chrna3 and "cocaine" in another TEXT-QTL experiment note (J:30687) but this allele is NOT a QTL allele so it should not be returned. <br/>
+	    				Igh&lt;tm1.1Erpi&gt; has "response to" in a note for an MP annotation and "cocaine" in a TEXT-QTL experiment note associated with marker Igh (J:23071) but this allele is NOT a QTL allele so it should not be returned.)
+	    			</td>
 	    		</tr>
     		</table>
 			</li>
