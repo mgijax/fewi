@@ -70,6 +70,7 @@ public class ImageUtils
 				image.getPixeldbID(),
 				maxWidth,maxHeight);
 	}
+	
 	// a super specific method signature to allow bypassing hibernate objects
 	public static String createImagePaneHTML(Integer paneWidth,Integer paneHeight, 
 			Integer paneX, Integer paneY,

@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import mgi.frontend.datamodel.GxdAssayResult;
-
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Filters;
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
@@ -24,11 +20,9 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
-import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow;
 import org.jax.mgi.fewi.summary.VocabACSummaryRow.ACType;

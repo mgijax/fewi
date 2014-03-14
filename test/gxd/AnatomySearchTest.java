@@ -15,7 +15,6 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
-import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockGxdControllerQuery;
 import org.jax.mgi.fewi.test.mock.MockGxdHttpQuery;
@@ -116,9 +115,9 @@ public class AnatomySearchTest extends BaseConcordionTest {
     	MockHttpServletResponse response = mockRequest().handle(request);
     	
     	ObjectMapper mapper = new ObjectMapper();
-    	SearchResults<StructureACResult> results = null; 
+    	SearchResults<EmapaACResult> results = null; 
     	results = mapper.readValue(response.getContentAsString(), 
-    			new TypeReference<SearchResults<StructureACResult>>() { });
+    			new TypeReference<SearchResults<EmapaACResult>>() { });
     	assertTrue(results.getTotalCount()>0);
     }
 
