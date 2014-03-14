@@ -202,24 +202,35 @@ public class AutoCompleteController {
 	 * fields on the GXD query form.  Results are returned as JSON.
 	 */
 	@RequestMapping("/emapa")
-	public @ResponseBody SearchResults<EmapaACResult>
-	    emapaAutoCompleteRequest(
+	public @ResponseBody SearchResults<EmapaACResult> emapaAutoCompleteRequest(
 		HttpServletResponse response,
-		@RequestParam("query") String query) {
-
+		@RequestParam("query") String query) 
+	{
 		AjaxUtils.prepareAjaxHeaders(response);
 		return performEmapaAutoComplete(query);
 	}
 	
+	/*
+	 * Duplicate of the above url for cre compatibility
+	 */
+	@RequestMapping("/structure")
+	public @ResponseBody SearchResults<EmapaACResult> structureAutoCompleteRequest(
+			HttpServletResponse response,
+			@RequestParam("query") String query) {
+		return emapaAutoCompleteRequest(response,query);
+	}
+	
 	/* method for use by automated testing, to mimic the above method
 	 */
-	public @ResponseBody SearchResults<EmapaACResult>
-	    emapaAutoComplete(String query) {
+	public @ResponseBody SearchResults<EmapaACResult> emapaAutoComplete(String query) {
 		return performEmapaAutoComplete(query);
 	}
 
 	/* float any results that begins with the given query string up to the
 	 * top of the results
+	 * 
+	 * TODO: We need to find a way to do this in Solr. Not only is this convoluted and inconsistent,
+	 * 	it likely won't do what is expected in every case. -kstone
 	 */
 	private SearchResults<EmapaACResult> floatBeginsMatches (String query,
 	    SearchResults<EmapaACResult> searchResults) {
@@ -246,9 +257,8 @@ public class AutoCompleteController {
 	/* method to actually perform the EMAPA search for the autocomplete,
 	 * called by the two methods above
 	 */
-	private SearchResults<EmapaACResult> performEmapaAutoComplete(
-		String query) {
-
+	private SearchResults<EmapaACResult> performEmapaAutoComplete(String query) 
+	{
 	    // split input on any non-alpha characters
 	    Collection<String> words =
 		QueryParser.parseAutoCompleteSearch(query);
@@ -258,10 +268,9 @@ public class AutoCompleteController {
 	    // if no query string, return an empty result set
 
 	    if(words.size() == 0) {
-		SearchResults<EmapaACResult> sr =
-		    new SearchResults<EmapaACResult>();
-		sr.setTotalCount(0);
-		return sr;
+			SearchResults<EmapaACResult> sr = new SearchResults<EmapaACResult>();
+			sr.setTotalCount(0);
+			return sr;
 	    }
 
 	    // otherwise, do the search and request the top 200 matches
@@ -274,9 +283,9 @@ public class AutoCompleteController {
 	    // build an AND-ed list of tokens for BEGINS searching in fList
 
 	    for (String q : words) {
-		Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
-		    Filter.OP_GREEDY_BEGINS);
-		fList.add(wordFilter);
+			Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
+			    Filter.OP_GREEDY_BEGINS);
+			fList.add(wordFilter);
 	    }
 
 	    f.setNestedFilters(fList,Filter.FC_AND);
@@ -284,79 +293,19 @@ public class AutoCompleteController {
 	    params.setFilter(f);
 				
 	    // default sorts are "score","autocomplete text"
-
 	    List<Sort> sorts = new ArrayList<Sort>();
 				
 	    sorts.add(new Sort("score", true));
 	    sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM, false));
 	    params.setSorts(sorts);
 				
-	    SearchResults<EmapaACResult> results =
-		autocompleteFinder.getEmapaAutoComplete(params);
+	    SearchResults<EmapaACResult> results = autocompleteFinder.getEmapaAutoComplete(params);
 
 	    // need a unique list of terms.
-
 	    results.uniqueifyResultObjects();
 
 	    results = floatBeginsMatches(query, results);
 	    return results;
-	}
-	
-	/*
-	 * This method maps requests for structure auto complete results. The results
-	 * are returned as JSON.
-	 */
-	@RequestMapping("/structure")
-	public @ResponseBody SearchResults<StructureACResult> structureAutoCompleteRequest(
-			HttpServletResponse response,
-			@RequestParam("query") String query) {
-		AjaxUtils.prepareAjaxHeaders(response);
-		return performStructureAutoComplete(query);
-	}
-	
-	public @ResponseBody SearchResults<StructureACResult> structureAutoComplete(
-			String query) {
-		return performStructureAutoComplete(query);
-	}
-	SearchResults<StructureACResult> performStructureAutoComplete(
-			String query)
-	{
-		// split input on any non-alpha characters
-				Collection<String> words = QueryParser.parseAutoCompleteSearch(query);
-				logger.debug("structure query:" + words.toString());
-				
-				if(words.size() == 0)
-				{
-					// return an empty result set;
-					SearchResults<StructureACResult> sr = new SearchResults<StructureACResult>();
-					sr.setTotalCount(0);
-					return sr;
-				}
-
-				SearchParams params = new SearchParams();
-				params.setPageSize(200);
-				
-				Filter f = new Filter();
-				List<Filter> fList = new ArrayList<Filter>();
-				for (String q : words) {
-					Filter wordFilter = new Filter(SearchConstants.STRUCTURE,q,Filter.OP_GREEDY_BEGINS);
-					fList.add(wordFilter);
-				}
-				f.setNestedFilters(fList,Filter.FC_AND);
-				
-				params.setFilter(f);
-				
-				// default sorts are "score","autocomplete text"
-				List<Sort> sorts = new ArrayList<Sort>();
-				
-				sorts.add(new Sort("score",true));
-				sorts.add(new Sort(IndexConstants.STRUCTUREAC_BY_SYNONYM,false));
-				params.setSorts(sorts);
-				
-				SearchResults<StructureACResult> results = autocompleteFinder.getStructureAutoComplete(params);
-				// need a unique list of terms. 
-				results.uniqueifyResultObjects();
-				return results;
 	}
 	
 	/*
