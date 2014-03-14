@@ -24,6 +24,7 @@
             <list>
                 <value>classpath*:GlobalConfig.properties</value>
                 <value>classpath*:fewi.properties</value>
+                <value>classpath*:common.solr.properties</value>
             </list>
         </property>
     </bean>
