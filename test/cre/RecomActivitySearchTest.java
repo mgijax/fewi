@@ -3,10 +3,9 @@ package cre;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.controller.AutoCompleteController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
+import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockCreHttpQuery;
@@ -54,10 +53,10 @@ public class RecomActivitySearchTest extends BaseConcordionTest
 	 */
     public List<String> getTerms(String query)
     {
-    	SearchResults<StructureACResult> results = 
-        		autoCompleteController.structureAutoComplete(query);
+    	SearchResults<EmapaACResult> results = 
+        		autoCompleteController.emapaAutoComplete(query);
     	List<String> terms = new ArrayList<String>();
-    	for(StructureACResult result : results.getResultObjects())
+    	for(EmapaACResult result : results.getResultObjects())
     	{
     		// synonym is the field we display in the dropdown.
     		terms.add(result.getSynonym());
@@ -67,10 +66,10 @@ public class RecomActivitySearchTest extends BaseConcordionTest
     
     public List<String> getTermsWithCre(String query)
     {
-    	SearchResults<StructureACResult> results = 
-        		autoCompleteController.structureAutoComplete(query);
+    	SearchResults<EmapaACResult> results = 
+        		autoCompleteController.emapaAutoComplete(query);
     	List<String> terms = new ArrayList<String>();
-    	for(StructureACResult result : results.getResultObjects())
+    	for(EmapaACResult result : results.getResultObjects())
     	{
     		if (result.getHasCre())
     		{
@@ -83,10 +82,10 @@ public class RecomActivitySearchTest extends BaseConcordionTest
     
     public List<String> getTermsWithoutCre(String query)
     {
-    	SearchResults<StructureACResult> results = 
-        		autoCompleteController.structureAutoComplete(query);
+    	SearchResults<EmapaACResult> results = 
+        		autoCompleteController.emapaAutoComplete(query);
     	List<String> terms = new ArrayList<String>();
-    	for(StructureACResult result : results.getResultObjects())
+    	for(EmapaACResult result : results.getResultObjects())
     	{
     		if (!result.getHasCre())
     		{
@@ -99,7 +98,7 @@ public class RecomActivitySearchTest extends BaseConcordionTest
     
     public int getTermCount(String query)
     {
-    	int count = autoCompleteController.structureAutoComplete(query).getTotalCount();
+    	int count = autoCompleteController.emapaAutoComplete(query).getTotalCount();
     	if(count < 0) count = 0;
     	return count;
     }

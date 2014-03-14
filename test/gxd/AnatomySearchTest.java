@@ -12,6 +12,7 @@ import org.codehaus.jackson.type.TypeReference;
 import org.jax.mgi.fewi.controller.AutoCompleteController;
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.StructureACResult;
@@ -126,10 +127,10 @@ public class AnatomySearchTest extends BaseConcordionTest {
     // ================================================================
     public List<String> getTerms(String query)
     {
-    	SearchResults<StructureACResult> results = 
-        		autoCompleteController.structureAutoComplete(query);
+    	SearchResults<EmapaACResult> results = 
+        		autoCompleteController.emapaAutoComplete(query);
     	List<String> terms = new ArrayList<String>();
-    	for(StructureACResult result : results.getResultObjects())
+    	for(EmapaACResult result : results.getResultObjects())
     	{
     		// synonym is the field we display in the dropdown.
     		terms.add(result.getSynonym());
@@ -139,7 +140,7 @@ public class AnatomySearchTest extends BaseConcordionTest {
     
     public int getTermCount(String query)
     {
-    	int count = autoCompleteController.structureAutoComplete(query).getTotalCount();
+    	int count = autoCompleteController.emapaAutoComplete(query).getTotalCount();
     	if(count < 0) count = 0;
     	return count;
     }
