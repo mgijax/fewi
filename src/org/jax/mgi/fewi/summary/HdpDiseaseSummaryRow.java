@@ -87,6 +87,8 @@ public class HdpDiseaseSummaryRow {
 		
 		public String getDiseaseModels()
 		{
+			if(term.getDiseaseModelCount()==null || term.getDiseaseModelCount()<1) return "";
+			
 			// links to disease models page
 			String url = fewiUrl + "disease/models/" + term.getPrimaryId();
 			return "<a href=\""+url+"\">"+term.getDiseaseModelCount()+"</a>";
