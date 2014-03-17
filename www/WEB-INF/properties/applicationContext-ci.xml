@@ -19,7 +19,8 @@
     <!-- (in this case, JDBC-related settings for the dataSource definition below) -->
     <context:property-placeholder 
     	location="classpath*:**/fewi.properties,
-    		classpath*:**/common.solr.properties" 
+    		classpath*:**/common.solr.properties,
+    		classpath*:**/common.fewi.properties" 
     />
 
     <bean id="configBean" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -28,6 +29,7 @@
                 <value>classpath*:GlobalConfig.properties</value>
                 <value>classpath*:fewi.properties</value>
                 <value>classpath*:common.solr.properties</value>
+                <value>classpath*:common.fewi.properties</value>
             </list>
         </property>
     </bean>

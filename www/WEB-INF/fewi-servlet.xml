@@ -13,7 +13,8 @@
     <!-- Exposes fewi.properties to be used in @Value annotations -->
     <context:property-placeholder 
     	location="WEB-INF/properties/fewi.properties,
-    		WEB-INF/properties/common.solr.properties" 
+    		WEB-INF/properties/common.solr.properties,
+    		WEB-INF/properties/common.fewi.properties" 
     />
 
     <!-- Exposes externalUrls.properties as a property bean. -->

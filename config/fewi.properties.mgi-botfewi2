@@ -42,9 +42,3 @@ hibernate.generate_statistics=false
 hibernate.show_sql=false
 hibernate.dialect=org.hibernate.dialect.ProgressDialect
 jndi.datasource=java:jboss/datasources/fe
-
-# gxd lit result limit
-gxdLit.limit=20000
-
-# SNP build identifier
-SNP_BUILD=dbSNP Build 137
