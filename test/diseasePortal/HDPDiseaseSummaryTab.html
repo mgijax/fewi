@@ -53,6 +53,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 75, E3: Disease tab: Add references column</li>
         <li>User story 155, Diseases tab: export as tab-delimited text</li>
         <li>User story 137, Add links to gene and disease detail pages</li>
+        <li>User story 128(5.18), HDP: Disease Tab: Link to mouse models page</li>
     </ul>
 </div>
 
@@ -83,6 +84,8 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>US155: Tab delimited file created with all diseases tab results</li>
 		<li>US155: Tab delimited files has data for Disease, OMIM ID, Mouse Models, Associated Mouse Markers(pipe separated), Associated Human Markers(pipe separated)</li>
 		<li>US137: Disease names link to MGI disease detail pages</li>
+		<li>US128: (5.18) Numbers in the Mouse Model column of the Disease tab are links to their disease all mouse models page</li>
+		<li>US128: (5.18) These links are just like you will find in the "View all Models" section of the disease detail page</li>
 	</ul>
 	<p>Logic is as follows:</p>
 	<ol>
@@ -226,8 +229,23 @@ order by AA.accID
                 <li>Verify that the link takes you to the Human Disease and Mouse Model detail page for <b>Alzheimer Disease; AD</b></li>
     		</ol>
     		</li>
-
-
+    		<li>Confirm on the HDMC Disease tab that numbers in the Mouse Models column are links(sto128)
+    		<p concordion:assertTrue="false">new test<p>
+    		<ol>
+                <li>Query for marker <b>Actb</b> on the Human Disease and Mouse Model query form</li>
+                <li>Click on the Diseases tab and locate the Mouse Models column</li>
+                <li>Verify that all rows that contain a number are links</li>
+    		</ol>
+    		</li>
+    		<li>Confirm that links in the Mouse Model column of the Disease tab go to the correct Mouse Models page(sto128)
+    		<p concordion:assertTrue="false">new test<p>
+    		<ol>
+                <li>Query for marker <b>shh</b> on the Human Disease and Mouse Model query form</li>
+                <li>Click on the Diseases tab and locate the Mouse Models column</li>
+                <li>Click on the link for Mouse Models for row <b>Holoprosencephaly 3; HPE3</b></li>
+                <li>Verify a Mouse disease Models page displays listing 3 Alleleic compositions
+    		</ol>
+    		</li>
 		</ol>
 	</div>
 	
