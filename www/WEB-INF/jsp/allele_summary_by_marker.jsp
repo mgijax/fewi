@@ -44,10 +44,26 @@ ${templateBean.templateBodyStartHtml}
 <%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
 <br/>
 
+<div id="summary">
+	<div id="rightcolumn" style="float: right;">
+			<div class="innertube">
+				<div id="paginationTop">&nbsp;</div>
+			</div>
+	</div>
+</div>
+
+<div id="toolbar" class="bluebar" style="">
+	<div id="downloadDiv">
+		<span class="label">Export:</span>
+		<a id="textDownload"  class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+        <a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+	</div>
+</div>
+
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
 
-<div id="paginationWrap" style="width: 468px">
+<div id="paginationWrap" style="width: 468px; float:right;">
 	<div id="paginationBottom">&nbsp;</div>
 </div>
 
