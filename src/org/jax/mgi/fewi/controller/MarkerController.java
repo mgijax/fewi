@@ -102,8 +102,7 @@ public class MarkerController {
     // instance variables
     //--------------------//
 
-    private Logger logger
-      = LoggerFactory.getLogger(MarkerController.class);
+    private Logger logger = LoggerFactory.getLogger(MarkerController.class);
 
     @Autowired
     private MarkerFinder markerFinder;
@@ -1379,43 +1378,18 @@ public class MarkerController {
 		 String coordUnit = query.getCoordUnit();
 		 if(notEmpty(coord))
 		 {
-			 queryFilters.add(genCoordFilter(coord,coordUnit));
+			 Filter coordFilter = FilterUtil.genCoordFilter(coord,coordUnit);
+			 if(coordFilter==null) coordFilter = nullFilter();
+			 queryFilters.add(coordFilter);
 		 }
 		 
 		 // CM Search
 		 String cm = query.getCm();
 		 if(notEmpty(cm))
 		 {
-			 cm = cm.trim();
-			 // split on either -, periods, or whitespaces
-			 String[] cmTokens = cm.split("\\s*(-|\\.\\.|\\s+)\\s*");
-			 Double start=null,end=null;
-			 try
-			 {
-				 BigDecimal startDec = QueryParser.parseDoubleInput(cmTokens[0]);
-				 start=startDec.doubleValue();
-				 // support single coordinate by setting end to be same as start
-				 if(cmTokens.length<2) end=start;
-				 else
-				 {
-					 BigDecimal endDec = QueryParser.parseDoubleInput(cmTokens[1]);
-					 end = endDec.doubleValue();
-				 }
-			 }catch(Exception e)
-			 {
-				 // ignore any errors, we just won't do a cm query
-				 logger.debug("failed to parse cm",e);
-			 }
-			 if(start!=null && end!=null)
-			 {
-				 Filter endF = new Filter(SearchConstants.CM_OFFSET,end.toString(),Filter.OP_LESS_OR_EQUAL);
-				 Filter startF = new Filter(SearchConstants.CM_OFFSET,start.toString(),Filter.OP_GREATER_OR_EQUAL);
-				 queryFilters.add(Filter.and(Arrays.asList(endF,startF)));
-			 }
-			 else
-			 {
-				 queryFilters.add(new Filter("markerKey","-9999",Filter.OP_EQUAL));
-			 }
+			 Filter cmFilter = FilterUtil.genCmFilter(cm);
+			 if(cmFilter==null) cmFilter = nullFilter();
+			 queryFilters.add(cmFilter);
 		 }
 		 
 		String startMarker = query.getStartMarker();
@@ -1450,61 +1424,22 @@ public class MarkerController {
             			String coordString = startCoord+"-"+endCoord;
             			logger.info("build coord string from markers "+startMarker+" to "+endMarker+" = "+coordString);
             			Filter chromosomeFilter = new Filter("chromosome",startMarkerObj.getChromosome(),Filter.OP_EQUAL);
-            			Filter coordFilter = genCoordFilter(coordString,"bp");
+            			Filter coordFilter = FilterUtil.genCoordFilter(coordString,"bp");
+            			if(coordFilter==null) coordFilter = nullFilter();
             			queryFilters.add(Filter.and(Arrays.asList(chromosomeFilter,coordFilter)));
             		}
             	}
         	}
         }
 
-        if(queryFilters.size()<1) return new Filter("markerKey","-99999",Filter.OP_EQUAL);
+        if(queryFilters.size()<1) return nullFilter();
         return Filter.and(queryFilters);
     }
-
-    private Filter genCoordFilter(String coord, String coordUnit)
+    
+    // returns a filter that should always fail to retrieve results
+    private Filter nullFilter()
     {
-    	coord = coord.trim();
-    	BigDecimal unitMultiplier = new BigDecimal(1);
-    	if(AlleleQueryForm.COORD_UNIT_MBP.equalsIgnoreCase(coordUnit))
-    	{
-			 // convert to Mbp
-			unitMultiplier = new BigDecimal(1000000);
-    	}
-    	// split on either -, periods, or whitespaces
-    	String[] coordTokens = coord.split("\\s*(-|\\.\\.|\\s+)\\s*");
-    	Long start=null,end=null;
-    	try
-    	{
-			 logger.info("parsing: "+coordTokens[0]);
-			 BigDecimal startDec = QueryParser.parseDoubleInput(coordTokens[0]);
-			 startDec = startDec.multiply(unitMultiplier);
-			 start = bdToLong(startDec);
-			 logger.info("into "+start);
-			 // support single coordinate by setting end to be same as start
-			 if(coordTokens.length<2) end=start;
-			 else
-			 {
-				 BigDecimal endDec = QueryParser.parseDoubleInput(coordTokens[1]);
-				 logger.info("parsing: "+coordTokens[1]);
-				 endDec = endDec.multiply(unitMultiplier);
-				 end = bdToLong(endDec);
-				 logger.info("into "+end);
-			}
-    	}catch(Exception e)
-    	{
-			 // ignore any errors, we just won't do a coord query
-			 logger.debug("failed to parse coordinates",e);
-    	}
-    	if(start!=null && end!=null)
-    	{
-			 Filter endF = new Filter(SearchConstants.START_COORD,end.toString(),Filter.OP_LESS_OR_EQUAL);
-			 Filter startF = new Filter(SearchConstants.END_COORD,start.toString(),Filter.OP_GREATER_OR_EQUAL);
-			 return Filter.and(Arrays.asList(endF,startF));
-    	}
-    	else
-    	{
-			 return new Filter("markerKey","-9999",Filter.OP_EQUAL);
-    	}
+    	return new Filter("markerKey","-99999",Filter.OP_EQUAL);
     }
     
     /** return a List comparable to 'annotations' but with the duplicate
@@ -1547,8 +1482,8 @@ public class MarkerController {
      * repopulated from scratch
      */
     protected static void clearMinimapCache() {
-	minimaps = new HashMap<Integer,String>();
-	return;
+		minimaps = new HashMap<Integer,String>();
+		return;
     }
 
     /** report how many minimap URLs are currently cacahed

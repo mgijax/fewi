@@ -4,9 +4,6 @@ td.top { vertical-align: top; }
 </style>
 
 
-<!-- query form structural table -->
-<table class="detailStructureTable">
-
 <!-- id is used internally; name is used by pheno popup -->
 <form method="GET" action="${configBean.FEWI_URL}marker/summary" id="markerQF" onSubmit="hNodes(); return false;" name="queryForm">
 <table class="queryStructureTable">
@@ -76,7 +73,7 @@ td.top { vertical-align: top; }
 	    <dl>
 	      <dt class="qfLabel"><A onclick='javascript:openUserhelpWindow("GENE_help.shtml#chromosome"); return false;' HREF="${helpPage}#chromosome">Chromosome(s)</A>: </dt>
 	      <dd>
-	        <select name="chromosome" multiple="" size="5" class="grayBackground">
+	        <select name="chromosome" id="chromosomeDropList" multiple="" size="5" class="grayBackground">
 		    		<fewi:selectOptions items="${chromosomes}" values="${queryForm.chromosome}" />
 			</select>
 	      </dd>
@@ -259,6 +256,9 @@ function treeInit() {
 
 $(function(){
 	
+	// set form reset function
+	$("#markerQF").on("reset",markerQfReset);
+	
     treeInit();
     
     // restore tree if we have params
@@ -373,4 +373,21 @@ function showHideCat(e) {
 
 YAHOO.util.Event.addListener('show', 'click', showHideCat, 'showHide');
 YAHOO.util.Event.addListener('hide', 'click', showHideCat, 'showHide');
+
+
+function markerQfReset(e)
+{
+	e.preventDefault();
+	var mqf=$("#markerQF");
+	  
+	// reset tree
+	resetTree();
+	
+	// reset all check boxes and textareas
+	  
+	mqf.find('input[type=checkbox]:checked').removeAttr('checked');
+	mqf.find('input[type=text], textarea').val("");
+	
+	mqf.find("#chromosomeDropList").val("any").change();
+}
 </script>

@@ -462,84 +462,20 @@ public class AlleleController {
 		 String coordUnit = query.getCoordUnit();
 		 if(notEmpty(coord))
 		 {
-			 coord = coord.trim();
-			 BigDecimal unitMultiplier = new BigDecimal(1);
-			 if(AlleleQueryForm.COORD_UNIT_MBP.equalsIgnoreCase(coordUnit))
-			 {
-				 // convert to Mbp
-				unitMultiplier = new BigDecimal(1000000);
-			 }
-			 // split on either -, periods, or whitespaces
-			 String[] coordTokens = coord.split("\\s*(-|\\.\\.|\\s+)\\s*");
-			 Long start=null,end=null;
-			 try
-			 {
-				 logger.info("parsing: "+coordTokens[0]);
-				 BigDecimal startDec = QueryParser.parseDoubleInput(coordTokens[0]);
-				 startDec = startDec.multiply(unitMultiplier);
-				 start = bdToLong(startDec);
-				 logger.info("into "+start);
-				 // support single coordinate by setting end to be same as start
-				 if(coordTokens.length<2) end=start;
-				 else
-				 {
-					 BigDecimal endDec = QueryParser.parseDoubleInput(coordTokens[1]);
-					 logger.info("parsing: "+coordTokens[1]);
-					 endDec = endDec.multiply(unitMultiplier);
-					 end = bdToLong(endDec);
-					 logger.info("into "+end);
-				 }
-			 }catch(Exception e)
-			 {
-				 // ignore any errors, we just won't do a coord query
-				 logger.debug("failed to parse coordinates",e);
-			 }
-			 if(start!=null && end!=null)
-			 {
-				 Filter endF = new Filter(SearchConstants.START_COORD,end.toString(),Filter.OP_LESS_OR_EQUAL);
-				 Filter startF = new Filter(SearchConstants.END_COORD,start.toString(),Filter.OP_GREATER_OR_EQUAL);
-				 filters.add(Filter.and(Arrays.asList(endF,startF)));
-			 }
-			 else
-			 {
-				 filters.add(new Filter(SearchConstants.ALL_KEY,"-9999",Filter.OP_EQUAL));
-			 }
+			 Filter coordFilter = FilterUtil.genCoordFilter(coord,coordUnit);
+			 if(coordFilter==null) coordFilter = nullFilter();
+			 filters.add(coordFilter);
 		 }
+		
 		 // CM Search
 		 String cm = query.getCm();
 		 if(notEmpty(cm))
 		 {
-			 cm = cm.trim();
-			 // split on either -, periods, or whitespaces
-			 String[] cmTokens = cm.split("\\s*(-|\\.\\.|\\s+)\\s*");
-			 Double start=null,end=null;
-			 try
-			 {
-				 BigDecimal startDec = QueryParser.parseDoubleInput(cmTokens[0]);
-				 start=startDec.doubleValue();
-				 // support single coordinate by setting end to be same as start
-				 if(cmTokens.length<2) end=start;
-				 else
-				 {
-					 BigDecimal endDec = QueryParser.parseDoubleInput(cmTokens[1]);
-					 end = endDec.doubleValue();
-				 }
-			 }catch(Exception e)
-			 {
-				 // ignore any errors, we just won't do a cm query
-				 logger.debug("failed to parse cm",e);
-			 }
-			 if(start!=null && end!=null)
-			 {
-				 Filter endF = new Filter(SearchConstants.CM_OFFSET,end.toString(),Filter.OP_LESS_OR_EQUAL);
-				 Filter startF = new Filter(SearchConstants.CM_OFFSET,start.toString(),Filter.OP_GREATER_OR_EQUAL);
-				 filters.add(Filter.and(Arrays.asList(endF,startF)));
-			 }
-			 else
-			 {
-				 filters.add(new Filter(SearchConstants.ALL_KEY,"-9999",Filter.OP_EQUAL));
-			 }
+			 Filter cmFilter = FilterUtil.genCmFilter(cm);
+			 if(cmFilter==null) cmFilter = nullFilter();
+			 filters.add(cmFilter);
 		 }
+		 
 		 // Cytoband
 		 String cyto = query.getCyto();
 		 if(notEmpty(cyto))
@@ -554,8 +490,13 @@ public class AlleleController {
 			 filters.add(new Filter(SearchConstants.ALL_IS_WILD_TYPE,0,Filter.OP_EQUAL));
 			 f=Filter.and(filters);
 		 }
-		 else f = new Filter(SearchConstants.ALL_KEY,"-9999",Filter.OP_EQUAL); // return nothing if no valid filters
+		 else f = nullFilter(); // return nothing if no valid filters
 		 return f;
+	 }
+	 
+	 private Filter nullFilter()
+	 {
+		 return new Filter(SearchConstants.ALL_KEY,"-9999",Filter.OP_EQUAL);
 	 }
 
 	 /*
