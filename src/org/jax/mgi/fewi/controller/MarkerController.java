@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -123,8 +124,7 @@ public class MarkerController {
     private SessionFactory sessionFactory;
 
     // cached data for query form
- 
-    private String chromosomeOptions = null;
+    private Map<String,String> chromosomeOptions = null;
     private String featureTypeHtml = null;
     private String featureTypeJson = null;
     private String genomeBuild = null;
@@ -146,11 +146,11 @@ public class MarkerController {
 
         ModelAndView mav = new ModelAndView("marker_query");
         mav.addObject("sort", new Paginator());
-        mav.addObject("chromosomes", chromosomeOptions);
+        mav.addObject("chromosomes", this.chromosomeOptions);
         mav.addObject("htmlMcv", featureTypeHtml);
         mav.addObject("jsonMcv", featureTypeJson);
         mav.addObject("genomeBuild", genomeBuild);
-        mav.addObject(new MarkerQueryForm());
+        mav.addObject("queryForm",new MarkerQueryForm());
         return mav;
     }
 
@@ -260,11 +260,10 @@ public class MarkerController {
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
 
-    	mav.addObject("chromosomes", chromosomeOptions);
+    	mav.addObject("chromosomes", this.chromosomeOptions);
     	mav.addObject("htmlMcv", featureTypeHtml);
     	mav.addObject("jsonMcv", featureTypeJson);
     	mav.addObject("genomeBuild", genomeBuild);
-        mav.addObject(new MarkerQueryForm());
         
         return mav;
     }
@@ -1629,23 +1628,16 @@ public class MarkerController {
     	 * the selction list), then we need to pull them out of the database,
     	 * generate it, and cache it
     	 */
-    	if (chromosomeOptions == null) {
-    	    SearchResults<QueryFormOption> chrResults =
-    		queryFormOptionFinder.getQueryFormOptions("marker",
-    		    "chromosome");
+    	if (this.chromosomeOptions == null) {
+    	    SearchResults<QueryFormOption> chrResults = queryFormOptionFinder.getQueryFormOptions("marker","chromosome");
     	    List<QueryFormOption> chromosomes = chrResults.getResultObjects();
 
-    	    StringBuffer chr = new StringBuffer();
-
-    	    for (QueryFormOption chromosome : chromosomes) {
-    		chr.append("<option value='");
-    	        chr.append(chromosome.getSubmitValue());
-    		chr.append("'>");
-    		chr.append(chromosome.getDisplayValue());
-    		chr.append("</option>");
+    	    this.chromosomeOptions = new LinkedHashMap<String,String>();
+    	    this.chromosomeOptions.put(MarkerQueryForm.CHROMOSOME_ANY,"Any");
+    	    for (QueryFormOption chromosome : chromosomes) 
+    	    {
+    	    	this.chromosomeOptions.put(chromosome.getSubmitValue(),chromosome.getDisplayValue());
     	    } 
-
-    	    chromosomeOptions = chr.toString();
     	}
 
     	/* if we don't have a cached version of the feature type options (for

@@ -29,6 +29,10 @@
 	<br><c:if test="${notFirst}">AND</c:if>
 	cM Position: <b>${queryForm.cm}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
+<c:if test="${not empty queryForm.startMarker}">
+	<br><c:if test="${notFirst}">AND</c:if>
+	Marker Range: between <b>${queryForm.startMarker}</b> and <b>${queryForm.endMarker}</b>
+<c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.mcv}">
 	<br><c:if test="${notFirst}">AND</c:if>
 	Marker Type: any of <b>${queryForm.mcvDisplay}</b>

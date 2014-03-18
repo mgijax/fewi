@@ -34,6 +34,14 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitle">Marker Query Summary</span>
 </div>
 
+<div id="outer" >
+	<span id="toggleImg" class="qfExpand"></span>
+	<div id="toggleQF"><span id="toggleLink" class="filterButton">Click to modify search</span></div>
+	<div id="qwrap" style="display:none;">
+		<%@ include file="/WEB-INF/jsp/marker_form.jsp" %>
+	</div>
+</div>
+
 <div id="summary">
 	<div id="breadbox" style="">
 		<div id="contentcolumn">
@@ -72,8 +80,10 @@ ${templateBean.templateBodyStartHtml}
 window.querystring="${queryString}";
 window.fewiurl="${configBean.FEWI_URL}";
 window.doHighlights=false;
-<c:if test="${not empty queryForm.nomen}">window.doHighlights=true</c:if>
+<c:if test="${not empty queryForm.nomen}">window.doHighlights=true;</c:if>
+var qDisplay = true;
 </script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_summary.js"></script>
 ${templateBean.templateBodyStopHtml}
 

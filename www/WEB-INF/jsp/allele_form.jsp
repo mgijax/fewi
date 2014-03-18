@@ -149,8 +149,7 @@
       >Chromosome</a>:
       </div>
       <div style="position:absolute; top:60px; left:100px; width:150px;">
-      <select id="chromosomeDropList" name="chromosome"
-        multiple="multiple" size="7">
+      <select id="chromosomeDropList" name="chromosome" multiple="multiple" size="7">
         <fewi:selectOptions items="${alleleQueryForm.chromosomeDisplay}" values="${alleleQueryForm.chromosome}" />
       </select>
       </div>

@@ -46,21 +46,22 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- paginator -->
-<table style="width:100%;">
-  <tr>
-    <td class="paginator">
-      <div id="paginationTop">&nbsp;</div>
-    </td>
-  </tr>
-</table>
+<div style="width:700px;"></div>
+<div id="rightcolumn">
+		<div class="innertube">
+			<div id="paginationTop">&nbsp;</div>
+		</div>
+</div>
 
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
 
-<!-- including this file will start the data injection -->
 <script type="text/javascript">
-  <%@ include file="/js/marker_summary.js" %>
+window.querystring="${queryString}";
+window.fewiurl="${configBean.FEWI_URL}";
 </script>
+<!-- including this file will start the data injection -->
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_summary.js"></script>
 
 ${templateBean.templateBodyStopHtml}
 

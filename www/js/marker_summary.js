@@ -1,3 +1,5 @@
+if(window.doHiglights==undefined) window.doHighlights=false;
+
 function main() {
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.

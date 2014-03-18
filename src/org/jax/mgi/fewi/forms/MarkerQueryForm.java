@@ -31,12 +31,24 @@ public class MarkerQueryForm
     private String startMarker;
     private String endMarker;
     
+    // Constants
+    public static String CHROMOSOME_ANY="any";
+    public static String COORD_UNIT_MBP="mbp";
+    
+    private List<String> coordUnitDisplay = new ArrayList<String>();
 
+    public MarkerQueryForm()
+    {
+    	// any defaults
+    	coordUnitDisplay.add("bp");
+    	coordUnitDisplay.add("Mbp");
+    }
 	
 	public static void setMarkerTypeKeyToDisplayMap(Map<String,String> markerTypeKeyToDisplayMap)
 	{
 		MarkerQueryForm.markerTypeKeyToDisplayMap=markerTypeKeyToDisplayMap;
 	}
+	
 	
 	// converts mcv keys submitted to displayable text values
 	public List<String> getMcvDisplay()
@@ -51,6 +63,11 @@ public class MarkerQueryForm
 		}
 		return displayValues;
 	}
+	
+    public List<String> getCoordUnitDisplay()
+    {
+    	return coordUnitDisplay;
+    }
 	
     //--------------------//
     // accessors
