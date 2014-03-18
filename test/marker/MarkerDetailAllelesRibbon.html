@@ -30,6 +30,7 @@
     <h1>Alleles Ribbon Tests</h1>
     <ul>
         <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
+        <li>User story 90, E8: Display link on Allele Detail(MGI 5.18)</li>
         <li>User story 105, E5: Allele and marker detail pages in prod wi (Release 5.18)</li>
     </ul>
 </div>
@@ -40,6 +41,7 @@
 		<li>sto75: links to "all alleles"</li>
 		<li>sto75: links to per allele type</li>
 		<li>sto75: assume use exact same allele types here as in the db</li>
+		<li>sto90: Link to Mutagentixs file in Alleles and Phenotypes ribbon for select detail pages</li>
 		<li>sto105: none</li>
 	</ul>
 </div>
@@ -203,7 +205,32 @@
                 </li>
     		</ol>
     		</li>
-
+    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto90)
+ 			<p concordion:assertTrue="false">new test</p>
+ 			<ol>
+                <li>Navigate to the marker detail page for Pet2 (MGI:101758)</li>
+                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to Mutagenix</li>
+			</ol>
+				</li>
+    		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto90)
+ 			<p concordion:assertTrue="true">passed. -klf 2014-03-10</p>
+    		<ol>
+                <li>Navigate to these marker detail pages.</li>
+                <li>Verify the mutagentix link exists and works:
+                <table>
+                	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
+					<tr><td>Klc1</td><td>MGI:107978</td></tr>
+					<tr><td>Ext2</td><td>MGI:108050</td></tr>
+					<tr><td>Prkg1</td><td>MGI:108174</td></tr>
+					<tr><td>Rgs8</td><td>MGI:108408</td></tr>
+					<tr><td>Ltbp1</td><td>MGI:109151</td></tr>
+					<tr><td>Ighmbp2</td><td>MGI:99954</td></tr>
+					<tr><td>AU045094</td><td>MGI:2146157</td></tr>
+					<tr><td>Sema4a</td><td>MGI:107560</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
 		</ol>
 	</div>
 
