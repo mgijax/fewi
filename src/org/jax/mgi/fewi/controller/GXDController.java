@@ -3,46 +3,36 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.util.Comparator;
-import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
-// MGI classes
 import mgi.frontend.datamodel.Allele;
-import mgi.frontend.datamodel.VocabTerm;
-import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.GxdAssayResult;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.VocabTerm;
 
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
-import org.jax.mgi.fewi.finder.ReferenceFinder;
-import org.jax.mgi.fewi.finder.MarkerBatchIDFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
-import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
-import org.jax.mgi.fewi.forms.ReferenceQueryForm;
-import org.jax.mgi.fewi.hunter.SolrMarkerKeyHunter;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
@@ -51,33 +41,26 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
 import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
-import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-import org.jax.mgi.fewi.summary.ReferenceSummary;
-import org.jax.mgi.fewi.util.Highlighter;
+import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.QueryParser;
-import org.jax.mgi.fewi.util.StyleAlternator;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
-
-// external classes
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -1311,7 +1294,7 @@ public class GXDController {
 		String nomenclature = query.getNomenclature();
 		String annotationId = query.getAnnotationId();
 		if(nomenclature!=null && !nomenclature.equals("")) {
-			Filter nomenFilter = generateNomenFilter(SearchConstants.MRK_NOMENCLATURE, nomenclature);
+			Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE, nomenclature);
 			if(nomenFilter != null) queryFilters.add(nomenFilter);
 		}
 		// vocab annotations
@@ -1436,7 +1419,7 @@ public class GXDController {
 		if ((query.getIsWildType() != null && "true".equals(query.getIsWildType()))){
 			queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
 		} else if (query.getMutatedIn() != null && !"".equals(query.getMutatedIn())) {
-			Filter mutatedInFilter = generateNomenFilter(SearchConstants.GXD_MUTATED_IN, query.getMutatedIn());
+			Filter mutatedInFilter = FilterUtil.generateNomenFilter(SearchConstants.GXD_MUTATED_IN, query.getMutatedIn());
 			if (mutatedInFilter != null) queryFilters.add(mutatedInFilter);
 		}
 
@@ -1475,45 +1458,6 @@ public class GXDController {
 
 		return gxdFilter;
 	}
-
-	private Filter generateNomenFilter(String property, String query){
-		logger.debug("splitting nomenclature query into tokens");
-		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query);
-		Filter nomenFilter = new Filter();
-		List<Filter> nomenFilters = new ArrayList<Filter>();
-		// we want to group all non-wildcarded tokens into one solr phrase search
-		List<String> nomenTokens = new ArrayList<String>();
-		String phraseSearch = "";
-
-		for(String nomen : nomens) {
-			if(nomen.endsWith("*") || nomen.startsWith("*")) {
-				nomenTokens.add(nomen);
-			} else {
-				phraseSearch += nomen+" ";
-			}
-		}
-
-		if(!phraseSearch.trim().equals("")) {
-			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-			nomenTokens.add("\""+phraseSearch+"\"~100");
-		}
-
-		for(String nomenToken : nomenTokens) {
-			logger.debug("token="+nomenToken);
-			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
-			nomenFilters.add(nFilter);
-		}
-
-		if(nomenFilters.size() > 0) {
-			nomenFilter.setNestedFilters(nomenFilters,Filter.FC_AND);
-			// add the nomenclature search filter
-			return nomenFilter;
-		}
-		// We don't want to return an empty filter object, because it screws up Solr.
-		return null;
-	}
-
-
 
 
 	/*

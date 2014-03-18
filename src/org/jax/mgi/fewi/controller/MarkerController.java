@@ -13,7 +13,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,6 +62,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
 import org.jax.mgi.fewi.util.FewiLinker;
+import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.jax.mgi.fewi.util.ProviderLinker;
@@ -1335,7 +1335,7 @@ public class MarkerController {
         String nomen = query.getNomen();
         if(notEmpty(nomen))
         {
-        	 Filter nomenFilter = generateNomenFilter("markerNomen",nomen);
+        	 Filter nomenFilter = FilterUtil.generateNomenFilter("markerNomen",nomen);
 			 if(nomenFilter!=null) queryFilters.add(nomenFilter);
         }
         
@@ -1556,42 +1556,6 @@ public class MarkerController {
     protected static int getMinimapCacheCount() {
 	return minimaps.size();
     }
-    
-    
-    private Filter generateNomenFilter(String property, String query){
-		logger.debug("splitting nomenclature query into tokens");
-		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query);
-		List<Filter> nomenFilters = new ArrayList<Filter>();
-		// we want to group all non-wildcarded tokens into one solr phrase search
-		List<String> nomenTokens = new ArrayList<String>();
-		String phraseSearch = "";
-
-		for(String nomen : nomens) {
-			if(nomen.endsWith("*") || nomen.startsWith("*")) {
-				nomenTokens.add(nomen);
-			} else {
-				phraseSearch += nomen+" ";
-			}
-		}
-
-		if(!phraseSearch.trim().equals("")) {
-			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-			nomenTokens.add("\""+phraseSearch+"\"~100");
-		}
-
-		for(String nomenToken : nomenTokens) {
-			logger.debug("token="+nomenToken);
-			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
-			nomenFilters.add(nFilter);
-		}
-
-		if(nomenFilters.size() > 0) {
-			// add the nomenclature search filter
-			return Filter.and(nomenFilters);
-		}
-		// We don't want to return an empty filter object, because it screws up Solr.
-		return null;
-	}
     
     private Filter makeListFilter(List<String> values, String searchConstant)
     {

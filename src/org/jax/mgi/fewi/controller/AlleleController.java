@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -55,6 +54,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AlleleSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.jax.mgi.fewi.util.NotesTagConverter;
@@ -411,7 +411,7 @@ public class AlleleController {
 		 String nomen = query.getNomen();
 		 if(notEmpty(nomen))
 		 {
-			 Filter nomenFilter = generateNomenFilter(SearchConstants.ALL_NOMEN,nomen);
+			 Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.ALL_NOMEN,nomen);
 			 if(nomenFilter!=null) filters.add(nomenFilter);
 		 }
 
@@ -1838,39 +1838,4 @@ public class AlleleController {
     	   if(bd.compareTo(new BigDecimal(Integer.MAX_VALUE)) > 0) return Integer.MAX_VALUE;
     	   return bd.longValue();
        }
-
-        private Filter generateNomenFilter(String property, String query){
-    		logger.debug("splitting nomenclature query into tokens");
-    		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query);
-    		List<Filter> nomenFilters = new ArrayList<Filter>();
-    		// we want to group all non-wildcarded tokens into one solr phrase search
-    		List<String> nomenTokens = new ArrayList<String>();
-    		String phraseSearch = "";
-
-    		for(String nomen : nomens) {
-    			if(nomen.endsWith("*") || nomen.startsWith("*")) {
-    				nomenTokens.add(nomen);
-    			} else {
-    				phraseSearch += nomen+" ";
-    			}
-    		}
-
-    		if(!phraseSearch.trim().equals("")) {
-    			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-    			nomenTokens.add("\""+phraseSearch+"\"~100");
-    		}
-
-    		for(String nomenToken : nomenTokens) {
-    			logger.debug("token="+nomenToken);
-    			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
-    			nomenFilters.add(nFilter);
-    		}
-
-    		if(nomenFilters.size() > 0) {
-    			// add the nomenclature search filter
-    			return Filter.and(nomenFilters);
-    		}
-    		// We don't want to return an empty filter object, because it screws up Solr.
-    		return null;
-    	}
 }

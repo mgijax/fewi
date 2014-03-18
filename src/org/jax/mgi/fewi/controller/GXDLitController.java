@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,9 +14,7 @@ import mgi.frontend.datamodel.GxdLitIndexRecord;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.GxdLitFinder;
-import org.jax.mgi.fewi.finder.MarkerBatchIDFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
@@ -33,8 +30,8 @@ import org.jax.mgi.fewi.summary.GxdLitAgeAssayTypePairTableCount;
 import org.jax.mgi.fewi.summary.GxdLitAssayTypeSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitGeneSummaryRow;
 import org.jax.mgi.fewi.summary.GxdLitReferenceSummaryRow;
+import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.Highlighter;
-import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
@@ -47,7 +44,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -767,7 +763,7 @@ public class GXDLitController {
         String nomenclature = query.getNomen();
         //Nomen filter
         if(nomenclature!=null && !nomenclature.equals("")) {
-			Filter nomenFilter = generateNomenFilter(SearchConstants.GXD_LIT_MRK_NOMEN, nomenclature);
+			Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.GXD_LIT_MRK_NOMEN, nomenclature);
 			if(nomenFilter != null) filterList.add(nomenFilter);
 		}
         // vocab term => marker IDs
@@ -1083,49 +1079,4 @@ public class GXDLitController {
 		}
 		return items;
 	}
-	
-	/**
-	 * This was copied directly from the GXDController to make the nomenclature queries in line with each other.
-	 * Be aware of this when modifying.
-	 * @param property
-	 * @param query
-	 * @return
-	 */
-	private Filter generateNomenFilter(String property, String query){
-		logger.debug("splitting nomenclature query into tokens");
-		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query);
-		Filter nomenFilter = new Filter();
-		List<Filter> nomenFilters = new ArrayList<Filter>();
-		// we want to group all non-wildcarded tokens into one solr phrase search
-		List<String> nomenTokens = new ArrayList<String>();
-		String phraseSearch = "";
-
-		for(String nomen : nomens) {
-			if(nomen.endsWith("*") || nomen.startsWith("*")) {
-				nomenTokens.add(nomen);
-			} else {
-				phraseSearch += nomen+" ";
-			}
-		}
-
-		if(!phraseSearch.trim().equals("")) {
-			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-			nomenTokens.add("\""+phraseSearch+"\"~100");
-		}
-
-		for(String nomenToken : nomenTokens) {
-			logger.debug("token="+nomenToken);
-			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
-			nomenFilters.add(nFilter);
-		}
-
-		if(nomenFilters.size() > 0) {
-			nomenFilter.setNestedFilters(nomenFilters,Filter.FC_AND);
-			// add the nomenclature search filter
-			return nomenFilter;
-		}
-		// We don't want to return an empty filter object, because it screws up Solr.
-		return null;
-	}
-
 }
