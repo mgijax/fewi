@@ -27,6 +27,13 @@ var toggleQF = function(oCallback) {
 	if (qDisplay){
 		myAnim.onComplete.subscribe(function(){
 			changeVisibility('qwrap');
+			YAHOO.util.Dom.setStyle(qf, 'height', 'auto');
+		});
+	}
+	else
+	{
+		myAnim.onComplete.subscribe(function(){
+			YAHOO.util.Dom.setStyle(qf, 'height', 'auto');
 		});
 	}
 
