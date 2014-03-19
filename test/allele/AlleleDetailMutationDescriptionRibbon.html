@@ -38,6 +38,7 @@
 <!--          <li>MGI 5.12 User story 128, Remove Expression Ribbon from Allele Detail Page</li>-->
 		<li>MGI 5.18 User story 24, E3: Display allele subtypes on allele detail and cre specificity pages</li>
 		<li>MGI 5.18 User story 54, Molecular Images: show thumbnail on Allele Detail page</li>
+		<li>MGI 5.18 User story 90, Display Mutagenetix link on Allele Detail page</li>
 		<li>MGI 5.18 User story 105, E5: Allele and marker detail pages in prod wi</li>
     </ul>
 </div>
@@ -50,6 +51,7 @@
 		<li>sto54 - is single molecular image for an allele display on allele detail page</li>
 		<li>sto54 - if more than one molecular image for an allele display first image only</li>
 		<li>sto54 - display molecular image in the mutation description ribbon floated to the right</li>
+		<li>sto90 - Display a link to Mutagenetix file on select allele detail pages</li>
 		<li>sto105 - none</li>
 	</ul>
 </div>
@@ -98,6 +100,25 @@
                 <li>Verify that molecular image MGI:5503313 displays in the right side of the molecular description ribbon</li>
                 <li>Navigate to the Allele Detail page for Dock2&lt;mu&gt; (MGI:5319388) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5319388">link</a>)</li>
                 <li>Verify that molecular image MGI:5466533 or MGI:5466535 displays in the right side of the molecular description ribbon</li>
+    		</ol>
+    		</li>
+    		<li>Verify these Alleles have the Mutagentix link in the Mutation Description ribbon and the link works. (sto92)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Navigate to these allele detail pages.</li>
+                <li>Verify the mutagentix link exists and works:
+                <table>
+                	<tr><th>Allele Symbol</th><th>MGI ID</th></tr>
+					<tr><td>Blnk&lt;m1Btlr&gt;</td><td>MGI:4442912</td></tr>
+					<tr><td>Irf7&lt;m1Btlr&gt;</td><td>MGI:4442855</td></tr>
+					<tr><td>Col4a4&lt;m1Btlr&gt;</td><td>MGI:4838032</td></tr>
+					<tr><td>Nfkbid&lt;m1Btlr&gt;</td><td>MGI:5428994</td></tr>
+					<tr><td>Unc93b1&lt;3d&gt;</td><td>MGI:3619211</td></tr>
+					<tr><td>Eif2ak4&lt;m1Btlr&gt;</td><td>MGI:5049871</td></tr>
+					<tr><td>Esrp1&lt;m1Btlr&gt;</td><td>MGI:4450974</td></tr>
+					<tr><td>Card11&lt;M2Btlr&gt;</td><td>MGI:5497995</td></tr>
+                </table>
+                </li>
     		</ol>
     		</li>
 		</ol>
