@@ -29,9 +29,9 @@
 <div id="maintitle">
     <h1>Recombinase Activity Search Tests</h1>
     <ul>
-        <li>User story 115, Cre: improved anatomy search (no autocomplete)</li>
-        <li>User story 136, Cre: improved anatomy search (with autocomplete)</li>
-        <li>User story 127 (HTMP2), Cre: use EMAP vocabulary instead of AD</li>
+        <li>MGI 5.14: User story 115, Cre: improved anatomy search (no autocomplete)</li>
+        <li>MGI 5.14: User story 136, Cre: improved anatomy search (with autocomplete)</li>
+        <li>MGI 5.18: User story 127 (HTMP2), Cre: use EMAP vocabulary instead of AD</li>
     </ul>
 </div>
 
@@ -44,8 +44,16 @@
 		<li>Sto136: typein box (from sto115) implements autocomplete behavior</li>
 		<li>Sto136: results/requirements from sto126 implemented</li>
 		<li>Sto136: autocomplete verified (across structures and stages)</li>
+		<li>MGI 5.18 Sto127: Cre home page: verify that autocomplete shows EMAPA terms/synonyms.</li>
+		<li>MGI 5.18 Sto127: Cre summary: verify that searching by EMAPA terms/synonyms returns expected results</li>
+		<li>MGI 5.18 Sto127: Cre summary: still display same system terms (the system for an EMAPS term is the same as for the corresponding AD term)</li>
+		<li>MGI 5.18 Sto127: On recombinase specificity pages, in place of AD terms, display corresponding EMAPS terms</li>
+		<li>MGI 5.18 Sto127: In the recombinase activity section of allele detail page, display EMAPS terms</li>
+		<li>MGI 5.18 Sto127: Change wording in various places to refer to EMAPA/EMAPS rather than the AD</li>
 	</ul>
-	<h3>Reminder of querying rules:</h3>
+
+
+	<h3>Query Logic:</h3>
 	<ul>
 		<li>Two assay types are returned NEVER for GXD and ONLY for Cre:
 		<ul>
@@ -104,45 +112,45 @@
 				</li>
     		</ol>
     		</li>
-			<li>Autocomplete performs "begins" matching on multiple tokens.
-			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+			<li>Autocomplete performs "begins" matching on multiple tokens. (updated for sto127)
+			<p concordion:assertTrue="true">passed. -klf 2014-03-19</p>
 				<ul>
-				<li>Typing <b>br fa</b> returns terms (and/or synonyms) containg multiple tokens.</li>
+				<li>Typing <b>br fa</b> returns terms (and/or synonyms) containg multiple tokens: <b>brown fat</b> and <b>facial VII nerve chorda tympani branch</b> .</li>
 				<li>Each term (or synonym) contains a token beginning with "br" AND a token beginning with "fa", in either order.</li>
 				<li>There are no other EMAP terms or synonyms containing tokens beginning with "br" AND "fa" in either order. (Need SQL query against all terms and synonyms in the EMAP.)</li>
 				</ul>
 			</li>
-			<li>Autocomplete does not match across a term and its synonym.
-			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+			<li>Autocomplete does not match across a term and its synonym. (updated for sto127)
+			<p concordion:assertTrue="true">passed. -klf 2014-03-19</p>
 				<ul>
-				<li>Typing <b>audi coch</b> does not return <b>auditory nerve</b>.</li>
+				<li>Typing <b>audi coch</b> does not return <b>vestibulocochlear nerve cochlear component</b>.</li>
 				<li>Typing <b>audi coch</b> does not return <b>vestibulocochlear VIII nerve cochlear component</b>.</li>
 				</ul>
 			</li>
-			<li>Selecting a synonym from the picklist places only the synonym text in the search text box.
-			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+			<li>Selecting a synonym from the picklist places only the synonym text in the search text box. (updated for sto127)
+			<p concordion:assertTrue="true">passed. -klf 2014-03-19</p>
 				<ul>
-				<li>Type <b>audit</b> and select <b>auditory nerve [syn. of vestibulocochlear VIII nerve cochlear component</b>.</li>
-				<li>Verify only <b>auditory nerve</b> appears in the search text box.</li>
+				<li>Type <b>kidney</b> and select <b>kidney [syn. metanephros]</b>.</li>
+				<li>Verify only <b>kidney</b> appears in the search text box.</li>
 				</ul>
 			</li>
 			<li>Searching for a synonym of a term should return same number and set of results as for the term itself.
-			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+			<p concordion:assertTrue="true">passed. -klf 2014-03-19</p>
 				<ul>
 				<li>Search for <b>brown fat</b> should return the same count and allele list results as for <b>brown adipose tissue</b> (this term has no child terms).</li>
 				</ul>
 			</li>
 			<li>Searching for a synonym returns alleles having recombinase data for the associated term or any of its children
-			<p concordion:assertTrue="true">2013/04/08 - kstone</p>
+			<p concordion:assertTrue="true">passed. -klf 2014-03-19</p>
 				<ul>
 				<li>Search for <b>trigeminal nerve</b> should return the same count and allele list results as for <b>trigeminal V nerve</b>.</li>
 				<li>Each allele's "Nervous System" Recombinase Specificity Page should contain at least 1 of the following structures:
 					<ul>
 					<li>trigeminal V nerve - has annotations to this term</li>
 					<li>trigeminal V nerve mandibular division - has annotations to this term</li>
+					<li>trigeminal V nerve mandibular division lingual branch - no annotations to this term directly</li>
 					<li>trigeminal V nerve maxillary division - no annotations to this term directly</li>
 					<li>trigeminal V nerve ophthalmic division - no annotations to this term directly</li>
-					<li>trigeminal V nerve mandibular division lingual branch - no annotations to this term directly</li>
 					</ul>
 				</li>
 				</ul>
@@ -152,6 +160,7 @@
 
 	<div id="auto">
 		<h3>Automated tests</h3>
+		<p>Updated for sto127, March 2014.</p>
 		<ol>
 		
     		<li>The count of Cre alleles returned for a text string queried against Sybase should match the count returned from the FeWI.
