@@ -30,7 +30,7 @@
     <h1>Alleles Ribbon Tests</h1>
     <ul>
         <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
-        <li>User story 90, E8: Display link on Allele Detail(MGI 5.18)</li>
+        <li>User story 92, E8: Display link on Marker Detail (MGI 5.18)</li>
         <li>User story 105, E5: Allele and marker detail pages in prod wi (Release 5.18)</li>
     </ul>
 </div>
@@ -41,7 +41,7 @@
 		<li>sto75: links to "all alleles"</li>
 		<li>sto75: links to per allele type</li>
 		<li>sto75: assume use exact same allele types here as in the db</li>
-		<li>sto90: Link to Mutagentixs file in Alleles and Phenotypes ribbon for select detail pages</li>
+		<li>sto92: Link to Mutagentixs file in Alleles and Phenotypes ribbon for select detail pages</li>
 		<li>sto105: none</li>
 	</ul>
 </div>
@@ -205,15 +205,15 @@
                 </li>
     		</ol>
     		</li>
-    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto90)
+    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto92)
  			<p concordion:assertTrue="false">new test</p>
  			<ol>
                 <li>Navigate to the marker detail page for Pet2 (MGI:101758)</li>
                 <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to Mutagenix</li>
 			</ol>
 				</li>
-    		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto90)
- 			<p concordion:assertTrue="true">passed. -klf 2014-03-10</p>
+    		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto92)
+ 			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the mutagentix link exists and works:
