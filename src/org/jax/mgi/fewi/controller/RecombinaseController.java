@@ -112,8 +112,8 @@ public class RecombinaseController {
     public @ResponseBody JsonSummaryResponse<RecombinaseSummary> recombinaseSummaryJson(
             HttpServletRequest request,
             @ModelAttribute RecombinaseQueryForm query,
-            @ModelAttribute Paginator page) {
-
+            @ModelAttribute Paginator page) 
+    {
         logger.debug(query.toString());
 
         // set up search parameters
@@ -123,19 +123,17 @@ public class RecombinaseController {
         params.setFilter(this.parseRecombinaseQueryForm(query));
 
         // issue the query and get back the matching Allele objects
-        SearchResults<Allele> searchResults =
-            recombinaseFinder.searchRecombinases(params);
+        SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
 
         // convert the Alleles to their RecombinaseSummary wrappers, and put
         // them in the JsonSummaryResponse object
         List<RecombinaseSummary> summaries = new ArrayList<RecombinaseSummary> ();
-        Iterator<Allele> it = searchResults.getResultObjects().iterator();
-        while (it.hasNext()) {
-            summaries.add(new RecombinaseSummary(it.next()));
+        for(Allele allele : searchResults.getResultObjects())
+        {
+            summaries.add(new RecombinaseSummary(allele));
         }
 
-        JsonSummaryResponse<RecombinaseSummary> jsonResponse =
-            new JsonSummaryResponse<RecombinaseSummary>();
+        JsonSummaryResponse<RecombinaseSummary> jsonResponse = new JsonSummaryResponse<RecombinaseSummary>();
 
         jsonResponse.setSummaryRows (summaries);
         jsonResponse.setTotalCount (searchResults.getTotalCount());

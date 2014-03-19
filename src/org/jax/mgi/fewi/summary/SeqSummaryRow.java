@@ -1,20 +1,20 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import mgi.frontend.datamodel.Sequence;
-import mgi.frontend.datamodel.SequenceSource;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Probe;
 import mgi.frontend.datamodel.ProbeCloneCollection;
+import mgi.frontend.datamodel.Sequence;
+import mgi.frontend.datamodel.SequenceSource;
 
-import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.IDGenerator;
-import org.jax.mgi.fewi.util.ProviderLinker;
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
-
-import javax.persistence.Column;
+import org.jax.mgi.fewi.util.DBConstants;
+import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.ProviderLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

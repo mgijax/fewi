@@ -52,8 +52,7 @@ public class AccessionController {
     // instance variables
     //--------------------//
 
-    private Logger logger
-      = LoggerFactory.getLogger(AccessionController.class);
+    private Logger logger = LoggerFactory.getLogger(AccessionController.class);
 
     @Autowired
     private AccessionFinder accessionFinder;
