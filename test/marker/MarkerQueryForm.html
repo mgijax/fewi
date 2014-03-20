@@ -1,0 +1,181 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+
+    <title>Marker Query Form</title>
+</head>
+
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#definitions">Definitions</a> | <a href="#logic">Logic Summary</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Marker Query From</h1>
+    <ul>
+        <li>User story 163, E9: MQ&S: Search Functionality (MGI 5.18)</li>
+    </ul>
+</div>
+
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>Small differences due to using a different text search engines are OK. Determining if a difference if "small" is mainly a judgement call by the SME, I think.</li>
+		<li>nomen search has no operator - as in allele and GXD forms</li>
+		<li>verify GO and InterPro work ok</li>
+		<li>add pheno system selection box</li>
+		<li>other fields should give exactly the same results, e.g., a query by coordinates, or GO term	</li>
+	</ul>
+</div>
+
+
+<div id="definitions">
+	<h2>Definitions</h2>
+	<dl>
+		<dt>Term</dt>
+		<dd>definition line 1</dd>
+		<dd>definition line 2</dd>
+	</dl>
+</div>
+
+
+<div id="logic">
+	<h2>Logic Summary</h2>
+	<p>This test suite is concerned primarily with look-and-feel of the Query Form, and small pieces of functionality that exist within the form itself.  Searching functionality is described in the Marker Summary From Query test suite.</p>
+</div>
+
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
+<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>The query form has 6 ribbons:
+    		<ul>
+    			<li>Gene/Marker</li>
+    			<li>Feature type</li>
+    			<li>Map position</li>
+    			<li>Gene Ontology classifications</li>
+    			<li>Protein domains</li>
+    			<li>Mouse phenotypes & mouse models of human disease</li>
+    		</ul>
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Open the Marker Query Form.</li>
+                <li>Verify that the 6 ribbons exist.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>The Gene/Marker ribbon contains an input text field and some suggestions. The input text field itself contains text indicating what data may be entered.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Verify the ribbon contains the elements described.</li>
+    		</ol>
+    		</li>
+
+    		<li>The Feature type ribbon contains an interactive tree structure displaying values from the "Marker Category" vocabulary (_vocab_key = 79) that have associated marker data; each term has a selection check box.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Verify the ribbon contains the elements described.</li>
+    		</ol>
+    		</li>
+
+    		<li>The Map position ribbon contains:
+    		<ul>
+    			<li>A multiselect combo-box input element for chromosomes</li>
+    			<li>An input text field for cM Position</li>
+    			<li>An input text field for Genome Coordinates</li>
+    			<li>A selection input element for bp or Mbp units</li>
+    			<li>Two input text fields for Marker Range</li>
+    			<li>Some suggestions and additional help text</li>
+    		</ul>
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Verify the ribbon contains the elements described.</li>
+    		</ol>
+    		</li>
+
+    		<li>The Gene Ontology classifications ribbon contains:
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+    		
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
