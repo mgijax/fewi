@@ -49,6 +49,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         propertyMap.put("endCoord", new SolrPropertyMapper("endCoord"));
         propertyMap.put("cmOffset", new SolrPropertyMapper("cm"));
         propertyMap.put("chromosome", new SolrPropertyMapper("chromosome"));
+        
 
         /*
          * InterPro searches
@@ -66,6 +67,12 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
     				"markerTermID",
     				"goTerm"
     					),"OR"));
+        
+        propertyMap.put("goProcess",new SolrPropertyMapper("goProcessTerm"));
+        propertyMap.put("goFunction",new SolrPropertyMapper("goFunctionTerm"));
+        propertyMap.put("goComponent",new SolrPropertyMapper("goComponentTerm"));
+
+        
         /*
          * Phenotype searches
          */

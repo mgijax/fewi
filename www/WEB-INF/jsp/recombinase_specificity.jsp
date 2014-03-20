@@ -264,12 +264,12 @@ ${templateBean.templateBodyStartHtml}
 
         Mouse Strains:
        <c:if test="${empty allele.imsrStrainCount or allele.imsrStrainCount=='0'}">
-          0 lines available
+          0 strains available
        </c:if>
        <c:if test="${not empty allele.imsrStrainCount and allele.imsrStrainCount!='0'}">
           <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=embryo&states=live&states=ovaries&states=sperm' 
             target="_blank">
-          ${allele.imsrStrainCount} lines available
+          ${allele.imsrStrainCount} <fewi:plural value="strain" size="${allele.imsrStrainCount}"/> available
           </a>
        </c:if>
 
@@ -281,7 +281,7 @@ ${templateBean.templateBodyStartHtml}
        </c:if>
        <c:if test="${not empty allele.imsrCellLineCount and allele.imsrCellLineCount!='0'}">
           <a href='${configBean.IMSRURL}summary?gaccid=${allele.primaryID}&states=ES+Cell' target="_blank">
-          ${allele.imsrCellLineCount} lines available
+          ${allele.imsrCellLineCount} <fewi:plural value="line" size="${allele.imsrCellLineCount}"/> available
           </a>
        </c:if>
 

@@ -1355,7 +1355,20 @@ public class MarkerController {
 		 String go = query.getGo();
 		 if(notEmpty(go))
 		 {
-			 queryFilters.add(new Filter("go",go,Filter.OP_EQUAL));
+			 List<String> goVocabs = query.getGoVocab();
+			 List<Filter> goVocabFilters = new ArrayList<Filter>();
+			 if(notEmpty(goVocabs) && goVocabs.size()<3)
+			 {
+				 for(String goVocab : goVocabs)
+				 {
+					 goVocabFilters.add(new Filter(goVocab,go,Filter.OP_EQUAL));
+				 }
+			 }
+			 else
+			 {
+				 goVocabFilters.add(new Filter("go",go,Filter.OP_EQUAL));
+			 }
+			 queryFilters.add(Filter.or(goVocabFilters));
 		 }
         
         // feature type

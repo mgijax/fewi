@@ -149,9 +149,7 @@ td.top { vertical-align: top; }
 	  </td>
 	  <td class="padded top">
 	    <span style="line-height: 150%">
-	    <input name="_Ontology_key" value="Molecular Function" checked="" type="checkbox"> Molecular Function<br>
-	    <input name="_Ontology_key" value="Biological Process" checked="" type="checkbox"> Biological Process<br>
-	    <input name="_Ontology_key" value="Cellular Component" checked="" type="checkbox"> Cellular Component<br> 
+	    <fewi:checkboxOptions items="${queryForm.goVocabDisplay}" values="${queryForm.goVocab}" name="goVocab" />
 	    </span>
 	  </td>
 	</tr>

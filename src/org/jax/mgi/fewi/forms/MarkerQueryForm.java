@@ -1,6 +1,8 @@
 package org.jax.mgi.fewi.forms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,7 @@ public class MarkerQueryForm
     private String nomen;
     private String phenotype;
     private String go;
+    private List<String> goVocab;
     private String interpro;
     private List<String> featureType;
     private List<String> mcv;
@@ -36,12 +39,19 @@ public class MarkerQueryForm
     public static String COORD_UNIT_MBP="mbp";
     
     private List<String> coordUnitDisplay = new ArrayList<String>();
-
+    private Map<String,String> goVocabDisplay = new LinkedHashMap<String,String>();
+    
     public MarkerQueryForm()
     {
     	// any defaults
     	coordUnitDisplay.add("bp");
     	coordUnitDisplay.add("Mbp");
+    	
+    	goVocabDisplay.put("goFunction","Molecular Function");
+    	goVocabDisplay.put("goProcess","Biological Process");
+    	goVocabDisplay.put("goComponent","Cellular Component");
+    	
+    	goVocab = Arrays.asList("goFunction","goProcess","goComponent");
     }
 	
 	public static void setMarkerTypeKeyToDisplayMap(Map<String,String> markerTypeKeyToDisplayMap)
@@ -67,6 +77,11 @@ public class MarkerQueryForm
     public List<String> getCoordUnitDisplay()
     {
     	return coordUnitDisplay;
+    }
+    
+    public Map<String,String> getGoVocabDisplay()
+    {
+    	return goVocabDisplay;
     }
 	
     //--------------------//
@@ -136,6 +151,12 @@ public class MarkerQueryForm
 	}
 	public void setGo(String go) {
 		this.go = go;
+	}
+	public List<String> getGoVocab() {
+		return goVocab;
+	}
+	public void setGoVocab(List<String> goVocab) {
+		this.goVocab = goVocab;
 	}
 	public void setInterpro(String interpro) {
 		this.interpro = interpro;
