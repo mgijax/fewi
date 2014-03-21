@@ -83,7 +83,7 @@
     			<li>Map position</li>
     			<li>Gene Ontology classifications</li>
     			<li>Protein domains</li>
-    			<li>Mouse phenotypes & mouse models of human disease</li>
+    			<li>Mouse phenotypes &amp; mouse models of human disease</li>
     		</ul>
  			<p concordion:assertTrue="false">new</p>
     		<ol>
@@ -122,34 +122,75 @@
     		</li>
 
     		<li>The Gene Ontology classifications ribbon contains:
+    		<ul>
+    			<li>An input text field for GO term/ID.</li>
+    			<li>Three GO vocabulary names with checkbox inputs.</li>
+    			<li>Some suggestions text.</li>
+    			<li>Link to the GO browser page.</li>
+    		</ul>
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Verify the ribbon contains the elements described.</li>
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>The Protein domains ribbon contains:
+    		<ul>
+    			<li>An input text field for InterPro term/ID.</li>
+    			<li>Some suggestions text.</li>
+    			<li>Link to the InterPro genes report	.</li>
+    		</ul>
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Verify the ribbon contains the elements described.</li>
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>The Mouse phenotypes &amp; mouse models of human disease ribbon contains:
+    		<ul>
+    			<li>An input text field for MP/OMIM term/ID.</li>
+    			<li>Popup to select Anatomical System(s). <i>Note: additional tests of this functionality, below.</i></li>
+    			<li>Link to MP browser page.</li>
+    			<li>Link to OMIM browser page.</li>
+    			<li>Link to User Help with Booleans and other querying tips.</li>
+    			<li>Some suggestions and additional text.</li>
+    		</ul>
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Verify the ribbon contains the elements described.</li>
+                <li>Verify the Anatomical Systems popup opens a new window. <i>Note: additional tests below.</i></li>
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>The Anatomical Systems Affected by Phenotypes popup window has and does the following (same as on the <a href="../allele/">Allele Query Form</a>):
+    		<p>Appearance:</p>
+    		<ul>
+				<li>Window with set dimensions and without "web browser chrome" (menubar, toolbar, URL bar, etc.).</li>
+    			<li>Window title: Phenotypes Selection List.</li>
+    			<li>Instructions text.</li>
+    			<li>Buttons: "Add to Query" and "Cancel".</li>
+    			<li>List of MP anatomical systems with checkboxes.</li>
+    		</ul>
+    		<p>Behavior:</p>
+    		<ul>
+    			<li>Checking boxes for anatomical systems and clicking "Add to Query" appends the corresponding MP IDs to whatever is already in the Phenotype/Disease input text box on the main form page and closes the popup.</li>
+    			<li>The text terms for the selected anatomical systems are displayed to the right of the input text box.</li>
+    			<li>Reopening the popup window displays previously selected terms with checkboxes still selected.</li>
+    			<li>Additional terms may be selected.</li>
+    			<li>Selecting additional terms and clicking "Add to Query" appends the corresponding MP IDs to whatever is already in the Phenotype/Disease input text box on the main form page and closes the popup.</li>
+    			<li>The text terms in the cumulative set of selected anatomical systems are displayed to the right of the input text box.</li>
+    			<li>In the popup window, clicking the text of the anatomical system also places a check in the corresponding checkbox (i.e., the user is not limited to checking inside the box).</li> 
+    		</ul>
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Open the Anatomical Systems popup. Select 3 systems by clicking on the text labels.</li>
+                <li>Verify the checkboxes are checked.</li>
+                <li>Click "Add to Query".</li>
+                <li>Verify the popup window closes. Verify the MP IDs for the selected systems appear in the Phenotypes/Diseases input text box. Verify the text labels which were selected appear in the list to the right of the input text field on the main form.</li>
+                <li>Add some text to the Phenotypes/Diseases input text box without removing the MP IDs already there.</li>
+                <li>Reopen the Anatomical Systems popup. Verify the previously-selected systems are still selected.  Select 3 more systems.</li>
+                <li>Click "Add to Query".</li>
+                <li>Verify the popup window closes. Verify the MP IDs for the selected systems are added to existing text in the Phenotypes/Diseases input text box. Verify the text labels which were selected are added to the list to the right of the input text field on the main form.</li>
     		</ol>
     		</li>
 
