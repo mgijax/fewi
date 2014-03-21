@@ -432,7 +432,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- Allele ribbon -->
-  <c:if test="${(marker.countOfAlleles > 0) or (not empty marker.markerClip) or (marker.countOfHumanDiseases > 0) or (marker.countOfAllelesWithHumanDiseases > 0) or (marker.countOfPhenotypeImages > 0)}">
+  <c:if test="${(marker.countOfAlleles > 0) or (not empty marker.markerClip) or (not empty marker.incidentalMutations) or (marker.countOfHumanDiseases > 0) or (marker.countOfAllelesWithHumanDiseases > 0) or (marker.countOfPhenotypeImages > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Alleles<br/>and<br/>phenotypes
