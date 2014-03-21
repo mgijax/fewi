@@ -23,11 +23,6 @@ function toggleHomologyDetails ()
 
 <title>${marker.symbol} MGI Mouse ${marker.markerType} Detail - ${marker.primaryID} - ${marker.name}</title>
 
-<meta name="description" content="${seoDescription}" />
-<meta name="keywords" content="${seoKeywords}" />
-<meta name="robots" content="NOODP" />
-<meta name="robots" content="NOYDIR" />
-
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <%  // Pull detail object into servlet scope
@@ -451,6 +446,13 @@ td.padded { padding:4px; }
 		  </c:forEach>
 		  <br/>
 		</c:if>
+		<c:if test="${not empty marker.incidentalMutations}">
+			Incidental mutations (
+			<c:forEach var="incidentalMutation" items="${marker.incidentalMutations}" varStatus="imStatus">
+				<c:if test="${imStatus.index>0}">, </c:if><a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${incidentalMutation.filename}">${incidentalMutation.filenameNoExtension}</a>
+			</c:forEach>
+			)
+		</c:if>
 		<c:if test="${not empty marker.markerClip}">
 		  &nbsp;<br/>
 		  <blockquote>${marker.markerClip}</blockquote>
@@ -542,21 +544,12 @@ td.padded { padding:4px; }
   <c:if test="${not (empty marker.gxdAssayCountsByType and (marker.countOfGxdLiterature < 1) and (marker.countOfCdnaSources < 1) and empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
-      <div id="gxdHeading" style="clear:both">
-      Expression<br/>
-      </div>
-      <div id="gxdLogo">
-      <a href="${configBean.HOMEPAGES_URL}expression.shtml">
-      <img id="gxdLogoImage" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" style='width: 50px'>
-      </a>
+        Expression
       </td>
-      <td id="gxd" class="<%=rightTdStyles.getNext() %>">
+      <td class="<%=rightTdStyles.getNext() %>">
 		<c:if test="${marker.countOfGxdLiterature > 0}">
-		  <div id="gxdLit" style="vertical-align:top">
 		  Literature Summary: (<a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a> records)<br/>
-		  </div>
 		</c:if>
-		<div id="gxdOther" style="vertical-align:bottom">
 		<c:if test="${not empty gxdAssayTypes}">
 		Data Summary:
 		<c:if test="${marker.countOfGxdResults > 0}">
@@ -607,8 +600,6 @@ td.padded { padding:4px; }
 		    <a href="${fn:replace (externalUrls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">ArrayExpress</a>
 		  </c:if><br/>
 		</c:if>
-		</div>
-	</div>
       </td>
     </tr>
   </c:if>
@@ -657,23 +648,7 @@ td.padded { padding:4px; }
       </td>
     </tr>
   </c:if>
-  
-   <!-- Incidental Mutation links -->
-  <c:if test="${not empty marker.incidentalMutations}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
-        Incidental Mutations
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
-		<table>
-		Data available:
-		  <c:forEach items="${marker.incidentalMutations}" var="filename" varStatus="imStatus">
-			<c:if test="${imStatus.index>0}">, </c:if><a href="${configBean.FTP_BASE_URL}incidental_muts/${filename}">${filename}</a>
-		</c:forEach>
-		</table>
-      </td>
-    </tr>
-  </c:if>
+
 
   <!-- Sequences ribbon -->
   <c:if test="${marker.countOfSequences > 0}">
@@ -862,34 +837,3 @@ td.padded { padding:4px; }
 <!-- close structural table and page template-->
 </table>
 ${templateBean.templateBodyStopHtml}
-
-<script>
-function log(msg) {
-    // log a message to the browser console
-    setTimeout(function() { throw new Error(msg); }, 0);
-}
-
-var headingWidth = document.getElementById("gxdHeading").offsetWidth;
-document.getElementById("gxdLogoImage").style.width = headingWidth + 'px';
-
-var gxdHeight = document.getElementById("gxd").offsetHeight;
-var litHeight = document.getElementById("gxdLit").offsetHeight;
-var otherHeight = document.getElementById("gxdOther").offsetHeight;
-
-var pad = gxdHeight - litHeight - otherHeight;
-
-// add padding between Lit Summary and cDNA source data, if needed
-if (pad > 0) {
-    document.getElementById('gxdOther').style.paddingTop = pad + 'px';
-}
-
-var imageHeight = document.getElementById("gxdLogo").offsetHeight;
-var headingHeight = document.getElementById("gxdHeading").offsetHeight;
-
-var imagePad = Math.round( (gxdHeight - imageHeight) / 2) - headingHeight;
-
-// add padding to center the logo vertically in the expression ribbon
-if (imagePad > 0) {
-    document.getElementById("gxdLogo").style.paddingTop = imagePad + 'px';
-}
-</script>
