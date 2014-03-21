@@ -349,7 +349,7 @@ td.right { text-align: right }
 	    </td>
 	    <td class="padded" width="*">Mutation details<span id='mutationDescription' style='display:none'>:&nbsp;<font class='small'>${description}
 	      <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
-	      <c:if test="${not empty allele.incidentalMutation}">
+	      <c:if test="${not empty allele.incidentalMutations}">
 		    Additional
 		    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
 		    were detected in sequencing for the causative mutation,
@@ -363,7 +363,7 @@ td.right { text-align: right }
 	    <td style="vertical-align: top;">&nbsp;</td>
 	    <td class="padded" width="*">
 			<span id='mutationDescription'><font class='small'>${description} <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
-	    	<c:if test="${not empty allele.incidentalMutation}">
+	    	<c:if test="${not empty allele.incidentalMutations}">
 		    Additional
 		    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
 		    were detected in sequencing for the causative mutation,
