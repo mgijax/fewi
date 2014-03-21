@@ -41,7 +41,7 @@
 		<li>sto75: links to "all alleles"</li>
 		<li>sto75: links to per allele type</li>
 		<li>sto75: assume use exact same allele types here as in the db</li>
-		<li>sto92: Link to Mutagentixs file in Alleles and Phenotypes ribbon for select detail pages</li>
+		<li>sto92: Link to Mutagenetixs file in Alleles and Phenotypes ribbon for select detail pages</li>
 		<li>sto105: none</li>
 	</ul>
 </div>
@@ -206,14 +206,14 @@
     		</ol>
     		</li>
     		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto92)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">Passed jeffc 03/21/2014</p>
  			<ol>
                 <li>Navigate to the marker detail page for Pet2 (MGI:101758)</li>
                 <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to Mutagenix</li>
 			</ol>
 				</li>
     		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto92)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="false">AU045094 has no link</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the mutagentix link exists and works:
