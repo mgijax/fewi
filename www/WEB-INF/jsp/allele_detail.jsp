@@ -5,7 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% IDLinker idLinker = (IDLinker)request.getAttribute("idLinker"); %>
-    
+
 ${templateBean.templateHeadHtml}
 
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
@@ -48,11 +48,11 @@ function toggleSequenceTags() {
 <%  // Pull detail object into servlet scope
     // EXAMPLE - Marker marker = (Marker)request.getAttribute("marker");
 
-    StyleAlternator leftTdStyles 
+    StyleAlternator leftTdStyles
       = new StyleAlternator("detailCat1","detailCat2");
-    StyleAlternator rightTdStyles 
+    StyleAlternator rightTdStyles
       = new StyleAlternator("detailData1","detailData2");
-    
+
 %>
 
 <style>
@@ -117,7 +117,7 @@ function formatFastaArgs() {
 ${templateBean.templateBodyStartHtml}
 
 <style type="text/css">
-td.padded { padding:4px; } 
+td.padded { padding:4px; }
 td.label { text-align: left; vertical-align: top; width: 1%; white-space: nowrap}
 td.right { text-align: right }
 </style>
@@ -129,7 +129,7 @@ td.right { text-align: right }
 <c:set var="fixedDivClose" value='</div>' />
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="ALLELE_detail_help.shtml">	
+<div id="titleBarWrapper" userdoc="ALLELE_detail_help.shtml">
 	<div class="yourInputButton">
 		<form name="YourInputForm">
 			<input class="searchToolButton" value="Your Input Welcome" name="yourInputButton" onclick='window.open("${configBean.MGIHOME_URL}feedback/feedback_form.cgi?accID=${allele.primaryID}&amp;dataDate=<fmt:formatDate type='date' value='${databaseDate}' dateStyle='short'/>")' onmouseover="return overlib('We welcome your corrections and new data.  Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
@@ -284,7 +284,7 @@ td.right { text-align: right }
 	<td class="padded" width="*">${backgroundStrain}</td>
 	</tr>
 	</c:if>
-	
+
 	<c:if test="${not empty allele.collection}">
 	  <tr>
 	    <td class="rightBorderThinGray label padded right"><font class="label">Collection:</font></td>
@@ -295,7 +295,7 @@ td.right { text-align: right }
       </table>
       ${fixedDivClose}
     </td>
-    
+
   </tr>
   </c:if>
 
@@ -347,26 +347,34 @@ td.right { text-align: right }
 	      <div id="rightArrowMutationDescription" onClick="toggleMutationDescription();" style="float: right; cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
 	      <div id="downArrowMutationDescription" onClick="toggleMutationDescription();" style="cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
 	    </td>
-	    <td class="padded" width="*">Mutation details<span id='mutationDescription' style='display:none'>:&nbsp;<font class='small'>${description} <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if></font></span></td>
+	    <td class="padded" width="*">Mutation details<span id='mutationDescription' style='display:none'>:&nbsp;<font class='small'>${description}
+	      <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
+	      <c:if test="${not empty allele.incidentalMutation}">
+		    Additional
+		    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
+		    were detected in sequencing for the causative mutation,
+		    ${symbolSup}, and may be present in stocks carrying  this mutation.
+		  </c:if>
+		</font></span>
+	    </td>
 	  </c:if>
 	  <c:if test="${fn:length(description) <= 100}">
 	    <td class="rightBorderThinGray" align="right" width="1%" valign="top">&nbsp;</td>
 	    <td style="vertical-align: top;">&nbsp;</td>
-	    <td class="padded" width="*"><span id='mutationDescription'><font class='small'>${description} <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if></font></span></td>
+	    <td class="padded" width="*">
+			<span id='mutationDescription'><font class='small'>${description} <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
+	    	<c:if test="${not empty allele.incidentalMutation}">
+		    Additional
+		    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
+		    were detected in sequencing for the causative mutation,
+		    ${symbolSup}, and may be present in stocks carrying  this mutation.
+	    	</c:if>
+			</font></span>
+	    </td>
 	  </c:if>
 	</tr>
 	</c:if>
 
-	<c:if test="${not empty allele.incidentalMutations}">
-	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Incidental Mutations:</font>&nbsp;</td>
-	<td width="1%">&nbsp;</td>
-	<td class="padded" width="*">Data available: 
-		<c:forEach items="${allele.incidentalMutations}" var="filename" varStatus="imStatus">
-			<c:if test="${imStatus.index>0}">, </c:if><a href="${configBean.FTP_BASE_URL}incidental_muts/${filename}">${filename}</a>
-		</c:forEach></td>
-	</tr>
-	</c:if>
-	
 	<c:if test="${(not empty allele.inheritanceMode) and (allele.inheritanceMode != 'Not Applicable')}">
 	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Inheritance:</font>&nbsp;</td>
 	<td width="1%">&nbsp;</td>
@@ -694,7 +702,7 @@ td.right { text-align: right }
 	    ${qtlExpt.htmlNote}<p/>
 	  </c:forEach>
 	</c:if>
-      </font> 
+      </font>
       ${fixedDivClose}
     </td>
   </tr>
