@@ -26,9 +26,9 @@ td.top { vertical-align: top; }
       <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_nomenclature'); return false;" href="${helpPage}#gene_nomenclature">Gene/Marker Symbol/Name</a>:
       </dt>
       <dd>
-        contains 
-		<input name="nomen" size="25" class="grayBackground" type="text" value="${queryForm.nomen}">
-		in current & old symbols/names, synonyms, alleles, homologs
+		<input name="nomen" size="25" class="grayBackground" type="text" value="${queryForm.nomen}" placeholder="Symbols, names or synonym">
+		<br/>
+		<i>Example: Pax* *Sox2* *os *Col2a1*</i>
       </dd>
     </dl>
     </td>
@@ -143,6 +143,8 @@ td.top { vertical-align: top; }
 	        &nbsp;
 	        <input name="go" size="35" type="text" value="${queryForm.go}">
 	        in
+	        <br/>
+	        <i>Example: one two three</i>
 	      </dd>
 	    </dl>
 	    <span class="vocabLink">Browse <a href="${configBean.WI_URL}searches/GO_form.shtml">Gene Ontology (GO)</a></span> 
@@ -169,6 +171,8 @@ td.top { vertical-align: top; }
         <dd>
 	  contains
           <input name="interpro" size="35" class="grayBackground" type="text" value="${queryForm.interpro}">
+          <br/>
+          <i>Example: four five six</i>
         </dd>
       </dl>
       <span class="vocabLink">Browse <a href="${configBean.FTP_URL}MGI_InterProDomains.rpt">InterPro protein domains</a>
@@ -191,13 +195,9 @@ td.top { vertical-align: top; }
 	        <span class="example">Enter any combination of phenotype terms,
 	          disease terms, or IDs
 	        </span><br>
-	        <textarea name="phenotype" rows="2" cols="60">${queryForm.phenotype}</textarea>
+	        <textarea name="phenotype" rows="2" cols="60" placeholder="Phenotype terms, disease terms, or IDs">${queryForm.phenotype}</textarea>
 	      </td>
 	      <td>
-	        <span class="example">
-			<a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml'); return false;" href="${configBean.USERHELP_URL}MISC_boolean_search_help.shtml">Hints</a>:<br>
-		using AND and OR, quotes, partial word matching, ...
-	        </span>
 	      </td>
 	    </tr>
 	  </table>
@@ -208,6 +208,9 @@ td.top { vertical-align: top; }
 	Browse <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
 	Browse <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
       </span>
+      <br/>
+      <i>Hints for using AND and OR, quotes, partial word matching,...
+      	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601</i>
     </td>
   </tr>
 
