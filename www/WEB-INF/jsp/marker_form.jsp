@@ -5,7 +5,7 @@ td.top { vertical-align: top; }
 
 
 <!-- id is used internally; name is used by pheno popup -->
-<form method="GET" action="${configBean.FEWI_URL}marker/summary" id="markerQF" onSubmit="hNodes(); return false;" name="queryForm">
+<form method="GET" action="${configBean.FEWI_URL}marker/summary" id="markerQF" onSubmit="hNodes(); return false;" name="markerQF">
 <table class="queryStructureTable">
 
   <tr><td class="queryParams1" colspan="2">
