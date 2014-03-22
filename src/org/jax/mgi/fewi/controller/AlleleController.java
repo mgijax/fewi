@@ -155,11 +155,13 @@ public class AlleleController {
     // Allele Query System Popup
     //-------------------------//
     @RequestMapping("/phenoPopup")
-    public ModelAndView phenoPopup (HttpServletRequest request) {
-
+    public ModelAndView phenoPopup (HttpServletRequest request) 
+    {
 		logger.debug("->systemPopup started");
-
+		String formName = (String) request.getAttribute("formName");
+		
         ModelAndView mav = new ModelAndView("allele_query_system_popup");
+        if(notEmpty(formName)) mav.addObject("formName",formName);
         return mav;
     }
 

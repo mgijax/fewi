@@ -1,4 +1,5 @@
 <%@ page import = "mgi.frontend.datamodel.QueryFormOption" %>
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <html>
 <head>
@@ -241,8 +242,8 @@
     if (selectedMpIds != "")
     {
         // append to phenotype form parameter if it wasn't empty
-        if (window.opener.document.alleleQueryForm.phenotype.value != ""){
-          var phenoInput = window.opener.document.alleleQueryForm.phenotype.value;
+        if (_form.phenotype.value != ""){
+          var phenoInput = _form.phenotype.value;
 
           // remove existing MP IDs from pheno free-text field to avoid dupes
           // and ensure we've removed unselected checks
@@ -281,12 +282,12 @@
           }
 
 
-          window.opener.document.alleleQueryForm.phenotype.value =
+          _form.phenotype.value =
             phenoInput + " " + selectedMpIds;
           window.opener.document.getElementById("selectedMpTextDiv").innerHTML = "You selected:<ul>" + selectedMpText + "</ul>";
         }
         else {
-          window.opener.document.alleleQueryForm.phenotype.value = selectedMpIds;
+          _form.phenotype.value = selectedMpIds;
           window.opener.document.getElementById("selectedMpTextDiv").innerHTML = "You selected:<ul>" + selectedMpText + "</ul>";
         }
     }
@@ -295,13 +296,17 @@
     window.close();
   }
 
+  // global form reference
+  var _form=null;
 
-  $(window).load(function () {
-
+  $(window).load(function () 
+  {
+	  // try to set the form
+	  _form = window.opener.document.<c:out value="${not empty formName ? formName : 'alleleQueryForm' }"/>;
     // If the phenotype text box isn't empty, we need to scan for MP term IDs
     // that may have already been entered.  We then activate those checks.
-    if (window.opener.document.alleleQueryForm.phenotype.value != ""){
-      var phenoInput = window.opener.document.alleleQueryForm.phenotype.value;
+    if (_form.phenotype.value != ""){
+      var phenoInput = _form.phenotype.value;
 
       if (phenoInput.search("MP:0005375") > -1) {
         $("#mp0005375").prop("checked", true);

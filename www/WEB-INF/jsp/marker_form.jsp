@@ -204,13 +204,16 @@ td.top { vertical-align: top; }
         </dd>
       </dl>
       <span class="vocabLink">
-        Select <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}marker/phenoPopup', 'mywindow', 'status,width=350,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
+        Select <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}allele/phenoPopup?formName=markerQF',
+          'mywindow', 'status,width=540,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
 	Browse <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
 	Browse <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
       </span>
       <br/>
       <i>Hints for using AND and OR, quotes, partial word matching,...
       	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601</i>
+      	
+      	 <div id="selectedMpTextDiv" style="position:absolute; top:0px; left:540px; width:350px;"></div>
     </td>
   </tr>
 
@@ -383,6 +386,9 @@ function markerQfReset(e)
 	  
 	// reset tree
 	resetTree();
+	
+    // clear the div containing the selected MP text
+	$("#selectedMpTextDiv").html("");
 	
 	// reset all check boxes and textareas
 	  
