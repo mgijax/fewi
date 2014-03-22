@@ -184,6 +184,8 @@ td.top { vertical-align: top; }
   <tr>
     <td class="queryCat2">Mouse phenotypes &amp;<br/>mouse models of<br/>human disease</td>
     <td class="queryParams2">
+      	
+      	 <div style="position: relative;"><div id="selectedMpTextDiv" style="position:absolute; top:0px; left:540px; width:350px;"></div></div>
       <dl>
         <dt class="qfLabel">
 	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#phenotype'); return false;" href="${helpPage}#phenotype">Phenotype/Human Disease</a>:
@@ -212,8 +214,6 @@ td.top { vertical-align: top; }
       <br/>
       <i>Hints for using AND and OR, quotes, partial word matching,...
       	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601</i>
-      	
-      	 <div id="selectedMpTextDiv" style="position:absolute; top:0px; left:540px; width:350px;"></div>
     </td>
   </tr>
 
