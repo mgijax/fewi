@@ -158,7 +158,7 @@ public class AlleleController {
     public ModelAndView phenoPopup (HttpServletRequest request) 
     {
 		logger.debug("->systemPopup started");
-		String formName = (String) request.getAttribute("formName");
+		String formName = (String) request.getParameter("formName");
 		
         ModelAndView mav = new ModelAndView("allele_query_system_popup");
         if(notEmpty(formName)) mav.addObject("formName",formName);
