@@ -14,6 +14,7 @@
 
 
 <body bgcolor="#ffffff">
+formName=${formName}
 
   <form name="PhenoPopup">
   <div style='padding:4px; padding-left:10px;'>
