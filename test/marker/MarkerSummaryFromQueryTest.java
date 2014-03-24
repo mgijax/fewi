@@ -1,12 +1,13 @@
 package marker;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.fewi.controller.MarkerController;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockMarkerControllerQuery;
+import org.jax.mgi.fewi.util.QueryParser;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MarkerSummaryFromQueryTest extends BaseConcordionTest 
@@ -40,6 +41,20 @@ public class MarkerSummaryFromQueryTest extends BaseConcordionTest
 	{
 		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
 		mq.setMcvKey(mcvKey);
+		return getSymbolsByMQ(mq);
+	}
+	
+	// Chromosome Query
+	public int getMarkerCountByChromosome(String chrString) throws Exception
+	{
+		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
+		mq.setChromosome(decodeChrs(chrString));
+		return mq.getMarkers().getTotalCount();
+	}
+	public List<String> getSymbolsByChromosome(String chrString) throws Exception
+	{
+		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
+		mq.setChromosome(decodeChrs(chrString));
 		return getSymbolsByMQ(mq);
 	}
 	
@@ -137,6 +152,11 @@ public class MarkerSummaryFromQueryTest extends BaseConcordionTest
 			symbols.add(marker.getSymbol());
 		}
 		return symbols;
+	}
+	
+	private List<String> decodeChrs(String chrString)
+	{
+		return QueryParser.tokeniseOnWhitespaceAndComma(chrString);
 	}
 }
 	
