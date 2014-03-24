@@ -163,10 +163,34 @@
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
-    		<li>Test 1
+    		<li>Nomen Query
     		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
+               	<li>Testing that AND, OR, and NOT aren't treated as Booleans
+				<ol>
+					<li>open the Marker query form</li>
+					<li>Type <b concordion:set="#query">pax6 and shh</b> in the nomenclature field and press the search button</li>
+					<li>verify that <b concordion:assertEquals="getMarkerCountByNomen(#query)">0</b> matching genes are returned</li>
+					<li>Type <b concordion:set="#query">pax6 or shh</b> in the nomenclature field and press the search button</li>
+					<li>verify that <b concordion:assertEquals="getMarkerCountByNomen(#query)">0</b> matching genes are returned</li>
+					<li>Type <b concordion:set="#query">paired AND box</b> in the nomenclature field and press the search button</li>
+					<li>verify that <b concordion:assertEquals="getMarkerCountByNomen(#query)">0</b> matching genes are returned</li>
+					<li>Type <b concordion:set="#query">paired OR box</b> in the nomenclature field and press the search button</li>
+					<li>verify that <b concordion:assertEquals="getMarkerCountByNomen(#query)">0</b> matching genes are returned</li>
+					<li>Type <b concordion:set="#query">paired NOT box</b> in the nomenclature field and press the search button</li>
+					<li>verify that <b concordion:assertEquals="getMarkerCountByNomen(#query)">0</b> matching genes are returned</li>
+				</ol>
+				</li>
+				<li>Testing that punctuation and extraneous wildcards are removed (ignored)
+				<ol>
+					<li>open the Marker query form</li>
+					<li>Type <b concordion:set="#query">dopachrome@#$%^&amp;*()_-+={}[]\|`~;':",./&lt;&gt;?</b> in the nomenclature field and press the search button</li>
+					<li>verify that only <b concordion:assertEquals="getMarkerCountByNomen(#query)">2</b> markers returned</li>
+					<li>Type <b concordion:set="#query">*dopachrome ***tautome*</b> in the nomenclature field and press the search button</li>
+					<li>verify that only <b concordion:assertEquals="getMarkerCountByNomen(#query)">2</b> markers is returned</li>
+					<li>Type <b concordion:set="#query">*****</b> in the nomenclature field and press the search button</li>
+					<li>verify that <b cc:assertEquals="getMarkerCountByNomen(#query)">0</b> matching markers are returned</li>
+				</ol>
+				</li>
     		</ol>
     		</li>
 		</ol>
