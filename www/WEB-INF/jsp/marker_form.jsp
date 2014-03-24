@@ -26,9 +26,9 @@ td.top { vertical-align: top; }
       <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_nomenclature'); return false;" href="${helpPage}#gene_nomenclature">Gene/Marker Symbol/Name</a>:
       </dt>
       <dd>
-		<input name="nomen" size="25" class="grayBackground" type="text" value="${queryForm.nomen}" placeholder="Symbols, names or synonym">
+		<input name="nomen" size="35" class="grayBackground" type="text" value="${queryForm.nomen}" placeholder="Symbols, names or synonym">
 		<br/>
-		<i>Example: Pax* *Sox2* *os *Col2a1*</i>
+		<span class="example">Example: Pax* *Sox2* *os *Col2a1*</span>
       </dd>
     </dl>
     </td>
@@ -87,7 +87,7 @@ td.top { vertical-align: top; }
 	        <input name="cm" size="13" class="grayBackground" type="text" value="${queryForm.cm}">
 	      </dd>
 	      <dd>
-	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">e.g., "10.0-40.0"</span>
+	        <span class="example" style="margin-left:50px;">Example: "10.0-40.0"</span>
 	      </dd>
 	    </dl>
 	  </td>
@@ -105,7 +105,7 @@ td.top { vertical-align: top; }
       		</select>	
 	      </dd>
 	      <dd>
-	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">e.g., "125.618-125.622" Mbp</span>
+	      	<span class="example" style="margin-left:50px;">Example: "125.618-125.622" Mbp</span>
 	      </dd>
 	      <dt class="qfLabel">
 	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#marker_range'); return false;" href="${helpPage}#marker_range">Marker range</a>:
@@ -117,8 +117,7 @@ td.top { vertical-align: top; }
 	        and <input name="endMarker" size="12" class="grayBackground" type="text" value="${queryForm.endMarker}">
 	      </dd>
 	      <dd>
-	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="example">
-		e.g., between "D19Mit32" and "Tbx10"</span>
+	      	<span class="example" style="margin-left:50px;">Example: between "D19Mit32" and "Tbx10"</span>
 	      </dd>
 	    </dl>
 	  </td>
@@ -139,12 +138,10 @@ td.top { vertical-align: top; }
 	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_ontology'); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) Classifications</a>:
 	      </dt>
 	      <dd>
-	        contains
-	        &nbsp;
 	        <input name="go" size="35" type="text" value="${queryForm.go}">
 	        in
 	        <br/>
-	        <i>Example: one two three</i>
+	        <span class="example">Example: one two three</span>
 	      </dd>
 	    </dl>
 	    <span class="vocabLink">Browse <a href="${configBean.WI_URL}searches/GO_form.shtml">Gene Ontology (GO)</a></span> 
@@ -169,10 +166,9 @@ td.top { vertical-align: top; }
 	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#interpro'); return false;" href="${helpPage}#interpro">InterPro Protein Domains</a>:
         </dt>
         <dd>
-	  contains
           <input name="interpro" size="35" class="grayBackground" type="text" value="${queryForm.interpro}">
           <br/>
-          <i>Example: four five six</i>
+          <span class="example">Example: four five six</span>
         </dd>
       </dl>
       <span class="vocabLink">Browse <a href="${configBean.FTP_URL}MGI_InterProDomains.rpt">InterPro protein domains</a>
@@ -191,29 +187,22 @@ td.top { vertical-align: top; }
 	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#phenotype'); return false;" href="${helpPage}#phenotype">Phenotype/Human Disease</a>:
         </dt>
         <dd>
-          <table border="0" cellpadding="2" cellspacing="0">
-	    <tr>
-	      <td>
 	        <span class="example">Enter any combination of phenotype terms,
 	          disease terms, or IDs
 	        </span><br>
 	        <textarea name="phenotype" rows="2" cols="60" placeholder="Phenotype terms, disease terms, or IDs">${queryForm.phenotype}</textarea>
-	      </td>
-	      <td>
-	      </td>
-	    </tr>
-	  </table>
+	      	<br/>
+	      	<span class="vocabLink">
+		        <b>Select</b> <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}allele/phenoPopup?formName=markerQF',
+		          'mywindow', 'status,width=540,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
+				<b>Browse</b> <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
+				<b>Browse</b> <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
+		      </span>
+		      <br/>
+		      <span class="example">Hints for using AND and OR, quotes, partial word matching,...
+		      	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601</span>
         </dd>
       </dl>
-      <span class="vocabLink">
-        Select <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}allele/phenoPopup?formName=markerQF',
-          'mywindow', 'status,width=540,height=400'); childWindow.focus()">Anatomical Systems Affected by Phenotypes</a><br>
-	Browse <a href="${configBean.WI_URL}searches/MP_form.shtml">Mammalian Phenotype Ontology (MP)</a><br>
-	Browse <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
-      </span>
-      <br/>
-      <i>Hints for using AND and OR, quotes, partial word matching,...
-      	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601</i>
     </td>
   </tr>
 
