@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.test.mock;
 import org.jax.mgi.fewi.controller.AlleleController;
 import org.jax.mgi.fewi.controller.DiseasePortalController;
 import org.jax.mgi.fewi.controller.GXDController;
+import org.jax.mgi.fewi.controller.MarkerController;
 
 /*
  * A useful way to encapsulate the inner workings of how mock queries get created
@@ -40,6 +41,14 @@ public class MockQueryFactory
 	public MockGxdHttpQuery gxdHttp() throws Exception
 	{
 		return new MockGxdHttpQuery(mr);
+	}
+	
+	/*
+	 * Marker Mock Queries
+	 */
+	public MockMarkerControllerQuery markerController(MarkerController controller) throws Exception
+	{
+		return new MockMarkerControllerQuery(controller);
 	}
 	
 	/*

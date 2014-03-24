@@ -1149,7 +1149,35 @@ public class MarkerController {
             {
         logger.debug("->JsonSummaryResponse started");
 
-        // parameter parsing
+        
+        SearchResults<SolrSummaryMarker> searchResults = getSummaryMarkers(request,query,page);
+        List<SolrSummaryMarker> markerList = searchResults.getResultObjects();
+
+        // create/load the list of SummaryRow wrapper objects
+        List<MarkerSummaryRow> summaryRows = new ArrayList<MarkerSummaryRow>();
+        for(SolrSummaryMarker marker : markerList)
+        {
+        	//logger.info("marker="+marker);
+        	summaryRows.add(new MarkerSummaryRow(marker));
+        }
+        // The JSON return object will be serialized to a JSON response.
+        // Client-side JavaScript expects this object
+        JsonSummaryResponse<MarkerSummaryRow> jsonResponse = new JsonSummaryResponse<MarkerSummaryRow>();
+
+        // place data into JSON response, and return
+        jsonResponse.setSummaryRows(summaryRows);
+        jsonResponse.setTotalCount(searchResults.getTotalCount());
+        return jsonResponse;
+    }
+    
+    /*
+     * This is exposed for our automated tests to use
+     */
+    public SearchResults<SolrSummaryMarker> getSummaryMarkers(HttpServletRequest request,
+			MarkerQueryForm query,
+            Paginator page) throws org.antlr.runtime.RecognitionException 
+    {
+    	// parameter parsing
         String refKey = request.getParameter("refKey");
         
         // generate search parms object;  add pagination, sorts, and filters
@@ -1169,24 +1197,7 @@ public class MarkerController {
         }        
 
         // perform query, and pull out the requested objects
-        SearchResults<SolrSummaryMarker> searchResults = markerFinder.getSummaryMarkers(params);
-        List<SolrSummaryMarker> markerList = searchResults.getResultObjects();
-
-        // create/load the list of SummaryRow wrapper objects
-        List<MarkerSummaryRow> summaryRows = new ArrayList<MarkerSummaryRow>();
-        for(SolrSummaryMarker marker : markerList)
-        {
-        	//logger.info("marker="+marker);
-        	summaryRows.add(new MarkerSummaryRow(marker));
-        }
-        // The JSON return object will be serialized to a JSON response.
-        // Client-side JavaScript expects this object
-        JsonSummaryResponse<MarkerSummaryRow> jsonResponse = new JsonSummaryResponse<MarkerSummaryRow>();
-
-        // place data into JSON response, and return
-        jsonResponse.setSummaryRows(summaryRows);
-        jsonResponse.setTotalCount(searchResults.getTotalCount());
-        return jsonResponse;
+        return markerFinder.getSummaryMarkers(params);
     }
 
   //--------------------------------//
