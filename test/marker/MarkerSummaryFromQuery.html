@@ -61,14 +61,27 @@
 <div id="logic">
 	<h2>Logic Summary</h2>
 
-	<h3>Main Section</h3>
+	<h3>Querying in Text Fields</h3>
 	<p>Description of logic to follow</p>
 
-	<h4>Subsection</h4>
+	<h4>Nomenclature</h4>
 	<ul>
-		<li>Describe logic</li>
-		<li>Use bullets as much as possible</li>
-		<li>Short, declarative statements are best</li>
+		<li>Uses primarily the same logic as <a href="../allele/QueryFormNomenclature.html">Allele Query and Summary.</a></li>
+		<li>Does not include search against allele synonyms.</li>
+		<li>Initial and trailing wildcard symbols (asterisk) are supported; "internal" asterisks are treated literally.</li>
+	</ul>
+
+	<h4>GO and Protein Domain (InterPro)</h4>
+	<ul>
+		<li>Performs a tokenized query against Solr index.</li>
+		<li>Initial and trailing wildcard symbols (asterisk) are supported.</li>
+	</ul>
+
+	<h4>Pheno/Disease</h4>
+	<ul>
+		<li>Performs a tokenized query against Solr index.</li>
+		<li>Initial and trailing wildcard symbols (asterisk) are supported.</li>
+		<li>Returns only genes having annotated alleles in One Marker Genotypes (OMG) or Conditional genotypes. EXCLUDES markers for annotated alleles present only in Complex genotypes.</li>
 	</ul>
 </div>
 
@@ -84,32 +97,209 @@
 <p concordion:assertTrue="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
+		
+		<h4>Nomenclature</h4>
 		<ol>
-    		<li>Test
+    		<li>Current, old, and interim mouse marker symbols, names, and synonyms  and human ortholog symbols and names are supported.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
+                <li>
+                <table>
+								<tr>
+									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
+									<th>Include in return</th>
+									<th>Exclude from return</th>
+									<th>Notes to tester</th>
+								</tr>
+								<tr>
+									<td>Pax6</td>
+									<td>
+										<ul>
+											<li>Pax6</li>
+											<li>Pauper</li>
+											<li>Del(2)Pax6<sup>11Neu</sup></li>
+											<li>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</li>
+										</ul>
+									</td>
+									<td>
+										<ul>
+											<li>Pax6os1</li>
+											<li>Elp4</li>
+										</ul>
+									</td>
+									<td>Pax6os1 and Elp4 are no longer returned because we no
+										longer do default "contains" searching within tokens. These
+										markers are returned via Current Symbol, Current Name and
+										Synonym.</td>
+								</tr>
+								<tr>
+									<td>Defb1</td>
+									<td>Defb1</td>
+									<td></td>
+									<td>This is an interim marker, searching by Symbol.</td>
+								</tr>
+								<tr>
+									<td>pentamer</td>
+									<td>Ppnr</td>
+									<td></td>
+									<td>This is an interim marker, searching by a token in the
+										Name.</td>
+								</tr>
+								<tr>
+									<td>oral cancer</td>
+									<td>
+										<ul>
+											<li>Cdk2ap1</li>
+											<li>Oraov1</li>
+										</ul>
+									</td>
+									<td></td>
+									<td>Cdk2ap1 is returned via Old Name</td>
+								</tr>
+								<tr>
+									<td>asip</td>
+									<td>
+										<ul>
+											<li>a</li>
+											<li>Pard3</li>
+										</ul>
+									</td>
+									<td></td>
+									<td>Ortholog has different symbol.</td>
+								</tr>
+								<tr>
+									<td>&quot;CD3-TCR complex&quot;</td>
+									<td>
+										<ul>
+											<li>Cd3d</li>
+											<li>Cd3e</li>
+											<li>Cd3g</li>
+										</ul>
+									</td>
+									<td></td>
+									<td>Query using quotation marks. Ortholog has different
+										name.</td>
+								</tr>
+								<tr>
+									<td>"RT1-Db"</td>
+									<td>H2-Eb1</td>
+									<td></td>
+									<td>Rat ortholog.</td>
+								</tr>
+							</table>
+						</li>
     		</ol>
     		</li>
     		
-    		<li>Test
+    		<li>Current allele symbols or names are supported.  Allele synonyms are NOT supported.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
+                <li>
+                <table>
+								<tr>
+									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
+									<th>Include in return</th>
+									<th>Exclude from return</th>
+									<th>Notes to tester</th>
+								</tr>
+								<tr>
+									<td>Gena265</td>
+									<td></td>
+									<td>Pax6</td>
+									<td>Gena265 is a synonym for the allele Pax6<sup>Leca3</sup>.
+									</td>
+								</tr>
+								<tr>
+									<td>leprdb</td>
+									<td></td>
+									<td>Lepr</td>
+									<td>leprdb is an allele synonym for Lepr<sup>db</sup>.
+									</td>
+								</tr>
+								<tr>
+									<td>subcapsularis</td>
+									<td></td>
+									<td>Mip</td>
+									<td>Allele Synonym : cataracta hereditaria subcapsularis for Mip<sup>cat</sup>.</td>
+								</tr>
+								<tr>
+									<td>corneal adhesion</td>
+									<td>Pax6</td>
+									<td></td>
+									<td>Allele name for Pax6<sup>Leca3</sup>.
+									</td>
+								</tr>
+								<tr>
+									<td>Leca3</td>
+									<td>Pax6</td>
+									<td></td>
+									<td>Token in the allele symbol for Pax6<sup>Leca3</sup>.
+									</td>
+								</tr>
+							</table>
+						</li>
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>Leading and trailing asterisks are treated as wildcards.  "Internal" asterisks are treated as literal characters.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
+                <li>
+                <table>
+								<tr>
+									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
+									<th>Include in return</th>
+									<th>Exclude from return</th>
+									<th>Notes to tester</th>
+								</tr>
+								<tr>
+									<td>Pax6*</td>
+									<td>
+										<ul>
+											<li>Pax6</li>
+											<li>Pax6os1</li>
+											<li>Del(2)Pax6<sup>11Neu</sup></li>
+											<li>Elp4</li>
+											<li>Pauper</li>
+											<li>Tg(Pax6-cre,GFP)1Pgr</li>
+										</ul>
+									</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>*os*</td>
+									<td>
+									<ul>
+										<li>Abhd11os</li>
+										<li>cosa</li>
+										<li>Dx6os1</li>
+										<li>Mid1</li>
+										<li>Os</li>
+										<li>Os9</li>
+										<li>Osbp</li>
+										<li>Tg(Etn2*,Ptf1aos,Ptf1a)#Kymm</li>
+										<li>Tg(Fos-EGFP)KR563Gsat</li>
+									</ul>
+									</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Cell</td>
+									<td>Cell</td>
+									<td>Cell</td>
+									<td>Cell</td>
+								</tr>
+							</table>
+						</li>
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>Non-alphanumeric characters other than asterisks are used to define token boundaries.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Step</li>
