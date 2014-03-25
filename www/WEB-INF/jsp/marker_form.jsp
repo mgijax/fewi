@@ -36,7 +36,7 @@ td.top { vertical-align: top; }
 
   <!-- row 2-->
   <tr>
-    <td class="queryCat2 padded top">Feature Type</td>
+    <td class="queryCat2 padded top">Feature type</td>
     <td class="queryParams2 padded top">
      <div id="nojs">
 	     <p class='example'><br/>Click to select one or more <a href="${configBean.USERHELP_URL}GENE_help.shtml#marker_type">feature types.</a><br/>
@@ -128,14 +128,14 @@ td.top { vertical-align: top; }
 
   <!-- row 4-->
   <tr>
-    <td class="queryCat2">Gene Ontology<br/>Classifications</td>
+    <td class="queryCat2">Gene Ontology<br/>classifications</td>
     <td class="queryParams2">
       <table>
 	<tr>
 	  <td class="padded top">
 	    <dl>
 	      <dt class="qfLabel">
-	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_ontology'); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) Classifications</a>:
+	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_ontology'); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) classifications</a>:
 	      </dt>
 	      <dd>
 	        <input name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>">
