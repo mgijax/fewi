@@ -391,27 +391,205 @@
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>Submitting a chromosome + cM position range returns markers in that range.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Select chromosome <b>1</b> and cM range <b>10-20</b> and submit the query with no other parameters.</li>
+                <li>Verify <b>211</b> markers are returned.</li>
+                <li>Verify the list includes the following markers:
+                <ul>
+                	<li>Affr</li>
+                	<li>Cocia4</li>
+                	<li>Creg2</li>
+                	<li>D1Mit20</li>
+                	<li>Eif5b</li>
+                	<li>Gm4850</li>
+                	<li>Prss40</li>
+                	<li>Snord89</li>
+                	<li>Zfp451</li>
+                </ul>
+                </li>
     		</ol>
     		</li>
-    		
+
+    		<li>Submitting a chromosome + genome coordinates range returns markers in that range.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Select chromosome <b>1</b> and genome coordinates range <b>24332803-40772038</b> with units <b>bp</b> and submit the query with no other parameters.</li>
+                <li>Verify <b>298</b> markers are returned.</li>
+                <li>Verify the list includes the following markers:
+                <ul>
+                	<li>Aff3</li>
+                	<li>Creg2</li>
+                	<li>D1Mit20</li>
+                	<li>Eif5b</li>
+                	<li>Gm4850</li>
+                	<li>Prss40</li>
+                	<li>Snord89</li>
+                	<li>Zfp451</li>
+                </ul>
+                </li>
+                <li>Verify the following markers are not returned (no coordinates):
+                <ul>
+                	<li>Cocia4</li>
+                	<li>D1Mit412</li>
+                	<li>Dbsty1</li>
+                </ul>
+                </li>
+                <li>Reopen the query and select chromosome <b>1</b> and genome coordinates range <b>24.332-40.772</b> with units <b>Mbp</b> and submit the query with no other parameters.</li>
+                <li>Verify <b>297</b> markers are returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting a marker range returns markers which fall between the start coordinate of the one marker and the end coordinate of the other marker.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Input <b>D19Mit32</b> and <b>Tbx10</b>.</li>
+                <li>Verify the following markers are returned (these are sorted by genome coordinates):
+                <ul>
+                	<li>Ighmbp2</li>
+					<li>D19Mit32</li>
+					<li>Lfp3</li>
+					<li>Tgct2</li>
+					<li>Mrpl21</li>
+					<li>Gm27771</li>
+					<li>Gm7810</li>
+					<li>Cpt1a</li>
+					<li>4833417J20Rik</li>
+					<li>Mtl5</li>
+					<li>Gal</li>
+					<li>Ppp6r3</li>
+					<li>Gm23940</li>
+					<li>Gm19205</li>
+					<li>n-Ta9</li>
+					<li>Lrp5</li>
+					<li>D19Mit68</li>
+					<li>Drinksac2</li>
+					<li>1810055G02Rik</li>
+					<li>Gm2141</li>
+					<li>Suv420h1</li>
+					<li>Gm16066</li>
+					<li>Gm19209</li>
+					<li>Chka</li>
+					<li>Tcirg1</li>
+					<li>Ndufs8</li>
+					<li>Aldh3b1</li>
+					<li>Unc93b1</li>
+					<li>1700055N04Rik</li>
+					<li>Aldh3b2</li>
+					<li>Acy3</li>
+					<li>Tbx10</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting an invalid marker range (one or both markers are missing coordinates; markers are on different chromosomes) returns error messages.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Input <b>Aff3</b> and <b>Tbx10</b>.</li>
+ 				<li>Verify result returns <b>Marker Aff3(1) not on same chromosome as Tbx10(19)</b>.</li>
+ 				<li>Input <b>Tbx10</b> and <b>D19Mit127</b>.</li>
+ 				<li>Verify result returns <b>Error: Your marker range contains at least one marker (D19Mit127) which has no genome coordinates. To query by marker range, both markers must have assigned genome coordinates.</b></li>
+ 			</ol>
+ 			</li>
+
 		</ol>
 
    		<h4>Gene Ontology classifications</h4>
 		<ol>
-    		<li>Test
+    		<li>Submitting a GO ID returns markers associated with the term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
+                <li>Enter <b>GO:0060710</b> (chorio-allantoic fusion) and submit the query. (has no descendants)</li>
+                <li>Verify <b>7</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <ul>
+                	<li>Cyr61</li>
+                	<li>Dnajb6</li>
+                	<li>Erf</li>
+                	<li>Itga4</li>
+                	<li>Lef1</li>
+                	<li>Vcam1</li>
+                	<li>Wnt7b</li>
+                </ul>
+                </li>
+                <li>Enter <b>GO:0070486</b> (leukocyte aggregation) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
+                <li>Verify <b>11</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <ul>
+                	<li>Adam8</li>
+                	<li>Bmp7</li>
+                	<li>Cd44</li>
+                	<li>Gstp1</li>
+                	<li>Has2</li>
+                	<li>Il1b</li>
+                	<li>S100a8</li>
+                	<li>S100a9</li>
+                	<li>Sema4d</li>
+                	<li>Spn</li>
+                	<li>Stk10</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting an exact GO term returns markers associated with the term and its descendants, if any.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Enter <b>leukocyte aggregation</b> (GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
+                <li>Verify <b>11</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <ul>
+                	<li>Adam8</li>
+                	<li>Bmp7</li>
+                	<li>Cd44</li>
+                	<li>Gstp1</li>
+                	<li>Has2</li>
+                	<li>Il1b</li>
+                	<li>S100a8</li>
+                	<li>S100a9</li>
+                	<li>Sema4d</li>
+                	<li>Spn</li>
+                	<li>Stk10</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting an exact GO synonym returns markers associated with the term and its descendants, if any.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Enter <b>leucocyte aggregation</b> (synonym for GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
+                <li>Verify <b>11</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <ul>
+                	<li>Adam8</li>
+                	<li>Bmp7</li>
+                	<li>Cd44</li>
+                	<li>Gstp1</li>
+                	<li>Has2</li>
+                	<li>Il1b</li>
+                	<li>S100a8</li>
+                	<li>S100a9</li>
+                	<li>Sema4d</li>
+                	<li>Spn</li>
+                	<li>Stk10</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting text which appears in more than one GO term returns markers associated with each term and its descendants, if any.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
                 <li>Step</li>
                 <li>Step</li>
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s).
  			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Step</li>
