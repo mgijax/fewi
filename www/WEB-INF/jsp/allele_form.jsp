@@ -88,7 +88,7 @@
         <textarea name="phenotype"
         placeholder="Phenotype terms, disease terms, or IDs"
         style="background-color: rgb(238,238,238); margin-left:2px; padding:2px; width: 380px; height: 40px;"
-        >${alleleQueryForm.phenotype}</textarea>
+        ><c:out value="${alleleQueryForm.phenotype}"/></textarea>
         <br/>
 
         <EM><STRONG>Select: </STRONG></EM>
@@ -134,7 +134,7 @@
         >Gene/Marker, or Allele</a>:
         <span style='margin-left:2px; padding:2px;'>
           <input type="text" size="36" name="nomen" style='margin-left:2px; padding:2px;'
-          placeholder="Symbols, names or synonyms" value="${alleleQueryForm.nomen}"></input>
+          placeholder="Symbols, names or synonyms" value="<c:out value="${alleleQueryForm.nomen}"/>"></input>
         </span><br/>
         <span class="example" style='margin-left:150px;'>
           Example: Pax6*&nbsp;&nbsp;&nbsp;*Sox2*&nbsp;&nbsp;&nbsp;*Yah&nbsp;&nbsp;&nbsp;*tm1b(KOMP)*
@@ -161,7 +161,7 @@
       >cM Position</a>:
       <br/>
       <span style='margin-left:25px;'>
-        between <input type="text" size="15" name="cm" value="${alleleQueryForm.cm}"></input>
+        between <input type="text" size="15" name="cm" value="<c:out value="${alleleQueryForm.cm}"/>"></input>
       </span>
       <br/>
       <span class="example" style='margin-left:75px;'>
@@ -175,7 +175,7 @@
       >Genome Coordinates</a>: <span class="example">(from GRCm38)</span>
       <br/>
       <span style='margin-left:25px;'>
-        between <input type="text" size="23" name="coordinate" value="${alleleQueryForm.coordinate}"></input>
+        between <input type="text" size="23" name="coordinate" value="<c:out value="${alleleQueryForm.coordinate}"/>"></input>
       <select name="coordUnit">
        <fewi:selectOptions items="${alleleQueryForm.coordUnitDisplay}" value="${alleleQueryForm.coordUnit}" />
       </select>

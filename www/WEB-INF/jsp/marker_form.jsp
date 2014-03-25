@@ -26,7 +26,7 @@ td.top { vertical-align: top; }
       <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_nomenclature'); return false;" href="${helpPage}#gene_nomenclature">Gene/Marker Symbol/Name</a>:
       </dt>
       <dd>
-		<input name="nomen" size="35" class="grayBackground" type="text" value="${queryForm.nomen}" placeholder="Symbols, names or synonym">
+		<input name="nomen" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.nomen}"/>" placeholder="Symbols, names or synonym">
 		<br/>
 		<span class="example">Example: Pax* *Sox2* *os *Col2a1*</span>
       </dd>
@@ -84,7 +84,7 @@ td.top { vertical-align: top; }
 	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#cm_offset'); return false;" href="${helpPage}#cm_offset">cM Position</a>: </dt>
 	      <dd>
 	        between
-	        <input name="cm" size="13" class="grayBackground" type="text" value="${queryForm.cm}">
+	        <input name="cm" size="13" class="grayBackground" type="text" value="<c:out value="${queryForm.cm}"/>">
 	      </dd>
 	      <dd>
 	        <span class="example" style="margin-left:50px;">Example: "10.0-40.0"</span>
@@ -99,7 +99,7 @@ td.top { vertical-align: top; }
 	      </dt>
 	      <dd>
 	        between
-	        <input name="coordinate" size="23" class="grayBackground" type="text" value="${queryForm.coordinate}">
+	        <input name="coordinate" size="23" class="grayBackground" type="text" value="<c:out value="${queryForm.coordinate}"/>">
 	        <select name="coordUnit" class="grayBackground">
        			<fewi:selectOptions items="${queryForm.coordUnitDisplay}" value="${queryForm.coordUnit}" />
       		</select>	
@@ -113,8 +113,8 @@ td.top { vertical-align: top; }
 	      </dt>
 	      <dd>
 	        between
-	        <input name="startMarker" size="12" class="grayBackground" type="text" value="${queryForm.startMarker}">
-	        and <input name="endMarker" size="12" class="grayBackground" type="text" value="${queryForm.endMarker}">
+	        <input name="startMarker" size="12" class="grayBackground" type="text" value="<c:out value="${queryForm.startMarker}"/>">
+	        and <input name="endMarker" size="12" class="grayBackground" type="text" value="<c:out value="${queryForm.endMarker}"/>">
 	      </dd>
 	      <dd>
 	      	<span class="example" style="margin-left:50px;">Example: between "D19Mit32" and "Tbx10"</span>
@@ -138,7 +138,7 @@ td.top { vertical-align: top; }
 	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_ontology'); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) Classifications</a>:
 	      </dt>
 	      <dd>
-	        <input name="go" size="35" type="text" value="${queryForm.go}">
+	        <input name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>">
 	        in
 	        <br/>
 	        <span class="example">Example: one two three</span>
@@ -166,7 +166,7 @@ td.top { vertical-align: top; }
 	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#interpro'); return false;" href="${helpPage}#interpro">InterPro Protein Domains</a>:
         </dt>
         <dd>
-          <input name="interpro" size="35" class="grayBackground" type="text" value="${queryForm.interpro}">
+          <input name="interpro" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.interpro}"/>">
           <br/>
           <span class="example">Example: four five six</span>
         </dd>
@@ -190,7 +190,7 @@ td.top { vertical-align: top; }
 	        <span class="example">Enter any combination of phenotype terms,
 	          disease terms, or IDs
 	        </span><br>
-	        <textarea name="phenotype" rows="2" cols="60" placeholder="Phenotype terms, disease terms, or IDs">${queryForm.phenotype}</textarea>
+	        <textarea name="phenotype" rows="2" cols="60" placeholder="Phenotype terms, disease terms, or IDs"><c:out value="${queryForm.phenotype}"/></textarea>
 	      	<br/>
 	      	<span class="vocabLink">
 		        <b>Select</b> <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}allele/phenoPopup?formName=markerQF',
