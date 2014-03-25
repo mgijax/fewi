@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.mgi.fewi.controller.MarkerController;
+import org.jax.mgi.fewi.forms.MarkerQueryForm;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockMarkerControllerQuery;
@@ -92,6 +93,12 @@ public class MarkerSummaryFromQueryTest extends BaseConcordionTest
 	{
 		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
 		mq.setMcvKey(decodeCommaValues(mcvKeys));
+		return mq.getMarkers().getTotalCount();
+	}
+	public int getMarkerCountAllMcv() throws Exception
+	{
+		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
+		mq.setMcvKey(this.getAllMcvKeys());
 		return mq.getMarkers().getTotalCount();
 	}
 	public List<String> getSymbolsByMcv(String mcvKeys) throws Exception
@@ -214,6 +221,11 @@ public class MarkerSummaryFromQueryTest extends BaseConcordionTest
 	private List<String> decodeCommaValues(String input)
 	{
 		return QueryParser.tokeniseOnWhitespaceAndComma(input);
+	}
+	private List<String> getAllMcvKeys()
+	{
+		markerController.initQueryForm();
+		return new ArrayList<String>(MarkerQueryForm.markerTypeKeyToDisplayMap.keySet());
 	}
 }
 	
