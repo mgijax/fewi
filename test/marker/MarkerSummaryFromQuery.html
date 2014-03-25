@@ -62,13 +62,14 @@
 	<h2>Logic Summary</h2>
 
 	<h3>Querying in Text Fields</h3>
-	<p>Description of logic to follow</p>
+	<p>Description of logic used in each of the text field inputs when a query is submitted:</p>
 
 	<h4>Nomenclature</h4>
 	<ul>
 		<li>Uses primarily the same logic as <a href="../allele/QueryFormNomenclature.html">Allele Query and Summary.</a></li>
 		<li>Does not include search against allele synonyms.</li>
 		<li>Initial and trailing wildcard symbols (asterisk) are supported; "internal" asterisks are treated literally.</li>
+		<li>Tokens are combined with Boolean AND. 
 	</ul>
 
 	<h4>GO and Protein Domain (InterPro)</h4>
@@ -108,7 +109,7 @@
                 <table>
 								<tr>
 									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
-									<th>Include in return</th>
+									<th>Include in return<br/>(may be others)</th>
 									<th>Exclude from return</th>
 									<th>Notes to tester</th>
 								</tr>
@@ -200,7 +201,7 @@
                 <table>
 								<tr>
 									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
-									<th>Include in return</th>
+									<th>Include in return<br/>(may be others)</th>
 									<th>Exclude from return</th>
 									<th>Notes to tester</th>
 								</tr>
@@ -251,7 +252,7 @@
                 <table>
 								<tr>
 									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
-									<th>Include in return</th>
+									<th>Include in return<br/>(may be others)</th>
 									<th>Exclude from return</th>
 									<th>Notes to tester</th>
 								</tr>
@@ -302,11 +303,104 @@
     		<li>Non-alphanumeric characters other than asterisks are used to define token boundaries.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
+                <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
+                <li>
+                <table>
+								<tr>
+									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
+									<th>Include in return<br />(may be others)
+									</th>
+									<th>Exclude from return</th>
+									<th>Notes to tester</th>
+								</tr>
+								<tr>
+									<td>Dach1-Pax6</td>
+									<td>Tg(Dach1-Pax6)#Fjl</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>-Pax6+Dach1</td>
+									<td>Tg(Dach1-Pax6)#Fjl</td>
+									<td></td>
+									<td>Not a string in a real name or symbol; verifying that the tokens are ANDed and characters don't matter.</td>
+								</tr>
+								<tr>
+									<td>Pax6*5a</td>
+									<td>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>-Pax6,-lacZ</td>
+									<td>
+										<ul>
+											<li>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</li>
+											<li>Tg(CAG-EGFP,-Pax6,-lacZ)1Stoy</li>
+										</ul>
+									</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>BV100Gsat</td>
+									<td>Tg(Pax6-EGFP)BV100Gsat</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Gsat</td>
+									<td></td>
+									<td>Tg(Pax6-EGFP)BV100Gsat</td>
+									<td>Verifying that tokenization is not happening on character-numeric string changes.</td>
+								</tr>
+							</table>
+						</li>
+    		</ol>
+    		</li>
+   		</ol>
+   		
+   		<h4>Feature type</h4>
+		<ol>
+    		<li>Markers returned for the selected feature type are of that type
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Select <b>polymorphic pseudogene</b> (count is 4 as of 3/25/2014) and submit the query with no other parameters.</li>
+                <li>Verify <b>4</b> markers are returned.</li>
+                <li>Verify the markers returned are all of the selected type.</li>
+                <li>Reopen the query and add selections for <b>RNase MRP RNA gene</b> (count=1) and <b>telomerase RNA gene</b> (count=1) and submit the query.</li>
+                <li>Verify <b>6</b> markers are returned.</li>
+                <li>Verify the 2 additional markers are of the additional types just selected.</li>
+    		</ol>
+    		</li>
+   		</ol>
+   		
+   		<h4>Map position</h4>
+		<ol>
+    		<li>Submitting a single chromosome selection returns markers for the chromosome.  Submitting multiple chromosome selections returns markers for all selected chromosomes. 
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Select chromosome <b>19</b> and submit the query with no other parameters.</li>
+                <li>Verify <b>2,185</b> markers are returned (as of 3/25/2014).</li>
+                <li>Reopen the query select only chromosome <b>Y</b> and submit the query.</li>
+                <li>Verify <b>701</b> markers are returned (as of 3/25/2014).</li>
+                <li>Reopen the query select chromosomes <b>19, Y</b> and submit the query.</li>
+                <li>Verify <b>2,886</b> markers are returned.</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
                 <li>Step</li>
                 <li>Step</li>
     		</ol>
     		</li>
+    		
+		</ol>
 
+   		<h4>Gene Ontology classifications</h4>
+		<ol>
     		<li>Test
  			<p concordion:assertTrue="false">new</p>
     		<ol>
@@ -322,7 +416,10 @@
                 <li>Step</li>
     		</ol>
     		</li>
-
+    		
+		</ol>
+   		<h4>Protein domains</h4>
+		<ol>
     		<li>Test
  			<p concordion:assertTrue="false">new</p>
     		<ol>
@@ -331,6 +428,18 @@
     		</ol>
     		</li>
 
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+    		
+		</ol>
+
+   		<h4>Mouse phenotypes &amp; mouse models of human disease</h4>
+		<ol>
     		<li>Test
  			<p concordion:assertTrue="false">new</p>
     		<ol>
