@@ -9,7 +9,7 @@
        <span class="label">ID</span>
   </td>
   <td class="summaryHeaderData1">
-    <a href="${configBean.FEWI_URL}marker/${marker.primaryID}" class="symbolLink">${marker.symbol}</a> 
+    <a href="${configBean.FEWI_URL}marker/${marker.primaryID}" class="symbolLink"><fewi:super value="${marker.symbol}"/></a> 
       	<c:if test="${marker.status == 'interim'}">(Interim)</c:if><br/>
     <span>${marker.name}</span><br/>
     <span>${marker.primaryID}</span>

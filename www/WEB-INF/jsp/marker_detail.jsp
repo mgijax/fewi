@@ -96,7 +96,7 @@ td.padded { padding:4px; }
 		</form>
 	</div>
     <div name="centeredTitle">
-	  <span class="titleBarMainTitle">${marker.symbol}</span><br/>
+	  <span class="titleBarMainTitle"><fewi:super value="${marker.symbol}"/></span><br/>
 	  ${marker.markerType} Detail
 	</div>
 </div>
@@ -116,7 +116,7 @@ td.padded { padding:4px; }
     <td class="<%=rightTdStyles.getNext() %>">
       <table style='width: 100%'>
         <tr style='width: 100%'><td style="text-align: left; vertical-align: top;">
-          <font size="+2"><B>${marker.symbol}</B><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
+          <font size="+2"><b><fewi:super value="${marker.symbol}"/></b><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
           </font><br/>
           <B>${marker.name}</B><br/>
           ${marker.primaryID}
@@ -157,7 +157,7 @@ td.padded { padding:4px; }
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
         <c:forEach var="synonym" items="${marker.synonyms}" varStatus="status">
-          ${synonym.synonym}<c:if test="${!status.last}">, </c:if>
+          <fewi:super value="${synonym.synonym}"/><c:if test="${!status.last}">, </c:if>
         </c:forEach>
       </td>
     </tr>

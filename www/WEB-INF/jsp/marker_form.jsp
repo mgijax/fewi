@@ -9,8 +9,8 @@ td.top { vertical-align: top; }
 <table class="queryStructureTable">
 
   <tr><td class="queryParams1" colspan="2">
-    Search for genes and markers by name, feature type, location, GO terms,
-    protein domains, etc.<br/>
+   <i>Search for genes and markers by name, feature type, location, GO terms,
+    protein domains, etc.</i><hr/>
     <input class="buttonLabel" value="Search" type="submit">&nbsp;&nbsp;
     <input class="reset" type="reset">
     <span class="example">Specify sorting and output options
