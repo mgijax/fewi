@@ -380,14 +380,14 @@
    		<h4>Map position</h4>
 		<ol>
     		<li>Submitting a single chromosome selection returns markers for the chromosome.  Submitting multiple chromosome selections returns markers for all selected chromosomes. 
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="false">new</p><i>(fully automated)</i>
     		<ol>
-                <li>Select chromosome <b>19</b> and submit the query with no other parameters.</li>
-                <li>Verify <b>2,185</b> markers are returned (as of 3/25/2014).</li>
-                <li>Reopen the query select only chromosome <b>Y</b> and submit the query.</li>
-                <li>Verify <b>701</b> markers are returned (as of 3/25/2014).</li>
-                <li>Reopen the query select chromosomes <b>19, Y</b> and submit the query.</li>
-                <li>Verify <b>2,886</b> markers are returned.</li>
+                <li>Select chromosome <b concordion:set="#chr">19</b> and submit the query with no other parameters.</li>
+                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChr19"></b></b> markers are returned.</li>
+                <li>Reopen the query select only chromosome <b concordion:set="#chr">Y</b> and submit the query.</li>
+                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChrY"></b></b> markers are returned.</li>
+                <li>Reopen the query select chromosomes <b concordion:set="#chr">19, Y</b> and submit the query.</li>
+                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChr19andY"></b></b> markers are returned.</li>
     		</ol>
     		</li>
 
