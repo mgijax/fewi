@@ -1545,7 +1545,8 @@ public class MarkerController {
     		MarkerQueryForm.setMarkerTypeKeyToDisplayMap(mcvToDisplay);
     	}
     }
-    private void initQueryForm()
+    /* For automated test access */
+    public void initQueryForm()
     {
     	/* if we don't have a cached version of the chromosome options (for
     	 * the selction list), then we need to pull them out of the database,
@@ -1600,12 +1601,6 @@ public class MarkerController {
 //    		initQueryForm(mtResults.getResultObjects());
 //    	}
     }
-    
-   private long bdToLong(BigDecimal bd)
-   {
-	   if(bd.compareTo(new BigDecimal(Integer.MAX_VALUE)) > 0) return Integer.MAX_VALUE;
-	   return bd.longValue();
-   }
     private boolean notEmpty(String s)
     {
     	return s!=null && !s.equals("");
