@@ -583,17 +583,202 @@
     		<li>Submitting text which appears in more than one GO term returns markers associated with each term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Enter <b>reticulum</b> in the GO input text field and submit the search.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+                <li>Verify the genes returned include the following:
+	                <table>
+						<tr>
+							<th>Gene</th>
+							<th>Annotated Term</th>
+							<th>GO sub-DAG</th>
+						</tr>
+						<tr>
+							<td>Srp14</td>
+							<td>endoplasmic reticulum signal peptide binding</td>
+							<td>Molecular Function</td>
+						</tr>
+						<tr>
+							<td>Srp54a</td>
+							<td>endoplasmic reticulum signal peptide binding</td>
+							<td>Molecular Function</td>
+						</tr>
+						<tr>
+							<td>Rab10</td>
+							<td>endoplasmic reticulum tubular network organization</td>
+							<td>Biological Process</td>
+						</tr>
+						<tr>
+							<td>Reep1</td>
+							<td>endoplasmic reticulum tubular network organization</td>
+							<td>Biological Process</td>
+						</tr>
+						<tr>
+							<td>H13</td>
+							<td>integral component of cytoplasmic side of endoplasmic reticulum membrane</td>
+							<td>Cellular Component</td>
+						</tr>
+						<tr>
+							<td>Pkd2</td>
+							<td>integral component of cytoplasmic side of endoplasmic reticulum membrane</td>
+							<td>Cellular Component</td>
+						</tr>
+					</table>
+				</li>
     		</ol>
     		</li>
 
     		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s).
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+				<li>Check only the box for <b>Molecular Function</b> and submit the search.</li>
+                <li>Verify the genes returned include or exclude the following, as indicated:
+                <table>
+					<tr>
+						<th>Gene</th>
+						<th>Annotated Term</th>
+						<th>Included / Excluded</th>
+						<th>GO sub-DAG</th>
+					</tr>
+					<tr>
+						<td>Srp14</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>included</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Srp54a</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>included</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Rab10</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>excluded</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>Reep1</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>excluded</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>H13</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>excluded</td>
+						<td>Cellular Component</td>
+					</tr>
+					<tr>
+						<td>Pkd2</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>excluded</td>
+						<td>Cellular Component</td>
+					</tr>
+				</table>
+				</li>
+                <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+				<li>Check only the box for <b>Biological Process</b> and submit the search.</li>
+                <li>Verify the genes returned include or exclude the following, as indicated:
+                <table>
+					<tr>
+						<th>Gene</th>
+						<th>Annotated Term</th>
+						<th>Included / Excluded</th>
+						<th>GO sub-DAG</th>
+					</tr>
+					<tr>
+						<td>Srp14</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>excluded</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Srp54a</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>excluded</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Rab10</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>included</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>Reep1</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>included</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>H13</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>excluded</td>
+						<td>Cellular Component</td>
+					</tr>
+					<tr>
+						<td>Pkd2</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>excluded</td>
+						<td>Cellular Component</td>
+					</tr>
+				</table>
+				</li>
+                <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+				<li>Check only the box for <b>Cellular Component</b> and submit the search.</li>
+                <li>Verify the genes returned include or exclude the following, as indicated:
+                <table>
+					<tr>
+						<th>Gene</th>
+						<th>Annotated Term</th>
+						<th>Included / Excluded</th>
+						<th>GO sub-DAG</th>
+					</tr>
+					<tr>
+						<td>Srp14</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>excluded</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Srp54a</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>excluded</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Rab10</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>excluded</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>Reep1</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>excluded</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>H13</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>included</td>
+						<td>Cellular Component</td>
+					</tr>
+					<tr>
+						<td>Pkd2</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>included</td>
+						<td>Cellular Component</td>
+					</tr>
+				</table>
+				</li>
     		</ol>
     		</li>
     		
