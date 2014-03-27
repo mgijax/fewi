@@ -75,14 +75,15 @@
 	<h4>GO and Protein Domain (InterPro)</h4>
 	<ul>
 		<li>Performs a tokenized query against Solr index.</li>
-		<li>Initial and trailing wildcard symbols (asterisk) are supported.</li>
+		<li>No wildcards. Uses MGI's standard &quot;contains text string&quot; approach (e.g., query for <i>rough</i> also returns matches for <i>through</i>).</li>
+		<li>Boolean support is desired in the future.</li>
 	</ul>
 
 	<h4>Pheno/Disease</h4>
 	<ul>
 		<li>Performs a tokenized query against Solr index.</li>
 		<li>Initial and trailing wildcard symbols (asterisk) are supported.</li>
-		<li>Returns only genes having annotated alleles in One Marker Genotypes (OMG) or Conditional genotypes. EXCLUDES markers for annotated alleles present only in Complex genotypes.</li>
+		<li>Returns only genes having annotated alleles in One Marker Genotypes (OMG) or Conditional genotypes. EXCLUDES markers for annotated alleles present only in Complex genotypes (unlike the Allele Query).</li>
 	</ul>
 </div>
 
@@ -957,6 +958,62 @@
 
    		<h4>Mouse phenotypes &amp; mouse models of human disease</h4>
 		<ol>
+    		<li>Submitting an MP or OMIM ID returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any. Markers having alleles only in Complex genotypes associated with the term are excluded.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting an exact MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any. Markers having alleles only in Complex genotypes associated with the term are excluded.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting an exact MP or OMIM synonym returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting text which appears in more than one MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with each term and its descendants, if any.
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li><i>Need test(s) for using wildcards.</i>
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li><i>Need test(s) for using Booleans.</i>
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
     		<li>Test
  			<p concordion:assertTrue="false">new</p>
     		<ol>
