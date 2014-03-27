@@ -393,48 +393,53 @@
 
     		<li>Submitting a chromosome + cM position range returns markers in that range.
  			<p concordion:assertTrue="false">new</p>
+ 			<i>(semi-auto)</i>
     		<ol>
-                <li>Select chromosome <b>1</b> and cM range <b>10-20</b> and submit the query with no other parameters.</li>
+                <li>Select chromosome <b concordion:set="#chr">1</b> and cM range <b concordion:set="#cm">10-20</b> and submit the query with no other parameters.</li>
                 <li>Verify <b>211</b> markers are returned.</li>
                 <li>Verify the list includes the following markers:
-                <ul>
-                	<li>Affr</li>
-                	<li>Cocia4</li>
-                	<li>Creg2</li>
-                	<li>D1Mit20</li>
-                	<li>Eif5b</li>
-                	<li>Gm4850</li>
-                	<li>Prss40</li>
-                	<li>Snord89</li>
-                	<li>Zfp451</li>
-                </ul>
+                <table cc:verifySupersetOf="#symbol : getSymbolsByChrCm(#chr,#cm)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Aff3</td></tr>
+                	<tr><td>Cocia4</td></tr>
+                	<tr><td>Creg2</td></tr>
+                	<tr><td>D1Mit20</td></tr>
+                	<tr><td>Eif5b</td></tr>
+                	<tr><td>Gm4850</td></tr>
+                	<tr><td>Prss40</td></tr>
+                	<tr><td>Snord89</td></tr>
+                	<tr><td>Zfp451</td></tr>
+                </table>
                 </li>
     		</ol>
     		</li>
 
     		<li>Submitting a chromosome + genome coordinates range returns markers in that range.
  			<p concordion:assertTrue="false">new</p>
+ 			<i>(semi-auto)</i>
     		<ol>
-                <li>Select chromosome <b>1</b> and genome coordinates range <b>24332803-40772038</b> with units <b>bp</b> and submit the query with no other parameters.</li>
+                <li>Select chromosome <b concordion:set="#chr">1</b> and genome coordinates range <b concordion:set="#coord">24332803-40772038</b> with units <b>bp</b> and submit the query with no other parameters.</li>
                 <li>Verify <b>298</b> markers are returned.</li>
                 <li>Verify the list includes the following markers:
-                <ul>
-                	<li>Aff3</li>
-                	<li>Creg2</li>
-                	<li>D1Mit20</li>
-                	<li>Eif5b</li>
-                	<li>Gm4850</li>
-                	<li>Prss40</li>
-                	<li>Snord89</li>
-                	<li>Zfp451</li>
-                </ul>
+                <table cc:verifySupersetOf="#symbol : getSymbolsByChrCoord(#chr,#coord)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Aff3</td></tr>
+                	<tr><td>Creg2</td></tr>
+                	<tr><td>D1Mit20</td></tr>
+                	<tr><td>Eif5b</td></tr>
+                	<tr><td>Gm4850</td></tr>
+                	<tr><td>Prss40</td></tr>
+                	<tr><td>Snord89</td></tr>
+                	<tr><td>Zfp451</td></tr>
+                </table>
                 </li>
                 <li>Verify the following markers are not returned (no coordinates):
-                <ul>
-                	<li>Cocia4</li>
-                	<li>D1Mit412</li>
-                	<li>Dbsty1</li>
-                </ul>
+                <table cc:verifyNotRows="#symbol : getSymbolsByChrCoord(#chr,#coord)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Cocia4</td></tr>
+                	<tr><td>D1Mit412</td></tr>
+                	<tr><td>Dbsty1</td></tr>
+                </table>
                 </li>
                 <li>Reopen the query and select chromosome <b>1</b> and genome coordinates range <b>24.332-40.772</b> with units <b>Mbp</b> and submit the query with no other parameters.</li>
                 <li>Verify <b>297</b> markers are returned.</li>
@@ -443,43 +448,45 @@
 
     		<li>Submitting a marker range returns markers which fall between the start coordinate of the one marker and the end coordinate of the other marker.
  			<p concordion:assertTrue="false">new</p>
+ 			<i>(semi-auto)</i>
     		<ol>
-                <li>Input <b>D19Mit32</b> and <b>Tbx10</b>.</li>
+                <li>Input <b concordion:set="#startMarker">D19Mit32</b> and <b concordion:set="#endMarker">Tbx10</b>.</li>
                 <li>Verify the following markers are returned (these are sorted by genome coordinates):
-                <ul>
-                	<li>Ighmbp2</li>
-					<li>D19Mit32</li>
-					<li>Lfp3</li>
-					<li>Tgct2</li>
-					<li>Mrpl21</li>
-					<li>Gm27771</li>
-					<li>Gm7810</li>
-					<li>Cpt1a</li>
-					<li>4833417J20Rik</li>
-					<li>Mtl5</li>
-					<li>Gal</li>
-					<li>Ppp6r3</li>
-					<li>Gm23940</li>
-					<li>Gm19205</li>
-					<li>n-Ta9</li>
-					<li>Lrp5</li>
-					<li>D19Mit68</li>
-					<li>Drinksac2</li>
-					<li>1810055G02Rik</li>
-					<li>Gm2141</li>
-					<li>Suv420h1</li>
-					<li>Gm16066</li>
-					<li>Gm19209</li>
-					<li>Chka</li>
-					<li>Tcirg1</li>
-					<li>Ndufs8</li>
-					<li>Aldh3b1</li>
-					<li>Unc93b1</li>
-					<li>1700055N04Rik</li>
-					<li>Aldh3b2</li>
-					<li>Acy3</li>
-					<li>Tbx10</li>
-                </ul>
+                <table cc:verifySupersetOf="#symbol : getSymbolsByRange(#startMarker,#endMarker)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Ighmbp2</td></tr>
+					<tr><td>D19Mit32</td></tr>
+					<tr><td>Lfp3</td></tr>
+					<tr><td>Tgct2</td></tr>
+					<tr><td>Mrpl21</td></tr>
+					<tr><td>Gm27771</td></tr>
+					<tr><td>Gm7810</td></tr>
+					<tr><td>Cpt1a</td></tr>
+					<tr><td>4833417J20Rik</td></tr>
+					<tr><td>Mtl5</td></tr>
+					<tr><td>Gal</td></tr>
+					<tr><td>Ppp6r3</td></tr>
+					<tr><td>Gm23940</td></tr>
+					<tr><td>Gm19205</td></tr>
+					<tr><td>n-Ta9</td></tr>
+					<tr><td>Lrp5</td></tr>
+					<tr><td>D19Mit68</td></tr>
+					<tr><td>Drinksac2</td></tr>
+					<tr><td>1810055G02Rik</td></tr>
+					<tr><td>Gm2141</td></tr>
+					<tr><td>Suv420h1</td></tr>
+					<tr><td>Gm16066</td></tr>
+					<tr><td>Gm19209</td></tr>
+					<tr><td>Chka</td></tr>
+					<tr><td>Tcirg1</td></tr>
+					<tr><td>Ndufs8</td></tr>
+					<tr><td>Aldh3b1</td></tr>
+					<tr><td>Unc93b1</td></tr>
+					<tr><td>1700055N04Rik</td></tr>
+					<tr><td>Aldh3b2</td></tr>
+					<tr><td>Acy3</td></tr>
+					<tr><td>Tbx10</td></tr>
+                </table>
                 </li>
     		</ol>
     		</li>
@@ -501,35 +508,37 @@
     		<li>Submitting a GO ID returns markers associated with the term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>GO:0060710</b> (chorio-allantoic fusion) and submit the query. (has no descendants)</li>
+                <li>Enter <b concordion:set="#go">GO:0060710</b> (chorio-allantoic fusion) and submit the query. (has no descendants)</li>
                 <li>Verify <b>7</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <ul>
-                	<li>Cyr61</li>
-                	<li>Dnajb6</li>
-                	<li>Erf</li>
-                	<li>Itga4</li>
-                	<li>Lef1</li>
-                	<li>Vcam1</li>
-                	<li>Wnt7b</li>
-                </ul>
+                <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Cyr61</td></tr>
+                	<tr><td>Dnajb6</td></tr>
+                	<tr><td>Erf</td></tr>
+                	<tr><td>Itga4</td></tr>
+                	<tr><td>Lef1</td></tr>
+                	<tr><td>Vcam1</td></tr>
+                	<tr><td>Wnt7b</td></tr>
+                </table>
                 </li>
-                <li>Enter <b>GO:0070486</b> (leukocyte aggregation) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
+                <li>Enter <b concordion:set="#go">GO:0070486</b> (leukocyte aggregation) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
                 <li>Verify <b>11</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <ul>
-                	<li>Adam8</li>
-                	<li>Bmp7</li>
-                	<li>Cd44</li>
-                	<li>Gstp1</li>
-                	<li>Has2</li>
-                	<li>Il1b</li>
-                	<li>S100a8</li>
-                	<li>S100a9</li>
-                	<li>Sema4d</li>
-                	<li>Spn</li>
-                	<li>Stk10</li>
-                </ul>
+                <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Adam8</td></tr>
+                	<tr><td>Bmp7</td></tr>
+                	<tr><td>Cd44</td></tr>
+                	<tr><td>Gstp1</td></tr>
+                	<tr><td>Has2</td></tr>
+                	<tr><td>Il1b</td></tr>
+                	<tr><td>S100a8</td></tr>
+                	<tr><td>S100a9</td></tr>
+                	<tr><td>Sema4d</td></tr>
+                	<tr><td>Spn</td></tr>
+                	<tr><td>Stk10</td></tr>
+                </table>
                 </li>
     		</ol>
     		</li>
@@ -537,22 +546,23 @@
     		<li>Submitting an exact GO term returns markers associated with the term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>leukocyte aggregation</b> (GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
+                <li>Enter <b concordion:set="#go">leukocyte aggregation</b> (GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
                 <li>Verify <b>11</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <ul>
-                	<li>Adam8</li>
-                	<li>Bmp7</li>
-                	<li>Cd44</li>
-                	<li>Gstp1</li>
-                	<li>Has2</li>
-                	<li>Il1b</li>
-                	<li>S100a8</li>
-                	<li>S100a9</li>
-                	<li>Sema4d</li>
-                	<li>Spn</li>
-                	<li>Stk10</li>
-                </ul>
+                <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Adam8</td></tr>
+                	<tr><td>Bmp7</td></tr>
+                	<tr><td>Cd44</td></tr>
+                	<tr><td>Gstp1</td></tr>
+                	<tr><td>Has2</td></tr>
+                	<tr><td>Il1b</td></tr>
+                	<tr><td>S100a8</td></tr>
+                	<tr><td>S100a9</td></tr>
+                	<tr><td>Sema4d</td></tr>
+                	<tr><td>Spn</td></tr>
+                	<tr><td>Stk10</td></tr>
+                </table>
                 </li>
     		</ol>
     		</li>
