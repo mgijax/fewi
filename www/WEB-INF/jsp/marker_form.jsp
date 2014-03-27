@@ -138,7 +138,7 @@ td.top { vertical-align: top; }
 	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_ontology'); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) classifications</a>:
 	      </dt>
 	      <dd>
-	        <input name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>">
+	        contains <input name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>">
 	        in
 	        <br/>
 	        <span class="example">Example: one two three</span>
@@ -166,7 +166,7 @@ td.top { vertical-align: top; }
 	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#interpro'); return false;" href="${helpPage}#interpro">InterPro Protein Domains</a>:
         </dt>
         <dd>
-          <input name="interpro" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.interpro}"/>">
+         contains <input name="interpro" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.interpro}"/>">
           <br/>
           <span class="example">Example: four five six</span>
         </dd>
