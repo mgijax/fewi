@@ -101,11 +101,17 @@ public class Filter {
 	    OP_WORD_BEGINS = 13,
 	    OP_NOT_HAS = 14;
 
-	// advanced operators
+	/*
+	 *  advanced operators
+	 *  
+	 *  Some of these are only subtley different from those above.
+	 *  	When in doubt, use one of the basic operators
+	 */
 	public static final int
 		OP_GREEDY_BEGINS = 99,
 		OP_IN = 100,
-		OP_NOT_IN = 101;
+		OP_NOT_IN = 101,
+		OP_STRING_CONTAINS = 102;
 
 	// operators for nested filters
 	public static final int

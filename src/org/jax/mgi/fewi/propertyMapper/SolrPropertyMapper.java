@@ -145,6 +145,9 @@ public class SolrPropertyMapper
         else if (operand == Filter.OP_CONTAINS) {
             val =  field + ":" + "(" + value + ")";
         }
+        else if (operand == Filter.OP_STRING_CONTAINS) {
+            val =  field + ":" + "*" + value + "*";
+        }
         else if (operand == Filter.OP_GREEDY_BEGINS) {
         	val =  "("+field + ":" + value + " OR "+field + ":" + value+"* )";
         }
