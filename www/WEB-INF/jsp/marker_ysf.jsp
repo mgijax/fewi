@@ -39,9 +39,9 @@
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.go}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	GO: any of <b>${queryForm.go}</b>
+	GO: contains <b>${queryForm.go}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.interpro}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	InterPro Domain: any of <b>${queryForm.interpro}</b>
+	InterPro Domain: contains <b>${queryForm.interpro}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
