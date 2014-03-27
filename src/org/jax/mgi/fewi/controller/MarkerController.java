@@ -1360,24 +1360,32 @@ public class MarkerController {
 		 String interpro = query.getInterpro();
 		 if(notEmpty(interpro))
 		 {
-			 queryFilters.add(new Filter("interpro",interpro,Filter.OP_EQUAL));
+			 List<Filter> interproFilters = new ArrayList<Filter>();
+			 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(interpro))
+			 {
+				 interproFilters.add(new Filter("interpro",token,Filter.OP_STRING_CONTAINS));
+			 }
+			 queryFilters.add(Filter.and(interproFilters));
 		 }
+		 
 		 //GO
 		 String go = query.getGo();
 		 if(notEmpty(go))
 		 {
 			 List<String> goVocabs = query.getGoVocab();
 			 List<Filter> goVocabFilters = new ArrayList<Filter>();
-			 if(notEmpty(goVocabs) && goVocabs.size()<3)
+			 if(!(notEmpty(goVocabs) && goVocabs.size()<3))
 			 {
-				 for(String goVocab : goVocabs)
-				 {
-					 goVocabFilters.add(new Filter(goVocab,go,Filter.OP_EQUAL));
-				 }
+				 goVocabs = Arrays.asList("go");
 			 }
-			 else
+			 for(String goVocab : goVocabs)
 			 {
-				 goVocabFilters.add(new Filter("go",go,Filter.OP_EQUAL));
+				 List<Filter> containsFilters = new ArrayList<Filter>();
+				 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(go))
+				 {
+					 containsFilters.add(new Filter(goVocab,token,Filter.OP_STRING_CONTAINS));
+				 }
+				 goVocabFilters.add(Filter.and(containsFilters));
 			 }
 			 queryFilters.add(Filter.or(goVocabFilters));
 		 }
