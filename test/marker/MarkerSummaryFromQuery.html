@@ -789,25 +789,167 @@
 					</tr>
 				</table>
 				</li>
+                <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+				<li>Check only the boxes for <b>Molecular Function</b> and <b>Cellular Component</b> and submit the search.</li>
+                <li>Verify the genes returned include or exclude the following, as indicated:
+                <table>
+					<tr>
+						<th>Gene</th>
+						<th>Annotated Term</th>
+						<th>Included / Excluded</th>
+						<th>GO sub-DAG</th>
+					</tr>
+					<tr>
+						<td>Srp14</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>included</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Srp54a</td>
+						<td>endoplasmic reticulum signal peptide binding</td>
+						<td>included</td>
+						<td>Molecular Function</td>
+					</tr>
+					<tr>
+						<td>Rab10</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>excluded</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>Reep1</td>
+						<td>endoplasmic reticulum tubular network organization</td>
+						<td>excluded</td>
+						<td>Biological Process</td>
+					</tr>
+					<tr>
+						<td>H13</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>included</td>
+						<td>Cellular Component</td>
+					</tr>
+					<tr>
+						<td>Pkd2</td>
+						<td>integral component of cytoplasmic side of endoplasmic
+							reticulum membrane</td>
+						<td>included</td>
+						<td>Cellular Component</td>
+					</tr>
+				</table>
+				</li>
     		</ol>
     		</li>
     		
 		</ol>
    		<h4>Protein domains</h4>
 		<ol>
-    		<li>Test
+    		<li>Submitting an InterPro ID returns markers associated with the term (we do not represent InterPro as a DAG or hierarchy, even though it is one).
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Enter <b>IPR000001</b> (Kringle) and submit the query. (has no descendants)</li>
+                <li>Verify <b>15</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <table >
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>F12</td></tr>
+                	<tr><td>F2</td></tr>
+                	<tr><td>Habp2</td></tr>
+                	<tr><td>Hgfac</td></tr>
+                	<tr><td>Mst1</td></tr>
+                	<tr><td>Plau</td></tr>
+                	<tr><td>Ror1</td></tr>
+                	<tr><td>Ror2</td></tr>
+                </table>
+                </li>
+                <li>Enter <b>IPR000562</b> (Fibronectin, type II, collagen-binding) and submit the query. (has no descendants)</li>
+                <li>Verify <b>13</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <table >
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Bsph1</td></tr>
+                	<tr><td>F12</td></tr>
+                	<tr><td>Hgfac</td></tr>
+                	<tr><td>Ly75</td></tr>
+                	<tr><td>Mmp2</td></tr>
+                	<tr><td>Mmp9</td></tr>
+                	<tr><td>Pla2r1</td></tr>
+                	<tr><td>Sel1l</td></tr>
+                </table>
+                </li>
+                <li>Enter <b>IPR013806</b> (Kringle-like fold) and submit the query. (has annotated descendants; is the parent term of the previous two queried terms; has no genes annotated ONLY to the parent term)</li>
+                <li>Verify <b>25</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <table >
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Bsph1</td></tr>
+                	<tr><td>F12</td></tr>
+                	<tr><td>F2</td></tr>
+                	<tr><td>Habp2</td></tr>
+                	<tr><td>Hgfac</td></tr>
+                	<tr><td>Mmp2</td></tr>
+                	<tr><td>Mmp9</td></tr>
+                	<tr><td>Mst1</td></tr>
+                	<tr><td>Plau</td></tr>
+                	<tr><td>Pla2r1</td></tr>
+                	<tr><td>Ror1</td></tr>
+                	<tr><td>Ror2</td></tr>
+                	<tr><td>Sel1l</td></tr>
+                </table>
+                </li>
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>Submitting an exact InterPro term returns markers associated with the term.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Enter <b>Kringle-like fold</b> (IPR013806) and submit the query. (has annotated descendants; is the parent term of the previous two queried terms; has no genes annotated ONLY to the parent term)</li>
+                <li>Verify <b>25</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <table >
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Bsph1</td></tr>
+                	<tr><td>F12</td></tr>
+                	<tr><td>F2</td></tr>
+                	<tr><td>Habp2</td></tr>
+                	<tr><td>Hgfac</td></tr>
+                	<tr><td>Mmp2</td></tr>
+                	<tr><td>Mmp9</td></tr>
+                	<tr><td>Mst1</td></tr>
+                	<tr><td>Plau</td></tr>
+                	<tr><td>Pla2r1</td></tr>
+                	<tr><td>Ror1</td></tr>
+                	<tr><td>Ror2</td></tr>
+                	<tr><td>Sel1l</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Submitting text which appears in more than one InterPro term returns markers associated with any matching term(s).
+ 			<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Enter <b>fibronec</b> (piece of text which appears in many protein domain names which have annotated genes) and submit the query.</li>
+                <li>Verify <b>231</b> genes are returned.</li>
+                <li>Verify the genes returned include:
+                <table >
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+        			<tr><td>Abi3bp</td></tr>
+                	<tr><td>Bsph1</td></tr>
+                	<tr><td>Epha1</td></tr>
+                	<tr><td>F12</td></tr>
+                	<tr><td>Hgfac</td></tr>
+                	<tr><td>Mmp2</td></tr>
+                	<tr><td>Mmp9</td></tr>
+                	<tr><td>Mylk</td></tr>
+                	<tr><td>Pla2r1</td></tr>
+                	<tr><td>Prlr</td></tr>
+                	<tr><td>Robo1</td></tr>
+                	<tr><td>Robo2</td></tr>
+                	<tr><td>Tnn</td></tr>
+                </table>
+                </li>
     		</ol>
     		</li>
     		
