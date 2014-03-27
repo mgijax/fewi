@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.jax.mgi.fewi.searchUtil.Filter;
 
 /**
@@ -146,7 +147,7 @@ public class SolrPropertyMapper
             val =  field + ":" + "(" + value + ")";
         }
         else if (operand == Filter.OP_STRING_CONTAINS) {
-            val =  field + ":" + "*" + value + "*";
+            val =  field + ":" + "*" + ClientUtils.escapeQueryChars(value) + "*";
         }
         else if (operand == Filter.OP_GREEDY_BEGINS) {
         	val =  "("+field + ":" + value + " OR "+field + ":" + value+"* )";

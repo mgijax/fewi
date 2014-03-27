@@ -95,8 +95,7 @@ public class MarkerController {
     //--------------------//
 
     // maps from marker key to the URL for the minimap image
-    private static HashMap<Integer,String> minimaps = 
-	    new HashMap<Integer,String>();
+    private static HashMap<Integer,String> minimaps =  new HashMap<Integer,String>();
 
     //--------------------//
     // instance variables
@@ -1361,6 +1360,7 @@ public class MarkerController {
 		 if(notEmpty(interpro))
 		 {
 			 List<Filter> interproFilters = new ArrayList<Filter>();
+			 
 			 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(interpro))
 			 {
 				 interproFilters.add(new Filter("interpro",token,Filter.OP_STRING_CONTAINS));
@@ -1385,8 +1385,10 @@ public class MarkerController {
 				 {
 					 containsFilters.add(new Filter(goVocab,token,Filter.OP_STRING_CONTAINS));
 				 }
+				 // AND the contains search tokens
 				 goVocabFilters.add(Filter.and(containsFilters));
 			 }
+			 // OR the query against each vocabulary (e.g. function,process,component)
 			 queryFilters.add(Filter.or(goVocabFilters));
 		 }
         
