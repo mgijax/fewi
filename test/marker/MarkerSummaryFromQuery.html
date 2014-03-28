@@ -561,22 +561,23 @@
     		<li>Submitting an exact GO synonym returns markers associated with the term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>leucocyte aggregation</b> (synonym for GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
+                <li>Enter <b concordion:set="#go">leucocyte aggregation</b> (synonym for GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
                 <li>Verify <b>11</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <ul>
-                	<li>Adam8</li>
-                	<li>Bmp7</li>
-                	<li>Cd44</li>
-                	<li>Gstp1</li>
-                	<li>Has2</li>
-                	<li>Il1b</li>
-                	<li>S100a8</li>
-                	<li>S100a9</li>
-                	<li>Sema4d</li>
-                	<li>Spn</li>
-                	<li>Stk10</li>
-                </ul>
+                 <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Adam8</td></tr>
+                	<tr><td>Bmp7</td></tr>
+                	<tr><td>Cd44</td></tr>
+                	<tr><td>Gstp1</td></tr>
+                	<tr><td>Has2</td></tr>
+                	<tr><td>Il1b</td></tr>
+                	<tr><td>S100a8</td></tr>
+                	<tr><td>S100a9</td></tr>
+                	<tr><td>Sema4d</td></tr>
+                	<tr><td>Spn</td></tr>
+                	<tr><td>Stk10</td></tr>
+                </table>
                 </li>
     		</ol>
     		</li>
@@ -584,11 +585,11 @@
     		<li>Submitting text which appears in more than one GO term returns markers associated with each term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>reticulum</b> in the GO input text field and submit the search.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+                <li>Enter <b concordion:set="#go">reticulum</b> in the GO input text field and submit the search.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
                 <li>Verify the genes returned include the following:
-	                <table>
+	                <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
 						<tr>
-							<th>Gene</th>
+							<th concordion:assertEquals="#symbol">Gene</th>
 							<th>Annotated Term</th>
 							<th>GO sub-DAG</th>
 						</tr>
@@ -630,12 +631,12 @@
     		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s).
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+                <li>Enter <b concordion:set="#go">reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
 				<li>Check only the box for <b>Molecular Function</b> and submit the search.</li>
                 <li>Verify the genes returned include or exclude the following, as indicated:
-                <table>
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
 					<tr>
-						<th>Gene</th>
+						<th concordion:assertEquals="#symbol">Gene</th>
 						<th>Annotated Term</th>
 						<th>Included / Excluded</th>
 						<th>GO sub-DAG</th>
@@ -839,9 +840,10 @@
     		<li>Submitting an InterPro ID returns markers associated with the term (we do not represent InterPro as a DAG or hierarchy, even though it is one).
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>IPR000001</b> (Kringle) and submit the query. (has no descendants)</li>
+                <li>Enter <b concordion:set="#interpro">IPR000001</b> (Kringle) and submit the query. (has no descendants)</li>
+                <li>Verify <b>15</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <table >
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByInterpro(#interpro)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
                 	<tr><td>F12</td></tr>
                 	<tr><td>F2</td></tr>
@@ -853,9 +855,10 @@
                 	<tr><td>Ror2</td></tr>
                 </table>
                 </li>
-                <li>Enter <b>IPR000562</b> (Fibronectin, type II, collagen-binding) and submit the query. (has no descendants)</li>
+                <li>Enter <b concordion:set="#interpro">IPR000562</b> (Fibronectin, type II, collagen-binding) and submit the query. (has no descendants)</li>
+                <li>Verify <b>13</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <table >
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByInterpro(#interpro)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
                 	<tr><td>Bsph1</td></tr>
                 	<tr><td>F12</td></tr>
@@ -867,9 +870,10 @@
                 	<tr><td>Sel1l</td></tr>
                 </table>
                 </li>
-                <li>Enter <b>IPR013806</b> (Kringle-like fold) and submit the query. (has annotated descendants; is the parent term of the previous two queried terms; has no genes annotated ONLY to the parent term)</li>
+                <li>Enter <b concordion:set="#interpro">IPR013806</b> (Kringle-like fold) and submit the query. (has annotated descendants; is the parent term of the previous two queried terms; has no genes annotated ONLY to the parent term)</li>
+                <li>Verify <b>25</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <table >
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByInterpro(#interpro)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
                 	<tr><td>Bsph1</td></tr>
                 	<tr><td>F12</td></tr>
@@ -892,9 +896,10 @@
     		<li>Submitting an exact InterPro term returns markers associated with the term.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>Kringle-like fold</b> (IPR013806) and submit the query. (has annotated descendants; is the parent term of the previous two queried terms; has no genes annotated ONLY to the parent term)</li>
+                <li>Enter <b concordion:set="#interpro">Kringle-like fold</b> (IPR013806) and submit the query. (has annotated descendants; is the parent term of the previous two queried terms; has no genes annotated ONLY to the parent term)</li>
+                <li>Verify <b>25</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <table >
+                <table cc:verifySupersetOf="#symbol : getSymbolsByInterpro(#interpro)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
                 	<tr><td>Bsph1</td></tr>
                 	<tr><td>F12</td></tr>
@@ -917,9 +922,10 @@
     		<li>Submitting text which appears in more than one InterPro term returns markers associated with any matching term(s).
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>fibronec</b> (piece of text which appears in many protein domain names which have annotated genes) and submit the query.</li>
+                <li>Enter <b concordion:set="#interpro">fibronec</b> (piece of text which appears in many protein domain names which have annotated genes) and submit the query.</li>
+                <li>Verify <b>231</b> genes are returned.</li>
                 <li>Verify the genes returned include:
-                <table >
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByInterpro(#interpro)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
         			<tr><td>Abi3bp</td></tr>
                 	<tr><td>Bsph1</td></tr>
@@ -946,9 +952,9 @@
     		<li>Submitting an MP or OMIM ID returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any. Markers having alleles only in Complex genotypes associated with the term are excluded.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>MP:0009335</b> (decreased splenocyte proliferation) and submit the query. (has no descendants)</li>
+                <li>Enter <b concordion:set="#pheno">MP:0009335</b> (decreased splenocyte proliferation) and submit the query. (has no descendants)</li>
                 <li>Verify the markers returned include:
-                <table >
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
                 	<tr><td>Aire</td><td></td></tr>
                 	<tr><td>Apex2</td><td></td></tr>
@@ -959,7 +965,7 @@
                 </table>
                 </li>
                 <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
-                <table >
+	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
                 	<tr><td>Cd28</td></tr>
                 	<tr><td>Hprt</td></tr>
@@ -972,9 +978,9 @@
     		<li>Submitting an exact MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any. Markers having alleles only in Complex genotypes associated with the term are excluded.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>"decreased splenocyte proliferation"</b> (MP:0009335) USING quotation marks, and submit the query. (has no descendants)</li>
+                <li>Enter <b concordion:set="#pheno">"decreased splenocyte proliferation"</b> (MP:0009335) USING quotation marks, and submit the query. (has no descendants)</li>
                 <li>Verify the markers returned include:
-                <table >
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
                 	<tr><td>Aire</td><td></td></tr>
                 	<tr><td>Apex2</td><td></td></tr>
@@ -985,7 +991,7 @@
                 </table>
                 </li>
                 <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
-                <table >
+	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
                 	<tr><td>Cd28</td></tr>
                 	<tr><td>Hprt</td></tr>
@@ -998,9 +1004,9 @@
     		<li>Submitting an exact MP or OMIM synonym returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>"reduced splenocyte proliferation"</b> (synonym for MP:0009335 above) USING quotation marks, and submit the query. (has no descendants)</li>
+                <li>Enter <b concordion:set="#pheno">"reduced splenocyte proliferation"</b> (synonym for MP:0009335 above) USING quotation marks, and submit the query. (has no descendants)</li>
                 <li>Verify the markers returned include:
-                <table >
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
                 	<tr><td>Aire</td><td></td></tr>
                 	<tr><td>Apex2</td><td></td></tr>
@@ -1011,7 +1017,7 @@
                 </table>
                 </li>
                 <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
-                <table >
+	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
                 	<tr><td>Cd28</td></tr>
                 	<tr><td>Hprt</td></tr>
@@ -1024,9 +1030,9 @@
     		<li>Submitting text which appears in more than one MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with each term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b>splenocyte</b> in the GO input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes??) </li>
+                <li>Enter <b concordion:set="#pheno">splenocyte</b> in the GO input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes??) </li>
                 <li>Verify the markers returned include:
-                <table>
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
 									<th concordion:assertEquals="#symbol">Marker Symbol</th>
 									<th>Notes</th>
@@ -1079,7 +1085,7 @@
 							</table>
 						</li>
                 <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
-                <table>
+	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
 									<th>Marker Symbol</th>
 									<th>Notes</th>
