@@ -998,16 +998,122 @@
     		<li>Submitting an exact MP or OMIM synonym returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Enter <b>"reduced splenocyte proliferation"</b> (synonym for MP:0009335 above) USING quotation marks, and submit the query. (has no descendants)</li>
+                <li>Verify the markers returned include:
+                <table >
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
+                	<tr><td>Aire</td><td></td></tr>
+                	<tr><td>Apex2</td><td></td></tr>
+                	<tr><td>Habp2</td><td></td></tr>
+                	<tr><td>Il10ra</td><td>Annotated allele is in a Conditional genotype</td></tr>
+                	<tr><td>Prkcq</td><td>Annotated alleles in an OMG and a Conditional genotype</td></tr>
+                	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated alleles in a Conditional genotype</td></tr>
+                </table>
+                </li>
+                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
+                <table >
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+                	<tr><td>Cd28</td></tr>
+                	<tr><td>Hprt</td></tr>
+                	<tr><td>Impdh1</td></tr>
+                </table>
+                </li>
     		</ol>
     		</li>
 
     		<li>Submitting text which appears in more than one MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with each term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Enter <b>splenocyte</b> in the GO input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes??) </li>
+                <li>Verify the markers returned include:
+                <table>
+								<tr>
+									<th concordion:assertEquals="#symbol">Marker Symbol</th>
+									<th>Notes</th>
+								</tr>
+								<tr>
+									<td>Aire</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Apex2</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Bcl2l11</td>
+									<td>Complex geno for some terms, OMG for others, so should
+										be included.</td>
+								</tr>
+								<tr>
+									<td>Braf</td>
+									<td>MP:0009340, OMGs</td>
+								</tr>
+								<tr>
+									<td>Habp2</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Idd6.1</td>
+									<td>Not in annotations, but "splenocyte" exists in (QTL) Notes for two QTL alleles.</td>
+								</tr>
+								<tr>
+									<td>Il10ra</td>
+									<td>Annotated allele is in a Conditional genotype</td>
+								</tr>
+								<tr>
+									<td>Prkcq</td>
+									<td>Annotated alleles in an OMG and a Conditional genotype</td>
+								</tr>
+								<tr>
+									<td>Srrt</td>
+									<td>MP:0009340, Conditional genotype</td>
+								</tr>
+								<tr>
+									<td>Steap</td>
+									<td>MP:0009340, OMGs</td>
+								</tr>
+								<tr>
+									<td>Tg(Cd4-cre)1Cwi</td>
+									<td>Annotated alleles in a Conditional genotype</td>
+								</tr>
+							</table>
+						</li>
+                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
+                <table>
+								<tr>
+									<th>Marker Symbol</th>
+									<th>Notes</th>
+								</tr>
+								<tr>
+									<td>Cd28</td>
+									<td>Cell</td>
+								</tr>
+								<tr>
+									<td>Hprt</td>
+									<td>Cell</td>
+								</tr>
+								<tr>
+									<td>Impdh1</td>
+									<td>Cell</td>
+								</tr>
+								<tr>
+									<td>Casp1</td>
+									<td>Only Complex genotypes exist for alleles of this marker.</td>
+								</tr>
+								<tr>
+									<td>H2-D1</td>
+									<td>Only Complex genotypes exist for alleles of this marker.</td>
+								</tr>
+								<tr>
+									<td>Igh-J</td>
+									<td>Only Complex genotypes exist for alleles of this marker. (Also has OMIM annot for 147060.)</td>
+								</tr>
+								<tr>
+									<td>Cell</td>
+									<td>Cell</td>
+								</tr>
+							</table>
+						</li>
     		</ol>
     		</li>
 
