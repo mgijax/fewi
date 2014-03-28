@@ -150,6 +150,7 @@ public class MarkerSummaryFromQueryTest extends BaseConcordionTest
 		return getSymbolsByMQ(mq);
 	}
 	
+	// Range Query
 	public int getMarkerCountByRange(String startMarker,String endMarker) throws Exception
 	{
 		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
@@ -202,6 +203,27 @@ public class MarkerSummaryFromQueryTest extends BaseConcordionTest
 	{
 		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
 		mq.setPhenotype(phenotype);
+		return getSymbolsByMQ(mq);
+	}
+	
+	
+	/*
+	 * Multiple Query Parameters
+	 * 
+	 *  Note: we only add combinations when we need to. This is not exhaustive, obviously.
+	 */
+	public List<String> getSymbolsByChrCm(String chr, String cm) throws Exception
+	{
+		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
+		mq.setChromosome(decodeCommaValues(chr));
+		mq.setCm(cm);
+		return getSymbolsByMQ(mq);
+	}
+	public List<String> getSymbolsByChrCoord(String chr, String coord) throws Exception
+	{
+		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
+		mq.setChromosome(decodeCommaValues(chr));
+		mq.setCoordinate(coord);
 		return getSymbolsByMQ(mq);
 	}
 	
