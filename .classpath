@@ -29,8 +29,6 @@
 	<classpathentry kind="lib" path="www/WEB-INF/lib/concordion-1.4.2.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/ognl-2.6.9.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/xom-1.2.5.jar"/>
-	<classpathentry kind="lib" path="www/WEB-INF/lib/icu4j-49_1.jar"/>
-	<classpathentry kind="lib" path="www/WEB-INF/lib/jxl.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/poi-3.8-20120326.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/poi-excelant-3.8-20120326.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/poi-ooxml-3.8-20120326.jar"/>
