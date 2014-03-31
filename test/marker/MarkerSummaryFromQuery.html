@@ -884,7 +884,6 @@
                 	<tr><td>Mmp9</td></tr>
                 	<tr><td>Mst1</td></tr>
                 	<tr><td>Plau</td></tr>
-                	<tr><td>Pla2r1</td></tr>
                 	<tr><td>Ror1</td></tr>
                 	<tr><td>Ror2</td></tr>
                 	<tr><td>Sel1l</td></tr>
@@ -910,7 +909,6 @@
                 	<tr><td>Mmp9</td></tr>
                 	<tr><td>Mst1</td></tr>
                 	<tr><td>Plau</td></tr>
-                	<tr><td>Pla2r1</td></tr>
                 	<tr><td>Ror1</td></tr>
                 	<tr><td>Ror2</td></tr>
                 	<tr><td>Sel1l</td></tr>
@@ -958,7 +956,6 @@
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
                 	<tr><td>Aire</td><td></td></tr>
                 	<tr><td>Apex2</td><td></td></tr>
-                	<tr><td>Habp2</td><td></td></tr>
                 	<tr><td>Il10ra</td><td>Annotated allele is in a Conditional genotype</td></tr>
                 	<tr><td>Prkcq</td><td>Annotated alleles in an OMG and a Conditional genotype</td></tr>
                 	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated alleles in a Conditional genotype</td></tr>
@@ -984,18 +981,17 @@
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
                 	<tr><td>Aire</td><td></td></tr>
                 	<tr><td>Apex2</td><td></td></tr>
-                	<tr><td>Habp2</td><td></td></tr>
                 	<tr><td>Il10ra</td><td>Annotated allele is in a Conditional genotype</td></tr>
                 	<tr><td>Prkcq</td><td>Annotated alleles in an OMG and a Conditional genotype</td></tr>
-                	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated alleles in a Conditional genotype</td></tr>
                 </table>
                 </li>
-                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
+                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes, or they are a Marker Type that gets excluded):
 	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
-        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
-                	<tr><td>Cd28</td></tr>
-                	<tr><td>Hprt</td></tr>
-                	<tr><td>Impdh1</td></tr>
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
+                	<tr><td>Cd28</td><td></td></tr>
+                	<tr><td>Hprt</td><td></td></tr>
+                	<tr><td>Impdh1</td><td></td></tr>
+                	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated allele in a Conditional genotype but Marker Type is a Recombinase.</td></tr>
                 </table>
                 </li>
     		</ol>
@@ -1010,18 +1006,17 @@
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
                 	<tr><td>Aire</td><td></td></tr>
                 	<tr><td>Apex2</td><td></td></tr>
-                	<tr><td>Habp2</td><td></td></tr>
                 	<tr><td>Il10ra</td><td>Annotated allele is in a Conditional genotype</td></tr>
                 	<tr><td>Prkcq</td><td>Annotated alleles in an OMG and a Conditional genotype</td></tr>
-                	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated alleles in a Conditional genotype</td></tr>
                 </table>
                 </li>
-                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
+                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes, or they are a Marker Type that gets excluded):
 	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
-        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
-                	<tr><td>Cd28</td></tr>
-                	<tr><td>Hprt</td></tr>
-                	<tr><td>Impdh1</td></tr>
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
+                	<tr><td>Cd28</td><td></td></tr>
+                	<tr><td>Hprt</td><td></td></tr>
+                	<tr><td>Impdh1</td><td></td></tr>
+                	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated allele in a Conditional genotype but Marker Type is a Recombinase.</td></tr>
                 </table>
                 </li>
     		</ol>
@@ -1030,7 +1025,7 @@
     		<li>Submitting text which appears in more than one MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with each term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b concordion:set="#pheno">splenocyte</b> in the GO input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes??) </li>
+                <li>Enter <b concordion:set="#pheno">splenocyte</b> in the Phenotypes/Diseases input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes??) </li>
                 <li>Verify the markers returned include:
 	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
@@ -1074,17 +1069,9 @@
 									<td>Srrt</td>
 									<td>MP:0009340, Conditional genotype</td>
 								</tr>
-								<tr>
-									<td>Steap</td>
-									<td>MP:0009340, OMGs</td>
-								</tr>
-								<tr>
-									<td>Tg(Cd4-cre)1Cwi</td>
-									<td>Annotated alleles in a Conditional genotype</td>
-								</tr>
 							</table>
 						</li>
-                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
+                <li>Verify the following markers are excluded (because their alleles are in Complex genotypes, or because of Marker Type):
 	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
 									<th>Marker Symbol</th>
@@ -1092,15 +1079,15 @@
 								</tr>
 								<tr>
 									<td>Cd28</td>
-									<td>Cell</td>
+									<td></td>
 								</tr>
 								<tr>
 									<td>Hprt</td>
-									<td>Cell</td>
+									<td></td>
 								</tr>
 								<tr>
 									<td>Impdh1</td>
-									<td>Cell</td>
+									<td></td>
 								</tr>
 								<tr>
 									<td>Casp1</td>
@@ -1115,8 +1102,8 @@
 									<td>Only Complex genotypes exist for alleles of this marker. (Also has OMIM annot for 147060.)</td>
 								</tr>
 								<tr>
-									<td>Cell</td>
-									<td>Cell</td>
+									<td>Tg(Cd4-cre)1Cwi</td>
+									<td>Annotated alleles in a Conditional genotype but Marker is a Recombinase, so gets excluded.</td>
 								</tr>
 							</table>
 						</li>
