@@ -226,6 +226,14 @@ public class MarkerSummaryFromQueryTest extends BaseConcordionTest
 		mq.setCoordinate(coord);
 		return getSymbolsByMQ(mq);
 	}
+	public List<String> getSymbolsByChrCoordMbp(String chr, String coord) throws Exception
+	{
+		MockMarkerControllerQuery mq = this.getMockQuery().markerController(markerController);
+		mq.setChromosome(decodeCommaValues(chr));
+		mq.setCoordUnit(MarkerQueryForm.COORD_UNIT_MBP);
+		mq.setCoordinate(coord);
+		return getSymbolsByMQ(mq);
+	}
 	
 	
 	/* Private helper methods */

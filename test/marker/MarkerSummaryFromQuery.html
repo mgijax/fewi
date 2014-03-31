@@ -355,136 +355,8 @@
     		</li>
    		</ol>
    		
-   		<h4>Feature type</h4>
-		<ol>
-    		<li>Markers returned for the selected feature type are of that type
- 			<p concordion:assertTrue="false">new</p><i>(fully-automated)</i>
-    		<ol>
-                <li>Select <b>polymorphic pseudogene</b> (count is 4 as of 3/25/2014) and submit the query with no other parameters.
-                 <span class="hide" concordion:set="#mcvKey">7288449</span></li>
-                <li>Verify <b cc:assertEquals="getMarkerCountByMcv(#mcvKey)"><b cc:dynamicData="markerCountMcv1"></b></b> markers are returned.</li>
-                <li>Verify the markers returned are all of the selected type.</li>
-                <li>Reopen the query and add selections for <b>RNase MRP RNA gene</b> (count=1) and <b>telomerase RNA gene</b> (count=1) and submit the query.
-                	<span class="hide" concordion:set="#mcvKey">7288449,6238182,6238183</span></li>
-                <li>Verify <b cc:assertEquals="getMarkerCountByMcv(#mcvKey)"><b cc:dynamicData="markerCountMcv2"></b></b> markers are returned.</li>
-                <li>Verify the 2 additional markers are of the additional types just selected.</li>
-    		</ol>
-    		</li>
-   		</ol>
-   		
    		<h4>Map position</h4>
 		<ol>
-    		<li>Submitting a single chromosome selection returns markers for the chromosome.  Submitting multiple chromosome selections returns markers for all selected chromosomes. 
- 			<p concordion:assertTrue="false">new</p><i>(fully automated)</i>
-    		<ol>
-                <li>Select chromosome <b concordion:set="#chr">19</b> and submit the query with no other parameters.</li>
-                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChr19"></b></b> markers are returned.</li>
-                <li>Reopen the query select only chromosome <b concordion:set="#chr">Y</b> and submit the query.</li>
-                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChrY"></b></b> markers are returned.</li>
-                <li>Reopen the query select chromosomes <b concordion:set="#chr">19, Y</b> and submit the query.</li>
-                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChr19andY"></b></b> markers are returned.</li>
-    		</ol>
-    		</li>
-
-    		<li>Submitting a chromosome + cM position range returns markers in that range.
- 			<p concordion:assertTrue="false">new</p>
- 			<i>(semi-auto)</i>
-    		<ol>
-                <li>Select chromosome <b concordion:set="#chr">1</b> and cM range <b concordion:set="#cm">10-20</b> and submit the query with no other parameters.</li>
-                <li>Verify <b>211</b> markers are returned.</li>
-                <li>Verify the list includes the following markers:
-                <table cc:verifySupersetOf="#symbol : getSymbolsByChrCm(#chr,#cm)">
-        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
-                	<tr><td>Aff3</td></tr>
-                	<tr><td>Cocia4</td></tr>
-                	<tr><td>Creg2</td></tr>
-                	<tr><td>D1Mit20</td></tr>
-                	<tr><td>Eif5b</td></tr>
-                	<tr><td>Gm4850</td></tr>
-                	<tr><td>Prss40</td></tr>
-                	<tr><td>Snord89</td></tr>
-                	<tr><td>Zfp451</td></tr>
-                </table>
-                </li>
-    		</ol>
-    		</li>
-
-    		<li>Submitting a chromosome + genome coordinates range returns markers in that range.
- 			<p concordion:assertTrue="false">new</p>
- 			<i>(semi-auto)</i>
-    		<ol>
-                <li>Select chromosome <b concordion:set="#chr">1</b> and genome coordinates range <b concordion:set="#coord">24332803-40772038</b> with units <b>bp</b> and submit the query with no other parameters.</li>
-                <li>Verify the list includes the following markers:
-                <table cc:verifySupersetOf="#symbol : getSymbolsByChrCoord(#chr,#coord)">
-        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
-                	<tr><td>Aff3</td></tr>
-                	<tr><td>Creg2</td></tr>
-                	<tr><td>D1Mit20</td></tr>
-                	<tr><td>Eif5b</td></tr>
-                	<tr><td>Gm4850</td></tr>
-                	<tr><td>Prss40</td></tr>
-                	<tr><td>Snord89</td></tr>
-                	<tr><td>Zfp451</td></tr>
-                </table>
-                </li>
-                <li>Verify the following markers are not returned (no coordinates):
-                <table cc:verifyNotRows="#symbol : getSymbolsByChrCoord(#chr,#coord)">
-        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
-                	<tr><td>Cocia4</td></tr>
-                	<tr><td>D1Mit412</td></tr>
-                	<tr><td>Dbsty1</td></tr>
-                </table>
-                </li>
-                <li>Reopen the query and select chromosome <b>1</b> and genome coordinates range <b>24.332-40.772</b> with units <b>Mbp</b> and submit the query with no other parameters.</li>
-                <li>Verify <b>297</b> markers are returned.</li>
-    		</ol>
-    		</li>
-
-    		<li>Submitting a marker range returns markers which fall between the start coordinate of the one marker and the end coordinate of the other marker.
- 			<p concordion:assertTrue="false">new</p>
- 			<i>(semi-auto)</i>
-    		<ol>
-                <li>Input <b concordion:set="#startMarker">D19Mit32</b> and <b concordion:set="#endMarker">Tbx10</b>.</li>
-                <li>Verify the following markers are returned (these are sorted by genome coordinates):
-                <table cc:verifySupersetOf="#symbol : getSymbolsByRange(#startMarker,#endMarker)">
-        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
-                	<tr><td>Ighmbp2</td></tr>
-					<tr><td>D19Mit32</td></tr>
-					<tr><td>Lfp3</td></tr>
-					<tr><td>Tgct2</td></tr>
-					<tr><td>Mrpl21</td></tr>
-					<tr><td>Gm27771</td></tr>
-					<tr><td>Gm7810</td></tr>
-					<tr><td>Cpt1a</td></tr>
-					<tr><td>4833417J20Rik</td></tr>
-					<tr><td>Mtl5</td></tr>
-					<tr><td>Gal</td></tr>
-					<tr><td>Ppp6r3</td></tr>
-					<tr><td>Gm23940</td></tr>
-					<tr><td>Gm19205</td></tr>
-					<tr><td>n-Ta9</td></tr>
-					<tr><td>Lrp5</td></tr>
-					<tr><td>D19Mit68</td></tr>
-					<tr><td>Drinksac2</td></tr>
-					<tr><td>1810055G02Rik</td></tr>
-					<tr><td>Gm2141</td></tr>
-					<tr><td>Suv420h1</td></tr>
-					<tr><td>Gm16066</td></tr>
-					<tr><td>Gm19209</td></tr>
-					<tr><td>Chka</td></tr>
-					<tr><td>Tcirg1</td></tr>
-					<tr><td>Ndufs8</td></tr>
-					<tr><td>Aldh3b1</td></tr>
-					<tr><td>Unc93b1</td></tr>
-					<tr><td>1700055N04Rik</td></tr>
-					<tr><td>Aldh3b2</td></tr>
-					<tr><td>Acy3</td></tr>
-					<tr><td>Tbx10</td></tr>
-                </table>
-                </li>
-    		</ol>
-    		</li>
-
     		<li>Submitting an invalid marker range (one or both markers are missing coordinates; markers are on different chromosomes) returns error messages.
  			<p concordion:assertTrue="false">new</p>
  			<ol>
@@ -1258,6 +1130,132 @@
 					<li>Summary should return all <b cc:assertEquals="getMarkerCountAllMcv()"><b cc:dynamicData="allMarkers"></b></b></li>
 				</ol>
 				</li>
+				<li>Markers returned for the selected feature type are of that type
+	    		<ol>
+	                <li>Select <b>polymorphic pseudogene</b> (count is 4 as of 3/25/2014) and submit the query with no other parameters.
+	                 <span class="hide" concordion:set="#mcvKey">7288449</span></li>
+	                <li>Verify <b cc:assertEquals="getMarkerCountByMcv(#mcvKey)"><b cc:dynamicData="markerCountMcv1"></b></b> markers are returned.</li>
+	                <li>Verify the markers returned are all of the selected type.</li>
+	                <li>Reopen the query and add selections for <b>RNase MRP RNA gene</b> (count=1) and <b>telomerase RNA gene</b> (count=1) and submit the query.
+	                	<span class="hide" concordion:set="#mcvKey">7288449,6238182,6238183</span></li>
+	                <li>Verify <b cc:assertEquals="getMarkerCountByMcv(#mcvKey)"><b cc:dynamicData="markerCountMcv2"></b></b> markers are returned.</li>
+	                <li>Verify the 2 additional markers are of the additional types just selected.</li>
+	    		</ol>
+	    		</li>
+    		</ol>
+    		</li>
+    		<li>Map Position
+    		<ol>
+	   			<li>Submitting a single chromosome selection returns markers for the chromosome.  Submitting multiple chromosome selections returns markers for all selected chromosomes. 
+	    		<ol>
+	                <li>Select chromosome <b concordion:set="#chr">19</b> and submit the query with no other parameters.</li>
+	                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChr19"></b></b> markers are returned.</li>
+	                <li>Reopen the query select only chromosome <b concordion:set="#chr">Y</b> and submit the query.</li>
+	                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChrY"></b></b> markers are returned.</li>
+	                <li>Reopen the query select chromosomes <b concordion:set="#chr">19, Y</b> and submit the query.</li>
+	                <li>Verify <b cc:assertEquals="getMarkerCountByChromosome(#chr)"><b cc:dynamicData="markerCountChr19andY"></b></b> markers are returned.</li>
+	    		</ol>
+	   			</li>
+
+	    		<li>Submitting a chromosome + cM position range returns markers in that range.
+	    		<ol>
+	                <li>Select chromosome <b concordion:set="#chr">1</b> and cM range <b concordion:set="#cm">10-20</b> and submit the query with no other parameters.</li>
+	                <li>Verify the list includes the following markers:
+	                <table cc:verifySupersetOf="#symbol : getSymbolsByChrCm(#chr,#cm)">
+	        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+	                	<tr><td>Aff3</td></tr>
+	                	<tr><td>Cocia4</td></tr>
+	                	<tr><td>Creg2</td></tr>
+	                	<tr><td>D1Mit20</td></tr>
+	                	<tr><td>Eif5b</td></tr>
+	                	<tr><td>Gm4850</td></tr>
+	                	<tr><td>Prss40</td></tr>
+	                	<tr><td>Snord89</td></tr>
+	                	<tr><td>Zfp451</td></tr>
+	                </table>
+	                </li>
+	    		</ol>
+	    		</li>
+	
+	    		<li>Submitting a chromosome + genome coordinates range returns markers in that range.
+	    		<ol>
+	                <li>Select chromosome <b concordion:set="#chr">1</b> and genome coordinates range <b concordion:set="#coord">24332803-40772038</b> with units <b>bp</b> and submit the query with no other parameters.</li>
+	                <li>Verify the list includes the following markers:
+	                <table cc:verifySupersetOf="#symbol : getSymbolsByChrCoord(#chr,#coord)">
+	        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+	                	<tr><td>Aff3</td></tr>
+	                	<tr><td>Creg2</td></tr>
+	                	<tr><td>D1Mit20</td></tr>
+	                	<tr><td>Eif5b</td></tr>
+	                	<tr><td>Gm4850</td></tr>
+	                	<tr><td>Prss40</td></tr>
+	                	<tr><td>Snord89</td></tr>
+	                	<tr><td>Zfp451</td></tr>
+	                </table>
+	                </li>
+	                <li>Verify the following markers are not returned (no coordinates):
+	                <table cc:verifyNotRows="#symbol : getSymbolsByChrCoord(#chr,#coord)">
+	        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+	                	<tr><td>Cocia4</td></tr>
+	                	<tr><td>D1Mit412</td></tr>
+	                	<tr><td>Dbsty1</td></tr>
+	                </table>
+	                </li>
+	                <li>Reopen the query and select chromosome <b concordion:set="#chr">1</b> 
+	                	and genome coordinates range <b concordion:set="#coord">24.332-40.772</b> with units <b>Mbp</b> and submit the query with no other parameters.</li>
+	                <li>Verify the following markers are returned:
+	                <table cc:verifySupersetOf="#symbol : getSymbolsByChrCoordMbp(#chr,#coord)">
+	        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+	                	<tr><td>Aff3</td></tr>
+	                	<tr><td>Amer3</td></tr>
+	                	<tr><td>Bag2</td></tr>
+	                </table>
+	                </li>
+	    		</ol>
+	    		</li>
+	    		<li>Submitting a marker range returns markers which fall between the start coordinate of the one marker and the end coordinate of the other marker.
+	    		<ol>
+	                <li>Input <b concordion:set="#startMarker">D19Mit32</b> and <b concordion:set="#endMarker">Tbx10</b>.</li>
+	                <li>Verify the following markers are returned (these are sorted by genome coordinates):
+	                <table cc:verifySupersetOf="#symbol : getSymbolsByRange(#startMarker,#endMarker)">
+	        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+	                	<tr><td>Ighmbp2</td></tr>
+						<tr><td>D19Mit32</td></tr>
+						<tr><td>Lfp3</td></tr>
+						<tr><td>Tgct2</td></tr>
+						<tr><td>Mrpl21</td></tr>
+						<tr><td>Gm27771</td></tr>
+						<tr><td>Gm7810</td></tr>
+						<tr><td>Cpt1a</td></tr>
+						<tr><td>4833417J20Rik</td></tr>
+						<tr><td>Mtl5</td></tr>
+						<tr><td>Gal</td></tr>
+						<tr><td>Ppp6r3</td></tr>
+						<tr><td>Gm23940</td></tr>
+						<tr><td>Gm19205</td></tr>
+						<tr><td>n-Ta9</td></tr>
+						<tr><td>Lrp5</td></tr>
+						<tr><td>D19Mit68</td></tr>
+						<tr><td>Drinksac2</td></tr>
+						<tr><td>1810055G02Rik</td></tr>
+						<tr><td>Gm2141</td></tr>
+						<tr><td>Suv420h1</td></tr>
+						<tr><td>Gm16066</td></tr>
+						<tr><td>Gm19209</td></tr>
+						<tr><td>Chka</td></tr>
+						<tr><td>Tcirg1</td></tr>
+						<tr><td>Ndufs8</td></tr>
+						<tr><td>Aldh3b1</td></tr>
+						<tr><td>Unc93b1</td></tr>
+						<tr><td>1700055N04Rik</td></tr>
+						<tr><td>Aldh3b2</td></tr>
+						<tr><td>Acy3</td></tr>
+						<tr><td>Tbx10</td></tr>
+	                </table>
+	                </li>
+	    		</ol>
+	    		</li>
+	    		
     		</ol>
     		</li>
 		</ol>
