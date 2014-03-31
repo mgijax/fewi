@@ -380,7 +380,6 @@
    		<h4>Gene Ontology classifications</h4>
 		<ol>
     		<li>Submitting a GO ID returns markers associated with the term and its descendants, if any.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#go">GO:0060710</b> (chorio-allantoic fusion) and submit the query. (has no descendants)</li>
                 <li>Verify the genes returned include:
@@ -416,7 +415,6 @@
     		</li>
 
     		<li>Submitting an exact GO term returns markers associated with the term and its descendants, if any.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#go">leukocyte aggregation</b> (GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
                 <li>Verify the genes returned include:
@@ -442,7 +440,6 @@
  			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#go">leucocyte aggregation</b> (synonym for GO:0070486) and submit the query. (has annotated descendants; only Sema4d is annotated to the parent term)</li>
-                <li>Verify <b>11</b> genes are returned.</li>
                 <li>Verify the genes returned include:
                  <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
         			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
