@@ -1,4 +1,4 @@
-if(window.doHiglights==undefined) window.doHighlights=false;
+if(window.doHighlights==undefined) window.doHighlights=false;
 
 function main() {
     // Column definitions -- sortable:true enables sorting

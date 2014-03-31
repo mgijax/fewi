@@ -111,6 +111,15 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         highlightFields.add("humanSymbol");
         highlightFields.add("humanName");
         highlightFields.add("humanSynonym");
+        highlightFields.add("ratSymbol");
+        highlightFields.add("ratSynonym");
+        highlightFields.add("cattleSymbol");
+        highlightFields.add("chickenSymbol");
+        highlightFields.add("dogSymbol");
+        highlightFields.add("rhesusMacaqueSymbol");
+        highlightFields.add("zebrafishSymbol");
+
+
         
         /*
          * Which fields to return
@@ -232,6 +241,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
             				hl = hl.replaceAll("/\\$\\$","</b>").replaceAll("\\$\\$","<b>");
             				String highlightMatch = field+":\""+hl+"\"";
                     		highlightList.add(highlightMatch);
+                    		// only add the first match in priority order of the orginal list
                     		break outer;
             			}
             		}
