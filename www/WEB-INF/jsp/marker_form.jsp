@@ -245,6 +245,8 @@ function treeInit() {
     for (e in els) {
 		contextElements.push(els[e].labelElId);
     }
+    YAHOO.util.Event.addListener(contextElements, 'mouseover', panelHandler);
+    YAHOO.util.Event.addListener(contextElements, 'mouseout', nd);
 } // treeInit
 
 $(function(){
