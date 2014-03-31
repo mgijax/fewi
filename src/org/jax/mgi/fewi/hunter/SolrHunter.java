@@ -165,7 +165,6 @@ public class SolrHunter implements Hunter {
      * implementing classes.
      */
 
-    @Override
     public void hunt(SearchParams searchParams, SearchResults searchResults) {
     	hunt(searchParams,searchResults, null, null);
     }
