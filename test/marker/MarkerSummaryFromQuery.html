@@ -1198,19 +1198,22 @@
     		</ol>
     		</li>
 
-    		<li>Test
+    		<li>Transgenic Reporter markers are excluded from the results set.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Query for Medulloblastoma; MDB <b concordion:set="#pheno">155255</b>.</li>
+                <li>Verify that <b>Ptch1</b> is returned.</li>
+                <li>Verify that <b>Tg(Atoh1-GFP)1Jejo</b> is not returned. (Transgenic Reporter portion of the genotype MGI:3836962)</li>
+                <li>Query for Teratoma, Ovarian <b concordion:set="#pheno">166950</b>.</li>
+                <li>Verify that <b>Foxo3</b> is returned.</li>
+                <li>Verify that <b>Tg(HBA1-Gfp)1Ew</b> is not returned. (Transgenic Reporter portion of the genotype MGI:4949205)</li>
     		</ol>
     		</li>
 
-    		<li>Test
- 			<p concordion:assertTrue="false">new</p>
+    		<li>Markers associated with Recombinase alleles are excluded from the results set.
+ 			<p concordion:assertTrue="true">passed. -klf 3/31/2016</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Included in tests above.</li>
     		</ol>
     		</li>
     		
