@@ -713,7 +713,6 @@
    		<h4>Protein domains</h4>
 		<ol>
     		<li>Submitting an InterPro ID returns markers associated with the term (we do not represent InterPro as a DAG or hierarchy, even though it is one).
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#interpro">IPR000001</b> (Kringle) and submit the query. (has no descendants)</li>
                 <li>Verify <b>15</b> genes are returned.</li>
@@ -768,7 +767,6 @@
     		</li>
 
     		<li>Submitting an exact InterPro term returns markers associated with the term.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#interpro">Kringle-like fold</b> (IPR013806) and submit the query. (has annotated descendants; is the parent term of the previous two queried terms; has no genes annotated ONLY to the parent term)</li>
                 <li>Verify <b>25</b> genes are returned.</li>
@@ -793,7 +791,6 @@
     		</li>
 
     		<li>Submitting text which appears in more than one InterPro term returns markers associated with any matching term(s).
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#interpro">fibronec</b> (piece of text which appears in many protein domain names which have annotated genes) and submit the query.</li>
                 <li>Verify <b>231</b> genes are returned.</li>
@@ -823,7 +820,6 @@
    		<h4>Mouse phenotypes &amp; mouse models of human disease</h4>
 		<ol>
     		<li>Submitting an MP or OMIM ID returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any. Markers having alleles only in Complex genotypes associated with the term are excluded.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#pheno">MP:0009335</b> (decreased splenocyte proliferation) and submit the query. (has no descendants)</li>
                 <li>Verify the markers returned include:
@@ -833,22 +829,21 @@
                 	<tr><td>Apex2</td><td></td></tr>
                 	<tr><td>Il10ra</td><td>Annotated allele is in a Conditional genotype</td></tr>
                 	<tr><td>Prkcq</td><td>Annotated alleles in an OMG and a Conditional genotype</td></tr>
-                	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated alleles in a Conditional genotype</td></tr>
                 </table>
                 </li>
                 <li>Verify the following markers are excluded (because their alleles are in Complex genotypes):
 	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
-        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
-                	<tr><td>Cd28</td></tr>
-                	<tr><td>Hprt</td></tr>
-                	<tr><td>Impdh1</td></tr>
+        			<tr><th concordion:assertEquals="#symbol">Marker Symbol</th><th>Notes</th></tr>
+                	<tr><td>Cd28</td><td></td></tr>
+                	<tr><td>Hprt</td><td></td></tr>
+                	<tr><td>Impdh1</td><td></td></tr>
+                	<tr><td>Tg(Cd4-cre)1Cwi</td><td>Annotated alleles in a Conditional genotype and Type is Recombinase</td></tr>
                 </table>
                 </li>
     		</ol>
     		</li>
 
     		<li>Submitting an exact MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any. Markers having alleles only in Complex genotypes associated with the term are excluded.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#pheno">"decreased splenocyte proliferation"</b> (MP:0009335) USING quotation marks, and submit the query. (has no descendants)</li>
                 <li>Verify the markers returned include:
@@ -873,7 +868,6 @@
     		</li>
 
     		<li>Submitting an exact MP or OMIM synonym returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#pheno">"reduced splenocyte proliferation"</b> (synonym for MP:0009335 above) USING quotation marks, and submit the query. (has no descendants)</li>
                 <li>Verify the markers returned include:
@@ -898,7 +892,6 @@
     		</li>
 
     		<li>Submitting text which appears in more than one MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with each term and its descendants, if any.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#pheno">splenocyte</b> in the Phenotypes/Diseases input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes.) </li>
                 <li>Verify the markers returned include:
@@ -1006,7 +999,6 @@
     		</li>
 
     		<li>Test that booleans work
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Query for <b concordion:set="#pheno">MP:0009754 AND MP:0009751</b> should return the following genes:
                   <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
@@ -1046,7 +1038,6 @@
     		</li>
 
     		<li>Test wildcards
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Query for <b concordion:set="#pheno">Papillorenal</b> should return:
                 	<table cc:verifyRowsUnordered="#symbol : getSymbolsByPhenotype(#pheno)">
