@@ -913,8 +913,7 @@
     		<ol>
                 <li>Enter <b concordion:set="#pheno">splenocyte</b> in the Phenotypes/Diseases input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes.) </li>
                 <li>Verify the markers returned include:
-	            <table
-								cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
 									<th concordion:assertEquals="#symbol">Marker Symbol</th>
 									<th>Notes</th>
@@ -984,7 +983,7 @@
                 <li>Verify the following markers are excluded (because their alleles are in Complex genotypes, or because of Marker Type):
 	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
-									<th>Marker Symbol</th>
+									<th concordion:assertEquals="#symbol">Marker Symbol</th>
 									<th>Notes</th>
 								</tr>
 								<tr>
