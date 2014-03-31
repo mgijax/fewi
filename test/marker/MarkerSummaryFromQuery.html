@@ -1025,9 +1025,10 @@
     		<li>Submitting text which appears in more than one MP or OMIM term returns markers having alleles in OMG or Conditional genotypes associated with each term and its descendants, if any.
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b concordion:set="#pheno">splenocyte</b> in the Phenotypes/Diseases input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes??) </li>
+                <li>Enter <b concordion:set="#pheno">splenocyte</b> in the Phenotypes/Diseases input text field and submit the search.<br/>(Appears in 11 MP Terms or Synonyms. May also appear in Notes.) </li>
                 <li>Verify the markers returned include:
-	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
+	            <table
+								cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
 									<th concordion:assertEquals="#symbol">Marker Symbol</th>
 									<th>Notes</th>
@@ -1050,16 +1051,39 @@
 									<td>MP:0009340, OMGs</td>
 								</tr>
 								<tr>
+									<td>Ccr6</td>
+									<td>Has text "splenocyte" in MP annotation notes. Allele
+										is "Targeted Reporter" type, but annotation is for OMG
+										genotype.</td>
+								</tr>
+								<tr>
+									<td>Cd28</td>
+									<td>Has alleles in complex and OMG genotypes.</td>
+								</tr>
+								<tr>
+									<td>Foxp3</td>
+									<td>Has text "splenocyte" in MP annotation notes. Allele
+										is "Targeted Reporter" type, but annotation is for OMG
+										genotype.</td>
+								</tr>
+								<tr>
 									<td>Habp2</td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>Idd6.1</td>
-									<td>Not in annotations, but "splenocyte" exists in (QTL) Notes for two QTL alleles.</td>
+									<td>Not in annotations, but "splenocyte" exists in (QTL)
+										Notes for two QTL alleles.</td>
 								</tr>
 								<tr>
 									<td>Il10ra</td>
 									<td>Annotated allele is in a Conditional genotype</td>
+								</tr>
+								<tr>
+									<td>Ncr1</td>
+									<td>Has text "splenocyte" in MP annotation notes. Allele
+										is "Targeted Reporter" type, but annotation is for OMG
+										genotype.</td>
 								</tr>
 								<tr>
 									<td>Prkcq</td>
@@ -1069,6 +1093,10 @@
 									<td>Srrt</td>
 									<td>MP:0009340, Conditional genotype</td>
 								</tr>
+								<tr>
+									<td>Steap3</td>
+									<td>MP:0009341, OMG</td>
+								</tr>
 							</table>
 						</li>
                 <li>Verify the following markers are excluded (because their alleles are in Complex genotypes, or because of Marker Type):
@@ -1076,10 +1104,6 @@
 								<tr>
 									<th>Marker Symbol</th>
 									<th>Notes</th>
-								</tr>
-								<tr>
-									<td>Cd28</td>
-									<td></td>
 								</tr>
 								<tr>
 									<td>Hprt</td>
