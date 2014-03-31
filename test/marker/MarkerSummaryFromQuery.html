@@ -1110,27 +1110,67 @@
     		</ol>
     		</li>
 
-    		<li><i>Need test(s) for using wildcards.</i>
+    		<li>Test that booleans work
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Query for <b concordion:set="#pheno">MP:0009754 AND MP:0009751</b> should return the following genes:
+                  <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
+						<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+						<tr><td>Drd4</td></tr>
+						<tr><td>hipr</td></tr>
+						<tr><td>Ppp1r1b</td></tr>
+					</table>
+                </li>
+                <li>Query for 
+                	<b concordion:set="#pheno">"enhanced behavioral response to cocaine" AND "enhanced behavioral response to alcohol"</b> should return the following genes:
+                  <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
+						<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+						<tr><td>Drd4</td></tr>
+						<tr><td>hipr</td></tr>
+						<tr><td>Ppp1r1b</td></tr>
+					</table>
+                </li>
+                <li>Query for 
+                	<b concordion:set="#pheno">MP:0009754 AND NOT MP:0009751</b> 
+                	should return the following genes:
+                  <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
+						<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+						<tr><td>Camk4</td></tr>
+						<tr><td>Chrm4</td></tr>
+						<tr><td>Clock</td></tr>
+					</table>
+					but not these genes:
+					<table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
+						<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+						<tr><td>Drd3</td></tr>
+						<tr><td>Fyn</td></tr>
+						<tr><td>Aldh2</td></tr>
+					</table>
+                </li>
     		</ol>
     		</li>
 
-    		<li><i>Need test(s) for using Booleans.</i>
+    		<li>Test wildcards
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Step</li>
-                <li>Step</li>
-    		</ol>
-    		</li>
-
-    		<li>Test
- 			<p concordion:assertTrue="false">new</p>
-    		<ol>
-                <li>Step</li>
-                <li>Step</li>
+                <li>Query for <b concordion:set="#pheno">Papillorenal</b> should return:
+                	<table cc:verifyRowsUnordered="#symbol : getSymbolsByPhenotype(#pheno)">
+						<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+						<tr><td>Pax2</td></tr>
+					</table>
+				</li>
+               <li>Query for <b concordion:set="#pheno">Papillore*</b> should return:
+                	<table cc:verifyRowsUnordered="#symbol : getSymbolsByPhenotype(#pheno)">
+						<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+						<tr><td>Pax2</td></tr>
+					</table>
+				</li>
+				<li>Query for <b concordion:set="#pheno">*apillorenal</b> should return:
+                	<table cc:verifyRowsUnordered="#symbol : getSymbolsByPhenotype(#pheno)">
+						<tr><th concordion:assertEquals="#symbol">Marker Symbol</th></tr>
+						<tr><td>Pax2</td></tr>
+					</table>
+				</li>
     		</ol>
     		</li>
 
