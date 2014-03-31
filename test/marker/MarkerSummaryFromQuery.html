@@ -364,12 +364,14 @@
    		<h4>Map position</h4>
 		<ol>
     		<li>Submitting an invalid marker range (one or both markers are missing coordinates; markers are on different chromosomes) returns error messages.
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
  			<ol>
  				<li>Input <b>Aff3</b> and <b>Tbx10</b>.</li>
  				<li>Verify result returns <b>Marker Aff3(1) not on same chromosome as Tbx10(19)</b>.</li>
  				<li>Input <b>Tbx10</b> and <b>D19Mit127</b>.</li>
- 				<li>Verify result returns <b>Error: Your marker range contains at least one marker (D19Mit127) which has no genome coordinates. To query by marker range, both markers must have assigned genome coordinates.</b></li>
+ 				<li>Verify result returns <b>end marker D19Mit127 has coordinates</b></li>
+ 				<li>Input <b>D19Mit127</b> and <b>Tbx10</b>.</li>
+ 				<li>Verify result returns <b>start marker D19Mit127 has coordinates</b></li>
  			</ol>
  			</li>
 
