@@ -460,7 +460,6 @@
     		</li>
 
     		<li>Submitting text which appears in more than one GO term returns markers associated with each term and its descendants, if any.
- 			<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Enter <b concordion:set="#go">reticulum</b> in the GO input text field and submit the search.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
                 <li>Verify the genes returned include the following:
@@ -506,7 +505,7 @@
     		</li>
 
     		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s).
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
 				<li>Check only the box for <b>Molecular Function</b> and submit the search.</li>
@@ -577,7 +576,7 @@
 					<tr>
 						<td>Srp54a</td>
 						<td>endoplasmic reticulum signal peptide binding</td>
-						<td>excluded</td>
+						<td>included</td>
 						<td>Molecular Function</td>
 					</tr>
 					<tr>
@@ -627,13 +626,13 @@
 					<tr>
 						<td>Srp54a</td>
 						<td>endoplasmic reticulum signal peptide binding</td>
-						<td>excluded</td>
+						<td>included</td>
 						<td>Molecular Function</td>
 					</tr>
 					<tr>
 						<td>Rab10</td>
 						<td>endoplasmic reticulum tubular network organization</td>
-						<td>excluded</td>
+						<td>included</td>
 						<td>Biological Process</td>
 					</tr>
 					<tr>
@@ -689,7 +688,7 @@
 					<tr>
 						<td>Reep1</td>
 						<td>endoplasmic reticulum tubular network organization</td>
-						<td>excluded</td>
+						<td>included</td>
 						<td>Biological Process</td>
 					</tr>
 					<tr>
