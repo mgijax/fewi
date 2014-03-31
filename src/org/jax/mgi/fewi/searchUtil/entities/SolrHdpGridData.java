@@ -83,7 +83,6 @@ public class SolrHdpGridData implements HdpGridAnnotation
 		this.humanAnnotCount = humanAnnotCount;
 	}
 	
-	@Override
 	public String getTermIdentifier() 
 	{
 		if("header".equals(termType)) return term;
