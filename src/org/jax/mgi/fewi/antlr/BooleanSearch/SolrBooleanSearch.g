@@ -16,6 +16,7 @@ tokens {
 @header {
 package org.jax.mgi.fewi.antlr.BooleanSearch;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.apache.solr.client.solrj.util.ClientUtils;
 }
 
 @lexer::header {package org.jax.mgi.fewi.antlr.BooleanSearch;}
@@ -55,6 +56,21 @@ private boolean notEmpty(Filter f)
 	if(!f.hasNestedFilters() && f.getValue()==null) return false;
 	return true;
 }
+
+private void setWordFilter(Filter f,String text)
+{
+	if(text!=null && text.contains("*"))
+	{
+		// Have solr escape any special characters, but make sure asterisk remains in tact
+		f.setValue(ClientUtils.escapeQueryChars(text).replaceAll("\\\\\\*","*"));
+		f.setOperator(Filter.OP_HAS_WORD);
+	}
+	else
+	{
+		f.setValue(text); 
+		f.setOperator(Filter.OP_EQUAL);
+	}
+}
 }
 
 
@@ -79,7 +95,7 @@ term	returns[Filter termNode] @init { termNode = new Filter(); boolean neg=false
 
 str returns[Filter stringFilter] @init { stringFilter = new Filter(); } :
         q=QUOTED { String text=sanitizeQuoted($q.text); stringFilter.setValue(text); stringFilter.setOperator(Filter.OP_EQUAL); }
-        | q2=WORD { String text=sanitizeQuoted($q2.text); stringFilter.setValue(text); stringFilter.setOperator(Filter.OP_EQUAL); }
+        | q2=WORD { String text=sanitizeQuoted($q2.text); setWordFilter(stringFilter,text); }
         ;
 
 WORD :  (~( ' ' | '\t' | '\r' | '\n' | '(' | ')' ))+;
