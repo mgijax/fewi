@@ -119,7 +119,7 @@
 									<td>
 										<ul>
 											<li>Pax6</li>
-											<li>Pauper</li>
+											<li>Paupar</li>
 											<li>Del(2)Pax6<sup>11Neu</sup></li>
 											<li>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</li>
 										</ul>
@@ -631,12 +631,12 @@
     		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s).
  			<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Enter <b concordion:set="#go">reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
+                <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
 				<li>Check only the box for <b>Molecular Function</b> and submit the search.</li>
                 <li>Verify the genes returned include or exclude the following, as indicated:
-	            <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
+	            <table>
 					<tr>
-						<th concordion:assertEquals="#symbol">Gene</th>
+						<th>Gene</th>
 						<th>Annotated Term</th>
 						<th>Included / Excluded</th>
 						<th>GO sub-DAG</th>
