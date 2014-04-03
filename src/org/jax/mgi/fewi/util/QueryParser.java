@@ -21,26 +21,11 @@ public class QueryParser
 	 */
 	public static String removeUnmatched(String original,char character)
 	{ 
-		int numChars=0;
-		int lastCharIdx=-1;
-		for (int i=0; i < original.length(); i++)
-		{
-		    char c = original.charAt(i);
-		    if(c==character)
-		    {
-		    	numChars+=1;
-		    	lastCharIdx=i;
-		    }
-		}
-
-		// now remove the last unmatched character from original
-		StringBuilder newString = new StringBuilder(original);
-		if((numChars%2) ==1)
-		{
-			newString.replace(lastCharIdx,lastCharIdx+1,"");
-		}
-		return newString.toString();
+		return removeUnmatched(original,character,character);
 	}
+	/**
+	 * removes unmatches character pairs from original String
+	 */
 	public static String removeUnmatched(String original,char leftChar,char rightChar)
 	{
 		List<Integer> leftIndices = new ArrayList<Integer>();
@@ -63,12 +48,25 @@ public class QueryParser
 		StringBuilder newString = new StringBuilder(original);
 		leftIndices.addAll(rightIndices);
 		Collections.sort(leftIndices);
-		int cnt=0;
-		for(Integer unmatchedIdx : leftIndices)
+
+		if(leftChar==rightChar)
 		{
-			unmatchedIdx -= cnt;
-			newString.replace(unmatchedIdx,unmatchedIdx+1,"");
-			cnt+=1;
+			// if both characters match, we only need to strip the last odd character
+			if((leftIndices.size()%2) == 1)
+			{
+				int lastIndex = leftIndices.get(leftIndices.size()-1);
+				newString.replace(lastIndex,lastIndex+1,"");
+			}
+		}
+		else
+		{
+			int cnt=0;
+			for(Integer unmatchedIdx : leftIndices)
+			{
+				unmatchedIdx -= cnt;
+				newString.replace(unmatchedIdx,unmatchedIdx+1,"");
+				cnt+=1;
+			}
 		}
 		
 		return newString.toString();
