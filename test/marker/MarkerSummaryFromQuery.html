@@ -32,6 +32,7 @@
     <h1>Marker Summary from Query</h1>
     <ul>
         <li>User story 163, E9: MQ&amp;S: Search Functionality (MGI 5.18)</li>
+        <li>User story 167, E9: MQ&amp;S: Sorting</li>
     </ul>
 </div>
 
@@ -44,6 +45,11 @@
 		<li>verify GO and InterPro work ok</li>
 		<li>add pheno system selection box</li>
 		<li>other fields should give exactly the same results, e.g., a query by coordinates, or GO term	</li>
+		<li>sto167: user can sort by symbol or by location by clicking in the column header</li>
+		<li>sto167: symbol sort is smart alpha</li>
+		<li>sto167: location sort is (smart) chromosome + startposition + symbol</li>
+		<li>sto167: default sort is by symbol</li>
+		<li>sto167: special case for query by nomen that promotes mouse matches over other species - need to define exactly when it applies</li>		
 	</ul>
 </div>
 
@@ -66,16 +72,40 @@
 
 	<h4>Nomenclature</h4>
 	<ul>
-		<li>Uses primarily the same logic as <a href="../allele/QueryFormNomenclature.html">Allele Query and Summary.</a></li>
-		<li>Does not include search against allele synonyms.</li>
+		<li>Performs a tokenized query against Solr index.</li>
 		<li>Initial and trailing wildcard symbols (asterisk) are supported; "internal" asterisks are treated literally.</li>
 		<li>Tokens are combined with Boolean AND. </li>
+		<li>Does not include search against allele synonyms.</li>
+		<li>Attempts to recreate, as much as possible, previous code's default sorting if Nomen field is submitted (except now using Solr field boosts):
+		<table>
+			<tr><td>labeltype</td>	<td>labeltypename</td>	<td>organism name</td>	<td>priority</td></tr>
+			<tr><td>MS</td>	<td>current symbol </td>	<td>mouse</td>	<td>1</td></tr>
+			<tr><td>MN</td>	<td>current name</td>	<td>mouse</td>	<td>2</td></tr>
+			<tr><td>AS</td>	<td>allele symbol</td>	<td>mouse</td>	<td>3</td></tr>
+			<tr><td>AN</td>	<td>allele name </td>	<td>mouse</td>	<td>4</td></tr>
+			<tr><td>MS</td>	<td>old symbol</td>	<td>mouse</td>	<td>5</td></tr>
+			<tr><td>MN</td>	<td>old name </td>	<td>mouse</td>	<td>6</td></tr>
+			<tr><td>MY</td>	<td>synonym</td>	<td>mouse</td>	<td>7</td></tr>
+			<tr><td>MY</td>	<td>human synonym</td>	<td>human</td>	<td>8</td></tr>
+			<tr><td>MY</td>	<td>rat synonym </td>	<td>rat</td>	<td>9</td></tr>
+			<tr><td>MY</td>	<td>related synonym</td>	<td></td>	<td>10</td></tr>
+			<tr><td>OS</td>	<td>human symbol</td>	<td>human</td>	<td>11</td></tr>
+			<tr><td>ON</td>	<td>human name</td>	<td>human</td>	<td>12</td></tr>
+			<tr><td>OS</td>	<td>rat symbol</td>	<td>rat</td>	<td>13</td></tr>
+			<tr><td>OS</td>	<td>rhesus macaque symbol</td>	<td>rhesus macaque</td>	<td>14</td></tr>
+			<tr><td>OS</td>	<td>cattle symbol</td>	<td>cattle</td>	<td>14</td></tr>
+			<tr><td>OS</td>	<td>dog symbol</td>	<td>dog, domestic</td>	<td>14</td></tr>
+			<tr><td>OS</td>	<td>zebrafish symbol</td>	<td>zebrafish</td>	<td>14</td></tr>
+			<tr><td>OS</td>	<td>chicken symbol </td>	<td>chicken</td>	<td>14</td></tr>
+			<tr><td>OS</td>	<td>chimpanzee symbol </td>	<td>chimpanzee</td>	<td>14</td></tr>
+		</table>
+		</li>
 	</ul>
 
 	<h4>GO and Protein Domain (InterPro)</h4>
 	<ul>
 		<li>Performs a tokenized query against Solr index.</li>
-		<li>No wildcards. Uses MGI's standard &quot;contains text string&quot; approach (e.g., query for <i>rough</i> also returns matches for <i>through</i>).</li>
+		<li>No wildcards. Uses MGI's standard &quot;contains text string&quot; approach (e.g., query for <i>rough</i> also returns matches for <i>through</i>, query for <i>ear</i> would also return <i>hear</i> and <i>heart</i>).</li>
 		<li>Boolean support is desired in the future.</li>
 	</ul>
 
@@ -83,7 +113,10 @@
 	<ul>
 		<li>Performs a tokenized query against Solr index.</li>
 		<li>Initial and trailing wildcard symbols (asterisk) are supported.</li>
-		<li>Returns only genes having annotated alleles in One Marker Genotypes (OMG) or Conditional genotypes. EXCLUDES markers for annotated alleles present only in Complex genotypes (unlike the Allele Query).</li>
+		<li>Returns only genes having annotated alleles in One Marker Genotypes (OMG) or "Simple" genotypes: 2-marker Conditional genotypes and 2-marker genotypes involving a Transgenic Reporter.
+		<ul><li>EXCLUDES markers for annotated alleles present only in Complex genotypes (unlike the Allele Query): genotypes having 3 or more markers.</li></ul></li>
+		<li>Excludes Recombinase markers in Conditional genotypes.</li>
+		<li>Excludes Transgenic Reporter markers.</li> 
 	</ul>
 </div>
 
@@ -324,58 +357,104 @@
     		<ol>
                 <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
                 <li>
-                <table>
+                	<table>
+						<tr>
+							<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
+							<th>Include in return<br />(may be others)
+							</th>
+							<th>Exclude from return</th>
+							<th>Notes to tester</th>
+						</tr>
+						<tr>
+							<td>Dach1-Pax6</td>
+							<td>Tg(Dach1-Pax6)#Fjl</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>-Pax6+Dach1</td>
+							<td>Tg(Dach1-Pax6)#Fjl</td>
+							<td></td>
+							<td>Not a string in a real name or symbol; verifying that the tokens are ANDed and characters don't matter.</td>
+						</tr>
+						<tr>
+							<td>Pax6*5a</td>
+							<td>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>-Pax6,-lacZ</td>
+							<td>
+								<ul>
+									<li>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</li>
+									<li>Tg(CAG-EGFP,-Pax6,-lacZ)1Stoy</li>
+								</ul>
+							</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>BV100Gsat</td>
+							<td>Tg(Pax6-EGFP)BV100Gsat</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Gsat</td>
+							<td></td>
+							<td>Tg(Pax6-EGFP)BV100Gsat</td>
+							<td>Verifying that tokenization is not happening on character-numeric string changes.</td>
+						</tr>
+					</table>
+				</li>
+    		</ol>
+    		</li>
+    		
+    		<li>Default order reflects the table in the Logic section as much as possible.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Submit a query with the data specified in the Nomen field below.</li>
+ 				<li>Verify that the order of results returned reflects the table in the Logic section as much as possible.</li>
+ 				<li>
+ 				<table>
+<!--
+select label, count(*)
+from MRK_Label
+group by label
+order by count(*) desc  
+-->
 								<tr>
-									<th>Input<br /> <span style="color: #FFFFFF;">ForceCellToBeWider</span></th>
-									<th>Include in return<br />(may be others)
-									</th>
-									<th>Exclude from return</th>
+									<th>Nomen</th>
 									<th>Notes to tester</th>
 								</tr>
 								<tr>
-									<td>Dach1-Pax6</td>
-									<td>Tg(Dach1-Pax6)#Fjl</td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>-Pax6+Dach1</td>
-									<td>Tg(Dach1-Pax6)#Fjl</td>
-									<td></td>
-									<td>Not a string in a real name or symbol; verifying that the tokens are ANDed and characters don't matter.</td>
-								</tr>
-								<tr>
-									<td>Pax6*5a</td>
-									<td>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>-Pax6,-lacZ</td>
-									<td>
-										<ul>
-											<li>Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy</li>
-											<li>Tg(CAG-EGFP,-Pax6,-lacZ)1Stoy</li>
-										</ul>
+									<td>fp</td>
+									<td>matches current name, old symbol, synonym, human
+										synonym, or allele symbol for several genes.<br /> Brings
+										back Srrm4, Ptgfr, Sdha like Public. Excludes many Public
+										"contains" matches. Includes 5 markers not returned by Public.
 									</td>
-									<td></td>
-									<td></td>
 								</tr>
 								<tr>
-									<td>BV100Gsat</td>
-									<td>Tg(Pax6-EGFP)BV100Gsat</td>
-									<td></td>
-									<td></td>
+									<td>cat</td>
+									<td>matches current symbol, current name, old symbol, synonym, allele symbol, or human synonym for many genes.<br/>
+										Brings back Cat, Mip, Cac, Trpv6, Glyat, Git1, Git2, Cat2, Cat3 like Public, but different order!<br/>
+										Excludes many Public "contains" matches.</td>
 								</tr>
 								<tr>
-									<td>Gsat</td>
-									<td></td>
-									<td>Tg(Pax6-EGFP)BV100Gsat</td>
-									<td>Verifying that tokenization is not happening on character-numeric string changes.</td>
+									<td>C57BL/6J</td>
+									<td>Public returns 1705 markers, mostly due to Allele Name, 25 for Allele Symbol.<br/>
+										Valinor returns 1674 markers, 3 for Current Name, all the rest for Allele Symbol.</td>
+								</tr>
+								<tr>
+									<td>c4a</td>
+									<td>Returns 3 matches on Valinor, 26 matches on Public due to "contains".<br/>
+										Valinor matches due to Current Symbol, Current Name, or Human Symbol.</td>
 								</tr>
 							</table>
 						</li>
-    		</ol>
+ 			</ol>
     		</li>
    		</ol>
    		
