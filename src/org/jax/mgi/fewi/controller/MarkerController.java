@@ -1188,7 +1188,7 @@ public class MarkerController {
 	        params.setIncludeMetaHighlight(true);
 	        params.setIncludeSetMeta(true);
         }
-        params.setSorts(this.genSorts(request));
+        params.setSorts(this.genSorts(request,query));
         params.setFilter(this.genFilters(query));
         
         if (refKey != null) {
@@ -1301,7 +1301,7 @@ public class MarkerController {
     }
 
     // generate the sorts
-    private List<Sort> genSorts(HttpServletRequest request)
+    private List<Sort> genSorts(HttpServletRequest request,MarkerQueryForm query)
     {
         logger.debug("->genSorts started");
 
@@ -1323,6 +1323,11 @@ public class MarkerController {
         else if("location".equalsIgnoreCase(sortRequested))
         {
         	sorts.add(new Sort("byLocation", desc));
+        }
+        else if(notEmpty(query.getNomen()))
+        {
+        	sorts.add(new Sort("score",true));
+        	sorts.add(new Sort("bySymbol",false));
         }
         else
         {

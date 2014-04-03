@@ -21,7 +21,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.IndexConstants;
-import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
+import org.jax.mgi.shr.fe.indexconstants.MarkerSummaryFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -44,12 +44,18 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
         propertyMap.put("featureTypeKey",new SolrPropertyMapper("featureTypeKey"));
         propertyMap.put("featureType",new SolrPropertyMapper("featureType"));
-        propertyMap.put("markerNomen", new SolrPropertyMapper("markerNomen"));
         propertyMap.put("startCoord", new SolrPropertyMapper("startCoord"));
         propertyMap.put("endCoord", new SolrPropertyMapper("endCoord"));
         propertyMap.put("cmOffset", new SolrPropertyMapper("cm"));
         propertyMap.put("chromosome", new SolrPropertyMapper("chromosome"));
         
+        
+        /*
+         * Nomen search
+         */
+        propertyMap.put("markerNomen", 
+        		new SolrPropertyMapper(new ArrayList<String>(MarkerSummaryFields.NOMEN_FIELDS.values()
+        		),"OR"));
 
         /*
          * InterPro searches
@@ -98,28 +104,12 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         highlightSnippets = 1;
         highlightPre = "$$"; // to be replaced later, because we need to superscript the data also
         highlightPost = "/$$";
+        
         // marker highlights
-        highlightFields.add("currentSymbol");
-        highlightFields.add("currentName");
-        highlightFields.add("synonym");
-        highlightFields.add("oldSymbol");
-        highlightFields.add("oldName");
-        highlightFields.add("relatedSynonym");
-        highlightFields.add("alleleSymbol");
-        highlightFields.add("alleleName");
-        highlightFields.add("alleleSynonym");
-        highlightFields.add("humanSymbol");
-        highlightFields.add("humanName");
-        highlightFields.add("humanSynonym");
-        highlightFields.add("ratSymbol");
-        highlightFields.add("ratSynonym");
-        highlightFields.add("cattleSymbol");
-        highlightFields.add("chickenSymbol");
-        highlightFields.add("dogSymbol");
-        highlightFields.add("rhesusMacaqueSymbol");
-        highlightFields.add("zebrafishSymbol");
-
-
+        for(String fieldName : MarkerSummaryFields.NOMEN_FIELDS.values())
+        {
+        	highlightFields.add(fieldName);
+        }
         
         /*
          * Which fields to return
