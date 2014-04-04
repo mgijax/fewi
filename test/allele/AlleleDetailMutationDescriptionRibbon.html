@@ -40,6 +40,7 @@
 		<li>MGI 5.18 User story 54, Molecular Images: show thumbnail on Allele Detail page</li>
 		<li>MGI 5.18 User story 90, Display Mutagenetix link on Allele Detail page</li>
 		<li>MGI 5.18 User story 105, E5: Allele and marker detail pages in prod wi</li>
+		<li>MGI 5.18 User story 198, E8: Add Australian Phenome Bank(APB) link on Allele Detail page</li>
     </ul>
 </div>
 
@@ -53,6 +54,7 @@
 		<li>sto54 - display molecular image in the mutation description ribbon floated to the right</li>
 		<li>sto90 - Display a link to Mutagenetix file on select allele detail pages</li>
 		<li>sto105 - none</li>
+		<li>st0198 - Display a link to Australian Phenome Bank(APB) file on select allele detail pages</li>
 	</ul>
 </div>
 
@@ -102,6 +104,7 @@
                 <li>Verify that molecular image MGI:5466533 or MGI:5466535 displays in the right side of the molecular description ribbon</li>
     		</ol>
     		</li>
+    		
     		<li>Verify these Alleles have the Mutagentix link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto90)
  			<p concordion:assertTrue="true">Passed jeffc 03/21/2014</p>
     		<ol>
@@ -117,6 +120,26 @@
 					<tr><td>Eif2ak4&lt;m1Btlr&gt;</td><td>MGI:5049871</td></tr>
 					<tr><td>Esrp1&lt;m1Btlr&gt;</td><td>MGI:4450974</td></tr>
 					<tr><td>Card11&lt;M2Btlr&gt;</td><td>MGI:5497995</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+    		
+    		<li>Verify these Alleles have the Australian Phenome Bank link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto198)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Navigate to these allele detail pages.</li>
+                <li>Verify the Australian Phenome Bank link exists and works:
+                <table>
+                	<tr><th>Allele Symbol</th><th>MGI ID</th></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
                 </table>
                 </li>
     		</ol>

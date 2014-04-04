@@ -30,8 +30,9 @@
     <h1>Alleles Ribbon Tests</h1>
     <ul>
         <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
-        <li>User story 92, E8: Display link on Marker Detail (MGI 5.18)</li>
+        <li>User story 92, E8: Display Mutagenetix link on Marker Detail (MGI 5.18)</li>
         <li>User story 105, E5: Allele and marker detail pages in prod wi (Release 5.18)</li>
+        <li>User Story 198, E8: Add Australian Phenome Bank(APB) file (Release 5.18)
     </ul>
 </div>
 
@@ -43,6 +44,8 @@
 		<li>sto75: assume use exact same allele types here as in the db</li>
 		<li>sto92: Link to Mutagenetixs file in Alleles and Phenotypes ribbon for select detail pages</li>
 		<li>sto105: none</li>
+		<li>sto198: Link to APB file in alleles and Phenotypes ribbon for select detail pages</li>
+		<li>sto198: APB link will follow the Mutagenetix link when Marker has both links</li>
 	</ul>
 </div>
 
@@ -205,6 +208,7 @@
                 </li>
     		</ol>
     		</li>
+    		
     		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto92)
  			<p concordion:assertTrue="true">Passed jeffc 03/31/2014</p>
  			<ol>
@@ -212,6 +216,7 @@
                 <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to Mutagenix: <b>Incidental mutations (data from Mutagenetix )</b></li>
 			</ol>
 				</li>
+				
     		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto92)
  			<p concordion:assertTrue="true">Passed jeffc 03/31/2014</p>
     		<ol>
@@ -227,6 +232,32 @@
 					<tr><td>Ighmbp2</td><td>MGI:99954</td></tr>
 					<tr><td>Rptoros</td><td>MGI:2442055</td></tr>
 					<tr><td>Sema4a</td><td>MGI:107560</td></tr>
+                </table>
+                </li>
+    		
+    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the APB file is attached it create the ribbon along with the Mutagentix file link (sto92)
+ 			<p concordion:assertTrue="false">new test</p>
+ 			<ol>
+                <li>Navigate to the marker detail page for ??? (MGI:?????)</li>
+                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to APB: <b>Incidental mutations (data from APB )</b></li>
+			</ol>
+				</li>
+				
+    		<li>Verify these markers have the APB link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Navigate to these marker detail pages.</li>
+                <li>Verify the mutagentix link exists and works (link will look like this: <b>Incidental mutations (data from Mutagenetix )</b>):
+                <table>
+                	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>???</td><td>MGI:</td></tr>
                 </table>
                 </li>
     		</ol>
