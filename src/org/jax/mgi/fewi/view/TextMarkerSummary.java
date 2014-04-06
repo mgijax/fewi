@@ -32,12 +32,16 @@ public class TextMarkerSummary extends AbstractTextView
 
 		// write the headers
 		String[] headerTitles = {
-			"Marker Symbol",
-			"Marker Name",
+			"Genetic Chr",
+			"cM",
+			"Genomic Chr",
+			"start",
+			"end",
+			"strand GRCm38",
+			"MGI ID",
 			"Feature Type",
-			"Chromosome",
-			"Start",
-			"Stop"
+			"Symbol",
+			"Name"
 		};
 
 		for(int i=0;i<headerTitles.length;i++)
@@ -50,12 +54,18 @@ public class TextMarkerSummary extends AbstractTextView
 		for (SolrSummaryMarker marker : markers)
 		{
             // write out this row to file writer
-			writer.write(marker.getSymbol() + "\t");
-			writer.write(marker.getName() + "\t");
-			writer.write(marker.getFeatureType() + "\t");
+			writer.write("#geneticChr" + "\t");
+			writer.write("#cM" + "\t");
 			writer.write(marker.getChromosome() + "\t");
 			writer.write(marker.getCoordStart() + "\t");
 			writer.write(marker.getCoordEnd() + "\t");
+			writer.write("#strand" + "\t");
+			writer.write("#MGIID" + "\t");
+			writer.write(marker.getFeatureType() + "\t");
+			writer.write(marker.getSymbol() + "\t");
+			writer.write(marker.getName() + "\t");
+
+			
 			writer.write("\r\n");
 		}
 	}
