@@ -56,6 +56,11 @@ ${templateBean.templateBodyStartHtml}
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
 
+<div id="paginationWrap" style="width: 468px; float:right;">
+	<div id="paginationBottom">&nbsp;</div>
+</div>
+
+
 <script type="text/javascript">
 window.querystring="${queryString}";
 window.fewiurl="${configBean.FEWI_URL}";
