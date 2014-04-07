@@ -1262,6 +1262,52 @@ order by count(*) desc
  			</ol>
 		</li>
 		
+		<li>"You searched for..." lists the parameters in the same order as they are shown on the Query Form.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Correct order is:
+ 				<ol>
+ 					<li>Markery Symbol/Name</li>
+ 					<li>Feature Type</li>
+ 					<li>Chromosome</li>
+ 					<li>Genome Coordinates</li>
+ 					<li>Marker Range</li>
+ 					<li>Gene Ontology Term(s)</li>
+ 					<li>InterPro Protein Domains</li>
+ 					<li>Phenotypes/Diseases</li>
+ 				</ol>
+ 				</li>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+		</li>
+		
+		<li>Parameters which may have multiple values display all selected or input values.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Feature type...</li>
+ 				<li>Chromosome...</li>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+		</li>
+		
+		<li>When only 1 or 2 GO DAG vocabularies are selected, the selected values are displayed.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ul>
+ 				<li>Molecular function</li>
+ 				<li>Biological process</li>
+ 				<li>Cellular component</li>
+ 			</ul>
+ 			<ol>
+ 				<li>Feature type...</li>
+ 				<li>Chromosome...</li>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+		</li>
 		
 		</ol>   		
 
