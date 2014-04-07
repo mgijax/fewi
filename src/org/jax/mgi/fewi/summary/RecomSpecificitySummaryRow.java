@@ -1,17 +1,16 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import mgi.frontend.datamodel.AlleleSystemAssayResult;
 import mgi.frontend.datamodel.AlleleSystemAssayResultImagePane;
 import mgi.frontend.datamodel.Image;
 
-import org.jax.mgi.fewi.util.DBConstants;
-import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.config.ContextLoader;
-
-import javax.persistence.Column;
+import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,9 +190,11 @@ public class RecomSpecificitySummaryRow {
     }
 
     // assay note
-    public String getAssayNote() {
+    public String getAssayNote() throws IOException
+    {
         if (alleleSystemAssayResult.getAssayNote() != null) {
-            return "<span class='summaryDataCell'>" + alleleSystemAssayResult.getAssayNote() + "</span>";
+        	NotesTagConverter ntc = new NotesTagConverter();
+            return "<span class='summaryDataCell'>" + ntc.convertNotes(alleleSystemAssayResult.getAssayNote(),'|') + "</span>";
 	    }
 	    else {
 			return "";
