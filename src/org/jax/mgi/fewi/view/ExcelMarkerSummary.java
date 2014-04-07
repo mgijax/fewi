@@ -31,12 +31,16 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 		// write the headers
 		Sheet sheet = workbook.createSheet();
 		String[] headerTitles = {
-			"Marker Symbol",
-			"Marker Name",
+			"Genetic Chr",
+			"cM",
+			"Genomic Chr",
+			"start",
+			"end",
+			"strand GRCm38",
+			"MGI ID",
 			"Feature Type",
-			"Chromosome",
-			"Start",
-			"Stop"
+			"Symbol",
+			"Name"
 		};
 
 		Row header = sheet.createRow(0);
@@ -50,14 +54,21 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 
 		for (SolrSummaryMarker marker : markers)
 		{
-			row = sheet.createRow(rownum++);
-			row.createCell(0).setCellValue(marker.getSymbol());
-			row.createCell(1).setCellValue(marker.getName());
-			row.createCell(2).setCellValue(marker.getFeatureType());
-			row.createCell(3).setCellValue(marker.getChromosome());
-			row.createCell(4).setCellValue(marker.getCoordStart());
-			row.createCell(5).setCellValue(marker.getCoordEnd());
-		}
+            // prep start & stop coords
+            Integer start = marker.getCoordStart();
+            Integer stop = marker.getCoordEnd();
 
+			row = sheet.createRow(rownum++);
+			row.createCell(0).setCellValue("Genetic Chr");
+			row.createCell(1).setCellValue("cM");
+			row.createCell(2).setCellValue("Genomic Chr");
+            if (start != null) {row.createCell(3).setCellValue(start);}
+            if (stop  != null) {row.createCell(4).setCellValue(stop);}
+			row.createCell(5).setCellValue("strand GRCm38");
+			row.createCell(6).setCellValue("MGI ID");
+			row.createCell(7).setCellValue(marker.getFeatureType());
+			row.createCell(8).setCellValue(marker.getSymbol());
+			row.createCell(9).setCellValue(marker.getName());
+		}
 	}
 }
