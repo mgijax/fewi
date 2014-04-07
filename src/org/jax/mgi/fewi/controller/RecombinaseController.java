@@ -5,8 +5,11 @@ package org.jax.mgi.fewi.controller;
 /*------------------------------*/
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +20,7 @@ import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.AlleleSystemAssayResult;
 import mgi.frontend.datamodel.Image;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
@@ -41,11 +45,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -121,16 +125,27 @@ public class RecombinaseController {
         params.setPaginator(page);
         params.setSorts(this.parseSummarySorts(request));
         params.setFilter(this.parseRecombinaseQueryForm(query));
+        params.setIncludeMetaHighlight(true);
+        params.setIncludeSetMeta(true);
 
         // issue the query and get back the matching Allele objects
         SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
+
+        Map<String,Set<String>> setHighlights = searchResults.getResultSetMeta().getSetHighlights();
 
         // convert the Alleles to their RecombinaseSummary wrappers, and put
         // them in the JsonSummaryResponse object
         List<RecombinaseSummary> summaries = new ArrayList<RecombinaseSummary> ();
         for(Allele allele : searchResults.getResultObjects())
         {
-            summaries.add(new RecombinaseSummary(allele));
+        	Set<String> highlights = new HashSet<String>();
+        	String allKeyStr = ((Integer) allele.getAlleleKey()).toString();
+        	if(setHighlights.containsKey(allKeyStr))
+        	{
+        		highlights = setHighlights.get(allKeyStr);
+        		logger.info("allKey="+allKeyStr+" hls=["+StringUtils.join(highlights,",")+"]");
+        	}
+            summaries.add(new RecombinaseSummary(allele,highlights));
         }
 
         JsonSummaryResponse<RecombinaseSummary> jsonResponse = new JsonSummaryResponse<RecombinaseSummary>();
@@ -138,6 +153,7 @@ public class RecombinaseController {
         jsonResponse.setSummaryRows (summaries);
         jsonResponse.setTotalCount (searchResults.getTotalCount());
 
+        logger.info("done generating summary response");
         return jsonResponse;
     }
 

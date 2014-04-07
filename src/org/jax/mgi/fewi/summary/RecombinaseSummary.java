@@ -2,7 +2,9 @@ package org.jax.mgi.fewi.summary;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSynonym;
@@ -12,6 +14,7 @@ import mgi.frontend.datamodel.RecombinaseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.shr.fe.indexconstants.CreFields;
 
 /** wrapper around an allele, to expose only certain data for a recombinase
  * summary page.  This will aid in efficient conversion to JSON notation and
@@ -27,6 +30,8 @@ public class RecombinaseSummary {
 	// primary object for a RecombinaseSummary is an Allele
 	private Allele allele;
 
+	private Set<String> highlights;
+	
 	// for convenience, this is the allele's RecombinaseInfo object
 	private RecombinaseInfo recombinaseInfo;
 
@@ -39,8 +44,10 @@ public class RecombinaseSummary {
 	// constructors
 	//-------------
 
-    public RecombinaseSummary (Allele allele) {
+    public RecombinaseSummary (Allele allele,Set<String> highlights) {
     	this.allele = allele;
+    	this.highlights=highlights;
+    	if(this.highlights==null) this.highlights = new HashSet<String>();
     	this.recombinaseInfo = allele.getRecombinaseInfo();
     }
 
@@ -69,7 +76,9 @@ public class RecombinaseSummary {
        		List<String> links = new ArrayList<String>();
     		for(AlleleSystem aSystem : affectedSystems)
     		{
-    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getSystemKey(),aSystem.getSystem(), null));
+    			String systemText = aSystem.getSystem();
+    			if(isSystemHighlighted(systemText,this.highlights)) systemText = "<b class=\"systemHl\">"+systemText+"</b>";
+    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getSystemKey(),systemText, null));
     		}
     		linkedSystems.append(StringUtils.join(links,", "));
 
@@ -95,7 +104,9 @@ public class RecombinaseSummary {
     		List<String> links = new ArrayList<String>();
     		for(AlleleSystem aSystem : unaffectedSystems)
     		{
-    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getSystemKey(),aSystem.getSystem(), null));
+    			String systemText = aSystem.getSystem();
+    			if(isSystemHighlighted(systemText,this.highlights)) systemText = "<b class=\"systemHl\">"+systemText+"</b>";
+    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getSystemKey(),systemText, null));
     		}
     		linkedSystems.append(StringUtils.join(links,", "));
     	}
@@ -104,7 +115,20 @@ public class RecombinaseSummary {
     	return linkedSystems.toString();
 	}
 
-    public String getDriver() {
+    public static boolean isSystemHighlighted(String systemText,Set<String> highlights) {
+    	// map solr field to displayed system
+    	for(String displayKey : CreFields.SYSTEM_FIELDS.keySet())
+    	{
+    		if(displayKey.equals(systemText))
+    		{
+    			// map display to solr field name to be able to line up with highlights
+    			return highlights.contains(CreFields.SYSTEM_FIELDS.get(displayKey));
+    		}
+    	}
+		return false;
+	}
+
+	public String getDriver() {
     	return this.allele.getDriver();
     }
 

@@ -1,14 +1,30 @@
 package org.jax.mgi.fewi.hunter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
+import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.jax.mgi.shr.fe.indexconstants.CreFields;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.jax.mgi.fewi.config.ContextLoader;
 
 @Repository
 public class SolrCreSummaryHunter extends SolrHunter {
@@ -37,7 +53,6 @@ public class SolrCreSummaryHunter extends SolrHunter {
          * filter list to the corresponding field names in the Solr implementation.
          * 
          */
-        
         propertyMap.put(SearchConstants.ALL_DRIVER, new SolrPropertyMapper(IndexConstants.ALL_DRIVER));
         propertyMap.put(SearchConstants.ALL_SYSTEM, new SolrPropertyMapper(IndexConstants.CRE_ALL_SYSTEM));
         
@@ -61,10 +76,93 @@ public class SolrCreSummaryHunter extends SolrHunter {
         
         
         /*
+         * Which fields to highlight
+         */
+        highlightRequireFieldMatch=false; // we want to highlight fields that we are not querying
+        highlightFragmentSize=100;
+        highlightSnippets = 1;
+        
+        // marker highlights
+        for(String fieldName : CreFields.SYSTEM_FIELDS.values())
+        {
+        	highlightFields.add(fieldName);
+        }
+        
+        
+        this.returnedFields.add(IndexConstants.ALL_KEY);
+        
+        
+        /*
          * field to iterate over and place into the output
          */
         keyString = IndexConstants.ALL_KEY;
         
+    }
+    
+
+    /**
+     * packInformation
+     * @param sdl
+     * @return List of keys
+     * This overrides the typical behavior of packInformation method.
+     * For this autocomplete hunter, we don't need highlighting or metadata, but
+     * only need a list of Marker objects.
+     */
+    @Override
+    protected void packInformation(QueryResponse rsp, SearchResults sr,
+            SearchParams sp) {
+        
+        // A list of all the primary keys in the document
+        SolrDocumentList sdl = rsp.getResults();
+
+        /**
+         * Iterate through the response documents, extracting the information
+         * that was configured at the implementing class level.
+         */
+        
+        List<String> resultKeys = new ArrayList<String>();
+        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        {
+            SolrDocument doc = (SolrDocument) iter.next();
+            
+            //logger.debug(doc.toString());
+            // Set the result object
+            String allKey = (String) doc.getFieldValue(IndexConstants.ALL_KEY);
+            resultKeys.add(allKey);
+            
+            // Add result to SearchResults
+            //sr.addResultObjects(marker);
+           // keyToResultMap.put(allKey,allKey);
+        }
+
+        sr.setResultKeys(resultKeys);
+        
+        // A mapping of field -> set of highlighted words
+        // for the result set.
+        Map<String, Set<String>> setHighlights = new HashMap<String, Set<String>> ();
+
+        if (sp.includeSetMeta()) {
+            sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
+        }
+
+        if (sp.includeRowMeta()) {
+           // sr.setMetaMapping(metaList);
+        }
+
+        if (!this.highlightFields.isEmpty() && sp.includeMetaHighlight() && sp.includeSetMeta())
+        {
+            // A mapping of documentKey -> Mapping of FieldName -> list of highlighted fields
+            Map<String, Map<String, List<String>>> highlights = rsp.getHighlighting();
+
+            for(String allKey : highlights.keySet())
+            {
+            	// only save the matching field names so we can match them in the results
+            	Map<String,List<String>> highlight = highlights.get(allKey);
+            	
+            	// add highlights to metadata object
+            	setHighlights.put(allKey,highlight.keySet());
+            }
+        }
     }
     
 	@Value("${solr.cre.url}")

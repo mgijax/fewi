@@ -90,6 +90,11 @@ span.smallGrey {
 font-size: 75%;
 color: #999999;
 }
+
+.systemHl
+{
+	font-size: 120%;
+}
 </style>
 
 <!-- Browser History Manager source file -->
