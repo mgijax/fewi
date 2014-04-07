@@ -32,7 +32,7 @@
         <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
         <li>User story 92, E8: Display Mutagenetix link on Marker Detail (MGI 5.18)</li>
         <li>User story 105, E5: Allele and marker detail pages in prod wi (Release 5.18)</li>
-        <li>User Story 198, E8: Add Australian Phenome Bank(APB) file (Release 5.18)
+        <li>User Story 198, E8: Add Australian Phenome Facility(APF) file (Release 5.18)
     </ul>
 </div>
 
@@ -44,8 +44,8 @@
 		<li>sto75: assume use exact same allele types here as in the db</li>
 		<li>sto92: Link to Mutagenetixs file in Alleles and Phenotypes ribbon for select detail pages</li>
 		<li>sto105: none</li>
-		<li>sto198: Link to APB file in alleles and Phenotypes ribbon for select detail pages</li>
-		<li>sto198: APB link will follow the Mutagenetix link when Marker has both links</li>
+		<li>sto198: Link to APF file in alleles and Phenotypes ribbon for select detail pages</li>
+		<li>sto198: APF link will follow the Mutagenetix link when Marker has both links</li>
 	</ul>
 </div>
 
@@ -235,29 +235,28 @@
                 </table>
                 </li>
     		
-    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the APB file is attached it create the ribbon along with the Mutagentix file link (sto92)
+    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the APF file is attached, it should create the ribbon along with the APF file link (sto92)
  			<p concordion:assertTrue="false">new test</p>
  			<ol>
-                <li>Navigate to the marker detail page for ??? (MGI:?????)</li>
-                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to APB: <b>Incidental mutations (data from APB )</b></li>
+                <li>Navigate to the marker detail page for Gm8906 (MGI:3779820)</li>
+                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to APF: <b>Incidental mutations (data from APF )</b></li>
 			</ol>
 				</li>
 				
-    		<li>Verify these markers have the APB link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
+    		<li>Verify these markers have the APF link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the mutagentix link exists and works (link will look like this: <b>Incidental mutations (data from Mutagenetix )</b>):
                 <table>
                 	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
-					<tr><td>???</td><td>MGI:</td></tr>
+					<tr><td>Atp4a</td><td>MGI:88113</td></tr>
+					<tr><td>Fitm2</td><td>MGI:2444508</td></tr>
+					<tr><td>hyi</td><td>MGI:1915430</td></tr>
+					<tr><td>Gm20388</td><td>MGI:5141853</td></tr>
+					<tr><td>Lvrq1</td><td>MGI:3042875</td></tr>
+					<tr><td>Gbx2</td><td>MGI:95668</td></tr>
+					<tr><td>Rgs19</td><td>MGI:1915153</td></tr>
                 </table>
                 </li>
     		</ol>
