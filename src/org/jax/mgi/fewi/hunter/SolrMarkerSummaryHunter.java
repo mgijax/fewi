@@ -116,11 +116,14 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
          */
         this.returnedFields.add("markerSymbol");
         this.returnedFields.add("markerName");
+        this.returnedFields.add("markerPrimaryID");
         this.returnedFields.add("markerKey");
         this.returnedFields.add("featureType");
         this.returnedFields.add("chromosome");
         this.returnedFields.add("startCoord");
         this.returnedFields.add("endCoord");
+        this.returnedFields.add("cm");
+        this.returnedFields.add("strand");
         this.returnedFields.add("locationDisplay");
         this.returnedFields.add("coordinateDisplay");
 
@@ -170,11 +173,13 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
             marker.setSymbol((String) doc.getFieldValue("markerSymbol"));
             marker.setName((String) doc.getFieldValue("markerName"));
             marker.setMarkerKey(markerKey);
-            marker.setMgiId("");
+            marker.setMgiId((String) doc.getFieldValue("markerPrimaryID"));
             marker.setFeatureType((String) doc.getFieldValue("featureType"));
             marker.setChromosome((String) doc.getFieldValue("chromosome"));
             marker.setCoordStart((Integer) doc.getFieldValue("startCoord"));
             marker.setCoordEnd((Integer) doc.getFieldValue("endCoord"));
+            marker.setCm((Double) doc.getFieldValue("cm"));
+            marker.setStrand((String) doc.getFieldValue("strand"));
             marker.setCoordinateDisplay((String) doc.getFieldValue("coordinateDisplay"));
             marker.setLocationDisplay((String) doc.getFieldValue("locationDisplay"));
             

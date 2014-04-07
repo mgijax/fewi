@@ -16,6 +16,8 @@ public class SolrSummaryMarker
 	private String chromosome = "";
 	private Integer coordStart = null;
 	private Integer coordEnd = null;
+	private Double cm = null;
+	private String strand = null;
 	private String coordinateDisplay = "";
 	private String locationDisplay = "";
 	
@@ -87,7 +89,18 @@ public class SolrSummaryMarker
 		this.chromosome = chromosome;
 	}
 	
-	
+	public Double getCm() {
+		return cm;
+	}
+	public String getStrand() {
+		return strand;
+	}
+	public void setCm(Double cm) {
+		this.cm = cm;
+	}
+	public void setStrand(String strand) {
+		this.strand = strand;
+	}
 	public Set<String> getHighlights() {
 		return highlights;
 	}
