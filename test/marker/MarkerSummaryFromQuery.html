@@ -131,6 +131,7 @@
 <div id="tests">
     <h2>Tests</h2>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+    <p><a href="#nomenclature">Nomenclature</a> |  <a href="#mapPosition">Map position</a> | <a href="#goClassification">Gene Ontology classifications</a> | <a href="#proteinDomains">Protein domains</a> | <a href="#mousePheno">Mouse phenotypes &amp; mouse models of human disease</a> | <a href="#sorting">Sorting tests</a> | <a href="#youSearchedFor">You searched for</a> </p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
 <p concordion:assertTrue="true">testing assertTrue - displays as green</p>
@@ -138,7 +139,7 @@
  -->
 		<h3>Manual tests</h3>
 		
-		<h4>Nomenclature</h4>
+		<h4 id="nomenclature">Nomenclature</h4>
 		<ol>
     		<li>Current, old, and interim mouse marker symbols, names, and synonyms  and human ortholog symbols and names are supported.
  			<p concordion:assertTrue="true">passed.  -klf 3/31/2014</p>
@@ -417,7 +418,7 @@
     		</li>
 		</ol>
 
-   		<h4>Map position</h4>
+   		<h4 id="mapPosition">Map position</h4>
 		<ol>
     		<li>Submitting an invalid marker range (one or both markers are missing coordinates; markers are on different chromosomes) returns error messages.
  			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
@@ -433,7 +434,7 @@
 
 		</ol>
 
-   		<h4>Gene Ontology classifications</h4>
+   		<h4 id="goClassification">Gene Ontology classifications</h4>
 		<ol>
     		<li>Submitting a GO ID returns markers associated with the term and its descendants, if any.
     		<ol>
@@ -766,7 +767,7 @@
     		</li>
     		
 		</ol>
-   		<h4>Protein domains</h4>
+   		<h4 id="proteinDomains">Protein domains</h4>
 		<ol>
     		<li>Submitting an InterPro ID returns markers associated with the term (we do not represent InterPro as a DAG or hierarchy, even though it is one).
     		<ol>
@@ -873,7 +874,7 @@
     		
 		</ol>
 
-   		<h4>Mouse phenotypes &amp; mouse models of human disease</h4>
+   		<h4 id="mousePheno">Mouse phenotypes &amp; mouse models of human disease</h4>
 		<ol>
     		<li>Submitting an MP or OMIM ID returns markers having alleles in OMG or Conditional genotypes associated with the term and its descendants, if any. Markers having alleles only in Complex genotypes associated with the term are excluded.
     		<ol>
@@ -1136,7 +1137,7 @@
     		
 		</ol>
 
-		<h4>Sorting</h4>
+		<h4 id="sorting">Sorting</h4>
     	<ol>	
     		<li>Default sort order when Nomenclature field is submitted reflects the table in the Logic section as much as possible.
  			<p concordion:assertTrue="false">new</p>
@@ -1241,7 +1242,7 @@ order by count(*) desc
 
    		</ol>
 
-		<h4>You Searched For...</h4>
+		<h4 id="youSearchedFor">You Searched For...</h4>
 		<ol>
 		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter.
  			<p concordion:assertTrue="false">new</p>
