@@ -33,6 +33,7 @@
     <ul>
         <li>User story 163, E9: MQ&amp;S: Search Functionality (MGI 5.18)</li>
         <li>User story 167, E9: MQ&amp;S: Sorting</li>
+        <li>User story 168, E9: MQ&amp;S: You searched for</li>
     </ul>
 </div>
 
@@ -49,7 +50,10 @@
 		<li>sto167: symbol sort is smart alpha</li>
 		<li>sto167: location sort is (smart) chromosome + startposition + symbol</li>
 		<li>sto167: default sort is by symbol</li>
-		<li>sto167: special case for query by nomen that promotes mouse matches over other species - need to define exactly when it applies</li>		
+		<li>sto167: special case for query by nomen that promotes mouse matches over other species - need to define exactly when it applies</li>
+		<li>sto168: query summary display a "you searched for" section above the table</li>
+		<li>sto168: it contains the users search parameters, nicely formatted</li>
+		<li>sto168: SME word requirements satisfied</li>		
 	</ul>
 </div>
 
@@ -1236,7 +1240,29 @@ order by count(*) desc
     		</li>
 
    		</ol>
-   		
+
+		<h4>You Searched For...</h4>
+		<ol>
+		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+		</li>
+		
+		<li>"You searched for..." does not reiterate default values submitted for any parameter.
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+		</li>
+		
+		
+		</ol>   		
 
 	</div>
 
