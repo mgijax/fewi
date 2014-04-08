@@ -169,7 +169,7 @@ tr.gray td {background-color:#EEEEEE;}
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>nervous system</b> (big high level term)</li>
-                <li>When the summary page displays confirm the following terms are bolded:
+                <li>When the summary page displays confirm the following systems are bolded:
                 	<table>
 					<tr><th>Allele Symbol</th><th>System</th></tr>
 					<tr><td>1700009P17Rik&lt;tm1.1(icre)Heli&gt;</td><td>nervous system</td></tr>
@@ -182,9 +182,9 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Verify querying by an ambiguous term highlights all matching systems(sto177)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
-                <li>From the Recombinase query form search for Recombinase Activity in <b>?????</b></li>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>muscle</b></li>
                 <li>When the summary page displays confirm that for allele <b>Tg(ACTA1-cre)79Jme</b> 
-                	the following terms are bolded(only the systemss that contain the search term should be bolded):
+                	the following systems are bolded(only the systems that contain the search term should be bolded):
                 	<table>
 					<tr><th>System</th></tr>
 					<tr><td>alimentary system</td></tr>
@@ -201,7 +201,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>barrel cortex</b> 
                 	(has no child terms, and words do not match any other term or synonym)</li>
-                <li>When the summary page displays confirm the following terms are bolded(only the systemss that contain the search term should be bolded):
+                <li>When the summary page displays confirm the following systems are bolded(only the systems that contain the search term should be bolded):
                 	<table>
 					<tr><th>Allele Symbol</th><th>System</th></tr>
 					<tr><td>Emx1&lt;tm1(cre)Ito&gt;</td><td>nervous system</td></tr>
@@ -215,7 +215,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
     			<!-- The synonym chosen has word "bulbar" that do not appear in any EMAPA structure, to discount any false positives -->
                 <li>From the Recombinase query form search for Recombinase Activity in <b>bulbar cushion</b> (synonym of "endocardial cushion tissue")</li>
-                <li>When the summary page displays confirm the following terms are bolded(only the systemss that contain the search term should be bolded):
+                <li>When the summary page displays confirm the following systems are bolded(only the systems that contain the search term should be bolded):
                 		<table>
 					<tr><th>Allele Symbol</th><th>System</th></tr>
 					<tr><td>Tg(ACTA1-cre)79Jme</td><td>cardiovascular system</td></tr>
@@ -228,7 +228,7 @@ tr.gray td {background-color:#EEEEEE;}
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>heart</b></li>
-                <li>When the summary page displays confirm the following terms are bolded, under the appropriate columns (either detected or not detected):
+                <li>When the summary page displays confirm the following systems are bolded, under the appropriate columns (either detected or not detected):
 				<table>
 					<tr><th>Allele Symbol</th><th>Detected</th><th>Not Detected</th></tr>
 					<tr><td>1700009P17Rik&lt;tm1.1(icre)Heli&gt;</td><td>cardiovascular system</td><td></td></tr>
