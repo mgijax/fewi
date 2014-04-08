@@ -4,6 +4,7 @@
 	<property file="build.properties" />
 	<property environment="env"/>
 	<property name="test.dir" location="test" />
+	<property name="unittestoutput.dir" location="unittest-results" />
 	<property name="TALK" value="false" />
 
 	<!--libs -->
@@ -167,8 +168,26 @@
 			</junit>
 		</target>
 
+	
+	<target name="unittest" depends="compile">
+		<echo>Running unit tests, output should be in ${unittestoutput.dir}</echo>
+		<mkdir dir="${unittestoutput.dir}"/>
+		<junit fork="yes" forkmode="once" failureproperty="junit.failure" 
+		printsummary="yes" >
+			<classpath>
+				<path refid="tests.path" />
+			</classpath>
+			<formatter type="xml" usefile="true" />
+			<batchtest todir="${unittestoutput.dir}">
+				<fileset dir="${compile.dir}" includes="unittest/fewi/**/*Test.class">
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail message="Test failure detected, check test results." if="junit.failure" />
+	</target>
+				
 	<!--war -->
-	<target name="war" depends="compile">
+	<target name="war" depends="unittest">
 		<echo>Build war file</echo>
 		<copy file="./www/WEB-INF/properties/excelviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
