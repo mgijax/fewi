@@ -303,10 +303,10 @@ tr.gray td {background-color:#EEEEEE;}
 			<li>Testing that punctuation and extraneous wildcards are removed (ignored)
 			<ol>
 				<li>open the Allele query form</li>
-				<li>Type <b concordion:set="#query">dopachrome@#$%^&amp;*()_-+={}[]\|`~;':",./&lt;&gt;?</b> in the nomenclature field and press the search button</li>
-				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">11</b> alleles returned with the symbol <b>Dct</b></li>
-				<li>Type <b concordion:set="#query">*dopachrome ***tautome*</b> in the nomenclature field and press the search button</li>
-				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">11</b> alleles is returned with the symbol <b>Dct</b></li>
+				<li>Type <b concordion:execute="#count1 = getAlleleCountByNomen(#TEXT)">dopachrome@#$%^&amp;*()_-+={}[]\|`~;':",./&lt;&gt;?</b> in the nomenclature field and press the search button</li>
+				<li>verify that alleles with the symbol <b>Dct</b> are returned</li>
+				<li>Type <b concordion:execute="#count2 = getAlleleCountByNomen(#TEXT)">*dopachrome ***tautome*</b> in the nomenclature field and press the search button</li>
+				<li>verify that alleles with the symbol <b>Dct</b> are returned and that the count is the <b concordion:assertTrue="#count1.equals(#count2)">same as previous test</b>.</li>
 				<li>Type <b concordion:set="#query">*****</b> in the nomenclature field and press the search button</li>
 				<li>verify that <b cc:assertEquals="getAlleleCountByNomen(#query)">0</b> matching alleles are returned</li>
 			</ol>
