@@ -40,7 +40,7 @@
 		<li>MGI 5.18 User story 54, Molecular Images: show thumbnail on Allele Detail page</li>
 		<li>MGI 5.18 User story 90, Display Mutagenetix link on Allele Detail page</li>
 		<li>MGI 5.18 User story 105, E5: Allele and marker detail pages in prod wi</li>
-		<li>MGI 5.18 User story 198, E8: Add Australian Phenome Bank(APB) link on Allele Detail page</li>
+		<li>MGI 5.18 User story 198, E8: Add Australian Phenome Facility(APF) link on Allele Detail page</li>
     </ul>
 </div>
 
@@ -54,7 +54,7 @@
 		<li>sto54 - display molecular image in the mutation description ribbon floated to the right</li>
 		<li>sto90 - Display a link to Mutagenetix file on select allele detail pages</li>
 		<li>sto105 - none</li>
-		<li>st0198 - Display a link to Australian Phenome Bank(APB) file on select allele detail pages</li>
+		<li>st0198 - Display a link to Australian Phenome Facility(APF) file on select allele detail pages</li>
 	</ul>
 </div>
 
@@ -125,21 +125,15 @@
     		</ol>
     		</li>
     		
-    		<li>Verify these Alleles have the Australian Phenome Bank link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto198)
- 			<p concordion:assertTrue="false">new test</p>
+    		<li>Verify these Alleles have the Australian Phenome Facility link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto198)
+ 			<p concordion:assertTrue="true">Passed jeffc 04/08/2014</p>
     		<ol>
                 <li>Navigate to these allele detail pages.</li>
-                <li>Verify the Australian Phenome Bank link exists and works:
+                <li>Verify the Australian Phenome Facility link exists and works:
                 <table>
                 	<tr><th>Allele Symbol</th><th>MGI ID</th></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
-					<tr><td>???&lt;????&gt;</td><td>MGI:</td></tr>
+					<tr><td>Adamts20&lt;hip&gt;</td><td>MGI:3847117</td></tr>
+					<tr><td>Nphp3&lt;pol&gt;</td><td>MGI:3847130</td></tr>
                 </table>
                 </li>
     		</ol>
