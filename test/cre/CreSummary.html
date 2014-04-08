@@ -168,14 +168,14 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Verify querying by a subsystem term also highlights the correct systems involved(sto177)
  			<p concordion:assertTrue="false">new test</p>
     		<ol>
-                <li>From the Recombinase query form search for Recombinase Activity in <b>brain blood vessel</b></li>
+                <li>From the Recombinase query form search for Recombinase Activity in <b>nervous system</b> (big high level term)</li>
                 <li>When the summary page displays confirm the following terms are bolded:
-                	<ul><li>???</li>
-                	<li>???</li>
-                	<li>????</li>
-                	<li>????</li>
-                	<li>????</li>
-                	</ul>   
+                	<table>
+					<tr><th>Allele Symbol</th><th>System</th></tr>
+					<tr><td>1700009P17Rik&lt;tm1.1(icre)Heli&gt;</td><td>nervous system</td></tr>
+					<tr><td>Tg(A830010M20Rik-cre)KJ227Gsat</td><td>nervous system</td></tr>
+					<tr><td>Acan&lt;tm1(cre/ERT2)Crm&gt;</td><td>nervous system</td></tr>
+				</table>   
                 </li>            	
     		</ol>
     		</li>
