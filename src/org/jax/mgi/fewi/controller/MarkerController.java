@@ -58,6 +58,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
@@ -1318,21 +1319,21 @@ public class MarkerController {
 
         if("symbol".equalsIgnoreCase(sortRequested))
         {
-        	sorts.add(new Sort("bySymbol", desc));
+        	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL, desc));
         }
         else if("location".equalsIgnoreCase(sortRequested))
         {
-        	sorts.add(new Sort("byLocation", desc));
+        	sorts.add(new Sort(SortConstants.MRK_BY_LOCATION, desc));
         }
         else if(notEmpty(query.getNomen()))
         {
         	sorts.add(new Sort("score",true));
-        	sorts.add(new Sort("bySymbol",false));
+        	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
         }
         else
         {
         	// default is by symbol
-        	sorts.add(new Sort("bySymbol",false));
+        	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
         }
         return sorts;
     }
@@ -1349,7 +1350,7 @@ public class MarkerController {
         String nomen = query.getNomen();
         if(notEmpty(nomen))
         {
-        	 Filter nomenFilter = FilterUtil.generateNomenFilter("markerNomen",nomen);
+        	 Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,nomen);
 			 if(nomenFilter!=null) queryFilters.add(nomenFilter);
         }
         
@@ -1357,7 +1358,7 @@ public class MarkerController {
 		 String phenotype = query.getPhenotype();
 		 if(notEmpty(phenotype))
 		 {
-			 queryFilters.add(BooleanSearch.buildSolrFilter("phenotype",phenotype));
+			 queryFilters.add(BooleanSearch.buildSolrFilter(SearchConstants.PHENOTYPE,phenotype));
 		 }
 		 
 		 //InterPro
@@ -1368,7 +1369,7 @@ public class MarkerController {
 			 
 			 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(interpro))
 			 {
-				 interproFilters.add(new Filter("interpro",token,Filter.OP_STRING_CONTAINS));
+				 interproFilters.add(new Filter(SearchConstants.INTERPRO_TERM,token,Filter.OP_STRING_CONTAINS));
 			 }
 			 queryFilters.add(Filter.and(interproFilters));
 		 }
@@ -1381,7 +1382,7 @@ public class MarkerController {
 			 List<Filter> goVocabFilters = new ArrayList<Filter>();
 			 if(!(notEmpty(goVocabs) && goVocabs.size()<3))
 			 {
-				 goVocabs = Arrays.asList("go");
+				 goVocabs = Arrays.asList(SearchConstants.GO_TERM);
 			 }
 			 for(String goVocab : goVocabs)
 			 {
@@ -1398,17 +1399,17 @@ public class MarkerController {
 		 }
         
         // feature type
-        Filter featureTypeFilter = makeListFilter(query.getFeatureType(),"featureType");
+        Filter featureTypeFilter = makeListFilter(query.getFeatureType(),SearchConstants.FEATURE_TYPE);
 		if(featureTypeFilter!=null) queryFilters.add(featureTypeFilter);
         
-		Filter mcvFilter = makeListFilter(query.getMcv(),"featureTypeKey");
+		Filter mcvFilter = makeListFilter(query.getMcv(),SearchConstants.FEATURE_TYPE_KEY);
 		if(mcvFilter!=null) queryFilters.add(mcvFilter);
 		
         // Chromosome
 		 List<String> chr = query.getChromosome();
 		 if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY))
 		 {
-			 Filter chrFilter = makeListFilter(chr,"chromosome");
+			 Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME);
 			 if(chrFilter!=null) queryFilters.add(chrFilter);
 		 }
 		 
@@ -1462,7 +1463,7 @@ public class MarkerController {
 
             			String coordString = startCoord+"-"+endCoord;
             			logger.info("build coord string from markers "+startMarker+" to "+endMarker+" = "+coordString);
-            			Filter chromosomeFilter = new Filter("chromosome",startMarkerObj.getChromosome(),Filter.OP_EQUAL);
+            			Filter chromosomeFilter = new Filter(SearchConstants.CHROMOSOME,startMarkerObj.getChromosome(),Filter.OP_EQUAL);
             			Filter coordFilter = FilterUtil.genCoordFilter(coordString,"bp");
             			if(coordFilter==null) coordFilter = nullFilter();
             			queryFilters.add(Filter.and(Arrays.asList(chromosomeFilter,coordFilter)));

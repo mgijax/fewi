@@ -48,8 +48,9 @@ public class SortConstants {
     // Default sort
     public static final String BY_DEFAULT						= "byDefaultSort";
 
-    // GXD Lit Summary Page
+    // marker sorts
     public static final String MRK_BY_SYMBOL					= "byMrkSymbol";
+	public static final String MRK_BY_LOCATION = "byMarkerLocation";
 
 	// Sequence Summary page
 	public static final String SEQUENCE_TYPE       = "sequenceType";

@@ -17,6 +17,7 @@ import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -39,61 +40,61 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
          * filter list to the corresponding field names in the Solr implementation.
          */
         propertyMap.put(SearchConstants.MRK_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_SYMBOL));
-        propertyMap.put("markerKey",new SolrPropertyMapper("markerKey"));
+        propertyMap.put(SearchConstants.MRK_KEY,new SolrPropertyMapper(IndexConstants.MRK_KEY));
         propertyMap.put(SearchConstants.MRK_ID, new SolrPropertyMapper(IndexConstants.MRK_ID));
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
-        propertyMap.put("featureTypeKey",new SolrPropertyMapper("featureTypeKey"));
-        propertyMap.put("featureType",new SolrPropertyMapper("featureType"));
-        propertyMap.put("startCoord", new SolrPropertyMapper("startCoord"));
-        propertyMap.put("endCoord", new SolrPropertyMapper("endCoord"));
-        propertyMap.put("cmOffset", new SolrPropertyMapper("cm"));
-        propertyMap.put("chromosome", new SolrPropertyMapper("chromosome"));
+        propertyMap.put(SearchConstants.FEATURE_TYPE_KEY,new SolrPropertyMapper(MarkerSummaryFields.FEATURE_TYPE_KEY));
+        propertyMap.put(SearchConstants.FEATURE_TYPE,new SolrPropertyMapper(MarkerSummaryFields.FEATURE_TYPE));
+        propertyMap.put(SearchConstants.START_COORD, new SolrPropertyMapper(IndexConstants.START_COORD));
+        propertyMap.put(SearchConstants.END_COORD, new SolrPropertyMapper(IndexConstants.END_COORD));
+        propertyMap.put(SearchConstants.CM_OFFSET, new SolrPropertyMapper(IndexConstants.CM_OFFSET));
+        propertyMap.put(SearchConstants.STRAND, new SolrPropertyMapper(IndexConstants.CHROMOSOME));
         
         
         /*
          * Nomen search
          */
-        propertyMap.put("markerNomen", 
+        propertyMap.put(SearchConstants.MRK_NOMENCLATURE, 
         		new SolrPropertyMapper(new ArrayList<String>(MarkerSummaryFields.NOMEN_FIELDS.values()
         		),"OR"));
 
         /*
          * InterPro searches
          */
-        propertyMap.put("interpro",
+        propertyMap.put(SearchConstants.INTERPRO_TERM,
     		new SolrPropertyMapper(Arrays.asList(
-    				"markerTermID",
-    				"interProTerm"
+    				IndexConstants.MRK_ID,
+    				MarkerSummaryFields.INTERPRO_TERM
     					),"OR"));
         /*
          * GO searches
          */
-        propertyMap.put("go",
+        propertyMap.put(SearchConstants.GO_TERM,
     		new SolrPropertyMapper(Arrays.asList(
-    				"markerTermID",
-    				"goTerm"
+    				IndexConstants.MRK_ID,
+    				MarkerSummaryFields.GO_TERM
     					),"OR"));
         
-        propertyMap.put("goProcess",new SolrPropertyMapper("goProcessTerm"));
-        propertyMap.put("goFunction",new SolrPropertyMapper("goFunctionTerm"));
-        propertyMap.put("goComponent",new SolrPropertyMapper("goComponentTerm"));
+        propertyMap.put(SearchConstants.GO_PROCESS_TERM,new SolrPropertyMapper(MarkerSummaryFields.GO_PROCESS_TERM));
+        propertyMap.put(SearchConstants.GO_FUNCTION_TERM,new SolrPropertyMapper(MarkerSummaryFields.GO_FUNCTION_TERM));
+        propertyMap.put(SearchConstants.GO_COMPONENT_TERM,new SolrPropertyMapper(MarkerSummaryFields.GO_COMPONENT_TERM));
 
         
         /*
          * Phenotype searches
          */
-        propertyMap.put("phenotype",
+        propertyMap.put(SearchConstants.PHENOTYPE,
     		new SolrPropertyMapper(Arrays.asList(
-    				"phenoId",
-    				"phenoText"
+    				MarkerSummaryFields.PHENO_ID,
+    				MarkerSummaryFields.PHENO_TEXT
     					),"OR"));
         
         
         /*
          * sortable fields
          */
-        this.sortMap.put("bySymbol",new SolrSortMapper("bySymbol"));
-        this.sortMap.put("byLocation",new SolrSortMapper("byLocation"));
+        this.sortMap.put(SortConstants.MRK_BY_SYMBOL,new SolrSortMapper(MarkerSummaryFields.BY_SYMBOL));
+        this.sortMap.put(SortConstants.MRK_BY_LOCATION,new SolrSortMapper(MarkerSummaryFields.BY_LOCATION));
         
         
         /*
@@ -114,18 +115,18 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         /*
          * Which fields to return
          */
-        this.returnedFields.add("markerSymbol");
-        this.returnedFields.add("markerName");
-        this.returnedFields.add("markerPrimaryID");
-        this.returnedFields.add("markerKey");
-        this.returnedFields.add("featureType");
-        this.returnedFields.add("chromosome");
-        this.returnedFields.add("startCoord");
-        this.returnedFields.add("endCoord");
-        this.returnedFields.add("cm");
-        this.returnedFields.add("strand");
-        this.returnedFields.add("locationDisplay");
-        this.returnedFields.add("coordinateDisplay");
+        this.returnedFields.add(IndexConstants.MRK_SYMBOL);
+        this.returnedFields.add(IndexConstants.MRK_NAME);
+        this.returnedFields.add(IndexConstants.MRK_PRIMARY_ID);
+        this.returnedFields.add(IndexConstants.MRK_KEY);
+        this.returnedFields.add(MarkerSummaryFields.FEATURE_TYPE);
+        this.returnedFields.add(IndexConstants.CHROMOSOME);
+        this.returnedFields.add(IndexConstants.START_COORD);
+        this.returnedFields.add(IndexConstants.END_COORD);
+        this.returnedFields.add(IndexConstants.CM_OFFSET);
+        this.returnedFields.add(IndexConstants.STRAND);
+        this.returnedFields.add(MarkerSummaryFields.LOCATION_DISPLAY);
+        this.returnedFields.add(MarkerSummaryFields.COORDINATE_DISPLAY);
 
 
         /*
@@ -165,23 +166,23 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
             
             //logger.debug(doc.toString());
             // Set the result object
-            String markerKey = (String) doc.getFieldValue("markerKey");
+            String markerKey = (String) doc.getFieldValue(IndexConstants.MRK_KEY);
             resultKeys.add(markerKey);
             
             SolrSummaryMarker marker = new SolrSummaryMarker();
 
-            marker.setSymbol((String) doc.getFieldValue("markerSymbol"));
-            marker.setName((String) doc.getFieldValue("markerName"));
+            marker.setSymbol((String) doc.getFieldValue(IndexConstants.MRK_SYMBOL));
+            marker.setName((String) doc.getFieldValue(IndexConstants.MRK_NAME));
             marker.setMarkerKey(markerKey);
-            marker.setMgiId((String) doc.getFieldValue("markerPrimaryID"));
-            marker.setFeatureType((String) doc.getFieldValue("featureType"));
-            marker.setChromosome((String) doc.getFieldValue("chromosome"));
-            marker.setCoordStart((Integer) doc.getFieldValue("startCoord"));
-            marker.setCoordEnd((Integer) doc.getFieldValue("endCoord"));
-            marker.setCm((Double) doc.getFieldValue("cm"));
-            marker.setStrand((String) doc.getFieldValue("strand"));
-            marker.setCoordinateDisplay((String) doc.getFieldValue("coordinateDisplay"));
-            marker.setLocationDisplay((String) doc.getFieldValue("locationDisplay"));
+            marker.setMgiId((String) doc.getFieldValue(IndexConstants.MRK_PRIMARY_ID));
+            marker.setFeatureType((String) doc.getFieldValue(MarkerSummaryFields.FEATURE_TYPE));
+            marker.setChromosome((String) doc.getFieldValue(IndexConstants.CHROMOSOME));
+            marker.setCoordStart((Integer) doc.getFieldValue(IndexConstants.START_COORD));
+            marker.setCoordEnd((Integer) doc.getFieldValue(IndexConstants.END_COORD));
+            marker.setCm((Double) doc.getFieldValue(IndexConstants.CM_OFFSET));
+            marker.setStrand((String) doc.getFieldValue(IndexConstants.STRAND));
+            marker.setCoordinateDisplay((String) doc.getFieldValue(MarkerSummaryFields.COORDINATE_DISPLAY));
+            marker.setLocationDisplay((String) doc.getFieldValue(MarkerSummaryFields.LOCATION_DISPLAY));
             
             // Add result to SearchResults
             sr.addResultObjects(marker);

@@ -33,6 +33,8 @@ public class SearchConstants {
     public static final String MRK_ID               = "marker_id";
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_NOMENCLATURE			= "nomenclature";
+	public static final String FEATURE_TYPE = "featureType";	
+	public static final String FEATURE_TYPE_KEY = "featureTypeKey";
 
     // allele constants
     public static final String ALL_KEY              = "allele_key";
@@ -113,6 +115,19 @@ public class SearchConstants {
     // mp constants
     public static final String MP_ID            = "mp_id";
     public static final String MP_HEADER        = "mp_header";
+    
+
+    // interpro
+	public static final String INTERPRO_TERM = "interProTerm";
+	
+	// go
+	public static final String GO_TERM = "goTerm";
+	public static final String GO_PROCESS_TERM = "goProcessTerm";
+	public static final String GO_FUNCTION_TERM = "goFunctionTerm";
+	public static final String GO_COMPONENT_TERM = "goComponentTerm";
+	
+	// phenotype
+	public static final String PHENOTYPE = "phenotype";
 
     // query form options' constants
     public static final String FORM_NAME	= "form_name";
@@ -157,7 +172,9 @@ public class SearchConstants {
     public static final String CHROMOSOME = "chromosome";
     public static final String CM_OFFSET = "cmOffset";
     public static final String CYTOGENETIC_OFFSET = "cytogeneticOffset";
+    public static final String STRAND = "strand";
 	
 	// genotype constants
 	public static final String GENOTYPE_TYPE = "genotypeType";
+
 }
