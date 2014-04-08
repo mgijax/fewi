@@ -24,11 +24,18 @@ public class TextMarkerSummary extends AbstractTextView
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
+		// retrieve list of markers from controller
+		List<SolrSummaryMarker> markers = (List<SolrSummaryMarker>) model.get("markers");
+
+		// setup
 		String filename = "MGImarkerQuery_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
-		System.out.println(response.getCharacterEncoding());
 
-		List<SolrSummaryMarker> markers = (List<SolrSummaryMarker>) model.get("markers");
+		// only display "why" it matched when nomen param isn't empty
+		boolean displayMatches = false;
+		if (!request.getParameter("nomen").equals("")){
+			displayMatches = true;
+		}
 
 		// write the headers
 		String[] headerTitles = {
@@ -41,9 +48,12 @@ public class TextMarkerSummary extends AbstractTextView
 			"MGI ID",
 			"Feature Type",
 			"Symbol",
-			"Name"
+			"Name",
+			""
 		};
-
+		if (displayMatches == true) {
+			headerTitles[10] = "Matching Text";
+		}
 		for(int i=0;i<headerTitles.length;i++)
 		{
 			writer.write(headerTitles[i]+"\t");
@@ -64,6 +74,10 @@ public class TextMarkerSummary extends AbstractTextView
 			writer.write(marker.getFeatureType() + "\t");
 			writer.write(marker.getSymbol() + "\t");
 			writer.write(marker.getName() + "\t");
+			if (displayMatches == true) {
+System.out.println("----highlights--" + marker.getHighlights());
+				writer.write(StringUtils.join(marker.getHighlights(),", ") + "\t");
+			}
 
 
 			writer.write("\r\n");

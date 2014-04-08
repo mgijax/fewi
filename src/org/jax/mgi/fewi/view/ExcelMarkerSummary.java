@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -23,12 +24,21 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 	{
 		logger.debug("buildExcelDocument");
+
+		// retrieve list of markers from controller
+		List<SolrSummaryMarker> markers = (List<SolrSummaryMarker>) model.get("markers");
+
+		// setup
 		String filename = "MGImarkerQuery_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".xlsx\"");
 
-		List<SolrSummaryMarker> markers = (List<SolrSummaryMarker>) model.get("markers");
+		// only display "why" it matched when nomen param isn't empty
+		boolean displayMatches = false;
+		if (!request.getParameter("nomen").equals("")){
+			displayMatches = true;
+		}
 
-		// write the headers
+		// create worksheet add the header row column headings
 		Sheet sheet = workbook.createSheet();
 		String[] headerTitles = {
 			"Genetic Chr",
@@ -40,19 +50,21 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 			"MGI ID",
 			"Feature Type",
 			"Symbol",
-			"Name"
+			"Name",
+			""
 		};
-
+		if (displayMatches == true) {
+			headerTitles[10] = "Matching Text";
+		}
 		Row header = sheet.createRow(0);
-		// add the header row
 		for(int i=0;i<headerTitles.length;i++)
 		{
 			header.createCell(i).setCellValue(headerTitles[i]);
 		}
+
+		// create and fill the rows objects
 		Row row;
 		int rownum = 1;
-
-		// create and fill the row object
 		for (SolrSummaryMarker marker : markers)
 		{
 			row = sheet.createRow(rownum++);
@@ -66,6 +78,10 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 			row.createCell(7).setCellValue(marker.getFeatureType());
 			row.createCell(8).setCellValue(marker.getSymbol());
 			row.createCell(9).setCellValue(marker.getName());
+			if (displayMatches == true) {
+System.out.println("----highlights--" + marker.getHighlights());
+				row.createCell(10).setCellValue(StringUtils.join(marker.getHighlights(),", "));
+			}
 		}
 	}
 }
