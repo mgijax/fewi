@@ -93,7 +93,7 @@ color: #999999;
 
 .systemHl
 {
-	font-size: 120%;
+	font-size: 105%;
 }
 </style>
 
