@@ -32,8 +32,9 @@
     <h1>Marker Summary from Query</h1>
     <ul>
         <li>User story 163, E9: MQ&amp;S: Search Functionality (MGI 5.18)</li>
-        <li>User story 167, E9: MQ&amp;S: Sorting</li>
-        <li>User story 168, E9: MQ&amp;S: You searched for</li>
+        <li>User story 167, E9: MQ&amp;S: Sorting (5.18)</li>
+        <li>User story 168, E9: MQ&amp;S: You searched for (5.18)</li>
+        <li>User story 164, E9: MQ&amp;S: Text/Excel downloads (5.18)</li>
     </ul>
 </div>
 
@@ -54,6 +55,10 @@
 		<li>sto168: query summary display a "you searched for" section above the table</li>
 		<li>sto168: it contains the users search parameters, nicely formatted</li>
 		<li>sto168: SME word requirements satisfied</li>		
+		<li>sto164: user can download results at tab-delimited text</li>
+		<li>sto164: user can download results as an Excel spreadsheet</li>
+		<li>sto164: download columns include the same data as the web display PLUS the MGI id</li>
+		<li>sto164: download columns are separated (where they are combined in the web display)</li>
 	</ul>
 </div>
 
@@ -131,7 +136,7 @@
 <div id="tests">
     <h2>Tests</h2>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
-    <p><a href="#nomenclature">Nomenclature</a> |  <a href="#mapPosition">Map position</a> | <a href="#goClassification">Gene Ontology classifications</a> | <a href="#proteinDomains">Protein domains</a> | <a href="#mousePheno">Mouse phenotypes &amp; mouse models of human disease</a> | <a href="#sorting">Sorting tests</a> | <a href="#youSearchedFor">You searched for</a> </p>
+    <p><a href="#nomenclature">Nomenclature</a> |  <a href="#mapPosition">Map position</a> | <a href="#goClassification">Gene Ontology classifications</a> | <a href="#proteinDomains">Protein domains</a> | <a href="#mousePheno">Mouse phenotypes &amp; mouse models of human disease</a> | <a href="#sorting">Sorting tests</a> | <a href="#youSearchedFor">You searched for</a> | <a href="#downloadableFiles">Downloadable Files</a> </p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
 <p concordion:assertTrue="true">testing assertTrue - displays as green</p>
@@ -1244,7 +1249,7 @@ order by count(*) desc
 
 		<h4 id="youSearchedFor">You Searched For...</h4>
 		<ol>
-		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter.
+		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter. (sto168)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
  				<li>Step</li>
@@ -1253,7 +1258,7 @@ order by count(*) desc
  			</ol>
 		</li>
 		
-		<li>"You searched for..." does not reiterate default values submitted for any parameter.
+		<li>"You searched for..." does not reiterate default values submitted for any parameter. (sto168)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
  				<li>Step</li>
@@ -1262,7 +1267,7 @@ order by count(*) desc
  			</ol>
 		</li>
 		
-		<li>"You searched for..." lists the parameters in the same order as they are shown on the Query Form.
+		<li>"You searched for..." lists the parameters in the same order as they are shown on the Query Form. (sto168)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
  				<li>Correct order is:
@@ -1282,7 +1287,7 @@ order by count(*) desc
  			</ol>
 		</li>
 		
-		<li>Parameters which may have multiple values display all selected or input values.
+		<li>Parameters which may have multiple values display all selected or input values. (sto168)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
  				<li>Feature type...</li>
@@ -1293,7 +1298,7 @@ order by count(*) desc
  			</ol>
 		</li>
 		
-		<li>When only 1 or 2 GO DAG vocabularies are selected, the selected values are displayed.
+		<li>When only 1 or 2 GO DAG vocabularies are selected, the selected values are displayed. (sto168)
  			<p concordion:assertTrue="false">new</p>
  			<ul>
  				<li>Molecular function</li>
@@ -1308,8 +1313,41 @@ order by count(*) desc
  				<li>Step</li>
  			</ol>
 		</li>
-		
 		</ol>   		
+
+		<h4 id="downloadableFiles">Downloadable Files</h4>
+		<ol>
+			<li>A file containing all data in the current results set can be downloaded in Text (tab-delimited) or Excel format.
+ 			<p concordion:assertTrue="false">new</p>		
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+			</li>
+
+			<li>Downloads have the correct data columns: (sto164)
+ 			<p concordion:assertTrue="false">new</p>		
+			<ul>
+				<li>Genetic Chr </li>
+				<li>cM </li>
+				<li>Genomic Chr</li> 
+				<li>start </li>
+				<li>end </li>
+				<li>strand GRCm38</li> 
+				<li>MGI ID </li>
+				<li>Feature Type</li> 
+				<li>Symbol </li>
+				<li>Name </li>
+				<li>Matching Text (optional - Matching Text appears when the user submits a nomen query)</li>
+			</ul>
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+			</li>
+		
+		
+		</ol>
 
 	</div>
 

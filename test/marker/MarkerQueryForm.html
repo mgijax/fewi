@@ -32,6 +32,7 @@
     <h1>Marker Query Form</h1>
     <ul>
         <li>User story 163, E9: MQ&amp;S: Search Functionality (MGI 5.18)</li>
+        <li>User story 165, E9: MQ&amp;S: Query form on summary page (5.18)</li>
     </ul>
 </div>
 
@@ -44,6 +45,9 @@
 		<li>verify GO and InterPro work ok</li>
 		<li>add pheno system selection box</li>
 		<li>other fields should give exactly the same results, e.g., a query by coordinates, or GO term	</li>
+		<li>sto165: MQF appears at top of marker summary page</li>
+		<li>sto165: openey/closey</li>
+		<li>sto165: form parameters correctly populated (include affected systems dialog)</li>
 	</ul>
 </div>
 
@@ -193,6 +197,23 @@
                 <li>Verify the popup window closes. Verify the MP IDs for the selected systems are added to existing text in the Phenotypes/Diseases input text box. Verify the text labels which were selected are added to the list to the right of the input text field on the main form.</li>
     		</ol>
     		</li>
+
+			<li>After the first query submission, the query form appears to contract, and the contracted version remains visible at the top of the results set. The "contracted" form can be expanded and contracted by clicking its header area. (sto164)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+			</li>
+
+			<li>After each query submission, the query form remains populated with the user's last inputs and selections, including "Affected Systems" in the Pheno/Disease ribbon. (sto164)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+			</li>
+
 
 		</ol>
 	</div>
