@@ -54,18 +54,18 @@ public class TextMarkerSummary extends AbstractTextView
 		for (SolrSummaryMarker marker : markers)
 		{
             // write out this row to file writer
-			writer.write("#geneticChr" + "\t");
-			writer.write("#cM" + "\t");
 			writer.write(marker.getChromosome() + "\t");
-			writer.write(marker.getCoordStart() + "\t");
-			writer.write(marker.getCoordEnd() + "\t");
-			writer.write("#strand" + "\t");
-			writer.write("#MGIID" + "\t");
+			writer.write(marker.getCmStr() + "\t");
+			writer.write(marker.getChromosome() + "\t");
+			writer.write(marker.getCoordStartStr() + "\t");
+			writer.write(marker.getCoordEndStr() + "\t");
+			writer.write(marker.getStrand() + "\t");
+			writer.write(marker.getMgiId() + "\t");
 			writer.write(marker.getFeatureType() + "\t");
 			writer.write(marker.getSymbol() + "\t");
 			writer.write(marker.getName() + "\t");
 
-			
+
 			writer.write("\r\n");
 		}
 	}
