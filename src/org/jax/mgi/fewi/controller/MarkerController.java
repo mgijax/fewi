@@ -106,7 +106,7 @@ public class MarkerController {
 
     @Autowired
     private MarkerFinder markerFinder;
-    
+
     @Autowired
     private DbInfoFinder dbInfoFinder;
 
@@ -118,8 +118,8 @@ public class MarkerController {
 
     @Autowired
     private IDLinker idLinker;
-    
-    @Autowired 
+
+    @Autowired
     private SessionFactory sessionFactory;
 
     // cached data for query form
@@ -175,25 +175,25 @@ public class MarkerController {
 		phenoHeaders.append("'>");
 		phenoHeaders.append(header.getDisplayValue());
 		phenoHeaders.append("</option>");
-	    } 
+	    }
 	    mpHeaders = phenoHeaders.toString();
 	}
 
 	ModelAndView mav = new ModelAndView("phenotype_popup");
 	mav.addObject("mpHeaders", mpHeaders);
 	return mav;
-    } 
+    }
 
     //-------------------------//
     // Marker Query Form Summary
     //-------------------------//
     @RequestMapping("/summary")
     public ModelAndView markerSummary(HttpServletRequest request,
-            @ModelAttribute MarkerQueryForm queryForm) 
+            @ModelAttribute MarkerQueryForm queryForm)
     {
         logger.debug("->markerSummary started");
         logger.debug("queryString: " + request.getQueryString());
-        
+
         // flag any errors for start and end marker, if specified
         String startMarker = queryForm.getStartMarker();
         String endMarker = queryForm.getEndMarker();
@@ -221,7 +221,7 @@ public class MarkerController {
         		return errorMav("start marker symbol <b>"+startMarker+"</b> matches multiple markers");
         	}
         	SolrSummaryMarker startMarkerObj = sr.getResultObjects().get(0);
-        	
+
         	// check that we can find the end marker
         	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.OP_EQUAL));
         	sr = markerFinder.getSummaryMarkers(sp);
@@ -234,14 +234,14 @@ public class MarkerController {
         		return errorMav("end marker symbol <b>"+endMarker+"</b> matches multiple markers");
         	}
         	SolrSummaryMarker endMarkerObj = sr.getResultObjects().get(0);
-        	
+
         	// check chromosome
         	if(!startMarkerObj.getChromosome().equals(endMarkerObj.getChromosome()))
         	{
         		return errorMav("Marker <b>"+startMarker+"("+startMarkerObj.getChromosome()+")</b> not on same chromosome as " +
         				"<b>"+endMarker+"("+endMarkerObj.getChromosome()+")</b>");
         	}
-        	
+
         	// check that coordinate exist for both
         	if(!notEmpty(startMarkerObj.getCoordStart()) || !notEmpty(startMarkerObj.getCoordEnd()))
         	{
@@ -254,7 +254,7 @@ public class MarkerController {
         }
 
         initQueryForm();
-        
+
         ModelAndView mav = new ModelAndView("marker_summary");
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
@@ -263,7 +263,7 @@ public class MarkerController {
     	mav.addObject("htmlMcv", featureTypeHtml);
     	mav.addObject("jsonMcv", featureTypeJson);
     	mav.addObject("genomeBuild", genomeBuild);
-        
+
         return mav;
     }
 
@@ -273,7 +273,7 @@ public class MarkerController {
         mav.addObject("errorMsg", msg);
         return mav;
     }
-    
+
     // Marker Summary (By Refernce) Shell
     //------------------------------------//
     @RequestMapping(value="/reference/key/{refKey}")
@@ -330,7 +330,7 @@ public class MarkerController {
     public ModelAndView markerDetailByID(@PathVariable("markerID") String markerID) {
 
         logger.debug("->markerDetailByID started");
-        
+
         // setup search parameters object
         SearchParams searchParams = new SearchParams();
         Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
@@ -381,7 +381,7 @@ public class MarkerController {
 		return mav;
 	    } catch (Exception e) {
 		ModelAndView mav = new ModelAndView("error");
-                mav.addObject("errorMsg", 
+                mav.addObject("errorMsg",
 			"Could not find allele ID for transgene marker");
 		return mav;
 	    }
@@ -412,7 +412,7 @@ public class MarkerController {
 
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("marker_detail");
-        
+
         // set specific hibernate filters to omit data that does not appear on this page. (for performance)
         sessionFactory.getCurrentSession().enableFilter("markerDetailRefs");
 
@@ -423,12 +423,12 @@ public class MarkerController {
 	// add a Properties object with URLs for use at the JSP level
 	Properties urls = idLinker.getUrlsAsProperties();
 	mav.addObject("urls", urls);
-        
+
         // add the marker to mav
         mav.addObject("marker", marker);
-        
+
         this.dbDate(mav);
-        
+
     // add human homologs to model if present
 	OrganismOrtholog mouseOO = marker.getOrganismOrtholog();
 	if (mouseOO != null) {
@@ -463,14 +463,14 @@ public class MarkerController {
         // We need to pull out the GO terms we want to use as teasers for
         // each ontology.  (This is easier in Java than JSTL, so we do
         // it here.)
-        
+
         List<mgi.frontend.datamodel.Annotation> pAnnot = this.noDuplicates(
         		marker.getGoProcessAnnotations());
         List<mgi.frontend.datamodel.Annotation> cAnnot = this.noDuplicates(
         		marker.getGoComponentAnnotations());
         List<mgi.frontend.datamodel.Annotation> fAnnot = this.noDuplicates(
         		marker.getGoFunctionAnnotations());
-        	
+
 	boolean hasGO = false;
 
         if (!pAnnot.isEmpty()) {
@@ -494,7 +494,7 @@ public class MarkerController {
        		mav.addObject ("functionAnnot1", fAnnot.get(0));
 		hasGO = true;
         }
-        
+
         if (!cAnnot.isEmpty()) {
         	if (cAnnot.size() > 2) {
         		mav.addObject ("componentAnnot3", cAnnot.get(2));
@@ -512,35 +512,35 @@ public class MarkerController {
 
         // need to pull out and re-package the expression counts for assays
         // and results
-        
-        Iterator<MarkerCountSetItem> assayIterator = 
+
+        Iterator<MarkerCountSetItem> assayIterator =
         	marker.getGxdAssayCountsByType().iterator();
-        Iterator<MarkerCountSetItem> resultIterator = 
+        Iterator<MarkerCountSetItem> resultIterator =
         	marker.getGxdResultCountsByType().iterator();
         MarkerCountSetItem item;
-        
+
         ArrayList<String> gxdAssayTypes = new ArrayList<String>();
         HashMap<String,String> gxdAssayCounts = new HashMap<String,String>();
         HashMap<String,String> gxdResultCounts = new HashMap<String,String>();
-        
+
         while (assayIterator.hasNext()) {
         	item = assayIterator.next();
         	gxdAssayTypes.add(item.getCountType());
-        	gxdAssayCounts.put(item.getCountType(), 
+        	gxdAssayCounts.put(item.getCountType(),
         		Integer.toString(item.getCount()) );
         }
         while (resultIterator.hasNext()) {
         	item = resultIterator.next();
-        	gxdResultCounts.put(item.getCountType(), 
+        	gxdResultCounts.put(item.getCountType(),
         		Integer.toString(item.getCount()) );
         }
-        
+
         mav.addObject ("gxdAssayTypes", gxdAssayTypes);
         mav.addObject ("gxdAssayCounts", gxdAssayCounts);
         mav.addObject ("gxdResultCounts", gxdResultCounts);
 
 	// expression, sequences, polymorphisms, proteins, references keywords
-	
+
 	if ((gxdAssayTypes.size() > 0) ||
 		(marker.getCountOfGxdLiterature() > 0)) {
 	    seoDataTypes.add("expression");
@@ -562,7 +562,7 @@ public class MarkerController {
 	    seoDataTypes.add("references");
 	}
 
-        // pull out the strain/species and provider links for each 
+        // pull out the strain/species and provider links for each
         // representative sequence
         mgi.frontend.datamodel.Sequence repGenomic = marker.getRepresentativeGenomicSequence();
         if (repGenomic != null) {
@@ -590,19 +590,19 @@ public class MarkerController {
         }
 
         ArrayList<String> qtlIDs = new ArrayList<String>();
-        
+
         for (MarkerID anId: marker.getIds()) {
         	if (anId.getLogicalDB().equalsIgnoreCase("Download data from the QTL Archive")) {
         		qtlIDs.add(idLinker.getLink(anId));
         	}
         }
         mav.addObject ("qtlIDs", qtlIDs);
-        
+
         // slice and dice the data for the "Other database links" section, to
         // ease the formatting requirements that would be cumbersome in JSTL
         ArrayList<String> logicalDBs = new ArrayList<String>();
         HashMap<String,String> otherIDs = new HashMap<String,String>();
-        
+
         Iterator<MarkerID> it = marker.getOtherIDs().iterator();
         MarkerID myID;
         String myLink;
@@ -610,29 +610,29 @@ public class MarkerController {
         String otherLinks;
     	MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
     	boolean isGeneModelID = false;
-    	
+
     	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
         while (it.hasNext()) {
         	myID = it.next();
         	logicaldb = myID.getLogicalDB();
         	myLink = idLinker.getLink(myID);
-        	        	
+
         	// for gene model sequences, we need to add evidence links where possible
         	if ("VEGA Gene Model".equals(logicaldb)) {
         		myLink = myLink + " (" + FormatHelper.setNewWindow(
-        				idLinker.getLink("VEGA Gene Model Evidence", 
+        				idLinker.getLink("VEGA Gene Model Evidence",
         						myID.getAccID(), "Evidence")) + ")";
         		isGeneModelID = true;
         	} else if ("Ensembl Gene Model".equals(logicaldb)) {
-        		myLink = myLink + " (" + FormatHelper.setNewWindow( 
-        				idLinker.getLink("Ensembl Gene Model Evidence", 
+        		myLink = myLink + " (" + FormatHelper.setNewWindow(
+        				idLinker.getLink("Ensembl Gene Model Evidence",
         						myID.getAccID(), "Evidence")) + ")";
         		isGeneModelID = true;
         	} else if ("Entrez Gene".equals(logicaldb) && (ncbiEvidenceID != null)) {
         		logger.info(ncbiEvidenceID.getAccID());
            		myLink = myLink + " (" + FormatHelper.setNewWindow(
-               			idLinker.getLink("NCBI Gene Model Evidence", 
+               			idLinker.getLink("NCBI Gene Model Evidence",
                				myID.getAccID(), "Evidence").replace ("contig=",
                				"contig=" + ncbiEvidenceID.getAccID())) + ")";
         		isGeneModelID = true;
@@ -642,17 +642,17 @@ public class MarkerController {
         	if (isGeneModelID) {
         		List<MarkerIDOtherMarker> otherMarkers = myID.getOtherMarkers();
         		MarkerIDOtherMarker otherMarker;
-        		
+
         		if ((otherMarkers != null) && (otherMarkers.size() > 0)) {
         			myLink = myLink + " (also overlaps ";
         			Iterator<MarkerIDOtherMarker> markerIterator = otherMarkers.iterator();
         			while (markerIterator.hasNext()) {
         				otherMarker = markerIterator.next();
-        				
-        				myLink = myLink + "<a href='" + fewiUrl + "marker/" 
-        					+ otherMarker.getPrimaryID() + "'>" 
+
+        				myLink = myLink + "<a href='" + fewiUrl + "marker/"
+        					+ otherMarker.getPrimaryID() + "'>"
         					+ otherMarker.getSymbol() + "</a>";
-        				
+
         				if (markerIterator.hasNext()) {
         					myLink = myLink + ", ";
         				}
@@ -660,7 +660,7 @@ public class MarkerController {
         			myLink = myLink + ") ";
         		}
         	}
-        	
+
         	if (!otherIDs.containsKey(logicaldb)) {
         		logicalDBs.add(logicaldb);
         		otherIDs.put(logicaldb, myLink);
@@ -668,8 +668,8 @@ public class MarkerController {
         		otherLinks = otherIDs.get(logicaldb);
         		otherIDs.put(logicaldb, otherLinks + ", " + myLink);
         	}
-        }        
-        
+        }
+
     	String refGenomeUrl = ContextLoader.getConfigBean().getProperty(
 		"MGIHOME_URL");
 
@@ -681,19 +681,19 @@ public class MarkerController {
 
         mav.addObject ("otherIDs", otherIDs);
         mav.addObject ("logicalDBs", logicalDBs);
-        
+
         // determine if we need a KOMP linkout (complex rules, so better in
         // Java than JSTL); for a link we must have (new per TR10311):
         // 1. has marker type of Pseudogene or Gene
         // 2. has bp coordinates
         // 3. has a strand
         // 4. has at least one sequence
-        
+
         String markerType = marker.getMarkerType();
        	MarkerLocation location = marker.getPreferredCoordinates();
        	List<MarkerSequenceAssociation> seqs = marker.getSequenceAssociations();
 	boolean hadCoords = false;
-       	
+
         if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
        		if ((location != null) &&
        				(location.getStartCoordinate() != null) &&
@@ -701,7 +701,7 @@ public class MarkerController {
        				(location.getStrand() != null) &&
        				(seqs != null) && (seqs.size() > 0)	) {
        			mav.addObject ("needKompLink", "yes");
-       			otherIDs.put("International Mouse Knockout Project Status", 
+       			otherIDs.put("International Mouse Knockout Project Status",
        				idLinker.getLink("KnockoutMouse", marker.getPrimaryID(),
        						marker.getSymbol()) );
        			logicalDBs.add("International Mouse Knockout Project Status");
@@ -721,7 +721,7 @@ public class MarkerController {
 		seoDescription.append(marker.getChromosome());
 	    }
 	}
-        
+
         // links to genome browsers (complex rules so put them here and
         // keep the JSP simple)
 
@@ -738,24 +738,24 @@ public class MarkerController {
 	//    where:
 	//	a. there are coordinates and marker is not a dna segment, or
 	//	b. there are coordinates and marker is a dna segment.
-	// 6. If a marker has coordinates, both link to GBrowse and show a 
+	// 6. If a marker has coordinates, both link to GBrowse and show a
 	//    thumbnail image from GBrowse.
 	// 7. The UCSC genome browser (when the marker has coordinates)
-        
+
         String vegaGenomeBrowserUrl = null;
         String ensemblGenomeBrowserUrl = null;
         String ucscGenomeBrowserUrl = null;
         String ncbiMapViewerUrl = null;
         String gbrowseUrl = null;
         String gbrowseThumbnailUrl = null;
-        
+
         boolean isDnaSegment = "DNA Segment".equals(markerType);
 
         String startCoordinate = null;
         String endCoordinate = null;
         String chromosome = null;
 	String vegaEnsemblLocation = null;
-        
+
         MarkerLocation coords = marker.getPreferredCoordinates();
         if (coords != null) {
         	startCoordinate = Long.toString(coords.getStartCoordinate().longValue());
@@ -763,9 +763,9 @@ public class MarkerController {
         	chromosome = coords.getChromosome();
 		vegaEnsemblLocation = chromosome + ":" + startCoordinate + "-" + endCoordinate;
         }
-        
+
         Properties externalUrls = ContextLoader.getExternalUrls();
-        
+
 	// VEGA Genome Browser
 	if (vegaEnsemblLocation != null) {
 		vegaGenomeBrowserUrl = externalUrls.getProperty (
@@ -795,7 +795,7 @@ public class MarkerController {
 			"Ensembl_Genome_Browser");
 
         	MarkerID ensemblGmID = marker.getEnsemblGeneModelID();
-        
+
 		// plug in Ensembl gene model ID, if available
 		if (ensemblGmID != null) {
 			ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace (
@@ -837,15 +837,15 @@ public class MarkerController {
 		"<chromosome>", chromosome).replace(
 		"<start>", startCoordinate).replace(
 		"<end>", endCoordinate);
-		
+
 		gbrowseThumbnailUrl = externalUrls.getProperty(
 		"GBrowse_Thumbnail").replace(
 		"<chromosome>", chromosome).replace(
 		"<start>", startCoordinate).replace(
 		"<end>", endCoordinate);
-		
+
 		// add tracks for special marker "types"
-		if(marker.getIsSTS()) 
+		if(marker.getIsSTS())
 		{
 			gbrowseUrl = gbrowseUrl.replace("label=","label=STS-");
 			gbrowseThumbnailUrl = gbrowseThumbnailUrl.replace("t=","t=STS;t=");
@@ -862,7 +862,7 @@ public class MarkerController {
 	}
 
         // whichever genome browser URLs we found, fill them in the mav
-        
+
         if (vegaGenomeBrowserUrl != null) {
         	mav.addObject ("vegaGenomeBrowserUrl", vegaGenomeBrowserUrl);
         }
@@ -881,9 +881,9 @@ public class MarkerController {
         if (gbrowseThumbnailUrl != null) {
         	mav.addObject ("gbrowseThumbnailUrl", gbrowseThumbnailUrl);
         }
-        
+
         // add data for biotype conflicts
-        
+
         List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
         if ((conflicts != null) && (conflicts.size() > 0)) {
         	StringBuffer conflictTable = new StringBuffer();
@@ -901,20 +901,20 @@ public class MarkerController {
             conflictTable.append ("</table>");
             mav.addObject ("biotypeConflictTable", conflictTable.toString());
         }
-        
+
         // add data for strain-specific markers
-        
+
         String ssNote = marker.getStrainSpecificNote();
         if (ssNote != null) {
         	List<Reference> ssRefs = marker.getStrainSpecificReferences();
         	boolean isFirst = true;
-        	
+
         	if ((ssRefs != null) && (ssRefs.size() > 0)) {
         		ssNote = ssNote + "(";
         		for (Reference ref : ssRefs) {
         			if (!isFirst) { ssNote = ssNote + ", "; }
         			else { isFirst = false; }
-        			
+
         			ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_new>"
         				+ ref.getJnumID() + "</a>";
         		}
@@ -922,7 +922,7 @@ public class MarkerController {
         	}
         	mav.addObject ("strainSpecificNote", ssNote);
         }
-        
+
 	// if we have not yet looked up the full suite of marker minimaps that
 	// have already been generated, then do so
 
@@ -945,7 +945,7 @@ public class MarkerController {
 
 	// if we already know what the minimap URL needs to be for this
 	// marker, then just put it in.
-	
+
 	String minimapUrl = null;
 	Integer markerKey = new Integer(marker.getMarkerKey());
 
@@ -1083,7 +1083,7 @@ public class MarkerController {
     public ModelAndView markerProbesets(@PathVariable("markerID") String markerID) {
 
         logger.debug("->markerProbesets started");
-        
+
         // setup search parameters object
         SearchParams searchParams = new SearchParams();
         Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
@@ -1145,11 +1145,11 @@ public class MarkerController {
     public @ResponseBody JsonSummaryResponse<MarkerSummaryRow> seqSummaryJson(
             HttpServletRequest request,
 			@ModelAttribute MarkerQueryForm query,
-            @ModelAttribute Paginator page) throws org.antlr.runtime.RecognitionException 
+            @ModelAttribute Paginator page) throws org.antlr.runtime.RecognitionException
             {
         logger.debug("->JsonSummaryResponse started");
 
-        
+
         SearchResults<SolrSummaryMarker> searchResults = getSummaryMarkers(request,query,page);
         List<SolrSummaryMarker> markerList = searchResults.getResultObjects();
 
@@ -1169,17 +1169,17 @@ public class MarkerController {
         jsonResponse.setTotalCount(searchResults.getTotalCount());
         return jsonResponse;
     }
-    
+
     /*
      * This is exposed for our automated tests to use
      */
     public SearchResults<SolrSummaryMarker> getSummaryMarkers(HttpServletRequest request,
 			MarkerQueryForm query,
-            Paginator page) throws org.antlr.runtime.RecognitionException 
+            Paginator page) throws org.antlr.runtime.RecognitionException
     {
     	// parameter parsing
         String refKey = request.getParameter("refKey");
-        
+
         // generate search parms object;  add pagination, sorts, and filters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
@@ -1191,10 +1191,10 @@ public class MarkerController {
         }
         params.setSorts(this.genSorts(request,query));
         params.setFilter(this.genFilters(query));
-        
+
         if (refKey != null) {
             params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
-        }        
+        }
 
         // perform query, and pull out the requested objects
         return markerFinder.getSummaryMarkers(params);
@@ -1215,8 +1215,6 @@ public class MarkerController {
         sp.setPageSize(250000);
         sp.setFilter(this.genFilters(query));
         List<Sort> sorts = new ArrayList<Sort>();
-        sorts.add(new Sort("bySymbol"));
-        sp.setSorts(sorts);
         SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
 
         List<SolrSummaryMarker> markers = sr.getResultObjects();
@@ -1231,7 +1229,7 @@ public class MarkerController {
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
-    
+
     private void dbDate(ModelAndView mav) {
         List<DatabaseInfo> dbInfo = dbInfoFinder.getInfo(new SearchParams()).getResultObjects();
         for (DatabaseInfo db: dbInfo) {
@@ -1246,7 +1244,7 @@ public class MarkerController {
         	}
         }
     }
-    
+
     /** get a String containing URLs to all currently rendered minimaps; they
      * will be delimited by line-breaks
      */
@@ -1270,14 +1268,14 @@ public class MarkerController {
 		StringBuffer urlString = new StringBuffer();
 		logger.debug("get minimap: " + parm);
 		try {
-			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + 
+			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") +
 					"searches/markerMiniMap.cgi?" + parm);
 			URLConnection urlConnection = url.openConnection();
 			HttpURLConnection connection = null;
-			
+
 			if (urlConnection instanceof HttpURLConnection) {
 				connection = (HttpURLConnection) urlConnection;
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream())); 
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String current;
 				current = in.readLine();
 				while (current != null) {
@@ -1353,27 +1351,27 @@ public class MarkerController {
         	 Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,nomen);
 			 if(nomenFilter!=null) queryFilters.add(nomenFilter);
         }
-        
+
         // Phenotypes
 		 String phenotype = query.getPhenotype();
 		 if(notEmpty(phenotype))
 		 {
 			 queryFilters.add(BooleanSearch.buildSolrFilter(SearchConstants.PHENOTYPE,phenotype));
 		 }
-		 
+
 		 //InterPro
 		 String interpro = query.getInterpro();
 		 if(notEmpty(interpro))
 		 {
 			 List<Filter> interproFilters = new ArrayList<Filter>();
-			 
+
 			 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(interpro))
 			 {
 				 interproFilters.add(new Filter(SearchConstants.INTERPRO_TERM,token,Filter.OP_STRING_CONTAINS));
 			 }
 			 queryFilters.add(Filter.and(interproFilters));
 		 }
-		 
+
 		 //GO
 		 String go = query.getGo();
 		 if(notEmpty(go))
@@ -1397,14 +1395,14 @@ public class MarkerController {
 			 // OR the query against each vocabulary (e.g. function,process,component)
 			 queryFilters.add(Filter.or(goVocabFilters));
 		 }
-        
+
         // feature type
         Filter featureTypeFilter = makeListFilter(query.getFeatureType(),SearchConstants.FEATURE_TYPE);
 		if(featureTypeFilter!=null) queryFilters.add(featureTypeFilter);
-        
+
 		Filter mcvFilter = makeListFilter(query.getMcv(),SearchConstants.FEATURE_TYPE_KEY);
 		if(mcvFilter!=null) queryFilters.add(mcvFilter);
-		
+
         // Chromosome
 		 List<String> chr = query.getChromosome();
 		 if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY))
@@ -1412,7 +1410,7 @@ public class MarkerController {
 			 Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME);
 			 if(chrFilter!=null) queryFilters.add(chrFilter);
 		 }
-		 
+
 		 // Coordinate Search
 		 String coord = query.getCoordinate();
 		 String coordUnit = query.getCoordUnit();
@@ -1422,7 +1420,7 @@ public class MarkerController {
 			 if(coordFilter==null) coordFilter = nullFilter();
 			 queryFilters.add(coordFilter);
 		 }
-		 
+
 		 // CM Search
 		 String cm = query.getCm();
 		 if(notEmpty(cm))
@@ -1431,7 +1429,7 @@ public class MarkerController {
 			 if(cmFilter==null) cmFilter = nullFilter();
 			 queryFilters.add(cmFilter);
 		 }
-		 
+
 		String startMarker = query.getStartMarker();
         String endMarker = query.getEndMarker();
         if(notEmpty(startMarker) && notEmpty(endMarker))
@@ -1450,12 +1448,12 @@ public class MarkerController {
             	if(sr.getTotalCount()>0)
             	{
             		SolrSummaryMarker endMarkerObj = sr.getResultObjects().get(0);
-            		
-            		if(notEmpty(startMarkerObj.getChromosome()) 
-            				&& notEmpty(startMarkerObj.getCoordStart()) 
+
+            		if(notEmpty(startMarkerObj.getChromosome())
+            				&& notEmpty(startMarkerObj.getCoordStart())
             				&& notEmpty(startMarkerObj.getCoordEnd())
             				&& notEmpty(endMarkerObj.getChromosome())
-            				&& notEmpty(endMarkerObj.getCoordStart()) 
+            				&& notEmpty(endMarkerObj.getCoordStart())
             				&& notEmpty(endMarkerObj.getCoordEnd()))
             		{
             			Integer startCoord = Math.min(startMarkerObj.getCoordStart(),endMarkerObj.getCoordStart());
@@ -1475,39 +1473,39 @@ public class MarkerController {
         if(queryFilters.size()<1) return nullFilter();
         return Filter.and(queryFilters);
     }
-    
+
     // returns a filter that should always fail to retrieve results
     private Filter nullFilter()
     {
     	return new Filter("markerKey","-99999",Filter.OP_EQUAL);
     }
-    
+
     /** return a List comparable to 'annotations' but with the duplicate
      * terms stripped out.  Also strip out any annotations with a NOT
      * qualifier.
      */
     private List<mgi.frontend.datamodel.Annotation> noDuplicates (
     		List<mgi.frontend.datamodel.Annotation> annotations) {
-    	
+
     	// the list we will compose to be returned
-    	ArrayList<mgi.frontend.datamodel.Annotation> a = new 
+    	ArrayList<mgi.frontend.datamodel.Annotation> a = new
     		ArrayList<mgi.frontend.datamodel.Annotation>();
-    	
+
     	// iterates over the input list
     	Iterator<mgi.frontend.datamodel.Annotation> it = annotations.iterator();
-    	
+
     	// tracks which terms we've seen already
     	HashMap<String, String> done = new HashMap<String, String>();
-    	
+
     	// which term we are looking at currently
     	mgi.frontend.datamodel.Annotation annot;
-    	
+
     	while (it.hasNext()) {
     		annot = it.next();
     		if (!done.containsKey(annot.getTerm())) {
-    			// if we have no qualifier or we have a qualifier that's 
+    			// if we have no qualifier or we have a qualifier that's
     			// not "NOT" then we ca use this term
-    			if ((annot.getQualifier() == null) || 
+    			if ((annot.getQualifier() == null) ||
     				(!annot.getQualifier().toLowerCase().equals("not"))) {
     					done.put (annot.getTerm(), "");
     					a.add (annot);
@@ -1531,7 +1529,7 @@ public class MarkerController {
     protected static int getMinimapCacheCount() {
 	return minimaps.size();
     }
-    
+
     private Filter makeListFilter(List<String> values, String searchConstant)
     {
     	Filter f = null;
@@ -1547,7 +1545,7 @@ public class MarkerController {
    		return f;
     }
 
-    
+
     private void initQueryForm(List<QueryFormOption> options)
     {
     	if(!MarkerQueryForm.initialized)
@@ -1574,10 +1572,10 @@ public class MarkerController {
 
     	    this.chromosomeOptions = new LinkedHashMap<String,String>();
     	    this.chromosomeOptions.put(MarkerQueryForm.CHROMOSOME_ANY,"Any");
-    	    for (QueryFormOption chromosome : chromosomes) 
+    	    for (QueryFormOption chromosome : chromosomes)
     	    {
     	    	this.chromosomeOptions.put(chromosome.getSubmitValue(),chromosome.getDisplayValue());
-    	    } 
+    	    }
     	}
 
     	/* if we don't have a cached version of the feature type options (for
@@ -1593,7 +1591,7 @@ public class MarkerController {
 
     	    featureTypeHtml = FormatHelper.buildHtmlTree(markerTypes);
     	    featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
-    	    
+
     	    initQueryForm(markerTypes);
     	}
 
@@ -1620,7 +1618,7 @@ public class MarkerController {
     private boolean notEmpty(String s)
     {
     	return s!=null && !s.equals("");
-    } 
+    }
     private boolean notEmpty(Integer i)
     {
     	return i!=null && i>0;
