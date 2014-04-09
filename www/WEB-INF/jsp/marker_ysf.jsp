@@ -36,7 +36,7 @@
 	<br><c:if test="${notFirst}">AND</c:if>
 	Gene Ontology Terms(s): contains <b>${queryForm.go}</b>
 	<c:if test="${not empty queryForm.goVocab and fn:length(queryForm.goVocab)<3}">
-	searching <b>${queryForm.goVocab}</b>
+	searching <b>${queryForm.goVocabYSF}</b>
 	</c:if>
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.interpro}">

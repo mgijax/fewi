@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 
 /*-------*/
@@ -89,6 +90,23 @@ public class MarkerQueryForm
     public Map<String,String> getGoVocabDisplay()
     {
     	return goVocabDisplay;
+    }
+    
+    public String getGoVocabYSF()
+    {
+    	if(goVocab!=null && goVocab.size()>0 && goVocab.size()<3)
+    	{
+    		List<String> matchingVocabs = new ArrayList<String>();
+    		for(String key : goVocab)
+    		{
+    			if(this.goVocabDisplay.containsKey(key))
+    			{
+    				matchingVocabs.add(this.goVocabDisplay.get(key));
+    			}
+    		}
+    		return StringUtils.join(matchingVocabs," and ");
+    	}
+    	return "";
     }
 	
     //--------------------//
