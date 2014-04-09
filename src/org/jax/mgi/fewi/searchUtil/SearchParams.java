@@ -26,6 +26,7 @@ public class SearchParams {
 	private boolean includeSetMeta = false;
 	private boolean includeMetaScore = false;
 	private boolean includeMetaHighlight = false;
+	private boolean includeHighlightMarkup = true;
 	private boolean includeGenerated = false;
 	private boolean fetchKeysOnly = false;
 	private boolean suppressLogs = false;
@@ -151,5 +152,12 @@ public class SearchParams {
 
 	public void setSuppressLogs(boolean suppressLogs) {
 		this.suppressLogs = suppressLogs;
+	}
+
+	public boolean includeHighlightMarkup() {
+		return includeHighlightMarkup;
+	}
+	public void setIncludeHighlightMarkup(boolean includeHighlightMarkup) {
+		this.includeHighlightMarkup = includeHighlightMarkup;
 	}
 }
