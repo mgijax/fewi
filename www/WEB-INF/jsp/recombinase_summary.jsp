@@ -125,18 +125,14 @@ ${templateBean.templateBodyStartHtml}
 	<div id="querySummary" style="width:700px;">
 		<div class="innertube" >
 				<span class="enhance">You searched for:</span><br/>
-		<c:if test="${not empty recombinaseQueryForm.system}"><span class="label">Anatomical System</span> equals 
-			<span class="label">${fn:replace(recombinaseQueryForm.system,";", ",") }</span><br/>
-			<script type="text/javascript">
-				YAHOO.mgiData.selectedSystem="${recombinaseQueryForm.system}";
-			</script>		
-			</c:if>
-		<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals 
-			<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
-		<c:if test="${not empty recombinaseQueryForm.structure}">
-			<b>Activity assayed</b> in <b>${recombinaseQueryForm.structure}</b> 
-			<span class="smallGrey"> includes synonyms &amp; substructures</span>
-			<br/></c:if>
+				<c:if test="${not empty recombinaseQueryForm.driver}"><span class="label">Driver</span> equals 
+					<span class="label">${fn:replace(recombinaseQueryForm.driver,";", ",") }</span><br/></c:if>
+				<c:if test="${not empty recombinaseQueryForm.structure}">
+					<b>Activity assayed</b> in <b>${recombinaseQueryForm.structure}</b> 
+					<span class="smallGrey"> includes synonyms &amp; substructures</span>
+					<br/>
+					<span>System(s) in bold contain matching search terms.</span>
+					<br/></c:if>
     <span class="pageAdvice" style="height: 20px;">
 	    Click column headings to sort table data.
     </span>
