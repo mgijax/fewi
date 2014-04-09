@@ -166,7 +166,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify querying by a subsystem term also highlights the correct systems involved(sto177)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed jeffc 04/09/2014</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>nervous system</b> (big high level term)</li>
                 <li>When the summary page displays confirm the following systems are bolded:
@@ -180,7 +180,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify querying by an ambiguous term highlights all matching systems(sto177)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed jeffc 04/09/2014</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>muscle</b></li>
                 <li>When the summary page displays confirm that for allele <b>Tg(ACTA1-cre)79Jme</b> 
@@ -197,7 +197,7 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
             </li> 
         	<li>Verify querying by an EMAP term highlights all matching systems(sto177)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed jeffc 04/09/2014</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>barrel cortex</b> 
                 	(has no child terms, and words do not match any other term or synonym)</li>
@@ -211,7 +211,7 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
             </li>
 	<li>Verify querying by an EMAP synonym term highlights all matching systems(sto177)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed jeffc 04/09/2014</p>
     		<ol>
     			<!-- The synonym chosen has word "bulbar" that does not appear in any EMAPA structure, to discount any false positives -->
                 <li>From the Recombinase query form search for Recombinase Activity in <b>bulbar cushion</b> (synonym of "endocardial cushion tissue")</li>
@@ -225,7 +225,7 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
             </li> 
 	<li>Verify querying by a term highlights all matching systems for both Detected and Not Detected columns(sto177)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed jeffc 04/09/2014</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>heart</b></li>
                 <li>When the summary page displays confirm the following systems are bolded, under the appropriate columns (either detected or not detected):
