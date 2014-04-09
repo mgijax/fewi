@@ -63,7 +63,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
          */
         propertyMap.put(SearchConstants.INTERPRO_TERM,
     		new SolrPropertyMapper(Arrays.asList(
-    				IndexConstants.MRK_ID,
+    				IndexConstants.MRK_TERM_ID,
     				MarkerSummaryFields.INTERPRO_TERM
     					),"OR"));
         /*
@@ -71,7 +71,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
          */
         propertyMap.put(SearchConstants.GO_TERM,
     		new SolrPropertyMapper(Arrays.asList(
-    				IndexConstants.MRK_ID,
+    				IndexConstants.MRK_TERM_ID,
     				MarkerSummaryFields.GO_TERM
     					),"OR"));
         
