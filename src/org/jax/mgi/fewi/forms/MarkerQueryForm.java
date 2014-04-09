@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+
 /*-------*/
 /* class */
 /*-------*/
@@ -47,11 +49,11 @@ public class MarkerQueryForm
     	coordUnitDisplay.add("bp");
     	coordUnitDisplay.add("Mbp");
     	
-    	goVocabDisplay.put("goFunction","Molecular Function");
-    	goVocabDisplay.put("goProcess","Biological Process");
-    	goVocabDisplay.put("goComponent","Cellular Component");
+    	goVocabDisplay.put(SearchConstants.GO_FUNCTION_TERM,"Molecular Function");
+    	goVocabDisplay.put(SearchConstants.GO_PROCESS_TERM,"Biological Process");
+    	goVocabDisplay.put(SearchConstants.GO_COMPONENT_TERM,"Cellular Component");
     	
-    	goVocab = Arrays.asList("goFunction","goProcess","goComponent");
+    	goVocab = new ArrayList<String>(goVocabDisplay.keySet());
     }
 	
 	public static void setMarkerTypeKeyToDisplayMap(Map<String,String> markerTypeKeyToDisplayMap)
