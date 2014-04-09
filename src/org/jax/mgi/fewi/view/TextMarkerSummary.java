@@ -39,9 +39,9 @@ public class TextMarkerSummary extends AbstractTextView
 
 		// write the headers
 		String[] headerTitles = {
-			"chromosome",
-			"start",
-			"end",
+			"Chromosome",
+			"Start",
+			"End",
 			"cM",
 			"strand GRCm38",
 			"MGI ID",

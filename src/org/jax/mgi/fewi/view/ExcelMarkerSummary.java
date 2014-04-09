@@ -41,9 +41,9 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 		// create worksheet add the header row column headings
 		Sheet sheet = workbook.createSheet();
 		String[] headerTitles = {
-			"chromosome",
-			"start",
-			"end",
+			"Chromosome",
+			"Start",
+			"End",
 			"cM",
 			"strand GRCm38",
 			"MGI ID",
