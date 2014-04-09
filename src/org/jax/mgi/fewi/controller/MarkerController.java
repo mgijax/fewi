@@ -1200,11 +1200,11 @@ public class MarkerController {
         return markerFinder.getSummaryMarkers(params);
     }
 
-  //--------------------------------//
-    // Allele Summary Tab-Delim Report
-    //--------------------------------//
-    @RequestMapping("/report*")
-    public ModelAndView markerSummaryExport(
+	//--------------------------------//
+	// Allele Summary Tab-Delim Report
+	//--------------------------------//
+	@RequestMapping("/report*")
+	public ModelAndView markerSummaryExport(
             HttpServletRequest request,
 			@ModelAttribute MarkerQueryForm query) throws org.antlr.runtime.RecognitionException
 	{
@@ -1214,6 +1214,13 @@ public class MarkerController {
         SearchParams sp = new SearchParams();
         sp.setPageSize(250000);
         sp.setFilter(this.genFilters(query));
+        // if we have nomen query, do text highlighting
+        if(notEmpty(query.getNomen()))
+        {
+	        sp.setIncludeMetaHighlight(true);
+	        sp.setIncludeSetMeta(true);
+        }
+
         List<Sort> sorts = new ArrayList<Sort>();
         SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
 
