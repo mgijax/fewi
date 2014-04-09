@@ -234,7 +234,11 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
             			{
             				String hl = highlight.get(field).get(0);
             				hl = FormatHelper.superscript(hl);
-            				hl = hl.replaceAll("/\\$\\$","</b>").replaceAll("\\$\\$","<b>");
+            				if (sp.includeHighlightMarkup()) {
+                				hl = hl.replaceAll("/\\$\\$","</b>").replaceAll("\\$\\$","<b>");
+            				} else {
+                				hl = hl.replaceAll("/\\$\\$","").replaceAll("\\$\\$","");
+            				}
             				String highlightMatch = field+":\""+hl+"\"";
                     		highlightList.add(highlightMatch);
                     		// only add the first match in priority order of the orginal list
