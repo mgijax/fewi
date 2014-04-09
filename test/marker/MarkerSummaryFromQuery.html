@@ -1320,17 +1320,25 @@ order by count(*) desc
 			<li>A file containing all data in the current results set can be downloaded in Text (tab-delimited) or Excel format.
  			<p concordion:assertTrue="false">new</p>		
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
+ 				<li>Enter <b>Pax6</b> in the Gene/Marker field and submit the query.</li>
+ 				<li>Click the <b>Text File</b> button.</li>
+ 				<li>Verify that 18 rows are returned.</li>
+ 				<li>Return to the query results and click the <b>Excel File</b> button.</li>
+ 				<li>Verify that 18 rows are returned.</li>
+ 				<li>Reset the query form. Enter <b>GO:0071314</b> (cellular response to cocaine) in the Gene Ontology classifications field and submit the query.</li>
+ 				<li>Click the <b>Text File</b> button.</li>
+ 				<li>Verify that 2 rows are returned.</li>
+ 				<li>Return to the query results and click the <b>Excel File</b> button.</li>
+ 				<li>Verify that 2 rows are returned.</li>
+ 				 
  			</ol>
 			</li>
 
 			<li>Downloads have the correct data columns: (sto164)
  			<p concordion:assertTrue="false">new</p>		
 			<table>
-				<tr><td>Genetic Chr </td></tr>
 				<tr><td>cM </td></tr>
-				<tr><td>Genomic Chr</td></tr> 
+				<tr><td>Chr</td></tr> 
 				<tr><td>start </td></tr>
 				<tr><td>end </td></tr>
 				<tr><td>strand GRCm38</td></tr> 
@@ -1341,11 +1349,28 @@ order by count(*) desc
 				<tr><td>Matching Text (optional - Matching Text appears when the user submits a nomen query)</td></tr>
 			</table>
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
+ 				<li>Using the Text and Excel files returned for the <b>Pax6</b> query above, verify that these columns are returned, including <b>Why Matched?</b>.</li>
+ 				<li>Verify that the data in the downloaded file matches the data displayed in the query results page. </li>
+ 				<li>Using the Text and Excel files returned for the <b>GO:0071314</b> query above, verify that these columns are returned, including <b>Why Matched?</b>.</li>
+ 				<li>Verify that the data in the downloaded file matches the data displayed in the query results page. </li>
  			</ol>
 			</li>
 		
+			<li>The cM column value is blank when the web displays "syntenic" or "QTL". (sto164)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+ 			</li>
+		
+			<li>The "Why Matched?" column value does not contain HTML "b" tags surrounding the matching text portion of the string. (sto164)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>Step</li>
+ 				<li>Step</li>
+ 			</ol>
+ 			</li>
 		
 		</ol>
 
