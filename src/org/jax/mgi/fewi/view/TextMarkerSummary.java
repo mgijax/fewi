@@ -75,7 +75,6 @@ public class TextMarkerSummary extends AbstractTextView
 			writer.write(marker.getSymbol() + "\t");
 			writer.write(marker.getName() + "\t");
 			if (displayMatches == true) {
-System.out.println("----highlights--" + marker.getHighlights());
 				writer.write(StringUtils.join(marker.getHighlights(),", ") + "\t");
 			}
 

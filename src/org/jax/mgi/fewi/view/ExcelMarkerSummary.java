@@ -79,7 +79,6 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 			row.createCell(8).setCellValue(marker.getSymbol());
 			row.createCell(9).setCellValue(marker.getName());
 			if (displayMatches == true) {
-System.out.println("----highlights--" + marker.getHighlights());
 				row.createCell(10).setCellValue(StringUtils.join(marker.getHighlights(),", "));
 			}
 		}
