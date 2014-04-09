@@ -39,11 +39,10 @@ public class TextMarkerSummary extends AbstractTextView
 
 		// write the headers
 		String[] headerTitles = {
-			"Genetic Chr",
-			"cM",
-			"Genomic Chr",
+			"chromosome",
 			"start",
 			"end",
+			"cM",
 			"strand GRCm38",
 			"MGI ID",
 			"Feature Type",
@@ -52,7 +51,7 @@ public class TextMarkerSummary extends AbstractTextView
 			""
 		};
 		if (displayMatches == true) {
-			headerTitles[10] = "Matching Text";
+			headerTitles[9] = "Matching Text";
 		}
 		for(int i=0;i<headerTitles.length;i++)
 		{
@@ -65,10 +64,9 @@ public class TextMarkerSummary extends AbstractTextView
 		{
             // write out this row to file writer
 			writer.write(marker.getChromosome() + "\t");
-			writer.write(marker.getCmStr() + "\t");
-			writer.write(marker.getChromosome() + "\t");
 			writer.write(marker.getCoordStartStr() + "\t");
 			writer.write(marker.getCoordEndStr() + "\t");
+			writer.write(marker.getCmStr() + "\t");
 			writer.write(marker.getStrand() + "\t");
 			writer.write(marker.getMgiId() + "\t");
 			writer.write(marker.getFeatureType() + "\t");
@@ -77,15 +75,7 @@ public class TextMarkerSummary extends AbstractTextView
 			if (displayMatches == true) {
 				writer.write(StringUtils.join(marker.getHighlights(),", ") + "\t");
 			}
-
-
 			writer.write("\r\n");
 		}
-	}
-
-	private String format(String str)
-	{
-		if(str == null) return "";
-		return str;
 	}
 }

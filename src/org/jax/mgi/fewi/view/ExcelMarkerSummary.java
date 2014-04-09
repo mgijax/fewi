@@ -41,11 +41,10 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 		// create worksheet add the header row column headings
 		Sheet sheet = workbook.createSheet();
 		String[] headerTitles = {
-			"Genetic Chr",
-			"cM",
-			"Genomic Chr",
+			"chromosome",
 			"start",
 			"end",
+			"cM",
 			"strand GRCm38",
 			"MGI ID",
 			"Feature Type",
@@ -54,7 +53,7 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 			""
 		};
 		if (displayMatches == true) {
-			headerTitles[10] = "Matching Text";
+			headerTitles[9] = "Matching Text";
 		}
 		Row header = sheet.createRow(0);
 		for(int i=0;i<headerTitles.length;i++)
@@ -69,10 +68,9 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 		{
 			row = sheet.createRow(rownum++);
 			row.createCell(0).setCellValue(marker.getChromosome());
-			row.createCell(1).setCellValue(marker.getCmStr());
-			row.createCell(2).setCellValue(marker.getChromosome());
             row.createCell(3).setCellValue(marker.getCoordStartStr());
             row.createCell(4).setCellValue(marker.getCoordEndStr());
+			row.createCell(1).setCellValue(marker.getCmStr());
 			row.createCell(5).setCellValue(marker.getStrand());
 			row.createCell(6).setCellValue(marker.getMgiId());
 			row.createCell(7).setCellValue(marker.getFeatureType());
