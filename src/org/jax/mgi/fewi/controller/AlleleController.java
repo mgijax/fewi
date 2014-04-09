@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -44,6 +43,7 @@ import org.jax.mgi.fewi.finder.ImageFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.AlleleQueryForm;
+import org.jax.mgi.fewi.forms.FormWidgetValues;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -162,6 +162,10 @@ public class AlleleController {
 		
         ModelAndView mav = new ModelAndView("allele_query_system_popup");
         if(notEmpty(formName)) mav.addObject("formName",formName);
+        AlleleQueryForm aqf = new AlleleQueryForm();
+        mav.addObject("widgetValues1",FormWidgetValues.getPhenoSystemWidgetValues1());
+        mav.addObject("widgetValues2",FormWidgetValues.getPhenoSystemWidgetValues2());
+
         return mav;
     }
 

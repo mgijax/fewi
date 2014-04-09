@@ -45,6 +45,38 @@
     $("#chromosomeDropList").val("any").change();
     //document.getElementById('chromosomeDropList').reset();
   }
+  
+  function updatePhenoSystemSummary()
+  {
+ 	var items = [];
+	<c:forEach var="entry" items="${alleleQueryForm.phenoSystemWidgetValues}">
+		items.push({key:"${entry.key}",value:"${entry.value}"});
+	</c:forEach> 
+	
+	var phenoInput = $("#phenotype").val();
+	// check to see if any exist in the input
+	var mpTextLines = [];
+	for(var i=0;i<items.length;i++)
+	{
+		var item = items[i];
+		if (phenoInput.search(item.key) > -1) 
+      	{
+			mpTextLines.push("<li>"+item.value+" ("+item.key+")</li>");
+        }
+		if(mpTextLines.length>0)
+		{
+			$("#selectedMpTextDiv").html("You selected:<ul>" + mpTextLines.join("") + "</ul>");
+		}
+		else
+		{
+			$("#selectedMpTextDiv").html("");
+		}
+	}
+  }
+  $(function(){
+	  $("#phenotype").change(updatePhenoSystemSummary);
+	  updatePhenoSystemSummary();
+  });
 </script>
 
 
@@ -69,7 +101,6 @@
    </td>
   </tr>
 
-
   <!-- phenotypes & disease -->
   <tr class="stripe1">
     <td class="cat1">Mouse phenotypes & <br/>mouse models of <br/>human disease </td>
@@ -85,7 +116,7 @@
 
       <div style="position:absolute; top:0px; left:135px; width:422px;">
 
-        <textarea name="phenotype"
+        <textarea id="phenotype" name="phenotype"
         placeholder="Phenotype terms, disease terms, or IDs"
         style="background-color: rgb(238,238,238); margin-left:2px; padding:2px; width: 380px; height: 40px;"
         ><c:out value="${alleleQueryForm.phenotype}"/></textarea>

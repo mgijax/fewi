@@ -61,6 +61,11 @@ public class MarkerQueryForm
 		MarkerQueryForm.markerTypeKeyToDisplayMap=markerTypeKeyToDisplayMap;
 	}
 	
+    // for the pheno system popup values
+    public Map<String,String> getPhenoSystemWidgetValues()
+    {
+    	return FormWidgetValues. getPhenoSystemWidgetValuesAll();
+    }
 	
 	// converts mcv keys submitted to displayable text values
 	public List<String> getMcvDisplay()

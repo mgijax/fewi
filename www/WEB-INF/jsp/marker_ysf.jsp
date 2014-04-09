@@ -7,15 +7,14 @@
 }
 </style>
 <c:set var="notFirst" value="${false}"/>
-<c:if test="${not empty queryForm.phenotype}">
-	<br><c:if test="${notFirst}">AND</c:if>
-	Phenotypes/Diseases: including text <b><fewi:verbatim value="${queryForm.phenotype}"/></b> 
-		<span class="smallGrey">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span>
-<c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.nomen}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	Nomenclature: including text <b><fewi:verbatim value="${queryForm.nomen}"/></b>
+	Marker Symbol/Name: including text <b><fewi:verbatim value="${queryForm.nomen}"/></b>
 		<span class="smallGrey">searching current symbols/names and synonyms</span>
+<c:set var="notFirst" value="${true}"/></c:if>
+<c:if test="${not empty queryForm.mcv}">
+	<br><c:if test="${notFirst}">AND</c:if>
+	Feature Type: any of <b>${queryForm.mcvDisplay}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.chromosome}">
 	<br><c:if test="${notFirst}">AND</c:if>
@@ -33,15 +32,19 @@
 	<br><c:if test="${notFirst}">AND</c:if>
 	Marker Range: between <b>${queryForm.startMarker}</b> and <b>${queryForm.endMarker}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
-<c:if test="${not empty queryForm.mcv}">
-	<br><c:if test="${notFirst}">AND</c:if>
-	Marker Type: any of <b>${queryForm.mcvDisplay}</b>
-<c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.go}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	GO: contains <b>${queryForm.go}</b>
+	Gene Ontology Terms(s): contains <b>${queryForm.go}</b>
+	<c:if test="${not empty queryForm.goVocab and fn:length(queryForm.goVocab)<3}">
+	searching <b>${queryForm.goVocab}</b>
+	</c:if>
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.interpro}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	InterPro Domain: contains <b>${queryForm.interpro}</b>
+	InterPro Protein Domain: contains <b>${queryForm.interpro}</b>
+<c:set var="notFirst" value="${true}"/></c:if>
+<c:if test="${not empty queryForm.phenotype}">
+	<br><c:if test="${notFirst}">AND</c:if>
+	Phenotypes/Diseases: including text <b><fewi:verbatim value="${queryForm.phenotype}"/></b> 
+		<span class="smallGrey">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span>
 <c:set var="notFirst" value="${true}"/></c:if>

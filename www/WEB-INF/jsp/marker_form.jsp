@@ -190,7 +190,7 @@ td.top { vertical-align: top; }
 	        <span class="example">Enter any combination of phenotype terms,
 	          disease terms, or IDs
 	        </span><br>
-	        <textarea name="phenotype" rows="2" cols="60" placeholder="Phenotype terms, disease terms, or IDs"><c:out value="${queryForm.phenotype}"/></textarea>
+	        <textarea id="phenotype" name="phenotype" rows="2" cols="60" placeholder="Phenotype terms, disease terms, or IDs"><c:out value="${queryForm.phenotype}"/></textarea>
 	      	<br/>
 	      	<span class="vocabLink">
 		        <b>Select</b> <a href="javascript:childWindow=window.open('${configBean.FEWI_URL}allele/phenoPopup?formName=markerQF',
@@ -219,6 +219,36 @@ td.top { vertical-align: top; }
 </form>
 
 <script type="text/javascript">
+
+
+function updatePhenoSystemSummary()
+{
+	var items = [];
+	<c:forEach var="entry" items="${queryForm.phenoSystemWidgetValues}">
+		items.push({key:"${entry.key}",value:"${entry.value}"});
+	</c:forEach> 
+	
+	var phenoInput = $("#phenotype").val();
+	// check to see if any exist in the input
+	var mpTextLines = [];
+	for(var i=0;i<items.length;i++)
+	{
+		var item = items[i];
+		if (phenoInput.search(item.key) > -1) 
+    	{
+			mpTextLines.push("<li>"+item.value+" ("+item.key+")</li>");
+      }
+		if(mpTextLines.length>0)
+		{
+			$("#selectedMpTextDiv").html("You selected:<ul>" + mpTextLines.join("") + "</ul>");
+		}
+		else
+		{
+			$("#selectedMpTextDiv").html("");
+		}
+	}
+}
+
 var show = [];
 var categoryTree;
 
@@ -262,6 +292,9 @@ $(function(){
     	mcvKeys.push("${mcvKey}");
     </c:forEach>
     restoreTree(mcvKeys);
+    
+	$("#phenotype").change(updatePhenoSystemSummary);
+	updatePhenoSystemSummary();
 });
 
 function restoreTree(mcvKeys)
@@ -388,4 +421,5 @@ function markerQfReset(e)
 	
 	mqf.find("#chromosomeDropList").val("any").change();
 }
+
 </script>

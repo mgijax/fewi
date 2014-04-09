@@ -48,7 +48,6 @@ public class AlleleQueryForm
     private Map<String,String> subTypeGroup1 = new LinkedHashMap<String,String>();
     private Map<String,String> subTypeGroup2 = new LinkedHashMap<String,String>();
     private Map<String,String> subTypeGroup3 = new LinkedHashMap<String,String>();
-
     
     public AlleleQueryForm()
     {
@@ -141,6 +140,12 @@ public class AlleleQueryForm
     public Map<String,String> getSubTypeGroup3()
     {
     	return subTypeGroup3;
+    }
+    
+    // for the pheno system popup values
+    public Map<String,String> getPhenoSystemWidgetValues()
+    {
+    	return FormWidgetValues. getPhenoSystemWidgetValuesAll();
     }
     
     //--------------------//
