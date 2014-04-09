@@ -1201,7 +1201,7 @@ public class MarkerController {
     }
 
 	//--------------------------------//
-	// Allele Summary Tab-Delim Report
+	// Marker Summary Reports
 	//--------------------------------//
 	@RequestMapping("/report*")
 	public ModelAndView markerSummaryExport(
@@ -1214,11 +1214,13 @@ public class MarkerController {
         SearchParams sp = new SearchParams();
         sp.setPageSize(250000);
         sp.setFilter(this.genFilters(query));
+
         // if we have nomen query, do text highlighting
         if(notEmpty(query.getNomen()))
         {
 	        sp.setIncludeMetaHighlight(true);
 	        sp.setIncludeSetMeta(true);
+	        sp.setIncludeHighlightMarkup(false);
         }
 
         List<Sort> sorts = new ArrayList<Sort>();
