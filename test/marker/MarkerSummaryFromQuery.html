@@ -1249,70 +1249,114 @@ order by count(*) desc
 
 		<h4 id="youSearchedFor">You Searched For...</h4>
 		<ol>
-		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter. (sto168)
+		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter. Parameters are listed in the same order as on the query form.  The first parameter submitted is listed with the label specified. The word "AND" precedes all subsequent parameter labels to indicate the query logic. Parameters which may have multiple values display all selected or input values. (sto168)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
- 				<li>Step</li>
+ 				<li>Submit a Marker Query with the following parameters entered or selected:
+ 				<ul>
+ 					<li>Marker Symbol/Name: <b>Pa*</b></li>
+ 					<li>Feature type: <b>gene</b></li>
+ 					<li>Map position: Chromosomes <b>1,2,3,4,5,6,7,8,9</b></li>
+ 					<li>Genome Coordinates: <b>1-999999999999</b> bp</li>
+ 					<li>Gene Ontology (GO) classifications: <b>cell</b>; select <b>Molecular Function</b> and <b>Cellular Component</b></li>
+ 					<li>InterPro Protein Domains: <b>domain</b></li>
+ 					<li>Phenotype/Human Disease: <b>abnormal OR phenotype</b></li>
+ 				</ul>
+ 				</li>
+ 				<li>Verify the results display includes the "You searched for" section with the submitted parameters listed in the order shown above.</li>
+ 				<li>Verify the "You searched for" section shows each submitted parameter value with its label and "help text" where needed:
+ 				<ul>
+ 					<li>Marker Symbol/Name: including text <b>Pa*</b> <span style="font-size:0.75em; color:#999999;">searching current symbols/names and synonyms</span></li>
+ 					<li>AND Feature type: any of <b>[gene, protein coding gene, non-coding RNA gene, rRNA gene, ...]</b> <em>(NOTE: We have to show all "child terms" of the selected term too. Need feedback from the Demo to see if we should substitute generic text like "your selected ")</em></li>
+ 					<li>AND on Chromosome: any of <b>[1, 2, 3, 4, 5, 6, 7, 8, 9]</b></li>
+ 					<li>AND Genome Coordinates: <b>1-999999999999</b> bp</li>
+ 					<li>AND Gene Ontology term(s): contains <b>cell</b> searching <b>Molecular Function</b> and <b>Cellular Component</b></li>
+ 					<li>AND InterPro Protein Domains: contains <b>domain</b></li>
+ 					<li>AND Phenotype/Human Disease: including text <b>abnormal OR phenotype</b> <span style="font-size:0.75em; color:#999999;">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span></li>
+ 				</ul>
+ 				</li>
+ 				<li>Submit a Marker Query with the following parameters entered or selected:
+ 				<ul>
+ 					<li>Marker Symbol/Name: <b>Pa*</b></li>
+ 					<li>Feature type: <b>other feature type</b></li>
+ 					<li>Map position: Chromosomes <b>10, 11, 12, 13, 14, 15, 16, 17, 18, 19, X, Y, XY, UN, MT</b></li>
+ 					<li>Genome Coordinates: <b>1-999</b> Mbp</li>
+ 					<li>Gene Ontology (GO) classifications: <b>cell</b> (with no GO sub-DAGs selected)</li>
+ 					<li>InterPro Protein Domains: <b>domain</b></li>
+ 					<li>Phenotype/Human Disease: <b>abnormal OR phenotype</b></li>
+ 				</ul>
+ 				</li>
+ 				<li>Verify the "You searched for" section shows each submitted parameter value with its label and "help text" where needed:
+ 				<ul>
+ 					<li>Marker Symbol/Name: including text <b>Pa*</b> <span style="font-size:0.75em; color:#999999;">searching current symbols/names and synonyms</span></li>
+ 					<li>AND Feature type: any of <b>[other feature type, QTL, transgene, complex/cluster/region, ...]</b> <em>(NOTE: We have to show all "child terms" of the selected term too. Need feedback from the Demo to see if we should substitute generic text like "your selected ")</em></li>
+ 					<li>AND on Chromosome: any of <b>[10, 11, 12, 13, 14, 15, 16, 17, 18, 19, X, Y, XY, UN, MT]</b></li>
+ 					<li>AND Genome Coordinates: <b>1-999</b> Mbp</li>
+ 					<li>AND Gene Ontology term(s): contains <b>cell</b></li>
+ 					<li>AND InterPro Protein Domains: contains <b>domain</b></li>
+ 					<li>AND Phenotype/Human Disease: including text <b>abnormal OR phenotype</b> <span style="font-size:0.75em; color:#999999;">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span></li>
+ 				</ul>
+ 				</li>
+ 				<li>Submit a Marker Query with the following parameters entered or selected:
+ 				<ul>
+ 					<li>Marker Symbol/Name: <em>default setting = blank</em></li>
+ 					<li>Feature type: <em>default setting</em></li>
+ 					<li>Map position: Chromosomes <b>1</b></li>
+ 					<li>cM Position: <b>10.0-40.0</b></li>
+ 					<li>Gene Ontology (GO) classifications: <b>cell</b> (with no GO sub-DAGs selected)</li>
+ 					<li>InterPro Protein Domains: <em>default setting = blank</em></li>
+ 					<li>Phenotype/Human Disease: <em>default setting = blank</em></li>
+ 				</ul>
+ 				</li>
+ 				<li>Verify the "You searched for" section shows each submitted parameter value with its label and "help text" where needed:
+ 				<ul>
+	 				<li>on Chromosome: any of <b>[1]</b></li>
+ 					<li>AND cM Position: <b>10.0-40.0</b></li>
+ 					<li>AND Gene Ontology term(s): contains <b>cell</b> </li>
+ 				</ul>
+ 				</li>
  			</ol>
 		</li>
 		
 		<li>"You searched for..." does not reiterate default values submitted for any parameter. (sto168)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
- 				<li>Step</li>
- 			</ol>
-		</li>
-		
-		<li>"You searched for..." lists the parameters in the same order as they are shown on the Query Form. (sto168)
- 			<p concordion:assertTrue="false">new</p>
- 			<ol>
- 				<li>Correct order is:
- 				<ol>
- 					<li>Markery Symbol/Name</li>
- 					<li>Feature Type</li>
- 					<li>Chromosome</li>
- 					<li>Genome Coordinates</li>
- 					<li>Marker Range</li>
- 					<li>Gene Ontology Term(s)</li>
- 					<li>InterPro Protein Domains</li>
- 					<li>Phenotypes/Diseases</li>
- 				</ol>
+ 				<li>Submit a Marker Query with the following parameters entered or selected:
+ 				<ul>
+ 					<li>Marker Symbol/Name: <em>default setting = blank</em></li>
+ 					<li>Feature type: <em>default setting</em></li>
+ 					<li>Map position: Chromosomes <em>default setting</em></li>
+ 					<li>Marker Range: between <b>D19Mit32</b> and <b>Tbx10</b></li>
+ 					<li>Gene Ontology (GO) classifications: <b>cell</b> (with no GO sub-DAGs selected)</li>
+ 					<li>InterPro Protein Domains: <em>default setting = blank</em></li>
+ 					<li>Phenotype/Human Disease: <em>default setting = blank</em></li>
+ 				</ul>
+ 				</li>
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs:
+ 				<ul>
+ 					<li>Marker Range: between <b>D19Mit32</b> and <b>Tbx10</b> </li>
+ 					<li>AND Gene Ontology term(s): contains <b>cell</b> </li>
+ 				</ul>
+ 				</li>
+ 				<li>Submit a Marker Query with the following parameters entered or selected:
+ 				<ul>
+ 					<li>Marker Symbol/Name: <em>default setting = blank</em></li>
+ 					<li>Feature type: <em>default setting</em></li>
+ 					<li>Map position: <em>default setting = blank</em></li>
+ 					<li>Gene Ontology (GO) classifications: <em>default setting = blank</em></li>
+ 					<li>InterPro Protein Domains: <em>default setting = blank</em></li>
+ 					<li>Phenotype/Human Disease: <b>abnormal AND phenotype</b></li>
+ 				</ul>
+ 				</li>
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs:
+ 				<ul>
+	 				<li>Phenotypes/Diseases: including text <b>abnormal AND phenotype</b> <span style="font-size:0.75em; color:#999999;">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span></li>
+ 				</ul>
  				</li>
  				<li>Step</li>
- 				<li>Step</li>
  			</ol>
 		</li>
 		
-		<li>Parameters which may have multiple values display all selected or input values. (sto168)
- 			<p concordion:assertTrue="false">new</p>
- 			<ol>
- 				<li>Feature type...</li>
- 				<li>Chromosome...</li>
- 				<li>Step</li>
- 				<li>Step</li>
- 				<li>Step</li>
- 			</ol>
-		</li>
-		
-		<li>When only 1 or 2 GO DAG vocabularies are selected, the selected values are displayed. (sto168)
- 			<p concordion:assertTrue="false">new</p>
- 			<ul>
- 				<li>Molecular function</li>
- 				<li>Biological process</li>
- 				<li>Cellular component</li>
- 			</ul>
- 			<ol>
- 				<li>Feature type...</li>
- 				<li>Chromosome...</li>
- 				<li>Step</li>
- 				<li>Step</li>
- 				<li>Step</li>
- 			</ol>
-		</li>
 		</ol>   		
 
 		<h4 id="downloadableFiles">Downloadable Files</h4>
