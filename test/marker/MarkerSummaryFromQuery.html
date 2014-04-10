@@ -1381,10 +1381,10 @@ order by count(*) desc
 			<li>Downloads have the correct data columns: (sto164)
  			<p concordion:assertTrue="false">new</p>		
 			<table>
-				<tr><td>cM </td></tr>
-				<tr><td>Chr</td></tr> 
+				<tr><td>Chr <em>(NOTE: this is genomic chromosome.  No differences from genetic chr exist as of 4/10/14 so genetic chr was dropped as redundant.)</em></td></tr> 
 				<tr><td>start </td></tr>
 				<tr><td>end </td></tr>
+				<tr><td>cM <em>(Note: the web iterface translates some special values to text: "QTL", "syntenic", maybe others. This was dropped from the file download.)</em></td></tr>
 				<tr><td>strand GRCm38</td></tr> 
 				<tr><td>MGI ID </td></tr>
 				<tr><td>Feature Type</td></tr> 
@@ -1400,10 +1400,17 @@ order by count(*) desc
  			</ol>
 			</li>
 		
-			<li>The cM column value is blank when the web displays "syntenic" or "QTL". (sto164)
+			<li>The cM column value is a number between 1 and 110 or is blank. <em>(From Schema Browser: Offset value of -1.0 designates syntenic marker. Offset value of -999.9 designates withdrawn or reserved marker.)</em> (sto164)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
- 				<li>Step</li>
+ 				<li>Query for Map Position Marker Range between <b>Hrh3</b> and <b>Vacq1</b>.</li>
+ 				<li>Verify that the results set includes markers with Genetic Location including "syntenic", "QTL", and values greater than 100.</li>
+ 				<li>Click the Text File button.</li>
+ 				<li>Verify that NO cM value for <b>1700039O17Rik</b> is displayed. <em>(Marker is syntenic; the cM value in the database is -1.0.)</em></li>
+ 				<li>Verify that the cM value for <b>4921531C22Rik</b> is 102.49. <em>(Marker has a cM value.)</em></li>
+ 				<li>Verify that the cM value for <b>Alcp5</b> is 103.43. <em>(Marker is a QTL with a cM value.)</em></li>
+ 				<li>Click the Excel File button.</li>
+ 				<li>Verify that </li>
  				<li>Step</li>
  			</ol>
  			</li>
@@ -1411,8 +1418,7 @@ order by count(*) desc
 			<li>The "Why Matched?" column value does not contain HTML "b" tags surrounding the matching text portion of the string. (sto164)
  			<p concordion:assertTrue="false">new</p>
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
+ 				<li>Using the Text and Excel files returned for the <b>Pax6</b> query above, verify that the <b>Why Matched?</b> column does not contain "&lt;b&gt;" or "&lt;/b&gt;" tags.</li>
  			</ol>
  			</li>
 		
