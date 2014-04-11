@@ -1320,7 +1320,7 @@ order by count(*) desc
 		</li>
 		
 		<li>"You searched for..." does not reiterate default values submitted for any parameter. (sto168)
- 			<p concordion:assertTrue="false">fails. klf 4/11/2014</p>
+ 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
  			<ol>
  				<li>Navigate to the Marker Query Form.</li>
  				<li>Submit a Marker Query with the following parameters entered or selected:
@@ -1334,7 +1334,7 @@ order by count(*) desc
  					<li>Phenotype/Human Disease: <em>default setting = blank</em></li>
  				</ul>
  				</li>
- 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="true">passes. -klf 4/11/2014</span>
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="true">passed. -klf 4/11/2014</span>
  				<ul>
  					<li>Marker Range: between <b>D19Mit32</b> and <b>Tbx10</b> </li>
  					<li>AND Gene Ontology term(s): contains <b>cell</b> </li>
@@ -1351,7 +1351,7 @@ order by count(*) desc
  					<li>Phenotype/Human Disease: <b>abnormal AND phenotype</b></li>
  				</ul>
  				</li>
- 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="false">fails: Chromosome "ANY"</span>
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="false">passed. -klf 4/11/2014</span>
  				<ul>
 	 				<li>Phenotypes/Diseases: including text <b>abnormal AND phenotype</b> <span style="font-size:0.75em; color:#999999;">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span></li>
  				</ul>
