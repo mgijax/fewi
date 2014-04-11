@@ -16,7 +16,7 @@
 	<br><c:if test="${notFirst}">AND</c:if>
 	Feature Type: any of <b>${queryForm.mcvDisplay}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
-<c:if test="${not empty queryForm.chromosome}">
+<c:if test="${queryForm.hasChromosome}">
 	<br><c:if test="${notFirst}">AND</c:if>
 	on Chromosome: any of <b>${queryForm.chromosome}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
