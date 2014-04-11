@@ -192,6 +192,15 @@ public class MarkerQueryForm
 	public void setPhenotype(String phenotype) {
 		this.phenotype = phenotype;
 	}
+	
+	// boolean accessors
+	public boolean getHasChromosome()
+	{
+		// has values, but not if there is one, and it's "any"
+		return chromosome!=null && chromosome.size()>0 
+				&& !(chromosome.size()==1 && chromosome.contains(MarkerQueryForm.CHROMOSOME_ANY));
+	}
+	
 	@Override
 	public String toString() {
 		return "MarkerQueryForm [nomen=" + nomen + ", featureType="
