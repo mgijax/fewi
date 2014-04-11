@@ -1364,24 +1364,28 @@ order by count(*) desc
 		<h4 id="downloadableFiles">Downloadable Files</h4>
 		<ol>
 			<li>A file containing all data in the current results set can be downloaded in Text (tab-delimited) or Excel format.
- 			<p concordion:assertTrue="false">new</p>		
+ 			<p concordion:assertTrue="true">passed. -klf 4/11/2014</p>		
  			<ol>
  				<li>Enter <b>Pax6</b> in the Gene/Marker field and submit the query.</li>
  				<li>Click the <b>Text File</b> button.</li>
  				<li>Verify that 18 rows are returned.</li>
+ 				<li>Verify that the filename contains the current date and current time.</li>
  				<li>Return to the query results and click the <b>Excel File</b> button.</li>
  				<li>Verify that 18 rows are returned.</li>
+ 				<li>Verify that the filename contains the current date and current time.</li>
  				<li>Reset the query form. Enter <b>GO:0071314</b> (cellular response to cocaine) in the Gene Ontology classifications field and submit the query.</li>
  				<li>Click the <b>Text File</b> button.</li>
  				<li>Verify that 2 rows are returned.</li>
+ 				<li>Verify that the filename contains the current date and current time.</li>
  				<li>Return to the query results and click the <b>Excel File</b> button.</li>
  				<li>Verify that 2 rows are returned.</li>
+ 				<li>Verify that the filename contains the current date and current time.</li>
  				 
  			</ol>
 			</li>
 
 			<li>Downloads have the correct data columns: (sto164)
- 			<p concordion:assertTrue="false">new</p>		
+ 			<p concordion:assertTrue="false">fails. Excel data columns are not correct. -klf 4/11/2014</p>		
 			<table>
 				<tr><td>Chr <em>(NOTE: this is genomic chromosome.  No differences from genetic chr exist as of 4/10/14 so genetic chr was dropped as redundant.)</em></td></tr> 
 				<tr><td>start </td></tr>
@@ -1403,7 +1407,7 @@ order by count(*) desc
 			</li>
 		
 			<li>The cM column value is a number between 1 and 110 or is blank. <em>(From Schema Browser: Offset value of -1.0 designates syntenic marker. Offset value of -999.9 designates withdrawn or reserved marker.)</em> (sto164)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 4/11/2014</p>
  			<ol>
  				<li>Query for Map Position Marker Range between <b>Hrh3</b> and <b>Vacq1</b>.</li>
  				<li>Verify that the results set includes markers with Genetic Location including "syntenic", "QTL", and values greater than 100.</li>
@@ -1418,7 +1422,7 @@ order by count(*) desc
  			</li>
 		
 			<li>The "Why Matched?" column value does not contain HTML "b" tags surrounding the matching text portion of the string. (sto164)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 4/11/2014</p>
  			<ol>
  				<li>Using the Text and Excel files returned for the <b>Pax6</b> query above, verify that the <b>Why Matched?</b> column does not contain "&lt;b&gt;" or "&lt;/b&gt;" tags.</li>
  			</ol>
