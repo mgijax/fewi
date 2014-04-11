@@ -67,17 +67,17 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 		for (SolrSummaryMarker marker : markers)
 		{
 			row = sheet.createRow(rownum++);
-			row.createCell(0).setCellValue(marker.getChromosome());
-            row.createCell(3).setCellValue(marker.getCoordStartStr());
-            row.createCell(4).setCellValue(marker.getCoordEndStr());
-			row.createCell(1).setCellValue(marker.getCmStr());
-			row.createCell(5).setCellValue(marker.getStrand());
-			row.createCell(6).setCellValue(marker.getMgiId());
-			row.createCell(7).setCellValue(marker.getFeatureType());
-			row.createCell(8).setCellValue(marker.getSymbol());
-			row.createCell(9).setCellValue(marker.getName());
+			this.addNextCellValue(row,marker.getChromosome());
+			this.addNextCellValue(row,marker.getCoordStartStr());
+			this.addNextCellValue(row,marker.getCoordEndStr());
+			this.addNextCellValue(row,marker.getCmStr());
+			this.addNextCellValue(row,marker.getStrand());
+			this.addNextCellValue(row,marker.getMgiId());
+			this.addNextCellValue(row,marker.getFeatureType());
+			this.addNextCellValue(row,marker.getSymbol());
+			this.addNextCellValue(row,marker.getName());
 			if (displayMatches == true) {
-				row.createCell(10).setCellValue(StringUtils.join(marker.getHighlights(),", "));
+				this.addNextCellValue(row,StringUtils.join(marker.getHighlights(),", "));
 			}
 		}
 	}

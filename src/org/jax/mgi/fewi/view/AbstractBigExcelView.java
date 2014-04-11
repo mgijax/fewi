@@ -158,4 +158,28 @@ public abstract class AbstractBigExcelView extends AbstractReportView
 		cell.setCellType(Cell.CELL_TYPE_STRING);
 		cell.setCellValue(text);
 	}
+	
+	/**
+	 * Convenient method to get next row cell without knowing the index
+	 */
+	protected void addNextCell(Row row)
+	{
+		row.createCell(getNextCellIdx(row));
+	}
+	
+	/**
+	 * Convenient method to add a new cell with value without calling its index
+	 * 	it merely increments from the previous index
+	 */
+	protected void addNextCellValue(Row row, String value)
+	{
+		row.createCell(getNextCellIdx(row)).setCellValue(value);
+	}
+	
+	private int getNextCellIdx(Row row)
+	{
+		int idx = row.getLastCellNum();
+		if(idx<0) return 0;
+		return idx;
+	}
 }

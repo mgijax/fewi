@@ -118,16 +118,16 @@ public class ExcelAlleleSummary  extends AbstractBigExcelView
 			}
 
 			row = sheet.createRow(rownum++);
-			row.createCell(0).setCellValue(allele.getPrimaryID());
-			row.createCell(1).setCellValue(allele.getSymbol());
-			row.createCell(2).setCellValue(allele.getName());
-			row.createCell(3).setCellValue(allele.getChromosome());
-			row.createCell(4).setCellValue(StringUtils.join(synonyms," | "));
-			row.createCell(5).setCellValue(allele.getAlleleType());
-			row.createCell(6).setCellValue(subtype);
-			row.createCell(7).setCellValue(transmissionType);
-			row.createCell(8).setCellValue(StringUtils.join(systems," | "));
-			row.createCell(9).setCellValue(StringUtils.join(diseases," | "));
+			this.addNextCellValue(row,allele.getPrimaryID());
+			this.addNextCellValue(row,allele.getSymbol());
+			this.addNextCellValue(row,allele.getName());
+			this.addNextCellValue(row,allele.getChromosome());
+			this.addNextCellValue(row,StringUtils.join(synonyms," | "));
+			this.addNextCellValue(row,allele.getAlleleType());
+			this.addNextCellValue(row,subtype);
+			this.addNextCellValue(row,transmissionType);
+			this.addNextCellValue(row,StringUtils.join(systems," | "));
+			this.addNextCellValue(row,StringUtils.join(diseases," | "));
 		}
 
 	}
