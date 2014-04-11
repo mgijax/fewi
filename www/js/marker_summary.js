@@ -22,7 +22,7 @@ function main() {
     {
     	myColumnDefs.push({
     		key:"highlights",
-    		label:"<b>Why Matched?</b>",
+    		label:"<b>Why Matched?<br><i>(best matching example)</i></b>",
     		sortable:false
     	});
     }
