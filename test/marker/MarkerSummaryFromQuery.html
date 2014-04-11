@@ -1250,7 +1250,7 @@ order by count(*) desc
 		<h4 id="youSearchedFor">You Searched For...</h4>
 		<ol>
 		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter. Parameters are listed in the same order as on the query form.  The first parameter submitted is listed with the label specified. The word "AND" precedes all subsequent parameter labels to indicate the query logic. Parameters which may have multiple values display all selected or input values. (sto168)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
  			<ol>
  				<li>Submit a Marker Query with the following parameters entered or selected:
  				<ul>
@@ -1279,7 +1279,7 @@ order by count(*) desc
  				<ul>
  					<li>Marker Symbol/Name: <b>Pa*</b></li>
  					<li>Feature type: <b>other feature type</b></li>
- 					<li>Map position: Chromosomes <b>10, 11, 12, 13, 14, 15, 16, 17, 18, 19, X, Y, XY, UN, MT</b></li>
+ 					<li>Map position: Chromosomes <b>10, 11, 12, 13, 14, 15, 16, 17, 18, 19, X, Y, XY, Unknown, Mitochondrial</b></li>
  					<li>Genome Coordinates: <b>1-999</b> Mbp</li>
  					<li>Gene Ontology (GO) classifications: <b>cell</b> (with no GO sub-DAGs selected)</li>
  					<li>InterPro Protein Domains: <b>domain</b></li>
@@ -1312,6 +1312,7 @@ order by count(*) desc
  				<ul>
 	 				<li>on Chromosome: any of <b>[1]</b></li>
  					<li>AND cM Position: <b>10.0-40.0</b></li>
+ 					<li>AND Genome Coordinates: 1-999 Mbp </li>
  					<li>AND Gene Ontology term(s): contains <b>cell</b> </li>
  				</ul>
  				</li>
@@ -1319,8 +1320,9 @@ order by count(*) desc
 		</li>
 		
 		<li>"You searched for..." does not reiterate default values submitted for any parameter. (sto168)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="false">fails. klf 4/11/2014</p>
  			<ol>
+ 				<li>Navigate to the Marker Query Form.</li>
  				<li>Submit a Marker Query with the following parameters entered or selected:
  				<ul>
  					<li>Marker Symbol/Name: <em>default setting = blank</em></li>
@@ -1332,12 +1334,13 @@ order by count(*) desc
  					<li>Phenotype/Human Disease: <em>default setting = blank</em></li>
  				</ul>
  				</li>
- 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs:
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="true">passes. -klf 4/11/2014</span>
  				<ul>
  					<li>Marker Range: between <b>D19Mit32</b> and <b>Tbx10</b> </li>
  					<li>AND Gene Ontology term(s): contains <b>cell</b> </li>
  				</ul>
  				</li>
+ 				<li>Use the <b>Reset</b> button to clear values from the Marker Query Form. </li>
  				<li>Submit a Marker Query with the following parameters entered or selected:
  				<ul>
  					<li>Marker Symbol/Name: <em>default setting = blank</em></li>
@@ -1348,12 +1351,11 @@ order by count(*) desc
  					<li>Phenotype/Human Disease: <b>abnormal AND phenotype</b></li>
  				</ul>
  				</li>
- 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs:
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="false">fails: Chromosome "ANY"</span>
  				<ul>
 	 				<li>Phenotypes/Diseases: including text <b>abnormal AND phenotype</b> <span style="font-size:0.75em; color:#999999;">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span></li>
  				</ul>
  				</li>
- 				<li>Step</li>
  			</ol>
 		</li>
 		
