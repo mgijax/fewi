@@ -88,28 +88,155 @@
 		<li>Attempts to recreate, as much as possible, previous code's default sorting if Nomen field is submitted (except now using Solr field boosts):<br/>
 			<b>MRK_label table</b>, April 2014, additional code sorted "exact" matches ahead of matches contained within text strings.
 		<table>
-			<tr><td>labeltype</td>	<td>labeltypename</td>	<td>organism name</td>	<td>priority</td></tr>
-			<tr><td>MS</td>	<td>current symbol </td>	<td>mouse</td>	<td>1</td></tr>
-			<tr><td>MN</td>	<td>current name</td>	<td>mouse</td>	<td>2</td></tr>
-			<tr><td>AS</td>	<td>allele symbol</td>	<td>mouse</td>	<td>3</td></tr>
-			<tr><td>AN</td>	<td>allele name </td>	<td>mouse</td>	<td>4</td></tr>
-			<tr><td>MS</td>	<td>old symbol</td>	<td>mouse</td>	<td>5</td></tr>
-			<tr><td>MN</td>	<td>old name </td>	<td>mouse</td>	<td>6</td></tr>
-			<tr><td>MY</td>	<td>synonym</td>	<td>mouse</td>	<td>7</td></tr>
-			<tr><td>MY</td>	<td>human synonym</td>	<td>human</td>	<td>8</td></tr>
-			<tr><td>MY</td>	<td>rat synonym </td>	<td>rat</td>	<td>9</td></tr>
-			<tr><td>MY</td>	<td>related synonym</td>	<td></td>	<td>10</td></tr>
-			<tr><td>OS</td>	<td>human symbol</td>	<td>human</td>	<td>11</td></tr>
-			<tr><td>ON</td>	<td>human name</td>	<td>human</td>	<td>12</td></tr>
-			<tr><td>OS</td>	<td>rat symbol</td>	<td>rat</td>	<td>13</td></tr>
-			<tr><td>OS</td>	<td>rhesus macaque symbol</td>	<td>rhesus macaque</td>	<td>14</td></tr>
-			<tr><td>OS</td>	<td>cattle symbol</td>	<td>cattle</td>	<td>14</td></tr>
-			<tr><td>OS</td>	<td>dog symbol</td>	<td>dog, domestic</td>	<td>14</td></tr>
-			<tr><td>OS</td>	<td>zebrafish symbol</td>	<td>zebrafish</td>	<td>14</td></tr>
-			<tr><td>OS</td>	<td>chicken symbol </td>	<td>chicken</td>	<td>14</td></tr>
-			<tr><td>OS</td>	<td>chimpanzee symbol </td>	<td>chimpanzee</td>	<td>14</td></tr>
-		</table>
-		</li>
+					<tr>
+						<th>labeltype</th>
+						<th>labeltypename</th>
+						<th>organism name</th>
+						<th>priority</th>
+						<th>New Priority 4/23/2014</th>
+					</tr>
+					<tr>
+						<td>MS</td>
+						<td>current symbol</td>
+						<td>mouse</td>
+						<td>1</td>
+						<td>1</td>
+					</tr>
+					<tr>
+						<td>MN</td>
+						<td>current name</td>
+						<td>mouse</td>
+						<td>2</td>
+						<td>2</td>
+					</tr>
+					<tr style="background-color:#FFFFDE;">
+						<td>MY</td>
+						<td>synonym</td>
+						<td>mouse</td>
+						<td>7</td>
+						<td>3 ???</td>
+					</tr>
+					<tr>
+						<td>AS</td>
+						<td>allele symbol</td>
+						<td>mouse</td>
+						<td>3</td>
+						<td>4</td>
+					</tr>
+					<tr>
+						<td>AN</td>
+						<td>allele name</td>
+						<td>mouse</td>
+						<td>4</td>
+						<td>5</td>
+					</tr>
+					<tr>
+						<td>MS</td>
+						<td>old symbol</td>
+						<td>mouse</td>
+						<td>5</td>
+						<td>6</td>
+					</tr>
+					<tr>
+						<td>MN</td>
+						<td>old name</td>
+						<td>mouse</td>
+						<td>6</td>
+						<td>7</td>
+					</tr>
+					<tr style="background-color:#FFFFDE;">
+						<td>MY</td>
+						<td>synonym</td>
+						<td>mouse</td>
+						<td>7</td>
+						<td>3</td>
+					</tr>
+					<tr>
+						<td>MY</td>
+						<td>human synonym</td>
+						<td>human</td>
+						<td>8</td>
+						<td>8</td>
+					</tr>
+					<tr>
+						<td>MY</td>
+						<td>rat synonym</td>
+						<td>rat</td>
+						<td>9</td>
+						<td>9</td>
+					</tr>
+					<tr>
+						<td>MY</td>
+						<td>related synonym</td>
+						<td></td>
+						<td>10</td>
+						<td>10</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>human symbol</td>
+						<td>human</td>
+						<td>11</td>
+						<td>11</td>
+					</tr>
+					<tr>
+						<td>ON</td>
+						<td>human name</td>
+						<td>human</td>
+						<td>12</td>
+						<td>12</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>rat symbol</td>
+						<td>rat</td>
+						<td>13</td>
+						<td>13</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>rhesus macaque symbol</td>
+						<td>rhesus macaque</td>
+						<td>14</td>
+						<td>14</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>cattle symbol</td>
+						<td>cattle</td>
+						<td>14</td>
+						<td>14</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>dog symbol</td>
+						<td>dog, domestic</td>
+						<td>14</td>
+						<td>14</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>zebrafish symbol</td>
+						<td>zebrafish</td>
+						<td>14</td>
+						<td>14</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>chicken symbol</td>
+						<td>chicken</td>
+						<td>14</td>
+						<td>14</td>
+					</tr>
+					<tr>
+						<td>OS</td>
+						<td>chimpanzee symbol</td>
+						<td>chimpanzee</td>
+						<td>14</td>
+						<td>14</td>
+					</tr>
+				</table>
+			</li>
 	</ul>
 
 	<h4>GO and Protein Domain (InterPro)</h4>
@@ -1351,7 +1478,7 @@ order by count(*) desc
  					<li>Phenotype/Human Disease: <b>abnormal AND phenotype</b></li>
  				</ul>
  				</li>
- 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="false">passed. -klf 4/11/2014</span>
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="true">passed. -klf 4/11/2014</span>
  				<ul>
 	 				<li>Phenotypes/Diseases: including text <b>abnormal AND phenotype</b> <span style="font-size:0.75em; color:#999999;">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span></li>
  				</ul>
