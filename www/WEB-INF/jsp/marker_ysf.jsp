@@ -50,5 +50,5 @@
 <c:set var="notFirst" value="${true}"/></c:if>
 <%-- Special nomen help text --%>
 <c:if test="${not empty queryForm.nomen}">
-	The default sort when Marker Symbol/Name is submitted is by a text-matching relevance score.
+	<br>The default sort when Marker Symbol/Name is submitted is by a text-matching relevance score.
 </c:if>
