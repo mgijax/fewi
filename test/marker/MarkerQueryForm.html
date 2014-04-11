@@ -199,27 +199,39 @@
     		</li>
 
 			<li>After the first query submission, the query form appears to contract, and the contracted version remains visible at the top of the results set. The "contracted" form can be expanded and contracted by clicking its header area. (sto164)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
+ 				<li>Navigate to the Marker Query Form, enter <b>Pa*</b> in the Gene/Marker Symbol/Name field. </li>
+ 				<li>Click the <b>Select Anatomical Systems Affected by Phenotypes</b> link, select <b>cellular</b> and <b>craniofacial</b>, and click the Add To Query button.</li>
+ 				<li>Submit the query.</li>
+ 				<li>Verify that the query form appears to contract to a blue bar containing the <b>Click to modify search</b> button.</li>
+ 				<li>Verify that the summary of query results is displayed below the blue bar.
+ 				<li>Click the <b>Click to modify search</b> button.</li>
+ 				<li>Verify that the query form appears to expand and the summary of query results remains displayed below the expanded query form.</li>
  			</ol>
 			</li>
 
 			<li>After each query submission, the query form remains populated with the user's last inputs and selections, including "Affected Systems" in the Pheno/Disease ribbon. (sto164)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
+ 				<li>Using the query submitted above, verify that the "Phenotype/Human Disease:" input field remains populated with <b>MP:0005384 MP:0005382</b>.</li>
+ 				<li>Verify that to the right of the "Phenotype/Human Disease:" input, text is displayed:<br/>
+ 					You selected:
+ 					<ul>
+						<li>cellular (MP:0005384)</li>
+						<li>craniofacial (MP:0005382)</li>
+ 					</ul>
+ 				</li> 
  			</ol>
 			</li>
 
 
 			<li>Opening the query form displays all input parameter ribbons and top and bottom buttons (nothing is cut off). (sto164)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
  			<ol>
- 				<li>Step</li>
- 				<li>Step</li>
+ 				<li>Using the query submitted above, verify that the "Search" and "Reset" buttons are fully visible at the bottom of the form area.</li>
+ 				<li>Use the bottom buttons to submit the query again.</li>
+ 				<li>Verify that the query was performed (results set was refreshed).</li>
  			</ol>
 			</li>
 
