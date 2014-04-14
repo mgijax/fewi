@@ -238,7 +238,7 @@
     		</ul>
   			<p concordion:assertTrue="true">kstone 2013/05/14</p> 
     		<ol>
-                <li>Query for genes with expression detected in <b concordion:set="#struct1">pulmonary valve</b> but not detected or analyzed in <b concordion:set="#struct2">pulmonary valve leaflets</b>.</li>
+                <li>Query for genes with expression detected in <b concordion:set="#struct1">pulmonary valve</b> but not detected or analyzed in <b concordion:set="#struct2">pulmonary valve leaflet</b>.</li>
                 <li>Verify that <i>results</i> for <b>pulmonary valve</b> are returned for the following genes <i>(semi automated)</i>:
                 <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
 					<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
@@ -260,7 +260,7 @@
                 <ul>
                 </ul>
                 </li>
-                <li>Verify that results for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">pulmonary valve leaflets</b> are not returned. <i>(fully automated)</i></li>
+                <li>Verify that results for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">pulmonary valve leaflet</b> are not returned. <i>(fully automated)</i></li>
                 <li>Verify that the gene <b cc:assertNoResultsContain="getGeneSymbols(#struct1,#struct2)">Pdgfra</b> is not returned. <i>(fully automated)</i></li>
     		</ol>
     		</li>
@@ -295,7 +295,6 @@
                 	<tr><td>Mnx1</td></tr>
                 	<tr><td>Prr3</td></tr>
                 	<tr><td>Prr14</td></tr>
-                	<tr><td>Th</td></tr>
                 	<tr><td>Zufsp</td></tr>
 				</table>
                 </li>
