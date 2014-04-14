@@ -231,8 +231,8 @@
 			<li>Testing a related synonym
 			<ol>
 				<li>open the GXD query form</li>
-				<li>Type <b concordion:set="#query">SERCA2a</b> in the nomenclature field and press the search button</li>
-				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Atp2a2</b>, is returned</li>
+				<li>Type <b concordion:set="#query">MGC:27631</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene, with symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Atp1a3</b>, is returned</li>
 			</ol>
 			</li>			
 			<li>Testing reverse wildcard search
