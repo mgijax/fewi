@@ -305,211 +305,220 @@ td.right { text-align: right }
     <td class="<%=leftTdStyles.getNext() %>">
       <a name="${typeCategory}Description"></a>${typeCategory}<br>description</td>
     <td class="<%=rightTdStyles.getNext() %>">
-    	<c:if test="${not empty molecularThumbnail and not empty molecularThumbnail.pixeldbNumericID}">
-	    	<div style="float: right; margin-right: 20px;">
-	    		<a href="${configBean.FEWI_URL}image/molecular/${molecularImage.mgiID}">
-	    			<img src='${configBean.PIXELDB_URL}${molecularThumbnail.pixeldbNumericID}'>
-	    		</a>
-	    	</div>
-    	</c:if>
       ${fixedDivOpen}
       <table>
-	<c:set var="typeLabel" value="Allele"/>
-	<c:if test="${typeCategory == 'Transgene'}">
-	  <c:set var="typeLabel" value="Transgene"/>
-	</c:if>
-	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${typeLabel} Type:</font>&nbsp;</td>
-	<td width="1%">&nbsp;</td>
-	<td class="padded" width="*">${allele.alleleType} <c:if test="${not empty allele.alleleSubType}">(${allele.alleleSubType})</c:if></td>
-	</tr>
+      <tr>
+      <td style="width:70%; vertical-align:top;">
+      <table>
+		<c:set var="typeLabel" value="Allele"/>
+		<c:if test="${typeCategory == 'Transgene'}">
+		  <c:set var="typeLabel" value="Transgene"/>
+		</c:if>
+		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${typeLabel} Type:</font>&nbsp;</td>
+		<td width="1%">&nbsp;</td>
+		<td class="padded" width="*">${allele.alleleType} <c:if test="${not empty allele.alleleSubType}">(${allele.alleleSubType})</c:if></td>
+		</tr>
 
-	<!-- comma-delimited set of mutations -->
-	<c:if test="${not empty mutations}">
-	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${mutationLabel}:</font>&nbsp;</td>
-	<td width="1%">&nbsp;</td>
-	<td class="padded" width="*">${mutations}
-	  <c:if test="${not empty vector}">&nbsp;&nbsp;&nbsp;&nbsp;<I>Vector:</I>&nbsp;${vector}</c:if>
-	  <c:if test="${not empty vectorType}">&nbsp;&nbsp;&nbsp;&nbsp;<I>Vector&nbsp;Type:</I>&nbsp;${vectorType}</c:if>
-	</td>
-	</tr>
-	</c:if>
-
-	<c:set var="molecularRefs" value=""/>
-	<c:forEach var="ref" items="${allele.molecularReferences}" varStatus="status">
-	<c:set var="molecularRefs" value="${molecularRefs}<a href='${configBean.FEWI_URL}reference/${ref.jnumID}' class='MP'>${ref.jnumID}</a>"/><c:if test="${!status.last}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
-	</c:forEach>
-
-	<c:if test="${not empty description}">
-	<tr>
-	  <c:if test="${fn:length(description) > 100}">
-	    <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap" valign="top">&nbsp;</td>
-	    <td class="padded" style="vertical-align: top;">
-	      <div id="rightArrowMutationDescription" onClick="toggleMutationDescription();" style="float: right; cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
-	      <div id="downArrowMutationDescription" onClick="toggleMutationDescription();" style="cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
-	    </td>
-	    <td class="padded" width="*">Mutation details<span id='mutationDescription' style='display:none'>:&nbsp;<font class='small'>${description}
-	      <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
-	      <c:if test="${not empty allele.incidentalMutations}">
-		    Additional
-		    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
-		    were detected in sequencing for the causative mutation,
-		    ${symbolSup}, and may be present in stocks carrying  this mutation.
-		  </c:if>
-		</font></span>
-	    </td>
-	  </c:if>
-	  <c:if test="${fn:length(description) <= 100}">
-	    <td class="rightBorderThinGray" align="right" width="1%" valign="top">&nbsp;</td>
-	    <td style="vertical-align: top;">&nbsp;</td>
-	    <td class="padded" width="*">
-			<span id='mutationDescription'><font class='small'>${description} <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
-	    	<c:if test="${not empty allele.incidentalMutations}">
-		    Additional
-		    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
-		    were detected in sequencing for the causative mutation,
-		    ${symbolSup}, and may be present in stocks carrying  this mutation.
-	    	</c:if>
-			</font></span>
-	    </td>
-	  </c:if>
-	</tr>
-	</c:if>
-
-	<c:if test="${(not empty allele.inheritanceMode) and (allele.inheritanceMode != 'Not Applicable')}">
-	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Inheritance:</font>&nbsp;</td>
-	<td width="1%">&nbsp;</td>
-	<td class="padded" width="*">${allele.inheritanceMode}</td>
-	</tr>
-	</c:if>
-
-	<c:if test="${(not empty sequenceCount) and (sequenceCount > 0)}">
-	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Sequence Tags:</font>&nbsp;</td>
-	<td width="1%" class='padded' style='vertical-align:top'>
-	  <div style='float:right; cursor:pointer; position:relative; z-index:1' id='rightArrowSeqTag' onClick='toggleSequenceTags()'><img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'></div>
-	  <div style='float:right; cursor:pointer; display:none; position:relative; z-index:1' id='downArrowSeqTag' onClick='toggleSequenceTags()'><img src='${configBean.WEBSHARE_URL}images/downArrow.gif'></div>
-	</td>
-	<td class="padded" width="*" style='vertical-align:top'>
-	  Sequence tag details (${sequenceCount} tag<c:if test='${sequenceCount > 1}'>s</c:if>)
-	  <form name='seqfetchForm' method='GET' action='${configBean.SEQFETCH_URL}'><input type='hidden' name='seq1' value=''></form>
-	  <form name='mouseblastForm' method='GET' action='${configBean.MOUSEBLAST_URL}index.cgi'><input type='hidden' name='blastableDB' value='assembly37'><input type='hidden' name='seqid' value=''></form>
-	  <style>
-	  td.seqTagTH { text-align: left; background-color: #D0E0F0; padding: 4px; border: 1px solid black; }
-	  td.seqTag { text-align: center; vertical-align: middle; padding: 4px; border: 1px solid black; }
-	  td.seqTagLeft { text-align: left; vertical-align: middle; padding: 4px; border: 1px solid black; }
-	  </style>
-
-	  <% // define holder for sequences' primary IDs and logical databases
-	     Sequence seq;
-	     String primaryID;
-	     String logicalDB;
-	  %>
-
-	  <table id='seqTagTable' style='display:none'>
-	    <tr>
-	      <td class='seqTagTH'>Tag ID</td>
-	      <td class='seqTagTH'>GenBank ID</td>
-	      <td class='seqTagTH'>Method</td>
-	      <td class='seqTagTH'>Tag Location (trapped strand)*</td>
-	      <td class='seqTagTH'>Select</td>
-	    </tr>
-	    <form name='sequenceForm' method='GET'>
-	  <c:if test="${not empty representativeSeq}">
-	    <tr>
-	      <td class='seqTag'>${representativeSeq.primaryID}<br/>
-		<% seq = (Sequence) request.getAttribute("representativeSeq");
-		   if (seq != null) {
-		     primaryID = seq.getPrimaryID();
-		     logicalDB = seq.getLogicalDB();
-
-		     // hack so we can handle TIGM one way for MCL and a
-		     // different way for sequence tags
-		     if ("TIGM".equals(logicalDB)) {
-			 logicalDB = "TIGM_SequenceTag";
-		     }
-		   } else {
-		     // should not happen
-		     primaryID = "none";
-		     logicalDB = "GenBank";
-		   }
-		%>
-		(<%= idLinker.getLink (logicalDB, primaryID, logicalDB).replace("TIGM_SequenceTag", "TIGM") %>)
-	      </td>
-	      <c:if test='${not empty representativeSeq.preferredGenBankID}'>
-	        <td class='seqTag'>${representativeSeq.preferredGenBankID.accID}
-		<br/>
-		(<a href='${configBean.FEWI_URL}sequence/${representativeSeq.preferredGenBankID.accID}' class='MP'>MGI Seq Detail</a>)
-	        </td>
-	      </c:if>
-	      <td class='seqTag'>${representativeSeq.tagMethod}</td>
-	      <td class='seqTagLeft'>${representativeSeq.sequenceTagLocation}</td>
-	      <td class='seqTag'><input type='radio' name='seq' value='<%= FormatHelper.getSeqForwardValue(seq) %>'></td>
-	    </tr>
-	  </c:if>
-	  <c:if test="${not empty otherSequences}">
-	    <c:forEach var="seq" items="${otherSequences}">
-	    <tr>
-	      <td class='seqTag'>${seq.primaryID}<br/>
-		<% seq = (Sequence) pageContext.getAttribute("seq");
-		   if (seq != null) {
-		     primaryID = seq.getPrimaryID();
-		     logicalDB = seq.getLogicalDB();
-		   } else {
-		     // should not happen
-		     primaryID = "n/a";
-		     logicalDB = "GenBank";
-		   }
-		%>
-		(<%= idLinker.getLink (logicalDB, primaryID, logicalDB) %>)
-	      </td>
-	      <c:if test='${not empty seq.preferredGenBankID}'>
-	        <td class='seqTag'>${seq.preferredGenBankID.accID}
-		<br/>
-		(<a href='${configBean.FEWI_URL}sequence/${seq.preferredGenBankID.accID}' class='MP'>MGI Seq Detail</a>)
+		<!-- comma-delimited set of mutations -->
+		<c:if test="${not empty mutations}">
+		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${mutationLabel}:</font>&nbsp;</td>
+		<td width="1%">&nbsp;</td>
+		<td class="padded" width="*">${mutations}
+		  <c:if test="${not empty vector}">&nbsp;&nbsp;&nbsp;&nbsp;<I>Vector:</I>&nbsp;${vector}</c:if>
+		  <c:if test="${not empty vectorType}">&nbsp;&nbsp;&nbsp;&nbsp;<I>Vector&nbsp;Type:</I>&nbsp;${vectorType}</c:if>
 		</td>
-	      </c:if>
-	      <td class='seqTag'>${seq.tagMethod}</td>
-	      <td class='seqTagLeft'>${seq.sequenceTagLocation}</td>
-	      <td class='seqTag'><input type='radio' name='seq' value='<%= FormatHelper.getSeqForwardValue(seq) %>'></td>
-	    </tr>
-	    </c:forEach>
-	  </c:if>
-	    <tr>
-	  </form>
-	      <td colspan="2" class='seqTag' style='text-align:center'><b>* ${assemblyVersion}</b><br/>(strand of gene trap mutagenesis)</td>
-	      <td colspan="3" class='seqTag' style='text-align:right'>
-		<form name='seqPullDownForm' id='seqPullDownForm'><i>Selected Tags:</i>
-		  <select name='seqPullDown'>
-		    <option value='download' selected>download
-		    <option value='mouseblast'>MouseBLAST
-		  </select>
-		  <input type='button' value='Go' onClick='formatForwardArgs()'>
-		</form>
-	      </td>
-	    </tr>
-	  </table>
-	</td>
-	</tr>
-	</c:if>
+		</tr>
+		</c:if>
 
-	<c:if test="${(not empty gbrowseLink) and (not empty gbrowseThumbnail)}">
-	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Genome Context:</font>&nbsp;</td>
-	<td width="1%" class='padded' style='vertical-align:top'>
-	  <div style='float:right; cursor:pointer; position:relative; z-index:1' id='rightArrowGenome' onClick='toggleGenomeContext()'><img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'></div>
-	  <div style='float:right; cursor:pointer; display:none; position:relative; z-index:1' id='downArrowGenome' onClick='toggleGenomeContext()'><img src='${configBean.WEBSHARE_URL}images/downArrow.gif'></div>
-	</td>
-	<td class="padded" style='vertical-align:top'>
-	  Genome Browser view of this mutation<br/>
-	  <table id='genomeContextTable' style='display:none'>
-	    <tr><td class='padded' style='border: 2px solid #aaaaaa; text-align:center; background-color: #ffffff'>
-	      <span style='font-size: 90%'><span style='color:blue'>Blue</span> line marks
-	      approximate position of gene trap insertion</span><br/>
-      	      <a href='${gbrowseLink}' class='anchor' target='_new'><img src='${gbrowseThumbnail}' style='width:290px'></a><p>
-	      ${gbrowseExtraLine}
-	      <a href='${gbrowseLink}' class='MP' target='_new'><span style='font-size: 90%'>${gbrowseLabel}</span></a>
-	    </td></tr>
-	  </table>
-	</td>
-	</c:if>
+		<c:set var="molecularRefs" value=""/>
+		<c:forEach var="ref" items="${allele.molecularReferences}" varStatus="status">
+		<c:set var="molecularRefs" value="${molecularRefs}<a href='${configBean.FEWI_URL}reference/${ref.jnumID}' class='MP'>${ref.jnumID}</a>"/><c:if test="${!status.last}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
+		</c:forEach>
+
+		<c:if test="${not empty description}">
+		<tr>
+		  <c:if test="${fn:length(description) > 100}">
+		    <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap" valign="top">&nbsp;</td>
+		    <td class="padded" style="vertical-align: top;">
+		      <div id="rightArrowMutationDescription" onClick="toggleMutationDescription();" style="float: right; cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
+		      <div id="downArrowMutationDescription" onClick="toggleMutationDescription();" style="cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
+		    </td>
+		    <td class="padded" width="*">Mutation details<span id='mutationDescription' style='display:none'>:&nbsp;<font class='small'>${description}
+		      <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
+		      <c:if test="${not empty allele.incidentalMutations}">
+			    Additional
+			    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
+			    were detected in sequencing for the causative mutation,
+			    ${symbolSup}, and may be present in stocks carrying  this mutation.
+			  </c:if>
+			</font></span>
+		    </td>
+		  </c:if>
+		  <c:if test="${fn:length(description) <= 100}">
+		    <td class="rightBorderThinGray" align="right" width="1%" valign="top">&nbsp;</td>
+		    <td style="vertical-align: top;">&nbsp;</td>
+		    <td class="padded" width="*">
+				<span id='mutationDescription'><font class='small'>${description} <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
+		    	<c:if test="${not empty allele.incidentalMutations}">
+			    Additional
+			    <a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${allele.incidentalMutation.filename}">incidental mutations </a>
+			    were detected in sequencing for the causative mutation,
+			    ${symbolSup}, and may be present in stocks carrying  this mutation.
+		    	</c:if>
+				</font></span>
+		    </td>
+		  </c:if>
+		</tr>
+		</c:if>
+
+		<c:if test="${(not empty allele.inheritanceMode) and (allele.inheritanceMode != 'Not Applicable')}">
+		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Inheritance:</font>&nbsp;</td>
+		<td width="1%">&nbsp;</td>
+		<td class="padded" width="*">${allele.inheritanceMode}</td>
+		</tr>
+		</c:if>
+
+		<c:if test="${(not empty sequenceCount) and (sequenceCount > 0)}">
+		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Sequence Tags:</font>&nbsp;</td>
+		<td width="1%" class='padded' style='vertical-align:top'>
+		  <div style='float:right; cursor:pointer; position:relative; z-index:1' id='rightArrowSeqTag' onClick='toggleSequenceTags()'><img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'></div>
+		  <div style='float:right; cursor:pointer; display:none; position:relative; z-index:1' id='downArrowSeqTag' onClick='toggleSequenceTags()'><img src='${configBean.WEBSHARE_URL}images/downArrow.gif'></div>
+		</td>
+		<td class="padded" width="*" style='vertical-align:top'>
+		  Sequence tag details (${sequenceCount} tag<c:if test='${sequenceCount > 1}'>s</c:if>)
+		  <form name='seqfetchForm' method='GET' action='${configBean.SEQFETCH_URL}'><input type='hidden' name='seq1' value=''></form>
+		  <form name='mouseblastForm' method='GET' action='${configBean.MOUSEBLAST_URL}index.cgi'><input type='hidden' name='blastableDB' value='assembly37'><input type='hidden' name='seqid' value=''></form>
+		  <style>
+		  td.seqTagTH { text-align: left; background-color: #D0E0F0; padding: 4px; border: 1px solid black; }
+		  td.seqTag { text-align: center; vertical-align: middle; padding: 4px; border: 1px solid black; }
+		  td.seqTagLeft { text-align: left; vertical-align: middle; padding: 4px; border: 1px solid black; }
+		  </style>
+	
+		  <% // define holder for sequences' primary IDs and logical databases
+		     Sequence seq;
+		     String primaryID;
+		     String logicalDB;
+		  %>
+	
+		  <table id='seqTagTable' style='display:none'>
+		    <tr>
+		      <td class='seqTagTH'>Tag ID</td>
+		      <td class='seqTagTH'>GenBank ID</td>
+		      <td class='seqTagTH'>Method</td>
+		      <td class='seqTagTH'>Tag Location (trapped strand)*</td>
+		      <td class='seqTagTH'>Select</td>
+		    </tr>
+		    <form name='sequenceForm' method='GET'>
+		  <c:if test="${not empty representativeSeq}">
+		    <tr>
+		      <td class='seqTag'>${representativeSeq.primaryID}<br/>
+			<% seq = (Sequence) request.getAttribute("representativeSeq");
+			   if (seq != null) {
+			     primaryID = seq.getPrimaryID();
+			     logicalDB = seq.getLogicalDB();
+	
+			     // hack so we can handle TIGM one way for MCL and a
+			     // different way for sequence tags
+			     if ("TIGM".equals(logicalDB)) {
+				 logicalDB = "TIGM_SequenceTag";
+			     }
+			   } else {
+			     // should not happen
+			     primaryID = "none";
+			     logicalDB = "GenBank";
+			   }
+			%>
+			(<%= idLinker.getLink (logicalDB, primaryID, logicalDB).replace("TIGM_SequenceTag", "TIGM") %>)
+		      </td>
+		      <c:if test='${not empty representativeSeq.preferredGenBankID}'>
+		        <td class='seqTag'>${representativeSeq.preferredGenBankID.accID}
+			<br/>
+			(<a href='${configBean.FEWI_URL}sequence/${representativeSeq.preferredGenBankID.accID}' class='MP'>MGI Seq Detail</a>)
+		        </td>
+		      </c:if>
+		      <td class='seqTag'>${representativeSeq.tagMethod}</td>
+		      <td class='seqTagLeft'>${representativeSeq.sequenceTagLocation}</td>
+		      <td class='seqTag'><input type='radio' name='seq' value='<%= FormatHelper.getSeqForwardValue(seq) %>'></td>
+		    </tr>
+		  </c:if>
+		  <c:if test="${not empty otherSequences}">
+		    <c:forEach var="seq" items="${otherSequences}">
+		    <tr>
+		      <td class='seqTag'>${seq.primaryID}<br/>
+			<% seq = (Sequence) pageContext.getAttribute("seq");
+			   if (seq != null) {
+			     primaryID = seq.getPrimaryID();
+			     logicalDB = seq.getLogicalDB();
+			   } else {
+			     // should not happen
+			     primaryID = "n/a";
+			     logicalDB = "GenBank";
+			   }
+			%>
+			(<%= idLinker.getLink (logicalDB, primaryID, logicalDB) %>)
+		      </td>
+		      <c:if test='${not empty seq.preferredGenBankID}'>
+		        <td class='seqTag'>${seq.preferredGenBankID.accID}
+			<br/>
+			(<a href='${configBean.FEWI_URL}sequence/${seq.preferredGenBankID.accID}' class='MP'>MGI Seq Detail</a>)
+			</td>
+		      </c:if>
+		      <td class='seqTag'>${seq.tagMethod}</td>
+		      <td class='seqTagLeft'>${seq.sequenceTagLocation}</td>
+		      <td class='seqTag'><input type='radio' name='seq' value='<%= FormatHelper.getSeqForwardValue(seq) %>'></td>
+		    </tr>
+		    </c:forEach>
+		  </c:if>
+		    <tr>
+		  </form>
+		      <td colspan="2" class='seqTag' style='text-align:center'><b>* ${assemblyVersion}</b><br/>(strand of gene trap mutagenesis)</td>
+		      <td colspan="3" class='seqTag' style='text-align:right'>
+			<form name='seqPullDownForm' id='seqPullDownForm'><i>Selected Tags:</i>
+			  <select name='seqPullDown'>
+			    <option value='download' selected>download
+			    <option value='mouseblast'>MouseBLAST
+			  </select>
+			  <input type='button' value='Go' onClick='formatForwardArgs()'>
+			</form>
+		      </td>
+		    </tr>
+		  </table>
+		</td>
+		</tr>
+		</c:if>
+
+		<c:if test="${(not empty gbrowseLink) and (not empty gbrowseThumbnail)}">
+		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Genome Context:</font>&nbsp;</td>
+		<td width="1%" class='padded' style='vertical-align:top'>
+		  <div style='float:right; cursor:pointer; position:relative; z-index:1' id='rightArrowGenome' onClick='toggleGenomeContext()'><img src='${configBean.WEBSHARE_URL}images/rightArrow.gif'></div>
+		  <div style='float:right; cursor:pointer; display:none; position:relative; z-index:1' id='downArrowGenome' onClick='toggleGenomeContext()'><img src='${configBean.WEBSHARE_URL}images/downArrow.gif'></div>
+		</td>
+		<td class="padded" style='vertical-align:top'>
+		  Genome Browser view of this mutation<br/>
+		  <table id='genomeContextTable' style='display:none'>
+		    <tr><td class='padded' style='border: 2px solid #aaaaaa; text-align:center; background-color: #ffffff'>
+		      <span style='font-size: 90%'><span style='color:blue'>Blue</span> line marks
+		      approximate position of gene trap insertion</span><br/>
+	      	      <a href='${gbrowseLink}' class='anchor' target='_new'><img src='${gbrowseThumbnail}' style='width:290px'></a><p>
+		      ${gbrowseExtraLine}
+		      <a href='${gbrowseLink}' class='MP' target='_new'><span style='font-size: 90%'>${gbrowseLabel}</span></a>
+		    </td></tr>
+		  </table>
+		</td></tr>
+		</c:if>
+      </table>
+      </td> 
+	    <c:if test="${not empty molecularThumbnail and not empty molecularThumbnail.pixeldbNumericID}">
+	   		<c:if test="${(not empty molecularThumbnail) and (not empty molecularThumbnail.caption)}">
+					<td class="padLR"><span>${molecularThumbnail.caption}</span></td>
+			</c:if>
+			<td class='padLR' style='text-align:right'>
+	   		<a href="${configBean.FEWI_URL}image/molecular/${molecularImage.mgiID}">
+	   			<img src='${configBean.PIXELDB_URL}${molecularThumbnail.pixeldbNumericID}'>
+	   		</a>
+	   		</td>
+	   	</c:if>    
+      </tr>
       </table>
       ${fixedDivClose}
     </td>
