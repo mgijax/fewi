@@ -138,7 +138,9 @@ td.top { vertical-align: top; }
 	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#gene_ontology'); return false;" href="${helpPage}#gene_ontology">Gene Ontology (GO) classifications</a>:
 	      </dt>
 	      <dd>
-	        contains <input name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>">
+	      	<textarea id="go" name="go" rows="2" cols="60" placeholder="GO terms or IDs"><c:out value="${queryForm.go}"/></textarea>
+	      
+	        <!-- contains <textarea name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>"> -->
 	        in
 	        <br/>
 	        <span class="example">Example: one two three</span>
