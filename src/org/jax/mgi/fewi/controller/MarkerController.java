@@ -1396,7 +1396,8 @@ public class MarkerController {
 				 List<Filter> containsFilters = new ArrayList<Filter>();
 				 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(go))
 				 {
-					 containsFilters.add(new Filter(goVocab,token,Filter.OP_STRING_CONTAINS));
+					 containsFilters.add(BooleanSearch.buildSolrFilter(goVocab,token));
+					 //containsFilters.add(new Filter(goVocab,token,Filter.OP_STRING_CONTAINS));
 				 }
 				 // AND the contains search tokens
 				 goVocabFilters.add(Filter.and(containsFilters));
