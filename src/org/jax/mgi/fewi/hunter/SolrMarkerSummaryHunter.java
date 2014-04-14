@@ -229,6 +229,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
 //            		highlightList.add(highlightMatch);
 //            	}
             	// only add the first matching highlight
+            	Set<String> goHighlightList = new LinkedHashSet<String>();
             	outer:
             	for(String hf : this.highlightFields)
             	{
@@ -244,15 +245,24 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
                 				hl = hl.replaceAll("/\\$\\$","").replaceAll("\\$\\$","");
             				}
             				String highlightMatch = field+":\""+hl+"\"";
-                    		highlightList.add(highlightMatch);
-                    		// only add the first match in priority order of the orginal list
-                    		if(!hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM) &&
-                    				!hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM) &&
-                    				!hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM))
+                    		if(hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM) ||
+                    				hf.equals(MarkerSummaryFields.GO_PROCESS_TERM) ||
+                    				hf.equals(MarkerSummaryFields.GO_FUNCTION_TERM))
+                    		{
+                    			highlightMatch = "<span style=\"background-color:yellow;\">"+highlightMatch+"</span>";
+                    			goHighlightList.add(highlightMatch);
+                    		}
+                    		else
+                    		{
+                        		// only add the first match in priority order of the orginal list (for marker nomen)
+                        		highlightList.add(highlightMatch);
                     			break outer;
+                    		}
             			}
             		}
             	}
+            	// put go terms last
+            	highlightList.addAll(goHighlightList);
             	
             	// add to solr marker object for convenience
             	marker.setHighlights(highlightList);
