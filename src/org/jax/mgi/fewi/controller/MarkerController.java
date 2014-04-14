@@ -1184,7 +1184,7 @@ public class MarkerController {
         SearchParams params = new SearchParams();
         params.setPaginator(page);
         // if we have nomen query, do text highlighting
-        if(notEmpty(query.getNomen()))
+        if(notEmpty(query.getNomen()) || notEmpty(query.getGo()))
         {
 	        params.setIncludeMetaHighlight(true);
 	        params.setIncludeSetMeta(true);

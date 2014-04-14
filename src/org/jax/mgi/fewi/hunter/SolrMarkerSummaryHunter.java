@@ -75,8 +75,8 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
     				MarkerSummaryFields.GO_TERM
     					),"OR"));
         
-        propertyMap.put(SearchConstants.GO_PROCESS_TERM,new SolrPropertyMapper(MarkerSummaryFields.GO_PROCESS_TERM));
         propertyMap.put(SearchConstants.GO_FUNCTION_TERM,new SolrPropertyMapper(MarkerSummaryFields.GO_FUNCTION_TERM));
+        propertyMap.put(SearchConstants.GO_PROCESS_TERM,new SolrPropertyMapper(MarkerSummaryFields.GO_PROCESS_TERM));
         propertyMap.put(SearchConstants.GO_COMPONENT_TERM,new SolrPropertyMapper(MarkerSummaryFields.GO_COMPONENT_TERM));
 
         
@@ -106,6 +106,10 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         highlightPre = "$$"; // to be replaced later, because we need to superscript the data also
         highlightPost = "/$$";
         
+
+        highlightFields.add(MarkerSummaryFields.GO_PROCESS_TERM);
+        highlightFields.add(MarkerSummaryFields.GO_FUNCTION_TERM);
+        highlightFields.add(MarkerSummaryFields.GO_COMPONENT_TERM);
         // marker highlights
         for(String fieldName : MarkerSummaryFields.NOMEN_FIELDS.values())
         {
@@ -242,7 +246,10 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
             				String highlightMatch = field+":\""+hl+"\"";
                     		highlightList.add(highlightMatch);
                     		// only add the first match in priority order of the orginal list
-                    		break outer;
+                    		if(!hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM) &&
+                    				!hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM) &&
+                    				!hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM))
+                    			break outer;
             			}
             		}
             	}
