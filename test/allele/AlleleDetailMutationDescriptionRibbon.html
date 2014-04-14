@@ -41,6 +41,7 @@
 		<li>MGI 5.18 User story 90, Display Mutagenetix link on Allele Detail page</li>
 		<li>MGI 5.18 User story 105, E5: Allele and marker detail pages in prod wi</li>
 		<li>MGI 5.18 User story 198, E8: Add Australian Phenome Facility(APF) link on Allele Detail page</li>
+		<li>MGI 5.18 User story 156, Caption for Molecular Image Thumbnail</li>
     </ul>
 </div>
 
@@ -54,6 +55,7 @@
 		<li>sto54 - display molecular image in the mutation description ribbon floated to the right</li>
 		<li>sto90 - Display a link to Mutagenetix file on select allele detail pages</li>
 		<li>sto105 - none</li>
+		<li>sto156 - Display thumbnail image caption to the left of molecular image in Mutation Description ribbon</li>
 		<li>st0198 - Display a link to Australian Phenome Facility(APF) file on select allele detail pages</li>
 	</ul>
 </div>
@@ -122,6 +124,18 @@
 					<tr><td>Card11&lt;M2Btlr&gt;</td><td>MGI:5497995</td></tr>
                 </table>
                 </li>
+    		</ol>
+    		</li>
+    		
+    		<li>Allele Detail page displays thumbnail caption to the left of the molecular image in the molecular description ribbon.  (sto156)
+ 			<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for Rabggta&lt;gm&gt; (MGI:1856886) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1856886">link</a>)</li>
+                <li>Verify that to the left of the molecular image is displayed the thumbnail caption</li>
+                <li>The caption should read <b>This image is from Detter JC, Proc Natl Acad Sci U S A 2000 Apr 11;97(8):4144-9. Copyright 2000 National Academy of Sciences, U.S.A.</b></li>
+                                <li>Navigate to the Allele Detail page for Sepp1&lt;tm3.1Rfb&gt; (MGI:5466366) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5466366">link</a>)</li>
+                <li>Verify that to the left of the molecular image is displayed the thumbnail caption</li>
+                <li>The caption should read <b>This image is from Hill KE, J Biol 2012 Nov 23;287(48):40414-24 and is displayed with the permission of the American Society for Biochemistry and Molecular Biology who owns the copyright. Full text from JBC</b></li>
     		</ol>
     		</li>
     		
