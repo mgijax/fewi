@@ -1332,7 +1332,7 @@ public class MarkerController {
         {
         	sorts.add(new Sort(SortConstants.MRK_BY_LOCATION, desc));
         }
-        else if(notEmpty(query.getNomen()))
+        else if(notEmpty(query.getNomen()) || notEmpty(query.getGo()))
         {
         	sorts.add(new Sort("score",true));
         	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
