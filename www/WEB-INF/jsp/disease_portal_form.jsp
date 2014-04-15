@@ -74,7 +74,7 @@
       <div style="position:absolute; top:6px; left:15px; ">
         <span class='queryHeaderText'>Search by genome locations</span></br>
         <div style='margin-left:6px; padding-top:5px;'>
-        <label><input id="organismHuman1" name="organism" class="organism" type="radio" value="human"/>Human(GRCh37)</label>
+        <label><input id="organismHuman1" name="organism" class="organism" type="radio" value="human"/>Human(GRCh38)</label>
         <label><input id="organismMouse1" name="organism" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
         </div>
       </div>
@@ -156,7 +156,7 @@
       </div>
       <div style='margin-left:220px; padding-top:5px;'>
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
-        <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh37)</label>
+        <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh38)</label>
         <label><input id="organismMouse2" name="organismIgnore" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
       	<div id="locationsFileNotify"><c:if test="${not empty locationsFileName}"><span >(Using cached file [${locationsFileName}])</span></c:if></div>
       </div>
