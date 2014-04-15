@@ -1394,13 +1394,15 @@ public class MarkerController {
 			 for(String goVocab : goVocabs)
 			 {
 				 List<Filter> containsFilters = new ArrayList<Filter>();
-				 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(go))
-				 {
-					 containsFilters.add(BooleanSearch.buildSolrFilter(goVocab,token));
-					 //containsFilters.add(new Filter(goVocab,token,Filter.OP_STRING_CONTAINS));
-				 }
+
+				 //containsFilters.add();
+//				 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(go))
+//				 {
+//					 //containsFilters.add(new Filter(goVocab,token,Filter.OP_STRING_CONTAINS));
+//				 }
 				 // AND the contains search tokens
-				 goVocabFilters.add(Filter.and(containsFilters));
+				 //goVocabFilters.add(Filter.and(containsFilters));
+				 goVocabFilters.add(BooleanSearch.buildSolrFilter(goVocab,go));
 			 }
 			 // OR the query against each vocabulary (e.g. function,process,component)
 			 queryFilters.add(Filter.or(goVocabFilters));
