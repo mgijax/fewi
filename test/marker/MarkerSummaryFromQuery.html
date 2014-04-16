@@ -35,6 +35,7 @@
         <li>User story 167, E9: MQ&amp;S: Sorting (5.18)</li>
         <li>User story 168, E9: MQ&amp;S: You searched for (5.18)</li>
         <li>User story 164, E9: MQ&amp;S: Text/Excel downloads (5.18)</li>
+        <li>User story 199, E9: Boolean enable GO and InterPro fields</li>
     </ul>
 </div>
 
@@ -59,6 +60,7 @@
 		<li>sto164: user can download results as an Excel spreadsheet</li>
 		<li>sto164: download columns include the same data as the web display PLUS the MGI id</li>
 		<li>sto164: download columns are separated (where they are combined in the web display)</li>
+		<li>sto199: both the GO and InterPro fields support boolean operators (AND, OR, NOT)</li>
 	</ul>
 </div>
 
@@ -86,7 +88,7 @@
 		<li>Tokens are combined with Boolean AND. </li>
 		<li>Does not include search against allele synonyms.</li>
 		<li>Attempts to recreate, as much as possible, previous code's default sorting if Nomen field is submitted (except now using Solr field boosts):<br/>
-			<b>MRK_label table</b>, April 2014, additional code sorted "exact" matches ahead of matches contained within text strings.
+			<b>MRK_label table</b>, April 2014, additional code sorted "exact" matches ahead of matches contained within text strings. - NEED TO UPDATE THIS TABLE TO REFLECT NEW ORDER. 4/16/2014 -KLF.
 		<table>
 					<tr>
 						<th>labeltype</th>
@@ -651,49 +653,99 @@
     		<ol>
                 <li>Enter <b concordion:set="#go">reticulum</b> in the GO input text field and submit the search.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
                 <li>Verify the genes returned include the following:
-	                <table cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
-						<tr>
-							<th concordion:assertEquals="#symbol">Gene</th>
-							<th>Annotated Term</th>
-							<th>GO sub-DAG</th>
-						</tr>
-						<tr>
-							<td>Srp14</td>
-							<td>endoplasmic reticulum signal peptide binding</td>
-							<td>Molecular Function</td>
-						</tr>
-						<tr>
-							<td>Srp54a</td>
-							<td>endoplasmic reticulum signal peptide binding</td>
-							<td>Molecular Function</td>
-						</tr>
-						<tr>
-							<td>Rab10</td>
-							<td>endoplasmic reticulum tubular network organization</td>
-							<td>Biological Process</td>
-						</tr>
-						<tr>
-							<td>Reep1</td>
-							<td>endoplasmic reticulum tubular network organization</td>
-							<td>Biological Process</td>
-						</tr>
-						<tr>
-							<td>H13</td>
-							<td>integral component of cytoplasmic side of endoplasmic reticulum membrane</td>
-							<td>Cellular Component</td>
-						</tr>
-						<tr>
-							<td>Pkd2</td>
-							<td>integral component of cytoplasmic side of endoplasmic reticulum membrane</td>
-							<td>Cellular Component</td>
-						</tr>
-					</table>
-				</li>
+	                <table
+								cc:verifySupersetOf="#symbol : getSymbolsByGo(#go)">
+								<tr>
+									<th concordion:assertEquals="#symbol">Gene</th>
+									<th>Annotated Term</th>
+									<th>GO sub-DAG</th>
+								</tr>
+								<tr>
+									<td>Srp14</td>
+									<td>endoplasmic reticulum signal peptide binding<br />
+										establishment of protein localization to endoplasmic reticulum<br />
+										signal recognition particle, endoplasmic reticulum targeting
+									</td>
+									<td>Molecular Function<br /> Biological Process<br />
+										Cellular Component
+									</td>
+								</tr>
+								<tr>
+									<td>Srp54a</td>
+									<td>endoplasmic reticulum signal peptide binding<br />
+										establishment of protein localization to endoplasmic reticulum<br />
+										signal recognition particle, endoplasmic reticulum targeting
+									</td>
+									<td>Molecular Function<br /> Biological Process<br />
+										Cellular Component
+									</td>
+								</tr>
+								<tr>
+									<td>Atp2b4</td>
+									<td>sarco(endo)plasmic reticulum Ca2+-ATPase</td>
+									<td>Molecular Function</td>
+								</tr>
+								<tr>
+									<td>Cemip</td>
+									<td>endoplasmic reticulum retention sequence binding<br/>
+										endoplasmic reticulum</td>
+									<td>Molecular Function<br />
+										Cellular Component</td>
+								</tr>
+								<tr>
+									<td>Rab10</td>
+									<td>endoplasmic reticulum tubular network organization<br />
+										endoplasmic reticulum
+									</td>
+									<td>Biological Process<br /> Cellular Component
+									</td>
+								</tr>
+								<tr>
+									<td>Reep1</td>
+									<td>endoplasmic reticulum tubular network organization<br />
+										endoplasmic reticulum
+									</td>
+									<td>Biological Process<br /> Cellular Component
+									</td>
+								</tr>
+								<tr>
+									<td>Crebrf</td>
+									<td>negative regulation of endoplasmic reticulum unfolded
+										protein response</td>
+									<td>Biological Process</td>
+								</tr>
+								<tr>
+									<td>Casq1</td>
+									<td>endoplasmic reticulum organization<br /> sarcoplasmic
+										reticulum
+									</td>
+									<td>Biological Process<br /> Cellular Component
+									</td>
+								</tr>
+								<tr>
+									<td>H13</td>
+									<td>integral component of cytoplasmic side of endoplasmic
+										reticulum membrane</td>
+									<td>Cellular Component</td>
+								</tr>
+								<tr>
+									<td>Pkd2</td>
+									<td>integral component of cytoplasmic side of endoplasmic
+										reticulum membrane</td>
+									<td>Cellular Component</td>
+								</tr>
+								<tr>
+									<td>Jph1</td>
+									<td>endoplasmic reticulum</td>
+									<td>Cellular Component</td>
+								</tr>
+							</table>
+						</li>
     		</ol>
     		</li>
-
-    		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s).
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+    		
+    		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s). RECHECKED FOR STO199.  NEED TO UPDATE WITH DATA FROM TABLE ABOVE.
+ 			<p concordion:assertTrue="true">passed. -klf 4/16/2014</p>
     		<ol>
                 <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
 				<li>Check only the box for <b>Molecular Function</b> and submit the search.</li>
@@ -758,7 +810,7 @@
 					<tr>
 						<td>Srp14</td>
 						<td>endoplasmic reticulum signal peptide binding</td>
-						<td>excluded</td>
+						<td>included</td>
 						<td>Molecular Function</td>
 					</tr>
 					<tr>
@@ -808,7 +860,7 @@
 					<tr>
 						<td>Srp14</td>
 						<td>endoplasmic reticulum signal peptide binding</td>
-						<td>excluded</td>
+						<td>included</td>
 						<td>Molecular Function</td>
 					</tr>
 					<tr>
@@ -826,7 +878,7 @@
 					<tr>
 						<td>Reep1</td>
 						<td>endoplasmic reticulum tubular network organization</td>
-						<td>excluded</td>
+						<td>included</td>
 						<td>Biological Process</td>
 					</tr>
 					<tr>
@@ -897,6 +949,44 @@
 				</li>
     		</ol>
     		</li>
+
+    		<li>The GO input field supports Boolean operators. (sto199)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>step</li>
+ 				<li>step</li>
+ 				<li>step</li>
+ 			</ol>
+    		</li>
+    		
+    		<li>The GO input field supports leading and trailing wildcards (asterisk). (consequence of sto199)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>step</li>
+ 				<li>step</li>
+ 				<li>step</li>
+ 			</ol>
+    		</li>
+    		
+    		<li>The GO input field supports grouping using parentheses. (consequence of sto199)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>step</li>
+ 				<li>step</li>
+ 				<li>step</li>
+ 			</ol>
+    		</li>
+    		
+    		<li>The GO input field supports phrase matching using double quotation marks. (consequence of sto199)
+ 			<p concordion:assertTrue="false">new</p>
+ 			<ol>
+ 				<li>step</li>
+ 				<li>step</li>
+ 				<li>step</li>
+ 			</ol>
+    		</li>
+
+
     		
 		</ol>
    		<h4 id="proteinDomains">Protein domains</h4>
