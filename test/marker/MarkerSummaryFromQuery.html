@@ -1179,38 +1179,74 @@
     		</li>
     		
     		<li>The InterPro input field supports Boolean operators. (sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
 			<ol>
-				<li>step</li>
-				<li>step</li>
+				<li>Enter <b>IPR013806 AND NOT IPR000001</b> and submit the query.</li>
+				<li>Verify that <b>ONLY the following</b> genes are returned:
+				<table>
+					<tr><th>Symbol</th></tr>
+					<tr><td>Bsph1</td></tr>
+					<tr><td>Bsph2</td></tr>
+					<tr><td>Fn1</td></tr>
+					<tr><td>Igf2r</td></tr>
+					<tr><td>Ly75</td></tr>
+					<tr><td>Mmp2</td></tr>
+					<tr><td>Mmp9</td></tr>
+					<tr><td>Mrc1</td></tr>
+					<tr><td>Mrc2</td></tr>
+					<tr><td>Sel1l</td></tr>
+				</table>
+				</li>
+				<li>Enter <b>calmodulin AND spectrin</b> and submit the query.</li>
+				<li>Verify that <b>ONLY the following</b> genes are returned:
+				<table>
+					<tr><th>Symbol</th></tr>
+					<tr><td>Aspm</td></tr>
+					<tr><td>Camsap1</td></tr>
+					<tr><td>Camsap3</td></tr>
+					<tr><td>Vav1</td></tr>
+					<tr><td>Vav2</td></tr>
+					<tr><td>Vav3</td></tr>
+				</table>
+				</li>
+				<li>Enter <b>Runt OR Opiodes</b> and submit the query.</li>
+				<li>Verify that <b>ONLY the following</b> genes are returned:
+				<table>
+					<tr><th>Symbol</th></tr>
+					<tr><td>Pomc</td></tr>
+					<tr><td>Runx1</td></tr>
+					<tr><td>Runx2</td></tr>
+					<tr><td>Runx3</td></tr>
+					<tr><td>Trp53</td></tr>
+					<tr><td>Trp63</td></tr>
+					<tr><td>Trp73</td></tr>
+				</table>
+				</li>
 				<li>step</li>
 			</ol>
     		</li>
     		
     		<li>The InterPro input field supports leading and trailing wildcards (asterisk). (consequence of sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
 			<ol>
-				<li>step</li>
-				<li>step</li>
-				<li>step</li>
+				<li>Enter <b>*piod*</b> and submit the query. (Should find the InterPro domain "Opiodes neuropeptide" IPR013532.)</li>
+				<li>Verify only <b>Pomc</b> is returned.</li>
 			</ol>
     		</li>
     		
     		<li>The InterPro input field supports grouping using parentheses. (consequence of sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
 			<ol>
-				<li>step</li>
-				<li>step</li>
-				<li>step</li>
+				<li>Enter <b>(Runt OR opiodes) AND corticotropin</b> and submit the query.</li>
+				<li>Verify only <b>Pomc</b> is returned.</li>
 			</ol>
     		</li>
     		
     		<li>The InterPro input field supports phrase matching using double quotation marks. (consequence of sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
 			<ol>
-				<li>step</li>
-				<li>step</li>
-				<li>step</li>
+				<li>Enter <b>"opiomelanocortin/corticotropin"</b> and submit the query.</li>
+				<li>Verify only <b>Pomc</b> is returned.</li>
 			</ol>
     		</li>
     		
