@@ -951,38 +951,122 @@
     		</li>
 
     		<li>The GO input field supports Boolean operators. (sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
  			<ol>
- 				<li>step</li>
- 				<li>step</li>
- 				<li>step</li>
+ 				<li>Input <b>GO:0045009 OR GO:0061343</b> and submit the query. <br/>(GO:0045009 - chitosome - 4 markers annotated to a child term "melanosome membrane" GO:0033162; <br/>GO:0061343 - cell adhesion involved in heart morphogenesis - 2 markers annotated to child term "regulation of cell adhesion involved in heart morphogenesis" GO:0061344.)</li>
+ 				<li>Verify that <b>ONLY the following</b> genes are returned:
+ 				<table>
+ 					<tr><th>Symbol</th></tr>
+ 					<tr><td>Gpr143</td></tr>
+ 					<tr><td>Oca2</td></tr>
+ 					<tr><td>Th</td></tr>
+ 					<tr><td>Tyrp1</td></tr>
+ 					<tr><td>Notch1</td></tr>
+ 					<tr><td>Rbpj</td></tr>
+ 				</table>
+ 				</li>
+ 				<li>Input <b>GO:0045009 AND GO:0061343</b> and submit the query. <br/>(GO:0045009 - chitosome - 4 markers annotated to a child term "melanosome membrane" GO:0033162; <br/>GO:0061343 - cell adhesion involved in heart morphogenesis - 2 markers annotated to child term "regulation of cell adhesion involved in heart morphogenesis" GO:0061344.)</li>
+ 				<li>Verify that <b>NO genes</b> are returned.
+ 				<li>Input <b>GO:0031670 AND NOT GO:0071295</b> and submit the query. <br/>(GO:0031670 - cellular response to nutrient - 17 markers annotated to this and child terms; <br/>GO:0071295 - cellular response to vitamin - 7 markers annotated to this and child terms;<br/> GO:0071295 is a child of GO:0031670 so this query should exclude 7 markers brought back by just GO:0031670.)</li>
+ 				<li>Verify that <b>ONLY the following</b> genes are returned.
+ 				<table>
+ 					<tr><th>Symbol</th></tr>
+ 					<tr><td>Cdkn2b</td></tr>
+ 					<tr><td>Chmp1a</td></tr>
+ 					<tr><td>Foxa2</td></tr>
+ 					<tr><td>Ncoa1</td></tr>
+ 					<tr><td>Nr1h4</td></tr>
+ 					<tr><td>Pdk2</td></tr>
+ 					<tr><td>Rrp8</td></tr>
+ 					<tr><td>Srf</td></tr>
+ 					<tr><td>Usf1</td></tr>
+ 					<tr><td>Usf2</td></tr>
+ 				</table>
+ 				</li>
+ 				<li>Verify that the following genes <b>ARE NOT</b> returned.
+ 				<table>
+ 					<tr><th>Symbol</th></tr>
+ 					<tr><td>Cyp27b1</td></tr>
+ 					<tr><td>Gas6</td></tr>
+ 					<tr><td>Med1</td></tr>
+ 					<tr><td>Snai2</td></tr>
+ 					<tr><td>Snw1</td></tr>
+ 					<tr><td>Trim24</td></tr>
+ 					<tr><td>Vdr</td></tr>
+ 				</table>
+ 				</li>
+ 				<li>Input <b>("cellular response to vitamin") AND  NOT (d OR k OR b9 OR k3)</b> and submit the query. <br/>(GO:0031670 - cellular response to nutrient - 17 markers annotated to this and child terms; <br/>GO:0071295 - cellular response to vitamin - 7 markers annotated to this and child terms;<br/> GO:0071295 is a child of GO:0031670 so this query should exclude 7 markers brought back by just GO:0031670.)</li>
+ 				<li>Verify that the following genes <b>ARE NOT</b> returned.
+ 				<table>
+								<tr>
+									<th>Symbol</th>
+								</tr>
+								<tr>
+									<td>Cyp27b1</td>
+								</tr>
+								<tr>
+									<td>Gas6</td>
+								</tr>
+								<tr>
+									<td>Med1</td>
+								</tr>
+								<tr>
+									<td>Snai2</td>
+								</tr>
+								<tr>
+									<td>Snw1</td>
+								</tr>
+								<tr>
+									<td>Trim24</td>
+								</tr>
+								<tr>
+									<td>Vdr</td>
+								</tr>
+								<tr>
+									<td>Bche</td>
+								</tr>
+								<tr>
+									<td>Cbs</td>
+								</tr>
+								<tr>
+									<td>Dcps</td>
+								</tr>
+								<tr>
+									<td>Lrp6</td>
+								</tr>
+								<tr>
+									<td>Ndor1</td>
+								</tr>
+							</table>
+						</li>
  			</ol>
     		</li>
     		
     		<li>The GO input field supports leading and trailing wildcards (asterisk). (consequence of sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
  			<ol>
- 				<li>step</li>
- 				<li>step</li>
- 				<li>step</li>
+ 				<li>Enter <b>postheparin</b> in the GO input field and submit the query.</li>
+ 				<li>Note the number of genes returned (16 as of 4/16/2014).</li>
+ 				<li>Enter <b>posthepar*</b> in the GO input field and submit the query.</li>
+ 				<li>Verify that the same number of genes is returned.</li>
+ 				<li>Enter <b>*stheparin</b> in the GO input field and submit the query.</li>
+ 				<li>Verify that the same number of genes is returned.</li>
+ 				<li>Enter <b>*sthepar*</b> in the GO input field and submit the query.</li>
+ 				<li>Verify that the same number of genes is returned.</li>
  			</ol>
     		</li>
     		
     		<li>The GO input field supports grouping using parentheses. (consequence of sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
  			<ol>
- 				<li>step</li>
- 				<li>step</li>
- 				<li>step</li>
+ 				<li>See results of "AND NOT" text-searching test, above.</li>
  			</ol>
     		</li>
     		
     		<li>The GO input field supports phrase matching using double quotation marks. (consequence of sto199)
- 			<p concordion:assertTrue="false">new</p>
+ 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
  			<ol>
- 				<li>step</li>
- 				<li>step</li>
- 				<li>step</li>
+ 				<li>See results of "AND NOT" text-searching test, above.</li>
  			</ol>
     		</li>
 
