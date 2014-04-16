@@ -152,9 +152,9 @@
     </td>
   </tr>
 
-  <!-- nomen & location -->
+  <!-- nomen & genome location -->
   <tr class="stripe2">
-    <td class="cat2">Nomenclature <br/>& location </td>
+    <td class="cat2">Nomenclature <br/>& genome location </td>
     <td>
     <div class='relativePos' style='height:220px;'>
 
