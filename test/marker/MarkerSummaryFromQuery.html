@@ -88,14 +88,14 @@
 		<li>Tokens are combined with Boolean AND. </li>
 		<li>Does not include search against allele synonyms.</li>
 		<li>Attempts to recreate, as much as possible, previous code's default sorting if Nomen field is submitted (except now using Solr field boosts):<br/>
-			<b>MRK_label table</b>, April 2014, additional code sorted "exact" matches ahead of matches contained within text strings. - NEED TO UPDATE THIS TABLE TO REFLECT NEW ORDER. 4/16/2014 -KLF.
+			<b>MRK_label table</b>, April 2014, additional Python code sorted "exact" matches ahead of matches contained within text strings.
 		<table>
 					<tr>
 						<th>labeltype</th>
 						<th>labeltypename</th>
 						<th>organism name</th>
 						<th>priority</th>
-						<th>New Priority 4/23/2014</th>
+						<th>new order 4/23/2014</th>
 					</tr>
 					<tr>
 						<td>MS</td>
@@ -105,59 +105,52 @@
 						<td>1</td>
 					</tr>
 					<tr>
-						<td>MN</td>
-						<td>current name</td>
+						<td>MY</td>
+						<td>synonym</td>
 						<td>mouse</td>
+						<td>7</td>
 						<td>2</td>
-						<td>2</td>
-					</tr>
-					<tr>
-						<td style="background-color:#FFFFDE;">MY</td>
-						<td style="background-color:#FFFFDE;">synonym</td>
-						<td style="background-color:#FFFFDE;">mouse</td>
-						<td style="background-color:#FFFFDE;">7</td>
-						<td style="background-color:#FFFFDE;">3 ???</td>
-					</tr>
-					<tr>
-						<td>AS</td>
-						<td>allele symbol</td>
-						<td>mouse</td>
-						<td>3</td>
-						<td>4</td>
-					</tr>
-					<tr>
-						<td>AN</td>
-						<td>allele name</td>
-						<td>mouse</td>
-						<td>4</td>
-						<td>5</td>
 					</tr>
 					<tr>
 						<td>MS</td>
 						<td>old symbol</td>
 						<td>mouse</td>
 						<td>5</td>
-						<td>6</td>
-					</tr>
-					<tr>
-						<td>MN</td>
-						<td>old name</td>
-						<td>mouse</td>
-						<td>6</td>
-						<td>7</td>
-					</tr>
-					<tr>
-						<td style="background-color:#FFFFDE;">MY</td>
-						<td style="background-color:#FFFFDE;">synonym</td>
-						<td style="background-color:#FFFFDE;">mouse</td>
-						<td style="background-color:#FFFFDE;">7</td>
-						<td style="background-color:#FFFFDE;">3 ???</td>
+						<td>3</td>
 					</tr>
 					<tr>
 						<td>MY</td>
 						<td>human synonym</td>
 						<td>human</td>
 						<td>8</td>
+						<td>4</td>
+					</tr>
+					<tr>
+						<td>MN</td>
+						<td>current name</td>
+						<td>mouse</td>
+						<td>2</td>
+						<td>5</td>
+					</tr>
+					<tr>
+						<td>AS</td>
+						<td>allele symbol</td>
+						<td>mouse</td>
+						<td>3</td>
+						<td>6</td>
+					</tr>
+					<tr>
+						<td>AN</td>
+						<td>allele name</td>
+						<td>mouse</td>
+						<td>4</td>
+						<td>7</td>
+					</tr>
+					<tr>
+						<td>MN</td>
+						<td>old name</td>
+						<td>mouse</td>
+						<td>6</td>
 						<td>8</td>
 					</tr>
 					<tr>
@@ -244,14 +237,21 @@
 	<h4>GO and Protein Domain (InterPro)</h4>
 	<ul>
 		<li>Performs a tokenized query against Solr index.</li>
-		<li>No wildcards. Uses MGI's standard &quot;contains text string&quot; approach (e.g., query for <i>rough</i> also returns matches for <i>through</i>, query for <i>ear</i> would also return <i>hear</i> and <i>heart</i>).</li>
-		<li>Boolean support is desired in the future.</li>
+		<li>Performs stemming.</li>
+		<li>Supports initial and trailing wildcards.</li>
+		<li>Supports quotation marks for phrase matching.</li>
+		<li>Supports parentheses for grouping.</li>
+		<li>Supports Booleans AND, OR, NOT, AND NOT. Default is OR.</li>
+		<li>The 3 GO DAG root node terms are excluded.</li>
 	</ul>
 
 	<h4>Pheno/Disease</h4>
 	<ul>
 		<li>Performs a tokenized query against Solr index.</li>
 		<li>Initial and trailing wildcard symbols (asterisk) are supported.</li>
+		<li>Supports quotation marks for phrase matching.</li>
+		<li>Supports parentheses for grouping.</li>
+		<li>Supports Booleans AND, OR, NOT, AND NOT. Default is OR.</li>
 		<li>Returns only genes having annotated alleles in One Marker Genotypes (OMG) or "Simple" genotypes: 2-marker Conditional genotypes and 2-marker genotypes involving a Transgenic Reporter.
 		<ul><li>EXCLUDES markers for annotated alleles present only in Complex genotypes (unlike the Allele Query): genotypes having 3 or more markers.</li></ul></li>
 		<li>Excludes Recombinase markers in Conditional genotypes.</li>
