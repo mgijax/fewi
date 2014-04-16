@@ -33,7 +33,7 @@ ${templateBean.templateBodyStartHtml}
 <div id="titleBarWrapper" userdoc="ALLELE_summary_help.shtml">
   <span class="titleBarMainTitle">Phenotypic Alleles</span>
   <br>
-  <span class="titleBarSubTitle"> Query Results -- Summary</span>
+  <span class="titleBarSubTitle"> Search Results -- Summary</span>
 </div>
 
 <div id="outer" >
