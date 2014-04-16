@@ -1357,7 +1357,11 @@ public class MarkerController {
         String nomen = query.getNomen();
         if(notEmpty(nomen))
         {
-        	 Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,nomen);
+        	 Filter nomenFilter = Filter.or(Arrays.asList(
+        			 FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,nomen),
+        			 // try to boost an exact match
+        			 new Filter(SearchConstants.MRK_SYMBOL,"\""+nomen+"\"^1000000000000",Filter.OP_HAS_WORD)
+        			 ));
 			 if(nomenFilter!=null) queryFilters.add(nomenFilter);
         }
 
