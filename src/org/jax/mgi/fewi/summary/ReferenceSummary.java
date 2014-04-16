@@ -136,7 +136,7 @@ public class ReferenceSummary {
         	sb.append(String.format("<li>Functional annotations (GO): <a href=\"%sgo/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfGOAnnotations()));
         }
         if(reference.getCountOfMarkers() > 0){
-        	sb.append(String.format("<li>Genome features: <a href=\"%ssearches/marker_report_by_reference.cgi?%s\">%,d</a></li>", wiUrl, this.reference.getReferenceKey(), this.reference.getCountOfMarkers()));
+        	sb.append(String.format("<li>Genome features: <a href=\"%smarker/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfMarkers()));
         }
         if(reference.getCountOfAlleles() > 0){
         	sb.append(String.format("<li>Phenotypic alleles: <a href=\"%sallele/reference/%s\">%,d</a></li>", fewiUrl, this.reference.getJnumID(), this.reference.getCountOfAlleles()));
