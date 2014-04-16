@@ -168,7 +168,8 @@ td.top { vertical-align: top; }
 	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#interpro'); return false;" href="${helpPage}#interpro">InterPro Protein Domains</a>:
         </dt>
         <dd>
-         contains <input name="interpro" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.interpro}"/>">
+         <%-- contains <input name="interpro" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.interpro}"/>"> --%>
+         <textarea id="interpro" name="interpro" rows="2" cols="60" placeholder="InterPro Protein Domains terms or IDs"><c:out value="${queryForm.interpro}"/></textarea>
           <br/>
           <span class="example">Example: four five six</span>
         </dd>

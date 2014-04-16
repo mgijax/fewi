@@ -1184,7 +1184,7 @@ public class MarkerController {
         SearchParams params = new SearchParams();
         params.setPaginator(page);
         // if we have nomen query, do text highlighting
-        if(notEmpty(query.getNomen()) || notEmpty(query.getGo()))
+        if(notEmpty(query.getNomen()) || notEmpty(query.getGo()) || notEmpty(query.getInterpro()))
         {
 	        params.setIncludeMetaHighlight(true);
 	        params.setIncludeSetMeta(true);
@@ -1332,7 +1332,7 @@ public class MarkerController {
         {
         	sorts.add(new Sort(SortConstants.MRK_BY_LOCATION, desc));
         }
-        else if(notEmpty(query.getNomen()) || notEmpty(query.getGo()))
+        else if(notEmpty(query.getNomen()) || notEmpty(query.getGo()) || notEmpty(query.getInterpro()))
         {
         	sorts.add(new Sort("score",true));
         	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
@@ -1376,13 +1376,14 @@ public class MarkerController {
 		 String interpro = query.getInterpro();
 		 if(notEmpty(interpro))
 		 {
-			 List<Filter> interproFilters = new ArrayList<Filter>();
-
-			 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(interpro))
-			 {
-				 interproFilters.add(new Filter(SearchConstants.INTERPRO_TERM,token,Filter.OP_STRING_CONTAINS));
-			 }
-			 queryFilters.add(Filter.and(interproFilters));
+//			 List<Filter> interproFilters = new ArrayList<Filter>();
+//
+//			 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(interpro))
+//			 {
+//				 interproFilters.add(new Filter(SearchConstants.INTERPRO_TERM,token,Filter.OP_STRING_CONTAINS));
+//			 }
+//			 queryFilters.add(Filter.and(interproFilters));
+			 queryFilters.add(BooleanSearch.buildSolrFilter(SearchConstants.INTERPRO_TERM,interpro));
 		 }
 
 		 //GO
@@ -1393,7 +1394,8 @@ public class MarkerController {
 			 List<Filter> goVocabFilters = new ArrayList<Filter>();
 			 if(!(notEmpty(goVocabs) && goVocabs.size()<3))
 			 {
-				 goVocabs = Arrays.asList(SearchConstants.GO_TERM);
+				// goVocabs = Arrays.asList(SearchConstants.GO_TERM);
+				 goVocabs = new ArrayList<String>(query.getGoVocabDisplay().keySet());
 			 }
 			 for(String goVocab : goVocabs)
 			 {

@@ -100,7 +100,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         /*
          * Which fields to highlight
          */
-        highlightRequireFieldMatch=false; // we want to highlight fields that we are not querying
+        highlightRequireFieldMatch=true; // we want to highlight fields that we are not querying
         highlightFragmentSize=100;
         highlightSnippets = 1;
         highlightPre = "$$"; // to be replaced later, because we need to superscript the data also
@@ -110,6 +110,8 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         highlightFields.add(MarkerSummaryFields.GO_PROCESS_TERM);
         highlightFields.add(MarkerSummaryFields.GO_FUNCTION_TERM);
         highlightFields.add(MarkerSummaryFields.GO_COMPONENT_TERM);
+        highlightFields.add(MarkerSummaryFields.INTERPRO_TERM);
+
         // marker highlights
         for(String fieldName : MarkerSummaryFields.NOMEN_FIELDS.values())
         {
@@ -247,7 +249,8 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
             				String highlightMatch = field+":\""+hl+"\"";
                     		if(hf.equals(MarkerSummaryFields.GO_COMPONENT_TERM) ||
                     				hf.equals(MarkerSummaryFields.GO_PROCESS_TERM) ||
-                    				hf.equals(MarkerSummaryFields.GO_FUNCTION_TERM))
+                    				hf.equals(MarkerSummaryFields.GO_FUNCTION_TERM) ||
+                    				hf.equals(MarkerSummaryFields.INTERPRO_TERM))
                     		{
                     			highlightMatch = "<span style=\"background-color:yellow;\">"+highlightMatch+"</span>";
                     			goHighlightList.add(highlightMatch);
