@@ -356,6 +356,7 @@ public class SolrHunter implements Hunter {
          * allows us to handle any special cases for properties using a single
          * interface.
          */
+    	if(filter==null) return "";
     	String filterProperty = filter.getProperty();
     	SolrPropertyMapper pm;
     	if(!propertyMap.containsKey(filterProperty))

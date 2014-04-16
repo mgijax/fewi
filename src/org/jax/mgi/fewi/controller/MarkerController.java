@@ -1360,7 +1360,7 @@ public class MarkerController {
         	 Filter nomenFilter = Filter.or(Arrays.asList(
         			 FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,nomen),
         			 // try to boost an exact match
-        			 new Filter(SearchConstants.MRK_SYMBOL,"\""+nomen+"\"^1000000000000",Filter.OP_HAS_WORD)
+        			 new Filter(SearchConstants.MRK_SYMBOL,"\""+nomen.replace("\"","")+"\"^1000000000000",Filter.OP_HAS_WORD)
         			 ));
 			 if(nomenFilter!=null) queryFilters.add(nomenFilter);
         }
@@ -1397,6 +1397,7 @@ public class MarkerController {
 				// goVocabs = Arrays.asList(SearchConstants.GO_TERM);
 				 goVocabs = new ArrayList<String>(query.getGoVocabDisplay().keySet());
 			 }
+			 goVocabs.add(SearchConstants.MRK_TERM_ID);
 			 for(String goVocab : goVocabs)
 			 {
 				 List<Filter> containsFilters = new ArrayList<Filter>();

@@ -31,6 +31,7 @@ public class SearchConstants {
     // marker constants
     public static final String MRK_KEY              = "marker_key";
     public static final String MRK_ID               = "marker_id";
+	public static final String MRK_TERM_ID 			= "markerTermId";
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_NOMENCLATURE			= "nomenclature";
 	public static final String FEATURE_TYPE = "featureType";	
@@ -176,5 +177,4 @@ public class SearchConstants {
 	
 	// genotype constants
 	public static final String GENOTYPE_TYPE = "genotypeType";
-
 }

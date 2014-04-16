@@ -42,6 +42,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         propertyMap.put(SearchConstants.MRK_SYMBOL, new SolrPropertyMapper(IndexConstants.MRK_SYMBOL));
         propertyMap.put(SearchConstants.MRK_KEY,new SolrPropertyMapper(IndexConstants.MRK_KEY));
         propertyMap.put(SearchConstants.MRK_ID, new SolrPropertyMapper(IndexConstants.MRK_ID));
+        propertyMap.put(SearchConstants.MRK_TERM_ID,new SolrPropertyMapper(IndexConstants.MRK_TERM_ID));
         propertyMap.put(SearchConstants.REF_KEY, new SolrPropertyMapper(IndexConstants.REF_KEY));
         propertyMap.put(SearchConstants.FEATURE_TYPE_KEY,new SolrPropertyMapper(MarkerSummaryFields.FEATURE_TYPE_KEY));
         propertyMap.put(SearchConstants.FEATURE_TYPE,new SolrPropertyMapper(MarkerSummaryFields.FEATURE_TYPE));
