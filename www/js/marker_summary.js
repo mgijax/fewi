@@ -48,7 +48,7 @@ function main() {
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
         template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-        pageReportTemplate : "Showing alleles {startRecord} - {endRecord} of {totalRecords}",
+        pageReportTemplate : "Showing markers {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [50,100,250,500],
         containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 100,
@@ -61,7 +61,9 @@ function main() {
         paginator : myPaginator,
         dynamicData : true,
         draggableColumns : false,
-        initialLoad : false
+        initialLoad : false,
+        MSG_LOADING:  '<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...',
+        MSG_EMPTY:    'No markers found.'
     };  
     
     // DataTable instance

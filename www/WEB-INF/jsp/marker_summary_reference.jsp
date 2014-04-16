@@ -37,20 +37,24 @@ ${templateBean.templateBodyStartHtml}
        <b>Reference</b>
   </td>
   <td class="summaryHeaderData1">
-    <a style="font-size:x-large;  font-weight: bold;" 
-      href="${configBean.FEWI_URL}reference/${reference.jnumID}">${reference.jnumID}</a>
-    <br/>
+    <a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;"
+      href="${configBean.FEWI_URL}reference/${reference.jnumID}">
+      ${reference.jnumID}
+    </a>
+
+    <div style="padding:4px;"> </div>
+
+    ${reference.shortCitation}
   </td>
 </tr>
 </table>
 
-
-<!-- paginator -->
-<div style="width:700px;"></div>
-<div id="rightcolumn">
-		<div class="innertube">
-			<div id="paginationTop">&nbsp;</div>
-		</div>
+<div id="summary">
+	<div id="rightcolumn" style="float: right;">
+			<div class="innertube">
+				<div id="paginationTop">&nbsp;</div>
+			</div>
+	</div>
 </div>
 
 <!-- data table div: filled by YUI, called via js below -->
