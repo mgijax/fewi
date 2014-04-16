@@ -148,6 +148,7 @@ function main() {
 
     // Called by Browser History Manager to trigger a new state
     var handleHistoryNavigation = function (request) {
+    	myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);
     	// Sends a new request to the DataSource
         myDataSource.sendRequest(request,{
             success : myDataTable.onDataReturnSetRows,
