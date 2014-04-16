@@ -95,12 +95,12 @@
 
           // update the you selected section
           _form.phenotype.value = phenoInput + " " + selectedMpIds;
-         // window.opener.document.getElementById("selectedMpTextDiv").innerHTML = "You selected:<ul>" + selectedMpText + "</ul>";
+         // window.opener.document.getElementById("selectedMpTextDiv").innerHTML = "Categories selected from systems list:<ul>" + selectedMpText + "</ul>";
         }
         else 
         {
           _form.phenotype.value = selectedMpIds;
-         // window.opener.document.getElementById("selectedMpTextDiv").innerHTML = "You selected:<ul>" + selectedMpText + "</ul>";
+         // window.opener.document.getElementById("selectedMpTextDiv").innerHTML = "Categories selected from systems list:<ul>" + selectedMpText + "</ul>";
         }
     }
 

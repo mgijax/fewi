@@ -65,7 +65,7 @@
         }
 		if(mpTextLines.length>0)
 		{
-			$("#selectedMpTextDiv").html("You selected:<ul>" + mpTextLines.join("") + "</ul>");
+			$("#selectedMpTextDiv").html("Categories selected from systems list:<ul>" + mpTextLines.join("") + "</ul>");
 		}
 		else
 		{
