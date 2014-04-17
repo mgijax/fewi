@@ -5,13 +5,13 @@ ${templateBean.templateHeadHtml}
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<title>Phenotypes, Alleles & Disease Models Query Form</title>
+<title>Phenotypes, Alleles & Disease Models Search Form</title>
 
 ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="ALLELE_help.shtml">
-  <span class="titleBarMainTitle">Phenotypes, Alleles & Disease Models Query Form</span>
+  <span class="titleBarMainTitle">Phenotypes, Alleles & Disease Models Search Form</span>
 </div>
 <c:set var="helpPage" value="${configBean.USERHELP_URL}ALLELE_help.shtml"/>
 
