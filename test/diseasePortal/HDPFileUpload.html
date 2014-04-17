@@ -37,7 +37,7 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 
 
-    <title>HDP: Querying by Disease Genes output</title>
+    <title>HDP File Uploads</title>
 </head>
 
 <body>
@@ -46,9 +46,10 @@ tr.gray td {background-color:#EEEEEE;}
 </div>
 
 <div id="maintitle">
-    <h1>HDP:  Add an Upload File button to accept VCF File Format</h1>
+    <h1>HDP File Uploads</h1>
     <ul>
-		<li>User Story 158, Query form: Upload files of coordinates - VCF Format</li>
+		<li>User Story 158, Query form: Upload files of coordinates - VCF Format (5.16)</li>
+		<li>User story 129, HDP: Upload file of gene symbols/ids (5.18)</li>
     </ul>
 </div>
 
@@ -71,13 +72,10 @@ tr.gray td {background-color:#EEEEEE;}
 			<li>(Remember that "." counts as empty)</li>
 		</ul>
 		</li>
-<!-- REPLACED ITEMS BELOW WITH ACCEPTANCE CRITERIA FROM THE KUNAGI STORY
-        <li>US158: Add an upload file option to the HDP query form</li>
-        <li>US158: Confirm you can upload a file of format type VCF</li>
-        <li>US158: Confirm you can upload a VCF file with human data</li>
-        <li>US158: Confirm you can upload a VCF file with mouse data</li>
-        <li>US158: Confirm you get an error when trying to upload a corrupted VCF file</li>
- -->
+		<li>(sto129) nomenclature search offers a file upload option</li>
+		<li>(sto129) accepts whatever the type-in accepts</li>
+		<li>(sto129) single column file</li>
+		<li>(sto129) only limited by system resources</li>
 	</ul>
 
 </div>
@@ -183,6 +181,71 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify clicking the "GO" button returns no data (i.e., the file was not processed and uploaded).</li> 
     		</ol>
     		</li>
+
+    		<li>A tab-delimited file containing a single column listing gene symbols returns the same results as the same gene symbols would if typed into the interface input field. (sto129)
+    		<p concordion:assertTrue="true">passed. -klf 4/17/2014</p>
+    		<ol>
+                <li>On the Human-Mouse: Disease Connection page, enter <b>105830</b> (Angelman Syndrome; AS) in the "Search by disease or phenotype terms" input area and submit the query.</li>
+                <li>On the Genes tab, click the button to "Export: Text File". Edit to include only a single column of data containing gene symbols (some mouse, some human). Save the file.<br/>
+                	(<em>Note: as of 4/17/2014 there were 5 genes with 4 unique gene symbols associated with this disease.</em>)</li>
+                <li>On the Human-Mouse: Disease Connection page, click the button to upload a file of genes.</li>
+                <li>Select the file from step 2 and upload it.</li>
+                <li>Verify that the "processing" window reports the same number of rows as are in the file. Click the "OK" button to continue.</li>
+                <li>Click the "GO" button to submit the file.</li>
+                <li>Note the number of results returned on the <b>Grid tab</b>, on the <b>Genes tab</b>, and on the <b>Diseases tab</b>.</li>
+                <li>Clear the HMDC query form.</li>
+                <li>From the upload file in step 2, copy the marker symbols and paste into the "Search by gene" input field and click the "Go" button to submit the query.</li>
+                <li>Verify that the same number of results were returned on the <b>Grid tab</b>, on the <b>Genes tab</b>, and on the <b>Diseases tab</b>.</li>
+            </ol>
+    		</li>
+
+    		<li>A tab-delimited file containing a single column listing gene IDs returns the same results as the same gene IDs would if typed into the interface input field. (sto129)
+    		<p concordion:assertTrue="true">passed. -klf 4/17/2014</p>
+    		<ol>
+                <li>On the Marker Query Form, enter <b>168600</b> (Parkinson Disease, Late-Onset; PD) in the "Phenotype/Human Disease" input area and submit the query.</li>
+                <li>From the results summary table, click the button to "Export: Text File". Edit to include only a single column of data containing gene IDs. Save the file.<br/>
+                	(<em>Note: as of 4/17/2014 there were 5 markers associated with this disease.</em>)</li>
+                <li>On the Human-Mouse: Disease Connection page, click the button to upload a file of genes.</li>
+                <li>Select the file from step 2 and upload it.</li>
+                <li>Verify that the "processing" window reports the same number of rows as are in the file. Click the "OK" button to continue.</li>
+                <li>Click the "GO" button to submit the file.</li>
+                <li>Note the number of results returned on the <b>Grid tab</b>, on the <b>Genes tab</b>, and on the <b>Diseases tab</b>.</li>
+                <li>Clear the HMDC query form.</li>
+                <li>From the upload file in step 2, copy the marker IDs and paste into the "Search by gene" input field and click the "Go" button to submit the query.</li>
+                <li>Verify that the same number of results were returned on the <b>Grid tab</b>, on the <b>Genes tab</b>, and on the <b>Diseases tab</b>.</li>
+            </ol>
+    		</li>
+
+    		<li>The "Reset" button clears the uploaded file from the cache. (sto129)
+    		<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>From the test above, select the file from step 2 and upload it.</li>
+                <li>Verify that the "processing" window reports the same number of rows as are in the file. Click the "OK" button to continue.</li>
+                <li>Click the "GO" button to submit the file.</li>
+                <li>Open the query form area and click the "Reset" button.</li>
+                <li>Verify that the filename is removed from the interface.</li>
+                <li>Verify the interface displays text "No file chosen".</li>
+                <li>Click the "Go" button.</li>
+                <li>Verify no genes are returned.</li>
+            </ol>
+    		</li>
+
+    		<li>A comma-delimited or Excel format file is not supported. (sto129) HOW WILL WE TEST THIS? IT GIVES UNDEFINED RESULTS - DO WE NEED "WE DO NOT SUPPORT" AND SOME WARNING IN THE INTERFACE? IF OTHER THAN .txt FILE EXTENSION, REFUSE UPLOAD AND WARN USER?
+    		<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>step</li>
+                <li>step</li>
+            </ol>
+    		</li>
+
+    		<li>Test
+    		<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>step</li>
+                <li>step</li>
+            </ol>
+    		</li>
+
 
     	</ol>	
 	</div>
