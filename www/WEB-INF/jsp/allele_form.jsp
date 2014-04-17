@@ -177,7 +177,7 @@
       <a class='userhelpLink'
       href="http://www.informatics.jax.org/userhelp/ALLELE_help.shtml#chromosome"
       onclick='javascript:openUserhelpWindow("ALLELE_help.shtml#chromosome"); return false;'
-      >Chromosome</a>:
+      >Chromosome(s)</a>:
       </div>
       <div style="position:absolute; top:60px; left:100px; width:150px;">
       <select id="chromosomeDropList" name="chromosome" multiple="multiple" size="7">

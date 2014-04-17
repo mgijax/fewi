@@ -33,9 +33,7 @@ ${templateBean.templateBodyStartHtml}
 <!-- header bar -->
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="ALLELE_summary_help.shtml">
-  <span class="titleBarMainTitle">Phenotypic Alleles</span>
-  <br>
-  <span class="titleBarSubTitle"> Query Results -- Summary</span>
+  <span class="titleBarMainTitle">Phenotypes, Alleles & Disease Models Search</span>
 </div>
 
 
