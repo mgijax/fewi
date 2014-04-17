@@ -77,13 +77,77 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Test 1
-<!-- 			<p concordion:assertTrue="false">new test</p> -->
+    		<li>The linked Markers count on the References summary opens the new FEWI marker summary page. 
+ 			<p concordion:assertTrue="false">new</p> 
     		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
+                <li>Open the References query form.</li>
+                <li>Enter <b>Bult</b> in the Authors field.</li>
+                <li>Select <b>Bult CJ</b> from the autocomplete and submit the query.</li>
+                <li>For J:182007, verify the link for <b>11</b> genome features opens the FEWI marker summary page.</li>
+                <li>Verify <b>11</b> markers were returned.</li>
+                <li>Verify the Reference ribbon appears at the top of the page:
+                	<ul>
+                	<li>J: number</li>
+                	<li>short reference format (first author, title, journal, date, volume, issue, page numbers)</li>
+                	</ul>
+                </li>
     		</ol>
     		</li>
+
+    		<li>The linked Markers count on the Quick Search opens the new FEWI marker summary page.
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>Enter <b>IPR000001</b> in the Quick Search and submit the search.</li>
+                <li>Verify the link for <b>15 genes, 15 annotations</b> in the Vocabulary section opens the FEWI marker summary page.</li>
+                <li>Verify <b>15</b> markers were returned.</li>
+                <li>Verify the "You searched for..." section displays:
+                <ul>
+                	<li>InterPro Protein Domain: contains <b>IPR000001</b></li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>The "View all MGI genes/markers within returned coordinate ranges." link on the SNP summary opens the new FEWI marker summary page.
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>Open the SNP Query Form.</li>
+                <li>In the Map Position ribbon, enter Marker Range <b>Between: D19Mit32  and: Tbx10  </b> and submit the query.</li>
+                <li>On the Mouse SNPs Query Results -- Summary page, verify the <b>MGI genes/markers</b> link opens the FEWI marker summary page.</li>
+                <li>Verify that <b>32</b> markers were returned.</li>
+                <li>Verify the "You searched for..." section displays:
+                <ul>
+                	<li>on Chromosome: any of <b>[19]</b></li> 
+					<li>AND Genome Coordinates: <b>3278551.0-3999511.0</b> bp</li>
+                </ul>
+				</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
+    		<li>Test
+ 			<p concordion:assertTrue="false">new</p> 
+    		<ol>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+                <li>Step</li>
+    		</ol>
+    		</li>
+
 		</ol>
 	</div>
 
