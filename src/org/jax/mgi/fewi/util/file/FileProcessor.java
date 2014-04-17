@@ -36,6 +36,10 @@ public class FileProcessor
 	  */
 	 public static VcfProcessorOutput processVCFCoordinates(MultipartFile vcf) throws IOException
 	 {
+		 return processVCFCoordinates(vcf,true,true);
+	 }
+	 public static VcfProcessorOutput processVCFCoordinates(MultipartFile vcf,boolean kickIds,boolean kickBadFilters) throws IOException
+	 {
 		 InputStream inputStream = vcf.getInputStream();
 		 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		 
@@ -58,7 +62,7 @@ public class FileProcessor
 			 
 			 // check if ID column exists
 			 int idColStringStart = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_ID_COL-1);
-			 if(idColStringStart>0)
+			 if(idColStringStart>0 && kickIds)
 			 {
 				 int idColStringStop = line.indexOf(VCF_COL_DELIM,idColStringStart+1);
 				 
@@ -73,7 +77,7 @@ public class FileProcessor
 			 
 			 // check the filter column if it exists
 			 int filterColStart = getNthIndexOfCharacter(line,VCF_COL_DELIM,VCF_FILTER_COL-1);
-			 if(filterColStart>0)
+			 if(filterColStart>0 && kickBadFilters)
 			 {
 				 int filterColStop = line.indexOf(VCF_COL_DELIM,filterColStart+1);
 				 

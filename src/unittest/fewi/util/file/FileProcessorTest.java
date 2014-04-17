@@ -112,8 +112,8 @@ public class FileProcessorTest
 		VcfProcessorOutput po = FileProcessor.processVCFCoordinates(mockFile("test",
 				Arrays.asList("chr2\t3456\t.\tC\tT\t28601.2\tPASS\t",
 						"chr2\t3456\t\tC\tT\t28601.2\tPASS\t",
-						"chr2\t3456\tID:12345\tC\tT\t28601.2\tfalse\t",
-						"chr2\t3456\t1345\tC\tT\t28601.2\t\t")
+						"chr2\t3456\tID:12345\tC\tT\t28601.2\tPASS\t",
+						"chr2\t3456\t1345\tC\tT\t28601.2\tPASS\t")
 						));
 
 		Assert.assertEquals(4,po.getRowsProcessed());
@@ -122,6 +122,54 @@ public class FileProcessorTest
 		Assert.assertEquals(0,po.getRowsKickedWithNoData());
 		Assert.assertEquals(0,po.getRowsKickedWithNotPass());
 		Assert.assertEquals(2,po.getRowsKickedWithId());
+	}
+	
+	@Test
+	public void testVCFDisableIDFilter() throws IOException
+	{
+		VcfProcessorOutput po = FileProcessor.processVCFCoordinates(mockFile("test",
+				Arrays.asList(
+						"chr2\t3456\tID:12345\tC\tT\t28601.2\tPASS\t",
+						"chr2\t3456\t1345\tC\tT\t28601.2\tPASS\t")
+						),false,true);
+
+		Assert.assertEquals(2,po.getRowsProcessed());
+		Assert.assertEquals(2,po.getRowsWithCoordinates());
+		Assert.assertEquals(0,po.getRowsKicked());
+		Assert.assertEquals(0,po.getRowsKickedWithNoData());
+		Assert.assertEquals(0,po.getRowsKickedWithNotPass());
+		Assert.assertEquals(0,po.getRowsKickedWithId());
+	}
+	
+	@Test
+	public void testVCFDisableBadFilters() throws IOException
+	{
+		VcfProcessorOutput po = FileProcessor.processVCFCoordinates(mockFile("test",
+				Arrays.asList("chr2\t3456\t.\tC\tT\t28601.2\tPASS\t",
+						"chr2\t3456\t\tC\tT\t28601.2\tfail\t")
+						),true,false);
+
+		Assert.assertEquals(2,po.getRowsProcessed());
+		Assert.assertEquals(2,po.getRowsWithCoordinates());
+		Assert.assertEquals(0,po.getRowsKicked());
+		Assert.assertEquals(0,po.getRowsKickedWithNoData());
+		Assert.assertEquals(0,po.getRowsKickedWithNotPass());
+		Assert.assertEquals(0,po.getRowsKickedWithId());
+	}
+	@Test
+	public void testVCFDisableAllFilters() throws IOException
+	{
+		VcfProcessorOutput po = FileProcessor.processVCFCoordinates(mockFile("test",
+				Arrays.asList("chr2\t3456\tID:12340\tC\tT\t28601.2\tPASS\t",
+						"chr2\t3456\t\tC\tT\t28601.2\tfail\t")
+						),false,false);
+
+		Assert.assertEquals(2,po.getRowsProcessed());
+		Assert.assertEquals(2,po.getRowsWithCoordinates());
+		Assert.assertEquals(0,po.getRowsKicked());
+		Assert.assertEquals(0,po.getRowsKickedWithNoData());
+		Assert.assertEquals(0,po.getRowsKickedWithNotPass());
+		Assert.assertEquals(0,po.getRowsKickedWithId());
 	}
 	
 	/*
