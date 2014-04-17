@@ -1582,11 +1582,11 @@ order by count(*) desc
  			</ol>
     		</li>
     			
-    		<li>Default sort order when a field other than the Nomenclature field is submitted is MGI's "smart alpha" by Marker Symbol.
+    		<li>Default sort order when genomic location rather than the Nomenclature field is submitted is MGI's "smart alpha" by Marker Symbol.
  			<p concordion:assertTrue="false">new</p>
  			<ol>
- 				<li>Enter <b>monooxygenase</b> in the GO input field and submit the query.</li>
- 				<li>Verify that the <b>cytochrome P450</b> families of markers are in "smart alpha" order.</li>
+ 				<li>Select chromosome <b>Y</b> and submit the query.</li>
+ 				<li>Verify that markers are in "smart alpha" order.</li>
  			</ol>
     		</li>
 
@@ -1603,9 +1603,9 @@ order by count(*) desc
     		<li>On-demand sort by clicking the "Symbol" column header in Summary output resorts all returned data in "smart alpha" order by Symbol.
  			<p concordion:assertTrue="false">new</p>
  			<ol>
- 				<li>Enter <b>cytochrome</b> in the Nomenclature input field and submit the query.</li>
+ 				<li>Select chromosome <b>Y</b> and submit the query.</li>
  				<li>Click the <b>Symbol</b> column header.</li>
- 				<li>Verify that the <b>cytochrome P450</b> families of markers are in "smart alpha" order.</li>
+ 				<li>Verify that markers are in "smart alpha" order.</li>
  			</ol>
     		</li>
 
