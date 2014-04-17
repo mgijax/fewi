@@ -15,7 +15,14 @@ var QFHeight = 100; // height of the qf during animation (should be close to the
 YAHOO.namespace("hdp.container"); 
 YAHOO.hdp.container.panelVcf = new YAHOO.widget.Panel("locationsFileHelp", { width:"520px", draggable:false, visible:false, constraintoviewport:true } ); 
 YAHOO.hdp.container.panelVcf.render(); 
-YAHOO.util.Event.addListener("locationsFileHelpImg", "mouseover", YAHOO.hdp.container.panelVcf.show, YAHOO.hdp.container.panelVcf, true); 
+//YAHOO.util.Event.addListener("locationsFileHelpImg", "mouseover", YAHOO.hdp.container.panelVcf.show, YAHOO.hdp.container.panelVcf, true);
+var _locationsFileHelpTOID;
+$("#locationsFileHelpImg").on("mouseover",function(e){
+	_locationsFileHelpTOID = setTimeout(function(){YAHOO.hdp.container.panelVcf.show()},500);
+});
+$("#locationsFileHelpImg").on("mouseout",function(e){
+	if(_locationsFileHelpTOID) clearTimeout(_locationsFileHelpTOID);
+});
 
 // ---------- functions for handling form submit action -----------
 //Instead of submitting the form, do an AJAX request
@@ -68,6 +75,7 @@ var resetQF = function (e) {
 	form.locations.value = "";
 	form.organism[1].checked = true;
 	form.locationsFileName.value = "";
+	form.geneFileName.value = "";
 	
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
@@ -78,6 +86,10 @@ var resetQF = function (e) {
 		if (typeof resetLocationsFileFields == 'function')
 		{
 			resetLocationsFileFields();
+		}
+		if (typeof resetGeneFileFields == 'function')
+		{
+			resetGeneFileFields();
 		}
 	}
 
@@ -126,6 +138,11 @@ var updateQuerySummary = function() {
 		ysfText += "<br/>"
 		ysfText += "Genes matching [<b>"+$('<div/>').text(values["genes"]).html()+"</b>]";
 	}
+	if ("geneFileName" in values && values["geneFileName"]!="")
+	{
+		ysfText += "<br/>"
+		ysfText += "Genes matching [<b id=\"ysf-geneFile\">file="+$('<div/>').text(values["geneFileName"]).html()+"</b>]";
+	}
 	if ("locations" in values && values["locations"]!="")
 	{
 		ysfText += "<br/>"
@@ -158,7 +175,7 @@ var checkFileUploadCache = function()
 {
 	var data = querystring;
 	var request = $.ajax({
-		url:fewiurl+"diseasePortal/isFileCached",
+		url:fewiurl+"diseasePortal/isLocationsFileCached",
 		type: "post",
 		data: data
 	});
@@ -180,6 +197,30 @@ var checkFileUploadCache = function()
 			}
 		}
     })
+    
+    var request2 = $.ajax({
+		url:fewiurl+"diseasePortal/isGeneFileCached",
+		type: "post",
+		data: data
+	});
+	request.done(function (response, textStatus, jqXHR){
+		if(textStatus=="success")
+		{
+			// display warning if it doesn't exist
+			$("#ysf-geneFile").append("&nbsp;<span style=\"color:red;\">"+response+"</span>");
+			
+			// update the cached message
+//		    var values = serializeQF();
+//			if (response=="" && "geneFileName" in values && values["geneFileName"]!="")
+//			{
+//				//$("#geneFileNotify").show().html("<br/><span>(Using cached file ["+values["geneFileName"]+"])</span>");
+//			}
+//			else
+//			{
+//				$("#geneFileNotify").hide().html("");
+//			}
+		}
+    })
 
 }
 
@@ -196,6 +237,7 @@ function openSummaryControl()
 	// also ensure that the qf is closed
 	// call the toggle function with no animation
 	if(qDisplay==false) toggleQF(null,true);
+	repositionUploadWidgets();
 }
 
 // Close all the controls tagged with the summaryControl class
@@ -230,6 +272,10 @@ var getQueryString = function()
 	var params = [];
 	if("phenotypes" in values && values["phenotypes"]!="") params.push("phenotypes="+values["phenotypes"]);
 	if("genes" in values && values["genes"]!="") params.push("genes="+values["genes"]);
+	if("geneFileName" in values && values["geneFileName"]!="")
+	{
+		params.push("geneFileName="+values["geneFileName"]);
+	}
 	if("locations" in values && values["locations"]!="")
 	{
 		params.push("locations="+values["locations"]);

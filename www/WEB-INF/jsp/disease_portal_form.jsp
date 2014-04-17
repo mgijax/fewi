@@ -58,6 +58,7 @@
       </div>
       <div style="position:absolute; top:60px; left:6px; ">
       <form:textarea path="genes" style="height:80px; width:240px;" class=""/>
+      <div id="geneFilePlaceholder" style="height:30px; width: 1px;"></div>
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Bmp4">Bmp4</a>,
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Pax*">Pax*</a>,
@@ -106,6 +107,7 @@
     </div>
 
     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
+    <input id="geneFileName" type="hidden" name="geneFileName" value="${geneFileName}">
     <input type="hidden" name="fGene" id="fGene" />
 	<input type="hidden" name="fHeader" id="fHeader" />
 	<input type="hidden" name="numDCol" id=numDCol />
@@ -113,10 +115,10 @@
       name="submit" class="formButtons" value="GO" type="submit"><br/>
     <input id="reset1" class="formButtons"
       style="position:absolute; top:265px; left:700px; width:60px; font-size:14px;" type="reset" >
-
     </form:form>
 
     <div style="position:absolute; top:220px; left:20px; width:600px;">
+		<br/>
       <div style='font-size:150%;'>
         ------------------------------------------------------------------------
       </div>
@@ -164,8 +166,15 @@
 	    <input type="hidden" name="type" value="vcf">
       </form>
     </div>
-
-
+	<div id="geneFileDiv" style="position:absolute; top:140px;">
+		<form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
+			id="hiddenFileForm2" name="hiddenFileForm" target="hiddenfileform_if">
+			<span style="">Upload a File: <input id="geneFileInput" type="file" name="file"></span>
+			<div id="geneFileNotify"><c:if test="${not empty geneFileName}"><span >(Using cached file [${geneFileName}])</span></c:if></div>
+			<input type="hidden" name="field" value="geneFile">
+		    <input type="hidden" name="type" value="singleCol">
+		</form>
+	</div>
 
     </div>
   </div> <!-- hdpQueryFormWrapper -->

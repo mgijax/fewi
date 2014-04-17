@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import mgi.frontend.datamodel.hdp.*;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
@@ -28,15 +28,15 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.summary.HdpDiseaseSummaryRow;
-import org.jax.mgi.fewi.summary.HdpMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
 import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
+import org.jax.mgi.fewi.summary.HdpMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -44,6 +44,7 @@ import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
+import org.jax.mgi.fewi.util.file.FileProcessorOutput;
 import org.jax.mgi.fewi.util.file.VcfProcessorOutput;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
@@ -146,6 +147,9 @@ public class DiseasePortalController
 		if(notEmpty(queryString) && !queryString.contains("tab=")) queryString += "&tab=gridtab";
 		model.addAttribute("querystring", queryString);
 		
+		boolean useGeneFile = DiseasePortalController.usingGenefileQuery(query,session);
+		if(useGeneFile) model.addAttribute("geneFileName",(String) session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME));
+		
 		boolean useLocationsFile = DiseasePortalController.usingLocationsQuery(query,session);
 		if(useLocationsFile) model.addAttribute("locationsFileName",(String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 		
@@ -153,13 +157,29 @@ public class DiseasePortalController
 
     }
     
-    @RequestMapping("/isFileCached")
+    @RequestMapping("/isLocationsFileCached")
     public @ResponseBody String checkIfLocationsFileIsCached(HttpServletRequest request,
     		HttpSession session,
     		@ModelAttribute DiseasePortalQueryForm query)
     {
     	boolean useLocationsFile = DiseasePortalController.usingLocationsQuery(query,session);
-    	if(!useLocationsFile) return "(Warning: File must be re-uploaded to see results)";
+    	if(notEmpty(query.getLocationsFileName()) && !useLocationsFile)
+    	{
+    		return "(Warning: File must be re-uploaded to see results)";
+    	}
+    	return "";
+    }
+    
+    @RequestMapping("/isGeneFileCached")
+    public @ResponseBody String checkIfGeneFileIsCached(HttpServletRequest request,
+    		HttpSession session,
+    		@ModelAttribute DiseasePortalQueryForm query)
+    {
+    	boolean useGeneFile = DiseasePortalController.usingGenefileQuery(query,session);
+    	if(notEmpty(query.getGeneFileName()) && !useGeneFile)
+    	{
+    		return "(Warning: File must be re-uploaded to see results)";
+    	}
     	return "";
     }
     
@@ -191,7 +211,11 @@ public class DiseasePortalController
 			session.setAttribute(field,null);
 
 			// set the filename
-			if(DiseasePortalQueryForm.LOCATIONS_FILE_VAR.equals(field))
+			if(DiseasePortalQueryForm.GENE_FILE_VAR.equals(field))
+			{
+				session.setAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME,filename);
+			}
+			else if(DiseasePortalQueryForm.LOCATIONS_FILE_VAR.equals(field))
 			{
 				session.setAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME,filename);
 			}
@@ -199,7 +223,7 @@ public class DiseasePortalController
 			{
 		        try {
 					String dataString="";
-		        	if(DiseasePortalQueryForm.VCF_FILE_TYPE.equalsIgnoreCase(type))
+					if(DiseasePortalQueryForm.VCF_FILE_TYPE.equalsIgnoreCase(type))
 		        	{
 		        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
 
@@ -243,15 +267,32 @@ public class DiseasePortalController
 			        		dataString = "true";
 		        		}
 		        	}
+					else if(DiseasePortalQueryForm.SINGLE_COL_TYPE.equalsIgnoreCase(type))
+					{
+						logger.debug("processing single column file ["+file.getOriginalFilename()+"]");
+
+						FileProcessorOutput po = FileProcessor.processSingleCol(file);
+						dataString = po.getValueString();
+		        		logger.debug("finished processing single column file ["+file.getOriginalFilename()+"]");
+		        		mav.addObject("singleColOutput",po);
+		        		
+		        		logger.debug("valueString = "+dataString);
+		        		if(!notEmpty(dataString))
+		        		{
+		        			logger.debug("no data found in file");
+		        			mav.addObject("error","No data found in uploaded file.");
+		    				return mav;
+		        		}
+					}
 	
 		        	// save the data in the session;
 		        	session.setAttribute(field,dataString);
 				} catch (IOException e) {
-					logger.error("error reading HDP upload file",e);
+					logger.error("error reading HMDC upload file",e);
 					mav.addObject("error","File reading IOException");
 					return mav;
 				} catch (Exception e) {
-					logger.error("error processing HDP upload file",e);
+					logger.error("error processing HMDC upload file",e);
 					mav.addObject("error","Server threw Exception, "+e.getMessage());
 					return mav;
 				}
@@ -1206,6 +1247,13 @@ public class DiseasePortalController
 			Filter genesFilter = generateHdpNomenFilter(SearchConstants.MRK_NOMENCLATURE, genes);
 			if(genesFilter != null) qFilters.add(genesFilter);
 		}
+		
+		String geneFileValue = (String) session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR);
+		if(notEmpty(geneFileValue) && usingGenefileQuery(query,session))
+		{
+			Filter genesFilter = generateHdpNomenFilter(SearchConstants.MRK_NOMENCLATURE, geneFileValue);
+			if(genesFilter != null) qFilters.add(genesFilter);
+		}
 
         // location entry box
 		String locations = query.getLocations();
@@ -1422,6 +1470,12 @@ public class DiseasePortalController
 	{
 		String locationsFileName = query.getLocationsFileName();
 		return locationsFileName!=null && locationsFileName.equals((String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
+	}
+	
+	private static boolean usingGenefileQuery(DiseasePortalQueryForm query, HttpSession session)
+	{
+		String geneFileName = query.getGeneFileName();
+		return geneFileName!=null && geneFileName.equals((String) session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME));
 	}
 
 }

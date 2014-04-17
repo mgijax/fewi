@@ -4,16 +4,17 @@
 *
 *   @author kstone
 */
-function HDPFileUploadWidget(originalFormId)
+function HDPFileUploadWidget(config)
 {
-    this.formId = originalFormId;
+    this.formId = config.formId;
     
     // CONSTANTS
-    this.originalFileInputId = "locationsFileInput";
-    this.originalFileNameInputId = "locationsFileName";
+    this.originalFileInputId = config.fileInputId || "locationsFileInput";
+    this.originalFileNameInputId = config.fileNameInputId || "locationsFileName";
+    this.originalFileNotifyId = config.fileNotifyId || "locationsFileNotify";
     this.iframeId = "hiddenfileform_if";
     this.iframeContentId = this.iframeId + "_content";
-    this.hiddenFormId = "hiddenFileForm";
+    this.hiddenFormId = config.hiddenFormId || "hiddenFileForm";
     this.hiddenFileInputId = "hiddenFile";
     this.hiddenFieldInputId = "hiddenField";
     this.hiddenTypeInputId = "hiddenType";
@@ -55,7 +56,7 @@ function HDPFileUploadWidget(originalFormId)
     
     _self.setLocationsFileSession = function(e)
     {
-		$("#locationsFileNotify").hide();
+		$("#"+_self.originalFileNotifyId).hide();
     	var files = null;
     	if(this.files) files = this.files;
 
@@ -133,7 +134,7 @@ function HDPFileUploadWidget(originalFormId)
     
     _self.resetLocationsFields = function()
     {
-    	var fileInput = $("#locationsFileInput");
+    	var fileInput = $("#"+_self.originalFileInputId);
 		try{
 			fileInput.val("");
 		} catch (err){
@@ -141,7 +142,7 @@ function HDPFileUploadWidget(originalFormId)
 			// And when this error does happen, we don't need the above line anyway.
 		}
 		fileInput.replaceWith( fileInput = fileInput.clone( true ) );
-		$("#locationsFileName").val("");
+		$("#"+_self.originalFileNameInputId).val("");
     }
     
     _self.popAlert = function(msg,hideButton)
@@ -169,17 +170,24 @@ function HDPFileUploadWidget(originalFormId)
     }
 }
 
-var resetLocationsFileFields;
+var resetLocationsFileFields,resetGeneFileFields;
 var repositionUploadWidgets = function()
 {
+	$("#geneFileDiv").position({of:$("#geneFilePlaceholder"),my:"right"});
 	//$("#locationsFileDiv").position({of:$("#locationsFileHome"),my:"right"});
 }
 var HDP_FUW;
+var HDP_FUW_GENES;
 $(function(){
 	// position the upload inside the proper div
 	repositionUploadWidgets();
 	
-	HDP_FUW = new HDPFileUploadWidget("diseasePortalQueryForm");
+	HDP_FUW = new HDPFileUploadWidget({formId:"diseasePortalQueryForm"});
+	HDP_FUW_GENES = new HDPFileUploadWidget({formId:"diseasePortalQueryForm",
+		fileInputId: "geneFileInput",
+		fileNameInputId: "geneFileName",
+		fileNotifyId: "geneFileNotify",
+		hiddenFormId: "hiddenFileForm2"});
 	resetLocationsFileFields=function(){
 		HDP_FUW.resetLocationsFields();
 		/*
@@ -191,5 +199,17 @@ $(function(){
 		setTimeout(HDP_FUW.setLocationsFileSession,200); 
 	}
 	
+	resetGeneFileFields=function(){
+		HDP_FUW_GENES.resetLocationsFields();
+		/*
+		 *  Setting a timeout here shouldn't make a damn difference, 
+		 *  	but there is a weird race condition with YUI's history manager
+		 *  	when called inside the reset button's event handler.
+		 *  I'm just glad that this at least solves it.
+		 */
+		setTimeout(HDP_FUW_GENES.setLocationsFileSession,200); 
+	}
+	
 	$("#locationsFileInput").change(HDP_FUW.setLocationsFileSession);
+	$("#geneFileInput").change(HDP_FUW_GENES.setLocationsFileSession);
 });

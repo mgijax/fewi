@@ -24,6 +24,7 @@ public class DiseasePortalQueryForm
     private String termHeader;
     private String termId;
     private String locationsFileName;
+    private String geneFileName;
     private int numDCol=100;
     
     // Filter queries
@@ -37,6 +38,8 @@ public class DiseasePortalQueryForm
     public static final String MOUSE = "mouse";
     
     // constants for file processing
+    public static final String GENE_FILE_VAR = "geneFile";
+    public static final String GENE_FILE_VAR_NAME = "geneFileName";
     public static final String LOCATIONS_FILE_VAR = "locationsFile";
     public static final String LOCATIONS_FILE_VAR_NAME = "locationsFileName";
     public static final String LOCATIONS_FILE_VAR_MOUSE_KEYS = "locationsFileMouseKeys";
@@ -45,9 +48,10 @@ public class DiseasePortalQueryForm
     public static List<String> ACCEPTABLE_FILE_VARS;
     static
     {
-    	ACCEPTABLE_FILE_VARS = Arrays.asList(LOCATIONS_FILE_VAR);
+    	ACCEPTABLE_FILE_VARS = Arrays.asList(GENE_FILE_VAR,LOCATIONS_FILE_VAR);
     }
     public static final String VCF_FILE_TYPE = "vcf";
+    public static final String SINGLE_COL_TYPE = "singleCol";
 
 
     public DiseasePortalQueryForm()
@@ -122,6 +126,15 @@ public class DiseasePortalQueryForm
 	public void setLocationsFileName(String locationsFileName) {
 		this.locationsFileName = locationsFileName;
 	}
+	
+	public String getGeneFileName() {
+		return geneFileName;
+	}
+
+	public void setGeneFileName(String geneFileName) {
+		this.geneFileName = geneFileName;
+	}
+	
 	
 	public boolean getHasLocationsQuery()
 	{

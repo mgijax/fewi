@@ -11,13 +11,16 @@
 		<c:if test="${not empty humanMatch}"><li>${humanMatch} Genes Matched On Human Genome</li></c:if>
 		</ul>
 	</c:if>
+	<c:if test="${not empty singleColOutput}">
+		<li>${singleColOutput.validRows} Gene Values Included</li>
+	</c:if>
 	<c:if test="${empty success}">
 		<br/>Sometimes this is due to an incompatible file format (Unicode text).
 			Refer to our <a target="_blank" href="${configBean.USERDOCS_URL}disease_connection_help.shtml#vcf" 
 				onclick="javascript:openUserhelpWindow('disease_connection_help.shtml#vcf'); return false;">help doc</a> 
 				for any questions about data-processing or file formats.
 	</c:if>
-	<c:if test="${not empty success}">
+	<c:if test="${not empty success && not empty vcfOutput}">
 		<br/>Please verify your organism selection before hitting "GO".
 	</c:if>
 </div>

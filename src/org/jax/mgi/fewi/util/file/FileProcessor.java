@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +27,8 @@ public class FileProcessor
 	 private static int VCF_ID_COL = 2;
 	 private static int VCF_FILTER_COL = 6;
 	 private static int VCF_ROW_LIMIT = 200000;
+	 
+	 private static int SINGLE_COL_ROW_LIMIT = 1000000;
 	 
 	 /*
 	  * Reads throught a VCF file to find all the coordinates.
@@ -108,6 +108,42 @@ public class FileProcessor
 		 return vpo;
 	 }
 	 
+
+	 /*
+	  * Reads throught a single column file to find all the rows.
+	  * 	Appends them all to the result string as comma separated list.
+	  * 	Assumes: each row in the file is a single column
+	  */
+	 public static FileProcessorOutput processSingleCol(MultipartFile file) throws IOException
+	 {
+		 InputStream inputStream = file.getInputStream();
+		 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		 
+		 FileProcessorOutput po = new FileProcessorOutput();
+		 
+		 StringBuilder sb = new StringBuilder("");
+		 String line;
+		 int count=0;
+		 while ((line = bufferedReader.readLine()) != null)
+		 {
+			 if(count++ > SINGLE_COL_ROW_LIMIT) break;
+			 //logger.debug("line="+line);
+			 // ignore comment lines
+			 po.addProcessedRow();
+			 line = line.trim();
+			 if(line.length()<1) { po.kickRowWithNoData(); continue; }
+			
+			 sb.append(line).append(",");
+			 po.addValidRow();
+		 }
+		 bufferedReader.close();
+		 inputStream.close();
+
+		 logger.debug("po = "+po);
+		 po.setValueString(sb.toString());
+		 return po;
+	}
+		
 	 /*
 	  * utility function to get nth occurance of a character in a sourceString 
 	  */
