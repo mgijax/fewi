@@ -340,9 +340,13 @@ tr.gray td {background-color:#EEEEEE;}
  			
  			(sto136)<p concordion:assertTrue="false">new</p> 
  			<ol>
- 				<li>On the HMDC Portal, query for ...</li>
- 				<li>From the Grid Tab, click the cell in the row for ... and the column for ...</li>
- 				<li>Verify that the pop-up contains IMSR links for <b>...</b> and <b>...</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers.</li>
+ 				<li>On the HMDC Portal, query for  gene: <b>G6pc</b>.</li>
+ 				<li>From the Grid Tab, click the cell in the row for G6pc and the column for Glycogen Storage Disease</li>
+ 				<li>Verify that the pop-up contains IMSR links for <b>G6pc</b> and <b>Alb</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers (2 and 24 as of 4/18/2014).</li>
+ 				<li>Reset the query. Query for disease: <b>151400</b> (Leukemia, Chronic Lymphocytic; CLL).</li>
+ 				<li>From the Grid Tab, click the cell in the row for <b>Del(14Trim13-Rnaseh2b)6Rdf</b> and the column for <b>Leukemia, Chronic Lymphocytic</b>.</li> 
+ 				<li>Verify that a count of "strains or lines" for <b>Del(14Trim13-Rnaseh2b)6Rdf</b> does not appear (there are no strains at IMSR as of 4/18/2014).</li>
+ 				<li>Verify that the count of "strains or lines" for <b>Cd19</b> is 7 (as of 4/18/2014).</li>
  			</ol>
 			</li> 
 
