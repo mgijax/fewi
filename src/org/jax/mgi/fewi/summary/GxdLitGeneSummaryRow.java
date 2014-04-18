@@ -85,7 +85,7 @@ public class GxdLitGeneSummaryRow {
     public List<String> getSynonyms() {
 	Marker marker = record.getMarker();
 	List<MarkerSynonym> markerSynonyms = marker.getSynonyms();
-	List<String> synonyms = new ArrayList();
+	List<String> synonyms = new ArrayList<String>();
 
 	for (MarkerSynonym markerSynonym: markerSynonyms) {
 		synonyms.add(markerSynonym.getSynonym());

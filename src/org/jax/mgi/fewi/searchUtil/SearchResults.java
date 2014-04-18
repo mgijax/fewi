@@ -213,12 +213,12 @@ public class SearchResults<T> {
     }
 }
 
-class FacetSorter implements Comparator {
+class FacetSorter implements Comparator<String> {
     public FacetSorter() {}
 
-    public int compare (Object a, Object b) {
-	String a1 = a.toString().toLowerCase();
-	String b1 = b.toString().toLowerCase();
+    public int compare (String a, String b) {
+	String a1 = a.toLowerCase();
+	String b1 = b.toLowerCase();
 
 	return a1.compareTo(b1);
     }

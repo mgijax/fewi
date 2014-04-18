@@ -29,7 +29,7 @@ public class BatchFinder {
     private Logger logger = LoggerFactory.getLogger(BatchFinder.class);
 
     @Autowired
-    private HibernateBatchSummaryHunter<BatchMarkerId> batchMarkerHunter;
+    private HibernateBatchSummaryHunter batchMarkerHunter;
 
 
     /*---------------------------------*/

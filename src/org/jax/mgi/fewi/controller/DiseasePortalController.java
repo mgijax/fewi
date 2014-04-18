@@ -188,7 +188,9 @@ public class DiseasePortalController
     		HttpSession session,
     		@RequestParam("file") MultipartFile file,
     		@RequestParam("field") String field,
-    		@RequestParam("type") String type) {
+    		@RequestParam("type") String type,
+    		@RequestParam(value="enableVcfFilter",required=false) String enableVcfFilter)
+    {
 
         logger.debug("-> diseasePortal -> uploadFile -> POST started"); 
         
@@ -226,11 +228,16 @@ public class DiseasePortalController
 					if(DiseasePortalQueryForm.VCF_FILE_TYPE.equalsIgnoreCase(type))
 		        	{
 		        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
-
-						VcfProcessorOutput vpo = FileProcessor.processVCFCoordinates(file);
+		        		
+		        		boolean enableFilters = notEmpty(enableVcfFilter);
+		        		boolean kickIds = enableFilters;
+		        		boolean kickBadFilters = enableFilters;
+		        		logger.debug("kickIds="+kickIds+", kickBadFilters="+kickBadFilters);
+						VcfProcessorOutput vpo = FileProcessor.processVCFCoordinates(file,kickIds,kickBadFilters);
 						dataString = vpo.getCoordinates();
 		        		logger.debug("finished processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
 		        		mav.addObject("vcfOutput",vpo);
+		        		mav.addObject("enableVcfFilter",enableFilters);
 		        		
 		        		if(!notEmpty(dataString))
 		        		{
@@ -1310,7 +1317,6 @@ public class DiseasePortalController
 	private Filter generateHdpNomenFilter(String property, String query){
 		//logger.debug("splitting nomenclature query into tokens");
 		Collection<String> nomens = QueryParser.parseNomenclatureSearch(query,false,"\"");
-		Filter nomenFilter = new Filter();
 		List<Filter> nomenFilters = new ArrayList<Filter>();
 		// we want to group all non-wildcarded tokens into one solr phrase search
 		List<String> nomenTokens = new ArrayList<String>();
@@ -1331,9 +1337,8 @@ public class DiseasePortalController
 		}
 
 		if(nomenFilters.size() > 0) {
-			nomenFilter.setNestedFilters(nomenFilters,Filter.FC_OR);
 			// add the nomenclature search filter
-			return nomenFilter;
+			return Filter.or(nomenFilters);
 		}
 		// We don't want to return an empty filter object, because it screws up Solr.
 		return null;
@@ -1463,7 +1468,7 @@ public class DiseasePortalController
 				}
 			}
 		}
-		return new ArrayList(markerKeys);
+		return new ArrayList<String>(markerKeys);
 	}
 	
 	private static boolean usingLocationsQuery(DiseasePortalQueryForm query, HttpSession session)

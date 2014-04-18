@@ -7,10 +7,10 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.jax.mgi.fewi.template.WebTemplate;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,11 +55,13 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
         }
 
         try {
-            propertiesConfig = new PropertiesConfiguration((File) ac.getResource("fewi.properties").getFile());
+        	propertiesConfig = new CompositeConfiguration();
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration((File) ac.getResource("fewi.properties").getFile()));
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration((File) ac.getResource("common.solr.properties").getFile()));
         } catch (ConfigurationException e) {
-            logger.error("Error with the configuration file.");
+            logger.error("Error with the configuration file.",e);
         } catch (IOException e) {
-            logger.error("File not found.");
+            logger.error("File not found.",e);
         }
         
         /*

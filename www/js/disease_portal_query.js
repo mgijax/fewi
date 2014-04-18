@@ -95,6 +95,7 @@ var resetQF = function (e) {
 
 	// don't forget to match the mirrored organism radio
 	$("#organismMouse2").prop("checked",true);
+	$("#enableVcfFilter").prop("checked",true);
 
 	// clear the validation errors
 	clearValidation();

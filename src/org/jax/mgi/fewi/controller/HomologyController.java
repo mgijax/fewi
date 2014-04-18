@@ -17,7 +17,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.jax.mgi.fewi.util.TextFileReader;
+import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
 
 /*-------*/
 /* class */

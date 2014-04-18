@@ -20,6 +20,7 @@ import mgi.frontend.datamodel.util.DatamodelUtils;
 import org.jax.mgi.fewi.util.TreeNode;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jax.org.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -254,45 +255,17 @@ public class FormatHelper
     /**
      * for a given collection, create a comma delimited string
      */
-    public static String commaDelimit (Collection c)
+    public static String commaDelimit (Collection<String> collection)
     {
-        String commaDelimString = new String("");
-
-        for (Iterator i = c.iterator(); i.hasNext(); ) {
-            String nextValue = (String)i.next();
-
-            if (nextValue != null) {
-                if (!commaDelimString.equals("")) {
-                        commaDelimString = commaDelimString + ", ";
-                }
-
-            commaDelimString = commaDelimString + nextValue;
-            }
-        }
-
-        return commaDelimString;
+    	return StringUtils.join(collection,", ");
     }
 
     /**
      * for a given collection, create a pipe delimited string
      */
-    public static String pipeDelimit (Collection c)
+    public static String pipeDelimit (Collection<String> collection)
     {
-        StringBuffer pipeDelimBuffer = new StringBuffer();
-
-        for (Iterator i = c.iterator(); i.hasNext(); ) 
-        {
-        	String nextValue = (String)i.next();
-            if (nextValue != null) {
-                pipeDelimBuffer.append(nextValue);
-
-                if (i.hasNext()) {
-                    pipeDelimBuffer.append(" | ");
-                }
-
-            }
-        }
-        return pipeDelimBuffer.toString();
+    	return StringUtils.join(collection," | ");
     }
 
 

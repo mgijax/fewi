@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.util;
+package org.jax.mgi.fewi.util.file;
 
 import java.util.*;
 import java.io.*;
@@ -19,22 +19,27 @@ public class TextFileReader
     return readFile(new File(fullPath));
   } 
 
-  // read the contents of 'myFile' and return them as a newline-delimited
-  // String.  Returns null if 'myFile' does not exist in the file system.
-  public static String readFile (File myFile) throws IOException {
-
-    if (!myFile.exists()) {
+  /* read the contents of 'file' and return them as a newline-delimited
+   * String.  Returns null if 'file' does not exist in the file system.
+   */
+  public static String readFile (File file) throws IOException 
+  {
+    if (!file.exists()) {
       return null;
     }
 
     String line = null;
     StringBuffer contents = new StringBuffer();
 
-    BufferedReader inFile = new BufferedReader(new FileReader(myFile));
+    BufferedReader inFile = new BufferedReader(new FileReader(file));
 
     while ((line = inFile.readLine()) != null) {
       contents.append (line);
       contents.append ("\n");
+    }
+    if(contents.length()>0)
+    {
+    	contents.deleteCharAt(contents.length()-1); // remove last \n
     }
     inFile.close();
 

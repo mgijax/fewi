@@ -26,8 +26,6 @@ public class HibernateAccessionSummaryHunter<T> {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	private Class type;
-	
 	private Map<String, List<String>> typeMap = new HashMap<String, List<String>>();
 	
     public HibernateAccessionSummaryHunter() {
@@ -54,7 +52,6 @@ public class HibernateAccessionSummaryHunter<T> {
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
 
         logger.debug("-> hunt");         
-        type = Accession.class;   	
     	
     	StringBuffer hql = new StringBuffer("FROM Accession WHERE");
     	logger.debug("parse id"); 

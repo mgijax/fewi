@@ -1125,7 +1125,7 @@ public class MarkerController {
 	    reports.put(probeset.getPlatform(), probeset.getReportName());
 	}
 
-	ArrayList<String> reportList = new ArrayList(reports.keySet());
+	ArrayList<String> reportList = new ArrayList<String>(reports.keySet());
 	Collections.sort(reportList);
 
 	mav.addObject("reportsOrdered", reportList);

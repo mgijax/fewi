@@ -31,7 +31,7 @@ public class QueryFormOptionFinder {
     private Logger logger = LoggerFactory.getLogger(QueryFormOptionFinder.class);
 
     @Autowired
-    private HibernateQueryFormOptionHunter<QueryFormOption> queryFormOptionHunter;
+    private HibernateQueryFormOptionHunter queryFormOptionHunter;
 
     /*----------------*/
     /* public methods */
@@ -40,37 +40,34 @@ public class QueryFormOptionFinder {
     /* Convenience method for easy retrieval of a list of options for a given
      * query form and field
     */
-    public SearchResults<QueryFormOption> getQueryFormOptions(String formName,
-	String fieldName) {
-
-	List<Filter> filterList = new ArrayList<Filter>();
-	SearchResults<QueryFormOption> searchResults = 
-	    new SearchResults<QueryFormOption>();
-
-	// if either parameter is null, just return no options
-	if ((formName == null) || (fieldName == null)) {
-	    return searchResults;
-	}
-
-	filterList.add(new Filter (SearchConstants.FORM_NAME, formName,
-	    Filter.OP_EQUAL) );
-
-	filterList.add(new Filter (SearchConstants.FIELD_NAME, fieldName,
-	    Filter.OP_EQUAL) );
-
-	Filter containerFilter = new Filter();
-	containerFilter.setFilterJoinClause(Filter.FC_AND);
-	containerFilter.setNestedFilters(filterList);
-
-	SearchParams searchParams = new SearchParams();
-	searchParams.setFilter (containerFilter);
-	searchParams.setPageSize (1000);
-
-	return this.getQueryFormOptions(searchParams);
+    public SearchResults<QueryFormOption> getQueryFormOptions(String formName,String fieldName) 
+	{
+		List<Filter> filterList = new ArrayList<Filter>();
+		SearchResults<QueryFormOption> searchResults =  new SearchResults<QueryFormOption>();
+	
+		// if either parameter is null, just return no options
+		if ((formName == null) || (fieldName == null)) {
+		    return searchResults;
+		}
+	
+		filterList.add(new Filter (SearchConstants.FORM_NAME, formName,Filter.OP_EQUAL) );
+	
+		filterList.add(new Filter (SearchConstants.FIELD_NAME, fieldName,Filter.OP_EQUAL) );
+	
+		Filter containerFilter = new Filter();
+		containerFilter.setFilterJoinClause(Filter.FC_AND);
+		containerFilter.setNestedFilters(filterList);
+	
+		SearchParams searchParams = new SearchParams();
+		searchParams.setFilter (containerFilter);
+		searchParams.setPageSize (1000);
+	
+		return this.getQueryFormOptions(searchParams);
     }
 
     /* Retrieval of multiple QueryFormOption objects */
-    public SearchResults<QueryFormOption> getQueryFormOptions(SearchParams searchParams) {
+    public SearchResults<QueryFormOption> getQueryFormOptions(SearchParams searchParams) 
+    {
         logger.debug("->getQueryFormOptions");
 
         // result object to be returned

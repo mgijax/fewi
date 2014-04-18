@@ -416,8 +416,6 @@ public class IDLinker {
 		private String name;
 		private String displayName;
 
-		private ActualDB() {}
-
 		public ActualDB(String name) {
 			this.name = name;
 		}

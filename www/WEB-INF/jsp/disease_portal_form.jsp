@@ -58,7 +58,6 @@
       </div>
       <div style="position:absolute; top:60px; left:6px; ">
       <form:textarea path="genes" style="height:80px; width:240px;" class=""/>
-      <div id="geneFilePlaceholder" style="height:30px; width: 1px;"></div>
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Bmp4">Bmp4</a>,
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Pax*">Pax*</a>,
@@ -66,6 +65,7 @@
       <br/><br/>
       Enter symbols, names or ids.<br/>
       Use * for wildcard.
+      <div id="geneFilePlaceholder" style="height:30px; width: 1px;"></div>
       </div>
     </div>
     </div>
@@ -110,6 +110,7 @@
     <input id="geneFileName" type="hidden" name="geneFileName" value="${geneFileName}">
     <input type="hidden" name="fGene" id="fGene" />
 	<input type="hidden" name="fHeader" id="fHeader" />
+	<input type="hidden" name="referseF" id="reverseF"/>
 	<input type="hidden" name="numDCol" id=numDCol />
     <input id="submit1" style="position:absolute; top:225px; left:700px; width:60px; font-size:20px;"
       name="submit" class="formButtons" value="GO" type="submit"><br/>
@@ -157,6 +158,9 @@
 		</div> 
       </div>
       <div style='margin-left:220px; padding-top:5px;'>
+      
+      	<label><input id="enableVcfFilter" name="enableVcfFilter" type="checkbox" value="true" checked="checked" class="organism"/>Enable VCF Filtering</label>
+      	<br/>
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
         <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh38)</label>
         <label><input id="organismMouse2" name="organismIgnore" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
@@ -166,7 +170,7 @@
 	    <input type="hidden" name="type" value="vcf">
       </form>
     </div>
-	<div id="geneFileDiv" style="position:absolute; top:140px;">
+	<div id="geneFileDiv" style="position:absolute; top:344px; left:243px;">
 		<form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
 			id="hiddenFileForm2" name="hiddenFileForm" target="hiddenfileform_if">
 			<span style="">Upload a File: <input id="geneFileInput" type="file" name="file"></span>

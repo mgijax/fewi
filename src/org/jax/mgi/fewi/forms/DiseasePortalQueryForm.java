@@ -30,6 +30,7 @@ public class DiseasePortalQueryForm
     // Filter queries
     private String fGene;
     private String fHeader;
+    private String referseF;
 
     private Map<String, String> organismOptions = new LinkedHashMap<String, String>();
 
@@ -126,7 +127,7 @@ public class DiseasePortalQueryForm
 	public void setLocationsFileName(String locationsFileName) {
 		this.locationsFileName = locationsFileName;
 	}
-	
+
 	public String getGeneFileName() {
 		return geneFileName;
 	}
@@ -164,6 +165,14 @@ public class DiseasePortalQueryForm
 		return this.numDCol;
 	}
 	
+	public String getReferseF() {
+		return referseF;
+	}
+
+	public void setReferseF(String referseF) {
+		this.referseF = referseF;
+	}
+
 	@Override
 	public String toString() {
 		return "DiseasePortalQueryForm [phenotypes=" + phenotypes + ", genes="

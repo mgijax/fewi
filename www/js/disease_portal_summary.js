@@ -257,11 +257,14 @@ function GridFilter()
 	this.filterDelim = "|";
 	this.highlightCssClass = "gridHl";
 	this.checkBoxClass = "gridCheck";
+	this.reverseId = "reverseF";
 
 	// state variables
 	this.filtersActive = false;
 	this.submitActive = false;
 	this.prevFilterQuery = null;
+	this.reverse = false;
+	
 	/*
 	 * States are as follows::
 	 * 	initial - only set on page load
@@ -315,6 +318,13 @@ function GridFilter()
 		return null;
 	}
 
+	this.setReverse = function(trueOrFalse)
+	{
+		_self.reverse = trueOrFalse;
+		if(_self.reverse) $("#"+_self.reverseId).val("true");
+		else  $("#"+_self.reverseId).val("");
+	}
+	
 	// returns an object representing the hidden fields
 	// RETURN FORMAT: {fGene : [filter1,filter2,...], fHeader : [filter1,filter2,...]}
 	this.getFiltersObject = function()
@@ -422,6 +432,7 @@ function GridFilter()
 				field.attr("value","");
 			}
 		}
+		 $("#"+_self.reverseId).val("");
 	}
 
 	// check the hidden inputs to see if fields have been set yet
@@ -560,6 +571,12 @@ function isGFiltersSet()
 // click handler for submit filters button
 function gridFilterSubmitClick(e)
 {
+	_GF.submit();
+}
+//click handler for submit reverse filters button
+function gridRevereseFilterSubmitClick(e)
+{
+	_GF.setReverse(true);
 	_GF.submit();
 }
 // click handler for reset button

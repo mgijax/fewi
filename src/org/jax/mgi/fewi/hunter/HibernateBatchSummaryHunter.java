@@ -24,15 +24,13 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class HibernateBatchSummaryHunter<T> {
-
+public class HibernateBatchSummaryHunter
+{
     // logger for the class
     private Logger logger = LoggerFactory.getLogger(HibernateBatchSummaryHunter.class);
     
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	private Class type;
 	
 	private Map<String, List<String>> typeMap = new HashMap<String, List<String>>();
 	
@@ -69,10 +67,9 @@ public class HibernateBatchSummaryHunter<T> {
 		typeMap.put("GenBank", genbankItems);
 	}
 
-	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
-
-        logger.debug("-> hunt");         
-        type = BatchMarkerId.class;
+	public void hunt(SearchParams searchParams, SearchResults<BatchMarkerId> searchResults) 
+	{
+        logger.debug("-> hunt");        
         
         // the queried id set
     	List<String> idSet = new ArrayList<String>();
@@ -114,7 +111,7 @@ public class HibernateBatchSummaryHunter<T> {
     	// perform HSQL query for BathMarkerIds
         Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());
         
-        List<T> qr = new ArrayList<T>();
+        List<BatchMarkerId> qr = new ArrayList<BatchMarkerId>();
         
 		int start = 0, end = 0, batchSize = 2000;
 		while (start < idSetLower.size()){
@@ -133,7 +130,7 @@ public class HibernateBatchSummaryHunter<T> {
         Map<String, List<BatchMarkerId>> qResults = new HashMap<String, List<BatchMarkerId>>();
         Set<Integer> markerKey = new HashSet<Integer>();
         
-        for (T item: qr){
+        for (BatchMarkerId item: qr){
         	BatchMarkerId bmi = (BatchMarkerId) item;
         	
         	// tracking a unique set of marker keys
@@ -156,18 +153,18 @@ public class HibernateBatchSummaryHunter<T> {
         
         // build the final result set by stepping through the original list of IDs (in order)
         // and mapping them to the retrieved BatchMarkerId records
-        List<T> returnList = new ArrayList<T>();
+        List<BatchMarkerId> returnList = new ArrayList<BatchMarkerId>();
         for (String id: idSet) {
         	if (qResults.containsKey(id.toLowerCase())) {
         		for (BatchMarkerId b : qResults.get(id.toLowerCase())) {
         			b.setTerm(id);
-					returnList.add((T)b);
+					returnList.add(b);
 				}
         	} else {
         		BatchMarkerId blankId = new BatchMarkerId();
     			blankId.setTerm(id);
     			blankId.setTermType("");
-    			returnList.add((T)blankId);
+    			returnList.add(blankId);
         	}
         }
         

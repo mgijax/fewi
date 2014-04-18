@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.hunter;
 import java.util.List;
 
 import mgi.frontend.datamodel.BatchMarkerId;
+import mgi.frontend.datamodel.DatabaseInfo;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -15,27 +16,22 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class HibernateDbInfoHunter<T> {
-
+public class HibernateDbInfoHunter
+{
     // logger for the class
     private Logger logger = LoggerFactory.getLogger(HibernateBatchSummaryHunter.class);
     
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	private Class type;
-	
-    public HibernateDbInfoHunter() {
-	}
 
-	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
-
-        logger.debug("-> hunt");         
-        type = BatchMarkerId.class;
+	@SuppressWarnings("unchecked")
+	public void hunt(SearchParams searchParams, SearchResults<DatabaseInfo> searchResults) 
+	{
+        logger.debug("-> hunt");     
 
     	StringBuffer hql = new StringBuffer("FROM DatabaseInfo ");    	
         Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());      
-        List<T> qr = query.list();
+        List<DatabaseInfo> qr = query.list();
 
         searchResults.setTotalCount(qr.size());
 

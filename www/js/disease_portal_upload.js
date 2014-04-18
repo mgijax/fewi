@@ -212,4 +212,5 @@ $(function(){
 	
 	$("#locationsFileInput").change(HDP_FUW.setLocationsFileSession);
 	$("#geneFileInput").change(HDP_FUW_GENES.setLocationsFileSession);
+	$("#enableVcfFilter").change(HDP_FUW.setLocationsFileSession);
 });

@@ -5,14 +5,16 @@
 	<c:if test="${not empty vcfOutput}">
 		<ul style="text-align:left;">
 		<li>${vcfOutput.rowsWithCoordinates} Coordinates Included</li>
-		<li>${vcfOutput.rowsKickedWithId} Rows Ignored Due to Non-Empty ID Column</li>
-		<li>${vcfOutput.rowsKickedWithNotPass} Rows Ignored Due to FILTER Other Than 'PASS'</li>
+		<c:if test="${enableVcfFilter}">
+			<li>${vcfOutput.rowsKickedWithId} Rows Ignored Due to Non-Empty ID Column</li>
+			<li>${vcfOutput.rowsKickedWithNotPass} Rows Ignored Due to FILTER Other Than 'PASS'</li>
+		</c:if>
 		<c:if test="${not empty mouseMatch}"><li>${mouseMatch} Genes Matched On Mouse Genome</li></c:if>
 		<c:if test="${not empty humanMatch}"><li>${humanMatch} Genes Matched On Human Genome</li></c:if>
 		</ul>
 	</c:if>
 	<c:if test="${not empty singleColOutput}">
-		<li>${singleColOutput.validRows} Gene Values Included</li>
+		<li>${singleColOutput.validRows} rows discovered.</li>
 	</c:if>
 	<c:if test="${empty success}">
 		<br/>Sometimes this is due to an incompatible file format (Unicode text).
