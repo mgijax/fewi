@@ -202,8 +202,11 @@ td.top { vertical-align: top; }
 				<b>Browse</b> <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
 		      </span>
 		      <br/>
-		      <span class="example">Hints for using AND and OR, quotes, partial word matching,...
-		      	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601</span>
+		      <span class="example">
+		        <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints for</a> 
+		        using AND and OR, quotes, partial word matching,...
+		      	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601
+		      </span>
         </dd>
       </dl>
     </td>
