@@ -203,8 +203,8 @@ td.top { vertical-align: top; }
 		      </span>
 		      <br/>
 		      <span class="example">
-		        <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints for</a> 
-		        using AND and OR, quotes, partial word matching,...
+		        <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> 
+		        for using AND and OR, quotes, partial word matching,...
 		      	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601
 		      </span>
         </dd>
