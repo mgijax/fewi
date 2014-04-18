@@ -55,6 +55,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 196, Tagging of Genotypes in popups</li>
         <li>User story 195, Sort order of Genotypes in popups</li>
         <li>User story 171, Popups: headers and styling</li>
+        <li>User story 136, HDP: Add IMSR links to popup grids (MGI 5.18)</li>
     </ul>
 
 
@@ -76,6 +77,9 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto195: use "smart" alpha sorting</li>
 		<li>sto195: The sort order of states is: hom, het, hemi, conditional [chimeric: let them fall where they may]</li>	
 		<li>sto171: [none specified]</li>
+		<li>sto136: popup grid includes links to IMSR (MGI 5.18)</li>
+		<li>sto136: one link per gene on the page (MGI 5.18)</li>
+		<li>sto136: link searches IMSR for all mice (not ES cells) carrying any mutation in that gene (this is the same link as on the allele detail page) (MGI 5.18)</li>
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -237,28 +241,18 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
     		</li>
 
-<!-- DUPLICATIVE TEST CASES FROM SOME IN THE "AUTOMATED" SECTION BELOW
-    		<li>Verify that Chimeric Genotypes are followed by the word <b>(Chimeric)</b> (sto196)
- 			<p concordion:assertTrue="false">new test</p> 
-    		<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#gene">Odf2</b> in the Genes section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Odf2</b> row and <b concordion:set="#column">reproductive system</b> column. </li>
-                <li>Confirm that <b>2</b> genotype rows are displayed for <b>Odf2&lt;Gt(XL169)Byg&gt;/Odf2&lt;+&gt;</b> and the second one is followed by <b>(Chimeric)</b></li>
-            </ol>
-            </li>
-                
-            <li>Verify that Conditional Genotypes are followed by the word <b>(Conditional)</b> (sto196)
- 			<p concordion:assertTrue="false">new test</p> 
-    		<ol>
-                <li>Open the HDP query form</li>
-                <li>Enter <b concordion:set="#gene">Gad1</b> in the Genes section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Gad1</b> row and <b concordion:set="#column">embryogenesis abnormalities</b> column. </li>
-                <li>Confirm that the first genotype row displays <b>Gad1&lt;tm1.1Byc&gt;/Gad1&lt;tm1Rpa&gt; Tg(Nes-cre)1Kln/0</b> and this genotype is followed by <b>(Conditional)</b></li>
-            </ol>
-            </li>
- -->
-            
+			<li>A link to IMSR for all strains or lines available is displayed for each mouse marker in the popup that has such a link on its Allele Detail Page.
+ 			<p concordion:assertTrue="false">new</p> 
+ 			<ol>
+ 				<li>On the HMDC Portal, query for genes <b>h2-d1,Hspa1a,vpreb1,H3f3a,Olfr160,hamp2,clec10a,mgl2</b>.</li>
+ 				<li>From the Grid Tab, click the cell in the row for Human HLA-B and the column for hematopoietic system.</li>
+ 				<li>Verify that the pop-up contains IMSR links for <b>H2-D1</b> and <b>H2-K1</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers (5 and 3 as of 4/18/2014).</li>
+ 				<li>From the Grid Tab, click the cell in the row for for Human HLA-B and the column for nervous system.</li>
+ 				<li>Verify that the pop-up contains an IMSR links only for <b>H2-D1</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for that marker (5 as of 4/18/2014).</li>
+ 				<li>From the Grid Tab, click the cell in the row for H3f3a, H3f3b and the column for growth/size.</li>
+ 				<li>Verify that the pop-up contains IMSR links for <b>H3f3a</b> and <b>H3f3b</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers (11 and 8 as of 4/18/2014).</li>
+ 			</ol>
+			</li>            
 
 		</ol>
 	</div>

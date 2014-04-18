@@ -54,6 +54,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 196, Tagging of Genotypes in popups</li>
         <li>User story 195, Sort order of Genotypes in popups</li>
         <li>User story 171, Popups: headers and styling</li>
+        <li>User story 136, HDP: Add IMSR links to popup grids (MGI 5.18)</li>
     </ul>
 </div>
 
@@ -78,6 +79,9 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>sto195: use "smart" alpha sorting</li>
 		<li>sto195: The sort order of states is: hom, het, hemi, conditional [chimeric: let them fall where they may]</li>	
 		<li>sto171: [none specified]</li>
+		<li>sto136: popup grid includes links to IMSR (MGI 5.18)</li>
+		<li>sto136: one link per gene on the page (MGI 5.18)</li>
+		<li>sto136: link searches IMSR for all mice (not ES cells) carrying any mutation in that gene (this is the same link as on the allele detail page) (MGI 5.18)</li>
 	</ul>
 
 	<h2>Specific Requirements</h2>
@@ -332,8 +336,19 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
     		</li>
 
+			<li>A link to IMSR for all strains or lines available is displayed for each mouse marker in the popup that has such a link on its Allele Detail Page.
+ 			<p concordion:assertTrue="false">new</p> 
+ 			<ol>
+ 				<li>On the HMDC Portal, query for ...</li>
+ 				<li>From the Grid Tab, click the cell in the row for ... and the column for ...</li>
+ 				<li>Verify that the pop-up contains IMSR links for <b>...</b> and <b>...</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers.</li>
+ 			</ol>
+			</li> 
+
 		</ol>
 	</div>
+
+
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
