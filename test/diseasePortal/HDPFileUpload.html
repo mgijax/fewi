@@ -192,34 +192,47 @@ tr.gray td {background-color:#EEEEEE;}
 17921 Rows Ignored Due to Non-Empty ID Column
 0 Rows Ignored Due to FILTER Other Than 'PASS'
  -->
-			<li>Checkbox exists to disable the filters (so do not excludes rows having an RSID value, or rows having a Filter value other than 'PASS'). Checking the box causes a file upload to process (include) rows which would have been excluded. 
+			<li>Checkbox exists to disable the filters (so do not excludes rows having an RSID value, or rows having a Filter value other than 'PASS'). Checking the box causes a file upload to process (include) rows which would have been excluded. (sto130) 
     		<p concordion:assertTrue="false">new</p>
     		<ol>
                 <li>Create a VCF test file with rows:
                 <ul>
-                	<li>Having RSID and Filter = 'PASS'.</li>
-                	<li>Having no RSID and Filter = 'PASS'.</li>
-                	<li>Having RSID and Filter other than 'PASS'.</li>
-                	<li>Having no RSID and Filter other than 'PASS'.</li>
+                	<li>Having RSID and Filter = 'PASS' - 2 rows.</li>
+                	<li>Having no RSID and Filter = 'PASS' - 2 rows.</li>
+                	<li>Having RSID and Filter other than 'PASS' - 2 rows.</li>
+                	<li>Having no RSID and Filter other than 'PASS' - 2 rows.</li>
                 </ul> 
                 </li>
+                <li>Click the "Choose File" button and select the test file.</li>
+                <li>Verify that the "File successfully processed." dialog reports: 2 coordinates included;  6 rows ignored.</li>
+                <li>Clear the query to begin again.</li>
                 <li>Open the Human Disease query page and select the checkbox to disable the filters.</li>
                 <li>Click the "Choose File" button and select the test file.</li>
-                <li>Verify that the </li>
+                <li>Verify that the "File successfully processed." dialog reports: 8 coordinates included;  0 rows ignored.</li>
+            </ol>
+			</li>
+
+			<li>Uploading a VCF file and then checking the box causes the file to be reprocessed. (sto130) 
+    		<p concordion:assertTrue="false">new</p>
+    		<ol>
+                <li>Click the "Choose File" button and select the test file from above.</li>
+                <li>Verify that the "File successfully processed." dialog reports: 2 coordinates included;  6 rows ignored.</li>
+                <li>Select the checkbox to disable the filters.</li>
+                <li>Verify that the "File successfully processed." dialog appears again and reports: 8 coordinates included;  0 rows ignored.</li>
             </ol>
 			</li>
 
 			<li>Test
     		<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Open the Human Disease query page and click the "Choose File" button</li>
+                <li>step</li>
             </ol>
 			</li>
 
 			<li>Test
     		<p concordion:assertTrue="false">new</p>
     		<ol>
-                <li>Open the Human Disease query page and click the "Choose File" button</li>
+                <li>step</li>
             </ol>
 			</li>
 
