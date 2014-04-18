@@ -142,10 +142,6 @@
 		</span>
         <br/>
 
-        <span class="example" style=''>
-          Example: MP:0009754 AND MP:0009751 &nbsp;&nbsp;&nbsp; Alzheimer &nbsp;&nbsp;&nbsp; 168600 OR 168601
-        </span>
-
       </div>
 
       <div id="selectedMpTextDiv" style="position:absolute; top:0px; left:540px; width:350px;"></div>
