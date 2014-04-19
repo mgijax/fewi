@@ -1,16 +1,12 @@
 package org.jax.mgi.fewi.finder;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
-import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Disease;
 
 import org.jax.mgi.fewi.hunter.SolrDiseaseHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;

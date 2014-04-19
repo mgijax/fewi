@@ -10,9 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URL;
 
-import javax.imageio.ImageIO;
+import mgi.frontend.datamodel.ImagePane;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
@@ -20,9 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.objectplanet.image.PngEncoder;
-
-import mgi.frontend.datamodel.ImagePane;
-import mgi.frontend.datamodel.Image;
 
 /**
  * 

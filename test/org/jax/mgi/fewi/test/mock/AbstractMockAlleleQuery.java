@@ -1,8 +1,5 @@
 package org.jax.mgi.fewi.test.mock;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.jax.mgi.fewi.controller.AlleleController;
 import org.jax.mgi.fewi.forms.AlleleQueryForm;
 import org.springframework.context.annotation.Scope;

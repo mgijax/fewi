@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -67,7 +66,6 @@ import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.jax.mgi.fewi.util.ProviderLinker;
-import org.jax.mgi.fewi.util.QueryParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -337,7 +335,7 @@ public class MarkerController {
         searchParams.setFilter(markerIdFilter);
 
         // find the requested marker
-        SearchResults searchResults = markerFinder.getMarkerByID(searchParams);
+        SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
         List<Marker> markerList = searchResults.getResultObjects();
 
         // there can be only one...
@@ -1017,7 +1015,7 @@ public class MarkerController {
         logger.debug("->markerDetailByKey started");
 
         // find the requested marker
-        SearchResults searchResults = markerFinder.getMarkerByKey(dbKey);
+        SearchResults<Marker> searchResults = markerFinder.getMarkerByKey(dbKey);
         List<Marker> markerList = searchResults.getResultObjects();
 
         // there can be only one...
@@ -1047,7 +1045,7 @@ public class MarkerController {
         searchParams.setFilter(refIdFilter);
 
         // find the requested reference
-        SearchResults searchResults
+        SearchResults<Reference> searchResults
           = referenceFinder.searchReferences(searchParams);
         List<Reference> refList = searchResults.getResultObjects();
 
@@ -1090,7 +1088,7 @@ public class MarkerController {
         searchParams.setFilter(markerIdFilter);
 
         // find the requested marker
-        SearchResults searchResults = markerFinder.getMarkerByID(searchParams);
+        SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
         List<Marker> markerList = searchResults.getResultObjects();
 
         // there can be only one...
@@ -1223,7 +1221,6 @@ public class MarkerController {
 	        sp.setIncludeHighlightMarkup(false);
         }
 
-        List<Sort> sorts = new ArrayList<Sort>();
         SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
 
         List<SolrSummaryMarker> markers = sr.getResultObjects();
@@ -1400,7 +1397,7 @@ public class MarkerController {
 			 goVocabs.add(SearchConstants.MRK_TERM_ID);
 			 for(String goVocab : goVocabs)
 			 {
-				 List<Filter> containsFilters = new ArrayList<Filter>();
+				 //List<Filter> containsFilters = new ArrayList<Filter>();
 
 				 //containsFilters.add();
 //				 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(go))
@@ -1642,7 +1639,8 @@ public class MarkerController {
     {
     	return i!=null && i>0;
     }
-    private boolean notEmpty(List l)
+    @SuppressWarnings("rawtypes")
+	private boolean notEmpty(List l)
     {
     	return l!=null && l.size()>0;
     }

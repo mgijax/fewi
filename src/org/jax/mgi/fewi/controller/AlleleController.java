@@ -1,6 +1,5 @@
 package org.jax.mgi.fewi.controller;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +32,6 @@ import mgi.frontend.datamodel.phenotype.PhenoTableSystem;
 import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
-import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
@@ -120,9 +118,6 @@ public class AlleleController {
     @Autowired
     private MarkerFinder markerFinder;
 
-	@Autowired
-	private SessionFactory sessionFactory;
-
 
     //--------------------------------------------------------------------//
     // public methods
@@ -141,7 +136,7 @@ public class AlleleController {
 		ModelAndView mav = new ModelAndView("allele_query");
 
 		this.initQFCache();
-        List<String> collectionValues = query.getCollectionValues();
+        List<String> collectionValues = AlleleQueryForm.getCollectionValues();
 
         // package data, and send to display layer
         mav.addObject("alleleQueryForm", query);
@@ -162,7 +157,6 @@ public class AlleleController {
 		
         ModelAndView mav = new ModelAndView("allele_query_system_popup");
         if(notEmpty(formName)) mav.addObject("formName",formName);
-        AlleleQueryForm aqf = new AlleleQueryForm();
         mav.addObject("widgetValues1",FormWidgetValues.getPhenoSystemWidgetValues1());
         mav.addObject("widgetValues2",FormWidgetValues.getPhenoSystemWidgetValues2());
 
@@ -193,7 +187,7 @@ public class AlleleController {
 		}
 
 		this.initQFCache();
-        List<String> collectionValues = query.getCollectionValues();
+        List<String> collectionValues = AlleleQueryForm.getCollectionValues();
 		mav.addObject("alleleQueryForm",query);
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("collectionValues", collectionValues);
@@ -291,7 +285,7 @@ public class AlleleController {
 	logger.debug("->alleleDetailByKey started");
 
 	// find the requested Allele
-	SearchResults searchResults = alleleFinder.getAlleleByKey(dbKey);
+	SearchResults<Allele> searchResults = alleleFinder.getAlleleByKey(dbKey);
 	List<Allele> alleleList = searchResults.getResultObjects();
 
 	// there can only be one Allele
@@ -1747,7 +1741,8 @@ public class AlleleController {
         {
         	return s!=null && !s.equals("");
         }
-        private boolean notEmpty(List l)
+        @SuppressWarnings("rawtypes")
+		private boolean notEmpty(List l)
         {
         	return l!=null && l.size()>0;
         }
@@ -1760,7 +1755,7 @@ public class AlleleController {
         		SearchParams sp = new SearchParams();
         		sp.setPageSize(0);
         		sp.setFilter(new Filter(SearchConstants.ALL_KEY,"[* TO *]",Filter.OP_HAS_WORD));
-        		SearchResults sr = alleleFinder.getCollectionFacet(sp);
+        		SearchResults<String> sr = alleleFinder.getCollectionFacet(sp);
         		List<String> collectionValues = sr.getResultFacets();
         		AlleleQueryForm.setCollectionValues(collectionValues);
         	}
@@ -1779,10 +1774,4 @@ public class AlleleController {
 	   		}
 	   		return f;
         }
-
-       private long bdToLong(BigDecimal bd)
-       {
-    	   if(bd.compareTo(new BigDecimal(Integer.MAX_VALUE)) > 0) return Integer.MAX_VALUE;
-    	   return bd.longValue();
-       }
 }

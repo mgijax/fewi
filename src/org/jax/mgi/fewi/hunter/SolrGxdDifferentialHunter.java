@@ -1,23 +1,13 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrGxdDifferentialHunter extends SolrHunter {
+public class SolrGxdDifferentialHunter extends SolrHunter<String> {
     
     /***
      * The constructor sets up this hunter so that it is specific to finding

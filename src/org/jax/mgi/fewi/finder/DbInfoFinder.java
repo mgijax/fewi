@@ -1,6 +1,5 @@
 package org.jax.mgi.fewi.finder;
 
-import mgi.frontend.datamodel.BatchMarkerId;
 import mgi.frontend.datamodel.DatabaseInfo;
 
 import org.jax.mgi.fewi.hunter.HibernateDbInfoHunter;

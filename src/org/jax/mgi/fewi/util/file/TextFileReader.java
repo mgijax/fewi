@@ -1,7 +1,9 @@
 package org.jax.mgi.fewi.util.file;
 
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * provides an easy mechanism to read text files from the file system into a

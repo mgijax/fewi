@@ -3,7 +3,7 @@ package org.jax.mgi.fewi.finder;
 import java.util.Arrays;
 import java.util.List;
 
-import mgi.frontend.datamodel.hdp.*;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.jax.mgi.fewi.hunter.SolrDiseasePortalHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -12,8 +12,10 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpEntity;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
+import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.slf4j.Logger;
@@ -69,9 +71,9 @@ public class DiseasePortalFinder
 	}
 
 	// Group results by term id to return the distinct matching diseases (but only diseases that would appear on Grid)
-	public SearchResults<String> getGridDiseases(SearchParams params)
+	public SearchResults<SolrString> getGridDiseases(SearchParams params)
 	{
-		SearchResults<String> results = huntGridDiseasesGroup(params);
+		SearchResults<SolrString> results = huntGridDiseasesGroup(params);
 		return results;
 	}
 
@@ -92,7 +94,7 @@ public class DiseasePortalFinder
 	// annotation results for given request - via join
 	public SearchResults<SolrHdpGridData> searchAnnotationsInGridResults(SearchParams params) 
 	{
-		SearchResults<SolrHdpGridData> results = new SearchResults<SolrHdpGridData>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		
 		// need to ensure that only docs come back that have a grid cluster
 		Filter originalFilter = params.getFilter();
@@ -118,12 +120,15 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 		hdpHunter.joinHunt(params, results, "diseasePortalAnnotationByMarker");
 		
-		return results;
+		SearchResults<SolrHdpGridData> srGD = new SearchResults<SolrHdpGridData>();
+		srGD.cloneFrom(results,SolrHdpGridData.class);
+		
+		return srGD;
 	}
 	
 	public SearchResults<SolrHdpGridData> searchAnnotationsInPopupResults(SearchParams params) 
 	{
-		SearchResults<SolrHdpGridData> results = new SearchResults<SolrHdpGridData>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		
 		// need to ensure that only docs come back that have a grid cluster
 		Filter originalFilter = params.getFilter();
@@ -149,7 +154,10 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 		hdpHunter.joinHunt(params, results, "diseasePortalAnnotationByMarkerTerm");
 		
-		return results;
+		SearchResults<SolrHdpGridData> srGD = new SearchResults<SolrHdpGridData>();
+		srGD.cloneFrom(results,SolrHdpGridData.class);
+		
+		return srGD;
 	}
 
 	// ---- counts ----
@@ -177,7 +185,7 @@ public class DiseasePortalFinder
 	// grid clusters
 	private SearchResults<SolrHdpGridCluster> huntGridClustersGroup(SearchParams params)
 	{
-		SearchResults<SolrHdpGridCluster> results = new SearchResults<SolrHdpGridCluster>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 
 		// make sure that only documents with grid cluster keys are included in the
 		// group (otherwise you get a weird off-by-one error in the count)
@@ -192,13 +200,15 @@ public class DiseasePortalFinder
 
 		hdpHunter.hunt(params, results,SearchConstants.DP_GRID_CLUSTER_KEY);
 
-		return results;
+		SearchResults<SolrHdpGridCluster> srGC = new SearchResults<SolrHdpGridCluster>();
+		srGC.cloneFrom(results,SolrHdpGridCluster.class);
+		return srGC;
 	}
 
 	// geno clusters
 	private SearchResults<HdpGenoCluster> huntGenoClustersGroup(SearchParams params)
 	{
-		SearchResults<HdpGenoCluster> results = new SearchResults<HdpGenoCluster>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 
 		// make sure that only documents with geno cluster keys are included in the
 		// group (otherwise you get a weird off-by-one error in the count)
@@ -216,12 +226,14 @@ public class DiseasePortalFinder
 		//hdpHunter.joinHunt(params, results, "diseasePortalAnnotationHeaders");
 		
         logger.debug("->keys from hunter - " + results.getResultKeys());
+        SearchResults<HdpGenoCluster> srGC = new SearchResults<HdpGenoCluster>();
+        srGC.cloneFrom(results);
 
         // gather objects identified by the hunter, add them to the results
-        List<HdpGenoCluster> genoClusters = genoCGatherer.get( HdpGenoCluster.class, results.getResultKeys() );
-        results.setResultObjects(genoClusters);
+        List<HdpGenoCluster> genoClusters = genoCGatherer.get( HdpGenoCluster.class, srGC.getResultKeys() );
+        srGC.setResultObjects(genoClusters);
 
-		return results;
+		return srGC;
 	}
 
 	// markers
@@ -229,8 +241,8 @@ public class DiseasePortalFinder
 	{ return huntMarkersGroup(params,false); }
 	private SearchResults<SolrDiseasePortalMarker> huntMarkersGroup(SearchParams params,boolean justKeys)
 	{
-		SearchResults<SolrDiseasePortalMarker> results
-		  = new SearchResults<SolrDiseasePortalMarker>();
+		SearchResults<SolrHdpEntity> results
+		  = new SearchResults<SolrHdpEntity>();
 
 		// make sure that only documents with marker keys are included in the
 		// group (otherwise you get weird off-by-one error in the count) also
@@ -250,13 +262,17 @@ public class DiseasePortalFinder
 		if(justKeys) hdpHunter.hunt(params, results,"bareMarkerKey");
 		else hdpHunter.hunt(params, results,SearchConstants.MRK_KEY);
 		params.setFilter(originalFilter);
-		return results;
+		
+		SearchResults<SolrDiseasePortalMarker> srM = new SearchResults<SolrDiseasePortalMarker>();
+		srM.cloneFrom(results,SolrDiseasePortalMarker.class);
+		
+		return srM;
 	}
 
 	// diseases
 	private SearchResults<SolrVocTerm> huntDiseasesGroup(SearchParams params)
 	{
-		SearchResults<SolrVocTerm> results = new SearchResults<SolrVocTerm>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with OMIM type are included in the group
 		Filter originalFilter = params.getFilter();
 		Filter modifiedFilter = Filter.and(
@@ -271,12 +287,15 @@ public class DiseasePortalFinder
 
 		hdpHunter.hunt(params, results,SearchConstants.VOC_TERM_ID);
 		params.setFilter(originalFilter);
-		return results;
+		
+		SearchResults<SolrVocTerm> srVT = new SearchResults<SolrVocTerm>();
+		srVT.cloneFrom(results,SolrVocTerm.class);
+		return srVT;
 	}
 	// get distinct list of diseases for the grid
-	private SearchResults<String> huntGridDiseasesGroup(SearchParams params)
+	private SearchResults<SolrString> huntGridDiseasesGroup(SearchParams params)
 	{
-		SearchResults<String> results = new SearchResults<String>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with OMIM type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
@@ -289,13 +308,16 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,DiseasePortalFields.TERM_HEADER);
-		return results;
+		
+		SearchResults<SolrString> srS = new SearchResults<SolrString>();
+		srS.cloneFrom(results,SolrString.class);
+		return srS;
 	}
 
 	// get distinct list of mp headers for the grid
-	public SearchResults<String> huntGridMPHeadersGroup(SearchParams params)
+	public SearchResults<SolrString> huntGridMPHeadersGroup(SearchParams params)
 	{
-		SearchResults<String> results = new SearchResults<String>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with MP type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
@@ -308,13 +330,17 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,DiseasePortalFields.TERM_HEADER);
-		return results;
+		
+		SearchResults<SolrString> srS = new SearchResults<SolrString>();
+		srS.cloneFrom(results,SolrString.class);
+		
+		return srS;
 	}
 
 	// get distinct list of mp terms for the grid drill down
 	public SearchResults<SolrVocTerm> huntGridMPTermsGroup(SearchParams params)
 	{
-		SearchResults<SolrVocTerm> results = new SearchResults<SolrVocTerm>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with MP type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
@@ -327,13 +353,16 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,SearchConstants.VOC_TERM_ID);
-		return results;
+		
+		SearchResults<SolrVocTerm> srVT = new SearchResults<SolrVocTerm>();
+		srVT.cloneFrom(results,SolrVocTerm.class);
+		return srVT;
 	}
 	
 	// get distinct list of disease terms for the grid drill down
 	public SearchResults<SolrVocTerm> huntGridDiseaseTermsGroup(SearchParams params)
 	{
-		SearchResults<SolrVocTerm> results = new SearchResults<SolrVocTerm>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with Disease type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
@@ -346,13 +375,16 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,SearchConstants.VOC_TERM_ID);
-		return results;
+		
+		SearchResults<SolrVocTerm> srVT = new SearchResults<SolrVocTerm>();
+		srVT.cloneFrom(results,SolrVocTerm.class);
+		return srVT;
 	}
 
 	// get distinct list of human markers for the grid drill down
 	public SearchResults<SolrDiseasePortalMarker> huntGridHumanMarkerGroup(SearchParams params)
 	{
-		SearchResults<SolrDiseasePortalMarker> results = new SearchResults<SolrDiseasePortalMarker>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with human organism type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
@@ -365,14 +397,17 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,SearchConstants.MRK_KEY);
-		return results;
+		
+		SearchResults<SolrDiseasePortalMarker> srM = new SearchResults<SolrDiseasePortalMarker>();
+		srM.cloneFrom(results,SolrDiseasePortalMarker.class);
+		return srM;
 	}
 
 
 	// phenotypes
 	private SearchResults<SolrVocTerm> huntPhenotypesGroup(SearchParams params)
-	{
-		SearchResults<SolrVocTerm> results = new SearchResults<SolrVocTerm>();
+	{		
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with MP type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
@@ -382,7 +417,10 @@ public class DiseasePortalFinder
 		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,SearchConstants.VOC_TERM_ID);
-		return results;
+		
+		SearchResults<SolrVocTerm> srVT = new SearchResults<SolrVocTerm>();
+		srVT.cloneFrom(results,SolrVocTerm.class);
+		return srVT;
 	}
 
 	// -------- Hibernate accessors ----------

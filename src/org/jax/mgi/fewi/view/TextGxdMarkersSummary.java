@@ -1,31 +1,16 @@
 package org.jax.mgi.fewi.view;
 
 import java.io.BufferedWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
-import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
-import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.NotesTagConverter;
-
-import mgi.frontend.datamodel.GxdAssayResult;
-import mgi.frontend.datamodel.ImagePane;
-import mgi.frontend.datamodel.Reference;
 
 public class TextGxdMarkersSummary extends AbstractTextView
 {

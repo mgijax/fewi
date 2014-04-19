@@ -1,21 +1,18 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Image;
 import mgi.frontend.datamodel.ImageAllele;
-import mgi.frontend.datamodel.ImagePane;
 import mgi.frontend.datamodel.ImagePaneSet;
-import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.Reference;
 
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.FormatHelper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 
 
 /**
@@ -32,7 +29,6 @@ public class ImageSummaryRow {
   //--------------------
 
   // logger & config values
-  private Logger logger = LoggerFactory.getLogger(ImageSummaryRow.class);
   private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
   private String pixeldbUrl = ContextLoader.getConfigBean().getProperty("PIXELDB_URL");
 
@@ -51,9 +47,6 @@ public class ImageSummaryRow {
   //--------------
   // constructors
   //--------------
-
-  // hide the default constructor - we NEED an image to wrap
-  private ImageSummaryRow () {}
   public  ImageSummaryRow (Image image, Image thumbImage) {
 
     //set instance variables
@@ -156,7 +149,6 @@ public class ImageSummaryRow {
   public String getAssayTypesInPage(){
     ImagePaneSet currentSet;
     StringBuffer assayTypes = new StringBuffer();
-    List<String> uniqueAssayTypes = new ArrayList<String>();
     List<ImagePaneSet> filteredSetList= new ArrayList<ImagePaneSet>();
     Iterator<ImagePaneSet> setIter;
 

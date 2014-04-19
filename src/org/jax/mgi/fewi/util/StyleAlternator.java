@@ -1,6 +1,5 @@
 package org.jax.mgi.fewi.util;
 
-import java.util.*;
 
 /**
  * provides an easy mechanism to alternate styles

@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import mgi.frontend.datamodel.MarkerTissueCount;
 
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.MarkerTissueCountFinder;
-import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;

@@ -1,12 +1,7 @@
 package org.jax.mgi.fewi.test.mock;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.jax.mgi.fewi.controller.DiseasePortalController;
-import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
-import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

@@ -4,7 +4,6 @@ import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.internal.listener.AssertResultRenderer;
-import org.concordion.internal.listener.RunResultRenderer;
 import org.concordion.internal.listener.VerifyRowsResultRenderer;
 
 public class FewiConcordionExtension implements ConcordionExtension {

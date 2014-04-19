@@ -3,18 +3,17 @@ package org.jax.mgi.fewi.finder;
 import java.util.List;
 
 import mgi.frontend.datamodel.VocabTerm;
-import org.jax.mgi.fewi.hunter.SolrAnatomyTermHunter;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.jax.mgi.fewi.hunter.SolrAnatomyTermHunter;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

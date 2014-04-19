@@ -86,7 +86,7 @@ public class RecomSpecificitySummaryRow {
         List<AlleleSystemAssayResultImagePane> imagePanes
           = alleleSystemAssayResult.getPanes();
 
-        Iterator imagePanesIter = imagePanes.iterator();
+        Iterator<AlleleSystemAssayResultImagePane> imagePanesIter = imagePanes.iterator();
 
         if (!imagePanesIter.hasNext() ){
             imageTags.append("<span class='small italic'>No figure available<br></span>");
@@ -94,7 +94,7 @@ public class RecomSpecificitySummaryRow {
 
         while (imagePanesIter.hasNext() ){
 
-            thisImagePane = (AlleleSystemAssayResultImagePane)imagePanesIter.next();
+            thisImagePane = imagePanesIter.next();
             thisImage = thisImagePane.getImage();
 
             // figure lables

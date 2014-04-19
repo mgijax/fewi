@@ -9,8 +9,6 @@ import mgi.frontend.datamodel.GxdLitIndexRecord;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.util.Highlighter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -21,8 +19,6 @@ public class GxdLitReferenceSummaryRow {
 	//-------------------
 	// instance variables
 	//-------------------
-
-    private Logger logger = LoggerFactory.getLogger(GxdLitReferenceSummaryRow.class);
 
 	// encapsulated row object
 	private GxdLitIndexRecord record;
@@ -39,9 +35,6 @@ public class GxdLitReferenceSummaryRow {
 	// constructors
 	//-------------
 
-	// hide the default constructor - we NEED a foo to wrap
-    private GxdLitReferenceSummaryRow () {}
-
     public GxdLitReferenceSummaryRow (GxdLitIndexRecord record, GxdLitQueryForm queryForm, Highlighter textHL) {
     	this.textHL = textHL;
     	this.ages = queryForm.getAge();
@@ -57,7 +50,6 @@ public class GxdLitReferenceSummaryRow {
     public List<GxdLitAssayTypeAgePair> getValidPairs() {
     	Boolean anyAges = Boolean.FALSE;
     	Boolean anyAssayTypes = Boolean.FALSE;
-    	int count = 0;
     	
     	if (!ages.isEmpty()) {
 	    	for (String age: ages) {

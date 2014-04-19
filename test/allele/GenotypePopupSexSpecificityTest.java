@@ -3,14 +3,12 @@ package allele;
 import java.util.ArrayList;
 import java.util.List;
 
-import mgi.frontend.datamodel.phenotype.*;
+import mgi.frontend.datamodel.phenotype.MPAnnot;
+import mgi.frontend.datamodel.phenotype.MPSystem;
+import mgi.frontend.datamodel.phenotype.MPTerm;
 
-import org.jax.mgi.fewi.controller.AlleleController;
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 
 public class GenotypePopupSexSpecificityTest extends BaseConcordionTest {

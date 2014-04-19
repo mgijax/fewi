@@ -4,7 +4,6 @@ import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
 
-import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;

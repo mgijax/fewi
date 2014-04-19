@@ -1,16 +1,5 @@
 package org.jax.mgi.fewi.test.mock;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mgi.frontend.datamodel.GxdAssayResult;
-import mgi.frontend.datamodel.ImagePane;
-import mgi.frontend.datamodel.Marker;
-
-import org.apache.commons.lang.StringUtils;
-import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.NotesTagConverter;
 
 /**
  * Represents a JSON summary object that was returned from a controller's response. 

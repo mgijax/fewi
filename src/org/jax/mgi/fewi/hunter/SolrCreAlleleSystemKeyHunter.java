@@ -1,16 +1,16 @@
 package org.jax.mgi.fewi.hunter;
 
+import mgi.frontend.datamodel.AlleleSystem;
+
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.jax.mgi.fewi.config.ContextLoader;
 
 @Repository
-public class SolrCreAlleleSystemKeyHunter extends SolrHunter {
+public class SolrCreAlleleSystemKeyHunter extends SolrHunter<AlleleSystem> {
     
     /***
      * This hunter maps allele id, system key pairings to alleleSystemKeys

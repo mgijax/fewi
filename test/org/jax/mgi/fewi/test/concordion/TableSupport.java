@@ -9,9 +9,7 @@ import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.internal.Row;
-import org.concordion.internal.SimpleEvaluator;
 import org.concordion.internal.Table;
-import org.concordion.internal.command.EchoCommand;
 
 public class TableSupport {
     private final CommandCall tableCommandCall;

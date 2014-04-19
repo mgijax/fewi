@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mgi.frontend.datamodel.Accession;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.searchUtil.SearchParams;

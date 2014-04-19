@@ -1,8 +1,27 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-// mgi classes
+import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.ORDER;
+import org.apache.solr.client.solrj.SolrRequest.METHOD;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.response.FacetField.Count;
+import org.apache.solr.client.solrj.response.Group;
+import org.apache.solr.client.solrj.response.GroupCommand;
+import org.apache.solr.client.solrj.response.GroupResponse;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.params.GroupParams;
+import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
+import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
@@ -10,24 +29,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
-import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
-import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
-
-// external classes
-import org.apache.commons.lang.StringUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
-import org.apache.solr.client.solrj.SolrRequest.METHOD;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.client.solrj.response.Group;
-import org.apache.solr.client.solrj.response.GroupCommand;
-import org.apache.solr.client.solrj.response.GroupResponse;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.FacetField.Count;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.params.GroupParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +38,7 @@ import org.springframework.beans.factory.annotation.Value;
  * This is the Solr specific hunter.  It is responsible for translating
  * higher-level generic webapp requests to Solr's specific API
  */
-public class SolrHunter implements Hunter {
+public class SolrHunter<T> implements Hunter<T> {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -165,15 +167,15 @@ public class SolrHunter implements Hunter {
      * implementing classes.
      */
 
-    public void hunt(SearchParams searchParams, SearchResults searchResults) {
+	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
     	hunt(searchParams,searchResults, null, null);
     }
 
-    public void hunt(SearchParams searchParams,SearchResults searchResults,String groupField) {
+	public void hunt(SearchParams searchParams,SearchResults<T> searchResults,String groupField) {
     	hunt(searchParams,searchResults, groupField, null);
     }
 
-    public void joinHunt(SearchParams searchParams,SearchResults searchResults,String joinField){
+	public void joinHunt(SearchParams searchParams,SearchResults<T> searchResults,String joinField){
     	hunt(searchParams,searchResults, null, joinField);
     }
 
@@ -187,7 +189,7 @@ public class SolrHunter implements Hunter {
      *
      */
 
-    public void hunt(SearchParams searchParams, SearchResults searchResults, String groupField,String joinField) {
+    public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField,String joinField) {
 
         // Invoke the hook, editing the search params as needed.
         searchParams = this.preProcessSearchParams(searchParams);
@@ -558,7 +560,7 @@ public class SolrHunter implements Hunter {
 
             if (sortMap.containsKey(sort.getSort())) {
                 for (String ssm: sortMap.get(sort.getSort()).getSortList()) {
-                    query.addSortField(ssm, currentSort);
+                    query.addSort(ssm,currentSort);
                 }
             }
 
@@ -568,7 +570,7 @@ public class SolrHunter implements Hunter {
              */
 
             else {
-                query.addSortField(sort.getSort(), currentSort);
+                query.addSort(sort.getSort(), currentSort);
             }
         }
     }
@@ -586,7 +588,7 @@ public class SolrHunter implements Hunter {
      * to override this method with their own version.
      */
 
-    protected void packInformation(QueryResponse rsp, SearchResults sr,
+	protected void packInformation(QueryResponse rsp, SearchResults<T> sr,
             SearchParams sp) {
 
         // A list of all the primary keys in the document
@@ -634,9 +636,8 @@ public class SolrHunter implements Hunter {
          * that was configured at the implementing class level.
          */
 
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
             /**
              * Calculate the row level metadata.  Currently this only
              * applies to score, and whether or not a row is generated for
@@ -796,7 +797,7 @@ public class SolrHunter implements Hunter {
      * @param sr
      * @param sp
      */
-    protected void packInformationForJoin(QueryResponse rsp,SearchResults sr, SearchParams sp)
+	protected void packInformationForJoin(QueryResponse rsp,SearchResults<T> sr, SearchParams sp)
     {
     	packInformation(rsp,sr,sp);
     }
@@ -816,7 +817,7 @@ public class SolrHunter implements Hunter {
      * This method traverses the GroupResponse object, assuming that a group query was done.
      */
 
-    protected void packInformationByGroup(QueryResponse rsp, SearchResults sr,
+	protected void packInformationByGroup(QueryResponse rsp, SearchResults<T> sr,
             SearchParams sp) {
 
     	GroupResponse gr = rsp.getGroupResponse();
@@ -841,8 +842,7 @@ public class SolrHunter implements Hunter {
 
         // A mapping of documentKey -> Mapping of FieldName
         // -> list of highlighted words.
-        Map<String, Map<String, List<String>>> highlights =
-            rsp.getHighlighting();
+        //Map<String, Map<String, List<String>>> highlights =rsp.getHighlighting();
 
         // A mapping of documentKey -> Row level Metadata objects.
         Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
@@ -868,7 +868,7 @@ public class SolrHunter implements Hunter {
         for (Group g : groups)
         {
         	String key = g.getGroupValue();
-        	int numFound = (int) g.getResult().getNumFound();
+        	//int numFound = (int) g.getResult().getNumFound();
 
             /**
              * In order to support older pages we pack the score directly as

@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.jax.mgi.fewi.config.ContextLoader;
 
 /** The GOGraphConverter class contains methods which encapsulate knowledge of

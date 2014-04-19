@@ -1,23 +1,24 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
-import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrAnatomyTermHunter extends SolrHunter {
+public class SolrAnatomyTermHunter extends SolrHunter<SolrAnatomyTerm> {
 
     public SolrAnatomyTermHunter() {
 
@@ -25,18 +26,18 @@ public class SolrAnatomyTermHunter extends SolrHunter {
          * Set up the sort mapping.  These are fields we can sort by in Solr.
          */
         sortMap.put(SortConstants.GXD_STRUCTURE,
-		new SolrSortMapper(IndexConstants.BY_GENOTYPE_TERM));
+        		new SolrSortMapper(IndexConstants.BY_GENOTYPE_TERM));
         
         /*
          * Setup the property map.  This maps from the properties of the
-	 * incoming filter list to the corresponding field names in the Solr
-	 * implementation.  As we only allow filtering by two fields, those
-	 * are the only ones we define here.
+		 * incoming filter list to the corresponding field names in the Solr
+		 * implementation.  As we only allow filtering by two fields, those
+		 * are the only ones we define here.
          */
         propertyMap.put(SearchConstants.STRUCTURE,
-		new SolrPropertyMapper(IndexConstants.STRUCTUREAC_STRUCTURE));
+        		new SolrPropertyMapper(IndexConstants.STRUCTUREAC_STRUCTURE));
         propertyMap.put(SearchConstants.SYNONYM,
-		new SolrPropertyMapper(IndexConstants.STRUCTUREAC_SYNONYM));
+        		new SolrPropertyMapper(IndexConstants.STRUCTUREAC_SYNONYM));
 
         /*
          * The name of the field we want to iterate through the documents for
@@ -51,34 +52,33 @@ public class SolrAnatomyTermHunter extends SolrHunter {
 	super.solrUrl = solrUrl;
     }
 
-    @Override
-    protected void packInformation (QueryResponse rsp, SearchResults sr,
-	SearchParams sp) {
+    @SuppressWarnings("unchecked")
+	@Override
+    protected void packInformation (QueryResponse rsp, SearchResults<SolrAnatomyTerm> sr,
+    		SearchParams sp) {
 
 	logger.debug ("Entering SolrAnatomyTermHunter.packInformation()");
 
 	List<SolrAnatomyTerm> terms = new ArrayList<SolrAnatomyTerm>();
 
 	SolrDocumentList sdl = rsp.getResults();
-	SolrDocument doc;
 	SolrAnatomyTerm term;
 
-	for (Iterator i = sdl.iterator(); i.hasNext();) {
-	    doc = (SolrDocument) i.next();
+	for (SolrDocument doc : sdl) {
 	    term = new SolrAnatomyTerm();
 
 	    term.setStructureKey ((String)
-		doc.getFieldValue(IndexConstants.STRUCTUREAC_KEY));
+	    		doc.getFieldValue(IndexConstants.STRUCTUREAC_KEY));
 	    term.setAccID((String)
-		doc.getFieldValue(IndexConstants.ACC_ID));
+	    		doc.getFieldValue(IndexConstants.ACC_ID));
 	    term.setStructure ((String)
-		doc.getFieldValue(IndexConstants.STRUCTUREAC_STRUCTURE));
+	    		doc.getFieldValue(IndexConstants.STRUCTUREAC_STRUCTURE));
 	    term.setStartStage ((String)
-		doc.getFieldValue(IndexConstants.GXD_START_STAGE));
+	    		doc.getFieldValue(IndexConstants.GXD_START_STAGE));
 	    term.setEndStage ((String)
-		doc.getFieldValue(IndexConstants.GXD_END_STAGE));
+	    		doc.getFieldValue(IndexConstants.GXD_END_STAGE));
 	    term.setSynonyms ((List<String>)
-		doc.getFieldValue(IndexConstants.STRUCTUREAC_SYNONYM));
+	    		doc.getFieldValue(IndexConstants.STRUCTUREAC_SYNONYM));
 
 	    terms.add(term);
 	}

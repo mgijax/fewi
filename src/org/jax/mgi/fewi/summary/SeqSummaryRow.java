@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.summary;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import mgi.frontend.datamodel.Marker;
@@ -42,10 +41,6 @@ public class SeqSummaryRow {
 	//-------------
 	// constructors
 	//-------------
-
-	// hide the default constructor - we NEED a sequence
-    private SeqSummaryRow () {}
-
     public SeqSummaryRow (Sequence seq) {
     	this.seq = seq;
     	logger.debug("SeqSummaryRow wrapping sequence w/ key - "
@@ -99,8 +94,6 @@ public class SeqSummaryRow {
 
 
     public String getStrainSpecies() {
-
-		List<SequenceSource> sourceList = seq.getSources();
 
 		SequenceSource ss = seq.getSources().get(0);
 		if (ss != null) {

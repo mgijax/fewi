@@ -8,9 +8,7 @@ import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.springframework.stereotype.Component;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +42,6 @@ public class GOSummaryRow {
 	//-------------
 	// constructors
 	//-------------
-
-	// hide the default constructor - we NEED a foo to wrap
-    private GOSummaryRow () {}
 
     public GOSummaryRow (Annotation annot, Marker marker) {
     	this.annot = annot;

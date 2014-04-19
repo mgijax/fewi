@@ -1,24 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.jax.mgi.fewi.controller.AlleleController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import mgi.frontend.datamodel.Allele;
-import mgi.frontend.datamodel.AlleleGenotypeAssociation;
-import mgi.frontend.datamodel.AllelePhenoGenotypeAssociation;
-import mgi.frontend.datamodel.AllelePhenoSummary;
-import mgi.frontend.datamodel.Genotype;
-import mgi.frontend.datamodel.phenotype.*;
 
 /**
  * This is a special display layer class for representing the allele phenotype by genotype table

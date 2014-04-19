@@ -1,15 +1,8 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.List;
 
-import mgi.frontend.datamodel.Marker;
-
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
-
-import javax.persistence.Column;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -20,8 +13,6 @@ public class GxdLitAgeAssayTypePairTable {
 	//-------------------
 	// instance variables
 	//-------------------
-
-    private Logger logger = LoggerFactory.getLogger(GxdLitAgeAssayTypePairTable.class);
 
 	// encapsulated row object
 	private List<String> ages;
@@ -34,9 +25,6 @@ public class GxdLitAgeAssayTypePairTable {
 	//-------------
 	// constructors
 	//-------------
-
-	// hide the default constructor - we NEED a foo to wrap
-    private GxdLitAgeAssayTypePairTable () {}
 
     public GxdLitAgeAssayTypePairTable (List<String> ages, List<GxdLitAssayTypeSummaryRow> assayTypes) {
     	this.ages = ages;

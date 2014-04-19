@@ -7,29 +7,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.AnnotationInferredFromID;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
-import mgi.frontend.datamodel.Reference;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class BigExcelGoReferenceSummary extends AbstractBigExcelView {
-	
-	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(BigExcelGoReferenceSummary.class);
-
-	
+public class BigExcelGoReferenceSummary extends AbstractBigExcelView 
+{	
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void buildExcelDocument(Map model, SXSSFWorkbook workbook, 
+	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		List<Annotation> results = (List<Annotation>) model.get("results");		
-		Reference r = (Reference) model.get("reference");
+		List<Annotation> results = (List<Annotation>) model.get("results");	
 		
 		Sheet sheet = workbook.createSheet();
 		Row row;

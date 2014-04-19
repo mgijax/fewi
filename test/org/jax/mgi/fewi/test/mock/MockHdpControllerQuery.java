@@ -1,21 +1,12 @@
 package org.jax.mgi.fewi.test.mock;
 
-import mgi.frontend.datamodel.Marker;
-
 import org.jax.mgi.fewi.controller.DiseasePortalController;
-import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
 
 public class MockHdpControllerQuery extends AbstractMockHdpQuery
 {

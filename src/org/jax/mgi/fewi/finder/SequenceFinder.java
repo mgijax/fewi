@@ -1,40 +1,11 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.*;
-
-/*-------------------------------*/
-/* to be changed for each Finder */
-/*-------------------------------*/
-
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MarkerSequenceAssociation;
-import mgi.frontend.datamodel.MarkerTissueCount;
 import mgi.frontend.datamodel.Sequence;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Example;
-import org.hibernate.NullPrecedence;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.jax.mgi.fewi.hunter.HibernateSequenceHunter;
-import org.jax.mgi.fewi.hunter.SolrSequenceKeyHunter;
-import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
-
-/*----------------------------------------*/
-/* standard classes, used for all Finders */
-/*----------------------------------------*/
-
-// fewi
-import org.jax.mgi.fewi.searchUtil.Paginator;
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-
-// external libs
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

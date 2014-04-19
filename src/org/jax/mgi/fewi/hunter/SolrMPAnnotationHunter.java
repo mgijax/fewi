@@ -1,23 +1,24 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
-import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
+import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrMPAnnotationHunter extends SolrHunter {
+public class SolrMPAnnotationHunter extends SolrHunter<SolrMPAnnotation> {
 
     /***
      * The constructor sets up this hunter so that it is specific to finding
@@ -55,8 +56,9 @@ public class SolrMPAnnotationHunter extends SolrHunter {
 	super.solrUrl = solrUrl;
     }
 
-    @Override
-    protected void packInformation (QueryResponse rsp, SearchResults sr,
+    @SuppressWarnings("unchecked")
+	@Override
+    protected void packInformation (QueryResponse rsp, SearchResults<SolrMPAnnotation> sr,
 	SearchParams sp) {
 
 	logger.debug ("Entering SolrMPAnnotationHunter.packInformation()");
@@ -64,11 +66,9 @@ public class SolrMPAnnotationHunter extends SolrHunter {
 	List<SolrMPAnnotation> annots = new ArrayList<SolrMPAnnotation>();
 
 	SolrDocumentList sdl = rsp.getResults();
-	SolrDocument doc;
 	SolrMPAnnotation annot;
 
-	for (Iterator i = sdl.iterator(); i.hasNext();) {
-	    doc = (SolrDocument) i.next();
+	for (SolrDocument doc : sdl) {
 	    annot = new SolrMPAnnotation();
 
 	    annot.setAnnotationKey ((String)

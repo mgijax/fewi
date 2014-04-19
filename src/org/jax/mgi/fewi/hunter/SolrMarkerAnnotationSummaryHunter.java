@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.hunter;
 
+import mgi.frontend.datamodel.Annotation;
+
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
@@ -9,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrMarkerAnnotationSummaryHunter extends SolrHunter {
+public class SolrMarkerAnnotationSummaryHunter extends SolrHunter<Annotation> {
 
     /***
      * The constructor sets up this hunter so that it is specific to finding

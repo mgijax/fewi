@@ -2,11 +2,11 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import mgi.frontend.datamodel.Allele;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -17,9 +17,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
-import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.CreFields;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
@@ -27,7 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrCreSummaryHunter extends SolrHunter {
+public class SolrCreSummaryHunter extends SolrHunter<Allele> {
     
     /***
      * The constructor sets up this hunter so that it is specific to cre
@@ -109,7 +107,7 @@ public class SolrCreSummaryHunter extends SolrHunter {
      * only need a list of Marker objects.
      */
     @Override
-    protected void packInformation(QueryResponse rsp, SearchResults sr,
+    protected void packInformation(QueryResponse rsp, SearchResults<Allele> sr,
             SearchParams sp) {
         
         // A list of all the primary keys in the document
@@ -121,9 +119,8 @@ public class SolrCreSummaryHunter extends SolrHunter {
          */
         
         List<String> resultKeys = new ArrayList<String>();
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
             
             //logger.debug(doc.toString());
             // Set the result object

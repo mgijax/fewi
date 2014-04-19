@@ -19,8 +19,9 @@ public class BigExcelReferenceSummary extends AbstractBigExcelView {
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(BigExcelReferenceSummary.class);
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void buildExcelDocument(Map model, SXSSFWorkbook workbook,
+	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		

@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.hunter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrMarkerSummaryHunter extends SolrHunter {
+public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
 
     /***
      * The constructor sets up this hunter so that it is specific to finding
@@ -154,7 +153,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
      * only need a list of Marker objects.
      */
     @Override
-    protected void packInformation(QueryResponse rsp, SearchResults sr,
+    protected void packInformation(QueryResponse rsp, SearchResults<SolrSummaryMarker> sr,
             SearchParams sp) {
         
         // A list of all the primary keys in the document
@@ -167,9 +166,8 @@ public class SolrMarkerSummaryHunter extends SolrHunter {
         Map<String,SolrSummaryMarker> keyToResultMap = new HashMap<String,SolrSummaryMarker>();
         
         List<String> resultKeys = new ArrayList<String>();
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
             
             //logger.debug(doc.toString());
             // Set the result object

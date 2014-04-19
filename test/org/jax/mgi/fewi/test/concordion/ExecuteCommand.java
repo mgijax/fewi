@@ -9,7 +9,6 @@ import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.ExecuteEvent;
 import org.concordion.api.listener.ExecuteListener;
 import org.concordion.internal.Row;
-import org.jax.mgi.fewi.test.concordion.TableSupport;
 import org.concordion.internal.util.Announcer;
 
 public class ExecuteCommand extends AbstractCommand{

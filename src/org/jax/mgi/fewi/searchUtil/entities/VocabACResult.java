@@ -1,6 +1,5 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Represents a result from the Vocab Term autocomplete hunter.

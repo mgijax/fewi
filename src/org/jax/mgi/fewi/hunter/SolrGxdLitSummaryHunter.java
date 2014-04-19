@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.propertyMapper.SolrReferenceTextSearchPropertyMapper;

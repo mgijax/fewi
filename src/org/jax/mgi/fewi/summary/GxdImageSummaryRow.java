@@ -4,13 +4,10 @@ package org.jax.mgi.fewi.summary;
 //
 //}
 
-import java.util.*;
-
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.ImageUtils;
-import org.jax.mgi.fewi.config.ContextLoader;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

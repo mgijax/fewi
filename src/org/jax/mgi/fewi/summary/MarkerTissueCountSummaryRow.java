@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.summary;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -15,8 +13,6 @@ public class MarkerTissueCountSummaryRow {
   //-------------------
   // instance variables
   //-------------------
-
-  private Logger logger = LoggerFactory.getLogger(MarkerTissueCountSummaryRow.class);
 
   // encapsulated row object
   private MarkerTissueCount mtc;
@@ -30,9 +26,6 @@ public class MarkerTissueCountSummaryRow {
   //-------------
   // constructors
   //-------------
-
-  // hide the default constructor - we NEED a marker tissue count to wrap
-  private MarkerTissueCountSummaryRow () {}
 
   public MarkerTissueCountSummaryRow (MarkerTissueCount mtc) {
     this.mtc = mtc;

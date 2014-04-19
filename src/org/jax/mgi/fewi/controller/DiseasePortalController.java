@@ -31,6 +31,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
+import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.summary.HdpDiseaseSummaryRow;
 import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
@@ -51,7 +52,6 @@ import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -78,10 +78,6 @@ public class DiseasePortalController
 	// get the finders used by various methods
 	@Autowired
 	private DiseasePortalFinder hdpFinder;
-
-    @Value("${solr.factetNumberDefault}")
-    private Integer facetLimit;
-
 
     //--------------------------//
     // Disease Portal Query Form
@@ -346,8 +342,12 @@ public class DiseasePortalController
       	List<SolrHdpGridCluster> gridClusters = searchResults.getResultObjects();
 
       	// search for diseases in result set - make column headers and ID list
-      	SearchResults<String> diseaseNamesResults = this.getGridDiseaseColumns(request, query,session);
-      	List<String> diseaseNames = diseaseNamesResults.getResultObjects();
+      	SearchResults<SolrString> diseaseNamesResults = this.getGridDiseaseColumns(request, query,session);
+      	List<String> diseaseNames = new ArrayList<String>();
+      	for(SolrString ss : diseaseNamesResults.getResultObjects())
+      	{
+      		diseaseNames.add(ss.toString());
+      	}
       	boolean moreDiseasesNotShown = diseaseNamesResults.getTotalCount() > diseaseNames.size();
       			
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
@@ -839,7 +839,7 @@ public class DiseasePortalController
 		return hdpFinder.getGridClusters(params);
 	}
 
-	public SearchResults<String> getGridDiseaseColumns(
+	public SearchResults<SolrString> getGridDiseaseColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			HttpSession session)
@@ -856,7 +856,7 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridDiseaseColumns finished");
-		SearchResults<String> results = hdpFinder.getGridDiseases(params);
+		SearchResults<SolrString> results = hdpFinder.getGridDiseases(params);
 
 		return results;
 	}
@@ -877,9 +877,14 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridMpHeaderColumns finished");
-		SearchResults<String> results = hdpFinder.huntGridMPHeadersGroup(params);
+		SearchResults<SolrString> results = hdpFinder.huntGridMPHeadersGroup(params);
 
-		return results.getResultObjects();
+		List<String> headerCols = new ArrayList<String>();
+		for(SolrString ss : results.getResultObjects())
+		{
+			headerCols.add(ss.toString());
+		}
+		return headerCols;
 	}
 
 	public List<SolrVocTerm> getGridMpTermColumns(
@@ -1008,7 +1013,6 @@ public class DiseasePortalController
 		//params.setIncludeMetaHighlight(doHighlight);
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
-		List<Sort> sorts = new ArrayList<Sort>();
 
 		//sorts.add(new Sort("score",true));
 		//sorts.add(new Sort(DiseasePortalFields.TERM,false));
@@ -1175,8 +1179,7 @@ public class DiseasePortalController
         // first, deal with sort direction
         String dirRequested  = request.getParameter("dir");
         boolean desc = false;
-        boolean asc = true;
-        if("desc".equalsIgnoreCase(dirRequested)){desc = true; asc=false;}
+        if("desc".equalsIgnoreCase(dirRequested)){desc = true;}
 
         // retrieve requested sort order; set default if not supplied
         String sortRequested = request.getParameter("sort");
@@ -1268,6 +1271,7 @@ public class DiseasePortalController
 		// add any file data that may be in the session
 		boolean useLocationsFile = usingLocationsQuery(query,session);
 		String locationsFileSet = (String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR);
+		@SuppressWarnings("unchecked")
 		List<String> markerKeysFromLocationsFile= DiseasePortalQueryForm.HUMAN.equals(query.getOrganism())
 				? (List<String>) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_HUMAN_KEYS)
 						: (List<String>) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_MOUSE_KEYS);

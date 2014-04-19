@@ -7,11 +7,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jax.mgi.fewi.controller.MarkerTissueCountController;
+import mgi.frontend.datamodel.MarkerTissueCount;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import mgi.frontend.datamodel.MarkerTissueCount;
 
 public class TextTissueSummary extends AbstractTextView {
 

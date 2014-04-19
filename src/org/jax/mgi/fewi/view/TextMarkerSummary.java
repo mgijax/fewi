@@ -1,16 +1,11 @@
 package org.jax.mgi.fewi.view;
 
 import java.io.BufferedWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import mgi.frontend.datamodel.AlleleSynonym;
-import mgi.frontend.datamodel.phenotype.AlleleSummaryDisease;
-import mgi.frontend.datamodel.phenotype.AlleleSummarySystem;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;

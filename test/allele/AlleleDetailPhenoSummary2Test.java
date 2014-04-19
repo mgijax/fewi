@@ -10,12 +10,8 @@ import mgi.frontend.datamodel.phenotype.PhenoTableSystemCell;
 import mgi.frontend.datamodel.phenotype.PhenoTableTerm;
 import mgi.frontend.datamodel.phenotype.PhenoTableTermCell;
 
-import org.jax.mgi.fewi.controller.AlleleController;
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 
 public class AlleleDetailPhenoSummary2Test extends BaseConcordionTest 

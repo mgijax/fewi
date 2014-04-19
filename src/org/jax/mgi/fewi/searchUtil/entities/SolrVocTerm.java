@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * Some fields may not pertain to every term, but maybe for a specific vocabulary.
  */
-public class SolrVocTerm 
+public class SolrVocTerm implements SolrHdpEntity
 {
 	String primaryId;
 	String term;

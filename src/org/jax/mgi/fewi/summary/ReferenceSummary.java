@@ -4,7 +4,6 @@ import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.Highlighter;
-import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

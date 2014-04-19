@@ -3,7 +3,6 @@ package gxd;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;

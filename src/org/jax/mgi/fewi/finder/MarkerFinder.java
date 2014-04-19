@@ -108,24 +108,28 @@ public class MarkerFinder {
     /* Retrieval of multiple markers
     /*---------------------------------*/
 
+    // TODO: should this be using the markerSummaryHunter? 
+    //		This gets a bit confusing, but am unsure about removing - kstone
     public SearchResults<Marker> getMarkers(SearchParams searchParams) {
 
         logger.debug("->getMarkers");
 
         // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+        SearchResults<SolrSummaryMarker> searchResults = new SearchResults<SolrSummaryMarker>();
 
         // ask the hunter to identify which objects to return
         markerSummaryHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
+        logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
 
+        // clone SearchResults to allow us to set Marker objects instead of SolrSummaryMarker
+        SearchResults<Marker> srMarker = new SearchResults<Marker>();
+        srMarker.cloneFrom(searchResults);
+        
         // gather objects identified by the hunter, add them to the results
-        List<Marker> markerList
-          = mrkGatherer.get( Marker.class, searchResults.getResultKeys() );
-        searchResults.setResultObjects(markerList);
+        List<Marker> markerList = mrkGatherer.get( Marker.class, srMarker.getResultKeys() );
+        srMarker.setResultObjects(markerList);
 
-        return searchResults;
+        return srMarker;
     }
     
     /*

@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrJournalsACHunter extends SolrHunter {
-    
+public class SolrJournalsACHunter extends SolrHunter<String>
+{    
     /***
      * The constructor sets up this hunter so that it pulls back a list of
      * possible journals for a given input string.

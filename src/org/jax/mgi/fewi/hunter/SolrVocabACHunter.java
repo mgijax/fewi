@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.Iterator;
-
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -25,7 +23,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class SolrVocabACHunter extends SolrHunter 
+public class SolrVocabACHunter extends SolrHunter<VocabACResult>
 {
     /***
      * The constructor sets up this hunter so that it is specific to sequence
@@ -70,7 +68,7 @@ public class SolrVocabACHunter extends SolrHunter
      * only need a list of VocabACResult objects.
      */
     @Override
-    protected void packInformation(QueryResponse rsp, SearchResults sr,
+    protected void packInformation(QueryResponse rsp, SearchResults<VocabACResult> sr,
             SearchParams sp) {
         
         // A list of all the primary keys in the document
@@ -82,9 +80,8 @@ public class SolrVocabACHunter extends SolrHunter
          * that was configured at the implementing class level.
          */
 
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
             
             //logger.debug(doc.toString());
             // Set the result object

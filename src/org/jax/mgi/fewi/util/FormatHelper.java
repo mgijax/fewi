@@ -5,9 +5,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,9 +14,7 @@ import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceLocation;
 import mgi.frontend.datamodel.VocabTerm;
-import mgi.frontend.datamodel.VocabTermEmapInfo;
 import mgi.frontend.datamodel.util.DatamodelUtils;
-import org.jax.mgi.fewi.util.TreeNode;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -426,9 +423,9 @@ public class FormatHelper
     public static String queryStringFromPost(HttpServletRequest request)
     {
       StringBuilder sb = new StringBuilder("");
-      for (Enumeration e = request.getParameterNames();e.hasMoreElements();)
+      for (Enumeration<String> e = request.getParameterNames();e.hasMoreElements();)
       {
-        String param = (String) e.nextElement();
+        String param = e.nextElement();
         sb.append(param).append("=").append(request.getParameter(param)).append("&");
       }
       String queryString = sb.toString();

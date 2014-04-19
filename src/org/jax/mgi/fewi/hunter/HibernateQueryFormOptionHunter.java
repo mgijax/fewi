@@ -1,13 +1,11 @@
 package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import mgi.frontend.datamodel.QueryFormOption;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.searchUtil.Filter;

@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.test.concordion;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,11 +14,9 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.ExpressionEvaluatedEvent;
-import org.concordion.api.listener.MissingRowEvent;
 import org.concordion.api.listener.SurplusRowEvent;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
-import org.jax.mgi.fewi.test.concordion.TableSupport;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
@@ -117,9 +113,9 @@ public class VerifySubsetOfCommand extends AbstractCommand {
         listeners.announce().expressionEvaluated(new ExpressionEvaluatedEvent(element));
     }
 
-    private void announceMissingRow(Element element) {
-        listeners.announce().missingRow(new MissingRowEvent(element));
-    }
+//    private void announceMissingRow(Element element) {
+//        listeners.announce().missingRow(new MissingRowEvent(element));
+//    }
 
     private void announceSurplusRow(Element element) {
         listeners.announce().surplusRow(new SurplusRowEvent(element));

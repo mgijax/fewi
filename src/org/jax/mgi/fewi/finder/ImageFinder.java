@@ -125,8 +125,7 @@ public class ImageFinder {
     logger.debug("->getPhenoImagesByAlleleKey()");
 
     // result object to be returned
-    SearchResults<ImageSummaryRow> searchResults
-      = new SearchResults<ImageSummaryRow>();
+    SearchResults<ImageSummaryRow> searchResults = new SearchResults<ImageSummaryRow>();
 
     // ask the hunter to identify which objects to return
     alleleImagesHunter.hunt(searchParams, searchResults);
@@ -134,8 +133,7 @@ public class ImageFinder {
       + searchResults.getResultKeys());
 
     // gather objects identified by the hunter
-    List<Image> imageList
-      = imageGatherer.get( Image.class, searchResults.getResultKeys() );
+    List<Image> imageList = imageGatherer.get( Image.class, searchResults.getResultKeys() );
 
     // list of summary objects to be returned
     List<ImageSummaryRow> imageSummaryRowList

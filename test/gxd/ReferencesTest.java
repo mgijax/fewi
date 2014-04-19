@@ -1,39 +1,14 @@
 package gxd;
 
-import static org.junit.Assert.*;
-import static org.springframework.test.web.ModelAndViewAssert.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
 import org.concordion.api.ExpectedToFail;
-import org.jax.mgi.fewi.controller.GXDController;
-import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
-import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
-import org.jax.mgi.fewi.hunter.SolrReferenceSummaryHunter;
-import org.jax.mgi.fewi.hunter.SolrSequenceSummaryHunter;
-import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.Sort;
-import org.jax.mgi.shr.fe.IndexConstants;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
-import org.springframework.web.servlet.ModelAndView;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:applicationContext-ci.xml"})

@@ -38,12 +38,8 @@ public class AccessionSummaryRow {
 	// constructors
 	//-------------
 
-	// hide the default constructor - we NEED a foo to wrap
-    private AccessionSummaryRow () {}
-
     public AccessionSummaryRow (Accession acc) {
     	this.acc = acc;
-    	return;
     }
 
 

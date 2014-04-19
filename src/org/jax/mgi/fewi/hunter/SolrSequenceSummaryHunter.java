@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.ArrayList;
-
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SortConstants;

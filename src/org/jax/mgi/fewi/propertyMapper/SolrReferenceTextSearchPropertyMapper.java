@@ -1,9 +1,6 @@
 package org.jax.mgi.fewi.propertyMapper;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.jax.mgi.fewi.searchUtil.Filter;
 
 /**
  * The SolrPropertyMapper class handles the mapping of operators being passed in from the 

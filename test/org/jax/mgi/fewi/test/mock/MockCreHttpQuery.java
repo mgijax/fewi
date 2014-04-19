@@ -1,13 +1,10 @@
 package org.jax.mgi.fewi.test.mock;
 
-import java.util.List;
-
 import org.codehaus.jackson.map.DeserializationConfig.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-import org.jax.mgi.fewi.summary.RecombinaseSummary;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

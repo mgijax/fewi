@@ -1,21 +1,14 @@
 package org.jax.mgi.fewi.finder;
 
 import java.util.List;
-import java.util.Comparator;
-import java.util.Collections;
 
-import mgi.frontend.datamodel.Allele;
-import mgi.frontend.datamodel.GxdAssayResult;
-import mgi.frontend.datamodel.Marker;
-
+import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdDifferentialHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdResultHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdSystemFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdAssayTypeFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdDetectedFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrGxdWildtypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdTheilerStageFacetHunter;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.hunter.SolrGxdWildtypeFacetHunter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;

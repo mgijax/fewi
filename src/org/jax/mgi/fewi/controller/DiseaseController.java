@@ -5,9 +5,6 @@ import java.util.List;
 import mgi.frontend.datamodel.Disease;
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
-import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.slf4j.Logger;
@@ -58,7 +55,7 @@ public class DiseaseController {
 
 	// find the requested disease by database key
 
-	SearchResults searchResults = diseaseFinder.getDiseaseByKey(dbKey);
+	SearchResults<Disease> searchResults = diseaseFinder.getDiseaseByKey(dbKey);
 	List<Disease> diseaseList = searchResults.getResultObjects();
 
 	// should only be one.  error condition if not.

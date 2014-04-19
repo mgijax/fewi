@@ -1,17 +1,14 @@
 package org.jax.mgi.fewi.view;
 
-import java.util.*;
 import java.io.BufferedWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.util.FormatHelper;
 
@@ -81,10 +78,5 @@ public class TextHdpDiseaseSummary extends AbstractTextView
 	{
 		if(i == null) return "";
 		return i.toString();
-	}
-	private String format(String str)
-	{
-		if(str == null) return "";
-		return str;
 	}
 }

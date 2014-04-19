@@ -10,8 +10,6 @@ import mgi.frontend.datamodel.MarkerSynonym;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.util.Highlighter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,8 +20,6 @@ public class GxdLitGeneSummaryRow {
 	//-------------------
 	// instance variables
 	//-------------------
-
-    private Logger logger = LoggerFactory.getLogger(GxdLitGeneSummaryRow.class);
 
 	// encapsulated row object
 	private GxdLitIndexRecord record;
@@ -41,9 +37,6 @@ public class GxdLitGeneSummaryRow {
 	//-------------
 	// constructors
 	//-------------
-
-	// hide the default constructor - we NEED a foo to wrap
-    private GxdLitGeneSummaryRow () {}
 
     public GxdLitGeneSummaryRow (GxdLitIndexRecord record, GxdLitQueryForm queryForm, Highlighter textHL) {
     	this.record = record;

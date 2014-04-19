@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 

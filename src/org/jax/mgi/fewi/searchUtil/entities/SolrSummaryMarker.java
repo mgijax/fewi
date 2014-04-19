@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Marker on marker summary

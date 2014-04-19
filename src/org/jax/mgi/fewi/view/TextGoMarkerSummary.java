@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.view;
 
 import java.io.BufferedWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,18 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
-import mgi.frontend.datamodel.BatchMarkerAllele;
-import mgi.frontend.datamodel.BatchMarkerId;
-import mgi.frontend.datamodel.BatchMarkerSnp;
 import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MarkerID;
-import mgi.frontend.datamodel.MarkerLocation;
-import mgi.frontend.datamodel.MarkerTissueCount;
 import mgi.frontend.datamodel.Reference;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.jax.mgi.fewi.forms.BatchQueryForm;
-import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

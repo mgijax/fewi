@@ -1,16 +1,13 @@
 package org.jax.mgi.fewi.util;
 
 // standard java
-import java.util.*;
-import java.util.regex.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-// internal
 import org.jax.mgi.fewi.config.ContextLoader;
-
-//external
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**  The NotesTagConverter class contains methods which encapsulate
 *   knowledge of the note tags found in note fields.  They allow for easy
@@ -32,9 +29,6 @@ public class NotesTagConverter
     private static List<TagConversion> tagConversionList = null;
 
     private String cssAnchorClass = "";
-
-    // logger for this class
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /* -------------------------------------------------------------------- */
     ///////////////
@@ -80,7 +74,7 @@ public class NotesTagConverter
     		tagConversionList = new ArrayList<TagConversion>();
     		 // Base URLs used in creating the replacement string patterns
             String fewiURL          = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-            String javawiURL        = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
+            //String javawiURL        = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
             String pywiURL          = ContextLoader.getConfigBean().getProperty("WI_URL");
             String mgihomeURL       = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
             String ipURL            = ContextLoader.getExternalUrls().getProperty("InterPro");
@@ -324,14 +318,14 @@ public class NotesTagConverter
     * @effects nothing
     * @throws
     */
-    private String convertTag (String parms, char delimiter, String replaceStr)
-    {
-    	return convertTag(parms,delimiter,replaceStr,false);
-    }
-    private String convertTag (String parms,char delimiter, String replaceStr,boolean noLink)
-    {
-    	return convertTag(parms,delimiter,replaceStr,noLink,false);
-    }
+//    private String convertTag (String parms, char delimiter, String replaceStr)
+//    {
+//    	return convertTag(parms,delimiter,replaceStr,false);
+//    }
+//    private String convertTag (String parms,char delimiter, String replaceStr,boolean noLink)
+//    {
+//    	return convertTag(parms,delimiter,replaceStr,noLink,false);
+//    }
     private String convertTag (String parms, char delimiter, String replaceStr,boolean noLink,boolean noSuperscript)
     {
         String      convertedTag    = "";

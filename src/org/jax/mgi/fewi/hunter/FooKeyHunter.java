@@ -1,15 +1,15 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-// mgi libs
+import mgi.frontend.datamodel.Marker;
+
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-
-// external libs
-import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 
 //----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ public class FooKeyHunter {
     // logger for the class
     private Logger logger = LoggerFactory.getLogger(FooKeyHunter.class);
 
-    public void hunt(SearchParams searchParams, SearchResults searchResults) {
+    public void hunt(SearchParams searchParams, SearchResults<Marker> searchResults) {
 
         logger.debug("-> Faking hunter responsibilities");
 

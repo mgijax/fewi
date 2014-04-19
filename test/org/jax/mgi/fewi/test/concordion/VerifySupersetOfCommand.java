@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.test.concordion;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +18,6 @@ import org.concordion.api.listener.MissingRowEvent;
 import org.concordion.api.listener.SurplusRowEvent;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
-import org.jax.mgi.fewi.test.concordion.TableSupport;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 

@@ -11,8 +11,8 @@ import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.finder.MarkerAnnotationFinder;
-import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;

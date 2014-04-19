@@ -12,8 +12,6 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 public class SolrReferenceSummaryBaseHunter extends SolrHunter {
     

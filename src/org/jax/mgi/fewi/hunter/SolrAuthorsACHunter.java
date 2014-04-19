@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrAuthorsACHunter extends SolrHunter {
-    
+public class SolrAuthorsACHunter extends SolrHunter<String>
+{    
     /***
      * The constructor sets up this hunter so that it is specific to sequence
      * summary pages.  Each item in the constructor sets a value that it has 

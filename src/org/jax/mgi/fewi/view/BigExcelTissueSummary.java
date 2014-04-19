@@ -14,8 +14,9 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 public class BigExcelTissueSummary extends AbstractBigExcelView {
 
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void buildExcelDocument(Map model, SXSSFWorkbook workbook,
+	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		

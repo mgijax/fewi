@@ -1,22 +1,12 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
-
-/*
-* import mgi.frontend.datamodel.Annotation;
-* import mgi.frontend.datamodel.Genotype;
-*/
-
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.jax.mgi.fewi.config.ContextLoader;
-
-import javax.persistence.Column;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -28,8 +18,6 @@ public class MPSummaryRow {
     //-------------------
     // instance variables
     //-------------------
-
-    private Logger logger = LoggerFactory.getLogger(MPSummaryRow.class);
 
     // encapsulated row object
     private List<SolrMPAnnotation> annotations = 
@@ -46,9 +34,6 @@ public class MPSummaryRow {
     //-------------
     // constructors
     //-------------
-
-    // hide the default constructor
-    private MPSummaryRow () {}
 
     // require a Genotype when we create an MPSummaryRow
     public MPSummaryRow (int genotypeKey) {

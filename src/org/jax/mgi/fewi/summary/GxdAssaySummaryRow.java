@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.List;
-
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.slf4j.Logger;

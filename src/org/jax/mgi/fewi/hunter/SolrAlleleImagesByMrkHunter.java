@@ -1,17 +1,19 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.summary.ImageSummaryRow;
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrAlleleImagesByMrkHunter extends SolrHunter {
+public class SolrAlleleImagesByMrkHunter extends SolrHunter<ImageSummaryRow> {
 
   /***
    * The constructor sets up this hunter so that it is specific to finding

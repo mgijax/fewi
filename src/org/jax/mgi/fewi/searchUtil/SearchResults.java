@@ -211,6 +211,34 @@ public class SearchResults<T> {
     		}
     	}
     }
+    
+    /*
+     * takes an existing SR object and copies over every non-T field (I.e. excludes resultObjects)
+     * 	unless clazz != null, then it will try to cast every object in resultObjects to clazz
+     */
+    public void cloneFrom(SearchResults<?> existingSr)
+    {
+    	cloneFrom(existingSr,null);
+    }
+    @SuppressWarnings("unchecked")
+	public void cloneFrom(SearchResults<?> existingSr,Class<T> clazz)
+    {
+    	this.setTotalCount(existingSr.getTotalCount());
+    	this.setResultKeys(existingSr.getResultKeys());
+    	this.setResultStrings(existingSr.getResultStrings());
+    	this.setMetaMapping(existingSr.getMetaMapping());
+    	this.setResultFacets(existingSr.getResultFacets());
+    	this.setResultSetMeta(existingSr.getResultSetMeta());
+    	if(clazz != null)
+    	{
+    		List<T> newResultObjects = new ArrayList<T>();
+    		for(Object obj : existingSr.getResultObjects())
+    		{
+    			newResultObjects.add((T) obj);
+    		}
+    		this.setResultObjects(newResultObjects);
+    	}
+    }
 }
 
 class FacetSorter implements Comparator<String> {

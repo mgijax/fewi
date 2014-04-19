@@ -2,17 +2,18 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.Arrays;
 
+import mgi.frontend.datamodel.Allele;
+
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
-import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrAlleleKeyHunter extends SolrHunter {
+public class SolrAlleleKeyHunter extends SolrHunter<Allele> {
     
     /***
      * The constructor sets up this hunter so that it is specific to finding

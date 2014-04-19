@@ -2,7 +2,9 @@ package org.jax.mgi.fewi.util;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import mgi.frontend.datamodel.VocabTerm;
+
 import org.jax.mgi.fewi.config.ContextLoader;
 
 public class TreeNode {

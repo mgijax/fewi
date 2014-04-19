@@ -1,11 +1,8 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jax.mgi.fewi.util.DBConstants;
-import org.jax.mgi.fewi.config.ContextLoader;
-
-import javax.persistence.Column;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

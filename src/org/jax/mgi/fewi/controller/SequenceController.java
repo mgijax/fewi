@@ -85,7 +85,7 @@ public class SequenceController {
         searchParams.setFilter(seqIdFilter);
 
         // find the requested sequence
-        SearchResults searchResults
+        SearchResults<Sequence> searchResults
           = sequenceFinder.getSequenceByID(searchParams);
         List<Sequence> seqList = searchResults.getResultObjects();
 

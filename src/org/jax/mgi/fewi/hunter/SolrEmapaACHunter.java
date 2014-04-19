@@ -1,20 +1,9 @@
 package org.jax.mgi.fewi.hunter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
-import org.jax.mgi.fewi.searchUtil.MetaData;
-import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -30,7 +19,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class SolrEmapaACHunter extends SolrHunter 
+public class SolrEmapaACHunter extends SolrHunter<EmapaACResult>
 {
     /***
      * The constructor sets up this hunter so that it is specific to our need.
@@ -66,7 +55,7 @@ public class SolrEmapaACHunter extends SolrHunter
      * only need a list of EmapaACResult objects.
      */
     @Override
-    protected void packInformation(QueryResponse rsp, SearchResults sr,
+    protected void packInformation(QueryResponse rsp, SearchResults<EmapaACResult> sr,
             SearchParams sp) {
 
         // A list of all the primary keys in the document
@@ -78,9 +67,8 @@ public class SolrEmapaACHunter extends SolrHunter
          * that was configured at the implementing class level.
          */
 
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
             
             // Set the result object
             String structure = (String) doc.getFieldValue(

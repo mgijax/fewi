@@ -1,25 +1,10 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.*;
-
-/*-------------------------------*/
-/* to be changed for each Finder */
-/*-------------------------------*/
-
-import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
 import org.jax.mgi.fewi.hunter.SolrMPAnnotationHunter;
-
-/*----------------------------------------*/
-/* standard classes, used for all Finders */
-/*----------------------------------------*/
-
-// fewi
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-
-// external libs
+import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

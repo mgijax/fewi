@@ -1,16 +1,9 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
-
 import mgi.frontend.datamodel.Image;
 
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.jax.mgi.fewi.util.FormatHelper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,7 +15,6 @@ public class RecomImage {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(RecomImage.class);
 
 	// encapsulated row object
 	private Image image;
@@ -37,10 +29,6 @@ public class RecomImage {
 	//-------------
 	// constructors
 	//-------------
-
-	// hide the default constructor - we NEED a foo to wrap
-    private RecomImage () {}
-
     public RecomImage (Image image, int imageIndex) {
     	this.image = image;
     	this.imageIndex = imageIndex;

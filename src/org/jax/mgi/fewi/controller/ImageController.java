@@ -1,54 +1,40 @@
 package org.jax.mgi.fewi.controller;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-/*------------------------------*/
-/* controller specific
-/*------------------------------*/
+import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.Genotype;
+import mgi.frontend.datamodel.Image;
+import mgi.frontend.datamodel.ImageAllele;
+import mgi.frontend.datamodel.ImageID;
+import mgi.frontend.datamodel.ImagePane;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Reference;
 
-// data model objects
-import mgi.frontend.datamodel.*;
-
-// index constants
-import org.jax.mgi.shr.fe.IndexConstants;
-
-// fewi
-import org.jax.mgi.fewi.finder.ImageFinder;
 import org.jax.mgi.fewi.finder.AlleleFinder;
+import org.jax.mgi.fewi.finder.ImageFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
-import org.jax.mgi.fewi.summary.ImageSummaryRow;
-import org.jax.mgi.fewi.util.IDLinker;
-import org.jax.mgi.fewi.util.PaginationControls;
-import org.jax.mgi.fewi.config.ContextLoader;
-
-/*--------------------------------------*/
-/* standard imports for all controllers */
-/*--------------------------------------*/
-
-// internal
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-
-// external
-import javax.servlet.http.HttpServletRequest;
+import org.jax.mgi.fewi.summary.ImageSummaryRow;
+import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.util.PaginationControls;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /*-------*/
@@ -148,7 +134,7 @@ public class ImageController {
         logger.debug("->phenoImageDetailByKey started");
 
         // find the requested image
-        SearchResults searchResults
+        SearchResults<Image> searchResults
           = imageFinder.getImageByKey(dbKey);
 
         List<Image> imageList = searchResults.getResultObjects();
@@ -174,7 +160,7 @@ public class ImageController {
         logger.debug("->phenoImageDetailByKey started");
 
         // find the requested image
-        SearchResults searchResults
+        SearchResults<Image> searchResults
           = imageFinder.getImageByKey(dbKey);
 
         List<Image> imageList = searchResults.getResultObjects();
@@ -224,7 +210,7 @@ public class ImageController {
         logger.debug("->expressionImageDetailByKey started");
 
         // find the requested image
-        SearchResults searchResults
+        SearchResults<Image> searchResults
           = imageFinder.getImageByKey(dbKey);
 
         List<Image> imageList = searchResults.getResultObjects();
@@ -365,7 +351,6 @@ public class ImageController {
         logger.debug("->phenoImageSummeryByAlleleKey started");
 
         ModelAndView mav = new ModelAndView("image_phenoSummary_by_allele");
-        Paginator page = new Paginator();
 
         // find the requested allele for header
         SearchResults<Allele> alleleSearchResults
@@ -655,7 +640,7 @@ public class ImageController {
         searchParams.setFilter(imageIdFilter);
 
         // find the requested image
-        SearchResults searchResults
+        SearchResults<Image> searchResults
           = imageFinder.getImageByID(searchParams);
 
         return searchResults.getResultObjects();
@@ -713,15 +698,12 @@ public class ImageController {
         List<ImageID> otherIDs = image.getOtherIds();
         if (otherIDs.size() > 0) {
 
-            ImageID thisOtherID;
 //            IDLinker idLinker = ContextLoader.getIDLinker();
-	    IDLinker idLinker = IDLinker.getInstance();
+            IDLinker idLinker = IDLinker.getInstance();
             List<String> otherIdLinks = new ArrayList<String>();
 
             // for each 'otherID', generate the anchor to external resource
-            Iterator otherIDsIter = otherIDs.iterator();
-            while (otherIDsIter.hasNext() ){
-              thisOtherID = (ImageID)otherIDsIter.next();
+            for (ImageID thisOtherID : otherIDs){
               otherIdLinks.add(idLinker.getLinks(thisOtherID));
             }
             mav.addObject("otherIdLinks", otherIdLinks);

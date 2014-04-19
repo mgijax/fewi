@@ -1,42 +1,30 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-/*
-* import mgi.frontend.datamodel.Annotation;
-* import mgi.frontend.datamodel.Genotype;
-* import mgi.frontend.datamodel.Reference;
-*/
-
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Term;
-import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
+
 import org.jax.mgi.fewi.finder.MPAnnotationFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
-import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
 import org.jax.mgi.fewi.summary.MPSummaryRow;
-import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /*-------*/

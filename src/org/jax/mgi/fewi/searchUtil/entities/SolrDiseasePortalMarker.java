@@ -1,8 +1,8 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.*;
+import java.util.List;
 
-public class SolrDiseasePortalMarker
+public class SolrDiseasePortalMarker implements SolrHdpEntity
 {
 	String markerKey;
 	String symbol = new String();

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.Reference;
 
 public class TextFooSummary extends AbstractTextView {
 

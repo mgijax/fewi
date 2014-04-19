@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.summary;
 import mgi.frontend.datamodel.Annotation;
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -15,8 +13,6 @@ public class OMIMSummaryRow {
 	//-------------------
 	// instance variables
 	//-------------------
-
-    private Logger logger = LoggerFactory.getLogger(OMIMSummaryRow.class);
 
 	// encapsulated row object
 	private Annotation annot;
@@ -29,9 +25,6 @@ public class OMIMSummaryRow {
 	//-------------
 	// constructors
 	//-------------
-
-	// hide the default constructor - we NEED a foo to wrap
-    private OMIMSummaryRow () {}
 
     public OMIMSummaryRow (Annotation markerAnnot) {
     	this.annot = markerAnnot;

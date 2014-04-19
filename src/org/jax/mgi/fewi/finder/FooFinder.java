@@ -1,25 +1,14 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.*;
-
-/*-------------------------------*/
-/* to be changed for each Finder */
-/*-------------------------------*/
+import java.util.List;
 
 import mgi.frontend.datamodel.Marker;
+
 import org.jax.mgi.fewi.hunter.FooKeyHunter;
 import org.jax.mgi.fewi.hunter.FooSummaryHunter;
-
-/*----------------------------------------*/
-/* standard classes, used for all Finders */
-/*----------------------------------------*/
-
-// fewi
+import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-
-// external libs
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

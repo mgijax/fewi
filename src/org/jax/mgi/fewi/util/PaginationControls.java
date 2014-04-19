@@ -1,16 +1,9 @@
 package org.jax.mgi.fewi.util;
 
 // standard java
-import java.util.*;
-
-// internal
-import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.Paginator;
-
-//external
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.servlet.http.HttpServletRequest;
 
 
 /**

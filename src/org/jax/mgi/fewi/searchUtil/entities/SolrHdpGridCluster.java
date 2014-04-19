@@ -1,8 +1,9 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SolrHdpGridCluster
+public class SolrHdpGridCluster implements SolrHdpEntity
 {
 	Integer gridClusterKey;
 	String homologeneId;

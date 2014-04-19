@@ -17,7 +17,7 @@ public class SolrCachedBatchMarkerHunter {
     // logger for the class
     private Logger logger = LoggerFactory.getLogger(SolrCachedBatchMarkerHunter.class);
 
-    public void hunt(SearchParams searchParams, SearchResults searchResults) {
+    public void hunt(SearchParams searchParams, SearchResults<?> searchResults) {
 
         logger.debug("-> Faking hunter responsibilities");
 

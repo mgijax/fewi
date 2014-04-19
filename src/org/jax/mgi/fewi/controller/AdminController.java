@@ -1,52 +1,12 @@
 package org.jax.mgi.fewi.controller;
 
-import java.util.*;
-
-/*------------------------------*/
-/* to change in each controller */
-/*------------------------------*/
-
-// fewi
-import org.jax.mgi.fewi.finder.FooFinder;
-import org.jax.mgi.fewi.finder.ReferenceFinder;
-import org.jax.mgi.fewi.forms.FooQueryForm;
-import org.jax.mgi.fewi.forms.ReferenceQueryForm;
-import org.jax.mgi.fewi.summary.FooSummaryRow;
-
-// data model objects
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.Reference;
-
-
-/*--------------------------------------*/
-/* standard imports for all controllers */
-/*--------------------------------------*/
-
-// internal
-import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.Paginator;
-import org.jax.mgi.fewi.searchUtil.Sort;
-import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-
-// external
 import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /*-------*/

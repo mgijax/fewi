@@ -1,6 +1,5 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.List;
 
 public class SolrGxdAssay 
 {

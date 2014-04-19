@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mgi.frontend.datamodel.hdp.*;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;

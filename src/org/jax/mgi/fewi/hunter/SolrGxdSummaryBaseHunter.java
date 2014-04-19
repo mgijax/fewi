@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -189,9 +188,8 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
          * that was configured at the implementing class level.
          */
 
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
 
             //logger.debug(doc.toString());
             // Set the result object
@@ -362,9 +360,8 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
          * that was configured at the implementing class level.
          */
 
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
            
             SolrGxdImage image = new SolrGxdImage();
             image.setImagePaneKey((Integer) doc.getFieldValue(ImagePaneFields.IMAGE_PANE_KEY));

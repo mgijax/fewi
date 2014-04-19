@@ -64,6 +64,7 @@ public class AbstractReportView extends AbstractView
 			}
 		}
 		
+		@SuppressWarnings("serial")
 		protected class TimeOutException extends Exception
 		{
 			public TimeOutException(String message)

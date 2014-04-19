@@ -1,25 +1,19 @@
 package org.jax.mgi.fewi.view;
 
-import java.util.*;
 import java.io.BufferedWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.jax.mgi.fewi.finder.AlleleFinder;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
-import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.NotesTagConverter;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.phenotype.AlleleSummaryDisease;
 import mgi.frontend.datamodel.phenotype.AlleleSummarySystem;
+
+import org.apache.commons.lang.StringUtils;
 
 public class TextAlleleSummary extends AbstractTextView
 {
@@ -29,8 +23,8 @@ public class TextAlleleSummary extends AbstractTextView
     //-------------------
     private static String NORMAL_PHENOTYPE="normal phenotype";
     private static String PHENOTYPE_NOT_ANALYZED="phenotype not analyzed";
-    private static String CELL_LINE="Cell Line";
-    private static String CHIMERIC="Chimeric";
+    //private static String CELL_LINE="Cell Line";
+    //private static String CHIMERIC="Chimeric";
     private static String NOT_APPLICABLE="Not Applicable";
 
     //-----------------------------------
@@ -45,7 +39,8 @@ public class TextAlleleSummary extends AbstractTextView
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 		System.out.println(response.getCharacterEncoding());
 
-        List<Allele> alleles = (List<Allele>) model.get("alleles");
+        @SuppressWarnings("unchecked")
+		List<Allele> alleles = (List<Allele>) model.get("alleles");
 
 		// write the headers
 		String[] headerTitles = {
@@ -118,11 +113,5 @@ public class TextAlleleSummary extends AbstractTextView
 			writer.write(StringUtils.join(diseases," | ") + "\t");
 			writer.write("\r\n");
 		}
-	}
-
-	private String format(String str)
-	{
-		if(str == null) return "";
-		return str;
 	}
 }

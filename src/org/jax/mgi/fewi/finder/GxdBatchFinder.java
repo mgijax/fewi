@@ -1,7 +1,5 @@
 package org.jax.mgi.fewi.finder;
 
-import mgi.frontend.datamodel.GxdAssayResult;
-
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;

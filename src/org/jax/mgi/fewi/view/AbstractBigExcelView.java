@@ -1,25 +1,19 @@
 package org.jax.mgi.fewi.view;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
 import java.util.Locale;
-
-import org.springframework.web.servlet.view.AbstractView;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -53,7 +47,7 @@ public abstract class AbstractBigExcelView extends AbstractReportView
 	 * Renders the view given the specified model.
 	 */
 	protected final void renderMergedOutputModel(
-			Map model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+			Map<String,Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		SXSSFWorkbook workbook;
 		if (this.url != null) {
@@ -125,7 +119,7 @@ public abstract class AbstractBigExcelView extends AbstractReportView
 	 * @param response in case we need to set cookies. Shouldn't write to it.
 	 */
 	protected abstract void buildExcelDocument(
-			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
+			Map<String,Object> model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
 
 	/**

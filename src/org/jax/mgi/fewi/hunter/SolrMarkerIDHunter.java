@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.hunter;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.shr.fe.IndexConstants;
-import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 

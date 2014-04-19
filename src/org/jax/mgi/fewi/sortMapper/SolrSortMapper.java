@@ -7,7 +7,7 @@ public class SolrSortMapper {
     
     List <String> sortList = new ArrayList<String>();
     
-    public SolrSortMapper(List sortList) {
+    public SolrSortMapper(List<String> sortList) {
         this.sortList = sortList;
     }
     

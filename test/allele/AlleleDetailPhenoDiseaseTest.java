@@ -1,20 +1,11 @@
 package allele;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mgi.frontend.datamodel.AlleleDisease;
-import mgi.frontend.datamodel.phenotype.*;
 
-import org.jax.mgi.fewi.controller.AlleleController;
 import org.jax.mgi.fewi.test.base.BaseConcordionTest;
 import org.jax.mgi.fewi.test.mock.MockRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 public class AlleleDetailPhenoDiseaseTest extends BaseConcordionTest {
 	

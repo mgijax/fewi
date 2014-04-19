@@ -1,9 +1,6 @@
 package org.jax.mgi.fewi.view;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -33,7 +29,7 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 	
 	@Override
 	public void buildExcelDocument(
-			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception
+			Map<String,Object> model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 			logger.debug("buildExcelDocument");
 			String filename = "MGIgeneExpressionQuery_"+getCurrentDate();

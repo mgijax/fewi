@@ -1,7 +1,8 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 import mgi.frontend.datamodel.QueryFormOption;
 
 import org.jax.mgi.fewi.hunter.HibernateQueryFormOptionHunter;

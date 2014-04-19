@@ -1,39 +1,10 @@
 package junit;
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-import org.jax.mgi.fewi.controller.GXDController;
-import org.jax.mgi.fewi.forms.GxdQueryForm;
-import org.jax.mgi.fewi.searchUtil.Paginator;
-import org.jax.mgi.fewi.searchUtil.SearchParams;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
-import org.jax.mgi.fewi.summary.JsonSummaryResponse;
-import org.jax.mgi.fewi.test.mock.MockJSONGXDAssayResult;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
-import org.springframework.validation.BeanPropertyBindingResult;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:applicationContext-ci.xml"})

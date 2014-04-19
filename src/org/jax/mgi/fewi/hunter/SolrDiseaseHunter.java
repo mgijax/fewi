@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.hunter;
 
+import mgi.frontend.datamodel.Disease;
+
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.shr.fe.IndexConstants;
@@ -7,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrDiseaseHunter extends SolrHunter {
+public class SolrDiseaseHunter extends SolrHunter<Disease> {
 
     /***
      * The constructor sets up this hunter so that it is specific to finding

@@ -71,7 +71,7 @@ public class HomologyController {
 	Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
 	searchParams.setFilter(markerIdFilter);
 
-	SearchResults searchResults = markerFinder.getMarkerByID(searchParams);
+	SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
 	List<Marker> markerList = searchResults.getResultObjects();
 
 	// should only be one.  error condition if not.
@@ -107,7 +107,7 @@ public class HomologyController {
 
 	// find the requested marker by database key
 
-	SearchResults searchResults = markerFinder.getMarkerByKey(dbKey);
+	SearchResults<Marker> searchResults = markerFinder.getMarkerByKey(dbKey);
 	List<Marker> markerList = searchResults.getResultObjects();
 
 	// should only be one.  error condition if not.

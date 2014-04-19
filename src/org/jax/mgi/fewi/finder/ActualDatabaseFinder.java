@@ -1,7 +1,8 @@
 package org.jax.mgi.fewi.finder;
 
-import mgi.frontend.datamodel.ActualDatabase;
 import java.util.List;
+
+import mgi.frontend.datamodel.ActualDatabase;
 
 import org.jax.mgi.fewi.hunter.HibernateActualDatabaseHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;

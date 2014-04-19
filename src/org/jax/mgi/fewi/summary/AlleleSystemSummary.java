@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.summary;
 
 import mgi.frontend.datamodel.AlleleSystem;
-import java.util.List;
 
 /** wrapper around an AlleleSystem object to expose only certain data
  * needed for a recombinase summary page.  This will aid in efficient
@@ -15,9 +14,6 @@ public class AlleleSystemSummary {
 	//-------------------
 
 	private AlleleSystem alleleSystem;
-	
-	// hide the default constructor
-    private AlleleSystemSummary () {}
 
     public AlleleSystemSummary (AlleleSystem alleleSystem) {
     	this.alleleSystem = alleleSystem;

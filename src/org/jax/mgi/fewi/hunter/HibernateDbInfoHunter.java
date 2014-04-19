@@ -2,7 +2,6 @@ package org.jax.mgi.fewi.hunter;
 
 import java.util.List;
 
-import mgi.frontend.datamodel.BatchMarkerId;
 import mgi.frontend.datamodel.DatabaseInfo;
 
 import org.hibernate.Query;

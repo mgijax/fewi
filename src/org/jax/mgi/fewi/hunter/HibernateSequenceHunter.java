@@ -3,41 +3,29 @@ package org.jax.mgi.fewi.hunter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import mgi.frontend.datamodel.MarkerSequenceAssociation;
 import mgi.frontend.datamodel.ReferenceSequenceAssociation;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceID;
 
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.NullPrecedence;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
-import org.hibernate.transform.Transformers;
-import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
-import org.jax.mgi.shr.fe.IndexConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -52,11 +40,8 @@ import org.springframework.stereotype.Repository;
  * @kstone
  */
 @Repository
-public class HibernateSequenceHunter implements Hunter {
-
-    // logger for the class
-    private Logger logger = LoggerFactory.getLogger(HibernateSequenceHunter.class);
-    
+public class HibernateSequenceHunter implements Hunter<Sequence>
+{    
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -113,15 +98,16 @@ public class HibernateSequenceHunter implements Hunter {
 	}
 	
 	
-	public void huntWithoutCount(SearchParams searchParams, SearchResults searchResults)
+	public void huntWithoutCount(SearchParams searchParams, SearchResults<Sequence> searchResults)
 	{
-		this.hunt(searchParams,searchResults,false);
+		this.hunt(searchParams, searchResults,false);
 	}
-	public void hunt(SearchParams searchParams, SearchResults searchResults)
+	public void hunt(SearchParams searchParams, SearchResults<Sequence> searchResults)
 	{
 		this.hunt(searchParams,searchResults,true);
 	}
-	public void hunt(SearchParams searchParams, SearchResults searchResults,boolean doCount)
+	@SuppressWarnings("unchecked")
+	public void hunt(SearchParams searchParams, SearchResults<Sequence> searchResults,boolean doCount)
 	{
 		Session s = sessionFactory.getCurrentSession();
 		

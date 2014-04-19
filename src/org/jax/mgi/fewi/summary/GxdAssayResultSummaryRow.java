@@ -4,27 +4,16 @@ package org.jax.mgi.fewi.summary;
 //
 //}
 
-import java.util.*;
-
-import mgi.frontend.datamodel.Genotype;
-import mgi.frontend.datamodel.GxdAssayResult;
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.MarkerLocation;
-import mgi.frontend.datamodel.ImagePane;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.finder.MarkerFinder;
-
-import javax.persistence.Column;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * wrapper around a marker; represents on row in summary

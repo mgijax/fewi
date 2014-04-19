@@ -19,9 +19,10 @@ public class ExcelMarkerSummary  extends AbstractBigExcelView
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(ExcelMarkerSummary.class);
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void buildExcelDocument(
-			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
+			Map<String,Object> model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 	{
 		logger.debug("buildExcelDocument");
 

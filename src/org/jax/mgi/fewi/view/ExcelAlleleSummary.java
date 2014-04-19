@@ -1,33 +1,21 @@
 package org.jax.mgi.fewi.view;
 
-import java.util.*;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.phenotype.AlleleSummaryDisease;
 import mgi.frontend.datamodel.phenotype.AlleleSummarySystem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.jax.mgi.fewi.finder.GxdBatchFinder;
-import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
-import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
-import org.jax.mgi.fewi.summary.GxdMarkerSummaryRow;
-import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,16 +26,17 @@ public class ExcelAlleleSummary  extends AbstractBigExcelView
     //-------------------
     private static String NORMAL_PHENOTYPE="normal phenotype";
     private static String PHENOTYPE_NOT_ANALYZED="phenotype not analyzed";
-    private static String CELL_LINE="Cell Line";
-    private static String CHIMERIC="Chimeric";
+    //private static String CELL_LINE="Cell Line";
+    //private static String CHIMERIC="Chimeric";
     private static String NOT_APPLICABLE="Not Applicable";
 
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(ExcelAlleleSummary.class);
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void buildExcelDocument(
-			Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
+			Map<String,Object> model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 	{
 		logger.debug("buildExcelDocument");
 		String filename = "MGIalleleQuery_"+getCurrentDate();

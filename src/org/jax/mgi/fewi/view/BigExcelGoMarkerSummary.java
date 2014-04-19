@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
-import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -23,13 +22,13 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 	private Logger logger = LoggerFactory.getLogger(BigExcelGoMarkerSummary.class);
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void buildExcelDocument(Map model, SXSSFWorkbook workbook,
+	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		List<Annotation> results = (List<Annotation>) model.get("results");		
-		Marker m = (Marker) model.get("marker");
+		List<Annotation> results = (List<Annotation>) model.get("results");	
 		
 		Sheet sheet = workbook.createSheet();
 		Row row;

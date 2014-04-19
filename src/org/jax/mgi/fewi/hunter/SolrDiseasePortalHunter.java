@@ -3,18 +3,16 @@ package org.jax.mgi.fewi.hunter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
@@ -25,16 +23,14 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
-import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpEntity;
+import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
+import org.jax.mgi.fewi.searchUtil.entities.SolrString;
+import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
-import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
-import org.jax.mgi.shr.fe.indexconstants.ImagePaneFields;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -55,10 +51,8 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class SolrDiseasePortalHunter extends SolrHunter
+public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 {
-	private String diseasePortalAnnotationUrl;
-
     /***
      * The constructor sets up this hunter so that it is specific to diseasePortal
      * summary pages.  Each item in the constructor sets a value that it has
@@ -294,7 +288,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
     }
 
     @Override
-    protected void packInformation(QueryResponse rsp, SearchResults sr,
+    protected void packInformation(QueryResponse rsp, SearchResults<SolrHdpEntity> sr,
             SearchParams sp) {
 
         // A list of all the primary keys in the document
@@ -307,21 +301,21 @@ public class SolrDiseasePortalHunter extends SolrHunter
          * that was configured at the implementing class level.
          */
 
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-            SolrDocument doc = (SolrDocument) iter.next();
 
             //logger.debug(doc.toString());
             // Set the result object
             String term = (String) doc.getFieldValue(DiseasePortalFields.TERM);
 
             // Add just the term if no groups are specified for now
-            sr.addResultObjects(term);
+            sr.addResultObjects(new SolrString(term));
         }
     }
 
-    @Override
-    protected void packInformationByGroup(QueryResponse rsp, SearchResults sr,
+    @SuppressWarnings("unchecked")
+	@Override
+    protected void packInformationByGroup(QueryResponse rsp, SearchResults<SolrHdpEntity> sr,
             SearchParams sp) {
     	GroupResponse gr = rsp.getGroupResponse();
 
@@ -365,9 +359,6 @@ public class SolrDiseasePortalHunter extends SolrHunter
 
         for (Group g : groups)
         {
-        	String key = g.getGroupValue();
-        	int numFound = (int) g.getResult().getNumFound();
-
         	// get the top document of the group
         	SolrDocument sd = g.getResult().get(0);
         	String uniqueKey = (String)sd.getFieldValue(DiseasePortalFields.UNIQUE_KEY);
@@ -436,7 +427,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
         		String header = (String) sd.getFieldValue(DiseasePortalFields.TERM_HEADER);
 
         		// return just the term name for now
-        		sr.addResultObjects(header);
+        		sr.addResultObjects(new SolrString(header));
         		keys.add(header);
         		keyToGroupKeyMap.put(uniqueKey,header);
         	}
@@ -519,7 +510,7 @@ public class SolrDiseasePortalHunter extends SolrHunter
      *
      */
     @Override
-    protected void packInformationForJoin(QueryResponse rsp, SearchResults sr,
+    protected void packInformationForJoin(QueryResponse rsp, SearchResults<SolrHdpEntity> sr,
             SearchParams sp)
     {
         SolrDocumentList sdl = rsp.getResults();
@@ -528,9 +519,8 @@ public class SolrDiseasePortalHunter extends SolrHunter
         /**
          * Iterate response documents, extracting data from solr doc
          */
-        for (Iterator iter = sdl.iterator(); iter.hasNext();)
+        for (SolrDocument doc : sdl)
         {
-          SolrDocument doc = (SolrDocument) iter.next();
 
           // fill data object, and add to SearchResults
           SolrHdpGridData genoInResult = new SolrHdpGridData();
@@ -556,7 +546,6 @@ public class SolrDiseasePortalHunter extends SolrHunter
 	@Value("${solr.disease_portal_annotation.url}")
 	public void setDiseasePortalAnnotationUrl(String diseasePortalAnnotationUrl)
 	{
-		this.diseasePortalAnnotationUrl = diseasePortalAnnotationUrl;
 		/*
          * Joined indices
          * List of indices that can be joined to this index.

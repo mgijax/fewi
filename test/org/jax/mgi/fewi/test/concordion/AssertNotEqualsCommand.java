@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.test.concordion;
 
 import java.util.Comparator;
+
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Element;
@@ -12,7 +13,6 @@ import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.BrowserStyleWhitespaceComparator;
 import org.concordion.internal.util.Announcer;
-import org.concordion.internal.util.Check;
 
 public class AssertNotEqualsCommand extends AbstractCommand {
 

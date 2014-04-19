@@ -8,9 +8,6 @@ import java.util.Map;
 import mgi.frontend.datamodel.hdp.HdpGenoClusterAnnotation;
 import mgi.frontend.datamodel.hdp.HdpGridAnnotation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /*
  *  A class for mapping columns to data for making rows in the Grid
  *  	Applicable to all the disease portal grids (summary, phenotype popup, disease popup)
@@ -21,8 +18,6 @@ import org.slf4j.LoggerFactory;
  *  @author kstone
  */
 public class HdpGridMapper {
-	
-	private Logger logger = LoggerFactory.getLogger(HdpGridMapper.class);
 	
 	private List<String> colIdList;
 	private List<HdpGridAnnotation> gridAnnotations;
