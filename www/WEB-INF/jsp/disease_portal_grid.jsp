@@ -30,9 +30,11 @@
 	  <th rowspan="2">
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
 		  		<div id="filterButtons">
-		  		<button style="width:160px;" class="reverseFilterSubmit" title="Resubmit the query keeping only results that have data in the rows and columns NOT selected">Apply Filters:&#x00A;Remove selected col/rows</button>
-<!-- 		  		<br/><button style="width:160px;" class="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Apply Filters:&#x00A;Retain selected col/rows</button>
- -->		  	</div></div>
+		  		<!-- <button style="width:160px;" class="reverseFilterSubmit" title="Resubmit the query keeping only results that have data in the rows and columns NOT selected">Apply Filters:&#x00A;Remove selected col/rows</button>
+		  		<br/> -->
+		  		<button style="width:160px;" class="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Apply Filters:&#x00A;Retain selected col/rows</button>		  	
+		  		</div>
+		  	</div>
 		  	<br/>Mouse Gene
 	  	</th>
 	  <th style="border-right: none;"></th>
@@ -162,7 +164,7 @@ function popupGenotypeDisease (url, gridClusterKey, termId)
 
 // add the click handler (from disease_portal_summary.js) to the submit button
 $(".filterSubmit").click(gridFilterSubmitClick);
-$(".reverseFilterSubmit").click(gridReverseFilterSubmitClick);
+//$(".reverseFilterSubmit").click(gridReverseFilterSubmitClick);
 $("#moreDiseases").click(gridMoreDiseasesClick);
 /* if(isGFiltersSet())
 {
