@@ -171,7 +171,7 @@
 	    <input type="hidden" name="type" value="vcf">
       </form>
     </div>
-	<div id="geneFileDiv" style="position:absolute; top:344px; left:243px;">
+	<div id="geneFileDiv" style="position:absolute; top:418px; left:243px;">
 		<form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
 			id="hiddenFileForm2" name="hiddenFileForm" target="hiddenfileform_if">
 			<span style="">Upload a File: <input id="geneFileInput" type="file" name="file"></span>
