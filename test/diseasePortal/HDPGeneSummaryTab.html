@@ -56,6 +56,7 @@ tr.gray td {background-color:#EEEEEE;}
         <li>User story 74, E3: Genes Tab: Add references column - part 2</li>
         <li>User story 105, Show all normal in the grid for MP (BUG, show "normal" genes on genes tab)</li>
         <li>User story 154, Genes Tab: export as tab-delimited text</li>
+        <li>User story 132, HDP: Grid and Genes tab: hover text for Gene symbols (MGI5.18)</li>
         <li>User story 137, Add Links to gene and disease detail pages</li>
         <li>User story 84, Genes tab: AIMSR column</li>
         <li>User story 210, Genes tab: default sort order</li>
@@ -87,6 +88,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<li>US154: Genes tab has button for downloading results as text</li>
 		<li>US154: Tab delimited file created with all genes tab results</li>
 		<li>US154: Tab delimited files has data for Organism, Marker Symbol, ID, Genetic Location, Genome Coordinates, Build #, Associated Human Diseases(pipe separated), Abnormal Phenotypes Reported in these systems(pipe separated)</li>
+		<li>US132: Hovering over a Gene symbol on the Grid summary, displays text of Gene's full name and it's feature type</li>
 		<li>US137: Mouse Gene symbols link to MGI gene detail pages</li>
 		<li>US137: Human Gene symbols link to MGI homology pages</li>
 		<li>US137: Human Gene Symbols that have no associated MGI homology page will have no link</li>
@@ -510,6 +512,28 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify that the Genes tab-delimited file has the ID 4092 for SMAD7 (the Entrez Gene ID)</li>
     		</ol>
     		</li>
+    		
+    		<li>Confirm Hovering over a Gene symbol on the Genes summary, displays text of Gene's full name and it's feature type(sto132)
+    		<p concordion:assertTrue="false">new test</p>
+    		<ol>
+                <li>Query for marker <b>pax*</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
+                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Hover your mouse over Gene Symbol <b>PAX9</b></li>
+                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Query for location <b>Chr12:3000000-10000000</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Apob</b></li>
+                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Hover your mouse over Gene Symbol <b>OSR1</b></li>
+                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Query for disease <b>diabetes</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Avp</b></li>
+                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Hover your mouse over Gene Symbol <b>CTSB</b></li>
+                <li>Verify that a popup displays saying <b>???</b></li>
+    		</ol>
+    		</li>
+    		
     		<li>Confirm Human symbols link to their MGI Homology page(sto137)
     		<p concordion:assertTrue="true">new test</p>
     		<ol>
