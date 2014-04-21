@@ -16,7 +16,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:applicationContext-ci.xml"})
@@ -24,10 +23,7 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
 @Transactional
 public class AlleleTest {
 
-	@Autowired
-    private AnnotationMethodHandlerAdapter handler;
-
-    // The class being tested is autowired via spring's DI
+	// The class being tested is autowired via spring's DI
     @Autowired
     private AlleleFinder alleleFinder;
 	    

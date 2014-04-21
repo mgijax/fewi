@@ -9,14 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.MarkerTissueCount;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class TextTissueSummary extends AbstractTextView {
-
-    private Logger logger
-    = LoggerFactory.getLogger(this.getClass().getName());
-
     
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
@@ -26,6 +19,7 @@ public class TextTissueSummary extends AbstractTextView {
 		response.setHeader("Content-Disposition","attachment; filename=\"tissueReport.txt\"");
 		System.out.println(response.getCharacterEncoding());
 		
+		@SuppressWarnings("unchecked")
 		List<MarkerTissueCount> tissues = (List<MarkerTissueCount>) model.get("results");
 		
 		writer.write("Structure\tAll\tDetected\tNot Detected\r\n");

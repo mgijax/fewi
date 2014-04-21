@@ -10,15 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
-import mgi.frontend.datamodel.Reference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TextGoReferenceSummary extends AbstractTextView {
 	
-	private Logger logger = LoggerFactory.getLogger(TextGoReferenceSummary.class);
-
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
 			HttpServletRequest request, HttpServletResponse response)
@@ -28,8 +22,8 @@ public class TextGoReferenceSummary extends AbstractTextView {
 
 		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tCategory\tEvidence\r\n");
 		
-		List<Annotation> results = (List<Annotation>) model.get("results");		
-		Reference r = (Reference) model.get("reference");
+		@SuppressWarnings("unchecked")
+		List<Annotation> results = (List<Annotation>) model.get("results");
 		
 		Marker m;
 		MarkerLocation ml;

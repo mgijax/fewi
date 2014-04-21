@@ -15,7 +15,6 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.ExpressionEvaluatedEvent;
 import org.concordion.api.listener.MissingRowEvent;
-import org.concordion.api.listener.SurplusRowEvent;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.util.Announcer;
@@ -28,7 +27,7 @@ import org.concordion.internal.util.Check;
  */
 public class VerifyNotRowsCommand extends AbstractCommand {
 
-    private Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
+    private final Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
 
     public VerifyNotRowsCommand()
     {
@@ -103,8 +102,8 @@ public class VerifyNotRowsCommand extends AbstractCommand {
     private void announceMissingRow(Element element) {
         listeners.announce().missingRow(new MissingRowEvent(element));
     }
-
-    private void announceSurplusRow(Element element) {
-        listeners.announce().surplusRow(new SurplusRowEvent(element));
-    }
+//
+//    private void announceSurplusRow(Element element) {
+//        listeners.announce().surplusRow(new SurplusRowEvent(element));
+//    }
 }

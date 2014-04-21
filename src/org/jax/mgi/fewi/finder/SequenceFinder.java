@@ -26,16 +26,13 @@ public class SequenceFinder {
 	/* instance variables */
 	/*--------------------*/
 
-    private Logger logger = LoggerFactory.getLogger(SequenceFinder.class);
+    private final Logger logger = LoggerFactory.getLogger(SequenceFinder.class);
     
     //@Autowired
     //private SolrSequenceKeyHunter sequenceHunter;
     
     @Autowired 
     private HibernateSequenceHunter hibernateSequenceHunter;
-
-    //@Autowired
-    //private SolrSequenceSummaryHunter solrSequenceSummaryHunter;
 
     @Autowired
     private HibernateObjectGatherer<Sequence> sequenceGatherer;

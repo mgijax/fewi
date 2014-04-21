@@ -13,9 +13,10 @@ import org.jax.mgi.fewi.test.mock.MockRequest;
 
 public class GenotypePopupSexSpecificityTest extends BaseConcordionTest {
 	
-    private String baseUrl = "/allele/genoview/";
+    private final String baseUrl = "/allele/genoview/";
     
-    public List<MPSystem> getMPSystems(String genotypeID) throws Exception
+    @SuppressWarnings("unchecked")
+	public List<MPSystem> getMPSystems(String genotypeID) throws Exception
     {
     	String url = baseUrl+genotypeID;
     	MockRequest mr = mockRequest(url);
@@ -27,7 +28,7 @@ public class GenotypePopupSexSpecificityTest extends BaseConcordionTest {
    
     public String getFirstSexGroup(String genotypeID, String system,String termID ) throws Exception
     {
-    	List<String> sexGroups = new ArrayList<String>();
+    	new ArrayList<String>();
     	for(MPSystem s : getMPSystems(genotypeID))
     	{
     		if(s.getSystem().equalsIgnoreCase(system))

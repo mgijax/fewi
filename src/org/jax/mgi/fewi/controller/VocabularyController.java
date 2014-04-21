@@ -7,7 +7,6 @@ import java.util.List;
 import mgi.frontend.datamodel.VocabTerm;
 
 import org.hibernate.SessionFactory;
-import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -49,7 +48,7 @@ public class VocabularyController {
     // instance variables
     //--------------------//
 
-    private Logger logger
+    private final Logger logger
       = LoggerFactory.getLogger(VocabularyController.class);
 
     @Autowired
@@ -428,12 +427,11 @@ public class VocabularyController {
 
 	// compose the dropdown list for linking to term at other stages
 
-	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+	//String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 	StringBuffer dropdown = new StringBuffer();
 	dropdown.append ("<form id='stageLinkerForm'><select name='stageLinker' id='stageLinker' onChange='if (stageLinker.value != \"\") { resetPanes(stageLinker.value); }'></form>");
 	dropdown.append ("<option value=''>Select developmental stage</option>");
 
-	List<VocabTerm> emapsTerms = null;
 	VocabTerm emapaTerm = null;
 	String dropdownMsg = null;
 

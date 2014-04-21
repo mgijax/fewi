@@ -43,7 +43,7 @@ public class IDLinker {
 
 	private Properties config = null;
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	@Autowired
 	private ActualDatabaseFinder actualDatabaseFinder;
@@ -259,7 +259,6 @@ public class IDLinker {
 		List<ActualDatabase> results = actualDatabaseFinder.getAll();
 
 		String ldbName = null;
-		String adbName = null;
 		HashMap<String,List<ActualDatabase>> byLdb = new HashMap<String,List<ActualDatabase>>();
 		List<ActualDatabase> adbs = null;
 
@@ -386,7 +385,7 @@ public class IDLinker {
 		Properties props = new Properties();
 
 		for (String ldb : this.ldbToAdb.keySet()) {
-			adbs = (List<ActualDB>) this.ldbToAdb.get(ldb);
+			adbs = this.ldbToAdb.get(ldb);
 			for (ActualDB adb: adbs) {
 				props.setProperty (ldb, adb.getUrl());
 			}
@@ -410,10 +409,10 @@ public class IDLinker {
 
 	//--- Inner Classes ---
 
-	private class ActualDB implements Comparable {
+	private class ActualDB implements Comparable<ActualDB> {
 		private String url;
 		private int orderVal = 9999;
-		private String name;
+		private final String name;
 		private String displayName;
 
 		public ActualDB(String name) {
@@ -455,17 +454,13 @@ public class IDLinker {
 			}
 		}
 
-		public int compareTo(Object b) {
-			if (!b.getClass().getName().endsWith("ActualDB")) {
-				return 0;
-			}
-			ActualDB b2 = (ActualDB) b;
-			if (this.orderVal < b2.orderVal) {
+		public int compareTo(ActualDB b) {
+			if (this.orderVal < b.orderVal) {
 				return -1;
-			} else if (this.orderVal > b2.orderVal){
+			} else if (this.orderVal > b.orderVal){
 				return 1;
 			}
-			return this.name.compareTo(b2.name);
+			return this.name.compareTo(b.name);
 		}
 	}
 }

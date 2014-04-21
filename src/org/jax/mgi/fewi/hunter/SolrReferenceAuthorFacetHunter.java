@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class SolrReferenceAuthorFacetHunter 
-	extends SolrReferenceSummaryBaseHunter {
+	extends SolrReferenceSummaryBaseHunter<String> {
     
     /***
      * The constructor sets up this hunter to gather the author

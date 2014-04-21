@@ -9,15 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
-import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class TextGoMarkerSummary extends AbstractTextView {
-	
-	private Logger logger = LoggerFactory.getLogger(TextGoMarkerSummary.class);
 
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
@@ -28,8 +22,8 @@ public class TextGoMarkerSummary extends AbstractTextView {
 
 		writer.write("Category\tClassification Term\tEvidence\tInferred From\tReference(s)\r\n");
 		
+		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");		
-		Marker m = (Marker) model.get("marker");
 		
 		StringBuffer inferred;
 		StringBuffer refs;

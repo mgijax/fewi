@@ -11,8 +11,6 @@ import mgi.frontend.datamodel.Image;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -23,9 +21,6 @@ public class RecomSpecificitySummaryRow {
     //-------------------
     // instance variables
     //-------------------
-
-    private Logger logger
-      = LoggerFactory.getLogger(RecomSpecificitySummaryRow.class);
 
     // encapsulated row object
     private AlleleSystemAssayResult alleleSystemAssayResult;

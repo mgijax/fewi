@@ -3,9 +3,6 @@ package org.jax.mgi.fewi.util;
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
 * provides static methods to generate links to external providers
 */
@@ -16,7 +13,6 @@ public class ProviderLinker
     /*--------------------*/
 
 	// logger for the class
-	private static Logger logger = LoggerFactory.getLogger(ProviderLinker.class);
 
 	private static String genBankUrl = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nuccore&id=";
 	private static String emblUrl = "http://www.ebi.ac.uk/htbin/emblfetch?";

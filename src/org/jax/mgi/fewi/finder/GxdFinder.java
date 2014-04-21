@@ -14,8 +14,10 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdEntity;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GxdFinder
 {
-	private Logger logger = LoggerFactory.getLogger(AutocompleteFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(AutocompleteFinder.class);
 
 	@Autowired
 	private SolrGxdResultHunter gxdResultHunter;
@@ -64,7 +66,7 @@ public class GxdFinder
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getMarkerCount(SearchParams params){
-		SearchResults<SolrGxdMarker> results = new SearchResults<SolrGxdMarker>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.hunt(params, results, SearchConstants.MRK_KEY);
 		logger.debug("gxd finder marker count ="+results.getTotalCount());
 		return results.getTotalCount();
@@ -73,7 +75,7 @@ public class GxdFinder
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getAssayCount(SearchParams params){
-		SearchResults<SolrGxdAssay> results = new SearchResults<SolrGxdAssay>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.hunt(params, results, SearchConstants.GXD_ASSAY_KEY);
 		logger.debug("gxd finder assay count ="+results.getTotalCount());
 		return results.getTotalCount();
@@ -82,46 +84,60 @@ public class GxdFinder
 	 * Only does the Solr query to return the total document (or group) count
 	 */
 	public Integer getAssayResultCount(SearchParams params){
-		SearchResults<SolrAssayResult> results = new SearchResults<SolrAssayResult>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.hunt(params, results);
 		logger.debug("gxd finder assay result count ="+results.getTotalCount());
 		return results.getTotalCount();
 	}
 	public Integer getImageCount(SearchParams params) {
-		SearchResults<SolrGxdImage> results = new SearchResults<SolrGxdImage>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.joinHunt(params, results,"gxdImagePane");
 		logger.debug("gxd finder image count ="+results.getTotalCount());
 		return results.getTotalCount();
 	}
 
 	public SearchResults<SolrAssayResult> searchAssayResults(SearchParams params) {
-		SearchResults<SolrAssayResult> results = new SearchResults<SolrAssayResult>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.hunt(params, results);
-		return results;
+		
+		SearchResults<SolrAssayResult> srAR = new SearchResults<SolrAssayResult>();
+		srAR.cloneFrom(results,SolrAssayResult.class);
+		return srAR;
 	}
 
 	public SearchResults<SolrGxdAssay> searchAssays(SearchParams params) {
-		SearchResults<SolrGxdAssay> results = new SearchResults<SolrGxdAssay>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.hunt(params, results,SearchConstants.GXD_ASSAY_KEY);
-		return results;
+		
+		SearchResults<SolrGxdAssay> srGA = new SearchResults<SolrGxdAssay>();
+		srGA.cloneFrom(results,SolrGxdAssay.class);
+		return srGA;
 	}
 
 	public SearchResults<SolrGxdMarker> searchMarkers(SearchParams params) {
-		SearchResults<SolrGxdMarker> results = new SearchResults<SolrGxdMarker>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.hunt(params, results,SearchConstants.MRK_KEY);
-		return results;
+		
+		SearchResults<SolrGxdMarker> srGM = new SearchResults<SolrGxdMarker>();
+		srGM.cloneFrom(results,SolrGxdMarker.class);
+		return srGM;
 	}
 	public SearchResults<SolrGxdImage> searchImages(SearchParams params) {
-		SearchResults<SolrGxdImage> results = new SearchResults<SolrGxdImage>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.joinHunt(params, results,"gxdImagePane");
-		return results;
+		
+		SearchResults<SolrGxdImage> srGI = new SearchResults<SolrGxdImage>();
+		srGI.cloneFrom(results,SolrGxdImage.class);
+		return srGI;
 	}
 	
 	public SearchResults<SolrGxdMarker> searchBatchMarkerIDs(SearchParams params) {
-		SearchResults<SolrGxdMarker> results = new SearchResults<SolrGxdMarker>();
+		SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 		gxdResultHunter.hunt(params, results,SearchConstants.MRK_ID);
-		return results;
-	}
+		
+		SearchResults<SolrGxdMarker> srGM = new SearchResults<SolrGxdMarker>();
+		srGM.cloneFrom(results,SolrGxdMarker.class);
+		return srGM;	}
 
 	/*
 	 *  Returns marker keys based on differential search
@@ -136,34 +152,44 @@ public class GxdFinder
         return searchResults.getResultKeys();
 	}
 
-	public SearchResults<String> getSystemFacet(SearchParams params) {
-	    SearchResults<String> results = new SearchResults<String>();
+	public SearchResults<SolrString> getSystemFacet(SearchParams params) {
+	    SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 	    gxdSystemFacetHunter.hunt(params, results);
-	    return results;
+	    SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+	    srSS.cloneFrom(results,SolrString.class);
+	    return srSS;
 	}
 
-	public SearchResults<String> getAssayTypeFacet(SearchParams params) {
-	    SearchResults<String> results = new SearchResults<String>();
+	public SearchResults<SolrString> getAssayTypeFacet(SearchParams params) {
+	    SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 	    gxdAssayTypeFacetHunter.hunt(params, results);
-	    return results;
+	    SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+	    srSS.cloneFrom(results,SolrString.class);
+	    return srSS;
 	}
 
-	public SearchResults<String> getDetectedFacet(SearchParams params) {
-	    SearchResults<String> results = new SearchResults<String>();
+	public SearchResults<SolrString> getDetectedFacet(SearchParams params) {
+	    SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 	    gxdDetectedFacetHunter.hunt(params, results);
-	    return results;
+	    SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+	    srSS.cloneFrom(results,SolrString.class);
+	    return srSS;
 	}
 
-	public SearchResults<String> getWildtypeFacet(SearchParams params) {
-	    SearchResults<String> results = new SearchResults<String>();
+	public SearchResults<SolrString> getWildtypeFacet(SearchParams params) {
+	    SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 	    gxdWildtypeFacetHunter.hunt(params, results);
-	    return results;
+	    SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+	    srSS.cloneFrom(results,SolrString.class);
+	    return srSS;
 	}
 
-	public SearchResults<String> getTheilerStageFacet(SearchParams params) {
-	    SearchResults<String> results = new SearchResults<String>();
+	public SearchResults<SolrString> getTheilerStageFacet(SearchParams params) {
+	    SearchResults<SolrGxdEntity> results = new SearchResults<SolrGxdEntity>();
 	    gxdTheilerStageFacetHunter.hunt(params, results);
-	    return results;
+	    SearchResults<SolrString> srSS = new SearchResults<SolrString>();
+	    srSS.cloneFrom(results,SolrString.class);
+	    return srSS;
 	}
 }
 

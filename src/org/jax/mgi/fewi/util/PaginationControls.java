@@ -2,8 +2,6 @@ package org.jax.mgi.fewi.util;
 
 // standard java
 import org.jax.mgi.fewi.searchUtil.Paginator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -17,10 +15,6 @@ public class PaginationControls
     //---------------------------------------------------------------
     // instance variables
     //---------------------------------------------------------------
-
-    // logger for this class
-    private Logger logger
-      = LoggerFactory.getLogger(this.getClass().getName());
 
 	// pagination data
 	private Integer resultsTotal = 0;

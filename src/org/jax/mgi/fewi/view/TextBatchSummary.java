@@ -24,8 +24,9 @@ import org.slf4j.LoggerFactory;
 
 public class TextBatchSummary extends AbstractTextView {
 	
-	private Logger logger = LoggerFactory.getLogger(TextBatchSummary.class);
+	private final Logger logger = LoggerFactory.getLogger(TextBatchSummary.class);
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
 			HttpServletRequest request, HttpServletResponse response)

@@ -57,7 +57,7 @@ public class BatchController {
     // instance variables
     //--------------------//
 
-    private Logger logger
+    private final Logger logger
       = LoggerFactory.getLogger(BatchController.class);
 
     @Autowired
@@ -146,7 +146,7 @@ public class BatchController {
             InputStream idStream;
             StringWriter writer = new StringWriter();
             try {
-            	idStream = (InputStream) file.getInputStream();
+            	idStream = file.getInputStream();
     			IOUtils.copy(idStream , writer);
     			idList = parseColumn(writer.toString(), col, sep);
     			
@@ -257,7 +257,8 @@ public class BatchController {
         
         logger.debug("page: " + page);
         
-        List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
+        @SuppressWarnings("unchecked")
+		List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
         if(idSet == null)
         {
         	idSet = parseIds(query.getIds());

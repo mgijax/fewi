@@ -4,8 +4,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -16,10 +14,9 @@ public class MarkerSummaryRow
 	//-------------------
 	// instance variables
 	//-------------------
-    private Logger logger = LoggerFactory.getLogger(MarkerSummaryRow.class);
 
 	// encapsulated row object
-	private SolrSummaryMarker marker;
+	private final SolrSummaryMarker marker;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");

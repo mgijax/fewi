@@ -1,6 +1,6 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-public class SolrGxdMarker 
+public class SolrGxdMarker implements SolrGxdEntity
 {
 	String mgiid;
 	String symbol;

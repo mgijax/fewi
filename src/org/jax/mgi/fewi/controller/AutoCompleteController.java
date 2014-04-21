@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AutoCompleteController {
 	
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(AutoCompleteController.class);
+	private final Logger logger = LoggerFactory.getLogger(AutoCompleteController.class);
 	
 	// get the finders used by various methods
 	@Autowired
@@ -311,7 +311,7 @@ public class AutoCompleteController {
 			@RequestParam("query") String query) {
 		
 		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query);
-		List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
+		//List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
 //		
 //        for (VocabACResult result : results.getResultObjects()) {
 //			if (result != null){
@@ -334,7 +334,7 @@ public class AutoCompleteController {
 		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.OP_IN);
 		
 		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
-		List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
+		new ArrayList<VocabACSummaryRow>();
 		
 //        for (VocabACResult result : results.getResultObjects()) {
 //			if (result != null){

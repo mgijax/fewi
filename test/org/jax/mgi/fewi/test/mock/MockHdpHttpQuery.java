@@ -51,6 +51,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		return request;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<HdpGridClusterSummaryRow> getGridClusters() throws Exception
 	{
 		this.pageSize=50;
@@ -62,6 +63,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
     	return (List<HdpGridClusterSummaryRow>) map.get("gridClusters");
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getDiseaseColumnIds() throws Exception
 	{
 		this.pageSize=50;
@@ -72,6 +74,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
     	return (List<String>) mr.handleRequest(request).get("diseaseNames");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<String> getMpHeaderColumns() throws Exception
 	{
 		this.pageSize=50;
@@ -83,13 +86,13 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 	}
 	
 	// ----------------- POPUP Functions ---------------------
+	@SuppressWarnings("unchecked")
 	public List<HdpGenoCluster> getDiseasePopupGenoClusters(String geneSymbol,String diseaseCol) throws Exception
 	{
 		this.pageSize=50;
 		// generate a grid request, and iterate through the rows, cols to find the correct data to build the popup link
 		List<HdpGridClusterSummaryRow> clusters = this.getGridClusters();
 		Integer gridClusterKey = gridClusterKeyByMarker(clusters,geneSymbol);
-		String diseaseId = diseaseCellIdByName(clusters,diseaseCol);
 		
 		if(gridClusterKey==null) return new ArrayList<HdpGenoCluster>();
 		
@@ -103,13 +106,14 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
     	return (List<HdpGenoCluster>) mr.handleRequest(request).get("genoClusters");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<SolrDiseasePortalMarker> getDiseasePopupHumanMarkers(String geneSymbol,String diseaseCol) throws Exception
 	{
 		this.pageSize=50;
 		// generate a grid request, and iterate through the rows, cols to find the correct data to build the popup link
 		List<HdpGridClusterSummaryRow> clusters = this.getGridClusters();
 		Integer gridClusterKey = gridClusterKeyByMarker(clusters,geneSymbol);
-		String diseaseId = diseaseCellIdByName(clusters,diseaseCol);
+		diseaseCellIdByName(clusters,diseaseCol);
 		
 		if(gridClusterKey==null) return new ArrayList<SolrDiseasePortalMarker>();
 		
@@ -123,6 +127,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
     	return (List<SolrDiseasePortalMarker>) mr.handleRequest(request).get("humanMarkers");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<HdpGenoCluster> getSystemPopupGenoClusters(String geneSymbol,String systemCol) throws Exception
 	{
 		this.pageSize=50;
@@ -141,6 +146,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
     	return (List<HdpGenoCluster>) mr.handleRequest(request).get("genoClusters");
 	}
+	@SuppressWarnings("unchecked")
 	public List<HdpGenoByHeaderPopupRow> getSystemPopupRows(String geneSymbol,String systemCol) throws Exception
 	{
 		this.pageSize=50;
@@ -159,6 +165,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
     	return (List<HdpGenoByHeaderPopupRow>) mr.handleRequest(request).get("popupRows");
 	}
+	@SuppressWarnings("unchecked")
 	public List<HdpGenoByHeaderPopupRow> getDiseasePopupRows(String geneSymbol,String diseaseCol) throws Exception
 	{
 		this.pageSize=50;
@@ -177,6 +184,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
     	return (List<HdpGenoByHeaderPopupRow>) mr.handleRequest(request).get("popupRows");
 	}
+	@SuppressWarnings("unchecked")
 	public List<HdpMarkerByHeaderPopupRow> getDiseaseMarkerPopupRows(String geneSymbol,String diseaseCol) throws Exception
 	{
 		this.pageSize=50;
@@ -195,6 +203,7 @@ public class MockHdpHttpQuery extends AbstractMockHdpQuery
 		
     	return (List<HdpMarkerByHeaderPopupRow>) mr.handleRequest(request).get("humanPopupRows");
 	}
+	@SuppressWarnings("unchecked")
 	public List<String> getSystemPopupTerms(String geneSymbol,String systemCol) throws Exception
 	{
 		this.pageSize=50;

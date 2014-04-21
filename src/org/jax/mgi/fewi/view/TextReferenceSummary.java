@@ -19,6 +19,7 @@ public class TextReferenceSummary extends AbstractTextView {
 		response.setHeader("Content-Disposition","attachment; filename=\"referenceReport.txt\"");
 		System.out.println(response.getCharacterEncoding());
 		
+		@SuppressWarnings("unchecked")
 		List<Reference> references = (List<Reference>) model.get("results");
 		
 		String pubmedId = "";

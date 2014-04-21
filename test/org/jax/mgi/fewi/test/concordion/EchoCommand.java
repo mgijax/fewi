@@ -1,8 +1,6 @@
 package org.jax.mgi.fewi.test.concordion;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.concordion.api.AbstractCommand;
@@ -14,8 +12,8 @@ import org.concordion.internal.util.Check;
 
 public class EchoCommand extends AbstractCommand {
 
-	private Map<String,Object> trackingMap= new HashMap<String,Object>();
-	private Set<String> trackingSet = new HashSet<String>();
+	//private Map<String,Object> trackingMap= new HashMap<String,Object>();
+	private final Set<String> trackingSet = new HashSet<String>();
 	
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {

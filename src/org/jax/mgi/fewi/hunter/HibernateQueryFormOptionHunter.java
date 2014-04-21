@@ -24,7 +24,7 @@ public class HibernateQueryFormOptionHunter
     // instance variables
  
     // logger for the class
-    private Logger logger = LoggerFactory.getLogger(HibernateQueryFormOptionHunter.class);
+    private final Logger logger = LoggerFactory.getLogger(HibernateQueryFormOptionHunter.class);
     
     @Autowired
     private SessionFactory sessionFactory;
@@ -72,7 +72,8 @@ public class HibernateQueryFormOptionHunter
         Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());       
         logger.debug("-> filter parsed" );   
         
-        List<QueryFormOption> qr = query.list();
+        @SuppressWarnings("unchecked")
+		List<QueryFormOption> qr = query.list();
         logger.debug("This is the size of the results: " + qr.size());
         logger.debug("-> query complete" );
 

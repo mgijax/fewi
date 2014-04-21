@@ -1,11 +1,13 @@
 package org.jax.mgi.fewi.hunter;
 
+import mgi.frontend.datamodel.Reference;
+
 import org.jax.mgi.shr.fe.IndexConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SolrReferenceSummaryHunter extends SolrReferenceSummaryBaseHunter {
+public class SolrReferenceSummaryHunter extends SolrReferenceSummaryBaseHunter<Reference> {
     
     /***
      * The constructor sets up this hunter so that it is specific 

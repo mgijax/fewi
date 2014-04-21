@@ -31,8 +31,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 	// logger for the class
 	private Logger logger = LoggerFactory.getLogger(BigExcelBatchSummary.class);
 	
-	private int totalCols = 2;
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook,
@@ -350,7 +348,6 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		} else if(queryForm.getUniprot()){
 			row.createCell(i++).setCellValue("Uniprot ID");
 		}
-		totalCols = i;
 		return row;
 	}
 	

@@ -32,6 +32,7 @@ public class ExcelTissueSummary extends AbstractExcelView {
 		row.createCell(col++).setCellValue("Detected");
 		row.createCell(col++).setCellValue("Not Detected");
 
+		@SuppressWarnings("unchecked")
 		List<MarkerTissueCount> tissues = (List<MarkerTissueCount>) model.get("results");
 		for (MarkerTissueCount mtc : tissues) {
 			row = sheet.createRow(rownum++);

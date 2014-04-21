@@ -10,8 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -21,8 +19,6 @@ public class HdpMarkerSummaryRow {
     //-------------------
     // instance variables
     //-------------------
-
-    private Logger logger = LoggerFactory.getLogger(HdpMarkerSummaryRow.class);
 
     // encapsulated row object
     private SolrDiseasePortalMarker solrDiseasePortalMarker;

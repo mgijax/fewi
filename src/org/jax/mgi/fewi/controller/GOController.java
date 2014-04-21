@@ -207,13 +207,13 @@ public class GOController {
 	if (query.getMrkKey() != null) {
             SearchResults<Marker> sr = markerFinder.getMarkerByKey(
 		query.getMrkKey());
-            m = (Marker) sr.getResultObjects().get(0);
+            m = sr.getResultObjects().get(0);
 	}
 
 	if (query.getReferenceKey() != null) {
             SearchResults<Reference> sr = referenceFinder.getReferenceByKey(
 		query.getReferenceKey());
-            r = (Reference) sr.getResultObjects().get(0);
+            r = sr.getResultObjects().get(0);
 	}
 
         // perform query, and pull out the requested objects
@@ -270,14 +270,14 @@ public class GOController {
 	if (query.getMrkKey() != null) {
             SearchResults<Marker> sr = markerFinder.getMarkerByKey(
 		query.getMrkKey());
-            m = (Marker) sr.getResultObjects().get(0);
+            m = sr.getResultObjects().get(0);
 	    view = "goMarkerSummaryReport";
 	}
 
 	if (query.getReferenceKey() != null) {
             SearchResults<Reference> sr = referenceFinder.getReferenceByKey(
 		query.getReferenceKey());
-            r = (Reference) sr.getResultObjects().get(0);
+            r = sr.getResultObjects().get(0);
 	    view = "goReferenceSummaryReport";
 	}
 

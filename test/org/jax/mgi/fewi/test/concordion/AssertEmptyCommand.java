@@ -20,15 +20,12 @@ import org.concordion.internal.util.Check;
 
 public class AssertEmptyCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
-    private final Comparator<Object> comparator;
-
+    private final Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     public AssertEmptyCommand() {
         this(new BrowserStyleWhitespaceComparator());
     }
     
     public AssertEmptyCommand(Comparator<Object> comparator) {
-        this.comparator = comparator;
     }
     
     public void addAssertEqualsListener(AssertEqualsListener listener) {
@@ -47,7 +44,8 @@ public class AssertEmptyCommand extends AbstractCommand {
         
         Object actuals = evaluator.evaluate(commandCall.getExpression());
         Check.isTrue(actuals instanceof Iterable, actuals.getClass().getCanonicalName() + " is not Iterable");
-        Collection<Object> results = (Collection<Object>) actuals;
+        @SuppressWarnings("unchecked")
+		Collection<Object> results = (Collection<Object>) actuals;
         
         String expected = element.getText();
         

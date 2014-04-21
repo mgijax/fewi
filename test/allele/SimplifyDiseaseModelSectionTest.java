@@ -13,24 +13,27 @@ import org.jax.mgi.fewi.test.mock.MockRequest;
 
 public class SimplifyDiseaseModelSectionTest extends BaseConcordionTest {
 	
-    private String baseUrl = "/allele/diseasetable/";
-    private String legendUrl = "/allele/phenotable/";
+    private final String baseUrl = "/allele/diseasetable/";
+    private final String legendUrl = "/allele/phenotable/";
     
-    public List<DiseaseTableDisease> getDiseases(String alleleID) throws Exception
+    @SuppressWarnings("unchecked")
+	public List<DiseaseTableDisease> getDiseases(String alleleID) throws Exception
     {
     	String url = baseUrl+alleleID;
     	MockRequest mr = mockRequest(url);
     	List<DiseaseTableDisease> diseases = (List<DiseaseTableDisease>) mr.get("diseases");
     	return diseases;
     }
-    public List<DiseaseTableGenotype> getDiseaseGenotypes(String alleleID) throws Exception
+    @SuppressWarnings("unchecked")
+	public List<DiseaseTableGenotype> getDiseaseGenotypes(String alleleID) throws Exception
     {
     	String url = baseUrl+alleleID;
     	MockRequest mr = mockRequest(url);
     	List<DiseaseTableGenotype> genotypes = (List<DiseaseTableGenotype>) mr.get("genotypes");
     	return genotypes;
     }
-    public List<PhenoTableGenotype> getLegendGenotypes(String alleleID) throws Exception
+    @SuppressWarnings("unchecked")
+	public List<PhenoTableGenotype> getLegendGenotypes(String alleleID) throws Exception
     {
     	String url = legendUrl+alleleID;
     	MockRequest mr = mockRequest(url);

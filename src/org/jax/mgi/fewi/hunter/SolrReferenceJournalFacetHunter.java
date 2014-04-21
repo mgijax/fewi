@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrReferenceJournalFacetHunter extends SolrReferenceSummaryBaseHunter {
+public class SolrReferenceJournalFacetHunter extends SolrReferenceSummaryBaseHunter<String>{
     
     /***
      * The constructor sets up this hunter so that it is specific to reference

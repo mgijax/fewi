@@ -19,9 +19,8 @@ public class TextFooSummary extends AbstractTextView {
 		response.setHeader("Content-Disposition","attachment; filename=\"markerReport.txt\"");
 		System.out.println(response.getCharacterEncoding());
 		
+		@SuppressWarnings("unchecked")
 		List<Marker> markers = (List<Marker>) model.get("results");
-		
-		String pubmedId = "";
 		
 		for (Marker mrk : markers) {
 			writer.write(mrk.getSymbol() + "\t");

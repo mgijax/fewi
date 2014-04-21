@@ -9,7 +9,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -102,7 +101,7 @@ public abstract class AbstractBigExcelView extends AbstractReportView
 		}
 
 		// create the Excel document from source
-		POIFSFileSystem fs = new POIFSFileSystem(inputFile.getInputStream());
+		//POIFSFileSystem fs = new POIFSFileSystem(inputFile.getInputStream());
 		SXSSFWorkbook workBook = new SXSSFWorkbook(100);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Loaded Excel workbook '" + source + "'");

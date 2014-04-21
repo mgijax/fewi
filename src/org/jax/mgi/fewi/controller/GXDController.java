@@ -30,7 +30,6 @@ import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -41,6 +40,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
 import org.jax.mgi.fewi.summary.GxdCountsSummary;
@@ -93,7 +93,7 @@ public class GXDController {
 	// instance variables
 	// --------------------//
 
-	private Logger logger = LoggerFactory.getLogger(GXDController.class);
+	private final Logger logger = LoggerFactory.getLogger(GXDController.class);
 
 	//@Autowired
     //private SolrMarkerKeyHunter mrkKeyHunter;
@@ -487,8 +487,6 @@ public class GXDController {
 
         List<GxdMarkerSummaryRow> summaryRows = new ArrayList<GxdMarkerSummaryRow>();
         GxdMarkerSummaryRow row;
-        MetaData rowMeta;
-
         for (SolrGxdMarker marker : markerList) {
 			if (marker != null){
 				row = new GxdMarkerSummaryRow(marker);
@@ -525,7 +523,6 @@ public class GXDController {
 
         List<GxdAssaySummaryRow> summaryRows = new ArrayList<GxdAssaySummaryRow>();
         GxdAssaySummaryRow row;
-        MetaData rowMeta;
 
         for (SolrGxdAssay assay : assayList) {
 			if (assay != null){
@@ -564,8 +561,6 @@ public class GXDController {
 
         List<GxdAssayResultSummaryRow> summaryRows = new ArrayList<GxdAssayResultSummaryRow>();
         GxdAssayResultSummaryRow row;
-        MetaData rowMeta;
-
         for (SolrAssayResult gxdAssayResult : resultList) {
 			if (gxdAssayResult != null){
 				row = new GxdAssayResultSummaryRow(gxdAssayResult);
@@ -596,8 +591,6 @@ public class GXDController {
         //List<SolrGxdAssay> assayList = searchResults.getResultObjects();
 
         List<GxdImageSummaryRow> summaryRows = new ArrayList<GxdImageSummaryRow>();
-        MetaData rowMeta;
-
         for (SolrGxdImage image : imageList) {
 			if (image != null){
 		        GxdImageSummaryRow row = new GxdImageSummaryRow(image);
@@ -1743,7 +1736,7 @@ public class GXDController {
 	    SearchParams params = new SearchParams();
 	    params.setFilter(this.parseGxdQueryForm(query));
 
-	    SearchResults<String> facetResults = null;
+	    SearchResults<SolrString> facetResults = null;
 
 	    if (FacetConstants.GXD_SYSTEM.equals(facetType)) {
 		facetResults = gxdFinder.getSystemFacet(params);
@@ -1825,7 +1818,7 @@ public class GXDController {
 	}
 
 	private Map<String, List<String>> parseFacetResponse (
-		SearchResults<String> facetResults, String order) {
+		SearchResults<SolrString> facetResults, String order) {
 
 	    Map<String, List<String>> m = new HashMap<String, List<String>>();
 	    List<String> l = new ArrayList<String>();
@@ -1853,7 +1846,7 @@ public class GXDController {
 
     private class DetectedComparator implements Comparator<String> {
 
-	private List<String> orderedItems = Arrays.asList (
+	private final List<String> orderedItems = Arrays.asList (
 	    new String[] { "Yes", "No", "Ambiguous", "Not Specified" });
 
 	public int compare (String a, String b) {

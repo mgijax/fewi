@@ -20,6 +20,7 @@ public class TextMarkerSummary extends AbstractTextView
 			throws Exception {
 
 		// retrieve list of markers from controller
+		@SuppressWarnings("unchecked")
 		List<SolrSummaryMarker> markers = (List<SolrSummaryMarker>) model.get("markers");
 
 		// setup

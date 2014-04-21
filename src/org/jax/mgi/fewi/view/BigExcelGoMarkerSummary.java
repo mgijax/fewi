@@ -13,13 +13,8 @@ import mgi.frontend.datamodel.Reference;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
-	
-	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(BigExcelGoMarkerSummary.class);
 
 	
 	@SuppressWarnings("unchecked")

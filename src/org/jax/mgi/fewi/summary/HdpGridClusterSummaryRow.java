@@ -7,12 +7,9 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -24,14 +21,10 @@ public class HdpGridClusterSummaryRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(HdpGridClusterSummaryRow.class);
-
 	// encapsulated row object
-	private SolrHdpGridCluster gridCluster;
-	private HdpGridMapper diseaseRowMapper;
-	private HdpGridMapper mpHeaderRowMapper;
-	private List<SolrHdpGridData> genoInResults;
-	private List<String> genoTerms;
+	private final SolrHdpGridCluster gridCluster;
+	private final HdpGridMapper diseaseRowMapper;
+	private final HdpGridMapper mpHeaderRowMapper;
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 

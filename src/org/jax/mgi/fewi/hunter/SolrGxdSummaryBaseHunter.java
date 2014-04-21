@@ -24,6 +24,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdEntity;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
@@ -39,10 +40,9 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class SolrGxdSummaryBaseHunter extends SolrHunter
+public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity>
 {
-	private String imagePaneUrl;
-    /***
+	/***
      * The constructor sets up this hunter so that it is specific to sequence
      * summary pages.  Each item in the constructor sets a value that it has
      * inherited from its superclass, and then relies on the superclass to
@@ -175,7 +175,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
     }
 
     @Override
-    protected void packInformation(QueryResponse rsp, SearchResults sr,
+    protected void packInformation(QueryResponse rsp, SearchResults<SolrGxdEntity> sr,
             SearchParams sp) {
 
         // A list of all the primary keys in the document
@@ -205,11 +205,13 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
             String printname = (String) doc.getFieldValue(GxdResultFields.STRUCTURE_PRINTNAME);
             Integer theilerStage = (Integer) doc.getFieldValue(GxdResultFields.THEILER_STAGE);
             String assayType = (String) doc.getFieldValue(GxdResultFields.ASSAY_TYPE);
-            List<String> figures = (List<String>) doc.getFieldValue(GxdResultFields.FIGURE);
+            @SuppressWarnings("unchecked")
+			List<String> figures = (List<String>) doc.getFieldValue(GxdResultFields.FIGURE);
             String miniCitation = (String) doc.getFieldValue(GxdResultFields.SHORT_CITATION);
             String genotype = (String) doc.getFieldValue(GxdResultFields.GENOTYPE);
            // String pattern = (String) doc.getFieldValue("pattern");
-            List<String> figuresPlain = (List<String>) doc.getFieldValue(GxdResultFields.FIGURE_PLAIN);
+            @SuppressWarnings("unchecked")
+			List<String> figuresPlain = (List<String>) doc.getFieldValue(GxdResultFields.FIGURE_PLAIN);
             String pubmedId = (String) doc.getFieldValue(GxdResultFields.PUBMED_ID);
 
             SolrAssayResult resultObject = new SolrAssayResult();
@@ -241,7 +243,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
     }
 
     @Override
-    protected void packInformationByGroup(QueryResponse rsp, SearchResults sr,
+    protected void packInformationByGroup(QueryResponse rsp, SearchResults<SolrGxdEntity> sr,
             SearchParams sp) {
 
     	GroupResponse gr = rsp.getGroupResponse();
@@ -260,10 +262,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
         Map<String, Set<String>> setHighlights =
             new HashMap<String, Set<String>> ();
 
-        // A mapping of documentKey -> Mapping of FieldName
-        // -> list of highlighted words.
-        Map<String, Map<String, List<String>>> highlights =
-            rsp.getHighlighting();
+        rsp.getHighlighting();
 
         // A mapping of documentKey -> Row level Metadata objects.
         Map<String, MetaData> metaList = new HashMap<String, MetaData> ();
@@ -279,7 +278,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
         for (Group g : groups)
         {
         	String key = g.getGroupValue();
-        	int numFound = (int) g.getResult().getNumFound();
+        	//int numFound = (int) g.getResult().getNumFound();
         	// get the top document of the group
         	SolrDocument sd = g.getResult().get(0);
         	if(gc.getName().equals(GxdResultFields.MARKER_KEY))
@@ -346,8 +345,9 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
      * Custom implementation for the join response
      * 
      */
-    @Override
-    protected void packInformationForJoin(QueryResponse rsp, SearchResults sr,
+    @SuppressWarnings("unchecked")
+	@Override
+    protected void packInformationForJoin(QueryResponse rsp, SearchResults<SolrGxdEntity> sr,
             SearchParams sp) {
 
         // A list of all the primary keys in the document
@@ -386,7 +386,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
     
     /* gather and facet-related data from 'rsp' and package it into 'sr'
      */
-    private void packFacetData (QueryResponse rsp, SearchResults sr) {
+    private void packFacetData (QueryResponse rsp, SearchResults<SolrGxdEntity> sr) {
 	if (this.facetString == null) { return; }
 
 	logger.debug("this.facetString = " + this.facetString);
@@ -409,7 +409,6 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter
 	@Value("${solr.gxdImagePane.url}")
 	public void setImagePaneJoinUrl(String imagePaneUrl)
 	{ 
-		this.imagePaneUrl = imagePaneUrl; 
 		/*
          * Joined indices
          * List of indices that can be joined to this index.

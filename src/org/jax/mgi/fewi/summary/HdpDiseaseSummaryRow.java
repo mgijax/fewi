@@ -10,8 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,10 +20,8 @@ public class HdpDiseaseSummaryRow {
 		// instance variables
 		//-------------------
 
-	  private Logger logger = LoggerFactory.getLogger(HdpDiseaseSummaryRow.class);
-
 		// encapsulated row object
-		private SolrVocTerm term;
+		private final SolrVocTerm term;
 		
 		private List<String> highlightedFields;
 

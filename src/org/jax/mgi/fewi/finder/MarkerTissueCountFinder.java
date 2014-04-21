@@ -11,8 +11,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jax.mgi.fewi.searchUtil.Paginator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,8 +29,6 @@ public class MarkerTissueCountFinder {
     /*--------------------*/
     /* instance variables */
     /*--------------------*/
-
-    private Logger logger = LoggerFactory.getLogger(MarkerTissueCountFinder.class);
     
     @Autowired
 	private SessionFactory sessionFactory;
@@ -46,6 +42,7 @@ public class MarkerTissueCountFinder {
     	return getTissues(mrkKey,null);
     }
     
+	@SuppressWarnings("unchecked")
 	public List<MarkerTissueCount> getTissues(String mrkKey,Paginator page)
     {
     	Session s = sessionFactory.getCurrentSession();

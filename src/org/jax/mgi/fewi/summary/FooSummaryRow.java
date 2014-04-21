@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.summary;
 import mgi.frontend.datamodel.Marker;
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -16,11 +14,6 @@ public class FooSummaryRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(FooSummaryRow.class);
-
-	// encapsulated row object
-	private Marker foo;
-
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
@@ -30,7 +23,6 @@ public class FooSummaryRow {
 	//-------------
 
     public FooSummaryRow (Marker foo) {
-    	this.foo = foo;
     	return;
     }
 

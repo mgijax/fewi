@@ -19,12 +19,12 @@ import org.springframework.stereotype.Repository;
 public class HibernateAccessionSummaryHunter<T> {
 
     // logger for the class
-    private Logger logger = LoggerFactory.getLogger(HibernateAccessionSummaryHunter.class);
+    private final Logger logger = LoggerFactory.getLogger(HibernateAccessionSummaryHunter.class);
     
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	private Map<String, List<String>> typeMap = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> typeMap = new HashMap<String, List<String>>();
 	
     public HibernateAccessionSummaryHunter() {
 				
@@ -76,7 +76,8 @@ public class HibernateAccessionSummaryHunter<T> {
 
         List<T> bm = new ArrayList<T>();
         
-        List<T> qr = (List<T>)query.list();
+        @SuppressWarnings("unchecked")
+		List<T> qr = query.list();
         logger.debug("This is the size of the results: " + qr.size());
         logger.debug("-> query complete" );
 

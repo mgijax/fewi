@@ -11,8 +11,6 @@ import mgi.frontend.datamodel.phenotype.AlleleSummarySystem;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * wrapper around a marker tissue count;  represents on row in summary
@@ -22,14 +20,13 @@ public class AlleleSummaryRow
   //-------------------
   // instance variables
   //-------------------
-  private Logger logger = LoggerFactory.getLogger(AlleleSummaryRow.class);
   private static String NORMAL_PHENOTYPE="normal phenotype";
   private static String PHENOTYPE_NOT_ANALYZED="phenotype not analyzed";
   private static String CELL_LINE="Cell Line";
   private static String CHIMERIC="Chimeric";
   
   // encapsulated row object
-  private Allele allele;
+  private final Allele allele;
 
   // config values
   String fewiUrl   = ContextLoader.getConfigBean().getProperty("FEWI_URL");

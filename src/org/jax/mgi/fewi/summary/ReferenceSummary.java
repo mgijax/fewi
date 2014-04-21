@@ -5,15 +5,12 @@ import mgi.frontend.datamodel.Reference;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.Highlighter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ReferenceSummary {
-	 private static Logger logger = LoggerFactory.getLogger(ReferenceSummary.class);
 	private Reference reference;
 	private String score;
-	private String pmUrl = ContextLoader.getExternalUrls().getProperty("PubMed");
-	private String doiUrl = ContextLoader.getExternalUrls().getProperty("DXDOI");
+	private final String pmUrl = ContextLoader.getExternalUrls().getProperty("PubMed");
+	private final String doiUrl = ContextLoader.getExternalUrls().getProperty("DXDOI");
 	private Highlighter titleHL = new Highlighter(null);
 	private Highlighter abstractHL = new Highlighter(null);
 	private Highlighter authorHL = new Highlighter(null);

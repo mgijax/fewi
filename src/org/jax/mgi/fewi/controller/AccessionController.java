@@ -107,7 +107,7 @@ public class AccessionController {
         	logger.debug("Found only 1, should be forwarding.");
         	// We only have one object, seamlessly forward it!
         	FewiLinker linker = FewiLinker.getInstance();
-        	Accession acc = (Accession) searchResults.getResultObjects().get(0);
+        	Accession acc = searchResults.getResultObjects().get(0);
         	String url = "";
         	
         	String objectType = acc.getObjectType();

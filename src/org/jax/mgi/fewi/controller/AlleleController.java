@@ -153,7 +153,7 @@ public class AlleleController {
     public ModelAndView phenoPopup (HttpServletRequest request) 
     {
 		logger.debug("->systemPopup started");
-		String formName = (String) request.getParameter("formName");
+		String formName = request.getParameter("formName");
 		
         ModelAndView mav = new ModelAndView("allele_query_system_popup");
         if(notEmpty(formName)) mav.addObject("formName",formName);
@@ -648,7 +648,7 @@ public class AlleleController {
 
 		seoDescription.append(", gene associations, and references.");
 
-		List<AlleleSynonym> synonyms = (List<AlleleSynonym>) allele.getSynonyms();
+		List<AlleleSynonym> synonyms = allele.getSynonyms();
 
 	    for (AlleleSynonym synonym : synonyms)
 	    {

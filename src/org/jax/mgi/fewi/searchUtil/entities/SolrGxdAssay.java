@@ -1,7 +1,7 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
 
-public class SolrGxdAssay 
+public class SolrGxdAssay implements SolrGxdEntity
 {
 	String markerSymbol;
 	String assayKey;

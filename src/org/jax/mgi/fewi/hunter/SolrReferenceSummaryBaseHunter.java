@@ -13,7 +13,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.IndexConstants;
 
-public class SolrReferenceSummaryBaseHunter extends SolrHunter {
+public class SolrReferenceSummaryBaseHunter<T> extends SolrHunter<T> {
     
     /***
      * The constructor sets up this hunter so that it is specific to reference

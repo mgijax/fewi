@@ -27,12 +27,12 @@ import org.springframework.stereotype.Repository;
 public class HibernateBatchSummaryHunter
 {
     // logger for the class
-    private Logger logger = LoggerFactory.getLogger(HibernateBatchSummaryHunter.class);
+    private final Logger logger = LoggerFactory.getLogger(HibernateBatchSummaryHunter.class);
     
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	private Map<String, List<String>> typeMap = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> typeMap = new HashMap<String, List<String>>();
 	
     public HibernateBatchSummaryHunter() {
 				
@@ -67,6 +67,7 @@ public class HibernateBatchSummaryHunter
 		typeMap.put("GenBank", genbankItems);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void hunt(SearchParams searchParams, SearchResults<BatchMarkerId> searchResults) 
 	{
         logger.debug("-> hunt");        
@@ -131,7 +132,7 @@ public class HibernateBatchSummaryHunter
         Set<Integer> markerKey = new HashSet<Integer>();
         
         for (BatchMarkerId item: qr){
-        	BatchMarkerId bmi = (BatchMarkerId) item;
+        	BatchMarkerId bmi = item;
         	
         	// tracking a unique set of marker keys
         	markerKey.add(bmi.getMarker().getMarkerKey());

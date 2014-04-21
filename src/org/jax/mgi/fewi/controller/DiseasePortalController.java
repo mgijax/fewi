@@ -144,10 +144,10 @@ public class DiseasePortalController
 		model.addAttribute("querystring", queryString);
 		
 		boolean useGeneFile = DiseasePortalController.usingGenefileQuery(query,session);
-		if(useGeneFile) model.addAttribute("geneFileName",(String) session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME));
+		if(useGeneFile) model.addAttribute("geneFileName",session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME));
 		
 		boolean useLocationsFile = DiseasePortalController.usingLocationsQuery(query,session);
-		if(useLocationsFile) model.addAttribute("locationsFileName",(String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
+		if(useLocationsFile) model.addAttribute("locationsFileName",session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 		
 		return "disease_portal_query";
 
@@ -1478,13 +1478,13 @@ public class DiseasePortalController
 	private static boolean usingLocationsQuery(DiseasePortalQueryForm query, HttpSession session)
 	{
 		String locationsFileName = query.getLocationsFileName();
-		return locationsFileName!=null && locationsFileName.equals((String) session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
+		return locationsFileName!=null && locationsFileName.equals(session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 	}
 	
 	private static boolean usingGenefileQuery(DiseasePortalQueryForm query, HttpSession session)
 	{
 		String geneFileName = query.getGeneFileName();
-		return geneFileName!=null && geneFileName.equals((String) session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME));
+		return geneFileName!=null && geneFileName.equals(session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME));
 	}
 
 }

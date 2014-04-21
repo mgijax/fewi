@@ -23,7 +23,7 @@ import org.concordion.internal.util.Check;
 
 public class AssertAllRowsEqualCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
+    private final Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     private final Comparator<Object> comparator;
 
     public AssertAllRowsEqualCommand() {
@@ -50,7 +50,8 @@ public class AssertAllRowsEqualCommand extends AbstractCommand {
         
         Object actuals = evaluator.evaluate(commandCall.getExpression());
         Check.isTrue(actuals instanceof Iterable, actuals.getClass().getCanonicalName() + " is not Iterable");
-        Iterable<Object> results = (Iterable<Object>) actuals;
+        @SuppressWarnings("unchecked")
+		Iterable<Object> results = (Iterable<Object>) actuals;
         
         String expected = element.getText();
         List<Object> failures = new ArrayList<Object>();

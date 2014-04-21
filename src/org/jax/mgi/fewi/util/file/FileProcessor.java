@@ -22,7 +22,6 @@ public class FileProcessor
 	 
 	 private static char VCF_COMMENT_CHAR = '#';
 	 private static char VCF_COL_DELIM = '\t';
-	 private static int VCF_CHROMOSOME_COL = 0;
 	 private static int VCF_COORDINATE_COL = 1;
 	 private static int VCF_ID_COL = 2;
 	 private static int VCF_FILTER_COL = 6;
@@ -165,7 +164,7 @@ public class FileProcessor
 		 StringBuilder charVals = new StringBuilder();;
 		 for(int i=0; i<chars.length; i++)
 		 {
-			int cInt = (int)chars[i];
+			int cInt = chars[i];
 			charVals.append(cInt).append(",");
 		 }
 		 return charVals.toString();

@@ -8,15 +8,12 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AutocompleteFinder 
 {
-	private Logger logger = LoggerFactory.getLogger(AutocompleteFinder.class);
 
 	@Autowired
 	private SolrAuthorsACHunter authorACHunter;

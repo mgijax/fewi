@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.List;
 
-public class SolrGxdImage 
+public class SolrGxdImage implements SolrGxdEntity
 {
 	Integer imagePaneKey;
 	String imageID;

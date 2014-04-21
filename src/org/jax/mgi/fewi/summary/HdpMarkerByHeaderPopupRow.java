@@ -6,8 +6,6 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -19,11 +17,9 @@ public class HdpMarkerByHeaderPopupRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(HdpMarkerByHeaderPopupRow.class);
-
 	// encapsulated row object
-	private SolrDiseasePortalMarker marker;
-	private HdpGridMapper gridMapper;
+	private final SolrDiseasePortalMarker marker;
+	private final HdpGridMapper gridMapper;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");

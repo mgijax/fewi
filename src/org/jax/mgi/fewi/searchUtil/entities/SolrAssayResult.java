@@ -2,7 +2,7 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.List;
 
-public class SolrAssayResult 
+public class SolrAssayResult implements SolrGxdEntity
 {
 	private String jNum;
 	private String pubmedId;

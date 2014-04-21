@@ -11,13 +11,14 @@ import org.jax.mgi.fewi.test.mock.MockRequest;
 
 public class AlleleDetailPhenoSummaryTest extends BaseConcordionTest {
 	
-    private String baseUrl = "/allele/phenotable/";
+    private final String baseUrl = "/allele/phenotable/";
     
     public List<PhenoTableSystem> getPhenoTableSystems(String alleleID) throws Exception
     {
     	String url = baseUrl+alleleID;
     	MockRequest mr = mockRequest(url);
-    	List<PhenoTableSystem> ptSystems = (List<PhenoTableSystem>) mr.get("phenoTableSystems");
+    	@SuppressWarnings("unchecked")
+		List<PhenoTableSystem> ptSystems = (List<PhenoTableSystem>) mr.get("phenoTableSystems");
     	return ptSystems;
     }
     

@@ -6,7 +6,6 @@ import java.util.List;
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AllelePhenoSummary;
 
-import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.hunter.SolrAlleleCollectionFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleKeyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
@@ -34,8 +33,7 @@ public class AlleleFinder {
     @Autowired
     private HibernateObjectGatherer<AllelePhenoSummary> phenoGatherer;
 
-    @Autowired
-	private SessionFactory sessionFactory;
+    
 
     /////////////////////////////////////////////////////////////////////////
     //  Retrieval of an allele, for a given ID

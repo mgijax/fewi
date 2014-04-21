@@ -22,14 +22,11 @@ import org.concordion.internal.util.Check;
 public class AssertEqualsCICommand extends AbstractCommand {
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
-    private final Comparator<Object> comparator;
-
     public AssertEqualsCICommand() {
         this(new BrowserStyleWhitespaceComparator());
     }
     
     public AssertEqualsCICommand(Comparator<Object> comparator) {
-        this.comparator = comparator;
     }
     
     public void addAssertEqualsListener(AssertEqualsListener listener) {

@@ -22,15 +22,12 @@ import org.concordion.internal.util.Check;
 
 public class AssertAllResultsContainTextCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
-    private final Comparator<Object> comparator;
-
+    private final Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     public AssertAllResultsContainTextCommand() {
         this(new BrowserStyleWhitespaceComparator());
     }
     
     public AssertAllResultsContainTextCommand(Comparator<Object> comparator) {
-        this.comparator = comparator;
     }
     
     public void addAssertEqualsListener(AssertEqualsListener listener) {
@@ -49,7 +46,8 @@ public class AssertAllResultsContainTextCommand extends AbstractCommand {
         
         Object actuals = evaluator.evaluate(commandCall.getExpression());
         Check.isTrue(actuals instanceof Iterable, actuals.getClass().getCanonicalName() + " is not Iterable");
-        Iterable<Object> results = (Iterable<Object>) actuals;
+        @SuppressWarnings("unchecked")
+		Iterable<Object> results = (Iterable<Object>) actuals;
         
         String expected = element.getText();
 

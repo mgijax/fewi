@@ -6,8 +6,6 @@ import java.util.List;
 import mgi.frontend.datamodel.Term;
 
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +21,7 @@ public class TermFinder {
     /* instance variables */
     /*--------------------*/
 
-    private Logger logger = LoggerFactory.getLogger(TermFinder.class);
+    //private Logger logger = LoggerFactory.getLogger(TermFinder.class);
     
     @Autowired
     private HibernateObjectGatherer<Term> termGatherer;

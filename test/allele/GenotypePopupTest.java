@@ -16,9 +16,10 @@ import org.jax.mgi.fewi.test.mock.MockRequest;
 public class GenotypePopupTest extends BaseConcordionTest 
 {
 		
-	    private String baseUrl = "/allele/genoview/";
+	    private final String baseUrl = "/allele/genoview/";
 	    
-	    public List<MPSystem> getMPSystems(String genotypeID) throws Exception
+	    @SuppressWarnings("unchecked")
+		public List<MPSystem> getMPSystems(String genotypeID) throws Exception
 	    {
 	    	String url = baseUrl+genotypeID;
 	    	MockRequest mr = mockRequest(url);

@@ -19,8 +19,6 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -32,17 +30,15 @@ public class BatchSummaryRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(BatchSummaryRow.class);
-
 	// encapsulated row object
 	private BatchMarkerId batchMarkerId;
 
 	private BatchQueryForm query = null;
 
 	// config values
-    private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-    private String javawiUrl = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
-    private String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
+    private final String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+    private final String javawiUrl = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
+    //private final String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
 
     private static String urlPattern = "<a href='%s' target='_blank'>%s</a>";
     private static String noWrap = "<span style='white-space:nowrap;'>%s</span>";

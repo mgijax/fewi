@@ -19,7 +19,7 @@ import org.concordion.internal.util.Check;
 
 public class AssertNoResultsContainCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
+    private final Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     private final Comparator<Object> comparator;
 
     public AssertNoResultsContainCommand() {
@@ -46,7 +46,8 @@ public class AssertNoResultsContainCommand extends AbstractCommand {
         
         Object actuals = evaluator.evaluate(commandCall.getExpression());
         Check.isTrue(actuals instanceof Iterable, actuals.getClass().getCanonicalName() + " is not Iterable");
-        Iterable<Object> results = (Iterable<Object>) actuals;
+        @SuppressWarnings("unchecked")
+		Iterable<Object> results = (Iterable<Object>) actuals;
         
         String expected = element.getText();
         

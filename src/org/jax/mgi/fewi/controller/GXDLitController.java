@@ -65,7 +65,7 @@ public class GXDLitController {
     // instance variables
     //--------------------//
 
-    private Logger logger
+    private final Logger logger
       = LoggerFactory.getLogger(GXDLitController.class);
 
     @Autowired
@@ -243,13 +243,13 @@ public class GXDLitController {
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
+        mav.addObject("refCount", analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
+        mav.addObject("hasFullyCoded", analysisData.get("hasFullyCoded"));
 
         return mav;
     	
@@ -344,13 +344,13 @@ public class GXDLitController {
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
+        mav.addObject("refCount", analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
+        mav.addObject("hasFullyCoded", analysisData.get("hasFullyCoded"));
 
         return mav;    	
     }
@@ -400,13 +400,13 @@ public class GXDLitController {
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
+        mav.addObject("refCount", analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("age", queryForm.getAge().get(0));
         mav.addObject("assayType", queryForm.getAssayType().get(0));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
+        mav.addObject("hasFullyCoded", analysisData.get("hasFullyCoded"));
         return mav;
     }
 
@@ -436,7 +436,7 @@ public class GXDLitController {
         SearchResults<GxdLitIndexRecord> results = gxdLitFinder.getGxdLitRecords(params);
 
 		int totalCount = results.getTotalCount();
-        Map<String, Set<String>> highlighting = results.getResultSetMeta().getSetHighlights();
+        //Map<String, Set<String>> highlighting = results.getResultSetMeta().getSetHighlights();
 
         Highlighter textHl = null;
 
@@ -459,7 +459,7 @@ public class GXDLitController {
         // create/load the list of SummaryRow wrapper objects for the gene section
         List<GxdLitGeneSummaryRow> summaryRows = generateGeneSection(recordList, queryForm, textHl,analysisData);
 
-        logger.debug("ref count after = "+(Integer)analysisData.get("refCount"));
+        logger.debug("ref count after = "+analysisData.get("refCount"));
 
         ModelAndView mav = new ModelAndView("gxdlit_summary");
         //if a markerID is in the query resolve it to a marker object
@@ -477,11 +477,11 @@ public class GXDLitController {
         mav.addObject("summaryRows", summaryRows);
         mav.addObject("queryString", request.getQueryString());
         mav.addObject("queryForm", queryForm);
-        mav.addObject("refCount", (Integer)analysisData.get("refCount"));
+        mav.addObject("refCount", analysisData.get("refCount"));
         mav.addObject("totalCount", totalCount);
         mav.addObject("pairTable", parseAgeAssay(summaryRows, Boolean.FALSE, queryForm));
         mav.addObject("limit", gxdLimit);
-        mav.addObject("hasFullyCoded", (Boolean)analysisData.get("hasFullyCoded"));
+        mav.addObject("hasFullyCoded", analysisData.get("hasFullyCoded"));
 
         return mav;
     }

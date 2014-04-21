@@ -31,7 +31,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class VocabularyFinder 
 {
-    private Logger logger = LoggerFactory.getLogger(VocabularyFinder.class);
+    private final Logger logger = LoggerFactory.getLogger(VocabularyFinder.class);
     
     @Autowired
     private SessionFactory sessionFactory;
@@ -46,7 +46,8 @@ public class VocabularyFinder
      * returns all vocab terms for the vocabulary beginning with the subsetLetter
      * e.g All terms beginning with A or B, etc
      */
-    public List<VocabTerm> getVocabSubset(String vocabName, String subsetLetter)
+    @SuppressWarnings("unchecked")
+	public List<VocabTerm> getVocabSubset(String vocabName, String subsetLetter)
     {
     	Session s = sessionFactory.getCurrentSession();
     	Criteria query = s.createCriteria(VocabTerm.class);

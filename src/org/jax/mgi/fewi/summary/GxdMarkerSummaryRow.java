@@ -7,8 +7,6 @@ package org.jax.mgi.fewi.summary;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -18,9 +16,6 @@ public class GxdMarkerSummaryRow {
 	//-------------------
 		// instance variables
 		//-------------------
-
-	  private Logger logger = LoggerFactory.getLogger(MarkerSummaryRow.class);
-
 		// encapsulated row object
 		private SolrGxdMarker marker;
 

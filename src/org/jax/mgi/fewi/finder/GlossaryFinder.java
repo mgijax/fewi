@@ -9,8 +9,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,14 +24,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GlossaryFinder 
 {
-    private Logger logger = LoggerFactory.getLogger(GlossaryFinder.class);
     
     @Autowired
 	private SessionFactory sessionFactory;
 
 
     /* returns all glossary terms for the index page */
-    public List<GlossaryTerm> getGlossaryIndex()
+    @SuppressWarnings("unchecked")
+	public List<GlossaryTerm> getGlossaryIndex()
     {
     	Session s = sessionFactory.getCurrentSession();
     	Criteria query = s.createCriteria(GlossaryTerm.class);

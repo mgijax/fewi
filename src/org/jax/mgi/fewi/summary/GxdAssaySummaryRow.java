@@ -2,8 +2,6 @@ package org.jax.mgi.fewi.summary;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GxdAssaySummaryRow {
 	
@@ -11,10 +9,8 @@ public class GxdAssaySummaryRow {
 	// instance variables
 	// -------------------
 
-	private Logger logger = LoggerFactory.getLogger(GxdAssayResultSummaryRow.class);
-
 	// encapsulated row object
-	private SolrGxdAssay assay;
+	private final SolrGxdAssay assay;
 
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");

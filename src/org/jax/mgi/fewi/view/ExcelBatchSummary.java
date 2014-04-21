@@ -16,10 +16,10 @@ import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -29,10 +29,8 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 public class ExcelBatchSummary extends AbstractExcelView {
 	
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(ExcelBatchSummary.class);
+	private final Logger logger = LoggerFactory.getLogger(ExcelBatchSummary.class);
 	
-	private int totalCols = 2;
-
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, 
 			HttpServletRequest request, HttpServletResponse response)
@@ -40,6 +38,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 		
 		logger.debug("buildExcelDocument");
 		BatchQueryForm queryForm = (BatchQueryForm)model.get("queryForm");
+		@SuppressWarnings("unchecked")
 		List<BatchMarkerId> results = (List<BatchMarkerId>) model.get("results");
 
 		HSSFSheet sheet = workbook.createSheet();		
@@ -258,9 +257,9 @@ public class ExcelBatchSummary extends AbstractExcelView {
 							addlRow = sheet.createRow(rownum++);
 							for (int i = 0; i < col; i++) {
 								if (row.getCell(i) != null){
-									if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
+									if (row.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC) {
 										addlRow.createCell(i).setCellValue(row.getCell(i).getNumericCellValue());
-									} else if (row.getCell(i).getCellType() == HSSFCell.CELL_TYPE_STRING){
+									} else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_STRING){
 										addlRow.createCell(i).setCellValue(row.getCell(i).getStringCellValue());
 									}
 								} else {
@@ -347,7 +346,6 @@ public class ExcelBatchSummary extends AbstractExcelView {
 		} else if(queryForm.getUniprot()){
 			headerRow.createCell(i++).setCellValue("Uniprot ID");
 		}
-		totalCols = i;
 		return headerRow;
 	}
 	

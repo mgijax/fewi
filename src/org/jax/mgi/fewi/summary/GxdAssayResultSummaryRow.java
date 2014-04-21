@@ -12,8 +12,6 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * wrapper around a marker; represents on row in summary
@@ -22,8 +20,6 @@ public class GxdAssayResultSummaryRow {
 	// -------------------
 		// instance variables
 		// -------------------
-
-		private Logger logger = LoggerFactory.getLogger(GxdAssayResultSummaryRow.class);
 
 		// encapsulated row object
 		private SolrAssayResult result;

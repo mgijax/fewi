@@ -239,14 +239,14 @@ public class SolrHunter<T> implements Hunter<T> {
         	List<String> docFields = new ArrayList<String>(this.groupReturnedFields.get(groupField));
 	    	docFields.add("score");
 	    	// I know the typecasting looks kludgy, but it's simpler than declaring array sizes and looping.
-	    	query.setFields((String[]) docFields.toArray(new String[0]));
+	    	query.setFields(docFields.toArray(new String[0]));
         }
         else if(!doJoin && this.returnedFields.size()>0)
         {
         	List<String> docFields = new ArrayList<String>(returnedFields);
         	docFields.add("score");
         	// I know the typecasting looks kludgy, but it's simpler than declaring array sizes and looping.
-        	query.setFields((String[]) docFields.toArray(new String[0]));
+        	query.setFields(docFields.toArray(new String[0]));
         }
         else  query.setFields("*","score"); // if none specified do *
 

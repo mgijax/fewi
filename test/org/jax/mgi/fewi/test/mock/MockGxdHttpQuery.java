@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jax.mgi.fewi.forms.GxdQueryForm;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -36,7 +37,7 @@ public class MockGxdHttpQuery extends AbstractMockGxdQuery
     	{
     		request.addParameter("annotationId", gqf.getAnnotationId());
     	}
-    	if (gqf.getTheilerStage().size() > 0 && !gqf.getTheilerStage().contains(gqf.ANY_STAGE))
+    	if (gqf.getTheilerStage().size() > 0 && !gqf.getTheilerStage().contains(GxdQueryForm.ANY_STAGE))
     	{
     		List<Integer> theilerStages = gqf.getTheilerStage();
     		String[] stages = new String[theilerStages.size()];
@@ -46,7 +47,7 @@ public class MockGxdHttpQuery extends AbstractMockGxdQuery
         	}
         	request.addParameter("theilerStage", stages);
     	}
-    	else if (gqf.getAge().size() > 0 && !gqf.getAge().contains(gqf.ANY_AGE))
+    	else if (gqf.getAge().size() > 0 && !gqf.getAge().contains(GxdQueryForm.ANY_AGE))
     	{
     		List<String> ages = gqf.getAge();
     		String[] ageParameter = new String[ages.size()];

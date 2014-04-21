@@ -10,8 +10,6 @@ import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.IDLinker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -23,15 +21,9 @@ public class GOSummaryRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(GOSummaryRow.class);
-
 	// encapsulated row object
 	private Annotation annot;
 	
-	private Marker marker;
-	
-	private Reference reference;
-
 	private IDLinker  linker = ContextLoader.getIDLinker();
 
 	// config values
@@ -45,13 +37,11 @@ public class GOSummaryRow {
 
     public GOSummaryRow (Annotation annot, Marker marker) {
     	this.annot = annot;
-    	this.marker = marker;
     	return;
     }
 
     public GOSummaryRow (Annotation annot, Reference reference) {
     	this.annot = annot;
-    	this.reference = reference;
     	return;
     }
 

@@ -15,8 +15,6 @@ import mgi.frontend.datamodel.ImagePane;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.objectplanet.image.PngEncoder;
 
@@ -29,7 +27,6 @@ import com.objectplanet.image.PngEncoder;
  */
 public class ImageUtils 
 {
-	 private static Logger logger = LoggerFactory.getLogger(ImageUtils.class);
 	/*
 	 * create the image pane HTML snippet without any scaling.
 	 */

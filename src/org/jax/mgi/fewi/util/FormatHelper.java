@@ -276,7 +276,6 @@ public class FormatHelper
 
         // sequence info
         String provider = getSeqProviderForward(seq);
-        String accID = seq.getPrimaryID();
 
         //coords
         List<SequenceLocation> locList = seq.getLocations();
@@ -401,9 +400,10 @@ public class FormatHelper
     {
     	if(start==null && end == null) return "";
     	NumberFormat nf = new DecimalFormat("#0");
-    	String s,e = "";
-    	if(start!=null) s = nf.format(start);
-    	if(end!=null) e = nf.format(end);
+    	if(start!=null)
+			nf.format(start);
+    	if(end!=null)
+			nf.format(end);
     	return nf.format(start)+"-"+nf.format(end);
     }
 

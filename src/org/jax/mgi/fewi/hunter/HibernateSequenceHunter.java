@@ -15,6 +15,7 @@ import org.hibernate.Criteria;
 import org.hibernate.NullPrecedence;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -201,7 +202,7 @@ public class HibernateSequenceHunter implements Hunter<Sequence>
 		
 		// need to reset the criteria to before we did the count
 		query.setProjection(null);
-		query.setResultTransformer(Criteria.ROOT_ENTITY);
+		query.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		
 		return totalCount;
 	}

@@ -11,9 +11,10 @@ import org.jax.mgi.fewi.test.mock.MockRequest;
 
 public class RecombinaseRibbonTest extends BaseConcordionTest 
 {
-	private String baseUrl = "/recombinase/allele/";
+	private final String baseUrl = "/recombinase/allele/";
     
-    private List<AlleleSystem> getCreAlleleSystems(String alleleID) throws Exception
+    @SuppressWarnings("unchecked")
+	private List<AlleleSystem> getCreAlleleSystems(String alleleID) throws Exception
     {
     	String url = baseUrl+alleleID;
     	MockRequest mr = mockRequest(url);

@@ -9,9 +9,10 @@ import org.jax.mgi.fewi.test.mock.MockRequest;
 
 public class AlleleDetailPhenoDiseaseTest extends BaseConcordionTest {
 	
-    private String baseUrl = "/allele/phenotable/";
+    private final String baseUrl = "/allele/phenotable/";
     
-    public List<AlleleDisease> getDiseases(String alleleID) throws Exception
+    @SuppressWarnings("unchecked")
+	public List<AlleleDisease> getDiseases(String alleleID) throws Exception
     {
     	String url = baseUrl+alleleID;
     	MockRequest mr = mockRequest(url);

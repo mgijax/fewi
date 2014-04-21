@@ -3,9 +3,6 @@ package org.jax.mgi.fewi.summary;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * wrapper around a row of recombinase images
@@ -15,8 +12,6 @@ public class RecomImageRow {
 	//-------------------
 	// instance variables
 	//-------------------
-
-    private Logger logger = LoggerFactory.getLogger(RecomImageRow.class);
 
 	// encapsulated row object
 	private List<RecomImage> recomImages = new ArrayList<RecomImage>();

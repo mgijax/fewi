@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 public class ExcelReferenceSummary extends AbstractExcelView {
 	
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(ExcelReferenceSummary.class);
+	private final Logger logger = LoggerFactory.getLogger(ExcelReferenceSummary.class);
 
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, 
@@ -26,6 +26,7 @@ public class ExcelReferenceSummary extends AbstractExcelView {
 			throws Exception {
 		
 		logger.debug("buildExcelDocument");
+		@SuppressWarnings("unchecked")
 		List<Reference> references = (List<Reference>) model.get("results");
 
 		HSSFSheet sheet = workbook.createSheet();

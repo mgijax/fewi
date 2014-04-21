@@ -8,8 +8,6 @@ import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -21,11 +19,9 @@ public class HdpGenoByHeaderPopupRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(HdpGenoByHeaderPopupRow.class);
-
 	// encapsulated row object
-	private HdpGenoCluster genoCluster;
-	private HdpGridMapper gridMapper;
+	private final HdpGenoCluster genoCluster;
+	private final HdpGridMapper gridMapper;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class SolrAnatomyTerm
 {
 	// stopwords are duplicated from stopwords.txt in the anatomyAC
@@ -22,7 +19,6 @@ public class SolrAnatomyTerm
 	String endStage;
 	List<String> synonyms;
 	List<String> tokens;
-	private Logger logger = LoggerFactory.getLogger(SolrAnatomyTerm.class);
 	
 	public String getStructureKey() {
 		return structureKey;
@@ -183,7 +179,6 @@ public class SolrAnatomyTerm
 	private String highlightString (String s) {
 	    if (this.tokens == null) { return s; }
 
-	    String sLower = null;
 	    String tokenLower = null;
 	    String term = s;
 	    String pLower = null;

@@ -56,8 +56,8 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 
         try {
         	propertiesConfig = new CompositeConfiguration();
-        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration((File) ac.getResource("fewi.properties").getFile()));
-        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration((File) ac.getResource("common.solr.properties").getFile()));
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("fewi.properties").getFile()));
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("common.solr.properties").getFile()));
         } catch (ConfigurationException e) {
             logger.error("Error with the configuration file.",e);
         } catch (IOException e) {
