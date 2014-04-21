@@ -173,7 +173,7 @@ function HDPFileUploadWidget(config)
 var resetLocationsFileFields,resetGeneFileFields;
 var repositionUploadWidgets = function()
 {
-	$("#geneFileDiv").position({of:$("#geneFilePlaceholder"),my:"right"});
+	$("#geneFileDiv").position({of:$("#geneFilePlaceholder"),my:"left"});
 	//$("#locationsFileDiv").position({of:$("#locationsFileHome"),my:"right"});
 }
 var HDP_FUW;
