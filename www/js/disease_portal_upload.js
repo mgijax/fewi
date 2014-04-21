@@ -196,7 +196,7 @@ $(function(){
 		 *  	when called inside the reset button's event handler.
 		 *  I'm just glad that this at least solves it.
 		 */
-		setTimeout(HDP_FUW.setLocationsFileSession,200); 
+		setTimeout(HDP_FUW.setLocationsFileSession,300); 
 	}
 	
 	resetGeneFileFields=function(){
@@ -207,12 +207,17 @@ $(function(){
 		 *  	when called inside the reset button's event handler.
 		 *  I'm just glad that this at least solves it.
 		 */
-		setTimeout(HDP_FUW_GENES.setLocationsFileSession,200); 
+		setTimeout(HDP_FUW_GENES.setLocationsFileSession,300); 
 	}
 	
 	$("#locationsFileInput").change(HDP_FUW.setLocationsFileSession);
 	$("#geneFileInput").change(HDP_FUW_GENES.setLocationsFileSession);
 	$("#enableVcfFilter").change(function(){
-		setTimeout(HDP_FUW.setLocationsFileSession,200); 
+		var input = this;
+		input.disabled = true;
+		setTimeout(function(){
+			input.disabled = false;
+			HDP_FUW.setLocationsFileSession();
+		},400); 
 	});
 });

@@ -22,6 +22,7 @@ public class DiseasePortalQueryForm
     private String termHeader;
     private String termId;
     private String locationsFileName;
+    private String enableVcfFilter;
     private String geneFileName;
     private int numDCol=100;
     
@@ -171,6 +172,14 @@ public class DiseasePortalQueryForm
 		this.referseF = referseF;
 	}
 
+	public String getEnableVcfFilter() {
+		return enableVcfFilter;
+	}
+
+	public void setEnableVcfFilter(String enableVcfFilter) {
+		this.enableVcfFilter = enableVcfFilter;
+	}
+	
 	@Override
 	public String toString() {
 		return "DiseasePortalQueryForm [phenotypes=" + phenotypes + ", genes="
@@ -180,6 +189,4 @@ public class DiseasePortalQueryForm
 				+ ", fHeader=" + fHeader + ", organismOptions="
 				+ organismOptions + "]";
 	}
-	
-	
 }

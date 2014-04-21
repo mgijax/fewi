@@ -107,6 +107,7 @@
     </div>
 
     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
+   	<input id="enableVcfFilterHid" type="hidden" name="enableVcfFilter" type="checkbox" value="true" />
     <input id="geneFileName" type="hidden" name="geneFileName" value="${geneFileName}">
     <input type="hidden" name="fGene" id="fGene" />
 	<input type="hidden" name="fHeader" id="fHeader" />
@@ -202,5 +203,15 @@ $(function(){
                         $("#"+mirrorId).prop("checked",true);
                 }
         });
+        
+        // wire up the hidden enableVcfFilter fields
+        $("#enableVcfFilter").change(function(e){
+        	$("#enableVcfFilterHid").val($("#enableVcfFilter").prop("checked"));
+        });
 });
+// form will get repopulated by javascript summary. We'll need to update the filter checkbox when that happens
+function refreshEnableVcfFilterValue()
+{
+	$("#enableVcfFilter").prop("checked",$("#enableVcfFilterHid").val()!='false');
+}
 </script>

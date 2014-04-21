@@ -76,6 +76,7 @@ var resetQF = function (e) {
 	form.organism[1].checked = true;
 	form.locationsFileName.value = "";
 	form.geneFileName.value = "";
+	form.enableVcfFilter.checked = true;
 	
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
@@ -285,6 +286,10 @@ var getQueryString = function()
 	if("locationsFileName" in values && values["locationsFileName"]!="")
 	{
 		params.push("locationsFileName="+values["locationsFileName"]);
+		if("enableVcfFilter" in values && values["enableVcfFilter"]=="true")
+		{
+			params.push("enableVcfFilter=true");
+		}
 		params.push("organism="+values["organism"]);
 	}
 	
@@ -400,6 +405,10 @@ function reverseEngineerFormInput(request)
 				}
 			}
 		}
+	}
+	if(typeof refreshEnableVcfFilterValue == 'function')
+	{
+		refreshEnableVcfFilterValue();
 	}
 	return foundParams;
 }
