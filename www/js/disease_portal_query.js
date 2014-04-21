@@ -76,7 +76,7 @@ var resetQF = function (e) {
 	form.organism[1].checked = true;
 	form.locationsFileName.value = "";
 	form.geneFileName.value = "";
-	form.enableVcfFilter.checked = true;
+	form.disableVcfFilter = "false";
 	
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
@@ -96,7 +96,7 @@ var resetQF = function (e) {
 
 	// don't forget to match the mirrored organism radio
 	$("#organismMouse2").prop("checked",true);
-	$("#enableVcfFilter").prop("checked",true);
+	$("#disableVcfFilter").prop("checked",false);
 
 	// clear the validation errors
 	clearValidation();
@@ -286,9 +286,9 @@ var getQueryString = function()
 	if("locationsFileName" in values && values["locationsFileName"]!="")
 	{
 		params.push("locationsFileName="+values["locationsFileName"]);
-		if("enableVcfFilter" in values && values["enableVcfFilter"]=="true")
+		if("disableVcfFilter" in values && values["disableVcfFilter"]=="true")
 		{
-			params.push("enableVcfFilter=true");
+			params.push("disableVcfFilter=true");
 		}
 		params.push("organism="+values["organism"]);
 	}

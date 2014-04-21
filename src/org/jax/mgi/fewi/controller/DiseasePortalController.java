@@ -73,7 +73,7 @@ public class DiseasePortalController
 {
 	
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(DiseasePortalController.class);
+	private final Logger logger = LoggerFactory.getLogger(DiseasePortalController.class);
 
 	// get the finders used by various methods
 	@Autowired
@@ -185,7 +185,7 @@ public class DiseasePortalController
     		@RequestParam("file") MultipartFile file,
     		@RequestParam("field") String field,
     		@RequestParam("type") String type,
-    		@RequestParam(value="enableVcfFilter",required=false) String enableVcfFilter)
+    		@RequestParam(value="disableVcfFilter",required=false) String disableVcfFilter)
     {
 
         logger.debug("-> diseasePortal -> uploadFile -> POST started"); 
@@ -225,7 +225,7 @@ public class DiseasePortalController
 		        	{
 		        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
 		        		
-		        		boolean enableFilters = notEmpty(enableVcfFilter);
+		        		boolean enableFilters = !notEmpty(disableVcfFilter);
 		        		boolean kickIds = enableFilters;
 		        		boolean kickBadFilters = enableFilters;
 		        		logger.debug("kickIds="+kickIds+", kickBadFilters="+kickBadFilters);

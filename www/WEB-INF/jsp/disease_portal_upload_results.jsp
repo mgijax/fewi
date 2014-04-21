@@ -5,7 +5,7 @@
 	<c:if test="${not empty vcfOutput}">
 		<ul style="text-align:left;">
 		<li>${vcfOutput.rowsWithCoordinates} Coordinates Included</li>
-		<c:if test="${enableVcfFilter}">
+		<c:if test="${disableVcfFilter}">
 			<li>${vcfOutput.rowsKickedWithId} Rows Ignored Due to Non-Empty ID Column</li>
 			<li>${vcfOutput.rowsKickedWithNotPass} Rows Ignored Due to FILTER Other Than 'PASS'</li>
 		</c:if>

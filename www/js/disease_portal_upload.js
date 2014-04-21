@@ -212,7 +212,7 @@ $(function(){
 	
 	$("#locationsFileInput").change(HDP_FUW.setLocationsFileSession);
 	$("#geneFileInput").change(HDP_FUW_GENES.setLocationsFileSession);
-	$("#enableVcfFilter").change(function(){
+	$("#disableVcfFilter").change(function(){
 		var input = this;
 		input.disabled = true;
 		setTimeout(function(){
