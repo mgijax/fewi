@@ -31,8 +31,8 @@
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
 		  		<div id="filterButtons">
 		  		<button style="width:160px;" class="reverseFilterSubmit" title="Resubmit the query keeping only results that have data in the rows and columns NOT selected">Apply Filters:&#x00A;Remove selected col/rows</button>
-		  		<br/><button style="width:160px;" class="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Apply Filters:&#x00A;Retain selected col/rows</button>
-		  	</div></div>
+<!-- 		  		<br/><button style="width:160px;" class="filterSubmit" title="Resubmit the query keeping only results that have data in the selected rows and columns">Apply Filters:&#x00A;Retain selected col/rows</button>
+ -->		  	</div></div>
 		  	<br/>Mouse Gene
 	  	</th>
 	  <th style="border-right: none;"></th>
