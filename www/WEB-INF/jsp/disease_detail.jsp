@@ -256,7 +256,17 @@ ${templateBean.templateBodyStartHtml}
     </tr>
   </c:if>
 
-<!-- ROW6 : mouse models where disease was expected but not observed -->
+<!-- ROW6 : references for this disease -->
+<c:if test="${diseaseRefCount>0}">
+	<tr>
+      <td class="<%=leftTdStyles.getNext() %>" >
+		References
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>" >
+		Disease References using Mouse Models <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}">(${diseaseRefCount})</a>
+      </td>
+    </tr>
+</c:if>
 
 <!-- close structural table and page template-->
 </table>

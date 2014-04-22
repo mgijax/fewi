@@ -5,7 +5,9 @@ import java.util.List;
 import mgi.frontend.datamodel.Disease;
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
+import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.util.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +34,14 @@ public class DiseaseController {
     // instance variables
     //--------------------//
 
-    private Logger logger
+    private final Logger logger
       = LoggerFactory.getLogger(DiseaseController.class);
 
     @Autowired
     private DiseaseFinder diseaseFinder;
+    
+    @Autowired 
+    DiseasePortalFinder diseasePortalFinder;
  
     @Autowired
     private IDLinker idLinker;
@@ -136,12 +141,21 @@ public class DiseaseController {
         mav.addObject("disease", disease);
 
         // add an IDLinker to the mav for use at the JSP level
-	idLinker.setup();
+        idLinker.setup();
         mav.addObject("idLinker", idLinker);
 
-	// add a pre-computed link for the disease ID
-	mav.addObject("linkOut", idLinker.getLink(disease.getLogicalDB(),
-	    disease.getPrimaryID(), disease.getPrimaryID() ) );
+		// add a pre-computed link for the disease ID
+		mav.addObject("linkOut", idLinker.getLink(disease.getLogicalDB(),
+				disease.getPrimaryID(), disease.getPrimaryID() ) );
+		
+		// get disease reference count from DiseasePortal logic
+		logger.debug("hitting diseasePortal index for diseaseRefCount");
+		List<SolrVocTerm> dpDiseases = diseasePortalFinder.getDiseaseByID(diseaseID);
+		if(dpDiseases.size()>0)
+		{
+			SolrVocTerm dpDisease = dpDiseases.get(0);
+			mav.addObject("diseaseRefCount",dpDisease.getDiseaseRefCount());
+		}
     
         return mav;
     }

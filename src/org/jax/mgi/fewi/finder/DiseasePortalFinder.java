@@ -29,7 +29,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DiseasePortalFinder
 {
-	private Logger logger = LoggerFactory.getLogger(DiseasePortalFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(DiseasePortalFinder.class);
 
 	@Autowired
 	private SolrDiseasePortalHunter hdpHunter;
@@ -82,6 +82,14 @@ public class DiseasePortalFinder
 	{
 		SearchResults<SolrVocTerm> results = huntDiseasesGroup(params);
 		return results;
+	}
+	public List<SolrVocTerm> getDiseaseByID(String diseaseId)
+	{
+		SearchParams params = new SearchParams();
+		params.setPageSize(1);
+		params.setFilter(new Filter(SearchConstants.VOC_TERM_ID, diseaseId,Filter.OP_EQUAL));
+		
+		return getDiseases(params).getResultObjects();
 	}
 
 	// Group results by term id to return the distinct matching phenotypes
