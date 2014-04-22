@@ -69,6 +69,10 @@ public class HdpGridClusterSummaryRow {
     {
     	return gridCluster.getHumanSymbols();
     }
+    public List<SolrDpGridClusterMarker> getHumanMarkers()
+    {
+    	return gridCluster.getHumanMarkers();
+    }
 
     public List<SolrDpGridClusterMarker> getMouseMarkers()
     {
