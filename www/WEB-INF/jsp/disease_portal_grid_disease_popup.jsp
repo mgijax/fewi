@@ -25,7 +25,10 @@
 
 <div id="markerList">
 <c:forEach var="marker" items="${markers}" varStatus="status">
-  Carrying any ${marker.symbol} Mutation: <a href='${configBean.IMSRURL}summary?gaccid=${marker.primaryID}&states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm' target='_blank'>${marker.countForImsr} strains or lines available</a><br/>
+  Find Mice: IMSR strains or lines carrying any ${marker.symbol} Mutation
+  <a href='${configBean.IMSRURL}summary?gaccid=${marker.primaryID}&states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm' target='_blank'>
+    (${marker.countForImsr} available)
+  </a><br/>
 </c:forEach>
 </div>
 
