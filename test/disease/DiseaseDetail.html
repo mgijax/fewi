@@ -83,7 +83,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
        		</li>
     		<li>Reference link on the disease detail page will match the link found for the terms disease tab of HDMC (sto137)
- 			<p concordion:assertTrue="false">New Test</p>
+ 			<p concordion:assertTrue="true">passed - kstone 2014/04/22</p>
     		<ol>
                 <li>Navigate to the Human Disease page for <b>Spherocytosis, Type 1; SPH1</b> (OMIM 182900).</li>
                 <li>Verify that the last ribbon on the page is called <b>References</b> </li>
@@ -92,18 +92,17 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>If a Disease has no Mouse Model references than the Reference ribbon will not display (sto137)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed - kstone 2014/04/22</p>
     		<ol>
                 <li>Navigate to the Human Disease page for <b>Speech-Sound Disorder</b> (OMIM 608445).</li>
                 <li>Verify that the Reference ribbon does not display since this disease has no references</li>
     		</ol>
     		</li>
     		<li>Reference link will take you to the appropriate References associated to a disease page (sto137)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:assertTrue="true">passed - kstone 2014/04/22</p>
     		<ol>
                 <li>Navigate to the Human Disease page for <b>Juvenile Polyposis Syndrome; JPS</b> (OMIM 174900).</li>
                 <li>Verify that the link reads <b>Disease References using Mouse Models (2)</b></li>
-                <li>Verify that the same row lists <b>C4A, C4B</b> in the same cell in the Human Homologs column. </li>
                 <li>Verify that clicking on the link <b>(2)</b> takes you to this page: <b>http://cardolan.informatics.jax.org/reference/disease/174900</b>and the page has just 2 references listed</li>
     		</ol>
     		</li>
