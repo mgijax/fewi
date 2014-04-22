@@ -21,6 +21,7 @@
 	padding:0px;
 }
 
+
 /* style shortcuts */
 .left { float: left; }
 .right { float: right; }
@@ -381,11 +382,13 @@ textarea {resize:none; background-color:#FFE4B5;}
   	background-color: #FFFFCC;
   }
   
-  #hdpGridTable .tooltip 
+  #hdpGridTable .tooltip,
+  div.tooltip 
   {
-	border: 1px solid #808080;
+	border: 1px solid #808080 !important;
+	border-radius: 0px !important;
 	background-color: #FFFFCA;
-	font-size: 90%;
+	font-size: 9px;
 	position: absolute;
 	top: 8px;
 	left: -50px;

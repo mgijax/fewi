@@ -932,11 +932,4 @@ History.initialize("yui-history-field", "yui-history-iframe");
 $(function(){
 	// put anything here that you definitally want to happen only after page is rendered.
 	$("#filterReset").click(resetFiltersClick);
-	
-	// use jquery UI to make nice HTML enabled tooltips
-	$(document).tooltip({
-	  content: function (callback) {
-	     callback($(this).prop('title'));
-	  }
-	});
 });
