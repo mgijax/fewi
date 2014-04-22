@@ -18,12 +18,6 @@ public class SolrHdpGridCluster implements SolrHdpEntity
 	public String getHomologeneId() {
 		return homologeneId;
 	}
-	public List<String> getMouseSymbols() {
-		return mouseSymbols;
-	}
-	public List<String> getHumanSymbols() {
-		return humanSymbols;
-	}
 	public void setGridClusterKey(Integer gridClusterKey) {
 		this.gridClusterKey = gridClusterKey;
 	}
@@ -46,23 +40,75 @@ public class SolrHdpGridCluster implements SolrHdpEntity
 		{
 			for(String mouseSymbol : mouseSymbols)
 			{
-				String[] tokens = mouseSymbol.split("\\|\\|");
-				if(tokens.length!=2) continue;
-				SolrDpGridClusterMarker marker = new SolrDpGridClusterMarker(tokens[0],tokens[1]);
-				markers.add(marker);
+				SolrDpGridClusterMarker marker = parseMarker(mouseSymbol);
+				if(marker!=null) markers.add(marker);
 			}
 		}
 		return markers;
 	}
 	
+	public List<SolrDpGridClusterMarker> getHumanMarkers()
+	{
+		List<SolrDpGridClusterMarker> markers = new ArrayList<SolrDpGridClusterMarker>();
+		if(humanSymbols != null)
+		{
+			for(String humanSymbol : humanSymbols)
+			{
+				SolrDpGridClusterMarker marker = parseMarker(humanSymbol);
+				if(marker!=null) markers.add(marker);
+			}
+		}
+		return markers;
+	}
+	
+
+	public List<String> getMouseSymbols() {
+		List<String> symbols = new ArrayList<String>();
+		for(SolrDpGridClusterMarker mouseMarker : this.getMouseMarkers())
+		{
+			symbols.add(mouseMarker.getSymbol());
+		}
+		return symbols;
+	}
+	
+	public List<String> getHumanSymbols()
+	{
+		List<String> symbols = new ArrayList<String>();
+		for(SolrDpGridClusterMarker humanMarker : this.getHumanMarkers())
+		{
+			symbols.add(humanMarker.getSymbol());
+		}
+		return symbols;
+	}
+	
+	private SolrDpGridClusterMarker parseMarker(String markerString)
+	{
+		String[] tokens = markerString.split("\\|\\|");
+		if(tokens.length<1 || markerString.trim().equals("")) return null;
+		String symbol = tokens[0];
+		String markerKey="",
+			name="",
+			featureType="";
+		if(tokens.length>=2) markerKey = tokens[1];
+		if(tokens.length>=3) name = tokens[2];
+		if(tokens.length>=4) featureType = tokens[3];
+		
+		// expected data in format "symbol||markerKey||name||featureType
+		return new SolrDpGridClusterMarker(symbol,markerKey,name,featureType);
+	}
+	
 	public class SolrDpGridClusterMarker
 	{
 		private String symbol;
+		private String name;
+		private String featureType;
 		private String markerKey;
 		
-		public SolrDpGridClusterMarker(String symbol,String markerKey)
+		public SolrDpGridClusterMarker(String symbol,String markerKey,String name,String featureType)
 		{
 			this.symbol=symbol;
+			this.name=name;
+			this.featureType=featureType;
 			this.markerKey=markerKey;
 		}
 		
@@ -81,6 +127,22 @@ public class SolrHdpGridCluster implements SolrHdpEntity
 		public void setMarkerKey(String markerKey)
 		{
 			this.markerKey=markerKey;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getFeatureType() {
+			return featureType;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public void setFeatureType(String featureType) {
+			this.featureType = featureType;
 		}
 	}
 }

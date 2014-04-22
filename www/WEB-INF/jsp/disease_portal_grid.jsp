@@ -69,15 +69,15 @@
 	<c:forEach var="gridCluster" items="${gridClusters}" varStatus="gcStatus">
 	  <tr class="${gcStatus.index % 2 == 0 ? 'row1' : 'row2'}">
 	    <td><div class="mc">
-	      <c:forEach var="humanSymbol" items="${gridCluster.humanSymbols}" varStatus="status">
-		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}"><fewi:super value="${humanSymbol}"/></a></c:if>
+	      <c:forEach var="humanMarker" items="${gridCluster.humanMarkers}" varStatus="status">
+		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}" title="<b>name:</b> ${humanMarker.name}"><fewi:super value="${humanMarker.symbol}"/></a></c:if>
 		      <c:if test="${ empty gridCluster.homologeneId}"><fewi:super value="${humanSymbol}"/></c:if>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </div></td>
 	    <td><div class="mc">
 	      <c:forEach var="mouseMarker" items="${gridCluster.mouseMarkers}" varStatus="status">
-		      <a href="${configBean.FEWI_URL}marker/key/${mouseMarker.markerKey}"><fewi:super value="${mouseMarker.symbol}"/></a>
+		      <a href="${configBean.FEWI_URL}marker/key/${mouseMarker.markerKey}" title="<b>name:</b> ${mouseMarker.name}<br/><b>featureType:</b> ${mouseMarker.featureType}"><fewi:super value="${mouseMarker.symbol}"/></a>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </div></td>
