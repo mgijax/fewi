@@ -68,6 +68,7 @@ public class HdpMarkerSummaryRow {
     	// mouse symbol links to marker detail
     	// human symbol links to homology summary
     	String url = fewiUrl + "marker/" + solrDiseasePortalMarker.getMgiId();
+    	String displayText = "<span class=\"jquiTT\" title=\"Name: " + solrDiseasePortalMarker.getName() + " Type: " + solrDiseasePortalMarker.getType() + "\" ><a href=\"" + url + "/\">" + symbol + "</a></span>";
     	if("human".equalsIgnoreCase(solrDiseasePortalMarker.getOrganism()))
     	{
     		if(solrDiseasePortalMarker.getHomologeneId() == null || solrDiseasePortalMarker.getHomologeneId().equals(""))
@@ -76,10 +77,9 @@ public class HdpMarkerSummaryRow {
     			return symbol;
     		}
     		url = fewiUrl + "homology/key/" + solrDiseasePortalMarker.getMarkerKey();
+	    	displayText = "<span class=\"jquiTT\" title=\"Name: " + solrDiseasePortalMarker.getName() + "\" ><a href=\"" + url + "/\">" + symbol + "</a></span>";
     	}
 
-    	String displayText = "<a href=\""+url+"/\">"+
-        		symbol+"</a>";
         return displayText;
     }
 

@@ -7,6 +7,7 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	String markerKey;
 	String symbol = new String();
 	String mgiId = new String();
+	String name = new String();
 	String type = new String();
 	String organism = new String();
 	String homologeneId = new String();
@@ -24,13 +25,13 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	public void setMarkerKey(String markerKey) {
 		this.markerKey = markerKey;
 	}
-	
+
 	// symbol
 	public String getSymbol() {return symbol;}
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
-	
+
 	// marker MGI ID
 	public String getMgiId() {
 		return mgiId;
@@ -38,7 +39,7 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	public void setMgiId(String mgiId) {
 		this.mgiId = mgiId;
 	}
-	
+
 	// marker ID
 	public String getMarkerId() {
 		return markerId;
@@ -46,7 +47,7 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	public void setMarkerId(String markerId) {
 		this.mgiId = markerId;
 	}
-	
+
 	// type
 	public String getType() {return type;}
 	public void   setType(String type) {
@@ -69,6 +70,12 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	public String getLocation() {return location;}
 	public void   setLocation(String location) {
 		this.location = location;
+	}
+
+	// name
+	public String getName() {return name;}
+	public void   setName(String name) {
+		this.name = name;
 	}
 
 	// coordinates
@@ -102,7 +109,7 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	public void setAllRefCount(Integer allRefCount) {
 		this.allRefCount = allRefCount;
 	}
-	
+
 	// disease ref count
 	public Integer getDiseaseRefCount() {
 		return diseaseRefCount;
@@ -110,7 +117,7 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	public void setDiseaseRefCount(Integer diseaseRefCount) {
 		this.diseaseRefCount = diseaseRefCount;
 	}
-	
+
 	// IMSR count
 	public Integer getImsrCount() {
 		return imsrCount;

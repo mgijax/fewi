@@ -119,7 +119,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 
          propertyMap.put(DiseasePortalFields.TERM_QUALIFIER,
             		new SolrPropertyMapper(DiseasePortalFields.TERM_QUALIFIER));
-         
+
          propertyMap.put(DiseasePortalFields.TERM_HEADER,
          		new SolrPropertyMapper(DiseasePortalFields.TERM_HEADER));
          /*
@@ -151,11 +151,11 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
         /*
          * Setup the sort mapping.
          */
-         
+
          // grid sorts
          sortMap.put(DiseasePortalFields.GRID_BY_MOUSE_LOCATION, new SolrSortMapper(DiseasePortalFields.GRID_BY_MOUSE_LOCATION));
          sortMap.put(DiseasePortalFields.GRID_BY_HUMAN_LOCATION, new SolrSortMapper(DiseasePortalFields.GRID_BY_HUMAN_LOCATION));
-         
+
          // marker sorts
         sortMap.put(SortConstants.DP_BY_MRK_SYMBOL, new SolrSortMapper(DiseasePortalFields.BY_MARKER_SYMBOL));
         sortMap.put(SortConstants.DP_BY_MRK_TYPE, new SolrSortMapper(DiseasePortalFields.BY_MARKER_TYPE));
@@ -222,8 +222,9 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
         returnedFields.add(DiseasePortalFields.ORGANISM);
         returnedFields.add(DiseasePortalFields.HOMOLOGENE_ID);
         returnedFields.add(DiseasePortalFields.MARKER_SYMBOL);
+        returnedFields.add(DiseasePortalFields.MARKER_NAME);
         returnedFields.add(DiseasePortalFields.MARKER_MGI_ID);
-        //returnedFields.add(DiseasePortalFields.MARKER_FEATURE_TYPE);
+        returnedFields.add(DiseasePortalFields.MARKER_FEATURE_TYPE);
         returnedFields.add(DiseasePortalFields.LOCATION_DISPLAY);
         returnedFields.add(DiseasePortalFields.COORDINATE_DISPLAY);
         returnedFields.add(DiseasePortalFields.BUILD_IDENTIFIER);
@@ -231,7 +232,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
         returnedFields.add(DiseasePortalFields.MARKER_SYSTEM);
         returnedFields.add(DiseasePortalFields.MARKER_ALL_REF_COUNT);
         returnedFields.add(DiseasePortalFields.MARKER_DISEASE_REF_COUNT);
-        
+
         // term fields
         returnedFields.add(DiseasePortalFields.TERM_ID);
         returnedFields.add(DiseasePortalFields.TERM);
@@ -241,7 +242,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
         returnedFields.add(DiseasePortalFields.DISEASE_REF_COUNT);
         returnedFields.add(DiseasePortalFields.TERM_MOUSESYMBOL);
         returnedFields.add(DiseasePortalFields.TERM_HUMANSYMBOL);
-        
+
         /*
          * define the returned fields for each type of group query
          */
@@ -258,8 +259,9 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 		        DiseasePortalFields.ORGANISM,
 		        DiseasePortalFields.HOMOLOGENE_ID,
 		        DiseasePortalFields.MARKER_SYMBOL,
+		        DiseasePortalFields.MARKER_NAME,
 		        DiseasePortalFields.MARKER_MGI_ID,
-		        //DiseasePortalFields.MARKER_FEATURE_TYPE,
+		        DiseasePortalFields.MARKER_FEATURE_TYPE,
 		        DiseasePortalFields.LOCATION_DISPLAY,
 		        DiseasePortalFields.COORDINATE_DISPLAY,
 		        DiseasePortalFields.BUILD_IDENTIFIER,
@@ -370,16 +372,16 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 
         		// Grid cluster is to be filled out by Hibernate (since it is too complex), so we just add the result keys here.
         		SolrHdpGridCluster gridCluster = new SolrHdpGridCluster();
-        		
+
         		gridCluster.setGridClusterKey(gridClusterKey);
         		gridCluster.setHomologeneId((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGENE_ID));
         		gridCluster.setMouseSymbols((List<String>)sd.getFieldValue(DiseasePortalFields.GRID_MOUSE_SYMBOLS));
         		gridCluster.setHumanSymbols((List<String>)sd.getFieldValue(DiseasePortalFields.GRID_HUMAN_SYMBOLS));
-        		
+
         		keys.add(gridClusterKey.toString());
         		sr.addResultObjects(gridCluster);
         		keyToGroupKeyMap.put(uniqueKey,gridClusterKey.toString());
-        		
+
         	}
         	if(gc.getName().equals(DiseasePortalFields.GENO_CLUSTER_KEY))
         	{
@@ -405,9 +407,10 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 	        		dpMarker.setMarkerKey(markerKey.toString());
 	                dpMarker.setOrganism((String)sd.getFieldValue(DiseasePortalFields.ORGANISM));
 	                dpMarker.setHomologeneId((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGENE_ID));
+	                dpMarker.setName((String)sd.getFieldValue(DiseasePortalFields.MARKER_NAME));
 	                dpMarker.setSymbol((String)sd.getFieldValue(DiseasePortalFields.MARKER_SYMBOL));
 	                dpMarker.setMgiId((String)sd.getFieldValue(DiseasePortalFields.MARKER_MGI_ID));
-	               // dpMarker.setType((String)sd.getFieldValue(DiseasePortalFields.MARKER_FEATURE_TYPE));
+	                dpMarker.setType((String)sd.getFieldValue(DiseasePortalFields.MARKER_FEATURE_TYPE));
 	                dpMarker.setLocation((String)sd.getFieldValue(DiseasePortalFields.LOCATION_DISPLAY));
 	                dpMarker.setCoordinate((String)sd.getFieldValue(DiseasePortalFields.COORDINATE_DISPLAY));
 	                dpMarker.setCoordinateBuild((String)sd.getFieldValue(DiseasePortalFields.BUILD_IDENTIFIER));
@@ -416,7 +419,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 	                dpMarker.setAllRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_ALL_REF_COUNT));
 	                dpMarker.setDiseaseRefCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_DISEASE_REF_COUNT));
 	                dpMarker.setImsrCount((Integer)sd.getFieldValue(DiseasePortalFields.MARKER_IMSR_COUNT));
-	                
+
 	        		sr.addResultObjects(dpMarker);
         		}
         		keyToGroupKeyMap.put(uniqueKey,markerKey.toString());
