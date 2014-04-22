@@ -193,7 +193,7 @@ tr.gray td {background-color:#EEEEEE;}
 0 Rows Ignored Due to FILTER Other Than 'PASS'
  -->
 			<li>Checkbox exists to disable the filters (so do not excludes rows having an RSID value, or rows having a Filter value other than 'PASS'). Checking the box causes a file upload to process (include) rows which would have been excluded. (sto130) 
-    		<p concordion:assertTrue="false">new</p>
+    		<p concordion:assertTrue="true">passed - kstone 2014/04/21</p>
     		<ol>
                 <li>Create a VCF test file with rows:
                 <ul>
@@ -202,6 +202,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	<li>Having RSID and Filter other than 'PASS' - 2 rows.</li>
                 	<li>Having no RSID and Filter other than 'PASS' - 2 rows.</li>
                 </ul> 
+                <i>There is a file like this in TR directory (/wts_projects/11400/11423/data_files/VCF_Files_for_Testing) called <b>test-filters.vcf</b></i>
                 </li>
                 <li>Click the "Choose File" button and select the test file.</li>
                 <li>Verify that the "File successfully processed." dialog reports: 2 coordinates included;  6 rows ignored.</li>
@@ -213,7 +214,7 @@ tr.gray td {background-color:#EEEEEE;}
 			</li>
 
 			<li>Uploading a VCF file and then checking the box causes the file to be reprocessed. (sto130) 
-    		<p concordion:assertTrue="false">new</p>
+    		<p concordion:assertTrue="true">passed - kstone 2014/04/21</p>
     		<ol>
                 <li>Click the "Choose File" button and select the test file from above.</li>
                 <li>Verify that the "File successfully processed." dialog reports: 2 coordinates included;  6 rows ignored.</li>
