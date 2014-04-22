@@ -336,17 +336,17 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
     		</li>
 
-			<li>A link to IMSR for all strains or lines available is displayed for each mouse marker in the popup that has such a link on its Allele Detail Page.
+			<li>A link to IMSR for all strains or lines available is displayed for each "causal" mouse marker in the popup that has such a link on its Allele Detail Page.
  			
- 			(sto136)<p concordion:assertTrue="false">new</p> 
+ 			(sto136)<p concordion:assertTrue="true">passed. -klf 2014-04-22</p> 
  			<ol>
  				<li>On the HMDC Portal, query for  gene: <b>G6pc</b>.</li>
  				<li>From the Grid Tab, click the cell in the row for G6pc and the column for Glycogen Storage Disease</li>
- 				<li>Verify that the pop-up contains IMSR links for <b>G6pc</b> and <b>Alb</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers (2 and 24 as of 4/18/2014).</li>
+ 				<li>Verify that the pop-up contains IMSR links for <b>G6pc</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers (2 as of 4/18/2014).<br/>
+ 					(<em>Note: no link is necessary for markers of Recombinase alleles.</em>)</li>
  				<li>Reset the query. Query for disease: <b>151400</b> (Leukemia, Chronic Lymphocytic; CLL).</li>
  				<li>From the Grid Tab, click the cell in the row for Del(14Trim13-Rnaseh2b)6Rdf and the column for Leukemia, Chronic Lymphocytic.</li> 
  				<li>Verify that a count of "strains or lines" for <b>Del(14Trim13-Rnaseh2b)6Rdf</b> does not appear (there are no strains at IMSR as of 4/18/2014).</li>
- 				<li>Verify that the count of "strains or lines" for <b>Cd19</b> is 7 (as of 4/18/2014).</li>
  			</ol>
 			</li> 
 
