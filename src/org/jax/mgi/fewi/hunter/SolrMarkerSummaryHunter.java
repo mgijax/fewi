@@ -107,10 +107,10 @@ public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
         highlightPost = "/$$";
         
 
-        highlightFields.add(MarkerSummaryFields.GO_PROCESS_TERM);
-        highlightFields.add(MarkerSummaryFields.GO_FUNCTION_TERM);
-        highlightFields.add(MarkerSummaryFields.GO_COMPONENT_TERM);
-        highlightFields.add(MarkerSummaryFields.INTERPRO_TERM);
+//        highlightFields.add(MarkerSummaryFields.GO_PROCESS_TERM);
+//        highlightFields.add(MarkerSummaryFields.GO_FUNCTION_TERM);
+//        highlightFields.add(MarkerSummaryFields.GO_COMPONENT_TERM);
+//        highlightFields.add(MarkerSummaryFields.INTERPRO_TERM);
 
         // marker highlights
         for(String fieldName : MarkerSummaryFields.NOMEN_FIELDS.values())

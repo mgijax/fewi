@@ -100,7 +100,7 @@ public class MarkerController {
     // instance variables
     //--------------------//
 
-    private Logger logger = LoggerFactory.getLogger(MarkerController.class);
+    private final Logger logger = LoggerFactory.getLogger(MarkerController.class);
 
     @Autowired
     private MarkerFinder markerFinder;
@@ -1182,7 +1182,7 @@ public class MarkerController {
         SearchParams params = new SearchParams();
         params.setPaginator(page);
         // if we have nomen query, do text highlighting
-        if(notEmpty(query.getNomen()) || notEmpty(query.getGo()) || notEmpty(query.getInterpro()))
+        if(notEmpty(query.getNomen()))
         {
 	        params.setIncludeMetaHighlight(true);
 	        params.setIncludeSetMeta(true);

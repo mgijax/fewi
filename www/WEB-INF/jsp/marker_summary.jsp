@@ -84,7 +84,7 @@ ${templateBean.templateBodyStartHtml}
 window.querystring="${queryString}";
 window.fewiurl="${configBean.FEWI_URL}";
 window.doHighlights=false;
-<c:if test="${not empty queryForm.nomen || not empty queryForm.go || not empty queryForm.interpro}">window.doHighlights=true;</c:if>
+<c:if test="${not empty queryForm.nomen}">window.doHighlights=true;</c:if>
 var qDisplay = true;
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_query.js"></script>
