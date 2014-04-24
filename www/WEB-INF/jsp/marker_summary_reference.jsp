@@ -57,6 +57,13 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 </div>
 
+<div id="toolbar" class="bluebar" style="">
+	<div id="downloadDiv">
+		<span class="label">Export:</span>
+		<a id="textDownload"  class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+        <a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+	</div>
+</div>
 <!-- data table div: filled by YUI, called via js below -->
 <div id="dynamicdata"></div>
 
