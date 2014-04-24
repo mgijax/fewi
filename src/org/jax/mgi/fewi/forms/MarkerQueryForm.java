@@ -32,16 +32,18 @@ public class MarkerQueryForm
     private String coordinate;
     private String coordUnit;
     private String cm;
-    
     private String startMarker;
     private String endMarker;
+    
+    // for links
+    private String refKey;
     
     // Constants
     public static String CHROMOSOME_ANY="any";
     public static String COORD_UNIT_MBP="mbp";
     
-    private List<String> coordUnitDisplay = new ArrayList<String>();
-    private Map<String,String> goVocabDisplay = new LinkedHashMap<String,String>();
+    private final List<String> coordUnitDisplay = new ArrayList<String>();
+    private final Map<String,String> goVocabDisplay = new LinkedHashMap<String,String>();
     
     public MarkerQueryForm()
     {
@@ -192,6 +194,14 @@ public class MarkerQueryForm
 		this.phenotype = phenotype;
 	}
 	
+	public String getRefKey() {
+		return refKey;
+	}
+
+	public void setRefKey(String refKey) {
+		this.refKey = refKey;
+	}
+
 	// boolean accessors
 	public boolean getHasChromosome()
 	{

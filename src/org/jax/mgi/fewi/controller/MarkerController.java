@@ -272,55 +272,6 @@ public class MarkerController {
         return mav;
     }
 
-    // Marker Summary (By Refernce) Shell
-    //------------------------------------//
-    @RequestMapping(value="/reference/key/{refKey}")
-    public ModelAndView markerSummeryByRefKey(
-          HttpServletRequest request,
-          @PathVariable("refKey") String refKey)
-    {
-        logger.debug("->markerSummeryByRefKey started");
-
-        // setup view object
-        ModelAndView mav = new ModelAndView("marker_summary_reference");
-
-		// setup search parameters object to gather the requested marker
-        SearchParams referenceSearchParams = new SearchParams();
-        Filter refIdFilter = new Filter(SearchConstants.REF_KEY, refKey);
-        referenceSearchParams.setFilter(refIdFilter);
-
-        // find the requested reference
-        SearchResults<Reference> referenceSearchResults = referenceFinder.searchReferences(referenceSearchParams);
-        List<Reference> referenceList = referenceSearchResults.getResultObjects();
-
-        // there can be only one...
-        if (referenceList.size() < 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No reference found for " + refKey);
-            return mav;
-        }
-        if (referenceList.size() > 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe reference found for " + refKey);
-            return mav;
-        }
-        Reference reference = referenceList.get(0);
-
-        // prep query form for summary js request
-        MarkerQueryForm query = new MarkerQueryForm();
-        request.setAttribute("refKey",refKey);
-
-        // package data, and send to view layer
-        mav.addObject("reference", reference);
-		mav.addObject("queryForm",query);
-		mav.addObject("queryString", "refKey=" + refKey);
-
-        logger.debug("markerSummeryByRefKey routing to view ");
-		return mav;
-    }
-
     //--------------------//
     // Marker Detail By ID
     //--------------------//
@@ -1033,11 +984,9 @@ public class MarkerController {
     // Marker Summary by Reference
     //-------------------------------//
     @RequestMapping(value="/reference/{refID}")
-    public ModelAndView markerSummeryByRef(@PathVariable("refID") String refID) {
+    public ModelAndView markerSummaryByRefId(@PathVariable("refID") String refID) {
 
-        logger.debug("->markerSummeryByRef started");
-
-        ModelAndView mav = new ModelAndView("marker_summary_reference");
+        logger.debug("->markerSummaryByRefId started");
 
         // setup search parameters object to gather the requested object
         SearchParams searchParams = new SearchParams();
@@ -1045,34 +994,66 @@ public class MarkerController {
         searchParams.setFilter(refIdFilter);
 
         // find the requested reference
-        SearchResults<Reference> searchResults
-          = referenceFinder.searchReferences(searchParams);
+        SearchResults<Reference> searchResults = referenceFinder.searchReferences(searchParams);
         List<Reference> refList = searchResults.getResultObjects();
 
         // there can be only one...
         if (refList.size() < 1) {
             // forward to error page
-            mav = new ModelAndView("error");
+        	ModelAndView mav = new ModelAndView("error");
             mav.addObject("errorMsg", "No reference found for " + refID);
             return mav;
         }
         if (refList.size() > 1) {
             // forward to error page
-            mav = new ModelAndView("error");
+        	ModelAndView mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Dupe references found for " + refID);
             return mav;
         }
+        
+        return markerSummaryByRef(refList.get(0));
+    }
 
-        // pull out the reference, and place into the mav
-        Reference reference = refList.get(0);
+    // Marker Summary (By Reference) Shell
+    //------------------------------------//
+    @RequestMapping(value="/reference/key/{refKey}")
+    public ModelAndView markerSummeryByRefKey(
+          HttpServletRequest request,
+          @PathVariable("refKey") String refKey)
+    {
+        logger.debug("->markerSummeryByRefKey started");
+
+        SearchResults<Reference> referenceResults = referenceFinder.getReferenceByKey(refKey);
+        List<Reference> referenceList = referenceResults.getResultObjects();
+        if (referenceList.size() < 1) {
+            // forward to error page
+        	ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No reference found for " + refKey);
+            return mav;
+        }
+        if (referenceList.size() > 1) {
+            // forward to error page
+        	ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "Dupe reference found for " + refKey);
+            return mav;
+        }
+        return markerSummaryByRef(referenceList.get(0));
+    }
+    
+    private  ModelAndView markerSummaryByRef(
+            Reference reference)
+    {
+    	 ModelAndView mav = new ModelAndView("marker_summary_reference");
+        new MarkerQueryForm();
+
+        // package data, and send to view layer
         mav.addObject("reference", reference);
 
         // pre-generate query string
         mav.addObject("queryString", "refKey=" + reference.getReferenceKey());
-
-        return mav;
+        logger.debug("markerSummaryByRef routing to view ");
+		return mav;
     }
-
 
     //-------------------------------------//
     // Marker's Microarray Probeset Summary
@@ -1484,6 +1465,11 @@ public class MarkerController {
             		}
             	}
         	}
+        }
+        String refKey = query.getRefKey();
+        if(notEmpty(refKey))
+        {
+        	queryFilters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.OP_EQUAL));
         }
 
         if(queryFilters.size()<1) return nullFilter();
