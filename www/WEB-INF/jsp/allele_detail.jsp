@@ -234,7 +234,7 @@ td.right { text-align: right }
       <c:if test="${not empty imageCount}">
         </td><td class='padLR' style='vertical-align:center; width=*; text-align:right'>
 	<c:if test="${(not empty thumbnailImage) and (not empty thumbnailImage.caption)}">
-	  <span>${thumbnailImage.caption}</span><p>
+	  <span class='small'>${thumbnailImage.caption}</span><p>
 	</c:if>
 	<span>Show the <a href="${configBean.FEWI_URL}image/phenoSummary/allele/${allele.primaryID}" class='MP'>${imageCount} image(s)</a> involving this allele.</span>
 	</td><td class='padLR' style='text-align:right; width=1%'>
@@ -393,13 +393,13 @@ td.right { text-align: right }
 		  td.seqTag { text-align: center; vertical-align: middle; padding: 4px; border: 1px solid black; }
 		  td.seqTagLeft { text-align: left; vertical-align: middle; padding: 4px; border: 1px solid black; }
 		  </style>
-	
+
 		  <% // define holder for sequences' primary IDs and logical databases
 		     Sequence seq;
 		     String primaryID;
 		     String logicalDB;
 		  %>
-	
+
 		  <table id='seqTagTable' style='display:none'>
 		    <tr>
 		      <td class='seqTagTH'>Tag ID</td>
@@ -416,7 +416,7 @@ td.right { text-align: right }
 			   if (seq != null) {
 			     primaryID = seq.getPrimaryID();
 			     logicalDB = seq.getLogicalDB();
-	
+
 			     // hack so we can handle TIGM one way for MCL and a
 			     // different way for sequence tags
 			     if ("TIGM".equals(logicalDB)) {
@@ -507,17 +507,17 @@ td.right { text-align: right }
 		</td></tr>
 		</c:if>
       </table>
-      </td> 
+      </td>
 	    <c:if test="${not empty molecularThumbnail and not empty molecularThumbnail.pixeldbNumericID}">
 	   		<c:if test="${(not empty molecularThumbnail) and (not empty molecularThumbnail.caption)}">
-					<td class="padLR"><span>${molecularThumbnail.caption}</span></td>
+					<td class="padLR"><span class='small'>${molecularThumbnail.caption}</span></td>
 			</c:if>
 			<td class='padLR' style='text-align:right'>
 	   		<a href="${configBean.FEWI_URL}image/molecular/${molecularImage.mgiID}">
 	   			<img src='${configBean.PIXELDB_URL}${molecularThumbnail.pixeldbNumericID}'>
 	   		</a>
 	   		</td>
-	   	</c:if>    
+	   	</c:if>
       </tr>
       </table>
       ${fixedDivClose}
