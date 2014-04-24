@@ -36,6 +36,7 @@
         <li>User story 168, E9: MQ&amp;S: You searched for (5.18)</li>
         <li>User story 164, E9: MQ&amp;S: Text/Excel downloads (5.18)</li>
         <li>User story 199, E9: Boolean enable GO and InterPro fields</li>
+        <li>User story 215,	Bug: Breast Cancer search returns Riken genes</li>
     </ul>
 </div>
 
@@ -61,6 +62,7 @@
 		<li>sto164: download columns include the same data as the web display PLUS the MGI id</li>
 		<li>sto164: download columns are separated (where they are combined in the web display)</li>
 		<li>sto199: both the GO and InterPro fields support boolean operators (AND, OR, NOT)</li>
+		<li>sto215: TEXT-QTL mapping experiment notes are not searched unless the markers are of type QTL for the Pheno/Disease field</li>
 	</ul>
 </div>
 
@@ -1808,7 +1810,15 @@ order by count(*) desc
  				<li>Using the Text and Excel files returned for the <b>Pax6</b> query above, verify that the <b>Why Matched?</b> column does not contain "&lt;b&gt;" or "&lt;/b&gt;" tags.</li>
  			</ol>
  			</li>
-		
+ 			
+			<li>A text search in the Pheno/Disease field ignores TEXT-QTL mapping experiment notes unless it for a marker of type QTL(sto215)
+ 			<p concordion:assertTrue="true">passed. -Jeffc 4/24/2014</p>
+ 			<ol>
+ 				<li>Using the Marker Query form</li>
+ 				<li>Enter <b>Breast Cancer</b> in the Phenotype/Human Disease field</li>
+ 				<li>Verify the results do not include any Riken genes, since these genes are candidate genes</li>
+ 			</ol>
+ 			</li>		
 		</ol>
 
 	</div>
