@@ -514,28 +514,28 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Confirm Hovering over a Gene symbol on the Genes summary, displays text of Gene's full name and it's feature type(sto132)
-    		<p concordion:assertTrue="false">new test</p>
+    		<p concordion:assertTrue="true">passed jeffc 04/24/2012</p>
     		<ol>
                 <li>Query for marker <b>pax*</b></li>
                 <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
-                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Verify that a popup displays saying <b>Name: paired box 1 Type: protein coding gene</b></li>
                 <li>Hover your mouse over Gene Symbol <b>PAX9</b></li>
-                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Verify that a popup displays saying <b>Name: paired box 9 Type: protein coding gene</b></li>
                 <li>Query for location <b>Chr12:3000000-10000000</b></li>
                 <li>Hover your mouse over Gene Symbol <b>Apob</b></li>
-                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Verify that a popup displays saying <b>Name: apolipoprotein B Type: protein coding gene</b></li>
                 <li>Hover your mouse over Gene Symbol <b>OSR1</b></li>
-                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Verify that a popup displays saying <b>Name: odd-skipped related transcription factor 1</b></li>
                 <li>Query for disease <b>diabetes</b></li>
-                <li>Hover your mouse over Gene Symbol <b>Avp</b></li>
-                <li>Verify that a popup displays saying <b>???</b></li>
-                <li>Hover your mouse over Gene Symbol <b>CTSB</b></li>
-                <li>Verify that a popup displays saying <b>???</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Idd3</b></li>
+                <li>Verify that a popup displays saying <b>Name: insulin dependent diabetes susceptibility 3 Type: QTL</b></li>
+                <li>Hover your mouse over Gene Symbol <b>IL6</b></li>
+                <li>Verify that a popup displays saying <b>Name: interleukin 6 (interferon, beta 2)</b></li>
     		</ol>
     		</li>
     		
     		<li>Confirm Human symbols link to their MGI Homology page(sto137)
-    		<p concordion:assertTrue="true">new test</p>
+    		<p concordion:assertTrue="true">jeffc 10/24/2014</p>
     		<ol>
                 <li>Query for marker <b>Actb</b></li>
                 <li>Click on the Genes tab and find the Human marker <b>ACTB</b> and click it</li>
@@ -543,7 +543,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>	
     		<li>Confirm Mouse symbols link to their MGI gene detail page(sto137)
-    		<p concordion:assertTrue="true">new test</p>
+    		<p concordion:assertTrue="true">jeffc 10/24/2014</p>
     		<ol>
                 <li>Query for marker <b>Actb</b></li>
                 <li>Click on the Genes tab and find the Mouse marker <b>Actb</b> and click it</li>
