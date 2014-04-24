@@ -45,21 +45,21 @@
     $("#chromosomeDropList").val("any").change();
     //document.getElementById('chromosomeDropList').reset();
   }
-  
+
   function updatePhenoSystemSummary()
   {
  	var items = [];
 	<c:forEach var="entry" items="${alleleQueryForm.phenoSystemWidgetValues}">
 		items.push({key:"${entry.key}",value:"${entry.value}"});
-	</c:forEach> 
-	
+	</c:forEach>
+
 	var phenoInput = $("#phenotype").val();
 	// check to see if any exist in the input
 	var mpTextLines = [];
 	for(var i=0;i<items.length;i++)
 	{
 		var item = items[i];
-		if (phenoInput.search(item.key) > -1) 
+		if (phenoInput.search(item.key) > -1)
       	{
 			mpTextLines.push("<li>"+item.value+" ("+item.key+")</li>");
         }
@@ -136,9 +136,9 @@
         <br/>
 
         <span class="example">
-		  <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> 
-		   for using AND and OR, quotes, partial word matching,...
-		  <br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601
+		  <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a>
+		   for using AND, OR, AND NOT, quotes, partial word matching,...
+		  <br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601 &nbsp; hippocamp*
 		</span>
         <br/>
 

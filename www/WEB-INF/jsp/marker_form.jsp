@@ -14,7 +14,7 @@ td.top { vertical-align: top; }
     <input class="buttonLabel" value="Search" type="submit">&nbsp;&nbsp;
     <input class="reset" type="reset">
     <span class="example">Specify sorting and output options
-      <a href="#output">below</a></span>.  
+      <a href="#output">below</a></span>.
   </td></tr>
 
   <!-- row 1-->
@@ -50,14 +50,14 @@ td.top { vertical-align: top; }
             <input type="button" name="resetchecks" id="resetchecks" value="Reset Checks"/>
             &nbsp;&nbsp;<a id='show' class='showHide'>Show</a>/<a id='hide' class='showHide'>Hide</a> all subcategories.
             <br/><br/>
-            <div id="catSelectors" class="ygtv-checkbox"></div> 
-        </div>        
-        <p class='example'><br/>Click to select one or more 
+            <div id="catSelectors" class="ygtv-checkbox"></div>
+        </div>
+        <p class='example'><br/>Click to select one or more
 	<a onclick='javascript:openUserhelpWindow("GENE_help.shtml#marker_type"); return false;' href="${helpPage}#marker_type"
         >feature types.</a><br/>
 	If no boxes are checked, then all feature types are included.<br/>
 	Counts reflect total MGI Markers in each feature type category.<br/>
-        </p>            
+        </p>
     </div>
     </td>
   </tr>
@@ -102,7 +102,7 @@ td.top { vertical-align: top; }
 	        <input name="coordinate" size="23" class="grayBackground" type="text" value="<c:out value="${queryForm.coordinate}"/>">
 	        <select name="coordUnit" class="grayBackground">
        			<fewi:selectOptions items="${queryForm.coordUnitDisplay}" value="${queryForm.coordUnit}" />
-      		</select>	
+      		</select>
 	      </dd>
 	      <dd>
 	      	<span class="example" style="margin-left:50px;">Example: "125.618-125.622" Mbp</span>
@@ -139,14 +139,14 @@ td.top { vertical-align: top; }
 	      </dt>
 	      <dd>
 	      	<textarea id="go" name="go" rows="2" cols="60" placeholder="GO terms or IDs"><c:out value="${queryForm.go}"/></textarea>
-	      
+
 	        <!-- contains <textarea name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>"> -->
 	        in
 	        <br/>
 	        <span class="example">Example: one two three</span>
 	      </dd>
 	    </dl>
-	    <span class="vocabLink">Browse <a href="${configBean.WI_URL}searches/GO_form.shtml">Gene Ontology (GO)</a></span> 
+	    <span class="vocabLink">Browse <a href="${configBean.WI_URL}searches/GO_form.shtml">Gene Ontology (GO)</a></span>
 	  </td>
 	  <td class="padded top">
 	    <span style="line-height: 150%">
@@ -183,7 +183,7 @@ td.top { vertical-align: top; }
   <tr>
     <td class="queryCat2">Mouse phenotypes &amp;<br/>mouse models of<br/>human disease</td>
     <td class="queryParams2">
-      	
+
       	 <div style="position: relative;"><div id="selectedMpTextDiv" style="position:absolute; top:0px; left:540px; width:350px;"></div></div>
       <dl>
         <dt class="qfLabel">
@@ -203,9 +203,9 @@ td.top { vertical-align: top; }
 		      </span>
 		      <br/>
 		      <span class="example">
-		        <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> 
-		        for using AND and OR, quotes, partial word matching,...
-		      	<br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601
+				  <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a>
+				   for using AND, OR, AND NOT, quotes, partial word matching,...
+				  <br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601 &nbsp; hippocamp*
 		      </span>
         </dd>
       </dl>
@@ -213,14 +213,14 @@ td.top { vertical-align: top; }
   </tr>
 
   <!-- Submit/Reset-->
-  <tr>  
+  <tr>
     <td colspan="2" align="left">
       <input class="buttonLabel" value="Search" type="submit">
       &nbsp;&nbsp;
       <input class="reset" type="reset">
     </td>
   </tr>
-  
+
 </table>
 </form>
 
@@ -232,15 +232,15 @@ function updatePhenoSystemSummary()
 	var items = [];
 	<c:forEach var="entry" items="${queryForm.phenoSystemWidgetValues}">
 		items.push({key:"${entry.key}",value:"${entry.value}"});
-	</c:forEach> 
-	
+	</c:forEach>
+
 	var phenoInput = $("#phenotype").val();
 	// check to see if any exist in the input
 	var mpTextLines = [];
 	for(var i=0;i<items.length;i++)
 	{
 		var item = items[i];
-		if (phenoInput.search(item.key) > -1) 
+		if (phenoInput.search(item.key) > -1)
     	{
 			mpTextLines.push("<li>"+item.value+" ("+item.key+")</li>");
       }
@@ -286,19 +286,19 @@ function treeInit() {
 } // treeInit
 
 $(function(){
-	
+
 	// set form reset function
 	$("#markerQF").on("reset",markerQfReset);
-	
+
     treeInit();
-    
+
     // restore tree if we have params
 	var mcvKeys=[];
     <c:forEach items="${queryForm.mcv}" var="mcvKey">
     	mcvKeys.push("${mcvKey}");
     </c:forEach>
     restoreTree(mcvKeys);
-    
+
 	$("#phenotype").change(updatePhenoSystemSummary);
 	updatePhenoSystemSummary();
 });
@@ -413,18 +413,18 @@ function markerQfReset(e)
 {
 	e.preventDefault();
 	var mqf=$("#markerQF");
-	  
+
 	// reset tree
 	resetTree();
-	
+
     // clear the div containing the selected MP text
 	$("#selectedMpTextDiv").html("");
-	
+
 	// reset all check boxes and textareas
-	  
+
 	mqf.find('input[type=checkbox]:checked').removeAttr('checked');
 	mqf.find('input[type=text], textarea').val("");
-	
+
 	mqf.find("#chromosomeDropList").val("any").change();
 }
 
