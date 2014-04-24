@@ -29,7 +29,7 @@ public class TextMarkerSummary extends AbstractTextView
 
 		// only display "why" it matched when nomen param isn't empty
 		boolean displayMatches = false;
-		if (!request.getParameter("nomen").equals("")){
+		if (request.getParameter("nomen")!=null && !request.getParameter("nomen").equals("")){
 			displayMatches = true;
 		}
 
