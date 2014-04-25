@@ -1812,12 +1812,12 @@ order by count(*) desc
  			</ol>
  			</li>
  			
-			<li>A text search in the Pheno/Disease field ignores TEXT-QTL mapping experiment notes unless it for a marker of type QTL(sto215)
+			<li>A text search in the Pheno/Disease field ignores TEXT-QTL mapping experiment notes unless it for a marker of type QTL (sto215)
  			<p concordion:assertTrue="true">passed. -Jeffc 4/24/2014</p>
  			<ol>
  				<li>Using the Marker Query form</li>
  				<li>Enter <b>Breast Cancer</b> in the Phenotype/Human Disease field</li>
- 				<li>Verify the results do not include any Riken genes, since these genes are candidate genes</li>
+ 				<li>Verify the results do not include any Riken genes, since these genes are associated with a TEXT-QTL Mapping Experiment and the only text match is in the Mapping Experiment Note (they don't have any matches in MP or OMIM annotated data).</li>
  			</ol>
  			</li>		
 		</ol>
