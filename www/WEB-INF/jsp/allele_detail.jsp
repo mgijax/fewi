@@ -232,9 +232,9 @@ td.right { text-align: right }
       </table>
 
       <c:if test="${not empty imageCount}">
-        </td><td class='padLR' style='vertical-align:center; width=*; text-align:right'>
+        </td><td class='padLR' style='vertical-align:center; width=*; text-align:left'>
 	<c:if test="${(not empty thumbnailImage) and (not empty thumbnailImage.caption)}">
-	  <span class='small'>${thumbnailImage.caption}</span><p>
+	  <span class='small' style='line-height:150%'>${thumbnailImage.caption}</span><p>
 	</c:if>
 	<span>Show the <a href="${configBean.FEWI_URL}image/phenoSummary/allele/${allele.primaryID}" class='MP'>${imageCount} image(s)</a> involving this allele.</span>
 	</td><td class='padLR' style='text-align:right; width=1%'>
@@ -510,7 +510,7 @@ td.right { text-align: right }
       </td>
 	    <c:if test="${not empty molecularThumbnail and not empty molecularThumbnail.pixeldbNumericID}">
 	   		<c:if test="${(not empty molecularThumbnail) and (not empty molecularThumbnail.caption)}">
-					<td class="padLR"><span class='small'>${molecularThumbnail.caption}</span></td>
+					<td class="padLR"><span class='small' style='line-height:150%'>${molecularThumbnail.caption}</span></td>
 			</c:if>
 			<td class='padLR' style='text-align:right'>
 	   		<a href="${configBean.FEWI_URL}image/molecular/${molecularImage.mgiID}">
