@@ -393,9 +393,13 @@ textarea {resize:none; background-color:#FFE4B5;}
 	position: absolute;
 	top: 8px;
 	left: -50px;
-	white-space: nowrap;
+	max-width: 300px;
 	padding: 2px;
 	font-weight: bold;
+  }
+  .tooltip span
+  {
+  	white-space: nowrap;
   }
   
   #hdpGridTable .mpBin_1 { background-color: #C6D6E8; }
