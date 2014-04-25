@@ -114,7 +114,7 @@
         >Phenotype / Disease:</a>
       </div>
 
-      <div style="position:absolute; top:0px; left:135px; width:422px;">
+      <div style="position:absolute; top:0px; left:135px; ">
 
         <textarea id="phenotype" name="phenotype"
         placeholder="Phenotype terms, disease terms, or IDs"
