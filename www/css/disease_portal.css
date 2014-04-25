@@ -383,7 +383,8 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   
   #hdpGridTable .tooltip,
-  div.tooltip 
+  div.tooltip,
+  tooltip
   {
 	border: 1px solid #808080 !important;
 	border-radius: 0px !important;
@@ -394,6 +395,7 @@ textarea {resize:none; background-color:#FFE4B5;}
 	left: -50px;
 	white-space: nowrap;
 	padding: 2px;
+	font-weight: bold;
   }
   
   #hdpGridTable .mpBin_1 { background-color: #C6D6E8; }

@@ -742,16 +742,16 @@ var genesResultsTable = function() {
 
 
 		// add jQuery UI tooltips for genes
-		hdpDataTable.subscribe("postRenderEvent",function(o){
-			$(".jquiTT").tooltip({
-			  content: function (callback) {
-			     callback($(this).prop('title'));
-			  },
-			  tooltipClass: "tooltip",
-			  hide: {duration:0},
-			  show: {duration:0}
-			});
-		});
+//		hdpDataTable.subscribe("postRenderEvent",function(o){
+//			$(".jquiTT").tooltip({
+//			  content: function (callback) {
+//			     callback($(this).prop('title'));
+//			  },
+//			  tooltipClass: "tooltip",
+//			  hide: {duration:0},
+//			  show: {duration:0}
+//			});
+//		});
 		// Ignore this for now. Just me playing around with jquery "teaser" text for systems
 		// -Kstone
 		// use jquery UI to make nice HTML enabled tooltips
@@ -945,4 +945,25 @@ History.initialize("yui-history-field", "yui-history-iframe");
 $(function(){
 	// put anything here that you definitally want to happen only after page is rendered.
 	$("#filterReset").click(resetFiltersClick);
+	
+
+	// use jquery UI to make nice HTML enabled tooltips
+	$(document).tooltip({
+	  content: function (callback) {
+	     callback($(this).prop('title'));
+	  	},
+	  tooltipClass: "tooltip",
+	  show: null,
+	  open: function(event, ui){
+			if(typeof(event.originalEvent) === 'undefined')
+			{
+				return false;
+			}
+			var $id = $(ui.tooltip).attr('id');
+			
+			// close any lingering tooltips
+			$('div.ui-tooltip').not('#' + $id).remove();
+	  	}
+	});
+
 });

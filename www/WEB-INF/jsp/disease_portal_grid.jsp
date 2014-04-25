@@ -70,14 +70,14 @@
 	  <tr class="${gcStatus.index % 2 == 0 ? 'row1' : 'row2'}">
 	    <td><div class="mc jquiTT">
 	      <c:forEach var="humanMarker" items="${gridCluster.humanMarkers}" varStatus="status">
-		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}" title="<b>Name: ${humanMarker.name}</b>"><fewi:super value="${humanMarker.symbol}"/></a></c:if>
-		      <c:if test="${ empty gridCluster.homologeneId}"><span title="<b>Name: ${humanMarker.name}</b>"><fewi:super value="${humanMarker.symbol}"/></span></c:if>
+		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}" title="Name: ${humanMarker.name}"><fewi:super value="${humanMarker.symbol}"/></a></c:if>
+		      <c:if test="${ empty gridCluster.homologeneId}"><span title="Name: ${humanMarker.name}"><fewi:super value="${humanMarker.symbol}"/></span></c:if>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </div></td>
 	    <td><div class="mc jquiTT">
 	      <c:forEach var="mouseMarker" items="${gridCluster.mouseMarkers}" varStatus="status">
-		      <a href="${configBean.FEWI_URL}marker/key/${mouseMarker.markerKey}" title="<b>Name: ${mouseMarker.name}<br/>Feature Type: ${mouseMarker.featureType}</b>"><fewi:super value="${mouseMarker.symbol}"/></a>
+		      <a href="${configBean.FEWI_URL}marker/key/${mouseMarker.markerKey}" title="Name: ${mouseMarker.name}<br/>Feature Type: ${mouseMarker.featureType}"><fewi:super value="${mouseMarker.symbol}"/></a>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </div></td>
@@ -187,17 +187,6 @@ $(".gridCellLink").hover(function(e){
 },function(e){
 	var tdDiv = $(this);
 	tdDiv.siblings().find(".tooltip").hide();
-});
-
-
-// use jquery UI to make nice HTML enabled tooltips
-$(".jquiTT").tooltip({
-  content: function (callback) {
-     callback($(this).prop('title'));
-  },
-  tooltipClass: "tooltip",
-  hide: {duration:0},
-  show: {duration:0}
 });
 
 </script>
