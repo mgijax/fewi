@@ -32,6 +32,7 @@
     <h1>Marker Summary From Link</h1>
     <ul>
         <li>User story 166, E9: MQ&amp;S: Fix inbound links</li>
+        <li>User story 222, BUG: text/excel download options not appearing
     </ul>
 </div>
 
@@ -40,6 +41,7 @@
     <h2>Acceptance Criteria</h2>
 	<ul>
 		<li>all markers for a reference</li>
+		<li>sto222 - none</li>
 	</ul>
 </div>
 
@@ -77,8 +79,8 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>The linked Markers count on the References summary opens the new FEWI marker summary page. 
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p> 
+    		<li>The linked Markers count on the References summary opens the new FEWI marker summary page. (modified for sto222)
+ 			<p concordion:assertTrue="true">passed. -klf 4/25/2014</p> 
     		<ol>
                 <li>Open the References query form.</li>
                 <li>Enter <b>Bult</b> in the Authors field.</li>
@@ -91,11 +93,12 @@
                 	<li>short reference format (first author, title, journal, date, volume, issue, page numbers)</li>
                 	</ul>
                 </li>
+                <li>Verify the Excel and Text download file buttons appear and function correctly.
     		</ol>
     		</li>
 
     		<li>The linked Markers count on the Quick Search opens the new FEWI marker summary page.
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p> 
+ 			<p concordion:assertTrue="true">passed. -klf 4/25/2014</p> 
     		<ol>
                 <li>Enter <b>IPR000001</b> in the Quick Search and submit the search.</li>
                 <li>Verify the link for <b>15 genes, 15 annotations</b> in the Vocabulary section opens the FEWI marker summary page.</li>
@@ -105,11 +108,12 @@
                 	<li>InterPro Protein Domain: contains <b>IPR000001</b></li>
                 </ul>
                 </li>
+                <li>Verify the Excel and Text download file buttons appear and function correctly.
     		</ol>
     		</li>
 
     		<li>The "View all MGI genes/markers within returned coordinate ranges." link on the SNP summary opens the new FEWI marker summary page.
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p> 
+ 			<p concordion:assertTrue="true">passed. -klf 4/25/2014</p> 
     		<ol>
                 <li>Open the SNP Query Form.</li>
                 <li>In the Map Position ribbon, enter Marker Range <b>Between: D19Mit32  and: Tbx10  </b> and submit the query.</li>
@@ -121,6 +125,7 @@
 					<li>AND Genome Coordinates: <b>3278551.0-3999511.0</b> bp</li>
                 </ul>
 				</li>
+                <li>Verify the Excel and Text download file buttons appear and function correctly.
     		</ol>
     		</li>
 
