@@ -195,7 +195,9 @@ $(".jquiTT").tooltip({
   content: function (callback) {
      callback($(this).prop('title'));
   },
-  tooltipClass: "tooltip"
+  tooltipClass: "tooltip",
+  hide: {duration:0},
+  show: {duration:0}
 });
 
 </script>

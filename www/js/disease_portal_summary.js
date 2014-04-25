@@ -740,8 +740,21 @@ var genesResultsTable = function() {
 			recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+
+		// add jQuery UI tooltips for genes
+		hdpDataTable.subscribe("postRenderEvent",function(o){
+			$(".jquiTT").tooltip({
+			  content: function (callback) {
+			     callback($(this).prop('title'));
+			  },
+			  tooltipClass: "tooltip",
+			  hide: {duration:0},
+			  show: {duration:0}
+			});
+		});
 		// Ignore this for now. Just me playing around with jquery "teaser" text for systems
 		// -Kstone
+		// use jquery UI to make nice HTML enabled tooltips
 //		hdpDataTable.subscribe("postRenderEvent",function(o){
 //			var systemCells = $("td.yui-dt-col-system div");
 //			systemCells.each(function(index,el){
