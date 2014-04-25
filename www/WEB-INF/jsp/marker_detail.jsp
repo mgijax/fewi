@@ -447,11 +447,11 @@ td.padded { padding:4px; }
 		  <br/>
 		</c:if>
 		<c:if test="${not empty marker.incidentalMutations}">
-			Incidental mutations (data from 
+			Incidental mutations (data from
 			<c:forEach var="incidentalMutation" items="${marker.incidentalMutations}" varStatus="imStatus">
 				<c:if test="${imStatus.index>0}">, </c:if><a href="${configBean.FTP_BASE_URL}datasets/incidental_muts/${incidentalMutation.filename}">${incidentalMutation.filenameNoExtension}</a>
 			</c:forEach>
-			)
+			)<br/>
 		</c:if>
 		<c:if test="${not empty marker.markerClip}">
 		  &nbsp;<br/>
