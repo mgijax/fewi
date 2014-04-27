@@ -50,7 +50,8 @@ public class SortConstants {
 
     // marker sorts
     public static final String MRK_BY_SYMBOL					= "byMrkSymbol";
-	public static final String MRK_BY_LOCATION = "byMarkerLocation";
+	public static final String MRK_BY_LOCATION 					= "byMarkerLocation";
+	public static final String MRK_BY_TYPE 						= "byMarkerType";
 
 	// Sequence Summary page
 	public static final String SEQUENCE_TYPE       = "sequenceType";
