@@ -95,6 +95,7 @@ public class SolrMarkerSummaryHunter extends SolrHunter<SolrSummaryMarker> {
          */
         this.sortMap.put(SortConstants.MRK_BY_SYMBOL,new SolrSortMapper(MarkerSummaryFields.BY_SYMBOL));
         this.sortMap.put(SortConstants.MRK_BY_LOCATION,new SolrSortMapper(MarkerSummaryFields.BY_LOCATION));
+        this.sortMap.put(SortConstants.MRK_BY_TYPE,new SolrSortMapper(MarkerSummaryFields.FEATURE_TYPE));
         
         
         /*
