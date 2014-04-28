@@ -36,6 +36,7 @@
         <li>User story 168, E9: MQ&amp;S: You searched for (5.18)</li>
         <li>User story 164, E9: MQ&amp;S: Text/Excel downloads (5.18)</li>
         <li>User story 199, E9: Boolean enable GO and InterPro fields</li>
+        <li>User story 203, E9: Add sort by Feature type to marker summary</li>
         <li>User story 215,	Bug: Breast Cancer search returns Riken genes</li>
     </ul>
 </div>
@@ -1628,7 +1629,15 @@ order by count(*) desc
  				<li>Verify that the <b>cytochrome P450</b> families of markers are in order by chromosome, then start coordinate, then symbol by "smart alpha".</li>
  			</ol>
     		</li>
-
+    		
+    		<li>On-demand sort by clicking the "Feature Type" column header in Summary output resorts all returned data in "smart alpha" order by Feature Type(secondary sort is Symbol)(sto203).
+ 			<p concordion:assertTrue="true">passed. -jeffc 4/28/2014</p>
+ 			<ol>
+ 				<li>Select Gene/Marker Symbol/Name <b>Pax*</b> and submit the query.</li>
+ 				<li>Click the <b>Feature Type</b> column header.</li>
+ 				<li>Verify that Feature Type are in "smart alpha" order.</li>
+ 			</ol>
+    		</li>
    		</ol>
 
 		<h4 id="youSearchedFor">You Searched For...</h4>
