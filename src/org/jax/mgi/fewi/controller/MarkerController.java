@@ -1295,13 +1295,23 @@ public class MarkerController {
 
         // retrieve requested sort order; set default if not supplied
         String sortRequested = request.getParameter("sort");
-
         String dirRequested  = request.getParameter("dir");
+        
+        // User can set initialSort and dir via link, but we want datatable sort to override
+        if((sortRequested==null || sortRequested.equals("default"))
+        		&& notEmpty(query.getInitialSort()) 
+        		&& notEmpty(query.getInitialDir()))
+        {
+        	sortRequested = query.getInitialSort();
+        	dirRequested = query.getInitialDir();
+        }
+        
         boolean desc = false;
         if("desc".equalsIgnoreCase(dirRequested)){
             desc = true;
         }
 
+        logger.debug("user requested marker sort="+sortRequested+", dir="+dirRequested);
         if("symbol".equalsIgnoreCase(sortRequested))
         {
         	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL, desc));

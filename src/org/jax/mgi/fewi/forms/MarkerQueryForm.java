@@ -37,6 +37,8 @@ public class MarkerQueryForm
     
     // for links
     private String refKey;
+    private String initialSort;
+    private String initialDir;
     
     // Constants
     public static String CHROMOSOME_ANY="any";
@@ -200,6 +202,22 @@ public class MarkerQueryForm
 
 	public void setRefKey(String refKey) {
 		this.refKey = refKey;
+	}
+
+	public String getInitialSort() {
+		return initialSort;
+	}
+
+	public void setInitialSort(String initialSort) {
+		this.initialSort = initialSort;
+	}
+
+	public String getInitialDir() {
+		return initialDir;
+	}
+
+	public void setInitialDir(String initialDir) {
+		this.initialDir = initialDir;
 	}
 
 	// boolean accessors
