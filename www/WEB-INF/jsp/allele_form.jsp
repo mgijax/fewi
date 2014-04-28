@@ -165,7 +165,7 @@
           <input type="text" size="36" name="nomen" style='margin-left:2px; padding:2px;'
           placeholder="Symbols, names or synonyms" value="<c:out value="${alleleQueryForm.nomen}"/>"></input>
         </span><br/>
-        <span class="example" style='margin-left:150px;'>
+        <span class="example" style='margin-left:142px;'>
           Example: Pax6*&nbsp;&nbsp;&nbsp;*Sox2*&nbsp;&nbsp;&nbsp;*Yah&nbsp;&nbsp;&nbsp;*tm1b(KOMP)*
         </span>
 
@@ -193,7 +193,7 @@
         between <input type="text" size="15" name="cm" value="<c:out value="${alleleQueryForm.cm}"/>"></input>
       </span>
       <br/>
-      <span class="example" style='margin-left:75px;'>
+      <span class="example" style='margin-left:80px;'>
         Example: 10.0-40.0
       </span>
 
