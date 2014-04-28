@@ -34,9 +34,13 @@
 <div id="maintitle">
     <h1>Build Sprint Tests for Firien Install</h1>
     <ul>
-        <li>User story #121, Suppress Gt(ROSA)26Sor</li>
-        <li>User story #106, Simplify Allele Summary</li>
+    	<li>User story #24, E3: Display allele subtypes on allele detail and cre specificity pages</li>
+        <li>User story #85 Alleles that have transmission status of cell line but have IMSR links get changed to a transmission state of Germ line</li>
+        <li>User story #17, E3: Display collection on allele detail and cre specificity pages</li>
+        <li>User story #105, E5: Allele and marker detail pages in prod wi</li>
         <li>User story #110, E5: Remove allele sets from schema (5.18)</li>
+        <li>User story #156, Caption for Molecular Image Thumbnail</li>
+        <li>User story #198, E8: Add Australian Phenome Facility(APF) link on Allele Detail page</li>
         
     </ul>
 </div>
@@ -59,55 +63,156 @@
 <p concordion:assertTrue="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
-		<p>From sto121, Suppress Gt(ROSA)26Sor</p>
+		<p>From sto85, Alleles that have transmission status of cell line but have IMSR links get changed to a transmission state of Germ line</p>
 		<ol>
-    		<li>Verify Gt(ROSA)26Sor is still returned in Marker Query searches for diseases
- 			<p concordion:assertTrue="true">jeffc 01/08/2013</p>
+    		<li>Alleles having genotypes with MP annotations loaded via the HTMP loader have their Germline Transmission display the text "Earliest citation of germline transmission"
+ 			<p concordion:assertTrue="false">klf 12/11/2012</p> 
     		<ol>
-                <li>Open the test Web Interface.</li>
-                <li>On the Marker Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
-                <li>Verify that <b>Gt(ROSA)26Sor</b> is found in the results set.</li>
+                <li>Navigate to the Allele Detail Page for  Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
+                <li>Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: </b></li>
     		</ol>
     		</li>
-    		<li>Verify Gt(ROSA)26Sor alleles are still returned in Allele Query searches for diseases
- 			<p concordion:assertTrue="true">jeffc 01/08/2013</p>
+    		<li>Alleles having their transmission status set to Germline via this load (above) have the appropriate (Sanger or Europhenome) load J:# associated with the transmission status, and it is linked to the correct References page.<br/>
+    		<i>Example: Earliest citation of germline transmission: J:175295</i> 
     		<ol>
-                <li>Open the test Web Interface.</li>
-                <li>On the Allele Query Form, search for <b>168601</b> in the Phenotypes/Diseases input field.</li>
-                <li>Verify that a <b>Gt(ROSA)26Sor</b> allele is found in the results set.</li>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
+                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li>
+                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:165965</b>.</li>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Adam17&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4434074 (previously had germ line transmission status = cell line).</li>
+                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:175295</b>.</li>
+                <li>Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:175295</b>.</li>
     		</ol>
     		</li>
-    		<li>Verify sort order of genes on Human Disease Detail Page matches public.
- 			<p concordion:assertTrue="true">jeffc 01/08/2013</p>
+    		<li>A. Alleles previously having the transmission status  &quot;Germline&quot;  in the EI (displaying a reference J:# and phrase in the WI) do not change.
+ 			<p>WI displays existing data for the following alleles. They should not change.</p>
     		<ol>
-    			<li>Open the test Web Interface.</li>
-    			<li>Navigate to the Human Disease Detail page for Ciliary Dyskinesia, Primary, 1; CILD1 (244400).</li>
-    			<li>Verify that genes in the Associated Genes section are listed in the same ordera as on Public.(minus Gt(ROSA)26Sor)</li>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Apoe&lt;tm1Unc&gt;, MGI:1857129.</li>
+                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:1050</b>.</li>
+                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:1050</b>.</li>
+                <li>Navigate to the Allele Detail Page for B9d1&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4432284</li>
+                <li><span concordion:assertTrue="false">passed - kstone 2012-12-11</span> - <b>Earliest citation of germline transmission: J:178421.</b></li>
+<!--                 <li>Navigate to the Allele Detail Page for Csrp2bp&lt;tm1a(KOMP)Wtsi&gt;, MGI:4363521.</li>
+                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:164007.</b></li>
+                <li>Navigate to the Allele Detail Page for Dkk3&lt;tm1Cni&gt;, MGI:3621929.</li>
+                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:106922.</b></li>
+                <li>Navigate to the Allele Detail Page for Mysm1&lt;tm1a(KOMP)Wtsi&gt;, MGI:4362924.</li>
+                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:179287.</b></li>
+ -->
+            </ol>
+            <p>B. Alleles with the transmission status "Not Applicable" do not change.</p>
+            <ol>
+                <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Ankrd11&lt;Yod&gt;</li>
+                <li><span concordion:assertTrue="false">passed - kstone 2012-12-11</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">passed - kstone 2012-12-11</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+<!--                 <li>Navigate to the Allele Detail Page for Cdh23&lt;v&gt;, MGI:1856228.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li>Navigate to the Allele Detail Page for Ctnnb1&lt;Bfc&gt;, MGI:2656734.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li>Navigate to the Allele Detail Page for Mecom&lt;Jbo&gt;, MGI:2158381.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li>Navigate to the Allele Detail Page for Myo6&lt;sv&gt;, MGI:1856555.</li>
+                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+ -->
+    		</ol>
+    		<p>C. Alleles with the transmission status "Chimeric" do change.</p>
+    		<ol>
+    			<li>Lori set Zfp715&lt;tm1a(EUCOMM)Hmgu&gt; to have status "Chimeric". (KLF verified around noon on 12/3/2012.) </li> 
+    			<li><span concordion:assertTrue="false">klf 13:39 12/3/2012.</span> - Verify load changes it to "Germline".</li>
+    			<li><span concordion:assertTrue="false">passed - kstone 2012-12-11</span> - Navigate to Allele Detail Page and verify WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li> 
+    		</ol>
+    		<p>D. Alleles with the transmission status "Not Specified" do not change.</p>
+    		<ol>
+    			<li>There are only a handful of these alleles and all are "Reserved" or "In Progress" Test not needed.</li>
     		</ol>
     		</li>
-		</ol>
-		<p>From sto106, Simplify Allele Summary</p>
-    	<p>ASCII sort currently has alleles with names like "tm10," "tm11", "tm12" appearing BEFORE "tm1" on Public, but AFTER "tm1" on Cardolan.</p>
-		<ol>
-    		<li>Verify that alleles are listed in the same order as displayed on Public 
- 			 	<p concordion:assertTrue="true">jeffc 01/08/2013</p>
- 				<ol>
- 	            <li>Navigate to Allele Summary Page for <b>Hprt</b> (MGI:96217).</li>
-                <li>Verify that alleles are listed in the same order as on Public.</li>
-                </ol>
+    		<li><span class="regressHi">Regress</span> Collection appears in Mutation Origin ribbon on Allele Detail Pages.(sto17)
+ 			<p concordion:assertTrue="false">passed. klf 2013-12-31</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for <b>0610037L13Rik&lt;tm1(KOMP)Vlcg&gt;</b> (MGI:3847523)</li>
+                <li>Verify that the Collection value <b>KOMP-Regeneron</b> appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Acan&lt;b2b183Clo&gt;</b> (MGI:5297419)</li>
+                <li>Verify that the Collection value <b>B2B/CvDC</b>  appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Adamts20&lt;hip&gt;</b> (MGI:3847117)</li>
+                <li>Verify that the Collection value <b>Australian PhenomeBank</b>  appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Dbx1&lt;tm1.1(cre)Mull&gt;</b> (MGI:5014205)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b>  appears as the last item in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Tg(ACTFLPe)9205Dym</b> (MGI:2448985)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b> appears as the last item in the Transgene Origin ribbon.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.(sto85)
+ 			<p concordion:assertTrue="false">passed. klf 2013-12-31</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for <b>Pax6&lt;2Neu&gt;</b> (MGI:2156812)</li>
+                <li>Verify that <b>no Collection value</b> appears in the Mutation Origin ribbon.</li>
+                <li>Navigate to the Allele Detail page for <b>Tg(GFAP-cre)#Gtm</b> (MGI:3057344)</li>
+                <li>Verify that <b>no Collection value</b> appears in the Transgene Origin ribbon.</li>
+    		</ol>
     		</li>
 
     		<li>GO Graphs appear properly. - CANNOT TEST THIS ONE UNTIL BUILD SPRINT. NOT INSTALLED ON VALINOR/CARDOLAN. (from sto110, E5: Remove allele sets from schema)
  			<p concordion:assertTrue="false">new March 2014</p>
     		<ol>
+
                 <li>Navigate to the Pax6 Marker Detail Page.</li>
                 <li>Follow the link for GO Classifications.</li>
                 <li>Follow the link for GO Graphical View.</li>
                 <li>Verify the GO Graph renders in the page with text and table data, as on Public.</li>
     		</ol>
     		</li>
+    		<li><span class="regressHi">Regress</span> Allele subtypes appear in Mutation Description ribbon on Allele Detail Pages 
+    			as a comma separated list following the allele type. (sto24)<br/> The types but not the subtypes are supported on Prod. (sto105)
+    			<p concordion:assertTrue="true">passed - klf 2014-03-10</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail page for Kdr&lt;tm1Jrt&gt; (MGI:1857168) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1857168">link</a>)</li>
+                <li>Verify that the subtype value <b>(Null/knockout, Reporter)</b> appears after Allele Type <b>Targeted</b> in the Mutation Description ribbon.</li>
+                <li>Navigate to the Allele Detail page for Olig2&lt;tm1(cre/Esr1*)Htak&gt; (MGI:2183410) (<a href="http://cardolan.informatics.jax.org/allele/MGI:2183410">link</a>)</li>
+                <li>Verify that the subtype value <b>(Inducible, Recombinase)</b> appears after Allele Type <b>Targeted</b> in the Mutation Description ribbon.</li>
+                <li>Navigate to the Allele Detail page for Tg(BCL2)1TSK (MGI:1891501) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1891501">link</a>)</li>
+                <li>Verify that the subtype value <b>(Inserted expressed sequence)</b> appears after Transgene Type <b>Transgenic</b> in the Transgene Description ribbon.</li>
+    		</ol>
+    		</li>
 
-
+    		<li><span class="regressHi">Regress</span> Allele Subtypes do not appear when the allele is not assigned to a subtype. (sto24)<br/>
+    		Also true on Prod. (sto105)
+ 			<p concordion:assertTrue="false">passed - klf 2014-03-10</p> 
+    		<ol>
+                <li>Navigate to the Allele Detail page for Lith20&lt;SM/J&gt; (MGI:3577251) (<a href="http://cardolan.informatics.jax.org/allele/MGI:3577251">link</a>)</li>
+                <li>Verify that <b>no subtype value</b> appears in the Mutation Description ribbon following the Allele Type: QTL.</li>
+                <li>Navigate to the Allele Detail page for Dst&lt;Tg4&gt; (MGI:1856421) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1856421">link</a>)</li>
+                <li>Verify that <b>no subtype value</b> appears in the Transgene description ribbon following the Transgene Type: Transgenic.</li>
+    		</ol>
+    		</li>
+    		<li>The correct image/caption is displayed to the left of the molecular image in the molecular description ribbon when more than one thumbnail exists for an allele.  (sto156)
+ 			<p concordion:assertTrue="false">passed jeffc 04/15/2014</p>
+    		<ol>
+                <li>Navigate to the Allele Detail page for Dock2&lt;mu&gt; (MGI:5319388) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5319388">link</a>)</li>
+                <li>Verify that to the left of the molecular image is displayed the thumbnail caption</li>
+                <li>The caption should read <b>Schematic showing the duplication and location of the premature stop codon in the Dock2&lt;mu&gt; allele found in Irf5&lt;tm1Ttg&gt;/Irf5&lt;tm1Ttg&gt; mice</b></li>
+                <li>The image and caption should be for the thumbnail J;182658; thumbnail; 3b which can be verified in the image module of the EI</li>
+    		</ol>
+    		</li>
+    		<li>Verify these Alleles have the Australian Phenome Facility link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto198)
+ 			<p concordion:assertTrue="false">Passed jeffc 04/08/2014</p>
+    		<ol>
+                <li>Navigate to these allele detail pages.</li>
+                <li>Verify the Australian Phenome Facility link exists and works:
+                <table>
+                	<tr><th>Allele Symbol</th><th>MGI ID</th></tr>
+					<tr><td>Adamts20&lt;hip&gt;</td><td>MGI:3847117</td></tr>
+					<tr><td>Nphp3&lt;pol&gt;</td><td>MGI:3847130</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>    		
+    		
+    		
+    		
 		</ol>
 	</div>
 
