@@ -76,7 +76,7 @@ var resetQF = function (e) {
 	form.organism[1].checked = true;
 	form.locationsFileName.value = "";
 	form.geneFileName.value = "";
-	form.disableVcfFilter = "false";
+	form.enableVcfFilter = "true";
 	
 	//form.fGene.value = "";
 	//form.fHeader.value = "";

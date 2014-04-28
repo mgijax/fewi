@@ -107,7 +107,7 @@
     </div>
 
     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
-   	<input id="disableVcfFilterHid" type="hidden" name="disableVcfFilter" type="checkbox" value="false" />
+   	<input id="enableVcfFilterHid" type="hidden" name="enableVcfFilter" type="checkbox" value="true" />
     <input id="geneFileName" type="hidden" name="geneFileName" value="${geneFileName}">
     <input type="hidden" name="fGene" id="fGene" />
 	<input type="hidden" name="fHeader" id="fHeader" />
@@ -160,7 +160,7 @@
       </div>
       <div style='margin-left:220px; padding-top:5px;'>
       
-      	<label><input id="disableVcfFilter" name="disableVcfFilter" type="checkbox" value="true" class="organism"/>Include all data rows</label>
+      	<label><input id="enableVcfFilter" name="enableVcfFilter" type="checkbox" value="true" class="organism" checked="checked"/>Apply filters</label>
       	<br/>
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
         <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh38)</label>
@@ -169,6 +169,7 @@
       </div>
 	    <input type="hidden" name="field" value="locationsFile">
 	    <input type="hidden" name="type" value="vcf">
+	    <input type="hidden" name="associatedFormInput" value="VCF file">
       </form>
     </div>
 	<div id="geneFileDiv" style="position:absolute; top:418px; left:243px;">
@@ -178,6 +179,7 @@
 			<div id="geneFileNotify"><c:if test="${not empty geneFileName}"><span >(Using cached file [${geneFileName}])</span></c:if></div>
 			<input type="hidden" name="field" value="geneFile">
 		    <input type="hidden" name="type" value="singleCol">
+		   	<input type="hidden" name="associatedFormInput" value="Gene file">
 		</form>
 	</div>
 
@@ -205,13 +207,13 @@ $(function(){
         });
         
         // wire up the hidden enableVcfFilter fields
-        $("#disableVcfFilter").change(function(e){
-        	$("#disableVcfFilterHid").val($("#disableVcfFilter").prop("checked"));
+        $("#enableVcfFilter").change(function(e){
+        	$("#enableVcfFilterHid").val($("#enableVcfFilter").prop("checked"));
         });
 });
 // form will get repopulated by javascript summary. We'll need to update the filter checkbox when that happens
 function refreshEnableVcfFilterValue()
 {
-	$("#disableVcfFilter").prop("checked",$("#disableVcfFilterHid").val()!='false');
+	$("#enableVcfFilter").prop("checked",$("#enableVcfFilterHid").val()!='false');
 }
 </script>

@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
@@ -186,7 +186,8 @@ public class DiseasePortalController
     		@RequestParam("file") MultipartFile file,
     		@RequestParam("field") String field,
     		@RequestParam("type") String type,
-    		@RequestParam(value="disableVcfFilter",required=false) String disableVcfFilter)
+    		@RequestParam(value="enableVcfFilter",required=false) String enableVcfFilter,
+    		@RequestParam(value="associatedFormInput",required=false) String associatedFormInput)
     {
 
         logger.debug("-> diseasePortal -> uploadFile -> POST started");
@@ -203,6 +204,9 @@ public class DiseasePortalController
 		logger.debug("file type: " + type);
 		String filename = file.getOriginalFilename();
 		logger.debug("filename: " + filename);
+		mav.addObject("filename",filename);
+		
+		if(!notEmpty(associatedFormInput)) associatedFormInput = "File";
 
 		if(DiseasePortalQueryForm.ACCEPTABLE_FILE_VARS.contains(field))
 		{
@@ -226,7 +230,7 @@ public class DiseasePortalController
 		        	{
 		        		logger.debug("processing vcf file ["+file.getOriginalFilename()+"] for coordinates");
 
-		        		boolean enableFilters = !notEmpty(disableVcfFilter);
+		        		boolean enableFilters = notEmpty(enableVcfFilter);
 		        		boolean kickIds = enableFilters;
 		        		boolean kickBadFilters = enableFilters;
 		        		logger.debug("kickIds="+kickIds+", kickBadFilters="+kickBadFilters);
@@ -313,7 +317,7 @@ public class DiseasePortalController
 			return mav;
 		}
 
-        mav.addObject("success","File successfully processed.");
+        mav.addObject("success",associatedFormInput+" successfully processed.");
 		return mav;
     }
 

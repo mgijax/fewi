@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 <%-- This is merely a page to communicate whether a file upload (via POST) was successful, or if not why. --%>
 <div id="<c:out value="${empty success ? 'error' : 'success'}"/>">
-	<c:out escapeXml="false" value="${empty success ? error : success}"/>
+	<span class="hdpFileUploadSuccess"><c:out escapeXml="false" value="${empty success ? error : success}"/></span>
 	<c:if test="${not empty vcfOutput}">
 		<ul style="text-align:left;">
 		<li>${vcfOutput.rowsWithCoordinates} Coordinates Included</li>

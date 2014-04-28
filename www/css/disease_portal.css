@@ -110,6 +110,17 @@ td.yui-dt-col-coordinate
 {
 	top: 120px;left: 260px;
 }
+.hdpFileUploadSuccess
+{
+	font-size: 120%;
+}
+#geneFileNotify
+{
+	font-style: italic;
+	color: black;
+	font-weight: bold;
+	white-space: nowrap;
+}
 #locationsFileNotify
 {
 	font-style: italic;
