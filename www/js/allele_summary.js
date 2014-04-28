@@ -47,7 +47,7 @@ function main() {
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
         template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-        pageReportTemplate : "Showing alleles {startRecord} - {endRecord} of {totalRecords}",
+        pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [50,100,250,500],
         containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 100,

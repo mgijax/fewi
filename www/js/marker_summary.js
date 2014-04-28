@@ -3,21 +3,21 @@ if(window.doHighlights==undefined) window.doHighlights=false;
 function main() {
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.
-    var myColumnDefs = [    
-        {key:"location", 
+    var myColumnDefs = [
+        {key:"location",
         	label:"<b>Genetic Location</b>",
         	sortable:false},
-        {key:"coordinates", 
+        {key:"coordinates",
             label:"<b>Genome Coordinates<br>(strand)<br><i>GRCm38</i></b>",
             sortable:true},
-        {key:"featureType", 
+        {key:"featureType",
             label:"<b>Feature Type</b>",
             sortable:true},
-        {key:"symbol", 
+        {key:"symbol",
             label:"<b>Symbol</b>",
             sortable:true},
     ];
-    
+
     if(doHighlights)
     {
     	myColumnDefs.push({
@@ -36,7 +36,7 @@ function main() {
         fields: [
                  {key:"location"},
                  {key:"coordinates"},
-                 {key:"featureType"},                 
+                 {key:"featureType"},
                  {key:"symbol"},
                  {key:"highlights"}
         ],
@@ -48,7 +48,7 @@ function main() {
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
         template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
-        pageReportTemplate : "Showing markers {startRecord} - {endRecord} of {totalRecords}",
+        pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
         rowsPerPageOptions : [50,100,250,500],
         containers   : ["paginationTop", "paginationBottom"],
         rowsPerPage : 100,
@@ -64,16 +64,16 @@ function main() {
         initialLoad : false,
         MSG_LOADING:  '<img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Searching...',
         MSG_EMPTY:    'No markers found.'
-    };  
-    
+    };
+
     // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, 
+    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs,
     	    myDataSource, myConfigs);
-    
+
     // Show loading message while page is being rendered
-    myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), 
-    	    YAHOO.widget.DataTable.CLASS_LOADING);    
-    	    
+    myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"),
+    	    YAHOO.widget.DataTable.CLASS_LOADING);
+
     // Integrate with Browser History Manager
     var History = YAHOO.util.History;
 
@@ -113,7 +113,7 @@ function main() {
     // ...then we hook up our custom function
     myPaginator.subscribe("changeRequest", handlePagination, myDataTable, true);
 
-    // Update payload data on the fly for tight integration with latest values from server 
+    // Update payload data on the fly for tight integration with latest values from server
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 
         var pRequest = parseRequest(oRequest);
@@ -124,7 +124,7 @@ function main() {
             rowsPerPage: Number(pRequest['results']) || 100,
             recordOffset: Number(pRequest['startIndex']) || 0
         };
-        
+
         var textReportButton = YAHOO.util.Dom.get('textDownload');
         if (!YAHOO.lang.isNull(textReportButton)){
         		textReportButton.setAttribute('href', fewiurl + 'marker/report.txt?' + querystring);
@@ -133,7 +133,7 @@ function main() {
 		if (!YAHOO.lang.isNull(excelReportButton)) {
 			excelReportButton.setAttribute('href', fewiurl + 'marker/report.xlsx?' + querystring);
 		}
-		
+
         return true;
     };
 
