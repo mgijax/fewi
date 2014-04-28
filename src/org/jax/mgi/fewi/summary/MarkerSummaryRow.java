@@ -9,7 +9,7 @@ import org.jax.mgi.fewi.util.FormatHelper;
 /**
  * wrapper around a marker;  represents on row in summary
  */
-public class MarkerSummaryRow 
+public class MarkerSummaryRow
 {
 	//-------------------
 	// instance variables
@@ -34,23 +34,25 @@ public class MarkerSummaryRow
     public String getLocation() {
     	return marker.getLocationDisplay();
     }
-    
+
     public String getCoordinates() {
     	return marker.getCoordinateDisplay();
     }
-    
+
     public String getSymbol() {
     	String detailUrl = fewiUrl+"marker/key/"+marker.getMarkerKey();
         return "<a href=\""+detailUrl+"\">"+FormatHelper.superscript(marker.getSymbol())+"</a>, "
     			+FormatHelper.superscript(marker.getName());
     }
-    
+
     public String getFeatureType(){
     	return marker.getFeatureType();
     }
-    
+
     public String getHighlights(){
-    	return StringUtils.join(marker.getHighlights(),"<br>");
+		String whyMatched = StringUtils.join(marker.getHighlights(),"<br>");
+		whyMatched = whyMatched.replace("\"", "");
+    	return whyMatched;
     }
-    
+
 }
