@@ -138,7 +138,7 @@
         <span class="example" style='line-height:160%;'>
 		  <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a>
 		   for using AND, OR, AND NOT, quotes, partial word matching,...
-		  <br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601 &nbsp; hippocamp*
+		  <br/>Examples: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601 &nbsp; hippocamp*
 		</span>
         <br/>
 

@@ -45,10 +45,10 @@
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty queryForm.phenotype}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	Phenotypes/Diseases: including text <b><fewi:verbatim value="${queryForm.phenotype}"/></b> 
+	Phenotypes/Diseases: including text <b><fewi:verbatim value="${queryForm.phenotype}"/></b>
 		<span class="smallGrey">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span>
 <c:set var="notFirst" value="${true}"/></c:if>
 <%-- Special nomen help text --%>
 <c:if test="${not empty queryForm.nomen}">
-	<br>The default sort when Marker Symbol/Name is submitted is by a text-matching relevance score.
+	<br>For a Marker Symbol/Name search the default sort is by text-matching relevance score.
 </c:if>

@@ -28,7 +28,7 @@ td.top { vertical-align: top; }
       <dd>
 		<input name="nomen" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.nomen}"/>" placeholder="Symbols, names or synonym">
 		<br/>
-		<span class="example">Example: Pax* *Sox2* *os *Col2a1*</span>
+		<span class="example">Examples: Pax* *Sox2* *os *Col2a1*</span>
       </dd>
     </dl>
     </td>
@@ -143,7 +143,11 @@ td.top { vertical-align: top; }
 	        <!-- contains <textarea name="go" size="35" type="text" value="<c:out value="${queryForm.go}"/>"> -->
 	        in
 	        <br/>
-	        <span class="example">Example: one two three</span>
+            <span class="example" style='line-height:160%;'>
+		    <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a>
+		     for using AND, OR, AND NOT, quotes, partial word matching,...
+		    <br/>Examples: vir* AND replication&nbsp;&nbsp;&nbsp;gaba AND NOT “inhibitory synapse”&nbsp;&nbsp;&nbsp;GO:0005794 OR GO:0005783
+		    </span>
 	      </dd>
 	    </dl>
 	    <span class="vocabLink">Browse <a href="${configBean.WI_URL}searches/GO_form.shtml">Gene Ontology (GO)</a></span>
@@ -170,8 +174,12 @@ td.top { vertical-align: top; }
         <dd>
          <%-- contains <input name="interpro" size="35" class="grayBackground" type="text" value="<c:out value="${queryForm.interpro}"/>"> --%>
          <textarea id="interpro" name="interpro" rows="2" cols="60" placeholder="InterPro Protein Domains terms or IDs"><c:out value="${queryForm.interpro}"/></textarea>
-          <br/>
-          <span class="example">Example: four five six</span>
+         <br/>
+          <span class="example" style='line-height:160%;'>
+		    <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a>
+		     for using AND, OR, AND NOT, quotes, partial word matching,...
+		    <br/>Examples: inhibitor* AND *peptide&nbsp;&nbsp;&nbsp;GPCR AND NOT kinase&nbsp;&nbsp;&nbsp;IPR000539 AND IPR001134&nbsp;&nbsp;&nbsp;muscarinic OR nicotinic
+		  </span>
         </dd>
       </dl>
       <span class="vocabLink">Browse <a href="${configBean.FTP_URL}MGI_InterProDomains.rpt">InterPro protein domains</a>
@@ -187,7 +195,7 @@ td.top { vertical-align: top; }
       	 <div style="position: relative;"><div id="selectedMpTextDiv" style="position:absolute; top:0px; left:540px; width:350px;"></div></div>
       <dl>
         <dt class="qfLabel">
-	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#phenotype'); return false;" href="${helpPage}#phenotype">Phenotype/Human Disease</a>:
+	  <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#phenotype'); return false;" href="${helpPage}#phenotype">Phenotype / Disease</a>:
         </dt>
         <dd>
 	        <span class="example">Enter any combination of phenotype terms,
@@ -202,11 +210,11 @@ td.top { vertical-align: top; }
 				<b>Browse</b> <a href="${configBean.FEWI_URL}vocab/omim/">Human Disease Vocabulary (OMIM)</a>
 		      </span>
 		      <br/>
-		      <span class="example">
-				  <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a>
-				   for using AND, OR, AND NOT, quotes, partial word matching,...
-				  <br/>Example: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601 &nbsp; hippocamp*
-		      </span>
+	        <span class="example" style='line-height:160%;'>
+			  <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a>
+			   for using AND, OR, AND NOT, quotes, partial word matching,...
+			  <br/>Examples: MP:0009754 AND MP:0009751 &nbsp; Alzheimer &nbsp; 168600 OR 168601 &nbsp; hippocamp*
+			</span>
         </dd>
       </dl>
     </td>
@@ -246,7 +254,7 @@ function updatePhenoSystemSummary()
       }
 		if(mpTextLines.length>0)
 		{
-			$("#selectedMpTextDiv").html("You selected:<ul>" + mpTextLines.join("") + "</ul>");
+			$("#selectedMpTextDiv").html("Categories selected from systems list:<ul>" + mpTextLines.join("") + "</ul>");
 		}
 		else
 		{
