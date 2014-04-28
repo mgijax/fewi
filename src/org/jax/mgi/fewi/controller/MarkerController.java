@@ -1306,9 +1306,13 @@ public class MarkerController {
         {
         	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL, desc));
         }
-        else if("location".equalsIgnoreCase(sortRequested))
+        else if("coordinates".equalsIgnoreCase(sortRequested))
         {
         	sorts.add(new Sort(SortConstants.MRK_BY_LOCATION, desc));
+        }
+        else if("featureType".equalsIgnoreCase(sortRequested))
+        {
+        	sorts.add(new Sort(SortConstants.MRK_BY_TYPE, desc));
         }
         else if(notEmpty(query.getNomen()) || notEmpty(query.getGo()) || notEmpty(query.getInterpro()))
         {
