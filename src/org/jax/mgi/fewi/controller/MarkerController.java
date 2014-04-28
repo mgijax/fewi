@@ -1323,6 +1323,7 @@ public class MarkerController {
         else if("featureType".equalsIgnoreCase(sortRequested))
         {
         	sorts.add(new Sort(SortConstants.MRK_BY_TYPE, desc));
+        	sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
         }
         else if(notEmpty(query.getNomen()) || notEmpty(query.getGo()) || notEmpty(query.getInterpro()))
         {

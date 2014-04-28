@@ -236,7 +236,7 @@ td.right { text-align: right }
 	<c:if test="${(not empty thumbnailImage) and (not empty thumbnailImage.caption)}">
 	  <span class='small' style='line-height:150%'>${thumbnailImage.caption}</span><p>
 	</c:if>
-	<span>Show the <a href="${configBean.FEWI_URL}image/phenoSummary/allele/${allele.primaryID}" class='MP'>${imageCount} image(s)</a> involving this allele.</span>
+	<span>Show the <a href="${configBean.FEWI_URL}image/phenoSummary/allele/${allele.primaryID}" class='MP'>${imageCount} phenotype image(s)</a> involving this allele.</span>
 	</td><td class='padLR' style='text-align:right; width=1%'>
 	<a href="${configBean.FEWI_URL}image/pheno/${primaryImage.mgiID}"><img src='${configBean.PIXELDB_URL}${thumbnailImage.pixeldbNumericID}'${thumbnailDimensions}></a>
 	</td></tr></table>
