@@ -1,8 +1,8 @@
-TAG: fewi-5-1-8-?
-DATE: 03/18/2014
-STAFF: lec
+TAG: fewi-5-1-8-1
+DATE: 04/29/2014
+STAFF: pf
 CHANGES: 
-1) TR11603/www/WEB-INF/properties/externalUrls.properties:removed BGEM link
+Tags for public testing and release
 
 TAG: fewi-5-1-7-5
 DATE: 03/03/2014
