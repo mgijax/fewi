@@ -80,7 +80,7 @@
 		<p>From sto85, Alleles that have transmission status of cell line but have IMSR links get changed to a transmission state of Germ line</p>
 		<ol>
     		<li>Alleles having genotypes with MP annotations loaded via the HTMP loader have their Germline Transmission display the text "Earliest citation of germline transmission"
- 			<p concordion:assertTrue="false">klf 12/11/2012</p> 
+ 			<p concordion:assertTrue="true">jeffc 04/29/2014</p> 
     		<ol>
                 <li>Navigate to the Allele Detail Page for  Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
                 <li>Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: </b></li>
@@ -90,10 +90,10 @@
     		<i>Example: Earliest citation of germline transmission: J:175295</i> 
     		<ol>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
-                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li>
-                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:165965</b>.</li>
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li>
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:165965</b>.</li>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Adam17&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4434074 (previously had germ line transmission status = cell line).</li>
-                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:175295</b>.</li>
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:175295</b>.</li>
                 <li>Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:175295</b>.</li>
     		</ol>
     		</li>
@@ -101,23 +101,16 @@
  			<p>WI displays existing data for the following alleles. They should not change.</p>
     		<ol>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Apoe&lt;tm1Unc&gt;, MGI:1857129.</li>
-                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:1050</b>.</li>
-                <li><span concordion:assertTrue="false">klf 12/11/2012</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:1050</b>.</li>
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:1050</b>.</li>
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:1050</b>.</li>
                 <li>Navigate to the Allele Detail Page for B9d1&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4432284</li>
-                <li><span concordion:assertTrue="false">passed - kstone 2012-12-11</span> - <b>Earliest citation of germline transmission: J:178421.</b></li>
-<!--                 <li>Navigate to the Allele Detail Page for Csrp2bp&lt;tm1a(KOMP)Wtsi&gt;, MGI:4363521.</li>
-                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:164007.</b></li>
-                <li>Navigate to the Allele Detail Page for Dkk3&lt;tm1Cni&gt;, MGI:3621929.</li>
-                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:106922.</b></li>
-                <li>Navigate to the Allele Detail Page for Mysm1&lt;tm1a(KOMP)Wtsi&gt;, MGI:4362924.</li>
-                <li><span concordion:assertTrue="false">new</span> - <b>Earliest citation of germline transmission: J:179287.</b></li>
- -->
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - <b>Earliest citation of germline transmission: J:178421.</b></li>
             </ol>
             <p>B. Alleles with the transmission status "Not Applicable" do not change.</p>
             <ol>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Ankrd11&lt;Yod&gt;</li>
-                <li><span concordion:assertTrue="false">passed - kstone 2012-12-11</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
-                <li><span concordion:assertTrue="false">passed - kstone 2012-12-11</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
 <!--                 <li>Navigate to the Allele Detail Page for Cdh23&lt;v&gt;, MGI:1856228.</li>
                 <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
                 <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
@@ -144,7 +137,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Collection appears in Mutation Origin ribbon on Allele Detail Pages.(sto17)
- 			<p concordion:assertTrue="false">passed. klf 2013-12-31</p>
+ 			<p concordion:assertTrue="true">jeffc 04/29/2014</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <b>0610037L13Rik&lt;tm1(KOMP)Vlcg&gt;</b> (MGI:3847523)</li>
                 <li>Verify that the Collection value <b>KOMP-Regeneron</b> appears as the last item in the Mutation Origin ribbon.</li>
