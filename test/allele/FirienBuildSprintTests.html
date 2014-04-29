@@ -1444,8 +1444,400 @@
     			<li>Verify the results returns <b>242</b> results</li>
     		</ol>
     		</li>
+   		<li><span class="regressHi">Regress</span> Collection appears in Allele Information ribbon on Recombinase Specificity Pages, between Molecular Description and Find Mice.
+ 			<p concordion:assertTrue="false">passed. -klf 2014-01-02</p> (sto17)
+    		<ol>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Dbx1&lt;tm1.1(cre)Mull&gt;</b> (MGI:5014205)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b>  appears in the correct place.</li>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Tg(ACTFLPe)9205Dym</b> (MGI:2448985)</li>
+                <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b> appears in the correct place.</li>
+    		</ol>
+    		</li>
 
-    		
+    		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.
+ 			<p concordion:assertTrue="false">passed. -klf 2014-01-02</p> (sto17)
+    		<ol>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Hprt&lt;tm1(cre)Mnn&gt;</b> (MGI:2181632)</li>
+                <li>Verify that <b>no Collection value</b> appears.</li>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Tg(CMV-cre/ERT)1Ipc</b> (MGI:2387570)</li>
+                <li>Verify that <b>no Collection value</b> appears.</li>
+    		</ol>
+    		</li>
+    		<li><span class="regressHi">Regress</span> Allele Subtypes appear in Allele Information ribbon after Type as comma delimited list.
+ 			<p concordion:assertTrue="false">passed - kstone 2014/01/23</p> (sto24)
+    		<ol>
+                <li>Navigate to a Recombinase Specificity page (there may be more than one) for 
+                	<a href="http://cardolan.informatics.jax.org//recombinase/specificity?id=MGI:4420223&amp;systemKey=4856343">Gad2&lt;tm2(cre)Zjh&gt;</a></li>
+                <li>Verify that the subtypes value <b>(Inserted expressed sequence, Recombinase)</b>  appears in the correct place.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> Image link URLs appear on the Recombinase Activity Detail page
+ 			<p concordion:assertTrue="false">klf 6/6/13</p>
+ 			<p>Note: this test requires fake data.</p>
+    		<ol>
+                <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
+                <li>Verify that images in the "Images" ribbon display linked text between the J:# and the Figure Label text.</li>
+                <li>Verify that tiny thumbnails in the "Recombinase Activity" ribbon, "Reference, Source" column, display linked text following the Figure Label text.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> Image link URLs open the linked resource in a new window
+ 			<p concordion:assertTrue="false">klf 6/6/13</p>
+    		<ol>
+                <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
+                <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the Images ribbon for Fig. Calb2 Brain (dorsal) Adult, and opens in a new window.</li>
+                <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the "Reference, Source" column wherever Fig. Calb2 Brain (dorsal) Adult is cited, and opens in a new window.</li>
+                <li>***Verify "AIBS Data" is hyperlinked to connectivity.brain-map.org in the Images ribbon for Fig. Calb2 Spinal cord (wh matter) P7, and opens in a new window.</li>
+                <li>Verify "AIBS Data" is hyperlinked to connectivity.brain-map.org in the "Reference, Source" column wherever Fig. Calb2 Spinal cord (wh matter) P7 is cited, and opens in a new window.</li>
+                <li>Verify each link opens in a new tab/window.</li>
+                <li>*** Only the one marked *** needs regression testing.</li>
+    		</ol>
+    		</li>
+
+    		<li><span class="regressHi">Regress</span> The \Link(...) markup does not affect the display of images on GXD Expression Detail WI pages.
+ 			<p concordion:assertTrue="false">klf 4/30/2013</p>
+    		<ol>
+                <li>Open the record for image MGI:5310731 (in situ reporter (knock-in) assay used by both Cre and GXD for Six1&lt;tm1(cre,ALPP)Xli&gt;)</li>
+                <li>Enter \Link(https://www.google.com/|Test Link|)  </li>
+                <li>Save the note and the image record.</li>
+                <li>After Exporter and/or Mover steps...</li>
+                <li>Navigate to the Recombinase Activity Detail page for Six1&lt;tm1(cre,ALPP)Xli&gt; - Alimentary System.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the Images ribbon for Fig. 5.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the "Reference, Source" column wherever Figure 5 is cited.</li>
+                <li>Navigate to the Recombinase Activity Detail page for Six1&lt;tm1(cre,ALPP)Xli&gt; - Sensory Organs.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the Images ribbon for Fig. 5.</li>
+                <li>Verify "Test Link" is hyperlinked to Google.com in the "Reference, Source" column wherever Figure 5 is cited.</li>
+                <li>Navigate to the GXD Image Detail page for the image (http://cardolan.informatics.jax.org/image/MGI:5310731).</li>
+                <li>Verify "Test Link" does not appear on the page.</li>
+                <li>Verify the page looks the same as it does on Public.</li>
+    		</ol>
+    		</li>
+    		<li>Autocomplete exists and displays correct information
+    		<p concordion:assertTrue="false">jeffc 04/14/2014 verified again for sto184</p>
+    		<ol>
+                <li>Open <a href="http://cardolan.informatics.jax.org/diseasePortal">disease portal query form</a> </li>
+                <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
+                <li>Verify that both <b>OMIM</b> and <b>Mammalian Phenotype</b> terms appear. 
+                	<i>The first two terms should be "Systemic Lupus Erythmatosus; SLE", an OMIM term, 
+                	and "decreased resistance to systemic lupus erythematosus", an MP term.</i>
+                </li>
+                <li>Verify that the first term <b>Systemic Lupus Erythematosus; SLE</b> is displayed with the text 
+                	<i>OMIM</i> immediately following it.
+                </li>
+                <li>Verify that the second term <b>decreased resistance to systemic lupus erythematosus</b>
+                	is displayed with the text <i>[increased susceptibility to systemic lupus erythematosus] Mammalian Phenotype,
+                	the brackets indicating that you matched a synonym.</i>
+                </li>
+                <li>Verify that the "disease clumping" term <b>Systemic Lupus Erythematosus</b> (with no abbreviation) does not appear in the autocomplete. (sto117)</li>
+            </ol>
+            </li>
+            <li>Autocomplete populates box with IDs
+            <p concordion:assertTrue="false">passed - jeffc 04/14/2014 verified for sto184</p>
+    		<ol>
+                <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
+                <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
+                <li>Verify that the text <b>152700,</b> is put into the phenotype/disease query box</li>
+                <li>Clear form. Type <b>wet lung</b> into phenotypes and diseases box</li>
+                <li>Click (or highlight and hit enter/tab) the first term <b>wet lung [pulmonary edema]</b>.</li>
+                <li>Verify that the text <b>MP:0003828,</b> is put into the phenotype/disease query box</li>
+            </ol>
+            </li>
+            <li>Autocomplete supports multiples
+            <p concordion:assertTrue="false">passed - jeffc 04/14/2014 verified for sto184</p>
+    		<ol>
+                <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
+                <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
+                <li>Verify that the text <b>152700,</b> is put into the phenotype/disease query box</li>
+                <li>Do not clear the form. Continue typing <b>wet lung</b> into phenotypes and diseases box</li>
+                <li>Click (or highlight and hit enter/tab) the first term <b>wet lung [pulmonary edema]</b>.</li>
+                <li>Verify that the text <b>MP:0003828,</b> is added to the phenotype/disease query box</li>
+            </ol>
+            </li>
+            <li>"You searched for" section displays the searched IDs as well as the terms they map to
+           <p concordion:assertTrue="false">passed - jeffc 04/14/2014 verified for sto184</p>
+    		<ol>
+                <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
+                <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
+                <li>Verify that the text <b>152700,</b> is put into the phenotype/disease query box</li>
+                <li>Do not clear the form. Continue typing <b>wet lung</b> into phenotypes and diseases box</li>
+                <li>Click (or highlight and hit enter/tab) the first term <b>wet lung [pulmonary edema]</b>.</li>
+                <li>Verify that the text <b>MP:0003828,</b> is added to the phenotype/disease query box</li>
+                <li>Click "Search"</li>
+                <li>Verify that the "you searched for" section displays the following text after 
+                	"Phenotypes or Diseases matching": 
+                	<b>[152700(Systemic Lupus Erythematosus; SLE), MP:0003828(pulmonary edema),]</b>
+                </li>
+            </ol>    		
+    		<li>Confirm Hovering over a Gene symbol on the Genes summary, displays text of Gene's full name and it's feature type(sto132)
+    		<p concordion:assertTrue="false">passed jeffc 04/24/2012</p>
+    		<ol>
+                <li>Query for marker <b>pax*</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
+                <li>Verify that a popup displays saying <b>Name: paired box 1 Type: protein coding gene</b></li>
+                <li>Hover your mouse over Gene Symbol <b>PAX9</b></li>
+                <li>Verify that a popup displays saying <b>Name: paired box 9 Type: protein coding gene</b></li>
+                <li>Query for location <b>Chr12:3000000-10000000</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Apob</b></li>
+                <li>Verify that a popup displays saying <b>Name: apolipoprotein B Type: protein coding gene</b></li>
+                <li>Hover your mouse over Gene Symbol <b>OSR1</b></li>
+                <li>Verify that a popup displays saying <b>Name: odd-skipped related transcription factor 1</b></li>
+                <li>Query for disease <b>diabetes</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Idd3</b></li>
+                <li>Verify that a popup displays saying <b>Name: insulin dependent diabetes susceptibility 3 Type: QTL</b></li>
+                <li>Hover your mouse over Gene Symbol <b>IL6</b></li>
+                <li>Verify that a popup displays saying <b>Name: interleukin 6 (interferon, beta 2)</b></li>
+    		</ol>
+    		</li>
+			<li>Confirm on the HDMC Disease tab that numbers in the Mouse Models column are links(sto128)
+    		<p concordion:assertTrue="false">jeffc 03/17/2014</p>
+    		<ol>
+                <li>Query for marker <b>Actb</b> on the Human Disease and Mouse Model query form</li>
+                <li>Click on the Diseases tab and locate the Mouse Models column</li>
+                <li>Verify that all rows that contain a number are links</li>
+    		</ol>
+    		</li>
+		    <li>Confirm Hovering over a Gene symbol on the Grid summary, displays text of Gene's full name and it's feature type(sto132)
+    		<p concordion:assertTrue="false">passed jeffc 04/23/2014</p>
+    		<ol>
+                <li>Query for marker <b>pax*</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
+                <li>Verify that a popup displays saying <b>Name: paired box 1 Feature Type: protein coding gene </b></li>
+                <li>Hover your mouse over Gene Symbol <b>PAX9</b></li>
+                <li>Verify that a popup displays saying <b>Name: paired box 9 Feature Type: protein coding gene </b></li>
+                <li>Query for location <b>Chr12:3000000-10000000</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Apob</b></li>
+                <li>Verify that a popup displays saying <b>Name: apolipoprotein B Feature Type: protein coding gene</b></li>
+                <li>Hover your mouse over Gene Symbol <b>OSR1</b></li>
+                <li>Verify that a popup displays saying <b>Name: odd-skipped related transcription factor 1</b></li>
+                <li>Query for disease <b>diabetes</b></li>
+                <li>Hover your mouse over Gene Symbol <b>Ighm</b></li>
+                <li>Verify that a popup displays saying <b>Name: immunoglobulin heavy constant mu Feature Type: gene segment</b></li>
+                <li>Hover your mouse over Gene Symbol <b>CTSB</b></li>
+                <li>Verify that a popup displays saying <b>Name: Cathepsin B</b></li>
+    		</ol>
+    		</li>
+			<li>A link to IMSR for all strains or lines available is displayed for each mouse marker in the popup that has such a link on its Allele Detail Page.
+ 			(sto136)<p concordion:assertTrue="false">passed. -klf 2014-04-22</p> 
+ 			<ol>
+ 				<li>On the HMDC Portal, query for genes <b>h2-d1,Hspa1a,vpreb1,H3f3a,Olfr160,hamp2,clec10a,mgl2</b>.</li>
+ 				<li>From the Grid Tab, click the cell in the row for Human HLA-B and the column for hematopoietic system.</li>
+ 				<li>Verify that the pop-up contains IMSR links for <b>H2-D1</b> and <b>H2-K1</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers (5 and 3 as of 4/18/2014).</li>
+ 				<li>From the Grid Tab, click the cell in the row for for Human HLA-B and the column for nervous system.</li>
+ 				<li>Verify that the pop-up contains an IMSR links only for <b>H2-D1</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for that marker (5 as of 4/18/2014).</li>
+ 				<li>From the Grid Tab, click the cell in the row for H3f3a, H3f3b and the column for growth/size.</li>
+ 				<li>Verify that the pop-up contains IMSR links for <b>H3f3a</b> and <b>H3f3b</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for those markers (11 and 8 as of 4/18/2014).</li>
+ 				<li>Reset the query.  Query for gene <b>Bmp4</b>.</li>
+ 				<li>From the Grid Tab, click the cell in the row for Bmp4 and the column for behavior/neurological.</li>
+ 				<li>Verify that the pop-up contains an IMSR link for <b>Bmp4</b>.  Verify that the count of "strains or lines" is the same as on an Allele Detail Page for Bmp4 (4 as of 4/22/2014).</li>
+ 				<li>Click the cell in the row for Tg(Eno2-Bmp4)3Jake and the column for behavior/neurological.</li>
+ 				<li>Verify that the pop-up does not contain an IMSR link. (There are no strains at IMSR as of 4/18/2014.)</li>
+ 			</ol>
+			</li>
+    		<li>Verify these markers have the APF link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
+ 			<p concordion:assertTrue="false">passed jeffc 04/08/2014</p>
+    		<ol>
+                <li>Navigate to these marker detail pages.</li>
+                <li>Verify the APF link exists and works (link will look like this: <b>Incidental mutations (data from APF )</b>):
+                <table>
+                	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
+					<tr><td>Atp4a</td><td>MGI:88113</td></tr>
+					<tr><td>Fitm2</td><td>MGI:2444508</td></tr>
+					<tr><td>hyi</td><td>MGI:1915430</td></tr>
+					<tr><td>Gm20388</td><td>MGI:5141853</td></tr>
+					<tr><td>Lvrq1</td><td>MGI:3042875</td></tr>
+					<tr><td>Gbx2</td><td>MGI:95668</td></tr>
+					<tr><td>Rgs19</td><td>MGI:1915153</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+            <li>For alleles, the "Type" column from a Quick Search displays the modified text from above, based on the allele's Generation Type. The allele's Subtypes (Attributes), if any, are ignored.
+            <p concordion:assertTrue="true">klf 2014-03-10</p>
+            <ol>
+                <li>Open the MGI main page and enter the text indicated in the table below into the Quick Search box, Press search</li>
+                <li>When the results display click the <b>Show all ..</b> link</li>
+                <li>Verify the following results:
+                <table>
+					<tr>
+						<th>Search for...</th>
+						<th>Allele symbol</th>
+						<th>Search Type</th>
+						<th>Generation Type</th>
+						<th>Note</th>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey-3H&gt;</td>
+						<td>Chemically induced allele</td>
+						<td>Chemically and radiation induced</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey-Neu&gt;</td>
+						<td>Chemically induced allele</td>
+						<td>Chemically induced (ENU)</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;9Neu&gt;</td>
+						<td>Chemically induced allele</td>
+						<td>Chemically induced (other)</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Gt(E049H01)Wrst&gt;</td>
+						<td>Gene trapped allele</td>
+						<td>Gene trapped</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey-H&gt;</td>
+						<td>Radiation induced allele</td>
+						<td>Radiation induced</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Sey&gt;</td>
+						<td>Spontaneous allele</td>
+						<td>Spontaneous</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;tm1Pgr&gt;</td>
+						<td>Targeted allele</td>
+						<td>Targeted</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Tg(Pax6-cre,GFP)2Pgr</td>
+						<td>Transgene</td>
+						<td>Transgenic</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Pax6</td>
+						<td>Pax6&lt;Neu11&gt;-deleted</td>
+						<td>column will be blank</td>
+						<td>Not Specified</td>
+						<td>Only displayed on production data search</td>
+					</tr>
+					<tr>
+						<td>chab1</td>
+						<td>chab1&lt;AKR/J&gt;</td>
+						<td>QTL</td>
+						<td>QTL</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>cript</td>
+						<td>cript&lt;Tn(sb-rtTA)2427.SB1Ove&gt;</td>
+						<td>Transposon induced allele</td>
+						<td>Transposon induced</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>none exist</td>
+						<td>Not Applicable</td>
+						<td>Not Applicable</td>
+						<td>They exist in data but not visible in WI</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>none exist</td>
+						<td>Endonuclease-mediated allele</td>
+						<td>Endonuclease-mediated</td>
+						<td>None exist yet</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>none exist</td>
+						<td>Other</td>
+						<td>Other</td>
+						<td>None exist yet</td>
+					</tr>
+				</table>
+				</li>
+	            </ol>
+            </li>
+
+			<li>Expression data is displayed associated with EMAPA/EMAPS terms in the Quick Search.
+            <p concordion:assertTrue="false">failing 2014-03-10</p>
+            <p>Some example terms which have changed between the AD and EMAPA/EMAPS:</p>
+            <table>
+						<tr>
+							<th>AD Term</th>
+							<th>EMAPA Term</th>
+							<th>EMAPA ID</th>
+						</tr>
+						<tr>
+							<td>TS12: vitelline vein<br /> ...through...<br /> TS18:
+								vitelline vein
+							</td>
+							<td>vitelline vein embryonic part TS12-18</td>
+							<td>EMAPA:16244</td>
+						</tr>
+						<tr>
+							<td>TS15: mesonephros mesenchyme<br /> ...through...<br />
+								TS16: mesonephros mesenchyme
+							</td>
+							<td>mesonephros associated mesenchyme TS15-16</td>
+							<td>EMAPA:16745</td>
+						</tr>
+						<tr>
+							<td>TS15: telencephalon<br /> ...through...<br /> TS16:
+								telencephalon
+							</td>
+							<td>early telencephalon TS15-16</td>
+							<td>EMAPA:16652</td>
+						</tr>
+						<tr>
+							<td>asdf</td>
+							<td>adsf</td>
+							<td>asdf</td>
+						</tr>
+					</table>
+					<ol>
+						<li>Navigate to the Quick Search and search for <b>vitelline vein embryonic part</b>.</li>
+						<li>Verify the Vocabulary Terms "bucket" displays <b>vitelline vein embryonic part TS12-18</b>.</li>
+						<li>Verify the Genome Features "bucket" displays the following markers, associated with the stage-specific EMAPS terms for this EMAPA term:
+						<ul>
+							<li>Abi3bp</li>
+							<li>Aplnr</li>
+							<li>Chst15</li>
+							<li>Gata4</li>
+							<li>Hhex</li>
+							<li>Kdr</li>
+							<li>Pitx2</li>
+							<li>Rps28</li>
+							<li>Stab2</li>
+							<li>Tagln2</li>
+							<li>Tal1</li>
+							<li>Tgfb1</li>
+							<li>Tgfb2</li>
+						</ul>
+						</li>
+					</ol>
+			</li>
+
+			<li>Quick Search data is aligned with other data.
+            <p concordion:assertTrue="false">failing 2014-03-11</p>
+			<ol>
+				<li>Quick Search: query for marker <b>Gm7092</b>.</li>
+				<li>Verify quick search results show marker symbol <b>Erich4</b> (<a href="http://cardolan.informatics.jax.org/marker/MGI:3646269">MGI:3646269</a>).</li>
+				
+			</ol>
+			</li>
+
+
     		
 	</ol>
 </div>
