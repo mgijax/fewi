@@ -5,12 +5,11 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.util.file.FileProcessor;
 import org.jax.mgi.fewi.util.file.FileProcessorOutput;
 import org.jax.mgi.fewi.util.file.VcfProcessorOutput;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;

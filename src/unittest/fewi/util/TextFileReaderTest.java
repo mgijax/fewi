@@ -7,10 +7,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.util.file.TextFileReader;
+import org.junit.Assert;
 import org.junit.Test;
 
 

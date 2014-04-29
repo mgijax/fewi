@@ -2,10 +2,9 @@ package unittest.fewi.util;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class QueryParserTest {
