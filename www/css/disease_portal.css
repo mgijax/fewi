@@ -404,7 +404,6 @@ textarea {resize:none; background-color:#FFE4B5;}
 	position: absolute;
 	top: 8px;
 	left: -50px;
-	max-width: 300px;
 	padding: 2px;
 	font-weight: bold;
   }
