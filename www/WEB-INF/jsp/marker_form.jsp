@@ -65,7 +65,7 @@ td.top { vertical-align: top; }
 
   <!-- row 3-->
   <tr>
-    <td class="queryCat1 padded top">Map position</td>
+    <td class="queryCat1 padded top">Genome location</td>
     <td class="queryParams1 padded top">
       <table>
 	<tr>
@@ -73,29 +73,29 @@ td.top { vertical-align: top; }
 	    <dl>
 	      <dt class="qfLabel"><A onclick='javascript:openUserhelpWindow("GENE_help.shtml#chromosome"); return false;' HREF="${helpPage}#chromosome">Chromosome(s)</A>: </dt>
 	      <dd>
-	        <select name="chromosome" id="chromosomeDropList" multiple="" size="5" class="grayBackground">
+	        <select name="chromosome" id="chromosomeDropList" multiple="" size="7" class="grayBackground">
 		    		<fewi:selectOptions items="${chromosomes}" values="${queryForm.chromosome}" />
 			</select>
 	      </dd>
 	    </dl>
 	  </td>
-	  <td class="padded top">
+	  <td class="padded top" style="padding-left:20px;">
+
 	    <dl>
-	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#cm_offset'); return false;" href="${helpPage}#cm_offset">cM Position</a>: </dt>
+	      <dt class="qfLabel">
+	      	<a onclick="javascript:openUserhelpWindow('GENE_help.shtml#cm_offset'); return false;" href="${helpPage}#cm_offset">
+	      	cM Position</a>:
+	      </dt>
 	      <dd>
 	        between
 	        <input name="cm" size="13" class="grayBackground" type="text" value="<c:out value="${queryForm.cm}"/>">
 	      </dd>
 	      <dd>
-	        <span class="example" style="margin-left:50px;">Example: "10.0-40.0"</span>
+	        <span class="example" style="margin-left:50px;">Example: 10.0-40.0</span>
 	      </dd>
-	    </dl>
-	  </td>
-	</tr>
-	<tr>
-	  <td class="padded top" colspan="2">
-	    <dl>
-	      <dt class="qfLabel"><a onclick="javascript:openUserhelpWindow('GENE_help.shtml#coordinates'); return false;" href="${helpPage}#coordinates">Genome Coordinates</a>: <span class="example">from ${genomeBuild}</span>
+	      <dt class="qfLabel" style="padding-top: 10px;">
+	      	<a onclick="javascript:openUserhelpWindow('GENE_help.shtml#coordinates'); return false;" href="${helpPage}#coordinates">
+	      	Genome Coordinates</a>: <span class="example">from ${genomeBuild}</span>
 	      </dt>
 	      <dd>
 	        between
@@ -105,8 +105,20 @@ td.top { vertical-align: top; }
       		</select>
 	      </dd>
 	      <dd>
-	      	<span class="example" style="margin-left:50px;">Example: "125.618-125.622" Mbp</span>
+	      	<span class="example" style="margin-left:80px;">
+	        Example:<br/>
+	        125.618-125.622 Mbp <br/>
+	        1-125618205 bp <br/>
+	        125618205 - 999999999bp
+	      	</span>
 	      </dd>
+
+	    </dl>
+	  </td>
+	</tr>
+	<tr>
+	  <td class="padded top" colspan="2" style="">
+	    <dl>
 	      <dt class="qfLabel">
 	        <a onclick="javascript:openUserhelpWindow('GENE_help.shtml#marker_range'); return false;" href="${helpPage}#marker_range">Marker range</a>:
 	      <span class="example">use current symbols</span>
@@ -117,7 +129,7 @@ td.top { vertical-align: top; }
 	        and <input name="endMarker" size="12" class="grayBackground" type="text" value="<c:out value="${queryForm.endMarker}"/>">
 	      </dd>
 	      <dd>
-	      	<span class="example" style="margin-left:50px;">Example: between "D19Mit32" and "Tbx10"</span>
+	      	<span class="example" style="margin-left:50px;">Example: between D19Mit32 and Tbx10</span>
 	      </dd>
 	    </dl>
 	  </td>
