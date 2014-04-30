@@ -105,7 +105,7 @@ td.top { vertical-align: top; }
       		</select>
 	      </dd>
 	      <dd>
-	      	<span class="example" style="margin-left:70px;">Example: </span><br/>
+	      	<span class="example" style="margin-left:70px;">Examples: </span><br/>
 	      	<span class="example" style="margin-left:70px;">125.618-125.622 Mbp </span><br/>
 	      	<span class="example" style="margin-left:70px;">1-125618205 bp </span><br/>
 	      	<span class="example" style="margin-left:70px;">125618205 - 999999999 bp</span><br/>
