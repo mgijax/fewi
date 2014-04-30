@@ -3,10 +3,9 @@ package unittest.fewi.searchUtil.entities;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SolrHdpGridClusterTest {
