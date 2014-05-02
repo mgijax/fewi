@@ -257,7 +257,16 @@
 		<li>Supports parentheses for grouping.</li>
 		<li>Supports Booleans AND, OR, NOT, AND NOT. Default is OR.</li>
 		<li>Returns only genes having annotated alleles in One Marker Genotypes (OMG) or "Simple" genotypes: 2-marker Conditional genotypes and 2-marker genotypes involving a Transgenic Reporter.
-		<ul><li>EXCLUDES markers for annotated alleles present only in Complex genotypes (unlike the Allele Query): genotypes having 3 or more markers.</li></ul></li>
+		<ul>
+			<li>EXCLUDES markers for annotated alleles present only in Complex genotypes (unlike the Allele Query): genotypes having 3 or more markers; genotypes having 2 markers that are not Conditional and do not contain a Transgenic Reporter.</li>
+			<li>EXCLUDES markers of slash alleles (unlike Allele Query) - examples:
+			<ul>
+				<li>MP:0004800 returns Lta/Tnf&lt;tm1Eug&gt; twice and also Lta/Tnf&lt;tm1Jods&gt; twice on the Allele Query, but neither Lta nor Tnf on the Marker Query.</li>
+				<li>MP:0004984 returns Bglap/Bglap2&lt;tm1Kry&gt; twice on the Allele Query, but neither Bglap nor Bglap2 on the Marker Query.</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
 		<li>Excludes Recombinase markers in Conditional genotypes.</li>
 		<li>Excludes Transgenic Reporter markers.</li> 
 		<li>Searches for matches in Mapping Experiment Notes when the Mapping Experiment type is TEXT-QTL only for markers of type QTL.</li>
