@@ -44,7 +44,7 @@
 </style>
 
 <div id="diseasePortalSearch">
-	
+
 <div id="hdpPageWrapper" >
 
   <div id="hdpQueryFormWrapper" >
@@ -129,8 +129,8 @@
        <div style='margin-top:6px; margin-left:20px;'>
         <span style="font-size:150%;">Upload a VCF File: <input id="locationsFileInput" type="file" name="file"></span>
         <img id="locationsFileHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
-		<div id="locationsFileHelp"> 
-			<div class="hd">VCF File Uploading Tips</div> 
+		<div id="locationsFileHelp">
+			<div class="hd">VCF File Uploading Tips</div>
 			<div class="bd">
 				<p>The file upload functionality will be expanded in coming releases. For now, the following restrictions are in place:</p>
 				<ul>
@@ -149,17 +149,16 @@
 					</li>
 					<li>Lines containing values other than "pass", ".", or no value (null) in column 7 are rejected</li>
 				</ul>
-				<p>If your file contains SNP IDs in column 3 and you wish to include those rows in the search, 
-					please edit the file to remove the IDs (leaving column 3 empty).
-					Save as a tab-delimited file in a format other than Unicode.
+				<p>The defaults filters remove known SNPs and low quality reads (final 2 bullet points above).
+				  If you do not want to use these filters, uncheck the “Apply Filters” box. Your file will then be reprocessed.
 				</p>
 				<p>If your file is larger than 25MB or has more than 100,000 lines, please edit the file to break it into smaller files.
 					Save as a tab-delimited file in a format other than Unicode.</p>
-			</div> 
-		</div> 
+			</div>
+		</div>
       </div>
       <div style='margin-left:220px; padding-top:5px;'>
-      
+
       	<label><input id="enableVcfFilter" name="enableVcfFilter" type="checkbox" value="true" class="organism" checked="checked"/>Apply filters</label>
       	<br/>
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
@@ -175,7 +174,7 @@
 	<div id="geneFileDiv" style="position:absolute; top:418px; left:243px;">
 		<form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
 			id="hiddenFileForm2" name="hiddenFileForm" target="hiddenfileform_if">
-			<span style="">Upload a File: <input id="geneFileInput" type="file" name="file"></span>
+			<span style="">Upload Genes File (.txt): <input id="geneFileInput" type="file" name="file"></span>
 			<div id="geneFileNotify"><c:if test="${not empty geneFileName}"><span >(Using cached file [${geneFileName}])</span></c:if></div>
 			<input type="hidden" name="field" value="geneFile">
 		    <input type="hidden" name="type" value="singleCol">
@@ -205,7 +204,7 @@ $(function(){
                         $("#"+mirrorId).prop("checked",true);
                 }
         });
-        
+
         // wire up the hidden enableVcfFilter fields
         $("#enableVcfFilter").change(function(e){
         	$("#enableVcfFilterHid").val($("#enableVcfFilter").prop("checked"));
