@@ -254,14 +254,14 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
 				<li>open the Allele query form</li>
 				<li>type <b concordion:set="#query">GF-1</b> in the nomenclature field and press the search button</li>
-				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">17</b> alleles, with symbol <b>Gata1</b> at the beginning, are returned, GF-1 is a synonym of gata1</li>
+				<li>verify that only <b concordion:assertEquals="getFirstMarkerSymbolByNomen(#query)">Gata1</b> alleles, with symbol <b>Gata1</b> at the beginning, are returned, GF-1 is a synonym of gata1</li>
 			</ol>
     		</li>
     		<li>Testing that searching by human synonym works
 			<ol>
 				<li>open the Alele query form</li>
 				<li>type <b concordion:set="#query">MRTL</b> in the nomenclature field and press the search button</li>
-				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">26</b> results are returned. MRTL is a human synonym of myc</li>
+				<li>verify that alleles of <b cc:assertSupersetOf="getMarkerSymbolsByNomen(#query)">Myc</b> are returned. MRTL is a human synonym of Myc</li>
 			</ol>    		
     		</li>
 			<li>Testing the search by wildcard option against symbols,names and synonyms
@@ -378,7 +378,7 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
 				<li>open the Allele query form</li>
 				<li>Type <b concordion:set="#query">"Dickie's Small Eye"</b> in the nomenclature field and press the search button</li>
-				<li>verify that only <b concordion:assertEquals="getAlleleCountByNomen(#query)">49</b> alleles are returned with the symbol <b>Pax6</b>in them</li>
+				<li>verify that <b cc:assertSupersetOf="getMarkerSymbolsByNomen(#query)">Pax6</b> alleles are returned.</li>
 			</ol>
 			</li>
 			<li>Testing that unusual characters within an Allele symbol doesn't break the query

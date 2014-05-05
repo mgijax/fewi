@@ -43,6 +43,13 @@ public class QueryFormNomenclatureTest extends BaseConcordionTest {
 		return new ArrayList<String>(symbols);
 	}
 	
+	public String getFirstMarkerSymbolByNomen(String nomen) throws Exception
+	{
+		List<String> symbols = getMarkerSymbolsByNomen(nomen);
+		if(symbols.size()>0) return symbols.get(0);
+		return "";
+	}
+	
 	public String getFirstAlleleSymbolByNomen(String nomen) throws Exception
 	{
 		List<String> symbols = getAlleleSymbolsByNomen(nomen);
