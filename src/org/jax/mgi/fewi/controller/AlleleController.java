@@ -95,7 +95,7 @@ public class AlleleController {
     // instance variables
     //--------------------//
 
-    private Logger logger = LoggerFactory.getLogger(AlleleController.class);
+    private final Logger logger = LoggerFactory.getLogger(AlleleController.class);
 
     @Autowired
     private IDLinker idLinker;
@@ -1055,14 +1055,6 @@ public class AlleleController {
 		    }
 		}
 
-		if (allele.getPhenotypeImages().size() > 0) {
-		    mav.addObject("imageCount",
-			"" + allele.getPhenotypeImages().size());
-
-		    mav.addObject("imageLabel", FormatHelper.plural (
-			allele.getPhenotypeImages().size(), "Image") );
-		}
-
 		if(allele.getMolecularImages().size() > 0)
 		{
 			// just pick the first one
@@ -1403,6 +1395,12 @@ public class AlleleController {
 		if (hasQtlExpts || (knockoutNote != null) ||
 			(derivationNote != null) || (generalNote != null)) {
 		    mav.addObject("hasNotes", "yes");
+		}
+
+		if(allele.getPhenotypeImages().size() > 0 && allele.getPrimaryImage()!=null)
+		{
+			mav.addObject("imageCount",allele.getPhenotypeImages().size());
+			mav.addObject("hasPrimaryPhenoImage",true);
 		}
 
 		return mav;

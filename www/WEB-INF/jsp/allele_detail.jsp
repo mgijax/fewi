@@ -189,8 +189,8 @@ td.right { text-align: right }
       <a name="nomenclature"></a>Nomenclature</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
-      <c:if test="${not empty imageCount}">
-        <table width="100%" border="0">
+      <c:if test="${hasPrimaryPhenoImage}">
+        <table width="100%" border="none">
 	<tr width="100%"><td style='width:70%; vertical-align:top'>
       </c:if>
       <table style='width: 100%'>
@@ -231,7 +231,7 @@ td.right { text-align: right }
 	</c:if>
       </table>
 
-      <c:if test="${not empty imageCount}">
+      <c:if test="${hasPrimaryPhenoImage}">
         </td><td class='padLR' style='vertical-align:center; width=*; text-align:left'>
 	<c:if test="${(not empty thumbnailImage) and (not empty thumbnailImage.caption)}">
 	  <span class='small' style='line-height:150%'>${thumbnailImage.caption}</span><p>
