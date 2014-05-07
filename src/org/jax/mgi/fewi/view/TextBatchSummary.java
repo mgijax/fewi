@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.view;
 
 import java.io.BufferedWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,8 @@ import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerTissueCount;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -25,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class TextBatchSummary extends AbstractTextView {
 	
 	private final Logger logger = LoggerFactory.getLogger(TextBatchSummary.class);
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void buildTextDocument(Map<String, Object> model, BufferedWriter writer,
@@ -37,6 +40,10 @@ public class TextBatchSummary extends AbstractTextView {
 		
 		BatchQueryForm queryForm = (BatchQueryForm)model.get("queryForm");
 		startTimeoutPeriod();
+		
+		// grab the session so we can control the hibernate cache by evicting objects that we are done using.
+		SessionFactory sessionFactory = (SessionFactory)model.get("sessionFactory");
+		Session session = sessionFactory.getCurrentSession();
 		
 		writer.write(this.genHeader(queryForm));
 		writer.write("\r\n");
@@ -70,6 +77,7 @@ public class TextBatchSummary extends AbstractTextView {
 						markerInfo.append(loc.getStrand() + "\t");
 						markerInfo.append(String.format("%.0f", loc.getStartCoordinate()) + "\t");
 						markerInfo.append(String.format("%.0f", loc.getEndCoordinate()));
+						evictCollection(session,m.getLocations());
 					} else {
 						markerInfo.append("UN\t\t");
 					}
@@ -125,6 +133,7 @@ public class TextBatchSummary extends AbstractTextView {
 						goIds.add(go.toString());
 					}
 		    		associations.add(goIds);
+					evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getMp()){
 					//logger.debug("mp");
 					List<String> mpIds = new ArrayList<String>();
@@ -136,6 +145,7 @@ public class TextBatchSummary extends AbstractTextView {
 						mpIds.add(mp.toString());
 					}
 		    		associations.add(mpIds);
+					evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getOmim()){
 					//logger.debug("omim");
 					List<String> omimIds = new ArrayList<String>();
@@ -147,6 +157,7 @@ public class TextBatchSummary extends AbstractTextView {
 	    				omimIds.add(omim.toString());
 					}
 		    		associations.add(omimIds);
+		    		evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getAllele()){
 					//logger.debug("allele");
 					List<String> alleles = new ArrayList<String>();
@@ -156,6 +167,7 @@ public class TextBatchSummary extends AbstractTextView {
 	    				allele.append(bma.getAlleleID() + "\t");
 	    				allele.append(bma.getAlleleSymbol());
 	    				alleles.add(allele.toString());
+	    				session.evict(bma);
 					}
 		    		associations.add(alleles);
 				} else if(queryForm.getExp()){
@@ -169,6 +181,7 @@ public class TextBatchSummary extends AbstractTextView {
 	    				exp.append(tissue.getDetectedResultCount() + "\t");
 	    				exp.append(tissue.getNotDetectedResultCount());
 						expression.add(exp.toString());
+						session.evict(tissue);
 					}
 		    		associations.add(expression);
 				} else if(queryForm.getRefsnp()){
@@ -176,6 +189,7 @@ public class TextBatchSummary extends AbstractTextView {
 					List<String> refSnpIds = new ArrayList<String>();					
         			for (BatchMarkerSnp snp : m.getBatchMarkerSnps()) {
         				refSnpIds.add(snp.getSnpID());
+            			session.evict(snp);
     				}
 		    		associations.add(refSnpIds);
 				} else if(queryForm.getRefseq()){
@@ -235,16 +249,34 @@ public class TextBatchSummary extends AbstractTextView {
 				combineResults = null;
 				// make sure that maker info is still printed out if there are no combined results
 				if( associations.size() == 0) writer.write(markerInfo.toString());	
+				
+				if(ids!=null)
+				{
+					evictCollection(session,ids);
+				}
 			}
 			else {
 				rownum++;
 				markerInfo.append("No associated gene");
 				markerInfo.append("\r\n");
 			}
-			id.setMarker(null);
+			if(m!=null) {
+				
+				session.evict(m);
+				id.setMarker(null);
+			}
+			session.evict(id);
 		}
 		
 		logger.info("finished processing batch text report");
+	}
+	
+	private void evictCollection(Session session, Collection<?> collection)
+	{
+		for(Object o : collection)
+		{
+			session.evict(o);
+		}
 	}
 	
 	private String genHeader(BatchQueryForm queryForm){

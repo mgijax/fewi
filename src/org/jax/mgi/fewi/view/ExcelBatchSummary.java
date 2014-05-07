@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -54,6 +57,10 @@ public class ExcelBatchSummary extends AbstractExcelView {
 		
 		row = sheet.createRow(rownum);
 
+		// grab the session so we can control the hibernate cache by evicting objects that we are done using.
+		SessionFactory sessionFactory = (SessionFactory)model.get("sessionFactory");
+		Session session = sessionFactory.getCurrentSession();
+				
 		for (BatchMarkerId id : results) {
 			associations = new ArrayList<List<List<String>>>();
 
@@ -81,6 +88,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 						row.createCell(col++).setCellValue(loc.getStrand());
 						row.createCell(col++).setCellValue(loc.getStartCoordinate());
 						row.createCell(col++).setCellValue(loc.getEndCoordinate());
+						evictCollection(session,m.getLocations());
 					} else {
 						row.createCell(col++).setCellValue("UN");
 						col += 3;
@@ -142,6 +150,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 	    				wrapper.add(goIds);
 					}		    		
 		    		associations.add(wrapper);
+					evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getMp()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> mpIds;
@@ -152,6 +161,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 						wrapper.add(mpIds);
 					}		    		
 		    		associations.add(wrapper);
+		    		evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getOmim()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> mpIds;
@@ -162,6 +172,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 	    				wrapper.add(mpIds);
 					}		
 		    		associations.add(wrapper);
+		    		evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getAllele()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> alleles;
@@ -170,6 +181,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 	    				alleles.add(bma.getAlleleID());
 	    				alleles.add(bma.getAlleleSymbol());
 	    				wrapper.add(alleles);
+	    				session.evict(bma);
 					}
 		    		associations.add(wrapper);
 				} else if(queryForm.getExp()){
@@ -182,6 +194,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
 	    				expression.add(String.valueOf(tissue.getDetectedResultCount()));
 	    				expression.add(String.valueOf(tissue.getNotDetectedResultCount()));
 	    				wrapper.add(expression);
+	    				session.evict(tissue);
 					}
 		    		associations.add(wrapper);
 				} else if(queryForm.getRefsnp()){
@@ -191,6 +204,7 @@ public class ExcelBatchSummary extends AbstractExcelView {
         				refSnpIds = new ArrayList<String>();
         				refSnpIds.add(snp.getSnpID());
         				wrapper.add(refSnpIds);
+        				session.evict(snp);
     				}
 		    		associations.add(wrapper);
 				} else if(queryForm.getRefseq()){
@@ -277,20 +291,32 @@ public class ExcelBatchSummary extends AbstractExcelView {
 					} 
 					workbook.setRepeatingRowsAndColumns(0,0,0,curRow,curRow + combineResults.size());
 					combineResults = null;
+					if(ids!=null)
+					{
+						evictCollection(session,ids);
+					}
 				}
 			} else {
 				row.createCell(col++).setCellValue("No associated gene");
 			}
+
+			if(m!=null) {
+				session.evict(m);
+				id.setMarker(null);
+			}
+			session.evict(id);
 		}
-		queryForm = null;
-		results = null;
-		
-		m = null;
-		ids = null;
-		associations = null;
 		
 		for (int i = 0; i < 20; i++) {
 			sheet.autoSizeColumn(i);	
+		}
+	}
+	
+	private void evictCollection(Session session, Collection<?> collection)
+	{
+		for(Object o : collection)
+		{
+			session.evict(o);
 		}
 	}
 	

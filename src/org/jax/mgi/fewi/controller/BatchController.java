@@ -17,6 +17,7 @@ import mgi.frontend.datamodel.BatchMarkerId;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -60,7 +61,11 @@ public class BatchController {
     private final Logger logger
       = LoggerFactory.getLogger(BatchController.class);
 
-    @Autowired
+
+	@Autowired
+	SessionFactory sessionFactory;
+	
+	@Autowired
     private BatchFinder batchFinder;
     
 
@@ -242,6 +247,7 @@ public class BatchController {
 			mav.addObject("totalCount", searchResults.getTotalCount());
 			mav.addObject("markerCount", searchResults.getResultSetMeta().getCount("marker"));		
 			mav.addObject("results", searchResults.getResultObjects());
+			mav.addObject("sessionFactory", sessionFactory);
 			return mav;
 				
 	}
