@@ -150,7 +150,7 @@
 					<li>Lines containing values other than "pass", ".", or no value (null) in column 7 are rejected</li>
 				</ul>
 				<p>The defaults filters remove known SNPs and low quality reads (final 2 bullet points above).
-				  If you do not want to use these filters, uncheck the “Apply Filters” box. Your file will then be reprocessed.
+				  If you do not want to use these filters, uncheck the "Apply Filters" box. Your file will then be reprocessed.
 				</p>
 				<p>If your file is larger than 25MB or has more than 100,000 lines, please edit the file to break it into smaller files.
 					Save as a tab-delimited file in a format other than Unicode.</p>
