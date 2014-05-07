@@ -1,3 +1,4 @@
+TAG: fewi-5-1-8-6
 TAG: fewi-5-1-8-5
 TAG: fewi-5-1-8-4
 TAG: fewi-5-1-8-3
@@ -7,6 +8,7 @@ DATE: 04/29/2014
 STAFF: pf
 CHANGES: 
 Tags for public testing and release
+1) minor tweak to HMDC VCF popup text
 
 TAG: fewi-5-1-7-5
 DATE: 03/03/2014
