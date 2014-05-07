@@ -55,13 +55,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
     <div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
         <h3>Manual tests</h3>
         <ol>
             <li>Selecting a term that is the same in multiple vocabularies should return only the genes annotated to the selected term
-            <p concordion:assertTrue="true">jeffc 8/10/2012</p> 
+            <p concordion:manual="true">jeffc 8/10/2012</p> 
             <ol>
                 <li>Select the term '<b>bleb - Function</b>'</li>
                 <li>Verify that 3 genes returned</li>
@@ -70,7 +70,7 @@
             </ol>
             </li>
             <li>Changing the text after selecting a term should blank the input box.
-            <p concordion:assertTrue="true">jeffc 8/10/2012</p> 
+            <p concordion:manual="true">jeffc 8/10/2012</p> 
             <ol>
                 <li>Select the term '<b>brachypodia</b>'</li> 
                 <li>Click in the box and type 'a'</li>

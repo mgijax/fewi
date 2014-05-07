@@ -76,13 +76,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 			<li>Sorting icons appear in the column headers for Gene, Assay Type and Reference.
-    		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+    		<p concordion:manual="true">jeffc 8/10/2012</p>
 	    		<ol>
 	                <li>Open GXD Query Form</li>
 	                <li>Search for <b>Afp</b></li>
@@ -92,7 +92,7 @@
 				</ol>
 			</li>
     		<li>Clicking "Assay Type" header performs multi-column sort:
-    		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+    		<p concordion:manual="true">jeffc 8/10/2012</p>
     			<ul>
     				<li>Assay Type
     				<ul>
@@ -113,7 +113,7 @@
 	    		</ol>
     		</li>
     		<li>Clicking "Assay Type" header a second time reverses the multi-column sort such that the entire results table is reversed (the bottom row becomes the top row, etc.).
-    		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+    		<p concordion:manual="true">jeffc 8/10/2012</p>
     		<ol>
     			<li>With the results set above still displayed, <b>navigate to the last page of results</b>.</li>
     			<li>Click the <b>"Assay Type"</b> header</li>
@@ -122,7 +122,7 @@
     		</ol>
     		</li>
     		<li>Clicking "Reference" header performs multi-column sort:
-    		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+    		<p concordion:manual="true">jeffc 8/10/2012</p>
     			<ul>
     				<li>Reference
     				<ul>
@@ -173,7 +173,7 @@
 	    		</ol>
     		</li>
     		<li>Clicking "Gene" header returns to default sort:
-    		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+    		<p concordion:manual="true">jeffc 8/10/2012</p>
 	    		<ol>
 	                <li>Open GXD Query Form</li>
 	                <li>Search for <b>Pax*</b> in the gene field <i>(Necessary for testing multiple assay types in same gene.)</i></li>
@@ -197,7 +197,7 @@
 	    		</ol>
     		</li>
     		<li>Clicking "Assay Details" column header does not resort the data.
-    		<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+    		<p concordion:manual="true">jeffc 8/10/2012</p>
 	    		<ol>
 	                <li>Open GXD Query Form</li>
 	                <li>Search for <b>Pax2</b></li>
@@ -207,7 +207,7 @@
 	    		</ol>
     		</li>
     	    <li>Verify proper sort of assay type when searching an anatomy term
-	    	<p concordion:assertTrue="true">jeffc 8/10/2012</p>		
+	    	<p concordion:manual="true">jeffc 8/10/2012</p>		
 	    		 <ol>
 	                <li>Open GXD Query Form</li>
 	                <li>Search for <b>limb</b> in the Anatomical Structures field</li>

@@ -50,13 +50,13 @@
     <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>The Reference QF Journals autocomplete should list all journals in our database
- 			<p concordion:assertTrue="true">passed 2013-May-03 klf</p>
+ 			<p concordion:manual="true">passed 2013-May-03 klf</p>
     		<ol>
                 <li>Navigate to the Reference Query Form.</li>
                 <li>In the Journals field, type <b>plos</b>. Verify that at least the following journals are displayed in the autocomplete (may also be others):
@@ -110,7 +110,7 @@
     		</li>
     		<li>The Journals QF should display a given journal in the autocomplete only once (i.e., autocomplete should not be case-sensitive).<br/>
     		Note: this is a manual entry into a translation dictionary. If more journals are identified, they will need to be added to that dictionary.
- 			<p concordion:assertTrue="true">passed 2013-May-03 klf</p>
+ 			<p concordion:manual="true">passed 2013-May-03 klf</p>
     		<ol>
     			<li>In the Journals field, type the indicated input. Verify that the following journals are displayed or not, as indicated:
     			<table>
@@ -124,7 +124,7 @@
     		</ol>
     		</li>
     		<li>The GXD Literature QF Journals autocomplete should list only journals which have GXD data
- 			<p concordion:assertTrue="true">passed 2013-May-03 klf</p>
+ 			<p concordion:manual="true">passed 2013-May-03 klf</p>
     		<ol>
                 <li>In the Journals field, type <b>alcohol</b>. Verify that the following journals are NOT displayed in the autocomplete:
                 <table>

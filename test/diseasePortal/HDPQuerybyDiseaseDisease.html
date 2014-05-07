@@ -75,8 +75,8 @@ tr.gray td {background-color:#EEEEEE;}
     <h2>Tests</h2>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual and Automated tests</h3>
 		<ol>
@@ -319,7 +319,7 @@ tr.gray td {background-color:#EEEEEE;}
     			</ol>
     			
     		<li>All diseases are returned when searching with just a stop word (sto58).
-    		<p concordion:assertTrue="true">klf 11/12/2013</p>
+    		<p concordion:manual="true">klf 11/12/2013</p>
     		<ol>
                 <li>Query for <b concordion:set="#disease">disease</b></li>
                 <li>Verify that all 7,000 plus diseases are returned.</li>
@@ -327,7 +327,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Correct diseases are returned when searching with a stop word and a disease term(sto58).
-    		<p concordion:assertTrue="true">klf 11/12/2013</p>
+    		<p concordion:manual="true">klf 11/12/2013</p>
     		<ol>
                 <li>Query for <b concordion:set="#disease">parkinson disease</b></li>
                 <li>Verify that 23 diseases are returned, all connected with parkinson.</li>

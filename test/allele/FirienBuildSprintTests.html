@@ -73,14 +73,14 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p>From sto85, Alleles that have transmission status of cell line but have IMSR links get changed to a transmission state of Germ line</p>
 		<ol>
     		<li>Alleles having genotypes with MP annotations loaded via the HTMP loader have their Germline Transmission display the text "Earliest citation of germline transmission"
- 			<p concordion:assertTrue="true">jeffc 04/29/2014</p> 
+ 			<p concordion:manual="true">jeffc 04/29/2014</p> 
     		<ol>
                 <li>Navigate to the Allele Detail Page for  Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
                 <li>Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: </b></li>
@@ -90,10 +90,10 @@
     		<i>Example: Earliest citation of germline transmission: J:175295</i> 
     		<ol>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Acap3&lt;tm1a(EUCOMM)Hmgu&gt;, MGI:4436565 (previously had germ line transmission status = cell line).</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:165965</b>.</li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:165965</b>.</li>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Adam17&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4434074 (previously had germ line transmission status = cell line).</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:175295</b>.</li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:175295</b>.</li>
                 <li>Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:175295</b>.</li>
     		</ol>
     		</li>
@@ -101,35 +101,35 @@
  			<p>WI displays existing data for the following alleles. They should not change.</p>
     		<ol>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for  Apoe&lt;tm1Unc&gt;, MGI:1857129.</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:1050</b>.</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:1050</b>.</li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:1050</b>.</li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - Verify clicking the link opens the page at <b>http://www.informatics.jax.org/reference/J:1050</b>.</li>
                 <li>Navigate to the Allele Detail Page for B9d1&lt;tm1a(EUCOMM)Wtsi&gt;, MGI:4432284</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - <b>Earliest citation of germline transmission: J:178421.</b></li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - <b>Earliest citation of germline transmission: J:178421.</b></li>
             </ol>
             <p>B. Alleles with the transmission status "Not Applicable" do not change.</p>
             <ol>
                 <li><span class="regressHi">Regress</span> Navigate to the Allele Detail Page for Ankrd11&lt;Yod&gt;</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
-                <li><span concordion:assertTrue="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:manual="true">jeffc 04/29/2014</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
 <!--                 <li>Navigate to the Allele Detail Page for Cdh23&lt;v&gt;, MGI:1856228.</li>
-                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
-                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li><span concordion:manual="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:manual="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
                 <li>Navigate to the Allele Detail Page for Ctnnb1&lt;Bfc&gt;, MGI:2656734.</li>
-                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
-                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li><span concordion:manual="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:manual="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
                 <li>Navigate to the Allele Detail Page for Mecom&lt;Jbo&gt;, MGI:2158381.</li>
-                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
-                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li><span concordion:manual="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:manual="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
                 <li>Navigate to the Allele Detail Page for Myo6&lt;sv&gt;, MGI:1856555.</li>
-                <li><span concordion:assertTrue="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
-                <li><span concordion:assertTrue="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
+                <li><span concordion:manual="false">new</span> - In the EI, verify the transmission status is <b>Not Applicable</b> and <b>no Transmission reference exists</b>.</li>
+                <li><span concordion:manual="false">new</span> - Verify the WI field "Germline Transmission" <b>does not appear</b> and the EI says "Not Applicable" .</li>
  -->
     		</ol>
     		<p>C. Alleles with the transmission status "Chimeric" do change.</p>
     		<ol>
     			<li>Lori set Zfp715&lt;tm1a(EUCOMM)Hmgu&gt; to have status "Chimeric". (KLF verified around noon on 12/3/2012.) </li> 
-    			<li><span concordion:assertTrue="true">klf 13:39 12/3/2012.</span> - Verify load changes it to "Germline".</li>
-    			<li><span concordion:assertTrue="true">passed - kstone 2012-12-11</span> - Navigate to Allele Detail Page and verify WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li> 
+    			<li><span concordion:manual="true">klf 13:39 12/3/2012.</span> - Verify load changes it to "Germline".</li>
+    			<li><span concordion:manual="true">passed - kstone 2012-12-11</span> - Navigate to Allele Detail Page and verify WI field "Germline Transmission" displays <b>Earliest citation of germline transmission: J:165965</b>.</li> 
     		</ol>
     		<p>D. Alleles with the transmission status "Not Specified" do not change.</p>
     		<ol>
@@ -137,7 +137,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Collection appears in Mutation Origin ribbon on Allele Detail Pages.(sto17)
- 			<p concordion:assertTrue="true">jeffc 04/29/2014</p>
+ 			<p concordion:manual="true">jeffc 04/29/2014</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <b>0610037L13Rik&lt;tm1(KOMP)Vlcg&gt;</b> (MGI:3847523)</li>
                 <li>Verify that the Collection value <b>KOMP-Regeneron</b> appears as the last item in the Mutation Origin ribbon.</li>
@@ -153,7 +153,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.(sto85)
- 			<p concordion:assertTrue="true">jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">jeffc 04/30/2014</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <b>Pax6&lt;2Neu&gt;</b> (MGI:2156812)</li>
                 <li>Verify that <b>no Collection value</b> appears in the Mutation Origin ribbon.</li>
@@ -163,7 +163,7 @@
     		</li>
 
     		<li>GO Graphs appear properly. (from sto110, E5: Remove allele sets from schema)
- 			<p concordion:assertTrue="true">jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">jeffc 04/30/2014</p>
     		<ol>
 
                 <li>Navigate to the Pax6 Marker Detail Page.</li>
@@ -174,7 +174,7 @@
     		</li>
     		<li><span class="regressHi">Regress</span> Allele subtypes appear in Mutation Description ribbon on Allele Detail Pages 
     			as a comma separated list following the allele type. (sto24)<br/> The types but not the subtypes are supported on Prod. (sto105)
-    			<p concordion:assertTrue="true">jeffc 04/30/2014</p> 
+    			<p concordion:manual="true">jeffc 04/30/2014</p> 
     		<ol>
                 <li>Navigate to the Allele Detail page for Kdr&lt;tm1Jrt&gt; (MGI:1857168) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1857168">link</a>)</li>
                 <li>Verify that the subtype value <b>(Null/knockout, Reporter)</b> appears after Allele Type <b>Targeted</b> in the Mutation Description ribbon.</li>
@@ -187,7 +187,7 @@
 
     		<li><span class="regressHi">Regress</span> Allele Subtypes do not appear when the allele is not assigned to a subtype. (sto24)<br/>
     		Also true on Prod. (sto105)
- 			<p concordion:assertTrue="true">passed - jeffc 04/30/2014</p> 
+ 			<p concordion:manual="true">passed - jeffc 04/30/2014</p> 
     		<ol>
                 <li>Navigate to the Allele Detail page for Lith20&lt;SM/J&gt; (MGI:3577251) (<a href="http://cardolan.informatics.jax.org/allele/MGI:3577251">link</a>)</li>
                 <li>Verify that <b>no subtype value</b> appears in the Mutation Description ribbon following the Allele Type: QTL.</li>
@@ -196,7 +196,7 @@
     		</ol>
     		</li>
     		<li>The correct image/caption is displayed to the left of the molecular image in the molecular description ribbon when more than one thumbnail exists for an allele.  (sto156)
- 			<p concordion:assertTrue="true">passed - jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed - jeffc 04/30/2014</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for Dock2&lt;mu&gt; (MGI:5319388) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5319388">link</a>)</li>
                 <li>Verify that to the left of the molecular image is displayed the thumbnail caption</li>
@@ -205,7 +205,7 @@
     		</ol>
     		</li>
     		<li>Verify these Alleles have the Australian Phenome Facility link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto198)
- 			<p concordion:assertTrue="true">passed. -klf 05/02/2014</p>
+ 			<p concordion:manual="true">passed. -klf 05/02/2014</p>
     		<ol>
                 <li>Navigate to these allele detail pages.</li>
                 <li>Verify the Australian Phenome Facility link exists and works:
@@ -218,7 +218,7 @@
     		</ol>
     		</li>    		
     		<li>Verify that allele subtypes are displayed in the category column after the generated type (if there are subtypes)
- 			<p concordion:assertTrue="true">passed - jeffc 04/30/2014</p> (sto24)
+ 			<p concordion:manual="true">passed - jeffc 04/30/2014</p> (sto24)
     		<ol>
     			<li>Do a nomenclature query for <a href="http://cardolan.informatics.jax.org/allele/summary?nomen=grhpr">Grhpr</a></li>
     			<li>Verify that allele <b>Grhpr&lt;Gt(OST383093)Lex&gt;</b> has only <b>Gene trapped</b> in the Category column. <i>It has no subtypes or transmission status display.</i></li>
@@ -228,7 +228,7 @@
     		</ol>
     		</li>    		
 			<li>The allele report can be downloaded in tab-delimited format.(sto41)
- 			<p concordion:assertTrue="true">passed. jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed. jeffc 04/30/2014</p>
     		<ol>
                 <li>Submit a query for <b>chrX</b>.</li>
                 <li>Click the button labeled "Text File".</li>
@@ -378,7 +378,7 @@
 			</li>
 
 			<li>The allele report can be downloaded in Excel format.(sto41)
- 			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
     		<ol>
                 <li>Submit a query for <b>chrX</b>.</li>
                 <li>Click the button labeled "Excel File".</li>
@@ -527,7 +527,7 @@
     		</ol>			
 			</li>
 			<li>Verify a query by coordinates returns the same alleles as on Public(sto32)(sto122)
- 			<p concordion:assertTrue="true">passed -jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed -jeffc 04/30/2014</p>
     		<ol>
                 <li>Submit a query for <b>chr12, between 56691767-56712822 bp</b></li>
                 <li>Verify <b>19 alleles</b> appear for the markers Eccp, Pax9, Slc25a21, Splwt1, Tbqt3, and Tmc1m3.</li>
@@ -535,7 +535,7 @@
 			</li>
 
     		<li>Searching by chromosome returns the correct alleles now we have moved it to the FeWI (sto38)
- 			<p concordion:assertTrue="true">passed -jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed -jeffc 04/30/2014</p>
     		<table>
 	    		<tr><th>Chromosome</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
 	    		<tr><td>18</td><td>11089 </td><td>11100</td></tr>
@@ -546,7 +546,7 @@
     		</table>
     		</li>
     		<li>Seaching with cm Position returns the correct alleles. cM values may be separated by a space or a dash. (revised for sto81)
- 			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
     		<table>
 	    		<tr><th>Chromosome</th><th>cM</th><th>Python Result<br/><a href="http://cardolan.informatics.jax.org/searches/allele_form.shtml">query form</a></th><th>FEWI Result<br/><a href="http://cardolan.informatics.jax.org/allele/">query form</a></th></tr>
 	    		<tr><td>19</td><td>50 - 75</td><td>507</td><td>507</td></tr>
@@ -555,7 +555,7 @@
     		</li>
     		
     		<li>Searching with Genome Coordinates returns the correct alleles. Genome coordinate values may be separated by a space or a dash. (revised for sto81)
- 			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
     		<table>
 	    		<tr><th>Chromosome</th><th>Coordinates</th><th></th><th>Python Result</th><th>FEWI Result</th></tr>
 	    		<tr><td>3</td><td>(&gt;=) 125618205<br/>125618205-999999999</td><td>bp</td><td>4330</td><td>4330</td></tr>
@@ -568,7 +568,7 @@
 			</li>
 
 			<li>Searching by MP or OMIM ID excludes alleles associated with "normal" and "Not" annotations. (sto35)
-			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
     		<table>
 	    		<tr>
 	    			<th>ID</th>
@@ -605,7 +605,7 @@
 
     		<li>Querying by Phenotype returns alleles annotated to the term via any kind of genotype (OMG, Conditional, or Non-Conditional Complex).<br/>
     		The affected systems column displays a comma separated list of systems for all OMG or Conditional genotypes of each allele, but not systems associated with Non-Conditional Complex genotypes. (sto115)  
- 			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>  
+ 			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>  
     		<ol>
     			<li>
     			<table>
@@ -662,7 +662,7 @@
     		</ol>
     		</li>
    		<li>Verify that MP and OMIM annotations associated with <b>Complex</b> (multiple allele pair), not conditionally-targeted genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.(sto32) (updated for sto115)
-    		<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+    		<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
     		<ol>
                 <li>For the allele <b>Kras<sup>tm1Mok</sup></b>, do not display MP header terms associated with complex (multi-gene) genotypes unless they are ALSO associated with a simple or a conditional genotype.<br/>
                 Do not display:
@@ -704,14 +704,14 @@
     		</li>
 
     		<li>Verify that MP and OMIM associations with <b>Compound</b> genotypes are suppressed in the display, but that searching for such annotations <b>still does return</b> the allele.(sto32)  (updated for sto115)
-    		<p concordion:assertTrue="true">passed -jeffc 04/30/2014</p>
+    		<p concordion:manual="true">passed -jeffc 04/30/2014</p>
     		<ol>
                 <li>For the allele <b>Del(2)49Ddu</b>, verify that <b>no data appears</b> in the columns for Affected Analytical Systems or Similar Human Diseases</li>
     		</ol>
     		</li>
     		
 			<li>Searching by MP or OMIM ID includes alleles from appropriate genotypes. (sto35) (updated for sto115)
-			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
     		<table>
 	    		<tr>
 	    			<th>ID</th>
@@ -794,7 +794,7 @@
 			</li>
 
 			<li>Searching by MP or OMIM alternate ID includes alleles from appropriate genotypes. (sto35) 
-			(updated for sto115)<p concordion:assertTrue="true">passed -jeffc 04/30/2014</p>
+			(updated for sto115)<p concordion:manual="true">passed -jeffc 04/30/2014</p>
     		<table>
 	    		<tr>
 	    			<th>Alternate ID</th>
@@ -830,7 +830,7 @@
 
 			<li>Searching by MP or OMIM terms  or synonyms returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)<br/>
 				(Note: includes tests for plain text, text including non-alphanumeric characters, and text strings that include non-Boolean &quot;and&quot;, &quot;or&quot;, and &quot;not&quot; as plain words.)
-			<p concordion:assertTrue="true">passed -jeffc 04/30/2014</p>
+			<p concordion:manual="true">passed -jeffc 04/30/2014</p>
     		<table>
 	    		<tr>
 	    			<th>MP or OMIM Term or Synonym Text</th>
@@ -1009,7 +1009,7 @@
     		</table>
 			</li>
 			<li>Searching by phenotype can match text in an allele's "General" note. (sto114)
-			<p concordion:assertTrue="true">passed - jeffc 04/30/2014</p>
+			<p concordion:manual="true">passed - jeffc 04/30/2014</p>
 				<ul>
 					<li>Do a phenotype/disease query for <a href="http://cardolan.informatics.jax.org/allele/summary?phenotype=S74469"><b>S74469</b></a></li>
 					<li>Verify that <b>A&lt;iy&gt;</b> is returned. (<i>Has general note "Genbank ID for this mutation: S74469"</i>)</li>
@@ -1017,7 +1017,7 @@
 			</li>
 
 			<li>Searching by combinations of MP or OMIM terms, synonyms or IDs using Booleans returns alleles associated with genotypes annotated to the matching term and its child terms. (sto35)
-			(updated for sto115 and sto181)<p concordion:assertTrue="true">passed -jeffc 04/30/2014</p>
+			(updated for sto115 and sto181)<p concordion:manual="true">passed -jeffc 04/30/2014</p>
     		<table>
 	    		<tr>
 	    			<th>MP or OMIM Term<br/>
@@ -1178,7 +1178,7 @@
 				(Note: This should be the same Stop Words list we are using for the Quick Search.  See <a href="http://prodwww.informatics.jax.org/wiki/index.php/TR:7754_Requirements">Search Tool Requirements</a> wiki page.<br/>
 				This list is:  <i>a, an, and, are, as, be, but, if, is, it, such, that, the, their, then, there, these, they, this, was, will</i>.<br/>
 				Excluded from the list, therefore, treated as words are: <i>at, by, for, in, into, no, not, of, on, or, to, with</i>.)
-			<p concordion:assertTrue="true">passed.  Odd behavior with commas, but results seem ok.  -klf 05/02/2014</p>
+			<p concordion:manual="true">passed.  Odd behavior with commas, but results seem ok.  -klf 05/02/2014</p>
 			<table>
 			<tr>
 				<th>Input</th>
@@ -1234,7 +1234,7 @@
 			</li>			
 
 			<li>The "Anatomical Systems Affected by Phenotypes" pop-up tool populates the Pheno/Disease input field with the MP IDs of the selected systems.
-			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
 			<table>
 			<tr>
 				<th>Selected Text</th>
@@ -1276,7 +1276,7 @@
 			</li>
 
 			<li>The "Anatomical Systems Affected by Phenotypes" pop-up tool adds the selected MP IDs to whatever text is already in the Pheno/Disease input field
-			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
 			<ol>
 				<li>Enter some text in the Phenotypes/Diseases form input text area.</li>
 				<li>Open the "Anatomical Systems Affected by Phenotypes" pop-up tool.</li>
@@ -1286,7 +1286,7 @@
 			</li>
 
     		<li>When allele is annotated to term "Normal phenotype"   or its children in OMG or Conditional genotype, and no other terms in ANY genotypes, display "no abnormal phenotype observed". (sto115)
-			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>  
+			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>  
 			<ol>
 				<li>From the Allele Query Form, submit a Nomenclature query for the items listed below. Verify that for the listed allele, the "Abnormal Phenotypes Reported in these Systems" column displays the listed text.
 				<table>
@@ -1363,7 +1363,7 @@
     		</li>
     		
     		<li>When allele is annotated to term "No phenotypic analysis"  in OMG or Conditional genotype, and no other terms in ANY genotypes, display "No Phenotypic Analysis". (sto115)
- 			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>  
+ 			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>  
 			<ol>
 				<li>From the Allele Query Form, submit a Nomenclature query for the items listed below. Verify that for the listed allele, the "Abnormal Phenotypes Reported in these Systems" column displays the listed text.
 				<table>
@@ -1433,7 +1433,7 @@
 			</ol>
     		</li>
     		<li>Verify that disease column excludes "Not" annotations when there are no other annotations for a disease term for a given allele (sto32) (updated for sto115)
- 			<p concordion:assertTrue="true">passed. -jeffc 04/30/2014</p>
+ 			<p concordion:manual="true">passed. -jeffc 04/30/2014</p>
     		<ol>
                 <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> displays <b>I<b>chthyosis and Male Hypogonadism 308200, </b>Immunodysregulation, Polyendocrinopathy, and Enteropathy, X-Linked; 304790, Wiskott-Aldrich Syndrome; WAS 301000</b> under Human Disease Models.</li>
                 <li>Verify that the row for allele <b>Foxp3<sup>sf</sup></b> DOES NOT display <b>Ichthyosis, X-Linked; XLI OMIM ID: 308100</b>  under Human Disease Models.</li>
@@ -1441,7 +1441,7 @@
             </ol>
     		</li>
     		<li>Verify you can query by a single collection and multiple collections(sto18)
-    		<p concordion:assertTrue="true">jeffc 04/30/2014</p>
+    		<p concordion:manual="true">jeffc 04/30/2014</p>
     		<ol>
     			<li>Open the Allele query form</li>
     			<li>Select the collection <b>Australian PhenomeBank</b> and click the search</li>
@@ -1451,7 +1451,7 @@
     		</ol>
     		</li>
    		<li><span class="regressHi">Regress</span> Collection appears in Allele Information ribbon on Recombinase Specificity Pages, between Molecular Description and Find Mice.
- 			<p concordion:assertTrue="true">passed. -klf 04/30/2014</p> (sto17)
+ 			<p concordion:manual="true">passed. -klf 04/30/2014</p> (sto17)
     		<ol>
                 <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Dbx1&lt;tm1.1(cre)Mull&gt;</b> (MGI:5014205)</li>
                 <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b>  appears in the correct place.</li>
@@ -1461,7 +1461,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.
- 			<p concordion:assertTrue="true">passed. -klf 04/30/2014</p> (sto17)
+ 			<p concordion:manual="true">passed. -klf 04/30/2014</p> (sto17)
     		<ol>
                 <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Hprt&lt;tm1(cre)Mnn&gt;</b> (MGI:2181632)</li>
                 <li>Verify that <b>no Collection value</b> appears.</li>
@@ -1470,7 +1470,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Allele Subtypes appear in Allele Information ribbon after Type as comma delimited list.
- 			<p concordion:assertTrue="true">passed - klf 04/30/2014</p> (sto24)
+ 			<p concordion:manual="true">passed - klf 04/30/2014</p> (sto24)
     		<ol>
                 <li>Navigate to a Recombinase Specificity page (there may be more than one) for 
                 	<a href="http://cardolan.informatics.jax.org//recombinase/specificity?id=MGI:4420223&amp;systemKey=4856343">Gad2&lt;tm2(cre)Zjh&gt;</a></li>
@@ -1479,7 +1479,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Image link URLs appear on the Recombinase Activity Detail page
- 			<p concordion:assertTrue="true">passed - klf 04/30/2014 </p>
+ 			<p concordion:manual="true">passed - klf 04/30/2014 </p>
  			<p>Note: this test requires fake data.</p>
     		<ol>
                 <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
@@ -1489,7 +1489,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Image link URLs open the linked resource in a new window
- 			<p concordion:assertTrue="true">Randy verified - says not needed - klf 04/30/2014</p>
+ 			<p concordion:manual="true">Randy verified - says not needed - klf 04/30/2014</p>
     		<ol>
                 <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
                 <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the Images ribbon for Fig. Calb2 Brain (dorsal) Adult, and opens in a new window.</li>
@@ -1502,7 +1502,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The \Link(...) markup does not affect the display of images on GXD Expression Detail WI pages.
- 			<p concordion:assertTrue="true">randy verified - says not needed - klf 4/30/2014</p>
+ 			<p concordion:manual="true">randy verified - says not needed - klf 4/30/2014</p>
     		<ol>
                 <li>Open the record for image MGI:5310731 (in situ reporter (knock-in) assay used by both Cre and GXD for Six1&lt;tm1(cre,ALPP)Xli&gt;)</li>
                 <li>Enter \Link(https://www.google.com/|Test Link|)  </li>
@@ -1520,7 +1520,7 @@
     		</ol>
     		</li>
     		<li>Autocomplete exists and displays correct information
-    		<p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+    		<p concordion:manual="true">passed - klf 04/30/2014</p>
     		<ol>
                 <li>Open <a href="http://cardolan.informatics.jax.org/diseasePortal">disease portal query form</a> </li>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
@@ -1539,7 +1539,7 @@
             </ol>
             </li>
             <li>Autocomplete populates box with IDs
-            <p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+            <p concordion:manual="true">passed - klf 04/30/2014</p>
     		<ol>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
                 <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
@@ -1550,7 +1550,7 @@
             </ol>
             </li>
             <li>Autocomplete supports multiples
-            <p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+            <p concordion:manual="true">passed - klf 04/30/2014</p>
     		<ol>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
                 <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
@@ -1561,7 +1561,7 @@
             </ol>
             </li>
             <li>"You searched for" section displays the searched IDs as well as the terms they map to
-           <p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+           <p concordion:manual="true">passed - klf 04/30/2014</p>
     		<ol>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
                 <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
@@ -1577,7 +1577,7 @@
             </ol> 
             </li>   		
     		<li>Confirm Hovering over a Gene symbol on the Genes summary, displays text of Gene's full name and it's feature type(sto132)
-    		<p concordion:assertTrue="true">passed - duplicate of 46? klf 04/30/2014</p>
+    		<p concordion:manual="true">passed - duplicate of 46? klf 04/30/2014</p>
     		<ol>
                 <li>Query for marker <b>pax*</b></li>
                 <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
@@ -1597,7 +1597,7 @@
     		</ol>
     		</li>
 			<li>Confirm on the HDMC Disease tab that numbers in the Mouse Models column are links(sto128)
-    		<p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+    		<p concordion:manual="true">passed - klf 04/30/2014</p>
     		<ol>
                 <li>Query for marker <b>Actb</b> on the Human Disease and Mouse Model query form</li>
                 <li>Click on the Diseases tab and locate the Mouse Models column</li>
@@ -1605,7 +1605,7 @@
     		</ol>
     		</li>
 		    <li>Confirm Hovering over a Gene symbol on the Grid summary, displays text of Gene's full name and it's feature type(sto132)
-    		<p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+    		<p concordion:manual="true">passed - klf 04/30/2014</p>
     		<ol>
                 <li>Query for marker <b>pax*</b></li>
                 <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
@@ -1625,7 +1625,7 @@
     		</ol>
     		</li>
 			<li>A link to IMSR for all strains or lines available is displayed for each mouse marker in the popup that has such a link on its Allele Detail Page.
- 			(sto136)<p concordion:assertTrue="true">passed. -klf 04/30/2014</p> 
+ 			(sto136)<p concordion:manual="true">passed. -klf 04/30/2014</p> 
  			<ol>
  				<li>On the HMDC Portal, query for genes <b>h2-d1,Hspa1a,vpreb1,H3f3a,Olfr160,hamp2,clec10a,mgl2</b>.</li>
  				<li>From the Grid Tab, click the cell in the row for Human HLA-B and the column for hematopoietic system.</li>
@@ -1642,7 +1642,7 @@
  			</ol>
 			</li>
     		<li>Verify these markers have the APF link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
- 			<p concordion:assertTrue="true">passed - klf 05/02/2014</p>
+ 			<p concordion:manual="true">passed - klf 05/02/2014</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the APF link exists and works (link will look like this: <b>Incidental mutations (data from APF )</b>):
@@ -1660,7 +1660,7 @@
     		</ol>
     		</li>
             <li>For alleles, the "Type" column from a Quick Search displays the modified text from above, based on the allele's Generation Type. The allele's Subtypes (Attributes), if any, are ignored.
-            <p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+            <p concordion:manual="true">passed - klf 04/30/2014</p>
             <ol>
                 <li>Open the MGI main page and enter the text indicated in the table below into the Quick Search box, Press search</li>
                 <li>When the results display click the <b>Show all ..</b> link</li>
@@ -1777,7 +1777,7 @@
             </li>
 
 			<li>Expression data is displayed associated with EMAPA/EMAPS terms in the Quick Search.
-            <p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+            <p concordion:manual="true">passed - klf 04/30/2014</p>
             <p>Some example terms which have changed between the AD and EMAPA/EMAPS:</p>
             <table>
 						<tr>
@@ -1836,7 +1836,7 @@
 			</li>
 
 			<li>Quick Search data is aligned with other data.
-            <p concordion:assertTrue="true">passed - klf 04/30/2014</p>
+            <p concordion:manual="true">passed - klf 04/30/2014</p>
 			<ol>
 				<li>Quick Search: query for marker <b>Gm7092</b>.</li>
 				<li>Verify quick search results show marker symbol <b>Erich4</b> (<a href="http://cardolan.informatics.jax.org/marker/MGI:3646269">MGI:3646269</a>).</li>

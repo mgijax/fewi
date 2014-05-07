@@ -60,13 +60,13 @@
     <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> Collection appears in Mutation Origin ribbon on Allele Detail Pages.
- 			<p concordion:assertTrue="true">passed. klf 2013-12-31</p>
+ 			<p concordion:manual="true">passed. klf 2013-12-31</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <b>0610037L13Rik&lt;tm1(KOMP)Vlcg&gt;</b> (MGI:3847523)</li>
                 <li>Verify that the Collection value <b>KOMP-Regeneron</b> appears as the last item in the Mutation Origin ribbon.</li>
@@ -82,7 +82,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.
- 			<p concordion:assertTrue="true">passed. klf 2013-12-31</p>
+ 			<p concordion:manual="true">passed. klf 2013-12-31</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for <b>Pax6&lt;2Neu&gt;</b> (MGI:2156812)</li>
                 <li>Verify that <b>no Collection value</b> appears in the Mutation Origin ribbon.</li>
@@ -92,7 +92,7 @@
     		</li>
 
 <!--     		<li>Verify that alleles with IMSR links there were transmission type Cell line are now reported as Germline
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:manual="false">new test</p>
     		<ol>
 				<table>
 				<tr><th>MGI ID</th><th>Symbol</th><th>Transmission</th></tr>

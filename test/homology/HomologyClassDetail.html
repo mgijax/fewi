@@ -70,8 +70,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p><span style="background-color:#FFFF00;">NOTE:</span> Some of these tests were set up to run automated in Dec. 2012.  I added manual verifications in case the automation fails. We don't really need both. --klf 6/7/13.</p>
@@ -82,7 +82,7 @@
 
 		<ol>   		
     		<li>Marker Detail page displays the new link when there's an associated homologene cluster.
-    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol>
     			<li>Verify that markers C4a and C4b link to homology class 36030.</li>
     			<li>Verify that markers Slx and Slxl1 and Gm4836 link to homology class 86036</li>	
@@ -91,13 +91,13 @@
        		</ol></li>
     		
     		<li>Marker Detail page no longer displays old link or list of species.
-    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol>
     			<li>Verify that markers C4a and C4b no longer have old link or list of species</li>
        		</ol>
        		</li>
        		<li>Verify homology class <b concordion:set="#clusterId">133481</b> containing no mouse markers is returned. 
-    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
     		    <li>Verify Homologene id is <b concordion:assertEquals="#hCluster.primaryID">133481</b>.</li>
     			<li>Verify count of <b concordion:set="#forganism">mouse</b> genes in class is 
@@ -105,21 +105,21 @@
     		</ol>
     		</li>    		
        		<li>Verify homology class <b concordion:set="#clusterId">86036</b> containing only mouse markers is returned. 
-    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
     			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">mouse</b>.</li>
     			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
     		</ol>
     		</li>    		
    		    <li>Verify homology class <b concordion:set="#clusterId">133546</b> containing only dog markers is returned. 
-    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
     			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">dog</b>.</li>
     			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
     		</ol>
     		</li>    	
    		    <li>Verify homology class <b concordion:set="#clusterId">133522</b> containing chimp  and chicken markers is returned. 
-    		<p concordion:assertTrue="true">klf 6/7/2013</p> 
+    		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
     			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">chimpanzee</b>.</li>
     			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">chicken</b>.</li>

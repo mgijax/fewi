@@ -48,13 +48,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>When text exists in the Nomen input field, an error message appears in the Genes ribbon after 1 character is typed in the Vocab input field
- 			<p concordion:assertTrue="true">jeffc  8/13/2012</p>
+ 			<p concordion:manual="true">jeffc  8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature text field</li>
@@ -63,7 +63,7 @@
     		</ol>
     		</li>
     		<li>When text exists in the Vocab input field, an error message appears in the Genes ribbon after 1 character is typed in the Nomen input field
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>obese</b> in the vocabulary text field</li>
@@ -73,7 +73,7 @@
     		</li>
     		<li>When text exists in the Vocab input field, and the user selects from a browser-supplied select list in the Nomen field (this occurs in Firefox, Safari, and IE, depending on user's custom settings, but not in Chrome when user types characters from a prior search or by double-clicking), an error message appears.
     		<p style="background-color:yellow;">IE has problems.  This test applies only to Chrome until we get to a story on IE and/or Firefox bug fixes. See special case test below. (klf 6/7/12)</p> 
- 			<p concordion:assertTrue="true">Pass on Chrome/FF.  jeffc 8/13/12. this test might not be need now?</p>
+ 			<p concordion:manual="true">Pass on Chrome/FF.  jeffc 8/13/12. this test might not be need now?</p>
     		<ol>
                 <li>Open the GXD query form</li>
 				<li>Enter <b>Pax1</b> in the Nomen field and submit the query</li>
@@ -86,7 +86,7 @@
     		</ol>
     		</li>
     		<li>The error message spans both sides of the &quot;OR&quot;. 
- 			<p concordion:assertTrue="true">jeffc 08/13/2012</p>
+ 			<p concordion:manual="true">jeffc 08/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>obese</b> in the vocabulary text field</li>
@@ -96,7 +96,7 @@
     		</ol>
     		</li>
     		<li>The user's text is retained in both the Nomen and Vocab input fields until the user deletes it
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>obese</b> in the vocabulary text field</li>
@@ -106,7 +106,7 @@
     		</ol>
     		</li>
     		<li>When text exists in the Vocab input field, the Search button is disabled after 1 character is typed in the Nomen input field
- 			<p concordion:assertTrue="true">jeffc 08/13/2012</p>
+ 			<p concordion:manual="true">jeffc 08/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>obese</b> in the vocabulary text field</li>
@@ -115,7 +115,7 @@
     		</ol>
     		</li>
     		<li>When text exists in the Nomen input field, the Search button is disabled after 1 character is typed in the Vocab input field
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature text field</li>
@@ -125,7 +125,7 @@
     		</li>
     		<li>When text exists in the Vocab input field, and the user selects from a browser-supplied select list in the Nomen field (this occurs in Firefox, Safari, and IE, depending on user's custom settings, but not in Chrome when user types characters from a prior search or by double-clicking), the Search button is disabled. 
     		<p style="background-color:yellow;">IE has problems. Firefox has similar problems.  This test applies only to Chrome until we get to a story on IE and/or Firefox bug fixes. See special case test below. (klf 6/7/12)</p> 
- 			<p concordion:assertTrue="true">Pass on Chrome.  jeffc 8/13/12 This appears to be a repeat of test #3</p>
+ 			<p concordion:manual="true">Pass on Chrome.  jeffc 8/13/12 This appears to be a repeat of test #3</p>
     		<ol>
                 <li>Open the GXD query form</li>
 				<li>Enter <b>Pax1</b> in the Nomen field and submit the query</li>
@@ -138,7 +138,7 @@
     		</ol>
     		</li>
     		<li>SPECIAL CASE FOR INTERNET EXPLORER and FIREFOX 12.0 OR 13.0 (6/8/2012): When text exists in the Vocab input field, and the user selects from a browser-supplied select list in the Nomen field in IE, the user is not permitted to submit the query, and the error message appears when they try.
- 			<p concordion:assertTrue="true">This test is no longer needed? jeffc</p>
+ 			<p concordion:manual="true">This test is no longer needed? jeffc</p>
     		<ol>
                 <li>Open the GXD query form</li>
 				<li>Enter <b>Pax1</b> in the Nomen field and submit the query</li>
@@ -154,7 +154,7 @@
     		</ol>
     		</li>
     		<li>When the Search button is disabled, removing text in the Vocab field causes the Search button to be re-enabled and removes the error message.
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature text field</li>
@@ -166,7 +166,7 @@
     		</ol>
     		</li>
     		<li>When the Search button is disabled, removing text in the Nomen field causes the Search button to be re-enabled and removes the error message.
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
  			<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>obese</b> in the vocabulary text field</li>
@@ -178,7 +178,7 @@
  			</ol>
 			</li>
     		<li>When text exists in the Vocab input field, the Search cannot be submitted by pressing &lt;Enter&gt; or &lt;Return&gt; on the keyboard after 1 character is typed in the Nomen input field
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>obese</b> in the vocabulary text field</li>
@@ -187,7 +187,7 @@
     		</ol>
     		</li>
     		<li>When text exists in the Nomen input field, the Search cannot be submitted by pressing &lt;Enter&gt; or &lt;Return&gt; on the keyboard after 1 character is typed in the Vocab input field
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature text field</li>
@@ -196,7 +196,7 @@
     		</ol>
     		</li>
     		<li>When &lt;Enter&gt; or &lt;Return&gt; on the keyboard are disabled from submitting the query, removing text in the Vocab field causes &lt;Enter&gt; or &lt;Return&gt; on the keyboard to be re-enabled to submit the query and removes the error message.
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature text field</li>
@@ -208,7 +208,7 @@
     		</ol>
     		</li>
     		<li>When &lt;Enter&gt; or &lt;Return&gt; on the keyboard are disabled from submitting the query, removing text in the Nomen field causes &lt;Enter&gt; or &lt;Return&gt; on the keyboard to be re-enabled to submit the query and removes the error message.
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>obese</b> in the vocabulary text field</li>

@@ -52,13 +52,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> Collection appears in Allele Information ribbon on Recombinase Specificity Pages, between Molecular Description and Find Mice.
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-02</p> (sto17)
+ 			<p concordion:manual="true">passed. -klf 2014-01-02</p> (sto17)
     		<ol>
                 <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Dbx1&lt;tm1.1(cre)Mull&gt;</b> (MGI:5014205)</li>
                 <li>Verify that the Collection value <b>Neuroscience Blueprint cre</b>  appears in the correct place.</li>
@@ -68,7 +68,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Collection does not appear when the allele is not assigned to a collection.
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-02</p> (sto17)
+ 			<p concordion:manual="true">passed. -klf 2014-01-02</p> (sto17)
     		<ol>
                 <li>Navigate to a Recombinase Specificity page (there may be more than one) for <b>Hprt&lt;tm1(cre)Mnn&gt;</b> (MGI:2181632)</li>
                 <li>Verify that <b>no Collection value</b> appears.</li>
@@ -77,7 +77,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Allele Subtypes appear in Allele Information ribbon after Type as comma delimited list.
- 			<p concordion:assertTrue="true">passed - kstone 2014/01/23</p> (sto24)
+ 			<p concordion:manual="true">passed - kstone 2014/01/23</p> (sto24)
     		<ol>
                 <li>Navigate to a Recombinase Specificity page (there may be more than one) for 
                 	<a href="http://cardolan.informatics.jax.org//recombinase/specificity?id=MGI:4420223&amp;systemKey=4856343">Gad2&lt;tm2(cre)Zjh&gt;</a></li>
@@ -86,7 +86,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Image link URLs appear on the Recombinase Activity Detail page
- 			<p concordion:assertTrue="true">klf 6/6/13</p>
+ 			<p concordion:manual="true">klf 6/6/13</p>
  			<p>Note: this test requires fake data.</p>
     		<ol>
                 <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
@@ -96,7 +96,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> Image link URLs open the linked resource in a new window
- 			<p concordion:assertTrue="true">klf 6/6/13</p>
+ 			<p concordion:manual="true">klf 6/6/13</p>
     		<ol>
                 <li>Navigate to the Recombinase Activity Detail page for <b>Calb2&lt;tm1(cre)Zjh&gt; - Nervous System</b>. </li>
                 <li>Verify "GRS Image" is hyperlinked to ndp.jax.org in the Images ribbon for Fig. Calb2 Brain (dorsal) Adult, and opens in a new window.</li>
@@ -109,7 +109,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The \Link(...) markup does not affect the display of images on GXD Expression Detail WI pages.
- 			<p concordion:assertTrue="true">klf 4/30/2013</p>
+ 			<p concordion:manual="true">klf 4/30/2013</p>
     		<ol>
                 <li>Open the record for image MGI:5310731 (in situ reporter (knock-in) assay used by both Cre and GXD for Six1&lt;tm1(cre,ALPP)Xli&gt;)</li>
                 <li>Enter \Link(https://www.google.com/|Test Link|)  </li>
@@ -128,7 +128,7 @@
     		</li>
 <!-- 
     		<li>Test
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:manual="false">new test</p> 
     		<ol>
                 <li>Step</li>
                 <li>Step</li>
@@ -136,7 +136,7 @@
     		</li>
 
     		<li>Test
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:manual="false">new test</p> 
     		<ol>
                 <li>Step</li>
                 <li>Step</li>

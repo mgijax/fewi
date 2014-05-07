@@ -53,13 +53,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 		<li>Allele detail page with turnstile icons for multiple sections
-		<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+		<p concordion:manual="true">jeffc 10/21/2013</p>
 			<ul>
 			<li>Navigate to the Gene Trap Allele Detail Page for <b>Arrdc3<sup>Gt(CSE151)Byg</sup></b></li>
 			<li>In the Mutation Description section, confirm there are turnstile icons for Mutation Notes, Sequence Tags, and Genome Context</li>
@@ -67,7 +67,7 @@
 			</ul>
 		</li>
 		<li>Spontaneous Allele detail page display of a mutation note less than 100 characters
-		<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+		<p concordion:manual="true">jeffc 10/21/2013</p>
 			<ul>
 			<li>Navigate to the QTL variant Detail Page for <b>kit<sup>Ssm</sup></b></li>
 			<li>In the Mutation Description section, confirm no turnstile icon exists</li>
@@ -75,7 +75,7 @@
 			</ul>
 		</li>
 		<li>Transgene detail page with Mutation notes just longer than 100 characters
-		<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+		<p concordion:manual="true">jeffc 10/21/2013</p>
 			<ul>
 			<li>Navigate to the Transgene Detail Page for <b>Tg(Ella-cre)C5379Lmgd</b></li>
 			<li>In the Mutation Description section, Confirm the Mutation notes has a turnstile icon</li>
@@ -83,7 +83,7 @@
 			</ul>
 		</li>
 		<li>Transposon induced Allele detail page Mutation notes well over 100 characters
-		<p concordion:assertTrue="true">jeffc 10/12/2013</p>
+		<p concordion:manual="true">jeffc 10/12/2013</p>
 			<ul>
 			<li>Navigate to the Transposon induced allele Detail Page for <b>Car12<sup>Tn(sb-T2/GT2/tTa)4563.1Dla</sup></b></li>
 			<li>In the Mutation Description section, Confirm the Mutation notes has a turnstile icon</li>

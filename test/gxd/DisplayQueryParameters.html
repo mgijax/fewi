@@ -65,8 +65,8 @@
 
 
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 <div id="tests">
     <h2>Tests</h2>
@@ -75,7 +75,7 @@
         <ol>
             <!--  Nomenclature or Vocabulary parameter tests -->
             <li>Test gene nomenclature search result display
-            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+            <p concordion:manual="true">passed klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>Pax*</b> into the nomenclature search box and click search</li>
@@ -83,7 +83,7 @@
                 </ol>
             </li>
             <li>Test missing gene nomenclature search display
-            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+            <p concordion:manual="true">passed klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Verify that no text is in the nomenclature search box and click search</li>
@@ -91,7 +91,7 @@
                 </ol>
             </li>
             <li>Test gene vocabulary search result display (MP)
-            <p concordion:assertTrue="true">Passed klf 7/17/12</p>
+            <p concordion:manual="true">Passed klf 7/17/12</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>brain tumor</b> into the gene vocabulary search box</li>
@@ -100,7 +100,7 @@
                 </ol>
             </li>
             <li>Test gene vocabulary search result display (GO)
-            <p concordion:assertTrue="true">Passed klf 7/17/12</p>
+            <p concordion:manual="true">Passed klf 7/17/12</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>response to fungus</b> into the gene vocabulary search box and click search</li>
@@ -111,7 +111,7 @@
 
             <!--  Developmental Stage parameter tests -->
             <li>Test display of developmental stage when no stage is selected
-            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+            <p concordion:manual="true">passed klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>Pax*</b> into the nomenclature search box and click search</li>
@@ -119,7 +119,7 @@
                 </ol>
             </li>
             <li>Test display of developmental stage when a single stage is selected
-            <p concordion:assertTrue="true">passed klf 7/17/2012</p>
+            <p concordion:manual="true">passed klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select <b>TS 3 (1.0-3.5 dpc)</b> from the Stage selection list and click search</li>
@@ -127,7 +127,7 @@
                 </ol>
             </li>
             <li>Test display of developmental stage when multiple stages are selected
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select <b>TS 3 (1.0-3.5 dpc)</b> and <b>TS 4 (2.0-4.0 dpc)</b> from the Stage selection list and click search</li>
@@ -137,7 +137,7 @@
 
 			<!--  Anatomical Structures tests -->
             <li>Test anatomy search result display
-			<p concordion:assertTrue="true">klf 7/17/2012</p>
+			<p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>myocardium</b> in the anatomical input text box </li>
@@ -146,7 +146,7 @@
                 </ol>
             </li>
             <li>Test anatomy search result display of a synonym
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>distal endoderm</b> in the anatomical input text box <i>(synonym for parietal endoderm)</i></li>
@@ -155,7 +155,7 @@
                 </ol>
             </li>
             <li>Test anatomy search result display with Detected
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select the <b>detected in</b> option in the Anatomical structure section</li>
@@ -165,7 +165,7 @@
                 </ol>	
             </li>    
             <li>Test anatomy search result display with Not Detected
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select the <b>not detected in</b> option in the Anatomical structure section</li>
@@ -177,7 +177,7 @@
                 		
             <!--  Assay Type parameter tests -->
             <li>Test assay type search result display
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select only <b>Immunohistochemistry</b> from the assay type select list and click search</li>
@@ -185,7 +185,7 @@
                 </ol>
             </li>
             <li>Test assay type search result display for multiple options selected
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select <b>Immunohistochemistry and In situ reporter (knock in)</b> from the assay type select list and click search</li>
@@ -193,7 +193,7 @@
                 </ol>
             </li>
             <li>Test assay type search result display for all options selected
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select <b>Find expression data in any assay type</b> from the assay type select list</li>
@@ -202,7 +202,7 @@
                 </ol>
             </li>
             <li>Test assay type search result display for no options selected
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Deselect <b>Find expression data in any assay type</b> from the assay type select list</li>
@@ -213,7 +213,7 @@
                 		
             <!--  Mutant / wild type parameter tests -->
             <li>Test all specimens search result display
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select <b>all specimens</b> from the Mutant / wild type section and click search</li>
@@ -221,7 +221,7 @@
                 </ol>
             </li>
             <li>Test Mutant / wild type search for wild type specimens only option
-                        <p concordion:assertTrue="true">klf 7/17/2012</p>
+                        <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select <b>wild type specimens only</b> from the Mutant / wild type section and click search</li>
@@ -229,7 +229,7 @@
                 </ol>
             </li>
             <li>Test Mutant / wild type search for specimens mutated in gene option
-               <p concordion:assertTrue="true">klf 7/17/2012</p>
+               <p concordion:manual="true">klf 7/17/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Select <b>Specimens mutated in gene:</b> from the Mutant / wild type section</li>
@@ -239,7 +239,7 @@
             </li>            
             <!--  Detection parameter tests -->
             <li>Test detected/not detected parameter search result display for each option selected
-            <p concordion:assertTrue="true">klf 7/17/2012</p>
+            <p concordion:manual="true">klf 7/17/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Verify <b>either</b> is selected in the Anatomical structure or stage section and press <b>search</b></li>
@@ -253,7 +253,7 @@
 
             <!--  Age parameter tests -->
             <li>Test age parameter search result display for default option selected
-            <p concordion:assertTrue="true">klf 7/17/12</p>
+            <p concordion:manual="true">klf 7/17/12</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Click <b>Use Ages (dbc)</b> to toggle to the Ages widget</li>
@@ -275,7 +275,7 @@
 
 			<li id="MultiParam">MUTLIPLE PARAMETER TESTS...<br/>
 			Verify the "You searched for" text updates appropriately when the user submits a subsequent query (using Gene Nomenclature)(multiple parameters)
-            <p concordion:assertTrue="true">kstone 06/07/2012</p>
+            <p concordion:manual="true">kstone 06/07/2012</p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>Pax*</b> into the nomenclature search box and click search</li>
@@ -301,7 +301,7 @@
                 </ol>
             </li>
             <li>Verify the "You searched for" text updates appropriately when the user presses the back button (using Gene Nomenclature)(after performing multiple queries) and forward button
-            <p concordion:assertTrue="true">kstone 06/07/2012</p>
+            <p concordion:manual="true">kstone 06/07/2012</p>
                 <ol>
                 	<li>AFTER HAVING PERFORMED THE QUERIES IN THE PREVIOUS TEST...</li>
                 	<li>Click the back button</li>
@@ -342,7 +342,7 @@
             </li>
             
 			<li>Verify the "You searched for" text updates appropriately when the user submits a subsequent query(using Gene Vocabulary) (multiple parameters)
-            <p concordion:assertTrue="true">Passed kstone 5/21/12</p><p><b>NEED to add anatomy search to this test when automating</b></p>
+            <p concordion:manual="true">Passed kstone 5/21/12</p><p><b>NEED to add anatomy search to this test when automating</b></p>
                 <ol>
                     <li>Navigate to the GXD data query form</li>
                     <li>Enter <b>Embryo development</b> into the gene vocabulary search box and click search</li>
@@ -365,7 +365,7 @@
                 </ol>
             </li>
             <li>Verify the "You searched for" text updates appropriately when the user presses the back button (using Gene Vocabulary)(after performing multiple queries) and forward button
-            <p concordion:assertTrue="true">Passed kstone 5/21/12</p><p><b>NEED to add anatomy search to this test when automating</b></p>
+            <p concordion:manual="true">Passed kstone 5/21/12</p><p><b>NEED to add anatomy search to this test when automating</b></p>
                 <ol>
                 	<li>AFTER HAVING PERFORMED THE QUERIES IN THE PREVIOUS TEST...</li>                	
                 	<li>Click the back button</li>

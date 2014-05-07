@@ -69,13 +69,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Clicking on a genotype row from the phenotype popup opens the Concatenated Genotype Cluster page(sto145)
- 			<p concordion:assertTrue="true">jeffc 10/14/2013</p> 
+ 			<p concordion:manual="true">jeffc 10/14/2013</p> 
  			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010030</b> (abnormal orbit morphology) in the Phenotypes and Diseases section and hit search</li>
@@ -85,7 +85,7 @@ tr.gray td {background-color:#EEEEEE;}
              </ol>
     		 </li>
     		<li>Clicking on a genotype row from the disease popup opens the Concatenated Genotype Cluster page(sto145)
- 			<p concordion:assertTrue="true">jeffc 10/14/2013</p> 
+ 			<p concordion:manual="true">jeffc 10/14/2013</p> 
  			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#disease">240300</b> (Autoimmune Polyendocrine Syndrome, Type I; APS1) in the Phenotypes and Diseases section and hit search</li>
@@ -95,7 +95,7 @@ tr.gray td {background-color:#EEEEEE;}
              </ol>
     		 </li>    		
     		<li>The concatenated genotype cluster page returns MP and OMIM annotations and notes for all individual genotypes within a given "cluster", as displayed on the Phenotype Popup or the Disease Popup windows. (sto145)
- 			<p concordion:assertTrue="true">jeffc 10/14/2013</p>
+ 			<p concordion:manual="true">jeffc 10/14/2013</p>
     		<ol>
                 <li>Open the HDP query form.</li>
                 <li>Enter <b concordion:set="#gene">Gas1</b> in the Genes section and hit search.</li>
@@ -130,7 +130,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>The concatenated genotype cluster page does NOT aggregate "chimeric" and "mouse line" genotypes. (sto145)
- 			<p concordion:assertTrue="true">jeffc 10/14/2013</p>
+ 			<p concordion:manual="true">jeffc 10/14/2013</p>
  			<ol>
                 <li>Enter <b concordion:set="#gene">Odf2</b> in the Genes section and hit search.</li>
                 <li>Click on the Grid tab and then the check for phenotype <b>reproductive system</b>.</li>
@@ -154,7 +154,7 @@ tr.gray td {background-color:#EEEEEE;}
  			</li>
 
     		<li>The concatenated genotype cluster page does NOT aggregate "conditional" and "nonconditional" genotypes. (sto145)
- 			<p concordion:assertTrue="true">Jeffc 10/14/2013</p>
+ 			<p concordion:manual="true">Jeffc 10/14/2013</p>
  			<ol>
                 <li>Enter <b concordion:set="#gene">Gad1</b> in the Genes section and hit search.</li>
                 <li>Click on the Grid tab and then the check for phenotype <b>normal phenotype</b>.</li>
@@ -180,7 +180,7 @@ tr.gray td {background-color:#EEEEEE;}
  			</li>
  			
  			<li>The concatenated genocluster page displays the word "Conditional" for genotypes with the "is conditional" flag = true. (sto145)
- 			<p concordion:assertTrue="true">klf 10/17/2013</p>
+ 			<p concordion:manual="true">klf 10/17/2013</p>
  			<ol>
                 <li>Enter <b concordion:set="#gene">Gad1</b> in the Genes section and hit search.</li>
 				<li>On the Grid display, click the check for the phenotype <b>nervous system</b>.</li>

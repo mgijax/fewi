@@ -72,20 +72,20 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> Verify dbSNP build is 137 on the snp detail page
- 			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
+ 			<p concordion:manual="true">jeffc 03/04/2013</p>
     		<ol>
                 <li>Display the SNP detail page for rs29438715(from marker Ap1b1)</li>
                 <li>When the detail page displays verify in the ID/Version ribbon it says dbSNP Build 137</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify NCBI build is 38 on the snp detail page
- 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+ 			<p concordion:manual="true">klf 3/4/2013</p>
     		<ol>
                 <li>Display the SNP detail page for rs29438715(from marker Ap1b1)</li>
                 <li>When the detail page displays verify on the Genome Location and Flanking Sequence ribbon it says GRCm38</li>
@@ -93,7 +93,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify GBrowse link renders correct page when SNP is mapped to 1 coordinate location.
- 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+ 			<p concordion:manual="true">klf 3/4/2013</p>
     		<ol>
                 <li>Display the SNP detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=snpDetail&amp;id=rs29404805">rs29404805(from marker Nefh)</a>.</li>
                 <li>Verify that the link for Mouse Genome Browser appears in the Additional resources ribbon between links to MPD and Ensembl SNP View.</li>
@@ -103,7 +103,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		<li><span class="regressHi">Regress</span> Verify GBrowse link does not appear and special message appears when SNP is mapped to 2+ coordinate locations.
     		<!-- The marker Gm20528 on chr 1 between 55538965 and 156522369 contains many SNPs with multiple coordinates -->
- 			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+ 			<p concordion:manual="true">jeffc 03/05/2013</p>
     		<ol>
                 <li>Display the SNP detail page for <a href="http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=snpDetail&amp;id=rs48957774">rs48957774(from marker Cyp21a1)</a>.</li>
                 <li>Verify that the link for Mouse Genome Browser does not appear in the Additional resources ribbon.</li>
@@ -111,7 +111,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> MPD links from SNP summary pages ure the correct URL pattern to link to MPD
-			<p concordion:assertTrue="true">KLF 3/13/13</p>
+			<p concordion:manual="true">KLF 3/13/13</p>
     		<ol>
                 <li>Display the SNP Summary page for <b>Pax6</b> and click on the first SNP Detail link for RS33198906</li>
                 <li>Hover over the MPD link</li>

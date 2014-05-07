@@ -45,13 +45,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>The Accession &quot;query&quot; functionality forwards to the new FeWI Assay Detail Page.
- 			<p concordion:assertTrue="true">klf 3/14/2013</p>
+ 			<p concordion:manual="true">klf 3/14/2013</p>
     		<ol>
                 <li>Enter the URL: cardolan.informatics.jax.org/accession/MGI:1859758</li>
                 <li>Verify that the page rendered is NOT <b>cardolan.informatics.jax.org/searches/expression.cgi?4552</b>.</li>
@@ -59,7 +59,7 @@
     		</ol>
     		</li>
     		<li>The link from an Expression Image Detail page goes to the new FeWI Assay Detail Page.
- 			<p concordion:assertTrue="true">klf 3/14/2013</p>
+ 			<p concordion:manual="true">klf 3/14/2013</p>
     		<ol>
                 <li>Navigate to an Image Detail Page: <a href="http://cardolan.informatics.jax.org/image/MGI:1860639">test case</a></li>
                 <li>In the Associated Assays ribbon, verify that the links to assay detail pages include <b>http://cardolan.informatics.jax.org/assay/MGI:1859758</b> and <b>http://cardolan.informatics.jax.org/assay/MGI:1859819</b></li>
@@ -67,14 +67,14 @@
     		</ol>
     		</li>
     		<li>The link from an Expression Query Results Summary (&quot;Standard&quot; query form) goes to the new FeWI Assay Detail Page.
- 			<p concordion:assertTrue="true">klf 3/14/2013</p>
+ 			<p concordion:manual="true">klf 3/14/2013</p>
     		<ol>
                 <li>Navigate to the <a href="http://cardolan.informatics.jax.org/gxd/">GXD Query Form</a> and perform a query for &quot;Pax1&quot;. </li>
                 <li>On the Results tab, in the Result Details column, verify that the link for MGI:1334713 is in the form <b>cardolan.informatics.jax.org/assay/MGI:1334713</b>. </li>
     		</ol>
     		</li>
     		<li>The link from an Expression Summary for a Reference goes to the new FeWI Assay Detail Page.
- 			<p concordion:assertTrue="true">klf 3/14/2013</p>
+ 			<p concordion:manual="true">klf 3/14/2013</p>
     		<ol>
                 <li>Navigate to a References page: <a href="http://cardolan.informatics.jax.org/reference/j:39896">test case J:39896</a>.</li> 
                 <li>Click the &quot;Expression results&quot; count: <a href="http://cardolan.informatics.jax.org/gxd/reference/J:39896">128</a> (as of 3/14/2013). </li>
@@ -83,7 +83,7 @@
     		</ol>
     		</li>
     		<li>The link from an Expression Summary for a Reference + Marker goes to the new FeWI Assay Detail Page.
- 			<p concordion:assertTrue="true">klf 3/14/2013</p>
+ 			<p concordion:manual="true">klf 3/14/2013</p>
     		<ol>
                 <li>Navigate to a GXD Literature Index Detail page which links to detailed expression data for the assays: <a href="http://cardolan.informatics.jax.org/gxdlit/key/26327">test case Pax6 + J:76822</a>. </li>
                 <li>Follow the link to &quot;Detailed expression data for these assays:&quot; <a href="http://cardolan.informatics.jax.org/gxd/summary?markerMgiId=MGI:97490&amp;jnum=J:76822">109</a> results (as of 3/14/2013).</li>
@@ -91,7 +91,7 @@
     		</ol>
     		</li>
     		<li>The link from an Expression Summary for a Marker goes to the new FeWI Assay Detail Page.
- 			<p concordion:assertTrue="true">klf 3/14/2013</p>
+ 			<p concordion:manual="true">klf 3/14/2013</p>
     		<ol>
                 <li>Navigate to a Marker Detail page: <a href="http://cardolan.informatics.jax.org/marker/MGI:97490">Pax6</a>.</li> 
                 <li>Click the &quot;Expression results&quot; count: <a href="http://cardolan.informatics.jax.org/gxd/marker/MGI:97490">1606</a> (as of 3/14/2013). </li>
@@ -100,7 +100,7 @@
     		</ol>
     		</li>
     		<li>The link from an Expression Summary for a Marker + Structure goes to the new FeWI Assay Detail Page.
- 			<p concordion:assertTrue="true">klf 3/14/2013</p>
+ 			<p concordion:manual="true">klf 3/14/2013</p>
     		<ol>
                 <li>Perform a <a href="http://cardolan.informatics.jax.org/batch">Batch Query</a> for the marker Pax6. Specify &quot;Gene Expression&quot; results in the output.</li>
                 <li>In the &quot;Assay Results&quot; column, follow the link for 3:4-cell stage embryo: <a href="http://cardolan.informatics.jax.org/gxd/summary?markerMgiId=MGI:97490&amp;annotatedStructureKey=15389">25</a> (as of 3/14/2013).</li>

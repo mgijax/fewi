@@ -57,7 +57,7 @@
         <h3>Manual tests</h3>
         <ol>
             <li>Output is displayed in four "tabs"
-            <p concordion:assertTrue="true">passed jeffc 4/09/2013</p>
+            <p concordion:manual="true">passed jeffc 4/09/2013</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b></li>
@@ -65,7 +65,7 @@
             </ol>
             </li>
             <li>Each tab displays the count of data returned for the given output type
-            <p><span concordion:assertTrue="true">passed kstone 7/16/2012</span></p>
+            <p><span concordion:manual="true">passed kstone 7/16/2012</span></p>
 <!-- 
 GET COUNT FOR GENES TAB
 select count(distinct gx._marker_key)
@@ -97,7 +97,7 @@ and m.symbol like 'Pax6%'
             </ol>
             </li>
             <li>Assay table exists with correct columns
-        	<p concordion:assertTrue="true">passed jeffc 8/10/2012</p>
+        	<p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
@@ -106,7 +106,7 @@ and m.symbol like 'Pax6%'
             </ol>
             </li>
             <li>Assay Details column displays data link and MGI ID
-        	<p concordion:assertTrue="true">passed jeffc 8/10/2012</p>
+        	<p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
@@ -121,7 +121,7 @@ and m.symbol like 'Pax6%'
             </ol>
             </li>
             <li>Verify that the camera icon appears when the assay detail page contains figures linked to image detail pages 
-            <p><span concordion:assertTrue="true">passed jeffc 8/10/2012</span></p>
+            <p><span concordion:manual="true">passed jeffc 8/10/2012</span></p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>me1</b> in the gene nomenclature field</li>
@@ -134,7 +134,7 @@ and m.symbol like 'Pax6%'
             </li>
 
             <li>Verify that the camera icons have a tooltip 
-            <p concordion:assertTrue="true">passed jeffc 8/10/2012</p>
+            <p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>me1</b> in the gene nomenclature field</li>
@@ -144,7 +144,7 @@ and m.symbol like 'Pax6%'
             </li>
             
             <li>Default row count is 100 for Assays tab
-        <p concordion:assertTrue="true">Passed jeffc 8/10/2012</p>
+        <p concordion:manual="true">Passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
@@ -154,7 +154,7 @@ and m.symbol like 'Pax6%'
             </li>
             
             <li>Gene symbol should not be linked on Assays tab
-        	<p concordion:assertTrue="true">passed jeffc 8/10/2012</p>
+        	<p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
@@ -163,7 +163,7 @@ and m.symbol like 'Pax6%'
             </ol>
             </li>
             <li>Test that GENES are sorted correctly
-        	<p concordion:assertTrue="true">passed jeffc 8/10/2012</p>
+        	<p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Hoxa*</b> in the nomenclature field</li>
@@ -177,7 +177,7 @@ and m.symbol like 'Pax6%'
 CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
   
             <li>Expression Images link from a Marker detail page goes to Images tab of it's assay summary
-        	<p concordion:assertTrue="true">jeffc 04/09/2013</p>
+        	<p concordion:manual="true">jeffc 04/09/2013</p>
             <ol>
                 <li>Open the marker detail page http://cardolan.informatics.jax.org/marker/MGI:98297</li>
                 <li>Click on the link for <b>Images</b> in the expression section</li>
@@ -185,7 +185,7 @@ CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
             </ol>
             </li>
             <li>Test that images are displayed on the Image tab and they are being correctly
-        	resized when needed<p concordion:assertTrue="true">jeffc 04/15/2013</p>
+        	resized when needed<p concordion:manual="true">jeffc 04/15/2013</p>
             <ol>
                 <li>Open the GXD expression data summary page for shh, </li>
                 <li>Verify the images are using the correct resizing by right-clicking the first image and viewing it's div height and width settings</li>
@@ -266,7 +266,7 @@ order by m.symbol, sortValue, b.short_citation
  -->
             <ol>
             	<li><i>Note: This test has not been updated during the last database refresh. We are not sure how necessary these sorting tests are to automate. They are difficult to maintain -kstone</i></li>
-            	<li><i>Note 2: The list of IDs is incorrect. The table is correct. <span concordion:assertTrue="true">passed klf 7/16/2012</span> </i></li>
+            	<li><i>Note 2: The list of IDs is incorrect. The table is correct. <span concordion:manual="true">passed klf 7/16/2012</span> </i></li>
                 <li>Open the GXD query page</li>
                 <li>Search for <b concordion:set="#nomen">Afp</b> in the gene nomenclature field (Note: includes all assay types except in situ reporter (knock in))</li>
                 <li>Click on the Assays tab</li>
@@ -447,7 +447,7 @@ order by m.symbol, sortValue, b.short_citation
 CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
   
             <li>Expression image link from a marker detail page goes to the image tab of the assay summary page
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for gata1 (http://cardolan.informatics.jax.org/marker/MGI:95661)</li>
                 <li>Click on the Images link found in the Eppression reibbon section of the marker detail page</li>
@@ -455,14 +455,14 @@ CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
             </ol>
             </li>
             <li>Confirm a GXD qury form search displays an Assay summary page with an Image tab included
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Open the GXD query form and search for the marker <b>Gata1</b></li>
                 <li>Verify the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab included, the Assay Results tab should be highlighted</li>
             </ol>
             </li>
             <li>Confirm the correct number and images are displayed
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for ebl1 (http://cardolan.informatics.jax.org/marker/MGI:87859)</li>
                 <li>Click on the Images link found in the Eppression ribbon section of the marker detail page(link should say 19)</li>
@@ -496,7 +496,7 @@ CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
             </ol>
             </li>
             <li>Confirm image tab when a query has no image
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Open the GXD query form and search for the marker <b>Dgsh</b></li>
                 <li>Click on the Images tab (note the tab says 0 images)</li>
@@ -504,7 +504,7 @@ CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
             </ol>
             </li>
             <li>Confirm images are linked to there Image detail page
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for gata1 (http://cardolan.informatics.jax.org/marker/MGI:95661)</li>
                 <li>Click on the Images link found in the Expression ribbon section of the marker detail page</li>

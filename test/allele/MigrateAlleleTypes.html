@@ -84,13 +84,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>The vocabulary for Allele (Generation) Types exists and contains the values specified below.
- 			<p concordion:assertTrue="true">klf 2/4/2014</p>
+ 			<p concordion:manual="true">klf 2/4/2014</p>
     		<ol>
                 <li>Query the Sybase VOC_Vocab table to verify the Allele Type vocabulary exists.</li>
                 <li>Query the Sybase VOC_Term table to verify the following terms exist for that vocabulary <i>(updated list as of 2/3/2014)</i>:
@@ -115,7 +115,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>The vocabulary for Allele Attributes (Subtypes) exists and contains the values specified below.
- 			<p concordion:assertTrue="true">klf 2/4/2014</p>
+ 			<p concordion:manual="true">klf 2/4/2014</p>
     		<ol>
                 <li>Query the Sybase VOC_Vocab table to verify the Allele Subtype vocabulary exists.</li>
                 <li>Query the Sybase VOC_Term table to verify the following terms exist for that vocabulary <i>(updated list as of 2/3/2014)</i>:<br/>
@@ -291,14 +291,14 @@ tr.gray td {background-color:#EEEEEE;}
 							<td>0</td>
 						</tr>
 					</table>
- 			<p concordion:assertTrue="true">klf 12/30/2013</p>
+ 			<p concordion:manual="true">klf 12/30/2013</p>
     		<ol>
                 <li>Confirm the migration script <a href="http://rohan.informatics.jax.org/usrlocalmgi/scrum-dog/dbutils/mgidbmigration/TR11515/alleletype/alleletype-after-SQL.csh.log">counts match before and after</a>.</li>
     		</ol>
 			</li>
 
 			<li>Counts for Cell Line Derivation Types after migration rules are applied match predicted values from before migration.
- 			<p concordion:assertTrue="true">klf 12/30/2013</p>
+ 			<p concordion:manual="true">klf 12/30/2013</p>
     		<ol>
                 <li>Confirm the migration script <a href="http://rohan.informatics.jax.org/usrlocalmgi/scrum-dog/dbutils/mgidbmigration/TR11515/alleletype/alleletype-after-SQL.csh.log">cell line counts match before and after</a>.</li>
     		</ol>
@@ -1124,7 +1124,7 @@ tr.gray td {background-color:#EEEEEE;}
 							<td><i>EuComm Project; rules for all tm3e alleles</i></td>
 						</tr>
 					</table>
-					<p concordion:assertTrue="true">klf 2/4/2014</p>
+					<p concordion:manual="true">klf 2/4/2014</p>
     		<ol>
                 <li>Confirm the <a href="http://rohan.informatics.jax.org/usrlocalmgi/scrum-dog/dbutils/mgidbmigration/TR11515/alleletype/alleletypeTests.csh.log.sorted">migration script tests passed</a>.</li>
                 <li>Confirm the alleles listed above display the correct Types and Subtypes.<br/>

@@ -75,8 +75,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
@@ -89,7 +89,7 @@
     			<li>Protein domains</li>
     			<li>Mouse phenotypes &amp; mouse models of human disease</li>
     		</ul>
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Open the Marker Query Form.</li>
                 <li>Verify that the 6 ribbons exist.</li>
@@ -97,14 +97,14 @@
     		</li>
     		
     		<li>The Gene/Marker ribbon contains an input text field and some suggestions. The input text field itself contains text indicating what data may be entered.
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Verify the ribbon contains the elements described.</li>
     		</ol>
     		</li>
 
     		<li>The Feature type ribbon contains an interactive tree structure displaying values from the "Marker Category" vocabulary (_vocab_key = 79) that have associated marker data; each term has a selection check box.  Each term has a popup triggered onMouseover with its definition.
- 			<p concordion:assertTrue="true">passed. -klf 4/1/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/1/2014</p>
     		<ol>
                 <li>Verify the ribbon contains the elements described.</li>
     		</ol>
@@ -119,7 +119,7 @@
     			<li>Two input text fields for Marker Range</li>
     			<li>Some suggestions and additional help text</li>
     		</ul>
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Verify the ribbon contains the elements described.</li>
     		</ol>
@@ -132,7 +132,7 @@
     			<li>Some suggestions text.</li>
     			<li>Link to the GO browser page.</li>
     		</ul>
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Verify the ribbon contains the elements described.</li>
     		</ol>
@@ -144,7 +144,7 @@
     			<li>Some suggestions text.</li>
     			<li>Link to the InterPro genes report	.</li>
     		</ul>
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Verify the ribbon contains the elements described.</li>
     		</ol>
@@ -159,7 +159,7 @@
     			<li>Link to User Help with Booleans and other querying tips.</li>
     			<li>Some suggestions and additional text.</li>
     		</ul>
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Verify the ribbon contains the elements described.</li>
                 <li>Verify the Anatomical Systems popup opens a new window. <i>Note: additional tests below.</i></li>
@@ -185,7 +185,7 @@
     			<li>The text terms in the cumulative set of selected anatomical systems are displayed to the right of the input text box.</li>
     			<li>In the popup window, clicking the text of the anatomical system also places a check in the corresponding checkbox (i.e., the user is not limited to checking inside the box).</li> 
     		</ul>
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Open the Anatomical Systems popup. Select 3 systems by clicking on the text labels.</li>
                 <li>Verify the checkboxes are checked.</li>
@@ -199,7 +199,7 @@
     		</li>
 
 			<li>After the first query submission, the query form appears to contract, and the contracted version remains visible at the top of the results set. The "contracted" form can be expanded and contracted by clicking its header area. (sto165)
- 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
+ 			<p concordion:manual="true">passed. klf 4/11/2014</p>
  			<ol>
  				<li>Navigate to the Marker Query Form, enter <b>Pa*</b> in the Gene/Marker Symbol/Name field. </li>
  				<li>Click the <b>Select Anatomical Systems Affected by Phenotypes</b> link, select <b>cellular</b> and <b>craniofacial</b>, and click the Add To Query button.</li>
@@ -212,7 +212,7 @@
 			</li>
 
 			<li>After each query submission, the query form remains populated with the user's last inputs and selections, including "Affected Systems" in the Pheno/Disease ribbon. (sto165)
- 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
+ 			<p concordion:manual="true">passed. klf 4/11/2014</p>
  			<ol>
  				<li>Using the query submitted above, verify that the "Phenotype/Human Disease:" input field remains populated with <b>MP:0005384 MP:0005382</b>.</li>
  				<li>Verify that to the right of the "Phenotype/Human Disease:" input, text is displayed:<br/>
@@ -227,7 +227,7 @@
 
 
 			<li>Opening the query form displays all input parameter ribbons and top and bottom buttons (nothing is cut off). (sto165)
- 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
+ 			<p concordion:manual="true">passed. klf 4/11/2014</p>
  			<ol>
  				<li>Using the query submitted above, verify that the "Search" and "Reset" buttons are fully visible at the bottom of the form area.</li>
  				<li>Use the bottom buttons to submit the query again.</li>

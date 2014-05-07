@@ -52,13 +52,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Test that sanger and europhenome appear okay in the same genotype (with appropriate columns)
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Cyb561<sup>tm1a(EUCOMM)Wtsi</sup> (MGI:4432734).</li>
@@ -66,7 +66,7 @@
     		</ol>
     		</li>
     		<li>Use vertical text for "MGI","WTSI", and "Euro"
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Baz1B<sup>tm2a(KOMP)Wtsi</sup></li>
@@ -74,7 +74,7 @@
     		</ol>
     		</li>
     		<li>Verify text (in the grid) for europhenome pipeline says "Euro"
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
  			<ol>
     		    <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Baz1B<sup>tm2a(KOMP)Wtsi</sup></li>
@@ -82,7 +82,7 @@
             </ol>
             </li>
     		<li>verify in the popup that it display source: "Euro" 
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Baz1B<sup>tm2a(KOMP)Wtsi</sup></li>
@@ -91,7 +91,7 @@
     		</ol>
     		</li>
     		<li>Verify that there is a line for "Euro" in the genotype popup legend 
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
 			    <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Baz1B<sup>tm2a(KOMP)Wtsi</sup></li>

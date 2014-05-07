@@ -39,13 +39,13 @@
     <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 			<li><span class="regressHi">Regress</span> Verify if the genotype has male/female glyph or "N", show the J#
- 			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
+ 			<p concordion:manual="true">jeffc 12/18/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Apoe<sup>tm1Unc</sup></b> (<b>MGI:1857129</b>)</li>
@@ -57,7 +57,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify if the genotype has just one J number and one note, the note is not followed by the J number
- 			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
+ 			<p concordion:manual="true">jeffc 12/18/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b> (<b>MGI:1856009</b>)</li>
@@ -66,7 +66,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify that when multiple notes exist for the same J number they do not display J number after notes
-    		<p concordion:assertTrue="true">jeffc 12/18/2012</p>
+    		<p concordion:manual="true">jeffc 12/18/2012</p>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Lepr<sup>db</sup></b> (<b>MGI:1856009</b>)</li>
@@ -75,7 +75,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify that J numbers still display after notes when there are more than one note and for different J numbers
- 			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
+ 			<p concordion:manual="true">jeffc 12/18/2012</p>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Apoe<sup>tm1Unc</sup></b> (<b>MGI:1857129</b>)</li>

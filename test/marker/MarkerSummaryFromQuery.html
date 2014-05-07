@@ -282,15 +282,15 @@
     <p><a href="#nomenclature">Nomenclature</a> |  <a href="#mapPosition">Map position</a> | <a href="#goClassification">Gene Ontology classifications</a> | <a href="#proteinDomains">Protein domains</a> | <a href="#mousePheno">Mouse phenotypes &amp; mouse models of human disease</a> | <a href="#sorting">Sorting tests</a> | <a href="#youSearchedFor">You searched for</a> | <a href="#downloadableFiles">Downloadable Files</a> </p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		
 		<h4 id="nomenclature">Nomenclature</h4>
 		<ol>
     		<li>Current, old, and interim mouse marker symbols, names, and synonyms  and human ortholog symbols and names are supported.
- 			<p concordion:assertTrue="true">passed.  -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed.  -klf 3/31/2014</p>
     		<ol>
                 <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
                 <li>
@@ -407,7 +407,7 @@
     		</li>
     		
     		<li>Current allele symbols or names are supported.  Allele synonyms are NOT supported.
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
                 <li>
@@ -458,7 +458,7 @@
     		</li>
 
     		<li>Leading and trailing asterisks are treated as wildcards.  "Internal" asterisks are treated as literal characters.
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
                 <li>
@@ -507,7 +507,7 @@
     		</li>
 
     		<li>Non-alphanumeric characters other than asterisks are used to define token boundaries.
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Navigate to the marker query form. Search for the following and verify the indicated results are returned.</li>
                 <li>
@@ -569,7 +569,7 @@
    		<h4 id="mapPosition">Map position</h4>
 		<ol>
     		<li>Submitting an invalid marker range (one or both markers are missing coordinates; markers are on different chromosomes) returns error messages.
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
  			<ol>
  				<li>Input <b>Aff3</b> and <b>Tbx10</b>.</li>
  				<li>Verify result returns <b>Marker Aff3(1) not on same chromosome as Tbx10(19)</b>.</li>
@@ -759,7 +759,7 @@
     		</li>
     		
     		<li>Submitting text and checking a box for particular DAG(s) within the GO returns markers associated with matching terms in only the checked DAG(s). RECHECKED FOR STO199.  NEED TO UPDATE WITH DATA FROM TABLE ABOVE.
- 			<p concordion:assertTrue="true">passed. -klf 4/16/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/16/2014</p>
     		<ol>
                 <li>Enter <b>reticulum</b> in the GO input text field.<br/>(Appears in 3 Molecular Function, 96 Biological Process, and 64 Cellular Component terms.) </li>
 				<li>Check only the box for <b>Molecular Function</b> and submit the search.</li>
@@ -965,7 +965,7 @@
     		</li>
 
     		<li>The GO input field supports Boolean operators. (sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
  			<ol>
  				<li>Input <b>GO:0045009 OR GO:0061343</b> and submit the query. <br/>(GO:0045009 - chitosome - 4 markers annotated to a child term "melanosome membrane" GO:0033162; <br/>GO:0061343 - cell adhesion involved in heart morphogenesis - 2 markers annotated to child term "regulation of cell adhesion involved in heart morphogenesis" GO:0061344.)</li>
  				<li>Verify that <b>ONLY the following</b> genes are returned:
@@ -1057,7 +1057,7 @@
     		</li>
     		
     		<li>The GO input field supports leading and trailing wildcards (asterisk). (consequence of sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
  			<ol>
  				<li>Enter <b>postheparin</b> in the GO input field and submit the query.</li>
  				<li>Note the number of genes returned (16 as of 4/16/2014).</li>
@@ -1071,14 +1071,14 @@
     		</li>
     		
     		<li>The GO input field supports grouping using parentheses. (consequence of sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
  			<ol>
  				<li>See results of "AND NOT" text-searching test, above.</li>
  			</ol>
     		</li>
     		
     		<li>The GO input field supports phrase matching using double quotation marks. (consequence of sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
  			<ol>
  				<li>See results of "AND NOT" text-searching test, above.</li>
  			</ol>
@@ -1193,7 +1193,7 @@
     		</li>
     		
     		<li>The InterPro input field supports Boolean operators. (sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
 			<ol>
 				<li>Enter <b>IPR013806 AND NOT IPR000001</b> and submit the query.</li>
 				<li>Verify that <b>ONLY the following</b> genes are returned:
@@ -1241,7 +1241,7 @@
     		</li>
     		
     		<li>The InterPro input field supports leading and trailing wildcards (asterisk). (consequence of sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
 			<ol>
 				<li>Enter <b>*piod*</b> and submit the query. (Should find the InterPro domain "Opiodes neuropeptide" IPR013532.)</li>
 				<li>Verify only <b>Pomc</b> is returned.</li>
@@ -1249,7 +1249,7 @@
     		</li>
     		
     		<li>The InterPro input field supports grouping using parentheses. (consequence of sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
 			<ol>
 				<li>Enter <b>(Runt OR opiodes) AND corticotropin</b> and submit the query.</li>
 				<li>Verify only <b>Pomc</b> is returned.</li>
@@ -1257,7 +1257,7 @@
     		</li>
     		
     		<li>The InterPro input field supports phrase matching using double quotation marks. (consequence of sto199)
- 			<p concordion:assertTrue="true">passed. -klf 2014-04-16</p>
+ 			<p concordion:manual="true">passed. -klf 2014-04-16</p>
 			<ol>
 				<li>Enter <b>"opiomelanocortin/corticotropin"</b> and submit the query.</li>
 				<li>Verify only <b>Pomc</b> is returned.</li>
@@ -1509,7 +1509,7 @@
     		</li>
 
     		<li>Transgenic Reporter markers are excluded from the results set.
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2014</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2014</p>
     		<ol>
                 <li>Query for Medulloblastoma; MDB <b concordion:set="#pheno">155255</b>.</li>
                 <li>Verify that <b>Ptch1</b> is one of the markers returned. (In some OMGs and also Complex genotype with Transgenic Reporter below.)</li>
@@ -1521,7 +1521,7 @@
     		</li>
 
     		<li>Markers associated with Recombinase alleles are excluded from the results set.
- 			<p concordion:assertTrue="true">passed. -klf 3/31/2016</p>
+ 			<p concordion:manual="true">passed. -klf 3/31/2016</p>
     		<ol>
                 <li>Included in tests above.</li>
     		</ol>
@@ -1532,7 +1532,7 @@
 		<h4 id="sorting">Sorting</h4>
     	<ol>	
     		<li>Default sort order when Nomenclature field is submitted reflects the table in the Logic section as much as possible.
- 			<p concordion:assertTrue="true">passed - kstone 2014/04/23</p>
+ 			<p concordion:manual="true">passed - kstone 2014/04/23</p>
  			<ol>
  				<li>Submit a query with the data specified in the Nomen field below.</li>
  				<li>Verify that the order of results returned reflects the table in the Logic section as much as possible.</li>
@@ -1597,7 +1597,7 @@ order by count(*) desc
     		</li>
     			
     		<li>Default sort order when Feature Type rather than the Nomenclature field is submitted is MGI's "smart alpha" by Marker Symbol.
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/17/2014</p>
  			<ol>
  				<li>Select only <b>unclassified other genome feature</b> and submit the query.</li>
  				<li>Verify that markers beginning with <b>Defa-...</b> are in "smart alpha" order.</li>
@@ -1605,7 +1605,7 @@ order by count(*) desc
     		</li>
 
     		<li>Default sort order when Map Position rather than the Nomenclature field is submitted is MGI's "smart alpha" by Marker Symbol.
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/17/2014</p>
  			<ol>
  				<li>Select chromosome <b>Y</b> and submit the query.</li>
  				<li>Verify that markers beginning with <b>DYBish...</b> are in "smart alpha" order.</li>
@@ -1613,7 +1613,7 @@ order by count(*) desc
     		</li>
 
     		<li>Default sort order when the Nomenclature field and a field other than the Nomenclature field is submitted follows the table in the Logic section, as much as possible.
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/17/2014</p>
  			<ol>
  				<li>Enter <b>cytochrome</b> in the Nomenclature input field and submit the query.</li>
  				<li>Note the order of the <b>cytochrome P450</b> families of markers in the output.</li>
@@ -1623,7 +1623,7 @@ order by count(*) desc
     		</li>
     			
     		<li>On-demand sort by clicking the "Symbol" column header in Summary output resorts all returned data in "smart alpha" order by Symbol.
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/17/2014</p>
  			<ol>
  				<li>Select chromosome <b>Y</b> and submit the query.</li>
  				<li>Click the <b>Symbol</b> column header.</li>
@@ -1632,7 +1632,7 @@ order by count(*) desc
     		</li>
 
     		<li>On-demand sort by clicking the "Genetic Location" column header in Summary output resorts all returned data in by Chromosome, then Start Coordinate, then Symbol.
- 			<p concordion:assertTrue="true">passed. -klf 4/17/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/17/2014</p>
  			<ol>
  				<li>Enter <b>cytochrome</b> in the Nomenclature input field and submit the query.</li>
  				<li>Click the <b>Genetic Location</b> column header.</li>
@@ -1641,7 +1641,7 @@ order by count(*) desc
     		</li>
     		
     		<li>On-demand sort by clicking the "Feature Type" column header in Summary output resorts all returned data in "smart alpha" order by Feature Type(sto203).
- 			<p concordion:assertTrue="true">passed. -jeffc 4/28/2014</p>
+ 			<p concordion:manual="true">passed. -jeffc 4/28/2014</p>
  			<ol>
  				<li>Select Gene/Marker Symbol/Name <b>Pax*</b> and submit the query.</li>
  				<li>Click the <b>Feature Type</b> column header.</li>
@@ -1653,7 +1653,7 @@ order by count(*) desc
 		<h4 id="youSearchedFor">You Searched For...</h4>
 		<ol>
 		<li>Summary displays "You searched for..." reiterating the user's input for each submitted parameter. Parameters are listed in the same order as on the query form.  The first parameter submitted is listed with the label specified. The word "AND" precedes all subsequent parameter labels to indicate the query logic. Parameters which may have multiple values display all selected or input values. (sto168)
- 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
+ 			<p concordion:manual="true">passed. klf 4/11/2014</p>
  			<ol>
  				<li>Submit a Marker Query with the following parameters entered or selected:
  				<ul>
@@ -1723,7 +1723,7 @@ order by count(*) desc
 		</li>
 		
 		<li>"You searched for..." does not reiterate default values submitted for any parameter. (sto168)
- 			<p concordion:assertTrue="true">passed. klf 4/11/2014</p>
+ 			<p concordion:manual="true">passed. klf 4/11/2014</p>
  			<ol>
  				<li>Navigate to the Marker Query Form.</li>
  				<li>Submit a Marker Query with the following parameters entered or selected:
@@ -1737,7 +1737,7 @@ order by count(*) desc
  					<li>Phenotype/Human Disease: <em>default setting = blank</em></li>
  				</ul>
  				</li>
- 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="true">passed. -klf 4/11/2014</span>
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:manual="true">passed. -klf 4/11/2014</span>
  				<ul>
  					<li>Marker Range: between <b>D19Mit32</b> and <b>Tbx10</b> </li>
  					<li>AND Gene Ontology term(s): contains <b>cell</b> </li>
@@ -1754,7 +1754,7 @@ order by count(*) desc
  					<li>Phenotype/Human Disease: <b>abnormal AND phenotype</b></li>
  				</ul>
  				</li>
- 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:assertTrue="true">passed. -klf 4/11/2014</span>
+ 				<li>Verify the "You searched for" section shows ONLY each submitted parameter value with its label and "help text" where needed and does NOT show default values for Feature type, Chromosome or GO sub-DAGs: <span concordion:manual="true">passed. -klf 4/11/2014</span>
  				<ul>
 	 				<li>Phenotypes/Diseases: including text <b>abnormal AND phenotype</b> <span style="font-size:0.75em; color:#999999;">searching MP terms, synonyms, IDs, and notes, disease terms, synonyms and IDs</span></li>
  				</ul>
@@ -1767,7 +1767,7 @@ order by count(*) desc
 		<h4 id="downloadableFiles">Downloadable Files</h4>
 		<ol>
 			<li>A file containing all data in the current results set can be downloaded in Text (tab-delimited) or Excel format.
- 			<p concordion:assertTrue="true">passed. -klf 4/11/2014</p>		
+ 			<p concordion:manual="true">passed. -klf 4/11/2014</p>		
  			<ol>
  				<li>Enter <b>Pax6</b> in the Gene/Marker field and submit the query.</li>
  				<li>Click the <b>Text File</b> button.</li>
@@ -1788,7 +1788,7 @@ order by count(*) desc
 			</li>
 
 			<li>Downloads have the correct data columns: (sto164)
- 			<p concordion:assertTrue="true">passed. -klf 4/11/2014</p>		
+ 			<p concordion:manual="true">passed. -klf 4/11/2014</p>		
 			<table>
 				<tr><td>Chr <em>(NOTE: this is genomic chromosome.  No differences from genetic chr exist as of 4/10/14 so genetic chr was dropped as redundant.)</em></td></tr> 
 				<tr><td>start </td></tr>
@@ -1810,7 +1810,7 @@ order by count(*) desc
 			</li>
 		
 			<li>The cM column value is a number between 1 and 110 or is blank. <em>(From Schema Browser: Offset value of -1.0 designates syntenic marker. Offset value of -999.9 designates withdrawn or reserved marker.)</em> (sto164)
- 			<p concordion:assertTrue="true">passed. -klf 4/11/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/11/2014</p>
  			<ol>
  				<li>Query for Map Position Marker Range between <b>Hrh3</b> and <b>Vacq1</b>.</li>
  				<li>Verify that the results set includes markers with Genetic Location including "syntenic", "QTL", and values greater than 100.</li>
@@ -1825,14 +1825,14 @@ order by count(*) desc
  			</li>
 		
 			<li>The "Why Matched?" column value does not contain HTML "b" tags surrounding the matching text portion of the string. (sto164)
- 			<p concordion:assertTrue="true">passed. -klf 4/11/2014</p>
+ 			<p concordion:manual="true">passed. -klf 4/11/2014</p>
  			<ol>
  				<li>Using the Text and Excel files returned for the <b>Pax6</b> query above, verify that the <b>Why Matched?</b> column does not contain "&lt;b&gt;" or "&lt;/b&gt;" tags.</li>
  			</ol>
  			</li>
  			
 			<li>A text search in the Pheno/Disease field ignores TEXT-QTL mapping experiment notes unless it for a marker of type QTL (sto215)
- 			<p concordion:assertTrue="true">passed. -Jeffc 4/24/2014</p>
+ 			<p concordion:manual="true">passed. -Jeffc 4/24/2014</p>
  			<ol>
  				<li>Using the Marker Query form</li>
  				<li>Enter <b>Breast Cancer</b> in the Phenotype/Human Disease field</li>

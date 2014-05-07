@@ -56,13 +56,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>For a marker, a label and link is generated for each Allele Type having alleles. The linked text is the count of all alleles for that marker having the Allele Type. The change is also supported on Prod. (sto105)
- 			<p concordion:assertTrue="true">passed. -klf 2014-03-10</p>
+ 			<p concordion:manual="true">passed. -klf 2014-03-10</p>
     		<ol>
                 <li>Navigate to the marker detail page for Pax6 (MGI:97490)</li>
                 <li>Verify the following Allele Types and counts:
@@ -190,7 +190,7 @@
     		</li>
 
     		<li>For a marker, a label and link is generated for alleles associated with disease models (OMIM annotations). The linked text is the count of all alleles of all types from any genotypes annotated to disease models EXCLUDING only "Not" annotations. No text or link appears if there are no OMIM-annotated alleles. The change is also supported on Prod. (sto105)
- 			<p concordion:assertTrue="true">passed. -klf 2014-03-10</p>
+ 			<p concordion:manual="true">passed. -klf 2014-03-10</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the count for Alleles Annotated to Human Diseases:
@@ -210,7 +210,7 @@
     		</li>
     		
     		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto92)
- 			<p concordion:assertTrue="true">Passed jeffc 03/31/2014</p>
+ 			<p concordion:manual="true">Passed jeffc 03/31/2014</p>
  			<ol>
                 <li>Navigate to the marker detail page for Pet2 (MGI:101758)</li>
                 <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to Mutagenix: <b>Incidental mutations (data from Mutagenetix )</b></li>
@@ -218,7 +218,7 @@
 				</li>
 				
     		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto92)
- 			<p concordion:assertTrue="true">Passed jeffc 03/31/2014</p>
+ 			<p concordion:manual="true">Passed jeffc 03/31/2014</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the mutagentix link exists and works (link will look like this: <b>Incidental mutations (data from Mutagenetix )</b>):
@@ -238,7 +238,7 @@
     		</li>
 
     		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the APF file is attached, it should create the ribbon along with the APF file link (sto92)
- 			<p concordion:assertTrue="true">passed jeffc 04/08/2014</p>
+ 			<p concordion:manual="true">passed jeffc 04/08/2014</p>
  			<ol>
                 <li>Navigate to the marker detail page for Gm8906 (MGI:3779820)</li>
                 <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to APF: <b>Incidental mutations (data from APF )</b></li>			
@@ -246,7 +246,7 @@
 			</li>			
 				
     		<li>Verify these markers have the APF link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
- 			<p concordion:assertTrue="true">passed jeffc 04/08/2014</p>
+ 			<p concordion:manual="true">passed jeffc 04/08/2014</p>
     		<ol>
                 <li>Navigate to these marker detail pages.</li>
                 <li>Verify the APF link exists and works (link will look like this: <b>Incidental mutations (data from APF )</b>):

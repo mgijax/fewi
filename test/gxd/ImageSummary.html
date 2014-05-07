@@ -52,7 +52,7 @@
         <h3>Manual tests</h3>
         <ol>
             <li>Output is displayed in four "tabs"
-            <p concordion:assertTrue="true">passed - kstone 2013-04-26</p>
+            <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b></li>
@@ -60,7 +60,7 @@
             </ol>
             </li>
             <li>Each tab displays the count of data returned for the given output type
-            <p concordion:assertTrue="true">passed - kstone 2013-04-26</p>
+            <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b concordion:set="#pax6">Pax6</b> in the Gene nomenclature field</li>
@@ -71,7 +71,7 @@
             </ol>
             </li>
             <li>Default row count is 25 for Images tab
-	        <p concordion:assertTrue="true">passed - kstone 2013-04-26</p>
+	        <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
@@ -81,7 +81,7 @@
             </li>
 
             <li>Expression Images link from a Marker detail page goes to Images tab of its assay summary
-        	<p concordion:assertTrue="true">passed - kstone 2013-04-26</p>
+        	<p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>Open the marker detail page http://cardolan.informatics.jax.org/marker/MGI:98297</li>
                 <li>Click on the link for <b>Images</b> in the expression section</li>
@@ -90,7 +90,7 @@
             </li>
 
             <li>Test that images are displayed on the Image tab and they are being correctly resized when needed
-            <p concordion:assertTrue="true">passed - kstone 2013-04-26</p>
+            <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>Open the GXD expression data summary page for shh, </li>
                 <li>Verify the images are using the correct resizing by right-clicking the first image and viewing it's div height and width settings</li>
@@ -104,7 +104,7 @@
             	<tr><td>list of genes</td><td>list of assay types</td><td>list of specimen labels</td></tr>
             	<tr><td>not linked</td><td>not linked</td><td>linked to assay detail pages, anchored to the image thumbnail on that page</td></tr>
             </table>
-            <p concordion:assertTrue="true">passed - kstone 2013-04-26</p>
+            <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>navigate to image summary tab for Pax6 and scroll down to the 3rd image pane (looks like a rainbow-colored loop)</li>
                 <li>verify that three genes appear in column 1, "Immunohistochemistry" appears three times in column 2, and three specimen labels (2nd and 3rd have same text) appear in column 3</li>
@@ -119,7 +119,7 @@
                 <li>Within an assay type, by marker symbol</li>
                 <li>For the same marker symbol, by reference short citation</li>
             </ol>
-            <p concordion:assertTrue="true">passed - kstone 2013-04-26</p>
+            <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>navigate to the image summary tab for Pax6</li> 
                 <li>scroll down to the 3rd image and verify that the data table displays:
@@ -228,7 +228,7 @@ order by m.symbol, sortValue, b.short_citation
  -->
             <ol>
             	<li><i>Note: This test has not been updated during the last database refresh. We are not sure how necessary these sorting tests are to automate. They are difficult to maintain -kstone</i></li>
-            	<li><i>Note 2: The list of IDs is incorrect. The table is correct. <span concordion:assertTrue="true">passed klf 7/16/2012</span> </i></li>
+            	<li><i>Note 2: The list of IDs is incorrect. The table is correct. <span concordion:manual="true">passed klf 7/16/2012</span> </i></li>
                 <li>Open the GXD query page</li>
                 <li>Search for <b concordion:set="#nomen">Afp</b> in the gene nomenclature field (Note: includes all assay types except in situ reporter (knock in))</li>
                 <li>Click on the Assays tab</li>
@@ -405,7 +405,7 @@ order by m.symbol, sortValue, b.short_citation
             </ol>
             </li>
             <li>Expression image link from a marker detail page goes to the image tab of the assay summary page
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for gata1 (http://cardolan.informatics.jax.org/marker/MGI:95661)</li>
                 <li>Click on the Images link found in the Eppression reibbon section of the marker detail page</li>
@@ -413,14 +413,14 @@ order by m.symbol, sortValue, b.short_citation
             </ol>
             </li>
             <li>Confirm a GXD qury form search displays an Assay summary page with an Image tab included
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Open the GXD query form and search for the marker <b>Gata1</b></li>
                 <li>Verify the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab included, the Assay Results tab should be highlighted</li>
             </ol>
             </li>
             <li>Confirm the correct number and images are displayed
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for ebl1 (http://cardolan.informatics.jax.org/marker/MGI:87859)</li>
                 <li>Click on the Images link found in the Eppression ribbon section of the marker detail page(link should say 19)</li>
@@ -454,7 +454,7 @@ order by m.symbol, sortValue, b.short_citation
             </ol>
             </li>
             <li>Confirm image tab when a query has no image
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Open the GXD query form and search for the marker <b>Dgsh</b></li>
                 <li>Click on the Images tab (note the tab says 0 images)</li>
@@ -462,7 +462,7 @@ order by m.symbol, sortValue, b.short_citation
             </ol>
             </li>
             <li>Confirm images are linked to there Image detail page
-            <p concordion:assertTrue="true">jeffc 04/12/2013</p>
+            <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for gata1 (http://cardolan.informatics.jax.org/marker/MGI:95661)</li>
                 <li>Click on the Images link found in the Expression ribbon section of the marker detail page</li>

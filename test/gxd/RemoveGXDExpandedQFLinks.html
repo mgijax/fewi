@@ -45,20 +45,20 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Remove the GXD Expanded query form(for test to work need URL mapping change)
- 			<p concordion:assertTrue="true">jeffc 5/28/2013</p>
+ 			<p concordion:manual="true">jeffc 5/28/2013</p>
     		<ol>
                 <li>Enter "http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=expressionQFexpanded" in a browser(tested using "http://cardolan.informatics.jax.org/javawi2/servlet/WIFetch?page=expressionQFexpanded")</li>
                 <li>Verify the GXD expanded query form does not get returned but forwards to GXD Differential tab?(until the URL mapper story is done you should get a blank page)</li>
     		</ol>
     		</li>
     		<li>Verify the link to GXD expanded qf is removed from the Expression pulldown
- 			<p concordion:assertTrue="true">jeffc 5/22/2013</p>
+ 			<p concordion:manual="true">jeffc 5/22/2013</p>
     		<ol>
                 <li>Open the MGI main page</li>
                 <li>Display the Search pulldown and then the Expression pulldown</li>
@@ -66,7 +66,7 @@
     		</ol>
     		</li>
     		<li>Verify the link to GXD QF has been moved to the top of the Expression pulldown
- 			<p concordion:assertTrue="true">jeffc 5/22/2013</p>
+ 			<p concordion:manual="true">jeffc 5/22/2013</p>
     		<ol>
                 <li>Open the MGI main page</li>
                 <li>Display the Search pulldown and then the Expression pulldown</li>
@@ -74,7 +74,7 @@
     		</ol>
     		</li>
     		<li>Verify the link to GXD expanded QF is removed from the All Search Tool page
- 			<p concordion:assertTrue="true">jeffc 5/22/2013</p>
+ 			<p concordion:manual="true">jeffc 5/22/2013</p>
     		<ol>
                 <li>Open the MGI main page</li>
                 <li>Display the All Search Tool page</li>
@@ -82,7 +82,7 @@
     		</ol>
     		</li>
     		<li>Verify the link to GXD expanded QF is removed from the Access Data section of GXD main page
- 			<p concordion:assertTrue="true">jeffc 5/22/2013</p>
+ 			<p concordion:manual="true">jeffc 5/22/2013</p>
     		<ol>
                 <li>Open the MGI main page</li>
                 <li>Display the Expression main page</li>
@@ -90,7 +90,7 @@
     		</ol>
     		</li>
     		<li>Verify the link to GXD expanded QF is removed from the aboutGXD page
- 			<p concordion:assertTrue="true">jeffc 5/22/2013</p>
+ 			<p concordion:manual="true">jeffc 5/22/2013</p>
     		<ol>
                 <li>Open the MGI main page</li>
                 <li>Display the Expression main page</li>

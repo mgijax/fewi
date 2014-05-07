@@ -163,13 +163,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Clicking a checkmark causes the popup to appear as a new, separate browser window (tests revised when sto95 was added)
- 			<p concordion:assertTrue="true">revised for sto95 - klf 10/1/2013</p> 
+ 			<p concordion:manual="true">revised for sto95 - klf 10/1/2013</p> 
     		<ol>
                 <li>Open the HDP query form.</li>
                 <li>Enter <b>gata1</b> in the Genes section and hit search.</li>
@@ -187,7 +187,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Bin colors correctly represent the number of annotations to a term for a genotype cluster (sto171)
- 			<p concordion:assertTrue="true">klf 11/12/13</p> 
+ 			<p concordion:manual="true">klf 11/12/13</p> 
     		<ol>
                 <li>Open the HDP query form.</li>
                 <li>Enter <b>Ldlr</b> in the Genes section and hit search.</li>
@@ -217,7 +217,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Correct onMouseover behavior for the genotype cluster rows...
- 			<p concordion:assertTrue="true">klf 11/12/13</p> 
+ 			<p concordion:manual="true">klf 11/12/13</p> 
     		<ol>
                 <li>Entire row turns pale yellow color.</li>
                 <li>Tooltip says "click row to see phenotype details".</li>
@@ -225,7 +225,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Correct Popup Window Header look and text...
- 			<p concordion:assertTrue="true">klf 11/12/13</p> 
+ 			<p concordion:manual="true">klf 11/12/13</p> 
     		<ol>
                 <li>Text says "Data for <b><i>Mouse gene symbol</i></b> and <b><i>affected system name</i></b> abnormalities.  (No bold or italics - that is for this test case only.)</li>
                 <li>Text is larger font on a light blue background with a black border.</li>
@@ -233,7 +233,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Correct legend look and text...
- 			<p concordion:assertTrue="true">klf 11/12/13</p> 
+ 			<p concordion:manual="true">klf 11/12/13</p> 
     		<ol>
                 <li>Legend has light blue background and black borders.</li>
                 <li>First line: "N" and text "Indicates Normal Phenotype"</li>
@@ -242,7 +242,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 			<li>A link to IMSR for all strains or lines available is displayed for each mouse marker in the popup that has such a link on its Allele Detail Page.
- 			(sto136)<p concordion:assertTrue="true">passed. -klf 2014-04-22</p> 
+ 			(sto136)<p concordion:manual="true">passed. -klf 2014-04-22</p> 
  			<ol>
  				<li>On the HMDC Portal, query for genes <b>h2-d1,Hspa1a,vpreb1,H3f3a,Olfr160,hamp2,clec10a,mgl2</b>.</li>
  				<li>From the Grid Tab, click the cell in the row for Human HLA-B and the column for hematopoietic system.</li>
@@ -449,7 +449,7 @@ tr.gray td {background-color:#EEEEEE;}
     		 </li>   
 
     		<li>Chimeric: Genotypes with the same allele pair on different strain backgrounds are "compressed" into a single genotype.  But CHIMERIC genotypes and MOUSE LINE  genotypes are compressed into separate genotypes.
- 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+ 			<p concordion:manual="true">klf 9/10/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#gene">Odf2</b> in the Genes section and hit search</li>
@@ -486,7 +486,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Conditional: Genotypes with the same allele pair on different strain backgrounds are "compressed" into a single genotype.  But CONDITIONAL genotypes and NOT CONDITIONAL  genotypes are compressed into separate genotypes.
- 			<p concordion:assertTrue="true">klf 9/10/2013</p> 
+ 			<p concordion:manual="true">klf 9/10/2013</p> 
 <!-- 
 SOME DATA... SAME ALLELE PAIRS BUT ONE IS CONDITIONAL AND ONE IS NOT:
 http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=2233 - NON-CONDITIONAL GENO IS "NORMAL"
@@ -535,7 +535,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
     		
     		<li>Slash alleles: MGI's "slash alleles"  (associated with intergenic deletions) are excluded from queries and results.  
  			But transgenes containing a slash in their nomenclature are still considered and returned by the query.
- 			<p concordion:assertTrue="true">klf 9/18/2013</p> 
+ 			<p concordion:manual="true">klf 9/18/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0004666</b> (absent stapedial artery) in the Phenotypes and Diseases section and hit search</li>
@@ -572,7 +572,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
 
 			<li>Background Sensitivity Flag Legend appears on all phenotype popups
 			<i>(sto178)</i> <i>(cannot automate)</i>
- 			<p concordion:assertTrue="true">klf 10/14/2013</p> 
+ 			<p concordion:manual="true">klf 10/14/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">gas1</b> in the Genes section and hit search</li>
@@ -585,7 +585,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
 			</ol>
     		</li>
 			<li>Background Sensitivity Flag appears in the  phenotype popups in cells where at least one genotype within the geno-cluster has an annotation to the MP term that also has a &quot;Background Sensitivity&quot; Note type. <i>(sto178)</i> <span style="background-color:#D079E0;">needs automation please</span>
- 			<p concordion:assertTrue="true">klf 10/14/2013</p> 
+ 			<p concordion:manual="true">klf 10/14/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Query for <b>240300</b> (Autoimmune Polyendocrine Syndrome, Type I; APS1).</li>
@@ -637,7 +637,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
     		
     		<li>MP Term column headers should display in the shortest-path DAG order, as on the Allele Detail Page. 
     			If a "normal" annotation to a header term appears, the header term should display in the first column. (sto95, modified for sto135)
- 			<p concordion:assertTrue="true">klf 10/16/2013</p> (automated)
+ 			<p concordion:manual="true">klf 10/16/2013</p> (automated)
     		<ol>
                 <li>Open the HDP query form.</li>
                 <li>Enter <b concordion:set="#genes">klf1</b> in the Genes section and hit search.</li>
@@ -681,7 +681,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
     		</li>
 
 			<li>Chimeric genotypes are identified on the Genocluster popup page(sto196)
- 			<p concordion:assertTrue="true">jeffc 11/01/2013</p> 
+ 			<p concordion:manual="true">jeffc 11/01/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">Odf2</b> in the Genes section and hit search</li>
@@ -691,7 +691,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
     		</li>
 
 			<li>Conditional genotypes are identified on the Genocluster popup page(sto196)
- 			<p concordion:assertTrue="true">jeffc 11/01/2013</p> 
+ 			<p concordion:manual="true">jeffc 11/01/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">Gad1</b> in the Genes section and hit search</li>
@@ -701,12 +701,12 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
     		</li>
     		
     		<li>Genotypes are listed in the order specified in "Specific Requirements", above. (sto195)
- 			<p concordion:assertTrue="true">klf 11/06/2013</p> 
+ 			<p concordion:manual="true">klf 11/06/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">Odf2</b> in the Genes section and hit search</li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Odf2</b> row and <b concordion:set="#column">reproductive system</b> column. </li>
-                <li>Confirm that genotypes are listed in the following order: <span concordion:assertTrue="true">(OK klf)</span>
+                <li>Confirm that genotypes are listed in the following order: <span concordion:manual="true">(OK klf)</span>
                 <table>
                 	<tr><th>Genotype</th></tr>
 					<tr><td>Odf2&lt;Gt(RRO072)Byg&gt;/Odf2&lt;Gt(RRO072)Byg&gt;	</td></tr>
@@ -720,7 +720,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
                 <li>Clear the search form.<br/><br/></li>
                 <li>Enter <b concordion:set="#genes">Fas</b> in the Genes section and hit search</li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Fas</b> row and <b concordion:set="#column">cellular abnormalities</b> column. </li>
-                <li>Confirm that genotypes are listed in the following order: <span concordion:assertTrue="true">(OK klf)</span>
+                <li>Confirm that genotypes are listed in the following order: <span concordion:manual="true">(OK klf)</span>
                 <table>
                 	<tr><th>Genotype</th></tr>
 					<tr><td>Fas&lt;lpr-cg&gt;/Fas&lt;lpr-cg&gt;</td></tr>
@@ -738,7 +738,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
                 <li>Clear the search form.<br/><br/></li>
                 <li>Enter <b concordion:set="#genes">Olfr*</b> in the Genes section and hit search</li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Olfr17</b> row and <b concordion:set="#column">nervous system</b> column. </li>
-                <li>Confirm that genotypes are listed in the following order: <span concordion:assertTrue="true">(OK klf)</span>
+                <li>Confirm that genotypes are listed in the following order: <span concordion:manual="true">(OK klf)</span>
                 <table>
                 	<tr><th>Genotype</th></tr>
 					<tr><td>Olfr17&lt;tm1Mom&gt;/Olfr17&lt;tm1Mom&gt;</td></tr>
@@ -755,7 +755,7 @@ http://www.informatics.jax.org/javawi2/servlet/WIFetch?page=alleleDetail&key=961
                 </table>
                 </li>
                 <li>Click the checkmark at the intersection of the <b concordion:set="#row">Olfr160</b> row and <b concordion:set="#column">nervous system</b> column. </li>
-                <li>Confirm that genotypes are listed in the following order: <span concordion:assertTrue="true">(OK klf)</span>
+                <li>Confirm that genotypes are listed in the following order: <span concordion:manual="true">(OK klf)</span>
                 <table>
                 	<tr><th>Genotype</th></tr>
 					<tr><td>Olfr151&lt;tm12(Olfr16)Mom&gt;/Olfr151&lt;tm12(Olfr16)Mom&gt;</td></tr>

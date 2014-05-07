@@ -42,13 +42,13 @@
     <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 		<li>Allele detail page does not count molecular images
-		<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+		<p concordion:manual="true">jeffc 10/21/2013</p>
 			<ul>
 			<li>Navigate to the Allele Detail Page for <b>Ecscr<sup>tm1Iked</sup></b></li>
 			<li>In the Nomenclature section, View the images link, it should say 3 images not 4</li>
@@ -56,7 +56,7 @@
 			</ul>
 		</li>
 		<li>Transgene detail pages does not count molecular images
-		<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+		<p concordion:manual="true">jeffc 10/21/2013</p>
 			<ul>
 			<li>Navigate to the Transgene Detail Page for <b>Tg(Ella-cre)C5379Lmgd</b></li>
 			<li>In the Nomenclature section, View the images link, it should say 1 image not 2</li>
@@ -65,7 +65,7 @@
 		</li>
 		<li>Examples of alleles with one molecular image and no phenotype images.  Should not display or refer to an image on Allele Detail Page or any Genotype popup windows. 
 		Cindy looked at these 12/20/2012.
-		<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+		<p concordion:manual="true">jeffc 10/21/2013</p>
 		<ul>
 			<li><span class="regressHi">Regress</span> Stk11&lt;tm1Jish&gt; MGI:2676471</li>
 			<li><span class="regressHi">Regress</span> Wnt3a&lt;tm1(cre)Eag&gt;  MGI:3612795</li>
@@ -74,7 +74,7 @@
 		</li>
 		<li>Examples of alleles with molecular image plus additional phenotypes images.  Note that counts are now correct on cardolan allele detail page and match the number on the linked image summary page. 
 		--Cindy 12/20/2012
-		<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+		<p concordion:manual="true">jeffc 10/21/2013</p>
 		<ul>
 			<li><span class="regressHi">Regress</span> Cryaa&lt;tm1Ady&gt;  MGI:4437472</li>
 			<li><span class="regressHi">Regress</span> Gys2&lt;tm1.1Pro&gt; MGI:4462836</li>

@@ -91,13 +91,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 		    <li>Confirm Hovering over a Gene symbol on the Grid summary, displays text of Gene's full name and it's feature type(sto132)
-    		<p concordion:assertTrue="true">passed jeffc 04/23/2014</p>
+    		<p concordion:manual="true">passed jeffc 04/23/2014</p>
     		<ol>
                 <li>Query for marker <b>pax*</b></li>
                 <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
@@ -117,7 +117,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Confirm Human symbols link to their MGI Homology page(sto137)
-    		<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+    		<p concordion:manual="true">jeffc 10/08/2013</p>
     		<ol>
                 <li>Query for marker <b>Actb</b></li>
                 <li>Click on the Grid tab and find the Human marker <b>ACTB</b> and click it</li>
@@ -125,7 +125,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>	
     		<li>Confirm Mouse symbols link to their MGI gene detail page(sto137)
-    		<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+    		<p concordion:manual="true">jeffc 10/08/2013</p>
     		<ol>
                 <li>Query for marker <b>Actb</b></li>
                 <li>Click on the Grid tab and find the Mouse marker <b>Actb</b> and click it</li>
@@ -133,7 +133,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Confirm a human symbol that has no MGI homology page is not a link(sto137)
- 			<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+ 			<p concordion:manual="true">jeffc 10/08/2013</p>
     		<ol>
                 <li>Query for marker <b>IGKC</b></li>
                 <li>Click on the Grid tab and find the Human marker <b>IGKC</b></li>
@@ -141,7 +141,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Confirm the existance of check boxes for rows and columns, A Submit Filters button, a Remove Filters button(sto140)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/22</p>
+ 			<p concordion:manual="true">passed - kstone 2013/10/22</p>
     		<ol>
                 <li>Query for marker <b>Casp3</b></li>
                 <li>Verify that each row has a check box after it's marker symbol</li>
@@ -152,7 +152,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Confirm the correct results are returned when selecting rows and columns(sto140)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/22</p>
+ 			<p concordion:manual="true">passed - kstone 2013/10/22</p>
     		<ol>
 				<li>Query for marker <b>casp3</b></li>
                 <li>Place checkmarks for markers <b>Casp3</b>, <b>Tg(ACTA1-Casp3*)10.2Spc</b> and <b>Tg(Casp3)18Fine</b></li>
@@ -163,7 +163,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Confirm the Remove Filters button returned everything back to the original query results(sto140)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/22</p>
+ 			<p concordion:manual="true">passed - kstone 2013/10/22</p>
     		<ol>
 				<li>Query for marker <b>Casp3</b></li>
                 <li>Place checkmarks for markers <b>Casp3</b>, <b>Tg(ACTA1-Casp3*)10.2Spc</b> and <b>Tg(Casp3)18Fine</b></li>
@@ -174,7 +174,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 <!--      		<li>Confirm the Invert button reverses the filtered results(sto140) Invert button no longer required
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:manual="false">new test</p>
     		<ol>
 				<li>Query for marker <b>shh</b></li>
                 <li>Place checkmarks for marker <b>Tg(Shh)#Dje</b></li>
@@ -185,7 +185,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li> -->
     		<li>Confirm that filtering is applied across all 3 tabs(sto140)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/22</p>
+ 			<p concordion:manual="true">passed - kstone 2013/10/22</p>
     		<ol>
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Place checkmarks for markers <b>Casp3</b> <b>Tomt</b> and <b>Tshr</b></li>
@@ -199,7 +199,7 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
     		</li>   
     		<li>Confirm that a second filter sort on columns works(sto140)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/22</p>
+ 			<p concordion:manual="true">passed - kstone 2013/10/22</p>
     		<ol>
 				<li>Query for Phenotype <b>diabetes</b></li>
                 <li>Place checkmarks for phenotypes <b>immune system</b>, <b>pigmentation</b> and <b>vision/eye</b></li>
@@ -210,7 +210,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>  
     		<li>Confirm that filtering is applied across all pages(sto140)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/22</p>
+ 			<p concordion:manual="true">passed - kstone 2013/10/22</p>
     		<ol>
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Place checkmarks for markers <b>Casp3</b> <b>Tomt</b> and <b>Tshr</b></li>
@@ -223,7 +223,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li> 
     		<li>Confirm that hovering over a cell with a phenotype checkmark or coloring triggers the popup text (sto189)
- 			<p concordion:assertTrue="true">klf 10/29/2013</p>
+ 			<p concordion:manual="true">klf 10/29/2013</p>
     		<ol>
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Hover over the checkmark for <b>Actb</b> and phenotype <b>nervous system</b></li>
@@ -240,7 +240,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Confirm that hovering over a cell with a disease checkmark or coloring triggers the popup text (sto189)
- 			<p concordion:assertTrue="true">klf 10/29/2013</p>
+ 			<p concordion:manual="true">klf 10/29/2013</p>
     		<ol>
 				<li>Query for phenotype <b>MP:0004521</b></li>
                 <li>Hover over the checkmark for <b>Bbs1</b> and disease <b>Obesity</b></li>
@@ -258,7 +258,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 		<li>If Chromosome Location is used in query, Grid tab/Marker and Genes tab/Genome Coordinatess sort order should agree (sto147)
- 			<p concordion:assertTrue="true">lec 11/18/2013</p>
+ 			<p concordion:manual="true">lec 11/18/2013</p>
     		<ol>
 		<li>Query for genome coordinates <b>Chr12:3000000-10000000</b></li>
 		<li>Click on Genes tab and select "Genome Coordinates" sort.  The Gene-sort order should match the order below.</li>
@@ -291,7 +291,7 @@ tr.gray td {background-color:#EEEEEE;}
 		</li>
 
 		<li>If Chromosome Location is used in query, Grid tab/Marker and Genes tab/Genome Coordinatess sort order should agree(even for mouse coordinates) (sto147)
- 			<p concordion:assertTrue="true">jeffc 11/21/2013</p>
+ 			<p concordion:manual="true">jeffc 11/21/2013</p>
     		<ol>
 			<li>Query for genome coordinates <b>Chr1:185800000-236600000</b>, Select "Human"</li>
 			<li>Click on Genes tab and select "Genome Coordinates" sort.</li>

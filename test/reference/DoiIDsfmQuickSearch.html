@@ -37,8 +37,8 @@
 </div>
 
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 
 
@@ -49,7 +49,7 @@
         <h3>Manual tests</h3>
         <ol>
             <li>Verify a DOI ID with a slash in it returns a reference link correctly
-            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <p concordion:manual="true">jeffc 05/23/2013</p>
             <ol>
                 <li>Open the MGI main page and enter "10.1093/hmg/dds430" in the Quick Search box</li>
                 <li>Verify the results returned has a Reference link in the Other Results by ID section</li>
@@ -57,7 +57,7 @@
             </ol>
             </li>
             <li>Verify a DOI ID with a dash in it returns a reference link correctly
-            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <p concordion:manual="true">jeffc 05/23/2013</p>
             <ol>
                 <li>Open the MGI main page and enter "53.08.04.db04-0422" in the Quick Search box</li>
                 <li>Verify the results returned has a Reference link in the Other Results by ID section</li>
@@ -66,7 +66,7 @@
             </li>
 <!-- 
             <li>Verify a DOI ID with a semicolon in it returns a reference link correctly
-            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <p concordion:manual="true">jeffc 05/23/2013</p>
             <ol>
                 <li>Open the MGI main page and enter "10.1096/fj.05-4017fje;1" in the Quick Search box</li>
                 <li>Verify the results returned has a Reference link in the Other Results by ID section</li>
@@ -75,7 +75,7 @@
             </li>
 -->
             <li>Verify a DOI ID with a parents in it returns a reference link correctly
-            <p concordion:assertTrue="true">jeffc 05/23/2013</p>
+            <p concordion:manual="true">jeffc 05/23/2013</p>
             <ol>
                 <li>Open the MGI main page and enter "10.1016/S0002-9440(10)65297-2" in the Quick Search box</li>
                 <li>Verify the results returned has a Reference link in the Other Results by ID section</li>

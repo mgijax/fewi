@@ -74,13 +74,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>The linked Markers count on the References summary opens the new FEWI marker summary page. (modified for sto222)
- 			<p concordion:assertTrue="true">passed. -klf 4/25/2014</p> 
+ 			<p concordion:manual="true">passed. -klf 4/25/2014</p> 
     		<ol>
                 <li>Open the References query form.</li>
                 <li>Enter <b>Bult</b> in the Authors field.</li>
@@ -99,7 +99,7 @@
     		</li>
 
     		<li>The linked Markers count on the Quick Search opens the new FEWI marker summary page.
- 			<p concordion:assertTrue="true">passed. -klf 4/25/2014</p> 
+ 			<p concordion:manual="true">passed. -klf 4/25/2014</p> 
     		<ol>
                 <li>Enter <b>IPR000001</b> in the Quick Search and submit the search.</li>
                 <li>Verify the link for <b>15 genes, 15 annotations</b> in the Vocabulary section opens the FEWI marker summary page.</li>
@@ -115,7 +115,7 @@
     		</li>
 
     		<li>The "View all MGI genes/markers within returned coordinate ranges." link on the SNP summary opens the new FEWI marker summary page.
- 			<p concordion:assertTrue="true">passed. -klf 4/28/2014</p> 
+ 			<p concordion:manual="true">passed. -klf 4/28/2014</p> 
     		<ol>
                 <li>Open the SNP Query Form.</li>
                 <li>In the Map Position ribbon, enter Marker Range <b>Between: D19Mit32  and: Tbx10  </b> and submit the query.</li>

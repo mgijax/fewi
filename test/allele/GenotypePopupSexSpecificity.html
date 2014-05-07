@@ -51,13 +51,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Verify popup displays no &quot;call&quot; icon for an abnormal phenotype for "NA" sexes
- 			<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p>  - <i>semi-automated</i>
+ 			<p concordion:manual="true">Passed - kstone 10/1/2012</p>  - <i>semi-automated</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Trp53<sup>tm1Tyj</sup></b> (<b>MGI:1857263</b>)</li>
@@ -67,7 +67,7 @@
     		</li>
     		
     		<li>Verify popup display for a &quot;normal&quot; phenotype displays only <b>N </b>for &quot;NA&quot; sexes (currently only for highest level term in MGI's annotations) 
-  			<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+  			<p concordion:manual="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Trp53<sup>tm1Tyj</sup></b> (<b>MGI:1857263</b>)</li>
@@ -77,7 +77,7 @@
     		</li>
     		
     		<li>Verify popup display for an abnormal phenotype of Female sex only 
- 			displays &quot;female&quot; symbol<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+ 			displays &quot;female&quot; symbol<p concordion:manual="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1a(KOMP)Wtsi</sup></b> (<b>MGI:4364794</b>)</li>
@@ -87,7 +87,7 @@
     		</li>
     		
     		<li>Verify popup display for an abnormal phenotype of Male sex only 
- 			displays &quot;male&quot; symbol<p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+ 			displays &quot;male&quot; symbol<p concordion:manual="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Actn4<sup>tm1a(EUCOMM)Wtsi</sup></b> (<b>MGI:4441842</b>)</li>
@@ -97,7 +97,7 @@
     		</li>
     		
     		<li>Verify popup display for a normal phenotype of Female sex only 
- 			displays &quot;female&quot; symbol and <b>N</b><p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+ 			displays &quot;female&quot; symbol and <b>N</b><p concordion:manual="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
 			<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Slc16a2<sup>tm1a(KOMP)Wtsi</sup></b> (<b>MGI:4364794</b>)</li>
@@ -107,7 +107,7 @@
     		</li>
     		
     		<li>Verify popup display for a normal phenotype of Male sex only 
- 			displays male symbol and <b>N</b> <p concordion:assertTrue="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
+ 			displays male symbol and <b>N</b> <p concordion:manual="true">Passed - kstone 10/1/2012</p> - <i>semi-automated</i>
     		<ol>
 			    <li>Open the test Web Interface</li>
                 <li>Navigate to the Allele Detail Page for <b>Mecp2<sup>tm1Bird</sup></b> (<b>MGI:2137555</b>)</li>
@@ -117,7 +117,7 @@
     		</li>
     		
 			<li>Verify text "source: WTSI" appears in the Notes area for MP annotations loaded from Sanger
- 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<p concordion:manual="true">jeffc 10/02/2012</p>
  			<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt; (<b>MGI:4362509</b>)</li>
@@ -136,7 +136,7 @@
 				<li class="tight">Male</li>
 				<li class="tight">Male Normal <i>(does not exist in our dataset yet)</i></li>
 			</ol>
- 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<p concordion:manual="true">jeffc 10/02/2012</p>
  			<ol>
  				<li>In the test Web Interface, navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</li>
  				<li>Open the genotype popup for the homozygous genotype with strain background "not specified"</li>
@@ -155,7 +155,7 @@
 			</li>
 			
 			<li>Verify "General" notes are displayed for MGI's MP annotations
- 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<p concordion:manual="true">jeffc 10/02/2012</p>
  			<ol>
  				<li>In the test Web Interface, navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</li>
  				<li>Open the genotype popup for the homozygous genotype with strain background "not specified"</li>
@@ -165,7 +165,7 @@
 			</li>
 			
 			<li>Verify "Normal" notes are displayed for MGI's MP annotations
- 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<p concordion:manual="true">jeffc 10/02/2012</p>
  			<ol>
  				<li>In the test Web Interface, navigate to the Allele Detail Page for Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</li>
  				<li>Open the genotype popup for the heterozygous wild type genotype (second allele: Slc16a2&lt;+&gt;) with strain background "not specified"</li>
@@ -175,7 +175,7 @@
 			</li>
 			
 			<li>Verify "Background Sensitivity" notes are displayed for MGI's MP annotations, and have the label text "Background Sensitivity:"
- 			<p concordion:assertTrue="true">jeffc 10/02/2012</p>
+ 			<p concordion:manual="true">jeffc 10/02/2012</p>
  			<ol>
  				<li>In the test Web Interface, navigate to the Allele Detail Page for Ap4e1&lt;tm1a(KOMP)Wtsi&gt;</li>
  				<li>Open the genotype popup for the homozygous genotype with strain background "not specified"</li>

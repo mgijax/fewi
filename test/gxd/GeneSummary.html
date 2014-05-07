@@ -53,13 +53,13 @@
     <h2>Tests</h2>
     <div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
          <h3>Manual tests</h3>
         <ol>
             <li>A Genes summary page exists
-		    <p concordion:assertTrue="true">jeffc 8/10/2012</p>
+		    <p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
@@ -67,7 +67,7 @@
             </ol>
             	</li>
         	<li>Standard header and footer are present (incl. navigation and quick search)
-            <p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            <p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
             	<li>Open the GXD query form</li>
             	<li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
@@ -75,7 +75,7 @@
 			</ol>
 				</li>
 			<li>User Help document file is updated to include info about this page(includes wired-up button for Help doc)           
-            <p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            <p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
             	<li>Open the GXD query form</li>
            	 	<li>Click the help icon</li>
@@ -83,7 +83,7 @@
             </ol>
         		</li>
             <li>Query form "ribbon" can open/close (refactor the query form JSP)
-            <p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            <p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
@@ -93,7 +93,7 @@
             </ol>
            		</li>
             	<li>Verify Tool Tips (if there are any)
-				<p concordion:assertTrue="true">passed jmason 2012-05-07</p>
+				<p concordion:manual="true">passed jmason 2012-05-07</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
@@ -102,7 +102,7 @@
             </ol>
             	</li>
             	<li>Verify that tabs exist for genes and assay results
-				<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+				<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature field and press <b>Search</b></li>
@@ -110,7 +110,7 @@
             </ol>
             	</li>
             	<li>Verify that the user help is correct
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Click on the <b>help icon</b></li>
@@ -118,7 +118,7 @@
             </ol>
             	</li>
             	<li>Verify the Gene summary table exists with correct columns
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Pax6</b> in the nomenclature field and press Search</li>
@@ -127,7 +127,7 @@
             </ol>
             	</li>
             	<li>Verify that tokens are combined using AND not OR
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>paired box</b> in the nomenclature field and press Search</li>
@@ -135,7 +135,7 @@
             </ol>
             	</li>
             	<li>Verify that the gene symbol links to the correct marker detail page
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax6</b> in the nomenclature field and press Search</li>
@@ -144,7 +144,7 @@
             </ol>
             	</li>
             	<li>Verify that gene summary results are sorted correctly
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>pax*</b> in the nomenclature field and press Search</li>
@@ -152,7 +152,7 @@
             </ol>
             	</li>
             	<li>Verify that long marker names/symbols wrap properly
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Sema5a</b> in the nomenclature field and press Search</li>
@@ -163,7 +163,7 @@
             </ol>
             	</li>
             	<li>Verify that marker symbols and names with weird characters don't break the interface
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Mirlet7c-1</b> in the nomenclature field and press Search</li>
@@ -175,7 +175,7 @@
             </ol>
             	</li>
             	<li>Test that X, Y, XY, MT, UN chromosome display correctly
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Ace2</b> in the nomenclature field and press Search</li>
@@ -191,7 +191,7 @@
             </ol>
             	</li>
             	<li>Verify that markers with chromosome but without coordinates work
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>cryg</b> in the nomenclature field and press Search</li>
@@ -201,7 +201,7 @@
             </ol>
             	</li>
             	<li>Verify that no invalid cM data appears when CM is : -1, or -999
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Gcap8</b> in the nomenclature field and press Search</li>
@@ -210,7 +210,7 @@
             </ol>
             	</li>   
             	<li>Verify that the word "syntenic" is displayed when no coordinates, cM or cytoband data exist for chromosomes other than UN
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Gcap8</b> in the nomenclature field and press Search</li>
@@ -218,7 +218,7 @@
             </ol>
             	</li> 
             	<li>Verify that nothing appears in the "Location" column when the chromosome is UN
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Labx</b> in the nomenclature field and press Search</li>
@@ -228,7 +228,7 @@
             </ol>
             	</li> 
             	<li>Verify that the correct marker type is displaying: SHOULD BE DISPLAYING THE "FEATURE TYPE" VALUE
-            	<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+            	<p concordion:manual="true">jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Hba</b> in the nomenclature field and press Search</li>
@@ -242,7 +242,7 @@
             </ol>
             	</li> 
             	<li>Verify Build of table layout with a single tab
-            	<p concordion:assertTrue="true">not a valid test now</p>
+            	<p concordion:manual="true">not a valid test now</p>
             <ol>
                 <li>Open the GXD query form</li>
                 <li>Enter <b>Hba</b> in the nomenclature field and press Search</li>

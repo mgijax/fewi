@@ -68,34 +68,34 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Text says "dbSNP Build 137"
- 			<p concordion:assertTrue="true">klf 3/5/2013</p>
+ 			<p concordion:manual="true">klf 3/5/2013</p>
     		<ol>
                 <li>Navigate to marker detail page for <a href="http://cardolan.informatics.jax.org/marker/MGI:97490">Pax6</a>.</li>
                 <li>In the Polymorphisms ribbon, verify text says "... from dbSNP Build 137)"</li>
     		</ol>
     		</li>
     		<li>Link is correct for markers that have no multi-coordinate SNPs
- 			<p concordion:assertTrue="true">klf 3/5/2013</p>
+ 			<p concordion:manual="true">klf 3/5/2013</p>
     		<ol>
                 <li>Navigate to marker detail page for <a href="http://cardolan.informatics.jax.org/marker/MGI:97490">Pax6</a>.</li>
                 <li>Verify SNPs count link does NOT include parameter "includeMultiples=1"</li>
     		</ol>
     		</li>
     		<li>Link is correct for markers that have one or more multi-coordinate SNPs
- 			<p concordion:assertTrue="true">klf 3/5/2013</p>
+ 			<p concordion:manual="true">klf 3/5/2013</p>
      		<ol>
                 <li>Navigate to marker detail page for <a href="http://cardolan.informatics.jax.org/marker/key/1311">Cyp21a1</a>. </li>
                 <li>Verify an additional link appears with SNPs count that DOES include parameter "includeMultiples=1"</li>
     		</ol>
     		</li>
     		<li>Link opens correct SNP Summary page
- 			<p concordion:assertTrue="true">klf 3/5/2013</p>
+ 			<p concordion:manual="true">klf 3/5/2013</p>
     		<ol>
                 <li>Navigate to marker detail page for <a href="http://cardolan.informatics.jax.org/marker/key/1311">Cyp21a1</a>. </li>
                 <li>Verify that following the SNP link for multiples (the extra link) opens the SNP Summary with:

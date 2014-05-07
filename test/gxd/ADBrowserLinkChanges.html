@@ -50,8 +50,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
@@ -78,13 +78,13 @@ SELECT COUNT(*) FROM gxd_expression e, closure s WHERE e._Structure_key = s._Str
 									<td>TS15: forelimb bud</td>
 									<td>384</td>
 									<td>a mid-level term having directly-annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>TS8: conceptus</td>
 									<td>469</td>
 									<td>a top-level term having a few directly-annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td><i>this case does not exist<br/>-klf 7/27/2012</i></td>
@@ -99,34 +99,34 @@ SELECT COUNT(*) FROM gxd_expression e, closure s WHERE e._Structure_key = s._Str
 									<td>289</td>
 									<td>a mid-level term having a no directly-annotated genes,
 										but having child terms with annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>TS7: extraembryonic cavity<br/>	TS6: cavity or cavity lining</td>
 									<td>0<br/>0</td>
 									<td>a mid-level term having no directly-annotated genes,
 										and having a child term with no annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>TS26: integumental system</td>
 									<td>639</td>
 									<td>a mid-level term having a no directly-annotated genes,
 										but having child terms with annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>TS26: integumental system muscle</td>
 									<td>0</td>
 									<td>a mid-level term having a no directly-annotated genes,
 										and having child terms with no annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>TS2: second polar body</td>
 									<td>25</td>
 									<td>a bottom-level term having directly-annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>TS4: mural trophectoderm<br/>TS20: adenohypophysis
@@ -135,7 +135,7 @@ SELECT COUNT(*) FROM gxd_expression e, closure s WHERE e._Structure_key = s._Str
 									<td>0<br/>0<br/>0
 									</td>
 									<td>a bottom-level term having no directly-annotated genes</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 
 							</table>
@@ -149,7 +149,7 @@ SELECT COUNT(*) FROM gxd_expression e, closure s WHERE e._Structure_key = s._Str
     			<li>no "You searched for"-area text</li>
     			<li>no link to GXD Lit Index records below data table</li>
     		</ul>
- 			<p concordion:assertTrue="true">jeffc 8/10/2012</p>
+ 			<p concordion:manual="true">jeffc 8/10/2012</p>
     		<ol>
                 <li>Open the GXD Anatomical Dictionary Browser.</li>
                 <li>Navigate to the Term Detail page for <b>TS15: forelimb bud</b>.</li>

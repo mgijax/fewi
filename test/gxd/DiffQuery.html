@@ -77,15 +77,15 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p>Skip to <a href="#broadQuery">Broad Query</a> | <a href="#structures">Structures</a> | <a href="#stages">Stages</a> | <a href="#structuresStages">Structures + Stages (3rd Ribbon)</a> | <a href="#addNegatives">Add Negative Results</a> </p>
 		<h4>Framework - tabs and ribbons exist and javascript works properly</h4>
 		<ol>
 		<li>Differential tab exists structures and stages ribbons
-			<p concordion:assertTrue="true">kstone 2013/05/14</p> 
+			<p concordion:manual="true">kstone 2013/05/14</p> 
 			<ol>
 			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a></li>
 			<li>Verify that <b>Differential Expression Search</b> tab exists.</li>
@@ -96,7 +96,7 @@
 			</ol>
 		</li>
 		<li>Anatomical Structure ribbon exists with proper form parameters
-			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+			<p concordion:manual="true">klf 4/30/2013</p> 
 			<ol>
 			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a> and click 
 				<b>Differential Expression Search</b> tab.</li>
@@ -118,7 +118,7 @@
 			</ol>
 		</li>
 		<li>Developmental Stage ribbon exists with proper form parameters
-			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+			<p concordion:manual="true">klf 4/30/2013</p> 
 			<ol>
 			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a>, click 
 				<b>Differential Expression Search</b> tab, then click anywhere on the text of the
@@ -140,7 +140,7 @@
 			</ol>
 		</li>
 		<li>Query submits and retains only the form parameters displayed to the user
-			<p concordion:assertTrue="true">klf 4/30/2013</p> 
+			<p concordion:manual="true">klf 4/30/2013</p> 
 			<ol>
 			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a>, click <b>Differential Expression Search</b> tab.</li>
 			<li>Select an anatomical structure for each of the input boxes in the "anatomical structure" ribbon.</li>
@@ -170,7 +170,7 @@
 
 		<ol>
 			<li><span class="regressHi">Regress</span> The Genes tab is the default view for results in the differential query (sto196).
-  			<p concordion:assertTrue="true">kstone 2013/05/14</p>   
+  			<p concordion:manual="true">kstone 2013/05/14</p>   
   			<ol>
   				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
   				<li>Verify that the Genes tab is the default view (not the Assay Results tab).</li>
@@ -178,7 +178,7 @@
 			</li>
 
 			<li>Wild type results ("broad" definition) are included in the differential query.
-  			<p concordion:assertTrue="true">passed kstone 5/7/13</p>  
+  			<p concordion:manual="true">passed kstone 5/7/13</p>  
   			<ol>
   				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
   				<li>Verify that the gene <b>Th</b> is returned.</li>
@@ -195,7 +195,7 @@
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
-  			<p concordion:assertTrue="true">kstone 2013/05/14</p> 
+  			<p concordion:manual="true">kstone 2013/05/14</p> 
     		<ol>
                 <li>Query for genes with expression detected in <b  concordion:set="#struct1">pulmonary valve</b>, not detected or analyzed in <b  concordion:set="#struct2">aortic valve</b>.</li>
                 <li>Verify that <i>results</i> for <b>pulmonary valve</b> or its child term <b>pulmonary valve leaflets</b> are returned for the following genes <i>(semi automated)</i>:
@@ -236,7 +236,7 @@
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
-  			<p concordion:assertTrue="true">kstone 2013/05/14</p> 
+  			<p concordion:manual="true">kstone 2013/05/14</p> 
     		<ol>
                 <li>Query for genes with expression detected in <b concordion:set="#struct1">pulmonary valve</b> but not detected or analyzed in <b concordion:set="#struct2">pulmonary valve leaflet</b>.</li>
                 <li>Verify that <i>results</i> for <b>pulmonary valve</b> are returned for the following genes <i>(semi automated)</i>:
@@ -282,7 +282,7 @@
 
     		<li>A query for detected in "A", not detected or analyzed in "B", where "B" is text but not a full text token contained in the text string of "A", returns results. <br/>
     		Example: <i>detected in Female... but not detected or analyzed in Male...</i>, since we are doing "contains token" textual-searching, should still produce some results.
-  			<p concordion:assertTrue="true">passed kstone 5/7/13</p>  
+  			<p concordion:manual="true">passed kstone 5/7/13</p>  
     		<ol>
                 <li>Query for genes with expression detected in <b concordion:set="#struct1">female reproductive system</b> but not detected or analyzed in <b concordion:set="#struct2">male reproductive system</b>.</li>
                 <li>Verify that <b>1,045 genes</b> are returned including<i>(semi automated)</i>:
@@ -325,7 +325,7 @@
     		</li>
     		
     		<li>A query for detected in "A", not detected or analyzed in "B", where a gene has both "expressed" and "not expressed" results for "A" and has no results and/or "not expressed" results (but does not have any "expressed" results) for "B" should return the gene.
-  			<p concordion:assertTrue="true">passed kstone 5/7/13</p>  
+  			<p concordion:manual="true">passed kstone 5/7/13</p>  
   			<ol>
   				<li>Query for genes with expression data detected in <b concordion:set="#struct1">liver</b>, not detected or analyzed in <b concordion:set="#struct2">spleen</b> <i>(fully automated)</i></li>
   				<li>Verify that these genes ARE included in the results set:
@@ -554,8 +554,8 @@
 					<tr><td>Mxra8</td></tr>
 	    			</table> 
 				</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stage <b>23</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stage <b>23</b> are returned.<br/>
+    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stage <b>23</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stage <b>23</b> are returned.<br/>
     			Note: the gene Pdgfra is annotated to aortic valve leaflet so this term should be excluded too.</li>
     		</ol>
     		</li>
@@ -595,8 +595,8 @@
 					<tr><td>Mxra8</td></tr>
 				</table>
 				</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stages <b>21,22,23</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stages <b>23,24,25</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stages <b>21,22,23</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stages <b>23,24,25</b> are returned.</li>
     		</ol>
     		</li>
 
@@ -613,7 +613,7 @@
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
- 			<p concordion:assertTrue="true">kstone - 2013/05/15</p> 
+ 			<p concordion:manual="true">kstone - 2013/05/15</p> 
  			<ol>
  				<li>Query for genes with expression detected in <b  concordion:set="#struct1">pyloric antrum</b>, not detected or analyzed in <b  concordion:set="#struct2">detrusor muscle of bladder</b>.</li>
                 <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pyloric antrum</b> are returned, 
@@ -705,9 +705,9 @@
 				</table>
 				</li>
 
-    			<li><i>Manual test: </i> <span concordion:assertTrue="true">kstone - 2013/05/20</span>  Verify that <i>postive results</i> for <b>metanephros mesenchyme</b> or its children in Stage <b>22</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="true">kstone - 2013/05/20</span>  Verify that <i>NO positive results</i> for <b>hepatic primordium</b> or its children (hepatic primordium parenchyma) in Stages <b>17</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:assertTrue="true">kstone - 2013/05/20</span>  Verify that <i>NEGATIVE results</i> for <b>hepatic primordium</b> <span style="background-color:#BBBB00">or its children (hepatic primordium parenchyma) - NOT supposed to be doing this - emailed Connie 5/17 (klf)</span> in Stages <b>17</b> ARE returned.</li>
+    			<li><i>Manual test: </i> <span concordion:manual="true">kstone - 2013/05/20</span>  Verify that <i>postive results</i> for <b>metanephros mesenchyme</b> or its children in Stage <b>22</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:manual="true">kstone - 2013/05/20</span>  Verify that <i>NO positive results</i> for <b>hepatic primordium</b> or its children (hepatic primordium parenchyma) in Stages <b>17</b> are returned.</li>
+    			<li><i>Manual test: </i> <span concordion:manual="true">kstone - 2013/05/20</span>  Verify that <i>NEGATIVE results</i> for <b>hepatic primordium</b> <span style="background-color:#BBBB00">or its children (hepatic primordium parenchyma) - NOT supposed to be doing this - emailed Connie 5/17 (klf)</span> in Stages <b>17</b> ARE returned.</li>
  			</ol>
     		</li>
 
@@ -726,7 +726,7 @@
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
- 			<p concordion:assertTrue="false">new</p> 
+ 			<p concordion:manual="false">new</p> 
     		<ol>
                 <li><i>Need to find test data</i></li>
                 <li>Step 1</li>
@@ -741,7 +741,7 @@
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
- 			<p concordion:assertTrue="false">new</p> 
+ 			<p concordion:manual="false">new</p> 
     		<ol>
                 <li><i>Need to find test data</i></li>
                 <li>Step 1</li>
@@ -749,7 +749,7 @@
     		</ol>
     		</li>
     		<li>A query for detected in "A", not detected in "B", where "A" is a child of "B" in the same Anatomical System, returns NO RESULTS. 
- 			<p concordion:assertTrue="false">new</p> 
+ 			<p concordion:manual="false">new</p> 
     		<ol>
                 <li><i>Need to find test data</i></li>
                 <li>Step 1</li>
@@ -757,7 +757,7 @@
     		</ol>
     		</li>
     		<li>Test
- 			<p concordion:assertTrue="false">new</p> 
+ 			<p concordion:manual="false">new</p> 
     		<ol>
                 <li>Step 1</li>
                 <li>Step 2</li>

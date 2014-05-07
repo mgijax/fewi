@@ -79,13 +79,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>For a reference's &quot;Phenotypic Alleles&quot; hyperlinked count, the summary includes all alleles associated with that reference, EXCLUDING only wild type alleles.
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-27</p>
+ 			<p concordion:manual="true">passed. -klf 2014-01-27</p>
     		<ol>
                 <li>Navigate to J:202293.</li>
                 <li>Follow the link labeled Phenotypic Alleles. Verify the total is <b>2</b> alleles.</li>

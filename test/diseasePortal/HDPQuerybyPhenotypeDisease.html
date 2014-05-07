@@ -82,8 +82,8 @@ tr.gray td {background-color:#EEEEEE;}
 <div id="tests">
     <h2>Automated Tests</h2>
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<ol>
     		<li>All diseases are returned that are associated with a simple genotype which is annotated to the queried MP term.
@@ -136,7 +136,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>All genes are returned when searching with just a stop word (sto58).
-    		<p concordion:assertTrue="true">klf 11/12/2013</p>
+    		<p concordion:manual="true">klf 11/12/2013</p>
     		<ol>
                 <li>Query for <b concordion:set="#phenotype">syndrome</b></li>
                 <li>Verify that all 113,000 plus genes are returned.</li>
@@ -156,7 +156,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Correct phenotypes are returned when searching with a stop word and a phenotype term(sto58).
-    		<p concordion:assertTrue="true">klf 11/12/2013</p> <i>counts are off but behavior is as expected</i>
+    		<p concordion:manual="true">klf 11/12/2013</p> <i>counts are off but behavior is as expected</i>
     		<ol>
                 <li>Query for <b concordion:set="#phenotype">heterotaxia syndrome</b></li>
                 <li>Verify that <strike>81</strike> genes are returned, all connected with heterotaxia.</li>

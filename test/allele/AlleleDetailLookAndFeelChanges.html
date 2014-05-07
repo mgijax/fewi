@@ -43,8 +43,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p>From Cindy's email 11/20/2012:</p>
@@ -52,99 +52,99 @@
 		<li>(relates to a different story)</li>
 		<li>Allele detail page, Disease models ribbon:
 			<ul>
-			<li>a) Remove word "genotypes:" in front of "see all" button. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>b) Un-bold the disease names and OMIM IDs. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-<!-- 			<li>c) Move "expected model not found" out of "Key" box in Phenotype Summary section ("and place in blank area above disease names" - superseded below). - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li> -->
+			<li>a) Remove word "genotypes:" in front of "see all" button. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>b) Un-bold the disease names and OMIM IDs. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+<!-- 			<li>c) Move "expected model not found" out of "Key" box in Phenotype Summary section ("and place in blank area above disease names" - superseded below). - <span concordion:manual="true">passed. klf 11/26/12</span></li> -->
 			</ul>
 		</li>
 		<li>Allele detail page, Phenotype summary ribbon:
 			<ul>
-			<li>a) Change ribbon name from "Phenotype summmary" to "Phenotypes" - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>b) Align genotypes legend box with side and top of ribbon and with the "Affected Systems" grid box. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>c) Narrow vertical spacing between genotypes legend box and the "Affected Systems" grid box. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>d) Remove word "genotypes:" in front of "see all" button. - <span concordion:assertTrue="true">passed. klf 11/26/12</span> </li>
-			<li>e) Move "(show or hide all annotated terms)" from yellow bar to just below "affected systems" in grid box. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-<!-- 			<li>f) Change "Click calls (√, N) for details" in "affected systems" grid box to "Click (√, N) for details" - SUPERSEDED BELOW <span concordion:assertTrue="true">passed. klf 11/26/12</span></li> -->
+			<li>a) Change ribbon name from "Phenotype summmary" to "Phenotypes" - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>b) Align genotypes legend box with side and top of ribbon and with the "Affected Systems" grid box. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>c) Narrow vertical spacing between genotypes legend box and the "Affected Systems" grid box. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>d) Remove word "genotypes:" in front of "see all" button. - <span concordion:manual="true">passed. klf 11/26/12</span> </li>
+			<li>e) Move "(show or hide all annotated terms)" from yellow bar to just below "affected systems" in grid box. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+<!-- 			<li>f) Change "Click calls (√, N) for details" in "affected systems" grid box to "Click (√, N) for details" - SUPERSEDED BELOW <span concordion:manual="true">passed. klf 11/26/12</span></li> -->
 			<li>g) Restore the disease model icon (or column?) in the genotypes legend box. We do not want to restore the photo icon. - <i>made this into a new story</i></li>
-			<li>h) In addition to moving the "(show or hide all annotated terms)" from yellow bar, please delete text "Phenotype Summary by Mammalian Phenotype terms" and "Genotypes are listed in the next section."  This will only leave the key in this part of the ribbon. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>i) Modify the key.  Delete the bottom two lines "N normal phenotype" and "(symbol) expected model not found".  Modify the remaining six into a 3 column, 2 row table and shift left.  Remove yellow background from this section. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>j) the tooltip that appears when you hover over a genotype button in the "Affected Systems" grid box (such as hm1 or ht1) says "genotype details", this should say "phenotype details".  The tooltip does not appear when hovering over the buttons in the genotype legend box. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>(added later)-- in part 3 add one more thing; Make the row shading the same in the "Affected Systems" grid box and genotypes legend box (as well as disease models box). - <span concordion:assertTrue="true">jeffc 11/27/2012</span></li>
+			<li>h) In addition to moving the "(show or hide all annotated terms)" from yellow bar, please delete text "Phenotype Summary by Mammalian Phenotype terms" and "Genotypes are listed in the next section."  This will only leave the key in this part of the ribbon. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>i) Modify the key.  Delete the bottom two lines "N normal phenotype" and "(symbol) expected model not found".  Modify the remaining six into a 3 column, 2 row table and shift left.  Remove yellow background from this section. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>j) the tooltip that appears when you hover over a genotype button in the "Affected Systems" grid box (such as hm1 or ht1) says "genotype details", this should say "phenotype details".  The tooltip does not appear when hovering over the buttons in the genotype legend box. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>(added later)-- in part 3 add one more thing; Make the row shading the same in the "Affected Systems" grid box and genotypes legend box (as well as disease models box). - <span concordion:manual="true">jeffc 11/27/2012</span></li>
 			</ul>
 		</li>
 		<li>Allele detail page, jump down links at top of page, just above the nomenclature ribbon.  (aka "Table of Contents")
 			<ul>
-			<li>a) reorder "Find Mice (IMSR)" to right of disease models. - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>b) Remove  "Phenotypes by genotype" - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>c) Rename "Phenotype summary" to "Phenotypes" - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
+			<li>a) reorder "Find Mice (IMSR)" to right of disease models. - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>b) Remove  "Phenotypes by genotype" - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>c) Rename "Phenotype summary" to "Phenotypes" - <span concordion:manual="true">passed. klf 11/26/12</span></li>
 			</ul>
 		</li>
 		<li>Additional items from discussion Wednesday 11/21/2012:
 			<ul>
-			<li>* Tool bar and image should be right-justified in browser window viewport, not the whole window (image and tool bar go too far to right on alleles with many genotypes, see Apc<sup>min</sup> for example) - <span concordion:assertTrue="true">jeffc 11/27/2012</span></li>
-			<li>* In sex specificity columns, move female first, male second - <span concordion:assertTrue="true">passed. klf 11/26/12</span></li>
-			<li>* Remove text "Key:" in front of the key to abbreviations in the Phenotypes ribbon - <span concordion:assertTrue="true">jeffc 11/27/2012</span></li>
-			<li>* Remove text "Click (√, N) for details" inside the annotations table in the Phenotypes ribbon.<!--  - NOTE: This is a further change to 3.f. above. --> - <span concordion:assertTrue="true">jeffc 11/27/2012</span></li>
+			<li>* Tool bar and image should be right-justified in browser window viewport, not the whole window (image and tool bar go too far to right on alleles with many genotypes, see Apc<sup>min</sup> for example) - <span concordion:manual="true">jeffc 11/27/2012</span></li>
+			<li>* In sex specificity columns, move female first, male second - <span concordion:manual="true">passed. klf 11/26/12</span></li>
+			<li>* Remove text "Key:" in front of the key to abbreviations in the Phenotypes ribbon - <span concordion:manual="true">jeffc 11/27/2012</span></li>
+			<li>* Remove text "Click (√, N) for details" inside the annotations table in the Phenotypes ribbon.<!--  - NOTE: This is a further change to 3.f. above. --> - <span concordion:manual="true">jeffc 11/27/2012</span></li>
 			</ul>
 		</li>
 		<li>Additional items from discussion Monday 11/26/2012:
 			<ul>
-			<li>* add 2 more columns to key above genotype legend in the Phenotypes ribbon: populate with "√ | phenotype observed" and "N | normal phenotype". - <span concordion:assertTrue="true">jeffc 11/27/2012</span></li>
-			<li>* add a 2-column key above the disease models table in the Disease Models ribbon: populate with "√ | phenotype observed" and "<img src="http://www.informatics.jax.org/webshare/images/notSymbol.gif" border="0" valign="bottom"/> | expected model not found" - <span concordion:assertTrue="true">klf 11/27/2012</span></li>
+			<li>* add 2 more columns to key above genotype legend in the Phenotypes ribbon: populate with "√ | phenotype observed" and "N | normal phenotype". - <span concordion:manual="true">jeffc 11/27/2012</span></li>
+			<li>* add a 2-column key above the disease models table in the Disease Models ribbon: populate with "√ | phenotype observed" and "<img src="http://www.informatics.jax.org/webshare/images/notSymbol.gif" border="0" valign="bottom"/> | expected model not found" - <span concordion:manual="true">klf 11/27/2012</span></li>
 			</ul>
 		</li>
 		<li>Verify column borders behave correctly
 			<ul>
 			<li>Navigate to Apoe<sup>tm1Unc</sup> Allele Detail Page (MGI:1857129)</li>
-			<li>Verify data columns for genotypes are separated by heavy gray borders. - <span concordion:assertTrue="true">jeffc 11/27/2012</span></li>
-			<li>Verify homozygous genotype with genetic background "not specified" (hm10) has female column (with WTSI and Euro "Source" data) separated from male column (with WTSI and Euro "Source" data) by narrow gray border. - <span concordion:assertTrue="true">jeffc 11/27/2012</span> </li>
-			<li>Verify heterozygous genotype with genetic background "not specified" (ht12) has female column (with WTSI "Source" data) separated from male column (with WTSI "Source" data) by narrow gray border. - <span concordion:assertTrue="true">jeffc 11/27/2012</span> </li>
+			<li>Verify data columns for genotypes are separated by heavy gray borders. - <span concordion:manual="true">jeffc 11/27/2012</span></li>
+			<li>Verify homozygous genotype with genetic background "not specified" (hm10) has female column (with WTSI and Euro "Source" data) separated from male column (with WTSI and Euro "Source" data) by narrow gray border. - <span concordion:manual="true">jeffc 11/27/2012</span> </li>
+			<li>Verify heterozygous genotype with genetic background "not specified" (ht12) has female column (with WTSI "Source" data) separated from male column (with WTSI "Source" data) by narrow gray border. - <span concordion:manual="true">jeffc 11/27/2012</span> </li>
 			</ul>
 		</li>
 		<li>Verify column for female annotations is to the left of column for male annotations for a given genotype
 			<ul>
 			<li>Navigate to Apoe<sup>tm1Unc</sup> Allele Detail Page (MGI:1857129)</li>
-			<li>Verify homozygous genotype with genetic background "not specified" (hm10) has female column (with WTSI and Euro "Source" data) to the left of male column (with WTSI and Euro "Source" data). - <span concordion:assertTrue="true">klf 11/27/2012</span> </li>
-			<li>Verify heterozygous genotype with genetic background "not specified" (ht12) has female column (with WTSI "Source" data) to the left of male column (with WTSI "Source" data). - <span concordion:assertTrue="true">klf 11/27/2012</span> </li>
+			<li>Verify homozygous genotype with genetic background "not specified" (hm10) has female column (with WTSI and Euro "Source" data) to the left of male column (with WTSI and Euro "Source" data). - <span concordion:manual="true">klf 11/27/2012</span> </li>
+			<li>Verify heterozygous genotype with genetic background "not specified" (ht12) has female column (with WTSI "Source" data) to the left of male column (with WTSI "Source" data). - <span concordion:manual="true">klf 11/27/2012</span> </li>
 			</ul>
 		</li>
 		<li>Changes from Tuesday 11/27/2012 at 2:30pm...
 			<ul>
-			<li>In Phenotypes ribbon, in the summary table, remove the "see all" button. - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In Phenotypes ribbon, in the summary table, make the whole rectangle background of "hm1", "ht2" buttons a clickable link (not just the text area). - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In Phenotypes ribbon, in the summary table, remove the "Click √/N to see details" text. - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In Phenotypes ribbon, below the summary table, add the text "View phenotypes for all genotypes (concatenated display)." Make the word "View" a link which triggers the Genotype Popup for all genotypes (same functionality as was behind "see all"). - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In the Genotypes Popup, in the key, remove the word "only" from the "observed in females" and "observed in males" text. - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In the Disease Models ribbon, in the key above the table, change the text "phenotype observed" to "disease model". - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In the Disease Models ribbon, in the key above the table, make all text and icons on one row (not two rows as now). - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In the Disease Models ribbon, in the summary table, remove the "see all" button. (Not replacing it with anything.) - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In the Disease Models ribbon, in the summary table, move the OMIM label and ID on the same line as the disease name. - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>In the Disease Models ribbon, in the summary table, remove the text "ID" so the remaining text is "OMIM: [IDnumber]". - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>On the Allele Summary page, remove the Uber-Header "Observed Phenotypes in Mouse". - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>On the Allele Summary page, remove mouse-over tooltips from the column headers. - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
-			<li>On the Allele Summary page, change "Similar Human Diseases" to "Human Disease Models". - <span concordion:assertTrue="true">klf 16:00 11/27/2012</span></li>
+			<li>In Phenotypes ribbon, in the summary table, remove the "see all" button. - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In Phenotypes ribbon, in the summary table, make the whole rectangle background of "hm1", "ht2" buttons a clickable link (not just the text area). - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In Phenotypes ribbon, in the summary table, remove the "Click √/N to see details" text. - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In Phenotypes ribbon, below the summary table, add the text "View phenotypes for all genotypes (concatenated display)." Make the word "View" a link which triggers the Genotype Popup for all genotypes (same functionality as was behind "see all"). - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In the Genotypes Popup, in the key, remove the word "only" from the "observed in females" and "observed in males" text. - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In the Disease Models ribbon, in the key above the table, change the text "phenotype observed" to "disease model". - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In the Disease Models ribbon, in the key above the table, make all text and icons on one row (not two rows as now). - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In the Disease Models ribbon, in the summary table, remove the "see all" button. (Not replacing it with anything.) - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In the Disease Models ribbon, in the summary table, move the OMIM label and ID on the same line as the disease name. - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>In the Disease Models ribbon, in the summary table, remove the text "ID" so the remaining text is "OMIM: [IDnumber]". - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>On the Allele Summary page, remove the Uber-Header "Observed Phenotypes in Mouse". - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>On the Allele Summary page, remove mouse-over tooltips from the column headers. - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
+			<li>On the Allele Summary page, change "Similar Human Diseases" to "Human Disease Models". - <span concordion:manual="true">klf 16:00 11/27/2012</span></li>
 			</ul>
 		</li>
 		<li>Update CSS: although it appears in the rendered page multiple times (using View Source), the code for generating styles for the FeWi and the JavaWI portions of the page lives in one place.  Verify "hm1"-type buttons look the same throughout the Allele Detail Page areas.
 		<ul>
-			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup></b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
-			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Allele Detail page for <b>Apoe<sup>tm1Lmh</sup></b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
-			<li><span concordion:assertTrue="true">klf 12/19/2012</span> - Allele Detail page for <b>Yaa</b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
+			<li><span concordion:manual="true">klf 12/19/2012</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup></b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
+			<li><span concordion:manual="true">klf 12/19/2012</span> - Allele Detail page for <b>Apoe<sup>tm1Lmh</sup></b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
+			<li><span concordion:manual="true">klf 12/19/2012</span> - Allele Detail page for <b>Yaa</b> has consistent Genotype Popup buttons in Genotype legend, Phenotypes matrix, and Diseases matrix</li>
 		</ul>
 		</li>
 		<li>Add subsection labels to the Phenotype ribbon and Disease Models ribbon
 		<ul>
-			<li><span concordion:assertTrue="true">Jeffc 01/02/2013</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup>Phenotype ribbon</b> has the subsection labels Key:, Genotypes:, and Phenotypes properly located in the top of each subsection</li>
-			<li><span concordion:assertTrue="true">jeffc 01/02/2013</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup>Disease models ribbon</b> has the subsection labels Key: and Models: properly located in the top of each subsection</li>
+			<li><span concordion:manual="true">Jeffc 01/02/2013</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup>Phenotype ribbon</b> has the subsection labels Key:, Genotypes:, and Phenotypes properly located in the top of each subsection</li>
+			<li><span concordion:manual="true">jeffc 01/02/2013</span> - Allele Detail page for <b>Apoe<sup>tm1Unc</sup>Disease models ribbon</b> has the subsection labels Key: and Models: properly located in the top of each subsection</li>
 		</ul>
 		</li>
 		
 		<li>SEO changes for MGI 5.18
 			<ul>
-			<li>a) <b>Targeted</b> and <b>Transgenic</b> types will use the same keywords - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
-			<li>b) <b>Other</b> type will be suppressed from the title - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
-			<li>c) The type <b>Other</b> will not be added as a keyword(just like NA and NS) - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
-			<li>d) <b>Other</b> type will not use the keywords "mutant" and "mutation"(just like NA and QTLs) - <span concordion:assertTrue="true">jeffc 02/12/2014</span></li>
+			<li>a) <b>Targeted</b> and <b>Transgenic</b> types will use the same keywords - <span concordion:manual="true">jeffc 02/12/2014</span></li>
+			<li>b) <b>Other</b> type will be suppressed from the title - <span concordion:manual="true">jeffc 02/12/2014</span></li>
+			<li>c) The type <b>Other</b> will not be added as a keyword(just like NA and NS) - <span concordion:manual="true">jeffc 02/12/2014</span></li>
+			<li>d) <b>Other</b> type will not use the keywords "mutant" and "mutation"(just like NA and QTLs) - <span concordion:manual="true">jeffc 02/12/2014</span></li>
 			</ul>
 		</li>		
 		</ol>

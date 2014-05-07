@@ -54,13 +54,13 @@
     <p>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.</p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> The "Submit Data" index page contains text inviting users to submit recombinase data. The text is hyperlinked to a form.
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
                 <li>From any MGI page, click the "Submit Data" item in the navigation bar.</li>
                 <li>Verify that the "Submit Data" index page appears.</li>
@@ -71,7 +71,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The recombinase data submission form contains sections containing input fields to capture data.
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
                 <li>Navigate to the "Recombinase Knock-in or Transgenic Allele Activity/Specificity Data Submission" form page.</li>
                 <li>Verify the <i>Contact details</i> section exists and contains input fields</li>
@@ -85,7 +85,7 @@
     		</li>
 
     		<li>Links to resources that appear on the form work properly and open in new windows/tabs.
- 			<p concordion:assertTrue="true">passed klf 5/10/2013</p>
+ 			<p concordion:manual="true">passed klf 5/10/2013</p>
     		<ol>
     			<li>Recombinase knock-in or transgene section, "searching MGI" text is hyperlinked to MGI's "Marker Query Form" and opens in a new tab/window.</li>
     			<li>Recombinase knock-in or transgene section, "Mouse Nomenclature Page" is linked to MGI's "Mouse Nomenclature Home Page" and opens in a new tab/window. </li>
@@ -97,7 +97,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The Recombinase activity data section contains an Excel file template the user may download.
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
                 <li>Verify the Recombinase activity data section contains a link to an Excel file template.</li>
                 <li>Verify that the user can download and open the Excel file template.</li>
@@ -105,7 +105,7 @@
     		</li>
     		
     		<li><span class="regressHi">Regress</span> The user may enter data and submit the recombinase data form. Prior to submitting, the user may edit any field. Submitting the form saves the submitted data on one of MGI's servers. 
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
                 <li>Enter something in every input field.</li>
                 <li>Verify that clicking the "Verify" button validates the form inputs and allows the user to edit or submit the data.</li>
@@ -119,7 +119,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> When a user submits a form, the address(es) indicated in the &quot;File Submission&quot; section is/are notified via email.  The email contains the the text submitted through the form. A confirmation email is also sent to the user who submitted the form. 
- 			<p concordion:assertTrue="true">passed on Valinor, klf 5/10/2013</p>
+ 			<p concordion:manual="true">passed on Valinor, klf 5/10/2013</p>
     		<ol>
                 <li>From the test above, verify that the user receives a confirmation email containing the text submitted through the form.</li>
                 <li>From the test above, verify that MGI staff receive an email containing the text submitted through the form.</li>
@@ -127,7 +127,7 @@
     		</li>
     		
     		<li>Successful submission gives the user a link to submit additional data. Clicking the link opens the Recombinase form with user identity data pre-populated.
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
                 <li>Verify that after submitting the form, a link appears inviting the user to submit more recombinase data.</li>
                 <li>Verify that clicking the link opens the Recombinase form.</li>
@@ -136,7 +136,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The form contains a "Verify" button for form input validation. Clicking this button highlights required input fields which are missing data. The form will not submit when required data are missing.
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
                 <li>Do not enter data into any required fields.</li>
                 <li>Verify that clicking the "Verify" button does not submit the form.</li>
@@ -150,7 +150,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The user may upload one or more files with the submitted form.  Uploading files saves all of them in MGI and associates them with the submitted data. Names of all uploaded files are identified in an email to the user. The directory(ies) containing uploaded file(s) is/are identifed in an email to MGI staff.   
- 			<p concordion:assertTrue="true">passed on Valinor, klf 5/10/2013</p>
+ 			<p concordion:manual="true">passed on Valinor, klf 5/10/2013</p>
     		<ol>
                 <li>Fill in the required parts of the form.</li>
                 <li>Click the "Choose file" button and select a file &lt;5MB.</li>
@@ -167,7 +167,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The uploaded files are saved correctly and are available in the correct directory.
- 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+ 			<p concordion:manual="true">klf 6/6/2013</p>
     		<ol>
     			<li>Using the submission form, upload one or more test files.</li>
     			<li>Log-in to the appropriate server (Cardolan, Firien, etc.) and navigate to the directory "/export/{servername}/. Example: "/export/firien/". </li>
@@ -180,7 +180,7 @@
     		</li>
 
     		<li><span class="regressHi">Regress</span> The uploaded files are saved and are available to curators from the "Submissions" link on the MGI wiki Main Page.
- 			<p concordion:assertTrue="true">We released this, so it must pass... right? - kstone</p>
+ 			<p concordion:manual="true">We released this, so it must pass... right? - kstone</p>
  			<p><span style="background-color:#FFFF66;">NOTE: Curators access files from the main wiki page via a link called "Submissions". We are not able to test this until we go to Public.</span></p>
     		<ol>
     			<li>Using the submission form, upload a test file.</li>
@@ -193,7 +193,7 @@
     		</li>
     		
     		<li>Reset button works.
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
                 <li>Enter text in several fields.</li>
                 <li>Click the "Reset" button.</li>
@@ -202,7 +202,7 @@
     		</li>
 
     		<li>Story 200: Links to resources that appear on the Mutant Alleles, Strains, and Phenotypes Submission Form work properly.
- 			<p concordion:assertTrue="true">passed klf 5/9/2013</p>
+ 			<p concordion:manual="true">passed klf 5/9/2013</p>
     		<ol>
     			<li>Allele section, "lab codes" is linked to the ILAR home page and opens in a new tab/window. </li>
     			<li>Genetic background section, "lab codes" is linked to the ILAR home page and opens in a new tab/window.</li>

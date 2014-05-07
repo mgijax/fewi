@@ -69,14 +69,14 @@
     <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> Allele subtypes appear in Mutation Description ribbon on Allele Detail Pages 
     			as a comma separated list following the allele type. (sto24)<br/> The types but not the subtypes are supported on Prod. (sto105)
-    			<p concordion:assertTrue="true">passed - klf 2014-03-10</p> 
+    			<p concordion:manual="true">passed - klf 2014-03-10</p> 
     		<ol>
                 <li>Navigate to the Allele Detail page for Kdr&lt;tm1Jrt&gt; (MGI:1857168) (<a href="http://cardolan.informatics.jax.org/allele/MGI:1857168">link</a>)</li>
                 <li>Verify that the subtype value <b>(Null/knockout, Reporter)</b> appears after Allele Type <b>Targeted</b> in the Mutation Description ribbon.</li>
@@ -89,7 +89,7 @@
 
     		<li><span class="regressHi">Regress</span> Allele Subtypes do not appear when the allele is not assigned to a subtype. (sto24)<br/>
     		Also true on Prod. (sto105)
- 			<p concordion:assertTrue="true">passed - klf 2014-03-10</p> 
+ 			<p concordion:manual="true">passed - klf 2014-03-10</p> 
     		<ol>
                 <li>Navigate to the Allele Detail page for Lith20&lt;SM/J&gt; (MGI:3577251) (<a href="http://cardolan.informatics.jax.org/allele/MGI:3577251">link</a>)</li>
                 <li>Verify that <b>no subtype value</b> appears in the Mutation Description ribbon following the Allele Type: QTL.</li>
@@ -98,7 +98,7 @@
     		</ol>
     		</li>
     		<li>Allele Detail page displays molecular image in the molecular description ribbon.  (sto54)
- 			<p concordion:assertTrue="true">klf 2014-03-10</p>
+ 			<p concordion:manual="true">klf 2014-03-10</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for Tgm3&lt;tm1Sjo&gt; (MGI:5436399) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5436399">link</a>)</li>
                 <li>Verify that molecular image MGI:5503313 displays in the right side of the molecular description ribbon</li>
@@ -108,7 +108,7 @@
     		</li>
     		
     		<li>Verify these Alleles have the Mutagentix link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto90)
- 			<p concordion:assertTrue="true">Passed jeffc 03/21/2014</p>
+ 			<p concordion:manual="true">Passed jeffc 03/21/2014</p>
     		<ol>
                 <li>Navigate to these allele detail pages.</li>
                 <li>Verify the mutagentix link exists and works:
@@ -128,7 +128,7 @@
     		</li>
     		
     		<li>Allele Detail page displays thumbnail caption to the left of the molecular image in the molecular description ribbon.  (sto156)
- 			<p concordion:assertTrue="true">passed jeffc 04/15/2014</p>
+ 			<p concordion:manual="true">passed jeffc 04/15/2014</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for Stk11&lt;tm1.1Jish&gt; (MGI:2676546) (<a href="http://cardolan.informatics.jax.org/allele/MGI:2676546">link</a>)</li>
                 <li>Verify that to the left of the molecular image is displayed the thumbnail caption</li>
@@ -143,7 +143,7 @@
     		</li>
 
     		<li>The correct image/caption is displayed to the left of the molecular image in the molecular description ribbon when more than one thumbnail exists for an allele.  (sto156)
- 			<p concordion:assertTrue="true">passed jeffc 04/15/2014</p>
+ 			<p concordion:manual="true">passed jeffc 04/15/2014</p>
     		<ol>
                 <li>Navigate to the Allele Detail page for Dock2&lt;mu&gt; (MGI:5319388) (<a href="http://cardolan.informatics.jax.org/allele/MGI:5319388">link</a>)</li>
                 <li>Verify that to the left of the molecular image is displayed the thumbnail caption</li>
@@ -152,7 +152,7 @@
     		</ol>
     		</li>    		
     		<li>Verify these Alleles have the Australian Phenome Facility link in the Mutation Description ribbon(under  Mutation Details) and the link works. (sto198)
- 			<p concordion:assertTrue="true">Passed jeffc 04/08/2014</p>
+ 			<p concordion:manual="true">Passed jeffc 04/08/2014</p>
     		<ol>
                 <li>Navigate to these allele detail pages.</li>
                 <li>Verify the Australian Phenome Facility link exists and works:

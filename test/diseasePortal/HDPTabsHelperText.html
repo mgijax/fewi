@@ -75,13 +75,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Test that correct text is displayed on the grid tab, genes tab, and diseases tab when searching for a disease
- 			<p concordion:assertTrue="true">jeffc 09/09/2013</p> 
+ 			<p concordion:manual="true">jeffc 09/09/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>605552</b> in the Phenotypes and Disease section and hit search</li>
@@ -92,7 +92,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Test that correct text is displayed on the grid tab, genes tab, and diseases tab when searching for a phenotype
- 			<p concordion:assertTrue="true">jeffc 09/09/2013</p> 
+ 			<p concordion:manual="true">jeffc 09/09/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>MP:0010030</b> in the Phenotypes and Disease section and hit search</li>
@@ -104,7 +104,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Test that correct text is displayed on the grid tab, genes tab, and diseases tab when searching for a gene
- 			<p concordion:assertTrue="true">jeffc 09/09/2013</p> 
+ 			<p concordion:manual="true">jeffc 09/09/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>gata1</b> in the Gene section and hit search</li>
@@ -115,7 +115,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li> 
     		
     		<li>Test that correct text is displayed on the grid tab, genes tab, and diseases tab when searching for a disease and a gene
- 			<p concordion:assertTrue="true">jeffc 09/09/2013</p> 
+ 			<p concordion:manual="true">jeffc 09/09/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>605552</b> in the Phenotypes and Disease section</li>
@@ -136,7 +136,7 @@ All human data are obtained from NCBI and OMIM. </b></li>
     		</li>  
     		
     		<li>Test that correct text is displayed on the grid tab, genes tab, and diseases tab when searching for a disease and a gene and then removing the text from the gene field
- 			<p concordion:assertTrue="true">jeffc 09/09/2013</p> 
+ 			<p concordion:manual="true">jeffc 09/09/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>605552</b> in the Phenotypes and Disease section</li>
@@ -150,7 +150,7 @@ All human data are obtained from NCBI and OMIM. </b></li>
     		</li>
 
     		<li>Test that correct text is displayed on the grid tab, genes tab, and diseases tab when searching for a disease and a gene and then removing the text from the disease field
- 			<p concordion:assertTrue="true">jeffc 09/09/2013</p> 
+ 			<p concordion:manual="true">jeffc 09/09/2013</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>605552</b> in the Phenotypes and Disease section</li>

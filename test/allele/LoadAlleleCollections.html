@@ -71,13 +71,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>A new vocabulary for Allele Collections exists and contains the values specified below.
- 			<p concordion:assertTrue="true">jeffc 12/30/2013</p>
+ 			<p concordion:manual="true">jeffc 12/30/2013</p>
     		<ol>
                 <li>Query the Sybase VOC_Vocab table to verify the new Allele Collection vocabulary exists.</li>
                 <li>Query the Sybase VOC_Term table to verify the following terms exist for that vocabulary <i>(list as of 12/30/2013)</i>:
@@ -107,28 +107,28 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>No allele has more than one Collection value
- 			<p concordion:assertTrue="true">jeffc 12/30/2013</p>
+ 			<p concordion:manual="true">jeffc 12/30/2013</p>
     		<ol>
                 <li>Tested via migration script.</li>
     		</ol>
     		</li>
 
     		<li>Every allele in the database has a Collection value.
- 			<p concordion:assertTrue="true">jeffc 12/30/2013</p>
+ 			<p concordion:manual="true">jeffc 12/30/2013</p>
     		<ol>
                 <li>Tested via migration script.</li>
     		</ol>
     		</li>
 
     		<li>Every Collection value in the database is associated with at least 1 allele.
- 			<p concordion:assertTrue="true">jeffc 12/30/2013</p>
+ 			<p concordion:manual="true">jeffc 12/30/2013</p>
     		<ol>
                 <li>Tested via migration script.</li>
     		</ol>
     		</li>
 
     		<li>The following alleles are assigned to the indicated Collection. 
- 			<p concordion:assertTrue="true">jeffc 12/30/2013</p>
+ 			<p concordion:manual="true">jeffc 12/30/2013</p>
     		<ol>
                 <li>Query Sybase ALL_Allele for the appropriate _Collection_key for each allele.</li>
                 <li>
@@ -163,7 +163,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Verify collection counts are close to expected counts
- 			<p concordion:assertTrue="true">jeffc 12/30/2013</p>
+ 			<p concordion:manual="true">jeffc 12/30/2013</p>
     		<ol>
     		<li>
                 <table>

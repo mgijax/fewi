@@ -54,8 +54,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p>Load test data from "mock" Europhenome file:</p>
@@ -85,13 +85,13 @@
 		</table>
 		<ol>
     		<li>Verify all lines in Europhenome's biomart download file are parsed and reformatted into our input HT-MP file format
- 			<p concordion:assertTrue="true">passed 11/13/2012 -klf</p>
+ 			<p concordion:manual="true">passed 11/13/2012 -klf</p>
     		<ol>
                 <li>Verify that counts at the top of <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload/logs/europhenoload.cur.log">Curator's Log file</a> are equal.</li>
     		</ol>
     		</li>
     		<li>Test the Europhenome parser rules
- 			<p concordion:assertTrue="true">passed 11/13/2012 -klf</p>
+ 			<p concordion:manual="true">passed 11/13/2012 -klf</p>
     		<ol>
                 <li>Make a Europhenome "kick-out" file, to validate the parser. Verify that errors shown in the table above are reported in the <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/htmpload/europhenompload.test/logs/europhenoload.cur.log">Curator's Log file for the test load</a>.
                 <ul>
@@ -106,7 +106,7 @@
     		</ol>
     		</li>
     		<li>Include Europhenome "mock data" in the file, to validate the parser.
- 			<p concordion:assertTrue="true">passed 11/13/2012 -klf</p>
+ 			<p concordion:manual="true">passed 11/13/2012 -klf</p>
     		<ol>
                 <li>Zygosity values are correctly translated: 0=heterozygous, 1=homozygous, 2=hemizygous (see <b>Btk&lt;tm1a(EUCOMM)Hmgu&gt; homozygote, hemizygote.</b>  see <b>Ankrd11&lt;Yod&gt; heterozygote.</b>  All real data.)</li>
                 <li>Data associated with &quot;hemizygous&quot; genotype whose marker is on the &quot;Y&quot; chromosome is loaded (see <b>Tspy-ps&lt;tm1(Mlc3-Gdf8)Mgs&gt; hemizygote</b> - mock data)</li>

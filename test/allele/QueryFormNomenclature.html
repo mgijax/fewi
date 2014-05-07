@@ -85,14 +85,14 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 
     		<li>Verify you can search for alleles by an old marker symbol, a current marker symbol
-    		<p concordion:assertTrue="true">passed - 2014/01/27 kstone</p>
+    		<p concordion:manual="true">passed - 2014/01/27 kstone</p>
     		<ol>
     			<li>Enter the old marker symbol <b>Hhg1</b> in the Nomenclature field and Search</li>
     			<li>Verify you return results with marker alleles beginning Shh since this is the old name for marker symbol <b>Shh</b></li>
@@ -101,7 +101,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify you can search for alleles by an old marker name, a current marker name, or a marker synonym
-    		<p concordion:assertTrue="true">passed - 2014/01/27 kstone</p>
+    		<p concordion:manual="true">passed - 2014/01/27 kstone</p>
     		<ol>
     			<li>Enter the marker name <b>programmed cell death 1 ligand 1</b> in the Nomenclature field and Search</li>
     			<li>Verify you return results with marker alleles beginning Cd274 or Pdcd1lg1 since this is the old name for marker name <b>CD274 antigen</b></li>
@@ -112,7 +112,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify you can search for alleles by allele symbol, allele name or an allele synonym
-    		<p concordion:assertTrue="true">passed - 2014/01/27 kstone</p>
+    		<p concordion:manual="true">passed - 2014/01/27 kstone</p>
     		<ol>
     			<li>Enter the allele symbol <b>ABCB8<sup>f</sup></b> in the Nomenclature field and Search</li>
     			<li>Verify you return the result <b>Abcb8<sup>tm1Hard</sup></b> since <b>ABCB8<sup>f</sup></b> is the old symbol for this allele</li>

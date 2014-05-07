@@ -129,13 +129,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>When all annotations via all MP terms to all genotypes for a given gene and MP header have the "norm" qualifier, the gene and header appear and the grid cell displays an "N" (sto105).
-			<p concordion:assertTrue="true">pass KLF 9/27/2013 - except for two rows noted below</p><i>fully-automated</i>
+			<p concordion:manual="true">pass KLF 9/27/2013 - except for two rows noted below</p><i>fully-automated</i>
 			<ol>
 				<li>Open the HDP query form</li>
 				<li>For each MP term below, verify the system header, listed gene, and display of "N":
@@ -173,7 +173,7 @@ tr.gray td {background-color:#EEEEEE;}
 <!--  NOT SURE WHAT THIS TEST WAS SUPPOSED TO VERIFY. THE FOLLOWING TEST VERIFIES MP->GENOTYPE->OMIM RULES.
 		KEEPING THIS TEST CASE BECAUSE IT RETURNS ONLY A LITTLE DATA SO MAY BE USEFUL FOR SOME OTHER PURPOSE.
  			<li>Test that Genotype to Disease contributes to the Disease results
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:manual="false">new test</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>MP:0001868</b> in the Phenotypes and Diseases section and hit search</li>
@@ -328,7 +328,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3027206">MGI:3027206</a> for Aspa&lt;nur7&gt;<br/>
                 	and <a href="http://www.informatics.jax.org/allele/genoview/MGI:3038607">MGI:3038607</a> for Aspa&lt;tm1Mata&gt;.)</li>
                 <li>Click on the Grid tab and confirm the following MP header terms are displayed:
-                	<p concordion:assertTrue="true">klf 9/26/2013</p>
+                	<p concordion:manual="true">klf 9/26/2013</p>
                 	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
                 	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
 					<tr><td>adipose tissue</td><td>annotated to same genotype as disease</td></tr>
@@ -356,7 +356,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <i>(automated)</i></li>
                 <li>(Note: this disease is annotated to Wrn&lt;tm1Led&gt; and Tg(CAG-WRN*K577M)5025Wcl.)</li>
                 <li>Click on the Grid tab and confirm the following MP header terms are displayed:
-                	<p concordion:assertTrue="true">klf 9/26/2013</p>
+                	<p concordion:manual="true">klf 9/26/2013</p>
                 	<table concordion:verifyRows="#systems : gridMpHeadersByPhenotype(#pheno)">
                 	<tr><th concordion:assertEquals="#systems">MP Header</th><th>Notes for tester</th></tr>
 					<tr><td>adipose tissue</td><td>annotated to same genotype (<a href="http://www.informatics.jax.org/allele/genoview/MGI:3665480">MGI:3665480</a>) as disease</td></tr>

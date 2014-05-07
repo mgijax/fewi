@@ -45,13 +45,13 @@
     <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li><span class="regressHi">Regress</span> Verify an allele gaining annotations from both HTMP providers is associated with both J:#s. 
- 			<p concordion:assertTrue="true">kstone 2013/05/14</p> 
+ 			<p concordion:manual="true">kstone 2013/05/14</p> 
     		<ol>
                 <li>Navigate to the Allele Detail Page for <b>Mysm1<sup>tm1a(KOMP)Wtsi</sup></b> </li>
                 <li>Verify that MP annotations exist from both WTSI and EuPh.</li>
@@ -61,12 +61,12 @@
     		</li>
     		<li>Verify an allele gaining annotations from only one HTMP provider is associated with only the correct J:#. 
     		<ol>
-                <li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">klf 2013/05/21</span> - Navigate to the Allele Detail Page for <b>Brdt<sup>tm1a(EUCOMM)Wtsi</sup></b> </li>
+                <li><span class="regressHi">Regress</span> <span concordion:manual="true">klf 2013/05/21</span> - Navigate to the Allele Detail Page for <b>Brdt<sup>tm1a(EUCOMM)Wtsi</sup></b> </li>
                 <li>Verify that MP annotations exist from both MGI and WTSI, but not EuPh.</li>
                 <li>Click the count of References at the bottom of the page.</li>
                 <li>Verify that <b>J:175295</b> appears in the list of references.</li>
                 <li>Verify that <b>J:165965</b> does not appear in the list of references.</li>
-                <li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">kstone 2013/05/14</span> - Navigate to the Allele Detail Page for <b>B9d1<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
+                <li><span class="regressHi">Regress</span> <span concordion:manual="true">kstone 2013/05/14</span> - Navigate to the Allele Detail Page for <b>B9d1<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
                 <li>Verify that MP annotations exist from both MGI and EuPh, but not WTSI.</li>
                 <li>Click the count of References at the bottom of the page.</li>
                 <li>Verify that <b>J:165965</b> appears in the list of references.</li>
@@ -75,9 +75,9 @@
     		</li>
     		<li>Verify a marker having an alleles with HTMP annotations has the appropriate J:#s.
     		<ol>
-    			<li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">kstone 2013/05/14</span> - Mysm1 has both</li>
-    			<li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">klf 2013/05/21</span> - Brdt has J:175295</li>
-    			<li><span class="regressHi">Regress</span> <span concordion:assertTrue="true">kstone 2013/05/14</span> - B9D1 has J:165965</li>
+    			<li><span class="regressHi">Regress</span> <span concordion:manual="true">kstone 2013/05/14</span> - Mysm1 has both</li>
+    			<li><span class="regressHi">Regress</span> <span concordion:manual="true">klf 2013/05/21</span> - Brdt has J:175295</li>
+    			<li><span class="regressHi">Regress</span> <span concordion:manual="true">kstone 2013/05/14</span> - B9D1 has J:165965</li>
     		</ol>
     		</li>
 		</ol>
@@ -87,14 +87,14 @@
 <!-- WRITE MANUAL TESTS EVENTUALLY USING SQL TO LOOK FOR THESE SITUATIONS.
  		<ol>
     		<li>Verify the HTMP J:#s are associated with only those <b>alleles</b> having HTMP annotations.
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:manual="false">new test</p> 
     		<ol>
                 <li>Find MP annotations from J:175295. - Find associated genotypes. - Find associated alleles. - Verify that there are no other alleles having J:175295 with reference type = Used-FC.</li>
                 <li>Find MP annotations from J:165965. - Find associated genotypes. - Find associated alleles. - Verify that  there areno other alleles having J:165965 with reference type = Used-FC.</li>
     		</ol>
     		</li>
     		<li>Verify the HTMP J:#s are associated with only those <b>markers</b> having alleles with HTMP annotations.
- 			<p concordion:assertTrue="false">new test</p> 
+ 			<p concordion:manual="false">new test</p> 
     		<ol>
                 <li>Find MP annotations from J:175295. - Find associated genotypes. - Find associated alleles. - Find associated markers. - Verify that there are no other markers having J:175295.</li>
                 <li>Find MP annotations from J:165965. - Find associated genotypes. - Find associated alleles. - Find associated markers. - Verify that there are no other markers having J:165965.</li>

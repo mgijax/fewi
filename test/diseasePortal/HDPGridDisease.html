@@ -132,13 +132,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>The Grid tab displays one column per disease, sorted alphabetically (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
+ 			<p concordion:manual="true">jeffc 11/01/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">gata1</b> in the Genes section and hit search</li>
@@ -156,7 +156,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 		
     		<li>A Transgene gets associated to a disease on the grid (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
+ 			<p concordion:manual="true">jeffc 11/01/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">605552</b> in the Phenotypes and Diseases section and hit search</li>
@@ -166,7 +166,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Either a human or a mouse marker can contribute to the disease column (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
+ 			<p concordion:manual="true">jeffc 11/01/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#genes">ACAT2</b> in the Genes section and hit search</li>
@@ -180,7 +180,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Alternate IDs return the same data (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="true">jeffc 11/01/2013 tested for sto117</p> 
+ 			<p concordion:manual="true">jeffc 11/01/2013 tested for sto117</p> 
  			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010030</b> (abnormal orbit morphology) in the Phenotypes and Diseases section and hit search</li>
@@ -192,7 +192,7 @@ tr.gray td {background-color:#EEEEEE;}
     		 </li>   
     		     		
     		<li>Multiple annotations to the same disease rolls up to one check (<i>modified for sto117</i>)
- 			<p concordion:assertTrue="true">klf 11/06/2013 tested for sto117</p> 
+ 			<p concordion:manual="true">klf 11/06/2013 tested for sto117</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0001870, MP:0001873</b> in the Phenotypes and Diseases section and hit search</li>
@@ -210,17 +210,17 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li>When the query matches a phenotype term, only diseases that share a super-simple or simple genotype  &quot;genocluster&quot; with MP terms matching your query are returned for a mouse marker (sto107), and the disease column headers are "clump" names (sto117), and cells reflect the number of underlying annotations (sto117) for those common genotypes.
  			<br/><i>updated for sto135, 117 (semi-automated)</i>
- 			<p concordion:assertTrue="true">klf 11/04/2013</p> 
+ 			<p concordion:manual="true">klf 11/04/2013</p> 
     					<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010632</b> (cardiac muscle necrosis) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Myelodysplastic Syndrome; MDS</b> DOES exist.</li>
                 <li>Confirm that mouse marker <b>Bap1</b> is associated with this disease. 
                 	(Genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:5439657">MGI:5439657</a> is a 'simple' genotype.)</li>
-                <li>Confirm that the count associated with Bap1 and Myelodysplastic Syndrome; MDS is <b>1</b>. (<span concordion:assertTrue="true">klf</span>)</li>
-                <li>Confirm that the disease column <b>Familial Arrhythmogenic Right Ventricular Dysplasia</b> exists. (<span concordion:assertTrue="true">klf</span>)</li>
-                <li>Confirm that mouse marker <b>Jup</b> is associated with this disease. (<span concordion:assertTrue="true">klf</span>)</li>
-                <li>Confirm that the count associated with Jup and Familial Arrhythmogenic Right Ventricular Dysplasia is <b>1</b> (<span concordion:assertTrue="true">klf</span>) (not 2; only 1 genotype is common to the MP term and the disease).<br/><br/></li>
+                <li>Confirm that the count associated with Bap1 and Myelodysplastic Syndrome; MDS is <b>1</b>. (<span concordion:manual="true">klf</span>)</li>
+                <li>Confirm that the disease column <b>Familial Arrhythmogenic Right Ventricular Dysplasia</b> exists. (<span concordion:manual="true">klf</span>)</li>
+                <li>Confirm that mouse marker <b>Jup</b> is associated with this disease. (<span concordion:manual="true">klf</span>)</li>
+                <li>Confirm that the count associated with Jup and Familial Arrhythmogenic Right Ventricular Dysplasia is <b>1</b> (<span concordion:manual="true">klf</span>) (not 2; only 1 genotype is common to the MP term and the disease).<br/><br/></li>
 
                 <li>Enter <b concordion:set="#pheno">MP:0011099</b> in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease column <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Beta-Thalassemia</b> exists.</li>
@@ -236,9 +236,9 @@ tr.gray td {background-color:#EEEEEE;}
                 	(has several super-simple genotypes and also the human ortholog annotated) are displayed.</li>
                 <li>Confirm disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Apert Syndrome</b> is displayed 
                 	(genotype <a href="http://www.informatics.jax.org/allele/genoview/MGI:3604025">MGI:3604025</a> is in common and is simple ).</li>
-                <li>Confirm that the gene <b>Fgfr2</b> is associated with <b>Apert Syndrome</b> and that the associated count is <b>4</b> (not 6). (<span concordion:assertTrue="true">klf</span>)</li>
-                <li>Confirm that the gene <b>Fgfr3</b> is associated with <b>Muenke Syndrome; MNKES</b> and that the associated count is <b>3</b> (not 6). (<span concordion:assertTrue="true">klf</span>)</li>
-                <li>Confirm that the gene <b>Lmna</b> is associated with <b>Hutchinson-Gilford Progeria Syndrome; HGPS</b> and that the associated count is <b>1</b> (not 5). (<span concordion:assertTrue="true">klf</span>)<br/><br/></li>
+                <li>Confirm that the gene <b>Fgfr2</b> is associated with <b>Apert Syndrome</b> and that the associated count is <b>4</b> (not 6). (<span concordion:manual="true">klf</span>)</li>
+                <li>Confirm that the gene <b>Fgfr3</b> is associated with <b>Muenke Syndrome; MNKES</b> and that the associated count is <b>3</b> (not 6). (<span concordion:manual="true">klf</span>)</li>
+                <li>Confirm that the gene <b>Lmna</b> is associated with <b>Hutchinson-Gilford Progeria Syndrome; HGPS</b> and that the associated count is <b>1</b> (not 5). (<span concordion:manual="true">klf</span>)<br/><br/></li>
                 
                 <li>Enter <b concordion:set="#pheno">MP:0001853</b> (heart inflammation) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and verify AT LEAST the following diseases are listed:
@@ -262,7 +262,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>When the query matches a disease term, only MP Headers that share a super-simple  or simple genotype  &quot;genocluster&quot; with terms matching your query are returned for a mouse marker (sto107).
-    		<p concordion:assertTrue="true">klf 9/26/2013</p>
+    		<p concordion:manual="true">klf 9/26/2013</p>
     		<ol>
     			<li>Open the HDP query form.</li>
     			<li>Enter <b concordion:set="#pheno">306955</b> (Heterotaxy, Visceral, 1, X-Linked; HTX1) in the Phenotypes and Diseases section and hit search.</li>
@@ -300,7 +300,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 			<li>When querying by phenotype, a disease associated with a mitochondrial gene and genotype should be returned. (Mitochondrial genotypes do not have Allele2 in our database.) 
- 			<p concordion:assertTrue="true">kstone 2013/10/31</p> 
+ 			<p concordion:manual="true">kstone 2013/10/31</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010954</b> (abnormal cellular respiration) in the Phenotypes and Diseases section and hit search</li>
@@ -312,7 +312,7 @@ tr.gray td {background-color:#EEEEEE;}
 			</li>
     		
     		<li>Test that a Phenotype-only  Human gene displays correctly in the HDP tabs (sto88)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/31</p> 
+ 			<p concordion:manual="true">passed - kstone 2013/10/31</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">603221</b> in the Phenotypes and Diseases section and hit search</li>
@@ -325,7 +325,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Test that a Phenotype-only Human gene does not get associated to the Disease on the Human Disease and Mouse Model Detail page (sto88)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/31</p> 
+ 			<p concordion:manual="true">passed - kstone 2013/10/31</p> 
  			<i>(cannot automate)</i>
     		<ol>
                 <li>Open the HDP query form</li>
@@ -337,7 +337,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Test that a Phenotype-only Human gene displays correctly when returned with other annotation types (sto88)
- 			<p concordion:assertTrue="true">passed - kstone 2013/10/31</p> 
+ 			<p concordion:manual="true">passed - kstone 2013/10/31</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>108800</b> (Atrial Septal Defect 1;ASD1) in the Phenotypes and Diseases section and hit search</li>
@@ -348,7 +348,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
 			<li>Test that a Phenotype-only gene displays correctly when returned with other annotation types (sto88)
- 			(contains 1005, 1006, 1012 annoatations)<p concordion:assertTrue="true">passed - kstone 2013/10/31</p>
+ 			(contains 1005, 1006, 1012 annoatations)<p concordion:manual="true">passed - kstone 2013/10/31</p>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>268220</b> (Rhabdomyosarcoma 2; RMS2) in the Phenotypes and Diseases section and hit search</li>
@@ -361,7 +361,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Disease terms are displayed in "clumped" columns (sto117)
-    		<p concordion:assertTrue="true">klf 11/04/2013</p>
+    		<p concordion:manual="true">klf 11/04/2013</p>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>Alzheimer</b> in the Phenotypes and Diseases section and hit search</li>
@@ -402,7 +402,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 			<li>Test that, for human genes, a Phenotype search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
- 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
+ 			<p concordion:manual="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>MP:0004753</b> ((abnormal miniature excitatory postsynaptic currents) in the Phenotypes and Diseases section and hit search</li>
@@ -412,7 +412,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li> 
     		<li>Test that, for human genes, a Disease search displays only diseases with text matching the search, not all diseases associated with the human homolog of a returned mouse gene (sto136)
- 			<p concordion:assertTrue="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
+ 			<p concordion:manual="true">kstone 2013/10/31</p> <i>(fully-automated)</i>
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">222100</b> (Melanoma, Cutaneous Malignant, Suspceptibility to, 3: CMM3) in the Phenotypes and Diseases section and hit search</li>

@@ -69,13 +69,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Verify disease model ribbon exists when it should, and doesn't when no disease models exist.
- 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
+ 			<p concordion:manual="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Fas<sup>theo</sup> (MGI:4455060).</li>
@@ -85,7 +85,7 @@
     		</ol>
     		</li>
     		<li>Only genotypes that have disease models appear in disease model table
- 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>automated</i>
+ 			<p concordion:manual="true">jeffc 11/26/2012</p> <i>automated</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
@@ -93,7 +93,7 @@
     		</ol>
     		</li>
     		<li>Verify that genotype labels match up with genotype legend
- 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>semi-automated</i>
+ 			<p concordion:manual="true">jeffc 11/26/2012</p> <i>semi-automated</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
@@ -104,7 +104,7 @@
     		</ol>
     		</li>
     		<li>Verify that Omim ID appears under each disease with a link
- 			<p concordion:assertTrue="true">jeffc 11/26/2012</p>
+ 			<p concordion:manual="true">jeffc 11/26/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
@@ -122,7 +122,7 @@
     		</ol>
     		</li>
     		<li>Each disease is only listed once
- 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>automated</i>
+ 			<p concordion:manual="true">jeffc 11/26/2012</p> <i>automated</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
@@ -132,7 +132,7 @@
     		</ol>
     		</li>
     		<li>verify that table functions like the mp phenotype table above, with working popups.
- 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
+ 			<p concordion:manual="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
@@ -142,7 +142,7 @@
     		</ol>
     		</li>
     		<li>Verify that the "see all" button pops up the right window
- 			<p concordion:assertTrue="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
+ 			<p concordion:manual="true">jeffc 11/26/2012</p> <i>maybe selenium test</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Mitf<sup>Mi-wh</sup> (MGI:1856088).</li>
@@ -150,7 +150,7 @@
     		</ol>
     		</li>
     		<li>Verify that the MP grid section didn't break when the Diseases were removed
- 			<p concordion:assertTrue="true">passed. klf 11/26/2012</p>
+ 			<p concordion:manual="true">passed. klf 11/26/2012</p>
  			<img src="http://prodwww.informatics.jax.org/wiki/images/4/42/AlleleDetail_MPGridError.png" width="700px" border="1" />
     		<ol>
                 <li>Open the test Web Interface.</li>

@@ -53,22 +53,22 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 
 		<h3>Manual tests</h3>
 		<p class="hilite"><b>Note:</b> Concordion doesn't like &lt; and &gt; signs directly in the HTML code. Encode them as "&amp;lt;" and "&amp;gt;", respectively.</p>
 		<ol>
     		<li>Verify searching by cell line returns genotypes
-    		<p concordion:assertTrue="true">passed jeffc 12/17/12</p>
+    		<p concordion:manual="true">passed jeffc 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>cell line EPD0109_3_E07</b> as "Mutant 1" cell line</li>
                 <li>Verify that <b>Homozygous</b> genotype for the allele <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b> is returned</li>
     		</ol>
     		</li>
     		<li>Verify curator can modify Mutant 1 and Mutant 2 cell lines independently in genotype with "Homozygous" allele state 
-    		<p concordion:assertTrue="true">passed jeffc 12/17/12</p>
+    		<p concordion:manual="true">passed jeffc 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
                 <li>Verify that a <b>Homozygous</b> genotype exists</li>
@@ -79,7 +79,7 @@
     		</ol>
     		</li>
     		<li>Verify curator cannot modify cell line to a value not already associated with the allele
-    		<p concordion:assertTrue="true">passed klf 12/17/12</p>
+    		<p concordion:manual="true">passed klf 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
                 <li>Verify that a <b>Homozygous</b> genotype exists</li>
@@ -90,7 +90,7 @@
     		</ol>
     		</li>
     		<li>Verify curator can delete cell lines from a genotype
-    		<p concordion:assertTrue="true">passed jeffc 12/17/12</p>
+    		<p concordion:manual="true">passed jeffc 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
                 <li>Verify that a <b>Homozygous</b> genotype exists</li>
@@ -103,7 +103,7 @@
     		</li>
 
     		<li>Verify curator can modify Mutant 1 cell line in genotype with "Hemizygous X-Linked" allele state
-    		<p concordion:assertTrue="true">passed jeffc 12/17/12</p>
+    		<p concordion:manual="true">passed jeffc 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
                 <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
@@ -113,7 +113,7 @@
     		</ol>
     		</li>
     		<li>Verify curator cannot modify cell line to a value not already associated with the allele in genotype with "Hemizygous X-Linked" allele state
-    		<p concordion:assertTrue="true">passed jeffc 12/17/12</p>
+    		<p concordion:manual="true">passed jeffc 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
                 <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
@@ -123,7 +123,7 @@
     		</ol>
     		</li>
     		<li>Verify curator can delete cell lines from a Hemizygous X-Linked genotype
-    		<p concordion:assertTrue="true">passed jeffc 12/17/12</p>
+    		<p concordion:manual="true">passed jeffc 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
                 <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
@@ -134,7 +134,7 @@
     		</li>
 
     		<li>Verify curator cannot add Mutant 2 cell lines for a Heterozygous (wild type), Indeterminate or Hemizygous X-Linked genotype
-    		<p concordion:assertTrue="true">passed jeffc 12/17/12</p>
+    		<p concordion:manual="true">passed jeffc 12/17/12</p>
     		<ol>
                 <li>* In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)WTSI&gt;</b></li>
                 <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
@@ -155,7 +155,7 @@
     		</li>
     		
     		<li>Verify curator cannot add/modify cell line that duplicates an existing genotype
-    		<p concordion:assertTrue="true">passed klf 12/17/12</p>
+    		<p concordion:manual="true">passed klf 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Sms&lt;tm1a(EUCOMM)WTSI&gt;</b></li>
                 <li>Verify that a <b>Heterozygous</b> genotype exists</li>
@@ -165,7 +165,7 @@
     		</ol>
     		</li>
     		<li>Verify curator can add a new genotype and specify valid cell lines
-    		<p concordion:assertTrue="true">passed klf 12/17/12</p>
+    		<p concordion:manual="true">passed klf 12/17/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>1500015O10Rik&lt;tm1Lex&gt;</b></li>
                 <li>Verify that no <b>Homozygous</b> genotype already exists</li>

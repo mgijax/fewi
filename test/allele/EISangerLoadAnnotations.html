@@ -58,14 +58,14 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p class="hilite"><b>Note:</b> Concordion doesn't like &lt; and &gt; signs directly in the HTML code. Encode them as "&amp;lt;" and "&amp;gt;", respectively.</p>
 		<ol>
     		<li>Verify Male/Female duplicates get combined correctly
-    		<p concordion:assertTrue="true">passed. kstone 11/7/12.</p>
+    		<p concordion:manual="true">passed. kstone 11/7/12.</p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>
@@ -75,7 +75,7 @@
     		</ol>
     		</li>
     		<li>Verify MP Annotation Header information is correct
- 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+ 			<p concordion:manual="true">Passed. klf 9/27/2012</p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>
@@ -87,7 +87,7 @@
     		</li>
 
 <!--     		<li>Verify Headers are listed in default order
- 			<p concordion:assertTrue="false"></p>
+ 			<p concordion:manual="false"></p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>
@@ -98,7 +98,7 @@
     		</li> -->
 
 		    <li>Verify the qualifier, J#, and Evidence code data are correct
- 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+ 			<p concordion:manual="true">Passed. klf 9/27/2012</p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>
@@ -110,7 +110,7 @@
     		</li>
 	
 		    <li>Verify the created by and Modified by fields are correct
- 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+ 			<p concordion:manual="true">Passed. klf 9/27/2012</p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>
@@ -121,7 +121,7 @@
     		</li>
     		
     		<li>Verify Hemizygous and Indeterminate are NOT combined incorrectly.
- 			<p concordion:assertTrue="true">Passed. kstone 11/7/12 </p>
+ 			<p concordion:manual="true">Passed. kstone 11/7/12 </p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>
@@ -137,7 +137,7 @@
     		</li>
     		
 			<li>Confirm curators can <b><u>edit Genotypes</u></b> created by Sanger load.
- 			<p concordion:assertTrue="true">Passed. klf 9/27/21</p>
+ 			<p concordion:manual="true">Passed. klf 9/27/21</p>
 				<ol>
 					<li>In EI Genotype Module, Enter <b>Not Specified</b> in the Strains field and <b>Slc16a2</b> in the Marker field and press the search button. (Should have allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.)</li>
 					<li>Using the first search result. Change State from Hemizygous X-Linked to Heterozygous.</li> 
@@ -213,7 +213,7 @@
 			
 			<ol>
 				<li>verify: <u><b>Sanger annotations do not appear</b></u> on &quot;Sanger&quot; genotype modified by curator.
-	 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+	 			<p concordion:manual="true">Passed. klf 9/27/2012</p>
 					<ol>
 						<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
 						<li>Select the <b>Heterozygous</b> genotype modified above.</li> 
@@ -237,7 +237,7 @@
 					</ol>
 				</li>
 				<li>verify: <u><b>Sanger annotations now appear on a newly-created "Sanger" genotype</b></u> (were on previously on edited genotype).
-	 			<p concordion:assertTrue="true">Passed. klf 9/27/2021</p>
+	 			<p concordion:manual="true">Passed. klf 9/27/2021</p>
 					<ol>
 						<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
 						<li>Verify the newly-created Hemizygous X-Linked genotype exists.</li> 
@@ -255,7 +255,7 @@
 			</ol>
 			</li>
 			<li>Confirm Curators can <u><b>add MP annotations to a &quot;Sanger&quot; genotype</b></u> (genotype not modified by curator).
- 			<p concordion:assertTrue="true">Passed. klf 9/26/12</p>
+ 			<p concordion:manual="true">Passed. klf 9/26/12</p>
 				<ol>
 					<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
 					<li>Select genotype that is Homozygous.</li>
@@ -307,7 +307,7 @@
 				</ol>
 			</li>
 		    <li>Verify <u><b>MP annotations added by curators remain after drop-and-reload</b></u>
- 			<p concordion:assertTrue="true">Passed. klf 9/27/2012</p>
+ 			<p concordion:manual="true">Passed. klf 9/27/2012</p>
 				<ol>
 					<li>In EI Genotype Module, query for genotypes involving allele Slc16a2&lt;tm1a(KOMP)Wtsi&gt;.</li>
 					<li>Select genotype that is Homozygous.</li>
@@ -331,7 +331,7 @@
     		</ol>
     		</li>
 <!--     		<li>Verify MP Annotation data is not editable
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:manual="false">new test</p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>

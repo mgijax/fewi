@@ -52,8 +52,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
  		<h3>Summary of Tests:</h3>
  		<ul>
@@ -67,7 +67,7 @@
 		<p class="hilite"><b>Note:</b> Concordion doesn't like &lt; and &gt; signs directly in the HTML code. Encode them as "&amp;lt;" and "&amp;gt;", respectively.</p>
 		<ol>
     		<li>Verify genotype with "Homozygous" allele state loads correct cell line for both alleles
-    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<p concordion:manual="true">passed klf 10/11/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Slc16a2&lt;tm1a(KOMP)Wtsi&gt;</b></li>
                 <li>Verify that a <b>Homozygous</b> genotype exists</li>
@@ -75,7 +75,7 @@
     		</ol>
     		</li>
     		<li>Verify genotype with "Heterozygous" allele state loads correct cell line for first allele, second allele is wild type and has no cell line
-    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<p concordion:manual="true">passed klf 10/12/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
                 <li>Verify that a <b>Heterozygous</b> genotype exists</li>
@@ -84,7 +84,7 @@
     		</ol>
     		</li>
     		<li>Verify genotype with "Hemizygous X-Linked" allele state loads correct cell line for first allele, second allele is null and has no cell line
-    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<p concordion:manual="true">passed klf 10/12/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
                 <li>Verify that a <b>Hemizygous X-Linked</b> genotype exists</li>
@@ -93,7 +93,7 @@
     		</ol>
     		</li>
     		<li>Verify genotype with "Indeterminate" (null in the load file) allele state loads correct cell line for first allele, second allele is null and has no cell line
-    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<p concordion:manual="true">passed klf 10/12/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Acsl4&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
                 <li>Verify that a <b>Indeterminate</b> genotype exists</li>
@@ -103,7 +103,7 @@
     		</li>
 
     		<li>ASSUMING THIS IS CORRECT REQUIREMENT: Verify genotype with "Homozygous" allele state loads no cell line for both alleles when source data is missing
-    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<p concordion:manual="true">passed klf 10/12/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Ube3b&lt;Gt(RRJ142)Byg&gt;</b></li>
                 <li>Verify that a <b>Homozygous</b> genotype exists</li>
@@ -111,7 +111,7 @@
     		</ol>
     		</li>
     		<li>ASSUMING THIS IS CORRECT REQUIREMENT: Verify genotype with "Heterozygous" allele state loads no cell line for first allele when source data is missing, second allele is wild type and has no cell line 
-    		<p concordion:assertTrue="true">passed klf 10/12/12</p>
+    		<p concordion:manual="true">passed klf 10/12/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Ube3b&lt;Gt(RRJ142)Byg&gt;</b></li>
                 <li>Verify that a <b>Heterozygous</b> genotype exists</li>
@@ -122,7 +122,7 @@
 
 
     		<li>Verify that 2 genotypes exist when the same allele and allele state have different cell lines (from fake data in Load Test file)
-    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<p concordion:manual="true">passed klf 10/11/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Sms&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
                 <li>Verify that <b>Heterozygous</b> genotypes exist with the following Mutant 1 cell lines:
@@ -138,7 +138,7 @@
     		</ol>
     		</li>
     		<li>Verify that loaded MP annotations are associated with the correct genotypes (taking into account cell lines)
-    		<p concordion:assertTrue="true">passed klf 10/11/12</p>
+    		<p concordion:manual="true">passed klf 10/11/12</p>
     		<ol>
                 <li>In the Genotype module of the Scrum Dog EI, search for genotypes having <b>Sms&lt;tm1a(EUCOMM)WTSI&gt;</b></li>
                 <li>Verify that <b>Heterozygous</b> genotypes with the following Mutant 1 cell lines have the following MP annotations:
@@ -190,7 +190,7 @@
     		</ol>
     		</li>
 <!--     		<li>Verify MP Annotation data is not editable
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:manual="false">new test</p>
     		<ol>
                 <li>Open the Scrum-dog EI</li>
                 <li>Log in to the Scrum-dog EI</li>

@@ -73,13 +73,13 @@
 		</ul>
 
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 
 		<ol>
     		<li>Verify help icon and popup exists
-			<p concordion:assertTrue="true">jeffc 8/13/12</p>
+			<p concordion:manual="true">jeffc 8/13/12</p>
 			<ol>
 				<li>Click on the <b>Help icon</b></li>
 				<li>Verify the help page <b>EXPRESSION_help.shtml</b> opens up in its own window</li>
@@ -87,7 +87,7 @@
 			</ol>
     		</li>
     		<li>Verify tooltips exist when you hover over each TS
-    		<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+    		<p concordion:manual="true">jeffc 8/13/2012</p>
 			<ol>
 				<li>Hover over each TS listed in the TS widget</li>
 				<li>Verify tooltips are associated with displayed text shown below: 
@@ -125,7 +125,7 @@
 			</ol>
     		</li>
     		<li>Verify behavior that "Any" selection becomes unselected when you choose another option
-			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+			<p concordion:manual="true">jeffc 8/13/2012</p>
 			<ol>
 				<li>Open the GXD query form</li>
 				<li>Click on the Developmental stage <b>TS3</b></li>
@@ -133,7 +133,7 @@
 			</ol>
     		</li>
     		<li>Verify that if other options are selected and you choose "Any" all other options are deselected
-			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+			<p concordion:manual="true">jeffc 8/13/2012</p>
 			<ol>
 				<li>Open the GXD query form</li>
 				<li>Click on the Developmental stages <b>TS3, TS7, TS13, and TS27</b></li>
@@ -142,7 +142,7 @@
 			</ol>
     		</li>
     		<li>Verify that dpc range is correct for each TS
-			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+			<p concordion:manual="true">jeffc 8/13/2012</p>
 			<ol>
 				<li>Open the GXD query form</li>
 				<li>View the Development stages list to verify the dpc ranges conform to this list:
@@ -179,7 +179,7 @@
 			</ol>
 	    	</li>
 	    	<li>Verify Reset button clears Theiler Stage selections
-			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+			<p concordion:manual="true">jeffc 8/13/2012</p>
 			<ol>
 				<li>Open the GXD query form</li>
 				<li>Click on the Developmental stages <b>TS3, TS7, TS13, and TS26</b></li>
@@ -189,14 +189,14 @@
 			</ol>	    	
 	    	</li>
     		<li>Search for a single TS and verify output sort order
-    		<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+    		<p concordion:manual="true">jeffc 8/13/2012</p>
 			<ol>
 				<li>Select "TS <b concordion:set="#stage">6</b>(4.0-5.5dpc)" option from the TS widget</li>
 				<li>Verify the sort order is correct (<b>default sort</b>). <i>Note: At TS6, Tdgf1 has a good example of ageMin-structure-present/absent. At TS10, Dab1 has a good example of absent/NS.</i></li>
 			</ol>
     		</li>
     		<li>Search for multiple TS and verify output sort order
-    		<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+    		<p concordion:manual="true">jeffc 8/13/2012</p>
 			<ol>
 				<li>Select "TS <b concordion:set="#stage1">6</b>(4.0-5.5dpc) and TS <b concordion:set="#stage2">7</b>(4.5-6.0dpc) from the TS widget</li>
 				<li>Verify the sort order is correct (<b>default sort</b>).  </li>

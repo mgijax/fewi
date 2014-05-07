@@ -60,8 +60,8 @@
     <p><span class="regressLo">Regress: low priority</span></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
  		<h3>Summary of Tests</h3>
  		<ul>
@@ -94,7 +94,7 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Verify genotypes are displayed in the correct order (as on the current Public display: hm, ht, cn, cx, tg, ot)
- 			<p concordion:assertTrue="true"></p> - <i>fully automated</i>
+ 			<p concordion:manual="true"></p> - <i>fully automated</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
@@ -103,7 +103,7 @@
     		</li>
 
     		<li>Verify genotype popup links go to correct genotype popup
- 			<p concordion:assertTrue="true">jeffc 10/21/2013</p> - <i>cannot automate</i>
+ 			<p concordion:manual="true">jeffc 10/21/2013</p> - <i>cannot automate</i>
 
     		<ol>
                 <li>Open the test Web Interface.</li>
@@ -131,7 +131,7 @@
     		</ol>
     		</li>
 		    <li><span class="regressHi">Regress</span> Verify that genotype columns are split into M/F sexes where applicable, and left as a single column in standard cases
- 			<p concordion:assertTrue="true">jeffc 10/21/2013</p> - <i>semi-automated</i>
+ 			<p concordion:manual="true">jeffc 10/21/2013</p> - <i>semi-automated</i>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
@@ -139,7 +139,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify that sex groupings under each genotype display all providers that have annotations (either MGI or WTSI for now)(is blank if only MGI results)
- 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+ 			<p concordion:manual="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Fas<sup>lpr</sup> (MGI:1856334).</li>
@@ -151,7 +151,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify for a given genotype, sex and provider that a checkmark always wins over an N.
- 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+ 			<p concordion:manual="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
@@ -162,7 +162,7 @@
     		</li>
 
     		<li>Verify that checkmarks and N symbols are links
- 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+ 			<p concordion:manual="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
@@ -178,7 +178,7 @@
     		</ol>
     		</li>
     		<li><span class="regressLo">Regress</span> Verify that toggling works by clicking the system names, and also the "hide"/"show" buttons
- 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+ 			<p concordion:manual="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for Lepr<sup>db</sup> (MGI:1856009).</li>
@@ -189,7 +189,7 @@
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> Verify that the Phenotype summary section does not display when there are no MP annotations for an allele
- 			<p concordion:assertTrue="true">jeffc 10/21/2013</p>
+ 			<p concordion:manual="true">jeffc 10/21/2013</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for a<sup>j</sup> (MGI:1856428).</li>

@@ -91,34 +91,34 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Allele detail page displays a Recombinase Ribbon for recombinase alleles
- 			<p concordion:assertTrue="true">jeffc 04/10/2013</p>
+ 			<p concordion:manual="true">jeffc 04/10/2013</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Crh&lt;tm1(cre)Zjh&gt;</b>.</li>
                 <li>Verify that a Recombinase Ribbon <b>exists</b>.</li>
     		</ol>
     		</li>
     		<li>Allele detail page does not display a Recombinase Ribbon for non-recombinase alleles
- 			<p concordion:assertTrue="true">jeffc 04/10/2013</p>
+ 			<p concordion:manual="true">jeffc 04/10/2013</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Crh&lt;tm1Maj&gt;</b>.</li>
                 <li>Verify that a Recombinase Ribbon <b>does not exist</b>.</li>
     		</ol>
     		</li>
     		<li>Recombinase Ribbon indicates the recombinase driver
- 			<p concordion:assertTrue="true">jeffc 04/10/2013</p>
+ 			<p concordion:manual="true">jeffc 04/10/2013</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Crh&lt;tm1(cre)Zjh&gt;</b>.</li>
                 <li>Verify that the following text exists: <b>Driver: | Crh <span style="font-size:0.80em;">Summary of all recombinase alleles driven by Crh</span>.</b></li>
     		</ol>
     		</li>
     		<li>Recombinase driver links to Recombinase Summary page showing results of query by the Driver
- 			<p concordion:assertTrue="true">jeffc 04/10/2012</p>
+ 			<p concordion:manual="true">jeffc 04/10/2012</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Crh&lt;tm1(cre)Zjh&gt;</b>.</li>
                 <li>Verify that the text <b>driven by Crh</b> links to the Recombinase Alleles - Tissue Summary page showing alleles with <b>driver = Crh</b> (check the URL)</li>
@@ -126,7 +126,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Left-hand column displays only those unique Anatomical Systems, in alphabetical order, for which the allele has recombinase results for child terms.
- 			<p concordion:assertTrue="true">klf 4/12/2013</p>
+ 			<p concordion:manual="true">klf 4/12/2013</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Pitx2&lt;tm4(cre)Jfm&gt;</b>.</li>
                 <li>Verify that only the anatomical system <b>cardiovascular system</b> is displayed.</li>
@@ -135,14 +135,14 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Left-hand column contains "turnstiles" which show/hide additional rows for each Anatomical System displayed.
- 			<p concordion:assertTrue="true">klf 4/12/2013</p>
+ 			<p concordion:manual="true">klf 4/12/2013</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Pitx2&lt;tm4(cre)Jfm&gt;</b>.</li>
                 <li>Verify that the Anatomical System <b>cardiovascular system</b> displays a turnstile which can be clicked to show/hide child terms.</li>
     		</ol>
     		</li>
     		<li>When turnstiles are open, left-hand column displays only those unique child terms, in alphabetical order, that are within the given Anatomical System and for which the allele has recombinase results.
- 			<p concordion:assertTrue="true">klf 4/12/2013</p>
+ 			<p concordion:manual="true">klf 4/12/2013</p>
     		<ol>
                 <li>Navigate to the allele detail page for <b>Pitx2&lt;tm4(cre)Jfm&gt;</b>.</li>
                 <li>Open the turnstile for anatomical system <b>cardiovascular system</b>.</li>
@@ -465,7 +465,7 @@ tr.gray td {background-color:#EEEEEE;}
             	</table>
            	</li>
            	<li>For a structure with both Expressed and Not Expr results in the database, the grid aggregates to display "Expressed".
-           	<p concordion:assertTrue="true">passed. klf 2014-03-13 </p>
+           	<p concordion:manual="true">passed. klf 2014-03-13 </p>
            	<ul>
 	           	<li>For the allele <b>Foxn1&lt;tm3(cre)Nrm&gt;</b> and system <b>branchial arches</b>, verify that the structure <b>3rd arch branchial pouch</b> in the age range <b>E9-E13.9</b> has both <i>Expressed</i> and <i>Not Expr</i> results (using the tissue specificity pages).</li>
 	           	<li>Verify that the Recombinase grid  on the Allele Detail page aggregates the data to display as <b>Expressed</b>.</li>
@@ -474,21 +474,21 @@ tr.gray td {background-color:#EEEEEE;}
            	</ul>
            	</li>
            	<li>For a structure whose expression annotation spans an age category boundary, the grid displays the appropriate  &quot;Expressed/Not Expr&quot; icons in all spanned categories.
-           	<p concordion:assertTrue="true">passed. klf 2014-03-13</p>
+           	<p concordion:manual="true">passed. klf 2014-03-13</p>
            	<ul>
            		<li>For the allele <b>Grid2&lt;tm1(cre/PGR)Ksak&gt;</b> and the system <b>nervous system</b>, verify that the structure <b>cerebellum purkinje cell layer</b> has <i>Expressed</i> results for the age <b>postnatal week 5-7</b> (using the tissue specificity page).</li>
            		<li>Verify that the grid displays <b>Expressed</b> icons in both the <b>P 22-42</b> age range and also the <b>Adult &gt;P 43</b> age range for that structure.</li>
            		<li>Verify that the grid displays <b>Expressed</b> icons in both age range categories for the system <b>nervous system</b>.</li>
            	</ul>
            	</li>
-           	<li><span concordion:assertTrue="true">klf 4/29/13</span> For a structure with multiple annotations within an age category, the grid
+           	<li><span concordion:manual="true">klf 4/29/13</span> For a structure with multiple annotations within an age category, the grid
            	lists the structure only once and displays the appropriate icon only once.<ul>
            		<li>For the allele <b>Tg(Neurog1-cre/ERT2)1Good</b> and the system <b>sensory organs</b>, verify the structure <b>cochlea</b> is listed only once and displays <i>Expressed</i> results for the age ranges <b>E14-E19.5</b> and <b>P0-P21</b>. (Note: this allele has 9 Expressed results for this structure in these 2 age ranges.)</li>
            	</ul>
 
            	</li>
             <li>Image column displays indicator  (checkmark) only when an image file is visible on the Specificity page. Indicator is linked to the appropriate Tissue Specificity page.
-            <p concordion:assertTrue="true">klf 4/29/13</p>
+            <p concordion:manual="true">klf 4/29/13</p>
             <ul>
             	<li>For the allele <b>Foxn1&lt;tm3(cre)Nrm&gt;</b> and system <b>branchial arches</b>,
             	<ul>
@@ -507,7 +507,7 @@ tr.gray td {background-color:#EEEEEE;}
             </ul>
             </li>
     		<li>For recombinase alleles having no recombinase activity assay data, in place of the Activity Overview grid display the sentence "MGI has not yet included recombinase activity data for this allele in any anatomical systems.".
- 			<p concordion:assertTrue="true">klf 5/8/2013</p>
+ 			<p concordion:manual="true">klf 5/8/2013</p>
  			<ol>
  				<li>Verify the sentence appears for the following alleles:
  				<ul>
@@ -520,7 +520,7 @@ tr.gray td {background-color:#EEEEEE;}
  			</ol>
  			</li>
  			<li>Verify show/hide all button appears in recombinase grid, and works.
- 			<p concordion:assertTrue="true">kstone - 2013-04-24</p>
+ 			<p concordion:manual="true">kstone - 2013-04-24</p>
  			<ol>
  				<li>Verify that text appears at top of the grid, with links to "show" or "hide" the terms.
  				<ul>
@@ -536,7 +536,7 @@ tr.gray td {background-color:#EEEEEE;}
 
 <!-- SUPERSEDED BY THE TEST THAT FOLLOWS.
  			<li>Verify that legend appears.
- 			<p concordion:assertTrue="true">passed klf 5/6/13</p>
+ 			<p concordion:manual="true">passed klf 5/6/13</p>
  			<ol>
  				<li>Verify that legend appears above the grid. It should be on its own line, and displays proper text, with the left-heading <b>Key:</b>
  				<ul>
@@ -550,7 +550,7 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 
     		<li>Move Key (legend): Key to the grid appears in header row, below "show/hide all" text, left-aligned to "Activity in Systems/Structures" header.
- 			<p concordion:assertTrue="true">pf 5/8/2013</p>
+ 			<p concordion:manual="true">pf 5/8/2013</p>
  			<ol>
  				<li>Verify that legend appears inside the grid.
  				<ul>
@@ -563,7 +563,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>On an Allele Detail Page, recombinase ribbon can toggle between "showing" and "hiding" the data.
- 			<p concordion:assertTrue="true">pf 5/8/2013</p>
+ 			<p concordion:manual="true">pf 5/8/2013</p>
  			<ul>
  				<li>For a recombinase allele that has activity data.
 	    		<ol>
@@ -587,7 +587,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Coming from the Recombinase Alleles - Tissue Summary page to an Allele Detail Page, the recombinase ribbon should be "open".  Coming from any other page, the recombinase ribbon should be "closed".
- 			<p concordion:assertTrue="true">pf 5/8/2013</p>
+ 			<p concordion:manual="true">pf 5/8/2013</p>
  			<ol>
 				<li>From the Recombinase mini-home, query for alleles driven by <b>Acan</b>.</li>
 				<li>From the Recombinase Alleles - Tissue Summary, click the Allele Symbol link for <b>Acan&lt;tm1(cre/ERT2)Crm&gt;</b> (<i>Note: not hyperlinking this here.  Must go to the page to perform the test accurately.</i>)</li>

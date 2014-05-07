@@ -68,13 +68,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Disease detail page includes all appropriate genes in the Mouse Homologs and Human Homologs columns when the homology class contains more than one gene for an organism.
- 			<p concordion:assertTrue="true">klf 6/7/2013</p>
+ 			<p concordion:manual="true">klf 6/7/2013</p>
     		<ol>
                 <li>Navigate to the Human Disease page for <b>Systemic Lupus Erythematosus; SLE</b> (OMIM 152700).</li>
                 <li>Verify that the Mouse Homologs column lists <b>C4b, C4a</b> in the same cell.</li>
@@ -83,7 +83,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
        		</li>
     		<li>Reference link on the disease detail page will match the link found for the terms disease tab of HDMC (sto137)
- 			<p concordion:assertTrue="true">passed - kstone 2014/04/22</p>
+ 			<p concordion:manual="true">passed - kstone 2014/04/22</p>
     		<ol>
                 <li>Navigate to the Human Disease page for <b>Spherocytosis, Type 1; SPH1</b> (OMIM 182900).</li>
                 <li>Verify that the last ribbon on the page is called <b>References</b> </li>
@@ -92,14 +92,14 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>If a Disease has no Mouse Model references than the Reference ribbon will not display (sto137)
- 			<p concordion:assertTrue="true">passed - kstone 2014/04/22</p>
+ 			<p concordion:manual="true">passed - kstone 2014/04/22</p>
     		<ol>
                 <li>Navigate to the Human Disease page for <b>Speech-Sound Disorder</b> (OMIM 608445).</li>
                 <li>Verify that the Reference ribbon does not display since this disease has no references</li>
     		</ol>
     		</li>
     		<li>Reference link will take you to the appropriate References associated to a disease page (sto137)
- 			<p concordion:assertTrue="true">passed - kstone 2014/04/22</p>
+ 			<p concordion:manual="true">passed - kstone 2014/04/22</p>
     		<ol>
                 <li>Navigate to the Human Disease page for <b>Juvenile Polyposis Syndrome; JPS</b> (OMIM 174900).</li>
                 <li>Verify that the link reads <b>Disease References using Mouse Models (2)</b></li>

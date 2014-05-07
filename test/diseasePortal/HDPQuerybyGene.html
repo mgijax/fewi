@@ -60,13 +60,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a><a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Can input symbol, name, synonym text or accession ID (any associated directly with the marker, including homologene ID) and return text-matching mouse, human markers.
-<!-- 			<p concordion:assertTrue="false">new test</p> -->
+<!-- 			<p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>I believe this test is covered by automated tests below</li>
                 
@@ -74,7 +74,7 @@
     		</li>
 
     		<li>Can input symbol, name, synonym text or accession ID and return human and mouse orthologs of text matches to any organism.
-<!-- 			<p concordion:assertTrue="false">new test</p> -->
+<!-- 			<p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>I believe this test is covered by automated tests below</li>
                 
@@ -82,7 +82,7 @@
     		</li>
 
     		<li>For all returned human and mouse markers, return diseases using previous rules.
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p>
     		<ol>
                 <li>Open the Human Disease query form</li>
                 <li>Query for the Marker symbol <b>Msx2</b> in the Genes query box</li>
@@ -93,7 +93,7 @@
     		</li>
 
     		<li>White-space and commas separate tokens which are combined by OR. Other special characters separate tokens which are combined by AND.
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p>
     		<ol>
                 <li>Open the Human Disease query form</li>
                 <li>Query for the Marker name <b>Sonic hedge hog</b> in the Genes query box</li>
@@ -105,7 +105,7 @@
     		</li>
 
     		<li>Mouse and human genes which have no disease or MP annotations but which are text-matched are also returned.
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p>
     		<ol>
                 <li>Open the Human Disease query form</li>
                 <li>Query for the Mouse Marker <b>cyp2d9</b> in the Genes query box</li>
@@ -116,7 +116,7 @@
     		</li>
     		
     		<li>Lists are supported (comma- or space-delimited).
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p> 		
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p> 		
     		<ol>
                 <li>Open the Human Disease query form</li>
                 <li>Query for <b>Bean1, MGI:95661</b> in the Genes query box</li>
@@ -126,7 +126,7 @@
     		</li>
 
     		<li>Mixed inputs (e.g., a symbol and an ID) are supported.
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p><i class="hilite">Duplicate of Above Test?</i> 		
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p><i class="hilite">Duplicate of Above Test?</i> 		
     		<ol>
                 <li>Open the Human Disease query form</li>
                 <li>Query for the Human Marker name <b>Bean1</b>and the MGI ID <b>MGI:95661</b> in the Genes query box</li>
@@ -136,7 +136,7 @@
     		</li>
 
     		<li>Text that matches Boolean operators is treated only as text, not as Booleans.
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>  		
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p>  		
     		<ol>
     			<li>Open the Human Disease query form</li>
                 <li>Query for the name <b>paired and box</b> in the Genes query box</li>
@@ -145,7 +145,7 @@
     		</li>
 
     		<li>Text that matches typical Stop Words is treated only as text, not as Stop Words (e.g., "as", "if", "a", "the").
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p> 		
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p> 		
     		<ol>
     			<li>Open the Human Disease query form</li>
                 <li>Query for the name <b>myosin IF</b> in the Genes query box</li>
@@ -154,7 +154,7 @@
     		</li>
 		
 		    <li>Old symbols and old names are used in searches for Genes.
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/21</p>	    
+ 			<p concordion:manual="true">passed - kstone - 2013/08/21</p>	    
     		<ol>
                 <li>Open the Human Disease query form</li>
                 <li>Query for the old Marker name <b>"optic coloboma"</b> in the Genes query box</li>

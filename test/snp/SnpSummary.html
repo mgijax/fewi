@@ -73,62 +73,62 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Verify dbSNP build is 137 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
- 			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
+ 			<p concordion:manual="true">jeffc 03/04/2013</p>
     		<ol>
                 <li>From the SNP query form search strain of C57BL/6J and Chromosome 11</li>
                 <li>When the summary page displays verify the SNP ID column header says dbSNP Build 137</li>
     		</ol>
     		</li>
     		<li>Verify NCBI build is 38 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
- 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+ 			<p concordion:manual="true">klf 3/4/2013</p>
     		<ol>
                 <li>From the SNP query form search strain of C57BL/6J and Chromosome 11</li>
                 <li>When the summary page displays verify the Map Position column header says GRCm38</li>
     		</ol>
     		</li>
     		<li>dbSNP build is 137 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
- 			<p concordion:assertTrue="true">jeffc 03/04/2013</p>
+ 			<p concordion:manual="true">jeffc 03/04/2013</p>
     		<ol>
                 <li>Display the Marker detail page for <b>Ap1b1</b> and click on the SNPs link in the Polymorphisms ribbon</li>
                 <li>When the summary page displays verify the SNP ID column header says dbSNP Build 137</li>
     		</ol>
     		</li>
     		<li>Verify NCBI build is 38 on the snp summary page(covered by selenium test SNPBuildNumbers.java)
- 			<p concordion:assertTrue="true">klf 3/4/2013</p>
+ 			<p concordion:manual="true">klf 3/4/2013</p>
     		<ol>
                 <li>Display the Marker detail page for <b>Ap1b1</b> and click on the SNPs link in the Polymorphisms ribbon</li>
                 <li>When the summary page displays verify the Map Position column header says GRCm38</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> A SNP query summary that returns over 1,000 results displays only 1,000 SNPs but displays the full count in the intro text
-			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+			<p concordion:manual="true">jeffc 03/05/2013</p>
     		<ol>
 				<li>Open the SNP query form use the selected strain of <b>C57BL/6J</b> and select Chromosome 11</li>
 				<li>When the summary page displays verify the first 1000 SNPs are displayed but the intro text says what the total number of SNPs are available</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> A summary that returns over 1,000 results for a marker displays only 1,000 SNPs but displays the full count in the intro text
-			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+			<p concordion:manual="true">jeffc 03/05/2013</p>
     		<ol>
                 <li>Display the Marker detail page for <b>Lrp1b</b> and click on the first SNPs link in the Polymorphisms ribbon</li>
                 <li>When the summary page displays verify the first 1000 SNPs are displayed but the intro text says what the total number of SNPs are available</li>
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> A tab-delimited text report including the total number of SNPs is available from a link in the intro text
-			<p concordion:assertTrue="true">jeffc 03/05/2013</p>
+			<p concordion:manual="true">jeffc 03/05/2013</p>
     		<ol>
                 <li>Display the Marker detail page for <b>Lrp1b</b> and click on the first SNPs link in the Polymorphisms ribbon</li>
                 <li>When the summary page displays verify there is a link in the intro text called <b>tab-delimited format</b>, Clicking on this  link displays the entire list of SNPs in Tab delimited format</li>
     		</ol>
     		</li>
     		<li><span class="regressLo">Regress</span> MPD links from SNP summary pages ure the correct URL pattern to link to MPD
-			<p concordion:assertTrue="true">KLF 3/13/13</p>
+			<p concordion:manual="true">KLF 3/13/13</p>
     		<ol>
                 <li>Display the SNP summary page for <b>Pax6</b> and hover over the MPD links</li>
                 <li>Verify the link follows the pattern <b>http://phenome.jax.org/db/q?rtn=snp/ret1&amp;gohint=1&amp;ureg=rs33198906</b> and NOT http://phenome.jax.org/db/q?rtn=snps/retrieve&amp;searchreq=rs33198906</li>

@@ -53,13 +53,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
      		<li>Verify that matching characters are bolded wherever they occur in every term or synonym in the list
-     		<p concordion:assertTrue="true">jeffc 08/13/2012</p>
+     		<p concordion:manual="true">jeffc 08/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
 				<li>Type <b>venom</b> slowly in the vocabulary field, pausing after each character to verify the display</li>
@@ -67,7 +67,7 @@
     		</ol>
     		</li>
     		<li>Verify that text is grayed out when none of the annotated genes have expression data
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>leucine catabolic process</b> in the vocabulary field</li>
@@ -75,7 +75,7 @@
     		</ol>
     		</li>
     		<li>Verify that if a no-expression-data term is selected, the error message appears and that user-input text remains in the text box and the fonts, colors and other appearance is similar to MGI's other pop-up messages
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>golgi reassembly</b> in the vocabulary field and click on it</li>
@@ -83,7 +83,7 @@
     		</ol>
     		</li>
     		<li>Verify behavior of clicking a term with 0 genes associated to it
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>pexophagy</b> in the vocabulary field</li>
@@ -91,7 +91,7 @@
     		</ol>
     		</li>
     		<li>Verify that autocomplete begins working on the 2nd character
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>an</b> in the vocabulary field</li>
@@ -99,7 +99,7 @@
     		</ol>
     		</li>
     		<li>Verify that font sizes are correct
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type any term in the vocabulary field</li>
@@ -107,7 +107,7 @@
     		</ol>
     		</li>
     		<li>Verify that Vocab names are correct in the drop-down list.
-    		<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+    		<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>leukocyte adhesion</b> in the vocabulary field</li>
@@ -123,7 +123,7 @@
     		</ol>
     		</li>
     		<li>Verify that very long input strings don't break the interface somehow
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Generate 10000 digits and copy/paste them into the vocabulary field, then hit enter</li>
@@ -131,7 +131,7 @@
     		</ol>
     		</li>
     		<li>Verify that the input box is populated with the term (and synonym) and Vocab of the selected option
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>type a synonym, like <b>obesity</b> into the vocabulary field and click the synonym</li>
@@ -139,7 +139,7 @@
     		</ol>
     		</li>
     		<li>Verify that text copied-and-pasted into the input box returns proper results
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Copy some text matching a term or synonym, then paste it into the vocabulary field, hit the space bar</li>
@@ -147,7 +147,7 @@
     		</ol>
     		</li>
     		<li>Verify that the browser's native "autofill" functionality is disabled by this Auto-Complete functionality
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Confirm the browser's "autofill" functionality is turned on</li>
@@ -158,7 +158,7 @@
     		</ol>
     		</li>
     		<li>Verify long lists scroll properly
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>an</b> and scroll back and forth through the auto list</li>
@@ -166,7 +166,7 @@
     		</ol>
     		</li>
     		<li>Verify long lists do not get cut off by some other piece of the UI
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>an</b> in the vocabulary field</li>
@@ -174,7 +174,7 @@
     		</ol>
     		</li>
     		<li>Verify that any term appears just once in the list per vocabulary
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type <b>cartilage condensation</b> in the vocabulary field</li>
@@ -184,7 +184,7 @@
     		</ol>
     		</li>
     		<li>Verify that fast typing gives the proper list of terms when typing ceases (THIS IS A Q4 TEST. CANNOT VERIFY FROM WITHIN THE FIREWALL)
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
                 <li>Type a long term very quickly in the vocabulary field</li>
@@ -193,7 +193,7 @@
     		</ol>
     		</li>
 			<li>Verify that the longest term appears properly wrapped and not cut off (NOTE: also an automated test of the autocomplete data returned)
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
 				<ol>
 				<li>Open the GXD query form.</li>
 				<li>Type <b>oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, 2-oxoglutarate as one donor, and incorporation of one atom each of oxygen</b> in the Vocabulary field</li>
@@ -202,7 +202,7 @@
 				</ol>
 			</li>
 			<li>Verify that the longest term-synonym pair appears properly wrapped and not cut off (NOTE: also an automated test of the autocomplete data returned)
- 			<p concordion:assertTrue="true">jeffc 8/13/2012</p>
+ 			<p concordion:manual="true">jeffc 8/13/2012</p>
 				<ol>
 				<li>Open the GXD query form.</li>
 				<li>Type <b>oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced iron-sulphur protein as one donor, and incorporation of one atom of oxygen</b> in the Vocabulary field</li>

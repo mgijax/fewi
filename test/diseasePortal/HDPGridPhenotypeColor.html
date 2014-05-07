@@ -71,13 +71,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Confirm the different bin colors are correct for the number of annotations(sto168).
-			<p concordion:assertTrue="true">jeffc 11/06/2013</p>
+			<p concordion:manual="true">jeffc 11/06/2013</p>
 			<ol>
 				<li>Open the HDP query form</li>
 				<li>For each MP term below, verify the cell color is correct:
@@ -97,7 +97,7 @@ tr.gray td {background-color:#EEEEEE;}
 
 
  			<li>Confirm correct bin color when one term has multiple J numbers (sto168)
- 			<p concordion:assertTrue="true">jeffc 11/06/2013</p> 
+ 			<p concordion:manual="true">jeffc 11/06/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>Zic3</b> in the Genes section and hit search</li>
@@ -106,7 +106,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
  			<li>Confirm normals still show an "N" but the background can be shaded (sto168)
- 			<p concordion:assertTrue="true">jeffc 11/06/2013</p> 
+ 			<p concordion:manual="true">jeffc 11/06/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>Chr10:<b concordion:set="#region">52542320-52545739</b></b> in the gene region section and hit search</li>
@@ -115,7 +115,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
  			<li>Confirm normals do not change the background shading when both normal and abnormal annotations exist (sto168)
- 			<p concordion:assertTrue="true">jeffc 11/06/2013</p> 
+ 			<p concordion:manual="true">jeffc 11/06/2013</p> 
 			<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>Diabetes</b> in the Phenotypes section and hit search</li>

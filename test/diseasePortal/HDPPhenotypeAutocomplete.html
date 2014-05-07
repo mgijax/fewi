@@ -59,13 +59,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Autocomplete exists and displays correct information
-    		<p concordion:assertTrue="true">jeffc 04/14/2014 verified again for sto184</p>
+    		<p concordion:manual="true">jeffc 04/14/2014 verified again for sto184</p>
     		<ol>
                 <li>Open <a href="http://cardolan.informatics.jax.org/diseasePortal">disease portal query form</a> </li>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
@@ -84,7 +84,7 @@
             </ol>
             </li>
             <li>Autocomplete populates box with IDs
-            <p concordion:assertTrue="true">passed - jeffc 04/14/2014 verified for sto184</p>
+            <p concordion:manual="true">passed - jeffc 04/14/2014 verified for sto184</p>
     		<ol>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
                 <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
@@ -95,7 +95,7 @@
             </ol>
             </li>
             <li>Autocomplete supports multiples
-            <p concordion:assertTrue="true">passed - jeffc 04/14/2014 verified for sto184</p>
+            <p concordion:manual="true">passed - jeffc 04/14/2014 verified for sto184</p>
     		<ol>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
                 <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>
@@ -106,7 +106,7 @@
             </ol>
             </li>
             <li>"You searched for" section displays the searched IDs as well as the terms they map to
-           <p concordion:assertTrue="true">passed - jeffc 04/14/2014 verified for sto184</p>
+           <p concordion:manual="true">passed - jeffc 04/14/2014 verified for sto184</p>
     		<ol>
                 <li>Type <b>systemic lupus</b> into phenotypes and diseases box</li>
                 <li>Click (or highlight and hit enter/tab) the first term <b>Systemic Lupus Erythematosus; SLE</b>.</li>

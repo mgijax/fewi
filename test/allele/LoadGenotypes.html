@@ -49,13 +49,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 			<li>Verify the following data inputs are interpreted and loaded as shown:
- 			<p concordion:assertTrue="true">Jeffc, Cindy 9/13/2012</p>
+ 			<p concordion:manual="true">Jeffc, Cindy 9/13/2012</p>
 			<table>
 				<tr><th>Column (Field)</th><th>Data Element</th><th>Value</th><th>Loaded as</th><th>Notes</th></tr>
 				<tr><td>1</td><td>pheno center</td><td>WTSI</td><td><i>not loaded</i></td><td>used for validation</td></tr>
@@ -81,7 +81,7 @@
 				<li> null or bad data in MGI Marker ID</li>
 				<li> null or bad data in Annotation Center</li>
     		</ul>
- 			<p concordion:assertTrue="true">klf 9/13/2012</p>
+ 			<p concordion:manual="true">klf 9/13/2012</p>
     		<ol>
                 <li>Run the parse-and-load script on <i>mgi_sanger_mp_test.tsv</i>.</li>
                 <li>Verify no new genotypes were created.</li>

@@ -71,13 +71,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>SNP Query Form displays correct, updated vocabulary values
- 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+ 			<p concordion:manual="true">klf 6/6/2013</p>
     		<ol>
                 <li>Verify new Strains added in proper order to multiselect list
                 <ul>
@@ -101,7 +101,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> SNP Query Form returns correct counts for SAMPLE data set
- 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+ 			<p concordion:manual="true">klf 6/6/2013</p>
     		<ol>
                 <li>Chr 1: 1,400,516 distinct consensus SNPs (having multicoord "false")</li>
                 <li>Chr 2: 1,058,891</li>
@@ -110,7 +110,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> SNP query form displays corrct dbSNP build number and correct NCBI build number
- 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+ 			<p concordion:manual="true">klf 6/6/2013</p>
     		<ol>
                 <li>Open the SNP query form</li>
                 <li>Verify the dbSNP build listed at the top of the form says dbSNP Build 137</li>
@@ -118,7 +118,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li><span class="regressHi">Regress</span> SNP query form returns correct data for SNPs associated with a marker.
- 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+ 			<p concordion:manual="true">klf 6/6/2013</p>
     		<ol>
                 <li>Open the SNP query form</li>
                 <li>In the Associated Genes ribbon, enter <b>Pnp</b> in the Gene Symbol/Name field and submit the query.</li>
@@ -129,7 +129,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		<li><span class="regressHi">Regress</span> SNP query form returns correct data for SNPs associated with a coordinate range.<br/>
     		NOTE: For coordinate queries, multi-coordinate SNPs are returned ONLY if they fall within the coordinate range queried.
- 			<p concordion:assertTrue="true">klf 6/6/2013</p>
+ 			<p concordion:manual="true">klf 6/6/2013</p>
     		<ol>
                 <li>Open the SNP query form</li>
                 <li>In the Map Position ribbon, enter the coordinates of Pnp +/- 2kbp: <b>chr 14 from 50942302 to 50955412</b> and submit the query.</li>

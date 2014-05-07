@@ -53,13 +53,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Verify that Gene Gt(ROSA)26Sor is never displayed in the Associated Genes section of Human Disease and Mouse Model Detail page
- 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+ 			<p concordion:manual="true">jeffc 12/06/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Open the Human Disease browser and display the disease Parkinson Disease 1, Autosomal Dominant; PARK1 OMIM ID: 168601</li> 
@@ -68,7 +68,7 @@
     		</li>
 
     		<li>Verify that CRE alleles that currently are suppressed on public still suppress
- 			<p concordion:assertTrue="true">jeff - sort order for associated genes section is different than public because of Dev environment sort difference</p>
+ 			<p concordion:manual="true">jeff - sort order for associated genes section is different than public because of Dev environment sort difference</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
 				<li>Open the Human Disease browser and display the disease DiGeorge Syndrome; DGS OMIM ID: 188400</li>
@@ -76,7 +76,7 @@
     		</ol>
     		</li>
 		    <li>Verify searching for Gt(ROSA)26Sor still returns results
- 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+ 			<p concordion:manual="true">jeffc 12/06/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Type <b>Gt(ROSA)26Sor</b> in the search tool and press Enter</li>
@@ -84,7 +84,7 @@
     		</ol>
     		</li>
  		    <li>Verify Gt(ROSA)26Sor displays in reports
- 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+ 			<p concordion:manual="true">jeffc 12/06/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Display the list of Phenotype reports from the All Reports page</li>
@@ -109,7 +109,7 @@
     		</ol>
     		</li>
     		<li>Verify Gt(ROSA)26Sor alleles are still returned in Quick Search searches for diseases
- 			<p concordion:assertTrue="true">jeffc 12/06/2012</p>
+ 			<p concordion:manual="true">jeffc 12/06/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>In the Quick Search, search for <b>168601</b>.</li>
@@ -117,7 +117,7 @@
     		</ol>
     		</li>
     		<li>Verify Gt(ROSA)26Sor Marker Detail Page still displays associated diseases
- 			<p concordion:assertTrue="true">klf 12/06/2012</p>
+ 			<p concordion:manual="true">klf 12/06/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Marker Detail Page for Gt(ROSA)26Sor. </li>

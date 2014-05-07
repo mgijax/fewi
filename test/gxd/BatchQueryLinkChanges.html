@@ -61,23 +61,23 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li><i>(Note: these structure counts should NOT include child terms.) </i>
     		Batch Query summary should display correct number of results for the gene, AD term, and detection level.  <br/>Following the link from the AD Term results count on the Batch Query summary page to the corresponding Expression Results Summary page should display the same number of results.
-<!-- 			<p concordion:assertTrue="true">jeffc 8/10/2012</p> -->
+<!-- 			<p concordion:manual="true">jeffc 8/10/2012</p> -->
     		<ol>
                 <li>Open the Batch Query.</li>
                 <li>Enter <b>Pax2, Shh</b> in the ID/Symbols input field and select <b>Gene Expression</b> in the Additional Output options and submit the query.</li>
                 <li>Verify the &quot;Caveat  &amp; Help&quot; tooltip now says: &quot;Please note that some of these results may have been obtained from mutant specimens.  The detected counts include also specimens for which detected = ambiguous or not specified (as well as present).&quot;<br/>
-                <p concordion:assertTrue="true">jeffc 8/10/2012</p>
+                <p concordion:manual="true">jeffc 8/10/2012</p>
                 </li>
                 <li>Verify the count of expression results shown for each item below.</li>
                 <li>Spot-check 10 rows or so to verify that the count of "Results: All" is equal to the sum of the counts in "Results: +" and "Results: -"<br/>
-                <p concordion:assertTrue="true">jeffc 8/10/2012</p>
+                <p concordion:manual="true">jeffc 8/10/2012</p>
                 </li>
                 <li>Follow the results count links and verify the results set in the Expression Summary table has the same count: <br/>
 	                <table>
@@ -97,7 +97,7 @@
 									<td>0</td>
 									<td>25</td>
 									<td></td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>Pax2</td>
@@ -106,7 +106,7 @@
 									<td>9</td>
 									<td>0</td>
 									<td>&quot;All Yes&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>Pax2</td>
@@ -115,7 +115,7 @@
 									<td>1</td>
 									<td>0</td>
 									<td>&quot;Ambiguous&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>Pax2</td>
@@ -124,7 +124,7 @@
 									<td>3</td>
 									<td>0</td>
 									<td>All &quot;Not specified&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>Shh</td>
@@ -133,7 +133,7 @@
 									<td>10</td>
 									<td>2</td>
 									<td>9 &quot;Yes&quot;, 2 &quot;No&quot;, 1 &quot;Not specified&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 								<tr>
 									<td>Shh</td>
@@ -142,7 +142,7 @@
 									<td>6</td>
 									<td>3</td>
 									<td>6 &quot;Yes&quot;, 3 &quot;No&quot;</td>
-									<td><p concordion:assertTrue="true">jeffc 8/10/2012</p></td>
+									<td><p concordion:manual="true">jeffc 8/10/2012</p></td>
 								</tr>
 							</table>
                 </li>

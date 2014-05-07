@@ -86,13 +86,13 @@ order by v._Marker_key, v._Allele_key
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 			<li>Verify the list of Allele Types is correct. Only the values listed here should be displayed as options (some values available in the database are suppressed on the QF):
- 			<p concordion:assertTrue="true">passed - kstone 2014/02/04</p>
+ 			<p concordion:manual="true">passed - kstone 2014/02/04</p>
     		<ol>
                 <li>Open the Allele query form</li>
                 <li>Verify the Categories section of the form contains a checkbox list called <b>Generation Method</b>.</li>
@@ -122,7 +122,7 @@ order by v._Marker_key, v._Allele_key
 			</li>
 			
 			<li>Each Generation Type selection on the query interface returns the correct set of alleles from the database. (Exclude wild types, alleles without a marker key.)
-    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<p concordion:manual="true">passed kstone - 2014/02/04</p>
     		<ol>
     			<li>Using the PostgreS <b>pub_stable</b> database, obtain counts for each Generation Type:
     			<ul>
@@ -141,7 +141,7 @@ order by v._Marker_key, v._Allele_key
 			</li>
 
     		<li>Selections of multiple Generation Types are combined using Boolean OR.
-    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<p concordion:manual="true">passed kstone - 2014/02/04</p>
     		<ol>
     			<li>Open the Allele query form.</li>
     			<li>Select <b>Chemically induced (ENU)</b> and <b>Chemically induced (other)</b> and click the search button.</li>
@@ -152,7 +152,7 @@ order by v._Marker_key, v._Allele_key
     		</li>
     		
     		<li>Verify the list of Allele Attributes is correct. Only the values listed here should be displayed as options (some values available in the database are suppressed on the QF):
-    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<p concordion:manual="true">passed kstone - 2014/02/04</p>
     		<ol>
                 <li>Open the Allele query form</li>
                 <li>Verify the Categories section of the form contains groups of checkbox lists corresponding to MGI's "Attributes".</li>
@@ -194,7 +194,7 @@ order by v._Marker_key, v._Allele_key
     		</li>
 
 			<li>Each "Attribute" selection on the query interface returns the correct set of alleles from the database. (Exclude wild types, alleles without a marker key.)
-    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<p concordion:manual="true">passed kstone - 2014/02/04</p>
     		<ol>
     			<li>Using the PostgreS <b>pub_stable</b> database, obtain counts for each Generation Type:
     			<ul>
@@ -214,7 +214,7 @@ order by v._Marker_key, v._Allele_key
 			</li>
 
     		<li>Selections of multiple "Attributes" are combined using Boolean OR.
-    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<p concordion:manual="true">passed kstone - 2014/02/04</p>
     		<ol>
     			<li>Open the Allele query form.</li>
     			<li>Select <b>Reporter</b> and <b>Recombinase</b> and click the search button.</li>
@@ -227,7 +227,7 @@ order by v._Marker_key, v._Allele_key
     		</li>
     		
     		<li>Generation Type selections are combined with "Attribute" selections using Boolean AND.
-    		<p concordion:assertTrue="true">passed kstone - 2014/02/04</p>
+    		<p concordion:manual="true">passed kstone - 2014/02/04</p>
     		<ol>
     			<li>Open the Allele query form.</li>
     			<li>Select <b>QTL</b> from the Generation Types and <b>Reporter</b> from the "Attributes" and click the search button.</li>

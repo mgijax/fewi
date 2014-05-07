@@ -114,14 +114,14 @@ tr.gray td {background-color:#EEEEEE;}
     <h2>Tests</h2>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual and Automated tests</h3>
 
 		<ol>
     		<li>The gene tab column headers are correct (<i>cannot automate</i>)(sto15)
-    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>
+    		<p concordion:manual="true">jeffc 08/12/2013</p>
     		<ol>
                 <li>Query for Piebaldism</li>
                 <li>Verify that he Genes tab column headers are listing the headings in this order:<br/>
@@ -136,7 +136,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Verify the Marker Symbol column is displaying superscript correctly
-    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>
+    		<p concordion:manual="true">jeffc 08/12/2013</p>
     		<ol>
                 <li>Query for "amyloid beta deposits", MP <b concordion:set="#phenotype">0003329</b>.</li>
                 <li>Verify that the marker symbol <b>Tg(Thy1-APP<sup>SL</sup>)28Lpr</b> is displaying the superscript correctly</li>
@@ -144,7 +144,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 <!--    		<li>Verify display of Marker Type (<i>no need to automate</i>)
-    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>
+    		<p concordion:manual="true">jeffc 08/12/2013</p>
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Verify that gene <b>Brca1</b> has the Marker type of <b>protein coding gene</b></li>
@@ -154,7 +154,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li> -->
 
     		<li>Verify display of Location data (<i>cannot automate</i>)
-    		<p concordion:assertTrue="true">jeffc 08/12/2014</p>    		
+    		<p concordion:manual="true">jeffc 08/12/2014</p>    		
     		<ol>
                 <li>Query for Long QT Syndrome 1, OMIM <b concordion:set="#disease">192500</b> (<i>This is to verify mouse with chr, coordinates, strand, build</i>)</li>
                 <li>Verify that mouse location displays <b>Chr7 88.12 cM, Chr7:143107254-143427042 (+) GRCm38</b></li>
@@ -315,7 +315,7 @@ tr.gray td {background-color:#EEEEEE;}
            </li>
 
             <li>Verify searching by a phenotype synonymn returns correct results
-    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>            
+    		<p concordion:manual="true">jeffc 08/12/2013</p>            
     		<ol>
                 <li>Query for abnormal mucosa-associated lymphoid tissue morphology, MP <b concordion:set="#phenotype">0002377</b>.</li>
                 <li>Verify that the returned genes are <b>Cebpb, Id2, and Lta</b></li>
@@ -325,7 +325,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li> 
     		  
             <li>Verify searching by Diabetes Mellitus, Permanent Neonatal; PNDM does not return Gt(ROSA)26Sor
-    		<p concordion:assertTrue="true">jeffc 08/15/2013</p>            
+    		<p concordion:manual="true">jeffc 08/15/2013</p>            
     		<ol>
                 <li>Query for Diabetes Mellitus, Permanent Neonatal; PNDM, MP <b concordion:set="#disease">606176</b>.</li>
                 <li>Verify that the returned genes do not include <b>Gt(ROSA)26Sor</b></li>
@@ -333,7 +333,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>          
 
             <li>Verify the sort of the Organism column
-    		<p concordion:assertTrue="true">lec 11/18/2013</p>            
+    		<p concordion:manual="true">lec 11/18/2013</p>            
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Verify that the default sort is by Marker Symbol, then Organism</li>
@@ -345,7 +345,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 <!--     		<li>Verify the sort of the Homologene ID column
-    		<p concordion:assertTrue="true">lec 11/18/2013</p>    		
+    		<p concordion:manual="true">lec 11/18/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Verify that the default sort is by Marker Symbol, then Organism</li>
@@ -357,7 +357,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>  -->   		
 
     		<li>Verify the sort of the Marker Symbol column (sto210)
-    		<p concordion:assertTrue="true">lec 11/18/2013</p>    		
+    		<p concordion:manual="true">lec 11/18/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Verify that the default sort is by Marker Symbol, then Organism</li>
@@ -369,7 +369,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>  
 
 <!--     		<li>Verify the sort of the Marker Type column
-    		<p concordion:assertTrue="true">lec 11/18/2013</p>    		
+    		<p concordion:manual="true">lec 11/18/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Verify that the default sort is by Marker Symbol, then Organism</li>
@@ -381,7 +381,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>  	 -->	
 
     		<li>Verify the sort of the Genetic Location column
-    		<p concordion:assertTrue="true">jeffc 08/12/2013</p>    		
+    		<p concordion:manual="true">jeffc 08/12/2013</p>    		
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Verify that the default sort is by Organism??</li>
@@ -392,7 +392,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify the existance of the References column
-    		<p concordion:assertTrue="true">jeffc 09/06/2013</p>    		
+    		<p concordion:manual="true">jeffc 09/06/2013</p>    		
     		<ol>
                 <li>Query for marker <b concordion:set="#symbol">neil1</b>.</li>
                 <li>Verify the existance of the References column after the Phenotypes column</li>
@@ -403,7 +403,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify the existance and accuracy of a Disease Relevant link in the References column
-    		<p concordion:assertTrue="true">jeffc 09/23/2013</p>    		
+    		<p concordion:manual="true">jeffc 09/23/2013</p>    		
     		<ol>
                 <li>Query for disease <b concordion:set="#disease">268220</b>.</li>
                 <li>Verify the existance of the Disease Relevant link in the References column on the Genes tab</li>
@@ -424,7 +424,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify the existance and accuracy of a Disease Relevant link in the References column(second example)
-    		<p concordion:assertTrue="true">jeffc 09/24/2013</p>    		
+    		<p concordion:manual="true">jeffc 09/24/2013</p>    		
     		<ol>
                 <li>Query for disease <b concordion:set="#disease">125700</b>.</li>
                 <li>Verify the existance of the Disease Relevant link in the References column on the Genes tab</li>
@@ -434,7 +434,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify that on the Disease Relevant link in the References column results, J numbers associated to a complex genotype do not display
-    		<p concordion:assertTrue="true">jeffc 09/23/2013</p>    		
+    		<p concordion:manual="true">jeffc 09/23/2013</p>    		
     		<ol>
                 <li>Query for disease <b concordion:set="#disease">229300</b>.</li>
                 <li>Click on the Genes tab</li>
@@ -447,7 +447,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify when a paper is brought back for a disease annotation that is not the disease you searched for
-    		<p concordion:assertTrue="true">jeffc 09/23/2013</p>    		
+    		<p concordion:manual="true">jeffc 09/23/2013</p>    		
     		<ol>
                 <li>Query for gene <b concordion:set="#gene">Tg(APPSwe,tauP301L)1Lfa</b>.</li>
                 <li>Click on the Genes tab</li>
@@ -457,7 +457,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify when querying for a gene that has only normal annotation confirm the gene symbol is displayed on the Genes tab(sto105)
-    		<p concordion:assertTrue="true">jeffc 10/01/2013</p>    		
+    		<p concordion:manual="true">jeffc 10/01/2013</p>    		
     		<ol>
                 <li>Query for gene <b concordion:set="#gene">Zfa-ps</b>.</li>
                 <li>Click on the Genes tab</li>
@@ -466,7 +466,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify when querying for a region that has genes with only normal annotations confirm these gene symbols are displayed on the Genes tab(sto105)
-    		<p concordion:assertTrue="true">jeffc 10/01/2013</p>    		
+    		<p concordion:manual="true">jeffc 10/01/2013</p>    		
     		<ol>
                 <li>Query for gene region <b concordion:set="#region">Chr10:52542320-52545739</b>.</li>
                 <li>Click on the Genes tab</li>
@@ -475,7 +475,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 			<li>The Genes tab has an Export Text File button(sto154)
-    		<p concordion:assertTrue="true">passed - kstone 2013/10/08</p>
+    		<p concordion:manual="true">passed - kstone 2013/10/08</p>
     		<ol>
                 <li>Query for MP:0009308</li>
                 <li>Verify that the Genes tab has a <b>Text File</b> button on it's tab</li>
@@ -483,7 +483,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>The genes tab column headers are correct for a tab-delimited file(<i>cannot automate</i>)(sto154)
-    		<p concordion:assertTrue="true">passed - kstone 2013/10/08</p>
+    		<p concordion:manual="true">passed - kstone 2013/10/08</p>
     		<ol>
                 <li>Query for Cancer</li>
                 <li>Verify that the Genes tab-delimited file column headers are listing the data in this order:<br/>
@@ -499,7 +499,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>The genes ID column (both mouse/human) is correct for a tab-delimited file(<i>cannot automate</i>)(sto154)
-    		<p concordion:assertTrue="true">passed - kstone 2013/10/08</p>
+    		<p concordion:manual="true">passed - kstone 2013/10/08</p>
     		<ol>
                 <li>Query for Smad7</li>
                 <li>Verify that the Genes tab-delimited file has the ID MGI:1100518 for Smad7 (the MGI ID)</li>
@@ -508,7 +508,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Confirm Hovering over a Gene symbol on the Genes summary, displays text of Gene's full name and it's feature type(sto132)
-    		<p concordion:assertTrue="true">passed jeffc 04/24/2012</p>
+    		<p concordion:manual="true">passed jeffc 04/24/2012</p>
     		<ol>
                 <li>Query for marker <b>pax*</b></li>
                 <li>Hover your mouse over Gene Symbol <b>Pax1</b></li>
@@ -529,7 +529,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     		
     		<li>Confirm Human symbols link to their MGI Homology page(sto137)
-    		<p concordion:assertTrue="true">jeffc 10/24/2014</p>
+    		<p concordion:manual="true">jeffc 10/24/2014</p>
     		<ol>
                 <li>Query for marker <b>Actb</b></li>
                 <li>Click on the Genes tab and find the Human marker <b>ACTB</b> and click it</li>
@@ -537,7 +537,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>	
     		<li>Confirm Mouse symbols link to their MGI gene detail page(sto137)
-    		<p concordion:assertTrue="true">jeffc 10/24/2014</p>
+    		<p concordion:manual="true">jeffc 10/24/2014</p>
     		<ol>
                 <li>Query for marker <b>Actb</b></li>
                 <li>Click on the Genes tab and find the Mouse marker <b>Actb</b> and click it</li>
@@ -545,7 +545,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>	
     		<li>Confirm a human symbol that has no MGI homology page is not a link (sto137)
- 			<p concordion:assertTrue="true">jeffc 10/08/2013</p>
+ 			<p concordion:manual="true">jeffc 10/08/2013</p>
     		<ol>
                 <li>Query for marker <b>IGKC</b></li>
                 <li>Click on the Genes tab and find the Human marker <b>IGKC</b></li>
@@ -553,7 +553,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify the existance of an <b>Find Mice (IMSR)</b> column on the Genes tab(sto84)
-    		<p concordion:assertTrue="true">klf 11/14/13</p>
+    		<p concordion:manual="true">klf 11/14/13</p>
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Click on the Genes tab</li>
@@ -561,7 +561,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li> 
     		<li>Verify IMSR mouse gene counts are correct (sto84)
-    		<p concordion:assertTrue="true">jeffc 11/01/2013</p>
+    		<p concordion:manual="true">jeffc 11/01/2013</p>
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Click on the Genes tab</li>
@@ -579,7 +579,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li> 
     		<li>Verify Human genes have no counts in the IMSR column on the Genes tab(sto84)
-    		<p concordion:assertTrue="true">jeffc 11/01/2013</p>
+    		<p concordion:manual="true">jeffc 11/01/2013</p>
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Click on the Genes tab</li>
@@ -587,7 +587,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
     		<li>Verify the IMSR counts are links to the IMSR website(sto84)
-    		<p concordion:assertTrue="true">jeffc 11/01/2013</p>
+    		<p concordion:manual="true">jeffc 11/01/2013</p>
     		<ol>
                 <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
                 <li>Click on the Genes tab</li>

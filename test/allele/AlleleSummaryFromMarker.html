@@ -73,13 +73,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>For a marker and given Allele Type hyperlinked count, the report includes all alleles for that marker having the Allele Type.
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-24</p>
+ 			<p concordion:manual="true">passed. -klf 2014-01-24</p>
     		<ol>
                 <li>Navigate to the marker detail page for Pax6 (MGI:97490)</li>
                 <li>Follow the link labeled "All Alleles". Verify the total is <b>55</b> alleles.</li>
@@ -232,7 +232,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>For a marker, from the hyperlinked count for alleles associated with disease models (OMIM annotations), the report includes all alleles of all types from any genotypes annotated to disease models EXCLUDING only "Not" annotations. Listings in the "Human Disease Models" column DISPLAY ONLY disease terms where the allele participates in an OMG or "Simple" genotype, and SUPPRESS disease terms where the allele participates in a "Complex" genotype.
- 			<p concordion:assertTrue="true">passed. -klf 2014-01-24</p>
+ 			<p concordion:manual="true">passed. -klf 2014-01-24</p>
     		<ol>
                 <li>Navigate to the marker detail page for Apoe (MGI:88057)</li>
                 <li>Follow the link labeled <b>Alleles Annotated to Human Diseases</b>. Verify the total is <b>5</b> alleles.</li>

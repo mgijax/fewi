@@ -72,13 +72,13 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 			<li>Verify a collection list exists in the Categories section of the query form(sto18)
- 			<p concordion:assertTrue="true">jeffc 01/21/2014</p>
+ 			<p concordion:manual="true">jeffc 01/21/2014</p>
     		<ol>
                 <li>Open the Allele query form</li>
                 <li>Verify the Categories section of the form contains a scrollable checkbox list called <b>Collections</b></li>
@@ -86,7 +86,7 @@
 			</li>
 			
 			<li>Verify the collection list is correct(sto18)
- 			<p concordion:assertTrue="true">jeffc 01/21/2014</p>
+ 			<p concordion:manual="true">jeffc 01/21/2014</p>
     		<ol>
                 <li>Open the Allele query form</li>
                 <li>Verify the Collection list contains the following items in alpha order:
@@ -113,7 +113,7 @@
 			</li>
 
     		<li>Verify you can query by a single collection and multiple collections(sto18)
-    		<p concordion:assertTrue="true">jeffc 01/21/2014</p>
+    		<p concordion:manual="true">jeffc 01/21/2014</p>
     		<ol>
     			<li>Open the Allele query form</li>
     			<li>Select the collection <b>Australian PhenomeBank</b> and click the search</li>
@@ -124,7 +124,7 @@
     		</li>
 
 <!--     		<li>Verify any addition to the collection list in the EI is picked up by the WI(sto18)
- 			<p concordion:assertTrue="false">new test</p>
+ 			<p concordion:manual="false">new test</p>
     		<ol>
                 <li></li>
                 <li></li>

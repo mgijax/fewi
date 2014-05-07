@@ -67,8 +67,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p>Screenshots from Lepr<sup>db</sup> page on Public (11/5/2012).  The table in these requirements will replace this view on Public.</p>
@@ -77,7 +77,7 @@
 		<ol>
 
     		<li>A table exists listing genotype label,allele pairs, genetic background, all cell lines (no transmission state this time) (see image above from Public on 11/6/2012 for reference)
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
                 <li>Scroll to the Phenotype summary section</li>
@@ -90,7 +90,7 @@
 
 
             <li> Verify cell lines display properly.
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
             <ol>
                 <li>Navigate to the allele <b>Ubxn2b<sup>tm1a(EUCOMM)Wtsi</sup></b></li>
                 <li>Scroll to the Phenotype summary section</li>
@@ -104,7 +104,7 @@
     		</li>
 
             <li> Verify disease models.
- 			<p concordion:assertTrue="true">jeffc 12/18/2012</p>
+ 			<p concordion:manual="true">jeffc 12/18/2012</p>
             <ol>
                 <li>Navigate to the allele <b>Apc<sup>Min</sup></b> (MGI:1856318)</li>
                 <li>Verify that <b>ht6</b>, <b>cx18</b>, <b>cx24</b>, <b>cx33</b> and , <b>cx70</b> have "Disease Model" indicators in the Genotype column.</li>
@@ -113,7 +113,7 @@
 
 
     		<li>Table lists all genotypes that exist in the pheno grid (and have identical numbering) (see image above from Public on 11/6/2012 for reference)
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
                 <li>Scroll to the Phenotype summary section</li>
@@ -121,7 +121,7 @@
     		</ol>
     		</li>
     		<li>Table properly displays complex genotypes (see image above from Public on 11/6/2012 for reference)
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
                 <li>Scroll to the Phenotype summary section</li>
@@ -130,7 +130,7 @@
     		</ol>
     		</li>
     		<li>Make sure superscript is properly displayed in allelic composition and genetic background (see image above from Public on 11/6/2012 for reference)
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
                 <li>Scroll to the Phenotype summary section</li>
@@ -138,7 +138,7 @@
     		</ol>
     		</li>
     		<li>Table becomes scrollable at some height
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
                 <li>Verify that the genotype legend is scrollable, and displays four or less genotypes at start.</li>
@@ -147,7 +147,7 @@
     		</ol>
     		</li>
     		<li>Clicking on genotype label in legend opens up the genotype popup
- 			<p concordion:assertTrue="true">passed - kstone 11/11/2012</p>
+ 			<p concordion:manual="true">passed - kstone 11/11/2012</p>
     		<ol>
                 <li>Navigate to the allele <b>Lepr<sup>db</sup></b></li>
                 <li>Click on any cell in the genotype legend "genotype" column. Verify that the popup is identical to the matching genotype popup in the phenotype grid.</li>
@@ -158,7 +158,7 @@
 		<h4>Genotype Type tests</h4>
 		<ol>
 			<li>Genotype type "tg" contains an allele of type "Transgenic" where the allele's marker is also of type "Transgene"
-			 <p concordion:assertTrue="true">passed - kstone 2014/02/10</p>
+			 <p concordion:manual="true">passed - kstone 2014/02/10</p>
 			 <i>Positive Cases:</i>
 			 <ol>
 			 	<li>Navigate to allele detail for <a href="http://cardolan.informatics.jax.org/allele/MGI:3847925">Tg(MMTV-NFKBIA*S32A*S36A)13Mka (<b>MGI:3847925</b>)</a></li>

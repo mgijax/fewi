@@ -90,15 +90,15 @@ dt {font-size:13px;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
 			<li>QC TEST - Rows marked <b>fail</b> get skipped (in skip file), and <b>pass</b> rows do not, from the 
 				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_pass_fail.txt">DAL_pass_fail.txt</a> file
 				(<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_pass_fail.xlsx">Excel</a>)
- 			<p concordion:assertTrue="true">passed - kstone 2014/02/20</p>
+ 			<p concordion:manual="true">passed - kstone 2014/02/20</p>
  			<br/>Tests results can be found here: <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test/logs/test.skip.log">skip.log</a>,
  				<a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test/logs/test.exist.log">exist.log</a>
  				(Note: examples end up in exist.log due to previous load runs)
@@ -113,7 +113,7 @@ dt {font-size:13px;}
 			<li>ALLELE CREATION LOGIC TEST - Rows marked <b>fail</b> get skipped (in duplicate file), and <b>pass</b> rows do not, from the 
 				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_logic.txt">DAL_test_logic.txt</a> file
 				(<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_logic.xlsx">Excel</a>)
- 			<p concordion:assertTrue="true">passed - kstone 2014/02/20</p>
+ 			<p concordion:manual="true">passed - kstone 2014/02/20</p>
  			<br/>Tests results can be found here: <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/logs/test.skip.log">skip.log</a>,
  				<a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/test2/logs/test.exist.log">exist.log</a>
  			(Note: valid alleles end up in exist.log due to previous load runs)
@@ -127,7 +127,7 @@ dt {font-size:13px;}
 			</ol>
 			</li>
 			<li>IKMC DATA LOAD - Appropriate allele data get loaded into MGD
- 			<p concordion:assertTrue="true">passed. -klf 2/21/2014 </p>
+ 			<p concordion:manual="true">passed. -klf 2/21/2014 </p>
 			<p>Rows not used to create new allele records are found here: <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/ikmc/logs/ikmc.skip.log">skip.log</a>,
  				<a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/ikmc/logs/ikmc.exist.log">exist.log</a>
  				(Note: these are "live" files and will update each time the load script is re-run.)</p>
@@ -231,7 +231,7 @@ dt {font-size:13px;}
  
 			<li>ALLELE UPDATE LOGIC TEST for alleles previously in MGI's database - Rows marked <b>fail</b> get skipped, and <b>pass</b> rows get processed as indicated, from the 
 				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_updateMGI_logic.txt">DAL_test_updateMGI_logic.txt</a> file. (sto144)
- 			<p concordion:assertTrue="true">passed. klf 2014-03-04</p>
+ 			<p concordion:manual="true">passed. klf 2014-03-04</p>
 			<ol>
 				<li>Run load using the above DAL_test_updateMGI_logic.txt file.</li>
 <!-- PASSED THESE TESTS USING EI ONLY. 
@@ -245,7 +245,7 @@ dt {font-size:13px;}
 
 			<li>ALLELE UPDATE LOGIC TEST for alleles just created in IKMC file - Rows marked <b>fail</b> get skipped, and <b>pass</b> rows get processed as indicated, from the 
 				<a href="http://prodwww.informatics.jax.org/all/wts_projects/11500/11515/DAL/DAL_test_updateIKMC_logic.txt">DAL_test_updateIKMC_logic.txt</a> file. (sto144)
- 			<p concordion:assertTrue="true">passed. klf 2014-03-04</p>
+ 			<p concordion:manual="true">passed. klf 2014-03-04</p>
 			<ol>
 				<li>Run load using the above DAL_test_updateIKMC_logic.txt file.</li>
 <!--  PASSED THESE TESTS USING EI ONLY. 
@@ -259,7 +259,7 @@ dt {font-size:13px;}
 
 
 			<li>IKMC DATA LOAD - Appropriate allele data get updated in MGD (sto144)
- 			<p concordion:assertTrue="true">passed. klf 2014-03-05</p>
+ 			<p concordion:manual="true">passed. klf 2014-03-05</p>
 			<ol>
 				<li>Run the real sanger load file (<a href="https://www.mousephenotype.org/imits/v2/reports/mgi_modification_allele_report.tsv">found here</a>)</li>
 				<li>Created/Updated Allele Records (file is <a href="http://rohan.informatics.jax.org/data/loads/scrum-dog/mgi/alleleload/ikmc/input/mgi_allele_ikmc.txt">here</a> - "live" file, will update each time the load script is re-run).&lt;- <i>CORRECT FILE LOCATION?</i></li>
@@ -428,7 +428,7 @@ dt {font-size:13px;}
 			</li>
 
 			<li>When data are added via the IKMC load to alleles with status of "Reserved", the status is udpated to "Approved". (sto144)
- 			<p concordion:assertTrue="true">passed. klf 2014-03-05</p>
+ 			<p concordion:manual="true">passed. klf 2014-03-05</p>
  			<p>The IKMC load file contains the following data for  creating an allele which already exists in MGD  with status "Reserved" : (Rab36&lt;tm1b(KOMP)Wtsi&gt;):</p>
  					<table>
 					<tr><th>Field 2</th><th>Field 6</th><th>Field 8</th><th>Field 9</th><th>Field 11</th><th>Field 12</th></tr>
@@ -444,7 +444,7 @@ dt {font-size:13px;}
 			</li>
 			
 			<li>A file containing colony names, MGI IDs, and allele symbols is available for IKMC to update their data. (sto144 / sto 145)
- 			<p concordion:assertTrue="true">passed. klf 2014-03-05</p>
+ 			<p concordion:manual="true">passed. klf 2014-03-05</p>
  			<ol>
  				<li>Navigate to the FTP directory <a href="ftp://ftp.informatics.jax.org/pub/IKMC/mgi_allele_ikmc.txt.current">ftp://ftp.informatics.jax.org/pub/IKMC/mgi_allele_ikmc.txt.current</a>.</li>
  				<li>Verify that a text file exists.</li>

@@ -54,8 +54,8 @@
     <img src="http://prodwww.informatics.jax.org/wiki/images/0/0a/MGI_5008609_GenotypeCellLinesMockup.jpg" width="400px" />
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<p>Set up: Add fake data via genotype loader  from file mgi_genotypeload_test.txt... </p>
@@ -81,7 +81,7 @@
 		</table>
 		<ol>
     		<li>Verify mutant cell line appears for simple genotypes which have one cell line.
- 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+ 			<p concordion:manual="true">jeffc-klf 10/26/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Chd7&lt;tm2a(EUCOMM)Wtsi&gt;</b></li>
@@ -91,7 +91,7 @@
     		</ol>
     		</li>
     		<li>Verify mutant cell lines appear for simple genotypes which have more than one cell line.
- 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+ 			<p concordion:manual="true">jeffc-klf 10/26/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Aamp&lt;tm1a(KOMP)Wtsi&gt;</b></li>
@@ -102,7 +102,7 @@
     		</li>
 
     		<li>Verify mutant cell lines appear for complex genotypes, same allele, which have more than one cell line.
- 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+ 			<p concordion:manual="true">jeffc-klf 10/26/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Ubxn2b&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>
@@ -119,7 +119,7 @@
     		</li>
     		
     		<li>Verify mutant cell lines appear for compound genotypes.
- 			<p concordion:assertTrue="true">jeffc-klf 10/26/2012</p>
+ 			<p concordion:manual="true">jeffc-klf 10/26/2012</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Aamp&lt;tm1a(KOMP)Wtsi&gt; </b></li>
@@ -135,7 +135,7 @@
     		</ol>
     		</li>
     		<li>Verify mutant cell lines appear for complex genotypes.
- 			<p concordion:assertTrue="true">passed. klf 10/26/12</p>
+ 			<p concordion:manual="true">passed. klf 10/26/12</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Acaa1a&lt;tm1a(KOMP)Wtsi&gt;</b></li>
@@ -155,7 +155,7 @@
     		</ol>
     		</li>
     		<li>Verify NO mutant cell lines appear for genotypes which DO NOT have them.
- 			<p concordion:assertTrue="true">passed. klf 10/26/12</p>
+ 			<p concordion:manual="true">passed. klf 10/26/12</p>
     		<ol>
                 <li>Open the test Web Interface.</li>
                 <li>Navigate to the Allele Detail Page for <b>Agmo&lt;tm1a(EUCOMM)Wtsi&gt;</b></li>

@@ -58,8 +58,8 @@
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
@@ -91,7 +91,7 @@
 				<li> null or bad data in MGI Marker ID; <i>marker ID not valid for the given allele ID</i></li>
 				<li> bad data in Sex (Gender)</li>
     		</ul>
- 			<p concordion:assertTrue="true">passed kstone 11/11/12.</p>
+ 			<p concordion:manual="true">passed kstone 11/11/12.</p>
     		<ol>
                 <li>Run the parse-and-load script on <i>mgi_sanger_mp_test.tsv</i>.</li>
                 <li>Verify correct error message was generated for each error line in the file.</li>

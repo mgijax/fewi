@@ -75,13 +75,13 @@ tr.gray td {background-color:#EEEEEE;}
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
 	<div id="manual">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Manual tests</h3>
 		<ol>
     		<li>The Grid tab exists.
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/23</p> 
+ 			<p concordion:manual="true">passed - kstone - 2013/08/23</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>gata1</b> in the Genes section and hit search</li>
@@ -90,7 +90,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 		
     		<li>Grid homology clusters with multiple markers appear as comma separated list
- 			<p concordion:assertTrue="true">passed - kstone - 2013/08/23</p> 
+ 			<p concordion:manual="true">passed - kstone - 2013/08/23</p> 
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b>Zfp110</b> in the Genes section and hit search</li>

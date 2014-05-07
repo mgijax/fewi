@@ -77,13 +77,13 @@ tr.gray td {background-color:#EEEEEE;}
     <h2>Tests</h2>
 	<div id="auto">
 <!-- To insert manual test results, use the following:
-<p concordion:assertTrue="true">testing assertTrue - displays as green</p>
-<p concordion:assertTrue="false">testing assertFalse - displays as red</p>
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
 		<h3>Automated tests</h3>
 		<ol>
     		<li>The gene <em>Gt(ROSA)26Sor</em> is excluded from all query results displays.
-			<!-- <p concordion:assertTrue="false">new test</p> -->
+			<!-- <p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>Query for 'absent vitelline blood vessels', <b concordion:set="#pheno">MP:0001719</b></li>
                 <li>Verify that <b cc:assertNoResultsContain="getSymbolsByPhenotype(#pheno)">Gt(ROSA)26Sor</b> does NOT appear in the genes list.
@@ -92,7 +92,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>"Normal" models are excluded: Markers in "Normal" models are not excluded from all query results displays.
- 			<!-- <p concordion:assertTrue="false">new test</p> -->
+ 			<!-- <p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>Query for 'cellular phenotype', <b concordion:set="#pheno">MP:0005384</b> </li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Aaas</b> does appear in the genes list</li>
@@ -100,7 +100,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Homozygous: A marker with a simple, homozygous genotype annotated to a MP term is returned for that MP term.
-			<!-- <p concordion:assertTrue="false">new test</p> -->
+			<!-- <p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>Query for 'adnormal retinal rod cell morphology', <b concordion:set="#pheno">MP:0000745</b></li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Aars</b> is returned.</li>
@@ -108,7 +108,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Hemizygous: A marker with a simple, hemizygous genotype annotated to a MP term is returned for that MP term.
-			<!-- <p concordion:assertTrue="false">new test</p> -->
+			<!-- <p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>Query for 'hippocampal neuron degeneration', <b concordion:set="#pheno">MP:0000811</b></li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Tg(Camk2a-tTA)1Mmay</b> is returned.</li>
@@ -116,7 +116,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Indeterminate: A marker with a simple, indeterminate (hemizygous) genotype annotated to a MP term is returned for that MP term.
-			<!-- <p concordion:assertTrue="false">new test</p> -->
+			<!-- <p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>Query for 'adnormal eye development', <b concordion:set="#pheno">MP:0001286</b></li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Zranb2</b> is returned.</li>
@@ -124,7 +124,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Heterozygous Wild Type: A marker with a simple, heterozygous, wild type genotype annotated to a MP term is returned for that MP term.
-			<!-- <p concordion:assertTrue="false">new test</p> -->
+			<!-- <p concordion:manual="false">new test</p> -->
     		<ol>
                 <li>Query for 'impaired coordination', <b  concordion:set="#pheno">MP:0001405</b>.</li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Ty</b> is returned.</li>
@@ -134,7 +134,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
     		<li>Heterozygous Non-Wild Type: A marker with a simple, heterozygous, non-wild type genotype annotated to a MP term is returned with that MP term.
-			<!-- <p concordion:assertTrue="false">new test</p> -->
+			<!-- <p concordion:manual="false">new test</p> -->
 		<ol>
                 <li>Query for 'decreased susceptibility to bacterial infection', <b  concordion:set="#pheno">MP:0002411</b></li>
                 <li>Verify that <b cc:assertResultsContain="getSymbolsByPhenotype(#pheno)">Slc11a1</b> is returned.</li>
