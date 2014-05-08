@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.BatchMarkerAllele;
 import mgi.frontend.datamodel.BatchMarkerId;
-import mgi.frontend.datamodel.BatchMarkerSnp;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
@@ -187,9 +186,8 @@ public class TextBatchSummary extends AbstractTextView {
 				} else if(queryForm.getRefsnp()){
 					//logger.debug("refsnp");
 					List<String> refSnpIds = new ArrayList<String>();					
-        			for (BatchMarkerSnp snp : m.getBatchMarkerSnps()) {
-        				refSnpIds.add(snp.getSnpID());
-            			session.evict(snp);
+        			for (String snp : m.getBatchMarkerSnps()) {
+        				refSnpIds.add(snp);
     				}
 		    		associations.add(refSnpIds);
 				} else if(queryForm.getRefseq()){

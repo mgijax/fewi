@@ -8,7 +8,6 @@ import mgi.frontend.datamodel.BatchMarkerAllele;
 import mgi.frontend.datamodel.BatchMarkerGoAnnotation;
 import mgi.frontend.datamodel.BatchMarkerId;
 import mgi.frontend.datamodel.BatchMarkerMpAnnotation;
-import mgi.frontend.datamodel.BatchMarkerSnp;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
@@ -294,9 +293,8 @@ public class BatchSummaryRow {
     		omimAnnots = batchMarkerId.getMarker().getOMIMAnnotations();
     	}
     	if (omimAnnots != null){
-    		String url;
     		for (Annotation annotation : omimAnnots) {
-    			url = fewiUrl + "disease/" + annotation.getTermID();
+    			String url = fewiUrl + "disease/" + annotation.getTermID();
     			omim.add(String.format(noWrap, String.format(urlPattern, url, annotation.getTerm())));
 			}
     	}
@@ -367,9 +365,8 @@ public class BatchSummaryRow {
     	}
 
     	if (expCounts != null){
-    		String url;
 	    	for (MarkerTissueCount tissue : expCounts) {
-    			url = fewiUrl + String.format("gxd/summary?markerMgiId=%s&annotatedStructureKey=%d",
+    			String url = fewiUrl + String.format("gxd/summary?markerMgiId=%s&annotatedStructureKey=%d",
     					marker.getPrimaryID(), tissue.getStructureKey());
     			structures.add(String.format(urlPattern, url, tissue.getAllResultCount()));
 			}
@@ -419,10 +416,9 @@ public class BatchSummaryRow {
     	List<String> refSnpIds = new ArrayList<String>();
     	String url = javawiUrl + "WIFetch?page=snpDetail&id=%s";
     	if (query.getRefsnp() && batchMarkerId.getMarker() != null){
-			for (BatchMarkerSnp snp : batchMarkerId.getMarker().getBatchMarkerSnps()) {
-				url = String.format(url, snp.getSnpID());
-				String.format(urlPattern, url, snp.getSnpID());
-				refSnpIds.add(String.format(urlPattern, url, snp.getSnpID()));
+			for (String snp : batchMarkerId.getMarker().getBatchMarkerSnps()) {
+				String snpUrl = String.format(url, snp);
+				refSnpIds.add(String.format(urlPattern, snpUrl, snp));
 			}
     	}
     	return StringUtils.join(refSnpIds, "<br/>");

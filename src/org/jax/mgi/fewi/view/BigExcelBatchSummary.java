@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.BatchMarkerAllele;
 import mgi.frontend.datamodel.BatchMarkerId;
-import mgi.frontend.datamodel.BatchMarkerSnp;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerLocation;
@@ -21,6 +21,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.slf4j.Logger;
@@ -29,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class BigExcelBatchSummary extends AbstractBigExcelView {
 	
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(BigExcelBatchSummary.class);
+	private final Logger logger = LoggerFactory.getLogger(BigExcelBatchSummary.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -41,14 +43,21 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 		BatchQueryForm queryForm = (BatchQueryForm)model.get("queryForm");
 		startTimeoutPeriod();
 		
-		Sheet sheet = workbook.createSheet();		
+		// setup
+		String filename = "MGIBatchReport_"+getCurrentDate();
+		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".xlsx\"");
+				
+		// grab the session so we can control the hibernate cache by evicting objects that we are done using.
+		SessionFactory sessionFactory = (SessionFactory)model.get("sessionFactory");
+		Session session = sessionFactory.getCurrentSession();
+			
+		Sheet sheet = workbook.createSheet();
 		genHeader(sheet.createRow(0), queryForm);
 		
 		Row row, addlRow;
 		int rownum = 1;
 		int col;
 		
-		row = sheet.createRow(rownum);
 
 		for (BatchMarkerId id : (List<BatchMarkerId>) model.get("results")) 
 		{
@@ -79,6 +88,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 						row.createCell(col++).setCellValue(loc.getStrand());
 						row.createCell(col++).setCellValue(loc.getStartCoordinate());
 						row.createCell(col++).setCellValue(loc.getEndCoordinate());
+						evictCollection(session,m.getLocations());
 					} else {
 						row.createCell(col++).setCellValue("UN");
 						col += 3;
@@ -140,6 +150,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 	    				wrapper.add(goIds);
 					}		    		
 		    		associations.add(wrapper);
+		    		evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getMp()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> mpIds;
@@ -150,6 +161,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 						wrapper.add(mpIds);
 					}		    		
 		    		associations.add(wrapper);
+		    		evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getOmim()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> mpIds;
@@ -160,6 +172,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 	    				wrapper.add(mpIds);
 					}		
 		    		associations.add(wrapper);
+    				evictCollection(session,m.getAnnotations());
 				} else if(queryForm.getAllele()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> alleles;
@@ -168,6 +181,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 	    				alleles.add(bma.getAlleleID());
 	    				alleles.add(bma.getAlleleSymbol());
 	    				wrapper.add(alleles);
+	    				session.evict(bma);
 					}
 		    		associations.add(wrapper);
 				} else if(queryForm.getExp()){
@@ -180,14 +194,15 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 	    				expression.add(String.valueOf(tissue.getDetectedResultCount()));
 	    				expression.add(String.valueOf(tissue.getNotDetectedResultCount()));
 	    				wrapper.add(expression);
+	    				session.evict(tissue);
 					}
 		    		associations.add(wrapper);
 				} else if(queryForm.getRefsnp()){
 					List<List<String>> wrapper = new ArrayList<List<String>>();
 					List<String> refSnpIds;
-        			for (BatchMarkerSnp snp : m.getBatchMarkerSnps()) {
+        			for (String snp : m.getBatchMarkerSnps()) {
         				refSnpIds = new ArrayList<String>();
-        				refSnpIds.add(snp.getSnpID());
+        				refSnpIds.add(snp);
         				wrapper.add(refSnpIds);
     				}
 		    		associations.add(wrapper);
@@ -283,17 +298,33 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 					
 					combineResults = null;
 				}
+				if(ids!=null)
+				{
+					evictCollection(session,ids);
+				}
 			} else {
 				row.createCell(col++).setCellValue("No associated gene");
 			}
-			id.setMarker(null);
+			if(m!=null) {
+				session.evict(m);
+				id.setMarker(null);
+			}
+			session.evict(id);
 		}
-		
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++) 
+		{
 			sheet.autoSizeColumn(i);	
 		}
 		
 		logger.info("finished processing batch excel report");
+	}
+	
+	private void evictCollection(Session session, Collection<?> collection)
+	{
+		for(Object o : collection)
+		{
+			session.evict(o);
+		}
 	}
 	
 	private  Row genHeader(Row row, BatchQueryForm queryForm){
