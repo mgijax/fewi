@@ -34,8 +34,9 @@ public class TextBatchSummary extends AbstractTextView {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		response.setHeader("Content-Disposition","attachment; filename=\"batchReport.txt\"");
-		System.out.println(response.getCharacterEncoding());
+		String filename = "MGIBatchReport_"+getCurrentDate();
+		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
+		logger.debug(response.getCharacterEncoding());
 		
 		BatchQueryForm queryForm = (BatchQueryForm)model.get("queryForm");
 		startTimeoutPeriod();
