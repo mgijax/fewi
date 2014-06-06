@@ -325,7 +325,7 @@ td.padded { padding:4px; }
 		    <a href="${jbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}"/></a>
 		    <br/>
 		    </c:if>
-		    <a href="${gbrowseUrl}">Mouse Genome Browser</a>
+		    <a href="${jbrowseUrl}">Mouse Genome Browser</a>
 		  </td></tr></table>
 		  </c:if>
 		</td></tr>
