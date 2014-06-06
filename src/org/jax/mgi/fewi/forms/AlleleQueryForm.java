@@ -10,7 +10,7 @@ import java.util.Map;
 /* class */
 /*-------*/
 
-public class AlleleQueryForm 
+public class AlleleQueryForm
 {
     //--------------------//
     // instance variables
@@ -32,15 +32,15 @@ public class AlleleQueryForm
     private String coordUnit;
     private String cm;
     private String cyto;
-    
+
     // Form Widget Values
     // collection will be set once dynamically and cached
     private static List<String> collectionValues=null;
-    
+
     // Constants
     public static String COORDINATE_ANY="any";
     public static String COORD_UNIT_MBP="mbp";
-    
+
     private List<String> coordUnitDisplay = new ArrayList<String>();
     private Map<String,String> chromosomeDisplay = new LinkedHashMap<String,String>();
     private Map<String,String> alleleTypeDisplay = new LinkedHashMap<String,String>();
@@ -48,13 +48,13 @@ public class AlleleQueryForm
     private Map<String,String> subTypeGroup1 = new LinkedHashMap<String,String>();
     private Map<String,String> subTypeGroup2 = new LinkedHashMap<String,String>();
     private Map<String,String> subTypeGroup3 = new LinkedHashMap<String,String>();
-    
+
     public AlleleQueryForm()
     {
     	// any defaults
     	coordUnitDisplay.add("bp");
     	coordUnitDisplay.add("Mbp");
-    	
+
     	chromosomeDisplay.put(COORDINATE_ANY,"ANY");
     	chromosomeDisplay.put("1","1");
     	chromosomeDisplay.put("2","2");
@@ -82,7 +82,7 @@ public class AlleleQueryForm
     	chromosomeDisplay.put("UN","Unknown");
 
     	chromosome = new ArrayList<String>(Arrays.asList(COORDINATE_ANY));
-    	
+
 
     	alleleTypeDisplay.put("Chemically induced (ENU)","Chemically induced (ENU)");
     	alleleTypeDisplay.put("Chemically induced (other)","Chemically induced (other)");
@@ -95,11 +95,11 @@ public class AlleleQueryForm
     	alleleTypeDisplay.put("Targeted","Targeted");
     	alleleTypeDisplay.put("Transgenic","Transgenic");
     	alleleTypeDisplay.put("Transposon induced","Transposon induced");
-    	
+
     	subTypeGroup1.put("Conditional ready","Conditional ready");
     	subTypeGroup1.put("Recombinase","Recombinase");
     	subTypeGroup1.put("RMCE-Ready","RMCE-Ready");
-    	
+
     	subTypeGroup2.put("Inserted expressed sequence","Inserted expressed sequence");
     	subTypeGroup2.put("Humanized sequence","Humanized sequence");
     	subTypeGroup2.put("Reporter","Reporter");
@@ -113,14 +113,14 @@ public class AlleleQueryForm
     	subTypeGroup3.put("Knockdown","Knockdown");
     	subTypeGroup3.put("Modified Isoform(s)","Modified isoform(s)");
     	subTypeGroup3.put("Null/knockout","Null/knockout");
-    	subTypeGroup3.put("No Functional Change","No functional change");
+    	subTypeGroup3.put("No functional change","No functional change");
     }
-    
+
     public List<String> getCoordUnitDisplay()
     {
     	return coordUnitDisplay;
     }
-    
+
     public Map<String,String> getChromosomeDisplay()
     {
     	return chromosomeDisplay;
@@ -141,13 +141,13 @@ public class AlleleQueryForm
     {
     	return subTypeGroup3;
     }
-    
+
     // for the pheno system popup values
     public Map<String,String> getPhenoSystemWidgetValues()
     {
     	return FormWidgetValues. getPhenoSystemWidgetValuesAll();
     }
-    
+
     //--------------------//
     // accessors
     //--------------------//
@@ -172,11 +172,11 @@ public class AlleleQueryForm
 	public void setAlleleType(List<String> alleleType) {
 		this.alleleType = alleleType;
 	}
-	
+
 	public void setChromosome(List<String> chromosome) {
 		this.chromosome = chromosome;
 	}
-	
+
 	public String getCoordinate() {
 		return coordinate;
 	}
@@ -201,7 +201,7 @@ public class AlleleQueryForm
 	public void setCyto(String cyto) {
 		this.cyto = cyto;
 	}
-	
+
 	public List<String> getCollection() {
 		return collection;
 	}
@@ -221,14 +221,14 @@ public class AlleleQueryForm
 	public void setMarkerId(String markerId) {
 		this.markerId = markerId;
 	}
-	
+
 	public String getNomen() {
 		return nomen;
 	}
 	public void setNomen(String nomen) {
 		this.nomen = nomen;
 	}
-	
+
 	public String getRefKey() {
 		return refKey;
 	}
@@ -247,21 +247,21 @@ public class AlleleQueryForm
 	public void setHasOMIM(String hasOMIM) {
 		this.hasOMIM = hasOMIM;
 	}
-	
+
 	public List<String> getAlleleSubType() {
 		return alleleSubType;
 	}
 	public void setAlleleSubType(List<String> alleleSubType) {
 		this.alleleSubType = alleleSubType;
 	}
-	
+
 	public String getIsCellLine() {
 		return isCellLine;
 	}
 	public void setIsCellLine(String isCellLine) {
 		this.isCellLine = isCellLine;
 	}
-	
+
 	//=== form widget values
 	public static List<String> getCollectionValues() {
 		return AlleleQueryForm.collectionValues;
@@ -269,15 +269,15 @@ public class AlleleQueryForm
 	public static void setCollectionValues(List<String> collectionValues) {
 		AlleleQueryForm.collectionValues = collectionValues;
 	}
-	
+
 	// boolean accessors
 	public boolean getHasChromosome()
 	{
 		// has values, but not if there is one, and it's "any"
-		return chromosome!=null && chromosome.size()>0 
+		return chromosome!=null && chromosome.size()>0
 				&& !(chromosome.size()==1 && chromosome.contains(AlleleQueryForm.COORDINATE_ANY));
 	}
-	
+
 	@Override
 	public String toString() {
 		return "AlleleQueryForm [allKey=" + allKey + ", allIds=" + allIds
