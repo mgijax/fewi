@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -29,8 +30,6 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 
     private static Properties properties = null;
     private static Properties externalUrls = null;
-
-    private static Configuration propertiesConfig = null;
     
     private static String webInfPath = null;
 
@@ -55,9 +54,17 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
         }
 
         try {
-        	propertiesConfig = new CompositeConfiguration();
+        	Configuration propertiesConfig = new CompositeConfiguration();
         	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("fewi.properties").getFile()));
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("common.fewi.properties").getFile()));
         	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("common.solr.properties").getFile()));
+        	
+        	for (@SuppressWarnings("unchecked") Iterator<String> i = propertiesConfig.getKeys(); i.hasNext();)
+        	{
+                String key = i.next();
+                String value = (String) propertiesConfig.getProperty(key);
+                properties.setProperty(key,value);
+        	}
         } catch (ConfigurationException e) {
             logger.error("Error with the configuration file.",e);
         } catch (IOException e) {
@@ -88,10 +95,6 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
 
     public static Properties getExternalUrls(){
         return externalUrls;
-    }
-
-    public static Configuration getPropertiesConfig() {
-        return propertiesConfig;
     }
     
     public static String getWebInfPath()
