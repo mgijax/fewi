@@ -696,6 +696,7 @@ public class MarkerController {
         String ucscGenomeBrowserUrl = null;
         String ncbiMapViewerUrl = null;
         String gbrowseUrl = null;
+        String jbrowseUrl = null;
         String gbrowseThumbnailUrl = null;
 
         boolean isDnaSegment = "DNA Segment".equals(markerType);
@@ -781,8 +782,15 @@ public class MarkerController {
 
 	// GBrowse
 	if (coords != null) {
+
 		gbrowseUrl = externalUrls.getProperty(
 		"GBrowse").replace(
+		"<chromosome>", chromosome).replace(
+		"<start>", startCoordinate).replace(
+		"<end>", endCoordinate);
+
+		jbrowseUrl = externalUrls.getProperty(
+		"JBrowse").replace(
 		"<chromosome>", chromosome).replace(
 		"<start>", startCoordinate).replace(
 		"<end>", endCoordinate);
@@ -796,6 +804,7 @@ public class MarkerController {
 		// add tracks for special marker "types"
 		if(marker.getIsSTS())
 		{
+			jbrowseUrl = jbrowseUrl + ",STS";
 			gbrowseUrl = gbrowseUrl.replace("label=","label=STS-");
 			gbrowseThumbnailUrl = gbrowseThumbnailUrl.replace("t=","t=STS;t=");
 		}
@@ -823,6 +832,9 @@ public class MarkerController {
         }
         if (ncbiMapViewerUrl != null) {
         	mav.addObject ("ncbiMapViewerUrl", ncbiMapViewerUrl);
+        }
+        if (jbrowseUrl != null) {
+        	mav.addObject ("jbrowseUrl", jbrowseUrl);
         }
         if (gbrowseUrl != null) {
         	mav.addObject ("gbrowseUrl", gbrowseUrl);
@@ -1010,7 +1022,7 @@ public class MarkerController {
             mav.addObject("errorMsg", "Dupe references found for " + refID);
             return mav;
         }
-        
+
         return markerSummaryByRef(refList.get(0));
     }
 
@@ -1039,7 +1051,7 @@ public class MarkerController {
         }
         return markerSummaryByRef(referenceList.get(0));
     }
-    
+
     private  ModelAndView markerSummaryByRef(
             Reference reference)
     {
@@ -1296,16 +1308,16 @@ public class MarkerController {
         // retrieve requested sort order; set default if not supplied
         String sortRequested = request.getParameter("sort");
         String dirRequested  = request.getParameter("dir");
-        
+
         // User can set initialSort and dir via link, but we want datatable sort to override
         if((sortRequested==null || sortRequested.equals("default"))
-        		&& notEmpty(query.getInitialSort()) 
+        		&& notEmpty(query.getInitialSort())
         		&& notEmpty(query.getInitialDir()))
         {
         	sortRequested = query.getInitialSort();
         	dirRequested = query.getInitialDir();
         }
-        
+
         boolean desc = false;
         if("desc".equalsIgnoreCase(dirRequested)){
             desc = true;

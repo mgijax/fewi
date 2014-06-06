@@ -245,7 +245,7 @@ td.padded { padding:4px; }
   </c:if>
 
   <!-- ROW5 -->
-  <c:if test="${not (empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl)}">
+  <c:if test="${not (empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
         Sequence&nbsp;Map
@@ -319,10 +319,10 @@ td.padded { padding:4px; }
 		  <a href="${ncbiMapViewerUrl}" target="_new">NCBI Map Viewer</a>
 		</c:if>
 		</td><td align="right" width="*">
-		  <c:if test="${not empty gbrowseUrl}">
+		  <c:if test="${not empty jbrowseUrl}">
 		    <table><tr><td align="center">
 		    <c:if test="${not empty gbrowseThumbnailUrl}">
-		    <a href="${gbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}"/></a>
+		    <a href="${jbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}"/></a>
 		    <br/>
 		    </c:if>
 		    <a href="${gbrowseUrl}">Mouse Genome Browser</a>
