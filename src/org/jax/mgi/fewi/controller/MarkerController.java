@@ -45,6 +45,7 @@ import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
+import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
@@ -58,6 +59,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
@@ -113,6 +115,9 @@ public class MarkerController {
 
     @Autowired
     private ReferenceFinder referenceFinder;
+    
+    @Autowired
+    private DiseasePortalFinder hdpFinder;
 
     @Autowired
     private IDLinker idLinker;
@@ -364,6 +369,7 @@ public class MarkerController {
 
         // set specific hibernate filters to omit data that does not appear on this page. (for performance)
         sessionFactory.getCurrentSession().enableFilter("markerDetailRefs");
+        sessionFactory.getCurrentSession().enableFilter("markerDetailMarkerInteractions");
 
         // add an IDLinker to the mav for use at the JSP level
 	idLinker.setup();
@@ -510,6 +516,19 @@ public class MarkerController {
 	if (marker.getCountOfReferences() > 0) {
 	    seoDataTypes.add("references");
 	}
+	
+    SearchParams params = new SearchParams();
+    params.setPageSize(1);
+    params.setFilter(new Filter(SearchConstants.MRK_KEY, new Integer(marker.getMarkerKey()).toString()));
+    SearchResults<SolrDiseasePortalMarker> results = hdpFinder.getMarkers(params);
+    List<SolrDiseasePortalMarker> mList = results.getResultObjects();
+    
+    if(mList != null && mList.size() > 0) {
+       SolrDiseasePortalMarker sdpm = mList.get(0);
+       if(sdpm != null && sdpm.getDiseaseRefCount() != null && sdpm.getDiseaseRefCount() > 0) {
+          mav.addObject("diseaseRefCount", sdpm.getDiseaseRefCount());
+       }
+    }
 
         // pull out the strain/species and provider links for each
         // representative sequence
@@ -862,6 +881,67 @@ public class MarkerController {
             conflictTable.append ("</table>");
             mav.addObject ("biotypeConflictTable", conflictTable.toString());
         }
+        
+	// add regulation data (compose these as individual rows here, rather
+	// than in the JSP due to complexity of mapping RV terms currently)
+	
+	ArrayList<String> interactions = new ArrayList<String>();
+	FewiLinker linker = FewiLinker.getInstance();
+
+	MarkerCountSetItem countItem;
+        Iterator<MarkerCountSetItem> interactionIterator = 
+        	marker.getInteractionCountsByType().iterator();
+
+	while (interactionIterator.hasNext()) {
+	    countItem = interactionIterator.next();
+
+	    String countType = countItem.getCountType();
+	    int count = countItem.getCount();
+
+	    StringBuffer sb = new StringBuffer();
+
+	    sb.append(marker.getSymbol());
+	    sb.append(" ");
+	    sb.append(countType);
+	    sb.append(" ");
+	    sb.append(count);
+	    sb.append(" marker");
+	    if (count > 1) {
+		sb.append("s");
+	    }
+
+	    Iterator<Marker> teaserIt = 
+		marker.getInteractionTeaserMarkers().iterator();
+
+	    if (teaserIt != null) {
+		sb.append(" (");
+
+		Marker rm;
+		while (teaserIt.hasNext()) {
+		    rm = teaserIt.next();
+
+		    sb.append("<a href='");
+		    sb.append(linker.getFewiIDLink(ObjectTypes.MARKER, 
+			rm.getPrimaryID() ));
+		    sb.append("'>");
+		    sb.append(rm.getSymbol());
+		    sb.append("</a>");
+
+		    if (teaserIt.hasNext()) {
+			sb.append(", ");
+		    }
+
+		}
+
+		if (count > 3) {
+		    sb.append(", ...");
+		}
+	        sb.append(")");
+	    }
+	    interactions.add(sb.toString());
+	}
+
+	mav.addObject("interactions", interactions);
 
         // add data for strain-specific markers
 

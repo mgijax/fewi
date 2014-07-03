@@ -328,6 +328,7 @@ public class AutoCompleteController {
 	//autocomplete for the disease portal phenotypes query
 	@RequestMapping("/diseasePortal/phenotypes")
 	public @ResponseBody JsonSummaryResponse<VocabACSummaryRow> vocabHDPPhenotypesAutoComplete(
+			HttpServletResponse response,
 			@RequestParam("query") String query) {
 		
 		// filter specific vocabs for this autocomplete
@@ -344,6 +345,9 @@ public class AutoCompleteController {
 //				logger.debug("--> Null Object");
 //			}
 //		}
+		
+
+		AjaxUtils.prepareAjaxHeaders(response);
 		JsonSummaryResponse<VocabACSummaryRow> jsonResponse = makeJsonResponse(results,query,ACType.DISEASE_PORTAL);
 		return jsonResponse;
 	}

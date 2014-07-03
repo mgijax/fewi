@@ -31,25 +31,25 @@ public class SortConstants {
 	public static final String CRE_NOT_DETECTED_COUNT  = "notDetectedCount";
 
     // Cre sorting strings, for the detail page
-    public static final String CRE_BY_STRUCTURE                 = "byStructure";
-    public static final String CRE_BY_AGE                       = "byAge";
-    public static final String CRE_BY_LEVEL                     = "byLevel";
-    public static final String CRE_BY_PATTERN                   = "byPattern";
-    public static final String CRE_BY_JNUM_ID                   = "byJnumID";
-    public static final String CRE_BY_ASSAY_TYPE                = "byAssayType";
-    public static final String CRE_BY_REPORTER_GENE             = "byReporterGene";
-    public static final String CRE_BY_DETECTION_METHOD          = "byDetectionMethod";
-    public static final String CRE_BY_ASSAY_NOTE                = "byAssayNote";
-    public static final String CRE_BY_ALLELIC_COMPOSITION       = "byAllelicComposition";
-    public static final String CRE_BY_SEX                       = "bySex";
-    public static final String CRE_BY_SPECIMEN_NOTE             = "bySpecimenNote";
-    public static final String CRE_BY_RESULT_NOTE               = "byResultNote";
+	public static final String CRE_BY_STRUCTURE                 = "byStructure";
+	public static final String CRE_BY_AGE                       = "byAge";
+	public static final String CRE_BY_LEVEL                     = "byLevel";
+	public static final String CRE_BY_PATTERN                   = "byPattern";
+	public static final String CRE_BY_JNUM_ID                   = "byJnumID";
+	public static final String CRE_BY_ASSAY_TYPE                = "byAssayType";
+	public static final String CRE_BY_REPORTER_GENE             = "byReporterGene";
+	public static final String CRE_BY_DETECTION_METHOD          = "byDetectionMethod";
+	public static final String CRE_BY_ASSAY_NOTE                = "byAssayNote";
+	public static final String CRE_BY_ALLELIC_COMPOSITION       = "byAllelicComposition";
+	public static final String CRE_BY_SEX                       = "bySex";
+	public static final String CRE_BY_SPECIMEN_NOTE             = "bySpecimenNote";
+	public static final String CRE_BY_RESULT_NOTE               = "byResultNote";
 
     // Default sort
-    public static final String BY_DEFAULT						= "byDefaultSort";
+	public static final String BY_DEFAULT						= "byDefaultSort";
 
     // marker sorts
-    public static final String MRK_BY_SYMBOL					= "byMrkSymbol";
+	public static final String MRK_BY_SYMBOL					= "byMrkSymbol";
 	public static final String MRK_BY_LOCATION 					= "byMarkerLocation";
 	public static final String MRK_BY_TYPE 						= "byMarkerType";
 
@@ -76,6 +76,14 @@ public class SortConstants {
 	public static final String DP_BY_LOCATION       = "byMarkerLocation";
 	public static final String DP_BY_HOMOLOGENE_ID       = "byHomologeneId";
 
+    // sorts for the regulation summary page (one per displayed column)
+	public static final String BY_FEATURE_1		= "byFeature1";
+	public static final String BY_FEATURE_2		= "byFeature2";
+	public static final String BY_INTERACTION		= "byInteraction";
+	public static final String BY_VALIDATION		= "byValidation";
+	public static final String BY_DATA_SOURCE		= "byDataSource";
+	public static final String BY_SCORE			= "byScore";
+	public static final String BY_REFERENCE		= "byReference";
 	
 	// Allele
 	public static final String ALL_BY_TRANSMISSION = "byTransmission";	
@@ -84,7 +92,9 @@ public class SortConstants {
 	public static final String ALL_BY_CHROMOSOME = "byChr";
 	public static final String ALL_BY_DISEASE = "byDisease";
 
-	
+	// general...
+	public static final String SEQUENCE_NUM = "sequenceNum";
+
     // faux entry;  used by webapp class template
-    public static final String FOO_SORT              = "fooSort";
+	public static final String FOO_SORT              = "fooSort";
 }

@@ -21,8 +21,7 @@ public class SolrMarkerIDHunter extends SolrHunter<String> {
          */
         propertyMap.put(SearchConstants.MRK_ID, new SolrPropertyMapper(IndexConstants.MRK_ID));
         propertyMap.put(IndexConstants.MRK_TERM_ID_FOR_GXD, new SolrPropertyMapper(IndexConstants.MRK_TERM_ID_FOR_GXD));
-        propertyMap.put(SearchConstants.PRIMARY_KEY,
-           		new SolrPropertyMapper(IndexConstants.MRK_PRIMARY_ID));
+        propertyMap.put(SearchConstants.PRIMARY_KEY, new SolrPropertyMapper(IndexConstants.MRK_PRIMARY_ID));
 
         /*
          * The name of the field we want to iterate through the documents for

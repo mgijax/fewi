@@ -52,7 +52,7 @@ ${templateBean.templateBodyStartHtml}
 </table>
 
 <!-- paginator -->
-<div id="summary" style="width:1080px;">
+<div id="summary" style="width:1240px;">
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
@@ -72,7 +72,7 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 </div>
 
-<div id="toolbar" class="bluebar" style="width:1065px;">
+<div id="toolbar" class="bluebar" style="width:1245px;">
 	<div id="downloadDiv">
 		<span class="label">Export:</span> 
 		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 

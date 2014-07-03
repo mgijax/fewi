@@ -1,0 +1,35 @@
+#-------------------------------------------------------------------------------
+#- fewi-specific properties.
+#-
+#- Applied by <context:property-placeholder/> application context XML file
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+#----- BASE URLS
+#-------------------------------------------------------------------------------
+
+
+#----- FEWI_URL -----#
+
+# Overrides value normally set in GlobalConfig.properties.
+#FEWI_URL=http://server.informatics.jax.org/
+FEWI_URL=http://localhost.jax.org:8080/fewi/mgi/
+
+
+#----- solr server urls -----#
+
+# Weekly Proto
+solr.server1.url=http://localhost.jax.org:9995/solr/
+
+# Front-end development indexes
+#solr.server1.url=http://cardolan:8985/solr/
+
+
+#-------------------------------------------------------------------------------
+#----- INSTALL VALUES
+#-------------------------------------------------------------------------------
+
+# directory in which to find the standard mgi template
+#template.dir=/Users/kstone/dev/mgiconfig/web/
+template.dir=/Users/oblod/mgi/cvs/mgiconfig/web/

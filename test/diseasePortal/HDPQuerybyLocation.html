@@ -160,17 +160,14 @@
     		</li>
     		<li>multiple coordinates via homology can be queried
     		<ol>
-                <li>Verify that CYP2D6 gene is returned for all the following queries, due to 5 mouse markers existing in its
-                	homology class (<a href="http://cardolan.informatics.jax.org/homology/86099">homologene:86099</a>)
+                <li>Verify that C4A gene is returned for all the following queries, due to 2 mouse markers existing in its
+                	homology class (<a href="http://cardolan.informatics.jax.org/homology/36030">homologene:36030</a>)
                 <table concordion:execute="#symbols = getSymbolsByMouseLocation(#mouseLoc)">
                 	<tr><th concordion:set="#mouseLoc">Query</th>
                 		<th cc:assertResultsContain="#symbols">Human Marker</th>
                 		<th>Mouse Marker</th></tr>
-                    <tr><td>Chr15:82452377</td><td>CYP2D6</td><td>Cyp2d9</td></tr>
-                	<tr><td>Chr15:82402846</td><td>CYP2D6</td><td>Cyp2d10</td></tr>
-                	<tr><td>Chr15:82389154</td><td>CYP2D6</td><td>Cyp2d11</td></tr>
-                	<tr><td>Chr15:82555108</td><td>CYP2D6</td><td>Cyp2d12</td></tr>
-                	<tr><td>Chr15:82615965</td><td>CYP2D6</td><td>Cyp2d34</td></tr>
+                    <tr><td>Chr17:34809092</td><td>C4A</td><td>C4a</td></tr>
+                	<tr><td>Chr17:34728380</td><td>C4A</td><td>C4b</td></tr>
                 	</table>
                 </li>
     		</ol>

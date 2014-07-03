@@ -320,12 +320,30 @@ td.right { text-align: right }
 		</tr>
 
 		<!-- comma-delimited set of mutations -->
-		<c:if test="${not empty mutations}">
+		<c:if test="${not empty allele.inducibleNote}">
+		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">Inducer:</font>&nbsp;</td>
+		<td width="1%">&nbsp;</td>
+		<td class="padded" width="*">${allele.inducibleNote}</td>
+		</tr>
+		</c:if>
+
+		<!-- comma-delimited set of mutations -->
+		<c:if test="${not (empty mutations and empty mutationInvolves)}">
 		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${mutationLabel}:</font>&nbsp;</td>
 		<td width="1%">&nbsp;</td>
 		<td class="padded" width="*">${mutations}
 		  <c:if test="${not empty vector}">&nbsp;&nbsp;&nbsp;&nbsp;<I>Vector:</I>&nbsp;${vector}</c:if>
 		  <c:if test="${not empty vectorType}">&nbsp;&nbsp;&nbsp;&nbsp;<I>Vector&nbsp;Type:</I>&nbsp;${vectorType}</c:if>
+		</td>
+		</tr>
+		</c:if>
+
+		<c:if test="${not empty mutationInvolves}">
+		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%" style="vertical-align: top"></td>
+		<td width="1%">&nbsp;</td>
+		<td class="padded" width="*">
+		  <span style="line-height: 175%">${symbolSup} involves ${allele.countOfMutationInvolvesMarkers} genes/genome features (<c:forEach var="m" items="${mutationInvolves}" varStatus="status"><a href="${configBean.FEWI_URL}marker/${m.relatedMarkerID}">${m.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if></c:forEach><c:if test="${allele.countOfMutationInvolvesMarkers > 3}"> ...</c:if>)</span>
+		  <a href="${configBean.FEWI_URL}allele/mutationInvolves/${allele.primaryID}" class="markerNoteButton" style="display:inline" onClick="javascript:popupGenotype('${configBean.FEWI_URL}allele/mutationInvolves/${allele.primaryID}', ${allele.alleleKey}); return false;">View&nbsp;all</a>
 		</td>
 		</tr>
 		</c:if>

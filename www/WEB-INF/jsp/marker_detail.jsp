@@ -42,6 +42,27 @@ function toggleHomologyDetails ()
 <style>
 .bioMismatch td { text-align: center; border-style: solid; border-width: 1px; }
 .bioMismatch .header { font-weight: bold; color:#002255; background-color:#aaaaaa; }
+
+.link { color:#000099;
+    cursor: pointer;
+    border-bottom: 1px #000099 solid;
+    text-decoration: none; }
+
+.bold { font-weight: bold; }
+
+.leftAlign { text-align: left; }
+
+.allBorders {
+    border-top: thin solid gray;
+    border-bottom: thin solid gray;
+    border-left: thin solid gray;
+    border-right: thin solid gray;
+    padding:3px;
+}
+
+.bottomBorder { border-bottom-color: #000000;
+    border-bottom-style:solid;
+    border-bottom-width:1px; }
 </style>
 
 <script language="Javascript">
@@ -106,6 +127,15 @@ td.padded { padding:4px; }
 </div>
 
 
+<!-- setup for clusters -->
+
+<c:if test="${not empty marker.clusters}">
+  <c:set var="hasClusters" value="true"/>
+</c:if>
+<c:if test="${not empty marker.clusterMembers}">
+  <c:set var="hasClusterMembers" value="true"/>
+</c:if>
+
 <!-- structural table -->
 <table class="detailStructureTable">
 
@@ -116,6 +146,12 @@ td.padded { padding:4px; }
       <font size="+2">&nbsp;</font>Symbol<br/>
       Name<br/>
       ID
+      <c:if test="${not empty hasClusters}">
+        <br/>Member&nbsp;of
+      </c:if>
+      <c:if test="${not empty hasClusterMembers}">
+      <br/>Cluster&nbsp;member<c:if test="${fn:length(marker.clusterMembers) > 1}">s</c:if>
+      </c:if>
     </td>
     <td class="<%=rightTdStyles.getNext() %>">
       <table style='width: 100%'>
@@ -123,7 +159,59 @@ td.padded { padding:4px; }
           <font size="+2"><b><fewi:super value="${marker.symbol}"/></b><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
           </font><br/>
           <B>${marker.name}</B><br/>
-          ${marker.primaryID}
+	  ${marker.primaryID}
+
+      <c:if test="${not empty hasClusters}">
+          <br/>
+          <c:forEach var="cluster" items="${marker.clusters}" varStatus="status">
+              <a href="${configBean.FEWI_URL}marker/${cluster.relatedMarkerID}">${cluster.relatedMarkerSymbol}</a> cluster<c:if test="${!status.last}">, </c:if>
+	    
+          </c:forEach>
+      </c:if>
+
+      <c:set var="memberCount" value="0"/>
+      <c:if test="${not empty hasClusterMembers}">
+        <br/>
+        <c:set var="memberCount" value="${fn:length(marker.clusterMembers)}"/>
+	<c:set var="i" value="0"/>
+	<c:set var="memberSymbols" value="${marker.symbol}"/>
+
+	<c:forEach var="member" items="${marker.clusterMembers}" varStatus="status">
+	    <c:set var="i" value="${i + 1}"/>
+	    <c:if test="${i <= 3}">
+	    <a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a><c:if test="${(i < 3) && (memberCount > i)}">, </c:if>
+	    </c:if>
+	    <c:set var="memberSymbols" value="${memberSymbols}, ${member.relatedMarkerSymbol}"/>
+	</c:forEach>
+	<c:if test="${memberCount > 3}">...</c:if>
+	(<span id="showClusterMembers" class="link">${memberCount}</span> member<c:if test="${memberCount > 1}">s</c:if>)
+      <form style='display:none;' name='batchWeb' enctype='multipart/form-data'
+	      target='_blank' method='post'
+	      action='${configBean.FEWI_URL}batch/summary'>
+	      <input name='idType' value='current symbol' type='hidden'>
+	      <input name='attributes' value='Nomenclature' type='hidden'>
+	      <input name='attributes' value='Location' type='hidden'>
+	      <input name='ids' value='${memberSymbols}' id='batchSymbolListWeb' type='hidden'>
+      </form> 
+
+      <div id="clusterMemberDiv" class="" style="visibility:hidden">
+	 <div class="hd"> ${marker.symbol} Cluster contains:
+	   <div style="float:right; margin-right:25px"><span onClick='JAVASCRIPT:batchWeb.submit();' style="cursor: pointer; text-decoration: underline; color: #0000ff">More Data</span> for these features</div>
+         </div>
+	 <div class="bd" style="overflow:auto">
+	    <table id="clusterMemberTable">
+		<tr><td class="bold leftAlign allBorders">Member</td><td class="bold leftAlign allBorders">Feature Type</td><td class="bold leftAlign allBorders">Location</td></tr>
+		<c:forEach var="member" items="${marker.clusterMembers}">
+		   <tr><td class="leftAlign allBorders"><a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a>, ${member.relatedMarkerName}</td>
+		   <td class="leftAlign allBorders">${member.relatedMarkerFeatureType}</td>
+		   <td class="leftAlign allBorders">${member.relatedMarkerLocation}</td>
+		   </tr>
+		</c:forEach>
+	    </table>
+	 </div>
+      </div>
+      </c:if> 
+
       </td><td style="text-align: right; vertical-align: middle;">
         <c:if test="${not empty biotypeConflictTable}">
           <a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'UL', 'UR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img src="${configBean.WEBSHARE_URL}images/warning2.gif" height="26" width="26" id="warning" border="0"></a>
@@ -499,6 +587,30 @@ td.padded { padding:4px; }
     </tr>
   </c:if>
 
+  <!-- interactions ribbon -->
+  <c:if test="${not empty interactions}">
+    <tr>
+      <td class="<%=leftTdStyles.getNext() %>">
+	<table><tr><td style="vertical-align: top">
+      <img id="interactionNewImage" src="${configBean.WEBSHARE_URL}images/new_icon.png" style="width: 35px">
+      </td><td style="vertical-align: top; white-space:nowrap">
+        Interactions
+	</td></tr></table>
+      </td>
+      <td class="<%=rightTdStyles.getNext() %>">
+	<table><tr><td>
+	<c:forEach var="interaction" items="${interactions}" varStatus="status">
+	${interaction}<c:if test="${!status.last}"><br/></c:if>
+	</c:forEach>
+	</td><td>
+	<div style="margin-top: 5px; margin-left: 5px; margin-bottom: 5px;">
+	  <a id="interactionLink" href="${configBean.FEWI_URL}interaction/explorer?markerIDs=${marker.primaryID}" class="markerNoteButton" style='display:inline;'>View All</a>
+	</div>
+	</td></tr></table>
+      </td> 
+    </tr>
+  </c:if>
+
   <!-- go classifications -->
   <c:if test="${(marker.countOfGOTerms > 0) or (marker.isInReferenceGenome > 0)}">
     <tr >
@@ -610,7 +722,7 @@ td.padded { padding:4px; }
 		    <a href="${fn:replace (externalUrls.GEO, '@@@@', geoID)}" target="_new">GEO</a>&nbsp;&nbsp;
 		  </c:if>
 		  <c:if test="${not empty arrayExpressID}">
-		    <a href="${fn:replace (externalUrls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">ArrayExpress</a>
+		    <a href="${fn:replace (externalUrls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">Expression Atlas</a>
 		  </c:if><br/>
 		</c:if>
 		</div>
@@ -830,6 +942,9 @@ td.padded { padding:4px; }
 		<c:if test="${marker.countOfReferences > 0}">
 		  All references(<a href="${configBean.FEWI_URL}reference/marker/${marker.primaryID}">${marker.countOfReferences}</a>)<br/>
 		</c:if>
+		<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
+			Disease annotation references (<a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a>)
+		</c:if>
       </td>
     </tr>
   </c:if>
@@ -859,27 +974,66 @@ function log(msg) {
     setTimeout(function() { throw new Error(msg); }, 0);
 }
 
-var headingWidth = document.getElementById("gxdHeading").offsetWidth;
-document.getElementById("gxdLogoImage").style.width = headingWidth + 'px';
+// formatting of GXD section
 
-var gxdHeight = document.getElementById("gxd").offsetHeight;
-var litHeight = document.getElementById("gxdLit").offsetHeight;
-var otherHeight = document.getElementById("gxdOther").offsetHeight;
+var gxdHeading = document.getElementById("gxdHeading");
+if (gxdHeading != null) {
+    var headingWidth = gxdHeading.offsetWidth;
+    document.getElementById("gxdLogoImage").style.width = headingWidth + 'px';
 
-var pad = gxdHeight - litHeight - otherHeight;
+    var gxdHeight = document.getElementById("gxd").offsetHeight;
+    var otherHeight = document.getElementById("gxdOther").offsetHeight;
 
-// add padding between Lit Summary and cDNA source data, if needed
-if (pad > 0) {
-    document.getElementById('gxdOther').style.paddingTop = pad + 'px';
+    var litHeight = 0;
+    try {
+	litHeight = document.getElementById("gxdLit").offsetHeight;
+    } catch (e) {};
+
+    var pad = gxdHeight - litHeight - otherHeight;
+
+    // add padding between Lit Summary and cDNA source data, if needed
+    if (pad > 0) {
+        document.getElementById('gxdOther').style.paddingTop = pad + 'px';
+    }
+
+    var imageHeight = document.getElementById("gxdLogo").offsetHeight;
+    var headingHeight = document.getElementById("gxdHeading").offsetHeight;
+
+    var imagePad = Math.round( (gxdHeight - imageHeight) / 2) - headingHeight;
+
+    // add padding to center the logo vertically in the expression ribbon
+    if (imagePad > 0) {
+        document.getElementById("gxdLogo").style.paddingTop = imagePad + 'px';
+    }
 }
 
-var imageHeight = document.getElementById("gxdLogo").offsetHeight;
-var headingHeight = document.getElementById("gxdHeading").offsetHeight;
+// cluster membership
 
-var imagePad = Math.round( (gxdHeight - imageHeight) / 2) - headingHeight;
+var elem = document.getElementById("clusterMemberTable");
+if (elem != null) {
+    YAHOO.namespace("markerDetail.container");
 
-// add padding to center the logo vertically in the expression ribbon
-if (imagePad > 0) {
-    document.getElementById("gxdLogo").style.paddingTop = imagePad + 'px';
+    var props = { visible:false, constraintoviewport:true,
+	context:['showClusterMembers', 'tl', 'br',
+	[ 'beforeShow', 'windowResize' ] ] };
+
+    if (${memberCount} > 12) {
+	props.height = "300px";
+	props.width = (elem.offsetWidth + 40) + "px";
+    }
+
+    YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
+        "clusterMemberDiv", props);
+    YAHOO.markerDetail.container.clusterMemberPanel.render();
+    YAHOO.util.Event.addListener ("showClusterMembers", "click",
+        YAHOO.markerDetail.container.clusterMemberPanel.show,
+        YAHOO.markerDetail.container.clusterMemberPanel, true);
+    YAHOO.util.Event.addListener (
+        "YAHOO.markerDetail.container.clusterMemberPanel", "move",
+        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
+    YAHOO.util.Event.addListener (
+        "YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
+        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
+    elem.style.display = '';		// make the div visible
 }
 </script>

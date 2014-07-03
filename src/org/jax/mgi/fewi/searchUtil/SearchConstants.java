@@ -50,6 +50,7 @@ public class SearchConstants {
 	public static final String ALL_NOMEN 			= "allNomen";
 	public static final String ALL_HAS_OMIM			 = "hasOMIM";
 	public static final String ALL_IS_CELLLINE		 = "isCellLine";
+    public static final String ALLELE_KEY              = "alleleKey";
 
     // Accession
 
@@ -177,4 +178,11 @@ public class SearchConstants {
 	
 	// genotype constants
 	public static final String GENOTYPE_TYPE = "genotypeType";
+
+    // interaction constants
+    public static final String RELATIONSHIP_TERM = "relationshipTerm";
+    public static final String VALIDATION = "validation";
+    public static final String DATA_SOURCE = "dataSource";
+    public static final String SCORE_NUMERIC = "score_numeric";
+    public static final String SCORE_FILTERABLE = "score_filterable";
 }

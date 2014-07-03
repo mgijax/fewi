@@ -28,6 +28,7 @@
                 <value>WEB-INF/properties/GlobalConfig.properties</value>
                 <value>WEB-INF/properties/fewi.properties</value>
                 <value>WEB-INF/properties/common.fewi.properties</value>
+                <value>WEB-INF/properties/common.solr.properties</value>
             </list>
         </property>
     </bean>

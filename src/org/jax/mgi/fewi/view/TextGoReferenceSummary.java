@@ -20,7 +20,7 @@ public class TextGoReferenceSummary extends AbstractTextView {
 		
 		response.setHeader("Content-Disposition","attachment; filename=\"goReferenceReport.txt\"");
 
-		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tCategory\tEvidence\r\n");
+		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tCategory\tEvidence\tInferred From\r\n");
 		
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");
@@ -50,6 +50,7 @@ public class TextGoReferenceSummary extends AbstractTextView {
 			writer.write(annot.getTerm() + "\t");
 			writer.write(annot.getDagName() + "\t");
 			writer.write(annot.getEvidenceCode() + "\t");
+			writer.write(annot.getInferredFrom() + "\t");
 			writer.write("\r\n");
 		}
 		writer.write("\r\n");

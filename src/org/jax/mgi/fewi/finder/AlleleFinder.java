@@ -4,9 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.AlleleRelatedMarker;
 import mgi.frontend.datamodel.AllelePhenoSummary;
 
 import org.jax.mgi.fewi.hunter.SolrAlleleCollectionFacetHunter;
+import org.jax.mgi.fewi.hunter.HibernateAlleleMutationInvolvesHunter;
 import org.jax.mgi.fewi.hunter.SolrAlleleKeyHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -33,7 +35,8 @@ public class AlleleFinder {
     @Autowired
     private HibernateObjectGatherer<AllelePhenoSummary> phenoGatherer;
 
-    
+    @Autowired
+    private HibernateAlleleMutationInvolvesHunter mutationInvolvesHunter;
 
     /////////////////////////////////////////////////////////////////////////
     //  Retrieval of an allele, for a given ID
@@ -88,7 +91,6 @@ public class AlleleFinder {
         return searchResults;
     }
 
-    
     /*
      * Facet functions
      */
@@ -98,4 +100,15 @@ public class AlleleFinder {
 		return results;
 	}
 
+
+    /** get 'mutation involves' markers for an allele
+     */
+    public SearchResults<AlleleRelatedMarker> getMutationInvolvesData(
+	SearchParams params) {
+
+	SearchResults<AlleleRelatedMarker> results =
+	    new SearchResults<AlleleRelatedMarker>();
+	mutationInvolvesHunter.hunt(params, results);
+	return results;
+    }
 }

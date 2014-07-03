@@ -22,7 +22,11 @@ function main() {
         {key:"evidence", 
             label:"Evidence",
             width:150, 
-            sortable:false}
+            sortable:false},
+	{key:"inferred",
+	    label:"Inferred From",
+	    width:160,
+	    sortable:false}
     ];
 
     // DataSource instance
@@ -36,7 +40,8 @@ function main() {
             {key:"chromosome"},
             {key:"term"},
             {key:"category"},
-            {key:"evidence"}
+            {key:"evidence"},
+	    {key:"inferred"}
         ],
         metaFields: {
             totalRecords: "totalCount"

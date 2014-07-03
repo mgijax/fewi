@@ -15,7 +15,11 @@
 
 	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
 	<!-- (in this case, JDBC-related settings for the dataSource definition below) -->
-	<context:property-placeholder location="WEB-INF/properties/fewi.properties" />
+    <context:property-placeholder 
+    	location="WEB-INF/properties/fewi.properties,
+    		WEB-INF/properties/common.solr.properties,
+    		WEB-INF/properties/common.fewi.properties"
+    />
 
 	<!-- JNDI DataSource for JEE environments -->
 	<jee:jndi-lookup id="dataSource" jndi-name="${jndi.datasource}"/>

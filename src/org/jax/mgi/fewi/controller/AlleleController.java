@@ -5,12 +5,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.AlleleRelatedMarker;
+import mgi.frontend.datamodel.AlleleRelatedMarkerProperty;
 import mgi.frontend.datamodel.AlleleCellLine;
 import mgi.frontend.datamodel.AlleleID;
 import mgi.frontend.datamodel.AlleleSynonym;
@@ -29,6 +32,7 @@ import mgi.frontend.datamodel.phenotype.DiseaseTableDisease;
 import mgi.frontend.datamodel.phenotype.PhenoTableGenotype;
 import mgi.frontend.datamodel.phenotype.PhenoTableSystem;
 
+import org.hibernate.SessionFactory;
 import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
@@ -41,6 +45,7 @@ import org.jax.mgi.fewi.finder.ImageFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.AlleleQueryForm;
+import org.jax.mgi.fewi.forms.MutationInvolvesQueryForm;
 import org.jax.mgi.fewi.forms.FormWidgetValues;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -50,6 +55,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AlleleSummaryRow;
+import org.jax.mgi.fewi.summary.MutationInvolvesSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FilterUtil;
@@ -118,6 +124,8 @@ public class AlleleController {
     @Autowired
     private MarkerFinder markerFinder;
 
+    @Autowired
+    private SessionFactory sessionFactory;
 
     //--------------------------------------------------------------------//
     // public methods
@@ -300,6 +308,145 @@ public class AlleleController {
 	return this.prepareAllele(request, alleleList.get(0));
     }
 
+    //------------------------------------------------//
+    // 'Mutation Involves' relationships for an allele
+    //------------------------------------------------//
+
+    @RequestMapping(value="/mutationInvolves/{alleleID:.+}", method=RequestMethod.GET)
+    public ModelAndView mutationInvolvesByID(
+		  HttpServletRequest request,
+		  HttpServletResponse response,
+	    @PathVariable("alleleID") String alleleID) {
+
+	logger.debug("->mutationInvolvesByID started");
+
+	// find the requested Allele
+	List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
+
+	// there can only be one Allele
+	if (alleleList.size() < 1) {
+	    return errorMav("Unknown ID : No allele was found for " + alleleID);
+	} else if (alleleList.size() > 1) {
+	    return errorMav("Duplicate ID : " + alleleID
+		+ " is shared by " + alleleList.size() + " alleles");
+	}
+
+	Allele allele = alleleList.get(0);
+
+	ModelAndView mav = new ModelAndView("allele_mutation_involves");
+	mav.addObject("allele", allele);
+
+	idLinker.setup();
+        mav.addObject("idLinker", idLinker);
+
+	String title = "Genes/genome features involved in mutation: "
+	    + allele.getSymbol();
+	String titleBar = allele.getSymbol() + 
+	    " : mouse genes/genome features involved in this mutation";
+
+	String seoDescription =
+	    "Mouse genes/genome features involved in mutation "
+	    + allele.getSymbol();
+
+	StringBuffer seoKeywords = new StringBuffer();
+	seoKeywords.append("MGI, ");
+	seoKeywords.append(allele.getSymbol());
+        seoKeywords.append(", ");
+	seoKeywords.append(allele.getName());
+	seoKeywords.append(", mouse, mice, murine, Mus musculus, ");
+	seoKeywords.append(allele.getAlleleType());
+
+	for (AlleleSynonym synonym : allele.getSynonyms()) {
+	    seoKeywords.append(", ");
+	    seoKeywords.append(synonym.getSynonym());
+	}
+
+	seoKeywords.append(", ");
+	seoKeywords.append(allele.getPrimaryID());
+
+	mav.addObject("pageTitle", titleBar);
+	mav.addObject("pageTitleSuperscript",
+	    FormatHelper.superscript(title));
+	mav.addObject("seoDescription", seoDescription);
+	mav.addObject("seoKeywords", seoKeywords.toString());
+        mav.addObject("alleleID", allele.getPrimaryID());
+	return mav;
+    }
+
+    /* method to retrieve data for the table on the mutation involves page and
+     * feed it to the page in JSON format
+     */
+    @RequestMapping("/mutationInvolvesJson")
+    public @ResponseBody JsonSummaryResponse<MutationInvolvesSummaryRow>
+	mutationInvolvesJson(HttpServletRequest request,
+	    @ModelAttribute MutationInvolvesQueryForm query,
+	    @ModelAttribute Paginator page) {
+
+	logger.debug("->mutationInvolvesJson() started");
+	logger.debug("queryForm: " + query.toString());
+
+	// find the allele and its key
+
+	String alleleID = query.getAlleleID();
+	int alleleKey = -1;
+	Allele allele = null;
+
+	if (alleleID != null) {
+	    // find the requested Allele
+	    List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
+
+	    // there can only be one Allele
+	    if (alleleList.size() < 1) {
+		logger.debug("No Allele Found for ID: " + alleleID);
+	    } else if (alleleList.size() > 1) {
+		logger.debug("ID matches multiple alleles: " + alleleID);
+	    }
+	    allele = alleleList.get(0);
+	    alleleKey = allele.getAlleleKey();
+	}
+
+	// build info needed to conduct the search
+
+	SearchParams params = new SearchParams();
+	params.setPaginator(page);
+	params.setFilter(this.genMutationInvolvesFilter(query, alleleKey));
+	logger.debug("Filter: " + params.getFilter().toString());
+
+	// perform the query and pull out requested objects
+	
+	SearchResults<AlleleRelatedMarker> searchResults = 
+	    alleleFinder.getMutationInvolvesData(params);
+	List<AlleleRelatedMarker> markers = searchResults.getResultObjects();
+
+	// convert to SummaryRow wrapper objects
+	
+	List<MutationInvolvesSummaryRow> summaryRows =
+	    new ArrayList<MutationInvolvesSummaryRow>();
+	Iterator<AlleleRelatedMarker> it = markers.iterator();
+	while (it.hasNext()) {
+	    AlleleRelatedMarker marker = it.next();
+	    if (marker != null) {
+		summaryRows.add(new MutationInvolvesSummaryRow(marker, allele));
+	    }
+	}
+
+	JsonSummaryResponse<MutationInvolvesSummaryRow> jsonResponse =
+	    new JsonSummaryResponse<MutationInvolvesSummaryRow>();
+
+	jsonResponse.setSummaryRows(summaryRows);
+	jsonResponse.setTotalCount(searchResults.getTotalCount());
+	return jsonResponse;
+    }
+
+    private Filter genMutationInvolvesFilter(MutationInvolvesQueryForm query,
+	int alleleKey) {
+
+	if (alleleKey > 0) {
+	    return new Filter (SearchConstants.ALLELE_KEY, alleleKey,
+		Filter.OP_EQUAL);
+	}
+	return null;
+    }
 
     //------------------------------------//
     // Allele Summary Data Retrieval
@@ -566,6 +713,17 @@ public class AlleleController {
 
 		idLinker.setup();
 	        mav.addObject("idLinker", idLinker);
+
+		// When retrieving 'mutation involves' markers for the teaser,
+		// ensure that we're only getting the ones we need, rather
+		// than the whole set.
+		sessionFactory.getCurrentSession().enableFilter(
+		    "teaserMarkers");
+		List<AlleleRelatedMarker> mutationInvolves =
+		    allele.getMutationInvolvesMarkers();
+		if (mutationInvolves.size() > 0) {
+		    mav.addObject("mutationInvolves", mutationInvolves); 
+		}
 
 		String alleleType = allele.getAlleleType();
 

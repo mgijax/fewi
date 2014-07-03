@@ -38,6 +38,7 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 		row.createCell(col++).setCellValue("Annotated Term");
 		row.createCell(col++).setCellValue("Category");
 		row.createCell(col++).setCellValue("Evidence");
+		row.createCell(col++).setCellValue("Inferred From");
 		
 		Marker m;
 		MarkerLocation ml;
@@ -67,6 +68,8 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 			row.createCell(col++).setCellValue(annot.getDagName());
 			row.createCell(col++).setCellValue(
 				annot.getEvidenceCode());
+			row.createCell(col++).setCellValue(
+				annot.getInferredFrom());
 		}
 	}
 

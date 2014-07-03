@@ -170,11 +170,12 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>
 
-    		<li>Heterozygous Wild Type: A marker with a simple, heterozygous, wild type genotype annotated to a disease is returned for that disease.
+    		<li>Heterozygous Wild Type: A marker with a simple (OMG), heterozygous, wild type genotype annotated to a disease is returned for that disease.
     		<ol>
-                <li>Query for Breast Cancer, OMIM <b  concordion:set="#disease">114480</b>.</li>
-                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Brca2</b> is returned.</li>
-                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Apc</b> is not returned. (Het wild type genotype exists, but it is not "simple".)</li>
+                <li>Query for Barth Syndrome, BTHS, OMIM <b concordion:set="#disease">302060</b>.</li>
+                <li>Verify that <b cc:assertResultsContain="getSymbolsByDisease(#disease)">Mest</b> is returned.</li>
+                <li>Query for  Endometrial Cancer, OMIM <b concordion:set="#disease">608089</b>.</li>
+                <li>Verify that <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Pgr</b> is not returned. (Het wild type genotype exists, but it is not "simple".)</li>
     		</ol>
     		</li>
 

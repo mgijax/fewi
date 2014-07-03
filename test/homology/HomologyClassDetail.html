@@ -104,21 +104,21 @@
     				<b concordion:assertEquals="getMarkerCountByOrganism(#hCluster, #forganism)">0</b>.</li>   
     		</ol>
     		</li>    		
-       		<li>Verify homology class <b concordion:set="#clusterId">86036</b> containing only mouse markers is returned. 
+       		<li>Verify homology class <b concordion:set="#clusterId">134093</b> containing only mouse markers is returned. 
     		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
     			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">mouse</b>.</li>
     			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
     		</ol>
     		</li>    		
-   		    <li>Verify homology class <b concordion:set="#clusterId">133546</b> containing only dog markers is returned. 
+   		    <li>Verify homology class <b concordion:set="#clusterId">135460</b> containing only dog markers is returned. 
     		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
     			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">dog</b>.</li>
     			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
     		</ol>
     		</li>    	
-   		    <li>Verify homology class <b concordion:set="#clusterId">133522</b> containing chimp  and chicken markers is returned. 
+   		    <li>Verify homology class <b concordion:set="#clusterId">132940</b> containing chimp  and chicken markers is returned. 
     		<p concordion:manual="true">klf 6/7/2013</p> 
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
     			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">chimpanzee</b>.</li>
@@ -136,8 +136,8 @@
     		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
                 <li>Verify Homologene id is <b concordion:assertEquals="#hCluster.primaryID">36030</b>.</li>
                 <li>Verify class source is <b concordion:assertEquals="#hCluster.source">HomoloGene</b>.</li>
-                <li>Verify class version is <b concordion:assertEquals="#hCluster.version">Release 67</b>.</li>
-                <li>Verify release date is <b concordion:assertEquals="#hCluster.date">2012-12-12 00:00:00.0</b>.</li>      
+                <li>Verify class version is <b concordion:assertEquals="#hCluster.version">Release 68</b>.</li>
+                <li>Verify release date is <b concordion:assertEquals="#hCluster.date">2014-05-06 00:00:00.0</b>.</li>      
     		</ol>
     		</li>  		
     		<li>Verify n-m relationships is correct for <b concordion:set="#clusterId">36030</b>
@@ -157,14 +157,7 @@
       			<li>Verify count of <b concordion:set="#forganism">foo</b> gene is in class is 
     				<b concordion:assertEquals="getMarkerCountByOrganism(#hCluster, #forganism)">0</b>.</li>  				
        		</ol>
-       		</li>
-       		<li>Verify homology cluster <b concordion:set="#clusterId">86036</b> containing only mouse markers is returned. 
-    		<ol concordion:execute="#hCluster = getHomologyCluster(#clusterId)">
-    			<li>Verify species list contains <b concordion:assertTrue="hasOrganism(#hCluster, #TEXT)">mouse</b>.</li>
-    			<li>Verify species list count is <b concordion:assertEquals="getOrganismCount(#hCluster)">1</b>.</li>  
-    		</ol>
-    		</li>    		
-   		
+       		</li>   		
 		</ol>
  	</div>
 </div>

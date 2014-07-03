@@ -121,7 +121,7 @@ public class HibernateBatchSummaryHunter
 			logger.debug(String.format("batch %d-%d", start, end));
 			query.setParameterList("ids", idSetLower.subList(start, end));				
 			qr.addAll(query.list());
-			start = end+1;
+			start = end;
 		}
 		idSetLower = null;
 

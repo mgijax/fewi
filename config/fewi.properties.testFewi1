@@ -33,12 +33,3 @@ solr.server1.url=http://mgi-fewi1.jax.org:9995/solr/
 # directory in which to find the standard mgi template
 #template.dir=/home/<user>/devwi/mgiconfig/web/
 template.dir=/usr/local/mgi/live/mgiconfig/web/
-
-# directory in which to find the GO graphs
-GO_GRAPHS_PATH=/data/GOgraphs
-
-# data sources
-hibernate.generate_statistics=false
-hibernate.show_sql=false
-hibernate.dialect=org.hibernate.dialect.ProgressDialect
-jndi.datasource=java:jboss/datasources/fe

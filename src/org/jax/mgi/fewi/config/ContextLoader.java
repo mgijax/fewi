@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.jax.mgi.fewi.util.IDLinker;
@@ -54,10 +53,10 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
         }
 
         try {
-        	Configuration propertiesConfig = new CompositeConfiguration();
-        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("fewi.properties").getFile()));
-        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("common.fewi.properties").getFile()));
-        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("common.solr.properties").getFile()));
+        	CompositeConfiguration propertiesConfig = new CompositeConfiguration();
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("WEB-INF/properties/fewi.properties").getFile()));
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("WEB-INF/properties/common.fewi.properties").getFile()));
+        	((CompositeConfiguration)propertiesConfig).addConfiguration(new PropertiesConfiguration(ac.getResource("WEB-INF/properties/common.solr.properties").getFile()));
         	
         	for (@SuppressWarnings("unchecked") Iterator<String> i = propertiesConfig.getKeys(); i.hasNext();)
         	{

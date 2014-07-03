@@ -271,6 +271,9 @@ public class VocabularyController {
 	    if (structure.equals(searchString)) {
 		structureExact.add(match);
 		done = true;
+	    } else if (structure.replace('-', ' ').equals(searchString)) {
+		structureExact.add(match);
+		done = true; 
 	    } else if (synonyms != null) {
 		for (String synonym : synonyms) {
 		    String synLower = synonym.toLowerCase();
