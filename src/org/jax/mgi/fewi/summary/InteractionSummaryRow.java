@@ -55,7 +55,7 @@ public class InteractionSummaryRow {
 	sb.append(fewiUrl);
 	sb.append("marker/");
 	sb.append(this.jr.getOrganizerID());
-	sb.append("'>");
+	sb.append("' target='_blank'>");
 	sb.append(this.jr.getOrganizerSymbol());
 	sb.append("</a>");
 	return sb.toString();
@@ -67,7 +67,7 @@ public class InteractionSummaryRow {
 	sb.append(fewiUrl);
 	sb.append("marker/");
 	sb.append(this.jr.getParticipantID());
-	sb.append("'>");
+	sb.append("' target='_blank'>");
 	sb.append(this.jr.getParticipantSymbol());
 	sb.append("</a>");
 	return sb.toString();
@@ -89,7 +89,7 @@ public class InteractionSummaryRow {
 	sb.append(fewiUrl);
 	sb.append("reference/");
 	sb.append(jr.getJnumID());
-	sb.append("'>");
+	sb.append("' target='_blank'>");
 	sb.append(jr.getJnumID());
 	sb.append("</a>");
 	return sb.toString();
