@@ -339,8 +339,18 @@ public class AlleleController {
 	idLinker.setup();
         mav.addObject("idLinker", idLinker);
 
-	String title = "Genes/genome features involved in mutation: "
-	    + allele.getSymbol();
+    	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+	StringBuffer title = new StringBuffer();
+	title.append("Genes/genome features involved in mutation: ");
+	title.append("<a href='");
+	title.append(fewiUrl);
+	title.append("allele/");
+	title.append(allele.getPrimaryID());
+	title.append("' target='_blank' class='noUnderline'>");
+	title.append(FormatHelper.superscript(allele.getSymbol()));
+	title.append("</a>");
+
 	String titleBar = allele.getSymbol() + 
 	    " : mouse genes/genome features involved in this mutation";
 
@@ -365,8 +375,7 @@ public class AlleleController {
 	seoKeywords.append(allele.getPrimaryID());
 
 	mav.addObject("pageTitle", titleBar);
-	mav.addObject("pageTitleSuperscript",
-	    FormatHelper.superscript(title));
+	mav.addObject("pageTitleSuperscript", title.toString());
 	mav.addObject("seoDescription", seoDescription);
 	mav.addObject("seoKeywords", seoKeywords.toString());
         mav.addObject("alleleID", allele.getPrimaryID());
