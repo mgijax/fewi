@@ -60,6 +60,7 @@ td.right { text-align: right }
     width: 1187px;
     margin-left: 5px;
 }
+a.noUnderline { text-decoration: none }
 </style>
 
 </HEAD><BODY CLASS="yui-skin-sam">
