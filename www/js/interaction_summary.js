@@ -179,8 +179,7 @@ function is_main() {
                 this.get("paginator").getRowsPerPage());
 
 	is_setSort(oColumn.key, sDir);
-		updateGraphBasedOnSorting();
-		updateBatchQueryButton();
+	updateGraphBasedOnSorting();
         is_updateBatchQueryLink();
 
         // Pass the state along to the Browser History Manager
