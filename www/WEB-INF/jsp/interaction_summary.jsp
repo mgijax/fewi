@@ -104,7 +104,7 @@ circle {
 			</script>
 			<c:forEach var="marker" items="${markers}">
 				<tr>
-					<td class="box left padded nowrap rightPad"><a href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a></td>
+					<td class="box left padded nowrap rightPad"><a href="${configBean.FEWI_URL}marker/${marker.primaryID}" target="_blank">${marker.symbol}</a></td>
 					<td class="box left padded nowrap rightPad" style="white-space: normal;">${marker.name}</td>
 					<td class="box left padded nowrap rightPad">${marker.markerSubtype}</td>
 					<script type="text/javascript">
@@ -215,7 +215,8 @@ circle {
 <div id="graphHelpDivDialog" class="facetFilter">
    <div class="hd">Graph Help</div>
    <div class="bd">
-	   <p>The graph shows the selected marker at the center, surrounded by the makers with which it is known to interact. Blue lines link validated interactions and red lines connect predicted interactions. The first 500 markers are shown based on how the table is sorted. The default sort is by validation type and then score.</p>
+	   <p>The graph shows the selected marker at the center, surrounded by the markers for which there is evidence of an interaction. Blue lines connect validated interactions and red lines connect predicted interactions.</p>
+	   <p>The first 500 markers are shown based on how the table is sorted. The default sort is by validation type and then score.</p>
 	   <p>Apply filters to reduce the number of results.</p>
 	   <p>Click the plus sign to zoom in (2X) on the graph and the minus sign to zoom out (50%).</p>
 	   <p>Click and hold to drag and reposition the graph.</p>
