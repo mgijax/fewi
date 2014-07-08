@@ -343,7 +343,7 @@ td.right { text-align: right }
 		<td width="1%">&nbsp;</td>
 		<td class="padded" width="*">
 		  <span style="line-height: 175%">${symbolSup} involves ${allele.countOfMutationInvolvesMarkers} genes/genome features (<c:forEach var="m" items="${mutationInvolves}" varStatus="status"><a href="${configBean.FEWI_URL}marker/${m.relatedMarkerID}">${m.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if></c:forEach><c:if test="${allele.countOfMutationInvolvesMarkers > 3}"> ...</c:if>)</span>
-		  <a href="${configBean.FEWI_URL}allele/mutationInvolves/${allele.primaryID}" class="markerNoteButton" style="display:inline" onClick="javascript:popupGenotype('${configBean.FEWI_URL}allele/mutationInvolves/${allele.primaryID}', ${allele.alleleKey}); return false;">View&nbsp;all</a>
+		  <a href="${configBean.FEWI_URL}allele/mutationInvolves/${allele.primaryID}" class="markerNoteButton" style="display:inline" onClick="javascript:popupWide('${configBean.FEWI_URL}allele/mutationInvolves/${allele.primaryID}', ${allele.alleleKey}); return false;">View&nbsp;all</a>
 		</td>
 		</tr>
 		</c:if>
