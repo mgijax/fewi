@@ -242,8 +242,7 @@ circle {
 		</style>
 		<table class="sourceTable">
 			<tr><td><b>Interaction Type</b></td><td><b>Data Source</b></td><td><b>Validation</b></td></tr>
-			<tr><td rowspan=5>microRNA targeting</td><td>mirTarBase</td><td>Validated</td></tr>
-			<tr><td>miRecords</td><td>Validated</td></tr>
+			<tr><td rowspan=4>microRNA targeting</td><td>mirTarBase</td><td>Validated</td></tr>
 			<tr><td>microT-CDS</td><td>Predicted</td></tr>
 			<tr><td>miRDB</td><td>Predicted</td></tr>
 			<tr><td>Pictar</td><td>Predicted</td></tr>
@@ -255,7 +254,9 @@ circle {
 			represented but will be implemented over time. <br> <br> <b>Gene
 				Product Information</b><br> Information on the specific gene
 			products involved for different interaction types is available by
-			downloading the interaction data using the "Download Data" button.<br>
+			downloading the interaction data using the "Download Data" button.
+			This leads to an ftp directory where interaction data files can be selected for download.  More information on the download data is available in a README file in the ftp directory.
+			<br>
 			<br> <b>Validation</b><br> MGI supports experimentally
 			validated and predicted interaction data, and distinguishes these in
 			the Interaction Explorer by edge color in the graph view
