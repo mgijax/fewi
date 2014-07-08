@@ -1,3 +1,13 @@
+TAG: fewi-5-1-9-2
+DATE: 07/08/2014
+STAFF: jsb
+CHANGES: 
+1) adjusted popup for mutation involves relationships from allele detail page
+2) made links to markers and references open a new window from explorer
+3) fixed broken link to Entrez Gene Evidence on marker detail page
+4) fixed order of markers when forwarding from explorer to batch query
+5) adjusted text on explorer's popup help dialogs
+
 TAG: fewi-5-1-9-1
 DATE: 07/03/2014
 STAFF: jsb
