@@ -199,6 +199,12 @@ public class AlleleController {
 		mav.addObject("alleleQueryForm",query);
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("collectionValues", collectionValues);
+
+		// add a flag if the request was for alleles related to a
+		// marker via a 'mutation involves' relationship
+		if (query.getMutationInvolves() != null) {
+			mav.addObject("mutationInvolves", "yes");
+		}
 		return mav;
 	 }
 
@@ -468,6 +474,10 @@ public class AlleleController {
 	 {
 		 SearchResults<Allele> sr = getAlleles(request,query,page);
 		 logger.info("found "+sr.getTotalCount()+" alleles");
+
+		 sessionFactory.getCurrentSession().enableFilter(
+		    "teaserMarkers");
+
 		 List<AlleleSummaryRow> sRows = new ArrayList<AlleleSummaryRow>();
 		 for(Allele allele : sr.getResultObjects())
 		 {
@@ -599,11 +609,27 @@ public class AlleleController {
 			 filters.add(new Filter(SearchConstants.ALL_IS_CELLLINE,isCellLine,Filter.OP_EQUAL));
 		 }
 
-		 //Marker ID
+		 //Marker ID has two meanings:
+		 // 1. if mutationInvolves is non-null, then look for the
+		 //    marker ID as one associated with alleles via the
+		 //    mutation involves field
+		 // 2. if not a mutationInvolves query, then look for alleles
+		 //    associated with the marker in the traditional sense
+
 		 String mrkId = query.getMarkerId();
+		 String mutationInvolves = query.getMutationInvolves();
+
 		 if(notEmpty(mrkId))
 		 {
-			 filters.add(new Filter(SearchConstants.MRK_ID,mrkId,Filter.OP_EQUAL));
+			 if (notEmpty(mutationInvolves)) {
+		    		filters.add(new Filter(
+					SearchConstants.ALL_MI_MARKER_IDS,
+					mrkId, Filter.OP_EQUAL));
+			 } else {
+			 	filters.add(new Filter(
+					SearchConstants.MRK_ID,
+					mrkId, Filter.OP_EQUAL));
+			 }
 		 }
 
 		 // Chromosome
