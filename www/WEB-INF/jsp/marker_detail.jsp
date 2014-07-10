@@ -527,16 +527,19 @@ td.padded { padding:4px; }
   <c:if test="${(marker.countOfAlleles > 0) or (not empty marker.markerClip) or (not empty marker.incidentalMutations) or (marker.countOfHumanDiseases > 0) or (marker.countOfAllelesWithHumanDiseases > 0) or (marker.countOfPhenotypeImages > 0)}">
     <tr >
       <td class="<%=leftTdStyles.getNext() %>">
-        Alleles<br/>and<br/>phenotypes
+      Mutations,<br/>alleles, and<br/>phenotypes
       </td>
       <td class="<%=rightTdStyles.getNext() %>">
         <c:if test="${marker.countOfAlleles > 0}">
 		  <c:set var="alleleUrl" value="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}"/>
-		  All alleles(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) :
+		  All mutations/alleles(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) :
 		  <c:forEach var="item" items="${marker.alleleCountsByType}">
 		    ${item.countType}(<a href="${alleleUrl}&alleleType=${item.countType}">${item.count}</a>)
 		  </c:forEach>
 		  <br/>
+		</c:if>
+		<c:if test="${marker.countOfMutationInvolves > 0}">
+		    Genomic Mutations involving ${marker.symbol} (<a href="${alleleUrl}&mutationInvolves=1">${marker.countOfMutationInvolves}</a>)<br/>
 		</c:if>
 		<c:if test="${not empty marker.incidentalMutations}">
 			Incidental mutations (data from
