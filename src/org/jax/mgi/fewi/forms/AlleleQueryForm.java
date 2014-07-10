@@ -32,6 +32,7 @@ public class AlleleQueryForm
     private String coordUnit;
     private String cm;
     private String cyto;
+    private String mutationInvolves;
 
     // Form Widget Values
     // collection will be set once dynamically and cached
@@ -260,6 +261,13 @@ public class AlleleQueryForm
 	}
 	public void setIsCellLine(String isCellLine) {
 		this.isCellLine = isCellLine;
+	}
+
+	public String getMutationInvolves() {
+		return mutationInvolves;
+	}
+	public void setMutationInvolves(String mutationInvolves) {
+		this.mutationInvolves = mutationInvolves;
 	}
 
 	//=== form widget values
