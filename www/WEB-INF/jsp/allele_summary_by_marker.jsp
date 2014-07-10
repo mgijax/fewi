@@ -21,6 +21,8 @@ ${templateBean.templateHeadHtml}
 <!--begin custom header content for this example-->
 <script type="text/javascript">
 </script>
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/hideshow.js"></script>
+
 
 ${templateBean.templateBodyStartHtml}
 
@@ -43,6 +45,11 @@ ${templateBean.templateBodyStartHtml}
 <br/>
 
 <div id="summary">
+	<c:if test="${not empty mutationInvolves}">
+	<div id="leftcolumn" style="float: left; vertical-align: middle; font-size: 125%; font-weight: bold; padding-top: 30px">
+		Genomic mutations involving ${marker.symbol}
+	</div>
+	</c:if>
 	<div id="rightcolumn" style="float: right;">
 			<div class="innertube">
 				<div id="paginationTop">&nbsp;</div>
@@ -69,6 +76,7 @@ ${templateBean.templateBodyStartHtml}
 window.querystring="${queryString}";
 window.fewiurl="${configBean.FEWI_URL}";
 </script>
+
 <!-- including this file will start the data injection -->
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/allele_summary.js"></script>
 
