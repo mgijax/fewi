@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
+import mgi.frontend.datamodel.AlleleRelatedMarker;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.phenotype.AlleleSummaryDisease;
 import mgi.frontend.datamodel.phenotype.AlleleSummarySystem;
@@ -69,22 +70,85 @@ public class AlleleSummaryRow
 	  }
 	  return "<span style=\"line-height: 1.4; \">"+StringUtils.join(synonyms,", ")+"</span>";
   }
+
   public String getCategory(){
-	  String category = "<span style=\"white-space: nowrap;\">"+allele.getAlleleType()+"</span>";
+	  StringBuffer category = new StringBuffer();
+
+	  category.append("<span style=\"white-space: nowrap;\">");
+	  category.append(allele.getAlleleType());
+	  category.append("</span>");
+
 	  if(allele.getAlleleSubType()!=null && !allele.getAlleleSubType().equals(""))
 	  {
-		  category += "<br>("+allele.getAlleleSubType()+")";
+		  category.append("<br>(");
+		  category.append(allele.getAlleleSubType());
+		  category.append(")");
 	  }
 	  if(CELL_LINE.equalsIgnoreCase(allele.getTransmissionType()))
 	  {
-		  category += "<br><b>(Cell Line)</b>";
+		  category.append("<br><b>(Cell Line)</b>");
 	  }
 	  else if(CHIMERIC.equalsIgnoreCase(allele.getTransmissionType()))
 	  {
-		  category += "<br><b>(Chimeric)</b>";
+		  category.append("<br><b>(Chimeric)</b>");
 	  }
-	  return category;
+
+	  if (allele.getCountOfMutationInvolvesMarkers() > 0) {
+
+		List<AlleleRelatedMarker> mutationInvolves =
+			allele.getMutationInvolvesMarkers();
+
+		if (mutationInvolves.size() > 0) {
+			category.append("<br>Involves ");
+			category.append(
+				allele.getCountOfMutationInvolvesMarkers());
+			category.append(" genes (");
+
+			boolean first = true;
+
+			for (AlleleRelatedMarker mrk : mutationInvolves) {
+				if (first) {
+					first = false;
+				} else {
+					category.append (", ");
+				}
+				category.append ("<a href='");
+				category.append (fewiUrl);
+				category.append ("marker/");
+				category.append (mrk.getRelatedMarkerID());
+				category.append ("'>");
+				category.append (mrk.getRelatedMarkerSymbol());
+				category.append ("</a>");
+			}
+			if (allele.getCountOfMutationInvolvesMarkers() > 3) {
+				category.append ("...");
+			}
+			category.append(") <a class='markerNoteButton'");
+		        category.append(" href='");
+			category.append(fewiUrl);
+			category.append("allele/mutationInvolves/");
+			category.append(allele.getPrimaryID());
+			category.append("'");
+
+			category.append(" style='display:inline;");
+			category.append(" line-height: 200%");
+			category.append("'");
+
+		        category.append(" onClick='javascript:popupWide(\"");
+			category.append(fewiUrl);
+			category.append("allele/mutationInvolves/");
+			category.append(allele.getPrimaryID());
+			category.append("\", ");
+			category.append(allele.getAlleleKey());
+			category.append("); return false;'");
+
+			category.append(">View&nbsp;all</a>");
+		}
+	  }
+
+	  return category.toString();
   }
+
   public String getSystems(){
 	  List<String> systems = new ArrayList<String>();
 	  
