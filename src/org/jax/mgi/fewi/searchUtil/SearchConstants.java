@@ -51,6 +51,7 @@ public class SearchConstants {
 	public static final String ALL_HAS_OMIM			 = "hasOMIM";
 	public static final String ALL_IS_CELLLINE		 = "isCellLine";
     public static final String ALLELE_KEY              = "alleleKey";
+    public static final String ALL_MI_MARKER_IDS = "mutationInvolvesMarkerIDs";
 
     // Accession
 
