@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.finder;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.text.DecimalFormat;
+import java.math.RoundingMode;
 
 import org.jax.mgi.fewi.hunter.SolrInteractionHunter;
 import org.jax.mgi.fewi.hunter.SolrInteractionTermFacetHunter;
@@ -94,6 +96,41 @@ public class InteractionFinder
 	return results;
     }
 
+    /** special method to truncate the 'score' to a three decimal places, with
+     * a forced round 'up' or down (if not 'up')
+     */
+    private String abbreviateScore (String score, boolean up) {
+	int decimalPos = score.indexOf('.');
+
+	// no decimal point, no truncation needed
+	if (decimalPos < 0) {
+	    return score;
+	}
+
+	int truncationPoint = decimalPos + 3;
+
+	// too few digits, no truncation needed
+	if ((score.length() - 1) <= truncationPoint) {
+	    return score;
+	}
+
+	DecimalFormat fmt = new DecimalFormat("#.###");
+	if (up) {
+	    fmt.setRoundingMode (RoundingMode.CEILING);
+	} else {
+	    fmt.setRoundingMode (RoundingMode.FLOOR);
+	}
+
+	try {
+	    Float fScoreObj = new Float(score);
+	    float fScore = fScoreObj.floatValue();
+	    return fmt.format(fScore);
+
+	} catch (NumberFormatException e) {
+	    return score;
+	}
+    }
+
     public SearchResults<String> getScoreFacet(SearchParams params) {
 	List<Sort> sorts = new ArrayList<Sort>();
 
@@ -117,6 +154,7 @@ public class InteractionFinder
 	String first = "0";
 	if (searchResults1.getResultObjects().size() >= 1) {
 	    first = searchResults1.getResultObjects().get(0).getScore();
+	    first = abbreviateScore(first, false);
 	}
 	logger.debug("Found first: " + first);
 
@@ -134,6 +172,7 @@ public class InteractionFinder
 	String last = "1";
 	if (searchResults2.getResultObjects().size() >= 1) {
 	    last = searchResults2.getResultObjects().get(0).getScore();
+	    last = abbreviateScore(last, false);
 	}
 	logger.debug("Found last: " + last);
 
