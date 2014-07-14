@@ -21,6 +21,7 @@ ${templateBean.templateHeadHtml}
 <!--begin custom header content for this example-->
 <script type="text/javascript">
 </script>
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/hideshow.js"></script>
 
 ${templateBean.templateBodyStartHtml}
 

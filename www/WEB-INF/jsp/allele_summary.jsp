@@ -14,6 +14,7 @@ ${templateBean.templateHeadHtml}
 <meta name="robots" content="NOODP"/>
 <meta name="robots" content="NOYDIR"/>
 
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/hideshow.js"></script>
 ${templateBean.templateBodyStartHtml}
 
 <!-- iframe for history manager's use -->
