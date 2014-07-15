@@ -139,8 +139,8 @@ circle {
 <div style="float: left; width: 1245px;">
 	<div style="margin-top: 30px; float: left;">
 		<span class="filterButton" id="showGraphHelpDiv" style="margin-right: 10px;">Graph Help</span>
-		<span class="filterButton" style="margin-right: 10px;"><a target="_blank" href="${configBean.FTP_BASE_URL}feature_relationships_downloads">Download Data</a></span>
-		<a id="toBatchQuery" target="_blank" class="filterButton" onClick="javascript: batchWeb.submit();" style="display:none"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> Batch Query</a>
+		<span class="filterButton" style="margin-right: 10px;"><a target="_blank" href="${configBean.FTP_BASE_URL}feature_relationships_downloads" title="Download the full data set from the MGI ftp site">Download Data</a></span>
+		<a id="toBatchQuery" target="_blank" class="filterButton" onClick="javascript: batchWeb.submit();" style="display:none" title="Forward the genome features from the table to the Batch Query form"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> Batch Query</a>
 		<div style="display: none"><span class="label">Export:</span>
 		<a id="relationshipTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
 		<a id="relationshipExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a></div>

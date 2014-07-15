@@ -353,10 +353,32 @@ var is_setBatchSymbolListWeb = function(s) {
 
     var el = document.getElementById('ids');
     if (el) {
+	var tooltip = 'Forward genome features to Batch Query';
+	try {
+	    var rowCount = is_dataTable.configs.paginator.getTotalRecords();
+	    var rowCountStr = rowCount + ' interactions';
+	    if (rowCount == 1) {
+		rowCountStr = '1 interaction';
+	    }
+
+	    var idCount = s.split(',').length - 1;	// trailing comma
+	    if (idCount > 0) {
+		if (idCount > 1) {
+		    tooltip = 'Forward ' + idCount
+			+ ' distinct genome features (from '
+			+ rowCountStr + ') to Batch Query';
+		} else {
+		    tooltip = 'Forward 1 genome feature (from '
+			+ rowCountStr + ') to Batch Query';
+		}
+	    }
+	} catch (e) {}
+
 	el.value = s;
 	var el2 = document.getElementById('toBatchQuery');
 	if (el2) {
 	    el2.style.display = 'inline';
+	    el2.title = tooltip;
 	}
     }
 };
