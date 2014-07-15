@@ -344,13 +344,7 @@ var is_updateBatchQueryLink = function() {
     is_fetchAndCall(url, is_setBatchSymbolListWeb);
 };
 
-var is_setBatchSymbolListWeb = function(s) {
-    if ((s === null) || (s == '')) {
-	// if can't get the full list, fall back on the main marker(s) for the
-	// page
-	s = markerIDs.join(', ');
-    }
-
+var is_setBatchTooltip = function(s) {
     var el = document.getElementById('ids');
     if (el) {
 	var tooltip = 'Forward genome features to Batch Query';
@@ -372,13 +366,35 @@ var is_setBatchSymbolListWeb = function(s) {
 			+ rowCountStr + ') to Batch Query';
 		}
 	    }
-	} catch (e) {}
+	} catch (e) {
+	    // fallback position in case of error (no counts)
+	    tooltip = 'Forward genomes features (from interactions) '
+		    + 'to Batch Query';
+	}
 
+	var el2 = document.getElementById('toBatchQuery');
+	if (el2) {
+	    el2.title = tooltip;
+	}
+    }
+};
+
+var is_setBatchSymbolListWeb = function(s) {
+    if ((s === null) || (s == '')) {
+	// if can't get the full list, fall back on the main marker(s) for the
+	// page
+	s = markerIDs.join(', ');
+    }
+
+    var el = document.getElementById('ids');
+    if (el) {
 	el.value = s;
 	var el2 = document.getElementById('toBatchQuery');
 	if (el2) {
 	    el2.style.display = 'inline';
-	    el2.title = tooltip;
 	}
     }
+    // use a 100ms delay before updating the tooltip, to give the paginator
+    // time to work
+    setTimeout(function() { is_setBatchTooltip(s); }, 100);
 };
