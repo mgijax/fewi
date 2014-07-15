@@ -1,3 +1,10 @@
+TAG: fewi-5-1-9-4
+DATE: 07/15/2014
+STAFF: jsb
+CHANGES: 
+1) fix for count of alleles associated with human diseases
+2) added tooltips for batch query and data download buttons on explorer
+
 TAG: fewi-5-1-9-3
 DATE: 07/10/2014
 STAFF: jsb
