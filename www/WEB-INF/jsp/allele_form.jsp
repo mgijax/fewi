@@ -236,7 +236,10 @@
     <!-- allele types -->
     <div class='relativePos categoryDiv' style='margin-right: 10px;'>
       <div class='categoryHeader' style="width:232px; " >
-        Generation Method
+      <a class='userhelpLink'
+	      href="${configBean.USERHELP_URL}ALLELE_phenotypic_categories_help.shtml#method"
+	      onclick="javascript:openUserhelpWindow('ALLELE_phenotypic_categories_help.shtml#method'); return false;"
+	      >Generation Method</a>
       </div>
       <div class='categorySelection' style="width:232px; overflow: auto; " >
       	<fewi:checkboxOptions items="${alleleQueryForm.alleleTypeDisplay}" name="alleleType" values="${alleleQueryForm.alleleType}" />
@@ -246,7 +249,10 @@
     <!-- allele subtypes -->
     <div class='relativePos categoryDiv' style='margin-right: 10px;'>
       <div class='categoryHeader' style="width:385px; " >
-        Allele Attributes
+      <a class='userhelpLink'
+	href="${configBean.USERHELP_URL}ALLELE_phenotypic_categories_help.shtml#attributes"
+	onclick="javascript:openUserhelpWindow('ALLELE_phenotypic_categories_help.shtml#attributes'); return false;"
+	      >Allele Attributes</a>
       </div>
       <div class='categorySelection' style="width:385px; overflow: auto; " >
       	<div style="float: left; margin-right: 20px;">
@@ -264,7 +270,10 @@
     <!-- collections -->
     <div class='relativePos categoryDiv'>
       <div class='categoryHeader' style="width:225px; " >
-        Collections
+      <a class='userhelpLink'
+	href="${configBean.USERHELP_URL}ALLELE_phenotypic_categories_help.shtml#collection"
+	onclick="javascript:openUserhelpWindow('ALLELE_phenotypic_categories_help.shtml#collection'); return false;"
+	      >Project Collections</a>
       </div>
       <div class='categorySelection' style="width:225px; overflow: auto; " >
       	<fewi:checkboxOptions items="${collectionValues}" name="collection" values="${alleleQueryForm.collection}" />

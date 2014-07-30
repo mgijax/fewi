@@ -35,11 +35,11 @@
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty alleleQueryForm.alleleSubType}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	Allele Attributes: any of <b>${alleleQueryForm.alleleSubType}</b>
+	Allele Attributes: all of <b>${alleleQueryForm.alleleSubType}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${not empty alleleQueryForm.collection}">
 	<br><c:if test="${notFirst}">AND</c:if>
-	Collection: any of <b>${alleleQueryForm.collection}</b>
+	Project Collection: any of <b>${alleleQueryForm.collection}</b>
 <c:set var="notFirst" value="${true}"/></c:if>
 <c:if test="${'0'==alleleQueryForm.isCellLine}">
 	<br><c:if test="${notFirst}">AND</c:if>

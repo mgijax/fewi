@@ -287,7 +287,7 @@ td.right { text-align: right }
 
 	<c:if test="${not empty allele.collection}">
 	  <tr>
-	    <td class="rightBorderThinGray label padded right"><font class="label">Collection:</font></td>
+	    <td class="rightBorderThinGray label padded right"><font class="label">Project Collection:</font></td>
 	    <td class="padded">${allele.collection}</td>
 	  </tr>
 	</c:if>
