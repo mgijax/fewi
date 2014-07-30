@@ -436,7 +436,7 @@ public class AutoCompleteController {
 		 *  		I am putting in this hack.
 		 *  	-kstone
 		 */
-		ids = ids.replaceAll("mp","MP");
+		ids = ids.replaceAll("mp:","MP:");
 		
 		SearchResults<VocabACResult> results = resolveVocabTermIdQuery(ids);
 		if(results==null) return ids;
