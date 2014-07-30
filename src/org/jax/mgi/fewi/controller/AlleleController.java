@@ -555,15 +555,15 @@ public class AlleleController {
 			 filters.add(new Filter(SearchConstants.ALL_ID,allIdTokens,Filter.OP_IN));
 		 }
 		 // Allele Type
-		 Filter alleleTypeFilter = makeListFilter(query.getAlleleType(),SearchConstants.ALL_TYPE);
+		 Filter alleleTypeFilter = makeListFilter(query.getAlleleType(),SearchConstants.ALL_TYPE, false);
 		 if(alleleTypeFilter!=null) filters.add(alleleTypeFilter);
 
 		 // Allele Sub Type
-		 Filter alleleSubTypeFilter = makeListFilter(query.getAlleleSubType(),SearchConstants.ALL_SUBTYPE);
+		 Filter alleleSubTypeFilter = makeListFilter(query.getAlleleSubType(),SearchConstants.ALL_SUBTYPE, true);
 		 if(alleleSubTypeFilter!=null) filters.add(alleleSubTypeFilter);
 
 		 // Allele Collection
-		 Filter collectionFilter = makeListFilter(query.getCollection(),SearchConstants.ALL_COLLECTION);
+		 Filter collectionFilter = makeListFilter(query.getCollection(),SearchConstants.ALL_COLLECTION, false);
 		 if(collectionFilter!=null) filters.add(collectionFilter);
 
 		 // Phenotypes
@@ -636,7 +636,7 @@ public class AlleleController {
 		 List<String> chr = query.getChromosome();
 		 if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY))
 		 {
-			 Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME);
+			 Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME, false);
 			 if(chrFilter!=null) filters.add(chrFilter);
 		 }
 		 // Coordinate Search
@@ -1951,7 +1951,15 @@ public class AlleleController {
         		AlleleQueryForm.setCollectionValues(collectionValues);
         	}
         }
-        private Filter makeListFilter(List<String> values, String searchConstant)
+
+	/* take a list of possible values for a field named by 'searchConstant'
+	 * and turn them into an appropriate Filter for Solr.  if 'joinWithAnd'
+	 * is true, then we require all those values when searching (a boolean
+	 * AND).  if false then we require at least one of those values (a
+	 * boolean OR).
+	 */
+        private Filter makeListFilter(List<String> values,
+	    String searchConstant, boolean joinWithAnd)
         {
         	Filter f = null;
 	   		if(values!=null && values.size()>0)
@@ -1961,7 +1969,11 @@ public class AlleleController {
 	   			 {
 	   				vFilters.add(new Filter(searchConstant,value,Filter.OP_EQUAL));
 	   			 }
-	   			 f = Filter.or(vFilters);
+				 if (joinWithAnd) {
+	   			     f = Filter.and(vFilters);
+				 } else {
+	   			     f = Filter.or(vFilters);
+				 }
 	   		}
 	   		return f;
         }
