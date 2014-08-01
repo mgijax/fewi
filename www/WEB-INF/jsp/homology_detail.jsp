@@ -263,6 +263,7 @@ ${templateBean.templateBodyStartHtml}
 		&nbsp;- chimpanzee<br>
 		&nbsp;- dog<br>
 		&nbsp;- monkey, Rhesus<br>
+		&nbsp;- western clawed frog (Xenopus tropicalis)<br>
 		&nbsp;- zebrafish<p>
 
 		<p>These are a subset of the total species represented in HomoloGene Classes at NCBI.<br>
