@@ -105,14 +105,14 @@ public class AlleleQueryForm
     	subTypeGroup2.put("Humanized sequence","Humanized sequence");
     	subTypeGroup2.put("Reporter","Reporter");
     	subTypeGroup2.put("Transposase","Transposase");
-    	subTypeGroup2.put("Transposon Concatemer","Transposon concatemer");
+    	subTypeGroup2.put("Transposon concatemer","Transposon concatemer");
 
-    	subTypeGroup3.put("Constitutively Active","Constitutively active");
-    	subTypeGroup3.put("Dominant Negative","Dominant negative");
+    	subTypeGroup3.put("Constitutively active","Constitutively active");
+    	subTypeGroup3.put("Dominant negative","Dominant negative");
     	subTypeGroup3.put("Hypomorph","Hypomorph");
     	subTypeGroup3.put("Inducible","Inducible");
     	subTypeGroup3.put("Knockdown","Knockdown");
-    	subTypeGroup3.put("Modified Isoform(s)","Modified isoform(s)");
+    	subTypeGroup3.put("Modified isoform(s)","Modified isoform(s)");
     	subTypeGroup3.put("Null/knockout","Null/knockout");
     	subTypeGroup3.put("No functional change","No functional change");
     }
