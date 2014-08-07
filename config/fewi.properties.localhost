@@ -20,7 +20,7 @@ FEWI_URL=http://localhost.jax.org:8080/fewi/mgi/
 #----- solr server urls -----#
 
 # Weekly Proto
-solr.server1.url=http://localhost.jax.org:9995/solr/
+solr.server1.url=http://localhost.jax.org:8991/solr/
 
 # Front-end development indexes
 #solr.server1.url=http://cardolan:8985/solr/
