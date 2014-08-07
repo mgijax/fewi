@@ -17,7 +17,7 @@ lib_java_fe.dir=dist
 global_config.dir=mgiconfig/web
 
 <!--data sources -->
-datasource=postgresDev-ds.xml
+datasource=postgresDev-ds-local.xml
 jdbcdriver=sharelib/postgresql-9.0-801.jdbc4.jar
 
 <!--config files -->
