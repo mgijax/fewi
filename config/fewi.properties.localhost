@@ -32,4 +32,4 @@ solr.server1.url=http://localhost.jax.org:9995/solr/
 
 # directory in which to find the standard mgi template
 #template.dir=/Users/kstone/dev/mgiconfig/web/
-template.dir=/Users/oblod/mgi/cvs/mgiconfig/web/
+template.dir=/data/webtemplates/
