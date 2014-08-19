@@ -9,15 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import mgi.frontend.datamodel.Marker;
-import mgi.frontend.datamodel.hdp.HdpGenoCluster;
-
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
@@ -48,22 +41,6 @@ import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
 import org.jax.mgi.fewi.util.file.FileProcessorOutput;
 import org.jax.mgi.fewi.util.file.VcfProcessorOutput;
-import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
-import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
 
 /*
  * This controller maps all /diseasePortal/ uri's
@@ -1462,17 +1439,12 @@ public class DiseasePortalController
 		Set<String> markerKeys = new HashSet<String>();
 		if(locationCoordinateTokens!=null && locationCoordinateTokens.size()>0)
 		{
-			int chunks = (int) Math.ceil(locationCoordinateTokens.size() / maxLocationsInAQuery);
-			if(chunks==0) chunks=1;
-			for(int i=0; i<chunks; i++)
+			List<List<String>> tokenBatches = FewiUtil.getBatches(locationCoordinateTokens, maxLocationsInAQuery);
+			for(int i=0; i<tokenBatches.size(); i++)
 			{
-				if(i>0) logger.debug("convertLocationsToMarkerKeys-> Chunking through coordinate query. "+(chunks-i)+" chunks left.");
-				// chunk through the list
-				int offsetStart = (i) * maxLocationsInAQuery;
-				int offsetEnd = (i+1) * maxLocationsInAQuery;
-				if(locationCoordinateTokens.size() < offsetEnd) offsetEnd = locationCoordinateTokens.size();
-				List<String> tokens = locationCoordinateTokens.subList(offsetStart,offsetEnd);
-
+				if(i>0) logger.debug("convertLocationsToMarkerKeys-> Chunking through coordinate query. "+(tokenBatches.size()-i)+" chunks left.");
+				List<String> tokens = tokenBatches.get(i);
+				
 				SearchParams sp = new SearchParams();
 				sp.setPageSize(100000); // there should be no limit on this
 				sp.setFetchKeysOnly(true);
@@ -1496,7 +1468,7 @@ public class DiseasePortalController
 				{
 					sp.setFilter(Filter.or(locationFilters));
 					// query solr for the matching marker keys
-					if(chunks==1) return hdpFinder.getMarkerKeys(sp);
+					if(tokenBatches.size()==1) return hdpFinder.getMarkerKeys(sp);
 					else markerKeys.addAll(hdpFinder.getMarkerKeys(sp));
 				}
 			}
