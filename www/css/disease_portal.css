@@ -2,7 +2,7 @@
 * Autocomplete styles
 */
 .ui-autocomplete {
-  max-height: 300px;
+  max-height: 145px;
   overflow-y: auto;
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
@@ -290,20 +290,20 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   .bsn_legend
   {
- 	color: #FF8300;
+ 	color: #FF4700;
   	font-weight: bold;
-  	font-size: 120%;
+  	font-size: 150%;
   	font-family: serif;
   }
   /* style for the backgroudn sensitivity note */
   .bsn
   {
-  	color: #FF8300;
+  	color: #FF4700;
   	font-weight: bold;
-  	font-size: 120%;
+  	font-size: 200%;
   	font-family: serif;
-  	top: -4px;
-  	right: 4px;
+  	top: -7px;
+  	right: 2px;
   	position: absolute;
   }
   

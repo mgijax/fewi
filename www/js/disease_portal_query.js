@@ -149,13 +149,13 @@ var updateQuerySummary = function() {
 	{
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
-		ysfText += organism+" locations matching [<b>"+$('<div/>').text(values["locations"]).html()+"</b>]";
+		ysfText += organism+" loci overlapping interval: [<b>"+$('<div/>').text(values["locations"]).html()+"</b>]";
 	}
 	if ("locationsFileName" in values && values["locationsFileName"]!="")
 	{
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
-		ysfText += organism+" locations matching [<b id=\"ysf-locationsFile\">file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
+		ysfText += organism+" loci overlapping interval: [<b id=\"ysf-locationsFile\">file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
 	}
 	
 	summaryDiv.append(ysfText);

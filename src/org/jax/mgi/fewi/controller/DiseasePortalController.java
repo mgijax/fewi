@@ -17,7 +17,9 @@ import javax.servlet.http.HttpSession;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
+import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
@@ -462,7 +464,7 @@ public class DiseasePortalController
       HttpServletRequest request,
       HttpServletResponse response,
       HttpSession session,
-      @ModelAttribute DiseasePortalQueryForm query)
+      @ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
     {
     	logger.debug("->gridSystemCell started");
 
@@ -532,7 +534,7 @@ public class DiseasePortalController
       HttpServletRequest request,
       HttpServletResponse response,
       HttpSession session,
-      @ModelAttribute DiseasePortalQueryForm query)
+      @ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
     {
     	logger.debug("->gridDiseaseCell started");
 
@@ -663,7 +665,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
-			@ModelAttribute Paginator page)
+			@ModelAttribute Paginator page) throws RecognitionException
 	{
 		SearchResults<SolrDiseasePortalMarker> searchResults
 		  = this.getSummaryResultsByGene(request, query, page,session,true);
@@ -705,7 +707,7 @@ public class DiseasePortalController
     public ModelAndView resultsMarkerSummaryExport(
             HttpServletRequest request,
             HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query) {
+			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException {
 
     	logger.debug("generating HDP marker report download");
 
@@ -735,7 +737,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
-			@ModelAttribute Paginator page)
+			@ModelAttribute Paginator page) throws RecognitionException
 	{
 		SearchResults<SolrVocTerm> searchResults = this.getSummaryResultsByDisease(request,query,page,session,true);
         List<HdpDiseaseSummaryRow> termList = new ArrayList<HdpDiseaseSummaryRow>();
@@ -768,7 +770,7 @@ public class DiseasePortalController
     public ModelAndView resultsDiseaseSummaryExport(
             HttpServletRequest request,
             HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query) {
+			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException {
 
     	logger.debug("generating HDP disease report download");
 
@@ -795,7 +797,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
-			@ModelAttribute Paginator page)
+			@ModelAttribute Paginator page) throws RecognitionException
 	{
 		SearchResults<SolrVocTerm> searchResults = this.getSummaryResultsByPhenotype(request,query,page,session);
         List<String> termList = new ArrayList<String>();
@@ -820,7 +822,7 @@ public class DiseasePortalController
 	public List<SolrHdpGridData> getAnnotationsInResults(
 			@ModelAttribute DiseasePortalQueryForm query,
 			List<String> gridClusterKeys,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 		logger.debug("-->getAnnotationsInResults");
 
@@ -844,7 +846,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 
 		logger.debug("getGridClusters query: " + query.toString());
@@ -857,7 +859,7 @@ public class DiseasePortalController
 		params.setIncludeMetaScore(true);
 
 		// determine and set the requested sorts, filters, and pagination
-// TODO - setup sorts and pagination
+
 		params.setSorts(this.genGridSorts(request,query));
 		params.setPaginator(page);
 		params.setFilter(this.parseQueryForm(query,session));
@@ -871,7 +873,7 @@ public class DiseasePortalController
 	public SearchResults<SolrString> getGridDiseaseColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 
 		logger.debug("getGridClusters disease column query: " + query.toString());
@@ -893,7 +895,7 @@ public class DiseasePortalController
 	public List<String> getGridMpHeaderColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 		logger.debug("getGridClusters mp header column query: " + query.toString());
 
@@ -919,7 +921,7 @@ public class DiseasePortalController
 	public List<SolrVocTerm> getGridMpTermColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 		logger.debug("getGenoClusters mp term column query: " + query.toString());
 
@@ -940,7 +942,7 @@ public class DiseasePortalController
 	public List<SolrVocTerm> getGridDiseaseTermColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 		logger.debug("getGenoClusters disease term column query: " + query.toString());
 
@@ -961,7 +963,7 @@ public class DiseasePortalController
 	public List<SolrDiseasePortalMarker> getGridHumanMarkers(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 		logger.debug("getGridHumanMarkers query: " + query.toString());
 
@@ -986,7 +988,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 			return getSummaryResultsByGene(request,query,page,session,false);
 	}
@@ -995,7 +997,7 @@ public class DiseasePortalController
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
 			HttpSession session,
-			boolean doHighlight)
+			boolean doHighlight) throws RecognitionException
 	{
 
 		logger.debug("getSummaryResults query: " + query.toString());
@@ -1022,7 +1024,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 		return getSummaryResultsByDisease(request,query,page,session,false);
 	}
@@ -1031,7 +1033,7 @@ public class DiseasePortalController
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
 			HttpSession session,
-			boolean doHighlight)
+			boolean doHighlight) throws RecognitionException
 	{
 
 		logger.debug("getSummaryResults query: " + query.toString());
@@ -1061,7 +1063,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 
 		logger.debug("getSummaryResultsByPhenotype query: " + query.toString());
@@ -1090,7 +1092,7 @@ public class DiseasePortalController
 	public SearchResults<HdpGenoCluster> getGenoClusters(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session)
+			HttpSession session) throws RecognitionException
 	{
 		logger.debug("getGenoClusters query: " + query.toString());
 
@@ -1231,7 +1233,7 @@ public class DiseasePortalController
     }
 
 	// parses the query parameters pass into main queries
-	private Filter parseQueryForm(DiseasePortalQueryForm query,HttpSession session)
+	private Filter parseQueryForm(DiseasePortalQueryForm query,HttpSession session) throws RecognitionException
 	{
 		List<Filter> qFilters = new ArrayList<Filter>();
 
@@ -1275,7 +1277,10 @@ public class DiseasePortalController
 		String phenotypes = query.getPhenotypes();
 		if(notEmpty(phenotypes))
 		{
-			Filter phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
+			Filter phenoFilter = BooleanSearch.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes);
+			//Filter phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
+			// TODO see if this works?
+			logger.info("Filters: " + phenoFilter);
 			if(phenoFilter != null) qFilters.add(phenoFilter);
 		}
 
@@ -1385,7 +1390,7 @@ public class DiseasePortalController
 	public @ResponseBody Integer getGridClusterCount(
 			HttpServletRequest request,
 			HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query)
+			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
 	{
 		SearchParams params = new SearchParams();
 		params.setFilter(this.parseQueryForm(query,session));
@@ -1396,7 +1401,7 @@ public class DiseasePortalController
 	public @ResponseBody Integer getMarkerCount(
 			HttpServletRequest request,
 			HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query)
+			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
 	{
 		SearchParams params = new SearchParams();
 		params.setFilter(this.parseQueryForm(query,session));
@@ -1407,7 +1412,7 @@ public class DiseasePortalController
 	public @ResponseBody Integer getDiseaseCount(
 			HttpServletRequest request,
 			HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query)
+			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
 	{
 		SearchParams params = new SearchParams();
 		params.setFilter(this.parseQueryForm(query,session));

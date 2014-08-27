@@ -644,7 +644,7 @@ var genesResultsTable = function() {
 		{key: "symbol", label: "Gene Symbol", sortable: true },
 		{key: "location", label: "Genetic Location", sortable: false },
 		{key: "coordinate", label: "Genome Coordinates", sortable: true },
-		{key: "disease", label: "Associated Human Diseases", sortable: false, width:240 },
+		{key: "disease", label: "Associated Human Diseases <span id=\"showMgiHumanDiseaseHelpDiv\" class=\"filterButton\">(source)</span>", sortable: false, width:240 },
 		{key: "system", label: "Abnormal Mouse Phenotypes<br/> Reported in these Systems", sortable: false },
 		{key: "allRefCount", label: "References in MGI", sortable: false },
 		{key: "imsrCount", label: "Mice With Mutations<br/> In this Gene (IMSR)", sortable: false },
@@ -792,6 +792,7 @@ var genesResultsTable = function() {
 
 		return true;
 	};
+	//setupPopups();
 };
 var diseasesResultsTable = function() {
 
@@ -804,8 +805,8 @@ var diseasesResultsTable = function() {
 		{key: "disease", label: "Disease", sortable: true },
 		{key: "diseaseId", label: "OMIM ID", sortable: true },
 		{key: "diseaseModels", label: "Mouse Models", sortable: false },
-		{key: "mouseMarkers", label: "Associated Mouse Genes", sortable: false },
-		{key: "humanMarkers", label: "Associated Human Genes", sortable: false },
+		{key: "mouseMarkers", label: "Associated Genes from Mouse Models", sortable: false },
+		{key: "humanMarkers", label: "Associated Human Genes <span id=\"showMgiHumanGenesHelpDiv\" class=\"filterButton\">(source)</span>", sortable: false },
 		{key: "refCount", label: "References using <br/>Mouse Models", sortable: false },
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];
@@ -898,6 +899,7 @@ var diseasesResultsTable = function() {
 
 		return true;
 	};
+	//setupPopups();
 };
 genesResultsTable();
 History.register("hdp", History.getBookmarkedState("hdp") || "", handleNavigation);
@@ -933,7 +935,7 @@ function historyInit()
 		if (queryTabParam && queryTabParam in mgiTab.tabs) resultsTabs.set("activeIndex",mgiTab.tabs[queryTabParam]);
 		handleNavigation(generateRequest(null, 0, DEFAULT_PAGE_SIZE),true,true);
 	}
-}
+};
 History.onReady(historyInit);
 
 
@@ -967,7 +969,40 @@ function refreshJQTooltips()
 		});
 	},400);
 
-}
+};
+
+function setupPopups() {
+
+	YAHOO.util.Event.onDOMReady(function() {
+		YAHOO.hdp.container.panel4 = new YAHOO.widget.Panel(
+			"showMgiHumanGenesHelpDivDialog", {
+				width : "420px",
+				visible : false,
+				constraintoviewport : true,
+				context : [ 'showMgiHumanGenesHelpDiv' ]
+			});
+		YAHOO.hdp.container.panel4.render();
+		YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click",
+		YAHOO.hdp.container.panel4.show,
+		YAHOO.hdp.container.panel4, true);
+
+		// Instantiate a Panel from markup
+		YAHOO.hdp.container.panel3 = new YAHOO.widget.Panel(
+			"showMgiHumanDiseaseHelpDivDialog", {
+				width : "420px",
+				visible : false,
+				constraintoviewport : true,
+				context : [ 'showMgiHumanDiseaseHelpDiv' ]
+			});
+		YAHOO.hdp.container.panel3.render();
+		YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click",
+		YAHOO.hdp.container.panel3.show,
+		YAHOO.hdp.container.panel3, true);
+
+	});
+
+};
+setupPopups();
 
 $(function(){
 	// put anything here that you definitally want to happen only after page is rendered.
