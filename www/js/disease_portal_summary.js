@@ -16,6 +16,28 @@ var History = YAHOO.util.History;
 // HTML/YUI page widgets
 YAHOO.namespace("hdp.container");
 
+YAHOO.hdp.container.panel1 = new YAHOO.widget.Panel(
+	"showMgiHumanGenesHelpDivDialog", {
+		width : "420px",
+		visible : false,
+		constraintoviewport : true,
+		context : [ 'showMgiHumanGenesHelpDiv', 'tr', 'bl' ]
+	});
+YAHOO.hdp.container.panel1.render();
+
+// Instantiate a Panel from markup
+YAHOO.hdp.container.panel2 = new YAHOO.widget.Panel(
+	"showMgiHumanDiseaseHelpDivDialog", {
+		width : "420px",
+		visible : false,
+		constraintoviewport : true,
+		context : [ 'showMgiHumanDiseaseHelpDiv', 'tr', 'bl' ]
+	});
+YAHOO.hdp.container.panel2.render();
+
+YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
+
 // ------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
@@ -792,7 +814,9 @@ var genesResultsTable = function() {
 
 		return true;
 	};
-	//setupPopups();
+
+	YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+	YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
 };
 var diseasesResultsTable = function() {
 
@@ -899,8 +923,11 @@ var diseasesResultsTable = function() {
 
 		return true;
 	};
-	//setupPopups();
+
+	YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+	YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
 };
+
 genesResultsTable();
 History.register("hdp", History.getBookmarkedState("hdp") || "", handleNavigation);
 
@@ -971,38 +998,21 @@ function refreshJQTooltips()
 
 };
 
-function setupPopups() {
+function showPanel1() {
+	YAHOO.hdp.container.panel1.cfg.setProperty("context",['showMgiHumanGenesHelpDiv','tr','bl']);
+	YAHOO.hdp.container.panel1.show();
+	if (ev) { 
+		YAHOO.util.Event.stopEvent(ev); 
+	} 
+}
 
-	YAHOO.util.Event.onDOMReady(function() {
-		YAHOO.hdp.container.panel4 = new YAHOO.widget.Panel(
-			"showMgiHumanGenesHelpDivDialog", {
-				width : "420px",
-				visible : false,
-				constraintoviewport : true,
-				context : [ 'showMgiHumanGenesHelpDiv' ]
-			});
-		YAHOO.hdp.container.panel4.render();
-		YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click",
-		YAHOO.hdp.container.panel4.show,
-		YAHOO.hdp.container.panel4, true);
-
-		// Instantiate a Panel from markup
-		YAHOO.hdp.container.panel3 = new YAHOO.widget.Panel(
-			"showMgiHumanDiseaseHelpDivDialog", {
-				width : "420px",
-				visible : false,
-				constraintoviewport : true,
-				context : [ 'showMgiHumanDiseaseHelpDiv' ]
-			});
-		YAHOO.hdp.container.panel3.render();
-		YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click",
-		YAHOO.hdp.container.panel3.show,
-		YAHOO.hdp.container.panel3, true);
-
-	});
-
-};
-setupPopups();
+function showPanel2() {
+	YAHOO.hdp.container.panel2.cfg.setProperty("context",['showMgiHumanDiseaseHelpDiv','tr','bl']);
+	YAHOO.hdp.container.panel2.show();
+	if (ev) { 
+		YAHOO.util.Event.stopEvent(ev); 
+	} 
+}
 
 $(function(){
 	// put anything here that you definitally want to happen only after page is rendered.
