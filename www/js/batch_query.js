@@ -47,6 +47,29 @@ if (!YAHOO.lang.isUndefined(toggleImg)){
 	YAHOO.util.Event.addListener("toggleImg", "click", toggleQF);
 }
 
+var showQF = function() {
+    /* show the query form (called upon certain page loads) */
+	
+    var qf = YAHOO.util.Dom.get('qwrap');
+    var toggleLink = YAHOO.util.Dom.get('toggleLink');
+    var toggleImg = YAHOO.util.Dom.get('toggleImg');
+    
+    var attributes = { height: { to: 310 }};
+
+    YAHOO.util.Dom.setStyle(qf, 'height', '0px');
+    YAHOO.util.Dom.setStyle(qf, 'display', 'none');
+    YAHOO.util.Dom.removeClass(toggleImg, 'qfExpand');
+    YAHOO.util.Dom.addClass(toggleImg, 'qfCollapse');
+    setText(toggleLink, "Click to hide search");
+    qDisplay = false;
+    changeVisibility('qwrap');
+
+    var myAnim = new YAHOO.util.Anim('qwrap', attributes);
+	
+    myAnim.duration = 0.75;
+    myAnim.animate();
+};
+
 var interceptSubmit = function(e) {
 	YAHOO.util.Event.preventDefault(e);	
 	var form = YAHOO.util.Dom.get("batchQueryForm");

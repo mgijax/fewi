@@ -177,6 +177,11 @@ public class BatchController {
         mav.addObject("queryString", queryForm.toQueryString());
         mav.addObject("batchQueryForm", queryForm);
         mav.addObject("inputIdCount", idList.size());
+	
+	if (queryForm.isFromQueryForm()) {
+	    mav.addObject("isFromQueryForm", "true");
+	}
+
         logger.debug("processSummary done");
         return mav;
     	

@@ -22,8 +22,8 @@ ${templateBean.templateBodyStartHtml}
 
 <div id="outer"  class="bluebar">
 	<span id="toggleImg" class="qfExpand"></span>
-	<div id="toggleQF"><span id="toggleLink" class="filterButton">Click to hide search</span></div>
-	<div id="qwrap">
+	<div id="toggleQF"><span id="toggleLink" class="filterButton">Click to modify search</span></div>
+	<div id="qwrap" style="display:none;">
 		<%@ include file="/WEB-INF/jsp/batch_form.jsp" %>
 	</div>
 </div>
@@ -110,7 +110,7 @@ ${templateBean.templateBodyStartHtml}
 
 	var fewiurl = "${configBean.FEWI_URL}";
 	var querystring = "${queryString}";
-	var qDisplay = false;
+	var qDisplay = true;
 
 </script>
 
@@ -118,5 +118,10 @@ ${templateBean.templateBodyStartHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_summary.js"></script>
 
-${templateBean.templateBodyStopHtml}
+<c:if test="${empty isFromQueryForm}">
+<script type="text/javascript">
+    YAHOO.util.Event.onDOMReady(function() { showQF(); });
+</script>
+</c:if>
 
+${templateBean.templateBodyStopHtml}
