@@ -94,7 +94,7 @@
     <div class='relativePos'>
       <div style="position:absolute; top:6px; left:15px; ">
         <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span><br />
-	<span style="font-style: italic;font-size: 11px;">Click "GO" to search by entered text without selecting a term from the list” and that should be it for this story.</span>
+	<span style="font-style: italic;font-size: 11px;">Click "GO" to search by entered text without selecting a term from the list.</span>
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
