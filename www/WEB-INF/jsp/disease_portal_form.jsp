@@ -56,7 +56,7 @@
       <div style="position:absolute; top:6px; left:15px; ">
         <span class='queryHeaderText'>Search by genes</span>
       </div>
-      <div style="position:absolute; top:75px; left:6px; ">
+      <div style="position:absolute; top:85px; left:6px; ">
       <form:textarea path="genes" style="height:80px; width:240px;" class=""/>
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Bmp4">Bmp4</a>,
@@ -79,7 +79,7 @@
         <label><input id="organismMouse1" name="organism" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
         </div>
       </div>
-      <div style="position:absolute; top:75px; left:6px; ">
+      <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="locations" name="locations" style="height:80px; width:280px;"></textarea>
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?locations=Chr12:3000000-10000000">Chr12:3000000-10000000</a>
@@ -94,9 +94,9 @@
     <div class='relativePos'>
       <div style="position:absolute; top:6px; left:15px; ">
         <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span><br />
-	<span style="font-style: italic;font-size: 11px;">Autocomplete is optional, click outside the box to exit autocomplete.</span>
+	<span style="font-style: italic;font-size: 11px;">Click "GO" to search by entered text without selecting a term from the list” and that should be it for this story.</span>
       </div>
-      <div style="position:absolute; top:75px; left:6px; ">
+      <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=diabetes">diabetes</a>,
@@ -120,7 +120,7 @@
       style="position:absolute; top:319px; left:710px; width:60px; font-size:14px;" type="reset" >
     </form:form>
 
-    <div style="position:absolute; top:225px; left:20px; width:600px;">
+    <div style="position:absolute; top:235px; left:20px; width:600px;">
 		<br/>
       <div style='font-size:150%;'>
         ------------------------------------------------------------------------
