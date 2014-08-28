@@ -2,7 +2,7 @@
 * Autocomplete styles
 */
 .ui-autocomplete {
-  max-height: 145px;
+  max-height: 155px;
   overflow-y: auto;
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
