@@ -2,7 +2,7 @@
 * Autocomplete styles
 */
 .ui-autocomplete {
-  max-height: 155px;
+  max-height: 145px;
   overflow-y: auto;
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
@@ -201,6 +201,7 @@ textarea {resize:none; background-color:#FFE4B5;}
     font-family: Verdana,Arial,Helvetica; 
     font-size: 20px;
   }
+
   #hdpSystemPopupTablePadder{ display: table-cell; }
   #hdpSystemPopupTablePadder img { visibility: hidden; }
   #hdpSystemPopupTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; vertical-align: bottom;}
@@ -387,7 +388,11 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   .gridCheck:hover { background-color: #FFFFCC;}
   #hdpGridTable tr .rcb { width: 18px; }
-  
+
+  .queryHeaderText {
+	font: 15px Verdana,Arial,Helvetica;
+  }
+
   .gridHl
   {
   	background-color: #FFFFCC;
