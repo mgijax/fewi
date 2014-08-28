@@ -94,6 +94,7 @@
     <div class='relativePos'>
       <div style="position:absolute; top:6px; left:15px; ">
         <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span>
+	<span style="font-style: italic;font-size: 11px;">Autocomplete is optional, click outside the box to exit autocomplete.</span>
       </div>
       <div style="position:absolute; top:60px; left:6px; ">
       <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
@@ -101,7 +102,7 @@
       <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=diabetes">diabetes</a>,
       <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>
       <br/><br/>
-      Select from autocomplete or continue typing.  Use quotes for exact match.
+	Use quotes for exact match. <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> for using AND, OR, NOT, quotes, partial word matching.
       </div>
     </div>
     </div>
