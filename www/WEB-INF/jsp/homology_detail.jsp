@@ -213,8 +213,20 @@ ${templateBean.templateBodyStartHtml}
 		</td>
 		
 		<td class="${style}">
-			<c:forEach var="disease" items="${m.markerDiseases}" varStatus="stat">
-				<a href="${configBean.FEWI_URL}disease/${disease.diseaseID}">${disease.disease}</a><br/>
+		    <c:choose>
+		    <c:when test="${hc.organism == 'mouse'}">
+		        <c:set var="diseases" value="${m.OMIMAnnotations}"/>
+		    </c:when>
+		    <c:when test="${hc.organism == 'human'}">
+		        <c:set var="diseases" value="${m.OMIMHumanAnnotations}"/>
+		    </c:when>
+	    	    <c:otherwise>
+			<c:set var="diseases" value=""/>
+	    	    </c:otherwise>
+	    	    </c:choose>
+
+			<c:forEach var="disease" items="${diseases}" varStatus="stat">
+				<a href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a><br/>
 			</c:forEach>
 	    </td>
 		
