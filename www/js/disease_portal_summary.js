@@ -666,7 +666,7 @@ var genesResultsTable = function() {
 		{key: "symbol", label: "Gene Symbol", sortable: true },
 		{key: "location", label: "Genetic Location", sortable: false },
 		{key: "coordinate", label: "Genome Coordinates", sortable: true },
-		{key: "disease", label: "Associated Human Diseases <span id=\"showMgiHumanDiseaseHelpDiv\" class=\"filterButton\">(source)</span>", sortable: false, width:240 },
+		{key: "disease", label: "Associated Human Diseases (<span id=\"showMgiHumanGenesHelpDiv\" style=\"color: #06F;cursor: pointer;\">source</span>)", sortable: false, width:240 },
 		{key: "system", label: "Abnormal Mouse Phenotypes<br/> Reported in these Systems", sortable: false },
 		{key: "allRefCount", label: "References in MGI", sortable: false },
 		{key: "imsrCount", label: "Mice With Mutations<br/> In this Gene (IMSR)", sortable: false },
@@ -830,7 +830,7 @@ var diseasesResultsTable = function() {
 		{key: "diseaseId", label: "OMIM ID", sortable: true },
 		{key: "diseaseModels", label: "Mouse Models", sortable: false },
 		{key: "mouseMarkers", label: "Associated Genes from Mouse Models", sortable: false },
-		{key: "humanMarkers", label: "Associated Human Genes <span id=\"showMgiHumanGenesHelpDiv\" class=\"filterButton\">(source)</span>", sortable: false },
+		{key: "humanMarkers", label: "Associated Human Genes (<span id=\"showMgiHumanDiseaseHelpDiv\" style=\"color: #06F;cursor: pointer;\">source</span>)", sortable: false },
 		{key: "refCount", label: "References using <br/>Mouse Models", sortable: false },
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];

@@ -92,14 +92,14 @@
 	<div id="paginationBottom" style="float:right;">&nbsp;</div>
 
 <div id="showMgiHumanGenesHelpDivDialog">
-   <div class="hd">MGI Associated Human Genes Help</div>
+   <div class="hd">Source of Gene-Disease Associations</div>
    <div class="bd">
-      <p>Disease associations for human markers are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests. Mouse markers are associated with human diseases through mouse genotypes described in publications.</p>
+      <p>Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests. Mouse genes are associated with human diseases through mouse genotypes described in publications.</p>
    </div>
 </div>
 <div id="showMgiHumanDiseaseHelpDivDialog">
-   <div class="hd">MGI Associated Human Diseases Help</div>
+   <div class="hd">Source of Gene-Disease Associations</div>
    <div class="bd">
-      <p>Disease associations for human markers are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests.</p>
+      <p>Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests.</p>
    </div>
 </div>
