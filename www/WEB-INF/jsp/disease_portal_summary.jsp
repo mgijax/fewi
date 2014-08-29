@@ -56,7 +56,7 @@
 			        <div style="margin-left:65px; display:none;"><span style=" border:1px solid; border-left-color:#FF0000; border-right-color:#FF0000; border-bottom-color:#CCC; border-top-color:#CCC;">&nbsp;&nbsp;&nbsp;</span> - Affected system contains the queried term.</div>
 			        <div style="display:block; margin-left:65px;"><strong>N</strong> - No abnormal phenotype observed.</div>
 		    		<div class="summary-helptext shared-helptext" style="color:#000; padding:4px 2px; font-style:normal;">
-		    			<span style="font-weight:bold;">NOTE:</span> When searching by phenotype/disease, only a subset phenotypes for a gene may be displayed. Search by gene or genome location for the complete phenotype profile of gene mutations.
+		    			<span style="font-weight:bold;">NOTE:</span> When searching by phenotype/disease, only a subset of phenotypes for a gene may be displayed. Search by gene or genome location for the complete phenotype profile of gene mutations.
                                 <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml#hdp_results'); return false;" 
                                   href="${configBean.USERHELP_URL}disease_connection_help.shtml">More..</a>
 		    		</div>
