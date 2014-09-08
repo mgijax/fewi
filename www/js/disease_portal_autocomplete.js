@@ -33,34 +33,26 @@ var resolveVocabTermIds = function()
  */
 // the split and extractLast functions define how we will delimit multiple selections
 function split( val ) {
-    // first pass, split by comma-space
-    var firstPassTerms = val.split( /,\s*/ );
-
-    // second pass, break booleans out into separate terms
-    var terms = [];
-    var maxLength = firstPassTerms.length;
-
-    for (var i=0; i < maxLength; i++) {
-	var term = firstPassTerms[i];
-
-	if (term.indexOf("AND NOT ") == 0) {
-	    terms.push("AND NOT ");
-	    terms.push(term.slice(8));
-	} else if (term.indexOf("OR ") == 0) {
-	    terms.push("OR ");
-	    terms.push(term.slice(3));
-	} else if (term.indexOf("AND ") == 0) {
-	    terms.push("AND ");
-	    terms.push(term.slice(4));
-	} else {
-	    terms.push(term);
-	}
-    } 
-    return terms; 
+	return val.split( /,\s*/ );
 }
-
 function extractLast( term ) {
-	return split( term ).pop();
+	if (typeof(term) == 'undefined') { return ""; }
+	var term = split( term ).pop();
+	var terms = term.split(/\s+/);
+	while(terms[0] == "") { terms.shift(); }
+	if(terms.length > 0) {
+		if(terms[0] == "AND" || terms[0] == "OR") {
+			terms.shift();
+		}
+		if(terms.length > 0 && terms[0] == "NOT") {
+			terms.shift();
+		}
+	}
+	if(terms.length > 0) {
+		return terms.join(" ");
+	} else {
+		return "";
+	}
 }
 
 $(function(){
@@ -72,25 +64,36 @@ $(function(){
 	// this section resets how tabbing works, so that it allows multiple autocomplete selections
 	// NOTE: the ID of the phenotypes search box must be "phenotypes"
 	var phenotypesAC = $( "#phenotypes" ).bind( "keydown", function( event ) {
-		if ( event.keyCode === $.ui.keyCode.TAB &&
-				$( this ).data( "ui-autocomplete" ).menu.active ) {
+		if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {
 			event.preventDefault();
+		}
+	})
+	.bind("keyup", function(event) {
+		if ( extractLast(this.value).length < 2) {
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-2) == "\" ") {
+			// And a comma after the end of a quote
+			this.value = [this.value.slice(0, this.value.length -2), '",', ' '].join('');
+			$(".ui-autocomplete").hide();
 		}
 	})
 	// this section set the jquery UI autocomplete feature
 	.autocomplete({
 	source: function( request, response ) {
-		$.ajax({
-			url: phenotypesACUrl+extractLast( request.term ),
-			dataType: "json",
-			success: function( data ) {
-				response($.map(data["summaryRows"], function( item ) {
-					// this function handles the json response.
-					// we redefine the data format we will use in the render functions
-					return {label: item.termId, formattedTerm: item.formattedTerm};
-				}));
-			}
-		});
+		if(extractLast(request.term).length >= 2) {
+			$.ajax({
+				url: phenotypesACUrl+extractLast( request.term ),
+				dataType: "json",
+				success: function( data ) {
+					response($.map(data["summaryRows"], function( item ) {
+						// this function handles the json response.
+						// we redefine the data format we will use in the render functions
+						return {label: item.termId, formattedTerm: item.formattedTerm};
+					}));
+				}
+			});
+		}
 	},
 	focus: function() {
 		// prevent value inserted on focus
@@ -101,15 +104,23 @@ $(function(){
 		// the select function is called when user selects an item
 		var terms = split( this.value );
 		// remove the current input
-		terms.pop();
+		var oldterm = terms.pop();
+		var oldterms = oldterm.split(/\s+/);
+		while(oldterms[0] == "") { oldterms.shift(); }
+		if(oldterms.length >= 1 && (oldterms[0] == "AND" || oldterms[0] == "OR")) {
+			oldterm = oldterms.shift();
+			terms.push(oldterm);
+		}
+		if(oldterms.length >= 1 && oldterms[0] == "NOT") {
+			oldterm = oldterms.shift();
+			terms.push(oldterm);
+		}
+
 		// add the selected item
 		terms.push( ui.item.value );
 		// add placeholder to get the comma-and-space at the end
 		terms.push( "" );
 		this.value = terms.join( ", " );
-
-		// replace any extra commas
-		this.value = this.value.replace("AND , ", "AND ");
 		return false;
 	}
 	}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
