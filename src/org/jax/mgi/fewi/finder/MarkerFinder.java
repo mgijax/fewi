@@ -76,7 +76,7 @@ public class MarkerFinder {
     public SearchResults<Marker> getMarkerByID(String id) 
     {
         SearchParams searchParams = new SearchParams();
-        searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.OP_EQUAL));
+        searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.Operator.OP_EQUAL));
         return getMarkerByID(searchParams);
     }
     

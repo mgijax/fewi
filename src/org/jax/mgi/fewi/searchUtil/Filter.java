@@ -20,13 +20,13 @@ public class Filter {
 	protected List<String> values = new ArrayList<String>();
 
 	// The type of comparison
-	protected int operator;
+	protected Operator operator = Operator.OP_EQUAL;
 
 	// List of filters, indicating this is a filter containing nested filters
 	protected List<Filter> nestedFilters = new ArrayList<Filter>();
 
 	// The type of comparison to use for joining nested filters
-	protected int filterJoinClause;
+	protected JoinClause filterJoinClause = JoinClause.FC_OR;
 	
 	protected boolean negate=false;
 
@@ -45,13 +45,13 @@ public class Filter {
 	public Filter(String property, String value) {
 		this.property = property;
 		values.add(value);
-		this.operator = OP_EQUAL;
+		this.operator = Operator.OP_EQUAL;
 	}
 
 	/**
 	 * Creates a basic filter; supply property/value/operator
 	 */
-	public Filter(String property, String value, int operator) {
+	public Filter(String property, String value, Operator operator) {
 		this.property = property;
 		values.add(value);
 		this.operator = operator;
@@ -60,7 +60,7 @@ public class Filter {
 	/**
 	 * Creates a basic filter; supply property/value/operator
 	 */
-	public Filter(String property,Integer value, int operator)
+	public Filter(String property,Integer value, Operator operator)
 	{
 		this.property = property;
 		values.add(value.toString());
@@ -70,52 +70,11 @@ public class Filter {
 	/**
 	 * Creates a basic filter; supply property, valueList, and operator
 	 */
-	public Filter(String property, List<String> values, int operator) {
+	public Filter(String property, List<String> values, Operator operator) {
 		this.property = property;
 		this.values = values;
 		this.operator = operator;
 	}
-
-
-    //////////////////////////////////////////////////////////////////////////
-    //  CONSTANTS
-    //////////////////////////////////////////////////////////////////////////
-
-	// basic operators
-	public static final int
-		OP_EQUAL = 0,
-		OP_NOT_EQUAL = 1,
-		OP_LESS_THAN = 2,
-		OP_GREATER_THAN = 3,
-		OP_LESS_OR_EQUAL = 4,
-		OP_GREATER_OR_EQUAL = 5,
-		OP_LIKE = 6,
-		OP_NULL = 7,
-		OP_NOT_NULL = 8,
-	    OP_BEGINS = 9,
-	    OP_ENDS = 10,
-	    OP_CONTAINS = 11,
-	    OP_HAS_WORD = 12,
-	    OP_WORD_BEGINS = 13,
-	    OP_NOT_HAS = 14;
-
-	/*
-	 *  advanced operators
-	 *  
-	 *  Some of these are only subtley different from those above.
-	 *  	When in doubt, use one of the basic operators
-	 */
-	public static final int
-		OP_GREEDY_BEGINS = 99,
-		OP_IN = 100,
-		OP_NOT_IN = 101,
-		OP_STRING_CONTAINS = 102;
-
-	// operators for nested filters
-	public static final int
-		FC_AND = 1000,
-		FC_OR = 1001;
-
 
     //////////////////////////////////////////////////////////////////////////
     //  BASIC ACCESSORS
@@ -147,10 +106,10 @@ public class Filter {
 	}
 
 	// operator
-	public int getOperator() {
+	public Operator getOperator() {
 		return operator;
 	}
-	public void setOperator(int operator) {
+	public void setOperator(Operator operator) {
 		this.operator = operator;
 	}
 	
@@ -169,17 +128,17 @@ public class Filter {
 		this.nestedFilters = nestedFilters;
 	}
 	
-	public void setNestedFilters(List<Filter> nestedFilters, int filterJoinClause)
+	public void setNestedFilters(List<Filter> nestedFilters, JoinClause filterJoinClause)
 	{
 		this.nestedFilters = nestedFilters;
 		this.filterJoinClause = filterJoinClause;
 	}
 
 	// filter join clause
-	public int getFilterJoinClause() {
+	public JoinClause getFilterJoinClause() {
 		return filterJoinClause;
 	}
-	public void setFilterJoinClause(int filterJoinClause) {
+	public void setFilterJoinClause(JoinClause filterJoinClause) {
 		this.filterJoinClause = filterJoinClause;
 	}
 
@@ -198,12 +157,7 @@ public class Filter {
 	}
 
 	public boolean isBasicFilter() {
-
-		boolean isBasic = true;
-		if (nestedFilters!=null && !nestedFilters.isEmpty()) {
-			isBasic = false;
-		}
-		return isBasic;
+		return (nestedFilters==null || nestedFilters.isEmpty());
 	}
 
     //////////////////////////////////////////////////////////////////////////
@@ -215,63 +169,63 @@ public class Filter {
 	 * Create a new Filter using the == operator.
 	 */
 	public static Filter equal(String property, String value) {
-		return new Filter(property, value, OP_EQUAL);
+		return new Filter(property, value, Operator.OP_EQUAL);
 	}
 
 	/**
 	 * Create a new Filter using the != operator.
 	 */
 	public static Filter notEqual(String property, String value) {
-		return new Filter(property, value, OP_NOT_EQUAL);
+		return new Filter(property, value, Operator.OP_NOT_EQUAL);
 	}
 
 	/**
 	 * Create a new Filter using the < operator.
 	 */
 	public static Filter lessThan(String property, String value) {
-		return new Filter(property, value, OP_LESS_THAN);
+		return new Filter(property, value, Operator.OP_LESS_THAN);
 	}
 
 	/**
 	 * Create a new Filter using the > operator.
 	 */
 	public static Filter greaterThan(String property, String value) {
-		return new Filter(property, value, OP_GREATER_THAN);
+		return new Filter(property, value, Operator.OP_GREATER_THAN);
 	}
 
 	/**
 	 * Create a new Filter using the <= operator.
 	 */
 	public static Filter lessOrEqual(String property, String value) {
-		return new Filter(property, value, OP_LESS_OR_EQUAL);
+		return new Filter(property, value, Operator.OP_LESS_OR_EQUAL);
 	}
 
 	/**
 	 * Create a new Filter using the >= operator.
 	 */
 	public static Filter greaterOrEqual(String property, String value) {
-		return new Filter(property, value, OP_GREATER_OR_EQUAL);
+		return new Filter(property, value, Operator.OP_GREATER_OR_EQUAL);
 	}
 
 	/**
 	 * Create a new Filter using the IN operator.
 	 */
 	public static Filter in(String property, List<String> values) {
-		return new Filter(property, values, OP_IN);
+		return new Filter(property, values, Operator.OP_IN);
 	}
 
 	/**
 	 * Create a new Filter using the NOT IN operator.
 	 */
 	public static Filter notIn(String property, List<String> values) {
-		return new Filter(property, values, OP_NOT_IN);
+		return new Filter(property, values, Operator.OP_NOT_IN);
 	}
 
 	/**
 	 * Create a new Filter using the LIKE operator.
 	 */
 	public static Filter like(String property, String value) {
-		return new Filter(property, value, OP_LIKE);
+		return new Filter(property, value, Operator.OP_LIKE);
 	}
 
 	/**
@@ -280,7 +234,7 @@ public class Filter {
 	 */
 	public static Filter and(List<Filter> filters) {
 		Filter filter = new Filter();
-		filter.setFilterJoinClause(FC_AND);
+		filter.setFilterJoinClause(JoinClause.FC_AND);
 		filter.setNestedFilters(filters);
 		return filter;
 	}
@@ -291,7 +245,7 @@ public class Filter {
 	 */
 	public static Filter or(List<Filter> filters) {
 		Filter filter = new Filter();
-		filter.setFilterJoinClause(FC_OR);
+		filter.setFilterJoinClause(JoinClause.FC_OR);
 		filter.setNestedFilters(filters);
 		return filter;
 	}
@@ -304,7 +258,7 @@ public class Filter {
 
         String returnString = new String();
 
-        if (this.isBasicFilter()) {
+        if (isBasicFilter()) {
 
             StringBuffer valueStrings = new StringBuffer();
             Iterator<String> valueIter = values.iterator();
@@ -313,9 +267,7 @@ public class Filter {
               valueStrings.append(valueIter.next());
             }
 
-            returnString = "Filter-["
-				+ "property=" + property + " : "
-				+ "values=" + valueStrings + "] ";
+            returnString = "Filter-[" + "property=" + property + " " + operator.getName() + " " + "values=" + valueStrings + "] ";
         }
         else {
 
@@ -346,13 +298,10 @@ public class Filter {
 		replaceProperty(this,propertyToReplace,replacement);
 	}
 	// the necessary recursive function
-	private void replaceProperty(Filter f,String propertyToReplace,String replacement)
-	{
+	private void replaceProperty(Filter f,String propertyToReplace,String replacement) {
 		if(f.property != null && f.property.equals(propertyToReplace)) f.setProperty(replacement);
-		if(f.getNestedFilters()!=null)
-		{
-			for(Filter nestedF : f.getNestedFilters())
-			{
+		if(f.getNestedFilters()!=null) {
+			for(Filter nestedF : f.getNestedFilters()) {
 				replaceProperty(nestedF,propertyToReplace,replacement);
 			}
 		}
@@ -363,26 +312,65 @@ public class Filter {
 	}
 
 	public String getOperatorString() {
-		if(operator == Filter.OP_BEGINS) return "BEGINS";
-		else if(operator == Filter.OP_CONTAINS) return "CONTAINS";
-		else if(operator == Filter.OP_ENDS) return "ENDS";
-		else if(operator == Filter.OP_EQUAL) return "=";
-		else if(operator == Filter.OP_GREATER_OR_EQUAL) return ">=";
-		else if(operator == Filter.OP_GREATER_THAN) return ">";
-		else if(operator == Filter.OP_GREEDY_BEGINS) return "GREEDY BEGINS";
-		else if(operator == Filter.OP_HAS_WORD) return "HAS WORD";
-		else if(operator == Filter.OP_IN) return "IN";
-		else if(operator == Filter.OP_LESS_OR_EQUAL) return "<=";
-		else if(operator == Filter.OP_LESS_THAN) return "<";
-		else if(operator == Filter.OP_LIKE) return "LIKE";
-		else if(operator == Filter.OP_NOT_EQUAL) return "!=";
-		else if(operator == Filter.OP_NOT_HAS) return "!HAS";
-		else if(operator == Filter.OP_NOT_IN) return "!IN";
-		else if(operator == Filter.OP_NOT_NULL) return "!NULL";
-		else if(operator == Filter.OP_NULL) return "NULL";
-		else if(operator == Filter.OP_STRING_CONTAINS) return "STRING CONTAINS";
-		else if(operator == Filter.OP_WORD_BEGINS) return "WORD BEGINS";
-		else return operator + "";
+		return operator.getName();
+	}
+	
+	public enum JoinClause {
+		FC_AND(1000, "AND"),
+		FC_OR(1001, "OR")
+		;
+		
+		private int	id = 0;
+		private String name = "";
 
+		JoinClause(int id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		public String getName() {
+			return name;
+		}
+	}
+	
+	public enum Operator {
+		OP_EQUAL(0, "="),
+		OP_NOT_EQUAL(1, "!="),
+		OP_LESS_THAN(2, "<"),
+		OP_GREATER_THAN(3, ">"),
+		OP_LESS_OR_EQUAL(4, "<="),
+		OP_GREATER_OR_EQUAL(5, ">="),
+		OP_LIKE(6, "LIKE"),
+		OP_NULL(7, "NULL"),
+		OP_NOT_NULL(8, "!NULL"),
+	    OP_BEGINS(9, "BIGINS"),
+	    OP_ENDS(10, "ENDS"),
+	    OP_CONTAINS(11, "CONTAINS"),
+	    OP_HAS_WORD(12, "HAS WORD"),
+	    OP_WORD_BEGINS(13, "WORD BEGINS"),
+	    OP_NOT_HAS(14, "!HAS"),
+	    OP_GREEDY_BEGINS(99, "GREEDY BEGIN"),
+		OP_IN(100, "IN"),
+		OP_NOT_IN(101, "!IN"),
+		OP_STRING_CONTAINS(102, "STRING CONTAINS")
+	    ;
+		
+		private int	id = 0;
+		private String name = "";
+
+		Operator(int id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		public String getName() {
+			return name;
+		}
 	}
 }

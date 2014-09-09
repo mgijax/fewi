@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.propertyMapper;
 
 import java.util.ArrayList;
 
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
+
 /**
  * The SolrPropertyMapper class handles the mapping of operators being passed in from the 
  * hunter, and mapping them specifically to Solr. 
@@ -29,7 +31,7 @@ public class SolrReferenceTextSearchPropertyMapper extends SolrPropertyMapper
 	}
 
 	@Override
-    public String getClause(String value, int operand) {
+    public String getClause(String value, Operator operand) {
 
         Boolean flag = Boolean.FALSE;
         Boolean tempFlag = Boolean.FALSE;

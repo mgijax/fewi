@@ -531,13 +531,13 @@ public class ReferenceController {
 		if(diseaseRelevantMarkerId != null && !diseaseRelevantMarkerId.equals(""))
 		{
 			queryList.add(new Filter(IndexConstants.REF_DISEASE_RELEVANT_MARKER_ID,
-					diseaseRelevantMarkerId,Filter.OP_EQUAL));
+					diseaseRelevantMarkerId,Filter.Operator.OP_EQUAL));
 		}
 		
 		String diseaseId = query.getDiseaseId();
 		if(diseaseId != null && !diseaseId.equals(""))
 		{
-			queryList.add(new Filter(IndexConstants.REF_DISEASE_ID,diseaseId,Filter.OP_EQUAL));
+			queryList.add(new Filter(IndexConstants.REF_DISEASE_ID,diseaseId,Filter.Operator.OP_EQUAL));
 		}
 		
 		//build author query filter
@@ -550,13 +550,13 @@ public class ReferenceController {
 			
 			if ("first".equals(scope)){
 				queryList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST, 
-						authors, Filter.OP_IN));
+						authors, Filter.Operator.OP_IN));
 			} else if ("last".equals(scope)){
 				queryList.add(new Filter(SearchConstants.REF_AUTHOR_LAST, 
-						authors, Filter.OP_IN));
+						authors, Filter.Operator.OP_IN));
 			} else {
 				queryList.add(new Filter(SearchConstants.REF_AUTHOR_ANY, 
-						authors, Filter.OP_IN));
+						authors, Filter.Operator.OP_IN));
 			}
 		}
 
@@ -567,7 +567,7 @@ public class ReferenceController {
 			List<String> journals = this.parseList(journalText, ";");
 
 			queryList.add(new Filter(SearchConstants.REF_JOURNAL, 
-					journals, Filter.OP_IN));
+					journals, Filter.Operator.OP_IN));
 		}
 		
 		// build year query filter
@@ -602,9 +602,9 @@ public class ReferenceController {
 							years.set(1, one.toString());
 						}
 						queryList.add(new Filter(SearchConstants.REF_YEAR, 
-								years.get(0), Filter.OP_GREATER_OR_EQUAL));
+								years.get(0), Filter.Operator.OP_GREATER_OR_EQUAL));
 						queryList.add(new Filter(SearchConstants.REF_YEAR, 
-								years.get(1), Filter.OP_LESS_OR_EQUAL));
+								years.get(1), Filter.Operator.OP_LESS_OR_EQUAL));
 					} catch (NumberFormatException nfe){
 						result.addError(
 								new FieldError("referenceQueryForm", 
@@ -621,10 +621,10 @@ public class ReferenceController {
 					} else {
 						if (rangeLoc == 0){
 							queryList.add(new Filter(SearchConstants.REF_YEAR, 
-									years.get(0), Filter.OP_LESS_OR_EQUAL));
+									years.get(0), Filter.Operator.OP_LESS_OR_EQUAL));
 						} else {
 							queryList.add(new Filter(SearchConstants.REF_YEAR, 
-									years.get(0), Filter.OP_GREATER_OR_EQUAL));
+									years.get(0), Filter.Operator.OP_GREATER_OR_EQUAL));
 						}
 					}
 				}
@@ -641,7 +641,7 @@ public class ReferenceController {
 					}
 					
 					queryList.add(new Filter(SearchConstants.REF_YEAR, 
-							year, Filter.OP_EQUAL));
+							year, Filter.Operator.OP_EQUAL));
 				} catch (NumberFormatException nfe){
 					result.addError(
 							new FieldError("referenceQueryForm", 
@@ -659,16 +659,16 @@ public class ReferenceController {
 
 			if(query.isInAbstract()){
 				textFilters.add(new Filter(SearchConstants.REF_TEXT_ABSTRACT, 
-						textField, Filter.OP_CONTAINS));
+						textField, Filter.Operator.OP_CONTAINS));
 			}
 			if(query.isInTitle()){
 				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE, 
-						textField, Filter.OP_CONTAINS));
+						textField, Filter.Operator.OP_CONTAINS));
 			}
 			if (textFilters.size() == 1) {
 				queryList.add(textFilters.get(0));
 			} else {
-				tf.setFilterJoinClause(Filter.FC_OR);
+				tf.setFilterJoinClause(Filter.JoinClause.FC_OR);
 				tf.setNestedFilters(textFilters);
 				queryList.add(tf);
 			}
@@ -681,21 +681,21 @@ public class ReferenceController {
 		if (query.getSeqKey() != null){
 			logger.info("set seqKey filter");
 			queryList.add(new Filter(SearchConstants.SEQ_KEY, 
-					query.getSeqKey().toString(), Filter.OP_EQUAL));
+					query.getSeqKey().toString(), Filter.Operator.OP_EQUAL));
 		}
 		
 		// build allele key query filter
 		if (query.getAlleleKey() != null){
 			logger.info("set alleleKey filter");
 			queryList.add(new Filter(SearchConstants.ALL_KEY, 
-					query.getAlleleKey().toString(), Filter.OP_EQUAL));
+					query.getAlleleKey().toString(), Filter.Operator.OP_EQUAL));
 		}
 		
 		// build allele key query filter
 		if (query.getMarkerKey() != null){
 			logger.info("set alleleKey filter");
 			queryList.add(new Filter(SearchConstants.MRK_KEY, 
-					query.getMarkerKey().toString(), Filter.OP_EQUAL));
+					query.getMarkerKey().toString(), Filter.Operator.OP_EQUAL));
 		}
 		
 		// process facet filters.  these filters are added to facetList as they 
@@ -705,12 +705,12 @@ public class ReferenceController {
 		// build author facet query filter
 		if(query.getAuthorFilter().size() > 0){
 			facetList.add(new Filter(FacetConstants.REF_AUTHORS, 
-					query.getAuthorFilter(), Filter.OP_IN));
+					query.getAuthorFilter(), Filter.Operator.OP_IN));
 		}
 		// build journal facet query filter
 		if (query.getJournalFilter().size() > 0){
 			facetList.add(new Filter(FacetConstants.REF_JOURNALS, 
-					query.getJournalFilter(), Filter.OP_IN));
+					query.getJournalFilter(), Filter.Operator.OP_IN));
 		}
 		// build year facet query filter
 		if (query.getYearFilter().size() > 0){
@@ -719,7 +719,7 @@ public class ReferenceController {
 				years.add(String.valueOf(yearString));
 			}
 			facetList.add(new Filter(FacetConstants.REF_YEAR, 
-					years, Filter.OP_IN));
+					years, Filter.Operator.OP_IN));
 		}
 		// build curated data facet query filter
 		if (query.getDataFilter().size() > 0){
@@ -729,7 +729,7 @@ public class ReferenceController {
 				selections.add(filter.replaceAll("\\*", ","));
 			}
 			facetList.add(new Filter(FacetConstants.REF_CURATED_DATA, 
-					selections, Filter.OP_IN));
+					selections, Filter.Operator.OP_IN));
 		}
 		
 		logger.debug("build params");
@@ -748,7 +748,7 @@ public class ReferenceController {
 								"* Invalid with other parameters"));
 			} else {
 				Filter f = new Filter();
-				f.setFilterJoinClause(Filter.FC_AND);
+				f.setFilterJoinClause(Filter.JoinClause.FC_AND);
 				queryList.addAll(facetList);
 				f.setNestedFilters(queryList);
 				return f;
@@ -765,9 +765,9 @@ public class ReferenceController {
 			}
 
 			facetList.add(new Filter(SearchConstants.REF_ID, 
-					cleanIds, Filter.OP_IN));
+					cleanIds, Filter.Operator.OP_IN));
 			Filter f = new Filter();
-			f.setFilterJoinClause(Filter.FC_AND);
+			f.setFilterJoinClause(Filter.JoinClause.FC_AND);
 			f.setNestedFilters(facetList);
 			return f;
 		} else {

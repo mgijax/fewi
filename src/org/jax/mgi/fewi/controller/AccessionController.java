@@ -315,7 +315,7 @@ public class AccessionController {
         // There can ONLY be accession at present, add it in.
         if (accId != null && !"".equals(accId.trim())) {
         	accId = accId.trim().toLowerCase();
-            return new Filter(SearchConstants.ACC_ID, accId.trim(), Filter.OP_EQUAL);
+            return new Filter(SearchConstants.ACC_ID, accId.trim(), Filter.Operator.OP_EQUAL);
         }
         return new Filter();
     }

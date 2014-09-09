@@ -770,7 +770,7 @@ public class GXDLitController {
         String termId = query.getTermId();
         if(termId!=null && !termId.equals(""))
         {
-        	filterList.add(new Filter(IndexConstants.MRK_TERM_ID,termId,Filter.OP_EQUAL));
+        	filterList.add(new Filter(IndexConstants.MRK_TERM_ID,termId,Filter.Operator.OP_EQUAL));
         	// COMMENTING OUT THIS STRATEGY, BECAUSE IT IS SLOW AND TIES UP SOLR's RESOURCES
 //        	// In order to do get the marker IDs associated with a termID search, we will have to 
 //			// query the marker index and iterate the markers
@@ -814,7 +814,7 @@ public class GXDLitController {
         String markerId = query.getMarkerId();
         if(markerId!=null && !markerId.equals(""))
         {
-        	filterList.add(new Filter(SearchConstants.MRK_ID,markerId,Filter.OP_EQUAL));
+        	filterList.add(new Filter(SearchConstants.MRK_ID,markerId,Filter.Operator.OP_EQUAL));
         }
 //       WE REMOVED THIS SECTION TO BRING IN LINE WITH 5.x GXD FORM QUERYING
 //		 THIS CODE REMAINS AS A REFERENCE IN CASE WE MISSED SOMETHING
@@ -909,11 +909,11 @@ public class GXDLitController {
         		{
         			ageAssayTypeFilters.add(new Filter(IndexConstants.GXD_LIT_AGE_ASSAY_TYPE_PAIR,
         					age+"-"+assayType,
-        					Filter.OP_EQUAL));
+        					Filter.Operator.OP_EQUAL));
         		}
         	}
         	Filter tf = new Filter();
-			tf.setFilterJoinClause(Filter.FC_OR);
+			tf.setFilterJoinClause(Filter.JoinClause.FC_OR);
 			tf.setNestedFilters(ageAssayTypeFilters);
 			filterList.add(tf);
         }
@@ -924,10 +924,10 @@ public class GXDLitController {
 	
 		        for (String age: ageList) {
 		        	ageFilters.add(new Filter (SearchConstants.GXD_LIT_AGE , age,
-			                Filter.OP_EQUAL));
+			                Filter.Operator.OP_EQUAL));
 		        }
 				Filter tf = new Filter();
-				tf.setFilterJoinClause(Filter.FC_OR);
+				tf.setFilterJoinClause(Filter.JoinClause.FC_OR);
 				tf.setNestedFilters(ageFilters);
 				filterList.add(tf);
 	        }
@@ -936,10 +936,10 @@ public class GXDLitController {
 	
 	    	        for (String assayType: assayTypeList) {
     		        	assayTypeFilters.add(new Filter (SearchConstants.GXD_LIT_ASSAY_TYPE , assayType,
-    			                Filter.OP_EQUAL));
+    			                Filter.Operator.OP_EQUAL));
 	    	        }
 					Filter tf = new Filter();
-					tf.setFilterJoinClause(Filter.FC_OR);
+					tf.setFilterJoinClause(Filter.JoinClause.FC_OR);
 					tf.setNestedFilters(assayTypeFilters);
 					filterList.add(tf);
 	    	}
@@ -955,13 +955,13 @@ public class GXDLitController {
 
 			if ("first".equals(scope)){
 				filterList.add(new Filter(SearchConstants.REF_AUTHOR_FIRST,
-						authors, Filter.OP_IN));
+						authors, Filter.Operator.OP_IN));
 			} else if ("last".equals(scope)){
 				filterList.add(new Filter(SearchConstants.REF_AUTHOR_LAST,
-						authors, Filter.OP_IN));
+						authors, Filter.Operator.OP_IN));
 			} else {
 				filterList.add(new Filter(SearchConstants.REF_AUTHOR_ANY,
-						authors, Filter.OP_IN));
+						authors, Filter.Operator.OP_IN));
 			}
 		}
 
@@ -971,7 +971,7 @@ public class GXDLitController {
 			List<String> journals = this.parseList(query.getJournal().trim(), ";");
 
 			filterList.add(new Filter(SearchConstants.REF_JOURNAL,
-					journals, Filter.OP_IN));
+					journals, Filter.Operator.OP_IN));
 		}
 
 
@@ -993,23 +993,23 @@ public class GXDLitController {
 						years.set(1, one.toString());
 					}
 					filterList.add(new Filter(SearchConstants.REF_YEAR,
-							years.get(0), Filter.OP_GREATER_OR_EQUAL));
+							years.get(0), Filter.Operator.OP_GREATER_OR_EQUAL));
 					filterList.add(new Filter(SearchConstants.REF_YEAR,
-							years.get(1), Filter.OP_LESS_OR_EQUAL));
+							years.get(1), Filter.Operator.OP_LESS_OR_EQUAL));
 				} else {
 					if (rangeLoc == 0){
 						logger.debug("year <= " + years.get(0));
 						filterList.add(new Filter(SearchConstants.REF_YEAR,
-								years.get(0), Filter.OP_LESS_OR_EQUAL));
+								years.get(0), Filter.Operator.OP_LESS_OR_EQUAL));
 					} else {
 						logger.debug("year >= " + years.get(0));
 						filterList.add(new Filter(SearchConstants.REF_YEAR,
-								years.get(0), Filter.OP_GREATER_OR_EQUAL));
+								years.get(0), Filter.Operator.OP_GREATER_OR_EQUAL));
 					}
 				}
 			} else {
 				filterList.add(new Filter(SearchConstants.REF_YEAR,
-						year, Filter.OP_EQUAL));
+						year, Filter.Operator.OP_EQUAL));
 			}
 		}
 
@@ -1021,16 +1021,16 @@ public class GXDLitController {
 			String text = query.getText();
 			if(query.isInAbstract()){
 				textFilters.add(new Filter(SearchConstants.REF_TEXT_ABSTRACT,
-						text, Filter.OP_CONTAINS));
+						text, Filter.Operator.OP_CONTAINS));
 			}
 			if(query.isInTitle()){
 				textFilters.add(new Filter(SearchConstants.REF_TEXT_TITLE,
-						text, Filter.OP_CONTAINS));
+						text, Filter.Operator.OP_CONTAINS));
 			}
 			if (textFilters.size() == 1) {
 				filterList.add(textFilters.get(0));
 			} else {
-				tf.setFilterJoinClause(Filter.FC_OR);
+				tf.setFilterJoinClause(Filter.JoinClause.FC_OR);
 				tf.setNestedFilters(textFilters);
 				filterList.add(tf);
 			}
@@ -1038,26 +1038,26 @@ public class GXDLitController {
 
 		// Reference Key Filter
 		if (query.getReference_key() != null && !query.getReference_key().equals("")) {
-			Filter rkf = new Filter(SearchConstants.REF_KEY, "" + query.getReference_key(), Filter.OP_EQUAL);
+			Filter rkf = new Filter(SearchConstants.REF_KEY, "" + query.getReference_key(), Filter.Operator.OP_EQUAL);
 			filterList.add(rkf);
 		}
 
 		// Marker Key Filter
 		if (query.getMarker_key() != null && !query.getMarker_key().equals("")) {
-			Filter mkf = new Filter(SearchConstants.MRK_KEY, "" + query.getMarker_key(), Filter.OP_EQUAL);
+			Filter mkf = new Filter(SearchConstants.MRK_KEY, "" + query.getMarker_key(), Filter.Operator.OP_EQUAL);
 			filterList.add(mkf);
 		}
 
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
+            containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
             containerFilter.setNestedFilters(filterList);
         }
         else
         {
         	// default to a query that will bring no results back
-        	containerFilter = new Filter(IndexConstants.GXD_LIT_SINGLE_KEY,"-1",Filter.OP_EQUAL);
+        	containerFilter = new Filter(IndexConstants.GXD_LIT_SINGLE_KEY,"-1",Filter.Operator.OP_EQUAL);
         }
 
         logger.debug("Got past the filter construction.");

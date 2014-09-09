@@ -51,12 +51,12 @@ public class QueryFormOptionFinder {
 		    return searchResults;
 		}
 	
-		filterList.add(new Filter (SearchConstants.FORM_NAME, formName,Filter.OP_EQUAL) );
+		filterList.add(new Filter (SearchConstants.FORM_NAME, formName,Filter.Operator.OP_EQUAL) );
 	
-		filterList.add(new Filter (SearchConstants.FIELD_NAME, fieldName,Filter.OP_EQUAL) );
+		filterList.add(new Filter (SearchConstants.FIELD_NAME, fieldName,Filter.Operator.OP_EQUAL) );
 	
 		Filter containerFilter = new Filter();
-		containerFilter.setFilterJoinClause(Filter.FC_AND);
+		containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
 		containerFilter.setNestedFilters(filterList);
 	
 		SearchParams searchParams = new SearchParams();

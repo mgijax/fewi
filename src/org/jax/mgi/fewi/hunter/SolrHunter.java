@@ -23,6 +23,7 @@ import org.apache.solr.common.params.GroupParams;
 import org.jax.mgi.fewi.propertyMapper.SolrJoinMapper;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
 import org.jax.mgi.fewi.searchUtil.MetaData;
 import org.jax.mgi.fewi.searchUtil.ResultSetMetaData;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -93,7 +94,7 @@ public class SolrHunter<T> implements Hunter<T> {
     protected HashMap <String, SolrSortMapper> sortMap = new HashMap<String, SolrSortMapper>();
 
     // FEWI's filter comparison -> Solr's comparison operator
-    protected HashMap<Integer, String> filterClauseMap = new HashMap<Integer, String>();
+    protected HashMap<JoinClause, String> filterClauseMap = new HashMap<JoinClause, String>();
 
     /*
      *  Fields to be returned in documents.
@@ -142,8 +143,8 @@ public class SolrHunter<T> implements Hunter<T> {
         // Setup the mapping of the logical ands and or to the vendor
         // specific ones.
 
-        filterClauseMap.put(Filter.FC_AND, " AND ");
-        filterClauseMap.put(Filter.FC_OR, " OR ");
+        filterClauseMap.put(Filter.JoinClause.FC_AND, " AND ");
+        filterClauseMap.put(Filter.JoinClause.FC_OR, " OR ");
 
     }
 
@@ -363,7 +364,6 @@ public class SolrHunter<T> implements Hunter<T> {
     	SolrPropertyMapper pm;
     	if(!propertyMap.containsKey(filterProperty))
     	{
-    		logger.warn("No Solr Property Mapper for field: "+filterProperty);
     		pm = new SolrPropertyMapper(filterProperty);
     	}
     	else pm = propertyMap.get(filter.getProperty());
@@ -378,8 +378,8 @@ public class SolrHunter<T> implements Hunter<T> {
             }
 
             // If its not an IN or NOT IN, get the query clause and return it
-            if (filter.getOperator() != Filter.OP_IN
-                    && filter.getOperator() != Filter.OP_NOT_IN) 
+            if (filter.getOperator() != Filter.Operator.OP_IN
+                    && filter.getOperator() != Filter.Operator.OP_NOT_IN) 
             {
                 return pm.getClause(filter);
             }
@@ -437,9 +437,7 @@ public class SolrHunter<T> implements Hunter<T> {
             }
             // handle negating a nested filter
             String negation= filter.doNegation() ? "-" : "";
-            return negation+"(" + StringUtils.join(resultsString,
-                    filterClauseMap.get(filter.getFilterJoinClause()))
-                    + ")";
+            return negation+"(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")";
         }
     }
 

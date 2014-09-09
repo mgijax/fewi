@@ -130,7 +130,7 @@ public class SolrGxdLitSummaryHunter extends SolrHunter<GxdLitIndexRecord> {
 	        if (foundTitle && foundAbstract) {
 	            filter.setProperty(SearchConstants.REF_TEXT_TITLE_ABSTRACT);
 	            filter.setValue(textToSearch);
-	            filter.setOperator(Filter.OP_CONTAINS);
+	            filter.setOperator(Filter.Operator.OP_CONTAINS);
 	            filter.setNestedFilters(new ArrayList<Filter> ());
 	        }
 	    }

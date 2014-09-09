@@ -328,20 +328,20 @@ public class BatchController {
         
        // logger.debug("set ids");
         if (idSet.size() > 0){
-        	filterList.add(new Filter(SearchConstants.BATCH_TERM, idSet, Filter.OP_IN));
+        	filterList.add(new Filter(SearchConstants.BATCH_TERM, idSet, Filter.Operator.OP_IN));
         }
         //logger.debug("set type");
         String idType = query.getIdType();
         if (idType != null && !"".equals(idType) && !"auto".equalsIgnoreCase(idType)){
         	logger.debug(idType);
-        	filterList.add(new Filter(SearchConstants.BATCH_TYPE, query.getIdType().trim(), Filter.OP_EQUAL));
+        	filterList.add(new Filter(SearchConstants.BATCH_TYPE, query.getIdType().trim(), Filter.Operator.OP_EQUAL));
         }
         
         //logger.debug("build");
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
+            containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
             containerFilter.setNestedFilters(filterList);
         }
 

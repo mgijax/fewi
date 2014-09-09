@@ -51,7 +51,7 @@ public class FilterUtil
 
 		for(String nomenToken : nomenTokens) 
 		{
-			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
+			Filter nFilter = new Filter(property, nomenToken,Filter.Operator.OP_HAS_WORD);
 			nomenFilters.add(nFilter);
 		}
 
@@ -102,8 +102,8 @@ public class FilterUtil
     	}
     	if(start!=null && end!=null)
     	{
-			 Filter endF = new Filter(SearchConstants.START_COORD,end.toString(),Filter.OP_LESS_OR_EQUAL);
-			 Filter startF = new Filter(SearchConstants.END_COORD,start.toString(),Filter.OP_GREATER_OR_EQUAL);
+			 Filter endF = new Filter(SearchConstants.START_COORD,end.toString(),Filter.Operator.OP_LESS_OR_EQUAL);
+			 Filter startF = new Filter(SearchConstants.END_COORD,start.toString(),Filter.Operator.OP_GREATER_OR_EQUAL);
 			 return Filter.and(Arrays.asList(endF,startF));
     	}
     	else
@@ -143,8 +143,8 @@ public class FilterUtil
 		}
 		if(start!=null && end!=null)
 		{
-			 Filter endF = new Filter(SearchConstants.CM_OFFSET,end.toString(),Filter.OP_LESS_OR_EQUAL);
-			 Filter startF = new Filter(SearchConstants.CM_OFFSET,start.toString(),Filter.OP_GREATER_OR_EQUAL);
+			 Filter endF = new Filter(SearchConstants.CM_OFFSET,end.toString(),Filter.Operator.OP_LESS_OR_EQUAL);
+			 Filter startF = new Filter(SearchConstants.CM_OFFSET,start.toString(),Filter.Operator.OP_GREATER_OR_EQUAL);
 			 return Filter.and(Arrays.asList(endF,startF));
 		}
 		else

@@ -1,6 +1,7 @@
 package org.jax.mgi.fewi.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,6 +56,7 @@ import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -345,11 +347,11 @@ public class DiseasePortalController
       	ModelAndView mav = new ModelAndView("disease_portal_grid");
 
       	// search for grid cluster objects
-      	SearchResults<SolrHdpGridCluster> searchResults = this.getGridClusters(request, query, page,session);
+      	SearchResults<SolrHdpGridCluster> searchResults = getGridClusters(request, query, page,session);
       	List<SolrHdpGridCluster> gridClusters = searchResults.getResultObjects();
 
       	// search for diseases in result set - make column headers and ID list
-      	SearchResults<SolrString> diseaseNamesResults = this.getGridDiseaseColumns(request, query,session);
+      	SearchResults<SolrString> diseaseNamesResults = getGridDiseaseColumns(request, query,session);
       	List<String> diseaseNames = new ArrayList<String>();
       	for(SolrString ss : diseaseNamesResults.getResultObjects())
       	{
@@ -362,23 +364,23 @@ public class DiseasePortalController
 		for(String disease : diseaseNames)
 		{
 			String headerText = disease;
-			diseaseColumnsToDisplay.add(this.getRotatedTextImgTag(headerText));
+			diseaseColumnsToDisplay.add(getRotatedTextImgTag(headerText));
 			//diseaseIds.add(vt.getPrimaryId());
 			//diseaseNames.add(disease);
 		}
 
       	// search for mp headers in result set & make column headers
-      	List<String> mpHeaders = this.getGridMpHeaderColumns(request,query,session);
+      	List<String> mpHeaders = getGridMpHeaderColumns(request,query,session);
       	List<String> mpHeaderColumnsToDisplay = new ArrayList<String>();
 		for(String mpHeader : mpHeaders)
 		{
-			mpHeaderColumnsToDisplay.add(this.getRotatedTextImgTag(mpHeader));
+			mpHeaderColumnsToDisplay.add(getRotatedTextImgTag(mpHeader));
 		}
 
 		logger.info("diseasePortal/grid -> querying solr for grid data");
       	// Search for the genotype clusters used to generate the result set
       	// and save as map for later
-      	List<SolrHdpGridData> annotationsInResults = this.getAnnotationsInResults(query,searchResults.getResultKeys(),session);
+      	List<SolrHdpGridData> annotationsInResults = getAnnotationsInResults(query,searchResults.getResultKeys(),session);
         Map<Integer,List<SolrHdpGridData>> gridClusterToMPResults = new HashMap<Integer,List<SolrHdpGridData>>();
         Map<Integer,List<SolrHdpGridData>> gridClusterToDiseaseResults = new HashMap<Integer,List<SolrHdpGridData>>();
 
@@ -464,14 +466,14 @@ public class DiseasePortalController
       HttpServletRequest request,
       HttpServletResponse response,
       HttpSession session,
-      @ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
+      @ModelAttribute DiseasePortalQueryForm query)
     {
     	logger.debug("->gridSystemCell started");
 
     	String gridClusterString = getGridClusterTitleForPopup(query.getGridClusterKey());
 
     	// get the geno cluster rows
-        SearchResults<HdpGenoCluster> searchResults = this.getGenoClusters(request, query,session);
+        SearchResults<HdpGenoCluster> searchResults = getGenoClusters(request, query,session);
         List<HdpGenoCluster> genoClusters = searchResults.getResultObjects();
     	//logger.debug("->gridSystemCell; number of genoClusters=" + genoClusters.size());
 
@@ -487,7 +489,7 @@ public class DiseasePortalController
     	//logger.debug("->markersInImsr=" + markersInImsr.size());
 
         // get the mp term columns
-    	List<SolrVocTerm> mpTerms = this.getGridMpTermColumns(request,query,session);
+    	List<SolrVocTerm> mpTerms = getGridMpTermColumns(request,query,session);
       	List<String> mpTermColumnsToDisplay = new ArrayList<String>();
 		List<String> termColIds = new ArrayList<String>();
 		List<String> termColNames = new ArrayList<String>(); // needed to automated tests
@@ -495,7 +497,7 @@ public class DiseasePortalController
 		for(SolrVocTerm mpTerm : mpTerms)
 		{
 			// use 30 max characters for the popup
-			mpTermColumnsToDisplay.add(this.getRotatedTextImgTag(mpTerm.getTerm(),30));
+			mpTermColumnsToDisplay.add(getRotatedTextImgTag(mpTerm.getTerm(),30));
 			termColIds.add(mpTerm.getPrimaryId());
 			termColNames.add(mpTerm.getTerm());
 		}
@@ -534,14 +536,14 @@ public class DiseasePortalController
       HttpServletRequest request,
       HttpServletResponse response,
       HttpSession session,
-      @ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
+      @ModelAttribute DiseasePortalQueryForm query)
     {
     	logger.debug("->gridDiseaseCell started");
 
     	String gridClusterString = getGridClusterTitle(query.getGridClusterKey(),true);
 
     	// gather the geno cluster rows
-        SearchResults<HdpGenoCluster> searchResults = this.getGenoClusters(request, query,session);
+        SearchResults<HdpGenoCluster> searchResults = getGenoClusters(request, query,session);
         List<HdpGenoCluster> genoClusters = searchResults.getResultObjects();
 
         // get unique list of markers in IMSR
@@ -556,7 +558,7 @@ public class DiseasePortalController
     	//logger.debug("->markersInImsr=" + markersInImsr.size());
 
         // gather the disease columns
-    	List<SolrVocTerm> diseaseTerms = this.getGridDiseaseTermColumns(request,query,session);
+    	List<SolrVocTerm> diseaseTerms = getGridDiseaseTermColumns(request,query,session);
       	List<String> diseaseTermColumnsToDisplay = new ArrayList<String>();
 		List<String> termColIds = new ArrayList<String>();
 		List<String> termColNames = new ArrayList<String>(); // needed to automated tests
@@ -564,7 +566,7 @@ public class DiseasePortalController
 		for(SolrVocTerm diseaseTerm : diseaseTerms)
 		{
 			// use 30 max characters for the popup
-			diseaseTermColumnsToDisplay.add(this.getRotatedTextImgTag(diseaseTerm.getTerm(),30));
+			diseaseTermColumnsToDisplay.add(getRotatedTextImgTag(diseaseTerm.getTerm(),30));
 			termColIds.add(diseaseTerm.getPrimaryId());
 			termColNames.add(diseaseTerm.getTerm());
 		}
@@ -582,9 +584,9 @@ public class DiseasePortalController
 		}
 
 		// get the human marker data as well
-    	List<SolrDiseasePortalMarker> humanMarkers = this.getGridHumanMarkers(request,query,session);
+    	List<SolrDiseasePortalMarker> humanMarkers = getGridHumanMarkers(request,query,session);
     	SearchParams sp = new SearchParams();
-    	sp.setFilter(this.parseQueryForm(query,session));
+    	sp.setFilter(parseQueryForm(query,session));
     	sp.setPageSize(10000);
     	SearchResults<SolrHdpGridData> sr = hdpFinder.searchAnnotationsInPopupResults(sp);
     	// map the results by marker key
@@ -665,10 +667,9 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
-			@ModelAttribute Paginator page) throws RecognitionException
+			@ModelAttribute Paginator page) 
 	{
-		SearchResults<SolrDiseasePortalMarker> searchResults
-		  = this.getSummaryResultsByGene(request, query, page,session,true);
+		SearchResults<SolrDiseasePortalMarker> searchResults = getSummaryResultsByGene(request, query, page,session,true);
         List<SolrDiseasePortalMarker> mList = searchResults.getResultObjects();
 
         List<HdpMarkerSummaryRow> summaryRows
@@ -707,16 +708,16 @@ public class DiseasePortalController
     public ModelAndView resultsMarkerSummaryExport(
             HttpServletRequest request,
             HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException {
+			@ModelAttribute DiseasePortalQueryForm query)  {
 
     	logger.debug("generating HDP marker report download");
 
 		ModelAndView mav = new ModelAndView("hdpMarkersSummaryReport");
 
-		Filter qf = this.parseQueryForm(query,session);
+		Filter qf = parseQueryForm(query,session);
 		SearchParams sp = new SearchParams();
 		sp.setFilter(qf);
-		List<Sort> sorts = this.genMarkerSorts(request);
+		List<Sort> sorts = genMarkerSorts(request);
 		sp.setSorts(sorts);
 		DiseasePortalBatchFinder batchFinder = new DiseasePortalBatchFinder(hdpFinder,sp);
 
@@ -737,9 +738,9 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
-			@ModelAttribute Paginator page) throws RecognitionException
+			@ModelAttribute Paginator page)
 	{
-		SearchResults<SolrVocTerm> searchResults = this.getSummaryResultsByDisease(request,query,page,session,true);
+		SearchResults<SolrVocTerm> searchResults = getSummaryResultsByDisease(request,query,page,session,true);
         List<HdpDiseaseSummaryRow> termList = new ArrayList<HdpDiseaseSummaryRow>();
 
         Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
@@ -770,16 +771,16 @@ public class DiseasePortalController
     public ModelAndView resultsDiseaseSummaryExport(
             HttpServletRequest request,
             HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException {
+			@ModelAttribute DiseasePortalQueryForm query) {
 
     	logger.debug("generating HDP disease report download");
 
 		ModelAndView mav = new ModelAndView("hdpDiseaseSummaryReport");
 
-    	Filter qf = this.parseQueryForm(query,session);
+    	Filter qf = parseQueryForm(query,session);
 		SearchParams sp = new SearchParams();
 		sp.setFilter(qf);
-		List<Sort> sorts = this.genDiseaseSorts(request);
+		List<Sort> sorts = genDiseaseSorts(request);
 		sp.setSorts(sorts);
 		DiseasePortalBatchFinder batchFinder = new DiseasePortalBatchFinder(hdpFinder,sp);
 
@@ -797,9 +798,9 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query,
-			@ModelAttribute Paginator page) throws RecognitionException
+			@ModelAttribute Paginator page)
 	{
-		SearchResults<SolrVocTerm> searchResults = this.getSummaryResultsByPhenotype(request,query,page,session);
+		SearchResults<SolrVocTerm> searchResults = getSummaryResultsByPhenotype(request,query,page,session);
         List<String> termList = new ArrayList<String>();
         for(SolrVocTerm term : searchResults.getResultObjects())
         {
@@ -822,14 +823,14 @@ public class DiseasePortalController
 	public List<SolrHdpGridData> getAnnotationsInResults(
 			@ModelAttribute DiseasePortalQueryForm query,
 			List<String> gridClusterKeys,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 		logger.debug("-->getAnnotationsInResults");
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
-		Filter originalQuery = this.parseQueryForm(query,session);
-		Filter gridClusterFilter = new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,gridClusterKeys,Filter.OP_IN);
+		Filter originalQuery = parseQueryForm(query,session);
+		Filter gridClusterFilter = new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,gridClusterKeys,Filter.Operator.OP_IN);
 		params.setFilter(Filter.and(Arrays.asList(originalQuery,gridClusterFilter)));
 		params.setPageSize(10000); // in theory I'm not sure how high this needs to be. 10k is just a start.
 
@@ -846,7 +847,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 
 		logger.debug("getGridClusters query: " + query.toString());
@@ -860,9 +861,9 @@ public class DiseasePortalController
 
 		// determine and set the requested sorts, filters, and pagination
 
-		params.setSorts(this.genGridSorts(request,query));
+		params.setSorts(genGridSorts(request,query));
 		params.setPaginator(page);
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("getSummaryResultsByGene finished");
@@ -873,7 +874,7 @@ public class DiseasePortalController
 	public SearchResults<SolrString> getGridDiseaseColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 
 		logger.debug("getGridClusters disease column query: " + query.toString());
@@ -883,7 +884,7 @@ public class DiseasePortalController
 
 		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM_HEADER)));
 		params.setPageSize(query.getNumDCol());
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("getGridDiseaseColumns finished");
@@ -895,7 +896,7 @@ public class DiseasePortalController
 	public List<String> getGridMpHeaderColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 		logger.debug("getGridClusters mp header column query: " + query.toString());
 
@@ -903,8 +904,8 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 
 		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM_HEADER)));
-		params.setPageSize(200); // I'm not sure we want to display more than this...
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setPageSize(200);
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("getGridMpHeaderColumns finished");
@@ -921,7 +922,7 @@ public class DiseasePortalController
 	public List<SolrVocTerm> getGridMpTermColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 		logger.debug("getGenoClusters mp term column query: " + query.toString());
 
@@ -929,9 +930,9 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 
 		params.setSorts(Arrays.asList(new Sort(DiseasePortalFields.BY_TERM_DAG)));
-		params.setPageSize(300); // I'm not sure we want to display more than this...
-		//params.setFilter(this.parseSystemPopup(query));
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setPageSize(300);
+		//params.setFilter(parseSystemPopup(query));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("getGridMpTermColumns finished");
@@ -942,7 +943,7 @@ public class DiseasePortalController
 	public List<SolrVocTerm> getGridDiseaseTermColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 		logger.debug("getGenoClusters disease term column query: " + query.toString());
 
@@ -950,9 +951,9 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 
 		params.setSorts(Arrays.asList(new Sort(DiseasePortalFields.TERM)));
-		params.setPageSize(300); // I'm not sure we want to display more than this...
-		//params.setFilter(this.parseSystemPopup(query));
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setPageSize(300);
+		//params.setFilter(parseSystemPopup(query));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("getGridDiseaseTermColumns finished");
@@ -963,7 +964,7 @@ public class DiseasePortalController
 	public List<SolrDiseasePortalMarker> getGridHumanMarkers(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 		logger.debug("getGridHumanMarkers query: " + query.toString());
 
@@ -972,8 +973,8 @@ public class DiseasePortalController
 
 		params.setSorts(Arrays.asList(new Sort(SortConstants.DP_BY_MRK_SYMBOL)));
 		params.setPageSize(1000);
-		//params.setFilter(this.parseSystemPopup(query));
-		params.setFilter(this.parseQueryForm(query,session));
+		//params.setFilter(parseSystemPopup(query));
+		params.setFilter(parseQueryForm(query,session));
 
 
 		// perform query and return results as json
@@ -988,7 +989,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 			return getSummaryResultsByGene(request,query,page,session,false);
 	}
@@ -997,7 +998,7 @@ public class DiseasePortalController
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
 			HttpSession session,
-			boolean doHighlight) throws RecognitionException
+			boolean doHighlight)
 	{
 
 		logger.debug("getSummaryResults query: " + query.toString());
@@ -1010,9 +1011,9 @@ public class DiseasePortalController
 		params.setIncludeMetaScore(true);
 
 		// determine and set the requested sorts, filters, and pagination
-		params.setSorts(this.genMarkerSorts(request));
+		params.setSorts(genMarkerSorts(request));
 		params.setPaginator(page);
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("getSummaryResultsByGene finished");
@@ -1024,7 +1025,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 		return getSummaryResultsByDisease(request,query,page,session,false);
 	}
@@ -1033,7 +1034,7 @@ public class DiseasePortalController
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
 			HttpSession session,
-			boolean doHighlight) throws RecognitionException
+			boolean doHighlight)
 	{
 
 		logger.debug("getSummaryResults query: " + query.toString());
@@ -1047,10 +1048,10 @@ public class DiseasePortalController
 
 		//sorts.add(new Sort("score",true));
 		//sorts.add(new Sort(DiseasePortalFields.TERM,false));
-		params.setSorts(this.genDiseaseSorts(request));
+		params.setSorts(genDiseaseSorts(request));
 		params.setPaginator(page);
-		//params.setSorts(this.parseSorts(request));
-		params.setFilter(this.parseQueryForm(query,session));
+		//params.setSorts(parseSorts(request));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("params parsed");
@@ -1063,7 +1064,7 @@ public class DiseasePortalController
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
 			@ModelAttribute Paginator page,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 
 		logger.debug("getSummaryResultsByPhenotype query: " + query.toString());
@@ -1080,8 +1081,8 @@ public class DiseasePortalController
 		sorts.add(new Sort(DiseasePortalFields.TERM,false));
 		params.setSorts(sorts);
 		params.setPaginator(page);
-		//params.setSorts(this.parseSorts(request));
-		params.setFilter(this.parseQueryForm(query,session));
+		//params.setSorts(parseSorts(request));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query and return results as json
 		logger.debug("params parsed");
@@ -1092,7 +1093,7 @@ public class DiseasePortalController
 	public SearchResults<HdpGenoCluster> getGenoClusters(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,
-			HttpSession session) throws RecognitionException
+			HttpSession session)
 	{
 		logger.debug("getGenoClusters query: " + query.toString());
 
@@ -1102,9 +1103,9 @@ public class DiseasePortalController
 		params.setPageSize(10000); // if this is too low, you can change it, but damn that's a lot of genotypes
 
 		// determine and set the requested sorts, filters, and pagination
-//		params.setFilter(this.parseQueryForm(query));
-		//params.setFilter(this.parseSystemPopup(query));
-		params.setFilter(this.parseQueryForm(query,session));
+//		params.setFilter(parseQueryForm(query));
+		//params.setFilter(parseSystemPopup(query));
+		params.setFilter(parseQueryForm(query,session));
 
 		// perform query
 		logger.debug("getSummaryResultsByGene finished");
@@ -1233,7 +1234,7 @@ public class DiseasePortalController
     }
 
 	// parses the query parameters pass into main queries
-	private Filter parseQueryForm(DiseasePortalQueryForm query,HttpSession session) throws RecognitionException
+	private Filter parseQueryForm(DiseasePortalQueryForm query,HttpSession session)
 	{
 		List<Filter> qFilters = new ArrayList<Filter>();
 
@@ -1242,43 +1243,47 @@ public class DiseasePortalController
 		if(notEmpty(fGenes))
 		{
 			List<String> tokens = Arrays.asList(fGenes.split("\\|"));
-			qFilters.add( new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, tokens, Filter.OP_IN));
+			qFilters.add( new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, tokens, Filter.Operator.OP_IN));
 		}
 
 		String fHeaders = query.getFHeader();
 		if(notEmpty(fHeaders))
 		{
 			List<String> tokens = Arrays.asList(fHeaders.split("\\|"));
-			qFilters.add( new Filter(DiseasePortalFields.TERM_HEADER, tokens, Filter.OP_IN));
+			qFilters.add( new Filter(DiseasePortalFields.TERM_HEADER, tokens, Filter.Operator.OP_IN));
 		}
 
         // grid cluster key
 		String gridClusterKey = query.getGridClusterKey();
 		if(notEmpty(gridClusterKey))
 		{
-			qFilters.add( new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.OP_EQUAL));
+			qFilters.add( new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.Operator.OP_EQUAL));
 		}
 
         // termHeader
 		String termHeader = query.getTermHeader();
 		if(notEmpty(termHeader))
 		{
-			qFilters.add(new Filter(SearchConstants.MP_HEADER, termHeader,Filter.OP_EQUAL));
+			qFilters.add(new Filter(SearchConstants.MP_HEADER, termHeader,Filter.Operator.OP_EQUAL));
 		}
 
 		// termId
 		String termId = query.getTermId();
 		if(notEmpty(termId))
 		{
-			qFilters.add(new Filter(SearchConstants.VOC_TERM_ID, termId,Filter.OP_EQUAL));
+			qFilters.add(new Filter(SearchConstants.VOC_TERM_ID, termId,Filter.Operator.OP_EQUAL));
 		}
 
         // phenotype entry box
 		String phenotypes = query.getPhenotypes();
 		if(notEmpty(phenotypes))
 		{
-			Filter phenoFilter = BooleanSearch.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", ""));
-			//Filter phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
+			Filter phenoFilter;
+			try {
+				phenoFilter = BooleanSearch.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", ""));
+			} catch (RecognitionException e) {
+				phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
+			}
 			// TODO see if this works?
 			logger.info("Filters: " + phenoFilter);
 			if(phenoFilter != null) qFilters.add(phenoFilter);
@@ -1327,7 +1332,7 @@ public class DiseasePortalController
 					String spatialQueryString = SolrLocationTranslator.getQueryValue(token);
 					if(notEmpty(spatialQueryString))
 					{
-						locationFilters.add(new Filter(coordField,spatialQueryString,Filter.OP_HAS_WORD));
+						locationFilters.add(new Filter(coordField,spatialQueryString,Filter.Operator.OP_HAS_WORD));
 					}
 				}
 			}
@@ -1338,7 +1343,7 @@ public class DiseasePortalController
 		if(hasMarkerKeysFromLocationsFile)
 		{
 			//logger.debug("making a query with marker keys matched via locations file");
-			qFilters.add(new Filter(SearchConstants.MRK_KEY,markerKeysFromLocationsFile,Filter.OP_IN));
+			qFilters.add(new Filter(SearchConstants.MRK_KEY,markerKeysFromLocationsFile,Filter.Operator.OP_IN));
 		}
 
 
@@ -1346,7 +1351,7 @@ public class DiseasePortalController
 		{
 			return Filter.and(qFilters);
 		}
-		return new Filter(SearchConstants.PRIMARY_KEY,"###NONE###",Filter.OP_HAS_WORD);
+		return new Filter(SearchConstants.PRIMARY_KEY,"###NONE###",Filter.Operator.OP_HAS_WORD);
 	}
 
 	private boolean notEmpty(String str)
@@ -1370,7 +1375,7 @@ public class DiseasePortalController
 
 		for(String nomenToken : nomenTokens) {
 			//logger.debug("token="+nomenToken);
-			Filter nFilter = new Filter(property, nomenToken,Filter.OP_HAS_WORD);
+			Filter nFilter = new Filter(property, nomenToken,Filter.Operator.OP_HAS_WORD);
 			nomenFilters.add(nFilter);
 		}
 
@@ -1390,10 +1395,10 @@ public class DiseasePortalController
 	public @ResponseBody Integer getGridClusterCount(
 			HttpServletRequest request,
 			HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
+			@ModelAttribute DiseasePortalQueryForm query)
 	{
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setFilter(parseQueryForm(query,session));
 		params.setPageSize(0);
 		return hdpFinder.getGridClusterCount(params);
 	}
@@ -1401,10 +1406,10 @@ public class DiseasePortalController
 	public @ResponseBody Integer getMarkerCount(
 			HttpServletRequest request,
 			HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
+			@ModelAttribute DiseasePortalQueryForm query)
 	{
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setFilter(parseQueryForm(query,session));
 		params.setPageSize(0);
 		return hdpFinder.getMarkerCount(params);
 	}
@@ -1412,10 +1417,10 @@ public class DiseasePortalController
 	public @ResponseBody Integer getDiseaseCount(
 			HttpServletRequest request,
 			HttpSession session,
-			@ModelAttribute DiseasePortalQueryForm query) throws RecognitionException
+			@ModelAttribute DiseasePortalQueryForm query)
 	{
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseQueryForm(query,session));
+		params.setFilter(parseQueryForm(query,session));
 		params.setPageSize(0);
 		return hdpFinder.getDiseaseCount(params);
 	}
@@ -1435,7 +1440,7 @@ public class DiseasePortalController
 		dpQf.setGridClusterKey(gridClusterKey);
 		SearchParams sp = new SearchParams();
 		sp.setPageSize(1);
-		sp.setFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.OP_EQUAL));
+		sp.setFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.Operator.OP_EQUAL));
 		SearchResults<SolrHdpGridCluster> gridClusters = hdpFinder.getGridClusters(sp);
 		if(gridClusters.getResultObjects().size()>0)
 		{
@@ -1493,7 +1498,7 @@ public class DiseasePortalController
 					String spatialQueryString = SolrLocationTranslator.getQueryValue(token);
 					if(notEmpty(spatialQueryString))
 					{
-						locationFilters.add(new Filter(coordField,spatialQueryString,Filter.OP_HAS_WORD));
+						locationFilters.add(new Filter(coordField,spatialQueryString,Filter.Operator.OP_HAS_WORD));
 					}
 				}
 

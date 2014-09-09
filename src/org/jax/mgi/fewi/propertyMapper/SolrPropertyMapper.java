@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 
 /**
  * The SolrPropertyMapper class handles the mapping of operators being passed in from the 
@@ -71,7 +72,7 @@ public class SolrPropertyMapper
      * to the underlying technology.
      */
     
-    public String getClause(String value,int operator)
+    public String getClause(String value,Operator operator)
     {
     	return getClause(value,operator,false);
     }
@@ -79,7 +80,7 @@ public class SolrPropertyMapper
     {
     	return getClause(filter.getValue(),filter.getOperator(),filter.doNegation());
     }
-    public String getClause(String value,int operator,boolean negate) 
+    public String getClause(String value,Operator operator,boolean negate) 
     {
         if (!singleField.equals("")) {
             return handleOperand(operator, value, singleField,negate);
@@ -102,54 +103,54 @@ public class SolrPropertyMapper
      * @param field
      * @return
      */
-    protected String handleOperand(int operand, String value, String field)
+    protected String handleOperand(Operator operand, String value, String field)
     {
     	return handleOperand(operand,value,field,false);
     }
-    protected String handleOperand(int operand, String value, String field,boolean negate) 
+    protected String handleOperand(Operator operand, String value, String field,boolean negate) 
     {
     	String val = "";
-        if (operand == Filter.OP_EQUAL) {
+        if (operand == Filter.Operator.OP_EQUAL) {
             val =  field + ":\"" + value + "\"";
         }
-        else if (operand == Filter.OP_GREATER_THAN) {
+        else if (operand == Filter.Operator.OP_GREATER_THAN) {
             Integer newValue = new Integer(value);
             newValue++;
             val =  field + ":[" + newValue + " TO *]";
         }
-        else if (operand == Filter.OP_LESS_THAN) {
+        else if (operand == Filter.Operator.OP_LESS_THAN) {
             Integer newValue = new Integer(value);
             newValue--;
             val =  field + ":[* TO "+newValue+"]";
         }
-        else if (operand == Filter.OP_WORD_BEGINS || operand == Filter.OP_HAS_WORD) {
+        else if (operand == Filter.Operator.OP_WORD_BEGINS || operand == Filter.Operator.OP_HAS_WORD) {
             val =  field + ":" + value;
         }
-        else if (operand == Filter.OP_GREATER_OR_EQUAL) {
+        else if (operand == Filter.Operator.OP_GREATER_OR_EQUAL) {
             val =  field + ":[" + value + " TO *]";
         }
-        else if (operand == Filter.OP_LESS_OR_EQUAL) {
+        else if (operand == Filter.Operator.OP_LESS_OR_EQUAL) {
             val =  field + ":[* TO "+value+"]";
         }
-        else if (operand == Filter.OP_NOT_EQUAL) {
+        else if (operand == Filter.Operator.OP_NOT_EQUAL) {
             val =  "*:* -" + field + ":" + value;
         }
-        else if (operand == Filter.OP_NOT_HAS) {
+        else if (operand == Filter.Operator.OP_NOT_HAS) {
             val =  "-" + field + ":\"" + value + "\"";
         }
-        else if (operand == Filter.OP_BEGINS) {
+        else if (operand == Filter.Operator.OP_BEGINS) {
             val =  field + ":" + value + "*";
         }
-        else if (operand == Filter.OP_ENDS) {
+        else if (operand == Filter.Operator.OP_ENDS) {
             val =  field + ":" + "*" + value;
         }
-        else if (operand == Filter.OP_CONTAINS) {
+        else if (operand == Filter.Operator.OP_CONTAINS) {
             val =  field + ":" + "(" + value + ")";
         }
-        else if (operand == Filter.OP_STRING_CONTAINS) {
+        else if (operand == Filter.Operator.OP_STRING_CONTAINS) {
             val =  field + ":" + "*" + ClientUtils.escapeQueryChars(value) + "*";
         }
-        else if (operand == Filter.OP_GREEDY_BEGINS) {
+        else if (operand == Filter.Operator.OP_GREEDY_BEGINS) {
         	val =  "("+field + ":" + value + " OR "+field + ":" + value+"* )";
         }
         

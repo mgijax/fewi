@@ -457,7 +457,7 @@ public class AlleleController {
 
 	if (alleleKey > 0) {
 	    return new Filter (SearchConstants.ALLELE_KEY, alleleKey,
-		Filter.OP_EQUAL);
+		Filter.Operator.OP_EQUAL);
 	}
 	return null;
     }
@@ -544,14 +544,14 @@ public class AlleleController {
 		 String allKey = query.getAllKey();
 		 if(notEmpty(allKey))
 		 {
-			 filters.add(new Filter(SearchConstants.ALL_KEY,allKey,Filter.OP_EQUAL));
+			 filters.add(new Filter(SearchConstants.ALL_KEY,allKey,Filter.Operator.OP_EQUAL));
 		 }
 		 // Allele IDs
 		 String allIds = query.getAllIds();
 		 if(notEmpty(allIds))
 		 {
 			 List<String> allIdTokens = QueryParser.tokeniseOnWhitespaceAndComma(allIds);
-			 filters.add(new Filter(SearchConstants.ALL_ID,allIdTokens,Filter.OP_IN));
+			 filters.add(new Filter(SearchConstants.ALL_ID,allIdTokens,Filter.Operator.OP_IN));
 		 }
 		 // Allele Type
 		 Filter alleleTypeFilter = makeListFilter(query.getAlleleType(),SearchConstants.ALL_TYPE, false);
@@ -584,28 +584,28 @@ public class AlleleController {
 		 String refKey = query.getRefKey();
 		 if(notEmpty(refKey))
 		 {
-			 filters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.OP_EQUAL));
+			 filters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.Operator.OP_EQUAL));
 		 }
 
 		 // Reference JNUM ID
 		 String jnumId = query.getJnumId();
 		 if(notEmpty(jnumId))
 		 {
-			 filters.add(new Filter(SearchConstants.JNUM_ID,jnumId,Filter.OP_EQUAL));
+			 filters.add(new Filter(SearchConstants.JNUM_ID,jnumId,Filter.Operator.OP_EQUAL));
 		 }
 
 		 // Has OMIM
 		 String hasOMIM = query.getHasOMIM();
 		 if(notEmpty(hasOMIM))
 		 {
-			 filters.add(new Filter(SearchConstants.ALL_HAS_OMIM,hasOMIM,Filter.OP_EQUAL));
+			 filters.add(new Filter(SearchConstants.ALL_HAS_OMIM,hasOMIM,Filter.Operator.OP_EQUAL));
 		 }
 
 		 // Exclude Cell Lines
 		 String isCellLine = query.getIsCellLine();
 		 if(notEmpty(isCellLine))
 		 {
-			 filters.add(new Filter(SearchConstants.ALL_IS_CELLLINE,isCellLine,Filter.OP_EQUAL));
+			 filters.add(new Filter(SearchConstants.ALL_IS_CELLLINE,isCellLine,Filter.Operator.OP_EQUAL));
 		 }
 
 		 //Marker ID has two meanings:
@@ -623,11 +623,11 @@ public class AlleleController {
 			 if (notEmpty(mutationInvolves)) {
 		    		filters.add(new Filter(
 					SearchConstants.ALL_MI_MARKER_IDS,
-					mrkId, Filter.OP_EQUAL));
+					mrkId, Filter.Operator.OP_EQUAL));
 			 } else {
 			 	filters.add(new Filter(
 					SearchConstants.MRK_ID,
-					mrkId, Filter.OP_EQUAL));
+					mrkId, Filter.Operator.OP_EQUAL));
 			 }
 		 }
 
@@ -661,14 +661,14 @@ public class AlleleController {
 		 String cyto = query.getCyto();
 		 if(notEmpty(cyto))
 		 {
-			 filters.add(new Filter(SearchConstants.CYTOGENETIC_OFFSET,cyto,Filter.OP_EQUAL));
+			 filters.add(new Filter(SearchConstants.CYTOGENETIC_OFFSET,cyto,Filter.Operator.OP_EQUAL));
 		 }
 
 		 Filter f;
 		 if(filters.size()>0)
 		 {
 			 // make sure not specified alleles are excluded
-			 filters.add(new Filter(SearchConstants.ALL_IS_WILD_TYPE,0,Filter.OP_EQUAL));
+			 filters.add(new Filter(SearchConstants.ALL_IS_WILD_TYPE,0,Filter.Operator.OP_EQUAL));
 			 f=Filter.and(filters);
 		 }
 		 else f = nullFilter(); // return nothing if no valid filters
@@ -677,7 +677,7 @@ public class AlleleController {
 	 
 	 private Filter nullFilter()
 	 {
-		 return new Filter(SearchConstants.ALL_KEY,"-9999",Filter.OP_EQUAL);
+		 return new Filter(SearchConstants.ALL_KEY,"-9999",Filter.Operator.OP_EQUAL);
 	 }
 
 	 /*
@@ -1943,7 +1943,7 @@ public class AlleleController {
         		// get collection facets
         		SearchParams sp = new SearchParams();
         		sp.setPageSize(0);
-        		sp.setFilter(new Filter(SearchConstants.ALL_KEY,"[* TO *]",Filter.OP_HAS_WORD));
+        		sp.setFilter(new Filter(SearchConstants.ALL_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
         		SearchResults<String> sr = alleleFinder.getCollectionFacet(sp);
         		List<String> collectionValues = sr.getResultFacets();
         		AlleleQueryForm.setCollectionValues(collectionValues);
@@ -1965,7 +1965,7 @@ public class AlleleController {
 	   			 List<Filter> vFilters = new ArrayList<Filter>();
 	   			 for(String value : values)
 	   			 {
-	   				vFilters.add(new Filter(searchConstant,value,Filter.OP_EQUAL));
+	   				vFilters.add(new Filter(searchConstant,value,Filter.Operator.OP_EQUAL));
 	   			 }
 				 if (joinWithAnd) {
 	   			     f = Filter.and(vFilters);

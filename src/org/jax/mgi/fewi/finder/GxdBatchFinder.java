@@ -31,7 +31,7 @@ public class GxdBatchFinder
 	{
 		this.finder=finder;
 		this.searchParams = new SearchParams();
-		searchParams.setFilter( new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.OP_HAS_WORD));
+		searchParams.setFilter( new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
 	}
 	
 	public GxdBatchFinder(GxdFinder finder,SearchParams searchParams)

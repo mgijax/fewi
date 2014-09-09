@@ -964,7 +964,7 @@ public class GXDController {
 				List<Filter> stageFilters = new ArrayList<Filter>();
 				for(Integer stage : stages)
 				{
-					stageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+stage,Filter.OP_HAS_WORD));
+					stageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+stage,Filter.Operator.OP_HAS_WORD));
 				}
 				// OR the stages together
 				queryFilters.add(Filter.or(stageFilters));
@@ -972,7 +972,7 @@ public class GXDController {
 			List<Filter> dStageFilters = new ArrayList<Filter>();
 			for(Integer dStage : query.getResolvedDifTheilerStage())
 			{
-				dStageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+dStage,Filter.OP_HAS_WORD));
+				dStageFilters.add(new Filter(SearchConstants.POS_STRUCTURE,"TS"+dStage,Filter.Operator.OP_HAS_WORD));
 			}
 			Filter dStageFilter = Filter.or(dStageFilters);
 			dStageFilter.negate();
@@ -1008,7 +1008,7 @@ public class GXDController {
 		Filter difFilter = new Filter();
 		if(queryFilters.size() > 0)
 		{
-			difFilter.setNestedFilters(queryFilters,Filter.FC_AND);
+			difFilter.setNestedFilters(queryFilters,Filter.JoinClause.FC_AND);
 		}		
 		else return null;
 		
@@ -1042,13 +1042,13 @@ public class GXDController {
 			// create the positive results filter
 			List<Filter> posFilters = new ArrayList<Filter>();
 			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
-			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			Filter posFilter = Filter.and(posFilters);
 			
 			// create negative results filter
 			List<Filter> negFilters = new ArrayList<Filter>();
 			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
-			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 			Filter negFilter = Filter.and(negFilters);
 			
 			// or them to bring back both datasets
@@ -1059,13 +1059,13 @@ public class GXDController {
 		{
 			// create the positive results filter
 			List<Filter> posFilters = new ArrayList<Filter>();
-			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
 			{
 				List<Filter> stageFilters = new ArrayList<Filter>();
 				for(Integer stage : stages)
 				{
-					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.OP_HAS_WORD);
+					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.Operator.OP_HAS_WORD);
 					stageFilters.add(stageF);
 
 				}
@@ -1076,11 +1076,11 @@ public class GXDController {
 			
 			// create the negative results filter
 			List<Filter> negFilters = new ArrayList<Filter>();
-			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 			List<Filter> difStageFilters = new ArrayList<Filter>();
 			for(Integer difStage : query.getResolvedDifTheilerStage())
 			{
-				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.OP_HAS_WORD);
+				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.Operator.OP_HAS_WORD);
 				difStageFilters.add(difStageF);
 
 			}
@@ -1096,13 +1096,13 @@ public class GXDController {
 			// create the positive results filter
 			List<Filter> posFilters = new ArrayList<Filter>();
 			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
-			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
 			{
 				List<Filter> stageFilters = new ArrayList<Filter>();
 				for(Integer stage : stages)
 				{
-					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.OP_HAS_WORD);
+					Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.Operator.OP_HAS_WORD);
 					stageFilters.add(stageF);
 
 				}
@@ -1114,11 +1114,11 @@ public class GXDController {
 			// create negative results filter
 			List<Filter> negFilters = new ArrayList<Filter>();
 			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
-			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 			List<Filter> difStageFilters = new ArrayList<Filter>();
 			for(Integer difStage : query.getResolvedDifTheilerStage())
 			{
-				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.OP_HAS_WORD);
+				Filter difStageF = new Filter(SearchConstants.GXD_THEILER_STAGE,difStage,Filter.Operator.OP_HAS_WORD);
 				difStageFilters.add(difStageF);
 
 			}
@@ -1154,7 +1154,7 @@ public class GXDController {
 		{
 			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
 			String sToken = "\""+phraseSearch+"\"~100";
-			return new Filter(queryField,sToken,Filter.OP_HAS_WORD);
+			return new Filter(queryField,sToken,Filter.Operator.OP_HAS_WORD);
 		}
 		return null;
 	}
@@ -1177,27 +1177,27 @@ public class GXDController {
 
 		if (query.getSystemFilter().size() > 0) {
 		    facetList.add(new Filter(FacetConstants.GXD_SYSTEM,
-			query.getSystemFilter(), Filter.OP_IN));
+			query.getSystemFilter(), Filter.Operator.OP_IN));
 		}
 
 		if (query.getAssayTypeFilter().size() > 0) {
 		    facetList.add(new Filter(FacetConstants.GXD_ASSAY_TYPE,
-			query.getAssayTypeFilter(), Filter.OP_IN));
+			query.getAssayTypeFilter(), Filter.Operator.OP_IN));
 		}
 
 		if (query.getDetectedFilter().size() > 0) {
 		    facetList.add(new Filter(FacetConstants.GXD_DETECTED,
-			query.getDetectedFilter(), Filter.OP_IN));
+			query.getDetectedFilter(), Filter.Operator.OP_IN));
 		}
 
 		if (query.getTheilerStageFilter().size() > 0) {
 		    facetList.add(new Filter(FacetConstants.GXD_THEILER_STAGE,
-			query.getTheilerStageFilter(), Filter.OP_IN));
+			query.getTheilerStageFilter(), Filter.Operator.OP_IN));
 		}
 
 		if (query.getWildtypeFilter().size() > 0) {
 		    facetList.add(new Filter(FacetConstants.GXD_WILDTYPE,
-			query.getWildtypeFilter(), Filter.OP_IN));
+			query.getWildtypeFilter(), Filter.Operator.OP_IN));
 		}
 
 		// process normal query form parameter.  the resulting filter objects
@@ -1210,12 +1210,12 @@ public class GXDController {
 			List<String> markerKeys = resolveDifferentialMarkers(query);
 			if(markerKeys !=null && markerKeys.size()>0)
 			{
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.OP_IN));
+				queryFilters.add( new Filter(SearchConstants.MRK_KEY,markerKeys,Filter.Operator.OP_IN));
 			}
 			else
 			{
 				// need a way to prevent the standard query from returning results when the differential fails to find markers
-				queryFilters.add( new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.OP_EQUAL));
+				queryFilters.add( new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.Operator.OP_EQUAL));
 			}
 			// add the 2nd part of the differential query (I.e. what results to display for the given markers)
 			queryFilters.add(makeDifferentialPart2Filter(query));
@@ -1292,7 +1292,7 @@ public class GXDController {
 		// vocab annotations
 		else if(annotationId !=null && !annotationId.equals("")) {
 			logger.debug("querying by vocab annotation term id "+annotationId);
-			queryFilters.add(new Filter(GxdResultFields.ANNOTATION,annotationId,Filter.OP_EQUAL));
+			queryFilters.add(new Filter(GxdResultFields.ANNOTATION,annotationId,Filter.Operator.OP_EQUAL));
 		}
 
 		// is detected section
@@ -1309,20 +1309,20 @@ public class GXDController {
 			if(detected.equalsIgnoreCase("yes"))
 			{
 				//dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
-				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			}
 			else if (detected.equalsIgnoreCase("no"))
 			{
 				//dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Unknown/Ambiguous",Filter.OP_EQUAL));
-				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 			}
 			else if (detected.equalsIgnoreCase("explicit-yes"))
 			{
-				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.OP_EQUAL));
+				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			}
 			else if (detected.equalsIgnoreCase("explicit-no"))
 			{
-				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.OP_EQUAL));
+				dFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 			}
 
 			queryFilters.add(Filter.or(dFilters));
@@ -1349,7 +1349,7 @@ public class GXDController {
 			List<Filter> stageFilters = new ArrayList<Filter>();
 			for(Integer stage : stages)
 			{
-				Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.OP_HAS_WORD);
+				Filter stageF = new Filter(SearchConstants.GXD_THEILER_STAGE,stage,Filter.Operator.OP_HAS_WORD);
 				stageFilters.add(stageF);
 
 			}
@@ -1369,16 +1369,16 @@ public class GXDController {
 				if(ages.contains(GxdQueryForm.POSTNATAL))
 				{
 					// same as TS 28 (and TS 27)
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.OP_HAS_WORD));
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.OP_HAS_WORD));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.Operator.OP_HAS_WORD));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.Operator.OP_HAS_WORD));
 				}
 				//embryonic means TS 1-26
 				// if they selected embryonic, none of the age selections matter
 				if(ages.contains(GxdQueryForm.EMBRYONIC))
 				{
 					// Same as TS 1-26 or NOT (TS 28 or TS 27)
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.OP_NOT_EQUAL));
-					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.OP_NOT_EQUAL));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,28,Filter.Operator.OP_NOT_EQUAL));
+					ageFilters.add(new Filter(SearchConstants.GXD_THEILER_STAGE,27,Filter.Operator.OP_NOT_EQUAL));
 				}
 				else
 				{
@@ -1390,8 +1390,8 @@ public class GXDController {
 						{
 							try{
 							//Float age_num = Float.parseFloat(age);
-							Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,age,Filter.OP_LESS_OR_EQUAL);
-							Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,age,Filter.OP_GREATER_OR_EQUAL);
+							Filter ageMinFilter = new Filter(SearchConstants.GXD_AGE_MIN,age,Filter.Operator.OP_LESS_OR_EQUAL);
+							Filter ageMaxFilter = new Filter(SearchConstants.GXD_AGE_MAX,age,Filter.Operator.OP_GREATER_OR_EQUAL);
 							// AND the min and max query to make a range query;
 							ageFilters.add(Filter.and(Arrays.asList(ageMinFilter,ageMaxFilter)));
 							}
@@ -1426,7 +1426,7 @@ public class GXDController {
 			for(String assayType : assayTypes)
 			{
 				logger.debug("querying by assay_type "+assayType);
-				Filter aFilter = new Filter(SearchConstants.GXD_ASSAY_TYPE,assayType,Filter.OP_EQUAL);
+				Filter aFilter = new Filter(SearchConstants.GXD_ASSAY_TYPE,assayType,Filter.Operator.OP_EQUAL);
 				aFilters.add(aFilter);
 			}
 			queryFilters.add(Filter.or(aFilters));
@@ -1437,15 +1437,15 @@ public class GXDController {
 		if(queryFilters.size() > 0)
 		{
 			queryFilters.addAll(facetList);
-			gxdFilter.setNestedFilters(queryFilters,Filter.FC_AND);
+			gxdFilter.setNestedFilters(queryFilters,Filter.JoinClause.FC_AND);
 		}
 		else if (facetList.size() > 0) {
-			gxdFilter.setNestedFilters(facetList, Filter.FC_AND);
+			gxdFilter.setNestedFilters(facetList, Filter.JoinClause.FC_AND);
 		}
 		else
 		{
 			// default return all results?
-			gxdFilter = new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.OP_HAS_WORD);
+			gxdFilter = new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD);
 		}
 
 		return gxdFilter;

@@ -11,10 +11,13 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
+import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.MetaData;
+import org.jax.mgi.fewi.searchUtil.PrettyFilterPrinter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -163,22 +166,22 @@ public class AutoCompleteController {
 			List<Filter> fList = new ArrayList<Filter>();
 			Filter fItem;
 			for (String q : queries) {
-				fItem = new Filter(param, q, Filter.OP_WORD_BEGINS);
+				fItem = new Filter(param, q, Filter.Operator.OP_WORD_BEGINS);
 				fList.add(fItem);
 			}
-			f.setNestedFilters(fList,Filter.FC_AND);
+			f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
 		} else {
-			f = new Filter(param, queries.get(0), Filter.OP_WORD_BEGINS);
+			f = new Filter(param, queries.get(0), Filter.Operator.OP_WORD_BEGINS);
 		}
 		
 		if (forGXD) {
 			List<Filter> finalList = new ArrayList<Filter>();
 			finalList.add(f);
-			Filter gxdClause = new Filter(SearchConstants.AC_FOR_GXD, "1", Filter.OP_EQUAL);
+			Filter gxdClause = new Filter(SearchConstants.AC_FOR_GXD, "1", Filter.Operator.OP_EQUAL);
 			finalList.add(gxdClause);
 			
 			Filter outerFilter = new Filter();
-			outerFilter.setNestedFilters(finalList,Filter.FC_AND);
+			outerFilter.setNestedFilters(finalList,Filter.JoinClause.FC_AND);
 			
 			params.setFilter(outerFilter);
 		}
@@ -278,11 +281,11 @@ public class AutoCompleteController {
 
 	    for (String q : words) {
 			Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
-			    Filter.OP_GREEDY_BEGINS);
+			    Filter.Operator.OP_GREEDY_BEGINS);
 			fList.add(wordFilter);
 	    }
 
-	    f.setNestedFilters(fList,Filter.FC_AND);
+	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
 				
 	    params.setFilter(f);
 				
@@ -332,7 +335,7 @@ public class AutoCompleteController {
 			@RequestParam("query") String query) {
 		
 		// filter specific vocabs for this autocomplete
-		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.OP_IN);
+		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.Operator.OP_IN);
 		
 		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
 		new ArrayList<VocabACSummaryRow>();
@@ -367,7 +370,7 @@ public class AutoCompleteController {
 		
 		List<Filter> fList = new ArrayList<Filter>();
 		for (String q : words) {
-			Filter termFilter = new Filter(SearchConstants.VOC_TERM,q,Filter.OP_GREEDY_BEGINS);
+			Filter termFilter = new Filter(SearchConstants.VOC_TERM,q,Filter.Operator.OP_GREEDY_BEGINS);
 			fList.add(termFilter);
 		}
 		if(additionalFilters!=null) fList.addAll(additionalFilters);
@@ -426,9 +429,8 @@ public class AutoCompleteController {
 	 *  	Any token, matching an ID, will be replaced with the term it matches.
 	 */
 	@RequestMapping("/vocabTerm/resolve")
-	public @ResponseBody String resolveVocabTermId(
-			@RequestParam("ids") String ids) 
-	{
+	public @ResponseBody String resolveVocabTermId(@RequestParam("ids") String ids) {
+		
 		/*
 		 *  Honestly, I am too lazy to figure out how to get StringUtils.replaceEach() to do case-insensitive matching (which I don't think it does).
 		 *  	So, to satisfy the curators who feel the need to have lowercase MP IDs resolved in "you searched for" text,
@@ -459,14 +461,29 @@ public class AutoCompleteController {
 			index++;
 		}
 		
+		Filter f;
+		String out = null;
+		try {
+			f = BooleanSearch.buildSolrFilter(SearchConstants.VOC_TERM, ids.replace(",", ""));
+			PrettyFilterPrinter pfp = new PrettyFilterPrinter();
+			f.Accept(pfp);
+			out = pfp.generateOutput();
+			logger.info("Pretty String: " + out);
+
+		} catch (RecognitionException e) {
+			e.printStackTrace();
+		}
 		// replace each search string with its corresponding replacement string
 		// 	I.e. every occurrence of searchList[0] is replaced by replacementList[0], and so on
-		String resolvedIds = StringUtils.replaceEach(ids,searchList,replacementList);
-		return resolvedIds;
+		
+		if(out != null) {
+			return StringUtils.replaceEach(out,searchList,replacementList);
+		} else {
+			return StringUtils.replaceEach(ids,searchList,replacementList);
+		}
 	}
 	
-	private SearchResults<VocabACResult> resolveVocabTermIdQuery(String ids)
-	{
+	private SearchResults<VocabACResult> resolveVocabTermIdQuery(String ids) {
 		// filter specific vocabs for this autocomplete
 		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
 		
@@ -477,7 +494,7 @@ public class AutoCompleteController {
 			List<Filter> idFilters = new ArrayList<Filter>();
 			for(String idToken : idTokens)
 			{
-				idFilters.add(new Filter(SearchConstants.VOC_TERM_ID,idToken,Filter.OP_EQUAL));
+				idFilters.add(new Filter(SearchConstants.VOC_TERM_ID,idToken,Filter.Operator.OP_EQUAL));
 			}
 			filters.add(Filter.or(idFilters));
 		}

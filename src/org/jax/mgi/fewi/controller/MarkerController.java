@@ -213,7 +213,7 @@ public class MarkerController {
         	// query for the start and end markers to check their coordinates and chromosomes
         	// check that we can find the start marker
         	SearchParams sp = new SearchParams();
-        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.OP_EQUAL));
+        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.Operator.OP_EQUAL));
         	SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
         	if(sr.getTotalCount()<1)
         	{
@@ -226,7 +226,7 @@ public class MarkerController {
         	SolrSummaryMarker startMarkerObj = sr.getResultObjects().get(0);
 
         	// check that we can find the end marker
-        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.OP_EQUAL));
+        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.Operator.OP_EQUAL));
         	sr = markerFinder.getSummaryMarkers(sp);
         	if(sr.getTotalCount()<1)
         	{
@@ -1444,7 +1444,7 @@ public class MarkerController {
         	 Filter nomenFilter = Filter.or(Arrays.asList(
         			 FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,nomen),
         			 // try to boost an exact match
-        			 new Filter(SearchConstants.MRK_SYMBOL,"\""+nomen.replace("\"","")+"\"^1000000000000",Filter.OP_HAS_WORD)
+        			 new Filter(SearchConstants.MRK_SYMBOL,"\""+nomen.replace("\"","")+"\"^1000000000000",Filter.Operator.OP_HAS_WORD)
         			 ));
 			 if(nomenFilter!=null) queryFilters.add(nomenFilter);
         }
@@ -1540,13 +1540,13 @@ public class MarkerController {
         	// query for the start and end markers to check their coordinates and chromosomes
         	// check that we can find the start marker
         	SearchParams sp = new SearchParams();
-        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.OP_EQUAL));
+        	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.Operator.OP_EQUAL));
         	SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
         	if(sr.getTotalCount()>0)
         	{
         		SolrSummaryMarker startMarkerObj = sr.getResultObjects().get(0);
         		// check that we can find the end marker
-            	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.OP_EQUAL));
+            	sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.Operator.OP_EQUAL));
             	sr = markerFinder.getSummaryMarkers(sp);
             	if(sr.getTotalCount()>0)
             	{
@@ -1564,7 +1564,7 @@ public class MarkerController {
 
             			String coordString = startCoord+"-"+endCoord;
             			logger.info("build coord string from markers "+startMarker+" to "+endMarker+" = "+coordString);
-            			Filter chromosomeFilter = new Filter(SearchConstants.CHROMOSOME,startMarkerObj.getChromosome(),Filter.OP_EQUAL);
+            			Filter chromosomeFilter = new Filter(SearchConstants.CHROMOSOME,startMarkerObj.getChromosome(),Filter.Operator.OP_EQUAL);
             			Filter coordFilter = FilterUtil.genCoordFilter(coordString,"bp");
             			if(coordFilter==null) coordFilter = nullFilter();
             			queryFilters.add(Filter.and(Arrays.asList(chromosomeFilter,coordFilter)));
@@ -1575,7 +1575,7 @@ public class MarkerController {
         String refKey = query.getRefKey();
         if(notEmpty(refKey))
         {
-        	queryFilters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.OP_EQUAL));
+        	queryFilters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.Operator.OP_EQUAL));
         }
 
         if(queryFilters.size()<1) return nullFilter();
@@ -1585,7 +1585,7 @@ public class MarkerController {
     // returns a filter that should always fail to retrieve results
     private Filter nullFilter()
     {
-    	return new Filter("markerKey","-99999",Filter.OP_EQUAL);
+    	return new Filter("markerKey","-99999",Filter.Operator.OP_EQUAL);
     }
 
     /** return a List comparable to 'annotations' but with the duplicate
@@ -1646,7 +1646,7 @@ public class MarkerController {
    			 List<Filter> vFilters = new ArrayList<Filter>();
    			 for(String value : values)
    			 {
-   				vFilters.add(new Filter(searchConstant,value,Filter.OP_EQUAL));
+   				vFilters.add(new Filter(searchConstant,value,Filter.Operator.OP_EQUAL));
    			 }
    			 f = Filter.or(vFilters);
    		}

@@ -559,33 +559,31 @@ public class InteractionController {
 
 		if (qf.getMarkerIDs().size() > 0) {
 			filters.add(new Filter(SearchConstants.MRK_ID, 
-					splitCommas(qf.getMarkerIDs()), Filter.OP_IN));
+					splitCommas(qf.getMarkerIDs()), Filter.Operator.OP_IN));
 			logger.debug("marker IDs: " + qf.getMarkerIDs().toString());
 		}
 
 		if (qf.getRelationshipTermFilter().size() > 0) {
 			filters.add(new Filter(SearchConstants.RELATIONSHIP_TERM,
-					splitCommas(qf.getRelationshipTermFilter()), Filter.OP_IN));
+					splitCommas(qf.getRelationshipTermFilter()), Filter.Operator.OP_IN));
 		}
 
 		if (qf.getValidationFilter().size() > 0) {
 			filters.add(new Filter(SearchConstants.VALIDATION,
-					splitCommas(qf.getValidationFilter()), Filter.OP_IN));
+					splitCommas(qf.getValidationFilter()), Filter.Operator.OP_IN));
 		}
 
 		if (qf.getDataSourceFilter().size() > 0) {
 			filters.add(new Filter(SearchConstants.DATA_SOURCE,
-					splitCommas(qf.getDataSourceFilter()), Filter.OP_IN));
+					splitCommas(qf.getDataSourceFilter()), Filter.Operator.OP_IN));
 		}
 
 		if (qf.getScoreFilter() != null) {
-			filters.add(Filter.greaterOrEqual(SearchConstants.SCORE_FILTERABLE,
-					qf.getScoreFilter()) );
+			filters.add(Filter.greaterOrEqual(SearchConstants.SCORE_FILTERABLE, qf.getScoreFilter()) );
 		}
 
 		if (qf.getRequireScore()) {
-			filters.add(Filter.greaterOrEqual(SearchConstants.SCORE_NUMERIC,
-					"0"));
+			filters.add(Filter.greaterOrEqual(SearchConstants.SCORE_NUMERIC, "0"));
 		}
 
 		logger.debug("filters: " + filters.toString());
@@ -595,7 +593,7 @@ public class InteractionController {
 		}
 
 		Filter andFilter = new Filter();
-		andFilter.setNestedFilters(filters, Filter.FC_AND);
+		andFilter.setNestedFilters(filters, Filter.JoinClause.FC_AND);
 
 		logger.debug("andFilter: " + andFilter.toString());
 
