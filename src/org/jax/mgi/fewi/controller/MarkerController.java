@@ -1317,7 +1317,6 @@ public class MarkerController {
         		try {
 					mav.addObject("databaseDate", df.parse(db.getValue()));
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
         	}

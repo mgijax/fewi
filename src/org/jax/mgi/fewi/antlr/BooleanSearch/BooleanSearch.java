@@ -33,7 +33,7 @@ public class BooleanSearch
 	 * remove empty double quotes
 	 * remove empty parens
 	 */
-	private static String sanitizeInput(String s)
+	public static String sanitizeInput(String s)
 	{
 		s = QueryParser.removeUnmatched(s,'"');
 		s = QueryParser.removeUnmatched(s,'(',')');

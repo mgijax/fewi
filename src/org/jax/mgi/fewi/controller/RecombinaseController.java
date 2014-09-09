@@ -386,9 +386,6 @@ public class RecombinaseController {
     /* private instance methods                                            */
     /*---------------------------------------------------------------------*/
 
-    /** TODO : needs to be adjusted for alleles
-     *
-     */
     private List<Sort> parseSummarySorts(HttpServletRequest request) {
 
         List<Sort> sorts = new ArrayList<Sort>();

@@ -650,7 +650,7 @@ public class GXDController {
 			@ModelAttribute GxdQueryForm query)
 	{
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		params.setPageSize(0);
 
 		return gxdFinder.getImageCount(params);
@@ -661,9 +661,8 @@ public class GXDController {
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
-		// TODO: figure out how to speed up the performance
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		// we want to get these counts as fast as possible
 		//params.setSorts(new ArrayList<Sort>(0));
 		params.setPageSize(0);

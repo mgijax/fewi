@@ -31,9 +31,6 @@ public class ProviderLinker
 	private static String vegaTranUrl = "http://vega.sanger.ac.uk/Mus_musculus/Transcript/Summary?db=core;t=";
 	private static String dotsUrl = "	http://genomics.betacell.org/gbco/showSummary.do?questionFullName=TranscriptQuestions.TranscriptFromDtIds&myProp%28dtIdP%29=";
 
-
-//TODO - move provider string test to use constants
-
     /*-------------------------*/
     /* public instance methods */
     /*-------------------------*/

@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.util;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * TODO: Rename this class to something more sensible.
  * 
  * Initially created to factor out code that prepares a jsp response to comply with
  * a cross browser Http AJAX request.

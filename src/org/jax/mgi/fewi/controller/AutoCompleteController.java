@@ -223,7 +223,7 @@ public class AutoCompleteController {
 	/* float any results that begins with the given query string up to the
 	 * top of the results
 	 * 
-	 * TODO: We need to find a way to do this in Solr. Not only is this convoluted and inconsistent,
+	 *  We need to find a way to do this in Solr. Not only is this convoluted and inconsistent,
 	 * 	it likely won't do what is expected in every case. -kstone
 	 */
 	private SearchResults<EmapaACResult> floatBeginsMatches (String query,
@@ -437,7 +437,7 @@ public class AutoCompleteController {
 		 *  	-kstone
 		 */
 		ids = ids.replaceAll("mp:","MP:");
-		
+		// TODO parse query in a boolean sorta way
 		SearchResults<VocabACResult> results = resolveVocabTermIdQuery(ids);
 		if(results==null) return ids;
 		

@@ -9,8 +9,6 @@ import java.util.List;
  */
 public class Filter {
 
-
-
     //////////////////////////////////////////////////////////////////////////
     //  INTERNAL FIELDS
     //////////////////////////////////////////////////////////////////////////
@@ -360,5 +358,31 @@ public class Filter {
 		}
 	}
 
+	public void Accept(VisitorInterface pi) {
+		pi.Visit(this);
+	}
 
+	public String getOperatorString() {
+		if(operator == Filter.OP_BEGINS) return "BEGINS";
+		else if(operator == Filter.OP_CONTAINS) return "CONTAINS";
+		else if(operator == Filter.OP_ENDS) return "ENDS";
+		else if(operator == Filter.OP_EQUAL) return "=";
+		else if(operator == Filter.OP_GREATER_OR_EQUAL) return ">=";
+		else if(operator == Filter.OP_GREATER_THAN) return ">";
+		else if(operator == Filter.OP_GREEDY_BEGINS) return "GREEDY BEGINS";
+		else if(operator == Filter.OP_HAS_WORD) return "HAS WORD";
+		else if(operator == Filter.OP_IN) return "IN";
+		else if(operator == Filter.OP_LESS_OR_EQUAL) return "<=";
+		else if(operator == Filter.OP_LESS_THAN) return "<";
+		else if(operator == Filter.OP_LIKE) return "LIKE";
+		else if(operator == Filter.OP_NOT_EQUAL) return "!=";
+		else if(operator == Filter.OP_NOT_HAS) return "!HAS";
+		else if(operator == Filter.OP_NOT_IN) return "!IN";
+		else if(operator == Filter.OP_NOT_NULL) return "!NULL";
+		else if(operator == Filter.OP_NULL) return "NULL";
+		else if(operator == Filter.OP_STRING_CONTAINS) return "STRING CONTAINS";
+		else if(operator == Filter.OP_WORD_BEGINS) return "WORD BEGINS";
+		else return operator + "";
+
+	}
 }

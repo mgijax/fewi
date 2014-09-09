@@ -108,7 +108,7 @@ public class MarkerFinder {
     /* Retrieval of multiple markers
     /*---------------------------------*/
 
-    // TODO: should this be using the markerSummaryHunter? 
+    //      Should this be using the markerSummaryHunter? 
     //		This gets a bit confusing, but am unsure about removing - kstone
     public SearchResults<Marker> getMarkers(SearchParams searchParams) {
 

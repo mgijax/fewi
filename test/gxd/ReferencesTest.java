@@ -23,7 +23,6 @@ public class ReferencesTest {
     @Test
     public void testAnatomicalSystem() 
     {
-//        // TODO Auto-generated method stub
 //        SolrSequenceSummaryHunter sssh = new SolrSequenceSummaryHunter();
 //        SolrReferenceSummaryHunter srsh = new SolrReferenceSummaryHunter();
 //        

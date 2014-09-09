@@ -980,7 +980,6 @@ public class GXDLitController {
 		if(year != null && !"".equals(year)){
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){
-				// TODO validate years are numbers
 
 				List<String> years = this.parseList(year, "-");
 
@@ -1008,7 +1007,6 @@ public class GXDLitController {
 								years.get(0), Filter.OP_GREATER_OR_EQUAL));
 					}
 				}
-				// TODO error: too many years entered
 			} else {
 				filterList.add(new Filter(SearchConstants.REF_YEAR,
 						year, Filter.OP_EQUAL));

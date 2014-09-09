@@ -44,7 +44,7 @@ public class Highlighter {
 	    
 	    // need to exclude anchor tags so that urls in links will behave correctly.
 	    // E.g. you searched for "europhenome" in a reference abstract and there is a link to "http://europhenome.org"
-	    // TODO: this code is up for grabs in terms of optimizing, as long as urls in anchor tags are taken into account. - kstone
+	    // this code is up for grabs in terms of optimizing, as long as urls in anchor tags are taken into account. - kstone
 	    Matcher am = Highlighter.anchorPattern.matcher(inputText);
 	    ArrayList<String> anchors = new ArrayList<String>();
 	    String tempInput=inputText;

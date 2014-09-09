@@ -92,7 +92,6 @@ public class AlleleController {
     // keep this around, so we know what version of the assembly we have (even
     // for alleles with a representative sequence without proper coordinates)
 	//
-	// TODO: surely there must be a more effective way of getting this information - kstone
     private static String assemblyVersion = null;
 
     private static Integer DOWNLOAD_ROW_CAP = new Integer(250000);
@@ -1921,7 +1920,6 @@ public class AlleleController {
 	        		try {
 						mav.addObject("databaseDate", df.parse(db.getValue()));
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 	        	}
