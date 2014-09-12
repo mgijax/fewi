@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Properties;
@@ -16,6 +17,7 @@ import mgi.frontend.datamodel.AlleleRelatedMarker;
 import mgi.frontend.datamodel.AlleleRelatedMarkerProperty;
 import mgi.frontend.datamodel.AlleleCellLine;
 import mgi.frontend.datamodel.AlleleID;
+import mgi.frontend.datamodel.AlleleRelatedMarker;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.Genotype;
@@ -36,8 +38,10 @@ import org.hibernate.SessionFactory;
 import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.detail.AlleleDetail;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
 import org.jax.mgi.fewi.finder.GenotypeFinder;
@@ -47,6 +51,7 @@ import org.jax.mgi.fewi.finder.ReferenceFinder;
 import org.jax.mgi.fewi.forms.AlleleQueryForm;
 import org.jax.mgi.fewi.forms.MutationInvolvesQueryForm;
 import org.jax.mgi.fewi.forms.FormWidgetValues;
+import org.jax.mgi.fewi.forms.MutationInvolvesQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -57,6 +62,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.AlleleSummaryRow;
 import org.jax.mgi.fewi.summary.MutationInvolvesSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.summary.MutationInvolvesSummaryRow;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -901,8 +907,6 @@ public class AlleleController {
 		// For now, we just include the first one.
 
 		String namesRaw = allele.getName();
-		boolean hasQtlExpts = false;
-
 		Marker marker = allele.getMarker();
 		if (marker != null)
 		{
@@ -942,14 +946,12 @@ public class AlleleController {
 				if (qtlExpts != null && qtlExpts.size() > 0)
 				{
 				    mav.addObject("qtlExpts", qtlExpts);
-				    hasQtlExpts = true;
 				}
 
 				List<MarkerQtlExperiment> qtlCandidateGenes = marker.getQtlCandidateGeneNotes();
 				if (qtlCandidateGenes != null && qtlCandidateGenes.size() > 0)
 				{
 				    mav.addObject("qtlCandidateGenes", qtlCandidateGenes);
-				    hasQtlExpts = true;
 				}
 
 				String qtlNote = marker.getQtlNote();
@@ -1560,35 +1562,10 @@ public class AlleleController {
 		// identify which sections will appear, based on what data is present
 		// (needed for table of contents)
 
-		mav.addObject("hasNomenclature", "yes");
-		mav.addObject("hasMutationDescription", "yes");
+		// create an alleleDetail object for determining page logic
+		AlleleDetail alleleDetail = new AlleleDetail(allele);
 
-		if (hasMcl || (transmissionType != null) || (pcl != null) || (allele.getStrain() != null)) {
-		    mav.addObject("hasMutationOrigin", "yes");
-		}
-		if (!alleleType.equals("QTL")) {
-		    mav.addObject("hasIMSR", "yes");
-		}
-		if (allele.getCountOfExpressionAssayResults() > 0) {
-		    mav.addObject("hasExpression", "yes");
-		}
-		if (allele.getCountOfReferences() > 0) {
-		    mav.addObject("hasReferences", "yes");
-		}
-		if (allele.getHasDiseaseModel()) {
-		    mav.addObject("hasDiseaseModel", "yes");
-		}
-		List<PhenoTableSystem> pheno = allele.getPhenoTableSystems();
-		if ((pheno != null) && (pheno.size() > 0)) {
-		    mav.addObject("hasPhenotypes", "yes");
-		}
-		if ((driverNote != null) && (driverNote.length() > 0)) {
-		    mav.addObject("hasRecombinaseData", "yes");
-		}
-		if (hasQtlExpts || (knockoutNote != null) ||
-			(derivationNote != null) || (generalNote != null)) {
-		    mav.addObject("hasNotes", "yes");
-		}
+		mav.addObject("alleleDetail",alleleDetail);
 
 		if(allele.getPhenotypeImages().size() > 0 && allele.getPrimaryImage()!=null)
 		{

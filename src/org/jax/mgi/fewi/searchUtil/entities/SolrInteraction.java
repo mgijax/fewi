@@ -1,8 +1,9 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
-import java.util.List;
+import org.jax.mgi.fewi.searchUtil.entities.group.SolrInteractionEntity;
 
-public class SolrInteraction
+
+public class SolrInteraction implements SolrInteractionEntity
 {
 	String regKey;
 	String organizerSymbol;

@@ -115,6 +115,8 @@
     Spring's @Required and @Autowired, as well as JSR 250's @Resource.
     -->
     <context:component-scan base-package="org.jax.mgi.fewi.controller" />
+    <context:component-scan base-package="org.jax.mgi.fewi.handler" />
+    <context:component-scan base-package="org.jax.mgi.fewi.matrix" />
     <context:component-scan base-package="org.jax.mgi.fewi.finder" />
     <context:component-scan base-package="org.jax.mgi.fewi.hunter" />
     <context:component-scan base-package="org.jax.mgi.fewi.template" />

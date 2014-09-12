@@ -1,0 +1,1432 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Matrix: Tissue X Gene</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Matrix: Tissue X Gene</h1>
+    <ul>
+        <li>User story 41, E3: TissuexGene matrix</li>
+        <li>User story 47, E4: Closey on Tissue x Stage</li>
+        <li>User story 97, E6: Scrolling</li>
+        <li>User story 45, E3: Cell hover display for tissue x gene matrix</li>
+        <li>User story 25, E2: Color gradient bins</li>
+        <li>User story 85, Indicate mixture of present and absent results</li>
+        <li>User story 101, Structure-specified queries: open 1 level</li>
+        <li>User story 60, E2: Color legend</li>
+        <li>User story 93, Cell popups: filtering tissuexgene</li>
+        <li>User story 68, E5: User can select and filter rows : the basics</li>
+        <li>User story 122, E5: Highlighted checked rows</li>
+        <li>User story 123, E5: Row checkboxes: 3 states+responsiveness</li>
+        <li>User story 111, Change format of gold cells</li>
+        <li>User story 113, E5: Tissue x Gene: User can select and filter genes</li>
+        <li>User story 69, E4: O/C state remembered across filtering</li>
+        <li>User story 164, cell-pop ups to 0 images</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria - Current Development Work</h2>
+	<ul>
+		<li>sto41: new tab "Tissue x Gene matrix"</li>
+		<li>sto101: for a single structure query, in both matrices, display that structure opened one level (assuming it is O/C)</li>
+		<li>sto41: shows top level structures x N columns if no structure is specified</li>
+		<li>sto41: cells are colored</li>
+		<li>sto41: genes (columns) ordered by alpha</li>
+		<li>sto41: gene symbols displayed as vertical text</li>
+		<li>sto41: no scrolling, no filtering</li>
+		<li>sto41: openy/closey behavior</li>
+		<li>sto41: numbers in cells are ok for testing, but should not appear in demo</li>
+		<li>sto47 - clicking on an open O/C row:
+		<ul>
+			<li>removes all displayed descendant rows</li>
+			<li>rows below move up</li>
+			<li>returns the row to the closed state</li>
+		</ul>
+		</li>
+		<li>sto97 - Matrices are "scrollable"
+		<ul>
+			<li>when a matrix is "too wide" (size TBD), horizontal scrollbars are provided</li>
+			<li>when a matrix is "too tall" (size TBD), vertical scrollbars are provided</li>
+		</ul>
+		</li>
+		<li>sto97 - Row and column headers remain "anchored" in position at the left and top (respectively) while scrolling, i.e.:</li>
+		<li>sto97 - Scrolling left/right:
+		<ul>
+			<li>Row headers remain fixed</li>
+			<li>Column headers scroll left/right with matrix</li>
+		</ul>
+		</li>
+		<li>sto97 - Scrolling up/down:
+		<ul>
+			<li>Row headers scroll up/down with matrix</li>
+			<li>Column headers remain fixed</li>
+		</ul>
+		</li>
+		<li>sto97 - Works in both matrices</li>
+		<li>sto97 - Users with scroll wheels ought to be able to use them to scroll up/down when the mouse is positioned over the matrix</li>
+		<li>sto97 - User must be able to increase the "viewport" size (the amount of matrix that is visible).</li>
+		<li>sto45 - see sto26 (Matrix Tissue By Stage test suite)</li>
+		<li>sto45 - the popup display contains the same info except there is no #genes column</li>
+		<li>sto25 - see mockups (slide 14)</li>
+		<li>sto25 - Only cells colored blue or red have binned gradients</li>
+		<li>sto25 - The bin parameters for blue:
+		<ul>
+			<li>&gt;50 = dark</li>
+			<li>5-50 = medium</li>
+			<li>1-4 = light</li>
+		</ul>
+		</li>
+		<li>sto25 - Bin parameters for red:
+		<ul>
+			<li>&gt;20 = dark</li>
+			<li>5-20 = medium</li>
+			<li>1-4 = light</li>
+		</ul>
+		</li>
+		<li>sto25 - for blue, the count to use is the total number of detected results under that cell</li>
+		<li>sto25 - for red, the count to use is the number of Absent results for THAT structure (do not count children)</li>
+		<li>sto25 - does not include the legend</li>
+		<li>sto85 - if a cell is blue, but also contains Absent results for THAT structure (not substructures), display a small red triangle in the upper right of the cell. (see mockup)
+		<ul>
+			<li>Q: are red triangle colors binned? (No - just one color; use the medium red.)	</li>
+		</ul>
+		</li>
+		<li>sto60 - legend is displayed in both matrix tabs (see mockup)</li>
+		<li>sto60 - not implementing the help popups for this story</li>
+		<li>sto93 - cell popup dialogs provide two "filter" buttons (see mockup) - one for results, one for images</li>
+		<li>sto164 - if there are no images for the results underlying a cell, then the popup for that cell should disable (alternately, disappear) the "See images" button.</li>
+		<li>sto93 - both do the same filtering, they just end up on different tabs</li>
+		<li>sto93 - filtering by a cell filters for that structure (including subs) and that stage or gene.</li>
+		<li>sto93 - filtering by a cell, works like other filtering:
+		<ul>
+			<li>the two filters show up in the "current filters" area - can be removed by user</li>
+			<li>filtering op works with browser history, i.e., the back button "undoes" the filter op.</li>
+		</ul>
+		</li>
+		<li>sto68 - every displayed row has a checkbox</li>
+		<li>sto68 - the checkboxes are vertically aligned and positioned at the right side of the structure names (see mockups)</li>
+		<li>sto68 - the matrix has a "filter" icon</li>
+		<li>sto68 - the user can filter by checking rows and then clicking the filter icon</li>
+		<li>sto68 - the query is rerun with the additional structure parameters based on what the user has checked, and the results are redrawn (nothing happens if the user clicks on filter while nothing is selected)</li>
+		<li>sto68 - Structure filtering works with the existing filter mechanism:
+		<ul>
+			<li>each selected structure appears as a filter box (which can be removed by the user)</li>
+			<li>the browser's Back button undoes the last filter operation</li>
+		</ul>
+		</li>
+		<li>sto68 - in this story, it's real simple: whatever the user checks is selected - no autochecking of descendents, etc.</li>
+		<li>sto122 - When a row's filter checkbox is checked the entire row is highlighted with a pale green background that has a bold border</li>
+		<li>sto122 - When a row's filter checkbox is removed the highlighting goes away</li>
+		<li>sto123 - Checkbox behavior should mimic the behavior of Feature Type selection in the marker query form. In words:
+		<ul>
+			<li>a cb has one of three states:
+			<ul>
+				<li>checked: displays a checkmark</li>
+				<li>blank: empty</li>
+				<li>minus: displays a "-"</li>
+			</ul>
+			</li>
+			<li>both blank and minus are considered "unchecked"; the only difference is that minus indicates that one or more descendants is checked.</li>
+			<li>initially, everything is unchecked, then...
+			<ul>
+				<li>if the user clicks an unchecked cb (either blank or minus), the cb and all visible descendants become checked</li>
+				<li>if the user clicks a checked cb, that cb and all displayed descendants become blank</li>
+				<li>After a click, each ancestor, a, of the clicked cb updates its state as follows:
+				<ul>
+					<li>if all of a's displayed children are checked, a is checked</li>
+					<li>otherwise a is minus</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+			<li>if a structure is displayed more than once, all its cbs should stay in sync</li>
+		</ul>
+		</li>
+		<li>sto111 - cells that were solid gold (!) now show just the little triangle in the upper right corner</li>
+		<li>sto111 - Change the gold box to the gold triangle box in the legend</li>
+
+		<li>sto113 - every gene (column) has a checkbox</li>
+		<li>sto113 - initially all unchecked</li>
+		<li>sto113 - whatever user checks gets applied when filtering, as in: filter for gene id in (id1, id2, ...)</li>
+		<li>sto113 - After filtering, one "filter box" per gene is displayed (similar to filtering by stages).
+		<ul>
+			<li>Label="Gene:&lt;symbol&gt;".</li>
+			<li>Removable by the user.</li>
+			<li>Works with browser history</li>
+		</ul>
+		</li>
+		<li>sto69 - For every row, r, displayed before filtering, if there is data for r after filtering, then r is displayed, else it goes away.
+		<ul>
+			<li>grids are not kept in sync w/ each other</li>
+			<li>open state is remembers across back buttons</li>
+		</ul>
+		</li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+    <ul>
+        <li>Do not address the differential query yet. </li>
+        <li>A matrix (grid) is displayed with anatomy terms for rows, mouse markers for columns.</li>
+        <li>Mouse marker columns are ordered by smart-alpha.</li>
+        <li>Text for mouse marker columns is rotated 90 degrees left.</li>
+        <li>All data are included: positive, negative, or ambiguous/not specified.</li>
+		<li>Color roll-up logic: 
+		<ol>
+			<li>If there are any results under the cell where detected=true, then color=BLUE.</li>
+			<li>Else, if the structure for THAT row (not looking at descendants) has result(s) that are NS or Ambiguous, then color=GRAY.</li>
+			<li>Else, if the structure for THAT row (not looking at descendants) has result(s) that are Absent, then color=RED.</li>
+			<li>Else, if there are any results under that cell where detected is Ambiguous, NS or Absent, color=GOLD.</li>
+		</ol>
+		</li>
+        <li>Only the required mouse marker columns are displayed to represent expression data (no blank columns).</li>
+        <li>When the query includes a structure (anatomy term), <del>only a single row is displayed corresponding to the queried structure</del> rows are displayed corresponding to the queried structure and its immediate child terms (if any). (sto101)</li>
+		<li>When the query does not include a structure (anatomy term), all necessary rows containing &quot;Default&quot; anatomy terms are displayed. (sto23)</li>
+		<li>&quot;Default&quot; anatomy terms to display include: (sto23)
+		<ul>
+			<li>Mouse.</li>
+			<li>The next level immediately below Mouse.</li>
+			<li>The level immediately below Organ System (e.g., alimentary system, cardiovascular system, etc.).</li>
+		</ul>
+		</li>
+		<li>Only the required rows are displayed to represent structures which have expression data for the submitted query parameters (no blank rows). (sto23)</li>
+		<li>If a term has multiple paths up the DAG to the root node (mouse), each path is represented once.</li>
+		<li>Child terms are indented below their parent terms.</li>
+		<li>In the row for a given structure, in the column for a given mouse marker, when no data exists for the structure but the structure is valid for some stage, display an empty circle symbol. </li>
+		<li>If a displayed term has one or more descendant terms with annotations, the displayed term's row can be "opened" (expanded) to display the immediate child term(s) along the path(s) to the annotated descendant term(s).</li>
+		<li>Clicking an "opened" or "expanded" term (one displaying descendant terms) redraws the grid to "close" or "hide" all descendant term rows (sto47).</li>
+		<li>If a term with descendant terms was previously "opened" or "expanded", a subsequent click will reopen or expand all descendant term rows which were also opened or expanded. (sto47)</li>
+        <li>Each cell contains a count of the number of expression results for the given anatomy term and mouse marker including results in any child terms and at all Theiler Stages.</li>
+		<li>Counts of expression results do not appear in the cells except in Debug Mode.</li>
+		<li>Clicking in a colored cell triggers a pop-up panel on the page. (sto45)</li>
+		<li>The popup panel contains a header row identifying the row and column of the cell from which it was triggered. (sto26)</li>
+		<li>The popup panel contains a table summarizing the data underlying the clicked cell: (sto45)
+		<ul>
+			<li>Columns: Detected values; Count of results</li>
+			<li>Rows: Detected value = Yes; Detected value = No; Detected value = Ambiguous or Not specified (summed)</li>
+			<li>The "Yes" count is the sum of all "Yes" results for the term and descendant terms.  The "No" and "Ambig/NS" counts are ONLY for the term itself.</li>
+		</ul>
+		</li>
+		<li>The popup contains two buttons for filtering the results set, which function similar to previous MGI filters: (sto93)
+		<ul>
+			<li>"Show these results" filters the existing results set and redraws the grid to display only the structure (and substructures) for the row of interest, and the Gene (by ID, not all nomenclature matches) for the column of interest. (It retains any prior filtering and other parameters from the query.)</li>
+			<li>"Show the images" filters the results set of images to include only those associated with assay results for the structure (and substructures) for the row of interest, and the Gene (by ID, not all nomenclature matches) for the column of interest, and changes the display to the Images tab.</li>
+			<li>If there are no images for the results underlying a cell, the "Show the images" button is not displayed. (sto164)</li>
+			<li>The standard "remove filters" buttons are added to the interface.</li>
+			<li>These actions are captured in the Browser History.</li>
+		</ul>
+		</li>
+		<li>Blue (positive annotations) and red (negative annotations) colors use 3 shades to form a "heat map" of the count of results of each cell. (sto25)
+		<ul>
+			<li>Blue (positive annotations) color bins represent 1-4 results, 5-50 results, and more than 50 results.</li>
+			<li>Blue (positive annotations) colored results include all positive annotations to all descendant terms.</li>
+			<li>Red (negative annotations) color bins represent 1-4 results, 4-20 results, and more than 20 results.</li>
+			<li>Red (negative annotations) color bins EXCLUDE annotations to descendant terms.</li>
+		</ul>
+		</li>
+		<li>When negative or ambiguous results exist only in descendant terms, display a gold corner triangle. (sto111)</li> 
+		<li>Grey (ambiguous or "not specified" annotations) and gold (negative or ambiguous results only in descendant terms) cells have only 1 shade (no heat map coloration). (sto25) </li>
+		<li>When negative annotations also exist for a structure which has its own or inferred (rolled-up) positive annotations, display a red corner triangle on the blue cell. (sto85) </li>
+		<li>A legend is available explaining the meaning of colors and symbols. (sto60)</li>
+		<li>The user may filter the existing results set by checking boxes to indicate which structure rows are to be retained. (sto68)</li>
+		<li>When filtering by structure terms, descendant terms are retained by default. (sto68)</li>
+		<li>When filtering by structure, the only columns retained are those having data for at least 1 retained structure row. (sto68)</li>
+		<li>After filtering by structure(s), all displayed rows are "closed" (collapsed) by default. (sto68)</li>
+		<li>Structure filters add "remove filter" buttons to the Filtering Button area, like the existing filters. (sto68)</li>
+		<li>Structure filters are included in Browser History, like the existing filters. (sto68)</li>
+		<li>Checkboxes which indicate rows selected for filtering display 1 of 3 states to give the user visual cues for the effects post-filtering: (sto123)
+		<ul>
+			<li>blank - the anatomical term (row) is not selected, nor it is an ancestor term, nor a descendant term of a selected term.</li>
+			<li>checked - the anatomical term (row) is selected for filtering <i>OR</i> the term is a descendant of a selected term.</li>
+			<li>minus - the anatomical term (row) is an ancestor of a selected term.</li>
+		</ul>
+		</li> 
+		<li>When the user selects a checkbox, then submits the filtering functionality: (sto123)
+		<ul>
+			<li>Upon selecting the checkbox, ancestor term(s) <i>directly above</i> the selected term display a minus sign (to indicate "partially selected"). Other ancestor terms elsewhere on the grid remain in their existing state.</li>
+			<li>If the user selects checkboxes for all descendant terms for a particular ancestor term, the ancestor term displays a checkmark instead of a minus sign (to indicate "included in filtering action").</li>
+			<li>If the user selects checkboxes for all descendant terms for a particular ancestor term, the ancestor term is the submitted filter term (not the individual descendant terms).</li>
+			<li>Upon selecting the checkbox, if the row for the term displays descendant terms (is expanded/open), descendant term(s) display a checkmark (to indicate "included in filtering action").</li>
+			<li>After submitting the filter action, only rows for the term(s) actively selected by the user are displayed by default in the results set grid view.</li>
+			<li><i>Exception:</i> if the user selected all descendant terms for a particular ancestor term, then the ancestor term is submitted and is a displayed row in the results set grid view.</li>
+			<li>After submitting the filter action, all descendant terms are included in the results set by default, but no descendant term rows are displayed by default in the grid view. </li>
+			<li>After submitting the filter action, only columns required to display the filtered data set (including descendant terms) are displayed.</li>
+		</ul>
+		</li>
+		<li>When the user selects a column (gene) checkbox, then submits the filtering functionality: (sto113)
+		<ul>
+			<li>After submitting the filter action, only columns for the gene(s) actively selected by the user are displayed by default in the results set grid view.</li>
+			<li>After submitting the filter action, only rows required to display the filtered data set are displayed.</li>
+		</ul>
+		</li>
+		<li>After filtering, the rows "remember" their open/closed state: (sto69)
+		<ul>
+			<li>Each time you "submit to the database" (via a query or a filtering behavior (either adding filters or removing them)), the grid will "capture a snapshot" of all the opened rows.</li>
+			<li>After the "submit", the grid will attempt to redraw with all the previously opened rows still open.
+			<ul>
+				<li>If some of those rows no longer exist, they simply won't appear.</li>
+				<li>If new rows appear between previously open rows, those rows will be in the closed state.</li>
+				<li>If previously absent rows now reappear, and they were in an open state before, they will be in an open state now.</li>
+			</ul>
+			</li>
+			<li>When the user clicks the "Back" button, the browser will "remember" the state of the rows for the data set to be displayed, as best it can:
+			<ul>
+				<li>If rows were open, then the user filtered the results based on data other than anatomy terms (rows), then the user closed some of the open rows, then the user clicked the "Back" button, the browser will keep the open rows open and the newly closed rows closed.</li>
+				<li>If rows were open, then the user filtered the results based on anatomy terms, then the user closed some of the open rows, then the user clicked the "Back" button, the browser will return to the set of open rows associated with the previous results set.<br/>
+				<i>(This is because the path up the DAG to the root node "mouse" gets broken when filtering by anatomy terms.)</i></li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+		<li>"Remembering" the open/closed state of rows is not reflected in the URL so cannot be bookmarked or copied and sent to another user. (sto69) </li>
+    </ul>
+</div>
+
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+			<li>When a structure is not specified as a query parameter, all &quot;Default&quot; structure rows are displayed which contain results for the other query parameters. Each subsequent "level" is indented. "Sibling terms" are listed in alphabetical order.  Cells where no expression data is available, but which represent a "valid" Theiler Stage for the given anatomical structure contain a "Valid" symbol. Colored cells do not contain a count of expression results data except in "Debug Mode". (sto41)
+			<p concordion:manual="true">passed. -klf 2014-07-02</p> 
+			<ol>
+				<li>QUERY FOR <b>Hoxb*</b> (contains few genes, a few thousand results, almost all default anatomical structures).</li>
+				<li>Verify that the following Anatomy Term rows, appear, with the specified indent-level and colored Gene cells:
+				<table>
+					<tr>
+						<th>Anatomy Term</th>
+						<th>Indent</th>
+						<th>Open State</th>
+						<th>Empty Cell  for Gene Columns</th>
+						<th>Colored Cells For Data in Gene Columns<br/>
+							(no counts when Debug Mode is Off)</th>
+					</tr>
+					<tr>
+						<td>mouse</td>
+						<td>0</td>
+						<td>OPEN by default</td>
+						<td></td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>blastocyst</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+						<td>Hoxb6</td>
+					</tr>
+					<tr>
+						<td>body fluid or substance</td>
+						<td>1</td>
+						<td>ROW DOES NOT APPEAR</td>
+						<td></td>
+						<td>none<i> - no data as of June 2014, row should not
+								appear</i></td>
+					</tr>
+					<tr>
+						<td>body region</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb6, Hoxb7,
+							Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>cavity or lining</td>
+						<td>1</td>
+						<td>ROW DOES NOT APPEAR</td>
+						<td></td>
+						<td>none<i> - no data as of June 2014, row should not
+								appear</i></td>
+					</tr>
+					<tr>
+						<td>early conceptus</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5, Hoxb5os,
+							Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+						<td>Hoxb1, Hoxb6</td>
+					</tr>
+					<tr>
+						<td>early embryo</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5, Hoxb5os,
+							Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+						<td>Hoxb1, Hoxb6</td>
+					</tr>
+					<tr>
+						<td>embryo</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td></td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>extraembryonic component</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb3, Hoxb3os, Hoxb4, Hoxb5os, Hoxb13</td>
+						<td>Hoxb2, Hoxb5, Hoxb6, Hoxb7, Hoxb8, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>germ layer</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb5os, Hoxb13</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5,
+							Hoxb6, Hoxb7, Hoxb8, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>organ</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb3os</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>organ system</td>
+						<td>1</td>
+						<td>OPEN by default</td>
+						<td>Hoxb3os</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>alimentary system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb6, Hoxb7,
+							Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>cardiovascular system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb3os</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>endocrine system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, 
+							Hoxb5os, Hoxb7, Hoxb8, Hoxb13</td>
+						<td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>exocrine system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, 
+							Hoxb5os, Hoxb7, Hoxb8, Hoxb13</td>
+						<td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>genitourniary system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb2, Hoxb3, Hoxb3os, 
+							Hoxb5os, Hoxb6, Hoxb8, Hoxb13</td>
+						<td>Hoxb1, Hoxb4, Hoxb5, Hoxb7, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>gland</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb6, Hoxb7,
+							Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>hemolymphoid system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os, Hoxb7</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb6, 
+							Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>integumental system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os, Hoxb13</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb6, Hoxb7,
+							Hoxb8, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>liver and biliary system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb3, Hoxb3os, Hoxb5os, Hoxb13</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb4, Hoxb5, Hoxb6, Hoxb7,
+							Hoxb8, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>musculature</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb5os, Hoxb7,
+							Hoxb8, Hoxb13</td>
+						<td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>musculoskeletal system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3os, Hoxb5os, Hoxb13</td>
+						<td>Hoxb3, Hoxb4, Hoxb5, Hoxb6, Hoxb7,
+							Hoxb8, Hoxb9</td>
+					</tr>
+					<tr>
+						<td>nervous system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb6, Hoxb7,
+							Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>organ</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb3os</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>reproductive system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb2, Hoxb3, Hoxb3os</td>
+						<td>Hoxb1, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>respiratory system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>sensory organ system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os, Hoxb5os</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>urinary system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb3os</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>visceral organ system</td>
+						<td>2</td>
+						<td>Can be opened</td>
+						<td>Hoxb3os</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5,
+							Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>polar body</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5, Hoxb5os, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+						<td>Hoxb6</td>
+					</tr>
+					<tr>
+						<td>tissue</td>
+						<td>1</td>
+						<td>Can be opened</td>
+						<td>Hoxb</td>
+						<td>Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5, Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+					</tr>
+					<tr>
+						<td>umbilical or vitelline vessel</td>
+						<td>1</td>
+						<td>ROW DOES NOT APPEAR</td>
+						<td></td>
+						<td>none<i> - no data as of June 2014, row should not
+								appear</i></td>
+					</tr>
+					<tr>
+						<td>zona pellucida</td>
+						<td>1</td>
+						<td>CANNOT be opened</td>
+						<td>Hoxb, Hoxb1, Hoxb2, Hoxb3, Hoxb3os, Hoxb4, Hoxb5, Hoxb5os, Hoxb7, Hoxb8, Hoxb9, Hoxb13</td>
+						<td>Hoxb6</td>
+					</tr>
+				</table>
+				</li>
+    		</ol>
+    		</li>
+    		
+    		<li>When a structure is specified as a query parameter, the matrix displays a row containing the queried structure term and if one or more annotated descendant terms exist, the row is opened to show the next "child" level(s).   Subsequent levels of descendant terms are closed by default. Columns contain the same set of genes returned in the "Genes" tab.  (sto41, sto101) 
+ 			<p concordion:manual="true">passed. -klf 2014-07-24</p> 
+ 			<ol>
+				<li>QUERY FOR <b>aortic valve TS21-28</b> (21 genes, 42 results).</li>
+				<li>Verify ALL of the following gene symbols are displayed in column headers (same as on Genes Tab), and a colored cell exists for each gene:
+				<table>
+					<tr><th>Gene symbol</th></tr>
+					<tr><td>Adarb1</td></tr>
+					<tr><td>Adrbk1</td></tr>
+					<tr><td>Col1a1</td></tr>
+					<tr><td>Col1a2</td></tr>
+					<tr><td>Ctgf</td></tr>
+					<tr><td>Fam89b</td></tr>
+					<tr><td>Gnb4</td></tr>
+					<tr><td>Id1</td></tr>
+					<tr><td>Itgb1</td></tr>
+					<tr><td>Kcnc3</td></tr>
+					<tr><td>Kcnj15</td></tr>
+					<tr><td>Lrrcc1</td></tr>
+					<tr><td>Mxra8</td></tr>
+					<tr><td>Nat2</td></tr>
+					<tr><td>Npas3</td></tr>
+					<tr><td>Pdgfra</td></tr>
+					<tr><td>Ror1</td></tr>
+					<tr><td>Ror2</td></tr>
+					<tr><td>Sost</td></tr>
+					<tr><td>Tgfb1</td></tr>
+					<tr><td>Tnr</td></tr>
+				</table>				
+				</li>
+				<li>Verify that the row is expanded (open) by default to display a row for <b>aortic valve leaflet</b>.</li>
+				<li>Verify that a colored cell exists for ONLY the following genes:
+				<table>
+					<tr><th>Gene symbol</th></tr>
+					<tr><td>Col1a1</td></tr>
+					<tr><td>Col1a2</td></tr>
+					<tr><td>Pdgfra</td></tr>
+				</table>				
+				</li>
+				<li>QUERY FOR Structure <b>aortic valve TS21-28</b> and Stages <b>21, 22, 24, 28</b>.</li>
+				<li>Verify ALL of the following gene symbols are displayed in column headers (same as on Genes Tab), and a colored cell exists for each gene:
+				<table>
+					<tr><th>Gene symbol</th></tr>
+					<tr><td>Adarb1</td></tr>
+					<tr><td>Adrbk1</td></tr>
+					<tr><td>Ctgf</td></tr>
+					<tr><td>Id1</td></tr>
+					<tr><td>Itgb1</td></tr>
+					<tr><td>Kcnj15</td></tr>
+					<tr><td>Nat2</td></tr>
+					<tr><td>Npas3</td></tr>
+					<tr><td>Ror1</td></tr>
+					<tr><td>Ror2</td></tr>
+					<tr><td>Sost</td></tr>
+					<tr><td>Tgfb1</td></tr>
+					<tr><td>Tnr</td></tr>
+				</table>				
+				</li>
+				<li>Verify that the row cannot be expanded (child term "aortic valve leaflet" exists, but no genes are annotated in this dataset).</li>
+				<li>QUERY FOR Structure <b>heart septum TS17-28</b>. <span concordion:manual="true">passed. -klf 2014-07-24</span></li>
+				<li>Verify that the row for <b>heart septum</b> is "expanded" by default.</li>
+				<li>Verify that rows are displayed for <b>interatrial septrum</b> and <b>interventricular septum</b>.</li>
+				<li>Verify that rows for <b>interatrial septrum</b> and <b>interventricular septum</b> are "collapsed" by default (child rows exist but are not open by default).</li>
+ 			</ol>
+    		</li>
+
+
+    		<li>Gene symbols in column headings are given in MGI's "smart alpha" order. (sto41)
+ 			<p concordion:manual="true">passed. -klf 2014-07-03</p> 
+    		<ol>
+				<li>QUERY FOR <b>collagen type</b> (42 genes, &lt;9000 results, symbols include variety of numbers and letters).</li>
+				<li>Verify gene symbols are displayed in column headers in the following order (same as on Genes Tab):
+				<table>
+					<tr><th>Gene symbol</th></tr>
+					<tr><td>Col1a1</td></tr>
+					<tr><td>Col1a2</td></tr>
+					<tr><td>Col2a1</td></tr>
+					<tr><td>Col3a1</td></tr>
+					<tr><td>Col4a1</td></tr>
+					<tr><td>Col4a2</td></tr>
+					<tr><td>Col4a3</td></tr>
+					<tr><td>Col4a3bp</td></tr>
+					<tr><td>Col4a4</td></tr>
+					<tr><td>Col4a5</td></tr>
+					<tr><td>Col4a6</td></tr>
+					<tr><td>Col5a1</td></tr>
+					<tr><td>Col5a2</td></tr>
+					<tr><td>Col5a3</td></tr>
+					<tr><td>Col6a1</td></tr>
+					<tr><td>Col6a2</td></tr>
+					<tr><td>Col6a3</td></tr>
+					<tr><td>Col6a4</td></tr>
+					<tr><td>Col6a5</td></tr>
+					<tr><td>Col7a1</td></tr>
+					<tr><td>Col8a1</td></tr>
+					<tr><td>Col8a2</td></tr>
+					<tr><td>Col9a1</td></tr>
+					<tr><td>Col9a2</td></tr>
+					<tr><td>Col9a3</td></tr>
+					<tr><td>Col10a1</td></tr>
+					<tr><td>Col11a1</td></tr>
+					<tr><td>Col11a2</td></tr>
+					<tr><td>Col12a1</td></tr>
+					<tr><td>Col13a1</td></tr>
+					<tr><td>Col14a1</td></tr>
+					<tr><td>Col15a1</td></tr>
+					<tr><td>Col16a1</td></tr>
+					<tr><td>Col17a1</td></tr>
+					<tr><td>Col18a1</td></tr>
+					<tr><td>Col19a1</td></tr>
+					<tr><td>Col20a1</td></tr>
+					<tr><td>Col22a1</td></tr>
+					<tr><td>Col23a1</td></tr>
+					<tr><td>Col24a1</td></tr>
+					<tr><td>Col26a1</td></tr>
+					<tr><td>Col27a1</td></tr>
+				</table>
+				</li>
+				<li>QUERY FOR vocabulary MP term <b>obesity</b> .</li>
+				<li>Verify that the gene symbol <b>a</b> appears in the first column.</li>
+				<li>QUERY FOR vocabulary GO term <b>mitochondrion</b>.</li>
+				<li>Verify that:
+				<ul>
+					<li>Numbered (Riken) genes are listed in the first columns.</li>
+					<li>"Mitochondrially encoded" genes with symbols beginning "mt-" are listed between Msto1 and Mtch1.</li>
+				</ul> 
+				</li>
+    		</ol>
+    		</li>
+
+			<li>Rows for terms which have annotated descendant terms may be "opened" or expanded. Cell colors for descendant terms correspond to annotations in the database. Terms displayed more than once in the grid correspond to annotations in the database wherever they are displayed. Cell colors "roll up" to represent aggregated data for all Theiler Stages for each gene (sto41). "Closing" the row redraws the grid to hide all rows for descendant terms.  "Reopening" the row redraws the grid, "remembering" which child rows were previously open or closed. Rows for other terms in the grid "move up" or down, accordingly, but do not open or close (modified for sto47).
+			<p concordion:manual="true">passed. -klf 2014-07-02</p>
+			<ol>
+				<li>QUERY FOR <b>Hoxb*</b> (contains few genes, a few thousand results, almost all default anatomical structures).</li>
+				<li>Click to expand the row for <b>embryo</b>.</li>
+				<li>Verify that the 1st-level (default) row for <b>body region</b> matches the child row for <b>body region</b> displayed under "embryo":
+				<ul>
+					<li>Hoxb, Hoxb3os, Hoxb5os have <b>empty</b> cells.</li>
+					<li>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13 have <b>blue</b> cells. (There are descendant terms with "No" and "Not specified".)</li>
+				</ul>
+				</li>
+				<li>Verify that the 1st-level (default) row for <b>organ</b> matches the child row for <b>organ</b> displayed under "embryo", and also matches the 2nd-level (default) row for <b>organ</b> displayed under "organ system":
+				<ul>
+					<li>Hoxb3 has an <b>empty</b> cell.</li>
+					<li>Hoxb has a <b>yellow</b> cell.</li>
+					<li>Hoxb1, Hoxb2, Hoxb3, Hoxb4, Hoxb5, Hoxb5os, Hoxb6, Hoxb7, Hoxb8, Hoxb9, Hoxb13 have <b>blue</b> cells.</li>
+				</ul>
+				</li>
+				<li>Click to expand the default row for <b>alimentary system</b>. </li>
+				<li>Click to expand the default for for "visceral organ system" and then its child term <b>alimentary system</b>.</li>
+				<li>Click to expand rows for "oral region" in both locations, then click to expand subsequent child term rows.</li>
+				<li>Verify that every appearance of <b>oral region</b> and its descendant terms displays correctly:
+				<table>
+					<tr><th>Term</th><th>Gene</th><th>Cell color</th><th>Notes</th></tr>
+					<tr><td>oral region</td><td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td><td>yellow</td><td>all annotations are "No" to child terms (Hoxb4 in TS22; Hoxb5, Hoxb6, Hoxb9 in TS 28)</td></tr>
+					<tr><td>jaw</td><td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td><td>yellow</td><td>all annotations are "No" to child terms</td></tr>
+					<tr><td>incisor</td><td>Hoxb5, Hoxb6, Hoxb9</td><td>red</td><td>Hoxb4 has no annotations to this term</td></tr>
+					<tr><td>tooth</td><td>Hoxb4</td><td>red</td><td></td></tr>
+					<tr><td>tooth</td><td>Hoxb5, Hoxb6, Hoxb9</td><td>yellow</td><td>all annotations are "No" to child terms</td></tr>
+					<tr><td>incisor</td><td>Hoxb5, Hoxb6, Hoxb9</td><td>red</td><td>Hoxb4 has no annotations to this term</td></tr>
+					<tr><td>upper jaw</td><td>Hoxb4</td><td>yellow</td><td>only Hoxb4 has annotations, and only to child term</td></tr>
+					<tr><td>palatal shelf</td><td>Hoxb4</td><td>red</td><td></td></tr>
+					<tr><td>oral region gland</td><td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td><td>yellow</td><td>all annotations are "No" to child terms</td></tr>
+					<tr><td>salivary gland</td><td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td><td>red</td><td></td></tr>
+					<tr><td>salivary gland</td><td>Hoxb4, Hoxb5, Hoxb6, Hoxb9</td><td>red</td><td></td></tr>
+				</table>
+				</li>
+				<li>CLOSE the row for the first instance of the structure <b>oral region</b> by clicking anywhere in the row header cell. (sto47)</li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that subsequent instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+				<li>REOPEN the row for the structure <b>oral region</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that subsequent instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+
+				<li>CLOSE the row for the second instance of the structure <b>oral region</b> by clicking anywhere in the row header cell. </li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that previous instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+				<li>REOPEN the row for the second instance of the structure <b>oral region</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that previous instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+
+				<li>CLOSE the row for the first instance of the structure <b>oral region</b> by clicking anywhere in the row header cell. (sto47)</li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that subsequent instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+				<li>CLOSE the row for the second instance of the structure <b>oral region</b> by clicking anywhere in the row header cell. </li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that previous instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+				<li>REOPEN the row for the structure <b>oral region</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that subsequent instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+				<li>REOPEN the row for the second instance of the structure <b>oral region</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that 9 rows for descendant terms immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below the final descendant term "salivary gland", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that previous instances of rows for <b>oral region</b> and descendant terms do not change.</li>
+			</ol>
+			</li>
+
+<!--  REMOVE TEST? NO LONGER NEEDED? -klf 8/20/2014
+			<li>Every structure row has a checkbox, right-justified, just to the left of the first data column. Checkboxes also exist for substructure (descendant term) rows after expanding a structure row. A button with a filter icon appears in the header cell, aligned with the checkboxes. (sto68)
+ 			<p concordion:manual="true">passed - kstone 2014/08/12</p> 
+ 			<ol>
+ 				<li>QUERY for Vocabulary <b>hedgehog signaling pathway [smoothened signaling pathway]</b> (GO "Function" term).</li>
+ 				<li>View the Tissue X Stage Matrix tab.</li>
+ 				<li>Verify that each row displays a checkbox to the right, prior to the column for the gene "1810043G02Rik".</li>
+ 				<li>Verify that checkboxes are right-aligned.</li>
+ 				<li>Verify that a Filter icon (button) appears in the header cell above the "mouse" row.</li>
+ 				<li>EXPAND the row for <b>blastocyst</b> to display rows for subterms.</li>
+ 				<li>Verify that 5 subterm rows display a checkbox, aligned with the others.</li>
+ 				<li>EXPAND the row for <b>trophectoderm</b> to display rows for subterms.</li>
+ 				<li>Verify that 2 subterm rows display a checkbox, aligned with the others.</li>
+ 				<li>EXPAND the row for <b>polar trophectoderm</b> to display rows for subterms.</li>
+ 				<li>Verify that 1 subterm row displays a checkbox, aligned with the others.</li>
+			</ol>			
+			</li>
+
+-->
+			<li>The existing results set can be filtered via selecting a structure by checking the checkbox and clicking the Filter button.   (sto68 sto123)
+			<ul>
+				<li>Selecting a structure displays a check in the checkbox.</li> 
+				<li>Selecting a structure displays a minus in the checkbox for all ancestor term(s) directly "above" the actively selected term.</li> 
+				<li>If other ancestor term(s) are present elsewhere in the grid, the state of their checkbox display remains unchanged.</li>
+				<li>If descendant term row(s) are open, a check is displayed in the descendant term checkboxes. </li>
+				<li>If the actively selected term appears elsewhere in the grid, a check is displayed in all its checkboxes.</li>
+				<li>If descendant term row(s) are open elsewhere in the grid, a check is displayed in the descendant term checkboxes. </li>
+				
+				<li>Only data corresponding to the selected terms and any descendant terms are retained. </li>
+				<li>Only rows and columns associated with the retained data are displayed.   </li>
+				<li>If terms actively selected by the user have descendant terms, these rows are initially "closed" (collapsed / hidden) by default in the results set grid view. </li>
+			</ul>
+ 			<p concordion:manual="true">passed. -klf 2014-08-21</p>
+ 			<ol>
+ 				<li><i>TEST FILTERING WITH SINGLE ROW; TEST CHECKBOX INTERACTION BEHAVIORS</i></li>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Gene Matrix tab.</li>
+ 				<li>(38 gene columns should be displayed - data as of 8/19/2014.)</li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail paraxial mesenchyme</b>.</li>
+ 				<li>SELECT the row for <b>tail somite</b> by clicking on the checkbox.</li>
+ 				<li>Verify that only the row for <b>tail somite</b> displays a checkmark.</li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b>, <b>tail mesenchyme</b>, and <b>tail</b> display minus signs.</li>
+ 				<li>OPEN (expand) the row for <b>tail somite</b> to display rows for descendant terms.</li>
+ 				<li>Verify that <b>tail dermomyotome</b> and <b>tail sclerotome</b> display checkmarks.</li>
+ 				<li>DE-SELECT the row for <b>tail somite</b> by clicking on the checkbox.</li>
+ 				<li>Verify the row for  <b>tail somite</b> no longer displays a check mark.</li>
+ 				<li>Verify that <b>tail dermomyotome</b> and <b>tail sclerotome</b> no longer display checkmarks.</li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b>, <b>tail mesenchyme</b>, and <b>tail</b> no longer display minus signs.</li>
+ 				<li>SELECT the row for <b>tail somite</b> once again by clicking on the checkbox.</li>
+ 				<li>Verify the row for  <b>tail somite</b> displays a check mark.</li>
+ 				<li>Verify that <b>tail dermomyotome</b> and <b>tail sclerotome</b> display checkmarks.</li>
+ 				<li>SELECT the row for <b>tail unsegmented mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b> and <b>tail mesenchyme</b> change from minus signs to display check marks.</li>
+ 				<li>DE-SELECT the row for <b>tail unsegmented mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Verify that no checkmark is displayed for <b>tail unsegmented mesenchyme</b>. </li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b> and <b>tail mesenchyme</b> change from check marks to display minus signs.</li>
+ 				<li><b>CLICK the Filter button</b> to filter the results.</li>
+ 				<li>Verify that the only row displayed is <b>tail somite</b>. </li>
+ 				<li>EXPAND the row for <b>tail somite</b> and verify that rows for <b>tail dermomyotome</b> and <b>tail sclerotome</b> are displayed.</li>
+ 				<li>Verify that the only columns displayed are <b>Hoxa9, Hoxb7, Hoxc9, Hoxd4, Hoxd11, Hoxd13</b>.</li>
+
+ 				<li><i>TEST FILTERING ON PREVIOUSLY-FILTERED RESULTS SET</i></li>
+ 				<li>SELECT the row for <b>tail sclerotome</b> by clicking on the checkbox.</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that the only row displayed is <b>tail sclerotome</b>.</li>
+ 				<li>Verify that the only column displayed is <b>Hoxb7</b>.</li>
+ 				<li>RESET the query form.</li>
+
+ 				<li><i>TEST FILTERING WITH MULTIPLE ROWS; TEST CHECKBOX INTERACTION BEHAVIORS</i></li>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Gene Matrix tab.</li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail nervous system</b>.</li>
+ 				<li>SELECT the row for <b>tail mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Verify that the row for <b>tail mesenchyme</b> and the descendant term <b>tail paraxial mesenchyme</b> display check marks.</li>
+ 				<li>Verify that the row for <b>tail</b> displays a minus sign.</li>
+ 				<li>SELECT the row for <b>tail nervous system</b> by clicking on the checkbox.</li>
+ 				<li>Verify that the row for <b>tail nervous system</b> and the descendant term <b>tail central nervous system</b> display check marks.</li>
+ 				<li>Verify that the row for <b>tail</b> still displays a minus sign.</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that the only rows displayed are <b>tail mesenchyme</b> and <b>tail nervous system</b>. (No rows should be displayed for "tail" or "tail skeleton", and no descendant term rows should be displayed.) </li>
+ 				<li>Verify that the columns for <b>Hotair, Hoxa6, Hoxb4, Hoxb13, Hoxc10, Hoxd3, Hoxd12, Msx2, Tlx1, Tlx2</b> are no longer displayed.</li>
+ 				<li>CLICK the <b>Remove All Filters</b> button to restore the query results set.</li>
+ 				<li>SELECT the rows for <b>tail mesenchyme</b> and <b>tail nervous system</b> and <b>tail skeleton</b> by clicking on the checkboxes.</li>
+ 				<li>Verify that the row for <b>tail</b> displays a check mark.</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that the only row displayed is <b>tail</b>. (No descendant term rows should be displayed.) </li>
+
+ 				<li><i>TEST FILTERING ON PREVIOUSLY-FILTERED RESULTS SET</i></li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail paraxial mesenchyme</b>.</li>
+ 				<li>Select the row for <b>tail unsegmented mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Expand the row for <b>tail nervous system</b>.</li>
+ 				<li>Expand the row for <b>tail central nervous system</b>.</li>
+ 				<li>SELECT the row for <b>tail future spinal cord</b> by clicking on the checkbox.</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify the only rows displayed are <b>tail unsegmented mesenchyme</b> and <b>tail future spinal cord</b>.</li>
+ 				<li>Verify the row for <b>tail future spinal cord</b> can be expanded to display subterms.</li>
+ 				<li>Verify the only columns displayed are <b>Hoxa1, Hoxb1, Hoxc11, Hoxd11, Hoxd13, Msx1</b>.</li>
+ 				<li>RESET the query form.</li>
+
+ 				<li><i>TEST FILTERING WITH MULTIPLE DUPLICATE ROWS (term appears more than once in displayed results set); TEST CHECKBOX INTERACTION BEHAVIORS</i></li>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>head TS11-28</b>.</li>
+ 				<li>View the Tissue X Gene Matrix tab.</li>
+ 				<li>Expand the row for <b>cranium</b>, and then the row for <b>temporal bone</b>.</li>
+ 				<li>Expand the row for <b>head bone</b>, and then the row for <b>temporal bone</b>.</li>
+ 				<li>SELECT the row for <b>temporal bone</b> that is a child of <b>cranium</b>.</li>
+ 				<li>Verify that ONLY the following rows have the indicated marks in the checkboxes (from the top of the results set moving downward):
+ 				<table>
+ 					<tr><th>term</th><th>checkbox state</th></tr>
+ 					<tr><td>head</td><td>minus</td></tr>
+ 					<tr><td>cranium</td><td>minus</td></tr>
+ 					<tr><td>temporal bone</td><td>check mark</td></tr>
+ 					<tr><td>temporal bone petrous part</td><td>check mark</td></tr>
+ 					<tr><td>head bone</td><td>minus</td></tr>
+ 					<tr><td>temporal bone</td><td>check mark</td></tr>
+ 					<tr><td>temporal bone petrous part</td><td>check mark</td></tr>
+ 				</table>
+ 				</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that the only row displayed is <b>temporal bone</b>.</li>
+ 				<li>Verify that the only column displayed is <b>Hoxa2</b>.</li>
+ 				<li>Verify that the row for temporal bone can be expanded to display <b>temporal bone petrous part</b>.</li>
+			</ol>			
+			</li>
+
+			<li>The existing results set can be filtered via selecting a gene (column) by checking the checkbox and clicking the Filter button.   (sto113)
+			<ul>
+				<li>Selecting a column displays a check in the checkbox.</li> 
+				<li>Only data corresponding to the selected genes are retained. </li>
+				<li>Only rows and columns associated with the retained data are displayed.   </li>
+			</ul>
+ 			<p concordion:manual="true">passed. -klf 2014-09-02</p>
+ 			<ol>
+ 				<li><i>TEST FILTERING WITH SINGLE COLUMN</i></li>
+ 				<li>QUERY for Structure <b>neck TS24-28</b> (EMAPA:35587).</li>
+                <li>Click the "Tissue X Gene Matrix" tab and verify:
+                <ul>
+                	<li>Only the following columns exist, with counts in each cell in the data row as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Notes</th></tr>
+                	<tr><td>Axl</td><td>1</td><td>in child term TS28: larynx muscle</td></tr>
+                	<tr><td>B3galt2</td><td>1</td><td>in child term TS28: larynx muscle</td></tr>
+                	<tr><td>Gabbr1</td><td>1</td><td>in child term TS28: larynx muscle</td></tr>
+                	<tr><td>Pitx2</td><td>2</td><td>in child term TS28: sternohyoid</td></tr>
+                	</table>
+                	</li>
+                	<li>The row for <b>neck</b> is expanded to show the subterm <b>neck muscle</b>.</li>
+                	<li>The row for <b>neck muscle</b> may be expanded to show subterms <b>larynx muscle</b> and <b>pharynx skeletal muscle</b>, which has further subterms.</li>
+                </ul>
+                </li>
+                <li>Select the column for <b>Axl</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the column for <b>Axl</b> is displayed.</li>
+                <li>Verify the row for <b>neck</b> is expanded to show the subterm <b>neck muscle</b>.</li>
+                <li>Expand the row for <b>neck muscle</b> and verify that the only child term is <b>larynx muscle</b>.</li> 
+                <li>Click the Browser Back button to undo the filtering action.</li>
+                <li>Select the column for <b>Pitx</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the column for <b>Pitx</b> is displayed.</li>
+                <li>Verify the row for <b>neck</b> is expanded to show the subterm <b>neck muscle</b>.</li>
+                <li>Expand the row for <b>neck muscle</b> and verify that the child term <b>larynx muscle</b> is NOT displayed.</li>
+                <li>Expand all rows and verify that the child term <b>sternohyoid</b> is displayed.</li> 
+                <li>Click the "Remove All Filters" button and verify that all columns and both rows are displayed (or can be expanded to display) once again.</li>
+
+ 				<li><i>TEST FILTERING WITH MULTIPLE COLUMNS</i></li>
+                <li>Select the column for <b>Axl, B3galt2, Gabbr1</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the columns for <b>Axl, B3galt2, Gabbr1</b> are displayed.</li>
+                <li>Verify the row for <b>neck</b> is expanded to show the subterm <b>neck muscle</b>.</li>
+                <li>Expand the row for <b>neck muscle</b> and verify that the only child term is <b>larynx muscle</b>.</li> 
+                <li>Click the "Remove Filters" button for <b>Gabbr1</b>.</li>
+				<li>Verify that only the columns for <b>Axl, B3galt2</b> are displayed.</li>
+                <li>Verify the row for <b>neck</b> is expanded to show the subterm <b>neck muscle</b>.</li>
+                <li>Expand the row for <b>neck muscle</b> and verify that the only child term is <b>larynx muscle</b>.</li> 
+                <li>Click the "Remove All Filters" button and verify that all columns and both rows are displayed (or can be expanded to display) once again.</li>
+                <li>Select the column for <b>Axl, B3galt2, Pitx2</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the columns for <b>Axl, B3galt2, Pitx2</b> are displayed.</li>
+                <li>Verify the row for <b>neck</b> is expanded to show the subterm <b>neck muscle</b>.</li>
+                <li>Expand the row for <b>neck muscle</b> and verify that the only child term is <b>larynx muscle</b>.</li> 
+                <li>Expand all rows and verify that the child term <b>sternohyoid</b> is displayed.</li> 
+                <li>Click the "Remove Filters" buttons for <b>Axl</b> and <b>B3galt2</b>.</li>
+				<li>Verify that only the column for <b>Pitx2</b> is displayed.</li>
+                <li>Verify the row for <b>neck</b> is expanded to show the subterm <b>neck muscle</b>.</li>
+                <li>Expand the row for <b>neck muscle</b> and verify that the child term <b>larynx muscle</b> is NOT displayed.</li>
+                <li>Expand all rows and verify that the child term <b>sternohyoid</b> is displayed.</li> 
+                <li>Click the "Remove All Filters" button and verify that all columns and both rows are displayed (or can be expanded to display) once again.</li>
+                
+ 				<li><i>TEST FILTERING ON COLUMN + ROW COMBINATION</i></li>
+                <li>Select the columns: <b>Axl, B3galt2</b>.</li>
+                <li>Select the row: <b>larynx muscle</b> (under "neck muscle").</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify that the only columns displayed are <b>Axl, B3galt2</b>.</li>
+                <li>Verify that the only row displayed is <b>larynx muscle</b></li>
+                <li>Click the "Remove All Filters" button.</li>
+                <li>Select the columns: <b>Pitx2</b>.</li>
+                <li>Select the row: <b>larynx muscle</b> (under "neck muscle").</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify that <b>no results are displayed</b> (because Pitx2 has no data for "larynx muscle").</li>
+                <li>Click the "Remove All Filters" button.</li>
+
+                <li><i>TEST SUBSEQUENT FILTERING ON COLUMN + ROW COMBINATION (should remember previous filters applied)</i></li>
+                <li>Select the columns: <b>Gabbr1, Pitx2</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify that the only columns displayed are <b>Gabbr1, Pitx2</b>.</li>
+                <li>Select the row: <b>sternohyoid</b> (expand a few rows to find it).</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify that the only column displayed is <b>Pitx2</b>.</li>
+                <li>Verify that the only row displayed is <b>pharynx skeletal muscle</b>.</li>
+                <li>Expand the row for pharynx skeletal muscle, then the row for infrahyoid muscle.</li>
+                <li>Verify that the only descendant term row displayed is <b>sternohyoid</b>.</li>                
+ 			</ol>
+ 			</li>
+
+
+
+			<li>"Remove Filter" buttons appear for row (structure) filtering. Clicking a "Remove Filter" button undoes the effect of the filter on the selected term.  (sto68)
+ 			<p concordion:manual="true">passed - kstone 2014/08/12</p>
+ 			<ol>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Gene Matrix tab.</li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail paraxial mesenchyme</b>.</li>
+ 				<li>Select the row for <b>tail somite</b> by clicking on the checkbox.</li>
+ 				<li>Click the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that a "Remove Filter" button appears for <b>Remove All Filters</b> and a button appears for <b>tail somite</b>. </li>
+ 				<li>Click the "Remove Filter" button for <b>tail somite</b>.</li>
+ 				<li>Verify that the original dataset is displayed.</li> 
+ 				<li><i>TEST INTEGRATION WITH EXISTING FILTERS AND FILTER BUTTONS.</i></li>
+ 				<li>Using the dataset above, click the "Filter expression by:" button <b>Assay Type</b>, select <b>Immunohistochemistry</b>, and submit the filter.  </li>
+ 				<li>Verify buttons appear in a section labeled "Filtered by:" <b>Remove All Filters</b> and <b>Assay Type: Immunohistochemistry</b>.</li>
+ 				<li>Verify the results set displays only rows for <b>tail</b> and <b>tail nervous system</b>.</li>
+ 				<li>Verify the results set displays only columns for <b>Hoxb1, Hoxb4</b>.</li>
+ 				<li>Expand the row for <b>tail nervous system</b>, then expand <b>tail central nervous system</b>, then expand <b>tail future spinal cord</b>, then <b>tail neural plate</b> to display the row for <b>tail neural crest</b>.</li>
+ 				<li>Select the row for <b>tail neural crest</b> by clicking on the checkbox.</li>
+ 				<li>Click the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify the results display one row for <b>tail neural crest</b> and one column for <b>Hoxb1</b>.</li>
+ 				<li>Verify an additional button appears in the section labeled "Filtered by:" <b>tail neural crest</b>.</li>
+ 				<li>Click the "Remove Filter" button labeled <b>Assay Type: Immunohistochemistry</b>.</li>
+ 				<li>Verify the results set still contains only one row for <b>tail neural crest</b> and one column for <b>Hoxb1</b>.</li>
+ 				<li>Click the "Remove Filter" button labeled <b>tail neural crest</b>.</li>
+ 				<li>Verify that the original dataset is displayed.</li> 
+			</ol>			
+			</li>
+
+			<li>Rows which are "open" (expanded) are remembered, as much as possible, after filtering actions and when using the browser's Back button. (sto69)<br/>
+			<i><b>NOTE</b>: All &quot;memory&quot; of which rows are opened or closed is in the browser's cache. To reset it, do a hard refresh (Ctrl+F5 on Windows; Command+R on Mac).</i>
+ 			<p concordion:manual="true">passed. -klf 2014-09-05</p> 
+ 			<ol>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Gene Matrix tab.</li>
+ 				<li>Expand <b>tail mesenchyme, tail nervous system, tail skeleton</b>. Then expand each term revealed once more (so children, grandchildren, and g-grandchildren terms are open; a total of 12 rows visible as of 2014-09-05).</li>
+ 				<li>SELECT Gene columns <b>Hoxb1, Hoxb7, Hoxc11, Hoxd8, Hoxd13</b> using the checkboxes in the column headers and submit the filter.<br/>
+ 				<i>Note: as of 2014-09-05 selecting this set of genes captured all data rows in the results set.</i>
+ 				</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li> 
+ 				<li>Expand the row for <b>tail somite</b> revealing 2 more descendant term rows and the row for <b>tail future spinal cord</b> revealing an additional 2 more descendant term rows (a total of 16 rows visible as of 2014-09-05).</li>
+ 				<li>CLICK the browser's "Back" button.</li>
+ 				<li>Verify that all 16 rows remain visible, and that the filter action is undone so that all Gene columns are visible.</li>
+ 				<li>Collapse ("close", "hide") <b>tail nervous system</b> (a total of 11 rows visible as of 2014-09-05).</li>
+ 				<li>SELECT <b>wild type</b> Using the "Filter expression by" buttons and submit the filter.</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li>
+ 				<li>SELECT Gene columns <b>Hoxb1, Hoxb7, Hoxc11, Hoxd8, Hoxd13</b> using the checkboxes in the column headers and submit the filter.</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li> 
+ 				<li>Expand all rows (a total of 16 rows as of 2014-09-05).</li>
+ 				<li>CLICK the <b>Remove all filters</b> button above the tabbed areas.</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li>
+ 				<li>Verify that <b>tail neural plate</b> may now be expanded (displays a turnstile).</li>
+ 				<li>Expand the row for <b>tail neural plate</b>.</li>
+ 				<li>Verify that the row for <b>tail neural crest</b> is displayed (a total of 17 rows as of 2014-09-05).</li>
+ 				<li>SELECT rows <b>tail mesenchyme</b> and <b>tail nervous system</b> and submit the filter.</li>
+ 				<li>Verify that all rows under "tail mesenchyme" and "tail nervous system" remain expanded (a total of 13 rows as of 2014-09-05).</li>
+ 				<li>CLICK the browser's "Back" button.</li>
+ 				<li>Verify that the filter action is undone so that all 17 rows are visible.</li>
+ 				<li>Collapse the row for <b>tail nervous system</b> (a total of 11 rows).</li> 
+ 				<li>SELECT rows <b>tail mesenchyme</b> and <b>tail nervous system</b> and submit the filter.</li>
+ 				<li>Verify that only rows for <b>tail mesenchyme</b> and <b>tail nervous system</b> and child terms are displayed.<br/>
+ 				<i>NOTE: "tail nervous system" will be displayed as "open" or expanded because the implementation uses the DAG path from the original display which becomes lost when filtering using rows. Fixing this "bug" was a low priority and was not addressed prior to the release. </i>
+ 				</li>
+ 				<li>CLICK the browser's "Back" button.</li>
+ 				<li>Verify that the filter action is undone so that all 11 rows are displayed and "tail nervous system" is collapsed.</li>
+ 			</ol>
+			</li>
+
+    		<li>The matrix data grid has scroll bars to permit viewing more data while keeping row and column header cells visible in the browser viewport. (new for sto97)
+ 			<p concordion:manual="true">passed. -klf 2014-07-14</p> 
+ 			<ol>
+ 				<li>Open a browser window approximately 760 px wide by 700 px tall.</li>
+ 				<li>QUERY FOR the MP Term <b>absent Ac [absent anterior commissure]</b>, click on the Tissue X Gene Matrix tab, and scroll the browser window down so that the query results "tabs" are at the top of the browser window.</li>
+ 				<li>Verify that a vertical and a horizontal scrollbar exists within the data grid area.</li>
+ 				<li>Verify that scrolling horizontally displays additional gene columns, but anatomical structure row header cells remain stationary.</li>
+ 				<li>Verify that scrolling vertically displays additional anatomical structure rows, but gene column header cells remain stationary.</li>
+ 				<li>Verify that expanding the browser window horizontally causes the grid's horizontal scrollbar to expand accordingly. When all columns are visible, the grid's horizontal scrollbar disappears.</li>
+ 				<li>Verify that contracting the browser window horizontally causes the grid's horizontal scrollbar to contract accordingly. When the browser window reaches a minimize of approx. 365 px wide, it cannot be contracted further. The data grid's scrollbar remains functional.</li>
+ 				<li>Verify that expanding the browser window vertically causes the grid's vertical scrollbar to expand accordingly. When all rows are visible, the grid's vertical scrollbar disappears.</li>
+ 				<li>Verify that contracting the browser window vertically causes the grid's vertical scrollbar to contract accordingly. As the browser window is contracted further, the data grid's scrollbar remains functional. There is no minimum vertical browser window size.</li>
+ 				<li>Return the browser window to approximately 760 px wide by 700 px tall.</li>
+ 				<li>QUERY FOR the anatomical structure <b>heart</b> (TS11-28), click on the Tissue X Gene Matrix tab, and scroll the browser window down so that the query results "tabs" are at the top of the browser window.</li>
+ 				<li>Verify that clicking the row for "heart" expands the grid to display rows for substructures, and that a vertical scrollbar appears within the data grid.</li>
+ 				<li>Verify that clicking the row for "bulbus cordis" expands the grid to display additional substructure rows, and that the vertical scroll within the data grid expands accordingly.</li>
+ 				<li>Verify that clicking the row for "heart" again contracts the grid to hide rows for substructures, and that the vertical scrollbar within the data grid disappears.</li>
+ 			</ol>
+    		</li>
+
+    		<li>Cells with coloring for positive expression or negative expression display one of three shades, creating a "heat map" for the data. 
+    		The color shade represents the heat map value where bins for positive results represent 1-4 results (light), 5-50 results (medium), or &gt;50 results (dark).  
+    		Bins for negative results represent 1-4 results (light), 5-20 results (medium), or &gt;20 results (dark).
+    		Only colors for positive and negative results have multiple shades. When negative results exist for the structure, a "negative color" triangle appears on the corner of the "positive color" cell.  (sto25, sto85)
+			<p concordion:manual="true">passed. -klf 2014-07-25</p> 
+			<ol>
+				<li>QUERY FOR Gene <b>Hoxb*</b> and Structure <b>oral region TS12-28</b>. </li>
+				<li>Click on the row for "oral region" and its descendant term rows to expand the grid.</li>
+				<li>Verify that the cell at the intersection of rows and columns specified below display the indicated color shades:
+				<table>
+					<tr><th>structure (row)</th><th>gene (column)</th><th>color</th><th>notes</th></tr>
+					<tr><td>tooth</td><td>Hoxb4</td><td><span style="color:red;">LIGHT red</span></td><td>1 "No" result</td></tr>
+					<tr><td>salivary gland</td><td>Hoxb6</td><td><span style="color:red;">LIGHT red</span></td><td>2 "No" results</td></tr>
+					<tr><td>incisor</td><td>Hoxb6</td><td><span style="color:red;">LIGHT red</span></td><td>2 "No" results</td></tr>
+				</table>
+				</li>
+				<li>QUERY FOR Gene <b>A*</b> and Structure <b>ovary TS20-28</b>. </li>
+				<li>FILTER FOR: <b>Detected?: No</b>.</li>
+				<li>Click on the row for "ovary" and its descendant term rows to expand the grid.</li>
+				<li>Verify that the cell at the intersection of rows and columns specified below display the indicated color shades:
+				<table>
+					<tr><th>structure (row)</th><th>gene (column)</th><th>color</th><th>notes</th></tr>
+					<tr><td>ovary</td><td>Amh</td><td><span style="color:red;">DARK red</span></td><td>21 "No" results, excluding 1 "No" to child term</td></tr>
+					<tr><td>ovary</td><td>Arhgap20</td><td><span style="color:red;">MEDIUM red</span></td><td>7 "No" results</td></tr>
+					<tr><td>ovary</td><td>Col9a1</td><td><span style="color:red;">MEDIUM red</span></td><td>5 "No" results</td></tr>
+					<tr><td>ovary</td><td>Cyp17a1</td><td><span style="color:red;">MEDIUM red</span></td><td>12 "No" results</td></tr>
+					<tr><td>ovary</td><td>Adamts5</td><td><span style="color:red;">LIGHT red</span></td><td>3 "No" results</td></tr>
+					<tr><td>meiotic oocyte</td><td>Camta1</td><td><span style="color:red;">LIGHT red</span></td><td>4 "No" results</td></tr>
+				</table>
+				</li>
+				<li>QUERY FOR Structure <b>metanephros (kidney) TS19-28</b>. </li>
+				<li>Verify that the cell at the intersection of rows and columns specified below display the indicated color shades:
+				<table>
+					<tr><th>structure (row)</th><th>gene (column)</th><th>color</th><th>has negative corner</th><th>notes</th></tr>
+					<tr><td>metanephros</td><td>1700011H14Rik</td><td><span style="color:blue;">MEDIUM blue</span></td><td>no</td><td>36 "Yes" results, negatives in child terms</td></tr>
+					<tr><td>metanephros</td><td>2010111I01Rik</td><td><span style="color:blue;">LIGHT blue</span></td><td>no</td><td>3 "Yes" results, no negatives</td></tr>
+					<tr><td>metanephros</td><td>Aadac</td><td><span style="color:blue;">MEDIUM blue</span></td><td style="color:red;">yes</td><td>36 "Yes" results, 2 "No" results</td></tr>
+					<tr><td>metanephros</td><td>Abhd14b</td><td><span style="color:blue;">MEDIUM blue</span></td><td>no</td><td>5 "Yes" results, no negatives</td></tr>
+					<tr><td>metanephros</td><td>Adam11</td><td><span style="color:blue;">LIGHT blue</span></td><td>no</td><td>4 "Yes" results, no negatives</td></tr>
+					<tr><td>metanephros</td><td>Ano1</td><td><span style="color:blue;">DARK blue</span></td><td style="color:red;">yes</td><td>72 "Yes" results, 2 "No" results</td></tr>
+					<tr><td>metanephros</td><td>Atp1b1</td><td><span style="color:blue;">DARK blue</span></td><td>no</td><td>54 "Yes" results, negatives in child terms</td></tr>
+					<tr><td>metanephros</td><td>Dmgdh</td><td><span style="color:;">gray</span></td><td>no</td><td>1 "Ambig/NS" result, 1 "No" result</td></tr>
+					<tr><td>metanephros</td><td>Kank1</td><td><span style="color:blue;">DARK blue</span></td><td>no</td><td>51 "Yes" results, negatives in child terms</td></tr>
+					<tr><td>metanephros</td><td>Kcnj6</td><td><span style="color:blue;">LIGHT blue</span></td><td style="color:red;">yes</td><td>1 "Yes" result, 5 "No" results</td></tr>
+					<tr><td>metanephros</td><td>Krt8</td><td><span style="color:blue;">MEDIUM blue</span></td><td>no</td><td>50 "Yes" results, negatives in child terms</td></tr>
+				</table>
+
+				</li>
+				<li>QUERY FOR Structure <b>brain TS17-28</b> and Gene <b>*Rik</b>. </li>
+				<li>Verify that the cell at the intersection of rows and columns specified below display the indicated color shades:
+				<table>
+					<tr><th>structure (row)</th><th>gene (column)</th><th>color</th><th>has negative corner</th><th>notes</th></tr>
+					<tr><td>brain</td><td>1500015O10Rik</td><td><span style="color:blue;">DARK blue</span></td><td>no</td><td>53 "Yes" results	</td></tr>
+					<tr><td>brain</td><td>1110004E09Rik</td><td><span style="color:blue;">MEDIUM blue</span></td><td>no</td><td>50 "Yes" results</td></tr>
+					<tr><td>brain</td><td>1600012H06Rik</td><td><span style="color:blue;">LIGHT blue</span></td><td>no</td><td>4 "Yes" results</td></tr>
+					<tr><td>brain</td><td>1110017D15Rik</td><td><span style="color:blue;">LIGHT blue</span></td><td style="color:red;">yes</td><td>1 "Yes" result, 1 "No" result</td></tr>
+					<tr><td>brain</td><td>2010111I01Rik</td><td><span style="color:blue;">LIGHT blue</span></td><td style="color:red;">yes</td><td>2 "Yes" results, 1 "No" result</td></tr>
+					<tr><td>brain</td><td>2010015M23Rik</td><td><span style="color:blue;">MEDIUM blue</span></td><td style="color:red;">yes</td><td>12 "Yes" results, 1 "No" result</td></tr>
+				</table>
+				</li>
+			</ol>
+			</li>
+
+			<li>Clicking a colored cell triggers a "pop-up panel" within the browser window. Only one pop-up may appear at a time.  The pop-up panel has a heading containing the row header value and column header value for the cell which was clicked.  A pop-up is closed by clicking the "Close" or "X" button. (sto45)
+			<p concordion:manual="true">passed. -klf 2014-07-22</p> 
+			<ol>
+				<li>QUERY FOR Gene <b>A*</b> and Structure <b>ovary TS20-28</b>. </li>
+				<li>Click on the blue cell at the intersection of <b>ovary</b> and <b>2010111I01Rik</b>.</li>
+				<li>Verify that a pop-up panel appears.</li>
+				<li>Verify that header text containing <b>ovary</b> and <b>2010111I01Rik</b> is displayed.</li>
+				<li>Click the "Close" or "X" button and verify the pop-up panel closes.</li>
+				<li>Click the yellow cell at the intersection of <b>ovary</b> and <b>a</b>.</li>
+				<li>Verify that a pop-up panel appears.</li>
+				<li>Verify that header text containing <b>ovary</b> and <b>a</b> is displayed.</li>
+				<li>Click the "Close" or "X" button and verify the pop-up panel closes.</li>
+				<li>Click on the gray cell at the intersection of <b>ovary</b> and <b>Aadac</b>.</li>
+				<li>Verify that a pop-up panel appears.</li>
+				<li>Verify that header text containing <b>ovary</b> and <b>Aadac</b> is displayed. Do not close the pop-up panel.</li>
+				<li>Click the red cell at the intersection of <b>urinary system</b> and <b>Abca3</b>.</li>
+				<li>Verify that only the pop-up for <b>ovary</b> and <b>Abca3</b> is displayed and the pop-up for <b>ovary</b> and <b>Aadac</b> has closed.</li>
+				<li>Click in on the text for the row <b>ovary</b> to expand the grid and display child terms.</li>
+				<li>Click on the cell containing a circle at the intersection of <b>atretic follicle</b> and <b>2010111I01Rik</b>.</li>
+				<li>Verify that NO pop-up panel appears.</li>
+			</ol>
+    		</li>
+
+    		<li>A pop-up panel contains a table summarizing the data underlying the clicked-on cell. (sto45)
+			<p concordion:manual="true">passed. -klf 2014-07-22</p> 
+			<ol>
+				<li>QUERY FOR Gene <b>A*</b> and Structure <b>ovary TS20-28</b>. </li>
+				<li>Click on the row for "ovary" to expand the grid.</li>
+				<li>Click on the <span style="color:blue;">blue</span> cell at the intersection of <b>ovary</b> and <b>Aard</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>ovary</b> and <b>Aard</b></p>
+				<table>
+					<tr><th>Detected?</th><th># of results</th><th>Notes</th></tr>
+					<tr><td>Yes</td><td>9</td><td></td></tr>
+					<tr><td>?</td><td>10</td><td></td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the <span style="color:blue;">blue</span> cell at the intersection of <b>ovary</b> and <b>Aatf</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>ovary</b> and <b>Aatf</b></p>
+				<table>
+					<tr><th>Detected?</th><th># of results</th><th>Notes</th></tr>
+					<tr><td>Yes</td><td>2</td><td>1 is to a child term</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the <span style="color:blue;">blue</span> cell at the intersection of <b>ovary</b> and <b>Amh</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>ovary</b> and <b>Amh</b></p>
+				<table>
+					<tr><th>Detected?</th><th># of results</th><th>Notes</th></tr>
+					<tr><td>Yes</td><td>8</td><td>some are to child terms</td></tr>
+					<tr><td>No</td><td>21</td><td>excludes 1 "No" to a child term</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the <span style="color:gray;">gray</span> cell at the intersection of <b>meiotic oocyte</b> and <b>Aplp1</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>meiotic oocyte</b> and <b>Aplp1</b></p>
+				<table>
+					<tr><th>Detected?</th><th># of results</th><th>Notes</th></tr>
+					<tr><td>?</td><td>2</td><td></td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the <span style="color:blue;">blue</span> cell at the intersection of <b>ovary</b> and <b>Efna1</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>ovary</b> and <b>Efna1</b></p>
+				<table>
+					<tr><th>Detected?</th><th># of results</th><th>Notes</th></tr>
+					<tr><td>Yes</td><td>1</td><td></td></tr>
+					<tr><td>No</td><td>1</td><td>excludes 2 "No" to child terms</td></tr>
+					<tr><td>?</td><td>1</td><td>excludes 2 "Ambig" to child terms</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the <span style="color:red;">red</span> cell at the intersection of <b>ovary</b> and <b>Adam2</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>ovary</b> and <b>Adam2</b></p>
+				<table>
+					<tr><th>Detected?</th><th># of results</th><th>Notes</th></tr>
+					<tr><td>No</td><td>2</td><td></td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>QUERY FOR Gene <b>Bc*</b> and Structure <b>kidney pelvis  TS21-28</b>. </li>
+				<li>Click on the <span style="color:gold;">gold</span> cell at the intersection of <b>kidney pelvis</b> and <b>Bcl2</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>kidney pelvis</b> and <b>Bcl2</b></p>
+				<table>
+					<tr><th>Detected?</th><th># of results</th><th>Notes</th></tr>
+					<tr><td colspan="3">Absent or not specified results are in substructures.</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+			</ol>
+			</li>
+
+			<li>In a pop-up panel for a colored cell, clicking the "View These Results" button filters the existing results set using the given Structure and the given Gene (by ID, not all nomenclature matches) as parameters and redraws the grid. 
+    		This functionality is integrated with existing filtering and with browser history management. (sto93)
+			<p concordion:manual="true">passed. -klf 2014-08-05</p>
+			<ol>
+				<li>QUERY FOR GO vocabulary term <b> hedgehog receptor activity</b> and Structure <b>cardiovascular system TS11-28</b>.</li>
+				<li>Verify the Structure X Gene Matrix tab contains a grid with rows <b>cardiovascular system</b> and 2 child terms: <b>heart, vascular system</b> and columns for genes <b>Disp1, Npc1, Ptch1, Ptch2, Ptchd1, Ptchd4</b>.</li>
+				<li>Click in the blue cell at the intersection of the structure <b>heart</b> and gene <b>Ptch2</b>.</li>
+				<li>In the pop-up panel, click the button labeled "View These Results". (<i>BASIC FUNCTIONALITY</i>)</li>
+ 				<li>Verify that the <b>Assay Results</b> tab becomes the active tab and displays only <b>5</b> results for <b>heart</b> and child terms, and <b>Ptch2</b> (data as of 8/4/2014).</li>
+ 				<li>Return to the Structure X Gene Matrix tab.</li>
+				<li>Verify that the grid is redrawn with rows <b>heart</b>, <b>heart atrium</b>, and <b>heart ventricle</b> and only one column: <b>Ptch2</b>.</li>
+<!-- NEED TO FIX IN FUTURE STORY...  
+ 				<li>PERFORM A NEW QUERY (in a separate window) for <b>heart TS11-28</b> and <b>Ptch2</b> and view the Structure X Gene Matrix tab.</li>
+				<li>Verify that the grid display is the same in both windows.</li>
+-->
+ 				<li>Verify that "Remove filters" buttons appear above the results tabs: <b>Remove all filters</b>, <b>heart</b>, and <b>Gene: Ptch2</b>. (<i>INTEGRATES WTIH EXISTING INTERFACE FILTER CONTROLS</i>)</li>
+ 				<li>CLICK the <b>Remove all filters</b> button.</li>
+ 				<li>Verify that the grid is redrawn to display rows for <b>cardiovascular system</b> and 2 child terms: <b>heart, vascular system</b> and columns for genes <b>Disp1, Npc1, Ptch1, Ptch2, Ptchd1, Ptchd4</b>. (the original results set)</li>
+				<li>Click in the blue cell at the intersection of the structure <b>heart</b> and gene <b>Ptch2</b> again.</li>
+ 				<li>In the pop-up panel, click the "View These Results" button.</li>
+ 				<li>After the <b>Assay Results</b> tab becomes active tab, click the browser <b>Back button</b>. (<i>INTEGRATES WITH BROWSER HISTORY</i>)</li>
+ 				<li>Verify that the Structure X Gene Matrix tab becomes the active tab.</li>
+ 				<li>Click the <b>Back button</b> again.</li>
+ 				<li>Verify that the grid is redrawn to display rows for <b>cardiovascular system</b> and 2 child terms: <b>heart, vascular system</b> and columns for genes <b>Disp1, Npc1, Ptch1, Ptch2, Ptchd1, Ptchd4</b>. (the original results set)</li>
+ 				<li>CLICK the filter button for "Assay Type" and select <b>RNA in situ</b>, then click <b>Filter</b>. (<i>INTEGRATES WTIH EXISTING FILTERS</i>)</li>
+ 				<li>When the grid is redrawn, click the blue cell at the intersection of the row for <b>heart</b> and the column for <b>Ptch1</b>.</li>
+ 				<li>Verify that the <b>Assay Results</b> tab becomes the active tab and displays only <b>1</b> result for <b>heart</b> and <b>Ptch1</b> (data as of 8/4/2014).</li>
+ 				<li>Return to the Structure X Gene Matrix tab.</li>
+ 				<li>Verify that the grid is redrawn to display the row for <b>heart</b> has no child term rows, and there is ONLY one column: <b>Ptch1</b>. (data as of 7/29/2014)</li>
+			</ol>
+			</li>
+
+    		<li>In a pop-up panel for a colored cell, clicking the "View The Images" button filters the existing results set using the given structure and the given Gene as parameters, returns images associated with the new results set, and displays the Images tab as the active tab.  
+    		This functionality is integrated with existing filtering and with browser history management. (sto93)
+ 			<p concordion:manual="true">passed. -klf 2014-08-05</p>
+ 			<ol>
+				<li>QUERY FOR GO vocabulary term <b> hedgehog receptor activity</b> and Structure <b>cardiovascular system TS11-28</b>.</li>
+				<li>Verify the Structure X Gene Matrix tab contains a grid with rows <b>cardiovascular system</b> and 2 child terms: <b>heart, vascular system</b> and columns for genes <b>Disp1, Npc1, Ptch1, Ptch2, Ptchd1, Ptchd4</b>.</li>
+				<li>Click in the blue cell at the intersection of the structure <b>heart</b> and gene <b>Ptch2</b>.</li>
+ 				<li>In the pop-up panel, click the "View These Images" button.</li>
+ 				<li>Verify that the pop-up panel disappears.</li>
+ 				<li>Verify that the display is redrawn with the <b>Images</b> tab active.</li>
+ 				<li>PERFORM A NEW QUERY (in a separate window) for <b>heart</b> and <b>Ptch2</b>, and view the "Images" tab.</li>
+ 				<li>Verify the count of images is the same in both windows. (4 rather than 221 as of 7/30/2014)</li>
+ 				<li>Verify that "Remove filters" buttons appear above the results tabs: <b>Remove all filters</b>, <b>heart</b>, and <b>Gene: Ptch2</b>.  (<i>INTEGRATES WTIH EXISTING INTERFACE FILTER CONTROLS</i>)</li>
+ 				<li>CLICK the <b>Remove all filters</b> button.</li>
+				<li>Verify the "Images" tab summary is redrawn with all expression images for the query (221 as of 7/30/2014).</li> 		
+				<li>Click the browser <b>Back button</b>.  (<i>INTEGRATES WITH BROWSER HISTORY</i>)</li>
+ 				<li>Verify that "Remove filters" buttons appear above the tabs: <b>Remove all filters</b>, <b>heart</b>, and <b>Gene: Ptch2</b>.</li>
+ 				<li>Verify the count of images is the that of the filtered set.  (4 rather than 221 as of 7/30/2014)</li>
+				<li>Click the browser <b>Back button</b> again. </li>
+				<li>Verify that the display is redrawn with the <b>Tissue X Gene Matrix</b> tab active.</li>
+ 				<li>Verify that the grid displays data corresponding to the filters (filters have not yet been removed): rows <b>cardiovascular system</b> and 2 child terms: <b>heart, vascular system</b> and a column ONLY for gene <b>Ptch2</b>.</li>
+				<li>Click the browser <b>Back button</b> again. </li>
+				<li>Verify that the grid displays data corresponding to the original results set.</li>
+            </ol>
+            </li>
+
+			<li>When the results set underlying a cell have no associated images, the "View the images" button in the pop-up panel is not displayed. (sto164)
+			<p concordion:manual="true">passed. -klf 2014-09-05</p>
+			<ol>
+				<li>QUERY for genes <b>Pax6os1</b>.</li>
+				<li>View the Tissue X Gene Matrix.</li>
+				<li>Click the cell at the intersection of <b>body region</b> and <b>Pax6os1</b> (there is only 1 result as of 2014-09-05).</li>
+				<li>Verify that the "View The Images" button does not appear.</li>
+			</ol>
+			</li>
+
+
+			<li>A legend is available, explaining the meaning of colors and symbols. (sto60)
+ 			<p concordion:manual="true">passed - kstone 2014/07/29</p> 
+    		<ol>
+                <li>QUERY FOR Marker <b>shh</b></li>
+                <li>Verify that an affordance (button or link) exists to trigger display of the <b>Matrix Legend</b>.</li>
+                <li>Click the Matrix Legend button or link.</li>
+                <li>Verify that a pop-up panel is displayed which explains all colors and symbols possible on the matrix grid.</li>
+                <li>Verify that the pop-up panel can be dragged around the browser viewport.</li>
+                <li>Verify that an expression results pop-up panel can be displayed at the same time as the Matrix Legend pop-up panel.</li>
+                <li>Verify that the Matrix Legend pop-up panel has a "close" affordance (button or link).</li>
+                <li>Click the "Close" button or link.</li>
+                <li>Verify that the Matrix Legend pop-up panel closes, but that any expression results panel remains open.</li> 
+			</ol>
+			</li>
+			<li>Data rows are highlighted when their filter select box is checked an unhighlighted when deselected(sto122)
+ 			<p concordion:manual="true">passed - jeffc 2014/08/14</p> 
+    		<ol>
+                <li>QUERY FOR Marker <b>shh</b></li>
+                <li>Click the Tissue x Gene tab</li>
+                <li>Click several of the filter check boxes for a row</li>
+                <li>Verify that when a row filter checkbox is checked the entire row is highlighted.</li>
+                <li>Deselect several rows you has previously selected</li>
+                <li>Verify that highlighting is removed from these rows</li>
+			</ol>
+			</li>
+
+
+<!-- 
+			<li>Statement of required behavior.
+			<p concordion:manual="false">new</p>
+			<ol>
+				<li>Step 1 of verification.</li>
+				<li>Step 2 of verification.</li>
+			</ol>
+			</li>
+
+			<li>Statement of required behavior.
+			<p concordion:manual="false">new</p>
+			<ol>
+				<li>Step 1 of verification.</li>
+				<li>Step 2 of verification.</li>
+			</ol>
+			</li>
+
+ -->
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Statement of required behavior 1.
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
+    		<li>Statement of required behavior 2.
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

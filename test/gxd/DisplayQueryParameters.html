@@ -35,6 +35,7 @@
         <li>User story 14, Search by gene-vocabulary annotation (GO and MP)</li>
         <li>User story 11, Search for expression results by Anatomy term </li>
         <li>User story 94, Fix test in gene section of query form(mutant / Wild type changes only)</li>
+        <li>User story 133, Search by Genome Location</li>
     </ul>
 <p>Description: The user is presented with a concise summary of the query form values that were submitted to reach a results page</p>
 <p><i>Note: on Expression Data Summary pages that are NOT generated from a user query, the heading for this area sometimes says &quot;Data Summary&quot; instead of &quot;Your searched for:&quot;.</i></p> 
@@ -108,7 +109,35 @@
                     <li>Verify the display of the text &quot;Genes annotated to <b>Function: response to fungi [response to fungus]</b> <span style="font-size:0.85em; color:#777777;">includes subterms</span>&quot;</li>
                 </ol>
             </li>
-
+            <!-- Genome Location tests -->
+			<li>Test Genome Location search for a single chromosome
+               <p concordion:manual="true">jeffc 8/15/2014</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select the input box for the Genome location section</li>
+                    <li>Enter <b>Chr15</b> in the text box and click search</li>
+                    <li>Verify the display of the genome location in you searched for: <b>Genome location(s)</b> <span style="font-size:0.85em; color:#777777;">chr15</span></li>
+                </ol>
+            </li>
+			<li>Test Genome Location search for a chromosome with coordinates
+               <p concordion:manual="true">jeffc 8/15/2014</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select the input box for the Genome location section</li>
+                    <li>Enter <b>ChrX:145500000</b> in the text box and click search</li>
+                    <li>Verify the display of the genome location in you searched for: <b>Genome location(s)</b> <span style="font-size:0.85em; color:#777777;">ChrX:145500000</span></li>
+                </ol>
+            </li>            
+			<li>Test Genome Location search for a single numeric chromosome
+               <p concordion:manual="true">jeffc 8/15/2014</p>
+                <ol>
+                    <li>Navigate to the GXD data query form</li>
+                    <li>Select the input box for the Genome location section</li>
+                    <li>Enter <b>ChrY</b> in the text box and click search</li>
+                    <li>Verify the display of the genome location in you searched for: <b>Genome location(s)</b> <span style="font-size:0.85em; color:#777777;">ChrY</span></li>
+                </ol>
+            </li>
+            
             <!--  Developmental Stage parameter tests -->
             <li>Test display of developmental stage when no stage is selected
             <p concordion:manual="true">passed klf 7/17/2012</p>

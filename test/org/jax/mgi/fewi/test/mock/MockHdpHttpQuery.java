@@ -6,12 +6,12 @@ import java.util.Map;
 
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
+import org.jax.mgi.fewi.matrix.HdpGridMapper.GridCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
 import org.jax.mgi.fewi.summary.HdpGenoByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpGridClusterSummaryRow;
 import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
-import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**

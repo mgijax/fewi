@@ -250,8 +250,8 @@ Tried adding the following to see if it would clear up this "failed" test. It di
     		<li>Verify GO Term count excludes all flavors of NOT.
     		<ol>
                 <li>open GXD query form and make sure vocabulary field is clear</li>
-				<li>type <b concordion:set="#query">ubiquitin-protein ligase activity</b> in the Vocabulary field.  This term has a 'NOT contributes to' annotation to Pcgf2.</li>
-				<li>verify that <b cc:assertResultsContain="getTerms(#query)">ubiquitin-protein ligase activity</b> appears in  the dropdown list with a count of <b>204</b></li>
+				<li>type <b concordion:set="#query">ubiquitin protein ligase activity</b> in the Vocabulary field.  This term has a 'NOT contributes to' annotation to Pcgf2.</li>
+				<li>verify that <b cc:assertResultsContain="getTerms(#query)">ubiquitin protein ligase activity</b> appears in  the dropdown list with a count of <b>204</b></li>
 				<li>make sure vocabulary field is clear</li>
 				<li>type <b concordion:set="#query">activation of JUN kinase activity</b> in the Vocabulary field.  This term has 'NOT' annotations to Ins2 and Bcl10.</li>
 				<li>verify that <b cc:assertResultsContain="getTerms(#query)">activation of JUN kinase activity</b> appears in  the dropdown list and has a count of <b>25</b></li>

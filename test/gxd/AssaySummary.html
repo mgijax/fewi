@@ -22,18 +22,30 @@
 <body>
 
 <div id="TOC">
-    <p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
 <div id="maintitle">
     <h1>Assay Summary</h1>
     <ul>
-        <li>User story 31, Display correct assay data</li>
+        <li>User story 16, E1: GXD QF: Anatomy Search -&gt; ID based</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
+	<ul>
+        <li>(sto16) when user selects an anatomy term from the dropdown, the query is by that term's ID, rather than by its text.
+		<ul>
+			<li>Example: search for 'limb'. Results should only include those for descendants of EMAPA:16405 (limb). It shoud NOT include things like "thin descending limb of outer medulla" (under renal system, loop of Henle)</li>
+		</ul>
+		</li>
+		<li>(sto16) Cre search should NOT change (i.e., it should still search based on text tokens.)</li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
     <ul>
         <li>a web page exists and displays a list of assays matching the query</li>
         <li>columns are: Gene, Assay Details, Assay Type, Reference</li>
@@ -44,10 +56,9 @@
         <li>camera icon has a tooltip on mouseover</li>
         <li>default is 100 rows per page</li>
         <li>default sort is 1. gene, 2. assay type, 3. author surname</li>
-        <li>browser back/forward works reliably (tested in BrowserHistoryjavascript test)</li>
-        <li>pagination control works reliably (tested in ????? test)</li>
-        <li>tab switching works reliably (tested in ??? test)</li>
-        <li>update user help</li>
+        <li>browser back/forward works (tested in BrowserHistoryjavascript test)</li>
+        <li>pagination control works</li>
+        <li>tab switching works</li>
     </ul>
 </div>
 
@@ -96,7 +107,7 @@ and m.symbol like 'Pax6%'
                 <li>Verify the Assay Results tab displays a count of <b cc:dynamicData="pax6ResultCount"></b> </li>
             </ol>
             </li>
-            <li>Assay table exists with correct columns
+            <li>Assay table exists with columns: Gene, Assay Details, Assay Type, Reference
         	<p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
@@ -120,7 +131,7 @@ and m.symbol like 'Pax6%'
                 </li>
             </ol>
             </li>
-            <li>Verify that the camera icon appears when the assay detail page contains figures linked to image detail pages 
+            <li>A camera icon appears when the assay detail page contains figures linked to image detail pages 
             <p><span concordion:manual="true">passed jeffc 8/10/2012</span></p>
             <ol>
                 <li>Open the GXD query page</li>
@@ -133,7 +144,7 @@ and m.symbol like 'Pax6%'
             </ol>
             </li>
 
-            <li>Verify that the camera icons have a tooltip 
+            <li>Camera icons have a tooltip 
             <p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
@@ -143,8 +154,8 @@ and m.symbol like 'Pax6%'
             </ol>
             </li>
             
-            <li>Default row count is 100 for Assays tab
-        <p concordion:manual="true">Passed jeffc 8/10/2012</p>
+            <li>Default row count is 100 for Assays tab; 
+        other values are 50, 250, 500<p concordion:manual="true">Passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
@@ -162,7 +173,7 @@ and m.symbol like 'Pax6%'
                 <li>The gene symbols <b>should not be a link</b> in the Gene column</li>
             </ol>
             </li>
-            <li>Test that GENES are sorted correctly
+            <li>Test that GENES are sorted by smart-alpha
         	<p concordion:manual="true">passed jeffc 8/10/2012</p>
             <ol>
                 <li>Open the GXD query page</li>
@@ -173,26 +184,22 @@ and m.symbol like 'Pax6%'
             </ol>
             </li>
 
-<!-- EVERYTHING IN HERE WAS ADDED FOR IMAGES TAB. SEPARATING INTO NEW FILE: ImageSummary.html. -klf 4/24/2013
-CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
-  
-            <li>Expression Images link from a Marker detail page goes to Images tab of it's assay summary
-        	<p concordion:manual="true">jeffc 04/09/2013</p>
-            <ol>
-                <li>Open the marker detail page http://cardolan.informatics.jax.org/marker/MGI:98297</li>
-                <li>Click on the link for <b>Images</b> in the expression section</li>
-                <li>Verify this takes you to the Images tab of the correct GXD expression data summary page</li>
-            </ol>
-            </li>
-            <li>Test that images are displayed on the Image tab and they are being correctly
-        	resized when needed<p concordion:manual="true">jeffc 04/15/2013</p>
-            <ol>
-                <li>Open the GXD expression data summary page for shh, </li>
-                <li>Verify the images are using the correct resizing by right-clicking the first image and viewing it's div height and width settings</li>
-                <li>Verify no matter what image you right-click the div height and width never exceed 250px X 250px</li>
-            </ol>
-            </li>
--->
+    		<li>When an Anatomical Structure term is submitted, only assays associated with that EMAPA term or its child terms are returned. (sto16)
+			<p concordion:manual="true">passed. -klf 2014-05-30</p>
+			<ol>
+                <li>Open the GXD query page.</li>
+                <li>Search for the following TERMS and verify the number of results returned (as of 5/20/2014 using AD Browser links on Cardolan):
+                <table>
+	                <tr><th>Term</th><th>EMAPA ID</th><th>Assays count</th><th>Notes to tester</th></tr>
+	                <tr><td>pinna mesenchyme TS20-26</td><td>EMAPA:17591</td><td>11</td><td>has child terms, some with zero results</td></tr>
+	                <tr><td>pinna TS20-28</td><td>EMAPA:17589</td><td>60</td><td>parent of "pinna mesenchyme TS20-26", has other child terms</td></tr>
+	                <tr><td>esophagus epithelium TS16-22</td><td>EMAPA:16835</td><td>39</td><td>has no child terms</td></tr>
+	                <tr><td>esophagus epithelium TS23</td><td>EMAPA:26985</td><td>70</td><td>has no child terms</td></tr>
+	                <tr><td>esophagus epithelium TS24-28</td><td>EMAPA:18862</td><td>45</td><td>has 2 child terms, one with zero results</td></tr>
+                </table>
+                </li>
+			</ol>
+    		</li>
 
             <li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
         </ol>
@@ -361,159 +368,9 @@ order by m.symbol, sortValue, b.short_citation
 					</tr>
 				</table>
 				</li>
-<!-- 
-				<li>Click <b>Click to modify search</b></li>
-                <li>Search for <b concordion:set="#nomen">Hhex</b> in the gene nomenclature field (Note: includes all assay types except RNase protection and Nuclease S1)</li>
-                <li>Click on the Assays tab</li>
-                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">30</b> rows.</li>
-                <li>Data returned should include only the following, in this order (human-readable table of all values below, NOTE author does not include &quot;et al.,&quot;)<br/>
-				<b concordion:set="#orderedAssays">MGI:4462695, MGI:3529579, MGI:5288741, MGI:4825370, MGI:3795404, MGI:4462792, MGI:3507633, MGI:3507634, MGI:3508843, MGI:3508844, MGI:4438434, MGI:3825718, MGI:2180036, MGI:3590576, MGI:3052989, MGI:4945303, MGI:5053738, MGI:5053739, MGI:4943179, MGI:2183486, MGI:1346303, MGI:1930274, MGI:1306925, MGI:4849074, MGI:4420280, MGI:3590572, MGI:4462694, MGI:3795415, MGI:3816588, MGI:3826488
-				</b>
-                OLD COMMENT: TURNED OFF AUTOMATED SORTING TEST <p concordion:assertTrue="getAssaysInOrder(#nomen, #orderedAssays)">Assays are in the same order</p> 
-				<table>
-					<tr><th>symbol</th><th>assaytype</th><th>accid</th><th>jnumid</th><th>short_citation</th><th>_assay_key</th><th>_refs_key</th></tr>
-					<tr><td>Hhex</td><td>Immunohistochemistry</td><td>MGI:4462695</td><td>J:74064</td><td>Ghosh B, Pediatr Res 2000 Nov;48(5):634-8</td><td>40342</td><td>75018</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3529579</td><td>J:79514</td><td>Burke Z, Mech Dev 2002 Oct;118(1-2):147</td><td>20088</td><td>80475</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:5288741</td><td>J:168654</td><td>Chung YC, Gene Expr Patterns 2011 Jan-Feb;11(1-2):84-92</td><td>57883</td><td>169750</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4825370</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>43369</td><td>154591</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3795404</td><td>J:134429</td><td>Flagg AE, Dev Biol 2007 Apr 1;304(1):308-16</td><td>31356</td><td>135522</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4462792</td><td>J:74064</td><td>Ghosh B, Pediatr Res 2000 Nov;48(5):634-8</td><td>40348</td><td>75018</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3507633</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>16121</td><td>92242</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3507634</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>16122</td><td>92242</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3508843</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>17331</td><td>92242</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3508844</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>17332</td><td>92242</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4438434</td><td>J:158268</td><td>Hassan AS, Gene Expr Patterns 2010 Feb 12;10(2-3):127-34</td><td>39345</td><td>159361</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3825718</td><td>J:139177</td><td>Hoffman BG, Genome Biol 2008;9(6):R99</td><td>33972</td><td>140270</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:2180036</td><td>J:75946</td><td>Kanai-Azuma M, Development 2002 May;129(10):2367-79</td><td>6510</td><td>76904</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3590576</td><td>J:47803</td><td>Keng VW, FEBS Lett 1998 Apr 17;426(2):183-6</td><td>22354</td><td>48124</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:3052989</td><td>J:91216</td><td>Kolterud A, Gene Expr Patterns 2004 Sep;4(5):521-8</td><td>15085</td><td>92201</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4945303</td><td>J:162220</td><td>Magdaleno S, PLoS Biol 2006 Apr;4(4):e86</td><td>51564</td><td>163316</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:5053738</td><td>J:171409</td><td>McMahon AP, J Am Soc Nephrol 2008 Apr;19(4):667-71</td><td>54500</td><td>172505</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:5053739</td><td>J:171409</td><td>McMahon AP, J Am Soc Nephrol 2008 Apr;19(4):667-71</td><td>54501</td><td>172505</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4943179</td><td>J:90402</td><td>Merrill BJ, Development 2004 Jan;131(2):263-74</td><td>50773</td><td>91387</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:2183486</td><td>J:77125</td><td>Norris DP, Development 2002 Jul;129(14):3455-68</td><td>6639</td><td>78085</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:1346303</td><td>J:53656</td><td>Perea-Gomez A, Development 1999 Oct;126(20):4499-511</td><td>4052</td><td>58318</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:1930274</td><td>J:67152</td><td>Perea-Gomez A, Development 2001 Mar;128(5):753-65</td><td>4978</td><td>68101</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:1306925</td><td>J:45579</td><td>Thomas PQ, Development 1998 Jan;125(1):85-94</td><td>1930</td><td>45863</td></tr>
-					<tr><td>Hhex</td><td>RNA in situ</td><td>MGI:4849074</td><td>J:156017</td><td>Yokoyama S, Dev Cell 2009 Dec;17(6):836-48</td><td>49296</td><td>157110</td></tr>
-					<tr><td>Hhex</td><td>In situ reporter (knock in)</td><td>MGI:4420280</td><td>J:149792</td><td>Morrison GM, Cell Stem Cell 2008 Oct 9;3(4):402-15</td><td>38954</td><td>150885</td></tr>
-					<tr><td>Hhex</td><td>Northern blot</td><td>MGI:3590572</td><td>J:47803</td><td>Keng VW, FEBS Lett 1998 Apr 17;426(2):183-6</td><td>22353</td><td>48124</td></tr>
-					<tr><td>Hhex</td><td>Western blot</td><td>MGI:4462694</td><td>J:74064</td><td>Ghosh B, Pediatr Res 2000 Nov;48(5):634-8</td><td>40341</td><td>75018</td></tr>
-					<tr><td>Hhex</td><td>RT-PCR</td><td>MGI:3795415</td><td>J:134429</td><td>Flagg AE, Dev Biol 2007 Apr 1;304(1):308-16</td><td>31366</td><td>135522</td></tr>
-					<tr><td>Hhex</td><td>RT-PCR</td><td>MGI:3816588</td><td>J:140465</td><td>Guo G, Dev Cell 2010 Apr 20;18(4):675-85</td><td>33007</td><td>141558</td></tr>
-					<tr><td>Hhex</td><td>RT-PCR</td><td>MGI:3826488</td><td>J:139177</td><td>Hoffman BG, Genome Biol 2008;9(6):R99</td><td>34560</td><td>140270</td></tr>				
-				</table>
-                </li>
-				<li>Click <b>Click to modify search</b></li>
-                <li>Search for <b concordion:set="#nomen">Mib*</b> in the gene nomenclature field (Note: includes three genes, several assay types)</li>
-                <li>Click on the Assays tab</li>
-                <li>The query should return <b cc:assertEquals="getAssayCountByNomen(#nomen)">23</b> rows.</li>
-                <li>Data returned should include only the following, in this order (human-readable table of all values below, NOTE author does not include &quot;et al.,&quot;)<br/>
-                <b concordion:set="#orderedAssays">MGI:4825381, MGI:3507897, MGI:3509067, MGI:3511959, MGI:5053748, MGI:4848573, MGI:3652956, MGI:3652842, MGI:4826195, MGI:3776837, MGI:3652832, MGI:3776828, MGI:3652840, MGI:3652946, MGI:3776839, MGI:3773868, MGI:3776821, MGI:3776825, MGI:3773859, MGI:3773860, MGI:3773863, MGI:3773865, MGI:3773866
-                </b>
-                <p concordion:assertTrue="getAssaysInOrder(#nomen, #orderedAssays)">Assays are in the same order</p>
-                <table>
-					<tr><th>symbol</th><th>assaytype</th><th>accid</th><th>jnumid</th><th>short_citation</th><th>_assay_key</th><th>_refs_key</th></tr>
-					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:4825381</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>43380</td><td>154591</td></tr>
-					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:3507897</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>16385</td><td>92242</td></tr>
-					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:3509067</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>17555</td><td>92242</td></tr>
-					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:3511959</td><td>J:91257</td><td>Gray PA, Science 2004 Dec 24;306(5705):2255-2257</td><td>18899</td><td>92242</td></tr>
-					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:5053748</td><td>J:171409</td><td>McMahon AP, J Am Soc Nephrol 2008 Apr;19(4):667-71</td><td>54510</td><td>172505</td></tr>
-					<tr><td>Hivep2</td><td>RNA in situ</td><td>MGI:4848573</td><td>J:156017</td><td>Yokoyama S, Dev Cell 2009 Dec;17(6):836-48</td><td>48795</td><td>157110</td></tr>
-					<tr><td>Mib1</td><td>Immunohistochemistry</td><td>MGI:3652956</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25194</td><td>103646</td></tr>
-					<tr><td>Mib1</td><td>RNA in situ</td><td>MGI:3652842</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25184</td><td>103646</td></tr>
-					<tr><td>Mib1</td><td>RNA in situ</td><td>MGI:4826195</td><td>J:153498</td><td>Diez-Roux G, PLoS Biol 2011;9(1):e1000582</td><td>44194</td><td>154591</td></tr>
-					<tr><td>Mib1</td><td>RNA in situ</td><td>MGI:3776837</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30583</td><td>101291</td></tr>
-					<tr><td>Mib1</td><td>Northern blot</td><td>MGI:3652832</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25182</td><td>103646</td></tr>
-					<tr><td>Mib1</td><td>Northern blot</td><td>MGI:3776828</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30582</td><td>101291</td></tr>
-					<tr><td>Mib1</td><td>Western blot</td><td>MGI:3652840</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25183</td><td>103646</td></tr>
-					<tr><td>Mib1</td><td>RT-PCR</td><td>MGI:3652946</td><td>J:102528</td><td>Barsi JC, Mech Dev 2005 Oct;122(10):1106-17</td><td>25192</td><td>103646</td></tr>
-					<tr><td>Mib2</td><td>RNA in situ</td><td>MGI:3776839</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30584</td><td>101291</td></tr>
-					<tr><td>Mib2</td><td>In situ reporter (knock in)</td><td>MGI:3773868</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30383</td><td>130196</td></tr>
-					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3776821</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30580</td><td>101291</td></tr>
-					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3776825</td><td>J:100264</td><td>Koo BK, J Biol Chem 2005 Jun 10;280(23):22335-42</td><td>30581</td><td>101291</td></tr>
-					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3773859</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30378</td><td>130196</td></tr>
-					<tr><td>Mib2</td><td>Northern blot</td><td>MGI:3773860</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30379</td><td>130196</td></tr>
-					<tr><td>Mib2</td><td>RT-PCR</td><td>MGI:3773863</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30380</td><td>130196</td></tr>
-					<tr><td>Mib2</td><td>RT-PCR</td><td>MGI:3773865</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30381</td><td>130196</td></tr>
-					<tr><td>Mib2</td><td>RT-PCR</td><td>MGI:3773866</td><td>J:129104</td><td>Wu JI, Genesis 2007 Nov;45(11):722-7</td><td>30382</td><td>130196</td></tr>                
-                </table>
-                </li>
- -->
             </ol>
             </li>
 
-<!-- EVERYTHING IN HERE WAS ADDED FOR IMAGES TAB. SEPARATING INTO NEW FILE: ImageSummary.html. -klf 4/24/2013
-CAN DELETE THIS STUFF WHEN I KNOW IT WORKS PROPERLY IN THE OTHER FILE.
-  
-            <li>Expression image link from a marker detail page goes to the image tab of the assay summary page
-            <p concordion:manual="true">jeffc 04/12/2013</p>
-            <ol>
-                <li>Display the marker detail page for gata1 (http://cardolan.informatics.jax.org/marker/MGI:95661)</li>
-                <li>Click on the Images link found in the Eppression reibbon section of the marker detail page</li>
-                <li>Verify the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab selected</li>
-            </ol>
-            </li>
-            <li>Confirm a GXD qury form search displays an Assay summary page with an Image tab included
-            <p concordion:manual="true">jeffc 04/12/2013</p>
-            <ol>
-                <li>Open the GXD query form and search for the marker <b>Gata1</b></li>
-                <li>Verify the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab included, the Assay Results tab should be highlighted</li>
-            </ol>
-            </li>
-            <li>Confirm the correct number and images are displayed
-            <p concordion:manual="true">jeffc 04/12/2013</p>
-            <ol>
-                <li>Display the marker detail page for ebl1 (http://cardolan.informatics.jax.org/marker/MGI:87859)</li>
-                <li>Click on the Images link found in the Eppression ribbon section of the marker detail page(link should say 19)</li>
-                <li>Verify the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab selected and the number displayed beside the tab is 19</li>
-                <li>Verify these are the images displayed:<br />
-                1 c-abl**<br />
-				2 c-abl**<br />
-				3 c-abl**<br />
-				Embryo_B291_1_1A<br />
-				Embryo_B291_1_1B<br />
-				Embryo_B291_1_1C<br />
-				Embryo_B291_1_2A<br />
-				Embryo_B291_1_2C<br />
-				Embryo_B291_1_2D<br />
-				Embryo_B291_1_3A<br />
-				Embryo_B291_1_3B<br />
-				Embryo_B291_1_3C<br />
-				Embryo_B291_1_3D<br />
-				Embryo_B291_1_4A<br />
-				Embryo_B291_1_4C<br />
-				Embryo_B291_1_4D<br />
-				Embryo_B291_1_5A<br />
-				Submitted Image - c-ablAdult<br />
-				Submitted Image - c-ablE18.5<br />
-				Submitted Image - c-ablP1.5<br />
-				Submitted Image - c-ablP0.5<br />
-				Submitted Image - c-ablP10.5<br />
-              *Note that the sort order of images might be off right now<br />
-              **these image figures have no image so should not display<br /> 
-              </li>
-            </ol>
-            </li>
-            <li>Confirm image tab when a query has no image
-            <p concordion:manual="true">jeffc 04/12/2013</p>
-            <ol>
-                <li>Open the GXD query form and search for the marker <b>Dgsh</b></li>
-                <li>Click on the Images tab (note the tab says 0 images)</li>
-                <li>After the Image summary page for marker <b>Dgsh</b> displays, verify the text says <b>No images with expression data found.</b></li>
-            </ol>
-            </li>
-            <li>Confirm images are linked to there Image detail page
-            <p concordion:manual="true">jeffc 04/12/2013</p>
-            <ol>
-                <li>Display the marker detail page for gata1 (http://cardolan.informatics.jax.org/marker/MGI:95661)</li>
-                <li>Click on the Images link found in the Expression ribbon section of the marker detail page</li>
-                <li>After the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab selected, click on the first displayed image (euxassay-006598_06)</li>
-                <li>Verify the Image detail page for figure euxassay-006598_06 displays</li>
-            </ol>
-            </li>
-
- -->
 		</ol>
 
         <ul>

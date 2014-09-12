@@ -4,7 +4,7 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
 
 public class GxdAssaySummaryRow {
-	
+
 	// -------------------
 	// instance variables
 	// -------------------
@@ -16,7 +16,7 @@ public class GxdAssaySummaryRow {
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 	String pywiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
 	String webshareUrl = ContextLoader.getConfigBean().getProperty("WEBSHARE_URL");
-	 
+
 	private String score;
 
 	// -------------
@@ -38,33 +38,32 @@ public class GxdAssaySummaryRow {
 	}
 
 	public String getGene() {
-		
-//		return "<a href='" + fewiUrl + "marker/" + mrk.getPrimaryID() + "'>"
-//				+ mrk.getSymbol() + "</a>";
-		
+
+		// return "<a href='" + fewiUrl + "marker/" + mrk.getPrimaryID() + "'>"
+		// + mrk.getSymbol() + "</a>";
+
 		return assay.getMarkerSymbol();
 	}
-	
-	public String getAssayID()
-	{
-		if(assay.getHasImage() )
-		{
-			return "<a href='"+fewiUrl+"assay/"+assay.getAssayMgiid()+"'>data</a><span> ("+assay.getAssayMgiid()+")</span>" + 
-					" <img class=\"cameraIcon\" src=\""+webshareUrl+"/images/mgi_camera.gif\" /> ";
+
+	public String getAssayID() {
+		if (assay.getHasImage()) {
+			return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
+					+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>"
+					+ " <img class=\"cameraIcon\" src=\"" + webshareUrl
+					+ "/images/mgi_camera.gif\" /> ";
 		}
-		return "<a href='"+fewiUrl+"assay/"+assay.getAssayMgiid()+"'>data</a><span> ("+assay.getAssayMgiid()+")</span>";
+		return "<a href='" + fewiUrl + "assay/" + assay.getAssayMgiid()
+				+ "'>data</a><span> (" + assay.getAssayMgiid() + ")</span>";
 	}
-	
+
 	public String getAssayType() {
 		return assay.getAssayType();
 	}
 
-
-	public String getReference()
-	{
-		return "<a href='"+fewiUrl+"reference/"+assay.getJNum()+"'>"+assay.getJNum()+"</a> "+assay.getMiniCitation();
+	public String getReference() {
+		return "<a href='" + fewiUrl + "reference/" + assay.getJNum() + "'>"
+				+ assay.getJNum() + "</a> " + assay.getMiniCitation();
 
 	}
-
 
 }

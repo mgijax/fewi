@@ -1,0 +1,161 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Expression Ribbon Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Expression Ribbon Tests</h1>
+    <ul>
+        <li>User story 22, E2: Add links to tissue x stage results</li>
+        <li>User story 196, Load and Link to Chicken Gene Expression Page</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto22: add new link from marker detail expression ribbon</li>
+		<li>sto22: link text = "Matrix view"</li>
+		<li>sto22: link to expression results for that gene, opened to the tissue x stage matrix tab</li>
+	</ul>
+</div>
+
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+	<p><i>Note: this test suite was written when the Tissue X Stage matrix tab was added to GXD Results, in MGI 5.20 (2014). It is expected this test suite will be more completely populated with tests for links in the Expression ribbon with subsequent MGI WI releases.</i></p>
+	<p>The Expression ribbon contains data about and links to GXD's expression assay results, tissues in which a marker has been assayed, and expression images. Links to the GXD Literature Index and to cDNA clones are included.  Links to external data sources are included.</p>
+	<ul>
+		<li>For each marker having expression results, add a link to the Tissue X Stage Matrix view tab which has been added to the expression results summary page. (sto22)</li>
+        <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog. (sto196)</li>
+        <li>When 2 or more chicken orthologs exist for a mouse marker, display a link when ONLY ONE of the orthologs has expression data. If 2 or more of the orthologs have expression data, do not link to any of them. (sto196)</li>
+        <li>When 2 or more mouse orthologs exist for a chicken marker, display a link on each mouse marker detail page, following the rules above. (sto196)</li>
+        <li>Display the link on a new line, below the External Resources line. (sto196)</li>
+        <li>Label for the new line should be "Other Vertebrates:" and label for the link itself should be "GEISHA". (sto196)</li> 
+        <li>Tests for data load requirements are in the <a href="../gxd/LoadExpressionOtherOrganisms.html">Load Expression for Other Organisms test suite</a>.</li> 
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+-->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>For a marker having expression results, a label and link to the Tissue X Stage Matrix view exists. (sto22)
+ 			<p concordion:manual="true">passed. -klf 2014-06-23</p>
+    		<ol>
+                <li>Navigate to the marker detail page for <b>Psmb2</b> (MGI:1347045)</li>
+                <li>In the Expression ribbon, verify that link appears to the right of the "Images" link.</li>
+                <li><del>Verify that following the link leads to the Results Summary page for Psmb2, with the Tissue X Stage Matrix tab as the "Active" tab.</del> <i>MOVED TO GXDSummaryLinksInbound test suite.</i></li>
+                <li><del>Verify that the matrix displays the same data as an Expression Query for Psmb2.</del> <i>MOVED TO GXDSummaryLinksInbound test suite.</i></li> 
+                <li>Navigate to the marker detail page for <b>Angel2</b> (MGI:1196310)</li>
+                <li>In the Expression ribbon, verify that NO "Matrix view" link appears to the right of the "Images" link.</li>
+                <li>Navigate to the marker detail page for <b>Asb1</b> (MGI:1929735)</li>
+                <li>In the Expression ribbon, verify that NO "Matrix view" link appears to the right of the "Images" link.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>When a mouse marker has a no chicken ortholog, DO NOT display the "Other Vertebrates:" row. (sto196)
+ 			<p concordion:manual="false">new</p>
+    		<ol>
+                <li>Klf8</li>
+                <li>Klf16</li>
+                <li>Klf17</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has a single chicken ortholog, and it appears in the GEISHA expression.txt file, display the link on the marker detail page. (sto196)
+ 			<p concordion:manual="false">new</p>
+    		<ol>
+                <li>Lhx6 is chicken LHX6</li>
+                <li>Myod1 is chicken MYOD1</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has 2 or more chicken orthologs, and only 1 of the orthologs is present in the GEISHA file, display the link on the marker detail page. (sto196)
+			<p concordion:manual="false">new</p>
+    		<ol>
+                <li>Cacng4 in mouse is orthologous to CACNG4, LOC100859571 in chicken. Only CACNG4 is in the file.</li>
+                <li>Ccr2 in mouse is orthologous to CCR2, CCR5 in chicken. Only CCR2 is in the file.</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has 2 or more chicken orthologs, and 2 or more of the orthologs are present in the GEISHA file, DO NOT display the link on the marker detail page. (sto196)
+			<p concordion:manual="false">new</p>
+    		<ol>
+                <li>Krt75 in mouse is orthologous to KRT6A, KRT75 in chicken. Both are in the file.</li>
+                <li>Hoxa10 in mouse is orthologous to HOXA10, LOC100858051, LOC100858905 in chicken. HOXA10, LOC100858905 are in the file.</li>
+    		</ol>
+    		</li>
+
+    		<li>When 2 or more mouse markers have the same chicken ortholog, and it appears in the GEISHA file, display the link on each of those marker detail pages. (sto196)
+
+			<p concordion:manual="false">new</p>
+    		<ol>
+                <li>Gapdh, Gm20899 in mouse are orthologous to GAPDH in chicken and it is in the file.</li>
+                <li>Hba-a1, Hba-a2 in mouse are orthologous to HBAA in chicken and it is in the file.</li>
+    		</ol>
+    		</li>
+
+    		<li>When 2 or more mouse markers belong to a cluster with 2 or more chicken orthologs, and only one of those orthologs are present in the GEISHA file, display the link on any of those marker detail pages. (sto196)
+			<p concordion:manual="false">new</p>
+    		<ol>
+                <li>Gm8909, Gm10499, H2-Bl, H2-D1, H2-K1, and more in mouse are orthologous to BF1, BF2, MICA, MR1, YF6, LOC417057, LOC417058, and more in chicken.  Only BF1 is in the file.</li>
+    		</ol>
+    		</li>
+
+    		<li>When 2 or more mouse markers belong to a cluster with 2 or more chicken orthologs, and 2 or more of those orthologs are present in the GEISHA file, DO NOT display the link on any of those marker detail pages. (sto196)
+			<p concordion:manual="false">new</p>
+    		<ol>
+                <li><i>Need to find an example.</i></li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

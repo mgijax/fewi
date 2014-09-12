@@ -3,6 +3,8 @@ package org.jax.mgi.fewi.searchUtil.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
+
 public class SolrHdpGridCluster implements SolrHdpEntity
 {
 	Integer gridClusterKey;

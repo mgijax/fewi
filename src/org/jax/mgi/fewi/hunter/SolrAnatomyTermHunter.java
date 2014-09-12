@@ -38,6 +38,9 @@ public class SolrAnatomyTermHunter extends SolrHunter<SolrAnatomyTerm> {
         		new SolrPropertyMapper(IndexConstants.STRUCTUREAC_STRUCTURE));
         propertyMap.put(SearchConstants.SYNONYM,
         		new SolrPropertyMapper(IndexConstants.STRUCTUREAC_SYNONYM));
+        
+        propertyMap.put(SearchConstants.ACC_ID,
+        		new SolrPropertyMapper(IndexConstants.ACC_ID));
 
         /*
          * The name of the field we want to iterate through the documents for

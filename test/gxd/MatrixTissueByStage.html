@@ -1,0 +1,3512 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+<style type="text/css">
+table.imagetable {
+	font-family: verdana,arial,sans-serif;
+	font-size:10px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #999999;
+	border-collapse: collapse;
+}
+table.imagetable th {
+	background:#EEEEDF;
+	border-width: 1px;
+	padding: 4px;
+	border-style: solid;
+	border-color: #999999;
+	border-bottom-width: 4px;
+	border-bottom-color:#996633
+}
+table.imagetable td {
+	background:#EEEEDF;
+	border-width: 1px;
+	padding: 4px;
+	border-style: solid;
+	border-color: #999999;
+}
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Matrix: Tissue X Stage</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Matrix: Tissue X Stage</h1>
+    <ul>
+        <li>User story 21, E2: Single structure query, no coloring</li>
+        <li>User story 39, E2: Single structure + coloring</li>
+        <li>User story 23, E2: No structure specified (default view)</li>
+        <li>User story 24, E2: Indicate valid stage range</li>
+        <li>User story 46, E4: Openy on Tissue x Stage</li>
+        <li>User story 91, Disappear the numbers and make the cells the right size</li>
+        <li>User story 26, E2: Cell hover display for tissue x stage matrix</li>
+        <li>User story 47, E4: Closey on Tissue x Stage</li>
+        <li>User story 61, E2: Display day range for Theiler stages</li>
+        <li>User story 97, E6: Scrolling</li>
+        <li>User story 25, E2: Color gradient bins</li>
+        <li>User story 85, Indicate mixture of present and absent results</li>
+        <li>User story 101, Structure-specified queries: open 1 level</li>
+        <li>User story 60, E2: Color legend</li>
+        <li>User story 121, Cell popups: filtering tissuexstage</li>
+        <li>User story 68, E5: User can select and filter rows : the basics</li>
+        <li>User story 122, E5: Highlighted checked rows</li>        
+        <li>User story 123, E5: Row checkboxes: 3 states+responsiveness</li>
+        <li>User story 111, Change format of gold cells</li>
+        <li>User story 65, E5: Tissue x Stage: User can select and filter stages</li>
+        <li>User story 69, E4: O/C state remembered across filtering</li>
+        <li>User story 164, cell-pop ups to 0 images</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria - Current Development Work</h2>
+	<ul>
+		<li>there is a new tissue x stage tab on results</li>
+		<li>querying with a single structure (and possibly other) query parameters yields a tissue x stage matrix with
+		<ul>
+			<li>display that structure opened one level (assuming it is O/C) (sto101)</li>
+			<li>whatever (correct) stages</li>
+			<li>Whatever is correct DPC age for the Theiler stage displayed</li>
+			<li>cells have a simple "x" or something, to indicate data or no data</li>
+			<li>every cell should have an x</li>
+			<li>no valid stage indicators</li>
+			<li>sto39 - cell show the solid (non-binned) rollup colors</li>
+			<li>sto39 - roll up rules tested and verified as part of this story!</li>		
+		</ul>
+		</li>
+		<li>sto23 - querying with no structure specified yields a tissue x stage matrix with:
+		<ul>
+			<li>the starting rows taken from the "high level" EMAPA. This means: all the first level + children of "organs systems" (that node is opened up).</li>
+			<li>only the top-level terms having results in the current result set are shown</li>
+			<li>if an annotation is to a term that has multiple top level ancestors, all of those top level nodes are shown</li>
+			<li>only shows stages from results that have annotations</li>
+			<li>solid (non-binned) roll up colors</li>
+			<li>proper indenting of structures</li>
+			<li>siblings are ordered within parent by alpha</li>
+			<li>display full term (regardless of length)</li>
+			<li>do _not_ display stage range as part of the term's label</li>
+		</ul>
+		</li>
+		<li>sto24 - In tissue x stage matrix, the valid stage range of each structure is visually indicated</li>
+		<li>sto24 - If a given cell has no results (no color) and that structure (row) exists in that stage (column), the cell contains a "o" character (see mockup)</li>
+		<li>sto24 - colored cells do not have an "o"</li>
+		<li>sto46 - for a given results set, if (and only if) any cell in a row contains annotations to descendants of that row, then the row is "openy/closey" (O/C)</li>
+		<li>sto46 - only implementing the openy part here</li>
+		<li>sto46 - O/C row displays an indication to the user as to which state it is in (i.e. open or closed)</li>
+		<li>sto46 - in the structure specified case, the displayed row is closed (assuming it is O/C)</li>
+		<li>sto46 - in the structure not specified case, the high level terms are as follows (the following wording assumes a node is displayed and is O/C):
+		<ul>
+			<li>the root node (mouse) is open</li>
+			<li>each child of the root is closed, except</li>
+			<li>organ system is open</li>
+			<li>each child of organ system is closed</li>
+		</ul>
+		</li>
+		<li>sto46 - Clicking a closed O/C row opens it:
+		<ul>
+			<li>the immediate children of the structure are added as rows below the parent; ONLY include those children having results</li>
+			<li>structure name labels are indented</li>
+			<li>child row cells are colored according to roll up rules</li>
+			<li>a child can (of course) be O/C</li>
+		</ul>
+		</li>
+		<li>sto46 - The same node/row will appear multiple times (as duplicate matrix rows) if there multiple paths to that node and the user opens the right sequence of O/C rows</li>
+		<li>sto47 - clicking on an open O/C row:
+		<ul>
+			<li>removes all displayed descendant rows</li>
+			<li>rows below move up</li>
+			<li>returns the row to the closed state</li>
+		</ul>
+		</li>
+		<li>sto46 - if user filters, the grid is simply redrawn - the open/closed state of drilldown is not remembered (for this story)</li>
+		<li>sto91 - none.</li>
+		<li>sto26 - see mockups (slide 18)</li>
+		<li>sto26 - popup displays a little table that summarizes the number of results and # of genes per "Detected" value</li>
+		<li>sto26 - table has 3 columns:
+		<ul>
+			<li>Detected? (yes/no/NS/Ambiguous)</li>
+			<li>#results = number of results in this cell for the specific Detected value</li>
+			<li>#genes = number of genes in the results under this cell with the specific detected value (a given gene is counted once for each Detected value it's associated with</li>
+		</ul>
+		</li>
+		<li>sto26 - table has one row per detected value represented in the results (suppress rows with 0 counts)</li>
+		<li>sto26 - user action to trigger the popup is a click in the cell</li>
+		<li>sto26 - user action to make popup go away = close button on popup</li>
+		<li>sto26 - at most one popup open at a time</li>
+		<li>sto26 - no filtering function yet</li>
+		<li>sto61 - In tissue x stage matrix, the valid DPC age of each displayed Theiler stage is visually indicated</li>		
+		<li>sto97 - Matrices are "scrollable"
+		<ul>
+			<li>when a matrix is "too wide" (size TBD), horizontal scrollbars are provided</li>
+			<li>when a matrix is "too tall" (size TBD), vertical scrollbars are provided</li>
+		</ul>
+		</li>
+		<li>sto97 - Row and column headers remain "anchored" in position at the left and top (respectively) while scrolling, i.e.:</li>
+		<li>sto97 - Scrolling left/right:
+		<ul>
+			<li>Row headers remain fixed</li>
+			<li>Column headers scroll left/right with matrix</li>
+		</ul>
+		</li>
+		<li>sto97 - Scrolling up/down:
+		<ul>
+			<li>Row headers scroll up/down with matrix</li>
+			<li>Column headers remain fixed</li>
+		</ul>
+		</li>
+		<li>sto97 - Works in both matrices</li>
+		<li>sto97 - Users with scroll wheels ought to be able to use them to scroll up/down when the mouse is positioned over the matrix</li>
+		<li>sto97 - User must be able to increase the "viewport" size (the amount of matrix that is visible).</li>
+		<li>sto25 - see mockups (slide 14)</li>
+		<li>sto25 - Only cells colored blue or red have binned gradients</li>
+		<li>sto25 - The bin parameters for blue:
+		<ul>
+			<li>&gt;50 = dark</li>
+			<li>5-50 = medium</li>
+			<li>1-4 = light</li>
+		</ul>
+		</li>
+		<li>sto25 - Bin parameters for red:
+		<ul>
+			<li>&gt;20 = dark</li>
+			<li>5-20 = medium</li>
+			<li>1-4 = light</li>
+		</ul>
+		</li>
+		<li>sto25 - for blue, the count to use is the total number of detected results under that cell</li>
+		<li>sto25 - for red, the count to use is the number of Absent results for THAT structure (do not count children)</li>
+		<li>sto25 - does not include the legend</li>
+		<li>sto85 - if a cell is blue, but also contains Absent results for THAT structure (not substructures), display a small red triangle in the upper right of the cell. (see mockup)
+		<ul>
+			<li>Q: are red triangle colors binned? (No - just one color; use the medium red.)	</li>
+		</ul>
+		</li>
+		<li>sto60 - legend is displayed in both matrix tabs (see mockup)</li>
+		<li>sto60 - not implementing the help popups for this story</li>
+		<li>sto121 - cell popup dialogs provide two "filter" buttons (see mockup) - one for results, one for images</li>
+		<li>sto164 - if there are no images for the results underlying a cell, then the popup for that cell should disable (alternately, disappear) the "See images" button.</li>
+		<li>sto121 - both do the same filtering, they just end up on different tabs</li>
+		<li>sto121 - filtering by a cell filters for that structure (including subs) and that stage or gene.</li>
+		<li>sto121 - filtering by a cell, works like other filtering:
+		<ul>
+			<li>the two filters show up in the "current filters" area - can be removed by user</li>
+			<li>filtering op works with browser history, i.e., the back button "undoes" the filter op.</li>
+		</ul>
+		</li>
+		<li>sto68 - every displayed row has a checkbox</li>
+		<li>sto68 - the checkboxes are vertically aligned and positioned at the right side of the structure names (see mockups)</li>
+		<li>sto68 - the matrix has a "filter" button with icon</li>
+		<li>sto68 - the user can filter by checking rows and then clicking the filter button with icon</li>
+		<li>sto68 - the query is rerun with the additional structure parameters based on what the user has checked, and the results are redrawn (nothing happens if the user clicks on filter while nothing is selected)</li>
+		<li>sto68 - Structure filtering works with the existing filter mechanism:
+		<ul>
+			<li>each selected structure appears as a filter box (which can be removed by the user)</li>
+			<li>the browser's Back button undoes the last filter operation</li>
+		</ul>
+		</li>
+		<li>sto68 - in this story, it's real simple: whatever the user checks is selected - no autochecking of descendents, etc.</li>
+		<li>sto122 - When a row's filter checkbox is checked the entire row is highlighted with a pale green background that has a bold border</li>
+		<li>sto122 - When a row's filter checkbox is removed the highlighting goes away</li>
+		<li>sto123 - Checkbox behavior should mimic the behavior of Feature Type selection in the marker query form. In words:
+		<ul>
+			<li>a cb has one of three states:
+			<ul>
+				<li>checked: displays a checkmark</li>
+				<li>blank: empty</li>
+				<li>minus: displays a "-"</li>
+			</ul>
+			</li>
+			<li>both blank and minus are considered "unchecked"; the only difference is that minus indicates that one or more descendants is checked.</li>
+			<li>initially, everything is unchecked, then...
+			<ul>
+				<li>if the user clicks an unchecked cb (either blank or minus), the cb and all visible descendants become checked</li>
+				<li>if the user clicks a checked cb, that cb and all displayed descendants become blank</li>
+				<li>After a click, each ancestor, a, of the clicked cb updates its state as follows:
+				<ul>
+					<li>if all of a's displayed children are checked, a is checked</li>
+					<li>otherwise a is minus</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+			<li>if a structure is displayed more than once, all its cbs should stay in sync</li>
+		</ul>
+		</li>
+		<li>sto111 - cells that were solid gold (!) now show just the little triangle in the upper right corner</li>
+		<li>sto111 - Change the gold box to the gold triangle box in the legend</li>
+		<li>sto65 - every gene (column) has a checkbox</li>
+		<li>sto65 - initially all unchecked</li>
+		<li>sto65 - whatever user checks gets applied when filtering, as in: filter for gene id in (id1, id2, ...)</li>
+		<li>sto65 - After filtering, one "filter box" per gene is displayed (similar to filtering by stages).
+		<ul>
+			<li>Label="Gene:&lt;symbol&gt;"</li>
+			<li>Removable by the user.</li>
+			<li>Works with browser history</li>
+		</ul>
+		</li>
+		<li>sto69 - For every row, r, displayed before filtering, if there is data for r after filtering, then r is displayed, else it goes away.
+		<ul>
+			<li>grids are not kept in sync w/ each other</li>
+			<li>open state is remembers across back buttons</li>
+		</ul>
+		</li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+    <ul>
+        <li>A matrix (grid) is displayed with anatomy terms for rows, Theiler Stages and DPC Ages for columns.</li>
+<!--        <li>Each cell contains a count of the number of expression results for the given anatomy term and Theiler Stage including results in any child terms. (sto21)</li>
+ 		<li>FOR STO21: we only display a grid when structure is one of the query parameters submitted.</li> -->
+		<li>Each cell contains a "valid" indicator, a colored shape representing annotation data, is colored to indicate annotation data, or is empty.</li>
+        <li>Data could be positive, negative, or ambiguous/not specified. (sto21)</li>
+		<li>Color roll-up logic: (sto39)
+		<ol>
+			<li>If there are any results under the cell where detected=true, then color=BLUE.</li>
+			<li>Else, if the structure for THAT row (not looking at descendants) has result(s) that are NS or Ambiguous, then color=GRAY.</li>
+			<li>Else, if the structure for THAT row (not looking at descendants) has result(s) that are Absent, then color=RED.</li>
+			<li>Else, if there are any results under that cell where detected is Ambiguous, NS or Absent, color=GOLD.</li>
+		</ol>
+		</li>
+        <li>Only the required Theiler Stage columns are displayed to represent expression data (no blank columns).</li>
+        <li>For a single structure query, in both matrices, display that structure opened one level (assuming it is O/C) (sto101)</li>
+		<li>When the query does not include a structure (anatomy term), all necessary rows containing &quot;Default&quot; anatomy terms are displayed. (sto23)</li>
+		<li>&quot;Default&quot; anatomy terms to display include: (sto23)
+		<ul>
+			<li>Mouse.</li>
+			<li>The next level immediately below Mouse.</li>
+			<li>The level immediately below Organ System (e.g., alimentary system, cardiovascular system, etc.).</li>
+		</ul>
+		</li>
+		<li>Only the required rows are displayed to represent structures which have expression data for the submitted query parameters (no blank rows). (sto23)</li>
+		<li>If a term has multiple paths up the DAG to the root node (mouse), each path is represented once.</li>
+		<li>Child terms are indented below their parent terms.</li>
+		<li>In the row for a given structure, in the column for a given Theiler Stage, when no data exists for the structure but the structure is valid for that Stage, display an empty circle symbol. (sto24)</li>
+		<li>If a displayed term has one or more descendant terms with annotations, the displayed term's row can be "opened" (expanded) to display the immediate child term(s) along the path(s) to the annotated descendant term(s). (sto46)</li>
+		<li>Clicking an "opened" or "expanded" term (one displaying descendant terms) redraws the grid to "close" or "hide" all descendant term rows (sto47).</li>
+		<li>If a term with descendant terms was previously "opened" or "expanded", a subsequent click will reopen or expand all descendant term rows which were also opened or expanded. (sto47)</li>
+		<li>Counts of expression results do not appear in the Theiler Stage column cells. (sto91)</li>
+		<li>Clicking in a colored cell triggers a pop-up panel on the page. (sto26)</li>
+		<li>The popup contains a header row identifying the row and column of the cell from which it was triggered. (sto26)</li>
+		<li>The popup contains a table summarizing the data underlying the clicked cell: (sto26)
+		<ul>
+			<li>Columns: Count of genes; Detected values; Count of results</li>
+			<li>Rows: Detected value = Yes; Detected value = No; Detected value = Ambiguous or Not specified (summed)</li>
+			<li>The "Yes" count is the sum of all "Yes" results for the term and descendant terms.  The "No" and "Ambig/NS" counts are ONLY for the term itself.</li>
+		</ul>
+		</li>
+		<li>The popup contains two buttons for filtering the results set, which function similar to previous MGI filters: (sto121)
+		<ul>
+			<li>"Show these results" filters the existing results set and redraws the grid to display only the structure (and substructures) for the row of interest, and the Theiler Stage for the column of interest, AND changes the display to the Results tab. (It retains any prior filtering and other parameters from the query.)</li>
+			<li>"Show the images" filters the results set of images to include only those associated with assay results for the structure (and substructures) for the row of interest, and the Theiler Stage for the column of interest, AND changes the display to the Images tab.</li>
+			<li>If there are no images for the results underlying a cell, the "Show the images" button is not displayed. (sto164)</li>
+			<li>The standard "remove filters" buttons are added to the interface.</li>
+			<li>These actions are captured in the Browser History.</li>
+		</ul>
+		</li>
+		<li>The matrix grid area has scrolling controls within the browser's viewport. (sto97)</li>
+		<li>Using the matrix grid scrolling controls, the column and row header cells remain visible as the user scrolls through the data.
+		<ul>
+			<li>When scrolling up/down to view rows, column headers always remain visible.</li>
+			<li>When scrolling left/right to view columns, row headers always remain visible.</li>
+		</ul>
+		</li>
+		<li>The scrollable area is responsive to changes in the size of the browser's viewport. (sto97)</li>
+		<li>Blue (positive annotations) and red (negative annotations) colors use 3 shades to form a "heat map" of the count of results of each cell. (sto25)
+		<ul>
+			<li>Blue (positive annotations) color bins represent 1-4 results, 5-50 results, and more than 50 results.</li>
+			<li>Blue (positive annotations) colored results include all positive annotations to all descendant terms.</li>
+			<li>Red (negative annotations) color bins represent 1-4 results, 4-20 results, and more than 20 results.</li>
+			<li>Red (negative annotations) color bins EXCLUDE annotations to descendant terms.</li>
+		</ul>
+		</li>
+		<li>When negative or ambiguous results exist only in descendant terms, display a gold corner triangle. (sto111)</li> 
+		<li>Grey (ambiguous or "not specified" annotations) and gold (negative or ambiguous results only in descendant terms) cells have only 1 shade (no heat map coloration). (sto25) </li>
+		<li>When negative annotations also exist for a structure which has its own or inferred (rolled-up) positive annotations, display a red corner triangle on the blue cell. (sto85) </li>
+		<li>A legend is available explaining the meaning of colors and symbols. (sto60)</li>
+		<li>The user may filter the existing results set by checking boxes to indicate which structure rows are to be retained. (sto68)</li>
+		<li>When filtering by structure terms, descendant terms are retained by default. (sto68)</li>
+		<li>When filtering by structure, the only columns retained are those having data for at least 1 retained structure row. (sto68)</li>
+		<li>After filtering by structure(s), all displayed rows are "closed" (collapsed) by default. (sto68)</li>
+		<li>Structure filters add "remove filter" buttons to the Filtering Button area, like the existing filters. (sto68)</li>
+		<li>Structure filters are included in Browser History, like the existing filters. (sto68)</li>
+		<li>Checkboxes which indicate rows selected for filtering display 1 of 3 states to give the user visual cues for the effects post-filtering (sto123), and rows are highlighted (sto122): 
+		<ul>
+			<li>blank - the anatomical term (row) is not selected, nor it is an ancestor term, nor a descendant term of a selected term.</li>
+			<li>checked - the anatomical term (row) is selected for filtering <i>OR</i> the term is a descendant of a selected term. These rows are also highlighted with a light background color.</li>
+			<li>minus - the anatomical term (row) is an ancestor of a selected term. These rows are not highlighted with a background color.</li>
+		</ul>
+		</li> 
+		<li>When the user selects a row (anatomy term) checkbox, then submits the filtering functionality: (sto123)
+		<ul>
+			<li>Upon selecting the checkbox, ancestor term(s) <i>directly above</i> the selected term display a minus sign (to indicate "partially selected"). Other ancestor terms elsewhere on the grid remain in their existing state.</li>
+			<li>If the user selects checkboxes for all descendant terms for a particular ancestor term, the ancestor term displays a checkmark instead of a minus sign (to indicate "included in filtering action").</li>
+			<li>If the user selects checkboxes for all descendant terms for a particular ancestor term, the ancestor term is the submitted filter term (not the individual descendant terms).</li>
+			<li>Upon selecting the checkbox, if the row for the term displays descendant terms (is expanded/open), descendant term(s) display a checkmark (to indicate "included in filtering action").</li>
+			<li>After submitting the filter action, only rows for the term(s) actively selected by the user are displayed by default in the results set grid view.</li>
+			<li><i>Exception:</i> if the user selected all descendant terms for a particular ancestor term, then the ancestor term is submitted and is a displayed row in the results set grid view.</li>
+			<li>After submitting the filter action, all descendant terms are included in the results set by default, but no descendant term rows are displayed by default in the grid view. </li>
+			<li>After submitting the filter action, only columns required to display the filtered data set (including descendant terms) are displayed.</li>
+		</ul>
+		</li>
+		<li>When the user selects a column (theiler stage) checkbox, then submits the filtering functionality: (sto65)
+		<ul>
+			<li>After submitting the filter action, only columns for the stage(s) actively selected by the user are displayed by default in the results set grid view.</li>
+			<li>After submitting the filter action, only rows required to display the filtered data set are displayed.</li>
+		</ul>
+		</li>
+		<li>After filtering, the rows "remember" their open/closed state: (sto69)
+		<ul>
+			<li>Each time you "submit to the database" (via a query or a filtering behavior (either adding filters or removing them)), the grid will "capture a snapshot" of all the opened rows.</li>
+			<li>After the "submit", the grid will attempt to redraw with all the previously opened rows still open.
+			<ul>
+				<li>If some of those rows no longer exist, they simply won't appear.</li>
+				<li>If new rows appear between previously open rows, those rows will be in the closed state.</li>
+				<li>If previously absent rows now reappear, and they were in an open state before, they will be in an open state now.</li>
+			</ul>
+			</li>
+			<li>When the user clicks the "Back" button, the browser will "remember" the state of the rows for the data set to be displayed, as best it can:
+			<ul>
+				<li>If rows were open, then the user filtered the results based on data other than anatomy terms (rows), then the user closed some of the open rows, then the user clicked the "Back" button, the browser will keep the open rows open and the newly closed rows closed.</li>
+				<li>If rows were open, then the user filtered the results based on anatomy terms, then the user closed some of the open rows, then the user clicked the "Back" button, the browser will return to the set of open rows associated with the previous results set.<br/>
+				<i>(This is because the path up the DAG to the root node "mouse" gets broken when filtering by anatomy terms.)</i></li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+		<li>"Remembering" the open/closed state of rows is not reflected in the URL so cannot be bookmarked or copied and sent to another user. (sto69) </li>
+    </ul>
+</div>
+
+<div id="unitTests">
+	<h2>Unit Test Locations</h2>
+	<ul>
+		<li>fewi/www/js/tests/GxdSummaryTests.js - test cell color assignment</li>
+		<li>fewi/src/unittest/fewi/matrix/GxdMatrixCellTest.java - tests cell roll up rules</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+
+<!--  EXAMPLE TEXT CASE FORMAT.
+    		<li>Statement of required behavior 1.
+ 			<p concordion:manual="false">new test</p> 
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
+-->
+
+		<ol>
+    		<li>When a structure is not specified as a query parameter, all &quot;Default&quot; structure rows are displayed which contain results for the other query parameters. Each subsequent "level" is indented. "Sibling terms" are listed in alphabetical order.  Cells where no expression data is available, but which represent a "valid" Theiler Stage for the given anatomical structure contain a "Valid" symbol. Colored cells do not contain a count of expression results data. (sto23, sto24, sto46, sto91)
+ 			<p concordion:manual="true">passed. -klf 2014-06-24</p> 
+ 			<br/><span class="autoMark">Cannot Automate. Can Unit test valid stage indicators, but no tests exist yet.</span>
+    		<ol>
+                <li>QUERY FOR Theiler Stages <b>TS 1 through TS 28</b> (to test the basic default view with all rows).</li>
+                <li>Verify that the following Anatomy Term rows, appear, with the specified indent-level and colored Theiler Stage cells:
+                <table>
+								<tr>
+									<th>Anatomy Term</th>
+									<th>Indent</th>
+									<th>Open State</th>
+									<th>Show "Valid" Symbol in</th>
+									<th>Colored Cells For Data in Valid Theiler Stages</th>
+								</tr>
+								<tr>
+									<td>mouse</td>
+									<td>0</td>
+									<td>OPEN by default</td>
+									<td></td>
+									<td>TS 1-28</td>
+								</tr>
+								<tr>
+									<td>body fluid or substance</td>
+									<td>1</td>
+									<td>ROW DOES NOT APPEAR</td>
+									<td></td>
+									<td>TS 28<i> - no data as of June 2014, row should not appear</i></td>
+								</tr>
+								<tr>
+									<td>body region</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 11-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>cavities and their linings</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td>TS9, TS10, TS27</td>
+									<td>TS 8-28<i> - no data at TS9, TS10, TS27</i></td>
+								</tr>
+								<tr>
+									<td>early embryo</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 1-5</td>
+								</tr>
+								<tr>
+									<td>embryo</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 6-26</td>
+								</tr>
+								<tr>
+									<td>extraembryonic component</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 4-26</td>
+								</tr>
+								<tr>
+									<td>germ layer</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td>TS4, TS5</td>
+									<td>TS 4-26<i> - no data at TS4, TS5</i></td>
+								</tr>
+								<tr>
+									<td>organ</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 11-28</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>1</td>
+									<td>OPEN by default</td>
+									<td></td>
+									<td>TS 11-28</td>
+								</tr>
+								<tr>
+									<td>alimentary system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 12-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>cardiovascular system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 11-28</td>
+								</tr>
+								<tr>
+									<td>endocrine system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 14-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>exocrine system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 21-28</td>
+								</tr>
+								<tr>
+									<td>genitourniary system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 13-22</td>
+								</tr>
+								<tr>
+									<td>gland</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS13</td>
+									<td>TS 13-28<i> - no data at TS13</i></td>
+								</tr>
+								<tr>
+									<td>hemolymphoid system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 22-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>integumental system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 20-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>liver and biliary system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 16-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>musculature</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 12-28</td>
+								</tr>
+								<tr>
+									<td>musculoskeletal system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 15-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>nervous system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 14-28</td>
+								</tr>
+								<tr>
+									<td>reproductive system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 19-28</td>
+								</tr>
+								<tr>
+									<td>respiratory system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 15-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>sensory organ system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td>TS27</td>
+									<td>TS 12-28<i> - no data at TS27</i></td>
+								</tr>
+								<tr>
+									<td>urinary system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 19-28</td>
+								</tr>
+								<tr>
+									<td>visceral organ system</td>
+									<td>2</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 12-28</td>
+								</tr>
+								<tr>
+									<td>polar body</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 1-4</td>
+								</tr>
+								<tr>
+									<td>tissue</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td></td>
+									<td>TS 11-28</td>
+								</tr>
+								<tr>
+									<td>umbilical or vitelline vessel</td>
+									<td>1</td>
+									<td>Can be opened</td>
+									<td>TS24, TS26, TS27, TS28</td>
+									<td>TS 12-28<i> - no data at TS24, TS26, TS27, TS28</i></td>
+								</tr>
+								<tr>
+									<td>zona pellucida</td>
+									<td>1</td>
+									<td>CANNOT be opened</td>
+									<td></td>
+									<td>TS 1-4</td>
+								</tr>
+							</table>
+						</li>
+    		</ol>
+    		</li>
+
+    		<li>When a structure is not specified as a query parameter, all &quot;Default&quot; structure rows are displayed which contain results for the other query parameters. 
+    		Cells where no expression data is available, but which represent a "valid" Theiler Stage for the given anatomical structure contain a "Valid" symbol.  
+    		When negative annotations exist for a structure, a red triangle appears on the corner of a blue cell. 
+    		The red triangle indicator should not appear for superstructures that do not have negative annotations themselves. (sto23, sto24, sto85)
+    		<br/><span class="autoMark">Partially Automated. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java. Only testing difference between colored cells and valid stage cells.</span>
+    		<p></p>
+    		<ol>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">Psmb2</b> (to test that only the necessary default rows appear, a simple case). <span concordion:manual="true">passed. -klf 2014-07-25</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+               	<span class="hide" concordion:execute="#response = getStageGridByNomenQuery(#nomen)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr><th concordion:set="#term">Anatomy Term</th><th concordion:set="#colId">Theiler Stage</th><th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th><th>Has Red Corner</th><th>Notes</th></tr>
+                	<tr><td>mouse</td><td>11</td><td style="color:blue;">Blue</td><td>colored</td><td>no</td><td>4 Y, 2 No</td></tr>
+                	<tr><td>mouse</td><td>23</td><td style="color:blue;">Blue</td><td>colored</td><td>no</td><td>1 Y</td></tr>
+                	<tr><td>embryo</td><td>11</td><td style="color:blue;">Blue</td><td>colored</td><td style="color:red;">yes</td><td>2 Y, 1 No (TS11: embryo)</td></tr>
+                	<tr><td>embryo</td><td>23</td><td style="color:blue;">Blue</td><td>colored</td><td>no</td><td>1 Y (TS23: nucleus pulposus)</td></tr>
+                	<tr><td>extraembryonic component</td><td>11</td><td style="color:blue;">Blue</td><td>colored</td><td style="color:red;">yes</td><td>2 Y, 1 No (TS11: extraembryonic component)</td></tr>
+                	<tr><td>extraembryonic component</td><td>23</td><td >Valid symbol</td><td>Valid symbol</td><td>no</td><td>extraembryonic component is valid at this TS</td></tr>
+                	<tr><td>organ system</td><td>11</td><td>Valid symbol</td><td>Valid symbol</td><td>no</td><td>organ system is valid at this TS</td></tr>
+                	<tr><td>organ system</td><td>23</td><td style="color:blue;">Blue</td><td>colored</td><td>no</td><td>1 Y (TS23: nucleus pulposus)</td></tr>
+                	<tr><td>musculoskeletal system</td><td>11</td><td>blank</td><td>blank</td><td>no</td><td>musculoskeletal system is NOT valid at this TS</td></tr>
+                	<tr><td>musculoskeletal system</td><td>23</td><td style="color:blue;">Blue</td><td>colored</td><td>no</td><td>1 Y (TS23: nucleus pulposus)</td></tr>
+                </table>
+                </li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">A930003A15Rik</b> (to test that only the necessary default rows appear, some terms have multiple parents which all should appear, TS28 and positive data only (fairly simple case)). <span concordion:manual="true">passed. -klf 2014-06-10</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenQuery(#nomen)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr><th concordion:set="#term">Anatomy Term</th><th concordion:set="#colId">Theiler Stage</th><th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th><th>Notes</th></tr>
+                	<tr><td>mouse</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (multiple terms)</td></tr>
+                	<tr><td>body region</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: cerebellum)</td></tr>
+                	<tr><td>organ</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: cerebellum)</td></tr>
+                	<tr><td>organ system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: cerebellum)</td></tr>
+                	<tr><td>nervous system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>1 Y (TS28: cerebellum)</td></tr>
+                	<tr><td>sensory organ system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>8 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer)</td></tr>
+                </table>
+                </li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">Mpp4</b> (to test that only the necessary default rows appear, some terms have multiple parents which all should appear (more complex case)). <span concordion:manual="true">passed. -klf 2014-06-11</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenQuery(#nomen)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr>
+                		<th concordion:set="#term">Anatomy Term</th>
+                		<th concordion:set="#colId">Theiler Stage</th>
+                		<th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th>
+                		<th>Notes</th></tr>
+								<tr>
+									<td>mouse</td>
+									<td>20</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y</td>
+								</tr>
+								<tr>
+									<td>mouse</td>
+									<td>22</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y</td>
+								</tr>
+								<tr>
+									<td>mouse</td>
+									<td>24</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>2 Y</td>
+								</tr>
+								<tr>
+									<td>mouse</td>
+									<td>26</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y</td>
+								</tr>
+								<tr>
+									<td>mouse</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>10 Y</td>
+								</tr>
+								<tr>
+									<td>body region</td>
+									<td>20</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS20: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>body region</td>
+									<td>22</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS22: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>body region</td>
+									<td>24</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS24: neural retina nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>body region</td>
+									<td>26</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS26: neural retina outer nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>body region</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>10 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum external granule cell
+										layer)</td>
+								</tr>
+								<tr>
+									<td>embryo</td>
+									<td>20</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS20: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>embryo</td>
+									<td>22</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS22: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>embryo</td>
+									<td>24</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>2 Y (TS24: neural retina nuclear layer, TS24: embryo)</td>
+								</tr>
+								<tr>
+									<td>embryo</td>
+									<td>26</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS26: neural retina outer nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>embryo</td>
+									<td>28</td>
+									<td>blank</td>
+									<td>blank</td>
+									<td>embryo is NOT valid at this TS</td>
+								</tr>
+								<tr>
+									<td>organ</td>
+									<td>20</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS20: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>organ</td>
+									<td>22</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS22: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>organ</td>
+									<td>24</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS24: neural retina nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>organ</td>
+									<td>26</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS26: neural retina outer nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>organ</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>10 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum external granule cell
+										layer)</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>20</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS20: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>22</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS22: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>24</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS24: neural retina nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>26</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS26: neural retina outer nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>10 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum external granule cell
+										layer)</td>
+								</tr>
+								<tr>
+									<td>nervous system</td>
+									<td>20</td>
+									<td>Valid symbol</td>
+									<td>Valid symbol</td>
+									<td>nervous system is valid at this TS</td>
+								</tr>
+								<tr>
+									<td>nervous system</td>
+									<td>22</td>
+									<td>Valid symbol</td>
+									<td>Valid symbol</td>
+									<td>nervous system is valid at this TS</td>
+								</tr>
+								<tr>
+									<td>nervous system</td>
+									<td>24</td>
+									<td>Valid symbol</td>
+									<td>Valid symbol</td>
+									<td>nervous system is valid at this TS</td>
+								</tr>
+								<tr>
+									<td>nervous system</td>
+									<td>26</td>
+									<td>Valid symbol</td>
+									<td>Valid symbol</td>
+									<td>nervous system is valid at this TS</td>
+								</tr>
+								<tr>
+									<td>nervous system</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS28: cerebellum external granule cell layer)</td>
+								</tr>
+								<tr>
+									<td>sensory organ system</td>
+									<td>20</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS20: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>sensory organ system</td>
+									<td>22</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS22: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>sensory organ system</td>
+									<td>24</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS24: neural retina nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>sensory organ system</td>
+									<td>26</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS26: neural retina outer nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>sensory organ system</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>9 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>tissue</td>
+									<td>20</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS20: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>tissue</td>
+									<td>22</td>
+									<td style="color: blue;">Blue</td>
+									<td>colored</td>
+									<td>1 Y (TS22: neural retinal epithelium)</td>
+								</tr>
+								<tr>
+									<td>tissue</td>
+									<td>24</td>
+									<td>Valid symbol</td>
+									<td>Valid symbol</td>
+									<td>tissue is valid at this TS</td>
+								</tr>
+								<tr>
+									<td>tissue</td>
+									<td>26</td>
+									<td>Valid symbol</td>
+									<td>Valid symbol</td>
+									<td>tissue is valid at this TS</td>
+								</tr>
+								<tr>
+									<td>tissue</td>
+									<td>28</td>
+									<td>Valid symbol</td>
+									<td>Valid symbol</td>
+									<td>tissue is valid at this TS</td>
+								</tr>
+							</table>
+						</li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">1700055N04Rik</b>. <span concordion:manual="true">passed. -klf 2014-06-11</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenQuery(#nomen)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr>
+                		<th concordion:set="#term">Anatomy Term</th>
+                		<th concordion:set="#colId">Theiler Stage</th>
+                		<th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th>
+                		<th>Notes</th></tr>
+                	<tr><td>mouse</td><td>24</td><td style="color:gold;">Gold</td><td>colored</td><td>2 No (TS24: retina, TS24: embryo)</td></tr>
+                	<tr><td>mouse</td><td>26</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS26: retina)</td></tr>
+                	<tr><td>mouse</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: retina layer, TS28: nasal cavity olfactory epithelium)</td></tr>
+                	<tr><td>body region</td><td>24</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS24: retina)</td></tr>
+                	<tr><td>body region</td><td>26</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS26: retina)</td></tr>
+                	<tr><td>body region</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: retina layer, TS28: nasal cavity olfactory epithelium)</td></tr>
+                	<tr><td>embryo</td><td>24</td><td style="color:red;">Red</td><td>colored</td><td>2 No (TS24: retina, TS24: embryo)</td></tr>
+                	<tr><td>embryo</td><td>26</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS26: retina)</td></tr>
+                	<tr><td>embryo</td><td>28</td><td>blank</td><td>blank</td><td>embryo is NOT valid at this TS</td></tr>
+                	<tr><td>organ</td><td>24</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS24: retina)</td></tr>
+                	<tr><td>organ</td><td>26</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS26: retina)</td></tr>
+                	<tr><td>organ</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: retina layer, TS28: nasal cavity olfactory epithelium)</td></tr>
+                	<tr><td>organ system</td><td>24</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS24: retina)</td></tr>
+                	<tr><td>organ system</td><td>26</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS26: retina)</td></tr>
+                	<tr><td>organ system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: retina layer, TS28: nasal cavity olfactory epithelium)</td></tr>
+                	<tr><td>sensory organ system</td><td>24</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS24: retina)</td></tr>
+                	<tr><td>sensory organ system</td><td>26</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS26: retina)</td></tr>
+                	<tr><td>sensory organ system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>9 Y (TS28: retina outer nuclear layer, TS28: retina inner nuclear layer, TS28: retina layer, TS28: nasal cavity olfactory epithelium)</td></tr>
+                	<tr><td>tissue</td><td>24</td><td>Valid symbol</td><td>Valid symbol</td><td>tissue is valid at this TS</td></tr>
+                	<tr><td>tissue</td><td>26</td><td>Valid symbol</td><td>Valid symbol</td><td>tissue is valid at this TS</td></tr>
+                	<tr><td>tissue</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>1 Y (TS28: nasal cavity olfactory epithelium)</td></tr>
+                </table>
+                </li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">Baalc</b> (has many "No" annotations).  <span concordion:manual="true">passed. -klf 2014-06-11</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenQuery(#nomen)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr>
+                		<th concordion:set="#term">Anatomy Term</th>
+                		<th concordion:set="#colId">Theiler Stage</th>
+                		<th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th>
+                		<th>Notes</th></tr>
+                	<tr><td>mouse</td><td>19</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No</td></tr>
+                	<tr><td>mouse</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>10 No</td></tr>
+                	<tr><td>mouse</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>14 Y</td></tr>
+                	<tr><td>body region</td><td>19</td><td style="color:gold;">Gold</td><td>colored</td><td>2 No (TS19: hindbrain, TS19: midbrain)</td></tr>
+                	<tr><td>body region</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>9 No (TS23: hypothalamus, TS23: neocortex, TS23: ganglionic eminence, TS23: hippocampus, TS23: olfactory bulb, TS23: hindbrain, TS23: cerebellum, TS23: midbrain, TS23: retina)</td></tr>
+                	<tr><td>body region</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>12 Y (exclude TS28: meninges, TS28: spinal cord)</td></tr>
+                	<tr><td>embryo</td><td>19</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No (TS19: hindbrain, TS19: midbrain, TS19: future spinal cord)</td></tr>
+                	<tr><td>embryo</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>10 No (TS23: hypothalamus, TS23: neocortex, TS23: ganglionic eminence, TS23: hippocampus, TS23: olfactory bulb, TS23: hindbrain, TS23: cerebellum, TS23: midbrain, TS23: retina, TS23: spinal cord)</td></tr>
+                	<tr><td>organ</td><td>19</td><td style="color:gold;">Gold</td><td>colored</td><td>2 No (TS19: hindbrain, TS19: midbrain)</td></tr>
+                	<tr><td>organ</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>9 No (TS23: hypothalamus, TS23: neocortex, TS23: ganglionic eminence, TS23: hippocampus, TS23: olfactory bulb, TS23: hindbrain, TS23: cerebellum, TS23: midbrain, TS23: retina)</td></tr>
+                	<tr><td>organ</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>12 Y (exclude TS28: meninges, TS28: spinal cord)</td></tr>
+                	<tr><td>organ system</td><td>19</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No (TS19: hindbrain, TS19: midbrain, TS19: future spinal cord)</td></tr>
+                	<tr><td>organ system</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>10 No (TS23: hypothalamus, TS23: neocortex, TS23: ganglionic eminence, TS23: hippocampus, TS23: olfactory bulb, TS23: hindbrain, TS23: cerebellum, TS23: midbrain, TS23: retina, TS23: spinal cord)</td></tr>
+                	<tr><td>organ system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>14 Y (TS28: brainstem, TS28: choroid plexus, TS28: hypothalamus, TS28: thalamus, TS28: basal ganglia, TS28: amygdala, TS28: cerebral cortex, TS28: hippocampus, TS28: olfactory bulb, TS28: cerebellum, TS28: midbrain, TS28: retina, TS28: meninges, TS28: spinal cord)</td></tr>
+                	<tr><td>nervous system</td><td>19</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No (TS19: hindbrain, TS19: midbrain, TS19: future spinal cord)</td></tr>
+                	<tr><td>nervous system</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>9 No (TS23: hypothalamus, TS23: neocortex, TS23: ganglionic eminence, TS23: hippocampus, TS23: olfactory bulb, TS23: hindbrain, TS23: cerebellum, TS23: midbrain, TS23: spinal cord)</td></tr>
+                	<tr><td>nervous system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>13 Y (TS28: brainstem, TS28: choroid plexus, TS28: hypothalamus, TS28: thalamus, TS28: basal ganglia, TS28: amygdala, TS28: cerebral cortex, TS28: hippocampus, TS28: olfactory bulb, TS28: cerebellum, TS28: midbrain, TS28: meninges, TS28: spinal cord)</td></tr>
+                	<tr><td>sensory organ system</td><td>19</td><td>Valid symbol</td><td>Valid symbol</td><td>sensory organ system is valid at this TS</td></tr>
+                	<tr><td>sensory organ system</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS23: retina)</td></tr>
+                	<tr><td>sensory organ system</td><td>28</td><td style="color:blue;">Blue</td><td>colored</td><td>1 Y (TS28: retina)</td></tr>
+                </table>
+                </li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">0610040J01Rik</b> and Stage TS <b concordion:set="#stage">27</b>. <span concordion:manual="true">passed. -klf 2014-06-10</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenAndStageQuery(#nomen,#stage)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr>
+                		<th concordion:set="#term">Anatomy Term</th>
+                		<th concordion:set="#colId">Theiler Stage</th>
+                		<th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th>
+                		<th>Notes</th></tr>
+                	<tr><td>mouse</td><td>27</td><td style="color:gold;">Gold</td><td>colored</td><td>4 Amb, 5 No</td></tr>
+                	<tr><td>organ system</td><td>27</td><td style="color:gold;">Gold</td><td>colored</td><td>4 Amb (TS27: urinary system, TS27: bladder, TS27: adventitia of bladder, TS27: urothelium of bladder), 5 No (TS27: detrusor muscle of bladder, TS27: lamina propria of bladder, TS27: muscularis mucosa of bladder, TS27: serosa of bladder, TS27: vasculature of bladder)</td></tr>
+                	<tr><td>urinary system</td><td>27</td><td style="color:gray;">Gray</td><td>colored</td><td>1 Amb (TS27: urinary system), 3 Amb, 5 No</td></tr>
+                	<tr><td>visceral organ system</td><td>27</td><td style="color:gold;">Gold</td><td>colored</td><td>4 Amb, 5 No</td></tr>
+                	<tr><td>tissue</td><td>27</td><td style="color:gold;">Gold</td><td>colored</td><td>1 Amb (TS27: urothelium of bladder)</td></tr>
+                </table>
+                </li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">1110002E22Rik</b> (most annotations are non-positive and to child terms and cannot be rolled-up, not to the displayed structures). <span concordion:manual="true">passed. -klf 2014-06-11</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenQuery(#nomen)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr>
+                		<th concordion:set="#term">Anatomy Term</th>
+                		<th concordion:set="#colId">Theiler Stage</th>
+                		<th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th>
+                		<th>Notes</th></tr>
+                	<tr><td>mouse</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 Amb</td></tr>
+                	<tr><td>mouse</td><td>21</td><td style="color:gold;">Gold</td><td>colored</td><td>5 Amb</td></tr>
+                	<tr><td>mouse</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>4 No</td></tr>
+                	<tr><td>mouse</td><td>28</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No</td></tr>
+                	<tr><td>embryo</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 Amb (TS17: genitourinary system)</td></tr>
+                	<tr><td>embryo</td><td>21</td><td style="color:gold;">Gold</td><td>colored</td><td>5 Amb (TS21: ovary, TS21: female reproductive system, TS21: mesonephros of female, TS21: urinary system X 2)</td></tr>
+                	<tr><td>embryo</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>4 No (TS23: metanephros, TS23: bladder, TS23: ureter X 2)</td></tr>
+                	<tr><td>organ</td><td>17</td><td>Valid symbol</td><td>Valid symbol</td><td>organ is valid at this TS</td></tr>
+                	<tr><td>organ</td><td>21</td><td style="color:gold;">Gold</td><td>colored</td><td>1 Amb (TS21: ovary)</td></tr>
+                	<tr><td>organ</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS23: metanephros)</td></tr>
+                	<tr><td>organ</td><td>28</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS28: metanephros)</td></tr>
+                	<tr><td>organ system</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 Amb (TS17: genitourinary system)</td></tr>
+                	<tr><td>organ system</td><td>21</td><td style="color:gold;">Gold</td><td>colored</td><td>5 Amb (TS21: ovary, TS21: female reproductive system, TS21: mesonephros of female, TS21: urinary system X 2)</td></tr>
+                	<tr><td>organ system</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>4 No (TS23: metanephros, TS23: bladder, TS23: ureter X 2)</td></tr>
+                	<tr><td>organ system</td><td>28</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No (TS28: metanephros, TS28: ureter X 2)</td></tr>
+                	<tr><td>genitourinary system</td><td>17</td><td style="color:gray;">Gray</td><td>colored</td><td>1 Amb (TS17: genitourinary system)</td></tr>
+                	<tr><td>genitourinary system</td><td>21</td><td>Valid symbol</td><td>Valid symbol</td><td>genitourinary system is valid at this TS</td></tr>
+                	<tr><td>reproductive system</td><td>21</td><td style="color:gold;">Gold</td><td>colored</td><td>3 Amb (TS21: ovary, TS21: female reproductive system, TS21: mesonephros of female)</td></tr>
+                	<tr><td>reproductive system</td><td>23</td><td>Valid symbol</td><td>Valid symbol</td><td>reproductive system is valid at this TS</td></tr>
+                	<tr><td>reproductive system</td><td>28</td><td>Valid symbol</td><td>Valid symbol</td><td>reproductive system is valid at this TS</td></tr>
+                	<tr><td>urinary system</td><td>21</td><td style="color:gray;">Gray</td><td>colored</td><td>2 Amb (TS21: urinary system X 2)</td></tr>
+                	<tr><td>urinary system</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>4 No (TS23: metanephros,  TS23: bladder, TS23: ureter X 2)</td></tr>
+                	<tr><td>urinary system</td><td>28</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No (TS28: metanephros, TS28: ureter X 2)</td></tr>
+                	<tr><td>visceral organ system</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 Amb (TS17: genitourinary system)</td></tr>
+                	<tr><td>visceral organ system</td><td>21</td><td style="color:gold;">Gold</td><td>colored</td><td>5 Amb (TS21: ovary, TS21: female reproductive system, TS21: mesonephros of female, TS21: urinary system X 2)</td></tr>
+                	<tr><td>visceral organ system</td><td>23</td><td style="color:gold;">Gold</td><td>colored</td><td>4 No (TS23: metanephros, TS23: bladder, TS23: ureter X 2)</td></tr>
+                	<tr><td>visceral organ system</td><td>28</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No (TS28: metanephros, TS28: ureter X 2)</td></tr>
+                </table>
+                </li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">H1f0</b> and Stage TS <b concordion:set="#stage">3</b> (has cases where "Not specified" trumps "No" for the displayed structure term). <span concordion:manual="true">passed. -klf 2014-06-10</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenAndStageQuery(#nomen,#stage)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr>
+                		<th concordion:set="#term">Anatomy Term</th>
+                		<th concordion:set="#colId">Theiler Stage</th>
+                		<th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th>
+                		<th>Notes</th></tr>
+                	<tr><td>mouse</td><td>3</td><td style="color:blue;">Blue</td><td>colored</td><td>8 = 2 Y, 3 No, 3 NS</td></tr>
+                	<tr><td>early embryo</td><td>3</td><td style="color:blue;">Blue</td><td>colored</td><td>2 Y, 1 No, 1 NS (TS3: 4-cell stage embryo, TS3: 8-cell stage embryo)</td></tr>
+                </table>
+                </li>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">Amn1</b> (all negative results, some to displayed structure terms, most to children). <span concordion:manual="true">passed. -klf 2014-06-10</span></li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and colored cells appear:
+                <span class="hide" concordion:execute="#response = getStageGridByNomenQuery(#nomen)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr>
+                		<th concordion:set="#term">Anatomy Term</th>
+                		<th concordion:set="#colId">Theiler Stage</th>
+                		<th>Color</th>
+                		<th concordion:assertEquals="#result">Cell Type</th>
+                		<th>Notes</th></tr>
+                	<tr><td>mouse</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No</td></tr>
+                	<tr><td>mouse</td><td>20</td><td style="color:gold;">Gold</td><td>colored</td><td>11 No</td></tr>
+                	<tr><td>embryo</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS17: genitourinary system)</td></tr>
+                	<tr><td>embryo</td><td>20</td><td style="color:gold;">Gold</td><td>colored</td><td>11 No (TS20: metanephros, TS20: ovary, TS20: testis, TS20: female reproductive system, TS20: mesonephros of female, TS20: male reproductive system, TS20: mesonephros of male, TS20: urinary system, TS20: urogenital mesentery X 3)</td></tr>
+                	<tr><td>organ</td><td>20</td><td style="color:gold;">Gold</td><td>colored</td><td>3 No (TS20: metanephros, TS20: ovary, TS20: testis)</td></tr>
+                	<tr><td>organ system</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS17: genitourinary system)</td></tr>
+                	<tr><td>organ system</td><td>20</td><td style="color:gold;">Gold</td><td>colored</td><td>11 No (TS20: metanephros, TS20: ovary, TS20: testis, TS20: female reproductive system, TS20: mesonephros of female, TS20: male reproductive system, TS20: mesonephros of male, TS20: urinary system, TS20: urogenital mesentery X 3)</td></tr>
+                	<tr><td>genitourinary system</td><td>17</td><td style="color:red;">Red</td><td>colored</td><td>1 No (TS17: genitourinary system)</td></tr>
+                	<tr><td>reproductive system</td><td>20</td><td style="color:gold;">Gold</td><td>colored</td><td>6 No (TS20: ovary, TS20: testis, TS20: female reproductive system, TS20: mesonephros of female, TS20: male reproductive system, TS20: mesonephros of male)</td></tr>
+                	<tr><td>urinary system</td><td>20</td><td style="color:red;">Red</td><td>colored</td><td>5 No (TS20: urinary system,  TS20: metanephros, TS20: urogenital mesentery X 3)</td></tr>
+                	<tr><td>visceral organ system</td><td>17</td><td style="color:gold;">Gold</td><td>colored</td><td>1 No (TS17: genitourinary system)</td></tr>
+                	<tr><td>visceral organ system</td><td>20</td><td style="color:gold;">Gold</td><td>colored</td><td>11 No (TS20: metanephros, TS20: ovary, TS20: testis, TS20: female reproductive system, TS20: mesonephros of female, TS20: male reproductive system, TS20: mesonephros of male, TS20: urinary system, TS20: urogenital mesentery X 3)</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When a displayed anatomical structure term has one or more descendant terms with expression results that meet all the query parameters, the displayed term's row is "opened" (expanded) by default to display the immediate child term(s) along the path(s) to the annotated descendant term(s) (sto46, sto101). 
+    		"Closing" the row redraws the grid to hide all rows for descendant terms.  
+    		"Reopening" the row redraws the grid, "remembering" which child rows were previously open or closed. 
+    		Rows for other terms in the grid "move up" or down, accordingly, but do not open or close (modified for sto47, sto101).
+    		<br/><span class="autoMark">Partially Automated. Only checking which rows are "openable"</span>
+    		<ol>
+                <li>QUERY FOR the Gene <b concordion:set="#nomen">Psmb2</b> and Theiler Stage TS <b concordion:set="#stage">23</b> (a simple case: one annotation, one path). 
+                <span concordion:manual="true">passed - kstone 2014-07-10</span></li>
+                <li>Verify that <i>only</i> the following anatomical term rows are displayed, at the indent level and in  the state indicated, with each subsequent "row expansion":
+				<span class="hide" concordion:execute="#response = getExpandedStageGridByNomenAndStageQuery(#nomen,#stage)">hidden</span>
+				<table concordion:execute="#result = getRowState(#response,#term)">
+								<tr>
+									<th concordion:set="#term">Anatomy Term</th>
+									<th>Indent</th>
+									<th>Theiler Stage</th>
+									<th>Color</th>
+									<th concordion:assertEquals="#result">Row State</th>
+									<th>Notes</th>
+								</tr>
+								<tr>
+									<td>mouse</td>
+									<td>0</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Open by default</td>
+									<td>1 Y</td>
+								</tr>
+								<tr>
+									<td>embryo</td>
+									<td>1</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>2</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Open by default</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>musculoskeletal system</td>
+									<td>3</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>skeletal system</td><td>4</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>skeleton</td>
+									<td>5</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>axial skeleton</td>
+									<td>6</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>intervertebral disc</td><td>7</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>nucleus pulposus</td>
+									<td>8</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>1 Y (TS23: nucleus pulposus) - has child terms but
+										they are not annotated.</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>1</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Open by default</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>musculoskeletal system</td>
+									<td>2</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>skeletal system</td><td>3</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>skeleton</td>
+									<td>4</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>axial skeleton</td>
+									<td>5</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>intervertebral disc</td><td>6</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS23: nucleus pulposus)</td>
+								</tr>
+								<tr>
+									<td>nucleus pulposus</td>
+									<td>7</td>
+									<td>23</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>1 Y (TS23: nucleus pulposus) - has child terms but
+										they are not annotated.</td>
+								</tr>
+							</table>
+						</li>
+				<li>Close the row for the structure <b>skeleton</b> by clicking anywhere in the row header cell. (sto47)</li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that rows for <b>axial skeleton</b>, <b>invertebral disc</b>, and <b>nucleus pulposus</b> disappear.</li>
+				<li>Verify that the bottom of the grid and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Reopen the row for the structure <b>skeleton</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that rows for <b>axial skeleton</b>, <b>invertebral disc</b>, and <b>nucleus pulposus</b> reappear.</li>
+				<li>Verify that the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				
+                <li>QUERY FOR the Gene <b>A930003A15Rik</b> (multiple child terms on different paths, TS28 and positive data only). <span concordion:manual="true">passed. -klf 2014-06-24</span></li>
+                <li>Verify that <i>only</i> the following anatomical term rows are displayed, at the indent level and in the state indicated, with each subsequent "row expansion":
+                <table>
+								<tr>
+									<th>Anatomy Term</th>
+									<th>Indent</th>
+									<th>Theiler Stage</th>
+									<th>Color</th>
+									<th>Row State</th>
+									<th>Notes</th>
+								</tr>
+								<tr>
+									<td>mouse</td>
+									<td>0</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Open by default</td>
+									<td>9 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>body region</td>
+									<td>1</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>9 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>head</td>
+									<td>2</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>9 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>brain</td>
+									<td>3</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>hindbrain</td>
+									<td>4</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon</td>
+									<td>5</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon lateral wall</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon alar plate</td>
+									<td>7</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>cerebellum</td>
+									<td>8</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>1 Y - has children but they are not annotated.</td>
+								</tr>
+								<tr>
+									<td>eye</td>
+									<td>3</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina</td>
+									<td>4</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina layer</td>
+									<td>5</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina outer nuclear layer</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>6 Y - no child terms</td>
+								</tr>
+								<tr>
+									<td>retina inner nuclear layer</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>2 Y - no child terms</td>
+								</tr>
+								<tr>
+									<td>organ</td>
+									<td>1</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>9 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>brain</td>
+									<td>2</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>hindbrain</td>
+									<td>3</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon</td>
+									<td>4</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon lateral wall</td>
+									<td>5</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon alar plate</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>cerebellum</td>
+									<td>7</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>1 Y - has children but they are not annotated.</td>
+								</tr>
+								<tr>
+									<td>sensory organ</td>
+									<td>2</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>eye</td>
+									<td>3</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina</td>
+									<td>4</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina layer</td>
+									<td>5</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina outer nuclear layer</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>6 Y - no child terms</td>
+								</tr>
+								<tr>
+									<td>retina inner nuclear layer</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>2 Y - no child terms</td>
+								</tr>
+								<tr>
+									<td>organ system</td>
+									<td>1</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Open by default</td>
+									<td>9 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer, TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>nervous system</td>
+									<td>2</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Open by default</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>central nervous system</td>
+									<td>3</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>brain</td>
+									<td>4</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>hindbrain</td>
+									<td>5</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon lateral wall</td>
+									<td>7</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>metencephalon alar plate</td>
+									<td>8</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS28: cerebellum)</td>
+								</tr>
+								<tr>
+									<td>cerebellum</td>
+									<td>9</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>1 Y - has children but they are not annotated.</td>
+								</tr>
+								<tr>
+									<td>sensory organ system</td>
+									<td>2</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>sensory organ</td>
+									<td>3</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>eye</td>
+									<td>4</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina layer</td>
+									<td>5</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>Can be opened</td>
+									<td>8 Y (TS28: retina outer nuclear layer, TS28: retina
+										inner nuclear layer)</td>
+								</tr>
+								<tr>
+									<td>retina outer nuclear layer</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>6 Y - no child terms</td>
+								</tr>
+								<tr>
+									<td>retina inner nuclear layer</td>
+									<td>6</td>
+									<td>28</td>
+									<td style="color: blue;">Blue</td>
+									<td>CANNOT be opened</td>
+									<td>2 Y - no child terms</td>
+								</tr>
+							</table>
+						</li>
+				<li>CLOSE the row for the first instance of the structure <b>eye</b> (10th row of the open grid, above) by clicking anywhere in the row header cell. (sto47)</li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>REOPEN the row for the structure <b>eye</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>CLOSE the row for the second instance of the structure <b>eye</b> (23rd row of the open grid, above) by clicking anywhere in the row header cell. </li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that previous and subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>REOPEN the row for the structure <b>eye</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that previous and subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>CLOSE the row for the first instance of the structure <b>eye</b> (10th row of the open grid, above) by clicking anywhere in the row header cell. </li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>CLOSE the row for the second instance of the structure <b>eye</b> (23rd row of the open grid, above) by clicking anywhere in the row header cell. </li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row disappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that previous and subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>CLOSE the row for the third instance of the structure <b>eye</b> (39th row of the open grid, above) by clicking anywhere in the row header cell. </li>
+				<li>Verify that the triangle "turnstile" returns to the "closed" state (points to the term).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row disappear.</li>
+				<li>Verify that the bottom of the grid, and other items below the grid "move up" on the page to fill the empty space.</li>
+				<li>Verify that previous and subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>REOPEN the first row for the structure <b>eye</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>REOPEN the second row for the structure <b>eye</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row reappear.</li>
+				<li>Verify that rows below "retina inner nuclear layer", the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that previous and subsequent instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+				<li>REOPEN the third row for the structure <b>eye</b> by clicking anywhere in the row header cell.</li>
+				<li>Verify that the triangle "turnstile" returns to the "open" state (points down toward child terms).</li>
+				<li>Verify that rows for <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> immediately below the "closed" row reappear.</li>
+				<li>Verify that the bottom of the grid and other items below the grid "move down" on the page to accommodate the opened rows.</li>
+				<li>Verify that previous instances of rows for <b>eye</b>, <b>retina layer</b>, <b>retina outer nuclear layer</b>, and <b>retina inner nuclear layer</b> do not change.</li>
+
+				
+                <li>QUERY FOR the Gene <b>0610040J01Rik</b> and Stage <b>TS 27</b> (multiple paths, negatives and ambiguous annots). <span concordion:manual="true">passed. -klf 2014-06-24</span></li>
+                <li>Verify that <i>only</i> the following anatomical term rows are displayed, at the indent level and in the state indicated, with each subsequent "row expansion":
+                <table>
+					<tr>
+						<th>Anatomy Term</th>
+						<th>Indent</th>
+						<th>Theiler Stage</th>
+						<th>Color</th>
+						<th>Row State</th>
+						<th>Notes</th>
+					</tr>
+					<tr>
+						<td>mouse</td>
+						<td>0</td>
+						<td>27</td>
+						<td style="color: gold;">Gold</td>
+						<td>Open by default</td>
+						<td>4 Amb, 5 No</td>
+					</tr>
+					<tr>
+						<td>organ system</td>
+						<td>1</td>
+						<td>27</td>
+						<td style="color: gold;">Gold</td>
+						<td>Open by default</td>
+						<td>4 Amb (TS27: urinary system, TS27: bladder, TS27:
+							adventitia of bladder, TS27: urothelium of bladder), 5 No
+							(TS27: detrusor muscle of bladder, TS27: lamina propria of
+							bladder, TS27: muscularis mucosa of bladder, TS27: serosa of
+							bladder, TS27: vasculature of bladder)</td>
+					</tr>
+					<tr>
+						<td>urinary system</td>
+						<td>2</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>Can be opened</td>
+						<td>1 Amb (TS27: urinary system), 3 Amb (TS27: bladder,
+							TS27: adventitia of bladder, TS27: urothelium of bladder), 5
+							No (TS27: detrusor muscle of bladder, TS27: lamina propria of
+							bladder, TS27: muscularis mucosa of bladder, TS27: serosa of
+							bladder, TS27: vasculature of bladder)</td>
+					</tr>
+					<tr>
+						<td>bladder</td>
+						<td>3</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>Can be opened</td>
+						<td>1 Amb (TS27: bladder), 2 Amb (TS27: adventitia of
+							bladder, TS27: urothelium of bladder), 5 No (TS27: detrusor
+							muscle of bladder, TS27: lamina propria of bladder, TS27:
+							muscularis mucosa of bladder, TS27: serosa of bladder, TS27:
+							vasculature of bladder)</td>
+					</tr>
+					<tr>
+						<td>adventitia of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>CANNOT be opened</td>
+						<td>1 Amb - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>detrusor muscle of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>lamina propria of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>muscularis mucosa of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>serosa of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>urothelium of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>CANNOT be opened</td>
+						<td>1 Amb - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>vasculature of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - no children.</td>
+					</tr>
+					<tr>
+						<td>urinary system epithelium</td>
+						<td>3</td>
+						<td>27</td>
+						<td style="color: gold;">Gold</td>
+						<td>Can be opened</td>
+						<td>1 Amb (TS27: urothelium of bladder)</td>
+					</tr>
+					<tr>
+						<td>urothelium of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>CANNOT be opened</td>
+						<td>1 Amb - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>visceral system</td>
+						<td>2</td>
+						<td>27</td>
+						<td style="color: gold;">Gold</td>
+						<td>Can be opened</td>
+						<td>4 Amb (TS27: urinary system, TS27: bladder, TS27:
+							adventitia of bladder, TS27: urothelium of bladder), 5 No
+							(TS27: detrusor muscle of bladder, TS27: lamina propria of
+							bladder, TS27: muscularis mucosa of bladder, TS27: serosa of
+							bladder, TS27: vasculature of bladder)</td>
+					</tr>
+					<tr>
+						<td>urinary system</td>
+						<td>3</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>Can be opened</td>
+						<td>1 Amb (TS27: urinary system), 3 Amb (TS27: bladder,
+							TS27: adventitia of bladder, TS27: urothelium of bladder), 5
+							No (TS27: detrusor muscle of bladder, TS27: lamina propria of
+							bladder, TS27: muscularis mucosa of bladder, TS27: serosa of
+							bladder, TS27: vasculature of bladder)</td>
+					</tr>
+					<tr>
+						<td>bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>Can be opened</td>
+						<td>1 Amb (TS27: bladder), 2 Amb (TS27: adventitia of
+							bladder, TS27: urothelium of bladder), 5 No (TS27: detrusor
+							muscle of bladder, TS27: lamina propria of bladder, TS27:
+							muscularis mucosa of bladder, TS27: serosa of bladder, TS27:
+							vasculature of bladder)</td>
+					</tr>
+					<tr>
+						<td>adventitia of bladder</td>
+						<td>5</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>CANNOT be opened</td>
+						<td>1 Amb - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>detrusor muscle of bladder</td>
+						<td>5</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>lamina propria of bladder</td>
+						<td>5</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>muscularis mucosa of bladder</td>
+						<td>5</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>serosa of bladder</td>
+						<td>5</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>urothelium of bladder</td>
+						<td>5</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>CANNOT be opened</td>
+						<td>1 Amb - has children but no annotations.</td>
+					</tr>
+					<tr>
+						<td>vasculature of bladder</td>
+						<td>5</td>
+						<td>27</td>
+						<td style="color: red;">Red</td>
+						<td>CANNOT be opened</td>
+						<td>1 No - no children.</td>
+					</tr>
+					<tr>
+						<td>tissue</td>
+						<td>1</td>
+						<td>27</td>
+						<td style="color: gold;">Gold</td>
+						<td>Open by default</td>
+						<td>1 Amb (TS27: urothelium of bladder)</td>
+					</tr>
+					<tr>
+						<td>epithelium</td>
+						<td>2</td>
+						<td>27</td>
+						<td style="color: gold;">Gold</td>
+						<td>Open by default</td>
+						<td>1 Amb (TS27: urothelium of bladder)</td>
+					</tr>
+					<tr>
+						<td>urinary system epithelium</td>
+						<td>3</td>
+						<td>27</td>
+						<td style="color: gold;">Gold</td>
+						<td>Open by default</td>
+						<td>1 Amb (TS27: urothelium of bladder)</td>
+					</tr>
+					<tr>
+						<td>urothelium of bladder</td>
+						<td>4</td>
+						<td>27</td>
+						<td style="color: gray;">Gray</td>
+						<td>CANNOT be opened</td>
+						<td>1 Amb - has children but no annotations.</td>
+					</tr>
+				</table>
+			</li>
+
+                <li>QUERY FOR the Gene <b>Abcb1b</b> and Structure <b>alimentary system</b> and Stage <b>TS 22</b> (many negative annots at child levels). <span concordion:manual="true">passed. -klf 2014-07-24</span> (modified for sto101)</li>
+                <li>Verify that <i>only</i> the following anatomical term rows are displayed, at the indent level and in the state indicated, with each subsequent "row expansion":
+                <table>
+								<tr>
+									<th>Anatomy Term</th>
+									<th>Indent</th>
+									<th>Theiler Stage</th>
+									<th>Color</th>
+									<th>Row State</th>
+									<th>Notes</th>
+								</tr>
+								<tr>
+									<td>alimentary system</td>
+									<td>0</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>OPEN BY DEFAULT</td>
+									<td>1 No (TS22: alimentary system); 12 No (TS22: salivary
+										gland, TS22: esophagus, TS22: thymus primordium, TS22: thyroid
+										gland, TS22: pharynx, TS22: tongue, TS22: stomach, TS22:
+										splenic primordium, TS22: pancreas, TS22: intestine, TS22:
+										tooth, TS22: palatal shelf)</td>
+								</tr>
+								<tr>
+									<td>gut</td>
+									<td>1</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>VISIBLE BY DEFAULT, Can be opened</td>
+									<td>9 No (TS22: esophagus, TS22: thymus primordium, TS22:
+										thyroid gland, TS22: pharynx, TS22: tongue, TS22: stomach,
+										TS22: splenic primordium, TS22: pancreas, TS22: intestine)</td>
+								</tr>
+								<tr>
+									<td>foregut</td>
+									<td>2</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>7 No (TS22: esophagus, TS22: thymus primordium, TS22:
+										thyroid gland, TS22: pharynx, TS22: tongue, TS22: stomach,
+										TS22: splenic primordium)</td>
+								</tr>
+								<tr>
+									<td>esophagus</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: esophagus)</td>
+								</tr>
+								<tr>
+									<td>foregut gland</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>2 No (TS22: thymus primordium, TS22:
+										thyroid gland)</td>
+								</tr>
+								<tr>
+									<td>thymus primordium</td>
+									<td>4</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: thymus primordium)</td>
+								</tr>
+								<tr>
+									<td>thyroid gland</td>
+									<td>4</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: thyroid gland)</td>
+								</tr>
+								<tr>
+									<td>pharynx</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>Can be opened</td>
+									<td>1 No (TS22: pharynx); 1 No (TS22: tongue)</td>
+								</tr>
+								<tr>
+									<td>tongue</td>
+									<td>4</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: tongue)</td>
+								</tr>
+								<tr>
+									<td>stomach</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>Can be opened</td>
+									<td>1 No (TS22: stomach); 1 No (TS22: splenic primordium)</td>
+								</tr>
+								<tr>
+									<td>stomach mesentery</td>
+									<td>4</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>1 No (TS22: splenic primordium)</td>
+								</tr>
+								<tr>
+									<td>dorsal mesogastrium</td>
+									<td>5</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>1 No (TS22: splenic primordium)</td>
+								</tr>
+								<tr>
+									<td>splenic primordium</td>
+									<td>6</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: splenic primordium)</td>
+								</tr>
+								<tr>
+									<td>foregut-midgut junction</td>
+									<td>2</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS22: pancreas)</td>
+								</tr>
+								<tr>
+									<td>foregut-midgut junction gland</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>1 Y (TS22: pancreas)</td>
+								</tr>
+								<tr>
+									<td>pancreas</td>
+									<td>4</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 Y (TS22: pancreas)</td>
+								</tr>
+								<tr>
+									<td>intestine</td>
+									<td>2</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: intestine)</td>
+								</tr>
+								<tr>
+									<td>oral region</td>
+									<td>1</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>VISIBLE BY DEFAULT, Can be opened</td>
+									<td>3 No (TS22: salivary gland, TS22: tooth, TS22: palatal
+										shelf)</td>
+								</tr>
+								<tr>
+									<td>jaw</td>
+									<td>2</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>2 No (TS22: tooth, TS22: palatal shelf)</td>
+								</tr>
+								<tr>
+									<td>tooth</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: tooth)</td>
+								</tr>
+								<tr>
+									<td>upper jaw</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>1 No (TS22: palatal shelf)</td>
+								</tr>
+								<tr>
+									<td>palatal shelf</td>
+									<td>4</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: palatal shelf)</td>
+								</tr>
+								<tr>
+									<td>oral region gland</td>
+									<td>2</td>
+									<td>22</td>
+									<td style="color: gold;">Gold</td>
+									<td>Can be opened</td>
+									<td>1 No (TS22: salivary gland)</td>
+								</tr>
+								<tr>
+									<td>salivary gland</td>
+									<td>3</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: salivary gland)</td>
+								</tr>
+								<tr>
+									<td>salivary gland</td>
+									<td>2</td>
+									<td>22</td>
+									<td style="color: red;">Red</td>
+									<td>CANNOT be opened</td>
+									<td>1 No (TS22: salivary gland)</td>
+								</tr>
+							</table>
+						</li>
+
+
+			</ol>
+    		</li>
+
+<!--  
+    		<li>Statement of required behavior 2.
+ 			<p concordion:manual="false">new test</p> 
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
+    		<li>Statement of required behavior 2.
+ 			<p concordion:manual="false">new test</p> 
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
+-->
+
+    		<li>When a structure is specified as a query parameter, the matrix displays a row containing the queried structure term and if one or more annotated descendant terms exist, the row is opened to show the next "child" level(s).   
+    		Subsequent levels of descendant terms are closed by default.(modified for sto101)
+ 			<p concordion:manual="true">passed. -klf 2014-07-24</p> 
+ 			<br/><span class="autoMark">Cannot automate.</span>
+    		<ol>
+                <li>Open the GXD Expression Data query form.</li>
+                <li>In the "anatomical structure or stage" ribbon, select <b>aortic valve TS21-28</b> (EMAPA:17870).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify that a matrix "grid" is displayed containing:
+                <ul>
+                	<li>One row of column headers containing Theiler Stage labels:
+                	<table>
+                	<tr><th>Stage</th></tr>
+                	<tr><td>21</td></tr>
+                	<tr><td>22</td></tr>
+                	<tr><td>23</td></tr>
+                	<tr><td>24</td></tr>
+                	<tr><td>26</td></tr>
+                	<tr><td>28</td></tr>
+                	</table>
+                	</li>
+                	<li>One data row beginning with a header cell displaying the queried term: <b>aortic valve</b>.</li>
+                	<li>A colored cell at the intersection of the data row with the Theiler Stage column.</li>
+                	<li><del>No data row for the child term "aortic valve leaflet".</del></li> 
+                	<li><del>The row for <b>aortic valve</b> may be opened (because annotated child term(s) exist).</del></li>
+					<li><del>Open the row for <b>aortic valve</b> to display a row for <b>aortic valve leaflet</b>, indented once.</del></li>
+					<li>The row <b>aortic valve</b> <del>"expands"</del> "is expanded" by default to display a row for <b>aortic valve leaflet</b>.</li>
+                	<li>A colored cell at the intersection of the row for <b>aortic valve leaflet</b> with the Theiler Stage columns for each Stage where expression results exist:
+                	<table>
+                	<tr><th>Stage</th></tr>
+                	<tr><td>23</td></tr>
+                	<tr><td>26</td></tr>
+                	</table>
+                	</li>
+                	<li>A "valid symbol" in the cell for Theiler Stage 24 (because no data exist for the term at that stage).</li>
+					<li>The row for <b>aortic valve leaflet</b> may NOT be opened (no child terms exist).</li>                	
+                </ul>
+                </li>
+                <li>Reset the query form.</li>
+                <li>In the "anatomical structure or stage" ribbon, select <b>aortic valve leaflet TS21-28</b> (EMAPA:18627).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify that a matrix "grid" is displayed containing:
+                <ul>
+                	<li>One row of column headers containing Theiler Stage labels for only TS23 and TS26.</li>
+                	<li>One data row beginning with a header cell displaying the queried term: <b>aortic valve leaflet</b>.</li>
+                	<li>A colored cell at the intersection of the data row with the Theiler Stage columns.</li>
+					<li>The row for <b>aortic valve leaflet</b> may NOT be opened (no child terms exist).</li>                	
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		
+			<li>Clicking a colored cell triggers a pop-up panel within the browser window. Only one pop-up may appear at a time.  The pop-up panel has a heading containing the row header value and column header value for the cell which was clicked.  A pop-up is closed by clicking the "Close" or "X" button. (sto26)
+			<p concordion:manual="true">passed - kstone 2014-07-10</p> 
+			<br/><span class="autoMark">Cannot Automate</span>
+			<ol>
+				<li>QUERY FOR the Gene <b>0610040J01Rik</b> and Structure <b>urinary system TS19-28</b>. </li>
+				<li>Click on the blue cell at the intersection of <b>urinary system</b> and <b>TS 23</b>.</li>
+				<li>Verify that a pop-up panel appears.</li>
+				<li>Verify that header text containing <b>urinary system</b> and <b>TS 23</b> is displayed.</li>
+				<li>Click the "Close" or "X" button and verify the pop-up panel closes.</li>
+				<li>Click the gray cell at the intersection of <b>urinary system</b> and <b>TS 27</b>.</li>
+				<li>Verify that a pop-up panel appears.</li>
+				<li>Verify that header text containing <b>urinary system</b> and <b>TS 27</b> is displayed.</li>
+				<li>Click the "Close" or "X" button and verify the pop-up panel closes.</li>
+				<li>Click on the blue cell at the intersection of <b>urinary system</b> and <b>TS 23</b> again.</li>
+				<li>Verify that a pop-up panel appears.</li>
+				<li>Verify that header text containing <b>urinary system</b> and <b>TS 23</b> is displayed as before.</li>
+				<li>Click the gray cell at the intersection of <b>urinary system</b> and <b>TS 27</b>.</li>
+				<li>Verify that only the pop-up for <b>urinary system</b> and <b>TS 23</b> is displayed.</li>
+				<li>Click in on the text for the row <b>urinary system</b> to expand the grid and display child terms.</li>
+				<li>Click on the cell containing a circle at the intersection of <b>urethra</b> and <b>TS 27</b>.</li>
+				<li>Verify that NO pop-up panel appears.</li>
+			</ol>
+    		</li>
+    		
+    		<li>A pop-up panel contains a table summarizing the data underlying the clicked-on cell. (sto26)
+			<p concordion:manual="true">set to "passed". -klf 2014-07-14</p> 
+			<br/><span class="autoMark">Cannot Automate</span>
+			<ol>
+				<li>QUERY FOR the Gene <b>0610040J01Rik</b> and Structure <b>urinary system TS19-28</b>. </li>
+				<li>Click on the row for "urinary system" to expand the grid, displaying rows for bladder, metanephros, urethra, and urinary system epithelium.</li>
+				<li>Click on the row for "bladder" to expand the grid, displaying rows for 7 child terms.</li>
+				<li>Click on the blue cell at the intersection of <b>urinary system</b> and <b>TS 23</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>urinary system</b> and <b>TS 23</b></p>
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>1</td><td>Yes</td><td>12</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the blue cell at the intersection of <b>bladder</b> and <b>TS 23</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>bladder</b> and <b>TS 23</b></p>
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>1</td><td>Yes</td><td>2</td></tr>
+					<tr><td>1</td><td>No</td><td>1</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the red cell at the intersection of <b>adventitia of bladder</b> and <b>TS 23</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>adventitia of bladder</b> and <b>TS 23</b></p>
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>1</td><td>No</td><td>1</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the gray cell at the intersection of <b>urinary system</b> and <b>TS 27</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>urinary system</b> and <b>TS 27</b></p>
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>1</td><td>?</td><td>1</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the gold cell at the intersection of <b>urinary system epithelium</b> and <b>TS 27</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<p>header text: <b>urinary system epithelium</b> and <b>TS 27</b></p>
+				
+				<p>No data table, but simply displays the message <b>Absent or not specified results are in substructures.</b></p>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>QUERY FOR the Structure <b>aortic valve leaflet TS23-26</b>. </li>
+				<li>Click on the blue cell at the intersection of <b>aortic valve leaflet</b> and <b>TS 23</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>1</td><td>Yes</td><td>1</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the blue cell at the intersection of <b>aortic valve leaflet</b> and <b>TS 26</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>2</td><td>Yes</td><td>8</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>QUERY FOR the Structure <b>aortic valve TS21-28</b>. </li>
+				<li>Click on the blue cell at the intersection of <b>aortic valve</b> and <b>TS 21</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>3</td><td>Yes</td><td>3</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the blue cell at the intersection of <b>aortic valve</b> and <b>TS 22</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>5</td><td>Yes</td><td>6</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the blue cell at the intersection of <b>aortic valve</b> and <b>TS 26</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>2</td><td>Yes</td><td>8</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>Click on the blue cell at the intersection of <b>aortic valve</b> and <b>TS 28</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows:
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>4</td><td>Yes</td><td>6</td></tr>
+					<tr><td>2</td><td>No</td><td>2</td></tr>
+				</table>
+				</li>
+				<li>Close the pop-up panel.</li>
+				<li>QUERY FOR the gene <b>Gmip</b> and expand nervous system -&gt; ... -&gt; telencephalon</li>
+				<li>Click on the blue cell at the intersection of <b>telencephalon</b> and TS <b>24</b>.</li>
+				<li>Verify that a pop-up panel appears with ONLY data as follows (<i>Gmip has 1 result for Not Specified</i>):
+				<table>
+					<tr><th># of genes</th><th>Detected?</th><th># of results</th></tr>
+					<tr><td>1</td><td>?</td><td>1</td></tr>
+				</table>
+				</li>
+			</ol>    		
+    		</li>
+
+    		<li>In a pop-up panel for a colored cell, clicking the "View These Results" button filters the existing results set using the given structure and the given Theiler Stage as parameters and redraws the grid. 
+    		This functionality is integrated with existing filtering and with browser history management. (sto121)
+ 			<p concordion:manual="true">passed. -klf 04-aug-2014</p>
+ 			<ol>
+                <li>Open the GXD Expression Data query form.</li>
+                <li>In the "anatomical structure or stage" ribbon, select <b>heart valve TS21-28</b> (EMAPA:17869) and submit the query.</li>
+ 				<li>Verify that the Structure X Stage Matrix tab grid is drawn to display rows for <b>heart valve</b> and 7 child terms, and columns: <b>TS 21 - TS26, TS28</b>.</li>
+ 				<li>Click the blue cell at the intersection of the row for <b>heart valve</b> and the column for <b>TS23</b>.</li>
+ 				<li>In the pop-up panel, click the <b>View These Results</b> button. (<i>BASIC FUNCTIONALITY</i>)</li>
+ 				<li>Verify that the pop-up panel disappears.</li>
+ 				<li>Verify that the <b>Assay Results</b> tab becomes the active tab and displays only results for <b>TS23</b>.</li>
+ 				<li>Verify that the count of Assay Results returned (displayed in the assay tab label) less negative results for descendant terms now matches the total "# of Results" from the pop-up panel (371 as of 7/28/2014 - <i>the query returns results for ALL descendant terms including negatives, the filter buttons return only those negative results that are for the term itself. In this case, there are no negatives to child terms.</i>).</li>
+ 				<li>Return to the Structure X Stage Matrix tab.</li>
+ 				<li>Verify that the grid is redrawn to display rows for <b>heart valve</b> and 5 child terms, and only one column: <b>TS 23</b>.</li>
+ 				<li>Verify that rows for <b>atrioventricular valve</b> and <b>semilunar valve</b> do not appear (there is no data at TS 23 as of 7/28/2014).</li>
+ 				<li>Verify that "Remove filters" buttons appear above the results tabs: <b>Remove all filters</b>, <b>Structure: heart valve</b>, and <b>TS: 23</b>. (<i>INTEGRATES WTIH EXISTING INTERFACE FILTER CONTROLS</i>)</li>
+ 				<li>CLICK the <b>Remove all filters</b> button.</li>
+ 				<li>Verify that the grid is redrawn to display rows for <b>heart valve</b> and 7 child terms, and columns for <b>TS21 - TS26, TS28</b> (the original results set).</li>
+ 				<li>Click the blue cell at the intersection of the row for <b>heart valve</b> and the column for <b>TS 23</b> again.</li>
+ 				<li>In the pop-up panel, click the "View These Results" button.</li>
+ 				<li>After the Assay Results tab is displayed, click the browser <b>Back button</b>. (<i>INTEGRATES WITH BROWSER HISTORY</i>)</li>
+ 				<li>Verify that the <b>Structure X Stage Matrix</b> tab becomes the active tab again.</li>
+ 				<li>Click the browser <b>Back button</b> again.</li>
+ 				<li>Verify that the grid is redrawn to display rows for <b>heart valve</b> and 7 child terms, and columns for <b>TS21 - TS26, TS28</b> (the original results set).</li>
+ 				<li>CLICK the filter button for "Assay Type" and select <b>Immunohistochemistry</b> and <b>In situ reporter (knock-in)</b>, then click <b>Filter</b>. (<i>INTEGRATES WTIH EXISTING FILTERS</i>)</li>
+ 				<li>When the grid is redrawn, click the blue cell at the intersection of the row for <b>heart valve</b> and the column for <b>TS 23</b> again.</li>
+ 				<li>In the pop-up panel, click the "View These Results" button.</li>
+ 				<li>Verify that the <b>Assay Results</b> tab becomes the active tab and displays only <b>10</b> results for <b>TS23</b> (data as of 8/4/2014).</li>
+ 				<li>Return to the Structure X Stage Matrix tab.</li>
+ 				<li>Verify that the grid is redrawn to display ONLY rows for<b>heart valve</b> and child terms <b>mitral valve</b>, <b>pulmonary valve</b>, and <b>tricuspid valve</b> and one column: <b>TS 23</b> (data as of 7/28/2014).</li>
+ 				<li>Click the blue cell at the intersection of the row for <b>tricuspid valve</b> and the column for <b>TS 23</b> again. (<i>CAN DO SEQUENTIAL FILTER STEPS</i>)</li>
+ 				<li>In the pop-up panel, click the "View These Results" button.</li>
+ 				<li>Verify that the <b>Assay Results</b> tab becomes the active tab and displays only <b>2</b> results for <b>tricuspid valve</b> and <b>TS 23</b> (data as of 8/4/2014).</li>
+ 				<li>Return to the Structure X Stage Matrix tab.</li>
+ 				<li>Verify that the grid is redrawn to display ONLY rows: for <b>heart valve</b> and <b>tricuspid valve</b> and one column: <b>TS 23</b>.</li>
+ 				<li>Reset the query form.</li>
+ 				<li>QUERY FOR <b>reproductive system TS19-28</b>.</li>
+ 				<li>On the Tissue X Stage matrix, expand the rows for "female reproductive system" and then "female associated reproductive structure".</li>
+ 				<li>Click the cell at the intersection of structure row <b>mesovarium</b> (<i>Note: it appears at least twice in the matrix. Choose the one in the described location.</i>) and column <b>TS20</b> to display the pop-up panel.</li>
+ 				<li>Click the "View These Results" button.</li>
+ 				<li>In the results set, open the row for "female reproductive system".</li>
+ 				<li>In the results set, verify that rows for the following ARE displayed:
+ 				<table>
+ 					<tr><th>structures displayed</th></tr>
+ 					<tr><td>female associated reproductive structure</td></tr>
+ 					<tr><td>mesovarium</td></tr>
+ 				</table>
+ 				</li>
+ 				<li>In the results set, verify that rows for the following are NOT displayed:
+ 				<table>
+ 					<tr><th>structures NOT displayed</th></tr>
+ 					<tr><td>female reproductive system epithelium</td></tr>
+ 					<tr><td>female reproductive system mesenchyme </td></tr>
+ 					<tr><td>mesonephros of female</td></tr>
+ 					<tr><td>nephric duct of female</td></tr>
+ 					<tr><td>nephric duct of female, rest of</td></tr>
+ 					<tr><td>ovary </td></tr>
+ 					<tr><td>paramesonephric duct of female</td></tr>
+ 				</table>
+ 				</li>
+ 			</ol>
+ 			</li>
+
+    		<li>In a pop-up panel for a colored cell, clicking the "View The Images" button filters the existing results set using the given structure and the given Theiler Stage as parameters, returns images associated with the new results set, and displays the Images tab as the active tab.  
+    		This functionality is integrated with existing filtering and with browser history management.(sto121)
+ 			<p concordion:manual="true">passed. -klf 04-aug-2014</p>
+ 			<ol>
+                <li>Open the GXD Expression Data query form.</li>
+                <li>In the "anatomical structure or stage" ribbon, select <b>heart valve TS21-28</b> (EMAPA:17869) and submit the query.</li>
+ 				<li>Click the blue cell at the intersection of the row for <b>heart valve</b> and the column for <b>TS 23</b>.</li>
+ 				<li>In the pop-up panel, click the "View The Images" button.</li>
+ 				<li>Verify that the pop-up panel disappears.</li>
+ 				<li>Verify that the display is redrawn with the <b>Images</b> tab active.</li>
+ 				<li>PERFORM A NEW QUERY (in a separate window) for <b>heart valve TS21-28</b> and <b>TS 23</b>, and view the "Images" tab.</li>
+ 				<li>Verify the count of images is the same in both windows. (340 rather than 537 as of 7/28/2014)</li>
+ 				<li>Verify that "Remove filters" buttons appear above the results tabs: <b>Remove all filters</b>, <b>Structure: heart valve</b>, and <b>TS: 23</b>.  (<i>INTEGRATES WTIH EXISTING INTERFACE FILTER CONTROLS</i>)</li>
+ 				<li>CLICK the <b>Remove all filters</b> button.</li>
+				<li>Verify the "Images" tab summary is redrawn with all expression images for the query (537 as of 7/28/2014).</li> 		
+				<li>Click the browser <b>Back button</b>.  (<i>INTEGRATES WITH BROWSER HISTORY</i>)</li>
+ 				<li>Verify that "Remove filters" buttons appear above the tabs: <b>Remove all filters</b>, <b>Structure: heart valve</b>, and <b>TS: 23</b>.</li>
+ 				<li>Verify the count of images is the that of the filtered set. (340 rather than 537 as of 7/28/2014)</li>
+				<li>Click the browser <b>Back button</b> again. </li>
+				<li>Verify that the display is redrawn with the <b>Tissue X Stage Matrix</b> tab active.</li>
+				<li>Click the browser <b>Back button</b> again. </li>
+ 				<li>Verify that the grid displays rows for <b>heart valve</b> and 7 child terms, and columns for <b>TS21 - TS26, TS28</b> (the original results set).</li>
+ 			</ol>
+ 			</li>
+
+			<li>When the results set underlying a cell have no associated images, the "View the images" button in the pop-up panel is not displayed. (sto164)
+			<p concordion:manual="true">passed. -klf 2014-09-05</p>
+			<ol>
+				<li>QUERY for genes <b>Hox*</b>.</li>
+				<li>View the Tissue X Stage Matrix.</li>
+				<li>Click the cell at the intersection of <b>cardiovascular system</b> and <b>TS14</b> (there is only 1 result as of 2014-09-05).</li>
+				<li>Verify that the "View The Images" button does not appear.</li>
+			</ol>
+			</li>
+
+    		<li>A Theiler Stage column is displayed only for each stage in which data exists for the queried structure or any child terms.
+ 			<p concordion:manual="true">passed. -klf 2014-06-02</p> 
+ 			<br/><span class="autoMark">Cannot Automate</span>
+    		<ol>
+                <li>Open the GXD Expression Data query form.</li>
+                <li>In the "anatomical structure or stage" ribbon, select <b>aortic valve TS21-28</b> (EMAPA:17870).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify that Theiler Stage 25 is not represented (there is no data for this term or child terms at that stage).</li>
+    		</ol>
+    		</li>
+
+    		<li>Applying Theiler Stage filter(s) from any results summary tab display retains only the associated column(s) in the display.
+ 			<p concordion:manual="true">passed. -klf 2014-06-02</p> 
+ 			<br/><span class="autoMark">Cannot Automate.</span>
+    		<ol>
+                <li>Open the GXD Expression Data query form.</li>
+                <li>In the "anatomical structure or stage" ribbon, select <b>aortic valve TS21-28</b> (EMAPA:17870).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "aortic valve TS21-28".</li>
+                	<li>Only the following columns exist, with counts in each cell in the data row as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Notes</th></tr>
+                	<tr><td>21</td><td>3</td><td></td></tr>
+                	<tr><td>22</td><td>6</td><td></td></tr>
+                	<tr><td>23</td><td>15</td><td>One is a child term: aortic valve leaflet.</td></tr>
+                	<tr><td>24</td><td>2</td><td></td></tr>
+                	<tr><td>25</td><td>1</td><td></td></tr>
+                	<tr><td>26</td><td>11</td><td>8 are child term: aortic valve leaflet.</td></tr>
+                	<tr><td>28</td><td>8</td><td>Two are negative.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>Click the "Assay Results" tab and filter the data to display only Theiler Stage 23, 24, 26 and 28.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify the columns for Theiler Stage 21 and Theiler Stage 22 are no longer displayed.</li>
+                <li>Click the "Remove All Filters" button and verify the columns for Theiler Stage 21 and Theiler Stage 22 are displayed once again.</li>
+                
+    		</ol>
+    		</li>
+
+    		<li>The "Tissue X Stage Matrix" grid functions for any other query parameters submitted with Anatomical Structure.
+ 			<p concordion:manual="true">passed. -klf 2014-06-02</p> 
+ 			<br/><span class="autoMark">Can Automate.</span>
+    		<ol>
+                <li>The test of correct counts verified Anatomical Structure + Genes.</li>
+                <li>QUERY FOR Anatomical Structure: <b>heart TS11-28</b> (EMAPA:16105) and Vocabulary: <b>absent heart</b> (MP:0011388).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "heart TS11-28".</li>
+                	<li>Only the following columns exist, with counts in each cell in the data row as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Notes</th></tr>
+                	<tr><td>11</td><td>10</td><td></td></tr>
+                	<tr><td>12</td><td>46</td><td></td></tr>
+                	<tr><td>13</td><td>27</td><td></td></tr>
+                	<tr><td>14</td><td>11</td><td></td></tr>
+                	<tr><td>15</td><td>40</td><td></td></tr>
+                	<tr><td>16</td><td>5</td><td></td></tr>
+                	<tr><td>17</td><td>7</td><td></td></tr>
+                	<tr><td>19</td><td>7</td><td>No results for TS18.</td></tr>
+                	<tr><td>20</td><td>17</td><td></td></tr>
+                	<tr><td>21</td><td>7</td><td></td></tr>
+                	<tr><td>22</td><td>12</td><td></td></tr>
+                	<tr><td>23</td><td>36</td><td></td></tr>
+                	<tr><td>25</td><td>7</td><td>No results for TS24.</td></tr>
+                	<tr><td>26</td><td>4</td><td></td></tr>
+                	<tr><td>28</td><td>24</td><td></td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>heart TS11-28</b> (EMAPA:16105) and Developmental Stage: <b>TS11</b> and <b>TS12</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "heart TS11-28".</li>
+                	<li>Only the following columns exist, with counts in each cell in the data row as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Notes</th></tr>
+                	<tr><td>11</td><td>83</td><td></td></tr>
+                	<tr><td>12</td><td>397</td><td></td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>heart TS11-28</b> (EMAPA:16105) and Mutant gene <b>Hand1</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "heart TS11-28".</li>
+                	<li>Only the following columns exist, with counts in each cell in the data row as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Notes</th></tr>
+                	<tr><td>12</td><td>17</td><td></td></tr>
+                	<tr><td>13</td><td>4</td><td></td></tr>
+                	<tr><td>15</td><td>6</td><td>No results in TS14.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>heart TS11-28</b> (EMAPA:16105), and Mutant gene <b>Hand1</b>, and Assay Types: <b>Immunohistochemistry</b> and <b>In situ reporter (knock in)</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "heart TS11-28".</li>
+                	<li>Only the following columns exist, with counts in each cell in the data row as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Notes</th></tr>
+                	<tr><td>12</td><td>10</td><td></td></tr>
+                	<tr><td>13</td><td>4</td><td></td></tr>
+                	<tr><td>15</td><td>6</td><td>No results in TS14.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "present", no other results exist, and no results for children exist, the cell color corresponds to "present". The color shade represents the heat map value where bins represent 1-4 results (light), 5-50 results (medium), or &gt;50 results (dark). (sto39, sto25)
+ 			<p concordion:manual="true">passed. -klf 2014-07-22</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>aortic valve leaflet TS23-26</b> (EMAPA:).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "aortic valve leaflet TS23-26".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>23</td><td>1 / 1</td><td style="color:blue;">LIGHT Blue</td><td>No child terms exist.</td></tr>
+                	<tr><td>26</td><td>8 / 8</td><td style="color:blue;"> MEDIUM Blue</td><td>No child terms exist.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>thyroglossal duct TS18-23</b> (EMAPA:).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "thyroglossal duct TS18-23".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>20</td><td>3 / 3</td><td style="color:blue;">LIGHT Blue</td><td>Child term "thyroglossal duct median lobe" has no results.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "present", and any other results for the structure also exist, the cell color corresponds to "present". The color shade represents the heat map value where bins represent 1-4 results (light), 5-50 results (medium), or &gt;50 results (dark).  When negative results exist for the structure, a "negative color" triangle appears on the corner of the "positive color" cell. (sto39, sto25, sto85)
+ 			<p concordion:manual="true">passed. -klf 2014-07-25</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>trunk somite TS12-19</b> (EMAPA:). and Stage: <b>TS 16</b> and Gene: <b>Myog</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "trunk somite".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Has Negative Corner</th><th>Notes</th></tr>
+                	<tr><td>16</td><td>4 Yes / 7 total</td><td style="color:blue;">LIGHT Blue</td><td style="color:red;">yes</td><td>2 "Yes" to this term, 2 "Yes" to children, <b>1 "No" to this term</b>, 2 "Not specified" to this term.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "present", no other results for this structure exist, and any results for CHILD terms exist, the cell color corresponds to "present". The color shade represents the heat map value where bins represent 1-4 results (light), 5-50 results (medium), or &gt;50 results (dark). When negative results exist for the structure, a &quot;negative color&quot; triangle appears on the corner of the &quot;positive color&quot; cell. (sto39, sto25, sto85)
+ 			<p concordion:manual="true">passed. -klf 2014-07-25</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>pulmonary valve TS21-28</b> (EMAPA:) and Stage <b>TS 23</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "pulmonary valve".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>23</td><td>7 Y</td><td style="color:blue;">MEDIUM Blue</td><td>6 "Yes" to the term, 1 "Yes" to the child term.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>auricle TS28</b> (EMAPA:).</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "auricle".</li>
+                	<li>Only the following exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Structure</th><th>Stage</th><th>Count</th><th>Color</th><th>Has Negative Corner</th><th>Notes</th></tr>
+                	<tr><td>auricle</td><td>28</td><td>5 Y/ 6 total</td><td style="color:blue;">MEDIUM Blue</td><td>no</td><td>2 child terms with data, <b>1 has a "No"</b>.</td></tr>
+                	<tr><td>auricular cartilage</td><td>28</td><td>2 Y/ 3 total</td><td style="color:blue;">LIGHT Blue</td><td style="color:red;">yes</td><td><b>1 "No"</b>.</td></tr>
+                	<tr><td>auricular muscle</td><td>28</td><td>3 Y/ 3 total</td><td style="color:blue;">LIGHT Blue</td><td>no</td><td><b></b></td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>brain TS17-28</b> (EMAPA:) and Stage: <b>TS 28</b> and Gene: <b>Wiz</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "brain".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Has Negative Corner</th><th>Notes</th></tr>
+                	<tr><td>28</td><td>68 Y/ 79 total</td><td style="color:blue;">DARK Blue</td><td>no</td><td>Child terms have <b>results with "No" (cerebellum)</b> and "Ambiguous".</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>trunk TS12-28</b> (EMAPA:) and Stage: <b>TS 16</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "trunk".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Has Negative Corner</th><th>Notes</th></tr>
+                	<tr><td>28</td><td>290 Y/ 325 total</td><td style="color:blue;">DARK Blue</td><td style="color:red;">yes</td><td>Child terms have results with "No" and "Ambiguous". <b>Term itself also has 5 &quot;No&quot;</b> and 14 &quot;Ambig&quot;.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and NO results exist for that structure, and any positive results for child terms exist, the cell color corresponds to "present". The color shade represents the heat map value where bins represent 1-4 results (light), 5-50 results (medium), or &gt;50 results (dark). When negative results exist for the structure, a &quot;negative color&quot; triangle appears on the corner of the &quot;positive color&quot; cell. (sto39, sto25, sto85) 
+ 			<p concordion:manual="true">passed. -klf 2014-07-25</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>head TS11-28</b> (EMAPA:), and Gene <b>Zswim6</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "head".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>19</td><td>2 / 4</td><td style="color:blue;">LIGHT Blue</td><td>2 Positives and 2 Ambiguous exist for child terms</td></tr>
+                	<tr><td>20</td><td>4 / 10</td><td style="color:blue;">LIGHT Blue</td><td>4 Positives and 6 Ambiguous exist for child terms</td></tr>
+                	<tr><td>22</td><td>4 / 10</td><td style="color:blue;">LIGHT Blue</td><td>4 Positives and 6 Ambiguous exist for child terms</td></tr>
+                	<tr><td>23</td><td>38 / 38</td><td style="color:blue;">MEDIUM Blue</td><td>38 Positives and 0 Ambiguous exist for child terms</td></tr>
+                	<tr><td>24</td><td>6 / 8</td><td style="color:blue;">MEDIUM Blue</td><td>6 Positives and 2 Ambiguous exist for child terms</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>head TS11-28</b> (EMAPA:), and Gene <b>Zwint</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "head".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>19</td><td>4 / 4</td><td style="color:blue;">LIGHT Blue</td><td>only Positives exist for child terms</td></tr>
+                	<tr><td>23</td><td>38 / 38</td><td style="color:blue;">MEDIUM Blue</td><td>only Positives exist for child terms</td></tr>
+                	<tr><td>28</td><td>12 / 12</td><td style="color:blue;">MEDIUM Blue</td><td>only Positives exist for child terms</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>head TS11-28</b> (EMAPA:), and Gene <b>1110017D15Rik</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "head".</li>
+                	<li>Only the following exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Structure</th><th>Stage</th><th>Count</th><th>Color</th><th>Has Negative Corner</th><th>Notes</th></tr>
+                	<tr><td>head</td><td>23</td><td>74 of 74</td><td style="color:blue;">DARK Blue</td><td>no</td><td>only Positives exist for child terms</td></tr>
+                	<tr><td>brain</td><td>23</td><td>0</td><td>"valid" symbol</td><td>no</td><td></td></tr>
+                	<tr><td>cranium</td><td>23</td><td>68</td><td style="color:blue;">DARK Blue</td><td>no</td><td></td></tr>
+                	<tr><td>ear</td><td>23</td><td>6</td><td style="color:blue;">MEDIUM Blue</td><td>no</td><td></td></tr>
+                	<tr><td>head bone</td><td>23</td><td>39</td><td style="color:blue;">MEDIUM Blue</td><td>no</td><td></td></tr>
+                	<tr><td>head</td><td>28</td><td>1 of 2</td><td style="color:blue;">LIGHT Blue</td><td>no</td><td>1 Positive and <b>1 Negative exist for child term</b></td></tr>
+                	<tr><td>brain</td><td>28</td><td>1 Y / 1 N</td><td style="color:blue;">LIGHT Blue</td><td style="color:red;">yes</td><td>1 Positive and <b>1 Negative exist for this term</b></td></tr>
+                	<tr><td>cranium</td><td>28</td><td>0</td><td>"valid" symbol</td><td>no</td><td></td></tr>
+                	<tr><td>ear</td><td>28</td><td>0</td><td>"valid" symbol</td><td>no</td><td></td></tr>
+                	<tr><td>head bone</td><td>28</td><td>0</td><td>"valid" symbol</td><td>no</td><td></td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "not specified" or "ambiguous", and no other results exist, and no results for child terms exist, the cell color corresponds to "not specified/ambiguous". (sto39) 
+ 			<p concordion:manual="true">passed. -klf 2014-06-03</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>allantois TS10-15</b> (EMAPA:), and Gene <b>Cib1</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "allantois".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>22</td><td>1 NS / 1 total</td><td style="color:gray;">Gray</td><td>For this gene, there is only 1 result for this structure: 1 NS.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "not specified" or &quot;ambiguous&quot;, and detection is "absent", and no positive results exist, and no results for child terms exist, the cell color corresponds to "not specified/ambiguous". No "negative color triangle" should appear on "not specified/ambiguous" cells. (sto39, sto85)
+ 			<p concordion:manual="true">passed. -klf 2014-07-25</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>thymus primordium TS20-22</b> (EMAPA:), and Gene <b>Alpl</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "thymus primordium".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Has Negative Color</th><th>Notes</th></tr>
+                	<tr><td>22</td><td>1 NS / 2 total</td><td style="color:gray;">Gray</td><td>no</td><td>For this gene, there are only 2 results for this structure: 1 NS <b>and 1 No</b>.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "not specified" or &quot;ambiguous&quot; (ok if detection is also "absent"), and no positive results exist, and any non-positive results for CHILD terms exist, the cell color corresponds to "not specified/ambiguous". (sto39)
+ 			<p concordion:manual="true">passed. -klf 2014-06-03</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>urethra of female TS23-28</b> (EMAPA:), and Gene <b>BC068157</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "urethra of female".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>23</td><td>1 / 2</td><td style="color:gray;">Gray</td><td>Term has 1 Ambiguous. Child has 1 Ambiguous.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>STRUCTURE</b> (EMAPA:), and Gene <b>GENE</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "STRUCTURE".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>nn</td><td>n / n</td><td style="color:gray;">Gray</td><td>Cannot find example of case where Term has Ambiguous/Not Specified and Child has No.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "absent", no other results exist, and no results for children exist, the cell color corresponds to &quot;absent&quot;.  The color shade represents the heat map value where bins represent 1-4 results (light), 5-20 results (medium), or &gt;20 results (dark). (sto39, sto25)
+ 			<p concordion:manual="true">passed. -klf 2014-07-22</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>olfactory bulb TS21-28</b> (EMAPA:) and Gene: <b>Abcb1b</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "olfactory bulb".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>22</td><td>1 / 1</td><td style="color:red;">LIGHT Red</td><td>Structure expression is "absent".</td></tr>
+                	<tr><td>23</td><td>1 / 1</td><td style="color:red;">LIGHT Red</td><td>Structure expression is "absent".</td></tr>
+                	<tr><td>28</td><td>2 / 2</td><td style="color:red;">LIGHT Red</td><td>Structure expression is "absent".</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>perihilar interstitium TS22-28</b> (EMAPA:28083).</li>
+                <li>Click the "Tissue X Stage Matrix" tab, expand the row for "perihilar interstitium", and verify:
+                <ul>
+                	<li>For the row containing "resident macrophage of the perihilar interstitium".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>28</td><td>14 / 14</td><td style="color:red;">MEDIUM Red</td><td>Structure expression is "absent" in "resident macrophage of the perihilar interstitium".</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>Click the "Tissue X Stage Matrix" tab, expand the row for "perihilar interstitium", and verify:
+                <ul>
+                	<li>For the row containing "rest of perihilar interstitium".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>28</td><td>14 / 14</td><td style="color:red;">MEDIUM Red</td><td>Structure expression is "absent" in "rest of perihilar interstitium".</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>nerve of bladder TS22-28</b> (EMAPA:31526).</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "nerve of bladder".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>27</td><td>41 / 41</td><td style="color:red;">DARK Red</td><td>Structure expression is "absent".</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist where detection is "absent", no other results exist, and any non-positive results for CHILD terms exist, the cell color corresponds to &quot;absent&quot;. The color shade represents the heat map value where bins represent 1-4 results (light), 5-20 results (medium), or &gt;20 results (dark). (sto39, sto25)
+ 			<p concordion:manual="true">passed. -klf 2014-07-22</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>limb digit TS20-28</b> (EMAPA:). and Stage: <b>TS 20</b>.</li>
+                <li>Submit the query.</li>
+                <li>Filter for <b>Detected?: No</b>.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "limb digit".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>20</td><td>4 / 14</td><td style="color:red;">LIGHT Red</td><td>4 "No" results for Term. 10 "No" results for children.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+                <li>QUERY FOR Anatomical Structure: <b>limb digit TS20-28</b> (EMAPA:). and Stage: <b>TS 20</b>.</li>
+                <li>Submit the query.</li>
+                <li>Filter for <b>Detected?: No</b> and <b>Detected?: Ambiguous</b>.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "limb digit".</li>
+                	<li>Only the following columns exist, with counts  and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>20</td><td>4 / 16</td><td style="color:red;">LIGHT Red</td><td>4 "No" results for Term. 10 "No" results and 2 "Ambiguous" results for children.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist for CHILD terms where detection is "not specified" and no other results exist for the TERM or for any CHILD terms, the cell color corresponds to "CHILD not specified/ambiguous/absent". (sto39)
+ 			<p concordion:manual="true">passed. -klf 2014-06-03</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>head TS11-28</b> (EMAPA:), and Stage: <b>TS 28</b> and Gene <b>Abca7</b> and Assay Type: <b>Northern Blot</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "head".</li>
+                	<li>Only the following columns exist, with counts and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>28</td><td>1 NS / 1 total</td><td style="color:gold;">Gold</td><td>For this query, the only result is to the child term "Brain", and are "not specified".</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist for CHILD terms where detection is "not specified" and detection is "absent", and no other results exist for the TERM or for any CHILD terms, the cell color corresponds to "CHILD not specified/ambiguous/absent". (sto39)
+ 			<p concordion:manual="true">passed. -klf 2014-06-03</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>foregut gland TS14-23</b> (EMAPA:), and Gene <b>Alpl</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "foregut gland".</li>
+                	<li>Only the following columns exist, with counts and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>22</td><td>1 NS / 3 total</td><td style="color:gold;">Gold</td><td>For this gene, there are only 3 results for 2 children of this structure: 1 NS and 2 No.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>When querying for a structure and results exist for CHILD terms where detection is "absent", and no other results exist for the TERM or for any CHILD terms, the cell color corresponds to "CHILD not specified/ambiguous/absent". (sto39)
+ 			<p concordion:manual="true">passed. -klf 2014-06-03</p> 
+ 			<br/><span class="autoMark">Unit Tested. Color of cells are unit tested in GxdSummaryTests.js,GxdMatrixCellTest.java.</span>
+    		<ol>
+                <li>QUERY FOR Anatomical Structure: <b>heart valve TS21-28</b> (EMAPA:), and Stage: <b>TS 28</b>, and Gene <b>Sost</b>.</li>
+                <li>Submit the query.</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>The data row begins with a header cell containing "heart valve".</li>
+                	<li>Only the following columns exist, with counts and color in each cell in the data row and coloring as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Color</th><th>Notes</th></tr>
+                	<tr><td>28</td><td>3 / 3 total</td><td style="color:gold;">Gold</td><td>For this gene, there are only 3 results for 3 children of this structure: 3 No.</td></tr>
+                	</table>
+                	</li>
+                </ul>
+                </li>
+    		</ol>
+    		</li>
+
+			<li>The existing results set can be filtered via selecting a structure by checking the checkbox and clicking the Filter button.   (sto68 sto123)
+			<ul>
+				<li>Selecting a structure displays a check in the checkbox.</li> 
+				<li>Selecting a structure displays a minus in the checkbox for all ancestor term(s) directly "above" the actively selected term.</li> 
+				<li>If other ancestor term(s) are present elsewhere in the grid, the state of their checkbox display remains unchanged.</li>
+				<li>If descendant term row(s) are open, a check is displayed in the descendant term checkboxes. </li>
+				<li>If the actively selected term appears elsewhere in the grid, a check is displayed in all its checkboxes.</li>
+				<li>If descendant term row(s) are open elsewhere in the grid, a check is displayed in the descendant term checkboxes. </li>
+				
+				<li>Only data corresponding to the selected terms and any descendant terms are retained. </li>
+				<li>Only rows and columns associated with the retained data are displayed.   </li>
+				<li>If terms actively selected by the user have descendant terms, these rows are initially "closed" (collapsed / hidden) by default in the results set grid view. </li>
+			</ul>
+ 			<p concordion:manual="true">passed. -klf 2014-08-21</p>
+ 			<ol>
+ 				<li><i>TEST FILTERING WITH SINGLE ROW; TEST CHECKBOX INTERACTION BEHAVIORS</i></li>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Stage Matrix tab.</li>
+ 				<li>Verify that the only columns displayed are <b>TS15, TS16, TS17, TS18, TS19, TS20, TS21, TS22, TS23, TS25</b> (note: no TS24 as of 8/8/2014).</li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail paraxial mesenchyme</b>.</li>
+ 				<li>SELECT the row for <b>tail somite</b> by clicking on the checkbox.</li>
+ 				<li>Verify that only the row for <b>tail somite</b> displays a checkmark.</li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b>, <b>tail mesenchyme</b>, and <b>tail</b> display minus signs.</li>
+ 				<li>OPEN (expand) the row for <b>tail somite</b> to display rows for descendant terms.</li>
+ 				<li>Verify that <b>tail dermomyotome</b> and <b>tail sclerotome</b> display checkmarks.</li>
+ 				<li>DE-SELECT the row for <b>tail somite</b> by clicking on the checkbox.</li>
+ 				<li>Verify the row for  <b>tail somite</b> no longer displays a check mark.</li>
+ 				<li>Verify that <b>tail dermomyotome</b> and <b>tail sclerotome</b> no longer display checkmarks.</li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b>, <b>tail mesenchyme</b>, and <b>tail</b> no longer display minus signs.</li>
+ 				<li>SELECT the row for <b>tail somite</b> once again by clicking on the checkbox.</li>
+ 				<li>Verify the row for  <b>tail somite</b> displays a check mark.</li>
+ 				<li>Verify that <b>tail dermomyotome</b> and <b>tail sclerotome</b> display checkmarks.</li>
+ 				<li>SELECT the row for <b>tail unsegmented mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b> and <b>tail mesenchyme</b> change from minus signs to display check marks.</li>
+ 				<li>DE-SELECT the row for <b>tail unsegmented mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Verify that no checkmark is displayed for <b>tail unsegmented mesenchyme</b>. </li>
+ 				<li>Verify that rows for <b>tail paraxial mesenchyme</b> and <b>tail mesenchyme</b> change from check marks to display minus signs.</li>
+ 				<li><b>CLICK the Filter button</b> to filter the results.</li>
+ 				<li>Verify that the only row displayed is <b>tail somite</b>. </li>
+ 				<li>Expand the row for <b>tail somite</b> and verify that rows for <b>tail dermomyotome</b> and <b>tail sclerotome</b> are displayed.</li>
+ 				<li>Verify that the only columns displayed are <b>TS17, TS18, TS19, TS20, TS21</b>.</li>
+
+ 				<li><i>TEST FILTERING ON PREVIOUSLY-FILTERED RESULTS SET</i></li>
+ 				<li>SELECT the row for <b>tail sclerotome</b> by clicking on the checkbox.</li>
+ 				<li><b>CLICK the Filter button</b> to filter the results.</li>
+ 				<li>Verify that the only row displayed is <b>tail sclerotome</b>.</li>
+ 				<li>Verify that the only column displayed is <b>TS20</b>.</li>
+ 				<li>RESET the query form.</li>
+
+ 				<li><i>TEST FILTERING WITH MULTIPLE ROWS; TEST CHECKBOX INTERACTION BEHAVIORS</i></li>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Stage Matrix tab.</li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail nervous system</b>.</li>
+ 				<li>SELECT the row for <b>tail mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Verify that the row for <b>tail mesenchyme</b> and the descendant term <b>tail paraxial mesenchyme</b> display check marks.</li>
+ 				<li>Verify that the row for <b>tail</b> displays a minus sign.</li>
+ 				<li>SELECT the row for <b>tail nervous system</b> by clicking on the checkbox.</li>
+ 				<li>Verify that the row for <b>tail nervous system</b> and the descendant term <b>tail central nervous system</b> display check marks.</li>
+ 				<li>Verify that the row for <b>tail</b> still displays a minus sign.</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that the only rows displayed are <b>tail mesenchyme</b> and <b>tail nervous system</b>. (No rows should be displayed for "tail" or "tail skeleton", and no subterm rows should be displayed.) </li>
+ 				<li>Verify that the columns for <b>TS22, TS25</b> are no longer displayed.</li>
+ 				<li>CLICK the <b>Remove All Filters</b> button to restore the query results set.</li>
+ 				<li>SELECT the rows for <b>tail mesenchyme</b> and <b>tail nervous system</b> and <b>tail skeleton</b> by clicking on the checkboxes.</li>
+ 				<li>Verify that the row for <b>tail</b> displays a check mark.</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that the only row displayed is <b>tail</b>. (No descendant term rows should be displayed.) </li>
+
+ 				<li><i>TEST FILTERING ON PREVIOUSLY-FILTERED RESULTS SET</i></li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail paraxial mesenchyme</b>.</li>
+ 				<li>SELECT the row for <b>tail unsegmented mesenchyme</b> by clicking on the checkbox.</li>
+ 				<li>Expand the row for <b>tail nervous system</b>.</li>
+ 				<li>Expand the row for <b>tail central nervous system</b>.</li>
+ 				<li>SELECT the row for <b>tail future spinal cord</b> by clicking on the checkbox.</li>
+ 				<li>Click the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify the only rows displayed are <b>tail unsegmented mesenchyme</b> and <b>tail future spinal cord</b>.</li>
+ 				<li>Verify the row for <b>tail future spinal cord</b> can be expanded to display subterms.</li>
+ 				<li>Verify the only columns displayed are <b>TS15, TS16, TS17, TS19</b>.</li>
+ 				<li>RESET the query form.</li>
+
+ 				<li><i>TEST FILTERING WITH MULTIPLE DUPLICATE ROWS (term appears more than once in displayed results set); TEST CHECKBOX INTERACTION BEHAVIORS</i></li>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>head TS11-28</b>.</li>
+ 				<li>View the Tissue X Stage Matrix tab.</li>
+ 				<li>Expand the row for <b>cranium</b>, and then the row for <b>temporal bone</b>.</li>
+ 				<li>Expand the row for <b>head bone</b>, and then the row for <b>temporal bone</b>.</li>
+ 				<li>SELECT the row for <b>temporal bone</b> that is a child of <b>cranium</b>.</li>
+ 				<li>Verify that ONLY the following rows have the indicated marks in the checkboxes (from the top of the results set moving downward):
+ 				<table>
+ 					<tr><th>term</th><th>checkbox state</th></tr>
+ 					<tr><td>head</td><td>minus</td></tr>
+ 					<tr><td>cranium</td><td>minus</td></tr>
+ 					<tr><td>temporal bone</td><td>check mark</td></tr>
+ 					<tr><td>temporal bone petrous part</td><td>check mark</td></tr>
+ 					<tr><td>head bone</td><td>minus</td></tr>
+ 					<tr><td>temporal bone</td><td>check mark</td></tr>
+ 					<tr><td>temporal bone petrous part</td><td>check mark</td></tr>
+ 				</table>
+ 				</li>
+ 				<li>CLICK the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that the only row displayed is <b>temporal bone</b>.</li>
+ 				<li>Verify that the only column displayed is <b>TS20</b>.</li>
+ 				<li>Verify that the row for temporal bone can be expanded to display <b>temporal bone petrous part</b>.</li>
+			</ol>			
+			</li>
+
+			<li>The existing results set can be filtered via selecting a Theiler Stage (column) by checking the checkbox and clicking the Filter button.   (sto65)
+			<ul>
+				<li>Selecting a column displays a check in the checkbox.</li> 
+				<li>Only data corresponding to the selected Theiler Stages are retained. </li>
+				<li>Only rows and columns associated with the retained data are displayed.   </li>
+			</ul>
+ 			<p concordion:manual="true">passed. -klf 2014-09-02</p>
+ 			<ol>
+ 				<li><i>TEST FILTERING WITH SINGLE COLUMN</i></li>
+ 				<li>QUERY for Structure <b>aortic valve TS21-28</b> (EMAPA:17870).</li>
+                <li>Click the "Tissue X Stage Matrix" tab and verify:
+                <ul>
+                	<li>Only the following columns exist, with counts in each cell in the data row as shown:
+                	<table>
+                	<tr><th>Stage</th><th>Count</th><th>Notes</th></tr>
+                	<tr><td>21</td><td>3</td><td></td></tr>
+                	<tr><td>22</td><td>6</td><td></td></tr>
+                	<tr><td>23</td><td>15</td><td>One is a child term: aortic valve leaflet.</td></tr>
+                	<tr><td>24</td><td>2</td><td></td></tr>
+                	<tr><td>25</td><td>1</td><td></td></tr>
+                	<tr><td>26</td><td>11</td><td>8 are child term: aortic valve leaflet.</td></tr>
+                	<tr><td>28</td><td>8</td><td>Two are negative.</td></tr>
+                	</table>
+                	</li>
+                	<li>The row for <b>aortic valve</b> may be expanded to show the subterm <b>aortic valve leaflet</b> which has data cells in columns for TS23 and TS26.</li>
+                </ul>
+                </li>
+                <li>Select the column for Theiler Stage 23.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the column for Theiler Stage 23 is displayed.</li>
+                <li>Verify the row for <b>aortic valve</b> may be expanded to show the subterm <b>aortic valve leaflet</b>.</li>
+                <li>Click the Browser Back button to undo the filtering action.</li>
+                <li>Select the column for Theiler Stage 22.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the column for Theiler Stage 22 is displayed.</li>
+                <li>Verify the row for <b>aortic valve</b> may NOT be expanded to show the subterm <b>aortic valve leaflet</b>.</li>
+                <li>Click the "Remove All Filters" button and verify that all columns and both rows are displayed (or can be expanded to display) once again.</li>
+
+ 				<li><i>TEST FILTERING WITH MULTIPLE COLUMNS</i></li>
+                <li>Select the column for Theiler Stage 23, Theiler Stage 24, and Theiler Stage 26.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the columns for Theiler Stage 23, 24 and 26 are displayed.</li>
+                <li>Verify the row for <b>aortic valve</b> may be expanded to show the subterm <b>aortic valve leaflet</b>.</li>
+                <li>Click the "Remove Filters" button for <b>TS: 24</b>.</li>
+				<li>Verify that only the columns for Theiler Stage 23 and 26 are displayed.</li>
+                <li>Verify the row for <b>aortic valve</b> may be expanded to show the subterm <b>aortic valve leaflet</b>.</li>
+                <li>Click the "Remove All Filters" button and verify that all columns and both rows are displayed (or can be expanded to display) once again.</li>
+                <li>Select the column for Theiler Stage 24, Theiler Stage 25, and Theiler Stage 26.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify only the columns for Theiler Stage 24, 25 and 26 are displayed.</li>
+                <li>Verify the row for <b>aortic valve</b> may be expanded to show the subterm <b>aortic valve leaflet</b>.</li>
+                <li>Click the "Remove Filters" button for <b>TS: 26</b>.</li>
+				<li>Verify that only the columns for Theiler Stage 24 and 25 are displayed.</li>
+                <li>Verify the row for <b>aortic valve</b> may NOT be expanded to show the subterm <b>aortic valve leaflet</b>.</li>
+                <li>Click the "Remove All Filters" button and verify that all columns and both rows are displayed (or can be expanded to display) once again.</li>
+                
+ 				<li><i>TEST FILTERING ON COLUMN + ROW COMBINATION</i></li>
+ 				<li>QUERY for Structure <b>heart valve TS21-28</b> (EMAPA:17869).</li>
+                <li>Click the "Tissue X Stage Matrix" tab.</li>
+                <li>Select the columns: <b>TS23, TS24 </b>.</li>
+                <li>Select the rows: <b>atrioventricular valve, mitral valve</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify that the only columns displayed are <b>TS23, TS24</b>.</li>
+                <li>Verify that the only row displayed is <b>mitral valve</b> (because atrioventricular valve has no data at TS23 or TS24, so this row disappears even though it was selected).</li>
+                <li>Click the "Remove All Filters" button.</li>
+                <li><i>TEST SUBSEQUENT FILTERING ON COLUMN + ROW COMBINATION (should remember previous filters applied)</i></li>
+                <li>Select the columns: <b>TS22, TS23, TS24 </b>.</li>
+                <li>Select the rows: <b>aortic valve, valve leaflet</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify that the only columns displayed are <b>TS22, TS23, TS24</b>.</li>
+                <li>Verify that the only rows displayed are <b>aortic valve, valve leaflet</b>.</li>
+                <li>Expand the row for valve leaflet.</li>
+                <li>Verify that the only descendant term rows displayed are <b>aortic valve leaflet, pulmonary valve leaflet</b>.</li>
+                <li>Select the row: <b>aortic valve leaflet</b>.</li>
+                <li>Click the Filter button to filter the results.</li>
+                <li>Verify that the only column displayed is <b>TS22, TS23, TS24</b>.</li>
+                <li>Verify that the only row displayed is <b>aortic valve</b>.</li>
+                <li>Expand the row for aortic valve.</li>
+                <li>Verify that the only descendant term row displayed is <b>aortic valve leaflet</b>.</li>                
+ 			</ol>
+ 			</li>
+
+			<li>"Remove Filter" buttons appear for row (structure) filtering. Clicking a "Remove Filter" button undoes the effect of the filter on the selected term.  (sto68)
+ 			<p concordion:manual="true">passed 08/12/2014</p> 
+ 			<ol>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Stage Matrix tab.</li>
+ 				<li>Expand the row for <b>tail mesenchyme</b>.</li>
+ 				<li>Expand the row for <b>tail paraxial mesenchyme</b>.</li>
+ 				<li>Select the row for <b>tail somite</b> by clicking on the checkbox.</li>
+ 				<li>Click the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify that a "Remove Filter" button appears for <b>Remove All Filters</b> and a button appears for <b>tail somite</b>. </li>
+ 				<li>Click the "Remove Filter" button for <b>tail somite</b>.</li>
+ 				<li>Verify that the original dataset is displayed.</li> 
+ 				<li><i>TEST INTEGRATION WITH EXISTING FILTERS AND FILTER BUTTONS.</i></li>
+ 				<li>Using the dataset above, click the "Filter expression by:" button <b>Assay Type</b>, select <b>Immunohistochemistry</b>, and submit the filter.  </li>
+ 				<li>Verify buttons appear in a section labeled "Filtered by:" <b>Remove All Filters</b> and <b>Assay Type: Immunohistochemistry</b>.</li>
+ 				<li>Verify the results set displays only rows for <b>tail</b> and <b>tail nervous system</b>.</li>
+ 				<li>Expand the row for <b>tail nervous system</b>, then expand <b>tail central nervous system</b>, then expand <b>tail future spinal cord</b>, then <b>tail neural plate</b> to display the row for <b>tail neural crest</b>.</li>
+ 				<li>Select the row for <b>tail neural crest</b> by clicking on the checkbox.</li>
+ 				<li>Click the Filter button to <b>filter the results</b>.</li>
+ 				<li>Verify the results display one row for <b>tail neural crest</b> and one column for <b>TS16</b>.</li>
+ 				<li>Verify an additional button appears in the section labeled "Filtered by:" <b>tail neural crest</b>.</li>
+ 				<li>Click the "Remove Filter" button labeled <b>Assay Type: Immunohistochemistry</b>.</li>
+ 				<li>Verify the results set still contains only one row for <b>tail neural crest</b> and one column for <b>TS16</b>.</li>
+ 				<li>Click the "Remove Filter" button labeled <b>tail neural crest</b>.</li>
+ 				<li>Verify that the original dataset is displayed.</li> 
+			</ol>			
+			</li>
+
+			<li>Rows which are "open" (expanded) are remembered, as much as possible, after filtering actions and when using the browser's Back button. (sto69)<br/>
+			<i><b>NOTE</b>: All &quot;memory&quot; of which rows are opened or closed is in the browser's cache. To reset it, do a hard refresh (Ctrl+F5 on Windows; Command+R on Mac).</i>
+ 			<p concordion:manual="true">passed. -klf 2014-09-05</p> 
+ 			<ol>
+ 				<li>QUERY for Gene <b>Hox*</b> and Structure <b>tail TS15-28</b>.</li>
+ 				<li>View the Tissue X Stage Matrix tab.</li>
+ 				<li>Expand <b>tail mesenchyme, tail nervous system, tail skeleton</b>. Then expand each term revealed once more (so children, grandchildren, and g-grandchildren terms are open; a total of 12 rows visible as of 2014-09-05).</li>
+ 				<li>SELECT columns <b>TS15, TS20</b> using the checkboxes in the column headers and submit the filter.</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li> 
+ 				<li>Expand the row for <b>tail somite</b> revealing 2 more descendant term rows and the row for <b>tail future spinal cord</b> revealing an additional 2 more descendant term rows (a total of 16 rows visible as of 2014-09-05).</li>
+ 				<li>CLICK the browser's "Back" button.</li>
+ 				<li>Verify that all 16 rows remain visible, and that the filter action is undone so that all 10 Theiler Stage columns are visible.</li>
+ 				<li>Collapse ("close", "hide") <b>tail nervous system</b> (a total of 11 rows visible as of 2014-09-05).</li>
+ 				<li>SELECT <b>wild type</b> Using the "Filter expression by" buttons and submit the filter.</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li>
+ 				<li>SELECT columns <b>TS15, TS20</b> using the checkboxes in the column headers and submit the filter.</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li> 
+ 				<li>Expand all rows (a total of 16 rows as of 2014-09-05).</li>
+ 				<li>CLICK the <b>Remove all filters</b> button above the tabbed areas.</li>
+ 				<li>Verify that all rows previously expanded remain expanded.</li>
+ 				<li>Verify that <b>tail neural plate</b> may now be expanded (displays a turnstile).</li>
+ 				<li>Expand the row for <b>tail neural plate</b>.</li>
+ 				<li>Verify that the row for <b>tail neural crest</b> is displayed (a total of 17 rows as of 2014-09-05).</li>
+ 				<li>SELECT rows <b>tail mesenchyme</b> and <b>tail nervous system</b> and submit the filter.</li>
+ 				<li>Verify that all rows under "tail mesenchyme" and "tail nervous system" remain expanded (a total of 13 rows as of 2014-09-05).</li>
+ 				<li>CLICK the browser's "Back" button.</li>
+ 				<li>Verify that the filter action is undone so that all 17 rows are visible.</li>
+ 				<li>Collapse the row for <b>tail nervous system</b> (a total of 11 rows).</li> 
+ 				<li>SELECT rows <b>tail mesenchyme</b> and <b>tail nervous system</b> and submit the filter.</li>
+ 				<li>Verify that only rows for <b>tail mesenchyme</b> and <b>tail nervous system</b> and child terms are displayed.<br/>
+ 				<i>NOTE: "tail nervous system" will be displayed as "open" or expanded because the implementation uses the DAG path from the original display which becomes lost when filtering using rows. Fixing this "bug" was a low priority and was not addressed prior to the release. </i>
+ 				</li>
+ 				<li>CLICK the browser's "Back" button.</li>
+ 				<li>Verify that the filter action is undone so that all 11 rows are displayed and "tail nervous system" is collapsed.</li>
+ 			</ol>
+			</li>
+
+    		
+    		<li>The matrix data grid has scroll bars to permit viewing more data while keeping row and column header cells visible in the browser viewport. (new for sto97)
+ 			<p concordion:manual="true">passed. -klf 2014-07-14</p> 
+ 			<ol>
+ 				<li>Open a browser window approximately 760 px wide by 700 px tall.</li>
+ 				<li>QUERY FOR the gene <b>Shh</b>, click on the Tissue X Stage Matrix tab, and scroll the browser window down so that the query results "tabs" are at the top of the browser window.</li>
+ 				<li>Verify that a vertical and a horizontal scrollbar exists within the data grid area.</li>
+ 				<li>Verify that scrolling horizontally displays additional Theiler Stage columns, but anatomical structure row header cells remain stationary.</li>
+ 				<li>Verify that scrolling vertically displays additional anatomical structure rows, but Theiler Stage column header cells remain stationary.</li>
+ 				<li>Verify that expanding the browser window horizontally causes the grid's horizontal scrollbar to expand accordingly. When all columns are visible, the grid's horizontal scrollbar disappears.</li>
+ 				<li>Verify that contracting the browser window horizontally causes the grid's horizontal scrollbar to contract accordingly. When the browser window reaches a minimize of approx. 365 px wide, it cannot be contracted further. The data grid's scrollbar remains functional.</li>
+ 				<li>Verify that expanding the browser window vertically causes the grid's vertical scrollbar to expand accordingly. When all rows are visible, the grid's vertical scrollbar disappears.</li>
+ 				<li>Verify that contracting the browser window vertically causes the grid's vertical scrollbar to contract accordingly. As the browser window is contracted further, the data grid's scrollbar remains functional. There is no minimum vertical browser window size.</li>
+ 				<li>Return the browser window to approximately 760 px wide by 700 px tall.</li>
+ 				<li>QUERY FOR the anatomical structure <b>heart</b> (TS11-28), click on the Tissue X Stage Matrix tab, and scroll the browser window down so that the query results "tabs" are at the top of the browser window.</li>
+ 				<li>Verify that clicking the row for "heart" expands the grid to display rows for substructures, and that a vertical scrollbar appears within the data grid.</li>
+ 				<li>Verify that clicking the row for "bulbus cordis" expands the grid to display additional substructure rows, and that the vertical scroll within the data grid expands accordingly.</li>
+ 				<li>Verify that clicking the row for "heart" again contracts the grid to hide rows for substructures, and that the vertical scrollbar within the data grid disappears.</li>
+ 			</ol>
+    		</li>
+    		
+			<li>Theiler Stage column headings also display the appropriate DPC ranges. (sto61, sto124)<br/>
+			<i>The Theiler Stage text is in boldface. The DPC text is regular font weight and gray. Text is displayed in one string, at an angle. DPC text is aligned horizontally (is not evenly spaced from the TS text).</i>
+ 			<p concordion:manual="true">passed. -klf 2014-09-05</p> 
+    		<ol>
+                <li>QUERY FOR Theiler Stages <b>TS 1 through TS 28</b></li>
+                <li>Verify that the following DPC ages appear with  their respective Theiler Stage cells:
+                <table class="">
+					<tr>
+					<th>TS1</th>
+					<th>TS2</th>
+					<th>TS3</th>
+					<th>TS4</th>
+					<th>TS5</th>
+					<th>TS6</th>
+					<th>TS7</th>
+					<th>TS8</th>
+					<th>TS9</th>
+					<th>TS10</th>
+					<th>TS11</th>
+					<th>TS12</th>
+					<th>TS13</th>
+					<th>TS14</th>
+					<th>TS15</th>
+					<th>TS16</th>
+					<th>TS17</th>
+					<th>TS18</th>
+					<th>TS19</th>
+					<th>TS20</th>
+					<th>TS21</th>
+					<th>TS22</th>
+					<th>TS23</th>
+					<th>TS24</th>
+					<th>TS25</th>
+					<th>TS26</th>
+					<th>TS27</th>
+					<th>TS28</th>
+					</tr>
+					<tr>
+					<td>E0-2.5</td>
+					<td>E1-2.5</td>
+					<td>E1-3.5</td>
+					<td>E2-4</td>
+					<td>E3-5.5</td>
+					<td>E4-5.5</td>
+					<td>E4.5-6</td>
+					<td>E5-6.5</td>
+					<td>E6.25-7.25</td>
+					<td>E6.5-7.75</td>
+					<td>E7.25-8</td>
+					<td>E7.5-8.75</td>
+					<td>E8-9.25</td>
+					<td>E8.5-9.75</td>
+					<td>E9-10.25</td>
+					<td>E9.5-10.75</td>
+					<td>E10-11.25</td>
+					<td>E10.5-11.25</td>
+					<td>E11-12.25</td>
+					<td>E11.5-13</td>
+					<td>E12.5-14</td>
+					<td>E13.5-15</td>
+					<td>E15</td>
+					<td>E16</td>
+					<td>E17</td>
+					<td>E18</td>
+					<td>P0-3</td>
+					<td>P4-Adult</td>
+					</tr>
+				</table>
+				</li>
+				<li><i>Test for case with only some columns displayed.</i></li>
+                <li>QUERY FOR Marker <b>shh</b></li>
+                <li>Verify that the following DPC ages appear with their respective Theiler Stage cells:
+                <table class="">
+					<tr>
+					<th>TS2</th>
+					<th>TS3</th>
+					<th>TS10</th>
+					<th>TS11</th>
+					<th>TS12</th>
+					<th>TS13</th>
+					<th>TS14</th>
+					<th>TS15</th>
+					<th>TS16</th>
+					<th>TS17</th>
+					<th>TS18</th>
+					<th>TS19</th>
+					<th>TS20</th>
+					<th>TS21</th>
+					<th>TS22</th>
+					<th>TS23</th>
+					<th>TS24</th>
+					<th>TS25</th>
+					<th>TS26</th>
+					<th>TS27</th>
+					<th>TS28</th>
+					</tr>
+					<tr>
+					<td>E1-2.5</td>
+					<td>E1-3.5</td>
+					<td>E6.5-7.75</td>
+					<td>E7.25-8</td>
+					<td>E7.5-8.75</td>
+					<td>E8-9.25</td>
+					<td>E8.5-9.75</td>
+					<td>E9-10.25</td>
+					<td>E9.5-10.75</td>
+					<td>E10-11.25</td>
+					<td>E10.5-11.25</td>
+					<td>E11-12.25</td>
+					<td>E11.5-13</td>
+					<td>E12.5-14</td>
+					<td>E13.5-15</td>
+					<td>E15</td>
+					<td>E16</td>
+					<td>E17</td>
+					<td>E18</td>
+					<td>P0-3</td>
+					<td>P4-Adult</td>
+					</tr>
+				</table>
+				</li>
+    		</ol>
+    		</li>
+    		
+			<li>A legend is available, explaining the meaning of colors and symbols. (sto60)
+ 			<p concordion:manual="true">passed - kstone 2014/07/29</p> 
+    		<ol>
+                <li>QUERY FOR Marker <b>shh</b></li>
+                <li>Verify that an affordance (button or link) exists to trigger display of the <b>Legend</b>.</li>
+                <li>Click the Legend button or link.</li>
+                <li>Verify that a pop-up panel is displayed which explains all colors and symbols possible on the matrix grid.</li>
+                <li>Verify that the pop-up panel can be dragged around the browser viewport.</li>
+                <li>Verify that an expression results pop-up panel can be displayed at the same time as the Legend pop-up panel.</li>
+                <li>Verify that the Legend pop-up panel has a "close" affordance (button or link).</li>
+                <li>Click the "Close" button or link.</li>
+                <li>Verify that the Legend pop-up panel closes, but that any expression results panel remains open.</li> 
+			</ol>
+			</li>
+			<li>Data rows are highlighted when their filter select box is checked an unhighlighted when deselected (sto122)
+ 			<p concordion:manual="true">passed - jeffc 2014/08/14</p> 
+    		<ol>
+                <li>QUERY FOR Marker <b>shh</b>.</li>
+                <li>Click the Tissue x Stage tab.</li>
+                <li>Click several of the filter check boxes for a row.</li>
+                <li>Verify that when a row filter checkbox is checked the entire row is highlighted.</li>
+                <li>Deselect several rows you has previously selected.</li>
+                <li>Verify that highlighting is removed from these rows.</li>
+			</ol>
+			</li>
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>After expanding a row, the child rows should have all the required stage range indicators
+    		<ol>
+                <li>Query for <b concordion:set="#nomen">Mpp4</b></li>
+                <li>Expand the row for nervous system (<b concordion:set="#parentRowId">EMAPA:16469</b>)</li>
+                <li>Verify that <i>only</i> the following Anatomy Term rows, Theiler Stage columns, and cell types appear:
+                	<span class="hide" concordion:execute="#response = getStageGridChildrenByNomenQuery(#nomen,#parentRowId)">hidden</span>
+                <table concordion:execute="#result = getCellByTerm(#response,#term,#colId)">
+                	<tr><th concordion:set="#term">Anatomy Term</th><th concordion:set="#colId">Theiler Stage</th>
+                		<th concordion:assertEquals="#result">Cell Type</th><th>Notes</th></tr>
+                	<tr><td>central nervous system</td><td>20</td><td>Valid symbol</td><td>This result set does not have stages 20-26 in its range, but should appear based on original query</td></tr>
+                	<tr><td>central nervous system</td><td>22</td><td>Valid symbol</td><td></td></tr>
+                	<tr><td>central nervous system</td><td>24</td><td>Valid symbol</td><td></td></tr>
+                	<tr><td>central nervous system</td><td>26</td><td>Valid symbol</td><td></td></tr>
+                	<tr><td>central nervous system</td><td>28</td><td>colored</td><td></td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

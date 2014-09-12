@@ -45,7 +45,7 @@
 	<target name="clean">
 		<delete dir="${compile.dir}" />
 		<delete file="${project.name}.war" />
-        	<delete dir="${testoutput.dir}"/>
+        <delete dir="${testoutput.dir}"/>
 	</target>
 
 
@@ -88,7 +88,7 @@
 	</target>
 		  	
 	<!-- Compile tests -->
-	<target name="compile-test" depends="compile,index-test">
+	<target name="compile-test" depends="unittest,jsunittest,index-test">
 		<copy file="./www/WEB-INF/properties/applicationContext-ci.xml" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/fewi.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/GlobalConfig.properties" todir="./www/WEB-INF/classes" overwrite="true" />
@@ -115,6 +115,7 @@
 				<fileset dir="${compile.dir}" includes="**/*Test.class">
 					<exclude name="**/FooTest.class" />
 					<exclude name="**/BaseConcordionTest.class" />
+					<exclude name="**/ContextLoaderTest.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
@@ -185,17 +186,86 @@
 		</junit>
 		<fail message="Test failure detected, check test results." if="junit.failure" />
 	</target>
+	
+	<target name="jsunittest" depends="jsunittest-run,jsunittest-warning">
+	</target>
+	
+	<target name="jsunittest-run">
+		<echo>Running JS unit tests</echo>
+		<exec executable="www/js/tests/${phantomjs.script}" 
+			resultproperty="jsunittest.returncode"
+			failifexecutionfails="false">
+		    <arg value="www/js/tests/qrunner.js"/>
+		    <arg value="www/js/tests/FewiJsTests.html"/>
+		 </exec>
+		<condition property="jsunittest.returncode" value="1">
+		    <not>
+		        <isset property="jsunittest.returncode"/>
+		    </not>
+		</condition>
+		<condition property="jsunittest.failure">
+            <isfailure code="${jsunittest.returncode}"/>
+        </condition>
+	</target>
 				
+	<target name="jsunittest-warning" if="jsunittest.failure">
+		<echo>WARNING: Javascript unit tests either have failures or simply failed to run</echo>
+	</target>
+	
+
+	
+	<!-- Copies JS files to build directory, minifies if js.minify is set -->
+	<target name="static-content-package">
+		<!-- Copy JS files into build directory -->
+		<copy todir="www/js" overwrite="true">
+			  <fileset dir="www/js/src">
+			    <include name="**/*.js"/>
+			  </fileset>
+		</copy>
+		<antcall target="static-content-minify" />
+	</target>
+	
+	<!-- minimize all static *.js content -->
+	<target name="static-content-minify" if="js.minify">
+		<echo>Minifying JS files. Unset prop js.minify to disable minification.</echo>
+	    <taskdef name="yuicompressor"
+	             classname="com.metrosix.yuicompressor.anttask.YuiCompressorTask">
+	    	<classpath refid="libs" />
+	    </taskdef>
+
+	    <yuicompressor todir="www/js" charset="utf-8" 
+	        preserveallsemicolons="true" munge="true" >
+	        <fileset dir="www/js/src">
+	            <include name="**/*.js"/>
+	        </fileset>
+	    </yuicompressor>
+	</target>
+	
+	<!-- Clean static content -->
+	<target name="static-content-cleanup">
+		<delete>
+			<fileset dir="www/js/">
+				<include name="*.js"/>
+			</fileset>
+		</delete>
+		<delete dir="www/js/widgets" />
+	</target>
+	
+	
 	<!--war -->
-	<target name="war" depends="unittest">
+	<target name="war" depends="unittest,jsunittest,static-content-package">
 		<echo>Build war file</echo>
 		<copy file="./www/WEB-INF/properties/excelviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
 			<fileset dir="www" />
+			<exclude name="www/js/tests/**" />
+			<exclude name="www/js/src/**" />
 		</war>
+		
+		<!-- Clear minified js build files -->
+		<antcall target="static-content-cleanup"/>
 	</target>
-
 
 	<!--deploy -->
 	<target name="deploy" depends="war">
@@ -203,12 +273,10 @@
 		<move file="${project.name}.war" todir="${deploy.dir}" overwrite="true" />
 	</target>
 
-
-        <!--deploy-ds -->
-        <target name="deploy-ds" >
-                <echo>Deploy datasource</echo>
-                <copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
-                <copy file="${jdbcdriver}" todir="${deploy.dir}" overwrite="true"/>
-        </target>
-
+    <!--deploy-ds -->
+    <target name="deploy-ds" >
+            <echo>Deploy datasource</echo>
+            <copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
+            <copy file="${jdbcdriver}" todir="${deploy.dir}" overwrite="true"/>
+    </target>
 </project>

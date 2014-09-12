@@ -104,6 +104,7 @@ ${templateBean.templateBodyStartHtml}
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
+<%@ include file="/WEB-INF/jsp/gxd_summary_js.jsp" %>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_by_marker_query.js">
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>

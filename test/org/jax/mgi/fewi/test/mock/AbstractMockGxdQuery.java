@@ -80,11 +80,11 @@ public class AbstractMockGxdQuery implements MockQuery
 	}
 	public void setStructure(String structure)
 	{
-		gqf.setStructure(structure);
+		gqf.setStructureID(structure);
 	}
 	public void setDifStructure(String difStructure)
 	{
-		gqf.setDifStructure(difStructure);
+		gqf.setDifStructureID(difStructure);
 	}
 	public void setIsWildType(boolean isWildType)
 	{
@@ -94,6 +94,11 @@ public class AbstractMockGxdQuery implements MockQuery
 	public void setMutatedIn(String mutatedIn)
 	{
 		gqf.setMutatedIn(mutatedIn);
+	}
+	
+	public void setLocations(String locations)
+	{
+		gqf.setLocations(locations);
 	}
 
 	

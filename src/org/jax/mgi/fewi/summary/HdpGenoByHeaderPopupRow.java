@@ -6,8 +6,8 @@ import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.util.HdpGridMapper;
-import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
+import org.jax.mgi.fewi.matrix.HdpGridMapper;
+import org.jax.mgi.fewi.matrix.HdpGridMapper.GridCell;
 
 
 /**

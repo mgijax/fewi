@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.List;
 
+import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+
 public class SolrAssayResult implements SolrGxdEntity
 {
 	private String jNum;

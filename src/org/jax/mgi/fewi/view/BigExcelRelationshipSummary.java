@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mgi.frontend.datamodel.MarkerTissueCount;
-
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -16,7 +14,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
 public class BigExcelRelationshipSummary extends AbstractBigExcelView {
 
 	@Override
-	protected void buildExcelDocument(Map model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		Sheet sheet = workbook.createSheet();			
 		Row row;
@@ -37,6 +35,7 @@ public class BigExcelRelationshipSummary extends AbstractBigExcelView {
 		row.createCell(col++).setCellValue("ReferenceId");
 		row.createCell(col++).setCellValue("Notes");
 
+		@SuppressWarnings("unchecked")
 		List<SolrInteraction> relationships = (List<SolrInteraction>) model.get("results");
 		for (SolrInteraction r : relationships) {
 			row = sheet.createRow(rownum++);

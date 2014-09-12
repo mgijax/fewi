@@ -7,16 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jax.mgi.fewi.controller.MarkerTissueCountController;
 import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import mgi.frontend.datamodel.MarkerTissueCount;
 
 public class TextRelationshipSummary extends AbstractTextView {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     
 	@Override
 	protected void buildTextDocument(
@@ -29,6 +22,7 @@ public class TextRelationshipSummary extends AbstractTextView {
 		response.setHeader("Content-Disposition","attachment; filename=\"relationshipReport.txt\"");
 		System.out.println(response.getCharacterEncoding());
 		
+		@SuppressWarnings("unchecked")
 		List<SolrInteraction> relationships = (List<SolrInteraction>) model.get("results");
 		
 		writer.write("OrganizerID\tOrganizerSymbol\tRelationshipTerm\tParticipantID\tParticipantSymbol\tEvidenceCode\tScore\tScoreSource\tValidation\tReferenceId\tNotes\r\n");

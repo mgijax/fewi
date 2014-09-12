@@ -8,11 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 // external
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 // data model objects
 import mgi.frontend.datamodel.Marker;
@@ -74,7 +72,7 @@ public class InteractionController {
 	// instance variables
 	//--------------------//
 
-	private Logger logger
+	private final Logger logger
 	= LoggerFactory.getLogger(InteractionController.class);
 
 	@Autowired
@@ -154,7 +152,7 @@ public class InteractionController {
 
 	    logger.debug("Params: " + params);
 		
-	    SearchResults sr = interactionFinder.getInteraction(params);
+	    SearchResults<SolrInteraction> sr = interactionFinder.getInteraction(params);
 	    List<SolrInteraction> interactionList = sr.getResultObjects();
 	    logger.debug("Controller received " + interactionList.size()
 		+ " SolrInteraction objects");
@@ -175,8 +173,9 @@ public class InteractionController {
 	    StringBuffer ids = new StringBuffer();
 		
 	    // add the input IDs first
-	    Map<String,String[]> parms = request.getParameterMap();
-	    List<String> inputIDs = (List<String>) Arrays.asList(
+	    @SuppressWarnings("unchecked")
+		Map<String,String[]> parms = request.getParameterMap();
+	    List<String> inputIDs = Arrays.asList(
 		parms.get("markerIDs"));
 
 	    for (String myId : inputIDs) {
@@ -227,15 +226,6 @@ public class InteractionController {
 		// 'request' has a 'markerIDs' field that is a comma-separated list of
 		// marker IDs.  Parse this into filters.
 
-		/*
-	String markerIDs = request.getParameter("markerIDs");
-	ArrayList<Filter> idFilters = new ArrayList<Filter>();
-	if (markerIDs != null) {
-	    for (String id : markerIDs.split(",")) {
-		idFilters.add(new Filter(SearchConstants.MRK_ID, id.trim()) );
-	    }
-	}
-		 */
 		int pageSizeInt = 25;
 		String pageSize = request.getParameter("pageSize");
 
@@ -266,7 +256,7 @@ public class InteractionController {
 
 		// find the requested interaction objects
 
-		SearchResults sr = interactionFinder.getInteraction(sp);
+		SearchResults<SolrInteraction> sr = interactionFinder.getInteraction(sp);
 		List<SolrInteraction> interactionList = sr.getResultObjects();
 		logger.debug("Controller received " + interactionList.size() + " SolrInteraction objects");
 
@@ -324,7 +314,7 @@ public class InteractionController {
 
 		SearchParams sp = new SearchParams();
 		sp.setFilter(Filter.or(idFilters));
-		SearchResults sr = interactionFinder.getInteraction(sp);
+		SearchResults<SolrInteraction> sr = interactionFinder.getInteraction(sp);
 
 		ModelAndView mav = new ModelAndView("relationshipSummaryReport");
 		mav.addObject("markerIDs", markerIDs);	
@@ -332,28 +322,6 @@ public class InteractionController {
 		return mav;			
 	}
 
-	/*
-	 * This method maps requests for the foo facet list.  The results are
-	 * returned as JSON.  
-	 */
-	/*
-	@RequestMapping("/facet/foo")
-	public @ResponseBody Map<String, List<String>> facetAuthor(
-			@ModelAttribute FooQueryForm query) {
-		// perform query and return results as json
-		logger.debug("get filter facets here");
-
-		SearchResults<String> results = new SearchResults<String>();
-		// hard-coded results for example purposes
-		List<String> foos = new ArrayList<String>();
-		foos.add("foo 1");
-		foos.add("foo 2");
-		foos.add("foo 3");
-		results.setResultFacets(foos);
-
-		return this.parseFacetResponse(results);
-	}
-	 */
 	//--------------------------------------------------------------------//
 	// private methods
 	//--------------------------------------------------------------------//
@@ -426,7 +394,7 @@ public class InteractionController {
 		
 		logger.debug("Params: " + params);
 		
-		SearchResults sr = interactionFinder.getInteraction(params);
+		SearchResults<SolrInteraction> sr = interactionFinder.getInteraction(params);
 		List<SolrInteraction> interactionList = sr.getResultObjects();
 		logger.debug("Controller received " + interactionList.size() + " SolrInteraction objects");
 
@@ -485,53 +453,6 @@ public class InteractionController {
 		return "forward:/mgi/batch/forwardSummary";
 	}
 
-
-	
-
-	/*
-	 * This is a convenience method to handle packing the SearchParams object
-	 * and return the SearchResults from the finder.
-	 */
-	/*
-	private SearchResults<Marker> getSummaryResults( HttpServletRequest request, 
-			@ModelAttribute FooQueryForm query,
-			@ModelAttribute Paginator page){
-
-        SearchParams params = new SearchParams();
-        params.setPaginator(page);
-        params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(query));
-
-        // perform query, return SearchResults 
-        return fooFinder.getFoos(params);
-	}
-	 */	
-	/*
-	 * This is a convenience method to parse the facet response from the 
-	 * SearchResults object, inspect it for error conditions, and return a 
-	 * map that the ui is expecting.
-	 */
-	/*
-	private Map<String, List<String>> parseFacetResponse(
-			SearchResults<String> facetResults) {
-
-		Map<String, List<String>> m = new HashMap<String, List<String>>();
-		List<String> l = new ArrayList<String>();
-
-		if (facetResults.getResultFacets().size() >= facetLimit){
-			logger.debug("too many facet results");
-			l.add("Too many results to display. Modify your search or try another filter first.");
-			m.put("error", l);
-		} else if (facetResults.getResultFacets().size() == 0) {
-			logger.debug("no facet results");
-			l.add("No values in results to filter.");
-			m.put("error", l);
-		} else {
-			m.put("resultFacets", facetResults.getResultFacets());
-		}
-		return m;
-	}
-	 */
 
 	/* traverse the items in the given list, split any items containing commas
 	 * into separate items, returning a new list containing the original items
@@ -606,24 +527,24 @@ public class InteractionController {
 	 * Map with two possible keys (error and resultFacets).
 	 */
 	private Map<String, List<String>> parseFacetResponse (
-			SearchResults<String> results, String order) {
+			SearchResults<SolrInteraction> results, String order) {
 
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
 
-		if (results.getRawResultFacets().size() >= facetLimit) {
+		if (results.getResultFacets().size() >= facetLimit) {
 			l.add("Too many results to display.  Modify your search or try another filter first.");
 			m.put("error", l);
-		} else if (results.getRawResultFacets().size() == 0) {
+		} else if (results.getResultFacets().size() == 0) {
 			l.add("No values in results to filter.");
 			m.put("error", l);
 		} else if (ALPHA.equals(order)) {
-			m.put("resultFacets", results.getResultFacets());
+			m.put("resultFacets", results.getSortedResultFacets());
 		} else if (RAW.equals(order)) {
-			m.put("resultFacets", results.getRawResultFacets());
+			m.put("resultFacets", results.getResultFacets());
 		} else {
 			// fallback on alpha if unknown ordering
-			m.put("resultFacets", results.getResultFacets());
+			m.put("resultFacets", results.getSortedResultFacets());
 		}
 		return m;
 	}
@@ -637,6 +558,7 @@ public class InteractionController {
 		// process fields one-by-one and dump them in a query form, then
 		// use the method to convert a QF to a Filter
 
+		@SuppressWarnings("unchecked")
 		Map<String,String[]> parms = request.getParameterMap();
 
 		Iterator<String> it = parms.keySet().iterator();
@@ -644,7 +566,7 @@ public class InteractionController {
 		while (it.hasNext()) {
 			String field = it.next();
 			List<String> values =
-					(List<String>) Arrays.asList(parms.get(field));
+					Arrays.asList(parms.get(field));
 
 			logger.debug("field: " + field);
 			logger.debug("values: " + values);
@@ -706,7 +628,7 @@ public class InteractionController {
 		SearchParams params = new SearchParams();
 		params.setFilter(this.parseInteractionQueryForm(qf));
 
-		SearchResults<String> facetResults = null;
+		SearchResults<SolrInteraction> facetResults = null;
 
 		if (FacetConstants.INT_SCORE.equals(facetType)) {
 			facetResults = interactionFinder.getScoreFacet(params);

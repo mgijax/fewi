@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Hunter for the EMAPA term autocomplete (structures for the GXD QF)
- * It queries all structures and their synonyms, and returns 
+ * It queries all structures and their synonyms, and returns
  * the matching field, plus the base structure name that it maps to.
  */
 
@@ -27,26 +27,26 @@ public class SolrEmapaACHunter extends SolrHunter<EmapaACResult>
      * its superclass, and then relies on the superclass to perform all of the
      * needed work via the hunt() method.
      */
-    public SolrEmapaACHunter() 
-    {        
+    public SolrEmapaACHunter()
+    {
         /*
          * Setup the property map.  This maps from the properties of the
 	 * incoming filter list to the corresponding field names in the Solr
 	 * implementation.
-         * 
+         *
          */
-    	
+
          propertyMap.put(SearchConstants.STRUCTURE,
 		new SolrPropertyMapper(IndexConstants.STRUCTUREAC_SYNONYM));
-   
+
         /*
          * The name of the field we want to iterate through the documents for
-         * and place into the output.  In this case we want to actually get a 
+         * and place into the output.  In this case we want to actually get a
          * specific field, and return it rather than a list of keys.
-         */  
+         */
         keyString = IndexConstants.STRUCTUREAC_STRUCTURE;
     }
-    
+
     /**
      * packInformation
      * @return List of keys
@@ -58,18 +58,18 @@ public class SolrEmapaACHunter extends SolrHunter<EmapaACResult>
     protected void packInformation(QueryResponse rsp, SearchResults<EmapaACResult> sr,
             SearchParams sp) {
 
-        // A list of all the primary keys in the document
+		logger.debug("SolrEmapaACHunter.packInformation");
 
+        // A list of all the primary keys in the document
         SolrDocumentList sdl = rsp.getResults();
 
         /**
          * Iterate through the response documents, extracting the information
          * that was configured at the implementing class level.
          */
-
         for (SolrDocument doc : sdl)
         {
-            
+
             // Set the result object
             String structure = (String) doc.getFieldValue(
 		IndexConstants.STRUCTUREAC_STRUCTURE);
@@ -85,18 +85,18 @@ public class SolrEmapaACHunter extends SolrHunter<EmapaACResult>
 		IndexConstants.GXD_END_STAGE);
 	    String accID = (String) doc.getFieldValue(IndexConstants.ACC_ID);
 
-            EmapaACResult resultObject = new EmapaACResult (structure, 
+            EmapaACResult resultObject = new EmapaACResult (structure,
 		synonym, isStrictSynonym, hasCre);
 	    resultObject.setStartStage(startStage);
 	    resultObject.setEndStage(endStage);
 	    resultObject.setAccID(accID);
-            
+
             // Add result to SearchResults
             sr.addResultObjects(resultObject);
         }
     }
-    
+
 	@Value("${solr.emapa_ac.url}")
-	public void setSolrUrl(String solrUrl) 
+	public void setSolrUrl(String solrUrl)
 	{ super.solrUrl = solrUrl; }
 }

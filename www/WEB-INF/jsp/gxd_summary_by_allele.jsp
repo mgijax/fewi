@@ -104,7 +104,7 @@ ${templateBean.templateBodyStartHtml}
     var querystring = "alleleId=${allele.primaryID}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
-
+<%@ include file="/WEB-INF/jsp/gxd_summary_js.jsp" %>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>
 <script type="text/javascript">

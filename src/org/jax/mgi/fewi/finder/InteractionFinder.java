@@ -1,27 +1,20 @@
 package org.jax.mgi.fewi.finder;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.text.DecimalFormat;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.hibernate.SessionFactory;
+import org.jax.mgi.fewi.hunter.SolrInteractionDataSourceFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrInteractionHunter;
 import org.jax.mgi.fewi.hunter.SolrInteractionTermFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrInteractionValidationFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrInteractionDataSourceFacetHunter;
-import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +33,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class InteractionFinder 
 {
-    private Logger logger = LoggerFactory.getLogger(InteractionFinder.class);
+    private final Logger logger = LoggerFactory.getLogger(InteractionFinder.class);
     
     @Autowired
     private SessionFactory sessionFactory;
@@ -62,38 +55,38 @@ public class InteractionFinder
      * parameters (to support the new interaction explorer)
      */
     public SearchResults<SolrInteraction> getInteraction (
-	SearchParams searchParams) {
+    		SearchParams searchParams) {
 
-	logger.debug("->InteractionFinder.getInteraction()");
-
-	// result object to be returned
-	SearchResults<SolrInteraction> searchResults =
-	    new SearchResults<SolrInteraction>();
-
-	// ask the hunter to identify which objects to return
-	interactionHunter.hunt(searchParams, searchResults);
-	logger.debug("->hunter found "
-	    + searchResults.getResultObjects().size() + " interaction relationships");
-
-	return searchResults;
+		logger.debug("->InteractionFinder.getInteraction()");
+	
+		// result object to be returned
+		SearchResults<SolrInteraction> searchResults =
+		    new SearchResults<SolrInteraction>();
+	
+		// ask the hunter to identify which objects to return
+		interactionHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found "
+		    + searchResults.getResultObjects().size() + " interaction relationships");
+	
+		return searchResults;
     }
 
-    public SearchResults<String> getValidationFacet(SearchParams params) {
-	SearchResults<String> results = new SearchResults<String>();
-	intValidationFacetHunter.hunt (params, results);
-	return results;
+    public SearchResults<SolrInteraction> getValidationFacet(SearchParams params) {
+		SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
+		intValidationFacetHunter.hunt (params, results);
+		return results;
     }
 
-    public SearchResults<String> getInteractionFacet(SearchParams params) {
-	SearchResults<String> results = new SearchResults<String>();
-	intTermFacetHunter.hunt (params, results);
-	return results;
+    public SearchResults<SolrInteraction> getInteractionFacet(SearchParams params) {
+		SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
+		intTermFacetHunter.hunt (params, results);
+		return results;
     }
 
-    public SearchResults<String> getDataSourceFacet(SearchParams params) {
-	SearchResults<String> results = new SearchResults<String>();
-	intDataSourceFacetHunter.hunt (params, results);
-	return results;
+    public SearchResults<SolrInteraction> getDataSourceFacet(SearchParams params) {
+		SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
+		intDataSourceFacetHunter.hunt (params, results);
+		return results;
     }
 
     /** special method to truncate the 'score' to a three decimal places, with
@@ -131,11 +124,11 @@ public class InteractionFinder
 	}
     }
 
-    public SearchResults<String> getScoreFacet(SearchParams params) {
+    public SearchResults<SolrInteraction> getScoreFacet(SearchParams params) {
 	List<Sort> sorts = new ArrayList<Sort>();
 
 	logger.debug("Entering getScoreFacet()");
-	SearchResults<String> results = new SearchResults<String>();
+	SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
 
 	// We just want one record returned from each end of the data set.
 

@@ -24,5 +24,7 @@ tr.gray td {background-color:#EEEEEE;}
 .regressHi {background-color:#FFAB57;} /*medium-orange*/
 .regressLo {background-color:#90DDF5;} /*light blue*/
 
+.autoMark { font-size: 80%; font-style: italic; color: cornflowerblue; }
+
 /*  p {color:blue;}
 li,b {color:red;} */

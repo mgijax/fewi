@@ -2,8 +2,10 @@ package org.jax.mgi.fewi.searchUtil.entities;
 
 import java.util.List;
 
-public class SolrGxdImage implements SolrGxdEntity
-{
+import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+
+public class SolrGxdImage implements SolrGxdEntity {
+
 	Integer imagePaneKey;
 	String imageID;
 	String pixeldbID;
@@ -111,5 +113,5 @@ public class SolrGxdImage implements SolrGxdEntity
 
 	public void setImageHeight(Integer imageHeight) {
 		this.imageHeight = imageHeight;
-	}	
+	}
 }

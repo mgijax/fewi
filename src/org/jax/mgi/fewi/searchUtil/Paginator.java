@@ -6,6 +6,12 @@ public class Paginator {
 	private Integer results;
 	private Integer resultsDefault = 25;
 
+	// shortcut to query all results
+	public static Paginator ALL_PAGES = new Paginator();
+	static {
+		ALL_PAGES.setResults(1000000000);
+	}
+	
 	public Paginator() {}
 	public Paginator(Integer results)
 	{
@@ -32,7 +38,6 @@ public class Paginator {
 	public void setResultsDefault(Integer resultsDefault) {
 		this.resultsDefault = resultsDefault;
 	}
-
 
     // toString for debugging purposes
 	@Override

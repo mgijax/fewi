@@ -168,15 +168,18 @@ public class SolrHunter<T> implements Hunter<T> {
      */
 
 	public void hunt(SearchParams searchParams, SearchResults<T> searchResults) {
-    	hunt(searchParams,searchResults, null, null);
+    	hunt(searchParams,searchResults, null, null,null);
     }
 
 	public void hunt(SearchParams searchParams,SearchResults<T> searchResults,String groupField) {
-    	hunt(searchParams,searchResults, groupField, null);
+    	hunt(searchParams,searchResults, groupField, null,null);
     }
 
 	public void joinHunt(SearchParams searchParams,SearchResults<T> searchResults,String joinField){
-    	hunt(searchParams,searchResults, null, joinField);
+    	hunt(searchParams,searchResults, null, joinField,null);
+    }
+	public void joinHunt(SearchParams searchParams,SearchResults<T> searchResults,String joinField,String extraJoinClause){
+    	hunt(searchParams,searchResults, null, joinField,extraJoinClause);
     }
 
     /**
@@ -189,7 +192,7 @@ public class SolrHunter<T> implements Hunter<T> {
      *
      */
 
-    public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField,String joinField) {
+    public void hunt(SearchParams searchParams, SearchResults<T> searchResults, String groupField,String joinField,String extraJoinClause) {
 
         // Invoke the hook, editing the search params as needed.
         searchParams = this.preProcessSearchParams(searchParams);
@@ -217,7 +220,7 @@ public class SolrHunter<T> implements Hunter<T> {
         // If a join field is specified add the join clause to the beginning of the query string
         if(doJoin)
         {
-        	queryString = this.joinIndices.get(joinField).getJoinClause(queryString);
+        	queryString = this.joinIndices.get(joinField).getJoinClause(queryString,extraJoinClause);
         }
         query.setQuery(queryString);
         
@@ -474,7 +477,7 @@ public class SolrHunter<T> implements Hunter<T> {
         server.setFollowRedirects(false);  // defaults to false
         server.setAllowCompression(true);
         server.setMaxRetries(maxRetries);
-
+        
         return server;
     }
 
