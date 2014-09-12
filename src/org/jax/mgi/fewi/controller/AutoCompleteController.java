@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.AutocompleteFinder;
@@ -39,8 +39,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import antlr.Parser;
 
 /*
  * This controller maps all /autocomplete/ uri's
@@ -431,7 +429,7 @@ public class AutoCompleteController {
 	 *  	Any token, matching an ID, will be replaced with the term it matches.
 	 */
 	@RequestMapping("/vocabTerm/resolve")
-	public @ResponseBody String resolveVocabTermId(@RequestParam("ids") String ids) {
+	public @ResponseBody HashMap<String, String> resolveVocabTermId(@RequestParam("ids") String ids) {
 		
 		/*
 		 *  Honestly, I am too lazy to figure out how to get StringUtils.replaceEach() to do case-insensitive matching (which I don't think it does).
@@ -440,10 +438,18 @@ public class AutoCompleteController {
 		 *  		I am putting in this hack.
 		 *  	-kstone
 		 */
+		BooleanSearch bs = new BooleanSearch();
 		ids = ids.replaceAll("mp:","MP:");
+		ids = bs.sanitizeInput(ids.replace(",", ""));
+		
+		HashMap<String, String> ret = new HashMap<String, String>();
 
 		SearchResults<VocabACResult> results = resolveVocabTermIdQuery(ids);
-		if(results==null) return ids;
+		
+		if(results==null) {
+			ret.put("ids", ids);
+			return ret;
+		}
 		
 		// if there are any hits, map them here
 		Set<String> duplicates = new HashSet<String>();
@@ -463,20 +469,45 @@ public class AutoCompleteController {
 			index++;
 		}
 		
-		Filter f;
-
-		BooleanSearch bs = new BooleanSearch();
-		f = bs.buildSolrFilter(SearchConstants.VOC_TERM, ids.replace(",", ""));
+		
+		
+		
+		Filter f = bs.buildSolrFilter(SearchConstants.VOC_TERM, ids);
 		
 		if(f != null) {
 			PrettyFilterPrinter pfp = new PrettyFilterPrinter();
 			f.Accept(pfp);
 			String out = pfp.generateOutput();
-			logger.info("Pretty String: " + out);
-			return StringUtils.replaceEach(out,searchList,replacementList);
+			logger.info("Modified Query String: " + out);
+			ret.put("ids", StringUtils.replaceEach(out,searchList,replacementList));
 		} else {
-			return StringUtils.replaceEach(ids,searchList,replacementList);
+			f = generateTermFilter(ids);
+			PrettyFilterPrinter pfp = new PrettyFilterPrinter();
+			f.Accept(pfp);
+			String out = pfp.generateOutput();
+			logger.info("Modified Query due to Error: " + ids);
+			ret.put("ids", StringUtils.replaceEach(out,searchList,replacementList));
+			ret.put("error", bs.getHtmlErrorString());
 		}
+		return ret;
+	}
+	
+	private Filter generateTermFilter(String ids){
+		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
+		List<Filter> filters = new ArrayList<Filter>();
+		if(idTokens.size()>0)
+		{
+			List<Filter> idFilters = new ArrayList<Filter>();
+			for(String idToken : idTokens)
+			{
+				idFilters.add(new Filter(SearchConstants.VOC_TERM_ID,idToken,Filter.Operator.OP_EQUAL));
+			}
+			filters.add(Filter.or(idFilters));
+		}
+		if(filters.size() > 0) {
+			return Filter.or(filters);
+		}
+		return null;
 	}
 	
 	private SearchResults<VocabACResult> resolveVocabTermIdQuery(String ids) {

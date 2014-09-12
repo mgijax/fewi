@@ -47,7 +47,7 @@ public class BooleanSearch  {
 	 * remove empty double quotes
 	 * remove empty parens
 	 */
-	private String sanitizeInput(String s) {
+	public String sanitizeInput(String s) {
 		s = QueryParser.removeUnmatched(s,'"');
 		s = QueryParser.removeUnmatched(s,'(',')');
 		s = s.replace("\"\""," ");

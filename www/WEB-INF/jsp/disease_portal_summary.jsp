@@ -24,7 +24,7 @@
 <div id="summary">
     <div id="paginationTop" style="float:right;">&nbsp;</div>
     <div id="querySummary" style="float:none;margin-left:0;">
-        <div class="innertube" style="width:500px">
+        <div class="innertube" style="width:900px">
             <div id="searchSummary"> <!-- filled via js --> </div>
             <div id="breadbox"><div id="gridFilterIndicator" class="hide">
             	<span id="filterReset" class="filterItem">Remove Filters</span>

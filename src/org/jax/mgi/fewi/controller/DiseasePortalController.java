@@ -1280,7 +1280,7 @@ public class DiseasePortalController
 			BooleanSearch bs = new BooleanSearch();
 			phenoFilter = bs.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", ""));
 			if(phenoFilter == null) {
-				logger.warn("Error with Query: " + phenotypes + " " + bs.getErrorMessage());
+				logger.warn("Error with Query: \n" + phenotypes + " " + bs.getErrorMessage());
 				phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
 			}
 			

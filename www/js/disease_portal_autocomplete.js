@@ -21,8 +21,14 @@ var resolveVocabTermIds = function()
 		data: data
 	});
 	request.done(function (response, textStatus, jqXHR){
-		if(textStatus=="success") $("#ysf-phenotypes").text(response);
-    })
+		if(textStatus=="success") {
+			$("#ysf-phenotypes").text(response.ids);
+			if(response.error) {
+				$("#errorTextString").html(response.error);
+				$("#errorTextMessage").show();
+			}
+		}
+   })
 }
 
 var getErrorMessages = function()
