@@ -14,7 +14,7 @@
 
 # Overrides value normally set in GlobalConfig.properties.
 #FEWI_URL=http://server.informatics.jax.org/
-FEWI_URL=http://localhost.jax.org:8080/fewi/mgi/
+FEWI_URL=http://localhost.jax.org/
 
 
 #----- solr server urls -----#

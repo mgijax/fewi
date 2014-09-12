@@ -25,7 +25,7 @@ public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface
 			if(filter.doNegation()) {
 				printni("NOT ");
 			}
-			if(filter.getValue().split(" ").length > 1) { 
+			if(filter.getValue() != null && filter.getValue().split(" ").length > 1) {
 				printni("\"" + filter.getValue() + "\"");
 			} else {
 				printni(filter.getValue());

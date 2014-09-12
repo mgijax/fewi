@@ -25,6 +25,11 @@ var resolveVocabTermIds = function()
     })
 }
 
+var getErrorMessages = function()
+{
+	//alert("Blah");
+}
+
 //set up any autocomplete behavior
 
 /*

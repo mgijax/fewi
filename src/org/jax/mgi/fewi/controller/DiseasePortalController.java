@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
-import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
@@ -56,7 +54,6 @@ import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -1279,12 +1276,14 @@ public class DiseasePortalController
 		if(notEmpty(phenotypes))
 		{
 			Filter phenoFilter;
-			try {
-				phenoFilter = BooleanSearch.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", ""));
-			} catch (RecognitionException e) {
+			// TODO so I can find this place in the code
+			BooleanSearch bs = new BooleanSearch();
+			phenoFilter = bs.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", ""));
+			if(phenoFilter == null) {
+				logger.warn("Error with Query: " + phenotypes + " " + bs.getErrorMessage());
 				phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
 			}
-			// TODO see if this works?
+			
 			logger.info("Filters: " + phenoFilter);
 			if(phenoFilter != null) qFilters.add(phenoFilter);
 		}

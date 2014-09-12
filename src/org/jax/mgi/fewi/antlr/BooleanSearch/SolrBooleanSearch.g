@@ -19,6 +19,13 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.apache.solr.client.solrj.util.ClientUtils;
 }
 
+@rulecatch {
+  catch (RecognitionException re) {
+    //Custom handling of an exception. Any java code is allowed.
+    throw re;
+  }
+}
+
 @lexer::header {package org.jax.mgi.fewi.antlr.BooleanSearch;}
 
 @members {

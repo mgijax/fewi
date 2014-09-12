@@ -569,7 +569,9 @@ public class AlleleController {
 		 String phenotype = query.getPhenotype();
 		 if(notEmpty(phenotype))
 		 {
-			 filters.add(BooleanSearch.buildSolrFilter(SearchConstants.ALL_PHENOTYPE,phenotype));
+			 BooleanSearch bs = new BooleanSearch();
+			 Filter f = bs.buildSolrFilter(SearchConstants.ALL_PHENOTYPE,phenotype);
+			 filters.add(f);
 		 }
 
 		 // Nomenclature

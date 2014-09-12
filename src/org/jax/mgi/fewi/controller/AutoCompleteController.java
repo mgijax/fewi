@@ -40,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import antlr.Parser;
+
 /*
  * This controller maps all /autocomplete/ uri's
  */
@@ -439,7 +441,7 @@ public class AutoCompleteController {
 		 *  	-kstone
 		 */
 		ids = ids.replaceAll("mp:","MP:");
-		// TODO parse query in a boolean sorta way
+
 		SearchResults<VocabACResult> results = resolveVocabTermIdQuery(ids);
 		if(results==null) return ids;
 		
@@ -462,21 +464,15 @@ public class AutoCompleteController {
 		}
 		
 		Filter f;
-		String out = null;
-		try {
-			f = BooleanSearch.buildSolrFilter(SearchConstants.VOC_TERM, ids.replace(",", ""));
+
+		BooleanSearch bs = new BooleanSearch();
+		f = bs.buildSolrFilter(SearchConstants.VOC_TERM, ids.replace(",", ""));
+		
+		if(f != null) {
 			PrettyFilterPrinter pfp = new PrettyFilterPrinter();
 			f.Accept(pfp);
-			out = pfp.generateOutput();
+			String out = pfp.generateOutput();
 			logger.info("Pretty String: " + out);
-
-		} catch (RecognitionException e) {
-			e.printStackTrace();
-		}
-		// replace each search string with its corresponding replacement string
-		// 	I.e. every occurrence of searchList[0] is replaced by replacementList[0], and so on
-		
-		if(out != null) {
 			return StringUtils.replaceEach(out,searchList,replacementList);
 		} else {
 			return StringUtils.replaceEach(ids,searchList,replacementList);

@@ -15,7 +15,8 @@ public class BooleanSearchTest {
 		System.out.println(sanitize("cell AND \"or this\" with\" lane(box))))(("));
 		
 		// test making a Filter
-		Filter f = BooleanSearch.buildSolrFilter("hi","cell AND lane NOT(clean)))(boring)");
+		BooleanSearch bs = new BooleanSearch();
+		Filter f = bs.buildSolrFilter("hi","cell AND lane NOT(clean)))(boring)");
 		System.out.println(f);
 	}
 	

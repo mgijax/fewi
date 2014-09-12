@@ -1453,7 +1453,9 @@ public class MarkerController {
 		 String phenotype = query.getPhenotype();
 		 if(notEmpty(phenotype))
 		 {
-			 queryFilters.add(BooleanSearch.buildSolrFilter(SearchConstants.PHENOTYPE,phenotype));
+			 BooleanSearch bs = new BooleanSearch();
+			 Filter f = bs.buildSolrFilter(SearchConstants.PHENOTYPE,phenotype);
+			 queryFilters.add(f);
 		 }
 
 		 //InterPro
@@ -1467,7 +1469,11 @@ public class MarkerController {
 //				 interproFilters.add(new Filter(SearchConstants.INTERPRO_TERM,token,Filter.OP_STRING_CONTAINS));
 //			 }
 //			 queryFilters.add(Filter.and(interproFilters));
-			 queryFilters.add(BooleanSearch.buildSolrFilter(SearchConstants.INTERPRO_TERM,interpro));
+			 
+			 BooleanSearch bs = new BooleanSearch();
+			 Filter f = bs.buildSolrFilter(SearchConstants.INTERPRO_TERM,interpro);
+			 queryFilters.add(f);
+
 		 }
 
 		 //GO
@@ -1493,7 +1499,10 @@ public class MarkerController {
 //				 }
 				 // AND the contains search tokens
 				 //goVocabFilters.add(Filter.and(containsFilters));
-				 goVocabFilters.add(BooleanSearch.buildSolrFilter(goVocab,go));
+				 
+				 BooleanSearch bs = new BooleanSearch();
+				 Filter f = bs.buildSolrFilter(goVocab,go);
+				 goVocabFilters.add(f);
 			 }
 			 // OR the query against each vocabulary (e.g. function,process,component)
 			 queryFilters.add(Filter.or(goVocabFilters));
