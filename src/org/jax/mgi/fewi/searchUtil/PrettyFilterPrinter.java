@@ -3,7 +3,6 @@ package org.jax.mgi.fewi.searchUtil;
 
 public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface {
 
-
 	public void Visit(Filter filter) {
 		
 		if(filter.getNestedFilters().size() > 0) {
@@ -28,9 +27,22 @@ public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface
 			if(filter.getValue() != null && filter.getValue().split(" ").length > 1) {
 				printni("\"" + filter.getValue() + "\"");
 			} else {
-				printni(filter.getValue());
+				if(
+					filter.getValue().equals("AND") ||
+					filter.getValue().equals("(AND") ||
+					filter.getValue().equals("AND)") ||
+					filter.getValue().equals("OR") ||
+					filter.getValue().equals("(OR") ||
+					filter.getValue().equals("OR)") ||
+					filter.getValue().equals("(NOT") ||
+					filter.getValue().equals("NOT)") ||
+					filter.getValue().equals("NOT")
+				) {
+					printni(filter.getValue().toLowerCase());
+				} else {
+					printni(filter.getValue());
+				}
 			}
 		}
 	}
-
 }
