@@ -90,11 +90,9 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Query for <b concordion:set="#disease">"abnormal aerobic respiration"</b> (by text) (MP:0010957).<br/>
                 (One genotype that should be associated is MGI:5294956 containing Ctf1&lt;tm1Msd&gt;.)</li>
-                <li>Verify that "Abdominal Obesity-Metabolic Syndrome 1; AOMS1", OMIM <b cc:assertResultsContain="getTermIdsByDisease(#disease)">605552</b> is returned.</li>
                 <li>Verify that "Diabetes Mellitus, Noninsulin-Dependent; NIDDM", OMIM <b cc:assertResultsContain="getTermIdsByDisease(#disease)">125853</b> is returned.</li>
                 <li>Query for <b concordion:set="#pheno">MP:0010957</b> (by ID) (abnormal aerobic respiration - same term as above).<br/>
                 (One genotype that should be associated is MGI:5294956 containing Ctf1&lt;tm1Msd&gt;.)</li>
-                <li>Verify that "Abdominal Obesity-Metabolic Syndrome 1; AOMS1", OMIM <b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">605552</b> is returned.</li>
                 <li>Verify that "Diabetes Mellitus, Noninsulin-Dependent; NIDDM", OMIM <b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">125853</b> is returned.</li>
     		</ol>
     		</li>
