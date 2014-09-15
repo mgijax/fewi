@@ -165,7 +165,7 @@ td.padded { padding:4px; }
           <br/>
           <c:forEach var="cluster" items="${marker.clusters}" varStatus="status">
               <a href="${configBean.FEWI_URL}marker/${cluster.relatedMarkerID}">${cluster.relatedMarkerSymbol}</a> cluster<c:if test="${!status.last}">, </c:if>
-	    
+
           </c:forEach>
       </c:if>
 
@@ -192,7 +192,7 @@ td.padded { padding:4px; }
 	      <input name='attributes' value='Nomenclature' type='hidden'>
 	      <input name='attributes' value='Location' type='hidden'>
 	      <input name='ids' value='${memberSymbols}' id='batchSymbolListWeb' type='hidden'>
-      </form> 
+      </form>
 
       <div id="clusterMemberDiv" class="" style="visibility:hidden">
 	 <div class="hd"> ${marker.symbol} Cluster contains:
@@ -210,7 +210,7 @@ td.padded { padding:4px; }
 	    </table>
 	 </div>
       </div>
-      </c:if> 
+      </c:if>
 
       </td><td style="text-align: right; vertical-align: middle;">
         <c:if test="${not empty biotypeConflictTable}">
@@ -610,7 +610,7 @@ td.padded { padding:4px; }
 	  <a id="interactionLink" href="${configBean.FEWI_URL}interaction/explorer?markerIDs=${marker.primaryID}" class="markerNoteButton" style='display:inline;'>View All</a>
 	</div>
 	</td></tr></table>
-      </td> 
+      </td>
     </tr>
   </c:if>
 
@@ -687,7 +687,10 @@ td.padded { padding:4px; }
 		  Tissues (<a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfGxdImages > 0}">
-		  Images (<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=imagestab">${marker.countOfGxdImages}</a>)
+		  Images (<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=imagestab">${marker.countOfGxdImages}</a>)&nbsp;&nbsp;&nbsp;
+		</c:if>
+		<c:if test="${marker.countOfGxdResults > 0}">
+		  Tissue x Stage Matrix (<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=stagegridtab">view</a>)
 		</c:if>
 		<br/>
 		<c:if test="${not empty marker.gxdResultCountsByStage}">
