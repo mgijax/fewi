@@ -92,8 +92,6 @@ and_expr	returns[Filter andExpression] @init { andExpression = new Filter(); and
 or_expr	returns[Filter orExpression] @init { orExpression = new Filter(); orExpression.setFilterJoinClause(Filter.JoinClause.FC_OR); }:	
 	t1=term { if(notEmpty(t1)) orExpression.addNestedFilter(t1); } ((OR)? t2=term { if(notEmpty(t2)) orExpression.addNestedFilter(t2); })*
 	;
-or_expr2 
-	:	term ((OR)? term)*;
 
 term	returns[Filter termNode] @init { termNode = new Filter(); boolean neg=false; }:	
 	(NOT { neg=true; })? s=str { termNode=s; if(neg) termNode.negate(); }

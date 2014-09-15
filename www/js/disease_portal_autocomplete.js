@@ -50,15 +50,22 @@ function extractLast( term ) {
 	if (typeof(term) == 'undefined') { return ""; }
 	var term = split( term ).pop();
 	var terms = term.split(/\s+/);
+	//console.log("T1: " + terms);
 	while(terms[0] == "") { terms.shift(); }
+	//console.log("T2: " + terms);
+	//console.log("TL: " + terms.length);
 	if(terms.length > 0) {
+		//console.log("1 terms[0]: " + terms[0]);
 		if(terms[0] == "AND" || terms[0] == "OR") {
 			terms.shift();
 		}
+		//console.log("2 terms[0]: " + terms[0]);
 		if(terms.length > 0 && terms[0] == "NOT") {
 			terms.shift();
 		}
+		//console.log("3 terms[0]: " + terms[0]);
 	}
+	//console.log("T3: " + terms);
 	if(terms.length > 0) {
 		return terms.join(" ");
 	} else {
@@ -86,6 +93,18 @@ $(function(){
 		if(this.value.slice(-2) == "\" ") {
 			// And a comma after the end of a quote
 			this.value = [this.value.slice(0, this.value.length -2), '",', ' '].join('');
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-4) == "AND ") {
+			this.value = [this.value.slice(0, this.value.length -4), 'AND,', ' '].join('');
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-4) == "NOT ") {
+			this.value = [this.value.slice(0, this.value.length -4), 'NOT,', ' '].join('');
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-3) == "OR ") {
+			this.value = [this.value.slice(0, this.value.length -3), 'OR,', ' '].join('');
 			$(".ui-autocomplete").hide();
 		}
 	})

@@ -1,11 +1,8 @@
 package org.jax.mgi.fewi.antlr.BooleanSearch;
 
-import java.util.List;
-
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.Token;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.util.QueryParser;
 
@@ -18,7 +15,6 @@ public class BooleanSearch  {
 	private String errorLine1 = "";
 	private String errorLine2 = "";
 	private String htmlErrorString = "";
-	private List<Token> ts;
 
 	private SolrBooleanSearchParser parser;
 

@@ -463,7 +463,7 @@ public class AutoCompleteController {
 			if(duplicates.contains(termId)) continue;
 			duplicates.add(termId);
 			
-			String replacement = result.getTermId() + "("+result.getOriginalTerm()+")";
+			String replacement = result.getOriginalTerm() + " - " + result.getTermId();
 			replacementList[index] = replacement;
 			searchList[index] = result.getTermId();
 			index++;
