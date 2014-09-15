@@ -284,6 +284,7 @@ tr.gray td {background-color:#EEEEEE;}
 						<tr><td>liver/biliary system</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
 						<tr><td>mortality/aging</td><td>When we implement these changes in popups, additional genotypes including allele Bic3&lt;tm1Jwb&gt; should go away.</td></tr>
 						<tr><td>nervous system</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
+						<tr><td>renal/urinary system</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
 						<tr><td>reproductive system</td><td>Associated only with genotypes also associated with the queried disease term.</td></tr>
 						<tr><td>respiratory system</td><td>When we implement these changes in popups, additional genotypes including allele Bic3&lt;tm1Jwb&gt; should go away.</td></tr>
 						<tr><td>skeleton</td><td>When we implement these changes in popups, additional genotypes including allele Bic3&lt;tm1Jwb&gt; should go away.</td></tr>
@@ -305,7 +306,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">MP:0010954</b> (abnormal cellular respiration) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click on the Grid tab and confirm the disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Optic Atrophy</b> is displayed.</li>
+                <li>Click on the Grid tab and confirm the disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Leber Optic Atrophy</b> is displayed.</li>
                 <li>Confirm the gene <b concordion:set="#row">mt-Nd6</b> <b>is displayed</b> and has a 
                 	<span class="hide" concordion:set="#column">Optic Atrophy</span>
                 	<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b> for this disease (same exact genotype for both MP and OMIM annotations).</li>
