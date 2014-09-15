@@ -308,7 +308,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Enter <b concordion:set="#pheno">MP:0010954</b> (abnormal cellular respiration) in the Phenotypes and Diseases section and hit search</li>
                 <li>Click on the Grid tab and confirm the disease <b cc:assertResultsContain="gridDiseaseIdsByPhenotype(#pheno)">Leber Optic Atrophy</b> is displayed.</li>
                 <li>Confirm the gene <b concordion:set="#row">mt-Nd6</b> <b>is displayed</b> and has a 
-                	<span class="hide" concordion:set="#column">Optic Atrophy</span>
+                	<span class="hide" concordion:set="#column">Leber Optic Atrophy</span>
                 	<b concordion:assertEquals="gridCheckForDiseaseByPhenotype(#pheno,#row,#column)">check</b> for this disease (same exact genotype for both MP and OMIM annotations).</li>
               	</ol>
 			</li>
