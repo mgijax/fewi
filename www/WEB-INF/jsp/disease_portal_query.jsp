@@ -11,13 +11,14 @@ ${templateBean.templateHeadHtml}
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 
 <!-- import jquery UI specifically for this page -->
 <link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 <script src="${configBean.WEBSHARE_URL}js/jquery-ui-1.10.2.custom.min.js"></script>
 
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 <%-- Please add styles to disease_portal.css
+Also disease_portal.css need to be imported last in order for the styles to override jquery-ui
 <style>
 </style>
 --%>
