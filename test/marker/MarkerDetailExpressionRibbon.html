@@ -30,7 +30,7 @@
     <h1>Expression Ribbon Tests</h1>
     <ul>
         <li>User story 22, E2: Add links to tissue x stage results</li>
-        <li>User story 196, Load and Link to Chicken Gene Expression Page</li>
+        <li><del>User story 196, Load and Link to Chicken Gene Expression Page</del> <i>Kicked story. Need to revise requirements and tests for new story. -klf 2014-09-17</i></li>
     </ul>
 </div>
 
@@ -50,12 +50,15 @@
 	<p>The Expression ribbon contains data about and links to GXD's expression assay results, tissues in which a marker has been assayed, and expression images. Links to the GXD Literature Index and to cDNA clones are included.  Links to external data sources are included.</p>
 	<ul>
 		<li>For each marker having expression results, add a link to the Tissue X Stage Matrix view tab which has been added to the expression results summary page. (sto22)</li>
+
+<!--  KICKED STO196. NEED TO REVISE THESE REQUIREMENTS WHEN WE PULL IN A STORY TO LOAD AND DISPLAY CHICKEN AND ZFIN ORTHOLOG EXPRESSION DATA. -klf 2014-09-17
         <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog. (sto196)</li>
         <li>When 2 or more chicken orthologs exist for a mouse marker, display a link when ONLY ONE of the orthologs has expression data. If 2 or more of the orthologs have expression data, do not link to any of them. (sto196)</li>
         <li>When 2 or more mouse orthologs exist for a chicken marker, display a link on each mouse marker detail page, following the rules above. (sto196)</li>
         <li>Display the link on a new line, below the External Resources line. (sto196)</li>
         <li>Label for the new line should be "Other Vertebrates:" and label for the link itself should be "GEISHA". (sto196)</li> 
         <li>Tests for data load requirements are in the <a href="../gxd/LoadExpressionOtherOrganisms.html">Load Expression for Other Organisms test suite</a>.</li> 
+-->
 	</ul>
 </div>
 
@@ -85,6 +88,9 @@
     		</ol>
     		</li>
     		
+
+<!--  KICKED STO196. NEED TO REVISE THESE TESTS WHEN WE PULL IN A STORY TO LOAD AND DISPLAY CHICKEN AND ZFIN ORTHOLOG EXPRESSION DATA. -klf 2014-09-17
+
     		<li>When a mouse marker has a no chicken ortholog, DO NOT display the "Other Vertebrates:" row. (sto196)
  			<p concordion:manual="false">new</p>
     		<ol>
@@ -140,6 +146,7 @@
                 <li><i>Need to find an example.</i></li>
     		</ol>
     		</li>
+-->
 
 		</ol>
 	</div>
