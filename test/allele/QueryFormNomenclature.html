@@ -215,11 +215,11 @@ tr.gray td {background-color:#EEEEEE;}
     			<li>Testing to verify that tokens are combined using AND not OR
 				<ol>
 				<li>open the Allele query form</li>
-				<li>type <b concordion:set="#query">RIKEN 0610031J06</b> in the nomenclature field</li>
-				<li>Verify that only 0610031J06Rik alleles are returned by verifying the correct marker symbols:
+				<li>type <b concordion:set="#query">RIKEN 1110057K04</b> in the nomenclature field</li>
+				<li>Verify that only 1110057K04Rik alleles are returned by verifying the correct marker symbols:
 					<table cc:verifyRowsUnordered="#result : getMarkerSymbolsByNomen(#query)">
 						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
-					    <tr><td>0610031J06Rik</td></tr>
+					    <tr><td>1110057K04Rik</td></tr>
 					</table>
 				</li>
 				</ol>    		
