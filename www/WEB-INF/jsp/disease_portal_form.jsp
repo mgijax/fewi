@@ -73,10 +73,10 @@
     <div style="position:absolute; top:2px; left:254px; width:300px;">
     <div class='relativePos'>
       <div style="position:absolute; top:6px; left:15px; ">
-        <span class='queryHeaderText'>Search by genome locations</span></br>
-        <div style='margin-left:6px; padding-top:5px;'>
-        <label><input id="organismHuman1" name="organism" class="organism" type="radio" value="human"/>Human(GRCh38)</label>
-        <label><input id="organismMouse1" name="organism" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
+        <span class='queryHeaderText'>Search by genome locations</span>
+        <div style='padding-top:42px;font-size:smaller;'>
+        <label><input id="organismHuman1" name="organism" type="radio" value="human"/>Human(GRCh38)</label>
+        <label><input id="organismMouse1" name="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
         </div>
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
@@ -93,8 +93,10 @@
     <div style="position:absolute; top:2px; left:546px; width:250px;">
     <div class='relativePos'>
       <div style="position:absolute; top:6px; left:15px; ">
-        <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span><br />
-	<span style="font-style: italic;font-size: 11px;">Click "GO" to search by entered text without selecting a term from the list.</span>
+        <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span>
+			<div style="padding-top: 12px;">
+        <span style="font-style: italic;font-size: 11px;">Click "GO" to search by entered text without selecting a term from the list.</span>
+			</div>
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
@@ -120,15 +122,9 @@
       style="position:absolute; top:319px; left:710px; width:60px; font-size:14px;" type="reset" >
     </form:form>
 
-    <div style="position:absolute; top:235px; left:20px; width:600px;">
-		<br/>
-      <div style='font-size:150%;'>
-        ------------------------------------------------------------------------
-      </div>
-      <form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
-		id="hiddenFileForm" name="hiddenFileForm" target="hiddenfileform_if">
-       <div style='margin-top:6px; margin-left:20px;'>
-        <span style="font-size:150%;">Upload a VCF File: <input id="locationsFileInput" type="file" name="file"></span>
+
+
+	<div style="position:absolute; top:227px; left:380px; z-index: 2;">
         <img id="locationsFileHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
 		<div id="locationsFileHelp">
 			<div class="hd">VCF File Uploading Tips</div>
@@ -157,26 +153,32 @@
 					Save as a tab-delimited file in a format other than Unicode.</p>
 			</div>
 		</div>
-      </div>
-      <div style='margin-left:220px; padding-top:5px;'>
+	</div>
 
-      	<label><input id="enableVcfFilter" name="enableVcfFilter" type="checkbox" value="true" class="organism" checked="checked"/>Apply filters</label>
+    <div style="position:absolute; top:255px; left:240px; ">
+      <form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data" id="hiddenFileForm" name="hiddenFileForm" target="hiddenfileform_if">
+       <div style='margin-left:20px;'>
+        Upload a VCF File:<br/> <input id="locationsFileInput" type="file" name="file">
+      </div>
+      <div style='margin-left:20px; padding-top:5px; font-size: smaller;'>
+
+      	<label><input id="enableVcfFilter" name="enableVcfFilter" type="checkbox" value="true" checked="checked"/>Apply filters</label>
       	<br/>
 	<!-- These are here to make the user feel better, but should not be submitted as extra organism values -->
-        <label><input id="organismHuman2" name="organismIgnore" class="organism" type="radio" value="human"/>Human(GRCh38)</label>
-        <label><input id="organismMouse2" name="organismIgnore" class="organism" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
-      	<div id="locationsFileNotify"><c:if test="${not empty locationsFileName}"><span >(Using cached file [${locationsFileName}])</span></c:if></div>
+        <label><input id="organismHuman2" name="organismIgnore" type="radio" value="human"/>Human(GRCh38)</label>
+        <label><input id="organismMouse2" name="organismIgnore" type="radio" value="mouse" checked="checked"/>Mouse(GRCm38)</label>
+      	<!-- <div id="locationsFileNotify"><c:if test="${not empty locationsFileName}"><span >(Using cached file [${locationsFileName}])</span></c:if></div> -->
       </div>
 	    <input type="hidden" name="field" value="locationsFile">
 	    <input type="hidden" name="type" value="vcf">
 	    <input type="hidden" name="associatedFormInput" value="VCF file">
       </form>
     </div>
-	<div id="geneFileDiv" style="position:absolute; top:418px; left:243px;">
-		<form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data"
-			id="hiddenFileForm2" name="hiddenFileForm" target="hiddenfileform_if">
-			<span style="">Upload Genes File (.txt): <input id="geneFileInput" type="file" name="file"></span>
-			<div id="geneFileNotify"><c:if test="${not empty geneFileName}"><span >(Using cached file [${geneFileName}])</span></c:if></div>
+
+	<div id="geneFileDiv" style="position:absolute; top:255px; left:8.5px;">
+		<form action="${configBean.FEWI_URL}diseasePortal/uploadFile" method="post" enctype="multipart/form-data" id="hiddenFileForm2" name="hiddenFileForm" target="hiddenfileform_if">
+			Upload Genes File (.txt):<br/> <input id="geneFileInput" type="file" name="file">
+			<!-- <div id="geneFileNotify"><c:if test="${not empty geneFileName}"><span >(Using cached file [${geneFileName}])</span></c:if></div> -->
 			<input type="hidden" name="field" value="geneFile">
 		    <input type="hidden" name="type" value="singleCol">
 		   	<input type="hidden" name="associatedFormInput" value="Gene file">

@@ -130,10 +130,10 @@ td.yui-dt-col-coordinate
 }
 #locationsFileHelpImg
 {
-	height: 24px;
+	height: 20px;
 	position: relative;
-	left: 100px;
-	top: 4px;
+	left: 40px;
+	top: 25px;
 }
 
 textarea {resize:none; background-color:#FFE4B5;}
