@@ -124,7 +124,7 @@
 
 
 
-	<div style="position:absolute; top:227px; left:380px; z-index: 2;">
+	<div style="position:absolute; top:227px; left:380px; z-index: 1;">
         <img id="locationsFileHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
 		<div id="locationsFileHelp">
 			<div class="hd">VCF File Uploading Tips</div>
