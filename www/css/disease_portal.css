@@ -103,8 +103,8 @@ td.yui-dt-col-coordinate
 }
 .organism
 {
-	margin-left: 6px;
-	margin-right: 3px;
+	/* margin-left: 6px; */
+	/* margin-right: 3px; */
 }
 #alertBoxPosition
 {
