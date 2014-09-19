@@ -440,7 +440,7 @@ public class AutoCompleteController {
 		 */
 		BooleanSearch bs = new BooleanSearch();
 		ids = ids.replaceAll("mp:","MP:");
-		ids = bs.sanitizeInput(ids.replace(",", ""));
+		ids = bs.sanitizeInput(ids.replace(",", " "));
 		
 		HashMap<String, String> ret = new HashMap<String, String>();
 

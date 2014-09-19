@@ -1278,7 +1278,7 @@ public class DiseasePortalController
 			Filter phenoFilter;
 			// TODO so I can find this place in the code
 			BooleanSearch bs = new BooleanSearch();
-			phenoFilter = bs.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", ""));
+			phenoFilter = bs.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", " "));
 			if(phenoFilter == null) {
 				logger.warn("Error with Query: \n" + phenotypes + " " + bs.getErrorMessage());
 				phenoFilter = generateHdpNomenFilter(SearchConstants.VOC_TERM, phenotypes);
