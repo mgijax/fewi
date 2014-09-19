@@ -31,7 +31,7 @@
 <div id="maintitle">
     <h1>Load Expression for Other Organisms</h1>
     <ul>
-        <li>User story 196, Load and Link to Chicken Gene Expression Page - <i>Kicked story. Need to revise requirements and tests. -klf 2014-09-17</i></li>
+        <li>User story 196, Load and Link to Chicken  and Zfin Gene Expression Page</li>
     </ul>
 </div>
 
@@ -46,12 +46,15 @@
 <div id="requirements">
 	<h2>Functional Requirements</h2>
     <ul>
-    	<li>Describe requirements in terms of functionality...
-<!-- Kicked story. Need to revise requirements. -klf 2014-09-17  
-        <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog.</li>
-        <li>When 2 or more chicken orthologs exist for a mouse marker, display a link only when only ONE of the orthologs has expression data. If 2 or more of the orthologs have expression data, do not link to any of them.</li>
-        <li>Display requirements for the mouse marker detail page are in the <a href="../marker/MarkerDetailExpressionRibbon.html">Marker Detail Expression Ribbon test suite</a>.</li>
--->
+    	<li>Load the appropriate data so that we can do the following:
+    	<ul>
+	        <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data as found in the file at GEISHA: <i>http://geisha.arizona.edu/geisha/expression.txt</i>.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog.</li>
+	        <li>When 2 or more chicken orthologs exist for a mouse marker, display all of them.</li>
+	        <li>Display link to expression data page for a zebrafish marker at ZFIN on the mouse marker detail page when the chicken ortholog has such data as found in the file at ZFIN: <i>http://zfin.org/downloads/xpat.txt</i>.  Do NOT display a link when ZFIN does not have expression data for the zebrafish ortholog.</li>
+	        <li>When 2 or more zebrafish orthologs exist for a mouse marker, display all of them.</li>
+	        <li>Display requirements for the mouse marker detail page are in the <a href="../marker/MarkerDetailExpressionRibbon.html">Marker Detail Expression Ribbon test suite</a>.</li>
+		</ul>
+		</li>
     </ul>
 </div>
 
@@ -69,12 +72,21 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>The latest Expression.txt file from GEISHA's Downloads page has loaded a Note for each MGI Chicken marker present in the GEISHA expression.txt file for which MGI has a mouse ortholog.
+    		<li>We have loaded a Note for each MGI Chicken marker present in the GEISHA expression.txt file for which MGI has a mouse ortholog.
  			<p concordion:manual="true">passed. -klf 2014-09-12</p>
     		<ol>
                 <li>Make set of distinct Entrez Gene IDs from the GEISHA Expression.txt file.</li>
                 <li>Remove from the set any chicken Entrez Gene ID which does not have a mouse ortholog.</li>
-                <li>Verify that the number of items remaining in the set equals the number of Note records created by the load.</li>
+                <li>Verify that the number of items remaining in the set equals the number of Note records with _mginote_type = 1043 created by the load.</li>
+    		</ol>
+    		</li>
+
+    		<li>We have loaded a Note for each MGI Zebrafish marker present in the ZFIN xpat.txt file for which MGI has a mouse ortholog.
+ 			<p concordion:manual="true">passed. -klf 2014-09-19</p>
+    		<ol>
+                <li>Make set of distinct marker symbols from the ZFIN xpat.txt file.</li>
+                <li>Remove from the set any zebrafish marker symbol which does not have a mouse ortholog.</li>
+                <li>Verify that the number of items remaining in the set equals the number of Note records with _mginote_type = 1044 created by the load.</li>
     		</ol>
     		</li>
 
@@ -87,12 +99,30 @@
     		</ol>
     		</li>
 
+    		<li>When a zebrafish marker symbol appears in the ZFIN xpat.txt file and there is an orthologous mouse marker, we will load exactly one Note associated with the zebrafish marker record.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>lhx6</b> (orthologous to mouse Lhx6 as of 2014-09-19).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the zebrafish marker <b>lhx6</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk includes the Zfin ID (from the xpat.txt file) for lhx6 = <b>ZDB-GENE-041025-1</b> (as of 2014-09-19).</li>
+    		</ol>
+    		</li>
+
     		<li>When a chicken marker ID appears more than once in the GEISHA expression.txt file and there is an orthologous mouse marker, we will load exactly one Note associated with the chicken record.
  			<p concordion:manual="true">passed. -klf 2014-09-12</p>
     		<ol>
                 <li>Check Expression.txt file for records for <b>MYOD1</b> (orthologous to mouse Myod1 as of 2014-09-10). Verify multiple rows exist.</li>
                 <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken marker <b>MYOD1</b> (_organism_key = 63).</li>
                 <li>Verify that the NoteChunk includes the Entrez Gene ID for MYOD1 = <b>374048</b> (as of 2014-09-10).</li>
+    		</ol>
+    		</li>
+
+    		<li>When a zebrafish marker symbol appears more than once in the ZFIN xpat.txt file and there is an orthologous mouse marker, we will load exactly one Note associated with the zebrafish record.
+ 			<p concordion:manual="true">passed. -klf 2014-09-19</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>myod1</b> (orthologous to mouse Myod1 as of 2014-09-19). Verify multiple rows exist.</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the zebrafish marker <b>myod1</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk includes the Zfin ID (from the xpat.txt file) for myod1 = <b>ZDB-GENE-980526-561</b> (as of 2014-09-19).</li>
     		</ol>
     		</li>
 
@@ -113,12 +143,31 @@
     		</ol>
     		</li>
 
+    		<li>When the mouse marker has 2 or more zebrafish orthologs, we will load a Note for every orthologous zebrafish marker present in the ZFIN xpat.txt file.
+ 			<p concordion:manual="true">passed. -klf 2014-09-19</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>sox1a, sox1b</b> (orthologous to mouse Sox1 as of 2014-09-19).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the Chicken markers <b>sox1a, sox1b</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk for sox1a includes the ZFIN ID for sox1a = <b>ZDB-GENE-040718-186</b> (as of 2014-09-19).</li> 
+                <li>Verify that the NoteChunk for sox1b includes the ZFIN ID for sox1b = <b>ZDB-GENE-060322-5</b> (as of 2014-09-19).</li> 
+            </ol>
+            </li>
+
     		<li>When 2 or more mouse markers have the same chicken ortholog, we will load a Note for the orthologous chicken marker.
  			<p concordion:manual="true">passed. -klf 2014-09-12</p>
     		<ol>
                 <li>Check Expression.txt file for records for <b>BF2</b>. Verify multiple mouse orthologs exist in MGI (Gm8909, Gm10499, H2-Bl, H2-D1, H2-K1, ... as of 2014-09-10).</li>
                 <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken marker <b>BF2</b> (_organism_key = 63).</li>
                 <li>Verify that the NoteChunk includes the Entrez Gene ID for BF2 = <b>425389</b> (as of 2014-09-10).</li>
+    		</ol>
+    		</li>
+
+    		<li>When 2 or more mouse markers have the same zebrafish ortholog, we will load a Note for the orthologous zebrafish marker.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>crygm6</b>. Verify multiple mouse orthologs exist in MGI (Cryge and Crygf as of 2014-09-19).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the zebrafish marker <b>crygm6</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk includes the ZFIN ID for crygm6 = <b>ZDB-GENE-050516-7</b> (as of 2014-09-19).</li>
     		</ol>
     		</li>
 
