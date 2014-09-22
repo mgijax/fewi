@@ -69,7 +69,7 @@ private void setWordFilter(Filter f,String text)
 	if(text!=null && text.contains("*"))
 	{
 		// Have solr escape any special characters, but make sure asterisk remains in tact
-		f.setValue(ClientUtils.escapeQueryChars(text).replaceAll("\\\\\\*","*"));
+		f.setValue(text);
 		f.setOperator(Filter.Operator.OP_HAS_WORD);
 	}
 	else
@@ -99,11 +99,11 @@ term	returns[Filter termNode] @init { termNode = new Filter(); boolean neg=false
 	;
 
 str returns[Filter stringFilter] @init { stringFilter = new Filter(); } :
-        q=QUOTED { String text=sanitizeQuoted($q.text); stringFilter.setValue(text); stringFilter.setOperator(Filter.Operator.OP_EQUAL); }
-        | q2=WORD { String text=sanitizeQuoted($q2.text); setWordFilter(stringFilter,text); }
+        q=QUOTED { stringFilter.setQuoted(true); stringFilter.setValue(sanitizeQuoted($q.text)); stringFilter.setOperator(Filter.Operator.OP_EQUAL); }
+        | q2=WORD { setWordFilter(stringFilter,sanitizeQuoted($q2.text)); }
         ;
 
-WORD :  (~( ' ' | '\t' | '\r' | '\n' | '(' | ')' ))+;
+WORD :  (~( ' ' | '\t' | '\r' | '\n' | '(' | ')' | '"' ))+;
 
 QUOTED: '"'(~'"')*'"';
 

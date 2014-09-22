@@ -5,26 +5,23 @@ public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface
 
 	public void Visit(Filter filter) {
 		
+		if(filter.isNegate()) printni("NOT ");
+		
 		if(filter.getNestedFilters().size() > 0) {
-			if(filter.getFilterJoinClause() == Filter.JoinClause.FC_AND) printni("(");
+			
+			if(filter.getNestedFilters().size() > 1) printni("(");
 			int c = 0;
 			for(Filter f: filter.getNestedFilters()) {
-				if(filter.getFilterJoinClause() == Filter.JoinClause.FC_AND) {
-					printni("("); f.Accept(this); printni(")");
-				} else {
-					f.Accept(this);
-				}
+				f.Accept(this);
 				c++;
 				if(c < filter.getNestedFilters().size()) {
 					printni(" " + filter.getFilterJoinClause().getName() + " ");
 				}
 			}
-			if(filter.getFilterJoinClause() == Filter.JoinClause.FC_AND) printni(")");
+			if(filter.getNestedFilters().size() > 1) printni(")");
 		} else {
-			if(filter.doNegation()) {
-				printni("NOT ");
-			}
-			if(filter.getValue() != null && filter.getValue().split(" ").length > 1) {
+
+			if(filter.isQuoted()) {
 				printni("\"" + filter.getValue() + "\"");
 			} else {
 				if(

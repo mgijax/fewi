@@ -512,8 +512,12 @@ public class AutoCompleteController {
 	
 	private SearchResults<VocabACResult> resolveVocabTermIdQuery(String ids) {
 		// filter specific vocabs for this autocomplete
-		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
 		
+		List<String> idTokens = new ArrayList<String>(Arrays.asList(ids.split("[\\s,]+|\\(|\\)")));
+		
+		// Not a construct for the newb.
+		while(idTokens.remove(""));
+
 		List<Filter> filters = new ArrayList<Filter>();
 		
 		if(idTokens.size()>0)

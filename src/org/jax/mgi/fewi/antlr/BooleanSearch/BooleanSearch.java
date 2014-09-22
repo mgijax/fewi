@@ -3,8 +3,12 @@ package org.jax.mgi.fewi.antlr.BooleanSearch;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.jax.mgi.fewi.controller.AlleleController;
+import org.jax.mgi.fewi.searchUtil.ActualFilterPrinter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.util.QueryParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BooleanSearch  {
 
@@ -15,20 +19,24 @@ public class BooleanSearch  {
 	private String errorLine1 = "";
 	private String errorLine2 = "";
 	private String htmlErrorString = "";
+	private final Logger logger = LoggerFactory.getLogger(BooleanSearch.class);
 
 	private SolrBooleanSearchParser parser;
 
 	public Filter buildSolrFilter(String searchConstant,String s) {
 		// sanitize the user input to remove grammar abnormalities
+		//logger.info("String before: " + s);
 		s = sanitizeInput(s);
+		//logger.info("String after: " + s);
 
 		ANTLRStringStream input = new ANTLRStringStream(s);
 		CommonTokenStream tokens = new CommonTokenStream(new SolrBooleanSearchLexer(input));
 		parser = new SolrBooleanSearchParser(tokens);
-		
+
 		try {
 			Filter qFilter = parser.query();
-			simplifyNests(searchConstant,qFilter);
+			setSearchConstant(searchConstant,qFilter);
+			//logger.info("Parsed filter: " + qFilter);
 			return qFilter;
 		} catch (RecognitionException r) {
 			parseErrorMessage(parser, r);
@@ -55,27 +63,12 @@ public class BooleanSearch  {
 	 *  need to recursively set the specified searchConstant.
 	 *  Also is a good idea to collapse nested filters that only have one item in them.
 	 */
-	private void simplifyNests(String searchConstant, Filter f) {
+	private void setSearchConstant(String searchConstant, Filter f) {
 		f.setProperty(searchConstant);
-		if(f.hasNestedFilters() && f.getNestedFilters().size()==1) {
-			Filter child = f.getNestedFilters().get(0);
-			if(child.doNegation()) f.negate();
-			f.setNestedFilters(child.getNestedFilters());
-			f.setFilterJoinClause(child.getFilterJoinClause());
-			if(child.hasNestedFilters()) {
-				simplifyNests(searchConstant,f);
-			} else {
-				f.setValue(child.getValue());
-				f.setValues(child.getValues());
-				f.setOperator(child.getOperator());
-			}
-		} else if(f.hasNestedFilters()) {
-			for(Filter child : f.getNestedFilters()) {
-				simplifyNests(searchConstant,child);
-			}
+		for(Filter child : f.getNestedFilters()) {
+			setSearchConstant(searchConstant,child);
 		}
 	}
-
 
 	private void parseErrorMessage(SolrBooleanSearchParser parser, RecognitionException e) {
 		String hdr = parser.getErrorHeader(e);
@@ -85,7 +78,7 @@ public class BooleanSearch  {
 		errorMessage += "^";
 		errorLine1 = errorMessage;
 		errorLine2 = "Parser: An error occured on: " + hdr + " " + msg;
-		
+
 		String firstpart = parser.input.toString().substring(0, e.charPositionInLine);
 		String secondpart = parser.input.toString().substring(e.charPositionInLine + e.token.getText().length(), parser.input.toString().length());
 		htmlErrorString = firstpart + "<span style=\"color: #FF0000; font-weight: bold\">" + e.token.getText() + "</span>" + secondpart;

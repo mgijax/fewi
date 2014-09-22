@@ -436,7 +436,7 @@ public class SolrHunter<T> implements Hunter<T> {
                 }
             }
             // handle negating a nested filter
-            String negation= filter.doNegation() ? "-" : "";
+            String negation= filter.isNegate() ? "-" : "";
             return negation+"(" + StringUtils.join(resultsString, filterClauseMap.get(filter.getFilterJoinClause())) + ")";
         }
     }

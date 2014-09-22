@@ -78,7 +78,7 @@ public class SolrPropertyMapper
     }
     public String getClause(Filter filter)
     {
-    	return getClause(filter.getValue(),filter.getOperator(),filter.doNegation());
+    	return getClause(filter.getValue(),filter.getOperator(),filter.isNegate());
     }
     public String getClause(String value,Operator operator,boolean negate) 
     {

@@ -30,6 +30,10 @@ public class Filter {
 	
 	protected boolean negate=false;
 
+	// This is mostly for display purposes
+	protected boolean quoted=false;
+	
+
     //////////////////////////////////////////////////////////////////////////
     //  CONSTRUCTORS
     //////////////////////////////////////////////////////////////////////////
@@ -114,9 +118,16 @@ public class Filter {
 	}
 	
 	// negate this filter?
-	public void negate() { this.negate=true; }
-	public boolean doNegation() { return this.negate; }
-
+	public boolean isNegate() {
+		return negate;
+	}
+	public void setNegate(boolean negate) {
+		this.negate = negate;
+	}
+	public void negate() {
+		negate = !negate;
+	}
+	
 	// filters
 	public List<Filter> getNestedFilters() {
 		return nestedFilters;
@@ -140,6 +151,13 @@ public class Filter {
 	}
 	public void setFilterJoinClause(JoinClause filterJoinClause) {
 		this.filterJoinClause = filterJoinClause;
+	}
+
+	public boolean isQuoted() {
+		return quoted;
+	}
+	public void setQuoted(boolean quoted) {
+		this.quoted = quoted;
 	}
 
 
@@ -267,14 +285,14 @@ public class Filter {
               valueStrings.append(valueIter.next());
             }
 
-            returnString = "Filter-[" + "property=" + property + " " + operator.getName() + " " + "values=" + valueStrings + "] ";
+            returnString = "Filter-[" + property + " " + operator.getName() + " " + valueStrings + ", NOT: " + negate + " QUOTE: " + quoted + " Nest: " + (nestedFilters.size() > 0) + "] ";
         }
         else {
 
             StringBuffer filterStrings = new StringBuffer();
             Iterator<Filter> filterIter = nestedFilters.iterator();
 
-            filterStrings.append("[[NestedFilters=" + nestedFilters.size() + " -- ");
+            filterStrings.append("[[NestedFilters=" + nestedFilters.size() + " NOT: " + negate + " -- ");
             while (filterIter.hasNext()) {
               filterStrings.append(filterIter.next().toString());
             }
@@ -373,4 +391,5 @@ public class Filter {
 			return name;
 		}
 	}
+
 }
