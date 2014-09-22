@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.antlr.BooleanSearch;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.jax.mgi.fewi.controller.AlleleController;
-import org.jax.mgi.fewi.searchUtil.ActualFilterPrinter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.slf4j.Logger;
