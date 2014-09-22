@@ -278,8 +278,6 @@ table.imagetable td {
 	<h2>Functional Requirements</h2>
     <ul>
         <li>A matrix (grid) is displayed with anatomy terms for rows, Theiler Stages and DPC Ages for columns.</li>
-<!--        <li>Each cell contains a count of the number of expression results for the given anatomy term and Theiler Stage including results in any child terms. (sto21)</li>
- 		<li>FOR STO21: we only display a grid when structure is one of the query parameters submitted.</li> -->
 		<li>Each cell contains a "valid" indicator, a colored shape representing annotation data, is colored to indicate annotation data, or is empty.</li>
         <li>Data could be positive, negative, or ambiguous/not specified. (sto21)</li>
 		<li>Color roll-up logic: (sto39)
@@ -352,17 +350,15 @@ table.imagetable td {
 		<li>After filtering by structure(s), all displayed rows are "closed" (collapsed) by default. (sto68)</li>
 		<li>Structure filters add "remove filter" buttons to the Filtering Button area, like the existing filters. (sto68)</li>
 		<li>Structure filters are included in Browser History, like the existing filters. (sto68)</li>
-		<li>Checkboxes which indicate rows selected for filtering display 1 of 3 states to give the user visual cues for the effects post-filtering (sto123), and rows are highlighted (sto122): 
+		<li>Checkboxes which indicate rows selected for filtering display 1 of 2 states to give the user visual cues for the effects post-filtering (sto123), and rows are highlighted (sto122): 
 		<ul>
 			<li>blank - the anatomical term (row) is not selected, nor it is an ancestor term, nor a descendant term of a selected term.</li>
 			<li>checked - the anatomical term (row) is selected for filtering <i>OR</i> the term is a descendant of a selected term. These rows are also highlighted with a light background color.</li>
-			<li>minus - the anatomical term (row) is an ancestor of a selected term. These rows are not highlighted with a background color.</li>
 		</ul>
 		</li> 
 		<li>When the user selects a row (anatomy term) checkbox, then submits the filtering functionality: (sto123)
 		<ul>
-			<li>Upon selecting the checkbox, ancestor term(s) <i>directly above</i> the selected term display a minus sign (to indicate "partially selected"). Other ancestor terms elsewhere on the grid remain in their existing state.</li>
-			<li>If the user selects checkboxes for all descendant terms for a particular ancestor term, the ancestor term displays a checkmark instead of a minus sign (to indicate "included in filtering action").</li>
+			<li>If the user selects checkboxes for all descendant terms for a particular ancestor term, the ancestor term displays a checkmark (to indicate "included in filtering action").</li>
 			<li>If the user selects checkboxes for all descendant terms for a particular ancestor term, the ancestor term is the submitted filter term (not the individual descendant terms).</li>
 			<li>Upon selecting the checkbox, if the row for the term displays descendant terms (is expanded/open), descendant term(s) display a checkmark (to indicate "included in filtering action").</li>
 			<li>After submitting the filter action, only rows for the term(s) actively selected by the user are displayed by default in the results set grid view.</li>
