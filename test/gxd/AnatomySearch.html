@@ -51,12 +51,11 @@
 	<ul>
 		<li>Input text causes an autocomplete dropdown list to appear with matching structure and synonym text from EMAPA</li>
 		<li>Append to each displayed item the valid Theiler Stage range (example: "muscle TS20-28") (sto16) </li>
-		<li>For synonyms in the autocomplete, display the list item in the form: "actual term (synonym) TS range" (example: "muscle TS20-28") (sto16)</li>
+		<li>For synonyms in the autocomplete, display the list item in the form: "actual term (synonym) TS range" (example: "esophagus lumen (esophageal lumen) TS16-26") (sto16)</li>
 		<li>Each unique EMAPA Term is displayed only once.</li>
-		<li>For synonym text which is duplicated for multiple Terms -DISPLAY HOW??- (sto16) </li>
 		<li>User may select only one option from autocomplete list, and this text may be a Term or a Synonym</li>
 		<li>If the user selects a term, the input box is populated with the selected text (example: "muscle TS20-28") (sto16)</li>
-		<li>If the user selects a term with a synonym in the autocomplete, display -WHAT??- in the query field (example: WHAT??) (sto16)</li>
+		<li>If the user selects a term with a synonym in the autocomplete, display the full text from the dropdown list in the query field (example: "esophagus lumen (esophageal lumen) TS16-26") (sto16)</li>
 		<li>Support string tokens (i.e. "le lo" includes "left lobe")</li>
 		<li>Employ a Stop Words list (and,from,of,or,the,their,to)<i>(as of 7/06/12)</i></li>
 		<li>DO NOT perform stemming</li>
@@ -245,16 +244,10 @@
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
 					<li>Type <b concordion:set="#query">vein</b> in the anatomy field</li>
-					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">vein</b> appears only once in the dropdown</li>
-
-<!-- DO WE NEED THESE TESTS? COVERED ELSEWHERE?
-					<li>verify that <b cc:assertResultsContain="getTerms(#query)">vein</b> appears somewhere in the dropdown</li>
-					<li>verify that <b cc:assertAllResultsContainText="getTerms(#query)">vein</b> appears in every result in the dropdown list</li> 
- -->
+					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">vein</b> TS12-28 appears only once in the dropdown</li>
 					<li>clear the anatomy field </li>
-					<li>type <b>esophagus</b> in the anatomy field &lt;- - - THIS PART NEEDS AUTOMATION PLEASE</li>
-					<li>verify that <b>esophagus TS16-23</b> appears only once in the dropdown</li>
-					<li>verify that <b>esophagus TS24-28</b> appears only once in the dropdown</li>
+					<li>type <b>esophagus</b> in the anatomy field <i>not automated</i></li>
+					<li>verify that <b>esophagus TS16-28</b> appears only once in the dropdown</li>
 	    		</ol>
 	    	</li>
 
