@@ -232,22 +232,20 @@ table.imagetable td {
 		<li>sto122 - When a row's filter checkbox is removed the highlighting goes away</li>
 		<li>sto123 - Checkbox behavior should mimic the behavior of Feature Type selection in the marker query form. In words:
 		<ul>
-			<li>a cb has one of three states:
+			<li>a checkbox (cb) has one of two states:
 			<ul>
 				<li>checked: displays a checkmark</li>
 				<li>blank: empty</li>
-				<li>minus: displays a "-"</li>
 			</ul>
 			</li>
-			<li>both blank and minus are considered "unchecked"; the only difference is that minus indicates that one or more descendants is checked.</li>
 			<li>initially, everything is unchecked, then...
 			<ul>
-				<li>if the user clicks an unchecked cb (either blank or minus), the cb and all visible descendants become checked</li>
+				<li>if the user clicks an unchecked cb, the cb and all visible descendants become checked</li>
 				<li>if the user clicks a checked cb, that cb and all displayed descendants become blank</li>
 				<li>After a click, each ancestor, a, of the clicked cb updates its state as follows:
 				<ul>
 					<li>if all of a's displayed children are checked, a is checked</li>
-					<li>otherwise a is minus</li>
+					<li>otherwise a is blank</li>
 				</ul>
 				</li>
 			</ul>
