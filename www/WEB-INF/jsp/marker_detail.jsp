@@ -739,7 +739,7 @@ td.padded { padding:4px; }
 			  <a href="${chickenLink.url}" target="_new">${chickenLink.displayText}</a><c:if test="${not status.last}">, </c:if>
 			</c:forEach>
 		  </c:if>
-		  <c:if test="${not empty marker.expressedInZfinLinks }">SFIN
+		  <c:if test="${not empty marker.expressedInZfinLinks }">ZFIN
 		    <c:forEach var="zfinLink" items="${marker.expressedInZfinLinks}" varStatus="status">
 			  <a href="" target="_new">${zfinLink.displayText}</a><c:if test="${not status.last}">, </c:if>
 			</c:forEach>
