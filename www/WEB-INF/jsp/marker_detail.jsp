@@ -729,7 +729,25 @@ td.padded { padding:4px; }
 		  </c:if>
 		  <c:if test="${not empty arrayExpressID}">
 		    <a href="${fn:replace (externalUrls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">Expression Atlas</a>
-		  </c:if><br/>
+		  </c:if>
+		  <br/>
+
+		<c:if test="${not (empty marker.expressedInChickenLinks and empty vertebrateLinksZfin)}">
+		  Other Vertebrates:
+		  <c:if test="${not empty marker.expressedInChickenLinks}">GEISHA:
+		    <c:forEach var="chickenLink" items="${marker.expressedInChickenLinks}" varStatus="status">
+			  <a href="${chickenLink.url}" target="_new">${chickenLink.displayText}</a><c:if test="${not status.last}">, </c:if>
+			</c:forEach>
+		  </c:if>
+		  <c:if test="${not empty marker.expressedInZfinLinks }">SFIN
+		    <c:forEach var="zfinLink" items="${marker.expressedInZfinLinks}" varStatus="status">
+			  <a href="" target="_new">${zfinLink.displayText}</a><c:if test="${not status.last}">, </c:if>
+			</c:forEach>
+		  </c:if>
+		  <br/>
+		</c:if>
+
+
 		</c:if>
 		</div>
 	</div>
