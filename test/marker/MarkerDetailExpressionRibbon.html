@@ -46,6 +46,8 @@
 			<li>Geisha: Gene1, Gene2, ...; Zfin: Gene1, Gene2, ...</li> 
 		</ul> 
 		</li>
+		<li>sto205: Please remove the Theiler stages line (including all of those blue number links).</li>
+		<li>sto205: Please add a ‘new’ icon next to the Tissue x Stage Matrix.</li>
 
 	</ul>
 </div>
@@ -56,7 +58,9 @@
 	<p><i>Note: this test suite was written when the Tissue X Stage matrix tab was added to GXD Results, in MGI 5.20 (2014). It is expected this test suite will be more completely populated with tests for links in the Expression ribbon with subsequent MGI WI releases.</i></p>
 	<p>The Expression ribbon contains data about and links to GXD's expression assay results, tissues in which a marker has been assayed, and expression images. Links to the GXD Literature Index and to cDNA clones are included.  Links to external data sources are included.</p>
 	<ul>
-		<li>For each marker having expression results, add a link to the Tissue X Stage Matrix view tab which has been added to the expression results summary page. (sto22)</li>
+		<li>For each marker having expression results, add a link to the Tissue X Stage Matrix view tab on the expression results summary page. (sto22)</li>
+		<li>Remove the line labeled "Theiler Stages:" followed by the list of Theiler Stages for which the marker has data, each linked to a results page. (sto205)</li>
+		<li>Display a "New" icon next to the Tissue X Stage Matrix link. (sto205)</li>
         <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog. (sto196)</li>
         <li>When 2 or more chicken orthologs exist for a mouse marker, display a link to GEISHA's expression page for each chicken ortholog gene. (sto196)</li>
         <li>When 2 or more mouse orthologs exist for a chicken marker, display a link on each mouse marker detail page, following the rules above. (sto196)</li>
@@ -101,6 +105,13 @@
     		</ol>
     		</li>
     		
+    		<li>For a marker having expression results, the list of linked Theiler Stages has been removed. (sto205)
+ 			<p concordion:manual="false">new</p>
+    		<ol>
+                <li>Navigate to the marker detail page for <b>Psmb2</b> (MGI:1347045)</li>
+                <li>In the Expression ribbon, verify that the list of linked Theiler Stages has been removed.</li>
+    		</ol>
+    		</li>
 
 
 
