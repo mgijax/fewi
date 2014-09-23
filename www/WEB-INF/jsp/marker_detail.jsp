@@ -732,7 +732,7 @@ td.padded { padding:4px; }
 		  </c:if>
 		  <br/>
 
-		<c:if test="${not (empty marker.expressedInChickenLinks and empty vertebrateLinksZfin)}">
+		<c:if test="${not (empty marker.expressedInChickenLinks and empty marker.expressedInZfinLinks)}">
 		  Other Vertebrates:
 		  <c:if test="${not empty marker.expressedInChickenLinks}">GEISHA:
 		    <c:forEach var="chickenLink" items="${marker.expressedInChickenLinks}" varStatus="status">
@@ -741,7 +741,7 @@ td.padded { padding:4px; }
 		  </c:if>
 		  <c:if test="${not empty marker.expressedInZfinLinks }">ZFIN:
 		    <c:forEach var="zfinLink" items="${marker.expressedInZfinLinks}" varStatus="status">
-			  <a href="" target="_new">${zfinLink.displayText}</a><c:if test="${not status.last}">, </c:if>
+			  <a href="${zfinLink.url}" target="_new">${zfinLink.displayText}</a><c:if test="${not status.last}">, </c:if>
 			</c:forEach>
 		  </c:if>
 		  <br/>
