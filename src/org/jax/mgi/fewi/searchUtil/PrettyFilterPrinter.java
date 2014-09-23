@@ -5,7 +5,7 @@ public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface
 
 	public void Visit(Filter filter) {
 		
-		if(filter.isNegate()) printni("NOT ");
+		if(filter.isNegate()) printni("(NOT ");
 		
 		if(filter.getNestedFilters().size() > 0) {
 			
@@ -41,5 +41,8 @@ public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface
 				}
 			}
 		}
+		
+		if(filter.isNegate()) printni(")");
+		
 	}
 }
