@@ -117,7 +117,7 @@
 
 
     		<li>When a mouse marker has no chicken or zebrafish ortholog, DO NOT display the "Other Vertebrates:" row. (sto196)
- 			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
                 <li>The marker detail page for <b>Klf16</b> should not display an "Other Vertebrates:" row in the Expression ribbon.</li>
                 <li>The marker detail page for <b>Klf17</b> should not display an "Other Vertebrates:" row in the Expression ribbon.</li>
@@ -125,7 +125,7 @@
     		</li>
 
     		<li>When a mouse marker has a chicken or zebrafish ortholog, but it does not appear in the GEISHA <i>http://geisha.arizona.edu/geisha/expression.txt</i> file or the Zfin <i>http://zfin.org/downloads/xpat.txt</i> file, DO NOT display the "Other Vertebrates:" row. (sto196)
- 			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
                 <li>The marker detail page for <b>Acot9</b> should not display an "Other Vertebrates:" row in the Expression ribbon. (Orthologs acot9.1, acot9.2 exist at Zfin, Acot9 at GEISHA, but do not have expression data in the files.)</li>
                 <li>The marker detail page for <b>Acot10</b> should not display an "Other Vertebrates:" row in the Expression ribbon. (Orthologs acot9.1, acot9.2 exist at Zfin, Acot9 at GEISHA, but do not have expression data in the files.)</li>
@@ -135,21 +135,22 @@
 
 
     		<li>When a mouse marker has a single chicken ortholog, and it appears in the GEISHA <i>http://geisha.arizona.edu/geisha/expression.txt</i> file, display the link on the marker detail page. (sto196)
- 			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
-                <li><i>needs example with GEISHA but not ZFIN</i></li>
+                <li>The marker detail page for <b>Klf10</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=420255">KLF10</a> in the Expression ribbon. (Ortholog KLF10 at GEISHA has expression data in the files.)</li>
     		</ol>
     		</li>
 
     		<li>When a mouse marker has a single zebrafish ortholog, and it appears in the Zfin <i>http://zfin.org/downloads/xpat.txt</i> file, display the link on the marker detail page. (sto196)
- 			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
-                <li><i>needs example with ZFIN but not GEISHA</i></li>
+                <li>The marker detail page for <b>Tpm1</b> should display an "Other Vertebrates:" row with "ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-040426-854">tpm1</a> in the Expression ribbon. (Ortholog tpm1 at ZFIN has expression data in the files.)</li>
+                <li>The marker detail page for <b>Ang4</b> should display an "Other Vertebrates:" row with "ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-050208-420">rnasel2</a>, <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-050809-5">rnasel3</a> in the Expression ribbon. (Orthologs rnasel2 and rnasel3 at ZFIN have expression data in the files.)</li>
     		</ol>
     		</li>
 
     		<li>When a mouse marker has a single chicken ortholog and a single zebrafish ortholog, and they appear in the files, display the links on the marker detail page. (sto196)
- 			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
                 <li>The marker detail page for <b>Lhx6</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=772259">LHX6</a>; ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-041025-1">lhx6</a>" in the Expression ribbon.</li>
                 <li>The GEISHA link should go to http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=772259, displaying the "Expression" tab for "LHX6 LIM homeobox 6".</li>
@@ -161,7 +162,7 @@
     		</li>
 
     		<li>When a mouse marker has 2 or more chicken orthologs, and only 1 of the orthologs is present in the GEISHA file, display the link on the marker detail page. (sto196)
-			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
     			<li>For the following examples, other organisms' links may also be present.</li>
                 <li>The marker detail page for <b>Cacng4</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=373924">CACNG4</a>" in the Expression ribbon. There should be no link for the chicken ortholog <b>LOC100859571</b>.</li>
@@ -170,7 +171,7 @@
     		</li>
 
     		<li>When a mouse marker has 2 or more zebrafish orthologs, and only 1 of the orthologs is present in the ZFin file, display the link on the marker detail page. (sto196)
-			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
     			<li>For the following examples, other organisms' links may also be present.</li>
                 <li>The marker detail page for <b>Ccr2</b> should display an "Other Vertebrates:" row with "ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-070302-1">ccr8.1</a>" in the Expression ribbon. There should be no links for the zebrafish orthologs <b>LOC100329767, LOC100535702</b>.</li>
@@ -179,7 +180,7 @@
     		</li>
 
     		<li>When a mouse marker has 2 or more chicken (or zebrafish) orthologs, and 2 or more of the orthologs are present in the GEISHA (or ZFIN) file, display links to each orthologous gene on the marker detail page. (sto196)
-			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
     			<li>For the following examples, other organisms' links may also be present.</li>
                 <li>The marker detail page for <b>Krt75</b> should display an "Other Vertebrates:" row with "GEISHA: KRT6A, KRT75". Both chicken gene symbols should be linked to the GEISHA page(s) displaying Expression data.</li>
@@ -192,7 +193,7 @@
     		</li>
 
     		<li>When 2 or more mouse markers have the same chicken (or zebrafish) ortholog, and it appears in the GEISHA (or ZFIN) file, display the link on each of those marker detail pages. (sto196)
-			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
     			<li>For the following examples, other organisms' links may also be present.</li>
                 <li>The marker detail pages for <b>Gapdh</b> and <b>Gm20899</b> should display an "Other Vertebrates:" row with "GEISHA: GAPDH". The chicken gene symbol should be linked to the GEISHA page displaying Expression data.</li>
@@ -201,7 +202,7 @@
     		</li>
 
     		<li>When 2 or more mouse markers belong to a cluster with 2 or more chicken (or zebrafish) orthologs, and any of those orthologs are present in the GEISHA (or ZFIN) file, display the link(s) on any of those marker detail pages. (sto196)
-			<p concordion:manual="false">new</p>
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
     			<li>For the following examples, other organisms' links may also be present.</li>
                 <li>The marker detail pages for <b>Gm8909</b>, <b>Gm10499</b>, <b>H2-Bl</b>, <b>H2-D1</b>, <b>H2-K1</b>, and others should display an "Other Vertebrates:" row with "GEISHA: BF1". The chicken gene symbol should be linked to the GEISHA page displaying Expression data. There should be no link(s) for additional chicken orthologs <b>BF1, BF2, MICA, MR1, YF6, LOC417057, LOC417058</b>, and others.</li>
