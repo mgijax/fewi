@@ -239,6 +239,9 @@ border-collapse: collapse;
 	padding-bottom: 1px;
 	font-size:160%
 }
+*:focus {
+    outline: 0;
+}
 </style>
 
 <style type="text/css">
@@ -494,7 +497,8 @@ border-collapse: collapse;
 		</div>
 		</div>
 		<span class='legendExampleRange'> tissue exists at
-		  <a href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler stage</a> (but has</span> <br/>
+		  <a id='tsGlossaryLink'
+		    href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler stage</a> (but has</span> <br/>
 		<span class='legendExampleRange'> no annotations)</span>
 	</div>
 
