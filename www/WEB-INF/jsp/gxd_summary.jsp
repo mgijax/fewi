@@ -424,7 +424,7 @@ border-collapse: collapse;
 
 	<div id='legendWrapper'>
 	<div class='legendSection' style="margin-bottom:10px;">
-		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Number of expression results</div>
+		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Number of expression results annotated as</div>
 	</div>
 	<div class='legendSection' >
 		<div style='padding-bottom:0px;'>present in structure and/or substructures</div>
@@ -458,6 +458,10 @@ border-collapse: collapse;
 		</div>
 	</div>
 
+	<div class='legendSection' style="margin-bottom:10px;">
+		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Other Symbols</div>
+	</div>
+
 	<div class='legendSection' >
 		<div class='legendExampleCell' style='margin-top:3px;'>
 		  <div class='hiddenNegIndicatorWrapper'>
@@ -479,8 +483,8 @@ border-collapse: collapse;
 		  	<div class='inSubStructIndicator'></div>
 		  </div>
 		</div>
-		<span class='legendExampleRange'> results in substructures - either</span> <br/>
-		<span class='legendExampleRange'> ambiguous or absent </span>
+		<span class='legendExampleRange'> either absent or ambiguous results </span> <br/>
+		<span class='legendExampleRange'> in substructures </span>
 	</div>
 
 	<div class='legendSection' >
@@ -490,7 +494,8 @@ border-collapse: collapse;
 		</div>
 		</div>
 		<span class='legendExampleRange'> tissue exists at
-		  <a href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler stage</a> </span>
+		  <a href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler stage</a> (but has</span> <br/>
+		<span class='legendExampleRange'> no annotations)</span>
 	</div>
 
 	<div class='legendSection' >
@@ -511,7 +516,7 @@ border-collapse: collapse;
 
 	<div id='legendWrapper'>
 	<div class='legendSection' style="margin-bottom:10px;">
-		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Number of expression results</div>
+		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Number of expression results annotated as</div>
 	</div>
 	<div class='legendSection' >
 		<div style='padding-bottom:0px;'>present in structure and/or substructures</div>
@@ -545,6 +550,10 @@ border-collapse: collapse;
 		</div>
 	</div>
 
+	<div class='legendSection' style="margin-bottom:10px;">
+		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Other Symbols</div>
+	</div>
+
 	<div class='legendSection' >
 		<div class='legendExampleCell' style='margin-top:3px;'>
 		  <div class='hiddenNegIndicatorWrapper'>
@@ -566,8 +575,8 @@ border-collapse: collapse;
 		  	<div class='inSubStructIndicator'></div>
 		  </div>
 		</div>
-		<span class='legendExampleRange'> results in substructures - either</span> <br/>
-		<span class='legendExampleRange'> ambiguous or absent </span>
+		<span class='legendExampleRange'> either absent or ambiguous results </span> <br/>
+		<span class='legendExampleRange'> in substructures </span>
 	</div>
 
 	<div class='legendSection' >
