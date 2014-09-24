@@ -492,6 +492,15 @@ border-collapse: collapse;
 		<span class='legendExampleRange'> tissue exists at
 		  <a href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler stage</a> </span>
 	</div>
+
+	<div class='legendSection' >
+		<div class='legendExampleCell' style='background:#FFFFFF;'>
+		  <div class='inSubStructIndicatorWrapper'>
+		  </div>
+		</div>
+		<span class='legendExampleRange'> tissue does not exist at this stage </span>
+	</div>
+
   </div>
 </div>
 </div>
@@ -561,6 +570,13 @@ border-collapse: collapse;
 		<span class='legendExampleRange'> ambiguous or absent </span>
 	</div>
 
+	<div class='legendSection' >
+		<div class='legendExampleCell' style='background:#FFFFFF;'>
+		  <div class='inSubStructIndicatorWrapper'>
+		  </div>
+		</div>
+		<span class='legendExampleRange'> no annotations for the gene in this tissue </span>
+	</div>
 
   </div>
 </div>
