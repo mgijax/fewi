@@ -1501,6 +1501,25 @@ public class GXDController {
 			facetList.add(new Filter(SearchConstants.MRK_SYMBOL,
 			query.getMarkerSymbolFilter(), Filter.OP_IN));
 		}
+		
+
+		// matrix only query fields
+		// absolute filter on structure ID (used by popups to restrict query to only this structure, but still keep the other structure queries and filters
+		if(query.getMatrixStructureId() !=null && query.getMatrixStructureId().size() > 0) {
+			List<Filter> matrixStructureFilters = new ArrayList<Filter>();
+			for(String matrixStructureId : query.getMatrixStructureId())
+			{
+				matrixStructureFilters.add(new Filter(SearchConstants.STRUCTURE_ID,matrixStructureId,Filter.OP_EQUAL));
+			}
+			if(matrixStructureFilters.size() > 0)
+			{
+				queryFilters.add(Filter.or(matrixStructureFilters));
+			}
+		}
+		if(query.getMatrixMarkerSymbol() !=null && !query.getMatrixMarkerSymbol().equals("")) {
+				queryFilters.add(new Filter(SearchConstants.MRK_SYMBOL, query.getMatrixMarkerSymbol()));
+		}
+
 
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.
@@ -1758,24 +1777,6 @@ public class GXDController {
 				aFilters.add(aFilter);
 			}
 			queryFilters.add(Filter.or(aFilters));
-		}
-
-
-		// matrix only query fields
-		// absolute filter on structure ID (used by popups to restrict query to only this structure, but still keep the other structure queries and filters
-		if(query.getMatrixStructureId() !=null && query.getMatrixStructureId().size() > 0) {
-			List<Filter> matrixStructureFilters = new ArrayList<Filter>();
-			for(String matrixStructureId : query.getMatrixStructureId())
-			{
-				matrixStructureFilters.add(new Filter(SearchConstants.STRUCTURE_ID,matrixStructureId,Filter.OP_EQUAL));
-			}
-			if(matrixStructureFilters.size() > 0)
-			{
-				queryFilters.add(Filter.or(matrixStructureFilters));
-			}
-		}
-		if(query.getMatrixMarkerSymbol() !=null && !query.getMatrixMarkerSymbol().equals("")) {
-				queryFilters.add(new Filter(SearchConstants.MRK_SYMBOL, query.getMatrixMarkerSymbol()));
 		}
 
 		// And all base filter sections
