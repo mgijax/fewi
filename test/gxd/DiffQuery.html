@@ -32,6 +32,7 @@
         <li>User story 16, E1: GXD QF: Anatomy Search -&gt; ID based</li>
         <li>User story 58, Deal with Differential QF</li>
         <li>User story 101, Structure-specified queries: open 1 level</li>
+        <li>User story 203, Bug: red cell pop-ups include yes for differential queries</li>
     </ul>
 </div>
 
@@ -49,6 +50,7 @@
 		<li>(sto58) (Assuming query semantics are correct) B row should be all red (or some white)</li>
 		<li>(sto58) if no negative result for B, B is not displayed</li>
 		<li>(sto101) for differential queries involving structures, show A and B (if there are results), but do not open either one.</li>	
+		<li>(sto203) <i>none</i></li>
 	</ul>
 </div>
 
@@ -103,6 +105,8 @@
 			<li><del>Else, if there are any results under that cell where detected is Ambiguous, NS or Absent, color=GOLD.</del> </li>
 		</ol>
 		</li>
+		<li>Color shading of cells corresponds to number of positive or negative results for the row and column intersection.</li>
+		<li>Pop-up panel displays correct count of positive or negative results for the row and column intersection.</li>
 	</ul>
 </div>
 
@@ -246,21 +250,6 @@
   			</ol>
 			</li>
 
-<!-- 
-Test data no longer works. Maybe due to rearranged Anatomy DAG (child relationships). Looking for new test case. -klf 2014-07-08
-
-			<li>Wild type results ("broad" definition) are included in the differential query. (assays which are not associated with any allele pairs, or in situ reporter (knock-in) assays associated with a single allele pair which is heterozygous w.t. for the assayed gene)
-  			<p concordion:manual="true">passed kstone 5/7/13</p>  
-  			<ol>
-  				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
-  				<li>Verify that the gene <b>Th</b> is returned.</li>
-  				<li>Click on the Assay Results tab.</li>
-  				<li>Verify that the results for <b>Th</b> include assay <b>MGI:3842448</b> having genotype <b>Th&lt;tm1(cre)Te&gt;/Th+</b>.</li>
-  				<li>Verify that the results for <b>Th</b> include assay <b>MGI:3842448</b> but NOT genotype <b>Th&lt;tm1(cre)Te&gt;/Th&lt;tm1(cre)Te&gt;</b>.</li>
-  				<li>Verify that the results for <b>Th</b> do NOT include assay <b>MGI:4451201</b> having genotype <b>Gdnf&lt;tm1Rosl&gt;/Gdnf&lt;tm1Rosl&gt;</b>.</li>
-  			</ol>
-			</li>
- -->
 			<li>Wild type results ("broad" definition) are included in the differential query. (assays which are not associated with any allele pairs, or in situ reporter (knock-in) assays associated with a single allele pair which is heterozygous w.t. for the assayed gene) (revised for sto58)
   			<p concordion:manual="true">passed - kstone 2014-07-10</p>  
   			<ol>
@@ -280,7 +269,6 @@ Test data no longer works. Maybe due to rearranged Anatomy DAG (child relationsh
 			</li>
 
     		<li><span class="regressHi">high</span> A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following:  (revised for sto16, sto58, regressed for sto101)
-<!-- <p concordion:manual="true">passed - kstone 2014-07-10</p> PUT PASS/FAIL ON INDIVIDUAL QUERIES, BELOW. -->  
     		<ul>
     			<li>GENES having positive results for "A"  or its substructures in &quot;wild type&quot; assays and having no positive results for "B" or its substructures in &quot;wild type&quot; assays </li>
     			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
@@ -371,15 +359,15 @@ Test data no longer works. Maybe due to rearranged Anatomy DAG (child relationsh
 				</table>
                 </li>
                 <li>QUERY FOR genes with expression detected in upper jaw incisor (<b concordion:set="#struct1">EMAPA:17939</b>), not detected or analyzed in heart atrium (<b concordion:set="#struct2">EMAPA:16688</b>). (revised for  sto58, regressed for sto101)</li> 
-  				<p concordion:manual="true">passed. klf 2014-07-24</p>  
+  				<p concordion:manual="true">passed. klf 2014-09-24</p>  
                 <li>Verify that AT LEAST the following genes are returned:
                 <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
 					<tr><th concordion:assertEquals="#result">Gene Symbol</th><th>Notes</th></tr>
-                	<tr><td>Aatf</td><td>positive for "upper jaw incisor", negative for "heart atrium"</td></tr>
-                	<tr><td>Acaa1a</td><td>positive for "upper jaw incisor", negative for "heart atrium"</td></tr>
-                	<tr><td>Alcam</td><td>positive for "upper jaw incisor epithelium"  (child) even though negative for &quot;upper jaw incisor&quot;; no data for "heart atrium"</td></tr>
-                	<tr><td>Dlx2</td><td>positive for "upper jaw incisor epithelium" (child), negative for "heart atrium"</td></tr>
-                	<tr><td>Kit</td><td>positive for 4 child terms of "upper jaw incisor", negative for "heart atrium"</td></tr>
+                	<tr><td>Aatf</td><td>3 positive for "upper jaw incisor", 1 negative for "heart atrium"</td></tr>
+                	<tr><td>Acaa1a</td><td>9 positive for "upper jaw incisor", 1 negative for "heart atrium"</td></tr>
+                	<tr><td>Alcam</td><td>1 positive for "upper jaw incisor epithelium"  (child) even though negative for &quot;upper jaw incisor&quot;; no data for "heart atrium"</td></tr>
+                	<tr><td>Dlx2</td><td>2 positive for "upper jaw incisor epithelium" (child), 1 negative for "heart atrium"</td></tr>
+                	<tr><td>Kit</td><td>2 positive for child terms of "upper jaw incisor", 1 negative for "heart atrium"</td></tr>
                 </table>
                 </li>
                 <li>Verify that the following genes are <b>not returned</b>:
