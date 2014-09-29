@@ -691,15 +691,9 @@ td.padded { padding:4px; }
 		</c:if>
 		<c:if test="${marker.countOfGxdResults > 0}">
 		  Tissue x Stage Matrix (<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=stagegridtab">view</a>)
+		  <img id="interactionNewImage" src="${configBean.WEBSHARE_URL}images/new_icon.png" style="width: 35px">
 		</c:if>
 		<br/>
-		<c:if test="${not empty marker.gxdResultCountsByStage}">
-		  Theiler Stages:
-		  <c:forEach var="item" items="${marker.gxdResultCountsByStage}" varStatus="status">
-		  	<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?theilerStage=${item.countType}">${item.countType}</a><c:if test="${!status.last}">,</c:if>
-		  </c:forEach>
-		  <br/>
-		</c:if>
 		</c:if>
 
 		<c:if test="${not empty gxdAssayTypes}">
@@ -731,22 +725,6 @@ td.padded { padding:4px; }
 		    <a href="${fn:replace (externalUrls.ArrayExpress, '@@@@', arrayExpressID)}" target="_new">Expression Atlas</a>
 		  </c:if>
 		  <br/>
-
-		<c:if test="${not (empty marker.expressedInChickenLinks and empty marker.expressedInZfinLinks)}">
-		  Other Vertebrates:
-		  <c:if test="${not empty marker.expressedInChickenLinks}">GEISHA:
-		    <c:forEach var="chickenLink" items="${marker.expressedInChickenLinks}" varStatus="status">
-			  <a href="${chickenLink.url}" target="_new">${chickenLink.displayText}</a><c:if test="${not status.last}">, </c:if>
-			</c:forEach>
-		  </c:if>
-		  <c:if test="${not empty marker.expressedInZfinLinks }">ZFIN:
-		    <c:forEach var="zfinLink" items="${marker.expressedInZfinLinks}" varStatus="status">
-			  <a href="${zfinLink.url}" target="_new">${zfinLink.displayText}</a><c:if test="${not status.last}">, </c:if>
-			</c:forEach>
-		  </c:if>
-		  <br/>
-		</c:if>
-
 
 		</c:if>
 		</div>
