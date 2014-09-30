@@ -378,7 +378,6 @@ var clearFilter = function() {
 var resetFacets = function(newFacets) {
     window.facets = newFacets;
     populateFilterSummary();
-    refreshTabCounts();
 };
 
 /* populates the 'breadbox' with current filters
