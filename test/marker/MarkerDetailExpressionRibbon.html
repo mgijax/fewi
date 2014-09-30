@@ -30,7 +30,7 @@
     <h1>Expression Ribbon Tests</h1>
     <ul>
         <li>User story 22, E2: Add links to tissue x stage results</li>
-        <li>User story 196, Load and Link to Chicken and Zfin Gene Expression Page</li>
+        <li>User story 196, Load and Link to Chicken and Zfin Gene Expression Page(this story was backed out)</li>
         <li>User story 205, A few more small changes</li>
     </ul>
 </div>
@@ -41,8 +41,8 @@
 		<li>sto22: add new link from marker detail expression ribbon</li>
 		<li>sto22: link text = "Matrix view"</li>
 		<li>sto22: link to expression results for that gene, opened to the tissue x stage matrix tab</li>
-		<li>sto196: Construct one link in the Expression Ribbon for each Geisha gene and for each Zfin gene</li>
-		<li>sto196: Links should look like so:
+		<li>sto196: Construct one link in the Expression Ribbon for each Geisha gene and for each Zfin gene(not implemented yet)</li>
+		<li>sto196: Links should look like so(not implemented yet):
 		<ul>
 			<li>Geisha: Gene1, Gene2, ...; Zfin: Gene1, Gene2, ...</li> 
 		</ul> 
@@ -62,7 +62,7 @@
 		<li>For each marker having expression results, add a link to the Tissue X Stage Matrix view tab on the expression results summary page. (sto22)</li>
 		<li>Remove the line labeled "Theiler Stages:" followed by the list of Theiler Stages for which the marker has data, each linked to a results page. (sto205)</li>
 		<li>Display a "New" icon next to the Tissue X Stage Matrix link. (sto205)</li>
-        <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog. (sto196)</li>
+        <!-- <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog. (sto196)</li>
         <li>When 2 or more chicken orthologs exist for a mouse marker, display a link to GEISHA's expression page for each chicken ortholog gene. (sto196)</li>
         <li>When 2 or more mouse orthologs exist for a chicken marker, display a link on each mouse marker detail page, following the rules above. (sto196)</li>
         <li>Display the link on a new line, below the External Resources line. (sto196)</li>
@@ -78,7 +78,7 @@
         Other Vertebrates: GEISHA: <a href="#1">GENE1</a>, <a href="#2">GENE2</a>; ZFIN: <a href="#3">gene1</a>, <a href="#4">gene2</a> 
         </li>
         <li>Tests for data load requirements are in the <a href="../gxd/LoadExpressionOtherOrganisms.html">Load Expression for Other Organisms test suite</a>.</li> 
-
+		 -->
 	</ul>
 </div>
 
@@ -115,7 +115,7 @@
     		</li>
 
 
-
+			<!-- 
     		<li>When a mouse marker has no chicken or zebrafish ortholog, DO NOT display the "Other Vertebrates:" row. (sto196)
  			<p concordion:manual="true">passed. -klf 2014-09-23</p>
     		<ol>
@@ -211,7 +211,7 @@
                 <li>The marker detail pages for <b>Cryge</b> and <b>Crygf</b> should display an "Other Vertebrates:" row with "ZFIN: crygm6, crygm7". The zebrafish gene symbols should be linked to the ZFIN pages displaying Expression data.</li>
     		</ol>
     		</li>
-
+			 -->
 
 		</ol>
 	</div>
