@@ -63,6 +63,52 @@ function toggleHomologyDetails ()
 .bottomBorder { border-bottom-color: #000000;
     border-bottom-style:solid;
     border-bottom-width:1px; }
+    
+    
+/* Turning divs into table layout */
+.container {
+	border-bottom: 1px solid black;
+}
+.container .row {
+	overflow: hidden;
+}
+.container .row > div {
+	padding-bottom: 10003px;
+	margin-bottom: -10000px;
+}
+
+.container .header {
+	float: left;
+	width: 130px;
+	border: 1px solid black;
+	text-align: right;
+	font-weight: bold;
+	font-size: 12px;
+	font-family: Verdana,Arial,Helvetica;
+	color: #000001;
+	padding: 3px;
+}
+.container .detail {
+	margin-left: 138px;
+	border: 1px solid black;
+	border-left: none;
+	font-size: 12px;
+	font-family: Verdana,Arial,Helvetica;
+	color: #000001;
+	padding: 3px;
+}
+
+.container .detailCat1 {
+	background-color: #DFEFFF;
+}
+.container .detailCat2 {
+	background-color: #D0E0F0;
+}
+
+.container .detailData2 {
+	background-color: #F0F0F0;
+}
+
 </style>
 
 <script language="Javascript">
@@ -114,7 +160,7 @@ td.padded { padding:4px; }
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="GENE_detail_help.shtml">
+<div id="titleBarWrapper" userdoc="GENE_detail_help.shtml" style="max-width: none;">
 	<div class="yourInputButton">
 		<form name="YourInputForm">
 			<input class="searchToolButton" value="Your Input Welcome" name="yourInputButton" onclick='window.open("${configBean.MGIHOME_URL}feedback/feedback_form.cgi?accID=${marker.primaryID}&amp;dataDate=<fmt:formatDate type='date' value='${databaseDate}' dateStyle='short'/>")' onmouseover="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" onmouseout="nd();" type="button">
@@ -137,13 +183,13 @@ td.padded { padding:4px; }
 </c:if>
 
 <!-- structural table -->
-<table class="detailStructureTable">
+<div class="container detailStructureTable">
 
 
   <!-- ROW1 -->
-  <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
-      <font size="+2">&nbsp;</font>Symbol<br/>
+  <div class="row">
+    <div class="header <%=leftTdStyles.getNext() %>">
+      Symbol<br/><br/>
       Name<br/>
       ID
       <c:if test="${not empty hasClusters}">
@@ -152,12 +198,12 @@ td.padded { padding:4px; }
       <c:if test="${not empty hasClusterMembers}">
       <br/>Cluster&nbsp;member<c:if test="${fn:length(marker.clusterMembers) > 1}">s</c:if>
       </c:if>
-    </td>
-    <td class="<%=rightTdStyles.getNext() %>">
-      <table style='width: 100%'>
+    </div>
+    <div class="detail <%=rightTdStyles.getNext() %>">
+      <table>
         <tr style='width: 100%'><td style="text-align: left; vertical-align: top;">
-          <font size="+2"><b><fewi:super value="${marker.symbol}"/></b><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
-          </font><br/>
+          <b style="font-size:x-large;"><fewi:super value="${marker.symbol}"/></b><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
+          <br/>
           <B>${marker.name}</B><br/>
 	  ${marker.primaryID}
 
@@ -223,48 +269,48 @@ td.padded { padding:4px; }
         </c:if>
       </td></tr>
       </table>
-    </td>
-  </tr>
+    </div>
+  </div>
 
   <!-- ROW1a -->
   <c:if test="${not empty marker.aliases}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         <c:if test="${marker.markerType == 'Gene'}">STS</c:if>
         <c:if test="${marker.markerType != 'Gene'}">STS for</c:if>
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
         <c:forEach var="alias" items="${marker.aliases}" varStatus="status">
           <a href="${configBean.FEWI_URL}marker/${alias.aliasID}">${alias.aliasSymbol}</a><c:if test="${!status.last}">, </c:if>
         </c:forEach>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- ROW2 -->
   <c:if test="${not empty marker.synonyms}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Synonyms
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
         <c:forEach var="synonym" items="${marker.synonyms}" varStatus="status">
           <fewi:super value="${synonym.synonym}"/><c:if test="${!status.last}">, </c:if>
         </c:forEach>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- ROW3 -->
   <c:if test="${not empty marker.markerSubtype}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Feature&nbsp;Type
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
         ${marker.markerSubtype}
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- ROW4 -->
@@ -272,11 +318,11 @@ td.padded { padding:4px; }
   <c:if test="${(not empty marker.preferredCentimorgans)
   		or (not empty marker.preferredCytoband)
   		or (marker.countOfMappingExperiments > 0)}">
-    <tr>
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row">
+      <div class="header <%=leftTdStyles.getNext() %>">
         Genetic&nbsp;Map
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
 
         <div>
         <c:if test="${not empty marker.preferredCentimorgans}">
@@ -328,16 +374,16 @@ td.padded { padding:4px; }
           <br/></>Mapping data(<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a>)
         </c:if>
         </div>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- ROW5 -->
   <c:if test="${not (empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Sequence&nbsp;Map
-      </td>
+      </div>
       <fmt:formatNumber value="${marker.preferredCoordinates.startCoordinate}" pattern="#0" var="startCoord"/>
       <fmt:formatNumber value="${marker.preferredCoordinates.endCoordinate}" pattern="#0" var="endCoord"/>
 	  <c:set var="chromosome" value="${marker.preferredCoordinates.chromosome}"/>
@@ -345,8 +391,8 @@ td.padded { padding:4px; }
 	  <c:set var="coord2" value="${fn:replace(coord1, '<start>', startCoord)}"/>
 	  <c:set var="coords" value="${fn:replace(coord2, '<end>', endCoord)}"/>
 
-      <td class="<%=rightTdStyles.getNext() %>">
-        <table width="100%">
+      <div class="detail <%=rightTdStyles.getNext() %>">
+        <table style="width: 100%;">
         <tr><td>
         <c:if test="${not empty marker.preferredCoordinates}">
         Chr${chromosome}:${startCoord}-${endCoord}
@@ -418,17 +464,17 @@ td.padded { padding:4px; }
 		  </c:if>
 		</td></tr>
 		</table>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- Vertebrate homology ribbon -->
   <c:if test="${(not empty homologyClass) or (marker.hasOneEnsemblGeneModelID) or (not empty marker.pirsfAnnotation)}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Vertebrate<br/>homology
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
 	<c:if test="${not empty homologyClass}">
 	  HomoloGene:${homologyClass.primaryID}&nbsp;&nbsp;<a href="${configBean.FEWI_URL}homology/${homologyClass.primaryID}">Vertebrate Homology Class</a><br/>
 	  <c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if> </c:forEach><p/>
@@ -443,15 +489,15 @@ td.padded { padding:4px; }
 			<c:set var="genetreeUrl" value="${fn:replace(genetreeUrl, '<model_id>', marker.ensemblGeneModelID.accID)}"/>
 			Gene Tree: <a href="${configBean.GENETREE_URL}${marker.ensemblGeneModelID.accID}">${marker.symbol}</a><br/>
 		</c:if>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- Human Homologs ribbon -->
   <c:if test="${not empty humanHomologs}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">Human<br/>homologs</td>
-      <td class="<%=rightTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">Human<br/>homologs</div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
 	<!-- details for each human marker -->
 	<table id="humanHomologDetails">
 
@@ -520,16 +566,16 @@ td.padded { padding:4px; }
 	  </c:forEach>
 
 	</table>
-    </td></tr>
+    </div></div>
   </c:if>
 
   <!-- Allele ribbon -->
   <c:if test="${(marker.countOfAlleles > 0) or (not empty marker.markerClip) or (not empty marker.incidentalMutations) or (marker.countOfHumanDiseases > 0) or (marker.countOfAllelesWithHumanDiseases > 0) or (marker.countOfPhenotypeImages > 0)}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
       Mutations,<br/>alleles, and<br/>phenotypes
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
         <c:if test="${marker.countOfAlleles > 0}">
 		  <c:set var="alleleUrl" value="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}"/>
 		  All mutations/alleles(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) :
@@ -586,41 +632,40 @@ td.padded { padding:4px; }
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
 		  Phenotype Images(<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a>)
 		</c:if>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- interactions ribbon -->
   <c:if test="${not empty interactions}">
-    <tr>
-      <td class="<%=leftTdStyles.getNext() %>">
-	<table><tr><td style="vertical-align: top">
-      <img id="interactionNewImage" src="${configBean.WEBSHARE_URL}images/new_icon.png" style="width: 35px">
-      </td><td style="vertical-align: top; white-space:nowrap">
-        Interactions
-	</td></tr></table>
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
-	<table><tr><td>
-	<c:forEach var="interaction" items="${interactions}" varStatus="status">
-	${interaction}<c:if test="${!status.last}"><br/></c:if>
-	</c:forEach>
-	</td><td>
-	<div style="margin-top: 5px; margin-left: 5px; margin-bottom: 5px;">
-	  <a id="interactionLink" href="${configBean.FEWI_URL}interaction/explorer?markerIDs=${marker.primaryID}" class="markerNoteButton" style='display:inline;'>View All</a>
-	</div>
-	</td></tr></table>
-      </td>
-    </tr>
+    <div class="row">
+      <div class="header <%=leftTdStyles.getNext() %>">
+    	<span style="white-space: nowrap; vertical-align: top;">
+	      	<img id="interactionNewImage" src="${configBean.WEBSHARE_URL}images/new_icon.png" style="width: 35px; vertical-align: top;">
+	        Interactions
+        </span>
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
+	
+		<span style="display: inline;">
+			<c:forEach var="interaction" items="${interactions}" varStatus="status">
+			${interaction}<c:if test="${!status.last}"><br/></c:if>
+			</c:forEach>
+			<div style="display: inline; margin-left: 5px;">
+			  <a id="interactionLink" href="http://localhost:8080/fewi_dev/mgi/interaction/explorer?markerIDs=MGI:87859" class="markerNoteButton" style="display:inline;">View All</a>
+			</div>
+		</span>
+      </div>
+    </div>
   </c:if>
 
   <!-- go classifications -->
   <c:if test="${(marker.countOfGOTerms > 0) or (marker.isInReferenceGenome > 0)}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Gene&nbsp;Ontology<br/>(GO)<br/>classifications
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
 		All GO classifications: (<a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a> annotations)<br/>
 		<table>
 	      <c:if test="${not empty processAnnot1}">
@@ -650,8 +695,8 @@ td.padded { padding:4px; }
 		  External Resources:
 		  <a href="${fn:replace(urls.FuncBase, '@@@@', funcbaseID.accID)}">FuncBase</a><br/>
 		</c:if>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- expression row -->
@@ -661,23 +706,24 @@ td.padded { padding:4px; }
   <c:set var="arrayExpressID" value="${marker.arrayExpressID.accID}"/>
 
   <c:if test="${not (empty marker.gxdAssayCountsByType and (marker.countOfGxdLiterature < 1) and (marker.countOfCdnaSources < 1) and empty allenID and empty gensatID and empty geoID and empty arrayExpressID)}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
-      <div id="gxdHeading" style="clear:both">
-      Expression<br/>
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
+			<div id="gxdHeading">
+				Expression
+			</div>
+		<div id="gxdLogo" style="margin-top: auto;">
+		      <a href="${configBean.HOMEPAGES_URL}expression.shtml">
+		      <img id="gxdLogoImage" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" style='width: 90%;'>
+		      </a>
+	    </div>
       </div>
-      <div id="gxdLogo">
-      <a href="${configBean.HOMEPAGES_URL}expression.shtml">
-      <img id="gxdLogoImage" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" style='width: 50px'>
-      </a>
-      </td>
-      <td id="gxd" class="<%=rightTdStyles.getNext() %>">
+      <div id="gxd" class="detail <%=rightTdStyles.getNext() %>">
 		<c:if test="${marker.countOfGxdLiterature > 0}">
 		  <div id="gxdLit" style="vertical-align:top">
 		  Literature Summary: (<a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a> records)<br/>
 		  </div>
 		</c:if>
-		<div id="gxdOther" style="vertical-align:bottom">
+		<div id="gxdOther" style="margin-top: 5px;">
 		<c:if test="${not empty gxdAssayTypes}">
 		Data Summary:
 		<c:if test="${marker.countOfGxdResults > 0}">
@@ -691,7 +737,9 @@ td.padded { padding:4px; }
 		</c:if>
 		<c:if test="${marker.countOfGxdResults > 0}">
 		  Tissue x Stage Matrix (<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=stagegridtab">view</a>)
-		  <img id="interactionNewImage" src="${configBean.WEBSHARE_URL}images/new_icon.png" style="width: 35px">
+		  <span style="position: absolute;">
+		  	<img id="gxdNewImage" src="${configBean.WEBSHARE_URL}images/new_icon.png" style="position: relative; top: -14px; width: 35px;">
+		  </span>
 		</c:if>
 		<br/>
 		</c:if>
@@ -729,17 +777,16 @@ td.padded { padding:4px; }
 		</c:if>
 		</div>
 	</div>
-      </td>
-    </tr>
+   </div>
   </c:if>
 
   <!-- Molecular reagents -->
   <c:if test="${(not empty marker.molecularReagentCountsByType) || (marker.countOfMicroarrayProbesets > 0)}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Molecular<br/>reagents
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
         <c:set var="reagentUrl" value="${configBean.WI_URL}searches/probe_report.cgi?_Marker_key=${marker.markerKey}"/>
 		<c:forEach var="item" items="${marker.molecularReagentCountsByType}">
 		  <c:set var="reagentType" value="&DNAtypes=${item.countType}"/>
@@ -758,34 +805,34 @@ td.padded { padding:4px; }
 		<c:if test="${marker.countOfMicroarrayProbesets > 0}">
 		  Microarray probesets(<a href="${configBean.FEWI_URL}marker/probeset/${marker.primaryID}">${marker.countOfMicroarrayProbesets}</a>)
 		</c:if>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- Other database links -->
   <c:if test="${not empty logicalDBs}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Other&nbsp;database<br/>links
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
 		<table>
 		  <c:forEach var="item" items="${logicalDBs}">
 			<tr><td>${item}</td><td>${otherIDs[item]}</td></tr>
 		  </c:forEach>
 		</table>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
 
   <!-- Sequences ribbon -->
   <c:if test="${marker.countOfSequences > 0}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Sequences
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
 		<form name="sequenceForm" method="GET">
 		<table class="padded">
 		  <tr><td class="padded" colspan="4">Representative Sequences</td><td class="padded">Length</td><td class="padded">Strain/Species</td><td class="padded">Flank</td></tr>
@@ -838,17 +885,17 @@ td.padded { padding:4px; }
 		<c:if test="${marker.countOfUniProtSequences > 0}">
 		  UniProt(<a href="${seqUrl}?provider=UniProt">${marker.countOfUniProtSequences}</a>)
 		</c:if>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- Polymorphisms ribbon -->
   <c:if test="${not empty marker.polymorphismCountsByType}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Polymorphisms
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
 		<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
 		  <c:set var="countText" value="${item.countType}"/>
 		  <c:set var="polyUrl" value="${configBean.WI_URL}searches/polymorphism_report.cgi?_Marker_key=${marker.markerKey}"/>
@@ -883,18 +930,18 @@ td.padded { padding:4px; }
 		  ${pad}${countText}(<a href="${polyUrl}">${item.count}</a>${polyExtra})
 		  <c:if test="${status.first and (empty isSnp)}">: </c:if>
 		</c:forEach>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- ROW14 -->
   <c:set var="proteinAnnotations" value="${marker.proteinAnnotations}"/>
   <c:if test="${not empty proteinAnnotations}">
-    <tr >
-      <td class="<%=leftTdStyles.getNext() %>">
+    <div class="row" >
+      <div class="header <%=leftTdStyles.getNext() %>">
         Protein-related<br/>information
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>">
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>">
         <table>
         <tr><td>Resource</td><td>ID</td><td>Description</td></tr>
         <c:forEach var="item" items="${proteinAnnotations}">
@@ -922,17 +969,17 @@ td.padded { padding:4px; }
 		    <a href="${fn:replace(url, '@@@@', seq.primaryID)}" target="_new">Graphical View of Protein Domain Structure</a>
 		  </c:if>
         </c:if>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- References -->
   <c:if test="${not empty marker.references}">
-    <tr  valign=top ALIGN=left>
-      <td class="<%=leftTdStyles.getNext() %>" >
+    <div class="row">
+      <div class="header <%=leftTdStyles.getNext() %>" >
         References
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>" >
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>" >
         <c:set var="earliestRef" value="${marker.earliestReference}"/>
         <c:set var="latestRef" value="${marker.latestReference}"/>
 	    <c:if test="${not empty earliestRef}">(Earliest) <a href="${configBean.FEWI_URL}reference/${earliestRef.jnumID}">${earliestRef.jnumID}</a>
@@ -947,95 +994,82 @@ td.padded { padding:4px; }
 		<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
 			Disease annotation references (<a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a>)
 		</c:if>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
   <!-- ROW16 -->
   <c:set var="otherMgiIDs" value="${marker.otherMgiIDs}"/>
   <c:if test="${not empty otherMgiIDs}">
-    <tr  valign=top ALIGN=left>
-      <td class="<%=leftTdStyles.getNext() %>" >
+    <div class="row">
+      <div class="header <%=leftTdStyles.getNext() %>" >
         Other<br/>accession&nbsp;IDs
-      </td>
-      <td class="<%=rightTdStyles.getNext() %>" >
+      </div>
+      <div class="detail <%=rightTdStyles.getNext() %>" >
 		<c:forEach var="item" items="${otherMgiIDs}" varStatus="status">
 		  ${item.accID}<c:if test="${not status.last}">, </c:if>
 		</c:forEach>
-      </td>
-    </tr>
+      </div>
+    </div>
   </c:if>
 
 <!-- close structural table and page template-->
-</table>
+</div>
 ${templateBean.templateBodyStopHtml}
 
 <script>
 function log(msg) {
     // log a message to the browser console
-    setTimeout(function() { throw new Error(msg); }, 0);
+    //setTimeout(function() { throw new Error(msg); }, 0);
+    console.log(msg);
 }
 
-// formatting of GXD section
-
-var gxdHeading = document.getElementById("gxdHeading");
-if (gxdHeading != null) {
-    var headingWidth = gxdHeading.offsetWidth;
-    document.getElementById("gxdLogoImage").style.width = headingWidth + 'px';
-
-    var gxdHeight = document.getElementById("gxd").offsetHeight;
-    var otherHeight = document.getElementById("gxdOther").offsetHeight;
-
-    var litHeight = 0;
-    try {
-	litHeight = document.getElementById("gxdLit").offsetHeight;
-    } catch (e) {};
-
-    var pad = gxdHeight - litHeight - otherHeight;
-
-    // add padding between Lit Summary and cDNA source data, if needed
-    if (pad > 0) {
-        document.getElementById('gxdOther').style.paddingTop = pad + 'px';
-    }
-
-    var imageHeight = document.getElementById("gxdLogo").offsetHeight;
-    var headingHeight = document.getElementById("gxdHeading").offsetHeight;
-
-    var imagePad = Math.round( (gxdHeight - imageHeight) / 2) - headingHeight;
-
-    // add padding to center the logo vertically in the expression ribbon
-    if (imagePad > 0) {
-        document.getElementById("gxdLogo").style.paddingTop = imagePad + 'px';
-    }
-}
-
-// cluster membership
-
-var elem = document.getElementById("clusterMemberTable");
-if (elem != null) {
-    YAHOO.namespace("markerDetail.container");
-
-    var props = { visible:false, constraintoviewport:true,
-	context:['showClusterMembers', 'tl', 'br',
-	[ 'beforeShow', 'windowResize' ] ] };
-
-    if (${memberCount} > 12) {
-	props.height = "300px";
-	props.width = (elem.offsetWidth + 40) + "px";
-    }
-
-    YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
-        "clusterMemberDiv", props);
-    YAHOO.markerDetail.container.clusterMemberPanel.render();
-    YAHOO.util.Event.addListener ("showClusterMembers", "click",
-        YAHOO.markerDetail.container.clusterMemberPanel.show,
-        YAHOO.markerDetail.container.clusterMemberPanel, true);
-    YAHOO.util.Event.addListener (
-        "YAHOO.markerDetail.container.clusterMemberPanel", "move",
-        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
-    YAHOO.util.Event.addListener (
-        "YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
-        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
-    elem.style.display = '';		// make the div visible
-}
+$(function(){
+	//formatting of GXD section
+	
+	var gxdHeading = $("#gxdHeading");
+	if (gxdHeading.length > 0) {
+	    var gxdHeight = $('#gxd').height();
+	    var headingHeight = $('#gxdHeading').height();
+	    var logo = $('#gxdLogo');
+	    var imageHeight = logo.height();
+	
+	    var imagePad = Math.round( (gxdHeight - imageHeight) / 2) - headingHeight;
+	
+	    // add padding to center the logo vertically in the expression ribbon
+	    if (imagePad > 0) {
+	        logo.css('padding-top', imagePad + 'px');
+	    }
+	}
+	
+	// cluster membership
+	
+	var elem = document.getElementById("clusterMemberTable");
+	if (elem != null) {
+	    YAHOO.namespace("markerDetail.container");
+	
+	    var props = { visible:false, constraintoviewport:true,
+		context:['showClusterMembers', 'tl', 'br',
+		[ 'beforeShow', 'windowResize' ] ] };
+	
+	    if (${memberCount} > 12) {
+		props.height = "300px";
+		props.width = (elem.offsetWidth + 40) + "px";
+	    }
+	
+	    YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
+	        "clusterMemberDiv", props);
+	    YAHOO.markerDetail.container.clusterMemberPanel.render();
+	    YAHOO.util.Event.addListener ("showClusterMembers", "click",
+	        YAHOO.markerDetail.container.clusterMemberPanel.show,
+	        YAHOO.markerDetail.container.clusterMemberPanel, true);
+	    YAHOO.util.Event.addListener (
+	        "YAHOO.markerDetail.container.clusterMemberPanel", "move",
+	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
+	    YAHOO.util.Event.addListener (
+	        "YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
+	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
+	    elem.style.display = '';		// make the div visible
+	}
+});
 </script>
