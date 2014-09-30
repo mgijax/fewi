@@ -1043,22 +1043,26 @@ function SuperGrid(config)
         if(_self.data.empty())
         {
         	_self.setEmptyMsg();
+
+            _self.renderCompletedFunction();
         }
         else
         {
         	_self.data.sortColumns();
-
+        	
 	        _self.initSvg();
 
 	        _self.buildInitialFixedColumnHeaders();
 
-	        _self.buildInitialMatrix();
-
-	        _self.buildInitialFixedRowHeaders();
-
-	        _self.refreshSvgHeight();
+	        _self.buildInitialMatrix()
+		        .done(function(){
+		        	_self.buildInitialFixedRowHeaders();
+	
+		        	_self.refreshSvgHeight();
+		        	
+		        	_self.renderCompletedFunction();
+		        });
         }
-        _self.renderCompletedFunction();
     }
 
     /*
@@ -1356,6 +1360,8 @@ function SuperGrid(config)
     */
     this.buildInitialMatrix = function()
     {
+    	var _deferred = $.Deferred();
+    	
         var g = _self.matrixGroupInner;
         _self.matrixCellGroup = g.append("g").attr("class","matrixCell");
 
@@ -1365,7 +1371,11 @@ function SuperGrid(config)
         var cells = _self.data.getVisibleCellsInRange(0,_self.maxRows-1,0,_self.maxColumns-1);
         var rows = Math.min(_self.maxRows,_self.data.numRows);
         var cols = Math.min(_self.maxColumns,_self.data.numCols);
-        _self.drawMatrix(g,_self.cellSize,cells,0,rows,0,cols,_self.matrixX,_self.matrixY);
+        _self.drawMatrix(g,_self.cellSize,cells,0,rows,0,cols,_self.matrixX,_self.matrixY)
+        	.done(function(){
+        		_deferred.resolve();
+        	});
+        return _deferred.promise();
     }
 
     this.calculateMatrixX = function()
@@ -1379,12 +1389,20 @@ function SuperGrid(config)
 
     this.drawMatrix = function(d3Target,cellSize,cells,startRows,endRows,startCols,endCols,startX,startY)
     {
+    	var _deferred = $.Deferred();
+    	
         // Assign the current row/column settings
         _self.currentRows = endRows;
         _self.currentCols = endCols;
 
         _self.drawMatrixLines(d3Target,cellSize,startRows,endRows,startCols,endCols,startX,startY);
-        _self.updateMatrixCells(d3Target,cellSize,cells,startX,startY);
+        
+        _self.updateMatrixCells(d3Target,cellSize,cells,startX,startY)
+        	.done(function(){
+        		_deferred.resolve();
+        	});
+        
+        return _deferred.promise();
     }
 
     this.drawMatrixLines = function(d3Target,cellSize,startRows,endRows,startCols,endCols,startX,startY)
@@ -1422,6 +1440,8 @@ function SuperGrid(config)
     */
     this.updateMatrixCells = function(d3Target,cellSize,cells,startX,startY)
     {
+    	var _deferred = $.Deferred();
+    	
     	// set some default values
     	cells.forEach(function(cell,i){
     		cell.rowOffset = 0;
@@ -1430,21 +1450,60 @@ function SuperGrid(config)
     	var dJoin = _self.matrixCellGroup.selectAll("g").data(cells,function(d){ return d.ri+"_"+d.ci});
     	var gEnter = dJoin.enter().append("g");
 
-    	//_self.cellRenderer(gEnter,cellSize);
-    	gEnter[0].forEach(function(g,i){
-    		if(g)
-    		{
-    			g = d3.select(g);
-    			_self.cellRenderer(g,cellSize,g.datum());
-    		}
-    	});
+    	
+    	_self.executeCellRenderers(cellSize,gEnter[0])
+    		.done(function(){
+    			
+    			// handle updates
+    	        dJoin.attr("class",function(d,i){ return "cell row"+d.ri+" col"+d.ci; })
+    	    		.attr("transform",_self.cellTransform);
 
-    	// handle updates
-        dJoin.attr("class",function(d,i){ return "cell row"+d.ri+" col"+d.ci; })
-    		.attr("transform",_self.cellTransform);
+    	        // handled removed data
+    	    	dJoin.exit().remove();
+    	    	
+    	    	_deferred.resolve();
+    		});
 
-        // handled removed data
-    	dJoin.exit().remove();
+    	return _deferred.promise();
+    }
+    
+    /*
+     * Executes all the cell renderers,
+     *  may occasionally relenquish control to browser for 
+     *  large numbers of cells
+     */
+    _self.executeCellRenderers = function(cellSize,d3Groups)
+    {
+    	var _deferred = $.Deferred();
+    	
+    	var i=0;
+    	(function () {
+    	    for (; i < d3Groups.length; i++) {
+    	        g = d3Groups[i];
+    	        if(g)
+        		{
+        			g = d3.select(g);
+        			_self.cellRenderer(g,cellSize,g.datum());
+        		}
+    	        
+    	        // Every 10,000 iterations, take a break
+    	        if ( i > 0 && i % 10000 == 0) {
+    	            // Manually increment `i` because we break
+    	            i++;
+    	            // Set a timer for the next iteration 
+    	            window.setTimeout(arguments.callee);
+    	            break;
+    	        }
+    	    }
+
+    	    // only resolve when we have processed all groups
+        	if (i >= d3Groups.length)
+        	{
+        		_deferred.resolve();
+        	}
+    	})();
+    	
+    	return _deferred.promise();
     }
 
     /*
