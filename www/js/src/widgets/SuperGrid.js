@@ -1486,8 +1486,8 @@ function SuperGrid(config)
         			_self.cellRenderer(g,cellSize,g.datum());
         		}
     	        
-    	        // Every 10,000 iterations, take a break
-    	        if ( i > 0 && i % 10000 == 0) {
+    	        // Every 8,000 iterations, take a break
+    	        if ( i > 0 && i % 8000 == 0) {
     	            // Manually increment `i` because we break
     	            i++;
     	            // Set a timer for the next iteration 
