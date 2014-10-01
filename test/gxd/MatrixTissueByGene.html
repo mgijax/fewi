@@ -47,6 +47,7 @@
         <li>User story 113, E5: Tissue x Gene: User can select and filter genes</li>
         <li>User story 69, E4: O/C state remembered across filtering</li>
         <li>User story 164, cell-pop ups to 0 images</li>
+        <li>User story 201, Enable/Disable filter button</li>
     </ul>
 </div>
 
@@ -184,6 +185,12 @@
 			<li>grids are not kept in sync w/ each other</li>
 			<li>open state is remembers across back buttons</li>
 		</ul>
+		<li>sto201 - Make the default state of the filter button disabled and grayed out.
+		<ul>
+			<li>When 1 or more gene filter is applied the filter button is enabled</li>
+			<li>When 1 or more tissue system filter is applied the filter button is enabled</li>
+			<li>When all filters are removed the filter button disables/grays out</li>
+		</ul>		
 		</li>
 	</ul>
 </div>
@@ -1379,8 +1386,45 @@
                 <li>Verify that highlighting is removed from these rows</li>
 			</ol>
 			</li>
+			<li>When query results are first displayed the filter button on the Tissue by Genes tab is disabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker Pax6</li>
+				<li>Click the Tissue x Gene tab</li>
+				<li>Verify that the filter button is disabled/grayed out</li>
+			</ol>
+			</li>
 
-
+			<li>When 1 or more gene filter is applied to the Tissue x Gene tab the filter button is enabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker pax6</li>
+				<li>Click the Tissue x Gene tab</li>
+				<li>Click any gene filter box</li>
+				<li>Verify the filter button enables</li>
+			</ol>
+			</li>
+			
+			<li>When 1 or more Tissue filter is applied to the Tissue x Gene tab the filter button is enabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker pax6</li>
+				<li>Click the Tissue x Gene tab</li>
+				<li>Click any tissue filter box</li>
+				<li>Verify the filter button enables</li>
+			</ol>
+			</li>
+			
+			<li>When all filters are removed the filter button on the Tissue by Genes tab is disabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker Pax6</li>
+				<li>Click the Tissue x Gene tab</li>
+				<li>Verify that the filter button is disabled/grayed out</li>
+				<li>Click several tissue and gene filters to enable the filter button</li>
+				<li>Remove all the filters and verify the filter button is again disabled/grayed out</li>
+			</ol>
+			</li>
 <!-- 
 			<li>Statement of required behavior.
 			<p concordion:manual="false">new</p>

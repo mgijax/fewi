@@ -78,6 +78,7 @@ table.imagetable td {
         <li>User story 65, E5: Tissue x Stage: User can select and filter stages</li>
         <li>User story 69, E4: O/C state remembered across filtering</li>
         <li>User story 164, cell-pop ups to 0 images</li>
+        <li>User story 201, Enable/Disable filter button</li>
     </ul>
 </div>
 
@@ -270,6 +271,13 @@ table.imagetable td {
 			<li>grids are not kept in sync w/ each other</li>
 			<li>open state is remembers across back buttons</li>
 		</ul>
+		</li>
+		<li>sto201 - Make the default state of the filter button disabled and grayed out.
+		<ul>
+			<li>When 1 or more stage filter is applied the filter button is enabled</li>
+			<li>When 1 or more tissue system filter is applied the filter button is enabled</li>
+			<li>When all filters are removed the filter button disables/grays out</li>
+		</ul>		
 		</li>
 	</ul>
 </div>
@@ -3472,6 +3480,45 @@ table.imagetable td {
                 <li>Verify that when a row filter checkbox is checked the entire row is highlighted.</li>
                 <li>Deselect several rows you has previously selected.</li>
                 <li>Verify that highlighting is removed from these rows.</li>
+			</ol>
+			</li>
+			<li>When query results are first displayed the filter button on the Tissue by Stage tab is disabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker Pax6</li>
+				<li>Click the Tissue x Stage tab</li>
+				<li>Verify that the filter button is disabled/grayed out</li>
+			</ol>
+			</li>
+
+			<li>When 1 or more stage filter is applied to the Tissue x Stage tab the filter button is enabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker pax6</li>
+				<li>Click the Tissue x Stage tab</li>
+				<li>Click any stage filter box</li>
+				<li>Verify the filter button enables</li>
+			</ol>
+			</li>
+			
+			<li>When 1 or more Tissue filter is applied to the Tissue x Stage tab the filter button is enabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker pax6</li>
+				<li>Click the Tissue x Stage tab</li>
+				<li>Click any tissue filter box</li>
+				<li>Verify the filter button enables</li>
+			</ol>
+			</li>
+			
+			<li>When all filters are removed the filter button on the Tissue by Stage tab is disabled
+			<p concordion:manual="true">Jeffc 10/01/2014</p>
+			<ol>
+				<li>Query for Marker Pax6</li>
+				<li>Click the Tissue x Stage tab</li>
+				<li>Verify that the filter button is disabled/grayed out</li>
+				<li>Click several tissue and stage filters to enable the filter button</li>
+				<li>Remove all the filters and verify the filter button is again disabled/grayed out</li>
 			</ol>
 			</li>
 		</ol>
