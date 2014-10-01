@@ -1049,7 +1049,7 @@ function SuperGrid(config)
         else
         {
         	_self.data.sortColumns();
-        	
+
 	        _self.initSvg();
 
 	        _self.buildInitialFixedColumnHeaders();
@@ -1057,9 +1057,9 @@ function SuperGrid(config)
 	        _self.buildInitialMatrix()
 		        .done(function(){
 		        	_self.buildInitialFixedRowHeaders();
-	
+
 		        	_self.refreshSvgHeight();
-		        	
+
 		        	_self.renderCompletedFunction();
 		        });
         }
@@ -1264,8 +1264,10 @@ function SuperGrid(config)
 		    .attr("y", buttonYOffset+4)
 		    .attr("dy", "1em")
 		    .style("cursor","pointer")
+		    .style("opacity","0.5")
 		    .text("Filter")
 		    .attr("class","matrixButtonText")
+		    .attr("id","filterTextID")
 	    	.style("font-size","13px")
     		.append("svg:title").text("Click to apply row/column filters");
 
@@ -1278,6 +1280,8 @@ function SuperGrid(config)
     			.attr("width",_self.cellSize * (1/2))
     			.attr("height",_self.cellSize * (1/2))
     			.attr("xlink:href",_self.filterButtonIconUrl)
+			    .attr("id","filterIconID")
+			    .style("opacity","0.5")
 	    		.append("svg:title").text("Click to apply row/column filters");
     	}
     	else
@@ -1361,7 +1365,7 @@ function SuperGrid(config)
     this.buildInitialMatrix = function()
     {
     	var _deferred = $.Deferred();
-    	
+
         var g = _self.matrixGroupInner;
         _self.matrixCellGroup = g.append("g").attr("class","matrixCell");
 
@@ -1390,18 +1394,18 @@ function SuperGrid(config)
     this.drawMatrix = function(d3Target,cellSize,cells,startRows,endRows,startCols,endCols,startX,startY)
     {
     	var _deferred = $.Deferred();
-    	
+
         // Assign the current row/column settings
         _self.currentRows = endRows;
         _self.currentCols = endCols;
 
         _self.drawMatrixLines(d3Target,cellSize,startRows,endRows,startCols,endCols,startX,startY);
-        
+
         _self.updateMatrixCells(d3Target,cellSize,cells,startX,startY)
         	.done(function(){
         		_deferred.resolve();
         	});
-        
+
         return _deferred.promise();
     }
 
@@ -1441,7 +1445,7 @@ function SuperGrid(config)
     this.updateMatrixCells = function(d3Target,cellSize,cells,startX,startY)
     {
     	var _deferred = $.Deferred();
-    	
+
     	// set some default values
     	cells.forEach(function(cell,i){
     		cell.rowOffset = 0;
@@ -1450,32 +1454,32 @@ function SuperGrid(config)
     	var dJoin = _self.matrixCellGroup.selectAll("g").data(cells,function(d){ return d.ri+"_"+d.ci});
     	var gEnter = dJoin.enter().append("g");
 
-    	
+
     	_self.executeCellRenderers(cellSize,gEnter[0])
     		.done(function(){
-    			
+
     			// handle updates
     	        dJoin.attr("class",function(d,i){ return "cell row"+d.ri+" col"+d.ci; })
     	    		.attr("transform",_self.cellTransform);
 
     	        // handled removed data
     	    	dJoin.exit().remove();
-    	    	
+
     	    	_deferred.resolve();
     		});
 
     	return _deferred.promise();
     }
-    
+
     /*
      * Executes all the cell renderers,
-     *  may occasionally relenquish control to browser for 
+     *  may occasionally relenquish control to browser for
      *  large numbers of cells
      */
     _self.executeCellRenderers = function(cellSize,d3Groups)
     {
     	var _deferred = $.Deferred();
-    	
+
     	var i=0;
     	(function () {
     	    for (; i < d3Groups.length; i++) {
@@ -1485,12 +1489,12 @@ function SuperGrid(config)
         			g = d3.select(g);
         			_self.cellRenderer(g,cellSize,g.datum());
         		}
-    	        
+
     	        // Every 8,000 iterations, take a break
     	        if ( i > 0 && i % 8000 == 0) {
     	            // Manually increment `i` because we break
     	            i++;
-    	            // Set a timer for the next iteration 
+    	            // Set a timer for the next iteration
     	            window.setTimeout(arguments.callee);
     	            break;
     	        }
@@ -1502,7 +1506,7 @@ function SuperGrid(config)
         		_deferred.resolve();
         	}
     	})();
-    	
+
     	return _deferred.promise();
     }
 
@@ -2336,6 +2340,7 @@ function SuperGrid(config)
 			_self.colFilterCheck(col, "check", el);
 		}
 		_self.updateFilterHighlights();
+		_self.updateFilterButton();
     }
 
     this.colFilterCheck = function(col, type, d3Target)
@@ -2370,7 +2375,30 @@ function SuperGrid(config)
 		_self.lastFilterRow = row;
 		_self.updateFilterTree();
 		_self.updateFilterHighlights();
+		_self.updateFilterButton();
+
+    	// update filter button
+
     }
+
+    /*
+     * activates filter button if anything is selected
+     */
+    this.updateFilterButton = function()
+    {
+    	var filteredRows = _self.getFilteredRows();
+    	var filteredColumns = _self.getFilteredColumns();
+    	if((filteredRows && filteredRows.length) || (filteredColumns && filteredColumns.length))
+    	{
+			$("#filterTextID").css("opacity","1");
+			$("#filterIconID").css("opacity","1");
+    	}
+    	else
+    	{
+			$("#filterTextID").css("opacity","0.5");
+			$("#filterIconID").css("opacity","0.5");
+		}
+	}
 
     this.rowFilterCheck = function(row, type, d3Target, applyToChildren, applyToParents)
     {
