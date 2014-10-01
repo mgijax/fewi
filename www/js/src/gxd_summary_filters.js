@@ -177,7 +177,7 @@ var buildFacetDialog = function() {
 
     gsfFacetDialog = new YAHOO.widget.Dialog("facetDialog", {
 	visible : false,
-	context : [ "filterDiv", "tl", "bl", ["beforeShow"]],
+	context : [ "summary", "tl", "tl", ["beforeShow","changeContent"]],
 	constraintoviewport : true,
 	buttons : [{ text:"Filter", handler:handleSubmit, isDefault:true } ]
     } );
