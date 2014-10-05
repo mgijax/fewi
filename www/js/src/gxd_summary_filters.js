@@ -9,6 +9,37 @@
 var facets = {};
 var gsfFacetDialog;
 
+var displayStageDayMap = {
+	1:"(E0-2.5)",
+	2:"(E1-2.5)",
+	3:"(E1-3.5)",
+	4:"(E2-4)",
+	5:"(E3-5.5)",
+	6:"(E4-5.5)",
+	7:"(E4.5-6)",
+	8:"(E5-6.5)",
+	9:"(E6.25-7.25)",
+	10:"(E6.5-7.75)",
+	11:"(E7.25-8)",
+	12:"(E7.5-8.75)",
+	13:"(E8-9.25)",
+	14:"(E8.5-9.75)",
+	15:"(E9-10.25)",
+	16:"(E9.5-10.75)",
+	17:"(E10-11.25)",
+	18:"(E10.5-11.25)",
+	19:"(E11-12.25)",
+	20:"(E11.5-13)",
+	21:"(E12.5-14)",
+	22:"(E13.5-15)",
+	23:"(E15)",
+	24:"(E16)",
+	25:"(E17)",
+	26:"(E18)",
+	27:"(P0-3)",
+	28:"(P4-Adult)"
+};
+
 /* Functions
  */
 
@@ -100,31 +131,43 @@ var populateFacetDialog = function (title, body, error) {
 /* parse the results we get back to populate a filter
  */
 var parseFacetResponse = function (oRequest, oResponse, oPayload) {
-    var results = oResponse.results;
-    var facetName = oPayload.name;
-    var options = [];
+	var results = oResponse.results;
+	var facetName = oPayload.name;
+	var options = [];
 
-    results.forEach(function(facet){
-    	// check any existing filters
-    	var checked = '';
-    	var fVal = encode(facet);
-    	if (facetName in window.facets) {
-		    var fil = facets[oPayload.name];
-		    var i = fil.length;
-		    while (i--) {
+	results.forEach(function(facet){
+		// check any existing filters
+		var checked = '';
+		var fVal = encode(facet);
+		if (facetName in window.facets) {
+			var fil = facets[oPayload.name];
+			var i = fil.length;
+			while (i--) {
 				if (fil[i] === fVal) {
-				    checked = ' checked ';
+					checked = ' checked ';
 				}
-		    }
-		} 
-    	options[options.length] = '<label><input type="checkbox" name="'
-			+ facetName + '" value="'
-			+ facet.replace(/,/g, '*') + '"'
-			+ checked + '> '
-			+ facet + '</label>';
-    });
+			}
+		}
 
-    populateFacetDialog(oPayload.title, options.join('<br/>'), false);
+		// create each row of filter
+		if (facetName == 'theilerStageFilter') {
+			var facetLabel = 'TS' + facet + ' ' + displayStageDayMap[facet];
+			options[options.length] = '<label><input type="checkbox" name="'
+				+ facetName + '" value="'
+				+ facet.replace(/,/g, '*') + '"'
+				+ checked + '> '
+				+ facetLabel + '</label>';
+		}
+		else {
+			options[options.length] = '<label><input type="checkbox" name="'
+				+ facetName + '" value="'
+				+ facet.replace(/,/g, '*') + '"'
+				+ checked + '> '
+				+ facet + '</label>';
+		}
+	});
+
+	populateFacetDialog(oPayload.title, options.join('<br/>'), false);
 };
 
 /*
@@ -338,7 +381,7 @@ var prepFilters = function(qfRequest) {
  */
 var clearAllFilters = function() {
     window.facets = {};
-    
+
 //    var newState = generateRequest (gxdDataTable.getState().sortedBy, 0,
 //	gxdDataTable.get("paginator").getRowsPerPage() );
 //    YAHOO.util.History.navigate("gxd", newState);
@@ -396,7 +439,7 @@ var populateFilterSummary = function() {
 		while (filterList.hasChildNodes()) {
 		    filterList.removeChild(filterList.get('firstChild'));
 		}
-	
+
 		clear = document.createElement('a');
 		clear.setAttribute('class', 'filterItem');
 		clear.setAttribute('id' , 'clearFilter');
@@ -412,13 +455,13 @@ var populateFilterSummary = function() {
     	// ensure that facet lists are unique
     	window.facets[k] = FewiUtil.uniqueValues(facets[k]);
 		var fValues = facets[k];
-		
+
 		var brTag = false;
 		fValues.forEach(function(filterValue){
 		    YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 		    vis = true;
 		    brTag = true;
-	
+
 		    var el = document.createElement('a');
 		    el.setAttribute('class', 'filterItem');
 		    el.setAttribute('id', k + ':' + filterValue);
@@ -426,7 +469,7 @@ var populateFilterSummary = function() {
 		    el.setAttribute('title', 'click to remove this filter');
 		    var filterTitle = k.charAt(0).toUpperCase() + k.slice(1);
 		    filterTitle = filterTitle.replace('Filter', '');
-	
+
 		    // some filters use camelcase; need to insert a space for them
 		    if(filterTitle == 'AssayType') filterTitle = 'Assay Type';
 		    else if(filterTitle == 'TheilerStage') filterTitle = "TS";
@@ -447,9 +490,9 @@ var populateFilterSummary = function() {
 		    	}
 		    }
 		    else if(filterTitle == 'Detected') filterTitle += '?';
-	
+
 		    if(filterTitle) filterTitle += ': ';
-	
+
 		    // sanitize the filterValue
 		    if(filterValue)
 		    {
@@ -458,13 +501,13 @@ var populateFilterSummary = function() {
 		    }
 		    var val = filterTitle + filterValue;
 		    setText(el, val);
-	
+
 		    filterList.appendChild(el);
 		    YAHOO.util.Event.addListener(el, 'click', clearFilter);
-	
+
 		    filterList.appendChild(document.createTextNode(' '));
 		});
-	
+
 		if (brTag) {
 		    filterList.appendChild(document.createElement('br'));
 		}
