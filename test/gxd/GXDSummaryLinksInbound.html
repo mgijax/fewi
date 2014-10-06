@@ -1,0 +1,206 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+    table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+    table, th, td {border: 1px solid #CCCCCC;}
+    td, th {padding:2px;}
+    .man {background-color:#FFFFCC;}
+    ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+    li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+    p {margin:2px 0px;}
+</style>
+    <title>GXD Summary Links Inbound</title>
+</head>
+
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+<body>
+
+<div id="TOC">
+    <p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>GXD Summary Links, Inbound</h1>
+    <p>formerly: Marker Detail GXD Link Changes</p>
+    <ul>
+        <li>MGI 5.10, User story 96, Change links to GXD from the Marker Detail page</li>
+        <li>MGI 5.14, User story 81, Change links to GXD Summary from the Antibody Detail and Probe Detail pages</li>
+        <li>MGI 5.20, User story 22, E2: Add links to tissue x stage results</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+    <ul>
+		<li>sto22: add new link from marker detail expression ribbon</li>
+		<li>sto22: link text = "Matrix view"</li>
+		<li>sto22: link to expression results for that gene, opened to the tissue x stage matrix tab</li>
+    </ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+	<ul>
+		<li>"Assays" link from Expression ribbon of the Marker Detail Page does not appear</li>
+		<li>"Results" link from Expression ribbon of the Marker Detail Page goes to non-query GXD Assay Results page</li>
+		<li>"TS" link from Expression ribbon of the Marker Detail Page goes to non-query GXD Assay Results page</li>
+		<li>Non-query GXD Assay Results page has no "modify search" section</li>
+		<li>Non-query GXD Assay Results page has the standard "Object" heading ribbon (marker, reference, allele, or other object)</li>
+		<li>Non-query GXD Assay Results page has You searched for.. section with text appropriate to the referring link, when appropriate</li>
+		<li>"Results" tab is the default active tab except...
+		<ul>
+			<li>"Tissues X Stage Matrix" tab is the default active tab when following "Matrix View" link from Marker Detail page</li>
+		</ul>
+		</li>
+	</ul>
+</div>
+
+<div id="tests">
+    <h2>Tests</h2>
+    <div id="manual">
+        <h3>Manual tests</h3>
+        <h4>from Marker Detail Page</h4>
+        <ol>
+            <li>The "Results" link from the Expression ribbon of the Marker detail goes to a non-query GXD Assay Results page.
+            <p concordion:manual="true">jeffc 8/13/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Verify the <b>Results link found in the Data summary line</b> of the Expression ribbon now goes to the non-query GXD Assay Results page</li>
+                <li>Verify the <b>Results links found for each assay type</b> in the Expression ribbon now go to the non-query GXD Assay Results page</li>
+            </ol>
+            </li>
+
+            <li>"TS" links from Expression ribbon of the Marker Detail Page go to non-query GXD Assay Results page.
+        	<p concordion:manual="true">jeffc 8/13/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Verify the <b>TS links found in the Theiler Stages line</b> of the Expression ribbon now go to the non-query GXD Assay Results page</li>
+            </ol>
+            </li>
+
+            <li>The "Matrix view" link from Expression ribbon of the Marker Detail Page go to non-query GXD Assay Results page. (sto22)
+        	<p concordion:manual="true">passed. -klf 2014-06-23</p>
+            <ol>
+                <li>Navigate to the <b>Psmb2</b> detail page.</li>
+                <li>Verify the <b>Matrix view</b> link on the "Data Summary" line of the Expression ribbon goes to the non-query GXD Assay Results page</li>
+            </ol>
+            </li>
+
+            <li>The non-query GXD Assay Results page has no modify search section.
+        	<p concordion:manual="true">jeffc 8/13/12</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the <b>Results</b> link found in the Data summary line of the Expression ribbon</li>
+                <li>Verify when the non-query GXD Assay Results page displays and it has <b>no Modify search section</b></li>
+            </ol>
+            </li>
+
+            <li>The non-query GXD Assay Results page has the standard Marker heading ribbon when following link from Marker Detail Page. (modified for sto22)
+            <p concordion:manual="true">passed. -klf 2014-06-23</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the <b>Results</b> link found in the Data summary line of the Expression ribbon.</li>
+                <li>Verify the standard <b>Marker header ribbon for Pax6</b> displays at the top of the non-query GXD Assay Results page.</li>
+                <li>Return to the Pax6 detail page.</li>
+                <li>Click on the <b>Matrix View</b> link found in the Data summary line of the Expression ribbon.</li>
+                <li>Verify the standard <b>Marker header ribbon for Pax6</b> displays at the top of the non-query GXD Assay Results page.</li>
+            </ol>
+            </li>
+
+            <li>The non-query GXD Assay Results page has NO, You searched for.. section with when following "Results" link from Marker Detail Page.
+            <p concordion:manual="true">jeffc 8/13/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the <b>Results</b> link found in the Data summary line of the Expression ribbon</li>
+                <li>Verify <b>no text</b> appears just below the standard Marker header ribbon for Pax6</li>
+            </ol>
+            </li>
+
+            <li>The non-query GXD Assay Results page has You searched for.. section with data for assay type displayed when following links for specific assay types from Marker Detail Page.
+            <p concordion:manual="true">jeffc 8/13/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on the individual <b>Results links</b> found for each assay type in the Expression ribbon</li>
+                <li>Verify text <b>Data summary:</b> appears below the standard Marker header ribbon for Pax6</li>
+                <li>Verify text <b>Assayed by (xxx)</b>  appears below the header text, where "xxx" is the assay type whose link was clicked, with correct formatting:<br/>
+                Assayed by: <b>(Immunohistochemistry)</b>
+                 </li>
+            </ol>
+            </li>
+
+            <li>The non-query GXD Assay Results page has You searched for.. section with data for Theiler stage displayed when following links for specific Theiler Stages from Marker Detail Page.
+            <p concordion:manual="true">jeffc 8/13/2012</p>
+            <ol>
+                <li>Navigate to the <b>Pax6</b> detail page.</li>
+                <li>Click on a <b>TS</b> link found in the Theiler stage summary line of the Expression ribbon</li>
+                <li>Verify text <b>Data summary:</b> appears below the standard Marker header ribbon for Pax6</li>
+                <li>Verify text <b>at Developmental stage(s): (xxx)</b>  appears below the header text, where "xxx" is the Theiler Stage "TS" value whose link was clicked, with correct formatting:<br/>
+                at Developmental Stage(s): <b>(TS12)</b>
+                </li>
+            </ol>
+            </li>
+
+			<li>Following the "Matrix view" link from a Marker Detail Page loads the non-query GXD Assay Results summary page with the "Tissue x Stage matrix" as the active tab. (sto22)
+        	<p concordion:manual="true">passed. -klf 2014-06-23</p>
+            <ol>
+                <li>Navigate to the <b>Psmb2</b> detail page.</li>
+                <li>Follow the <b>Matrix view</b> link on the "Data Summary" line of the Expression ribbon.</li>
+                <li>Verify that the non-query GXD Assay Results page loads with the "Tissue x Stage matrix" tab as the active tab.</li>
+            </ol>
+			</li>
+			
+			<li>Following the "Matrix view" link from a Marker Detail Page loads the Tissue x Stage matrix grid and populates it with the correct data for the marker. (sto22)
+        	<p concordion:manual="true">passed. -klf 2014-06-23</p>
+            <ol>
+                <li>Navigate to the <b>Psmb2</b> detail page.</li>
+                <li>Follow the <b>Matrix view</b> link on the "Data Summary" line of the Expression ribbon.</li>
+                <li>Verify that the rows, columns, colored cells, and graphics displayed are the same as an <b>Gene Expression Data search form query, Tissue X Stage matrix tab display for Psmb2</b>.</li>
+                <li>Navigate to the <b>Amn1</b> detail page.</li>
+                <li>Follow the <b>Matrix view</b> link on the "Data Summary" line of the Expression ribbon.</li>
+                <li>Verify that the rows, columns, colored cells, and graphics displayed are the same as an <b>Gene Expression Data search form query, Tissue X Stage matrix tab display for Amn1</b>.</li>
+            </ol>
+			</li>
+       </ol>
+
+
+       <h4>From Probe Detail and Antibody Detail pages</h4>
+       <ol>
+       		<li>The link from the Antibody Detail page returns the correct GXD Summary page with the correct number of results
+            <p concordion:manual="true">klf 3/25/2013</p>
+            <ol>
+            	<li>Navigate to the <a href="http://cardolan.informatics.jax.org/searches/antibody.cgi?4691">Antibody Detail page for 12F8 Antibody</a></li>
+            	<li>Verify that the Additional Information section says "24 results".</li>
+            	<li>Click the link and verify that 24 results are displayed.</li>
+            	<li>Verify that all results belong to Immunohistochemistry or Western Blot assays for Ncam1.</li>
+            </ol>
+			</li>
+
+			<li>The link from the Probe Detail page returns the correct GXD Summary page with the correct number of results
+			<p concordion:manual="true">klf 3/25/2013</p>
+            <ol>
+            	<li>Navigate to the <a href="http://cardolan.informatics.jax.org/searches/probe.cgi?2543536">Probe Detail page for Arhgap31 probe</a></li>
+            	<li>Verify that the Additional Information section says "17 results".</li>
+            	<li>Click the link and verify that 17 results are displayed.</li>
+            	<li>Verify that all results belong to one RNA in situ assay for Arhgap31</li>
+            </ol>
+			</li>
+       </ol>
+    </div>
+
+
+    <div id="auto">
+        <h3>Automated tests</h3>
+       		<ol>
+    		<li>none</li>
+			</ol>
+    </div>
+</div>
+
+</body>
+</html>

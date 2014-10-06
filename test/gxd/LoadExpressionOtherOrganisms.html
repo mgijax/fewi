@@ -1,0 +1,199 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Load Expression for Other Organisms</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Load Expression for Other Organisms</h1>
+    <ul>
+        <li>User story 196, Load and Link to Chicken  and Zfin Gene Expression Page</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria - Current Development Work</h2>
+	<ul>
+		<li>Acc crit 1</li>
+		<li>Acc crit 2</li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+    <ul>
+    	<li>Load the appropriate data so that we can do the following:
+    	<ul>
+	        <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data as found in the file at GEISHA: <i>http://geisha.arizona.edu/geisha/expression.txt</i>.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog.</li>
+	        <li>When 2 or more chicken orthologs exist for a mouse marker, display all of them.</li>
+	        <li>Display link to expression data page for a zebrafish marker at ZFIN on the mouse marker detail page when the chicken ortholog has such data as found in the file at ZFIN: <i>http://zfin.org/downloads/xpat.txt</i>.  Do NOT display a link when ZFIN does not have expression data for the zebrafish ortholog.</li>
+	        <li>When 2 or more zebrafish orthologs exist for a mouse marker, display all of them.</li>
+	        <li>Display requirements for the mouse marker detail page are in the <a href="../marker/MarkerDetailExpressionRibbon.html">Marker Detail Expression Ribbon test suite</a>.</li>
+		</ul>
+		</li>
+    </ul>
+</div>
+
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>We have loaded a Note for each MGI Chicken marker present in the GEISHA expression.txt file for which MGI has a mouse ortholog.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Make set of distinct Entrez Gene IDs from the GEISHA Expression.txt file.</li>
+                <li>Remove from the set any chicken Entrez Gene ID which does not have a mouse ortholog.</li>
+                <li>Verify that the number of items remaining in the set equals the number of Note records with _mginote_type = 1043 created by the load.</li>
+    		</ol>
+    		</li>
+
+    		<li>We have loaded a Note for each MGI Zebrafish marker present in the ZFIN xpat.txt file for which MGI has a mouse ortholog.
+ 			<p concordion:manual="true">passed. -klf 2014-09-19</p>
+    		<ol>
+                <li>Make set of distinct marker symbols from the ZFIN xpat.txt file.</li>
+                <li>Remove from the set any zebrafish marker symbol which does not have a mouse ortholog.</li>
+                <li>Verify that the number of items remaining in the set equals the number of Note records with _mginote_type = 1044 created by the load.</li>
+    		</ol>
+    		</li>
+
+    		<li>When a chicken marker ID appears in the GEISHA expression.txt file and there is an orthologous mouse marker, we will load exactly one Note associated with the chicken marker record.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Check Expression.txt file for records for <b>LHX6</b> (orthologous to mouse Lhx6 as of 2014-09-10).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken marker <b>LHX6</b> (_organism_key = 63).</li>
+                <li>Verify that the NoteChunk includes the Entrez Gene ID for LHX6 = <b>772259</b> (as of 2014-09-10).</li>
+    		</ol>
+    		</li>
+
+    		<li>When a zebrafish marker symbol appears in the ZFIN xpat.txt file and there is an orthologous mouse marker, we will load exactly one Note associated with the zebrafish marker record.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>lhx6</b> (orthologous to mouse Lhx6 as of 2014-09-19).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the zebrafish marker <b>lhx6</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk includes the Zfin ID (from the xpat.txt file) for lhx6 = <b>ZDB-GENE-041025-1</b> (as of 2014-09-19).</li>
+    		</ol>
+    		</li>
+
+    		<li>When a chicken marker ID appears more than once in the GEISHA expression.txt file and there is an orthologous mouse marker, we will load exactly one Note associated with the chicken record.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Check Expression.txt file for records for <b>MYOD1</b> (orthologous to mouse Myod1 as of 2014-09-10). Verify multiple rows exist.</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken marker <b>MYOD1</b> (_organism_key = 63).</li>
+                <li>Verify that the NoteChunk includes the Entrez Gene ID for MYOD1 = <b>374048</b> (as of 2014-09-10).</li>
+    		</ol>
+    		</li>
+
+    		<li>When a zebrafish marker symbol appears more than once in the ZFIN xpat.txt file and there is an orthologous mouse marker, we will load exactly one Note associated with the zebrafish record.
+ 			<p concordion:manual="true">passed. -klf 2014-09-19</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>myod1</b> (orthologous to mouse Myod1 as of 2014-09-19). Verify multiple rows exist.</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the zebrafish marker <b>myod1</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk includes the Zfin ID (from the xpat.txt file) for myod1 = <b>ZDB-GENE-980526-561</b> (as of 2014-09-19).</li>
+    		</ol>
+    		</li>
+
+    		<li>When the mouse marker has 2 or more chicken orthologs, we will load a Note for every orthologous chicken marker present in the GEISHA expression.txt file.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>(Case 1) Check Expression.txt file for records for <b>KRT6A, KRT75</b> (orthologous to mouse Krt75 as of 2014-09-10).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken markers <b>KRT6A, KRT75</b> (_organism_key = 63).</li>
+                <li>Verify that the NoteChunk for KRT6A includes the Entrez Gene ID for KRT6A = <b>408041</b> (as of 2014-09-10).</li> 
+                <li>Verify that the NoteChunk for KRT75 includes the Entrez Gene ID for KRT75 = <b>408042</b> (as of 2014-09-10).</li> 
+                <li>(Case 2) Check Expression.txt file for records for <b>HOXA10, LOC100858905</b> (orthologous to mouse Hoxa10 as of 2014-09-10).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken markers <b>HOXA10, LOC100858905</b> (_organism_key = 63).</li>
+                <li>Verify that the NoteChunk for HOXA10 includes the Entrez Gene ID for HOXA10 = <b>776143</b> (as of 2014-09-10).</li> 
+                <li>Verify that the NoteChunk for LOC100858905 includes the Entrez Gene ID for LOC100858905 = <b>100858905</b> (as of 2014-09-10).</li> 
+                <li>(Case 3) Check Expression.txt file for records for <b>CCR2</b> (orthologous to mouse Ccr2 as of 2014-09-10). Chicken <b>CCR5</b> is also orthologous but does not appear in Expression.txt file.</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken markers <b>CCR2</b> (_organism_key = 63).</li>
+                <li>Verify that the NoteChunk for CCR2 includes the Entrez Gene ID for CCR2 = <b>420696</b> (as of 2014-09-10).</li> 
+    		</ol>
+    		</li>
+
+    		<li>When the mouse marker has 2 or more zebrafish orthologs, we will load a Note for every orthologous zebrafish marker present in the ZFIN xpat.txt file.
+ 			<p concordion:manual="true">passed. -klf 2014-09-19</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>sox1a, sox1b</b> (orthologous to mouse Sox1 as of 2014-09-19).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the Chicken markers <b>sox1a, sox1b</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk for sox1a includes the ZFIN ID for sox1a = <b>ZDB-GENE-040718-186</b> (as of 2014-09-19).</li> 
+                <li>Verify that the NoteChunk for sox1b includes the ZFIN ID for sox1b = <b>ZDB-GENE-060322-5</b> (as of 2014-09-19).</li> 
+            </ol>
+            </li>
+
+    		<li>When 2 or more mouse markers have the same chicken ortholog, we will load a Note for the orthologous chicken marker.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Check Expression.txt file for records for <b>BF2</b>. Verify multiple mouse orthologs exist in MGI (Gm8909, Gm10499, H2-Bl, H2-D1, H2-K1, ... as of 2014-09-10).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : chicken : GEISHA" (_notetype_key = 1043) exists for the Chicken marker <b>BF2</b> (_organism_key = 63).</li>
+                <li>Verify that the NoteChunk includes the Entrez Gene ID for BF2 = <b>425389</b> (as of 2014-09-10).</li>
+    		</ol>
+    		</li>
+
+    		<li>When 2 or more mouse markers have the same zebrafish ortholog, we will load a Note for the orthologous zebrafish marker.
+ 			<p concordion:manual="true">passed. -klf 2014-09-12</p>
+    		<ol>
+                <li>Check xpat.txt file for records for <b>crygm6</b>. Verify multiple mouse orthologs exist in MGI (Cryge and Crygf as of 2014-09-19).</li>
+                <li>Verify that one MGI Note of type "GXD Expression Link : zebrafish : ZFIN" (_notetype_key = 1044) exists for the zebrafish marker <b>crygm6</b> (_organism_key = 84).</li>
+                <li>Verify that the NoteChunk includes the ZFIN ID for crygm6 = <b>ZDB-GENE-050516-7</b> (as of 2014-09-19).</li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Statement of required behavior 1.
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
+    		<li>Statement of required behavior 2.
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

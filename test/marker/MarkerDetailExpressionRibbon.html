@@ -1,0 +1,233 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Expression Ribbon Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Expression Ribbon Tests</h1>
+    <ul>
+        <li>User story 22, E2: Add links to tissue x stage results</li>
+        <li>User story 196, Load and Link to Chicken and Zfin Gene Expression Page(this story was backed out)</li>
+        <li>User story 205, A few more small changes</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto22: add new link from marker detail expression ribbon</li>
+		<li>sto22: link text = "Matrix view"</li>
+		<li>sto22: link to expression results for that gene, opened to the tissue x stage matrix tab</li>
+		<li>sto196: Construct one link in the Expression Ribbon for each Geisha gene and for each Zfin gene(not implemented yet)</li>
+		<li>sto196: Links should look like so(not implemented yet):
+		<ul>
+			<li>Geisha: Gene1, Gene2, ...; Zfin: Gene1, Gene2, ...</li> 
+		</ul> 
+		</li>
+		<li>sto205: Please remove the Theiler stages line (including all of those blue number links).</li>
+		<li>sto205: Please add a ‘new’ icon next to the Tissue x Stage Matrix.</li>
+
+	</ul>
+</div>
+
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+	<p><i>Note: this test suite was written when the Tissue X Stage matrix tab was added to GXD Results, in MGI 5.20 (2014). It is expected this test suite will be more completely populated with tests for links in the Expression ribbon with subsequent MGI WI releases.</i></p>
+	<p>The Expression ribbon contains data about and links to GXD's expression assay results, tissues in which a marker has been assayed, and expression images. Links to the GXD Literature Index and to cDNA clones are included.  Links to external data sources are included.</p>
+	<ul>
+		<li>For each marker having expression results, add a link to the Tissue X Stage Matrix view tab on the expression results summary page. (sto22)</li>
+		<li>Remove the line labeled "Theiler Stages:" followed by the list of Theiler Stages for which the marker has data, each linked to a results page. (sto205)</li>
+		<li>Display a "New" icon next to the Tissue X Stage Matrix link. (sto205)</li>
+        <!-- <li>Display link to expression data page for a chicken marker at GEISHA on the mouse marker detail page when the chicken ortholog has such data.  Do NOT display a link when GEISHA does not have expression data for the chicken ortholog. (sto196)</li>
+        <li>When 2 or more chicken orthologs exist for a mouse marker, display a link to GEISHA's expression page for each chicken ortholog gene. (sto196)</li>
+        <li>When 2 or more mouse orthologs exist for a chicken marker, display a link on each mouse marker detail page, following the rules above. (sto196)</li>
+        <li>Display the link on a new line, below the External Resources line. (sto196)</li>
+        <li>Label for the new line should be "Other Vertebrates:" and label for the (list of) link(s) should be "GEISHA". (sto196)</li> 
+        <li>Each link should be the orthologous chicken gene symbol. (sto196)</li>
+        <li>Display link to expression data page for a zebrafish marker at ZFin on the mouse marker detail page when the zebrafish ortholog has such data.  Do NOT display a link when ZFin does not have expression data for the zebrafish ortholog. (sto196)</li>
+        <li>When 2 or more zebrafish orthologs exist for a mouse marker, display a link to ZFin's expression page for each zebrafish ortholog gene. (sto196)</li>
+        <li>When 2 or more mouse orthologs exist for a zebrafish marker, display a link on each mouse marker detail page, following the rules above. (sto196)</li>
+        <li>Display the link on the new line, below the External Resources line. (sto196)</li>
+        <li>Label for the new line should be "Other Vertebrates:" and label for the (list of) link(s) should be "ZFIN". (sto196)</li> 
+        <li>Each link should be the orthologous zebrafish gene symbol. (sto196)</li>
+        <li>Example:<br/> 
+        Other Vertebrates: GEISHA: <a href="#1">GENE1</a>, <a href="#2">GENE2</a>; ZFIN: <a href="#3">gene1</a>, <a href="#4">gene2</a> 
+        </li>
+        <li>Tests for data load requirements are in the <a href="../gxd/LoadExpressionOtherOrganisms.html">Load Expression for Other Organisms test suite</a>.</li> 
+		 -->
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+-->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>For a marker having expression results, a label and link to the Tissue X Stage Matrix view exists. (sto22)
+ 			<p concordion:manual="true">passed. -klf 2014-06-23</p>
+    		<ol>
+                <li>Navigate to the marker detail page for <b>Psmb2</b> (MGI:1347045)</li>
+                <li>In the Expression ribbon, verify that link appears to the right of the "Images" link.</li>
+                <li>Navigate to the marker detail page for <b>Angel2</b> (MGI:1196310)</li>
+                <li>In the Expression ribbon, verify that NO "Matrix view" link appears to the right of the "Images" link.</li>
+                <li>Navigate to the marker detail page for <b>Asb1</b> (MGI:1929735)</li>
+                <li>In the Expression ribbon, verify that NO "Matrix view" link appears to the right of the "Images" link.</li>
+    		</ol>
+    		</li>
+    		
+    		<li>For a marker having expression results, the list of linked Theiler Stages has been removed. (sto205)
+ 			<p concordion:manual="true">jeffc 1006/2014</p>
+    		<ol>
+                <li>Navigate to the marker detail page for <b>Psmb2</b> (MGI:1347045)</li>
+                <li>In the Expression ribbon, verify that the list of linked Theiler Stages has been removed.</li>
+    		</ol>
+    		</li>
+
+
+			<!-- 
+    		<li>When a mouse marker has no chicken or zebrafish ortholog, DO NOT display the "Other Vertebrates:" row. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+                <li>The marker detail page for <b>Klf16</b> should not display an "Other Vertebrates:" row in the Expression ribbon.</li>
+                <li>The marker detail page for <b>Klf17</b> should not display an "Other Vertebrates:" row in the Expression ribbon.</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has a chicken or zebrafish ortholog, but it does not appear in the GEISHA <i>http://geisha.arizona.edu/geisha/expression.txt</i> file or the Zfin <i>http://zfin.org/downloads/xpat.txt</i> file, DO NOT display the "Other Vertebrates:" row. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+                <li>The marker detail page for <b>Acot9</b> should not display an "Other Vertebrates:" row in the Expression ribbon. (Orthologs acot9.1, acot9.2 exist at Zfin, Acot9 at GEISHA, but do not have expression data in the files.)</li>
+                <li>The marker detail page for <b>Acot10</b> should not display an "Other Vertebrates:" row in the Expression ribbon. (Orthologs acot9.1, acot9.2 exist at Zfin, Acot9 at GEISHA, but do not have expression data in the files.)</li>
+                <li>another?</li>
+    		</ol>
+    		</li>
+
+
+    		<li>When a mouse marker has a single chicken ortholog, and it appears in the GEISHA <i>http://geisha.arizona.edu/geisha/expression.txt</i> file, display the link on the marker detail page. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+                <li>The marker detail page for <b>Klf10</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=420255">KLF10</a> in the Expression ribbon. (Ortholog KLF10 at GEISHA has expression data in the files.)</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has a single zebrafish ortholog, and it appears in the Zfin <i>http://zfin.org/downloads/xpat.txt</i> file, display the link on the marker detail page. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+                <li>The marker detail page for <b>Tpm1</b> should display an "Other Vertebrates:" row with "ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-040426-854">tpm1</a> in the Expression ribbon. (Ortholog tpm1 at ZFIN has expression data in the files.)</li>
+                <li>The marker detail page for <b>Ang4</b> should display an "Other Vertebrates:" row with "ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-050208-420">rnasel2</a>, <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-050809-5">rnasel3</a> in the Expression ribbon. (Orthologs rnasel2 and rnasel3 at ZFIN have expression data in the files.)</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has a single chicken ortholog and a single zebrafish ortholog, and they appear in the files, display the links on the marker detail page. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+                <li>The marker detail page for <b>Lhx6</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=772259">LHX6</a>; ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-041025-1">lhx6</a>" in the Expression ribbon.</li>
+                <li>The GEISHA link should go to http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=772259, displaying the "Expression" tab for "LHX6 LIM homeobox 6".</li>
+                <li>The ZFIN link should go to http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-041025-1, displaying "Expression Pattern Search Results for lhx6".</li>
+                <li>The marker detail page for <b>Myod1</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=374048">MYOD1</a>; ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-980526-561">myod1</a>" in the Expression ribbon.</li>
+                <li>The GEISHA link should go to http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=374048, displaying the "Expression" tab for "MYOD1 myogenic differentiation 1".</li>
+                <li>The ZFIN link should go to http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-980526-561, displaying "Expression Pattern Search Results for myod1".</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has 2 or more chicken orthologs, and only 1 of the orthologs is present in the GEISHA file, display the link on the marker detail page. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+    			<li>For the following examples, other organisms' links may also be present.</li>
+                <li>The marker detail page for <b>Cacng4</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=373924">CACNG4</a>" in the Expression ribbon. There should be no link for the chicken ortholog <b>LOC100859571</b>.</li>
+                <li>The marker detail page for <b>Ccr2</b> should display an "Other Vertebrates:" row with "GEISHA: <a href="http://geisha.arizona.edu/geisha/search.jsp?search=NCBI+ID&amp;text=420696">CCR2</a>" in the Expression ribbon. There should be no link for the chicken ortholog <b>CCR5</b>.</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has 2 or more zebrafish orthologs, and only 1 of the orthologs is present in the ZFin file, display the link on the marker detail page. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+    			<li>For the following examples, other organisms' links may also be present.</li>
+                <li>The marker detail page for <b>Ccr2</b> should display an "Other Vertebrates:" row with "ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-070302-1">ccr8.1</a>" in the Expression ribbon. There should be no links for the zebrafish orthologs <b>LOC100329767, LOC100535702</b>.</li>
+                <li>The marker detail page for <b>Acot3</b> should display an "Other Vertebrates:" row with "ZFIN: <a href="http://zfin.org/cgi-bin/webdriver?MIval=aa-xpatselect.apg&amp;query_results=true&amp;searchtype=equals&amp;xpatsel_geneZdbId=ZDB-GENE-041001-182">si:dkey-11e23.4</a>" in the Expression ribbon. There should be no links for the zebrafish orthologs <b>si:dkey-11e23.3, si:dkey-288i20.1</b>.</li>
+    		</ol>
+    		</li>
+
+    		<li>When a mouse marker has 2 or more chicken (or zebrafish) orthologs, and 2 or more of the orthologs are present in the GEISHA (or ZFIN) file, display links to each orthologous gene on the marker detail page. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+    			<li>For the following examples, other organisms' links may also be present.</li>
+                <li>The marker detail page for <b>Krt75</b> should display an "Other Vertebrates:" row with "GEISHA: KRT6A, KRT75". Both chicken gene symbols should be linked to the GEISHA page(s) displaying Expression data.</li>
+                <li>The marker detail page for <b>Hoxa10</b> should display an "Other Vertebrates:" row with "GEISHA: HOXA10, LOC100858905". Both chicken gene symbols should be linked to the GEISHA page(s) displaying Expression data. There should be no link for chicken ortholog <b>LOC100858051</b>.</li>
+                <li>The marker detail page for <b>Akr1b3</b> should display an "Other Vertebrates:" row with "ZFIN: akr1b1, si:dkey-180p18.9". Both zebrafish gene symbols should be linked to the ZFIN page(s) displaying Expression data.</li>
+                <li>The marker detail page for <b>Ang4</b> should display an "Other Vertebrates:" row with "ZFIN: rnasel2, rnasel3". Both zebrafish gene symbols should be linked to the ZFIN page(s) displaying Expression data.</li>
+                <li>The marker detail page for <b>Sox1</b> should display an "Other Vertebrates:" row with "ZFIN: sox1a, sox1b". Both zebrafish gene symbols should be linked to the ZFIN page(s) displaying Expression data.</li>
+                <li>The marker detail page for <b>Ugt1a1</b> should display an "Other Vertebrates:" row with "ZFIN: ugt1ab, ugt1b1". Both zebrafish gene symbols should be linked to the ZFIN page(s) displaying Expression data. There should be no link(s) for additional zebrafish orthologs <b>ugt1a1, ugt1a2, ugt1a4, ugt1a5, ugt1a6, ugt1a7, ugt1b2, ugt1b3, ugt1b4, ugt1b5, ugt1b7</b>.</li>
+    		</ol>
+    		</li>
+
+    		<li>When 2 or more mouse markers have the same chicken (or zebrafish) ortholog, and it appears in the GEISHA (or ZFIN) file, display the link on each of those marker detail pages. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+    			<li>For the following examples, other organisms' links may also be present.</li>
+                <li>The marker detail pages for <b>Gapdh</b> and <b>Gm20899</b> should display an "Other Vertebrates:" row with "GEISHA: GAPDH". The chicken gene symbol should be linked to the GEISHA page displaying Expression data.</li>
+                <li>The marker detail pages for <b>Hba-a1</b> and <b>Hba-a2</b> should display an "Other Vertebrates:" row with "GEISHA: HBAA". The chicken gene symbol should be linked to the GEISHA page displaying Expression data.</li>
+    		</ol>
+    		</li>
+
+    		<li>When 2 or more mouse markers belong to a cluster with 2 or more chicken (or zebrafish) orthologs, and any of those orthologs are present in the GEISHA (or ZFIN) file, display the link(s) on any of those marker detail pages. (sto196)
+ 			<p concordion:manual="true">passed. -klf 2014-09-23</p>
+    		<ol>
+    			<li>For the following examples, other organisms' links may also be present.</li>
+                <li>The marker detail pages for <b>Gm8909</b>, <b>Gm10499</b>, <b>H2-Bl</b>, <b>H2-D1</b>, <b>H2-K1</b>, and others should display an "Other Vertebrates:" row with "GEISHA: BF1". The chicken gene symbol should be linked to the GEISHA page displaying Expression data. There should be no link(s) for additional chicken orthologs <b>BF1, BF2, MICA, MR1, YF6, LOC417057, LOC417058</b>, and others.</li>
+                <li>The marker detail pages for <b>Gm6910</b> and <b>Rybp</b> should display an "Other Vertebrates:" row with "ZFIN: rybpa". The zebrafish gene symbol should be linked to the ZFIN page displaying Expression data. There should be no link(s) for additional zebrafish ortholog <b>rybpb</b>.</li>
+                <li>The marker detail pages for <b>Bnip3l</b> and <b>Gm10480</b> should display an "Other Vertebrates:" row with "ZFIN: bnip3lb". The zebrafish gene symbol should be linked to the ZFIN page displaying Expression data. There should be no link(s) for additional zebrafish ortholog <b>bnip3la</b>.</li>
+                <li>The marker detail pages for <b>Cryge</b> and <b>Crygf</b> should display an "Other Vertebrates:" row with "ZFIN: crygm6, crygm7". The zebrafish gene symbols should be linked to the ZFIN pages displaying Expression data.</li>
+    		</ol>
+    		</li>
+			 -->
+
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
