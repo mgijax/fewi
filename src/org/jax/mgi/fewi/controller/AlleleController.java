@@ -30,6 +30,7 @@ import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceLocation;
 import mgi.frontend.datamodel.phenotype.DiseaseTableDisease;
 import mgi.frontend.datamodel.phenotype.PhenoTableGenotype;
+import mgi.frontend.datamodel.phenotype.PhenoTableProvider;
 import mgi.frontend.datamodel.phenotype.PhenoTableSystem;
 
 import org.hibernate.SessionFactory;
@@ -569,9 +570,9 @@ public class AlleleController {
 		 String phenotype = query.getPhenotype();
 		 if(notEmpty(phenotype))
 		 {
-			 BooleanSearch bs = new BooleanSearch();
-			 Filter f = bs.buildSolrFilter(SearchConstants.ALL_PHENOTYPE,phenotype);
-			 filters.add(f);
+			BooleanSearch bs = new BooleanSearch();
+			Filter f = bs.buildSolrFilter(SearchConstants.ALL_PHENOTYPE,phenotype);
+			filters.add(f);
 		 }
 
 		 // Nomenclature
@@ -1643,6 +1644,7 @@ public class AlleleController {
         // predetermine existance of a few columns.
         boolean hasSexCols=false;
         boolean hasSourceCols=false;
+	List<PhenoTableProvider> providerList = null;
 
         for(PhenoTableGenotype g : allele.getPhenoTableGenotypeAssociations())
         {
@@ -1650,9 +1652,16 @@ public class AlleleController {
         	{
         		hasSexCols=true;
         	}
-        	if(g.getPhenoTableProviders().size()>1 || (g.getPhenoTableProviders().size()==1 &&
-        			!g.getPhenoTableProviders().get(0).getProvider().equalsIgnoreCase("MGI")))
-        	{
+
+		providerList = g.getPhenoTableProviders();
+		if ((providerList != null) && ((providerList.size() > 1) || 
+			(providerList.size() == 1 &&
+			 !"MGI".equalsIgnoreCase(
+			    providerList.get(0).getInterpretationCenterName())) ))
+/*        	if(g.getPhenoTableProviders().size()>1 || (g.getPhenoTableProviders().size()==1 &&
+** 			!g.getPhenoTableProviders().get(0).getPhenotypingCenterName().equalsIgnoreCase("MGI")))
+*/
+		{
         		hasSourceCols=true;
         	}
         }
