@@ -4,12 +4,16 @@ import mgi.frontend.datamodel.Image;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * wrapper around an image, for the recombinase detail image gallery
  */
 public class RecomImage {
+
+	private final Logger logger = LoggerFactory.getLogger(RecomImage.class);
 
 	//-------------------
 	// instance variables
@@ -84,7 +88,9 @@ public class RecomImage {
         try {
           NotesTagConverter ntc = new NotesTagConverter();
           cleanCopyright = ntc.convertNotes(cleanCopyright, '|');
-        }catch (Exception e) {}
+        }catch (Exception e) {
+        	logger.error(e.getMessage(),e);
+        }
         return cleanCopyright.trim().replaceAll("[\\r\\n]", "<br/>").replaceAll("[\"]", "\\\\'");
     }
 

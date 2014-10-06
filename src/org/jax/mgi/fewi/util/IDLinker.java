@@ -372,7 +372,6 @@ public class IDLinker {
 			}
 			isFirst = false;
 		}
-		done = new HashMap<String,String>();
 		return sb.toString();
 	}
 

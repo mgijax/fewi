@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 
-	private Logger logger = LoggerFactory.getLogger(HibernateObjectGatherer.class);
+	private final Logger logger = LoggerFactory.getLogger(HibernateObjectGatherer.class);
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -172,7 +172,6 @@ public class HibernateObjectGatherer<T> implements ObjectGathererInterface<T> {
 			// This is a catch to prevent nulls from getting to the controllers -kstone 9-18-2012
 			if(resultsMap.get(t)!=null) orderedResults.add(resultsMap.get(t));
 		}
-		resultsMap = new LinkedHashMap<String, T>();
 		
 		//logger.debug("Gatherer time: " + (System.nanoTime() - start)/(60*60*1000F));
 		logger.debug("HibernateObjectGatherer.get() : Re-ordered results; Finished");

@@ -641,7 +641,9 @@ public class InteractionController {
 
 		} else if (FacetConstants.INT_DATA_SOURCE.equals(facetType)) {
 			facetResults = interactionFinder.getDataSourceFacet(params);
-
+		}
+		else {
+			facetResults = new SearchResults<SolrInteraction>();
 		}
 
 		return this.parseFacetResponse(facetResults, order);

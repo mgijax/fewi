@@ -725,9 +725,6 @@ public class GXDLitController {
 	    		allTypes.add(row);
 	    	}
 	    }
-	    hasAgeMap = new HashMap<String, Boolean>();
-		hasAssayTypeMap = new HashMap<String, Boolean>();
-		countMap = new HashMap<String, Map<String, GxdLitAgeAssayTypePairTableCount>>();
 
 	    return new GxdLitAgeAssayTypePairTable(allAges, allTypes);
 	}
@@ -1039,13 +1036,13 @@ public class GXDLitController {
 		}
 
 		// Reference Key Filter
-		if (query.getReference_key() != null && !query.getReference_key().equals("")) {
+		if (query.getReference_key() != null) {
 			Filter rkf = new Filter(SearchConstants.REF_KEY, "" + query.getReference_key(), Filter.OP_EQUAL);
 			filterList.add(rkf);
 		}
 
 		// Marker Key Filter
-		if (query.getMarker_key() != null && !query.getMarker_key().equals("")) {
+		if (query.getMarker_key() != null) {
 			Filter mkf = new Filter(SearchConstants.MRK_KEY, "" + query.getMarker_key(), Filter.OP_EQUAL);
 			filterList.add(mkf);
 		}

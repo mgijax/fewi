@@ -2101,6 +2101,9 @@ public class GXDController {
 	    } else if (FacetConstants.GXD_WILDTYPE.equals(facetType)) {
 	    	facetResults = gxdFinder.getWildtypeFacet(params);
 	    }
+	    else {
+	    	facetResults = new SearchResults<SolrString>();
+	    }
 
 	    return this.parseFacetResponse(facetResults, order);
 	}

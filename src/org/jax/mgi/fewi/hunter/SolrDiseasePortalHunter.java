@@ -399,6 +399,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
         		// return just the marker key for now
         		//sr.addResultObjects(markerKey);
         		if(markerKey != null) keys.add(markerKey.toString());
+        		String markerKeyString = markerKey != null ? markerKey.toString() : "";
 
         		if(!sp.getFetchKeysOnly())
         		{
@@ -422,7 +423,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 
 	        		sr.addResultObjects(dpMarker);
         		}
-        		keyToGroupKeyMap.put(uniqueKey,markerKey.toString());
+        		keyToGroupKeyMap.put(uniqueKey,markerKeyString);
 
         	}
         	else if(gc.getName().equals(DiseasePortalFields.TERM_HEADER))

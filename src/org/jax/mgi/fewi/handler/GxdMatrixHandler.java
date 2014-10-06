@@ -40,30 +40,36 @@ public class GxdMatrixHandler {
 	}
 
 	private static List<VocabTerm> highLevelEmapaTerms = null;
+	private static volatile Object highLevelTermsLock = new Object();
 	public List<GxdMatrixRow> getHighLevelTerms()
 	{
 		String mouseId = "EMAPA:25765"; // it all starts here...
 		String organSystemId = "EMAPA:16103";
 		if(highLevelEmapaTerms==null)
 		{
-			logger.debug("initializing high level emapa terms");
-			List<VocabTerm> terms = vocabFinder.getTermByID(mouseId);
-
-			logger.debug("found "+terms.size()+" terms for \"mouse\" ID: "+mouseId);
-			// go one level deep
-			highLevelEmapaTerms = new ArrayList<VocabTerm>();
-			for(VocabTerm topTerm : terms)
-			{
-				highLevelEmapaTerms.add(topTerm);
-				for(VocabTerm secondLevelTerm : topTerm.getChildren())
+			synchronized (GxdMatrixHandler.highLevelTermsLock) {
+				if(highLevelEmapaTerms==null)
 				{
-					if(secondLevelTerm.getPrimaryId().equals(organSystemId))
+					logger.debug("initializing high level emapa terms");
+					List<VocabTerm> terms = vocabFinder.getTermByID(mouseId);
+		
+					logger.debug("found "+terms.size()+" terms for \"mouse\" ID: "+mouseId);
+					// go one level deep
+					highLevelEmapaTerms = new ArrayList<VocabTerm>();
+					for(VocabTerm topTerm : terms)
 					{
-						secondLevelTerm.getChildren().size();
+						highLevelEmapaTerms.add(topTerm);
+						for(VocabTerm secondLevelTerm : topTerm.getChildren())
+						{
+							if(secondLevelTerm.getPrimaryId().equals(organSystemId))
+							{
+								secondLevelTerm.getChildren().size();
+							}
+						}
 					}
+					logger.debug("done initializing high level emapa terms");
 				}
 			}
-			logger.debug("done initializing high level emapa terms");
 		}
 
 		// Now build on the fly, the matrix rows for the high level terms

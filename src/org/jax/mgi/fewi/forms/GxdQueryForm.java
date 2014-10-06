@@ -174,13 +174,13 @@ public class GxdQueryForm implements Cloneable {
 
 		// init differential fields
 		for (Integer key : theilerStages.keySet()) {
-			if (key != ANY_STAGE)
+			if (!key.equals(ANY_STAGE))
 				theilerStagesRibbon2.put(key, theilerStages.get(key));
 		}
 		difTheilerStages.put(ANY_STAGE_NOT_ABOVE,
 				"Any stage not selected above");
 		for (Integer key : theilerStages.keySet()) {
-			if (key != ANY_STAGE)
+			if (!key.equals(ANY_STAGE))
 				difTheilerStages.put(key, theilerStages.get(key));
 		}
 		// difTheilerStage.add(ANY_STAGE_NOT_ABOVE);

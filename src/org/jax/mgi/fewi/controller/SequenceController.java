@@ -55,7 +55,7 @@ public class SequenceController {
     // instance variables
     //--------------------//
 
-    private Logger logger
+    private final Logger logger
       = LoggerFactory.getLogger(SequenceController.class);
 
     @Autowired
@@ -141,7 +141,7 @@ public class SequenceController {
 
         // package other IDs for this sequence
         Set<SequenceID> ids = sequence.getIds();
-        if (!ids.isEmpty() & ids.size() > 1) {
+        if (!ids.isEmpty() && ids.size() > 1) {
 
             List<SequenceID> otherIDs = new ArrayList<SequenceID>();
             Iterator<SequenceID> it = ids.iterator();
@@ -432,7 +432,7 @@ public class SequenceController {
 
         // package other IDs for this sequence
         Set<SequenceID> ids = sequence.getIds();
-        if (!ids.isEmpty() & ids.size() > 1) {
+        if (!ids.isEmpty() && ids.size() > 1) {
 
             List<SequenceID> otherIDs = new ArrayList<SequenceID>();
             
