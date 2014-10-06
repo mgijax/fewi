@@ -1481,7 +1481,6 @@ function SuperGrid(config)
     	var _deferred = $.Deferred();
     	var i=0;
     	(function () {
-    		console.log("num cells = "+d3Groups.length);
     	    for (; i < d3Groups.length; i++) {
     	        g = d3Groups[i];
     	        if(g)
