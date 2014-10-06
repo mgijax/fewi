@@ -161,28 +161,42 @@ td.padTop { padding-top:4px }
 </c:forEach>
 </tr>
 
+<script type="text/javascript">
+    var cellIDs = [];
+</script>
 <c:if test="${hasSourceCols}">
-<tr class="stripe1">
-<th style="text-align:right;" class="small">Source:</th>
+<tr class="stripe1" id="sourceRow">
+<th style="text-align:right;" class="small"><span onMouseOut="nd();" onMouseOver="return overlib('Mouse over source labels to view Data Interpretation and Phenotyping Centers for high throughput phenotype annotations.<P><B>Data Interpretation Center:</B> The source of Mammalian Phenotype calls made from primary phenotyping data.<P><B>Phenotyping Center:</B> The source of primary phenotyping data (where phenotyping tests were performed for annotations shown).', LEFT, WIDTH, 400);">Source:</span><br>
+<img src="${configBean.WEBSHARE_URL}images/help_small_transp.gif" alt="Help" onMouseOut="nd();" onMouseOver="return overlib('Mouse over source labels to view Data Interpretation and Phenotyping Centers for high throughput phenotype annotations.<P><B>Data Interpretation Center:</B> The source of Mammalian Phenotype calls made from primary phenotyping data.<P><B>Phenotyping Center:</B> The source of primary phenotyping data (where phenotyping tests were performed for annotations shown).', LEFT, WIDTH, 400);">
+</th>
 <c:forEach var="phenoTableGenotype" items="${phenoTableGenotypes}" varStatus="gStatus">
 <c:if test="${!phenoTableGenotype.diseaseOnly }">
   <c:if test="${phenoTableGenotype.splitSex == '1' }">
     <c:forEach var="phenoTableProvider" items="${phenoTableGenotype.phenoTableProviders}" varStatus="pStatus">
-      <th class="<c:if test="${pStatus.index==0 }">genoBorder </c:if> borderUnder">
-        <span class="provider"><img src="${configBean.FEWI_URL}assets/images/${phenoTableProvider.providerIcon}"/></span>
+      <th class="<c:if test="${pStatus.index==0 }">genoBorder </c:if> borderUnder" style="vertical-align: bottom; padding-bottom: 10px">
+      <div id="ptpa${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
       </th>
+      <script type="text/javascript">
+	  cellIDs.push("ptpa${phenoTableProvider.uniqueKey}");
+      </script>
     </c:forEach>    
     <c:forEach var="phenoTableProvider" items="${phenoTableGenotype.phenoTableProviders}" varStatus="pStatus">
-      <th class="borderUnder <c:if test="${pStatus.index==0}">sexBorder </c:if> <c:if test="${pStatus.last && gStatus.last}">rightGenoBorder</c:if>">
-        <span class="provider"><img src="${configBean.FEWI_URL}assets/images/${phenoTableProvider.providerIcon}"/></span>
+      <th class="borderUnder <c:if test="${pStatus.index==0}">sexBorder </c:if> <c:if test="${pStatus.last && gStatus.last}">rightGenoBorder</c:if>" style="vertical-align: bottom; padding-bottom: 10px">
+      <div id="ptpb${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
+      <script type="text/javascript">
+	  cellIDs.push("ptpb${phenoTableProvider.uniqueKey}");
+      </script>
       </th>
     </c:forEach>    
   </c:if>
 
   <c:if test="${phenoTableGenotype.splitSex == '0' }">
     <c:forEach var="phenoTableProvider" items="${phenoTableGenotype.phenoTableProviders}" varStatus="pStatus" >
-      <th class="<c:if test="${pStatus.index==0 }">genoBorder </c:if>  <c:if test="${pStatus.last && gStatus.last}">rightGenoBorder</c:if> borderUnder">
-        <span class="provider"><img src="${configBean.FEWI_URL}assets/images/${phenoTableProvider.providerIcon}"/></span>
+      <th class="<c:if test="${pStatus.index==0 }">genoBorder </c:if>  <c:if test="${pStatus.last && gStatus.last}">rightGenoBorder</c:if> borderUnder" style="vertical-align: bottom; padding-bottom: 10px">
+      <div id="ptpc${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
+      <script type="text/javascript">
+	  cellIDs.push("ptpc${phenoTableProvider.uniqueKey}");
+      </script>
       </th>
     </c:forEach>    
   </c:if>
@@ -345,6 +359,32 @@ td.padTop { padding-top:4px }
     }
     return;
   }
+
+/* need to adjust the heights/widths of cells in the Source row of the
+ * phenotype table
+ */
+
+    var maxWidth = 0;	// largest width of source items
+    var maxHeight = 0;	// largest height of source items
+
+    for (i = 0; i < cellIDs.length; i++) {
+	var rect = document.getElementById(cellIDs[i]).getBoundingClientRect();
+	maxWidth = Math.max(maxWidth, rect['width']);
+	maxHeight = Math.max(maxHeight, rect['height']);
+    }
+
+    maxWidth = Math.floor(maxWidth) + 10;		// add padding
+    maxHeight = Math.floor(maxHeight) + 10;
+
+    // apply the heights & widths
+
+    document.getElementById('sourceRow').style.height = maxHeight + 'px';
+
+    for (i = 0; i < cellIDs.length; i++) {
+	var el = document.getElementById(cellIDs[i]);
+	el.style.width = maxWidth + 'px';
+	el.style.height = maxHeight = 'px';
+    } 
 </script>
 
 
