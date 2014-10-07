@@ -42,6 +42,10 @@
           <c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_blank" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
         </c:forEach>
         ) 
+	<c:set var="showRefs" value=""/>
+	<c:if test="${fn:length(term.references) > 1}">
+	    <c:set var="showRefs" value="1"/>
+	</c:if>
 
       </div>
 		<div class="sexDiv" style="margin-left:${term.displayIndent+10}px;">
@@ -57,17 +61,17 @@
 		      	  <!-- This is a check to suppress certain rows from displaying -->
 			      <c:if test="${!annotation.isBoth || !annotation.isCall || reference.hasNotes || reference.hasNonMgiSource}">
 				      <div class="refSection" >
-				          <c:if test="${refStatus.index==0 && reference.hasNonMgiSource}">
-			       				 <span class="sourceDisplay">${reference.sourceDisplay}</span>
+				          <c:if test="${reference.hasNonMgiSource}">
+					  <span class="sourceDisplay" onMouseOver="return overlib('${reference.sourceDescription}', LEFT, WIDTH, 200);" onMouseOut="nd();">${reference.sourceDisplay}</span>
 			       			</c:if>
 				        <c:forEach var="note" items="${reference.notes}" varStatus="noteStatus">
 				        	<div class="mpNote">
 				            &bull; ${note.note} 
 				            <!-- check to determine when to display jnumID -->
-				            <c:if test="${fn:length(term.references)>1 || annotation.hasNonEmptyGlyph }">(${reference.jnumID})</c:if>
+				            <c:if test="${not empty showRefs}">(${reference.jnumID})</c:if>
 				            </div>
 				        </c:forEach> <!-- reference.notes -->
-				       <c:if test="${fn:length(reference.notes)==0}">
+				       <c:if test="${fn:length(reference.notes)==0 && not empty showRefs}">
 				      	<span class="mpNote">(${reference.jnumID})</span>
 				      	</c:if>
 			      </div>
