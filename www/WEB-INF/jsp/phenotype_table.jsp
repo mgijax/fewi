@@ -384,6 +384,7 @@ td.padTop { padding-top:4px }
 	var el = document.getElementById(cellIDs[i]);
 	el.style.width = maxWidth + 'px';
 	el.style.height = maxHeight = 'px';
+	el.style.marginLeft = '3px';
     } 
 </script>
 
