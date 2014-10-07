@@ -63,9 +63,13 @@ jsData = {
       <% 
 	    // unhappily resorting to scriptlet
 		Genotype genotype = (Genotype)request.getAttribute("genotype"); 
-	    String allComp = genotype.getCombination1().trim();
-		allComp = ntc.convertNotes(allComp, '|');
-		allComp = FormatHelper.newline2HTMLBR(allComp.replace("\"", "'"));
+		String allComp = "N/A";
+  		try {
+		    allComp = genotype.getCombination1().trim();
+		    allComp = ntc.convertNotes(allComp, '|');
+		    allComp = FormatHelper.newline2HTMLBR(allComp.replace("\"", "'"));
+		} catch (Exception e) {};
+
 		String diseaseModel = new String("");
 		if (genotype.hasDiseases()) {
 			diseaseModel = new String("<span style='font-size:80%; font-style:italic;' >&nbsp;&nbsp;Disease&nbsp;Model</span>");
