@@ -74,3 +74,4 @@
 	</div>
     <br/>
 </c:forEach>
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/mgi_template01.js"></script>

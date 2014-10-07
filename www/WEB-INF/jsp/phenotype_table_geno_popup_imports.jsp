@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="http://www.informatics.jax.org/webshare/css/mgi.css" type="text/css">
+<link href="${configBean.WEBSHARE_URL}css/mgi_template01.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="${configBean.WEBSHARE_URL}js/jquery-1.10.2.min.js"></script>
 
 <style type="text/css">
