@@ -174,7 +174,7 @@ td.padTop { padding-top:4px }
   <c:if test="${phenoTableGenotype.splitSex == '1' }">
     <c:forEach var="phenoTableProvider" items="${phenoTableGenotype.phenoTableProviders}" varStatus="pStatus">
       <th class="<c:if test="${pStatus.index==0 }">genoBorder </c:if> borderUnder" style="vertical-align: bottom; padding-bottom: 10px">
-      <div id="ptpa${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
+      <div id="ptpa${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; -webkit-transform: rotate(270deg); transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
       </th>
       <script type="text/javascript">
 	  cellIDs.push("ptpa${phenoTableProvider.uniqueKey}");
@@ -182,7 +182,7 @@ td.padTop { padding-top:4px }
     </c:forEach>    
     <c:forEach var="phenoTableProvider" items="${phenoTableGenotype.phenoTableProviders}" varStatus="pStatus">
       <th class="borderUnder <c:if test="${pStatus.index==0}">sexBorder </c:if> <c:if test="${pStatus.last && gStatus.last}">rightGenoBorder</c:if>" style="vertical-align: bottom; padding-bottom: 10px">
-      <div id="ptpb${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
+      <div id="ptpb${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; -webkit-transform: rotate(270deg); transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
       <script type="text/javascript">
 	  cellIDs.push("ptpb${phenoTableProvider.uniqueKey}");
       </script>
@@ -193,7 +193,7 @@ td.padTop { padding-top:4px }
   <c:if test="${phenoTableGenotype.splitSex == '0' }">
     <c:forEach var="phenoTableProvider" items="${phenoTableGenotype.phenoTableProviders}" varStatus="pStatus" >
       <th class="<c:if test="${pStatus.index==0 }">genoBorder </c:if>  <c:if test="${pStatus.last && gStatus.last}">rightGenoBorder</c:if> borderUnder" style="vertical-align: bottom; padding-bottom: 10px">
-      <div id="ptpc${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
+      <div id="ptpc${phenoTableProvider.uniqueKey}" style="font-size: 80%; font-weight: 300; -webkit-transform: rotate(270deg); transform: rotate(270deg); white-space: nowrap;" onMouseOut="nd();" onMouseOver="return overlib('${phenoTableProvider.providerDescription}', LEFT, WIDTH, 200);">${phenoTableProvider.providerString}</div>
       <script type="text/javascript">
 	  cellIDs.push("ptpc${phenoTableProvider.uniqueKey}");
       </script>
