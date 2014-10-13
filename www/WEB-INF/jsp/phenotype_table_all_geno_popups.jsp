@@ -65,6 +65,9 @@
       <TD>
         <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_legend.jsp" %>
       </TD>
+      <TD>
+        <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_source.jsp" %>
+      </TD>
     </TR>
 </table>
 	</div>
