@@ -92,28 +92,31 @@
 </div>
 
 <!-- Disease Models -->
+<style>
+td.outline { border: 1px solid black; }
+</style>
 <c:if test="${hasDiseaseModels}" >
 	<div id="diseaseModelDiv">
-		<table border='1' cellpadding='3' cellspacing='0' class='results'>
+		<table border='1' cellpadding='3' cellspacing='0' class='results' style="border-collapse: collapse;">
 		<tr class='resultsHeaderYellow'>
-			<td colspan='2' class='resultsHeader' style='align:left'><div align='left'>Mouse Models of Human Disease</div></td>
-			<td class='resultsHeader'>OMIM ID</td><td class='resultsHeader'>Ref(s)</td>
+			<td colspan='2' class='resultsHeader outline' style='align:left'><div align='left'>Mouse Models of Human Disease</div></td>
+			<td class='resultsHeader outline'>OMIM ID</td><td class='resultsHeader outline'>Ref(s)</td>
 		</tr>
 		<c:forEach var="disease" items="${genotype.diseases}" varStatus="diseaseStatus">
 			<tr class="${diseaseStatus.index % 2==0 ? ' stripe1' : ' stripe2'}">
 				<c:choose>
 				<c:when test="${disease.isNot}">
-				<td>NOT</td><td>
+				<td class="outline">NOT</td><td>
 				</c:when>
 				<c:otherwise>
-				<td colspan='2' rowspan='1'>
+				<td class="outline" colspan='2' rowspan='1'>
 				</c:otherwise>
 				</c:choose>
 				<a class='MP' target="_blank" href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a></td>
-				<td>
+				<td class="outline">
 					<a class='MP' target="_blank" href="http://www.omim.org/entry/${disease.termID}">${disease.termID}</a>
 				</td>
-				<td>
+				<td class="outline">
 				<c:forEach var="reference" items="${disease.references}" varStatus="refStatus">
 	          		<c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_blank" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
 	        	</c:forEach>
