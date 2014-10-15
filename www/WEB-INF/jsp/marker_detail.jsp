@@ -652,7 +652,7 @@ td.padded { padding:4px; }
 			${interaction}<c:if test="${!status.last}"><br/></c:if>
 			</c:forEach>
 			<div style="display: inline; margin-left: 5px;">
-			  <a id="interactionLink" href="http://localhost:8080/fewi_dev/mgi/interaction/explorer?markerIDs=MGI:87859" class="markerNoteButton" style="display:inline;">View All</a>
+			  <a id="interactionLink" href="${configBean.FEWI_URL}/interaction/explorer?markerIDs=MGI:87859" class="markerNoteButton" style="display:inline;">View All</a>
 			</div>
 		</span>
       </div>
