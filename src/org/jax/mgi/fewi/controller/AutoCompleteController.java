@@ -347,10 +347,10 @@ public class AutoCompleteController {
 	    // build an AND-ed list of tokens for BEGINS searching in fList
 	    for (String q : words) {
 			Filter wordFilter = new Filter(SearchConstants.STRUCTURE, q,
-			    Filter.OP_GREEDY_BEGINS);
+			    Filter.Operator.OP_GREEDY_BEGINS);
 			fList.add(wordFilter);
 	    }
-	    f.setNestedFilters(fList,Filter.FC_AND);
+	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
 	    params.setFilter(f);
 
 	    // default sorts are "score","autocomplete text"
@@ -641,7 +641,7 @@ public class AutoCompleteController {
 			List<Filter> idFilters = new ArrayList<Filter>();
 			for(String idToken : idTokens)
 			{
-				idFilters.add(new Filter(SearchConstants.ACC_ID,idToken,Filter.OP_EQUAL));
+				idFilters.add(new Filter(SearchConstants.ACC_ID,idToken,Filter.Operator.OP_EQUAL));
 			}
 			filters.add(Filter.or(idFilters));
 		}

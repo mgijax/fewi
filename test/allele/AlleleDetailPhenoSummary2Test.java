@@ -61,7 +61,7 @@ public class AlleleDetailPhenoSummary2Test extends BaseConcordionTest
 		    			cellCount++;
 		    			if (g.getGenotype().getPrimaryID().equalsIgnoreCase(genotypeID)
 		    					&& sexValue.equalsIgnoreCase(sex)
-		    					&& p.getProvider().equalsIgnoreCase(provider))
+		    					&& p.getProviderString().equalsIgnoreCase(provider))
 		    			{
 		    				return cellCount;
 		    			}

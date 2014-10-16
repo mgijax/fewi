@@ -1444,7 +1444,7 @@ public class GXDController {
 		if(!structureId.trim().equals(""))
 		{
 			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
-			String sToken = "\""+phraseSearch+"\"~100";
+			String sToken = "\""+structureId+"\"~100";
 			return new Filter(queryField,sToken,Filter.Operator.OP_HAS_WORD);
 		}
 		return null;
@@ -1493,12 +1493,12 @@ public class GXDController {
 
 		if(query.getStructureIDFilter().size() > 0) {
 			facetList.add(new Filter(SearchConstants.STRUCTURE_ID,
-			query.getStructureIDFilter(), Filter.OP_IN));
+			query.getStructureIDFilter(), Filter.Operator.OP_IN));
 		}
 
 		if(query.getMarkerSymbolFilter().size() > 0) {
 			facetList.add(new Filter(SearchConstants.MRK_SYMBOL,
-			query.getMarkerSymbolFilter(), Filter.OP_IN));
+			query.getMarkerSymbolFilter(), Filter.Operator.OP_IN));
 		}
 		
 
@@ -1508,7 +1508,7 @@ public class GXDController {
 			List<Filter> matrixStructureFilters = new ArrayList<Filter>();
 			for(String matrixStructureId : query.getMatrixStructureId())
 			{
-				matrixStructureFilters.add(new Filter(SearchConstants.STRUCTURE_ID,matrixStructureId,Filter.OP_EQUAL));
+				matrixStructureFilters.add(new Filter(SearchConstants.STRUCTURE_ID,matrixStructureId,Filter.Operator.OP_EQUAL));
 			}
 			if(matrixStructureFilters.size() > 0)
 			{
@@ -1573,7 +1573,7 @@ public class GXDController {
 			for(String token : tokens){
 				String spatialQueryString = SolrLocationTranslator.getQueryValue(token);
 				if(spatialQueryString !=null && !spatialQueryString.equals("")) {
-					locationFilters.add(new Filter(SearchConstants.MOUSE_COORDINATE,spatialQueryString,Filter.OP_HAS_WORD));
+					locationFilters.add(new Filter(SearchConstants.MOUSE_COORDINATE,spatialQueryString,Filter.Operator.OP_HAS_WORD));
 				}
 			}
 			if(locationFilters.size() > 0)
@@ -1583,7 +1583,7 @@ public class GXDController {
 			else
 			{
 				// this enables location query to fail if input is invalid
-				queryFilters.add(new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.OP_EQUAL));
+				queryFilters.add(new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.Operator.OP_EQUAL));
 			}
 		}
 
