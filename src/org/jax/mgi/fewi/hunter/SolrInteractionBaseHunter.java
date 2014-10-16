@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrQuery;
@@ -23,7 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SolrInteractionBaseHunter extends SolrHunter {
+public class SolrInteractionBaseHunter extends SolrHunter<SolrInteraction> {
 
 	public SolrInteractionBaseHunter() {
 
@@ -119,11 +118,11 @@ public class SolrInteractionBaseHunter extends SolrHunter {
 					scoreSort = SolrQuery.ORDER.asc;
 				}
 
-				for (String ssm : ((SolrSortMapper)sortMap.get(sort.getSort())).getSortList()) {
+				for (String ssm : sortMap.get(sort.getSort()).getSortList()) {
 					if (fieldNum == 0) {
-						query.addSortField(ssm, validationSort);
+						query.addSort(ssm, validationSort);
 					} else {
-						query.addSortField(ssm, scoreSort);
+						query.addSort(ssm, scoreSort);
 					}
 					fieldNum++;
 				}
@@ -134,8 +133,8 @@ public class SolrInteractionBaseHunter extends SolrHunter {
 				// Otherwise, if this sort is configured in the sortMap, then
 				// we can have it mapped to 1->N fields in the Solr index.
 
-				for (String ssm : ((SolrSortMapper)sortMap.get(sort.getSort())).getSortList()) {
-					query.addSortField(ssm, currentSort);
+				for (String ssm : sortMap.get(sort.getSort()).getSortList()) {
+					query.addSort(ssm, currentSort);
 				}
 
 			} else {
@@ -143,26 +142,22 @@ public class SolrInteractionBaseHunter extends SolrHunter {
 				// otherwise, we just pass through an unmapped field to Solr
 				// and let it deal with it
 
-				query.addSortField(sort.getSort(), currentSort);
+				query.addSort(sort.getSort(), currentSort);
 			}
 		}
 	}
 
 	@Override
-	protected void packInformation (QueryResponse rsp, SearchResults sr,
+	protected void packInformation (QueryResponse rsp, SearchResults<SolrInteraction> sr,
 			SearchParams sp) {
 
 		logger.debug ("Entering SolrInteractionBaseHunter.packInformation()");
 
-		List<SolrInteraction> items = new ArrayList<SolrInteraction>();
-
 		SolrDocumentList sdl = rsp.getResults();
-		SolrDocument doc;
-		SolrInteraction item;
 
-		for (Iterator i = sdl.iterator(); i.hasNext();) {
-			doc = (SolrDocument) i.next();
-			item = new SolrInteraction();
+		for (SolrDocument doc : sdl)
+		{
+			SolrInteraction item = new SolrInteraction();
 
 			item.setRegKey ((String) doc.getFieldValue(IndexConstants.REG_KEY));
 			item.setOrganizerID((String) doc.getFieldValue(IndexConstants.ORGANIZER_ID));
@@ -179,9 +174,8 @@ public class SolrInteractionBaseHunter extends SolrHunter {
 			item.setJnumID ((String) doc.getFieldValue(IndexConstants.JNUM_ID));
 			item.setMatureTranscript ((String) doc.getFieldValue(IndexConstants.MATURE_TRANSCRIPT));
 
-			items.add(item);
+			sr.addResultObjects(item);
 		}
-		sr.setResultObjects(items);
 
 		this.packFacetData(rsp, sr);
 
@@ -191,7 +185,7 @@ public class SolrInteractionBaseHunter extends SolrHunter {
 
 	/* gather and facet-related data from 'rsp' and package it into 'sr'
 	 */
-	private void packFacetData (QueryResponse rsp, SearchResults sr) {
+	private void packFacetData (QueryResponse rsp, SearchResults<SolrInteraction> sr) {
 		if (this.facetString == null) { return; }
 
 		logger.debug("this.facetString = " + this.facetString);

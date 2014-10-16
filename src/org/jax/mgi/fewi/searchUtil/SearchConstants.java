@@ -34,7 +34,7 @@ public class SearchConstants {
 	public static final String MRK_TERM_ID 			= "markerTermId";
     public static final String MRK_SYMBOL               = "marker_symbol";
     public static final String MRK_NOMENCLATURE			= "nomenclature";
-	public static final String FEATURE_TYPE = "featureType";	
+	public static final String FEATURE_TYPE = "featureType";
 	public static final String FEATURE_TYPE_KEY = "featureTypeKey";
 
     // allele constants
@@ -118,17 +118,17 @@ public class SearchConstants {
     // mp constants
     public static final String MP_ID            = "mp_id";
     public static final String MP_HEADER        = "mp_header";
-    
+
 
     // interpro
 	public static final String INTERPRO_TERM = "interProTerm";
-	
+
 	// go
 	public static final String GO_TERM = "goTerm";
 	public static final String GO_PROCESS_TERM = "goProcessTerm";
 	public static final String GO_FUNCTION_TERM = "goFunctionTerm";
 	public static final String GO_COMPONENT_TERM = "goComponentTerm";
-	
+
 	// phenotype
 	public static final String PHENOTYPE = "phenotype";
 
@@ -176,14 +176,19 @@ public class SearchConstants {
     public static final String CM_OFFSET = "cmOffset";
     public static final String CYTOGENETIC_OFFSET = "cytogeneticOffset";
     public static final String STRAND = "strand";
-	
+
 	// genotype constants
 	public static final String GENOTYPE_TYPE = "genotypeType";
 
-    // interaction constants
+	// interaction constants
     public static final String RELATIONSHIP_TERM = "relationshipTerm";
     public static final String VALIDATION = "validation";
     public static final String DATA_SOURCE = "dataSource";
     public static final String SCORE_NUMERIC = "score_numeric";
     public static final String SCORE_FILTERABLE = "score_filterable";
+
+	// matrix view groups
+	public static final String STAGE_MATRIX_GROUP = "stageMatrixGroup";
+	public static final String GENE_MATRIX_GROUP = "geneMatrixGroup";
+
 }

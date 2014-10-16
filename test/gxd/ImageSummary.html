@@ -22,27 +22,37 @@
 <body>
 
 <div id="TOC">
-    <p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
 <div id="maintitle">
-    <h1>Image Summary</h1>
+    <h1>Images Summary</h1>
     <ul>
-        <li>User story 122, GXD Image Tab - web framework</li>
-        <li>User story 123, GXD Image Tab - display images</li>
-        <li>User story 124, GXD Image Tab - display metadata</li>
+        <li>User story 16, E1: GXD QF: Anatomy Search -&gt; ID based</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
+	<ul>
+        <li>(sto16) when user selects an anatomy term from the dropdown, the query is by that term's ID, rather than by its text.
+		<ul>
+			<li>Example: search for 'limb'. Results should only include those for descendants of EMAPA:16405 (limb). It shoud NOT include things like "thin descending limb of outer medulla" (under renal system, loop of Henle)</li>
+		</ul>
+		</li>
+		<li>(sto16) Cre search should NOT change (i.e., it should still search based on text tokens.)</li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
     <ul>
-        <li>The Images link from a marker detail page goes to the new Images tab of the assay summary page.</li>
-        <li>Correct images are displayed for a marker.</li>
-        <li>Image pages use standard pagination</li>
-        <li>Image tab displays the correct image count.</li>
+        <li>Images are displayed for assay results returned in the Assay Results tab.</li>
+        <li>Image pages use standard pagination.</li>
+        <li>Image tab displays the count of images.</li>
         <li>Each image links to its image detail page.</li>
         <li>Images are bounded to a standard size.</li>
+        <li>The Images link from a marker detail page goes to the new Images tab of the assay summary page.</li>
     </ul>
 </div>
 
@@ -59,6 +69,7 @@
                 <li>Verify the output returned has the tabs (in order): <b>Genes, Assays, Assay Results, Images</b></li>
             </ol>
             </li>
+
             <li>Each tab displays the count of data returned for the given output type
             <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
@@ -70,13 +81,15 @@
                 <li>Verify the Images tab displays a count of <b cc:assertEquals="getImagesCountByNomen(#pax6)"><b cc:dynamicData="pax6ImageCount"></b></b> </li>
             </ol>
             </li>
-            <li>Default row count is 25 for Images tab
+
+            <li>Default row count is 25 for Images tab; other values are 50, 100, 250.
 	        <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>Open the GXD query page</li>
                 <li>Search for <b>Pax6</b> in the Gene nomenclature field</li>
                 <li>Click on the Images tab</li>
                 <li>Verify the number of rows returned is <b>25</b></li>
+                <li>Verify the other options are <b>50, 100, 250</b>.</li>
             </ol>
             </li>
 
@@ -89,7 +102,7 @@
             </ol>
             </li>
 
-            <li>Test that images are displayed on the Image tab and they are being correctly resized when needed
+            <li>Images are resized to maximum 200px tall and/or 200px wide when needed.
             <p concordion:manual="true">passed - kstone 2013-04-26</p>
             <ol>
                 <li>Open the GXD expression data summary page for shh, </li>
@@ -98,8 +111,7 @@
             </ol>
             </li>
 
-            <li>Each image pane displays associated data fields
-            <table>
+            <li>Each image pane displays associated genes, assay types, and specimen labels<table>
             	<tr><th>Gene</th><th>Assay Type</th><th>Result Details</th></tr>
             	<tr><td>list of genes</td><td>list of assay types</td><td>list of specimen labels</td></tr>
             	<tr><td>not linked</td><td>not linked</td><td>linked to assay detail pages, anchored to the image thumbnail on that page</td></tr>
@@ -157,6 +169,25 @@
                 </li>
             </ol>
             </li>
+
+    		<li>When an Anatomical Structure term is submitted, only images from assay results associated with that EMAPA term or its child terms are returned. (sto16)
+			<p concordion:manual="true">passed. -klf 2014-05-30</p>
+			<ol>
+                <li>Open the GXD query page.</li>
+                <li>Search for the following TERMS and verify the number of results returned (as of 5/20/2014 using AD Browser links on Cardolan):
+                <table>
+	                <tr><th>Term</th><th>EMAPA ID</th><th>Images count</th><th>Notes to tester</th></tr>
+	                <tr><td>pinna mesenchyme TS20-26</td><td>EMAPA:17591</td><td>16</td><td>has child terms, some with zero results</td></tr>
+	                <tr><td>pinna TS20-28</td><td>EMAPA:17589</td><td>37</td><td>parent of "pinna mesenchyme TS20-26", has other child terms</td></tr>
+	                <tr><td>esophagus epithelium TS16-22</td><td>EMAPA:16835</td><td>29</td><td>has no child terms</td></tr>
+	                <tr><td>esophagus epithelium TS23</td><td>EMAPA:26985</td><td>130</td><td>has no child terms</td></tr>
+	                <tr><td>esophagus epithelium TS24-28</td><td>EMAPA:18862</td><td>26</td><td>has 2 child terms, one with zero results</td></tr>
+                </table>
+                </li>
+			</ol>
+    		</li>
+
+
         </ol>
     </div>
     <div id="auto">
@@ -412,14 +443,14 @@ order by m.symbol, sortValue, b.short_citation
                 <li>Verify the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab selected</li>
             </ol>
             </li>
-            <li>Confirm a GXD qury form search displays an Assay summary page with an Image tab included
+            <li>GXD query form search displays an Assay summary page with an Image tab included
             <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Open the GXD query form and search for the marker <b>Gata1</b></li>
                 <li>Verify the Gene Expression summary page for marker <b>Gata1</b> displays with the Image tab included, the Assay Results tab should be highlighted</li>
             </ol>
             </li>
-            <li>Confirm the correct number and images are displayed
+            <li>Image tab displays the count of images; all expression images for a given query are returned.
             <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for ebl1 (http://cardolan.informatics.jax.org/marker/MGI:87859)</li>
@@ -453,7 +484,7 @@ order by m.symbol, sortValue, b.short_citation
               </li>
             </ol>
             </li>
-            <li>Confirm image tab when a query has no image
+            <li>Image tab displays count of zero and special text when a query has no image
             <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Open the GXD query form and search for the marker <b>Dgsh</b></li>
@@ -461,7 +492,7 @@ order by m.symbol, sortValue, b.short_citation
                 <li>After the Image summary page for marker <b>Dgsh</b> displays, verify the text says <b>No images with expression data found.</b></li>
             </ol>
             </li>
-            <li>Confirm images are linked to there Image detail page
+            <li>Images are linked to their Image detail page
             <p concordion:manual="true">jeffc 04/12/2013</p>
             <ol>
                 <li>Display the marker detail page for gata1 (http://cardolan.informatics.jax.org/marker/MGI:95661)</li>

@@ -390,7 +390,7 @@ public class NotesTagConverter
         Matcher mLT   = pLT.matcher(displayParm);
 
         // if both are found, replace them with the proper HTML
-        if (mGT.find() & mLT.find()){
+        if (mGT.find() && mLT.find()){
             displayParm = displayParm.replaceAll("<", "<sup");
             displayParm = displayParm.replaceAll(">", "</sup>");
             displayParm = displayParm.replaceAll("<sup", "<sup>");

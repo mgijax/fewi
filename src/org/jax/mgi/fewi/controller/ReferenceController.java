@@ -61,7 +61,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ReferenceController {
 	
 	// logger for the class
-	private Logger logger = LoggerFactory.getLogger(ReferenceController.class);
+	private final Logger logger = LoggerFactory.getLogger(ReferenceController.class);
 	
 	// get the finders used by various methods
 	@Autowired
@@ -908,16 +908,16 @@ public class ReferenceController {
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
 		
-		if (facetResults.getResultFacets().size() >= facetLimit){
+		if (facetResults.getSortedResultFacets().size() >= facetLimit){
 			logger.debug("too many facet results");
 			l.add("Too many results to display. Modify your search or try another filter first.");
 			m.put("error", l);
-		} else if (facetResults.getResultFacets().size() == 0) {
+		} else if (facetResults.getSortedResultFacets().size() == 0) {
 			logger.debug("no facet results");
 			l.add("No values in results to filter.");
 			m.put("error", l);
 		} else {
-			m.put("resultFacets", facetResults.getResultFacets());
+			m.put("resultFacets", facetResults.getSortedResultFacets());
 		}
 		return m;
 	}

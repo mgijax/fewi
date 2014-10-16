@@ -171,7 +171,9 @@ public class BatchController {
 			logger.debug("session timeout="+session.getMaxInactiveInterval());
 			//session.setMaxInactiveInterval(1);
 			queryForm.setIds(StringUtils.join(idList, "\n"));
-		}  
+		}
+		int inputIdCount = idList != null ? idList.size() : 0;
+		
         ModelAndView mav = new ModelAndView("batch_summary");
         mav.addObject("queryString", queryForm.toQueryString());
         mav.addObject("batchQueryForm", queryForm);

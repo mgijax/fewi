@@ -1,5 +1,7 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
+import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
+
 import mgi.frontend.datamodel.hdp.HdpGridAnnotation;
 
 public class SolrHdpGridData implements HdpGridAnnotation,SolrHdpEntity

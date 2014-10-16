@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.propertyMapper;
 
+
 /**
  * The SolrPropertyMapper class handles the mapping of operators being passed in from the 
  * hunter, and mapping them specifically to Solr. 
@@ -58,16 +59,28 @@ public class SolrJoinMapper {
 
     public String getJoinClause(String queryString) 
     {
-    	if(this.toFilter==null || this.toFilter.trim().equals(""))
+    	return getJoinClause(queryString,null);
+    }
+    public String getJoinClause(String queryString,String extraJoinClause) 
+    {
+    	boolean toFilterEmpty = this.toFilter==null || this.toFilter.trim().equals("");
+    	boolean extraJoinClauseEmpty = extraJoinClause==null || extraJoinClause.trim().equals("");
+    	
+    	if(toFilterEmpty && extraJoinClauseEmpty)
     	{
     		return "{!join fromIndex="+fromIndex+
     			" from="+fromKey+
     			" to="+toKey+"} "+queryString;
     	}
+    	String finalToFilter = "";
+    	if(toFilterEmpty) finalToFilter = extraJoinClause;
+    	else if(extraJoinClauseEmpty) finalToFilter = this.toFilter;
+    	else finalToFilter = this.toFilter + " AND "+extraJoinClause;
+    	
     	// else do the nested query format to include a filter on the toIndex
     	return "_query_:\"{!join fromIndex="+fromIndex+
     			" from="+fromKey+
     			" to="+toKey+
-    			" v='"+queryString.replace("\"","\\\"")+"'}\" AND "+this.toFilter;
+    			" v='"+queryString.replace("\"","\\\"")+"'}\" AND "+finalToFilter;
     }
 }

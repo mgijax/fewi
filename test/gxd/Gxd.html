@@ -1,9 +1,10 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
 <head>
-<title>GXD</title>
+<title>GXD Test Suites</title>
 <style>
 h5 {font-size:1em; font-variant:small-caps;}
 th {background-color:#D0E0F0;}
+td.palestBlue {background-color:#EAEFF5;}
 </style>
 </head>
 <!-- declare strict doctype to look for disallowed html errors
@@ -13,20 +14,21 @@ th {background-color:#D0E0F0;}
 -->
 <body>
 
-    <h1>GXD</h1>
+    <h1>GXD Test Suites</h1>
 
 	<div>
-	<h2>Functional Description</h2>
-	<h3>Planned Querying Functionality:</h3>
-	<p><b>Standard Query Form</b>: The user may search for expression data for genes by identifying the genes by nomenclature, vocabulary term annotations, or chromosomal location.  The user also may search for expression data associated with particular anatomical structures or developmental stages, in specimens bearing mutations in particular genes, or by the type of expression assay performed.  The user may specify whether they wish to restrict the results only to data where expression was detected, only to data where expression was assayed but was absent, or to include all data.</p>
-	<p><b>Differential Query Form</b>: The user may search for genes having positive expression results in structure "A" but not structure "B".  The user may search for genes having positive expression results in some stage(s) but not (an)other stage(s).  The user may search for genes having positive expression results in structure "A" at certain stage(s) but not structure "B" at (an)other stage(s).  The query returns positive expression results for the selected structure and its descendant terms and/or stage(s) from the first part of the query.  The query returns negative results for the selected structure and/or stage(s) from the second part of the query, but does not return negative results for ancestor or descendant terms.</p>
+	<h2>Functional Description Overview</h2>
+	<h3>Querying Functionality:</h3>
+	<p><b>Standard Query Form</b>: The user may search for expression data for genes by identifying the genes by nomenclature, vocabulary term annotations, or chromosomal location.  The user also may search for expression data associated with particular anatomical structures or developmental stages, in specimens bearing mutations in particular genes, or by the type of expression assay performed.   In querying by anatomical structure, the user must select an EMAPA term from the pick list provided (added 2014). The user may specify whether they wish to restrict the results only to data where expression was detected, only to data where expression was assayed but was absent, or to include all data.</p>
+	<p> . </p>
+	<p><b>Differential Query Form</b>: The user may <b>search for genes</b> having positive expression results in structure &quot;A&quot; but not structure &quot;B&quot;.  The user may <b>search for genes</b> having positive expression results in some stage(s) but not (an)other stage(s).  The user may <b>search for genes</b> having positive expression results in structure &quot;A&quot; at certain stage(s) but not structure &quot;B&quot; at (an)other stage(s). In querying by anatomical structure, the user must select an EMAPA term from the pick list provided (added 2014).  The query returns <b>genes</b> having positive expression results for &quot;A&quot; or its descendants in selected stage(s) which have no positive expression results for &quot;B&quot; or any of its descendants in selected stage(s).   For those genes, the query returns positive <b>expression results</b> for structure &quot;A&quot; and its descendant terms for selected stage(s).  For the same genes, the query returns negative results for structure  &quot;B&quot; for  selected stage(s), but does not return negative results for ancestor or descendant terms. Results that are &quot;ambigous&quot; or &quot;not specified&quot; are not considered in the query are never returned. Only "wild type" specimens are included, where "wild type" is specially defined.</p>
 	
-	<h3>Planned Results Summary Functionality:</h3>
-	<p>The user may access each of four views of the results set of data using "tab" affordances: Genes, Assays, Assay Results, or Images. Each view contains a data table with particular columns, sorting and filtering requirements. Results will be presented in "paginated" subsets.  The user may download the full results set in tab-delimited or Excel format.	
+	<h3>Results Summary:</h3>
+	<p>The user may access each of six views of the results set of data using "tab" affordances: Genes, Assays, Assay Results, Images, Tissue X Stage matrix (added 2014),  or Tissue X Gene matrix (added 2014). Each view contains a data table with particular columns, sorting and filtering requirements.  Applying filters affects the returned data in all &quot;tab&quot; views. Results are  presented in paginated subsets.  The user may download the full results set in tab-delimited or Excel format.	
 	The user may forward the list of returned genes to the Batch Query tool.</p>
 	
 	<h3>Expression Assay Detail Page</h3>
-	<p>Revisions to the Assay Detail page include displaying image panes for each specimen and breaking up the former table containing all Specimens into 1 table for each Specimen.</p>
+	<p>The Assay Detail page includes  a separate results  table  and relevant image panes for each Specimen in the Assay.</p>
 	</div>
 
 	<div>
@@ -35,97 +37,98 @@ th {background-color:#D0E0F0;}
 			<tr>
 				<th>Description</th>
 				<th>Release</th>
-				<th>User story IDs</th>
+				<th>Current User Story IDs</th>
 				<th>Contains Manual Tests?</th>
 				<th>Notes</th>
 			</tr>
-			<tr>
-				<td colspan="5"><h5>GXD QF &amp; Summary: Basic
-						Functionality</h5></td>
+<!--			<tr>
+				<td colspan="5" class="palestBlue">
+				<h5>GXD Data Loads</h5>
+				<p><i>Regular loads of external expression data or related information</i></p>
+				</td>
 			</tr>
 			<tr>
-				<td>GXD Standard Query: 
+ 				<td>Links to other organisms:
 				<ul>
-					<li><a concordion:run="concordion" href="AssayResults.html">Correct assay results data are returned</a> (Assay Results tab)</li>
-					<li><a concordion:run="concordion" href="AssaySummary.html">Correct assays data are returned</a> (Assays tab)</li>
-					<li><a concordion:run="concordion" href="GeneSummary.html">Correct gene results data are returned</a> (Genes tab)</li>
-					<li><a concordion:run="concordion" href="ImageSummary.html">Correct image results data are returned</a> (Images Tab)</li>
-				</ul></td>
-				<td>MGI 5.10, MGI 5.14</td>
-				<td>In 5.14: 122, 123, 124, 182, 193</td>
+					<li><a concordion:run="concordion" href="LoadExpressionOtherOrganisms.html">Chicken (GEISHA) load, Zebrafish (ZFIN) load</a></li>
+				</ul>
+				</td>
+				<td>5.20</td>
+				<td>196</td>
 				<td>Yes</td>
-				<td></td>
+				<td>Involves loading data, then following it through to the front end. Tests for display in the WI are located in other (Marker) test suites.</td>
+			</tr> -->
+			<tr>
+				<td colspan="5" class="palestBlue">
+				<h5>GXD  Standard Query Form Ribbons: Detailed Interface Functionality Tests</h5>
+				<p>See below for query results summary (query submittal) tests.</p>
+				</td>
 			</tr>
 			<tr>
-				<td colspan="5"><h5>GXD  Standard Query Form Ribbons: Detailed Interface &amp; Functionality Tests</h5></td>
-			</tr>
-			<tr>
-				<td colspan="5" style="background-color: #EEEEEE;">Genes</td>
+				<td colspan="5" style="background-color: #EEEEEE;">Genes ribbon</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="NomenclatureSearch.html">Nomenclature search</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="VocabularyAutocomplete.html">Vocabulary autocomplete</a>
-					(only searched vocabs)</td>
-				<td>MGI 5.10</td>
+				<td><a concordion:run="concordion" href="VocabularyAutocomplete.html">Vocabulary autocomplete</a> (only searched vocabs)</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td><td>Need to verify (or automate) counts in the automated tests.<br/>Need to update 2 search terms since data refresh.<br/></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="GeneVocabSearch.html">Vocabulary
 						term search</a> (GO and MP and OMIM)</td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
-					href="ProhibitNomenVocabSearch.html">Prohibit Nomen + Vocab
-						Search</a></td>
-				<td>MGI 5.10</td>
+					href="ProhibitNomenVocabSearch.html">Prohibit Nomen + Vocab Search</a></td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td>some tests might be obsolete jeffc</td>
 			</tr>
 			<tr>
-				<td colspan="5" style="background-color: #EEEEEE;">Anatomical
-					structure or stage</td>
+				<td colspan="5" style="background-color: #EEEEEE;">Genome Location ribbon</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="LocationSearch.html">Searching by Genome Location</a></td>
+				<td>5.20</td>
+				<td>133</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="5" style="background-color: #EEEEEE;">Anatomical structure or stage ribbon</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="DetectionSearch.html">Searching
 						by detected/not detected</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
-<!--  COMBINED THESE TESTS IN WITH ANATOMYSEARCH TEST SUITE.  DELETE THESE IF THAT RUNS PROPERLY.  -klf 3/15/2013
-  			<tr>
-				<td><a concordion:run="concordion"
-					href="AnatomyAutocomplete.html">Anatomy autocomplete</a> (with synonyms)</td>
-				<td>MGI 5.10</td>
-				<td></td>
-				<td>Yes</td>
-				<td></td>
-			</tr> -->
 			<tr>
-				<td><a concordion:run="concordion" href="AnatomySearch.html">Anatomy
-						term search</a> (includes all Autocomplete tests)</td>
-				<td>MGI 5.10</td>
-				<td></td>
+				<td><a concordion:run="concordion" href="AnatomySearch.html">Anatomy term search</a> (includes Autocomplete)</td>
+				<td>5.10<br/>5.20</td>
+				<td>16</td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="TheilerStageSearch.html">Searching by Theiler stage</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
@@ -133,7 +136,7 @@ th {background-color:#D0E0F0;}
 			<tr>
 				<td><a concordion:run="concordion" href="AgeSearch.html">Searching
 						by age</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
@@ -141,61 +144,90 @@ th {background-color:#D0E0F0;}
 			<tr>
 				<td><a concordion:run="concordion" href="AgeStageToggle.html">Searching
 						by age -OR- Theiler stage</a> (toggling)</td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="5" style="background-color: #EEEEEE;">Mutant/wildtype</td>
+				<td colspan="5" style="background-color: #EEEEEE;">Mutant/wildtype ribbon</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="MutantWildtypeSearch.html">Searching by mutant/wildtype
 						genetic background of specimen</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="5" style="background-color: #EEEEEE;">Assay types</td>
+				<td colspan="5" style="background-color: #EEEEEE;">Assay types ribbon</td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="AssayTypeSearch.html">Searching
 						by assay type</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="5"><h5>GXD Differential Query Form Ribbons</h5></td>
+				<td colspan="5" class="palestBlue"><h5>GXD Query Results Summary: Functionality for query output</h5></td>
 			</tr>
 			<tr>
-				<td><a concordion:run="concordion" href="DiffQuery.html">Differential expression</a>
+				<td>GXD Standard Query: 
 				<ul>
-					<li>Ribbon 1: in explicit Structures</li>
-					<li>Ribbon 2: in explicit Stages</li>
-				</ul>
-				</td>
-				<td>MGI 5.14</td>
-				<td>146, 170</td>
+					<li><a concordion:run="concordion" href="AssayResults.html">Assay Results tab</a></li>
+					<li><a concordion:run="concordion" href="AssaySummary.html">Assays tab</a></li>
+					<li><a concordion:run="concordion" href="GeneSummary.html">Genes tab</a></li>
+					<li><a concordion:run="concordion" href="ImageSummary.html">Images Tab</a></li>
+					<li><a concordion:run="concordion" href="MatrixTissueByStage.html">Matrix - Tissue X Stage</a></li>
+					<li><a concordion:run="concordion" href="MatrixTissueByGene.html">Matrix - Tissue X Gene</a></li>
+				</ul></td>
+				<td>5.10,<br/>5.14,<br/>5.20</td>
+				<td>16, 21, 23, 46, 91, 41, 25, 26, 45, 47, 60, 61,  65, 68, 69, 85, 93, 97, 101, 111,  113, 121, 122, 123, 164, 201</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="5" class="palestBlue"><h5>GXD Differential Query Form Ribbons</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="DiffQuery.html">Differential expression</a></td>
+				<td>5.14,<br/>5.20</td>
+				<td>16, 58, 101</td>
 				<td>Yes (some auto)</td>
-				<td>Broad query, positive results only (5/2/13)<br/>
-				Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.
+				<td>Marked tests for regression with <span class="regressHi">high</span> or <span class="regressLo">low</span>.
 				<i>kstone - passed regression tests (2013/05/14)</i>
 				</td>
 			</tr>
+
 			<tr>
-				<td colspan="5"><h5>GXD QF &amp; Summary: Other Page
+				<td colspan="5" class="palestBlue"><h5>GXD QF &amp; Summary: Input
+						Combinations</h5></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion"
+					href="MultipleParametersSearch.html">Searching by combining
+						multiple search parameters</a><br /> (This test verifies only that
+					correct data are returned.<br /> Other, manual tests are required
+					to verify format and layout.)</td>
+				<td>5.10, 5.20</td>
+				<td>133</td>
+				<td>No</td>
+				<td>NEED TO UPDATE FOR STO16???</td>
+			</tr>
+
+			<tr>
+				<td colspan="5" class="palestBlue"><h5>GXD QF &amp; Summary: Other Page
 						Functionality</h5></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="AssayResultsPagination.html">Assay results summary
 						pagination</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
@@ -204,14 +236,14 @@ th {background-color:#D0E0F0;}
 				<td><a concordion:run="concordion"
 					href="DisplayQueryParameters.html">Display query parameters
 						(You Searched For) *</a></td>
-				<td>MGI 5.10</td>
-				<td></td>
+				<td>5.10, 5.20</td>
+				<td>133</td>
 				<td>Yes (no Auto)</td><td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="BrowserHistoryJavascript.html">Browser history manager *</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td><td>some tests need updating</td>
 			</tr>
@@ -219,7 +251,7 @@ th {background-color:#D0E0F0;}
 				<td><a concordion:run="concordion" href="CollapsingFields.html">Making
 						query form &quot;fully functional&quot;</a><br /> (Query form expands
 					and collapses, retains user's values)</td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
@@ -228,7 +260,7 @@ th {background-color:#D0E0F0;}
 				<td><a concordion:run="concordion"
 					href="DownloadableReports.html">File download options for Assay
 						Results</a> (text and Excel)</td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes</td>
 				<td></td>
@@ -237,7 +269,7 @@ th {background-color:#D0E0F0;}
 				<td><a concordion:run="concordion"
 					href="QueryFormTextChanges.html">Query Form Text Changes</a> (from
 					Sprint 8 + vocab searching changes)</td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td>Evaluate this test stuff, might not be needed any more jeffc 7/18/12</td>
@@ -253,113 +285,96 @@ th {background-color:#D0E0F0;}
 						Results Tab</a></li>
 					<li><a concordion:run="concordion" href="ColumnSortAssaysTab.html">Column Sorting, Assays Tab</a></li>
 				</ul></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td></td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="ImageSummary.html">Column Sorting, Images Tab</a></td>
-				<td>MGI 5.14</td>
+				<td>5.14</td>
 				<td></td>
 				<td></td>
 				<td></td>
 			</tr>
+
 			<tr>
-				<td colspan="5"><h5>GXD QF &amp; Summary: Input
-						Combinations</h5></td>
-			</tr>
-			<tr>
-				<td><a concordion:run="concordion"
-					href="MultipleParametersSearch.html">Searching by combining
-						multiple search parameters</a><br /> (This test verifies only that
-					correct data are returned.<br /> Other, manual tests are required
-					to verify format and layout.)</td>
-				<td>MGI 5.10</td>
-				<td></td>
-				<td>No</td>
-				<td></td>
-			</tr>
-			
-						<tr>
-				<td colspan="5"><h5>GXD Detail: Ribbon Sections</h5></td>
+				<td colspan="5" class="palestBlue"><h5>GXD Detail: Ribbon Sections</h5></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="AssayDetail.html">Header and Assay ribbon data</a><br />Includes <a href="AssayDetail.html#pageBanner">standard page banner elements</a> and also <a href="AssayDetail.html#assayRibbon">Assay identifier data</a>. </td>
-				<td>MGI 5.14</td>
-				<td>14, 135</td>
+				<td>5.14</td>
+				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="AssayDetail.html">Probe &quot;ribbon&quot; data</a><br /> Includes <a href="AssayDetail.html#probeRibbon">probes</a>, antibodies,  and direction detection reporter genes.</td>
-				<td>MGI 5.14</td>
-				<td>15</td>
+				<td>5.14</td>
+				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="AssayDetail.html">Results ribbon data</a><br /> Includes <a href="AssayDetail.html#inSituResults">InSitu Result Table</a>, <a href="AssayDetail.html#BlotData">Blot table</a>,  and <a href="AssayDetail.html#imagePanes">Images.</a></td>
-				<td>MGI 5.14</td>
-				<td>15, 16, 18, 19, 22, 23, 48, 54, 55, 65, 135</td>
+				<td>5.14</td>
+				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion"
 					href="AssayDetailSuperscripting.html">Superscripting for all sections</a><br /> Includes <a href="AssayDetail.html#inSituResults">InSitu Result Table</a>, <a href="AssayDetail.html#BlotData">Blot table</a>,  and <a href="AssayDetail.html#imagePanes">Images.</a></td>
-				<td>MGI 5.14</td>
-				<td>139</td>
+				<td>5.14</td>
+				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="5"><h5>Other Pages</h5></td>
+				<td colspan="5" class="palestBlue"><h5>Other Pages</h5></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="TissueSummary.html">Tissue Summary</a></td>
-				<td>MGI 5.14</td>
-				<td>198</td>
+				<td>5.14</td>
+				<td></td>
 				<td></td>
 				<td>will need to regress (klf 5/21/2013)</td>
 			</tr>
 			<tr>
-				<td>Update links to GXD Summary Page...
+				<td>Inbound links to GXD Summary Page...
 				<ul>
-					<li><a concordion:run="concordion" href="GXDSummaryLinkChangesInbound.html">From three pages:</a> 
+					<li><a concordion:run="concordion" href="GXDSummaryLinksInbound.html">From three pages:</a> 
 						<ul>
-						<li>Marker Detail Page (included building new Summary Page to support these)</li>
-						<li>Probe Detail page (MGI 5.14)</li>
-						<li>Antibody Detail page (MGI 5.14)</li>
+						<li>Marker Detail Page (changes in 5.20: add matrix views)</li>
+						<li>Probe Detail page (5.14)</li>
+						<li>Antibody Detail page (5.14)</li>
 						</ul>
 					</li>
 					<li><a concordion:run="concordion" href="ReferencesPageLinkChanges.html">From References Page</a></li>
 					<li><a concordion:run="concordion" href="ADBrowserLinkChanges.html">From AD Browser</a></li>
 					<li><a concordion:run="concordion" href="GXDLitIndexDetailLinkChanges.html">From GXD Lit Index Detail Page</a> (Note: no change to our default sort. -Connie 7/27/12)</li>
 					<li><a concordion:run="concordion" href="BatchQueryLinkChanges.html">From Batch Query</a></li>
-					<li>From Allele Detail Page - REMOVED IN MGI 5.12</li>
-					<li>From Quick Search - separate test suite; see below</li>
 				</ul>
 				</td>
-				<td>MGI 5.14</td>
-				<td>81</td>
+				<td>5.14, 5.20</td>
+				<td>22</td>
 				<td>Yes</td>
-				<td>Consolidated these from multiple rows that were listed separately, below.</td>
+				<td>Add matrix views to summary page in Release 5.20(?).</td>
 			</tr>
 <!-- 			<tr>
 				<td><a concordion:run="concordion" href="MarkerDetailLinkChanges.html">Update links from Marker Detail Page to GXD Results Summary</a><br /> 
 					(includes building new Summary Page to support these)</td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
 			</tr>   -->
 			<tr>
 				<td><a concordion:run="concordion" href="LitIndexLinksFromQueryOrMarker.html">Update links from Query Results Summary Page to GXD Lit Index<br/>and Expression Results for Marker Page</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
@@ -367,22 +382,22 @@ th {background-color:#D0E0F0;}
 <!-- 			<tr>
 				<td><a concordion:run="concordion" href="ReferencesPageLinkChanges.html">Update links from References Page to GXD Results Summary</a><br /> 
 					(includes building new Summary Page to support these)</td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
 			</tr>   
 			<tr>
 				<td><a concordion:run="concordion" href="ADBrowserLinkChanges.html">Change links from AD Browser to GXD Summary</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
 			</tr>  -->
 			<tr>
 				<td><a concordion:run="concordion" href="QuickSearchLinkChanges.html">Change links from Quick Search</a></td>
-				<td>MGI 5.14</td>
-				<td>104</td>
+				<td>5.14</td>
+				<td></td>
 				<td>Yes</td>
 				<td>
 				<ul>
@@ -393,28 +408,28 @@ th {background-color:#D0E0F0;}
 			</tr>
 <!-- 			<tr>
 				<td><a concordion:run="concordion" href="GXDLitIndexDetailLinkChanges.html">Change links from GXD Lit Index Detail Page to GXD Summary</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td></td>
 				<td><i>Note: no change to our default sort. -Connie 7/27/12</i></td>
 			</tr>  
 			<tr>
 				<td><a concordion:run="concordion" href="TissueSummaryLinkChanges.html">Change links from Tissue Summary to GXD Summary</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
 			</tr>  
 			<tr>
 				<td><a concordion:run="concordion" href="BatchQueryLinkChanges.html">Change links from Batch Query to GXD Summary</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
 			</tr> 
 			<tr>
 				<td><a concordion:run="concordion" href="AlleleDetailPageLinkChanges.html">Change GXD links from Allele Detail Page to GXD Summary</a></td>
-				<td>MGI 5.10</td>
+				<td>5.10</td>
 				<td></td>
 				<td>Yes (no Auto)</td>
 				<td></td>
@@ -436,22 +451,15 @@ th {background-color:#D0E0F0;}
 					</li>
 				</ul>
 				</td>
-				<td>MGI 5.14</td>
-				<td>21</td>
+				<td>5.14</td>
+				<td></td>
 				<td>Yes</td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><a concordion:run="concordion" href="GXDImageSummaryForward.html">Update link to GXD Image Summary Page</a></td>
-				<td>MGI 5.14</td>
-				<td>130</td>
-				<td>Yes</td>
+				<td>5.14</td>
 				<td></td>
-			</tr>
-						<tr>
-				<td><a concordion:run="concordion" href="RemoveGXDExpandedQFLinks.html">Remove links to GXD Expanded Query Form Page</a></td>
-				<td>MGI 5.14</td>
-				<td>175</td>
 				<td>Yes</td>
 				<td></td>
 			</tr>

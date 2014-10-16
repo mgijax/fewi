@@ -23,49 +23,90 @@
 <body>
 
 <div id="TOC">
-	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
 <div id="maintitle">
     <h1>GXD Differential Query Tests</h1>
     <ul>
-        <li>User story #168, GXD Differential QF - Framework</li>
-        <li>User story #146, GXD Differential QF - Stucture A but not B</li>
-        <li>User story #170, GXD Differential QF - Stage I but not J</li>
-        <li>User story #196, GXD Differential QF - should land on Genes tab</li>
-        <li>User story #169, GXD Differential QF - Stucture A but not B, include negatives</li>
-        <li>User story #171, GXD Differential QF - Stage I but not J, include negatives</li>
-        <li>User story #172, GXD Differential QF - Structure/Stage A/I but not B/J</li>
-        <li>User story #173, GXD Differential QF - Structure/Stage A/I but not B/J, include negatives</li>
+        <li>User story 16, E1: GXD QF: Anatomy Search -&gt; ID based</li>
+        <li>User story 58, Deal with Differential QF</li>
+        <li>User story 101, Structure-specified queries: open 1 level</li>
+        <li>User story 203, Bug: red cell pop-ups include yes for differential queries</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>sto168: Standard form has a second tab for the differential query</li>
-		<li>sto168: Differential Query Form has 2 ribbons: Strucures only and Stages only.</li>
-		<li>sto168: Each ribbon has a submit and reset button. User is only able to submit one ribbon.</li>
-		<li>sto168: Differential Query Form is tied into history manager by opening the appropriate tab+ribbon 
-			if the querystring represents a differential query.</li>
-		<li>sto146: the first query ribbon functional</li>
-		<li>sto146: looks only at positive results; shows only positive results</li>
-		<li>sto146: Has autocomplete boxes for structure A and another for structure B</li>
-		<li>sto146: Implements the broad flavor of NOT. That is a gene is returned if it shows positive expression in A or its descendants, AND has NO positive expression in B or its descendants.</li>
-		<li>sto146: For those genes that satisfy this criterion, show the positive results from A and its descendants</li>
-		<li>sto170: form allows user to select multiple stages for both I and J</li>
-		<li>sto170: allow user to specify J with a "no other stages" checkbox (equivalent to manually selecting all the other stages not in I)</li>
-		<li>sto170: returns genes that show positive expression in any of the I stages AND do NOT show positive expression in any of the J stages</li>
-		<li>sto170: for returned genes, show positive results from the I stages</li>
-		<li>sto169: results include everything returned in sto146, plus results include negative/absent results for structure B. This includes just the negative results in B. (No ancestors or descendants needed.)</li>
-		<li>sto171: for the genes returned, returns the same positive results as in sto170, plus returns negative results for stage(s) J</li>
-		<li>sto172: form has 3rd ribbon</li>
-		<li>sto172: allows user to specify structure A and one or more stages I</li>
-		<li>sto172: allows user to specify structure B and one or more stages J</li>
-		<li>sto172: query finds genes that have positive expression in the A structure in any of the I stages, and subtracts any genes that have positive expression in the B structure in any of the J stages</li>
-		<li>sto172: for the remaining genes, shows the positive results in A structure in stages I</li>
-		<li>sto173: results include all those from sto172, plus... results include and negative results in structure B stages J</li>
-		<li>sto196: when user clicks "Search" on the differential QF tab, the Genes tab is opened by default</li>
+        <li>(sto16) when user selects an anatomy term from the dropdown, the query is by that term's ID, rather than by its text.
+		<ul>
+			<li>Example: search for 'limb'. Results should only include those for descendants of EMAPA:16405 (limb). It shoud NOT include things like "thin descending limb of outer medulla" (under renal system, loop of Henle)</li>
+		</ul>
+		</li>
+		<li>(sto16) Cre search should NOT change (i.e., it should still search based on text tokens.)</li>
+		<li>(sto58) two rows displayed: A and B</li>
+		<li>(sto58) B only displayed if there are negative results returned</li>
+		<li>(sto58) (Assuming query semantics are correct) B row should be all red (or some white)</li>
+		<li>(sto58) if no negative result for B, B is not displayed</li>
+		<li>(sto101) for differential queries involving structures, show A and B (if there are results), but do not open either one.</li>	
+		<li>(sto203) <i>none</i></li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+	<ul>
+		<li>GXD Query Form has a second tab for the differential query</li>
+		<li>Differential Query Form has 3 ribbons: Structures only (A but not B), Stages only (I but not J), and Structures + Stages (A at I but not B at J).</li>
+		<li>Each ribbon has a submit and reset button. User is able to submit parameters from only one ribbon.</li>
+		<li>Has autocomplete boxes for structure A and another for structure B which use the EMAPA vocabulary.</li>
+		<li>Autocomplete is forced-select (user must pick from one of the values displayed). Query submits the EMAPA ID for the selected term. (NEW: sto16, May 2014)</li>
+		<li>Allows user to select multiple stages for both I and J</li>
+		<li>Allow user to specify J as a "no other stages" checkbox (equivalent to manually selecting all the other stages not in I)</li>
+	</ul>
+
+	<h3>Query functionality</h3>
+	<ul>
+		<li>Query excludes "ambiguous" and "not specified" results. </li>
+		<li>Differential queries include only "wild type" results in the query logic and in the displayed results sets.  "Wild type" is defined as assays which are not associated with any allele pairs, or in situ reporter (knock-in) assays associated with a single allele pair which is heterozygous w.t. for the assayed gene.</li>
+		<li>Query converts EMAPA terms from the Structure autocomplete to EMAPS terms to submit the query. (NEW: sto16, May 2014)</li>
+		<li>Query returns genes that have positive expression in the A structure or any descendant terms in any of the I stages, and subtracts any genes that have positive expression in the B structure  or any descendant terms in any of the J stages</li>
+		<li>Descendant terms are defined as following any path toward a leaf node in the DAG: these may be IS_A or PART_OF relationships.</li>
+	</ul>
+	
+	<h3>Results Summary functionality</h3>
+	<ul>
+		<li>For those genes that satisfy the criteria, show the positive results from A and its descendants from the I stages</li>
+		<li>For those genes that satisfy the criteria, show negative/absent results, if any, for structure B for the J stages. This includes just the negative results in B. (No ancestors or descendants needed.)</li>
+		<li>Do not display "ambiguous" or "not specified" results.</li>
+		<li>For differential queries, the Genes tab is opened in the Results Summary by default</li>
+		<li>Differential Query Form is tied into history manager by opening the appropriate tab+ribbon if the query string represents a differential query.</li>
+	</ul>
+	
+	<h3>Matrix Displays functionality</h3>
+	<ul>
+		<li>Display one row for structure A. If there are annotated results for descendant terms, the row is expandable.</li>
+		<li>Unlike the standard queries, the row for structure A is NOT expanded by default. (It does NOT display first-level child terms by default.) (sto101)</li>
+		<li>If negative results exist, display one row for structure B, below the row for structure A.  This row is not expandable (as no descendant terms should be returned via rules above).</li>
+		<li>If structure B is a descendant term of structure A, then row(s) for B will ALSO appear in DAG location(s) beneath A when expanded.</li>
+		<li>No rows are displayed for descendant terms for B.</li>
+		<li>If NO structures are specified in the query, display all "default" rows having data for the specified Theiler Stages in their expanded or collapsed state, as with the Standard Query.</li> 
+		<li>If NO stages are specified in the query, display Stage columns for every stage having data for structure A or structure B.</li>
+		<li>In Theiler Stage columns, if stages ARE specified in the query, display Stage columns only for the I and J stage(s).</li>
+		<li>(Theiler Stage columns should match the stages listed in the Theiler Stages filter.)</li>
+		<li>In Gene columns, display a column for each gene having a positive result for structure A or its descendants (in the I stage(s)), and for any additional genes having a negative result for structure B (in the J stage(s)).</li>
+		<li>(Gene columns should match the genes listed on the Genes tab.)</li>
+		<li>Color roll-up logic, modified from Standard Query functional requirements: (sto39)
+		<ol>
+			<li>If there are any results under the cell where detected=true, then color=BLUE.</li>
+			<li><del>Else, if the structure for THAT row (not looking at descendants) has result(s) that are NS or Ambiguous, then color=GRAY.</del></li>
+			<li>Else, if the structure for THAT row (not looking at descendants) has result(s) that are Absent, then color=RED.</li>
+			<li><del>Else, if there are any results under that cell where detected is Ambiguous, NS or Absent, color=GOLD.</del> </li>
+		</ol>
+		</li>
+		<li>Color shading of cells corresponds to number of positive or negative results for the row and column intersection.</li>
+		<li>Pop-up panel displays correct count of positive or negative results for the row and column intersection.</li>
 	</ul>
 </div>
 
@@ -80,8 +121,8 @@
 <p concordion:manual="true">testing assertTrue - displays as green</p>
 <p concordion:manual="false">testing assertFalse - displays as red</p>
  -->
-		<h3>Manual tests</h3>
-		<p>Skip to <a href="#broadQuery">Broad Query</a> | <a href="#structures">Structures</a> | <a href="#stages">Stages</a> | <a href="#structuresStages">Structures + Stages (3rd Ribbon)</a> | <a href="#addNegatives">Add Negative Results</a> </p>
+		<h3>Manual and Automated tests</h3>  
+		<p>Skip to <a href="#querying">Querying Functionality</a> : <a href="#structures">Structures</a> | <a href="#stages">Stages</a> | <a href="#structuresStages">Structures + Stages (3rd Ribbon)</a></p>
 		<h4>Framework - tabs and ribbons exist and javascript works properly</h4>
 		<ol>
 		<li>Differential tab exists structures and stages ribbons
@@ -107,9 +148,7 @@
 				properly populates its input box.</li>
 			<li>Verify that there is a tooltip between the structure boxes that only appears on hover
 				and <b>disappears</b> when you hover out.</li>
-			<li>Tooltip should have the header <b>NOT detected or analyzed in...</b> and should display text:
-				<p>NOT detected or analyzed in = there are no positive expression results in the specified
-					structures recorded in the database.</p></li>
+			<li>Tooltip should have the header <b>NOT detected or analyzed in...</b> and should display explanatory text.</li>
 			<li>Verify that the reset button works to reset the parameters on this form.</li>
 			<li>Verify that the submit button makes the summary appear (NOTE: we don't care if query is correct here.).</li>
 			<li>Copy the url in the browser after submitting a query. Paste into a new window or tab. </li>
@@ -129,9 +168,7 @@
 			<li>Verify that there are two theiler stage multiselect search boxes. (NOTE: there should not be an ages search)</li>
 			<li>Verify that there is a tooltip between the stages boxes that only appears on hover
 				and <b>disappears</b> when you hover out.</li>
-			<li>Tooltip should have the header <b>NOT detected or analyzed in...</b> and should display text:
-				<p>NOT detected or analyzed in = there are no positive expression results in the specified
-					stages recorded in the database.</p></li>
+			<li>Tooltip should have the header <b>NOT detected or analyzed in...</b> and should display explanatory text.</li>
 			<li>Verify that the reset button works to reset the parameters on this form.</li>
 			<li>Verify that the submit button makes the summary appear (NOTE: we don't care if query is correct here.).</li>
 			<li>Copy the url in the browser after submitting a query. Paste into a new window or tab. </li>
@@ -139,37 +176,73 @@
 				is display and populated with the stage options you selected.</li>
 			</ol>
 		</li>
+
+
+		<li>Structure + Stage ribbon exists with proper form parameters.
+			<p concordion:manual="true">passed. -klf 2014-05-30</p> 
+			<ol>
+			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a>, click 
+				<b>Differential Expression Search</b> tab, then click anywhere on the text of the
+					<b>Structure and Stage</b> ribbon.</li>
+			<li>Verify that the <b>Anatomical Structure</b> ribbon closes, and the stages ribbon opens.</li>
+			<li>Verify that the <b>Structure and Stage</b> ribbon says:
+				<p>Search for genes expressed in <b>some anatomical structures and stages</b> but not others.</p></li>
+			<li>Verify that there are two structure search boxes.</li>
+			<li>Verify that each structure box has a functional anatomical autocomplete and that each autocomplete
+				properly populates its input box.</li>
+			<li>Verify that there is a tooltip between the structure boxes that only appears on hover
+				and <b>disappears</b> when you hover out.</li>
+			<li>Tooltip should have the header <b>NOT detected or analyzed in...</b> and should display explanatory text.</li>
+			<li>Verify that there are two theiler stage multiselect search boxes. (NOTE: there should not be an ages search)</li>
+			<li>Verify that the reset button works to reset the parameters on this form.</li>
+			<li>Verify that the submit button makes the summary appear (NOTE: we don't care if query is correct here.).</li>
+			<li>Copy the url in the browser after submitting a query. Paste into a new window or tab. </li>
+			<li>Verify that the summary appears. Click modify Search and verify that the <b>Structure and Stage</b> ribbon
+				is display and populated with the stage options you selected.</li>
+			</ol>
+		</li>
+
+
 		<li>Query submits and retains only the form parameters displayed to the user
-			<p concordion:manual="true">klf 4/30/2013</p> 
+			<p concordion:manual="true">passed. -klf 2014-05-30</p> 
 			<ol>
 			<li>Go to <a href="http://cardolan.informatics.jax.org/gxd">standard gxd form</a>, click <b>Differential Expression Search</b> tab.</li>
-			<li>Select an anatomical structure for each of the input boxes in the "anatomical structure" ribbon.</li>
+			<li>Select an anatomical structure for each of the input boxes.</li>
 			<li>Click anywhere on the text of the <b>Developmental Stage</b> ribbon.</li>
-			<li>Select any non-default Theiler Stage selections in each of the multi-select widgets in the "developmental stage" ribbon.</li>
+			<li>Select any non-default Theiler Stage selections in each of the multi-select widgets.</li>
+			<li>Click anywhere on the text of the <b>Structure and Stage</b> ribbon.</li>
+			<li>Select an anatomical structure for each of the input boxes.</li>
+			<li>Select any non-default Theiler Stage selections in each of the multi-select widgets.</li>
 			<li>Click anywhere on the text of the <b>Anatomical Structure</b> ribbon.</li>
 			<li>Verify the anatomical structures previously selected are still visible.</li>
 			<li>Click anywhere on the text of the <b>Developmental Stage</b> ribbon.</li>
 			<li>Verify the theiler stage selections previously selected remain selected.</li>
+			<li>Click anywhere on the text of the <b>Structure and Stage</b> ribbon.</li>
+			<li>Verify the structure and theiler stage selections previously selected remain selected.</li>
+			<li>Click the <b>Submit</b> button (NOTE: we don't care if query is correct here).</li>
+			<li>Verify that the summary appears. Click modify Search and verify that the <b>Structure and Stage</b> ribbon is display and populated with the structure and stage options you selected.</li>
+			<li>Click anywhere on the text of the <b>Developmental Stage</b> ribbon.</li>
+			<li>Verify that the theiler stage multi-select widgets display the default values.</li>
+			<li>Select any non-default Theiler Stage selections in each of the multi-select widgets.</li>
 			<li>Click the <b>Submit</b> button (NOTE: we don't care if query is correct here).</li>
 			<li>Verify that the summary appears. Click modify Search and verify that the <b>Developmental Stage</b> ribbon is display and populated with the stage options you selected.</li>
 			<li>Click anywhere on the text of the <b>Anatomical Structure</b> ribbon.</li>
 			<li>Verify that the input boxes are empty.</li>
-			<li>Select an anatomical structure for each of the input boxes in the "anatomical structure" ribbon.</li>
+			<li>Select an anatomical structure for each of the input boxes.</li>
 			<li>Click the <b>Submit</b> button (NOTE: we don't care if query is correct here).</li>
 			<li>Verify that the summary appears. Click modify Search and verify that the <b>Anatomical Structure</b> ribbon is display and populated with the structures you selected.</li>
 			</ol>
-		
 		</li>
+		
 		</ol>
 
-		<h4 id="broadQuery">Broad Queries, return only positive results</h4>
-		<p>Note: all differential queries include only "wild type" results in the query logic and in the displayed results sets.  "Wild type" means any assays which are not associated with any allele pairs, and also in situ reporter (knock-in) assays associated with a single allele pair which is heterozygous w.t. for the assayed gene.</p>
+		<h4 id="querying">Querying Functionality</h4>
 		<p>Skip to <a href="#structures">Structures</a> | <a href="#stages">Stages</a> | <a href="#structuresStages">Structures + Stages (3rd Ribbon)</a></p>
 
 		<h5 id="structures">Structures</h5>
 
 		<ol>
-			<li><span class="regressHi">Regress</span> The Genes tab is the default view for results in the differential query (sto196).
+			<li><span class="regressHi">Regress</span> The Genes tab is the default view for results in the differential query.
   			<p concordion:manual="true">kstone 2013/05/14</p>   
   			<ol>
   				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
@@ -177,34 +250,106 @@
   			</ol>
 			</li>
 
-			<li>Wild type results ("broad" definition) are included in the differential query.
-  			<p concordion:manual="true">passed kstone 5/7/13</p>  
+			<li>Wild type results ("broad" definition) are included in the differential query. (assays which are not associated with any allele pairs, or in situ reporter (knock-in) assays associated with a single allele pair which is heterozygous w.t. for the assayed gene) (revised for sto58)
+  			<p concordion:manual="true">passed - kstone 2014-07-10</p>  
   			<ol>
-  				<li>Query for genes with expression detected in <b>substantia nigra</b>, not detected or analyzed in <b>male reproductive system</b></li>
-  				<li>Verify that the gene <b>Th</b> is returned.</li>
-  				<li>Click on the Assay Results tab.</li>
-  				<li>Verify that the results for <b>Th</b> include assay <b>MGI:3842448</b> having genotype <b>Th&lt;tm1(cre)Te&gt;/Th+</b>.</li>
-  				<li>Verify that the results for <b>Th</b> include assay <b>MGI:3842448</b> but NOT genotype <b>Th&lt;tm1(cre)Te&gt;/Th&lt;tm1(cre)Te&gt;</b>.</li>
-  				<li>Verify that the results for <b>Th</b> do NOT include assay <b>MGI:4451201</b> having genotype <b>Gdnf&lt;tm1Rosl&gt;/Gdnf&lt;tm1Rosl&gt;</b>.</li>
+  				<li>Query for genes with expression detected in <b>bladder</b>, not detected or analyzed in <b>adventitia of bladder</b></li>
+  				<li>Verify that the gene <b>Agtr2</b> is returned.</li>
+  				<li>Verify that the gene <b>Bai2</b> is returned.</li>
+  				<li>Verify that the gene <b>Cldn2</b> is returned.</li>
+  				<li>Click on the ASSAY RESULTS TAB.</li>
+  				<li>Verify that the results for <b>Agtr2</b> do NOT include assay <b>MGI:3805915</b> having genotype <b>Agtr2&lt;tm1Gsb&gt;/Agtr2&lt;+&gt;</b>. (because assay type is RT-PCR)</li>
+  				<li>Verify that the results for <b>Bai2</b> include assay <b>MGI:3639206</b> having genotype <b>Bai2&lt;tm1Dgen&gt;/Bai2&lt;+&gt;</b>.</li>
+  				<li>Verify that the results for <b>Cldn2</b> include assay <b>MGI:4358786</b> having genotype <b>Grhl3&lt;tm1Bogi&gt;/Grhl3&lt;tm1Bogi&gt;</b>.</li>
+  				<li>Click on the TISSUE X STAGE MATRIX TAB.</li>
+  				<li>Verify that columns appear only for Theiler Stages <b>22, 23, 24, 25, 26, 27, 28</b>.</li>
+  				<li>Click on the TISSUE X GENE MATRIX TAB.</li>
+  				<li>Verify that columns appear for <b>Agtr2</b>, <b>Bai2</b>, and <b>Cldn2</b> (in addition to other genes).</li>
   			</ol>
 			</li>
-    		<li><span class="regressHi">high</span> A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
+
+    		<li><span class="regressHi">high</span> A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following:  (revised for sto16, sto58, regressed for sto101)
     		<ul>
-    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
+    			<li>GENES having positive results for "A"  or its substructures in &quot;wild type&quot; assays and having no positive results for "B" or its substructures in &quot;wild type&quot; assays </li>
     			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
+    			<li>ASSAY RESULTS for "B" - negative results only, no substructures or ancestors</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
+    			<li>TISSUE X STAGE MATRIX having:
+    			<ul>
+    				<li>a row for "A".</li>
+    				<li>the row for "A" may be expanded if any substructures have positive results.</li>
+    				<li>a row for "B" if there are any negative results for "B".</li>
+    				<li>the row for "B" may not be expanded.</li>
+    				<li>if "B" is a substructure of "A", its appears in its place in the DAG as well as at the bottom as "structure B".</li>
+    				<li>cells with color(s) for positive results in the row for "A".</li>
+    				<li>cells with color(s) for negative results in the row for "B".</li>
+    				<li>if "B" is a substructure of "A", its cells will display the color(s) for negative results wherever the row appears.</li> 
+    				<li>a column for each Theiler Stage having positive results for "A" or negative results for "B".</li>
+    			</ul>
+    			</li>
+    			<li>TISSUE X GENE MATRIX having:
+    			<ul>
+    				<li>the same rows as the Tissue X Stage Matrix.</li>
+    				<li>a column for each gene returned from the Genes Tab.</li>
+    				<li>cells with color(s) for positive results in the row for "A".</li>
+    				<li>cells with color(s) for negative results in the row(s) for "B".</li>
+    			</ul>
+    			</li>
     		</ul>
-  			<p concordion:manual="true">kstone 2013/05/14</p> 
     		<ol>
-                <li>Query for genes with expression detected in <b  concordion:set="#struct1">pulmonary valve</b>, not detected or analyzed in <b  concordion:set="#struct2">aortic valve</b>.</li>
-                <li>Verify that <i>results</i> for <b>pulmonary valve</b> or its child term <b>pulmonary valve leaflets</b> are returned for the following genes <i>(semi automated)</i>:
+                <li>QUERY FOR genes with expression detected in pulmonary valve (<b concordion:set="#struct1">EMAPA:17872</b>), not detected or analyzed in aortic valve (<b concordion:set="#struct2">EMAPA:17870</b>). (revsised for sto58)</li>
+  				<p concordion:manual="true">passed - kstone 2014-07-10</p>  
+                <li>Verify that that ONLY the following genes for <b>pulmonary valve</b> or its child term <b>pulmonary valve leaflet</b> are returned:
                 <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
 					<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
-                	<tr><td>Acta2</td></tr>
-					<tr><td>Casp3</td></tr>					
+					<tr><td>Acta2</td></tr>
+					<tr><td>Casp3</td></tr>
 					<tr><td>Col11a1</td></tr>
 					<tr><td>Crip2</td></tr>
+					<tr><td>Evc</td></tr>
+					<tr><td>Evc2</td></tr>
+					<tr><td>Foxc1</td></tr>
+					<tr><td>Foxc2</td></tr>
+					<tr><td>Hand1</td></tr>
+					<tr><td>Hapln1</td></tr>
+					<tr><td>Itga6</td></tr>
+					<tr><td>Mki67</td></tr>
+					<tr><td>Postn</td></tr>
+				</table>
+                </li>
+                <li>Verify that the following genes are <b>not returned</b>:
+                <table cc:verifyNotRows="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th><th>Notes</th></tr>
+				    <tr><td>Gnb4</td><td> </td></tr>
+				    <tr><td>Itgb1</td><td> </td></tr>
+				    <tr><td>Mxra8</td><td> </td></tr>
+				    <tr><td>Nat2</td><td>excluded because its results are not "wild type"</td></tr>
+				    <tr><td>Npas3</td><td> </td></tr>
+				    <tr><td>Pdgfra</td><td> has positive for &quot;pulmonary valve leaflet&quot; (child term) but also for &quot;aortic valve&quot;</td></tr>
+				    <tr><td>Sost</td><td>has negative for "aortic valve" but does not have "pulmonary valve"</td></tr>
+				</table>
+                </li>
+                <li>Verify that <i>results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pulmonary valve</b> are returned.</li>
+                <li>Verify that <i>results</i> for its child term <b>pulmonary valve leaflet</b> are NOT returned. (<i>Only annotated gene is Pdgfra, also has positive for "aortic valve" so should be excluded.</i>)</li>
+                <li>Verify that <i>negative results</i> for <b>aortic valve</b> are returned. (<i>There are none where gene also has pulmonary valve as of 5/28/2014; removing automation. -klf</i>)</li>
+                <li>Verify that <i>negative results</i> for its child term <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">aortic valve leaflet</b> are <b>not returned</b>.</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that the top row is for <b>pulmonary valve</b>.</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that the row for pulmonary valve CANNOT be expanded. (<i>Only child term is annotated to Pdgfra, also annotated to "aortic valve".</i>)</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that no row exists for <b>aortic valve</b> (<i>there are no negative results to display - no genes match the query</i>).</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that columns exist for Theiler Stages <b>21, 22, 23, 24, 26, 28</b> and no columns exist for Theiler Stages <b>25, 27</b>.</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that cells have the positive color(s).</li>
+                <li>On the Tissue X Gene Matrix Tab, verify that the top row is for <b>pulmonary valve</b>.</li>
+                <li>On the Tissue X Gene Matrix Tab, verify that no row exists for <b>aortic valve</b> (<i>there are no negative results to display - no genes match the query</i>).</li>
+                <li>On the Tissue X Gene Matrix Tab, verify that columns exist ONLY for the following genes (<i>same as table above</i>):
+                <table>
+					<tr><th>Gene Symbol</th></tr>
+					<tr><td>Acta2</td></tr>
+					<tr><td>Casp3</td></tr>
+					<tr><td>Col11a1</td></tr>
+					<tr><td>Crip2</td></tr>
+					<tr><td>Evc</td></tr>
+					<tr><td>Evc2</td></tr>
 					<tr><td>Foxc1</td></tr>
 					<tr><td>Foxc2</td></tr>
 					<tr><td>Hand1</td></tr>
@@ -213,39 +358,128 @@
 					<tr><td>Postn</td></tr>
 				</table>
                 </li>
-                <li>Verify that the following genes are <b>not returned</b> <i>(fully automated)</i>:
-                <table cc:verifyNotRows="#result : getGeneSymbols(#struct1,#struct2)">
-						<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
-					    <tr><td>Gnb4</td></tr>
-					    <tr><td>Itgb1</td></tr>
-					    <tr><td>Mxra8</td></tr>
-					    <tr><td>Nat2</td></tr>
-					    <tr><td>Npas3</td></tr>
-					    <tr><td>Pdgfra</td></tr>
-				</table>
-				<p>Note: Nat2 is excluded because its results are not "wild type". </p>
+                <li>QUERY FOR genes with expression detected in upper jaw incisor (<b concordion:set="#struct1">EMAPA:17939</b>), not detected or analyzed in heart atrium (<b concordion:set="#struct2">EMAPA:16688</b>). (revised for  sto58, regressed for sto101)</li> 
+  				<p concordion:manual="true">passed. klf 2014-09-24</p>  
+                <li>Verify that AT LEAST the following genes are returned:
+                <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th><th>Notes</th></tr>
+                	<tr><td>Aatf</td><td>3 positive for "upper jaw incisor", 1 negative for "heart atrium"</td></tr>
+                	<tr><td>Acaa1a</td><td>9 positive for "upper jaw incisor", 1 negative for "heart atrium"</td></tr>
+                	<tr><td>Alcam</td><td>1 positive for "upper jaw incisor epithelium"  (child) even though negative for &quot;upper jaw incisor&quot;; no data for "heart atrium"</td></tr>
+                	<tr><td>Dlx2</td><td>2 positive for "upper jaw incisor epithelium" (child), 1 negative for "heart atrium"</td></tr>
+                	<tr><td>Kit</td><td>2 positive for child terms of "upper jaw incisor", 1 negative for "heart atrium"</td></tr>
+                </table>
                 </li>
-                <li>Verify that <i>results</i> for <b>aortic valve</b> or its child term <b>aortic valve leaflets</b> are <b>not returned</b>.</li>
+                <li>Verify that the following genes are <b>not returned</b>:
+                <table cc:verifyNotRows="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th><th>Notes</th></tr>
+				    <tr><td>A4gnt</td><td>no data for "upper jaw incisor", negative in "heart atrium"</td></tr>
+				    <tr><td>Acat2</td><td>positive in "heart atrium"</td></tr>
+				    <tr><td>Pdgfra</td><td>positive in "heart atrium" and child terms</td></tr>
+				    <tr><td>Tgfb1</td><td>positive in "heart atrium" and child terms</td></tr>
+				</table>
+				</li>
+                <li>Verify that <i>results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">upper jaw incisor</b> or its child terms are returned.</li>
+                <li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">heart atrium</b> are returned.</li>
+                <li>Verify that <i>negative results</i> for its child terms <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">atrium cardiac muscle</b>, and others, are <b>not returned</b>.</li>
+                <li>On the Tissue X Stage Matrix tab, verify that:
+                <ol>
+                	<li>the top row displays <b>upper jaw incisor</b>.</li>
+                	<li>cells in the first row have only positive color(s).</li>
+                	<li>a second row appears for <b>heart atrium</b>.</li>
+                	<li>cells in the second row have only negative color(s).</li>
+                	<li>the "structure A" row can be expanded to display child terms.</li>
+                	<li>cells in rows of descendant terms have only positive color(s). </li>
+                	<li>the "structure B" row CANNOT be expanded to display child terms.</li>
+                	<li>columns exist for Theiler Stages <b>19, 20, 21, 22, 23, 24, 25, 26, 28</b> and no column exists for Theiler Stage <b>27</b>.</li>
+                </ol>
+				</li>
+                <li>On the Tissue X Gene Matrix tab, verify that
+                <ol>
+                	<li>the top row displays <b>upper jaw incisor</b>.</li>
+                	<li>cells in the first row have only positive color(s).</li>
+                	<li>a second row appears for <b>heart atrium</b>.</li>
+                	<li>cells in the second row have only negative color(s).</li>
+                	<li>the "structure A" row can be expanded to display child terms.</li>
+                	<li>cells in rows of descendant terms have only positive color(s). </li>
+                	<li>the "structure B" row CANNOT be expanded to display child terms.</li>
+                	<li>columns exist for AT LEAST the following (<i>same table as above</i>):
+	                <table>
+						<tr><th>Gene Symbol</th><th>Notes</th></tr>
+        	        	<tr><td>Aatf</td><td>positive for "upper jaw incisor", negative for "heart atrium"</td></tr>
+            	    	<tr><td>Acaa1a</td><td>positive for "upper jaw incisor", negative for "heart atrium"</td></tr>
+                		<tr><td>Alcam</td><td>positive for "upper jaw incisor epithelium"  (child) even though negative for &quot;upper jaw incisor&quot;; no data for "heart atrium"</td></tr>
+                		<tr><td>Dlx2</td><td>positive for "upper jaw incisor epithelium" (child), negative for "heart atrium"</td></tr>
+               		 	<tr><td>Kit</td><td>positive for 4 child terms of "upper jaw incisor", negative for "heart atrium"</td></tr>
+            	    </table>
+					</li>
+					<li>NO columns exist for the following (<i>same table as above</i>): 
+            	    <table>
+						<tr><th>Gene Symbol</th><th>Notes</th></tr>
+					    <tr><td>A4gnt</td><td>no data for "upper jaw incisor", negative in "heart atrium"</td></tr>
+				    	<tr><td>Acat2</td><td>positive in "heart atrium"</td></tr>
+					    <tr><td>Pdgfra</td><td>positive in "heart atrium" and child terms</td></tr>
+					    <tr><td>Sost</td><td>negative in child term "atrium cardiac muscle" (<i>child terms don't count for "structure B"</i>)</td></tr>
+					    <tr><td>Tgfb1</td><td>positive in "heart atrium" and child terms</td></tr>
+					</table>
+					</li>
+                </ol> 
+				</li>
+
+ 				<li>QUERY FOR genes with expression detected in pyloric antrum (<b  concordion:set="#struct1">EMAPA:17891</b>), not detected or analyzed in detrusor muscle of bladder (<b  concordion:set="#struct2">EMAPA:28637</b>). (revised for sto16)</li>
+                <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pyloric antrum</b> are returned, 
+                	but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">pyloric antrum</b>.</li>
+ 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">detrusor muscle of bladder</b> are returned, 
+ 					but no <i>positive results</i> for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">detrusor muscle of bladder</b>.</li>
+ 				<li>QUERY FOR genes with expression detected in pronephros (<b  concordion:set="#struct1">EMAPA:16579</b>), not detected or analyzed in future adenohypophysis (<b  concordion:set="#struct2">EMAPA:16724</b>). (revised for sto16)</li>
+                <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pronephros</b> are returned.</li>
+ 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">future adenohypophysis</b> are returned, 
+ 					but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">Rathke's pouch</b> (child of <i>future adenohypophysis</i>). </li>
     		</ol>
     		</li>
-    		<li><span class="regressHi">high</span> A query for detected in "A", not detected or analyzed in "B", where "A" is a parent of "B" in the same Anatomical System, returns only the following:<br/>
+
+    		<li><span class="regressHi">high</span> A query for detected in "A", not detected or analyzed in "B", where "A" is a parent of "B" in the same Anatomical System, returns only the following: (modified for sto58, regressed for sto101)<br/>
     		Example: <i>detected in Cardiovascular System but not detected or analyzed in Heart</i> is a valid query and should return results. 
+<!-- <p concordion:manual="true">passed - kstone 2014-07-10</p> PUT PASS/FAIL ON INDIVIDUAL QUERIES, BELOW. -->  
     		<ul>
     			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
     			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
+    			<li>ASSAY RESULTS for "B" - negative results only, no substructures or ancestors</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
+    			<li>TISSUE X STAGE MATRIX having:
+    			<ul>
+    				<li>a row for "A".</li>
+    				<li>the row for "A" may be expanded if any substructures have positive results.</li>
+    				<li>a row for "B" if there are any negative results for "B".</li>
+    				<li>the row for "B" may not be expanded.</li>
+    				<li>cells with color(s) for positive results in the row for "A".</li>
+    				<li>cells with color(s) for negative results in the row for "B".</li>
+    				<li>a column for each Theiler Stage having positive results for "A" or negative results for "B".</li>
+    			</ul>
+    			</li>
+    			<li>TISSUE X GENE MATRIX having:
+    			<ul>
+    				<li>the same rows as the Tissue X Stage Matrix.</li>
+    				<li>a column for each gene returned from the Genes Tab.</li>
+    				<li>cells with color(s) for positive results in the row for "A".</li>
+    				<li>cells with color(s) for negative results in the row for "B".</li>
+    			</ul>
+    			</li>
     		</ul>
-  			<p concordion:manual="true">kstone 2013/05/14</p> 
     		<ol>
-                <li>Query for genes with expression detected in <b concordion:set="#struct1">pulmonary valve</b> but not detected or analyzed in <b concordion:set="#struct2">pulmonary valve leaflet</b>.</li>
-                <li>Verify that <i>results</i> for <b>pulmonary valve</b> are returned for the following genes <i>(semi automated)</i>:
+                <li>QUERY FOR genes with expression detected in pulmonary valve (<b concordion:set="#struct1">EMAPA:17872</b>) but not detected or analyzed in pulmonary valve leaflet (<b concordion:set="#struct2">EMAPA:18629</b>). (revised for sto16, sto58, regressed for sto101)</li>
+  				<p concordion:manual="true">passed. klf 2014-07-24</p>  
+                <li>Verify that the following genes are returned: 
                 <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
 					<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
 					<tr><td>Acta2</td></tr>
 					<tr><td>Casp3</td></tr>
 					<tr><td>Col11a1</td></tr>
 					<tr><td>Crip2</td></tr>
+					<tr><td>Ctgf</td></tr>
+					<tr><td>Evc</td></tr>
+					<tr><td>Evc2</td></tr>
 					<tr><td>Foxc1</td></tr>
 					<tr><td>Foxc2</td></tr>
 					<tr><td>Gnb4</td></tr>
@@ -257,77 +491,167 @@
 					<tr><td>Npas3</td></tr>
 					<tr><td>Postn</td></tr>
 				</table>
-                <ul>
-                </ul>
                 </li>
-                <li>Verify that results for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">pulmonary valve leaflet</b> are not returned. <i>(fully automated)</i></li>
-                <li>Verify that the gene <b cc:assertNoResultsContain="getGeneSymbols(#struct1,#struct2)">Pdgfra</b> is not returned. <i>(fully automated)</i></li>
-    		</ol>
-    		</li>
-    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" is a child of "B" in the same Anatomical System, returns NO RESULTS.<br/>
-    		Example: <i>detected in Lung but not detected or analyzed in Respiratory System</i> is not a valid query. 
-    		<ol>
-                <li>Query for genes with expression detected in <b concordion:set="#struct1">lung</b> but not detected or analyzed in <b concordion:set="#struct2">respiratory system</b>.</li>
-                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b><i>(fully automated)</i></li>
-    		</ol>
-    		</li>
-
-    		<li>A query for detected in "A", not detected or analyzed in "B", where "B" is a text token contained in the text string of "A", returns NO RESULTS. <br/>
-    		Example: <i>detected in Future Brain but not detected or analyzed in Brain</i> is valid biologically, but since we are doing "contains token" textual-searching, the query will fail.
-    		<ol>
-                <li>Query for genes with expression detected in <b concordion:set="#struct1">pancreas primordium</b> but not detected or analyzed in <b concordion:set="#struct2">pancreas</b>.</li>
-                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b><i>(fully automated)</i></li>
-    		</ol>
-    		</li>
-
-    		<li>A query for detected in "A", not detected or analyzed in "B", where "B" is text but not a full text token contained in the text string of "A", returns results. <br/>
-    		Example: <i>detected in Female... but not detected or analyzed in Male...</i>, since we are doing "contains token" textual-searching, should still produce some results.
-  			<p concordion:manual="true">passed kstone 5/7/13</p>  
-    		<ol>
-                <li>Query for genes with expression detected in <b concordion:set="#struct1">female reproductive system</b> but not detected or analyzed in <b concordion:set="#struct2">male reproductive system</b>.</li>
-                <li>Verify that <b>1,045 genes</b> are returned including<i>(semi automated)</i>:
-                <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
-					<tr><th concordion:assertEquals="#result">Gene Symbol</th></tr>
-                	<tr><td>Abcb1b</td></tr>
-                	<tr><td>Ablim1</td></tr>
-                	<tr><td>Ablim2</td></tr>
-                	<tr><td>Casp3</td></tr>
-                	<tr><td>Mnx1</td></tr>
-                	<tr><td>Prr3</td></tr>
-                	<tr><td>Prr14</td></tr>
-                	<tr><td>Zufsp</td></tr>
+                <li>Verify that <i>results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pulmonary valve</b> are returned.</li>
+                <li>Verify that results for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">pulmonary valve leaflet</b> are not returned.</li>
+                <li>Verify that the gene <b cc:assertNoResultsContain="getGeneSymbols(#struct1,#struct2)">Pdgfra</b> is not returned.</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that the top row is for <b>pulmonary valve</b>.</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that no row exists for <b>pulmonary valve leaflet</b> (<i>there are no negative results to display. -klf 7/8/2014</i>).</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that columns exist for Theiler Stages <b>21, 22, 23, 24, 26, 28</b> and no columns exist for Theiler Stages <b>25, 27</b>.</li>
+                <li>On the Tissue X Stage Matrix Tab, verify that cells have the positive color(s).</li>
+                <li>On the Tissue X Gene Matrix Tab, verify that the top row is for <b>pulmonary valve</b>.</li>
+                <li>On the Tissue X Gene Matrix Tab, verify that no row exists for <b>pulmonary valve leaflet</b> (<i>there are no negative results to display. -klf 7/8/2014</i>).</li>
+                <li>On the Tissue X Gene Matrix Tab, verify that columns exist for the following genes (<i>same as table above</i>):
+                <table>
+					<tr><th>Gene Symbol</th></tr>
+					<tr><td>Acta2</td></tr>
+					<tr><td>Casp3</td></tr>
+					<tr><td>Col11a1</td></tr>
+					<tr><td>Crip2</td></tr>
+					<tr><td>Ctgf</td></tr>
+					<tr><td>Evc</td></tr>
+					<tr><td>Evc2</td></tr>
+					<tr><td>Foxc1</td></tr>
+					<tr><td>Foxc2</td></tr>
+					<tr><td>Gnb4</td></tr>
+					<tr><td>Hand1</td></tr>
+					<tr><td>Itga6</td></tr>
+					<tr><td>Itgb1</td></tr>
+					<tr><td>Mki67</td></tr>
+					<tr><td>Mxra8</td></tr>
+					<tr><td>Npas3</td></tr>
+					<tr><td>Postn</td></tr>
 				</table>
                 </li>
-                <li>Verify that results DO NOT include <i>(semi automated)</i>:
-                <table cc:verifyNotRows="#result : getResultStructures(#struct1,#struct2)">
-					<tr><th concordion:assertEquals="#result">Structure</th></tr>
-                	<tr><td>male reproductive system</td></tr>
-                	<tr><td>testis</td></tr>
-                </table>
-                OR - <i>Note: these 3 are manual tests...</i>
-                <ul>
-                	<li>any term that has <b>testis</b> in it</li>
-                	<li>male reproductive structure</li>
-                	<li>any term that has <b>male</b> (but "female" is OK) in it</li>
-                </ul>
+                <li>On the Tissue X Gene Matrix Tab, verify that no column exists for <b>Pdgfra</b>.</li>
+                <li>QUERY FOR genes with expression detected in heart valve (<b concordion:set="#struct1">EMAPA:17869</b>) but not detected or analyzed in aortic valve (<b concordion:set="#struct2">EMAPA:17870</b>). (revised for sto16, regressed for sto101)</li>
+  				<p concordion:manual="true">passed. klf 2014-07-24</p>  
+                <li>Verify that AT LEAST the following genes are returned:
+                <table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th><th>Notes</th></tr>
+					<tr><td>Ackr4</td><td>wild type</td></tr>
+					<tr><td>Foxc1</td><td>wild type</td></tr>
+					<tr><td>Klf13</td><td>no alleles</td></tr>
+					<tr><td>Slc9a6</td><td>wild type (also a genotype with a deletion?)</td></tr>
+				</table>
 				</li>
-                <li>Verify that results DO include:
-                <table cc:verifySupersetOf="#result : getResultStructures(#struct1,#struct2)">
-					<tr><th concordion:assertEquals="#result">Structure</th></tr>
-                	<tr><td>female reproductive system</td></tr>
-                	<tr><td>ovary</td></tr>
-                	<tr><td>meiotic oocyte</td></tr>
-                	<tr><td>uterus</td></tr>
-                	<tr><td>placenta</td></tr>
-                </table>
+                <li>Verify that the following genes are <b>not returned</b>:
+                <table cc:verifyNotRows="#result : getGeneSymbols(#struct1,#struct2)">
+					<tr><th concordion:assertEquals="#result">Gene Symbol</th><th>Notes</th></tr>
+				    <tr><td>Bmp2</td><td>negative: mitral valve and tricuspid valve (children of heart valve, siblings of aortic valve)</td></tr>
+				    <tr><td>Col1a1</td><td>positive: aortic valve leaflet</td></tr>
+				    <tr><td>Col1a2</td><td>positive: aortic valve leaflet</td></tr>
+				    <tr><td>Gaa</td><td>negative: heart valve</td></tr>
+				    <tr><td>Id1</td><td>positive: aortic valve</td></tr>
+				    <tr><td>Ippk</td><td>negative: heart valve ("wild type" het assay)</td></tr>
+				    <tr><td>Sost</td><td>negative: heart valve and aortic valve</td></tr>
+				</table>
 				</li>
+				<li>On the Tissue X Stage Matrix tab, verify that:
+				<ol>
+					<li>the row for <b>heart valve</b> is at the top and can be expanded.</li>
+					<li>in the row for <b>heart valve</b>, only positive color(s) appear in the cells.</li>
+					<li>in rows for descendant terms, only positive color(s) appear in the cells.</li>
+					<li>there is no row for <b>aortic valve</b>.</li>
+					<li>columns exist for Theiler Stages <b>21, 22, 23, 24, 25, 26, 28</b> and no column exists for Theiler Stage <b>27</b>.</li>
+					
+				</ol>
+				</li>
+				<li>On the Tissue X Gene Matrix tab, verify that:
+				<ol>
+					<li>the row for <b>heart valve</b> is at the top and can be expanded.</li>
+					<li>in the row for <b>heart valve</b>, only positive color(s) appear in the cells.</li>
+					<li>in rows for descendant terms, only positive color(s) appear in the cells.</li>
+					<li>there is no row for <b>aortic valve</b>.</li>
+					<li>columns exist for the following genes (<i>same table as above</i>):
+	                <table>
+						<tr><th>Gene Symbol</th><th>Notes</th></tr>
+						<tr><td>Ackr4</td><td>wild type</td></tr>
+						<tr><td>Foxc1</td><td>wild type</td></tr>
+						<tr><td>Klf13</td><td>no alleles</td></tr>
+						<tr><td>Slc9a6</td><td>wild type (also a genotype with a deletion?)</td></tr>
+					</table>
+					</li>
+					<li>no columns exist for the following genes (<i>same table as above</i>):
+    	            <table>
+						<tr><th>Gene Symbol</th><th>Notes</th></tr>
+					    <tr><td>Bmp2</td><td>negative: mitral valve and tricuspid valve (children of heart valve, siblings of aortic valve)</td></tr>
+					    <tr><td>Col1a1</td><td>positive: aortic valve leaflet</td></tr>
+				    	<tr><td>Col1a2</td><td>positive: aortic valve leaflet</td></tr>
+					    <tr><td>Gaa</td><td>negative: heart valve</td></tr>
+					    <tr><td>Id1</td><td>positive: aortic valve</td></tr>
+					    <tr><td>Ippk</td><td>negative: heart valve ("wild type" het assay)</td></tr>
+					    <tr><td>Sost</td><td>negative: heart valve and aortic valve</td></tr>
+					</table>
+					</li>
+				</ol>
+				</li>
+                <li>QUERY FOR genes with expression detected in heart valve (<b concordion:set="#struct1">EMAPA:17869</b>) but not detected or analyzed in atrioventricular valve (<b concordion:set="#struct2">EMAPA:35154</b>). (created for sto58, regressed for sto101)</li>
+  				<p concordion:manual="true">passed. klf 2014-07-24</p>  
+                <li>On the Tissue X Stage Matrix tab, verify that:
+                <ol>
+                	<li>the top row contains <b>heart valve</b> and is expandable.</li>
+                	<li>all colored cells in this row or child rows are positive color(s).</li>
+                	<li>no child row exists for <b>atrioventricular valve</b>.</li>
+                	<li>the "structure B" row is <b>atrioventricular valve</b>.</li>
+                	<li>all colored cells in the "structure B" row are negative color(s).</li>
+                	<li>columns exist for Theiler Stages <b>21,22,23,24,25,26,28</b>; no column exists for Theiler Stage <b>27</b>.</li>
+                	<li>colored cells for "atrioventricular valve" appear only in the column for Theiler Stage <b>28</b>.</li>
+                </ol>
+                </li>
+                <li>On the Tissue X Gene Matrix tab, verify that:
+                <ol>
+                	<li>the top row contains <b>heart valve</b> and is expandable.</li>
+                	<li>all colored cells in this row or child rows are positive color(s).</li>
+                	<li>no child row exists for <b>atrioventricular valve</b>.</li>
+                	<li>the "structure B" row is <b>atrioventricular valve</b>.</li>
+                	<li>all colored cells in the "structure B" row are negative color(s).</li>
+                	<li>columns exist for:
+                	<table>
+                		<tr><th>Gene</th><th>Notes</th></tr>
+                		<tr><td>Tgfb1</td><td>the only gene with positive in Heart Valve, negative in Atrioventricular Valve</td></tr>
+                		<tr><td>Tgfb2</td><td>positive in Heart Valve, no data in Atrioventricular Valve</td></tr>
+                		<tr><td>Tbx5</td><td>positive in Heart Valve, only negs are Mitral Valve and Tricuspid Valve</td></tr>
+                	</table>
+                	</li>
+                	<li>columns DO NOT exist for:
+                	<table>
+                		<tr><th>Gene</th><th>Notes</th></tr>
+                		<tr><td>Sost</td><td>negative in Heart Valve, negative in Atrioventricular Valve</td></tr>
+                		<tr><td>Bmp2</td><td>no data in Heart Valve, negs in Mitral Valve and Tricuspid Valve</td></tr>
+                		<tr><td>Nkx2-5</td><td>no data in Heart Valve, negs in Mitral Valve and Tricuspid Valve</td></tr>
+                	</table>
+                	</li>
+                </ol>
+                </li>
     		</ol>
     		</li>
-    		
-    		<li>A query for detected in "A", not detected or analyzed in "B", where a gene has both "expressed" and "not expressed" results for "A" and has no results and/or "not expressed" results (but does not have any "expressed" results) for "B" should return the gene.
+
+    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" is a child of "B" <del>in the same Anatomical System</del> by an IS_A or a PART_OF relationship returns NO RESULTS. (revised for sto16, sto58)<br/>
+    		Example: <i>detected in Lung but not detected or analyzed in Respiratory System</i> is not a valid query. 
+			<p concordion:manual="true">passed - kstone 2014-07-10</p>
+    		<ol>
+                <li>Query for genes with expression detected in lung (<b concordion:set="#struct1">EMAPA:16728</b>) but not detected or analyzed in respiratory system (<b concordion:set="#struct2">EMAPA:16727</b>).</li>
+                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b></li>
+                <li>On the Tissue X Stage Matrix tab, verify that <b>no results are returned</b>.</li>
+                <li>On the Tissue X Gene Matrix tab, verify that <b>no results are returned</b>.</li>
+                <li>Query for genes with expression detected in body wall (<b concordion:set="#struct1">EMAPA:32761</b> TS17-26) but not detected or analyzed in trunk (<b concordion:set="#struct2">EMAPA:31857</b> TS12-28).</li>
+                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b></li>
+                <li>Query for genes with expression detected in cardiac muscle tissue (<b concordion:set="#struct1">EMAPA:32688</b> TS12-28) but not detected or analyzed in muscle tissue (<b concordion:set="#struct2">EMAPA:32715</b> TS12-28) - an IS_A relationship.</li>
+                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b></li>
+                <li>On the Tissue X Stage Matrix tab, verify that <b>no results are returned</b>.</li>
+                <li>On the Tissue X Gene Matrix tab, verify that <b>no results are returned</b>.</li>
+                <li>Query for genes with expression detected in cardiac muscle tissue (<b concordion:set="#struct1">EMAPA:32688</b> TS12-28) but not detected or analyzed in heart (<b concordion:set="#struct2">EMAPA:16105</b> TS11-28) - a PART_OF relationship.</li>
+                <li><b cc:assertEmpty="getGeneSymbols(#struct1,#struct2)">Verify no results are returned.</b></li>
+                <li>On the Tissue X Stage Matrix tab, verify that <b>no results are returned</b>.</li>
+                <li>On the Tissue X Gene Matrix tab, verify that <b>no results are returned</b>.</li>
+    		</ol>
+    		</li>
+
+    		<li>A query for detected in "A", not detected or analyzed in "B", where a gene has both "expressed" and "not expressed" results for "A" and has no results and/or "not expressed" results (but does not have any "expressed" results) for "B" should return the gene. (revised for sto16)
   			<p concordion:manual="true">passed kstone 5/7/13</p>  
   			<ol>
-  				<li>Query for genes with expression data detected in <b concordion:set="#struct1">liver</b>, not detected or analyzed in <b concordion:set="#struct2">spleen</b> <i>(fully automated)</i></li>
+  				<li>Query for genes with expression data detected in liver (<b concordion:set="#struct1">EMAPA:16846</b>), not detected or analyzed in spleen (<b concordion:set="#struct2">EMAPA:18767</b>).</li>
   				<li>Verify that these genes ARE included in the results set:
   				<table cc:verifySupersetOf="#result : getGeneSymbols(#struct1,#struct2)">
   					<tr><th concordion:assertEquals="#result">Gene</th><th>Notes</th></tr>
@@ -335,7 +659,7 @@
   					<tr><td>Aard</td><td>liver has "expr" and "not spec"; spleen has "not spec"</td></tr>
   					<tr><td>Abca3</td><td>liver has "expr" and "not expr"; spleen has "not expr" and "not spec"</td></tr>
   					<tr><td>Bckdk</td><td>liver has "expr" and "not expr" and "not spec"; no data for "spleen"</td></tr>
-  					<tr><td>Pkm</td><td>liver has "expr" and "ambig"; spleen has "not expr"</td></tr>
+  					<tr><td>Pkm</td><td>liver has "expr" and "ambig"; no data for &quot;spleen&quot;</td></tr>
   				</table>
   				</li>
   				<li>Verify that these genes ARE NOT included in the results set:
@@ -354,16 +678,37 @@
    		<h5 id="stages">Stages</h5>
 
    		<ol>
-    		<li>A query for detected in "Stage I", not detected or analyzed in "Stage J", returns only the following:
-    		<ul>
+    		<li>A query for detected in "Stage I", not detected or analyzed in "Stage J", returns only the following: 
+    		(revised for sto58)<ul>
     			<li>GENES having positive results for "Stage I" and having no positive results for "Stage J" (treat root nodes like any other node)</li>
     			<li>ASSAY RESULTS for "Stage I" - positive results only</li>
+    			<li>ASSAY RESULTS for "Stage J" - negative results only</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
+    			<li>TISSUE X STAGE MATRIX having:
+    			<ul>
+    				<li>a row for every "default" structure (see test suites for "Tissue By Stage Matrix" and "Tissue By Gene Matrix") where positive results exist for "Stage(s) I" or  negative results exist for "Stage(s) J".</li>
+    				<li>structures having descendant terms may be expanded if any substructures have results.</li>
+    				<li>a column for each Theiler Stage having positive results for "Stage(s) I" or negative results for "Stage(s) J".</li>
+    				<li>cells with color(s) for positive results in the columns for "Stage(s) I".</li>
+    				<li>cells with color(s) for negative results in the columns for "Stage(s) J".</li>
+    				<li>cells with color(s) for substructures having negative results in the columns for "Stage(s) J".</li>
+    				<li>no cells anywhere with color(s) for Ambiguous/Not Specified results.</li>
+    			</ul>
+    			</li>
+    			<li>TISSUE X GENE MATRIX having:
+    			<ul>
+    				<li>the same rows as the Tissue X Stage Matrix.</li>
+    				<li>a column for each gene returned from the Genes Tab.</li>
+    				<li>cells with color(s) for positive results in the rows for structures present at "Stage(s) I".</li>
+    				<li>cells with color(s) for negative results in the rows for structures present at "Stage(s) J" when the gene has only negative results for those structures at those stages.</li>
+    				<li>cells with color for "negative substructure results"  (gold) in the rows for structures present at "Stage(s) J" when the gene has only negative results for the substructures at those stages.</li>
+    				<li>no cells anywhere with color(s) for Ambiguous/Not Specified results.</li>
+    			</ul>
+    			</li>
     		</ul>
     		<ol>
-                <li>Query for genes with expression detected in Stage <b concordion:set="#stage1">22</b>, not detected or analyzed in Stage <b concordion:set="#stage2">23</b>. 
-                	<i>(fully automated)</i></li>
+                <li>QUERY FOR genes with expression detected in Stage <b concordion:set="#stage1">22</b>, not detected or analyzed in Stage <b concordion:set="#stage2">23</b>.</li>
                 <li>Verify that the following genes appear in the results set:
                 <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
@@ -381,10 +726,110 @@
                 	<tr><td>Kcnh5</td></tr>
                 </table>
                 </li>
-    		</ol>  		
-    		<ol>
-                <li>Query for genes with expression detected in Stage <b concordion:set="#stage1">17</b>, not detected or analyzed in Stage <b concordion:set="#stage2">20</b>.
-                	<i>(fully automated)</i></li>
+                
+                <li>QUERY FOR genes with expression detected in Stage <b>1</b>, not detected or analyzed in Stage <b>28</b>. (new for sto58)</li>
+  				<p concordion:manual="true">passed - kstone 2014-07-10</p>  
+                <li>On the Tissue X Stage Matrix, verify that:
+                <ol>
+                	<li>the column for Theiler Stage 1 contains only cells with positive color(s).</li>
+                	<li>the column for Theiler Stage 28 contains only cells with negative color(s) or "negative substructure" color (gold).</li>
+                	<li>the following rows are displayed:
+                	<table>
+                		<tr><th>Structure</th><th>Ident</th><th>Openy/Closey</th><th>Notes</th></tr>
+                		<tr><td>mouse</td><td>0</td><td>Is open</td><td></td></tr>
+                		<tr><td>body region</td><td>1</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>early conceptus</td><td>1</td><td>Can be opened</td><td>this and "early embryo" likely to change with next data update</td></tr>
+                		<tr><td>early embryo</td><td>1</td><td>Can be opened</td><td>this and "early conceptus" likely to change with next data update</td></tr>
+                		<tr><td>organ</td><td>1</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>organ system</td><td>1</td><td>Is open</td><td></td></tr>
+                		<tr><td>cardiovascular system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>gland</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>hemolymphoid system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>liver and biliary system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>musculature</td><td>2</td><td>Cannot be opened</td><td></td></tr>
+                		<tr><td>nervous system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>organ</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>reproductive system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>respiratory system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>sensory organ system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>urinary system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>visceral organ system</td><td>2</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>polar body</td><td>1</td><td>Can be opened</td><td></td></tr>
+                		<tr><td>zona pellucida</td><td>1</td><td>Cannot be opened</td><td></td></tr>
+                	</table>
+                	</li>
+                </ol>
+                </li>
+                <li>On the Tissue X Gene Matrix, verify that:
+                <ol>
+                	<li>The following genes display only positive-colored cells and only in <b>1-cell stage conceptus</b> and its ancestor terms (may need to expand rows):
+                	<table>
+                		<tr><th>Gene</th></tr>
+                		<tr><td>Abce1</td></tr>
+                		<tr><td>Atp5g1</td></tr>
+                		<tr><td>Cry1</td></tr>
+                		<tr><td>Eef1g</td></tr>
+                		<tr><td>Gars</td></tr>
+                		<tr><td>Hist1h1d</td></tr>
+                		<tr><td>Hspa1b</td></tr>
+                		<tr><td>Hspe1</td></tr>
+                		<tr><td>Isyna1</td></tr>
+                		<tr><td>Nans</td></tr>
+                		<tr><td>Ndufb1</td></tr>
+                		<tr><td>Obox2</td></tr>
+                		<tr><td>Polb</td></tr>
+                		<tr><td>Rad51ap1</td></tr>
+                		<tr><td>Rpl3</td></tr>
+                		<tr><td>Rpl31</td></tr>
+                		<tr><td>Setd1a</td></tr>
+                		<tr><td>Thoc1</td></tr>
+                		<tr><td>Tmed8</td></tr>
+                	</table>
+                	</li>
+                	<li>The gene <b>Ints1</b> ALSO displays positive-colored cells in the following structures and their ancestor terms from Theiler Stage 1:<br/>
+                	(<i>terms may appear more than once due to the DAG structure</i>)
+                	<table>
+                		<tr><th>Anatomical Structure</th></tr>
+                		<tr><td>1-cell stage embryo</td></tr>
+                		<tr><td>second polar body</td></tr>
+                		<tr><td>zona pellucida</td></tr>
+                	</table>
+                	</li>
+                	<li>The following genes display positive-colored cells in <b>1-cell stage conceptus</b> and its ancestor terms (may need to expand rows) AND ALSO negative-colored cells in other rows as specified in the table below.  Ancestor terms of the terms with negative results are displayed with "negative substructure" color (gold):
+                	<table>
+                		<tr><th>Gene</th><th>Structure with negative</th><th>Notes (ancestor term cells should display in gold)</th></tr>
+                		<tr><td>Rnf103</td><td>head</td><td>substructure of "body region"</td></tr>
+                		<tr><td>Rnf103</td><td>brain ventricular layer</td><td>substructure of "organ" ... "brain"</td></tr>
+                		<tr><td>Rnf103</td><td>hypothalamus</td><td>substructure of "organ" ... "brain" and deeper...</td></tr>
+                		<tr><td>Rnf103</td><td>thalamus</td><td>substructure of "organ" ... "brain" and deeper...</td></tr>
+                		<tr><td>Rnf103</td><td>cerebral cortex</td><td>substructure of "organ" ... "brain" and deeper...</td></tr>
+                		<tr><td>Rnf103</td><td>olfactory bulb</td><td>substructure of "organ" ... "brain" and deeper...</td></tr>
+                		<tr><td>Rnf103</td><td>hindbrain</td><td>substructure of "organ" ... "brain"</td></tr>
+                		<tr><td>Rnf103</td><td>cerebellum</td><td>substructure of "organ" ... "brain" and deeper...</td></tr>
+                		<tr><td>Rnf103</td><td>midbrain</td><td>substructure of "organ" ... "brain"</td></tr>
+                		<tr><td>Rnf103</td><td>ear</td><td>substructure of "organ" ... "sensory organ"</td></tr>
+                		<tr><td>Rnf103</td><td>retina</td><td>substructure of "organ" ... "sensory organ" ... "eye"</td></tr>
+                		<tr><td>Rnf103</td><td>central nervous system</td><td>substructure of "nervous system"</td></tr>
+                		<tr><td>Rnf103</td><td>cranial ganglion</td><td>substructure of "nervous system" and deeper...</td></tr>
+                		<tr><td>Rnf103</td><td>spinal cord</td><td>substructure of "nervous system" and deeper...</td></tr>
+                		<tr><td>Rnf103</td><td>dorsal root ganglion</td><td>substructure of "nervous system" and deeper...</td></tr>
+                		<tr><td>Tet1</td><td>meiotic oocyte</td><td>substructure of "organ system" ... "reproductive system" and deeper... (<i>appears multiple times</i>)</td></tr>
+                		<tr><td>Ubtfl1</td><td>musculature</td><td>has no ancestor terms</td></tr>
+                		<tr><td>Ubtfl1</td><td>heart</td><td>substructure of "organ"</td></tr>
+                		<tr><td>Ubtfl1</td><td>liver</td><td>substructure of "organ" (<i>appears multiple times</i>)</td></tr>
+                		<tr><td>Ubtfl1</td><td>lung</td><td>substructure of "organ"</td></tr>
+                		<tr><td>Ubtfl1</td><td>metanephros</td><td>substructure of "organ" (<i>appears multiple times</i>)</td></tr>
+                		<tr><td>Ubtfl1</td><td>spleen</td><td>substructure of "organ system" ... "gland" ... "hemolymphoid system" (<i>appears multiple times</i>)</td></tr>
+                		<tr><td>Ubtfl1</td><td>meiotic oocyte</td><td>substructure of "organ system" ... "reproductive system" and deeper... (<i>appears multiple times</i>)</td></tr>
+                		<tr><td>Ubtfl1</td><td>testis</td><td>substructure of "organ system" ... "reproductive system" and deeper... (<i>appears multiple times</i>)</td></tr>
+                		<tr><td>Ubtfl1</td><td>bladder</td><td>substructure of "organ system" ... "urinary system" (<i>appears multiple times</i>)</td></tr>
+                	</table>
+                	</li>
+                </ol>
+                </li>
+
+
+                <li>QUERY FOR genes with expression detected in Stage <b concordion:set="#stage1">17</b>, not detected or analyzed in Stage <b concordion:set="#stage2">20</b>.</li>
                 <li>Verify that the following genes appear in the results set:
                 <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
@@ -394,16 +839,17 @@
                 </li>
     		</ol>  		
     		</li>
+
     		<li>A query for detected in "Stage I or J", not detected or analyzed in "Stage K or L", returns only the following:
     		<ul>
     			<li>GENES having positive results for "Stage I" or having positive results for "Stage J" and having no positive results for "Stage K" and having no positive results for "Stage L" (treat root nodes like any other node)</li>
     			<li>ASSAY RESULTS for "Stage I" and for "Stage J" - positive results only</li>
+    			<li>ASSAY RESULTS for "Stage K" and "Stage L" - negative results only</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
     		<ol>
-                <li>Query for genes with expression detected in Stages <b concordion:set="#stage1">2,3</b>, not detected or analyzed in Stages <b concordion:set="#stage2">8,9,10</b>
-                	<i>(fully automated)</i></li>
+                <li>QUERY FOR genes with expression detected in Stages <b concordion:set="#stage1">2,3</b>, not detected or analyzed in Stages <b concordion:set="#stage2">8,9,10</b></li>
                 <li>Verify that the following genes appear in the results set:
                 <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
@@ -425,26 +871,62 @@
                 	<tr><td>Klf2</td></tr>
                 </table>
                 </li>
+ 				<li>QUERY FOR genes with expression detected in Stages <b  concordion:set="#stages1">6,7,8</b>, not detected or analyzed in Stages <b  concordion:set="#stages2">5,14,15,16,17,18,19,20,21,22,23,24,25,26,28</b>.</li>
+                <li>Verify that <i>positive results</i> are returned for only the following Stages:
+                	<table cc:verifyRowsUnordered="#result : getResultStages(#stages1,#stages2)">
+                	<tr><th concordion:assertEquals="#result">Stage</th></tr>
+                	<tr><td>6</td></tr>
+                	<tr><td>7</td></tr>
+                	<tr><td>8</td></tr>
+                	</table>
+                </li>
+                <li>Verify that no <i>negative results</i> for the following Stages are returned:
+                	<table cc:verifyNotRows="#result : getResultStagesNegatives(#stages1,#stages2)">
+                	<tr><th concordion:assertEquals="#result">Stage</th></tr>
+                	<tr><td>6</td></tr>
+                	<tr><td>7</td></tr>
+                	<tr><td>8</td></tr>
+                	</table>
+                </li>
+ 				<li>Verify that <i>negative results</i> for  Stage <b cc:assertResultsContain="getResultStagesNegatives(#stages1,#stages2)">5</b> are returned.</li>
+ 				<li>Verify that no <i>positive results</i> for the following Stages are returned:
+ 					<table cc:verifyNotRows="#result : getResultStages(#stages1,#stages2)">
+ 					<tr><th concordion:assertEquals="#result">Stage</th></tr>
+ 					<tr><td>5</td></tr>
+ 					<tr><td>14</td></tr>
+ 					<tr><td>15</td></tr>
+ 					<tr><td>16</td></tr>
+ 					<tr><td>17</td></tr>
+ 					<tr><td>18</td></tr>
+ 					<tr><td>19</td></tr>
+ 					<tr><td>20</td></tr>
+ 					<tr><td>21</td></tr>
+ 					<tr><td>22</td></tr>
+ 					<tr><td>23</td></tr>
+ 					<tr><td>24</td></tr>
+ 					<tr><td>25</td></tr>
+ 					<tr><td>26</td></tr>
+ 					<tr><td>28</td></tr>
+ 					</table>
+ 				</li>
     		</ol>  		
     		</li>
     		<li>A query for detected in "Stage I or J", not detected or analyzed in "Any stage not selected above", returns only the following:
     		<ul>
     			<li>GENES having positive results for "Stage I" or having positive results for "Stage J" and having no positive results for "Stage K" and having no positive results for "Stage L" and having no positive results for "Stage M"... and having no positive results for "Stage 28" (treat root nodes like any other node)</li>
     			<li>ASSAY RESULTS for "Stage I" and for "Stage J" - positive results only</li>
+    			<li>ASSAY RESULTS for "Stage K" and for "Stage L"... "Stage 28" - negative results only</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
     		<ol>
-                <li>Query for genes with expression detected in Stage <b concordion:set="#stage1">23</b> and not detected or analyzed in <b concordion:set="#stage2">any stage not selected above</b>.
-                	<i>(fully automated)</i></li>
+                <li>QUERY FOR genes with expression detected in Stage <b concordion:set="#stage1">23</b> and not detected or analyzed in <b concordion:set="#stage2">any stage not selected above</b>.</li>
                 <li>Verify that the following genes appear in the results set:
                 <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th><th>Notes</th></tr>
                 	<tr><td>Bfsp1</td><td>1 result</td></tr>
                 	<tr><td>Chm</td><td>1 result</td></tr>
                 	<tr><td>Esyt3</td><td>2 results</td></tr>
-                	<tr><td>Krtap14</td><td>3 results</td></tr>
-                	<tr><td>Serpina3c</td><td>3 results</td></tr>
                 	<tr><td>Sult1c1</td><td>3 results</td></tr>
                 </table>
                 </li>
@@ -458,8 +940,7 @@
                 	<tr><td>Snx10</td><td>has data other stages</td></tr>
                 </table>
                 </li>
-                <li>Query for genes with expression detected in Stages <b concordion:set="#stage1">22,23</b> and not detected or analyzed in <b concordion:set="#stage2">any stage not selected above</b>.
-                	<i>(fully automated)</i></li>
+                <li>QUERY FOR genes with expression detected in Stages <b concordion:set="#stage1">22,23</b> and not detected or analyzed in <b concordion:set="#stage2">any stage not selected above</b>.</li>
                 <li>Verify that the following genes appear in the results set:
                 <table cc:verifySupersetOf="#result : getGeneSymbolsByStage(#stage1,#stage2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th><th>Notes</th></tr>
@@ -469,9 +950,7 @@
                 	<tr><td>Eif6</td><td>1 "expr", 2 "not expr" at TS 22</td></tr>
                 	<tr><td>Esyt3</td><td>2 results</td></tr>
                 	
-                	<tr><td>Krtap14</td><td>3 results</td></tr>
                 	<tr><td>Rad23a</td><td>2 at TS22</td></tr>
-                	<tr><td>Serpina3c</td><td>3 results</td></tr>
                 	<tr><td>Snx10</td><td>2 at TS22, 1 at TS23</td></tr>
                 	<tr><td>Sult1c1</td><td>3 results</td></tr>
                 	<tr><td>Tspan15</td><td>1 at TS22, 2 at TS23</td></tr>
@@ -496,18 +975,35 @@
 		
 		<ol>
 
-    		<li>A query for detected in Structure "A" + Stage "I", not detected or analyzed in Structure "A" + Stage "J" returns only the following:
+    		<li>A query for detected in Structure "A" + Stage "I", not detected or analyzed in Structure "A" + Stage "J" returns only the following: (modified for sto58)
     		<ul>
     			<li>GENES having positive results for Structure "A" and its children at Stage "I", and having no positive results for Structure "A" and its children at Stage "J"</li>
     			<li>ASSAY RESULTS for Structure "A"  and its children at Stage "I"  - positive results only</li>
-    			<li>NO ASSAY RESULTS for Structure "A" and its children at Stage "J"</li>
+    			<li>ASSAY RESULTS for Structure "A" at Stage "J" - no substructures or ancestors, negative results only</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
+    			<li>TISSUE X STAGE MATRIX:
+    			<ul>
+    				<li>has one row corresponding to Structure "A".</li>
+    				<li>has one column for Stage "I" and one column for "J".</li>
+    				<li>if there are descendant terms with positive results in Stage "I", the row may be opened.</li>
+    				<li>all colored cells in column "I" have positive color(s).</li>
+    				<li>colored cells in column "J" appear only in the row for the queried term and have negative color(s).</li> 
+    			</ul>
+    			</li>
+    			<li>TISSUE X GENE MATRIX:
+    			<ul>
+    				<li>has same rows as Tissue X Stage Matrix.</li>
+    				<li>has a column for each gene returned on the Genes tab.</li>
+    				<li>has only positive color(s) in every cell for the queried term.</li>
+    				<li>has only positive color(s) in cells for descendant terms.</li>
+    			</ul>
+    			</li>
     		</ul>
     		<ol> 			
-    			<li>Query for genes with expression detected in Structure <b concordion:set="#struct1">tail</b> and Stage <b concordion:set="#stages1">25</b>, 
-    				not detected or analyzed in Structure <b concordion:set="#struct2">tail</b> and Stage <b concordion:set="#stages2">26</b>.</li>
-    			<li>Verify that <i>at least</i> the following genes are returned: <i>(fully automated)</i>
+    			<li>QUERY FOR genes with expression detected in Structure tail (<b concordion:set="#struct1">EMAPA:16748</b>) and Stage <b concordion:set="#stages1">25</b>, 
+    				not detected or analyzed in Structure tail (<b concordion:set="#struct2">EMAPA:16748</b>) and Stage <b concordion:set="#stages2">26</b>. (revised for sto16)</li>
+    			<li>Verify that <i>at least</i> the following genes are returned:
 				<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
 					<tr><td>Derl3</td></tr>
@@ -518,7 +1014,27 @@
 					<tr><td>Tgfbi</td></tr>
 				</table>
 				 </li>
-				 <li>Verify that <b cc:assertNoResultsContain="getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">Mmp11</b> is NOT returned. <i>(fully automated)</i></li>
+				 <li>Verify that <b cc:assertNoResultsContain="getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">Mmp11</b> is NOT returned. </li>
+				 <li>QUERY FOR detected in <b>tail</b> at stage <b>16</b>, not detected or assayed in <b>tail</b> at stage <b>22</b>. (new for sto58)</li>
+  				<p concordion:manual="true">passed - kstone 2014-07-10</p>  
+				 <li>On the Tissue X Stage Matrix, verify that:
+				 <ol>
+				 	<li>one row is displayed for the structure <b>tail</b>.</li>
+				 	<li>the row can be opened to display descendant terms.</li>
+				 	<li>all cells for descendant terms have positive color(s).</li>
+				 	<li>one column is displayed for Theiler Stage 16.</li>
+				 	<li>all cells in the TS 16 column display positive color(s).</li>
+				 	<li>one column is displayed for Theiler Stage 22.</li>
+				 	<li>cells in the TS 22 column display ONLY negative color(s), and ONLY for the first row: "tail".</li> 
+				 </ol>
+				 </li>
+				 <li>On the Tissue X Gene Matrix, verify that:
+				 <ol>
+				 	<li>the same rows are displayed as on the Tissue X Stage matrix.</li>
+				 	<li>all cells for all genes display positive color(s) for the first row: "tail".</li>
+				 	<li>any colored cells in rows for descendant terms display only positive color(s).</li>
+				 </ol>
+				 </li>
     		</ol>
     		</li>
 
@@ -527,13 +1043,25 @@
     		<ul>
     			<li>GENES having positive results for Structure "A" and its children at Stage "I", and having no positive results for Structure "B" and its children at Stage "I"</li>
     			<li>ASSAY RESULTS for Structure "A"  and its children at Stage "I"  - positive results only</li>
-    			<li>NO ASSAY RESULTS for Structure "B" and its children at Stage "I"</li>
+    			<li>ASSAY RESULTS for Structure "B" at Stage "I" - no substructures or ancestors, negative results only</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
+    			<li>TISSUE X STAGE MATRIX:
+    			<ul>
+    				<li>thing 1</li>
+    				<li>thing 2</li>
+    			</ul>
+    			</li>
+    			<li>TISSUE X GENE MATRIX:
+    			<ul>
+    				<li>thing 1</li>
+    				<li>thing 2</li>
+    			</ul>
+    			</li>
     		</ul>
     		<ol>
-    			<li>Query for genes with expression detected in Structure <b concordion:set="#struct1">mitral valve</b> at Stage <b concordion:set="#stages1">23</b>, not detected or analyzed in Structure <b concordion:set="#struct2">aortic valve</b> at Stage <b concordion:set="#stages2">23</b>.</li>
-    			<li>Verify that <i>at least</i> the following genes are returned: <i>(fully automated)</i>
+    			<li>QUERY FOR genes with expression detected in Structure mitral valve (<b concordion:set="#struct1">EMAPA:17871</b>) at Stage <b concordion:set="#stages1">23</b>, not detected or analyzed in Structure aortic valve (<b concordion:set="#struct2">EMAPA:17870</b>) at Stage <b concordion:set="#stages2">23</b>. (revised for sto16)</li>
+    			<li>Verify that <i>at least</i> the following genes are returned:
 	    			<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	    			<tr><th concordion:assertEquals="#result">Gene</th></tr>
 					<tr><td>Cxcr4</td></tr>
@@ -544,19 +1072,42 @@
 					<tr><td>Slc22a6</td></tr>
 	    			</table> 
     			</li>
-    			<li>Verify that the following genes are not returned: <i>(fully automated)</i>
+    			<li>Verify that the following genes are not returned:
 	    			<table cc:verifyNotRows="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
-	    			<tr><th concordion:assertEquals="#result">Gene</th></tr>
-					<tr><td>Fam89b</td></tr>
-					<tr><td>Gnb4</td></tr>
-					<tr><td>Kcnj15</td></tr>
-					<tr><td>Lrrcc1</td></tr>
-					<tr><td>Mxra8</td></tr>
+	    			<tr><th concordion:assertEquals="#result">Gene</th><th>Notes</th></tr>
+					<tr><td>Fam89b</td><td> </td></tr>
+					<tr><td>Gnb4</td><td> </td></tr>
+					<tr><td>Kcnj15</td><td> </td></tr>
+					<tr><td>Lrrcc1</td><td> </td></tr>
+					<tr><td>Mxra8</td><td> </td></tr>
+					<tr><td>Pdgfra</td><td>annotated to aortic valve leaflet so this term should be excluded too</td></tr>
 	    			</table> 
 				</li>
-    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stage <b>23</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stage <b>23</b> are returned.<br/>
-    			Note: the gene Pdgfra is annotated to aortic valve leaflet so this term should be excluded too.</li>
+    			<li>Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stage <b>23</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span>  </li>
+    			<li>Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stage <b>23</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span> </li>
+    			<li>QUERY FOR detected in <b>aorta</b> at Theiler Stage <b>26</b>, not detected or assayed in <b>vena cava</b> at Stage <b>26</b>. (new for sto58)</li>
+  				<p concordion:manual="true">passed - kstone 2014-07-10</p>  
+    			<li>On the Tissue X Stage Matrix, verify that:
+    			<ol>
+    				<li>a row for <b>aorta</b> is displayed.</li>
+    				<li>the row for <b>aorta</b> may be expanded to display descendant terms.</li>
+    				<li>all colored cells for <b>aorta</b> and substructures are positive color(s).</li>
+    				<li>a row for <b>vena cava</b> is displayed.</li>
+    				<li>the colored cell is a negative color.</li>
+    				<li>the row for <b>vena cava</b> cannot be opened.</li>
+    				<li>only one column is displayed: Theiler Stage <b>26</b>.</li>
+    			</ol>
+    			</li>
+    			<li>On the Tissue X Gene Matrix, verify that:
+    			<ol>
+    				<li>the same rows are displayed as on the Tissue X Stage Matrix.</li>
+    				<li>columns display the same genes as are listed in the Genes Tab.</li>
+    				<li>every cell in the row for <b>aorta</b> displays positive color(s).</li>
+    				<li>for descendant terms, any colored cells display only positive color(s).</li>
+    				<li>the only colored cells in the row for <b>vena cava</b> display negative color(s).</li>
+    				<li>the gene <b>Prdm6</b> has a negative color for <b>vena cava</b>.</li>
+    			</ol>
+    			</li>
     		</ol>
     		</li>
 
@@ -564,13 +1115,13 @@
     		<ul>
     			<li>GENES having positive results for Structure "A" and its children and Stage "I", and having no positive results for Structure "B" and its children and Stage "J"</li>
     			<li>ASSAY RESULTS for Structure "A" and its children at Stage "I" - positive results only</li>
-    			<li>NO ASSAY RESULTS for Structure "B" and its children at Stage "J"</li>
+    			<li>ASSAY RESULTS for Structure "B" at Stage "J" - no substructures or ancestors, negative results only</li>
     			<li>ASSAYS corresponding to the displayed assay results</li>
     			<li>IMAGES corresponding to the displayed assay results</li>
     		</ul>
     		<ol>
-    			<li>Query for genes with expression detected in Structure <b concordion:set="#struct1">mitral valve</b> and Stage <b concordion:set="#stages1">21,22,23</b>, 
-    				not detected or analyzed in Structure <b concordion:set="#struct2">aortic valve</b> and Stage <b concordion:set="#stages2">23,24,25</b>.</li>
+    			<li>QUERY FOR genes with expression detected in Structure mitral valve (<b concordion:set="#struct1">EMAPA:17871</b>) and Stage <b concordion:set="#stages1">21,22,23</b>, 
+    				not detected or analyzed in Structure aortic valve (<b concordion:set="#struct2">EMAPA:17870</b>) and Stage <b concordion:set="#stages2">23,24,25</b>. (revised for sto16)</li>
     			<li>Verify that <i>at least</i> the following genes are returned: 
 				<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	                <tr><th concordion:assertEquals="#result">Gene symbol</th></tr>
@@ -595,103 +1146,15 @@
 					<tr><td>Mxra8</td></tr>
 				</table>
 				</li>
-    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stages <b>21,22,23</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:manual="true">klf 5/16/2013</span>  Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stages <b>23,24,25</b> are returned.</li>
+    			<li>Verify that <i>postive results</i> for <b>mitral valve</b> or its children in Stages <b>21,22,23</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span></li>
+    			<li>Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stages <b>23,24,25</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span></li>
     		</ol>
     		</li>
-
-		</ol>
-
-     	<h4 id="addNegatives">Broad Queries, return positive and "negative" results</h4>
-
-    	<ol>
-    		<li>A query for detected in "A", not detected or analyzed in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
-    		<ul>
-    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures</li>
-    			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
-    			<li>ASSAY RESULTS for "B" ONLY, no substructures, no ancestors - negative ("absent") results only</li>
-    			<li>ASSAYS corresponding to the displayed assay results</li>
-    			<li>IMAGES corresponding to the displayed assay results</li>
-    		</ul>
- 			<p concordion:manual="true">kstone - 2013/05/15</p> 
- 			<ol>
- 				<li>Query for genes with expression detected in <b  concordion:set="#struct1">pyloric antrum</b>, not detected or analyzed in <b  concordion:set="#struct2">detrusor muscle of bladder</b>.</li>
-                <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pyloric antrum</b> are returned, 
-                	but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">pyloric antrum</b>. <i>(fully automated)</i></li>
- 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">detrusor muscle of bladder</b> are returned, 
- 					but no <i>positive results</i> for <b cc:assertNoResultsContain="getResultStructures(#struct1,#struct2)">detrusor muscle of bladder</b>. <i>(fully automated)</i></li>
- 				<li>Verify that query for structure "A", but not detected or analyzed in "B" does not return negatives for children of the query term (it should only search directly annotated "absent" results).
- 				<br/>Query for genes with expression detected in <b  concordion:set="#struct1">pronephros</b>, not detected or analyzed in <b  concordion:set="#struct2">oral region-derived pituitary</b>.</li>
-                <li>Verify that <i>positive results</i> for <b cc:assertResultsContain="getResultStructures(#struct1,#struct2)">pronephros</b> are returned. <i>(fully automated)</i></li>
- 				<li>Verify that <i>negative results</i> for <b cc:assertResultsContain="getResultStructuresNegatives(#struct1,#struct2)">oral region-derived pituitary</b> are returned, 
- 					but no <i>negative results</i> for <b cc:assertNoResultsContain="getResultStructuresNegatives(#struct1,#struct2)">Rathke's pouch</b>. <i>(fully automated)</i></li>
- 			</ol>
-    		</li>
-    		
-    		<li>A query for detected in Stage "I", not detected or analyzed in Stage "J", returns only the following:
-    		<ul>
-    			<li>GENES having positive results for "I" and having no positive results for "J" in any structures</li>
-    			<li>ASSAY RESULTS for Stage "I" in every structure - positive results only</li>
-    			<li>ASSAY RESULTS for Stage "J" - negative ("absent") results only</li>
-    			<li>ASSAYS corresponding to the displayed assay results</li>
-    			<li>IMAGES corresponding to the displayed assay results</li>
-    		</ul>
- 			<ol>
- 				<li>Query for genes with expression detected in Stages <b  concordion:set="#stages1">6,7,8</b>, not detected or analyzed in Stages <b  concordion:set="#stages2">5,14,15,16,17,18,19,20,21,22,23,24,25,26,28</b>.</li>
-                <li>Verify that <i>positive results</i> are returned for only the following Stages: <i>(fully automated)</i>
-                	<table cc:verifyRowsUnordered="#result : getResultStages(#stages1,#stages2)">
-                	<tr><th concordion:assertEquals="#result">Stage</th></tr>
-                	<tr><td>6</td></tr>
-                	<tr><td>7</td></tr>
-                	<tr><td>8</td></tr>
-                	</table>
-                </li>
-                <li>Verify that no <i>negative results</i> for the following Stages are returned: <i>(fully automated)</i>
-                	<table cc:verifyNotRows="#result : getResultStagesNegatives(#stages1,#stages2)">
-                	<tr><th concordion:assertEquals="#result">Stage</th></tr>
-                	<tr><td>6</td></tr>
-                	<tr><td>7</td></tr>
-                	<tr><td>8</td></tr>
-                	</table>
-                </li>
- 				<li>Verify that <i>negative results</i> for  Stage <b cc:assertResultsContain="getResultStagesNegatives(#stages1,#stages2)">5</b> are returned. <i>(fully automated)</i></li>
- 				<li>Verify that no <i>positive results</i> for the following Stages are returned: <i>(fully automated)</i>
- 					<table cc:verifyNotRows="#result : getResultStages(#stages1,#stages2)">
- 					<tr><th concordion:assertEquals="#result">Stage</th></tr>
- 					<tr><td>5</td></tr>
- 					<tr><td>14</td></tr>
- 					<tr><td>15</td></tr>
- 					<tr><td>16</td></tr>
- 					<tr><td>17</td></tr>
- 					<tr><td>18</td></tr>
- 					<tr><td>19</td></tr>
- 					<tr><td>20</td></tr>
- 					<tr><td>21</td></tr>
- 					<tr><td>22</td></tr>
- 					<tr><td>23</td></tr>
- 					<tr><td>24</td></tr>
- 					<tr><td>25</td></tr>
- 					<tr><td>26</td></tr>
- 					<tr><td>28</td></tr>
- 					</table>
- 					</li>
- 			</ol>
-    		</li>
-    		
-    		<li>A query for detected in Structure "A" + Stage "I", not detected or analyzed in Structure "B" + Stage "J", returns only the following:
-    		<ul>
-    			<li>GENES having positive results for "A"+"I" and having no positive results for "B"+"J" in any structures</li>
-    			<li>ASSAY RESULTS for Stage "A"+"I" in every structure - positive results only</li>
-    			<li>ASSAY RESULTS for Stage "B"+"J" - negative ("absent") results only</li>
-    			<li>ASSAYS corresponding to the displayed assay results</li>
-    			<li>IMAGES corresponding to the displayed assay results</li>
-    		</ul>
- 			<ol>
- 				<li>Query for genes with expression detected in Structure <b  concordion:set="#struct1">metanephric mesenchyme</b> at Stages <b  concordion:set="#stages1">22</b>, not detected or analyzed in Structure <b  concordion:set="#struct2">hepatic primordium</b> at Stages <b  concordion:set="#stages2">17</b>.</li>
-    			<li>Verify that <i>at least</i> the following genes are returned: <i>(fully automated)</i>
+ 				<li>QUERY FOR genes with expression detected in Structure metanephric mesenchyme (<b  concordion:set="#struct1">EMAPA:17375</b>) at Stages <b  concordion:set="#stages1">22</b>, not detected or analyzed in Structure hepatic primordium (<b  concordion:set="#struct2">EMAPA:16847</b>) at Stages <b  concordion:set="#stages2">17</b>. (revised for sto16)</li>
+    			<li>Verify that <i>at least</i> the following genes are returned:
 	    			<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	    			<tr><th concordion:assertEquals="#result">Gene</th><th>Notes</th></tr>
-					<tr><td>Hs6st2</td><td>has a negative result for child of the "B"+"J" combo, searched text is contained in child term name</td></tr>
+					<tr><td>Hs6st2</td><td>has a negative result for child of the "B"+"J" combo</td></tr>
 					<tr><td>Acvr2b</td><td>has no results for the "B"+"J" combo</td></tr>
 					<tr><td>Aldh1a2</td><td>has no results for the "B"+"J" combo</td></tr>
 	    			</table> 
@@ -702,70 +1165,28 @@
 					<tr><td>Adamts1</td><td>has only negative result for "A"+"I" combo</td></tr>
 					<tr><td>Aimp1</td><td>has only negative result for "A"+"I" combo</td></tr>
 					<tr><td>Ctnnbip1</td><td>has only negative result for "A"+"I" combo</td></tr>
+					<tr><td>Vtn</td><td>positive for both "A"+"I" and "B"+"J"</td></tr>
 				</table>
 				</li>
+    			<li>Verify that <i>postive results</i> for <b>metanephros mesenchyme</b> or its children in Stage <b>22</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span>  </li>
+    			<li>Verify that <i>NO positive results</i> for <b>hepatic primordium</b> or its children (hepatic primordium parenchyma) in Stages <b>17</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span> </li>
+    			<li>Verify that <i>NEGATIVE results</i> for <b>hepatic primordium</b> but NOT its children (hepatic primordium parenchyma) in Stages <b>17</b> ARE returned. (<i>Note: There are none as of 2014-05-30. -klf</i>) <span concordion:manual="true">passed. -klf 2014-05-30</span> </li>
 
-    			<li><i>Manual test: </i> <span concordion:manual="true">kstone - 2013/05/20</span>  Verify that <i>postive results</i> for <b>metanephros mesenchyme</b> or its children in Stage <b>22</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:manual="true">kstone - 2013/05/20</span>  Verify that <i>NO positive results</i> for <b>hepatic primordium</b> or its children (hepatic primordium parenchyma) in Stages <b>17</b> are returned.</li>
-    			<li><i>Manual test: </i> <span concordion:manual="true">kstone - 2013/05/20</span>  Verify that <i>NEGATIVE results</i> for <b>hepatic primordium</b> <span style="background-color:#BBBB00">or its children (hepatic primordium parenchyma) - NOT supposed to be doing this - emailed Connie 5/17 (klf)</span> in Stages <b>17</b> ARE returned.</li>
- 			</ol>
-    		</li>
+ 				<li>QUERY FOR genes with expression detected in Structure pulmonary trunk (<b  concordion:set="#struct1">EMAPA:17015</b>) at Stages <b  concordion:set="#stages1">23</b>, not detected or analyzed in Structure aortic valve (<b  concordion:set="#struct2">EMAPA:17870</b>) at Stages <b  concordion:set="#stages2">28</b>. (<i>Looking at results for the gene 'Sost'.</i>) (added for sto16)</li>
+    			<li>Verify that <i>postive results</i> for <b>pulmonary trunk</b> or its children in Stage <b>23</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span>  </li>
+    			<li>Verify that <i>NO positive results</i> for <b>aortic valve </b> or its children in Stages <b>28</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span> </li>
+    			<li>Verify that <i>NEGATIVE results</i> for <b>aortic valve </b> but NOT its children in Stages <b>28</b> ARE returned. (<i>Note: No children have annotations.</i>) <span concordion:manual="true">passed. -klf 2014-05-30</span> </li>
 
+ 				<li>QUERY FOR genes with expression detected in Structure pulmonary trunk (<b  concordion:set="#struct1">EMAPA:17015</b>) at Stages <b  concordion:set="#stages1">23</b>, not detected or analyzed in Structure heart (<b  concordion:set="#struct2">EMAPA:16105</b>) at Stages <b  concordion:set="#stages2">23</b>. (<i>Looking at results for the gene 'Sost'.</i>) (added for sto16)</li>
+    			<li>Verify that <i>postive results</i> for <b>pulmonary trunk</b> or its children in Stage <b>23</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span>  </li>
+    			<li>Verify that <i>NO positive results</i> for <b>heart </b> or its children (heart valve) in Stages <b>23</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span> </li>
+    			<li>Verify that <i>NEGATIVE results</i> for <b>heart </b> but NOT its children (heart valve) in Stages <b>23</b> ARE returned. (<i>Note: both term and child term have negative annotations.</i>) <span concordion:manual="true">passed. -klf 2014-05-30</span> </li>
 
-    	</ol>
- 
-
- <!-- 
-		<h4>Strict Queries</h4>
-		<ol>
-    		<li>A query for detected in "A", not detected in "B", where "A" and "B" are in different Anatomical Systems, returns only the following: 
-    		<ul>
-    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures and having negative results in "B" or its parent terms</li>
-    			<li>ASSAY RESULTS for "A" and its parent terms - positive results only</li>
-    			<li>??? ASSAY RESULTS for "B" and its substructures - negative results only</li>
-    			<li>ASSAYS corresponding to the displayed assay results</li>
-    			<li>IMAGES corresponding to the displayed assay results</li>
-    		</ul>
- 			<p concordion:manual="false">new</p> 
-    		<ol>
-                <li><i>Need to find test data</i></li>
-                <li>Step 1</li>
-                <li>Step 2</li>
-    		</ol>
-    		</li>
-    		<li>A query for detected in "A", not detected in "B", where "A" is a parent of "B" in the same Anatomical System, returns only the following: 
-    		<ul>
-    			<li>GENES having positive results for "A" or its substructures and having no positive results for "B" or its substructures and having negative results in "B" or its parent terms</li>
-    			<li>ASSAY RESULTS for "A" and its substructures - positive results only</li>
-    			<li>??? ASSAY RESULTS for "B" and its parent terms - negative results only</li>
-    			<li>ASSAYS corresponding to the displayed assay results</li>
-    			<li>IMAGES corresponding to the displayed assay results</li>
-    		</ul>
- 			<p concordion:manual="false">new</p> 
-    		<ol>
-                <li><i>Need to find test data</i></li>
-                <li>Step 1</li>
-                <li>Step 2</li>
-    		</ol>
-    		</li>
-    		<li>A query for detected in "A", not detected in "B", where "A" is a child of "B" in the same Anatomical System, returns NO RESULTS. 
- 			<p concordion:manual="false">new</p> 
-    		<ol>
-                <li><i>Need to find test data</i></li>
-                <li>Step 1</li>
-                <li>Step 2</li>
-    		</ol>
-    		</li>
-    		<li>Test
- 			<p concordion:manual="false">new</p> 
-    		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
-    		</ol>
-    		</li>
 		</ol>
--->
+
 	</div>
+
+
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>

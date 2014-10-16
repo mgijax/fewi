@@ -423,7 +423,8 @@ public class FormatHelper
     public static String queryStringFromPost(HttpServletRequest request)
     {
       StringBuilder sb = new StringBuilder("");
-      for (Enumeration<String> e = request.getParameterNames();e.hasMoreElements();)
+      for (@SuppressWarnings("unchecked")
+      		Enumeration<String> e = request.getParameterNames();e.hasMoreElements();)
       {
         String param = e.nextElement();
         sb.append(param).append("=").append(request.getParameter(param)).append("&");

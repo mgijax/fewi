@@ -1,3 +1,23 @@
+TAG: fewi-5-2-0-5
+TAG: fewi-5-2-0-4
+TAG: fewi-5-2-0-3
+TAG: fewi-5-2-0-2
+TAG: fewi-5-2-0-1
+DATE: 9/15/14
+STAFF: pf
+CHANGES: 5.2 release tags
+
+TAG: fewi-tr11654-preMerge
+DATE: 9/12/14
+STAFF: pf
+CHANGES: merging in the tr11654 branch
+
+TAG: fewi-5-1-9-7
+DATE: 08/19/14
+STAFF: kstone
+CHANGES:
+1) Fix for TR11733 VCF upload bug
+
 TAG: fewi-tr11674-BP
 DATE: 08/14/14
 STAFF: oblod

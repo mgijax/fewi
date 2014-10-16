@@ -1,14 +1,7 @@
 package org.jax.mgi.fewi.summary;
 
-import java.util.*;
-
-import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
-import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.config.ContextLoader;
-
-import javax.persistence.Column;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jax.mgi.fewi.searchUtil.entities.SolrInteraction;
 
 
 /**
@@ -20,8 +13,6 @@ public class InteractionSummaryRow {
     // instance variables
     //-------------------
 
-    private Logger logger = LoggerFactory.getLogger(InteractionSummaryRow.class);
-
     // encapsulated row object
     private SolrInteraction jr;
 
@@ -31,9 +22,6 @@ public class InteractionSummaryRow {
     //-------------
     // constructors
     //-------------
-
-    // hide the default constructor - we NEED a SolrInteraction object to wrap
-    private InteractionSummaryRow () {}
 
     public InteractionSummaryRow (SolrInteraction jr) {
     	this.jr = jr;

@@ -273,8 +273,10 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table>
                 </li>
                 <li>NOTE: WHAT REQUIREMENT DOES THIS TEST? (klf 10/3/13) - Only the following genes <b>should appear</b> in the results set for <b concordion:set="#disease">605552,265050,100070,609782,611891,614375,226100,182212,100100,260570</b>:
-                	<table cc:verifyRowsUnordered="#symbol : getSymbolsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th></tr>
+                	<!-- disabling automated test -->
+                	<!-- <table cc:verifyRowsUnordered="#symbol : getSymbolsByDisease(#disease)">
+                	<tr><th concordion:assertEquals="#symbol">Gene symbol</th></tr> -->
+                	<table><tr><th>Gene Symbol</th></tr>
                 	<tr><td>Ctf1</td></tr>
                 	<tr><td>Gucy2c</td></tr>
                 	<tr><td>Neil1</td></tr>
@@ -293,13 +295,21 @@ tr.gray td {background-color:#EEEEEE;}
                 	</table>
                 </li>
                 <li>And the following genes <b>should NOT appear</b> in the results set:
-                	<table>
+                	<!-- disabling automated test <table>
                 	<tr><th>Gene symbol</th></tr>
                 	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Apoe</td></tr>
                 	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Cyp19a1</td></tr>
                 	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Colec11</td></tr>
                 	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Ski</td></tr>
                 	<tr><td cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Chrm3</td></tr>
+                	</table> -->
+                	<table>
+                	<tr><th>Gene symbol</th></tr>
+                	<tr><td>Apoe</td></tr>
+                	<tr><td>Cyp19a1</td></tr>
+                	<tr><td>Colec11</td></tr>
+                	<tr><td>Ski</td></tr>
+                	<tr><td>Chrm3</td></tr>
                 	</table>
                 </li>
                 </ol>

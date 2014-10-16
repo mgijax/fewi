@@ -2,16 +2,17 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.Marker;
@@ -28,6 +29,14 @@ import org.jax.mgi.fewi.finder.VocabularyFinder;
 import org.jax.mgi.fewi.forms.BatchQueryForm;
 import org.jax.mgi.fewi.forms.GxdLitQueryForm;
 import org.jax.mgi.fewi.forms.GxdQueryForm;
+import org.jax.mgi.fewi.handler.GxdMatrixHandler;
+import org.jax.mgi.fewi.matrix.GxdGeneMatrixPopup;
+import org.jax.mgi.fewi.matrix.GxdMatrixCell;
+import org.jax.mgi.fewi.matrix.GxdMatrixMapper;
+import org.jax.mgi.fewi.matrix.GxdMatrixRow;
+import org.jax.mgi.fewi.matrix.GxdStageGridJsonResponse;
+import org.jax.mgi.fewi.matrix.GxdStageMatrixMapper;
+import org.jax.mgi.fewi.matrix.GxdStageMatrixPopup;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -37,9 +46,13 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrAssayResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrDagEdge;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdAssay;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdGeneMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdImage;
 import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMarker;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdMatrixResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrGxdStageMatrixResult;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.summary.GxdAssayResultSummaryRow;
 import org.jax.mgi.fewi.summary.GxdAssaySummaryRow;
@@ -50,6 +63,7 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.indexconstants.GxdResultFields;
+import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +75,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -80,7 +95,7 @@ public class GXDController {
 	// --------------------//
 	// static variables
 	// --------------------//
-	
+
 	// value for the isWildType field in gxdResult index
 	private static String WILD_TYPE = "wild type";
 
@@ -97,7 +112,7 @@ public class GXDController {
 
 	//@Autowired
     //private SolrMarkerKeyHunter mrkKeyHunter;
-	
+
 	@Autowired
 	private MarkerFinder markerFinder;
 
@@ -114,6 +129,9 @@ public class GXDController {
 
 	@Autowired
 	private GXDLitController gxdLitController;
+	
+	@Autowired
+	private GxdMatrixHandler gxdMatrixHandler;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit;
@@ -135,7 +153,7 @@ public class GXDController {
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
-		
+
 		return mav;
 	}
 
@@ -150,7 +168,7 @@ public class GXDController {
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showDifferentialQueryForm",true);
-		
+
 		return mav;
 	}
 
@@ -406,7 +424,7 @@ public class GXDController {
 		}else {
 			mav.addObject("theilerStage", "");
 		}
-        
+
         // handle requests for a specific summary tab
         String tab = request.getParameter("tab");
         if(tab != null) mav.addObject("tab", tab);
@@ -499,7 +517,7 @@ public class GXDController {
         		= new JsonSummaryResponse<GxdMarkerSummaryRow>();
         jsonResponse.setSummaryRows(summaryRows);
         jsonResponse.setTotalCount(searchResults.getTotalCount());
-        
+
         logger.debug("gxdMarkersSummaryJson() found "+searchResults.getTotalCount()+" markers");
 
         return jsonResponse;
@@ -577,7 +595,7 @@ public class GXDController {
         logger.debug("gxdResultsSummaryJson() found "+searchResults.getTotalCount()+" results");
         return jsonResponse;
 	}
-	
+
 	@RequestMapping("/images/json")
 	public @ResponseBody JsonSummaryResponse<GxdImageSummaryRow> gxdImageSummaryJson(
 			HttpServletRequest request,
@@ -607,6 +625,279 @@ public class GXDController {
 
         return jsonResponse;
 	}
+
+	@RequestMapping("/stageMatrixPopup/json")
+	public @ResponseBody GxdStageMatrixPopup gxdStageMatrixPopupJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="rowId") String rowId,
+			@RequestParam(value="colId") String colId
+			) {
+		logger.debug("gxdStageMatrixPopupJson() started");
+		logger.debug("request=" + request.getQueryString());
+
+        // find the requested structure
+        List<VocabTerm> structureTermList = vocabFinder.getTermByID(rowId);
+        VocabTerm structureTerm = structureTermList.get(0);
+
+        // force only the current row and column as filters
+        query.getMatrixStructureId().add(rowId);
+        query.setTheilerStageFilter(Arrays.asList(colId));
+
+        // the object to return as a JSON object
+        GxdStageMatrixPopup gxdStageMatrixPopup = new GxdStageMatrixPopup(structureTerm.getPrimaryID(), structureTerm.getTerm());
+
+        int imageCount = this.getGxdImageCount(request,query);
+        
+		// get the results for structure/stage
+		Paginator page = new Paginator(10000000);
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(this.parseGxdQueryForm(query));
+		SearchResults<SolrGxdMatrixResult> searchResults = gxdFinder.searchMatrixResults(params);
+        List<SolrGxdMatrixResult> assayResultList = searchResults.getResultObjects();
+		gxdStageMatrixPopup.setAssayResultList(assayResultList);
+		gxdStageMatrixPopup.setHasImage(imageCount > 0);
+
+        return gxdStageMatrixPopup;
+	}
+
+	@RequestMapping("/geneMatrixPopup/json")
+	public @ResponseBody GxdGeneMatrixPopup gxdGeneMatrixPopupJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@RequestParam(value="rowId") String rowId,
+			@RequestParam(value="colId") String colId
+			) {
+		logger.debug("gxdGeneMatrixPopupJson() started");
+		logger.debug("request=" + request.getQueryString());
+
+        // find the requested structure
+        List<VocabTerm> structureTermList = vocabFinder.getTermByID(rowId);
+        VocabTerm structureTerm = structureTermList.get(0);
+
+        // force only the current row and column as filters
+        query.getMatrixStructureId().add(rowId);
+        query.setMatrixMarkerSymbol(colId);
+
+        // the object to return as a JSON object
+        GxdGeneMatrixPopup gxdGeneMatrixPopup = new GxdGeneMatrixPopup(structureTerm.getPrimaryID(), structureTerm.getTerm());
+
+        int imageCount = this.getGxdImageCount(request,query);
+        
+		// get the results for structure/gene
+		Paginator page = new Paginator(10000000);
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(this.parseGxdQueryForm(query));
+		SearchResults<SolrGxdMatrixResult> searchResults = gxdFinder.searchMatrixResults(params);
+        List<SolrGxdMatrixResult> assayResultList = searchResults.getResultObjects();
+		gxdGeneMatrixPopup.setAssayResultList(assayResultList);
+		gxdGeneMatrixPopup.setHasImage(imageCount > 0);
+		
+        return gxdGeneMatrixPopup;
+	}
+
+
+	@RequestMapping("/stagegrid/json")
+	public @ResponseBody GxdStageGridJsonResponse gxdStageGridJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
+			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			HttpSession session) throws CloneNotSupportedException
+	{
+		logger.debug("gxdStageGridJson() started");
+
+		boolean isFirstPage = page.getStartIndex() == 0;
+		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
+
+		// save original query in case we are expanding a row
+    	GxdQueryForm originalQuery = (GxdQueryForm) query.clone();
+    	String sessionQueryString = originalQuery.toString();
+
+    	// check if we have a totalCount set (if so, we return early to indicate end of data)
+        String totalCountSessionId = "GxdStageMatrixTotalCount_"+sessionQueryString;
+    	Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
+    	if(totalCount!=null && totalCount<page.getStartIndex())
+    	{
+    		logger.debug("reached end of result set");
+    		return new GxdStageGridJsonResponse();
+    	}
+
+    	// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
+		if(isChildrenOfQuery)
+		{
+			gxdMatrixHandler.addMapChildrenOfFilterForMatrix(query,childrenOf);
+			// paths variable is not supported in conjunction with childrenOf query
+			// childrenOf query takes precedence
+			pathsToOpen = null;
+		}
+
+		// get the matrix results for this page
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(this.parseGxdQueryForm(query));
+		SearchResults<SolrGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
+		logger.debug("got matrix results");
+        List<SolrGxdStageMatrixResult> resultList = searchResults.getResultObjects();
+
+        // cache total count of assay results
+        session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+
+        // get the parent rows to be displayed
+		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
+
+		//logger.debug("term tree = "+parentTerms.get(0).printTree());
+        List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
+        //logger.debug("flat rows = "+StringUtils.join(flatRows,", "));
+
+
+        // TODO: this gets all edges, but we only need all of them for the first page
+        List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+
+		// prune empty data rows
+		if(isFirstPage)
+		{
+			Set<String> rowsWithChildren = new HashSet<String>();
+			for(SolrDagEdge edge : edges)
+			{
+				rowsWithChildren.add(edge.getParentId());
+			}
+			Set<String> idsWithData = this.getExactStructureIds(query);
+			idsWithData.addAll(rowsWithChildren);
+			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
+			//logger.debug("pruned Rows = "+parentTerms.get(0).printTree());
+		}
+        //logger.debug("edges for mapper size="+edges.size());
+        //logger.debug(StringUtils.join(edges,", "));
+
+        // get matrix cells; add stages to mapper if this is a row-expansion
+        GxdStageMatrixMapper mapper = new GxdStageMatrixMapper(edges);
+
+        // we need to get the whole list of theiler stages for the originalQuery to map all the dummy theiler stage cells
+        if (isChildrenOfQuery)
+        {
+        	String stagesInMatrixSessionId = "gxdMatrixStages_"+sessionQueryString;
+        	@SuppressWarnings("unchecked")
+			Set<String> stagesInMatrix = (Set<String>) session.getAttribute(stagesInMatrixSessionId);
+        	if(stagesInMatrix==null)
+        	{
+        		stagesInMatrix = this.getStagesInMatrix(originalQuery);
+        		session.setAttribute(stagesInMatrixSessionId,stagesInMatrix);
+        	}
+			logger.debug("adding stages to mapper: stages=" + stagesInMatrix);
+			mapper.setStagesInMatrix(stagesInMatrix);
+		}
+        List<GxdMatrixCell> gxdMatrixCells = mapper.mapCells(flatRows, resultList);
+
+        // only generate row relationships on first page/batch
+        if (isFirstPage)
+        {
+        	gxdMatrixHandler.assignOpenCloseState(parentTerms,query,edges);
+        }
+
+		// add to the response object
+		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		jsonResponse.setParentTerms(parentTerms);
+		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
+
+		logger.debug("sending json response");
+        return jsonResponse;
+	}
+
+	@RequestMapping("/genegrid/json")
+	public @ResponseBody GxdStageGridJsonResponse gxdGeneGridJson(
+			HttpServletRequest request,
+			@ModelAttribute GxdQueryForm query,
+			@ModelAttribute Paginator page,
+			@RequestParam(value="mapChildrenOf",required=false) String childrenOf,
+			@RequestParam(value="pathToOpen",required=false) List<String> pathsToOpen,
+			HttpSession session) throws CloneNotSupportedException
+	{
+		logger.debug("gxdGeneGridJson() started");
+
+		boolean isFirstPage = page.getStartIndex() == 0;
+		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
+
+		// save original query in case we are expanding a row
+    	GxdQueryForm originalQuery = (GxdQueryForm) query.clone();
+    	String sessionQueryString = originalQuery.toString();
+
+    	// check if we have a totalCount set (if so, we return early to indicate end of data)
+        String totalCountSessionId = "GxdGeneMatrixTotalCount_"+sessionQueryString;
+    	Integer totalCount = (Integer) session.getAttribute(totalCountSessionId);
+    	if(totalCount!=null && totalCount<page.getStartIndex())
+    	{
+    		logger.debug("reached end of result set");
+    		return new GxdStageGridJsonResponse();
+    	}
+
+    	// if we have a mapChildrenOf query, we filter by structureIds of the child rows of this parentId
+		if(isChildrenOfQuery)
+		{
+			gxdMatrixHandler.addMapChildrenOfFilterForMatrix(query,childrenOf);
+			pathsToOpen = null;
+		}
+
+		// get the matrix results for this page
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(this.parseGxdQueryForm(query));
+		SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
+		logger.debug("got matrix results");
+        List<SolrGxdGeneMatrixResult> resultList = searchResults.getResultObjects();
+
+        // cache total count of assay results
+        session.setAttribute(totalCountSessionId,searchResults.getTotalCount());
+
+        // get the parent rows to be displayed
+		List<GxdMatrixRow> parentTerms = gxdMatrixHandler.getParentTermsToDisplay(query,childrenOf,pathsToOpen);
+
+        List<GxdMatrixRow> flatRows = gxdMatrixHandler.getFlatTermList(parentTerms);
+
+
+        // TODO: this gets all edges, but we only need all of them for the first page
+        List<SolrDagEdge> edges = getDAGDescendentRelationships(query,flatRows).getResultObjects();
+
+		// prune empty data rows
+		if(isFirstPage)
+		{
+			Set<String> rowsWithChildren = new HashSet<String>();
+			for(SolrDagEdge edge : edges)
+			{
+				rowsWithChildren.add(edge.getParentId());
+			}
+			Set<String> idsWithData = this.getExactStructureIds(query);
+			idsWithData.addAll(rowsWithChildren);
+
+			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
+			//logger.debug("pruned Rows = "+parentTerms.get(0).printTree());
+		}
+        //logger.debug("edges for mapper size="+edges.size());
+        //logger.debug(StringUtils.join(edges,", "));
+
+        // get matrix cells; add stages to mapper if this is a row-expansion
+        GxdMatrixMapper mapper = new GxdMatrixMapper(edges);
+
+        List<GxdMatrixCell> gxdMatrixCells = mapper.mapCells(flatRows, resultList);
+
+        // only generate row relationships on first page/batch
+        if (isFirstPage)
+        {
+        	gxdMatrixHandler.assignOpenCloseState(parentTerms,query,edges);
+        }
+
+		// add to the response object
+		GxdStageGridJsonResponse jsonResponse = new GxdStageGridJsonResponse();
+		jsonResponse.setParentTerms(parentTerms);
+		jsonResponse.setGxdMatrixCells(gxdMatrixCells);
+
+		logger.debug("sending json response");
+        return jsonResponse;
+	}
+
 
 	// -----------------------------------------------------------------//
 	// Methods for getting query counts
@@ -920,13 +1211,13 @@ public class GXDController {
 	 */
 	private boolean isDifferentialQuery(GxdQueryForm query)
 	{
-		return (query.getDifStructure()!=null && !query.getDifStructure().equals(""))
-				|| 
+		return (query.getDifStructureID()!=null && !query.getDifStructureID().equals(""))
+				||
 				(query.getDifTheilerStage().size() > 0);
 	}
-	
+
 	/*
-	 * Creates the differental part 1 filters, 
+	 * Creates the differental part 1 filters,
 	 * 	performs the query against gxdDifferentialMarker index
 	 * 	and returns the unique marker keys returned
 	 */
@@ -936,17 +1227,17 @@ public class GXDController {
 		List<Filter> queryFilters = new ArrayList<Filter>();
 
 		// init form fields
-		String structure = query.getStructure();
-		String difStructure = query.getDifStructure();
+		String structure = query.getStructureID();
+		String difStructure = query.getDifStructureID();
 		List<Integer> stages = query.getTheilerStage();
 		List<Integer> difStages = query.getDifTheilerStage();
-		
+
 		// figure out what kind of diff query this is
 		boolean hasStructures = (structure!=null && !structure.equals("")
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
 				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
-		
+
 		// perform structure diff
 		if(hasStructures && !hasStages)
 		{
@@ -1002,20 +1293,20 @@ public class GXDController {
 			dStageFilter.negate();
 			queryFilters.add(dStageFilter);
 		}
-		
 
-		
+
+
 		Filter difFilter = new Filter();
 		if(queryFilters.size() > 0)
 		{
 			difFilter.setNestedFilters(queryFilters,Filter.JoinClause.FC_AND);
 		}		
 		else return null;
-		
-		
+
+
 		SearchParams difSP = new SearchParams();
 		difSP.setFilter(difFilter);
-		
+
 		return gxdFinder.searchDifferential(difSP);
 	}
 	/*
@@ -1025,17 +1316,17 @@ public class GXDController {
 	{
 		ArrayList<Filter> queryFilters = new ArrayList<Filter>();
 		// init form fields
-		String structure = query.getStructure();
-		String difStructure = query.getDifStructure();
+		String structure = query.getStructureID();
+		String difStructure = query.getDifStructureID();
 		List<Integer> stages = query.getTheilerStage();
 		List<Integer> difStages = query.getDifTheilerStage();
-		
+
 		// figure out what kind of diff query this is
 		boolean hasStructures = (structure!=null && !structure.equals("")
 				&& difStructure!=null && !difStructure.equals(""));
 		boolean hasStages = (stages.size() > 0 && difStages.size()>0
 				&& !(stages.contains(GxdQueryForm.ANY_STAGE) && difStages.contains(GxdQueryForm.ANY_STAGE_NOT_ABOVE)));
-		
+
 		// perform structure diff
 		if(hasStructures && !hasStages)
 		{
@@ -1044,13 +1335,13 @@ public class GXDController {
 			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
 			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			Filter posFilter = Filter.and(posFilters);
-			
+
 			// create negative results filter
 			List<Filter> negFilters = new ArrayList<Filter>();
 			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
 			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
 			Filter negFilter = Filter.and(negFilters);
-			
+
 			// or them to bring back both datasets
 			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
 		}
@@ -1073,7 +1364,7 @@ public class GXDController {
 				posFilters.add(Filter.or(stageFilters));
 			}
 			Filter posFilter = Filter.and(posFilters);
-			
+
 			// create the negative results filter
 			List<Filter> negFilters = new ArrayList<Filter>();
 			negFilters.add(new Filter(SearchConstants.GXD_DETECTED,"No",Filter.Operator.OP_EQUAL));
@@ -1087,7 +1378,7 @@ public class GXDController {
 			// OR the stages together
 			negFilters.add(Filter.or(difStageFilters));
 			Filter negFilter = Filter.and(negFilters);
-			
+
 			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
 		}
 		else if(hasStructures && hasStages)
@@ -1110,7 +1401,7 @@ public class GXDController {
 				posFilters.add(Filter.or(stageFilters));
 			}
 			Filter posFilter = Filter.and(posFilters);
-			
+
 			// create negative results filter
 			List<Filter> negFilters = new ArrayList<Filter>();
 			negFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_EXACT,difStructure));
@@ -1125,32 +1416,32 @@ public class GXDController {
 			// OR the stages together
 			negFilters.add(Filter.or(difStageFilters));
 			Filter negFilter = Filter.and(negFilters);
-			
+
 			// or them to bring back both datasets
 			queryFilters.add(Filter.or(Arrays.asList(posFilter,negFilter)));
 		}
-		
+
 		// all results MUST be wild type (broad definition)
 		queryFilters.add(new Filter(SearchConstants.GXD_IS_WILD_TYPE, WILD_TYPE));
-		
+
 		return Filter.and(queryFilters);
 	}
-	
+
 	/*
 	 * Factored out building the anatomy style filter, because 1) it is complicated
 	 * 	and 2) it is used in many places
 	 */
-	public Filter makeStructureSearchFilter(String queryField, String structure)
+	public Filter makeStructureSearchFilter(String queryField, String structureId)
 	{
-		Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
-
-		String phraseSearch = "";
-		for(String structureToken : structureTokens)
-		{
-			logger.debug("token="+structureToken);
-			phraseSearch += structureToken+" ";
-		}
-		if(!phraseSearch.trim().equals(""))
+//		Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
+//
+//		String phraseSearch = "";
+//		for(String structureToken : structureTokens)
+//		{
+//			logger.debug("token="+structureToken);
+//			phraseSearch += structureToken+" ";
+//		}
+		if(!structureId.trim().equals(""))
 		{
 			// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
 			String sToken = "\""+phraseSearch+"\"~100";
@@ -1158,7 +1449,7 @@ public class GXDController {
 		}
 		return null;
 	}
-	
+
 	/*
 	 * This method parses the GxdQueryForm bean and constructs a Filter
 	 * object to represent the query.
@@ -1200,6 +1491,35 @@ public class GXDController {
 			query.getWildtypeFilter(), Filter.Operator.OP_IN));
 		}
 
+		if(query.getStructureIDFilter().size() > 0) {
+			facetList.add(new Filter(SearchConstants.STRUCTURE_ID,
+			query.getStructureIDFilter(), Filter.OP_IN));
+		}
+
+		if(query.getMarkerSymbolFilter().size() > 0) {
+			facetList.add(new Filter(SearchConstants.MRK_SYMBOL,
+			query.getMarkerSymbolFilter(), Filter.OP_IN));
+		}
+		
+
+		// matrix only query fields
+		// absolute filter on structure ID (used by popups to restrict query to only this structure, but still keep the other structure queries and filters
+		if(query.getMatrixStructureId() !=null && query.getMatrixStructureId().size() > 0) {
+			List<Filter> matrixStructureFilters = new ArrayList<Filter>();
+			for(String matrixStructureId : query.getMatrixStructureId())
+			{
+				matrixStructureFilters.add(new Filter(SearchConstants.STRUCTURE_ID,matrixStructureId,Filter.OP_EQUAL));
+			}
+			if(matrixStructureFilters.size() > 0)
+			{
+				queryFilters.add(Filter.or(matrixStructureFilters));
+			}
+		}
+		if(query.getMatrixMarkerSymbol() !=null && !query.getMatrixMarkerSymbol().equals("")) {
+				queryFilters.add(new Filter(SearchConstants.MRK_SYMBOL, query.getMatrixMarkerSymbol()));
+		}
+
+
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.
 		// the first this we need to check is if we have differential params
@@ -1219,7 +1539,7 @@ public class GXDController {
 			}
 			// add the 2nd part of the differential query (I.e. what results to display for the given markers)
 			queryFilters.add(makeDifferentialPart2Filter(query));
-			
+
 			if (facetList.size() > 0) {
 			    queryFilters.addAll(facetList);
 			}
@@ -1227,9 +1547,9 @@ public class GXDController {
 			return Filter.and(queryFilters);
 			// NOTE: THIS WAS A DIFFERENTIAL QUERY, THE BELOW CODE ONLY APPLIES TO STANDARD QUERY FORM
 		}
-		
+
 		// Process STANDARD QUERY FORM params
-		
+
 		// prep form parameter variables
 		String markerMgiId = query.getMarkerMgiId();
 		String jnum = query.getJnum();
@@ -1239,10 +1559,32 @@ public class GXDController {
 		String alleleId = query.getAlleleId();
 		String probeKey = query.getProbeKey();
 		String antibodyKey = query.getAntibodyKey();
+		String markerSymbol = query.getMarkerSymbol();
 
 		if(structureKey !=null && !structureKey.equals("")) {
 			Filter structureKeyFilter = new Filter(SearchConstants.STRUCTURE_KEY, structureKey);
 			queryFilters.add(structureKeyFilter);
+		}
+
+		// spatial location
+		if(query.getLocations() !=null && !query.getLocations().equals("")) {
+			List<String> tokens = QueryParser.tokeniseOnWhitespaceAndComma(query.getLocations());
+			List<Filter> locationFilters = new ArrayList<Filter>();
+			for(String token : tokens){
+				String spatialQueryString = SolrLocationTranslator.getQueryValue(token);
+				if(spatialQueryString !=null && !spatialQueryString.equals("")) {
+					locationFilters.add(new Filter(SearchConstants.MOUSE_COORDINATE,spatialQueryString,Filter.OP_HAS_WORD));
+				}
+			}
+			if(locationFilters.size() > 0)
+			{
+				queryFilters.add(Filter.or(locationFilters));
+			}
+			else
+			{
+				// this enables location query to fail if input is invalid
+				queryFilters.add(new Filter(SearchConstants.MRK_KEY,"NO_MARKERS_FOUND",Filter.OP_EQUAL));
+			}
 		}
 
 		// special case...  if we have a structure ID and a structure,
@@ -1282,6 +1624,10 @@ public class GXDController {
 			Filter antibodyKeyFilter = new Filter(SearchConstants.ANTIBODY_KEY, antibodyKey);
 			queryFilters.add(antibodyKeyFilter);
 		}
+		if(markerSymbol !=null && !markerSymbol.equals("")) {
+			Filter markerSymbolFilter = new Filter(SearchConstants.MRK_SYMBOL, markerSymbol);
+			queryFilters.add(markerSymbolFilter);
+		}
 
 		String nomenclature = query.getNomenclature();
 		String annotationId = query.getAnnotationId();
@@ -1303,7 +1649,7 @@ public class GXDController {
 				|| detected.equalsIgnoreCase("explicit-yes"))
 		{
 			List<Filter> dFilters = new ArrayList<Filter>();
-			
+
 			// UPDATE: 2013-04-24 GXD changed their mind and does not want to return ambiguous results for detected radio buttons.
 			// I am merely commenting out the code in case they change their mind again  - kstone
 			if(detected.equalsIgnoreCase("yes"))
@@ -1738,21 +2084,24 @@ public class GXDController {
 	    SearchResults<SolrString> facetResults = null;
 
 	    if (FacetConstants.GXD_SYSTEM.equals(facetType)) {
-		facetResults = gxdFinder.getSystemFacet(params);
+	    	facetResults = gxdFinder.getSystemFacet(params);
 
 	    } else if (FacetConstants.GXD_ASSAY_TYPE.equals(facetType)) {
-		facetResults = gxdFinder.getAssayTypeFacet(params);
+	    	facetResults = gxdFinder.getAssayTypeFacet(params);
 
 	    } else if (FacetConstants.GXD_DETECTED.equals(facetType)) {
-		facetResults = gxdFinder.getDetectedFacet(params);
-		order = DETECTED;
+			facetResults = gxdFinder.getDetectedFacet(params);
+			order = DETECTED;
 
 	    } else if (FacetConstants.GXD_THEILER_STAGE.equals(facetType)) {
-		facetResults = gxdFinder.getTheilerStageFacet(params);
-		order = RAW;
+			facetResults = gxdFinder.getTheilerStageFacet(params);
+			order = RAW;
 
 	    } else if (FacetConstants.GXD_WILDTYPE.equals(facetType)) {
-		facetResults = gxdFinder.getWildtypeFacet(params);
+	    	facetResults = gxdFinder.getWildtypeFacet(params);
+	    }
+	    else {
+	    	facetResults = new SearchResults<SolrString>();
 	    }
 
 	    return this.parseFacetResponse(facetResults, order);
@@ -1822,52 +2171,111 @@ public class GXDController {
 	    Map<String, List<String>> m = new HashMap<String, List<String>>();
 	    List<String> l = new ArrayList<String>();
 
-	    if (facetResults.getRawResultFacets().size() >= facetLimit) {
-		l.add("Too many results to display. Modify your search or try another filter first.");
-		m.put("error", l);
-	    } else if (facetResults.getRawResultFacets().size() == 0) {
-		l.add("No values in results to filter.");
-		m.put("error", l);
-	    } else if (ALPHA.equals(order)) {
-		m.put("resultFacets", facetResults.getResultFacets());
-	    } else if (RAW.equals(order)) {
-		m.put("resultFacets", facetResults.getRawResultFacets());
-	    } else {
-		// DETECTED.equals(order)
 
-		List<String> values = facetResults.getRawResultFacets();
-		Collections.sort (values, new DetectedComparator());
-		facetResults.setResultFacets(values);
-		m.put("resultFacets", facetResults.getRawResultFacets());
+	    if (facetResults.getResultFacets().size() >= facetLimit) {
+	    	l.add("Too many results to display. Modify your search or try another filter first.");
+	    	m.put("error", l);
+	    } else if (facetResults.getResultFacets().size() == 0) {
+			l.add("No values in results to filter.");
+			m.put("error", l);
+	    } else if (ALPHA.equals(order)) {
+	    	m.put("resultFacets", facetResults.getSortedResultFacets());
+	    } else if (RAW.equals(order)) {
+	    	m.put("resultFacets", facetResults.getResultFacets());
+	    } else {
+			// DETECTED.equals(order)
+
+			List<String> values = facetResults.getResultFacets();
+			Collections.sort (values, new DetectedComparator());
+			facetResults.setResultFacets(values);
+			m.put("resultFacets", facetResults.getResultFacets());
 	    }
+
 	    return m;
 	}
 
     private class DetectedComparator implements Comparator<String> {
 
-	private final List<String> orderedItems = Arrays.asList (
-	    new String[] { "Yes", "No", "Ambiguous", "Not Specified" });
+		private final List<String> orderedItems = Arrays.asList (
+		    new String[] { "Yes", "No", "Ambiguous", "Not Specified" });
 
-	public int compare (String a, String b) {
-	    int aIndex = orderedItems.indexOf(a);
-	    int bIndex = orderedItems.indexOf(b);
+		public int compare (String a, String b) {
+		    int aIndex = orderedItems.indexOf(a);
+		    int bIndex = orderedItems.indexOf(b);
 
-	    // normal case: both a and b were in the orderedItems list
+		    // normal case: both a and b were in the orderedItems list
 
-	    if ((aIndex >= 0) && (bIndex >= 0)) {
-		if (aIndex < bIndex) { return -1; }
-		else if (aIndex > bIndex) { return 1; }
-		else { return 0; }
-	    }
+		    if ((aIndex >= 0) && (bIndex >= 0)) {
+			if (aIndex < bIndex) { return -1; }
+			else if (aIndex > bIndex) { return 1; }
+			else { return 0; }
+		    }
 
-	    // secondary cases: only one of them was in the list
-	    
-	    if (aIndex >= 0) { return -1; }
-	    if (bIndex >= 0) { return 1; }
+		    // secondary cases: only one of them was in the list
 
-	    // tertiary case: neither was in the list -- sort alpha
+		    if (aIndex >= 0) { return -1; }
+		    if (bIndex >= 0) { return 1; }
 
-	    return a.compareToIgnoreCase(b);
-	}
+		    // tertiary case: neither was in the list -- sort alpha
+
+		    return a.compareToIgnoreCase(b);
+		}
     }
+    
+    /*
+     * Matrix related methods 
+     */
+    public SearchResults<SolrDagEdge> getDAGDirectRelationships(GxdQueryForm query,List<GxdMatrixRow> parentTerms)
+	{
+		SearchParams params = new SearchParams();
+		params.setPageSize(100000);
+		params.setFilter(this.parseGxdQueryForm(query));
+		List<String> parentIds = new ArrayList<String>();
+		for(GxdMatrixRow term : parentTerms)
+		{
+			parentIds.add(term.getRid());
+		}
+		return gxdFinder.searchMatrixDAGDirectEdges(params, parentIds);
+	}
+    
+    public SearchResults<SolrDagEdge> getDAGDescendentRelationships(GxdQueryForm query,List<GxdMatrixRow> parentTerms)
+	{
+		SearchParams params = new SearchParams();
+		params.setPageSize(100000);
+		params.setFilter(this.parseGxdQueryForm(query));
+		List<String> parentIds = new ArrayList<String>();
+		for(GxdMatrixRow term : parentTerms)
+		{
+			parentIds.add(term.getRid());
+		}
+		return gxdFinder.searchMatrixDAGDescendentEdges(params, parentIds);
+	}
+    
+    private Set<String> getExactStructureIds(GxdQueryForm query)
+	{
+		SearchParams params = new SearchParams();
+		params.setPageSize(100000);
+		params.setFilter(parseGxdQueryForm(query));
+		SearchResults<SolrString> sr = gxdFinder.searchStructureIds(params);
+		Set<String> ids = new HashSet<String>();
+		for(SolrString s : sr.getResultObjects())
+		{
+			ids.add(s.toString());
+		}
+		return ids;
+	}
+
+	private Set<String> getStagesInMatrix(GxdQueryForm query)
+	{
+		SearchParams params = new SearchParams();
+		params.setPageSize(100000);
+		params.setFilter(parseGxdQueryForm(query));
+		SearchResults<SolrString> sr = gxdFinder.searchStagesInMatrix(params);
+		Set<String> stages = new HashSet<String>();
+		for(SolrString s : sr.getResultObjects())
+		{
+			stages.add(s.toString());
+		}
+		return stages;
+	}
 }

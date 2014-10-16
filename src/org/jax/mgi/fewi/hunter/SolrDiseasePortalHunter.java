@@ -24,11 +24,11 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
-import org.jax.mgi.fewi.searchUtil.entities.SolrHdpEntity;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridData;
 import org.jax.mgi.fewi.searchUtil.entities.SolrString;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
+import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
 import org.jax.mgi.fewi.sortMapper.SolrSortMapper;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.springframework.beans.factory.annotation.Value;
@@ -399,6 +399,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
         		// return just the marker key for now
         		//sr.addResultObjects(markerKey);
         		if(markerKey != null) keys.add(markerKey.toString());
+        		String markerKeyString = markerKey != null ? markerKey.toString() : "";
 
         		if(!sp.getFetchKeysOnly())
         		{
@@ -422,7 +423,7 @@ public class SolrDiseasePortalHunter extends SolrHunter<SolrHdpEntity>
 
 	        		sr.addResultObjects(dpMarker);
         		}
-        		keyToGroupKeyMap.put(uniqueKey,markerKey.toString());
+        		keyToGroupKeyMap.put(uniqueKey,markerKeyString);
 
         	}
         	else if(gc.getName().equals(DiseasePortalFields.TERM_HEADER))

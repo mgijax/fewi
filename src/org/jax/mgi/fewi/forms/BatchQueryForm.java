@@ -149,7 +149,7 @@ public class BatchQueryForm {
 		if (fileType != null && !"".equals(fileType)){
 			params.add("fileType=" + fileType);
 		}
-		if (idColumn != null && !"".equals(idColumn)){
+		if (idColumn != null){
 			params.add("idColumn=" + idColumn);
 		}
 		if (idType != null && !"".equals(idType)){

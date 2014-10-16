@@ -5,8 +5,12 @@ import mgi.frontend.datamodel.Reference;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.Highlighter;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReferenceSummary {
+	private final Logger logger = LoggerFactory.getLogger(ReferenceSummary.class);
+	
 	private Reference reference;
 	private String score;
 	private final String pmUrl = ContextLoader.getExternalUrls().getProperty("PubMed");
@@ -20,7 +24,9 @@ public class ReferenceSummary {
 		this.reference = reference;
 		try{
 			this.ntc = new NotesTagConverter();
-		}catch(Exception e){}
+		}catch(Exception e){
+			logger.error(e.getMessage(),e);
+		}
 	}
 
 	public void setReference(Reference reference) {

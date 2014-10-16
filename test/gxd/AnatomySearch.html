@@ -13,53 +13,61 @@
 	.hide {display: none;}
 </style>
 
-    <title>Anatomy Term Search</title>
+    <title>Anatomy Term Input Field</title>
 </head>
 
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
 <body>
 
 <div id="TOC">
-	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
 <div id="maintitle">
-    <h1>Anatomy Term Search</h1>
+    <h1>Anatomy Term Input Field</h1>
     <ul>
-        <li>User story 10, Build autocomplete for Anatomy term search</li>
-        <li>User story 11, Search for expression results by Anatomy term</li>
-        <li>User story 88, Implement stop word list to anatomy search</li>
-        <li>User story 48, Change anatomy autocomplete handling of synonyms</li>
-    </ul>
+        <li>User story 16, E1: GXD QF: Anatomy Search -&gt; ID based</li>
+	</ul>
 </div>
 
 <div id="acceptance">
-    <h2>Acceptance Criteria</h2>
+	<h2>Acceptance Criteria</h2>
 	<ul>
-		<li>Story 10: input text causes a dropdown list to appear with matching structure and synonyms</li>
-		<li>Story 10: when the user selects a term, the input box is populated with the selected text</li>
-		<li>Story 10: sorting is by score (exact matches first), then by alpha</li>
-		<li>Story 10: support string tokens (i.e. ""le lo"" includes ""left lobe"")</li>
-		<li>Story 10: does not support selecting multiple Structure Names</li>
-		<li>Story 11: user may select only one option from autocomplete list, and this text may be a Term or a Synonym text string from the AD</li>
+		<li>(sto16) when user selects an anatomy term from the dropdown, the query is by that term's ID, rather than by its text
+		<ul>
+			<li>Example: search for 'limb'. Results should only include those for descendants of EMAPA:16405 (limb). It shoud NOT include things like "thin descending limb of outer medulla" (under renal system, loop of Henle)</li>
+		</ul>
+		</li>
+		<li>(sto16) Cre search should NOT change (i.e., it should still search based on text tokens.)</li>
+	</ul>
+</div>
+
+<div id="requirements">
+    <h2>Functional Requirements</h2>
+	<ul>
+		<li>Input text causes an autocomplete dropdown list to appear with matching structure and synonym text from EMAPA</li>
+		<li>Append to each displayed item the valid Theiler Stage range (example: "muscle TS20-28") (sto16) </li>
+		<li>For synonyms in the autocomplete, display the list item in the form: "actual term (synonym) TS range" (example: "esophagus lumen (esophageal lumen) TS16-26") (sto16)</li>
+		<li>Each unique EMAPA Term is displayed only once.</li>
+		<li>User may select only one option from autocomplete list, and this text may be a Term or a Synonym</li>
+		<li>If the user selects a term, the input box is populated with the selected text (example: "muscle TS20-28") (sto16)</li>
+		<li>If the user selects a term with a synonym in the autocomplete, display the full text from the dropdown list in the query field (example: "esophagus lumen (esophageal lumen) TS16-26") (sto16)</li>
+		<li>Support string tokens (i.e. "le lo" includes "left lobe")</li>
+		<li>Employ a Stop Words list (and,from,of,or,the,their,to)<i>(as of 7/06/12)</i></li>
+		<li>DO NOT perform stemming</li>
+		<li>Treat special characters (ampersand, at symbol, hyphen, apostrophe, slash, etc.) as if they were whitespace</li>
+		<li>Sorting in the autocomplete list is by score (exact matches first), then by alpha</li>
+		<li>Reset button clears the widget</li>
+
+<!-- 
 		<li>Story 11: selected input text tokens are matched against Structure Name (ANDing tokens)</li>
 		<li>Story 11: selected input text tokens are also matched against Synonyms (ANDing tokens) in order to find associated Structure Names</li>
-		<li>Story 11: all expression results associated with all matching Structure Names and their child structures are returned </li>
-		<li>Story 11: other parameters AND'ed to this</li>
-		<li>Story 11: reset button clears the widget</li>
-		<li>Story 11: update display user's query parameters</li>
-		<li>Story 11: update user help</li>
-		<li>Story 11: DO NOT update the autocomplete handling of synonyms to be like the vocab autocomplete
-			<ul>
-				<li>for each synonym, DO NOT display the structure name in square brackets</li>
-			</ul>
-		</li>
-		<li>Story 11: the autocomplete will continue to display both Terms and Synonyms, undistinguished from one another, which match to the user's typed text</li>
-		<li>Story 88: Employ a Stop Words list (and,from,of,or,the,their,to)<i>(as of 7/06/12)</i></li>
-		<li>Story 88: DO NOT perform stemming</li>
-		<li>Story 88: treat special characters (ampersand, at symbol, hyphen, apostrophe, slash, etc.) as if they were whitespace</li>
-		<li>Story 48: For synonyms in the autocomplete, display the text of the synonym and "[synonym]" after it</li>
-		<li>Story 48: Do this if it is only a synonym. If the text is a real term somewhere in the anatomy and a synonym elsewhere, don't display "[synonym]"</li>
-		<li>Story 48: If the user selects a synonym in the autocomplete, display the synonym in the query field and search for terms/synonyms that contain all the tokens from that synonym. (Do not display the text "[synonym]".)</li>
+		<li>All expression results associated with the matching EMAPA ID and child structures are returned (sto16) </li>
+ -->
 	</ul>
 </div>
 
@@ -75,79 +83,113 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-			<h4>Sto 10: Basic Autocomplete</h4>
-	     		<li>Test that a structure when selected gets put into the input box
-	     		<p concordion:manual="true">Passed jeffc 08/10/2012</p>
-	    		<ol>
-	                <li>open GXD query form and make sure anatomy field is clear</li>
-					<li>type <b>brain</b> in the Anatomy field</li>
-					<li>click on <b>brain</b> in the dropdown list</li>
-					<li>verify that the <b>input box is populated with brain</b></li>
-	    		</ol>
-	    		</li>
-	    		<li>Test that a synonym when selected puts the synonym in the input box instead of synonym
-	    		<p concordion:manual="true">Passed jeffc 08/10/2012</p><i>Note: this logic was changed during story #11 (Anatomy Term search)</i>
-	    		<ol>
-	                <li>open the GXD query form</li>
-					<li>type <b>myocardium</b> into the Anatomy field</li>
-					<li>click on <b>myocardium</b> in the dropdown</li>
-					<li>verify that the <b>input box is populated with myocardium</b></li>
-	    		</ol>
-	    		</li>
-	
-	    		<li>Test that autocomplete starts when you enter the second character
-	    		<p concordion:manual="true">Passed jeffc 08/10/2012</p>
-	    		<ol>
-	                <li>open the GXD query form and clear the anatomy field</li>
-					<li>type the character <b>b</b> in the anatomy field and wait a few seconds</li>
-					<li>verify that no dropdown appears</li>
-					<li>continue typing entering the character <b>r</b></li>
-					<li>verify that <b>the dropdown list appears, and terms in the list contain words beginning with "br"</b></li>
-	    		</ol>
-	    		</li>
-	    		<li>Test that tokens are ANDed
-	    		<p concordion:manual="true">Passed jeffc 08/10/2012</p>
-	    		<ol>
-	                <li>open the GXD query form and clear the anatomy field</li>
-					<li>type <b>cardiac brain</b> in the anatomy field</li>
-					<li>verify that <b>the dropdown appears after typing cardiac, but has disappeared by the time you finish typing brain</b></li>
-	    		</ol>
-	    		</li>
-	    		<li>Test that sorting of the autocomplete list is by exact match to a completed token, and then by smart-alpha
-	    		<p concordion:manual="true">Passed jeffc 8/10/2012</p>
-	    		<ol>
-	                <li>open the GXD query form and clear the anatomy field</li>
-					<li>type <b>epithel</b> in the anatomy field</li>
-					<li>verify that <b>the dropdown list is presented in alphabetical order (case insensitive)</b></li>
-					<li>complete typing <b>epithelium</b> in the anatomy field</li>
-					<li>verify that <b>epithelium</b> is the first value in the dropdown list</li>
-					<li>verify that two-token terms appear next in the list, in alphabetical order (case insensitive)</li>
-					<li>verify that terms having 3 or more tokens appear after single- and two-token terms, and are in alphabetical order (case insensitive)</li> 
-	    		</ol>
-	    		</li>
-			<li>Test reset button clears all fields
-			    <p concordion:manual="true">Passed jeffc 08/10/2012</p>
-				<ol>
-					<li>open the GXD query form and enter <b>text in the anatomy field and in the Nomen field</b></li>
-					<li><b>Press the Reset button</b></li>
-					<li>verify that <b>Anatomy text and Nomen text disappears</b></li>
-				</ol>
+     		<li>Structure matching the input text appears as <b>term with TS range</b> in the autocomplete; the selected structure and TS range are placed in the input box (revised for sto16)
+     		<p concordion:manual="true">passed. -klf 2014-05-29</p>
+    		<ol>
+                <li>open GXD query form and make sure anatomy field is clear.</li>
+				<li>type <b>brain</b> in the Anatomy field.</li>
+				<li>verify <b>brain TS17-28</b> appears in the dropdown list and select it.</li>
+				<li>verify that the input box is populated with <b>brain TS17-28</b></li>
+    		</ol>
+    		</li>
+
+    		<li>Synonym matching the input text appears as <b>term (synonym) TS range</b> in the autocomplete; the selected structure, synonym, and TS range are placed in the input box (revised for sto16)
+     		<p concordion:manual="true">passed. -klf 2014-05-29</p>
+    		<ol>
+                <li>open the GXD query form and make sure anatomy field is clear.</li>
+				<li>type <b>myocardium</b> into the Anatomy field.</li>
+				<li>verify <b>cardiac muscle tissue (myocardium) TS12-28</b> appears in the dropdown list and select it.</li>
+				<li>verify that the input box is populated with <b>cardiac muscle tissue (myocardium) TS12-28</b>.</li>
+    		</ol>
+    		</li>
+
+    		<li>Autocomplete starts when you enter the second character
+     		<p concordion:manual="true">passed. -klf 2014-05-29</p>
+    		<ol>
+                <li>open the GXD query form and clear the anatomy field</li>
+				<li>type the character <b>b</b> in the anatomy field and wait a few seconds</li>
+				<li>verify that no dropdown appears</li>
+				<li>continue typing entering the character <b>r</b></li>
+				<li>verify that <b>the dropdown list appears, and terms in the list contain words beginning with "br"</b></li>
+    		</ol>
+    		</li>
+
+    		<li>Tokens are ANDed (revised for sto16)
+     		<p concordion:manual="true">passed. -klf 2014-05-29</p>
+    		<ol>
+                <li>open the GXD query form and clear the anatomy field.</li>
+				<li>type <b>cardiac brain</b> in the anatomy field.</li>
+				<li>verify that <b>the dropdown appears after typing cardiac, but has disappeared by the time you finish typing brain</b>.</li>
+				<li>clear the anatomy field.</li>
+				<li>type <b>le lo</b> in the anatomy field.</li>
+				<li>verify that <b>liver left lobe (left hepatic lobe) TS22-28</b> appears in the dropdown list.</li>
+    		</ol>
+    		</li>
+
+    		<li>Sorting of the autocomplete list is by exact match to a completed token, and then by smart-alpha<br/>
+    		<i>What we're apparently actually doing:</i> 1.exact matches, 2.first-token matches in 2-token strings, by count of tokens, 3.it gets weird... REVISE THIS TEST? -klf 5/30/2014
+    		<p concordion:manual="true">tested and passed during original GXD QF release</p>
+    		<ol>
+                <li>open the GXD query form and clear the anatomy field</li>
+				<li>type <b>epithel</b> in the anatomy field</li>
+				<li>verify that <b>the dropdown list is presented in alphabetical order (case insensitive)</b></li>
+				<li>complete typing <b>epithelium</b> in the anatomy field</li>
+				<li>verify that <b>epithelium</b> is the first value in the dropdown list</li>
+				<li>verify that two-token terms appear next in the list, in alphabetical order (case insensitive)</li>
+				<li>verify that terms having 3 or more tokens appear after single- and two-token terms, and are in alphabetical order (case insensitive)</li> 
+    		</ol>
+    		</li>
+
+			<li>Reset button clears all fields
+    		<p concordion:manual="true">passed. -klf 2014-05-29</p>
+			<ol>
+				<li>open the GXD query form and enter <b>text in the anatomy field and in the Nomen field</b></li>
+				<li><b>Press the Reset button</b></li>
+				<li>verify that <b>Anatomy text and Nomen text disappears</b></li>
+			</ol>
 			</li>
-			<li>Test that special characters are treated as white space
-	    		<p concordion:manual="true">Passed jeffc 08/10/2012</p>
-				<ol>
-	                <li>open the GXD query form and clear the anatomy field</li>
-					<li>type <b>cranio facial</b> in the anatomy field</li>
-					<li>verify that <b>cranio-facial muscle</b> appears in the dropdown list</li>
-					<li>type <b>vagus ganglion gasserian</b> in the anatomy field</li>
-					<li>verify that <b>superior vagus ganglion, gasserian ganglion</b> appears in the dropdown list</li>
-					<li>type <b>rathke s</b> in the anatomy field</li>
-					<li>verify that <b>Rathke's pouch</b> appears in the dropdown list</li>
-					<li>type <b>rathke's</b> in the anatomy field</li>
-					<li>verify that <b>Rathke's pouch</b> appears in the dropdown list</li>
-				</ol>
+
+			<li>Special characters are treated as white space (revised for sto16)
+    		<p concordion:manual="true">passed. -klf 2014-05-30</p>
+			<ol>
+                <li>open the GXD query form and clear the anatomy field</li>
+				<li>type <b>cranio facial</b> in the anatomy field</li>
+				<li>verify that <b>craniofacial muscle (cranio-facial muscle) TS28</b> appears in the dropdown list</li>
+				<li>type <b>cranio-facial</b> in the anatomy field</li>
+				<li>verify that <b>craniofacial muscle (cranio-facial muscle) TS28</b> appears in the dropdown list</li>
+				<li>type <b>Henle inn</b> in the anatomy field</li>
+				<li>verify that <b>loop of Henle, inner medullary portion TS25-28</b> appears in the dropdown list</li>
+				<li>type <b>Henle, inn</b> in the anatomy field</li>
+				<li>verify that <b>loop of Henle, inner medullary portion TS25-28</b> appears in the dropdown list</li>
+				<li>type <b>rathke s</b> in the anatomy field</li>
+				<li>verify that <b>Rathke's pouch TS15-19</b> appears in the dropdown list</li>
+				<li>verify that <b>Rathke's pouch TS14</b> appears in the dropdown list </li>
+				<li>type <b>rathke's</b> in the anatomy field</li>
+				<li>verify that <b>Rathke's pouch TS15-19</b> appears in the dropdown list</li>
+				<li>verify that <b>Rathke's pouch TS14</b> appears in the dropdown list</li>
+			</ol>
 			</li>
-			<h4>Sto 48: Autocomplete with Synonyms</h4>
+			
+			<li>"Duplicate" terms having different Theiler Stage ranges appear as separate entries in the Autcomplete list.
+    		<p concordion:manual="true">passed. -klf 2014-05-30</p>
+			<ol>
+				<li>type <b>esophagus epithelium</b> in the anatomy field.</li>
+				<li>verify that <b>esophagus epithelium TS23</b>, <b>esophagus epithelium TS24-28</b>, and <b>esophagus epithelium TS16-22</b> all appear in the autocomplete list.</li>
+			</ol>
+			</li>
+			
+			<li>"Duplicate" synonyms associated with different terms appear as separate entries in the Autcomplete list.
+    		<p concordion:manual="true">passed. -klf 2014-05-29</p>
+			<ol>
+				<li>type <b>germinal epithelium</b> in the anatomy field.</li>
+				<li>verify that <b>coelomic epithelium of gonad primordium (germinal epithelium) TS17-18</b> and <b>coelomic epithelium of gonad (germinal epithelium) TS19</b> both appear in the autocomplete list.</li>
+			</ol>
+			</li>
+		</ol>
+
+<!-- NO LONGER NEEDED. TERMS AND SYNONYMS ARE BEING COMPLETELY, EXPLICITLY SPELLED OUT. 5/19/2014 -klf
+		<h4>Sto 48: Autocomplete with Synonyms</h4>
+		<ol>
     		<li>Text in the autocomplete list that corresponds to one or more synonyms but no primary terms should display [synonym] next to the text.
  			<p concordion:manual="true">jeffc 8/10/2012</p> 
     		<ol>
@@ -156,6 +198,7 @@
                 <li>Verify that <b>[synonym]</b> appears next to the text &quot;heart muscle&quot;.</li>
     		</ol>
     		</li>
+
     		<li>Text in the autocomplete list that corresponds to one or more synonyms and also one or more primary terms should NOT display [synonym] next to the text.
  			<p concordion:manual="true">jeffc 8/10/2012</p> 
     		<ol>
@@ -164,6 +207,7 @@
                 <li>Verify that <b>[synonym] DOES NOT appear</b> next to the text &quot;kidney&quot;. <i>(A primary term in TS 28 but a synonym in other Stages.)</i></li>
     		</ol>
     		</li>
+
     		<li>Text in the autocomplete list that corresponds to one or more primary terms should NOT display [synonym] next to the text.
  			<p concordion:manual="true">jeffc 8/10/2012</p> 
     		<ol>
@@ -172,74 +216,68 @@
                 <li>Verify that <b>[synonym] DOES NOT appear</b> next to the text &quot;cardiac muscle&quot;.</li>
     		</ol>
     		</li>
-    		<h4>Sto 11, Sto 88: Anatomy Term Search</h4>
-    		<li>The selected text is placed in the input box (this is a change)
-			<p concordion:manual="true">passed jeffc 08/10/2012</p> 
-    		<ol>
-    			<li>Begin typing <b>myocardium</b> in the input text box</li>
-    			<li>Select <b>myocardium</b> from the autocomplete list</li>
-    			<li>Verify the input text box is populated with the text <b>myocardium</b> and not <b>cardiac muscle</b></li>
-    		</ol>
-    		</li>
-    		<li>The selected text tokens are AND'ed and search against both Terms and Synonyms
- 			<p concordion:manual="true">passed jeffc 08/10/2012</p> 
-    		<ol>
-    			<li>Begin typing <b>myoc</b> in the input text box</li>
-    			<li>Verify that <b>myocoele</b> appears in the autocomplete list (a Structure Name Term)</li>
-    			<li>Verify that <b>myocardium</b> appears in the autocomplete list (a Synonym)</li>
-    			<li>Continue typing... add a space and then <b>som</b></li>
-    			<li>Verify that all displayed terms are <b>somite 05 myocoele</b> through <b>somite 60 myocoele</b></li>
-    		</ol>
-    		</li>
-		</ol>
+    	</ol>
+ -->
 	</div>
+
+
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
-	   		<li>Test the ID
+	   		<li><!-- Test the ID -->Text in the input field that matches EMAPA Terms or Synonyms appears in every item in the autocomplete list; no items appear which do not contain the input text.
 	    		<ol>
 	                <li>open GXD query form and make sure anatomy field is clear</li>
 					<li>type <b concordion:set="#query">brain</b> in the Anatomy field</li>
 					<li>verify that <b cc:assertAllResultsContainText="getTerms(#query)">brain</b> appears in every result in the dropdown list</li>
 	    		</ol>
 	    	</li>
-	    	<li>Test that a synonym when entered appears in the dropdown
+
+	    	<li>Text in the input field that matches EMAPA Synonyms produces the associated Terms in the autocomplete list
 	    		<ol>
 	    			<li>open the GXD query form and make sure the anatomy field is clear</li>
 					<li>type <b concordion:set="#query">myocardium</b> (a synonym of cardiac muscle) in to the Anatomy field</li>
 					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">myocardium</b> appears in the dropdown</li>
 	    		</ol>
 	    	</li>
-	    	<li>Test that a term appears only once in the dropdown
+
+	    	<li>Each term appears only once in the dropdown
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
 					<li>Type <b concordion:set="#query">vein</b> in the anatomy field</li>
-					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">vein</b> appears only once in the dropdown</li>
-					<li>verify that <b cc:assertResultsContain="getTerms(#query)">vein</b> appears somewhere in the dropdown</li>
-					<li>verify that <b cc:assertAllResultsContainText="getTerms(#query)">vein</b> appears in every result in the dropdown list</li>
+					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">vein</b> TS12-28 appears only once in the dropdown</li>
+					<li>clear the anatomy field </li>
+					<li>type <b>esophagus</b> in the anatomy field <i>not automated</i></li>
+					<li>verify that <b>esophagus TS16-28</b> appears only once in the dropdown</li>
 	    		</ol>
 	    	</li>
-	    	<li>Test finding a term that has a special character in it
+
+	    	<li>Non-alphanumeric characters do not break the autocomplete
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
 					<li>type <b concordion:set="#query">4-cell stage embryo</b> in the Anatomy field</li>
 					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">4-cell stage embryo</b> appears in the dropdown</li>
 	    		</ol>
 	    	</li>
-	    	<li>Test multiple tokens
+
+	    	<li>Multiple tokens are AND'ed together
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
 					<li>type <b concordion:set="#query">renal cortex</b> in the anatomy field</li>
-					<li><b cc:assertValueAppearsOnlyOnce="getTerms(#query)">renal cortex</b> should appear in the dropdown and not cortex or renal vascluature, etc</li>
+					<li><b cc:assertValueAppearsOnlyOnce="getTerms(#query)">renal cortex</b> should appear in the dropdown.</li>
+					<li><b cc:assertNoResultsContain="getTerms(#query)">adrenal cortex</b> does not appear by itself</li>
+					<li><b cc:assertNoResultsContain="getTerms(#query)">renal vasculature</b> does not appear</li>
 	    		</ol>
 	    	</li>
-	    	<li>Test multiple partial tokens
+
+	    	<li>Multiple partial tokens are AND'ed together, each token is treated as "Begins" to find matching terms, and proximity (terms or tokens being next to one another) is not required
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
-					<li>type <b concordion:set="#query">le lu</b> in the anatomy field</li>
+					<li>type <b concordion:set="#query">lu le</b> in the anatomy field</li>
 					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">left lung</b> is in the dropdown</li>
+					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">left atrium lumen</b> is in the dropdown</li>
 	    		</ol>
 	    	</li>
+
 	    	<li>Test that special characters do not break the anatomy field
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
@@ -251,6 +289,7 @@
 					<li>verify no dropdown should appear, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
 				</ol>
 	    	</li>
+
 	    	<li>Test that special characters are ignored between tokens
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
@@ -258,6 +297,7 @@
 					<li><b cc:assertValueAppearsOnlyOnce="getTerms(#query)">future brain</b> should appear in the dropdown</li>
 				</ol>
 	    	</li>
+
 	    	<li>Test that parent terms do not appear in dropdown
 	    		<ol>
 	    			<li>open the GXD query form and clear the anatomy field</li>
@@ -270,6 +310,7 @@
 						<b cc:assertNoResultsContain="getTerms(#query)">embryo</b>, etc</li>
 	    		</ol>
 	    	</li>
+
 	    	<li>Test that child terms do not appear in dropdown
 	    		<ol>
 					<li>open the GXD query form and clear the anatomy field</li>
@@ -279,6 +320,8 @@
 						<b cc:assertNoResultsContain="getTerms(#query)">spinal chord</b>, etc</li>
 				</ol>
 	    	</li>
+
+<!-- DO NOT NEED A TEST FOR PRINTNAMES ANY MORE, DO WE??? 
 	    	<li>Test that autocomplete is not searching printnames
 				<ol>
 					<li>open the GXD query form and clear the anatomy field</li>
@@ -286,107 +329,33 @@
 					<li>verify that no dropdown appears, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
 				</ol>
 			</li>
+ -->
 			<li>Test the longest structure name
 				<ol>
 					<li>open the GXD query form and clear the anatomy field</li>
+					<li>type <b concordion:set="#query">1st branchial arch mandibular component mesenchyme derived from head mesoderm</b> </li>
+					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">1st branchial arch mandibular component mesenchyme derived from head mesoderm</b> appears in the dropdown</li>
+<!-- OLD TEST DATA BEFORE EMAPA 
 					<li>type <b concordion:set="#query">mesenchyme of paramesonephric duct of female, mesonephric portion</b> </li>
 					<li>verify that <b cc:assertValueAppearsOnlyOnce="getTerms(#query)">mesenchyme of paramesonephric duct of female, mesonephric portion</b> does indeed appear in the dropdown</li>
+ -->
 				</ol>
 			</li>
 			<li>Test matching across fields does not occur
 				<ol>
 					<li>open the GXD query form and clear the anatomy field</li>
 					<li>type <b concordion:set="#query">kidney metanephros</b> (a synonym followed by its base structure)</li>
-					<li>verify that no dropdown appears, indicating <b concordion:assertEquals="getTermCount(#query)">0</b> results.</li>
+					<li>verify that no autocomplete appears: <b concordion:assertEquals="getTermCount(#query)">0</b> items in the dropdown list.</li>
 				</ol>
 			</li>
-    		<li>The query returns all results in every stage where the Term or the Synonym contains the selected text, and all results associated with all descendant Terms
-<!-- OLD EXAMPLE FROM KEVIN'S EMAIL OF 5/25/2012
-				<ol>
-					<li><span class="hide" concordion:execute="#stage6Count = get(#TEXT)">ts6ResultCount</span>
-					Select "TS <b concordion:set="#stage">6</b>(4.0-5.5dpc)" option from the TS widget</li>
-					<li>Verify you return <b cc:assertEquals="getResultCountByTS(#stage)"><span concordion:echo="#stage6Count"></span></b> results</li>
-				</ol>
- -->    		
- <!--  UPDATED EXAMPLE FROM TEST CASE AT END OF THIS DOCUMENT 
-     			<li>
-    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
-    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
-    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
-    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
-  -->
- 			<ol>
- 				<li>
- 				Query for <b concordion:set="#structure">cornea</b> should return
- 				<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForCorneaResults"></b></b> assay results,
- 				<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countForCorneaAssays"></b></b> assays, and
- 				<b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countForCorneaGenes"></b></b> genes.
-    			</li>
-    			<li>Query for <b concordion:set="#structure">abdominal muscle</b> 
-    			should return <b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForAbdominalMuscleResults"></b></b> assay results.</li>
-			</ol>
-    		</li>
-    		<li>Text matching a Synonym which maps to 2 or more different Terms in different Stages returns all results for all such Terms and all their descendant Terms in all Stages
-    		<ol>
- 				<li>
- 				Query for the Synonym <b concordion:set="#structure">oogonia</b> should return
- 				<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForOogoniaResults"></b></b> assay results,
- 				<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countForOogoniaAssays"></b></b> assays, and
- 				<b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countForOogoniaGenes"></b></b> genes.
-    			</li>
-    			<li>Query for the Synonym <b concordion:set="#structure">oogonia</b> should return data AT LEAST for the following Terms and child Terms:
-    				<table cc:verifySupersetOf="#results : getStructures(#structure)">
-    				<tr><th cc:assertEquals="#results">Term</th></tr>
-    				<tr><td>meiotic germ cell of ovary</td></tr>
-    				<tr><td>germ cell of ovary</td></tr>
-    				<tr><td>premeiotic germ cell of ovary</td></tr>
-    				<tr><td>unfertilized egg</td></tr>
-    				</table>
-    			</li>
-    		</ol>
-    		</li>
-    		<li>The query does not stem (remove common suffixes like plurals, -ing, and -ed, to use only the root word) the selected Term or Synonym text tokens or the Terms or Synonyms in the results.
-    		<ol>
-    			<li><i>(No terms end in '-ed' and also appear in 'present tense' form. klf 5/29/12)</i></li>
-    			<li>Query for <b concordion:set="#structure">mature nephron</b> should return <b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForMatureNephronResults"></b></b> assay results.
-    			</li>
-    			<li>Query for <b concordion:set="#structure">maturing nephron</b> should return <b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForMaturingNephronResults"></b></b> assay results.
-    			</li>
-    			<li>Query for <b concordion:execute="#count1 = getResultCount(#TEXT)">mature nephron</b> and for <b concordion:execute="#count2 = getResultCount(#TEXT)">maturing nephron</b> should return different number of assay results.
-    			<b cc:assertNotEquals="#count2"><b concordion:echo="#count1"></b></b>. 
-    			</li>
-    			<li>Query for <b concordion:set="#structure">extraembryonic cavity</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">extraembryonic cavities</b>.
-    			</li>
-    			<li>Query for <b concordion:set="#structure">capillaries</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">capillary</b>.
-    			</li>
-    			<li>Query for <b concordion:set="#structure">column</b> (not a real Term) should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">future spinal cord basal columns</b> (a real Term)
-    			</li>
-    			<li>Query for <b concordion:set="#structure">columns</b> (not a real Term) should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">vertebral column</b> (a real Term)
-    			</li>
-    		</ol>
-    		</li>
-    		<li>Tokens must be AND'ed within a Term or within a Synonym but cannot match across both
-    		<ol>
-    			<li>Query for <b concordion:set="#structure">amygdala nucleus</b> should not bring back <b cc:assertNoResultsContain="getStructures(#structure)">amygdala</b>. (<i>amygdala has synonym amygdaloid nucleus</i>)</li>
-    		</ol>
-    		</li>
-    		<li>Token order does not matter. 
-    		<ol>
-    			<li>Query for <b concordion:set="#structure">head pancreas</b> (modified from actual term) should include <b cc:assertResultsContain="getStructures(#structure)">pancreas head parenchyma</b> in the return set</li>
-    		</ol>
-    		</li>
-    		<li>Tokens are AND'ed but query is not limited to a phrase search
-    		<ol>
-    			<li>Query for <b concordion:set="#structure">abdomen</b> also includes results for <b cc:assertResultsContain="getStructures(#structure)">abdomen muscle</b>.</li>
-    			<li>Query for <b concordion:set="#structure">incisor epithelium</b> also includes results for <b cc:assertResultsContain="getStructures(#structure)">lower jaw incisor epithelium</b></li>
-    		</ol>
-    		</li>
-    		<li><!-- Stop Words are ignored and do not affect results (e.g., choosing a Term or Synonym containing "in" or "of" should also match Terms and Synonyms with the remaining tokens but do not contain "in" or "of") -->
+
+<!--  STOP WORDS ARE NOT RELEVANT SINCE WE ARE NO LONGER SUBMITTING A TEXT QUERY -klf 5/20/2014
+    		<li><!- Stop Words are ignored and do not affect results (e.g., choosing a Term or Synonym containing "in" or "of" should also match Terms and Synonyms with the remaining tokens but do not contain "in" or "of") 
     		A Stop Words list IS in effect.  Stop Words ("and","from","of","or","the","their","to") are ignored by the search algorithm.<br/>
     		<ol>
-    		<!-- I used SQL to hunt for terms containing "of" or "in" then I hunted for terms cotaining some of the same words until I found these by inspection -->
+    		<!- I used SQL to hunt for terms containing "of" or "in" then I hunted for terms cotaining some of the same words until I found these by inspection 
      			<li>Query for <b concordion:set="#structure">mature renal corpuscle</b> should return results for <b cc:assertResultsContain="getStructures(#structure)">Bowman's capsule of mature renal corpuscle</b>.</li>
-    			<!-- THERE ARE NO RESULTS WITH THIS TERM <li>Query for <b concordion:set="#structure">mesenchyme derived from neural crest</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">neural crest-derived mesenchyme in lateral migration pathway</b></li> -->
+    			<!- THERE ARE NO RESULTS WITH THIS TERM <li>Query for <b concordion:set="#structure">mesenchyme derived from neural crest</b> should NOT RETURN results including <b cc:assertNoResultsContain="getStructures(#structure)">neural crest-derived mesenchyme in lateral migration pathway</b></li> 
      			<li>Query for <b concordion:execute="#count1 = getResultCount(#TEXT)">s-shaped body medial segment</b></li>
     			<li>Query for <b  concordion:execute="#count2 = getResultCount(#TEXT)">medial segment of s-shaped body</b></li>
     			<li>Result count should be same, which is <b cc:assertEquals="#count1"><b concordion:echo="#count2"></b></b></li>
@@ -396,11 +365,9 @@
     			<li>Query for <b concordion:set="#structure">and from of or the their to brain</b> should return results for <b cc:assertResultsContain="getStructures(#structure)">brain</b></li>
     		</ol>
     		</li>
-    		<li>Terms which involve single-character tokens should return correctly (e.g., "s-shaped body", "rhombomere A", "T-lymphocyte", "pro-B-lymphocyte") <i>(NOTE: Is this test necessary? Why wouldn't they return correctly?)</i>
-    		<ol>
-    			<li>test case goes here</li>
-    		</ol>
-    		</li>
+ -->
+
+<!-- NUMBERS AND NON-ALPHANUMERIC CHARACTERS ARE NOT RELEVANT SINCE WE ARE NO LONGER SUBMITTING TEXT QUERIES -klf 5/20/2014
     		<li>Non-alphanumeric characters in the input text and in the AD Terms and Synonym should be ignored by queries (ampersand, at symbol, number sign, hyphen, slash, etc.)
     		<ol>
     			<li>Query for <b concordion:set="#structure">body wall</b> should include <b cc:assertResultsContain="getStructures(#structure)">body-wall mesenchyme</b> in the return set</li>
@@ -428,6 +395,8 @@
     			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForDigit1MetacarpusResults"></b></b> assay results.</li>
     		</ol>
     		</li>
+-->
+
 		</ol>
 	</div>
 </div>

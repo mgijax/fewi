@@ -9,33 +9,51 @@
 	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
 	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
 	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	ul > li {margin-bottom:0px;}
 	p {margin:2px 0px;}
 </style>
     <title>Assay Results Summary</title>
 </head>
 
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
 <body>
 
 <div id="TOC">
-	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
 <div id="maintitle">
     <h1>Assay Results Summary</h1>
     <ul>
-        <li>User story 51, Display correct assay result data</li>
-        <li>User story 193, MGI 5.14, GXD Assay Results Summary: change figure links</li>
-        <li>User story 182, MGI 5.14, GXD Assay Results Summary: GXD summary not displaying pane labels with "&lt;""&gt;" properly</li>
+        <li>User story 16, E1: GXD QF: Anatomy Search -&gt; ID based</li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
+        <li>(sto16) when user selects an anatomy term from the dropdown, the query is by that term's ID, rather than by its text.
+		<ul>
+			<li>Example: search for 'limb'. Results should only include those for descendants of EMAPA:16405 (limb). It shoud NOT include things like "thin descending limb of outer medulla" (under renal system, loop of Henle)</li>
+		</ul>
+		</li>
+		<li>(sto16) Cre search should NOT change (i.e., it should still search based on text tokens.)</li>
+	</ul>
+</div>
+
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+	<ul>
 		<li>results summary table displays expression results for the submitted query parameters</li>
 		<li>genes are NOT linked to marker detail pages</li>
-		<li>assays are linked to assay detail pages</li>
-		<li>other links....image detail, reference detail work</li>
+		<li>alleles are NOT linked to allele detail pages</li>
+		<li>"data" are linked to assay detail pages</li>
+		<li>images are linked to the specified thumbnail image on an assay detail page</li> 
+		<li>references are linked to the specified reference ("detail") page</li>
         <li>Results should be in the DEFAULT sort order:<br/>
 			1. Gene Symbol (smart alpha)<br/>
 			2. Assay Type (order as listed on the marker detail page in MGI 5.0)<br/>
@@ -62,8 +80,26 @@
 			3. Ambiguous<br/>
 			4. Not Specified<br/>
 		</li>
-		<li>Story 193: change [figure links destination] and have these links take you to the assay detail page, specifically that portion of the page that contains the specimen that figure is associated with</li>
-		<li>Story 182: display text between "&lt;" and "&gt;" as superscripted</li>
+		<li>Results are sortable on-demand by (each of these primary sorts has additional secondary, tertiary, etc. rules):
+		<ul>
+			<li>Gene (smart alpha)</li>
+			<li>Assay type (order as listed above)</li>
+			<li>Anatomical system (alpha)</li>
+			<li>Age </li>
+			<li>Structure (topological order)</li>
+			<li>Detected (order as listed above)</li>
+			<li>Reference (alphabetical order on the text string, not the J-number)</li>
+		</ul>
+		</li>
+		<li>Results are paginated:
+		<ul>
+			<li>50 results per page</li>
+			<li>100 results per page (default)</li>
+			<li>250 results per page</li>
+			<li>500 results per page</li>
+		</ul>
+		</li>
+		<li>The results set may be downloaded as a text file or as an Excel file.</li>
 	</ul>
 </div>
 
@@ -71,6 +107,7 @@
     <h2>Tests</h2>
 	<div id="manual">
 		<h3>Manual tests</h3>
+		<h4>Basic functionality</h4>
 		<ol>
     		<li>Assay Results table exists with correct columns
 			<p concordion:manual="true">Passed kstone 2013/05/20</p>
@@ -105,7 +142,7 @@
 				</li>
     		</ol>
     		</li>
-    		<li>Detected? displays "Level" data
+    		<li>Detected? displays  Yes/No/Ambigous/Not Specified rather than "Level" data
 			<p concordion:manual="true">jeffc 8/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
@@ -167,7 +204,7 @@
     			</li>
     		</ol>
 			</li>
-    		<li>Mutant Allele(s) displays correct data
+    		<li>Mutant Allele(s) displays allele pairs in gentoypes associated with the assay result
 			<p concordion:manual="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
@@ -190,7 +227,7 @@
 				</li>                
     		</ol>
     		</li>
-    		<li>Reference displays correct data
+    		<li>Reference displays the &quot;short citation&quot; version of the reference associated with the assay result
 			<p concordion:manual="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
@@ -204,7 +241,7 @@
 				</li>
     		</ol>
     		</li>
-    		<li>Gene symbol should not be linked on Assay Results tab
+    		<li>Gene symbol is not linked on Assay Results tab
 			<p concordion:manual="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
@@ -265,7 +302,7 @@
 				<li>Results should be in the DEFAULT sort order</li>
     		</ol>
     		</li>
-    		<li>Test that long marker names/symbols wrap properly
+    		<li>Long marker names/symbols display the full name, wrapped if necessary
 			<p concordion:manual="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
@@ -276,7 +313,7 @@
 				<li>Verify the symbol returns with proper formatting</li>
     		</ol>
     		</li>
-    		<li>Test that marker symbols and names with non-alphanumeric characters don't break the interface
+    		<li>Marker symbols and names with non-alphanumeric characters display their full text
 			<p concordion:manual="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query form</li>
@@ -290,7 +327,7 @@
                 <li>Verify that Pax6 data returns with all fields properly formatted</li>
     		</ol>
     		</li>
-    		<li>Test that the accordion animation does not activate when using back button from a subsequent page
+    		<li>The accordion animation to hide/show the query form does not activate when using back button from a subsequent page
 			<p concordion:manual="true">Passed jeffc 08/10/2012</p>
     		<ol>
                 <li>Open the GXD query page</li>
@@ -300,64 +337,59 @@
                 <li>Make sure the query form is already closed (without accordion effect)</li>
     		</ol>
     		</li>
+    		
+    		<li>When an Anatomical Structure term is submitted, only assay results associated with that EMAPA term or its child terms are returned. (sto16)
+			<p concordion:manual="true">passed. -klf 2014-05-30</p>
+			<ol>
+                <li>Open the GXD query page.</li>
+                <li>Search for the following TERMS and verify the number of results returned (as of 5/20/2014 using AD Browser on Cardolan):
+                <table>
+	                <tr><th>Term</th><th>EMAPA ID</th><th>Results count</th><th>Notes to tester</th></tr>
+	                <tr><td>pinna mesenchyme TS20-26</td><td>EMAPA:17591</td><td>17</td><td>has child terms, some with zero results</td></tr>
+	                <tr><td>pinna TS20-28</td><td>EMAPA:17589</td><td>74</td><td>parent of "pinna mesenchyme TS20-26", has other child terms</td></tr>
+	                <tr><td>esophagus epithelium TS16-22</td><td>EMAPA:16835</td><td>46</td><td>has no child terms</td></tr>
+	                <tr><td>esophagus epithelium TS23</td><td>EMAPA:26985</td><td>134</td><td>has no child terms</td></tr>
+	                <tr><td>esophagus epithelium TS24-28</td><td>EMAPA:18862</td><td>55</td><td>has 2 child terms, one with zero results</td></tr>
+                </table>
+                </li>
+			</ol>
+    		</li>
 
-<!--  MOVED THE FOLLOWING TESTS TO ASSAY DETAIL TEST SUITE
-    		<li>Test that MGI ID links in specimen notes go to the correct page
-			<p concordion:manual="true">jeffc 05/17/2013</p>
-    		<ol>
-                <li>Search for MGI:5478602</li>
-                <li>Click the Expression Assay link</li>
-                <li>Once the result page displays</li>
-                <li>Find the link "MGI:5476800" located in the note for specimen 3 and click it</li>
-                <li>Verify the page displayed is for MGI:5476800</li>
-    		</ol>
-    		</li>
-    		<li>Test that MGI ID links in Assay notes go to the correct page
-			<p concordion:manual="true">jeffc 05/17/2013</p>
-    		<ol>
-                <li>Search for MGI:1270923</li>
-                <li>Click the Expression Assay link</li>
-                <li>Once the result page displays, Click the link "MGI:2670369"</li>
-                <li>Find the link "MGI:2670369" located in assay notes and click it</li>
-                <li>Verify the page displayed is for MGI:2670369</li>
-    		</ol>
-    		</li>
--->
             <li>See also the <a href="DisplayQueryParameters.html">Display Query Parameters (You Searched For) test suite</a>.</li>
 		</ol>
 	</div>
 	<div id="auto">
-		<h3>Automated tests</h3>
+		<h3>Automated tests - - -&gt;1-5 NEED TO BE INSTRUMENTED OR MOVED BACK TO "MANUAL" SECTION &lt;- - -</h3>
 		<ol>
-    		<li>Query returns correct results
+    		<li>Query returns all results associated with a Marker.
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
                 <li>Verify 1434 results are returned</li>
     		</ol>
     		</li>    		
-    		<li>Assay Type column displays correct assay type
+    		<li>Assay Type column displays the assay type associated with a specific assay
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
                 <li>Verify all results for MGI:1859758 display only the Assay Type "Immunohistochemistry"</li>
     		</ol>
     		</li>
-    		<li>Anatomical System column displays correct data
+    		<li>Anatomical System column displays the System associated with the anatomy term for a specific assay result
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
                 <li>Verify the results for MGI:1859758 for TS15: future forebrain displays Nervous System, verify the results for MGI:2157343 for TS15: lens placode displays Sensory Organs</li>
     		</ol>
     		</li>
-    		<li>Age displays correct data
+    		<li>Age displays the Age associated with a specific assay result
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
                 <li>Verify the results for MGI:1859758 for TS15: future forebrain displays E9.5 and the results for MGI:2157343 for TS15: lens placode displays E9.5</li>
     		</ol>
     		</li>
-    		<li>Structure displays correct data
+    		<li>Structure displays anatomy term associated with a specific assay result
     		<ol>
                 <li>Open the GXD query page</li>
                 <li>Search for Pax6</li>
@@ -402,17 +434,31 @@
  						<tr><td>TS28: liver</td><td>Yes</td></tr>
  					</table>
  				</li>
- 				<li>Verify that "Ambiguous" takes precedence over "Absent".
+ 				<li>"Ambiguous" takes precedence over "Absent".
  					<br/>(There are no data for this case.  kstone 5/22/12)
  				</li>
     		</ol>
     		</li>
+
+<!-- MOVED FROM ANATOMY SEARCH (INPUT FIELD) TEST SUITE. NEEDS TO BE UPDATED FOR EMAPA IDs TO USE IT. -klf 5/30/2014
+    		<li>The query returns all results in every stage where the Term or the Synonym contains the selected text, and all results associated with all descendant Terms
+ 			<ol>
+ 				<li>
+ 				Query for <b concordion:set="#structure">cornea</b> should return
+ 				<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForCorneaResults"></b></b> assay results,
+ 				<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countForCorneaAssays"></b></b> assays, and
+ 				<b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countForCorneaGenes"></b></b> genes.
+    			</li>
+    			<li>Query for <b concordion:set="#structure">abdominal muscle</b> 
+    			should return <b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countForAbdominalMuscleResults"></b></b> assay results.</li>
+			</ol>
+    		</li>
+ -->
 		</ol>
         <ul>
         <li><a href="MultipleParametersSearch.html">See also multiple parameter search tests</a></li>
         </ul>
 	</div>
-	<p>Verified that all tests from Google docs QA spreadsheet US51 are here.  -klf 6/11/2012</p>
 </div>
 
 </body>

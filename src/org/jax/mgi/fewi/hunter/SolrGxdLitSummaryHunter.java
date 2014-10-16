@@ -138,14 +138,12 @@ public class SolrGxdLitSummaryHunter extends SolrHunter<GxdLitIndexRecord> {
 
 	protected SearchParams preProcessSearchParams(SearchParams searchParams) {
 
-	    Filter filter = searchParams.getFilter();
-	    if (!filter.isBasicFilter()) {
-	        checkFilter(filter);
-	    }
-	    return searchParams;
+		Filter filter = searchParams.getFilter();
+		if (!filter.isBasicFilter()) {
+			checkFilter(filter);
+		}
+		return searchParams;
 	}
-
-
 
 	@Value("${solr.gxdLitIndex.url}")
 	public void setSolrUrl(String solrUrl) {

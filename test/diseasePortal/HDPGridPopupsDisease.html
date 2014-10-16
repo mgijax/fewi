@@ -156,11 +156,12 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">270150</b> (Sjogren Syndrome) in the Phenotypes and Diseases section and <b>Aire</b> in the Genes section and hit search.</li>
-                <li>Verify the only diseases listed are <b>Rheumatoid Arthritis</b> and <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b> (which shares a genotype with Sjogren Syndrome).</li>
+                <li>Verify the only diseases listed are <b>Sjogren Syndrome</b> and <b>Autoimmune Polyendocrine Syndrome, Type I; APS1</b> (which shares a genotype with Sjogren Syndrome).</li>
                 <li>Verify <b>Guillain-Barre Syndrome, Familial; GBS</b> is NOT listed (annotated to a different genotype of Aire).</li>
-                <li>Click the checkmark or colored cell for <b concordion:set="#row">Aire</b> and <b concordion:set="#column">Rheumatoid Arthritis</b>; 
+                <li>Click the checkmark or colored cell for <b concordion:set="#row">Aire</b> and <b concordion:set="#column">Sjogren Syndrome</b>; 
                 	verify the genotype in the Disease Popup is <b cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>.</li>
-                <li>Click the checkmark or colored cell for <b concordion:set="#row">Aire</b> and <b concordion:set="#column">Autoimmune Diseases</b>; 
+                <li>Click the checkmark or colored cell for 
+                	<b concordion:set="#row">Aire</b> and <b concordion:set="#column">Autoimmune Polyendocrine Syndrome, Type I, with or without Reversible Metaphyseal Dysplasia; APS1</b>; 
                 	verify the same genotype appears (<b cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>) in the Disease Popup.</li>
     		</ol>
     		</li>

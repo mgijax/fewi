@@ -75,10 +75,19 @@ public class VocabularyFinder
     }
 
     public List<VocabTerm> getTermByID(String id) {
-	logger.debug("->getTermByID(" + id + ")");
+    	logger.debug("->getTermByID(" + id + ")");
 
-	return termGatherer.get (VocabTerm.class, id, "primaryId");
+		return termGatherer.get (VocabTerm.class, id, "primaryId");
     }
+    
+	public VocabTerm getTermByKey(String key) {
+		logger.debug("->getTermByKey(" + key + ")");
+		return termGatherer.get (VocabTerm.class, key);
+	}
+
+	public List<VocabTerm> getTermsByID(List<String> ids) {
+		return termGatherer.get(VocabTerm.class, ids, "primaryId");
+	}
 
     /** get the anatomy terms which match the given search parameters
      * (for searching on the new anatomy browser)

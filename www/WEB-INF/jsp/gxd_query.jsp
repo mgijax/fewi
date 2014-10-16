@@ -43,7 +43,7 @@ td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
 
 .yui-skin-sam .yui-tt .bd
 {
-	background-color:#ddf; 
+	background-color:#ddf;
 	color:#005;
 	border:2px solid #005;
 }
@@ -77,13 +77,13 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml">	
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml">
 	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
 
-<div id="outerGxd">    
+<div id="outerGxd">
     <div id="toggleQF" class="summaryControl" style="display:none"><span id="toggleImg" class="qfExpand" style="margin-right:15px; margin-top:0px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
     <div id="qwrap">
     	<%@ include file="/WEB-INF/jsp/gxd_form.jsp" %>
@@ -100,6 +100,8 @@ ${templateBean.templateBodyStartHtml}
     var fewiurl = "${configBean.FEWI_URL}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
+
+<%@ include file="/WEB-INF/jsp/gxd_summary_js.jsp" %>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>

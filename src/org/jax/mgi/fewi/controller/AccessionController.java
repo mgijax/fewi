@@ -52,7 +52,7 @@ public class AccessionController {
     // instance variables
     //--------------------//
 
-    private Logger logger = LoggerFactory.getLogger(AccessionController.class);
+    private final Logger logger = LoggerFactory.getLogger(AccessionController.class);
 
     @Autowired
     private AccessionFinder accessionFinder;
@@ -213,7 +213,6 @@ public class AccessionController {
         	}
         }
         
-        typeCount = new HashMap<String, Integer>();
         
         // The JSON return object will be serialized to a JSON response.
         // Client-side JavaScript expects this object

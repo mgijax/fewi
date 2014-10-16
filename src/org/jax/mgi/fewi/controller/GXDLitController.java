@@ -725,9 +725,6 @@ public class GXDLitController {
 	    		allTypes.add(row);
 	    	}
 	    }
-	    hasAgeMap = new HashMap<String, Boolean>();
-		hasAssayTypeMap = new HashMap<String, Boolean>();
-		countMap = new HashMap<String, Map<String, GxdLitAgeAssayTypePairTableCount>>();
 
 	    return new GxdLitAgeAssayTypePairTable(allAges, allTypes);
 	}

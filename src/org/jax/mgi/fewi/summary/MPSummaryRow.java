@@ -7,6 +7,8 @@ import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.entities.SolrMPAnnotation;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -15,12 +17,15 @@ import org.jax.mgi.fewi.util.NotesTagConverter;
  */
 public class MPSummaryRow {
 
+	private final Logger logger = LoggerFactory.getLogger(MPSummaryRow.class);
+
+	
     //-------------------
     // instance variables
     //-------------------
 
     // encapsulated row object
-    private List<SolrMPAnnotation> annotations = 
+    private final List<SolrMPAnnotation> annotations = 
 	    new ArrayList<SolrMPAnnotation>();
 
     // genotype key shared by all annotations
@@ -53,7 +58,9 @@ public class MPSummaryRow {
     private void addNotesTagConverter() {
 	try {
 	    this.ntc = new NotesTagConverter();
-	} catch (Exception e) {}
+	} catch (Exception e) {
+		logger.error(e.getMessage(),e);
+		}
     }
 
     //------------------------------------------------------------------------

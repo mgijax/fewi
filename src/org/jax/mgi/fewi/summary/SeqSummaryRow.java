@@ -27,7 +27,7 @@ public class SeqSummaryRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(SeqSummaryRow.class);
+    private final Logger logger = LoggerFactory.getLogger(SeqSummaryRow.class);
 
 	// encapsulated row object
 	private Sequence seq;
@@ -152,7 +152,6 @@ public class SeqSummaryRow {
 					probeSB.append(ccIter.next());
 				}
 		    }
-			cloneCollections = new HashSet<String>();
 		}
         return probeSB.toString();
     }

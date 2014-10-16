@@ -149,34 +149,34 @@ td.right { text-align: right }
   <tr><!-- <%= rightTdStyles.getNext() %> -->
     <td colspan="2" class="<%= rightTdStyles.getNext() %>">
       <div style="min-width:850px; max-width:1120px; font-size: 0.9em; padding-left:10px; text-align:center;" ID="TOC">
-      <c:if test="${not empty hasNomenclature}">
+      <c:if test="${alleleDetail.hasNomenclature}">
         <a href="#nomenclature" class='MP'>Nomenclature</a>
       </c:if>
-      <c:if test="${not empty hasMutationOrigin}">
+      <c:if test="${alleleDetail.hasMutationOrigin}">
         | <a href="#${typeCategory}Origin" class='MP'>${typeCategory}&nbsp;origin</a>
       </c:if>
-      <c:if test="${not empty hasMutationDescription}">
+      <c:if test="${alleleDetail.hasMutationDescription}">
         | <a href="#${typeCategory}Description" class='MP'>${typeCategory} description</a>
       </c:if>
-      <c:if test="${not empty hasExpression}">
+      <c:if test="${alleleDetail.hasExpression}">
         | <a href="#expression" class='MP'>Expression</a>
       </c:if>
-      <c:if test="${not empty hasRecombinaseData}">
+      <c:if test="${alleleDetail.hasRecombinaseData}">
         | <a href="#recombinase" class='MP'>Recombinase activity</a>
       </c:if>
-      <c:if test="${not empty hasPhenotypes}">
+      <c:if test="${alleleDetail.hasPhenotypes}">
         | <a href="#phenotypes" class='MP'>Phenotypes</a>
       </c:if>
-      <c:if test="${not empty hasDiseaseModel}">
+      <c:if test="${alleleDetail.hasDiseaseModel}">
         | <a href="#diseaseModels" class='MP'>Disease&nbsp;models</a>
       </c:if>
-      <c:if test="${not empty hasIMSR}">
+      <c:if test="${alleleDetail.hasIMSR}">
         | <a href="#imsr" class='MP'>Find&nbsp;Mice&nbsp;(IMSR)</a>
       </c:if>
-      <c:if test="${not empty hasNotes}">
+      <c:if test="${alleleDetail.hasNotes}">
         | <a href="#notes" class='MP'>Notes</a>
       </c:if>
-      <c:if test="${not empty hasReferences}">
+      <c:if test="${alleleDetail.hasReferences}">
         | <a href="#references" class='MP'>References</a>
       </c:if>
       </div>
@@ -185,7 +185,7 @@ td.right { text-align: right }
 
   <!-- ROW1 : nomenclature -->
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="nomenclatureHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="nomenclature"></a>Nomenclature</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
@@ -238,7 +238,7 @@ td.right { text-align: right }
 	</c:if>
 	<span>Show the <a href="${configBean.FEWI_URL}image/phenoSummary/allele/${allele.primaryID}" class='MP'>${imageCount} phenotype image(s)</a> involving this allele.</span>
 	</td><td class='padLR' style='text-align:right; width=1%'>
-	<a href="${configBean.FEWI_URL}image/pheno/${primaryImage.mgiID}"><img src='${configBean.PIXELDB_URL}${thumbnailImage.pixeldbNumericID}'${thumbnailDimensions}></a>
+	<a href="${configBean.FEWI_URL}image/pheno/${primaryImage.mgiID}"><img id="primaryPhenoImage" src='${configBean.PIXELDB_URL}${thumbnailImage.pixeldbNumericID}'${thumbnailDimensions}></a>
 	</td></tr></table>
       </c:if>
       ${fixedDivClose}
@@ -247,9 +247,9 @@ td.right { text-align: right }
 
 
   <!-- ROW2 : mutation/variant origin -->
-  <c:if test="${not empty hasMutationOrigin}">
+  <c:if test="${alleleDetail.hasMutationOrigin}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="originHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="${typeCategory}Origin"></a>${typeCategory}<br>origin</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
@@ -300,9 +300,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW3 : mutation/variant description -->
-  <c:if test="${not empty hasMutationDescription}">
+  <c:if test="${alleleDetail.hasMutationDescription}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="descriptionHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="${typeCategory}Description"></a>${typeCategory}<br>description</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
@@ -316,7 +316,7 @@ td.right { text-align: right }
 		</c:if>
 		<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">${typeLabel} Type:</font>&nbsp;</td>
 		<td width="1%">&nbsp;</td>
-		<td class="padded" width="*">${allele.alleleType} <c:if test="${not empty allele.alleleSubType}">(${allele.alleleSubType})</c:if></td>
+		<td class="padded" id="alleleTypeDisplay">${allele.alleleType} <c:if test="${not empty allele.alleleSubType}">(${allele.alleleSubType})</c:if></td>
 		</tr>
 
 		<!-- comma-delimited set of mutations -->
@@ -544,9 +544,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW4 : recombinase activity -->
-  <c:if test="${not empty hasRecombinaseData}">
+  <c:if test="${alleleDetail.hasRecombinaseData}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="recombinaseHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="recombinase"></a>Recombinase<br>activity</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
@@ -619,9 +619,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW5 : phenotypes -->
-  <c:if test="${not empty hasPhenotypes}">
+  <c:if test="${alleleDetail.hasPhenotypes}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="phenotypesHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="phenotypes"></a>Phenotypes</td>
     <td class="<%=rightTdStyles.getNext() %>">
         <div id="phenoTableInsert">
@@ -638,9 +638,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW6 : disease models -->
-  <c:if test="${not empty hasDiseaseModel}">
+  <c:if test="${alleleDetail.hasDiseaseModel}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="diseaseModelsHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="diseaseModels"></a>Disease&nbsp;models</td>
     <td class="<%=rightTdStyles.getNext() %>">
       <div id="diseaseTableInsert">
@@ -651,9 +651,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW7 : expression -->
-  <c:if test="${not empty hasExpression}">
+  <c:if test="${alleleDetail.hasExpression}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="expressionHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="expression"></a>Expression</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
@@ -667,9 +667,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW8 : IMSR -->
-  <c:if test="${not empty hasIMSR}">
+  <c:if test="${alleleDetail.hasIMSR}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="imsrHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="imsr"></a>Find&nbsp;Mice&nbsp;(IMSR)</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
@@ -698,9 +698,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW9 : notes -->
-  <c:if test="${not empty hasNotes}">
+  <c:if test="${alleleDetail.hasNotes}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="notesHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="notes"></a>Notes</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}
@@ -736,9 +736,9 @@ td.right { text-align: right }
   </c:if>
 
   <!-- ROW10 : reference -->
-  <c:if test="${not empty hasReferences}">
+  <c:if test="${alleleDetail.hasReferences}">
   <tr>
-    <td class="<%=leftTdStyles.getNext() %>">
+    <td id="referencesHeader" class="<%=leftTdStyles.getNext() %>">
       <a name="references"></a>References</td>
     <td class="<%=rightTdStyles.getNext() %>">
       ${fixedDivOpen}

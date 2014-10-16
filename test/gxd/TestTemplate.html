@@ -12,13 +12,20 @@
 	p {margin:2px 0px;}
 </style>
 
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
     <title>CHANGE Test suite title</title>
 </head>
 
 <body>
 
 <div id="TOC">
-	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#requirements">Functional Requirements</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
 </div>
 
 <div id="maintitle">
@@ -29,18 +36,28 @@
 </div>
 
 <div id="acceptance">
-    <h2>Acceptance Criteria</h2>
+    <h2>Acceptance Criteria - Current Development Work</h2>
 	<ul>
 		<li>Acc crit 1</li>
 		<li>Acc crit 2</li>
 	</ul>
 </div>
 
+<div id="requirements">
+	<h2>Functional Requirements</h2>
+    <ul>
+        <li>item 1</li>
+        <li>item 2</li>
+    </ul>
+</div>
+
+
 
 
 <div id="tests">
     <h2>Tests</h2>
     <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+
 	<div id="manual">
 <!-- To insert manual test results, use the following:
 <p concordion:manual="true">testing assertTrue - displays as green</p>
@@ -48,32 +65,43 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Test 1
+    		<li>Statement of required behavior 1.
 <!-- 			<p concordion:manual="false">new test</p> -->
     		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
     		</ol>
     		</li>
+
+    		<li>Statement of required behavior 2.
+<!-- 			<p concordion:manual="false">new test</p> -->
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
 		</ol>
 	</div>
+
 	<div id="auto">
 		<h3>Automated tests</h3>
 		<ol>
-    		<li>Test 1
+    		<li>Statement of required behavior 1.
     		<ol>
-                <li>Step 1</li>
-                <li>Step 2</li>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
     		</ol>
     		</li>
+
+    		<li>Statement of required behavior 2.
+    		<ol>
+                <li>Step 1 of verification.</li>
+                <li>Step 2 of verification.</li>
+    		</ol>
+    		</li>
+
 		</ol>
- <!--  EXAMPLE TEST CASE USING DYNAMIC DATA SPREADSHEET AT https://docs.google.com/spreadsheet/ccc?key=0ArepxibBtJW2dEl0eEg1bElOc1Mxc1FnNGtmSmlUSlE#gid=2 
-     			<li>
-    			Query for <b concordion:set="#structure">4-cell stage</b> should return 
-    			<b cc:assertEquals="getResultCount(#structure)"><b cc:dynamicData="countFor4CellStageResults"></b></b> assay results, 
-    			<b cc:assertEquals="getAssayCount(#structure)"><b cc:dynamicData="countFor4CellStageAssays"></b></b> assays, 
-    			and <b cc:assertEquals="getGeneCount(#structure)"><b cc:dynamicData="countFor4CellStageGenes"></b></b> genes.<br/></li>
-  -->
  	</div>
 </div>
 

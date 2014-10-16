@@ -47,7 +47,7 @@ public class MarkerTissueCountController {
     // instance variables
     //--------------------//
 
-    private Logger logger
+    private final Logger logger
       = LoggerFactory.getLogger(MarkerTissueCountController.class);
 
     @Autowired
@@ -57,7 +57,7 @@ public class MarkerTissueCountController {
     private MarkerFinder markerFinder;
     
     // a cache object
-    private Map<String,Integer> totalCountsCache = new HashMap<String,Integer>();
+    private final Map<String,Integer> totalCountsCache = new HashMap<String,Integer>();
     
     
     /* 
@@ -75,10 +75,7 @@ public class MarkerTissueCountController {
             SearchParams params = new SearchParams();
             
             String mrkKey = request.getParameter("mrkKey");
-            
-            if (mrkKey != null) {
-                params.setFilter(new Filter(SearchConstants.MRK_KEY, mrkKey));
-            }
+            params.setFilter(new Filter(SearchConstants.MRK_KEY, mrkKey));
             
             Paginator page = new Paginator();
             page.setResults(5000);
@@ -169,9 +166,8 @@ public class MarkerTissueCountController {
         
         String mrkKey = request.getParameter("mrkKey");
         
-        if (mrkKey != null) {
-            params.setFilter(new Filter(SearchConstants.MRK_KEY, mrkKey));
-	    }
+        
+        params.setFilter(new Filter(SearchConstants.MRK_KEY, mrkKey));
         
         params.setPaginator(page);
         

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchResults<T> {
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
     //////////////////////////////////////////////////////////////////////////
     //  INTERNAL FIELDS
     //////////////////////////////////////////////////////////////////////////
@@ -160,16 +160,14 @@ public class SearchResults<T> {
     /**
 	 * Get facets
 	 */
-	public List<String> getResultFacets() {
-	Collections.sort (resultFacets, new FacetSorter());
+    public List<String> getResultFacets() {
         return resultFacets;
     }
-
-    /**
-	 * Get facets in raw order (not alphanumeric)
-	 */
-	public List<String> getRawResultFacets() {
-        return resultFacets;
+	
+	public List<String> getSortedResultFacets() {
+		List<String> sortedFacets = new ArrayList<String>(resultFacets);
+		Collections.sort (sortedFacets, new FacetSorter());
+        return sortedFacets;
     }
 
     /**

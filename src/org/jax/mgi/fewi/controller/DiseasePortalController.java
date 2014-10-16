@@ -22,6 +22,7 @@ import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
+import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -42,8 +43,8 @@ import org.jax.mgi.fewi.summary.HdpMarkerByHeaderPopupRow;
 import org.jax.mgi.fewi.summary.HdpMarkerSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
+import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.HdpGridMapper;
 import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
@@ -1471,17 +1472,12 @@ public class DiseasePortalController
 		Set<String> markerKeys = new HashSet<String>();
 		if(locationCoordinateTokens!=null && locationCoordinateTokens.size()>0)
 		{
-			int chunks = (int) Math.ceil(locationCoordinateTokens.size() / maxLocationsInAQuery);
-			if(chunks==0) chunks=1;
-			for(int i=0; i<chunks; i++)
+			List<List<String>> tokenBatches = FewiUtil.getBatches(locationCoordinateTokens, maxLocationsInAQuery);
+			for(int i=0; i<tokenBatches.size(); i++)
 			{
-				if(i>0) logger.debug("convertLocationsToMarkerKeys-> Chunking through coordinate query. "+(chunks-i)+" chunks left.");
-				// chunk through the list
-				int offsetStart = (i) * maxLocationsInAQuery;
-				int offsetEnd = (i+1) * maxLocationsInAQuery;
-				if(locationCoordinateTokens.size() < offsetEnd) offsetEnd = locationCoordinateTokens.size();
-				List<String> tokens = locationCoordinateTokens.subList(offsetStart,offsetEnd);
-
+				if(i>0) logger.debug("convertLocationsToMarkerKeys-> Chunking through coordinate query. "+(tokenBatches.size()-i)+" chunks left.");
+				List<String> tokens = tokenBatches.get(i);
+				
 				SearchParams sp = new SearchParams();
 				sp.setPageSize(100000); // there should be no limit on this
 				sp.setFetchKeysOnly(true);
@@ -1505,7 +1501,7 @@ public class DiseasePortalController
 				{
 					sp.setFilter(Filter.or(locationFilters));
 					// query solr for the matching marker keys
-					if(chunks==1) return hdpFinder.getMarkerKeys(sp);
+					if(tokenBatches.size()==1) return hdpFinder.getMarkerKeys(sp);
 					else markerKeys.addAll(hdpFinder.getMarkerKeys(sp));
 				}
 			}

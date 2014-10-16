@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.matrix.HdpGridMapper;
+import org.jax.mgi.fewi.matrix.HdpGridMapper.GridCell;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster;
 import org.jax.mgi.fewi.searchUtil.entities.SolrHdpGridCluster.SolrDpGridClusterMarker;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.HdpGridMapper;
-import org.jax.mgi.fewi.util.HdpGridMapper.GridCell;
 
 
 /**

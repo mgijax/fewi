@@ -1,6 +1,14 @@
 <!-- jquery library (for the ageStage tab widget) -->
 
 <style>
+#locations
+{
+	float:left;
+	padding:4px;
+	height:28px;
+	width:260px;
+	background-color: #FFFFFF;
+}
 #gxdQueryForm table tr td table tr td ul li span { font-size: 10px; font-style: italic; }
 #gxdQueryForm table tr td table tr td span { font-size: 10px; font-style: italic; }
 span.smallGrey { font-size: 75%; color: #999999; }
@@ -68,7 +76,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 .hide { display:none; }
 .anatomyAC
 {
-	padding:2px 0px 12px 20px; 
+	padding:2px 0px 12px 20px;
 	width:300px;
 	text-align:left;
 }
@@ -84,7 +92,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 }
 <!--[if IE]> -->
 #ageStageDiv {width:21em;}
-#theilerStage, #age {margin-left:7px;margin-right:7px;height:9.5em}
+#theilerStage {margin-left:0px;margin-right:12px;height:9.5em}
+#age {margin-left:7px;margin-right:7px;height:9.5em}
 #ageStageTd {height:12em;}
 <![endif]-->
 
@@ -117,7 +126,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</tr>
 		<tr>
 			<td valign='top' style="padding-right: 15px;">
-				<hr>			
+				<hr>
 				One gene <span>e.g., Shh or kit oncogene</span><br/>
 				Genes with similar nomenclature <span>e.g., Hoxa*</span>
 			</td>
@@ -126,10 +135,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</td>
 			<td valign='top' style="padding-left: 15px;">
 				<hr>
-				A set of genes defined by 
+				A set of genes defined by
 				<img id="gxdVocabHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
-				<div id="gxdVocabHelp"> 
-					<div class="hd">A set of genes defined by...</div> 
+				<div id="gxdVocabHelp" style="visibility: hidden; height:0px;">
+					<div class="hd">A set of genes defined by...</div>
 					<div class="bd">
 						<p>You can find sets of genes associated with terms in MGI's vocabularies and ontologies:</p>
 						<ul>
@@ -137,8 +146,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 							<li>Phenotype - Mammalian Phenotype Ontology (<a href="${configBean.WI_URL}searches/MP_form.shtml">MP</a>)</li>
 							<li>Disease - Online Mendelian Inheritance in Man (<a href="${configBean.FEWI_URL}vocab/omim/">OMIM</a>)</li>
 						</ul>
-					</div> 
-				</div> 
+					</div>
+				</div>
 				<ul style="padding: 0px;">
 					<li>Function <span>e.g., cell-cell signalling</span></li>
 					<li>Phenotype <span>e.g., obese</span></li>
@@ -149,7 +158,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<tr>
 			<td colspan="3" style="padding: 0px; height: 1em; text-align:center;">
 				<div id="geneError" class="small error" style="display:none;">
-				*Input not allowed in both boxes. 
+				*Input not allowed in both boxes.
 				Please clear one field before submitting your query.</div>
 			</td>
 		</tr>
@@ -171,17 +180,19 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		</td>
 	</tr>
 
-<!-- 	<tr class="stripe2">
-		<td class="cat2Gxd">Chromosomal location</TD>
+ 	<tr class="stripe2">
+		<td class="cat2Gxd">Genome location</td>
 		<td>
-			<div style="width:300px;text-align:left;">
-				inputs go here
-			</div>
+		    <div style='vertical-align:top; height:40px;padding-left:5px;'>
+		        <form:textarea path="locations" id="locations" name="locations" style="" cols="26" rows="2" />
+		        <div style='float:left; padding-left: 5px;'>Find expression data for a set of genes defined by </br>genomic interval(s) (genome build ${configBean.ASSEMBLY_VERSION}).</div>
+		    </div>
+		    <div style='font-size: 10px; font-style: italic;'>e.g., Chr12:3000000-10000000 </div>
 		</td>
-	</tr> -->
+	</tr>
 
-	<tr class="stripe2">
-		<td class="cat2Gxd">Anatomical structure or stage</td>
+	<tr class="stripe1">
+		<td class="cat1Gxd">Anatomical structure or stage</td>
 		<td>
 			<table class="noborder">
 			<tr>
@@ -190,7 +201,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			</tr>
 			<tr><th>Anatomical Structures:</th>
 			<th>AND&nbsp;/&nbsp;OR</th>
-			<th>&nbsp;&nbsp;&nbsp;&nbsp;Developmental Stages (dpc):</th>
+			<th>&nbsp;&nbsp;&nbsp;&nbsp;Developmental Stages:</th>
 			</tr>
 			<tr>
 			<td valign="middle">
@@ -211,6 +222,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 					</div>
 					<div id="ageStageDiv" class="tab-content">
 						<div class="active-content">
+							<a href="${configBean.FEWI_URL}glossary/theiler" target="_blank"><img style="margin-bottom:82px;" id="" src="${configBean.WEBSHARE_URL}images/help_icon.png" /></a>
 							<form:select multiple="true" path="theilerStage" size="7" items="${gxdQueryForm.theilerStages}">
 	                        <form:options items="${theilerStages}" />
 	                        </form:select>
@@ -221,39 +233,39 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	                        </form:select>
 						</div>
 					</div>
-		        </div>                            
+		        </div>
 			</td>
 			</tr>
 			</table>
 		</td>
 	</tr>
 
- 	<tr class="stripe1">
-		<td class="cat1Gxd">Mutant / wild type</td>
+ 	<tr class="stripe2">
+		<td class="cat2Gxd">Mutant / wild type</td>
 		<td>
 				<div style="width:500px;text-align:left;">
 				Find expression data in ...
 				<ul id="geneticBackground">
-				<li><label><input type="radio" id="mutatedSpecimen" name="geneticBackground"/> Specimens mutated in gene: </label> 
+				<li><label><input type="radio" id="mutatedSpecimen" name="geneticBackground"/> Specimens mutated in gene: </label>
 					<form:input id="mutatedIn" path="mutatedIn" style="width:220px;"></form:input></li>
 				<li><label><input type="radio" id="isWildType" name="geneticBackground"/> Wild type specimens only</label></li>
 				<li><label><input type="radio" id="allSpecimen" name="geneticBackground" checked="true"/> All specimens</label></li>
 				</ul>
 					<div style="padding-left: 15px; height: 1em;">
 						<div id="mutatedSelectError" class="small error" style="display:none; white-space:nowrap;">
-						*Please clarify your search by either selecting the 
+						*Please clarify your search by either selecting the
 						<i>'Specimens mutated in'</i> button or clearing its gene box.</div>
 						<div id="mutatedGeneError" class="small error" style="display:none; white-space:nowrap;">
-						*You have selected <i>'Specimens mutated in gene'</i>.  
+						*You have selected <i>'Specimens mutated in gene'</i>.
 						Please enter a gene.</div>
 					</div>
 				</div>
 		</td>
 	</tr>
-	<tr class="stripe2">
-		<td class="cat2Gxd">Assay types</td>
+	<tr class="stripe1">
+		<td class="cat1Gxd">Assay types</td>
 		<td>
-			<label id="allAssayTypeLabel"><input type="checkbox" id="assayType-ALL" name="assayType-ALL" class="assayType-ALL" checked="true"/> 
+			<label id="allAssayTypeLabel"><input type="checkbox" id="assayType-ALL" name="assayType-ALL" class="assayType-ALL" checked="true"/>
 				Find expression data in any assay type</label>
 			<div id="assayTypes" style="width:800px;text-align:left;position:relative;">
 			<ul id="assayTypes1" >
@@ -265,7 +277,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		       		<label class="assayTypeLabel"><input type="checkbox" id="assayType" name="assayType" class="assayType" value="<c:out value="${assayType}"/>" checked="true"/>
 		       		<c:out value="${assayType}"/></label>
 		       	</li>
-			       
+
 		   </c:forEach>
 		   </ul>
 			</div>
@@ -281,10 +293,10 @@ span.smallGrey { font-size: 75%; color: #999999; }
 </table>
 
 <div id="vocabWarning">
-    <div class="hd">Warning. Invalid Selection</div> 
+    <div class="hd">Warning. Invalid Selection</div>
         <div id="vocabWarningText" class="bd"></div>
-</div> 
-		             
+</div>
+
 </form:form>
 </div>
 <div id="differential-qf">
@@ -304,23 +316,25 @@ span.smallGrey { font-size: 75%; color: #999999; }
 				Find genes where expression is detected in<br/>
 				<div style="padding:2px 0px 12px 20px; width:300px;text-align:left;" id="difStructureAutoComplete1">
 				<input id="difStructure1" name="structure" style="width:270px;"></input>
+				<input type="hidden" id="difStructure1ID" name="structureID" value=""/>
 				<div id="difStructureContainer1"></div>
 				</div>
 			</td></tr>
 			<tr><td colspan="2">
-				and expression is <span class="redNot">NOT</span> detected or analyzed in 
+				and expression is <span class="redNot">NOT</span> detected or analyzed in
 				<img id="gxdDifStruct1HelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
-				<div id="gxdDifStruct1Help"> 
-					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
+				<div id="gxdDifStruct1Help">
+					<div class="hd"><b>NOT</b> detected or analyzed in...</div>
 					<div class="bd">
-						<p>The search will return genes whose expression was absent (not detected), 
+						<p>The search will return genes whose expression was absent (not detected),
 						as well as genes whose expression has not been analyzed or recorded in the database for the specified structure.</p>
-					</div> 
-				</div> 
+					</div>
+				</div>
 			</td></tr>
 			<tr><td colspan="2">
 				<div style="padding:2px 0px 12px 20px;width:300px;text-align:left;" id="difStructureAutoComplete2">
 				<input id="difStructure2" name="difStructure" style="width:270px;"></input>
+				<input type="hidden" id="difStructure2ID" name="difStructureID" value=""/>
 				<div id="difStructureContainer2"></div>
 				</div>
 			</td></tr>
@@ -370,21 +384,21 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	                        </form:select>
 						</div> --%>
 					<!-- </div> -->
-		        </div>               
+		        </div>
 				</div>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="vertical-align:top;">
-				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed at 
+				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed at
 				<img id="gxdDifStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
-				<div id="gxdDifStageHelp"> 
-					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
+				<div id="gxdDifStageHelp">
+					<div class="hd"><b>NOT</b> detected or analyzed in...</div>
 					<div class="bd">
-						<p>The search will return genes whose expression was absent (not detected), 
+						<p>The search will return genes whose expression was absent (not detected),
 						as well as genes whose expression has not been analyzed or recorded in the database for the specified developmental stage(s).</p>
-					</div> 
-				</div> 
+					</div>
+				</div>
 			</td>
 			<td>
 				<div style="padding-left:40px;">
@@ -404,8 +418,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	                        <form:options items="${ages}" />
 	                        </form:select>
 						</div> --%>
-					</div> 
-		        </div>                            
+					</div>
+		        </div>
 			</td>
 				</div>
 			</td>
@@ -438,6 +452,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			Find genes where expression is detected in<br/>
 			<div class="anatomyAC" id="difStructureAutoComplete3">
 				<input id="difStructure3" name="structure" style="width:270px;"></input>
+				<input type="hidden" id="difStructure3ID" name="structureID" value=""/>
 				<div id="difStructureContainer3"></div>
 			</td>
 			<td>
@@ -447,24 +462,25 @@ span.smallGrey { font-size: 75%; color: #999999; }
 							<form:select multiple="true" path="theilerStage" id="difTheilerStage3" size="7" items="${gxdQueryForm.theilerStages}">
 	                        <form:options items="${theilerStages}" />
 	                        </form:select>
-		        </div>               
+		        </div>
 				</div>
 			</td>
 		</tr>
 		<tr  style="height:8px;"><td colspan="4"></td></tr>
 		<tr>
 			<td colspan="2" style="vertical-align:top;">
-				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed in 
+				and expression is <span class="redNot" style="vertical-align:top;">NOT</span> detected or analyzed in
 				<img id="gxdDifStructStageHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" /><br/>
-				<div id="gxdDifStructStageHelp"> 
-					<div class="hd"><b>NOT</b> detected or analyzed in...</div> 
+				<div id="gxdDifStructStageHelp">
+					<div class="hd"><b>NOT</b> detected or analyzed in...</div>
 					<div class="bd">
-						<p>The search will return genes whose expression was absent (not detected), 
+						<p>The search will return genes whose expression was absent (not detected),
 						as well as genes whose expression has not been analyzed or recorded in the database for the specified structure and stage(s).</p>
-					</div> 
-				</div> 
+					</div>
+				</div>
 				<div class="anatomyAC" id="difStructureAutoComplete4">
 				<input id="difStructure4" name="difStructure" style="width:270px;"></input>
+				<input type="hidden" id="difStructure4ID" name="difStructureID" value=""/>
 				<div id="difStructureContainer4"></div>
 			</td>
 			<td>
@@ -474,8 +490,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 							<form:select multiple="true" path="difTheilerStage" id="difTheilerStage4" size="7" items="${gxdQueryForm.difTheilerStages}">
 	                        <form:options items="${theilerStages}" />
 	                        </form:select>
-					</div> 
-		        </div>                            
+					</div>
+		        </div>
 			</td>
 				</div>
 			</td>
