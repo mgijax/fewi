@@ -9,17 +9,6 @@
 ${templateBean.templateHeadHtml}
 
 <SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
-<SCRIPT TYPE="text/javascript">
-function toggleHomologyDetails ()
-{
-    toggle ("downArrowHomologs");
-    toggle ("rightArrowHomologs");
-    toggle ("humanHomologDetails");
-    if (mgihomeUrl != null) {
-        hitUrl (mgihomeUrl + "other/monitor.html", "toggleHomologyDetails=1");
-    }
-}
-</SCRIPT>
 
 <title>${marker.symbol} MGI Mouse ${marker.markerType} Detail - ${marker.primaryID} - ${marker.name}</title>
 
@@ -112,44 +101,131 @@ function toggleHomologyDetails ()
 </style>
 
 <script language="Javascript">
-function isIntegerFlank(flank) {
-    // error if non-numeric flank
-    if (isNaN(flank)) {
-        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer.");
-        return 0;
-    }
-
-    // error if flank is a float, not an integer
-    if (flank.indexOf('.') != -1) {
-        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer -- without a decimal point.");
-        return 0
-    }
-
-    // error if flank has extra spaces
-    if (flank.indexOf(' ') != -1) {
-        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer -- without extra spaces.");
-        return 0
-    }
-    return 1;
-}
-
-function formatForwardArgs() {
-    document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
-
-    // ensure we have a valid value for Flank before proceeding
-    if (document.sequenceForm.flank1 && !isIntegerFlank(document.sequenceForm.flank1.value)) {
-        return 1;
-    }
-    document.sequenceForm.submit();
-}
-
-function formatFastaArgs() {
-    // ensure we have a valid value for Flank before proceeding
-    if (document.markerCoordForm.flank1 && !isIntegerFlank(document.markerCoordForm.flank1.value)) {
-        return 1;
-    }
-    document.markerCoordForm.submit();
-}
+$(function(){
+	 window.isIntegerFlank = function(flank) {
+	    // error if non-numeric flank
+	    if (isNaN(flank)) {
+	        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer.");
+	        return 0;
+	    }
+	
+	    // error if flank is a float, not an integer
+	    if (flank.indexOf('.') != -1) {
+	        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer -- without a decimal point.");
+	        return 0
+	    }
+	
+	    // error if flank has extra spaces
+	    if (flank.indexOf(' ') != -1) {
+	        alert ("An invalid value is specified for Flank (" + flank + ").  Flank must be an integer -- without extra spaces.");
+	        return 0
+	    }
+	    return 1;
+	}
+	
+	window.formatForwardArgs = function() {
+	    document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
+	
+	    // ensure we have a valid value for Flank before proceeding
+	    if (document.sequenceForm.flank1 && !isIntegerFlank(document.sequenceForm.flank1.value)) {
+	        return 1;
+	    }
+	    document.sequenceForm.submit();
+	}
+	
+	window.formatFastaArgs = function() {
+	    // ensure we have a valid value for Flank before proceeding
+	    if (document.markerCoordForm.flank1 && !isIntegerFlank(document.markerCoordForm.flank1.value)) {
+	        return 1;
+	    }
+	    document.markerCoordForm.submit();
+	}
+	
+	window.toggleHomologyDetails = function()
+	{
+	    toggle ("downArrowHomologs");
+	    toggle ("rightArrowHomologs");
+	    toggle ("humanHomologDetails");
+	    if (mgihomeUrl != null) {
+	        hitUrl (mgihomeUrl + "other/monitor.html", "toggleHomologyDetails=1");
+	    }
+	}
+	
+	/* cluster membership */
+	
+	function initializeClusterMembersPopup () {
+		var elem = document.getElementById("clusterMemberTable");
+		if (elem != null) {
+		    YAHOO.namespace("markerDetail.container");
+		
+		    var props = { 
+		    	visible:false, 
+		    	constraintoviewport:true,
+				context:['showClusterMembers', 'tl', 'br',
+					[ 'beforeShow', 'windowResize' ] ] 
+		    };
+		
+		    if (${memberCount} > 12) {
+				props.height = "300px";
+				props.width = (elem.offsetWidth + 40) + "px";
+		    }
+		    
+		 	// make the div visible
+		    elem.style.display = '';
+		}
+		
+		/* Wire up cluster members popup show link */
+		YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
+		        "clusterMemberDiv", 
+		        props
+		);
+	    YAHOO.markerDetail.container.clusterMemberPanel.render();
+	    YAHOO.util.Event.addListener ("showClusterMembers", "click",
+	    	YAHOO.markerDetail.container.clusterMemberPanel.show,
+	        YAHOO.markerDetail.container.clusterMemberPanel, 
+	        true
+	    );
+	    YAHOO.util.Event.addListener (
+	        "YAHOO.markerDetail.container.clusterMemberPanel", "move",
+	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
+	    );
+	    YAHOO.util.Event.addListener (
+	        "YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
+	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
+	    );
+	}
+	initializeClusterMembersPopup();
+	
+	/* Wire up batch submit in cluster members popup */
+	$("#clusterBatchLink").click(function(){
+		$("#batchWebForm").submit();
+	});
+	
+	window.log = function(msg) {
+	    // log a message to the browser console
+	    //setTimeout(function() { throw new Error(msg); }, 0);
+	    console.log(msg);
+	}
+	
+	/* formatting of GXD section */
+	function formatGxdSection () {
+		var gxdHeading = $("#gxdHeading");
+		if (gxdHeading.length > 0) {
+		    var gxdHeight = $('#gxd').height();
+		    var headingHeight = $('#gxdHeading').height();
+		    var logo = $('#gxdLogo');
+		    var imageHeight = logo.height();
+		
+		    var imagePad = Math.round( (gxdHeight - imageHeight) / 2) - headingHeight;
+		
+		    // add padding to center the logo vertically in the expression ribbon
+		    if (imagePad > 0) {
+		        logo.css('padding-top', imagePad + 'px');
+		    }
+		}
+	}
+	formatGxdSection();
+});
 </script>
 
 ${templateBean.templateBodyStartHtml}
@@ -172,16 +248,6 @@ td.padded { padding:4px; }
 	</div>
 </div>
 
-
-<!-- setup for clusters -->
-
-<c:if test="${not empty marker.clusters}">
-  <c:set var="hasClusters" value="true"/>
-</c:if>
-<c:if test="${not empty marker.clusterMembers}">
-  <c:set var="hasClusterMembers" value="true"/>
-</c:if>
-
 <!-- structural table -->
 <div class="container detailStructureTable">
 
@@ -192,11 +258,11 @@ td.padded { padding:4px; }
       Symbol<br/><br/>
       Name<br/>
       ID
-      <c:if test="${not empty hasClusters}">
+      <c:if test="${hasClusters}">
         <br/>Member&nbsp;of
       </c:if>
-      <c:if test="${not empty hasClusterMembers}">
-      <br/>Cluster&nbsp;member<c:if test="${fn:length(marker.clusterMembers) > 1}">s</c:if>
+      <c:if test="${hasClusterMembers}">
+      <br/>Cluster&nbsp;member<c:if test="${memberCount > 1}">s</c:if>
       </c:if>
     </div>
     <div class="detail <%=rightTdStyles.getNext() %>">
@@ -207,56 +273,21 @@ td.padded { padding:4px; }
           <B>${marker.name}</B><br/>
 	  ${marker.primaryID}
 
-      <c:if test="${not empty hasClusters}">
+      <c:if test="${hasClusters}">
           <br/>
           <c:forEach var="cluster" items="${marker.clusters}" varStatus="status">
               <a href="${configBean.FEWI_URL}marker/${cluster.relatedMarkerID}">${cluster.relatedMarkerSymbol}</a> cluster<c:if test="${!status.last}">, </c:if>
-
           </c:forEach>
       </c:if>
 
-      <c:set var="memberCount" value="0"/>
-      <c:if test="${not empty hasClusterMembers}">
+    <c:if test="${hasClusterMembers}">
         <br/>
-        <c:set var="memberCount" value="${fn:length(marker.clusterMembers)}"/>
-	<c:set var="i" value="0"/>
-	<c:set var="memberSymbols" value="${marker.symbol}"/>
-
-	<c:forEach var="member" items="${marker.clusterMembers}" varStatus="status">
-	    <c:set var="i" value="${i + 1}"/>
-	    <c:if test="${i <= 3}">
-	    <a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a><c:if test="${(i < 3) && (memberCount > i)}">, </c:if>
-	    </c:if>
-	    <c:set var="memberSymbols" value="${memberSymbols}, ${member.relatedMarkerSymbol}"/>
-	</c:forEach>
-	<c:if test="${memberCount > 3}">...</c:if>
-	(<span id="showClusterMembers" class="link">${memberCount}</span> member<c:if test="${memberCount > 1}">s</c:if>)
-      <form style='display:none;' name='batchWeb' enctype='multipart/form-data'
-	      target='_blank' method='post'
-	      action='${configBean.FEWI_URL}batch/summary'>
-	      <input name='idType' value='current symbol' type='hidden'>
-	      <input name='attributes' value='Nomenclature' type='hidden'>
-	      <input name='attributes' value='Location' type='hidden'>
-	      <input name='ids' value='${memberSymbols}' id='batchSymbolListWeb' type='hidden'>
-      </form>
-
-      <div id="clusterMemberDiv" class="" style="visibility:hidden">
-	 <div class="hd"> ${marker.symbol} Cluster contains:
-	   <div style="float:right; margin-right:25px"><span onClick='JAVASCRIPT:batchWeb.submit();' style="cursor: pointer; text-decoration: underline; color: #0000ff">More Data</span> for these features</div>
-         </div>
-	 <div class="bd" style="overflow:auto">
-	    <table id="clusterMemberTable">
-		<tr><td class="bold leftAlign allBorders">Member</td><td class="bold leftAlign allBorders">Feature Type</td><td class="bold leftAlign allBorders">Location</td></tr>
-		<c:forEach var="member" items="${marker.clusterMembers}">
-		   <tr><td class="leftAlign allBorders"><a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a>, ${member.relatedMarkerName}</td>
-		   <td class="leftAlign allBorders">${member.relatedMarkerFeatureType}</td>
-		   <td class="leftAlign allBorders">${member.relatedMarkerLocation}</td>
-		   </tr>
+		<c:forEach var="member" items="${marker.clusterMembers}" varStatus="status" end="2">
+		    <a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
 		</c:forEach>
-	    </table>
-	 </div>
-      </div>
-      </c:if>
+		<c:if test="${memberCount > 3}">...</c:if>
+			(<span id="showClusterMembers" class="link">${memberCount}</span> member<c:if test="${memberCount > 1}">s</c:if>)
+	    </c:if>
 
       </td><td style="text-align: right; vertical-align: middle;">
         <c:if test="${not empty biotypeConflictTable}">
@@ -1013,63 +1044,39 @@ td.padded { padding:4px; }
     </div>
   </c:if>
 
-<!-- close structural table and page template-->
+<!-- close structural table -->
 </div>
+
+<!-- Elements not part of page structure that are hidden by default -->
+<div class="hiddenItems">
+	<!-- Cluster Relationship items -->
+	<c:if test="${hasClusterMembers}">
+		 <form style='display:none;' id="batchWebForm" name='batchWeb' enctype='multipart/form-data'
+		      target='_blank' method='post'
+		      action='${configBean.FEWI_URL}batch/summary'>
+		      <input name='idType' value='current symbol' type='hidden'>
+		      <input name='attributes' value='Nomenclature' type='hidden'>
+		      <input name='attributes' value='Location' type='hidden'>
+		      <input name='ids' value='${memberSymbols}' id='batchSymbolListWeb' type='hidden'>
+	      </form>
+	
+	      <div id="clusterMemberDiv" class="" style="visibility:hidden;">
+			 <div class="hd"> ${marker.symbol} Cluster contains:
+			   <div style="float:right; margin-right:25px"><span id="clusterBatchLink" style="cursor: pointer; text-decoration: underline; color: #0000ff">More Data</span> for these features</div>
+		     </div>
+			 <div class="bd" style="overflow:auto">
+			    <table id="clusterMemberTable">
+				<tr><td class="bold leftAlign allBorders">Member</td><td class="bold leftAlign allBorders">Feature Type</td><td class="bold leftAlign allBorders">Location</td></tr>
+				<c:forEach var="member" items="${marker.clusterMembers}">
+				   <tr><td class="leftAlign allBorders"><a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a>, ${member.relatedMarkerName}</td>
+				   <td class="leftAlign allBorders">${member.relatedMarkerFeatureType}</td>
+				   <td class="leftAlign allBorders">${member.relatedMarkerLocation}</td>
+				   </tr>
+				</c:forEach>
+			    </table>
+			 </div>
+	      </div>
+	</c:if>
+</div>
+<!--  close page template -->
 ${templateBean.templateBodyStopHtml}
-
-<script>
-function log(msg) {
-    // log a message to the browser console
-    //setTimeout(function() { throw new Error(msg); }, 0);
-    console.log(msg);
-}
-
-$(function(){
-	//formatting of GXD section
-	
-	var gxdHeading = $("#gxdHeading");
-	if (gxdHeading.length > 0) {
-	    var gxdHeight = $('#gxd').height();
-	    var headingHeight = $('#gxdHeading').height();
-	    var logo = $('#gxdLogo');
-	    var imageHeight = logo.height();
-	
-	    var imagePad = Math.round( (gxdHeight - imageHeight) / 2) - headingHeight;
-	
-	    // add padding to center the logo vertically in the expression ribbon
-	    if (imagePad > 0) {
-	        logo.css('padding-top', imagePad + 'px');
-	    }
-	}
-	
-	// cluster membership
-	
-	var elem = document.getElementById("clusterMemberTable");
-	if (elem != null) {
-	    YAHOO.namespace("markerDetail.container");
-	
-	    var props = { visible:false, constraintoviewport:true,
-		context:['showClusterMembers', 'tl', 'br',
-		[ 'beforeShow', 'windowResize' ] ] };
-	
-	    if (${memberCount} > 12) {
-		props.height = "300px";
-		props.width = (elem.offsetWidth + 40) + "px";
-	    }
-	
-	    YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
-	        "clusterMemberDiv", props);
-	    YAHOO.markerDetail.container.clusterMemberPanel.render();
-	    YAHOO.util.Event.addListener ("showClusterMembers", "click",
-	        YAHOO.markerDetail.container.clusterMemberPanel.show,
-	        YAHOO.markerDetail.container.clusterMemberPanel, true);
-	    YAHOO.util.Event.addListener (
-	        "YAHOO.markerDetail.container.clusterMemberPanel", "move",
-	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
-	    YAHOO.util.Event.addListener (
-	        "YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
-	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw);
-	    elem.style.display = '';		// make the div visible
-	}
-});
-</script>
