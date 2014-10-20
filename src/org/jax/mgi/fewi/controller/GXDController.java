@@ -1332,7 +1332,7 @@ public class GXDController {
 		{
 			// create the positive results filter
 			List<Filter> posFilters = new ArrayList<Filter>();
-			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
+			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,structure));
 			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			Filter posFilter = Filter.and(posFilters);
 
@@ -1386,7 +1386,7 @@ public class GXDController {
 			// stub for 3rd differential ribbon logic
 			// create the positive results filter
 			List<Filter> posFilters = new ArrayList<Filter>();
-			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE,structure));
+			posFilters.add(makeStructureSearchFilter(SearchConstants.STRUCTURE_ID,structure));
 			posFilters.add(new Filter(SearchConstants.GXD_DETECTED,"Yes",Filter.Operator.OP_EQUAL));
 			if(stages.size() > 0 && !stages.contains(GxdQueryForm.ANY_STAGE))
 			{

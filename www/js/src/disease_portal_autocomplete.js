@@ -21,8 +21,19 @@ var resolveVocabTermIds = function()
 		data: data
 	});
 	request.done(function (response, textStatus, jqXHR){
-		if(textStatus=="success") $("#ysf-phenotypes").text(response);
-    })
+		if(textStatus=="success") {
+			$("#ysf-phenotypes").text(response.ids);
+			if(response.error) {
+				$("#errorTextString").html(response.error);
+				$("#errorTextMessage").show();
+			}
+		}
+   })
+}
+
+var getErrorMessages = function()
+{
+	//alert("Blah");
 }
 
 //set up any autocomplete behavior
@@ -36,7 +47,30 @@ function split( val ) {
 	return val.split( /,\s*/ );
 }
 function extractLast( term ) {
-	return split( term ).pop();
+	if (typeof(term) == 'undefined') { return ""; }
+	var term = split( term ).pop();
+	var terms = term.split(/\s+/);
+	//console.log("T1: " + terms);
+	while(terms[0] == "") { terms.shift(); }
+	//console.log("T2: " + terms);
+	//console.log("TL: " + terms.length);
+	if(terms.length > 0) {
+		//console.log("1 terms[0]: " + terms[0]);
+		if(terms[0] == "AND" || terms[0] == "OR") {
+			terms.shift();
+		}
+		//console.log("2 terms[0]: " + terms[0]);
+		if(terms.length > 0 && terms[0] == "NOT") {
+			terms.shift();
+		}
+		//console.log("3 terms[0]: " + terms[0]);
+	}
+	//console.log("T3: " + terms);
+	if(terms.length > 0) {
+		return terms.join(" ");
+	} else {
+		return "";
+	}
 }
 
 $(function(){
@@ -48,25 +82,48 @@ $(function(){
 	// this section resets how tabbing works, so that it allows multiple autocomplete selections
 	// NOTE: the ID of the phenotypes search box must be "phenotypes"
 	var phenotypesAC = $( "#phenotypes" ).bind( "keydown", function( event ) {
-		if ( event.keyCode === $.ui.keyCode.TAB &&
-				$( this ).data( "ui-autocomplete" ).menu.active ) {
+		if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {
 			event.preventDefault();
+		}
+	})
+	.bind("keyup", function(event) {
+		if ( extractLast(this.value).length < 2) {
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-2) == "\" ") {
+			// And a comma after the end of a quote
+			this.value = [this.value.slice(0, this.value.length -2), '",', ' '].join('');
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-4) == "AND ") {
+			this.value = [this.value.slice(0, this.value.length -4), 'AND,', ' '].join('');
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-4) == "NOT ") {
+			this.value = [this.value.slice(0, this.value.length -4), 'NOT,', ' '].join('');
+			$(".ui-autocomplete").hide();
+		}
+		if(this.value.slice(-3) == "OR ") {
+			this.value = [this.value.slice(0, this.value.length -3), 'OR,', ' '].join('');
+			$(".ui-autocomplete").hide();
 		}
 	})
 	// this section set the jquery UI autocomplete feature
 	.autocomplete({
 	source: function( request, response ) {
-		$.ajax({
-			url: phenotypesACUrl+extractLast( request.term ),
-			dataType: "json",
-			success: function( data ) {
-				response($.map(data["summaryRows"], function( item ) {
-					// this function handles the json response.
-					// we redefine the data format we will use in the render functions
-					return {label: item.termId, formattedTerm: item.formattedTerm};
-				}));
-			}
-		});
+		if(extractLast(request.term).length >= 2) {
+			$.ajax({
+				url: phenotypesACUrl+extractLast( request.term ),
+				dataType: "json",
+				success: function( data ) {
+					response($.map(data["summaryRows"], function( item ) {
+						// this function handles the json response.
+						// we redefine the data format we will use in the render functions
+						return {label: item.termId, formattedTerm: item.formattedTerm};
+					}));
+				}
+			});
+		}
 	},
 	focus: function() {
 		// prevent value inserted on focus
@@ -77,7 +134,18 @@ $(function(){
 		// the select function is called when user selects an item
 		var terms = split( this.value );
 		// remove the current input
-		terms.pop();
+		var oldterm = terms.pop();
+		var oldterms = oldterm.split(/\s+/);
+		while(oldterms[0] == "") { oldterms.shift(); }
+		if(oldterms.length >= 1 && (oldterms[0] == "AND" || oldterms[0] == "OR")) {
+			oldterm = oldterms.shift();
+			terms.push(oldterm);
+		}
+		if(oldterms.length >= 1 && oldterms[0] == "NOT") {
+			oldterm = oldterms.shift();
+			terms.push(oldterm);
+		}
+
 		// add the selected item
 		terms.push( ui.item.value );
 		// add placeholder to get the comma-and-space at the end

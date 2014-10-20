@@ -128,12 +128,14 @@ var updateQuerySummary = function() {
 	var summaryDiv = $('#searchSummary');
 	summaryDiv.html("");
 	var ysfText = "<b>You searched for: </b>";
+
+	ysfText += "<span id=\"errorTextMessage\" style=\"display: none;\"><br>There is an error in your query, indicated by bolded text:<br><span id=\"errorTextString\"></span><br><b>Query was modified and run in the following way:</b></span>";
 	
 	var values = serializeQF();
 	if ("phenotypes" in values && values["phenotypes"]!="")
 	{
 		ysfText += "<br/>"
-		ysfText += "Phenotypes or Diseases matching [<b id=\"ysf-phenotypes\">"+values["phenotypes"]+"</b>]";
+		ysfText += "Phenotypes or Diseases matching: <b id=\"ysf-phenotypes\">"+values["phenotypes"]+"</b>";
 	}
 	if ("genes" in values && values["genes"]!="")
 	{
@@ -149,13 +151,13 @@ var updateQuerySummary = function() {
 	{
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
-		ysfText += organism+" locations matching [<b>"+$('<div/>').text(values["locations"]).html()+"</b>]";
+		ysfText += organism+" loci overlapping interval: [<b>"+$('<div/>').text(values["locations"]).html()+"</b>]";
 	}
 	if ("locationsFileName" in values && values["locationsFileName"]!="")
 	{
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
-		ysfText += organism+" locations matching [<b id=\"ysf-locationsFile\">file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
+		ysfText += organism+" loci overlapping interval: [<b id=\"ysf-locationsFile\">file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
 	}
 	
 	summaryDiv.append(ysfText);
@@ -165,6 +167,9 @@ var updateQuerySummary = function() {
 	
 	// check if file upload is still cached
 	checkFileUploadCache();
+
+	// Run query againt parser to check for errors
+	getErrorMessages();
 };
 
 

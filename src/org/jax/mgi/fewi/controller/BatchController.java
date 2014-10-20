@@ -177,12 +177,10 @@ public class BatchController {
         ModelAndView mav = new ModelAndView("batch_summary");
         mav.addObject("queryString", queryForm.toQueryString());
         mav.addObject("batchQueryForm", queryForm);
-        mav.addObject("inputIdCount", idList.size());
-	
-	if (queryForm.isFromQueryForm()) {
-	    mav.addObject("isFromQueryForm", "true");
-	}
-
+        mav.addObject("inputIdCount", inputIdCount);
+    	if (queryForm.isFromQueryForm()) {
+    	    mav.addObject("isFromQueryForm", "true");
+    	}
         logger.debug("processSummary done");
         return mav;
     	

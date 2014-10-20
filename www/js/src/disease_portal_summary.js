@@ -16,6 +16,28 @@ var History = YAHOO.util.History;
 // HTML/YUI page widgets
 YAHOO.namespace("hdp.container");
 
+YAHOO.hdp.container.panel1 = new YAHOO.widget.Panel(
+	"showMgiHumanGenesHelpDivDialog", {
+		width : "420px",
+		visible : false,
+		constraintoviewport : true,
+		context : [ 'showMgiHumanGenesHelpDiv', 'tr', 'bl' ]
+	});
+YAHOO.hdp.container.panel1.render();
+
+// Instantiate a Panel from markup
+YAHOO.hdp.container.panel2 = new YAHOO.widget.Panel(
+	"showMgiHumanDiseaseHelpDivDialog", {
+		width : "420px",
+		visible : false,
+		constraintoviewport : true,
+		context : [ 'showMgiHumanDiseaseHelpDiv', 'tr', 'bl' ]
+	});
+YAHOO.hdp.container.panel2.render();
+
+YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
+
 // ------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
 	"tabViewId":"resultSummary",
@@ -644,7 +666,7 @@ var genesResultsTable = function() {
 		{key: "symbol", label: "Gene Symbol", sortable: true },
 		{key: "location", label: "Genetic Location", sortable: false },
 		{key: "coordinate", label: "Genome Coordinates", sortable: true },
-		{key: "disease", label: "Associated Human Diseases", sortable: false, width:240 },
+		{key: "disease", label: "Associated Human Diseases (<span id=\"showMgiHumanGenesHelpDiv\" style=\"color: #06F;cursor: pointer;\">source</span>)", sortable: false, width:240 },
 		{key: "system", label: "Abnormal Mouse Phenotypes<br/> Reported in these Systems", sortable: false },
 		{key: "allRefCount", label: "References in MGI", sortable: false },
 		{key: "imsrCount", label: "Mice With Mutations<br/> In this Gene (IMSR)", sortable: false },
@@ -792,6 +814,9 @@ var genesResultsTable = function() {
 
 		return true;
 	};
+
+	YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+	YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
 };
 var diseasesResultsTable = function() {
 
@@ -804,8 +829,8 @@ var diseasesResultsTable = function() {
 		{key: "disease", label: "Disease", sortable: true },
 		{key: "diseaseId", label: "OMIM ID", sortable: true },
 		{key: "diseaseModels", label: "Mouse Models", sortable: false },
-		{key: "mouseMarkers", label: "Associated Mouse Genes", sortable: false },
-		{key: "humanMarkers", label: "Associated Human Genes", sortable: false },
+		{key: "mouseMarkers", label: "Associated Genes from Mouse Models", sortable: false },
+		{key: "humanMarkers", label: "Associated Human Genes (<span id=\"showMgiHumanDiseaseHelpDiv\" style=\"color: #06F;cursor: pointer;\">source</span>)", sortable: false },
 		{key: "refCount", label: "References using <br/>Mouse Models", sortable: false },
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];
@@ -898,7 +923,11 @@ var diseasesResultsTable = function() {
 
 		return true;
 	};
+
+	YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+	YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
 };
+
 genesResultsTable();
 History.register("hdp", History.getBookmarkedState("hdp") || "", handleNavigation);
 
@@ -933,7 +962,7 @@ function historyInit()
 		if (queryTabParam && queryTabParam in mgiTab.tabs) resultsTabs.set("activeIndex",mgiTab.tabs[queryTabParam]);
 		handleNavigation(generateRequest(null, 0, DEFAULT_PAGE_SIZE),true,true);
 	}
-}
+};
 History.onReady(historyInit);
 
 
@@ -967,6 +996,22 @@ function refreshJQTooltips()
 		});
 	},400);
 
+};
+
+function showPanel1() {
+	YAHOO.hdp.container.panel1.cfg.setProperty("context",['showMgiHumanGenesHelpDiv','tr','bl']);
+	YAHOO.hdp.container.panel1.show();
+	if (ev) { 
+		YAHOO.util.Event.stopEvent(ev); 
+	} 
+}
+
+function showPanel2() {
+	YAHOO.hdp.container.panel2.cfg.setProperty("context",['showMgiHumanDiseaseHelpDiv','tr','bl']);
+	YAHOO.hdp.container.panel2.show();
+	if (ev) { 
+		YAHOO.util.Event.stopEvent(ev); 
+	} 
 }
 
 $(function(){

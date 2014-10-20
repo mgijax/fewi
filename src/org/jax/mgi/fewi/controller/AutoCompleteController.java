@@ -182,6 +182,7 @@ public class AutoCompleteController {
 
 			Filter outerFilter = new Filter();
 			outerFilter.setNestedFilters(finalList,Filter.JoinClause.FC_AND);
+			
 			params.setFilter(outerFilter);
 		}
 		else {
@@ -242,8 +243,8 @@ public class AutoCompleteController {
 
 	/* float any results that begins with the given query string up to the
 	 * top of the results
-	 * 
-	 *  We need to find a way to do this in Solr. Not only is this convoluted and inconsistent,
+	 *
+	 * TODO: We need to find a way to do this in Solr. Not only is this convoluted and inconsistent,
 	 * 	it likely won't do what is expected in every case. -kstone
 	 */
 	private SearchResults<EmapaACResult> floatBeginsMatches (String query,
@@ -301,6 +302,7 @@ public class AutoCompleteController {
 	    }
 
 	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
+				
 	    params.setFilter(f);
 
 	    // default sorts are "score","autocomplete text"
@@ -398,6 +400,7 @@ public class AutoCompleteController {
 
 		// filter specific vocabs for this autocomplete
 		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.Operator.OP_IN);
+		
 		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
 		new ArrayList<VocabACSummaryRow>();
 
@@ -529,6 +532,9 @@ public class AutoCompleteController {
 			searchList[index] = result.getTermId();
 			index++;
 		}
+		
+		
+		
 		
 		Filter f = bs.buildSolrFilter(SearchConstants.VOC_TERM, ids);
 		
