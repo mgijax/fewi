@@ -12,9 +12,18 @@
  * 	It resolves any term IDs into their term names.
  * 	This only really needs to be used if the user had autocomplete interaction...
  */ 
-var resolveVocabTermIds = function()
+var resolveVocabTermIds = function(datain)
 {
-	var data = "ids="+$("#ysf-phenotypes").text();
+	var data;
+
+	if($("#ysf-phenotypes").text().length > 0) {
+		data = "ids="+$("#ysf-phenotypes").text();
+	} else if($("#phenotypes").val().length > 0) {
+		data = "ids="+$("#phenotypes").val();
+	} else {
+		data = "ids="+datain;
+	}
+
 	var request = $.ajax({
 		url:fewiurl+"autocomplete/vocabTerm/resolve",
 		type: "post",
@@ -26,6 +35,9 @@ var resolveVocabTermIds = function()
 			if(response.error) {
 				$("#errorTextString").html(response.error);
 				$("#errorTextMessage").show();
+			}
+			if(response.ids.length > 0) {
+				$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
 			}
 		}
    })
@@ -107,6 +119,9 @@ $(function(){
 			this.value = [this.value.slice(0, this.value.length -3), 'OR,', ' '].join('');
 			$(".ui-autocomplete").hide();
 		}
+		if($("#showingQuery").prop("checked")) {
+			resolveVocabTermIds();
+		}
 	})
 	// this section set the jquery UI autocomplete feature
 	.autocomplete({
@@ -151,6 +166,9 @@ $(function(){
 		// add placeholder to get the comma-and-space at the end
 		terms.push( "" );
 		this.value = terms.join( ", " );
+		if($("#showingQuery").prop("checked")) {
+			resolveVocabTermIds();
+		}
 		return false;
 	}
 	}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
@@ -166,5 +184,16 @@ $(function(){
 	//		.append('<span>'+value+'</span>')
 	//		.appendTo(ul);
 	};
+
+	var showQuery = $( "#showingQuery" ).click(function() {
+		if(this.checked) {
+			resolveVocabTermIds();
+			$("#queryText").show();
+		} else {
+			$("#queryText").hide();
+		}
+	});
+
+
 });
 
