@@ -14,14 +14,16 @@
  */ 
 var resolveVocabTermIds = function(datain)
 {
-	var data;
+	var data = "";
 
 	if($("#ysf-phenotypes").text().length > 0) {
 		data = "ids="+$("#ysf-phenotypes").text();
 	} else if($("#phenotypes").val().length > 0) {
 		data = "ids="+$("#phenotypes").val();
-	} else {
+	} else if(datain) {
 		data = "ids="+datain;
+	} else {
+		data = "ids=";
 	}
 
 	var request = $.ajax({
@@ -36,8 +38,10 @@ var resolveVocabTermIds = function(datain)
 				$("#errorTextString").html(response.error);
 				$("#errorTextMessage").show();
 			}
-			if(response.ids.length > 0) {
+			if(response.ids && response.ids.length > 0) {
 				$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
+			} else {
+				$("#queryText").html("");
 			}
 		}
    })
@@ -194,6 +198,10 @@ $(function(){
 		}
 	});
 
+	var resetButton = $("#resetButton").click(function() {
+		$("#phenotypes").val("");
+		resolveVocabTermIds();
+	});
 
 });
 
