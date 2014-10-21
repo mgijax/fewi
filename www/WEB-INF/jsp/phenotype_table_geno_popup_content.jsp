@@ -52,6 +52,13 @@
 		<table>
 		<c:forEach var="annotation" items="${term.annots}" varStatus="annotStatus">
 
+		    <c:set var="showMgi" value=""/>
+		    <c:forEach var="reference" items="${annotation.references}">
+		        <c:if test="${reference.hasNonMgiSource}">
+			  <c:set var="showMgi" value="1"/>
+			</c:if>
+		    </c:forEach>
+
 		<tr class="<c:if test="${annotStatus.index>0}">borderTop</c:if>"><td class="sexTd" rowspan="1}">
 				<c:if test="${annotation.sex=='M'}"><img class="mp_glyph" src="${configBean.FEWI_URL}assets/images/Mars_symbol.svg"/></c:if>
        			<c:if test="${annotation.sex=='F'}"><img class="mp_glyph" src="${configBean.FEWI_URL}assets/images/Venus_symbol.svg"/></c:if>
@@ -59,9 +66,9 @@
         	<td>
 		      <c:forEach var="reference" items="${annotation.references}" varStatus="refStatus">
 		      	  <!-- This is a check to suppress certain rows from displaying -->
-			      <c:if test="${!annotation.isBoth || !annotation.isCall || reference.hasNotes || reference.hasNonMgiSource}">
+			      <c:if test="${!annotation.isBoth || !annotation.isCall || reference.hasNotes || reference.hasNonMgiSource || (not empty showMgi)}">
 				      <div class="refSection" >
-				          <c:if test="${reference.hasNonMgiSource}">
+				          <c:if test="${(not empty showMgi) || reference.hasNonMgiSource}">
 					  <span class="sourceDisplay" onMouseOver="return overlib('${reference.sourceDescription}', LEFT, WIDTH, 200);" onMouseOut="nd();">${reference.sourceDisplay}</span>
 			       			</c:if>
 				        <c:forEach var="note" items="${reference.notes}" varStatus="noteStatus">
