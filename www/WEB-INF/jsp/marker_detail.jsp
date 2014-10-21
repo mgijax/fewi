@@ -172,27 +172,27 @@ $(function(){
 		    
 		 	// make the div visible
 		    elem.style.display = '';
-		}
 		
-		/* Wire up cluster members popup show link */
-		YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
-		        "clusterMemberDiv", 
-		        props
-		);
-	    YAHOO.markerDetail.container.clusterMemberPanel.render();
-	    YAHOO.util.Event.addListener ("showClusterMembers", "click",
-	    	YAHOO.markerDetail.container.clusterMemberPanel.show,
-	        YAHOO.markerDetail.container.clusterMemberPanel, 
-	        true
-	    );
-	    YAHOO.util.Event.addListener (
-	        "YAHOO.markerDetail.container.clusterMemberPanel", "move",
-	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
-	    );
-	    YAHOO.util.Event.addListener (
-	        "YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
-	        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
-	    );
+			/* Wire up cluster members popup show link */
+			YAHOO.markerDetail.container.clusterMemberPanel = new YAHOO.widget.Panel(
+			        "clusterMemberDiv", 
+			        props
+			);
+		    YAHOO.markerDetail.container.clusterMemberPanel.render();
+		    YAHOO.util.Event.addListener ("showClusterMembers", "click",
+		    	YAHOO.markerDetail.container.clusterMemberPanel.show,
+		        YAHOO.markerDetail.container.clusterMemberPanel, 
+		        true
+		    );
+		    YAHOO.util.Event.addListener (
+		        "YAHOO.markerDetail.container.clusterMemberPanel", "move",
+		        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
+		    );
+		    YAHOO.util.Event.addListener (
+		        "YAHOO.markerDetail.container.clusterMemberPanel", "mouseover",
+		        YAHOO.markerDetail.container.clusterMemberPanel.forceContainerRedraw
+		    );
+		}
 	}
 	initializeClusterMembersPopup();
 	
@@ -266,31 +266,8 @@ td.padded { padding:4px; }
       </c:if>
     </div>
     <div class="detail <%=rightTdStyles.getNext() %>">
-      <table>
-        <tr style='width: 100%'><td style="text-align: left; vertical-align: top;">
-          <b style="font-size:x-large;"><fewi:super value="${marker.symbol}"/></b><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
-          <br/>
-          <B>${marker.name}</B><br/>
-	  ${marker.primaryID}
-
-      <c:if test="${hasClusters}">
-          <br/>
-          <c:forEach var="cluster" items="${marker.clusters}" varStatus="status">
-              <a href="${configBean.FEWI_URL}marker/${cluster.relatedMarkerID}">${cluster.relatedMarkerSymbol}</a> cluster<c:if test="${!status.last}">, </c:if>
-          </c:forEach>
-      </c:if>
-
-    <c:if test="${hasClusterMembers}">
-        <br/>
-		<c:forEach var="member" items="${marker.clusterMembers}" varStatus="status" end="2">
-		    <a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
-		</c:forEach>
-		<c:if test="${memberCount > 3}">...</c:if>
-			(<span id="showClusterMembers" class="link">${memberCount}</span> member<c:if test="${memberCount > 1}">s</c:if>)
-	    </c:if>
-
-      </td><td style="text-align: right; vertical-align: middle;">
-        <c:if test="${not empty biotypeConflictTable}">
+    	<div class="biotypeConflictDiv" style="float: right;">
+    	<c:if test="${not empty biotypeConflictTable}">
           <a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'UL', 'UR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img src="${configBean.WEBSHARE_URL}images/warning2.gif" height="26" width="26" id="warning" border="0"></a>
           <a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'UL', 'UR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>BioType Conflict</a>
         </c:if>
@@ -298,8 +275,29 @@ td.padded { padding:4px; }
           <a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'UL', 'UR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img src="${configBean.WEBSHARE_URL}images/mice.jpg" height="38" width="38" id="mice" border="0"></a>
           <a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'UL', 'UR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>Strain-Specific Marker</a>
         </c:if>
-      </td></tr>
-      </table>
+        </div>
+        <div class="geneSymbolSection">
+          <b style="font-size:x-large;"><fewi:super value="${marker.symbol}"/></b><c:if test="${marker.status == 'interim'}"> (Interim)</c:if>
+          <br/>
+          <b>${marker.name}</b><br/>
+	  		${marker.primaryID}
+
+	      <c:if test="${hasClusters}">
+	          <br/>
+	          <c:forEach var="cluster" items="${marker.clusters}" varStatus="status">
+	              <a href="${configBean.FEWI_URL}marker/${cluster.relatedMarkerID}">${cluster.relatedMarkerSymbol}</a> cluster<c:if test="${!status.last}">, </c:if>
+	          </c:forEach>
+	      </c:if>
+
+	      <c:if test="${hasClusterMembers}">
+	        <br/>
+			<c:forEach var="member" items="${marker.clusterMembers}" varStatus="status" end="2">
+			    <a href="${configBean.FEWI_URL}marker/${member.relatedMarkerID}">${member.relatedMarkerSymbol}</a><c:if test="${!status.last}">, </c:if>
+			</c:forEach>
+			<c:if test="${memberCount > 3}">...</c:if>
+				(<span id="showClusterMembers" class="link">${memberCount}</span> member<c:if test="${memberCount > 1}">s</c:if>)
+		  </c:if>
+	   </div>
     </div>
   </div>
 
@@ -358,14 +356,15 @@ td.padded { padding:4px; }
         <div>
         <c:if test="${not empty marker.preferredCentimorgans}">
           <c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
-            Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
-            <c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
-              <c:set var="hasGeneticLocation" value="1"/>
-              <c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
-
+          	<c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
+	        <c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
               <c:if test="${not empty miniMap}">
         	    <div style="float:right;text-align:left;"><a href="${linkmapUrl}"><img src="${miniMap}" border="0"></a></div>
               </c:if>
+	         </c:if>
+            Chromosome ${marker.preferredCentimorgans.chromosome}<br/>
+            <c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
+              <c:set var="hasGeneticLocation" value="1"/>
 			  <c:if test="${marker.markerType == 'QTL'}">
 			    cM position of peak correlated region/marker:
 			  </c:if>
