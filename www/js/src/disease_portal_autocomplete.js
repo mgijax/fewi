@@ -38,8 +38,12 @@ var resolveVocabTermIds = function(datain)
 				$("#errorTextString").html(response.error);
 				$("#errorTextMessage").show();
 			}
-			if(response.ids && response.ids.length > 0) {
-				$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
+			if($("#showingQuery").prop("checked")) {
+				if(response.ids && response.ids.length > 0) {
+					$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
+				} else {
+					$("#queryText").html("<b>Effective Phenotype Query:</b> ");
+				}
 			} else {
 				$("#queryText").html("");
 			}
