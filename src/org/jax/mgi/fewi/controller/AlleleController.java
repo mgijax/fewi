@@ -751,6 +751,21 @@ public class AlleleController {
 		idLinker.setup();
 	        mav.addObject("idLinker", idLinker);
 
+		// pick up and save our 'expresses component' markers before
+		// we enable the filter for the 'mutation involves' markers
+
+		List<AlleleRelatedMarker> expressesComponent =
+		    allele.getExpressesComponentMarkers();
+		if (expressesComponent.size() > 0) {
+		    mav.addObject("expressesComponent", expressesComponent);
+		    for (AlleleRelatedMarker arm : expressesComponent) {
+			String otherOrganism = arm.getEcOrganism();
+			if (otherOrganism != null) {
+			    mav.addObject("nonMouseExpressesComponent", "1");
+			}
+		    }
+		}
+
 		// When retrieving 'mutation involves' markers for the teaser,
 		// ensure that we're only getting the ones we need, rather
 		// than the whole set.

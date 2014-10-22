@@ -35,6 +35,11 @@ function toggleSequenceTags() {
     toggle("downArrowSeqTag");
     toggle("seqTagTable");
 }
+function toggleExpressesComponent() {
+    toggle("rightArrowExpressesComponent");
+    toggle("downArrowExpressesComponent");
+    toggle("expressesComponentTable");
+}
 </SCRIPT>
 
 <title>${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})</title>
@@ -69,6 +74,23 @@ td.padTop { padding-top:4px }
     -moz-outline-style: none;
     outline:0;
     cursor: pointer;
+}
+td.detailCat3 {
+    background-color: #d0e0f0;
+    border: 1px solid black;
+    color: #000001;
+    font-family: Verdana,Arial,Helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px;
+    text-align: left;
+    vertical-align: top;
+}
+td.cm { 
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px; 
+    border: 1px solid black;
 }
 </style>
 
@@ -348,6 +370,49 @@ td.right { text-align: right }
 		</tr>
 		</c:if>
 
+		<c:if test="${not empty expressesComponent}">
+		<tr>
+		    <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap" valign="top">&nbsp;</td>
+		    <td class="padded" style="vertical-align: top;">
+		      <div id="rightArrowExpressesComponent" onClick="toggleExpressesComponent();" style="float: right; cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
+		      <div id="downArrowExpressesComponent" onClick="toggleExpressesComponent();" style="cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
+		    </td>
+		    <td>
+			<font style="font-weight: bold">${symbolSup}</font> expresses
+			${fn:length(expressesComponent)} component<c:if test="${fn:length(expressesComponent) > 1}">s</c:if>
+			<div id="expressesComponentTable" style="display: none">
+			    <table class="detail">
+				<tr>
+				    <td class="detailCat3 cm">Organism</td>
+				    <td class="detailCat3 cm">Gene</td>
+				    <c:if test="${not empty nonMouseExpressesComponent}"><td class="detailCat3 cm">Mouse Homolog</td></c:if>
+				    <td class="detailCat3 cm">Note</td>
+				</tr>
+				<c:forEach var="ecMarker" items="${expressesComponent}" varStatus="ecStatus">
+				    <c:set var="ecOrganism" value="Mouse"/>
+				    <c:set var="ecGene" value="${ecMarker.relatedMarkerSymbol}"/>
+				    <c:set var="ecHomolog" value=""/>
+				    <c:set var="ecNote" value="${ecMarker.note}"/>
+				    <c:if test="${ecMarker.relationshipTerm != 'expresses'}">
+					<c:set var="ecOrganism" value="${ecMarker.ecOrganism}"/>
+					<c:set var="ecHomolog" value="${ecGene}"/>
+					<c:set var="ecGene" value="${ecMarker.ecSymbol}"/>
+				    </c:if>
+
+				    <tr>
+					<td class="cm">${ecOrganism}</td>
+					<td class="cm">${ecGene}</td>
+					<c:if test="${not empty nonMouseExpressesComponent}"><td class="cm">${ecHomolog}</td></c:if>
+					<td class="cm">${ecNote}</td>
+				    </tr>
+				</c:forEach> 
+			    </table>
+			</div>
+
+		    </td>
+		</tr>
+		</c:if>
+
 		<c:set var="molecularRefs" value=""/>
 		<c:forEach var="ref" items="${allele.molecularReferences}" varStatus="status">
 		<c:set var="molecularRefs" value="${molecularRefs}<a href='${configBean.FEWI_URL}reference/${ref.jnumID}' class='MP'>${ref.jnumID}</a>"/><c:if test="${!status.last}"><c:set var="molecularRefs" value="${molecularRefs}, "/></c:if>
@@ -358,10 +423,10 @@ td.right { text-align: right }
 		  <c:if test="${fn:length(description) > 100}">
 		    <td class="rightBorderThinGray" align="right" width="1%" nowrap="nowrap" valign="top">&nbsp;</td>
 		    <td class="padded" style="vertical-align: top;">
-		      <div id="rightArrowMutationDescription" onClick="toggleMutationDescription();" style="float: right; cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
-		      <div id="downArrowMutationDescription" onClick="toggleMutationDescription();" style="cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
+		      <div id="downArrowMutationDescription" onClick="toggleMutationDescription();" style="cursor: pointer; position: relative; z-index: 1;"><img src="${configBean.WEBSHARE_URL}images/downArrow.gif" border="0"></div>
+		      <div id="rightArrowMutationDescription" onClick="toggleMutationDescription();" style="float: right; cursor: pointer; position: relative; z-index: 1; display: none;"><img src="${configBean.WEBSHARE_URL}images/rightArrow.gif" border="0"></div>
 		    </td>
-		    <td class="padded" width="*">Mutation details<span id='mutationDescription' style='display:none'>:&nbsp;<font class='small'>${description}
+		    <td class="padded" width="*">Mutation details<span id='mutationDescription'>:&nbsp;<font class='small'>${description}
 		      <c:if test="${not empty molecularRefs}">(<i>${molecularRefs}</i>)</c:if>
 		      <c:if test="${not empty allele.incidentalMutations}">
 			    Additional
