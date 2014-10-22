@@ -391,18 +391,25 @@ td.right { text-align: right }
 				<c:forEach var="ecMarker" items="${expressesComponent}" varStatus="ecStatus">
 				    <c:set var="ecOrganism" value="Mouse"/>
 				    <c:set var="ecGene" value="${ecMarker.relatedMarkerSymbol}"/>
+				    <c:set var="ecLink1" value="<a href='${configBean.FEWI_URL}marker/${ecMarker.relatedMarkerID}'>${ecGene}</a>"/>
 				    <c:set var="ecHomolog" value=""/>
+				    <c:set var="ecLink2" value=""/>
 				    <c:set var="ecNote" value="${ecMarker.note}"/>
 				    <c:if test="${ecMarker.relationshipTerm != 'expresses'}">
 					<c:set var="ecOrganism" value="${ecMarker.ecOrganism}"/>
 					<c:set var="ecHomolog" value="${ecGene}"/>
+					<c:set var="ecLink2" value="${ecLink1}"/>
 					<c:set var="ecGene" value="${ecMarker.ecSymbol}"/>
+					<c:set var="ecLink1" value="${ecGene}"/>
+					<c:if test="${not empty ecMarker.ecGeneID}">
+					    <c:set var="ecLink1" value="<a href='${fn:replace(urls.Entrez_Gene, '@@@@', ecMarker.ecGeneID)}'>${ecGene}</a>"/>
+					</c:if>
 				    </c:if>
 
 				    <tr>
 					<td class="cm">${ecOrganism}</td>
-					<td class="cm">${ecGene}</td>
-					<c:if test="${not empty nonMouseExpressesComponent}"><td class="cm">${ecHomolog}</td></c:if>
+					<td class="cm">${ecLink1}</td>
+					<c:if test="${not empty nonMouseExpressesComponent}"><td class="cm">${ecLink2}</td></c:if>
 					<td class="cm">${ecNote}</td>
 				    </tr>
 				</c:forEach> 

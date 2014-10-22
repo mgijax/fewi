@@ -751,6 +751,10 @@ public class AlleleController {
 		idLinker.setup();
 	        mav.addObject("idLinker", idLinker);
 
+		// add a Properties object with URLs for use at the JSP level
+		Properties urls = idLinker.getUrlsAsProperties();
+		mav.addObject("urls", urls);
+
 		// pick up and save our 'expresses component' markers before
 		// we enable the filter for the 'mutation involves' markers
 
