@@ -39,8 +39,10 @@ import mgi.frontend.datamodel.MarkerSynonym;
 import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.RelatedMarker;
 import mgi.frontend.datamodel.SequenceSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -941,28 +943,38 @@ public class MarkerController {
 	    interactions.add(sb.toString());
 	}
 
+	/* Logical values for cluster members section */
 	mav.addObject("interactions", interactions);
+	mav.addObject("memberCount", marker.getClusterMembers().size());
+	mav.addObject("hasClusters", marker.getClusters().size() > 0);
+	mav.addObject("hasClusterMembers", marker.getClusterMembers().size() > 0);
+	List<String> memberSymbols = new ArrayList<String>();
+	for (RelatedMarker member : marker.getClusterMembers())
+	{
+		memberSymbols.add(member.getRelatedMarkerSymbol());
+	}
+	mav.addObject("memberSymbols", StringUtils.join(memberSymbols, ", "));
+	
+	
+    /* add data for strain-specific markers */
+    String ssNote = marker.getStrainSpecificNote();
+    if (ssNote != null) {
+    	List<Reference> ssRefs = marker.getStrainSpecificReferences();
+    	boolean isFirst = true;
 
-        // add data for strain-specific markers
+    	if ((ssRefs != null) && (ssRefs.size() > 0)) {
+    		ssNote = ssNote + "(";
+    		for (Reference ref : ssRefs) {
+    			if (!isFirst) { ssNote = ssNote + ", "; }
+    			else { isFirst = false; }
 
-        String ssNote = marker.getStrainSpecificNote();
-        if (ssNote != null) {
-        	List<Reference> ssRefs = marker.getStrainSpecificReferences();
-        	boolean isFirst = true;
-
-        	if ((ssRefs != null) && (ssRefs.size() > 0)) {
-        		ssNote = ssNote + "(";
-        		for (Reference ref : ssRefs) {
-        			if (!isFirst) { ssNote = ssNote + ", "; }
-        			else { isFirst = false; }
-
-        			ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_new>"
-        				+ ref.getJnumID() + "</a>";
-        		}
-        		ssNote = ssNote + ")";
-        	}
-        	mav.addObject ("strainSpecificNote", ssNote);
-        }
+    			ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_new>"
+    				+ ref.getJnumID() + "</a>";
+    		}
+    		ssNote = ssNote + ")";
+    	}
+    	mav.addObject ("strainSpecificNote", ssNote);
+    }
 
 	// if we have not yet looked up the full suite of marker minimaps that
 	// have already been generated, then do so
