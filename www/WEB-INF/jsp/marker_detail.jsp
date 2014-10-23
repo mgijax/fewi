@@ -608,7 +608,7 @@ td.padded { padding:4px; }
       <div class="detail <%=rightTdStyles.getNext() %>">
         <c:if test="${marker.countOfAlleles > 0}">
 		  <c:set var="alleleUrl" value="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}"/>
-		  All mutations/alleles(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) :
+		  All mutations(<a href="${alleleUrl}">${marker.countOfAlleles}</a>) :
 		  <c:forEach var="item" items="${marker.alleleCountsByType}">
 		    ${item.countType}(<a href="${alleleUrl}&alleleType=${item.countType}">${item.count}</a>)
 		  </c:forEach>
