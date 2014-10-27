@@ -380,7 +380,7 @@ td.right { text-align: right }
 		    <td>
 			<font style="font-weight: bold">${symbolSup}</font> expresses
 			${fn:length(expressesComponent)} component<c:if test="${fn:length(expressesComponent) > 1}">s</c:if>
-			<div id="expressesComponentTable" style="display: none">
+			<div id="expressesComponentTable" style="display: none; margin-top: 2px">
 			    <table class="detail">
 				<tr>
 				    <td class="detailCat3 cm">Organism</td>
@@ -402,7 +402,7 @@ td.right { text-align: right }
 					<c:set var="ecGene" value="${ecMarker.ecSymbol}"/>
 					<c:set var="ecLink1" value="${ecGene}"/>
 					<c:if test="${not empty ecMarker.ecGeneID}">
-					    <c:set var="ecLink1" value="<a href='${fn:replace(urls.Entrez_Gene, '@@@@', ecMarker.ecGeneID)}'>${ecGene}</a>"/>
+					<c:set var="ecLink1" value="${ecGene} (<a href='${fn:replace(urls.Entrez_Gene, '@@@@', ecMarker.ecGeneID)}' target='_blank'>${ecMarker.ecGeneID}</a>)"/>
 					</c:if>
 				    </c:if>
 
