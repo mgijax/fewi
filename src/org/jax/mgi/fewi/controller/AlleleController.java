@@ -758,6 +758,8 @@ public class AlleleController {
 		// pick up and save our 'expresses component' markers before
 		// we enable the filter for the 'mutation involves' markers
 
+		sessionFactory.getCurrentSession().enableFilter(
+		    "expressesComponentMarkers");
 		List<AlleleRelatedMarker> expressesComponent =
 		    allele.getExpressesComponentMarkers();
 		if (expressesComponent.size() > 0) {
@@ -775,6 +777,8 @@ public class AlleleController {
 		// than the whole set.
 		sessionFactory.getCurrentSession().enableFilter(
 		    "teaserMarkers");
+		sessionFactory.getCurrentSession().enableFilter(
+		    "mutationInvolvesMarkers");
 		List<AlleleRelatedMarker> mutationInvolves =
 		    allele.getMutationInvolvesMarkers();
 		if (mutationInvolves.size() > 0) {
