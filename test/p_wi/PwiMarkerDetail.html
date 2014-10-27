@@ -1,0 +1,283 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Alleles Ribbon Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Alleles Ribbon Tests</h1>
+    <ul>
+        <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
+        <li>User story 92, E8: Display Mutagenetix link on Marker Detail (MGI 5.18)</li>
+        <li>User story 105, E5: Allele and marker detail pages in prod wi (Release 5.18)</li>
+        <li>User Story 198, E8: Add Australian Phenome Facility(APF) file (Release 5.18)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto75: links to "all alleles"</li>
+		<li>sto75: links to per allele type</li>
+		<li>sto75: assume use exact same allele types here as in the db</li>
+		<li>sto92: Link to Mutagenetixs file in Alleles and Phenotypes ribbon for select detail pages</li>
+		<li>sto105: none</li>
+		<li>sto198: Link to APF file in alleles and Phenotypes ribbon for select detail pages</li>
+		<li>sto198: APF link will follow the Mutagenetix link when Marker has both links</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>For a marker, a label and link is generated for each Allele Type having alleles. The linked text is the count of all alleles for that marker having the Allele Type. The change is also supported on Prod. (sto105)
+ 			<p concordion:manual="true">passed. -klf 2014-03-10</p>
+    		<ol>
+                <li>Navigate to the marker detail page for Pax6 (MGI:97490)</li>
+                <li>Verify the following Allele Types and counts:
+                <table>
+	                <tr><th>Allele Type</th><th>Count</th></tr>
+	                <tr><td>All alleles</td><td>53</td></tr>
+					<tr><td>Chemically and radiation induced</td><td>3</td></tr>
+					<tr><td>Chemically induced (ENU)</td><td>24</td></tr>
+					<tr><td>Chemically induced (other)</td><td>1</td></tr>
+					<tr><td>Gene trapped</td><td>7</td></tr>
+					<tr><td>Not Applicable</td><td></td></tr>
+					<tr><td>Not Specified</td><td></td></tr>
+					<tr><td>QTL</td><td></td></tr>
+					<tr><td>Radiation induced</td><td>2</td></tr>
+					<tr><td>Spontaneous</td><td>5</td></tr>
+					<tr><td>Targeted</td><td>11</td></tr>
+					<tr><td>Transgenic</td><td></td></tr>
+					<tr><td>Transposon induced</td><td></td></tr>
+                </table>
+				</li>
+                <li>Navigate to the marker detail page for Abcc8 (MGI:1352629)</li>
+                <li>Verify the following Allele Types and counts:
+                <table>
+	                <tr><th>Allele Type</th><th>Count</th></tr>
+	                <tr><td>All alleles</td><td>7</td></tr>
+					<tr><td>Targeted</td><td>7</td></tr>
+                </table>
+				</li>
+                <li>Navigate to the marker detail page for Kit (MGI:96677)</li>
+                <li>Verify the following Allele Types and counts:
+                <table>
+                	<tr><th>Allele Type</th><th>Count</th></tr>
+                	<tr><td>All alleles</td><td>150</td></tr>
+					<tr><td>Chemically and radiation induced</td><td></td></tr>
+					<tr><td>Chemically induced (ENU)</td><td>17</td></tr>
+					<tr><td>Chemically induced (other)</td><td>1</td></tr>
+					<tr><td>Gene trapped</td><td>39</td></tr>
+					<tr><td>Not Applicable</td><td>1</td></tr>
+					<tr><td>Not Specified</td><td></td></tr>
+					<tr><td>QTL</td><td></td></tr>
+					<tr><td>Radiation induced</td><td>2</td></tr>
+					<tr><td>Spontaneous</td><td>71</td></tr>
+					<tr><td>Targeted</td><td>19</td></tr>
+					<tr><td>Transgenic</td><td></td></tr>
+					<tr><td>Transposon induced</td><td></td></tr>
+                </table>
+				</li>
+                <li>Navigate to the marker detail page for Apoe (MGI:88057)</li>
+                <li>Verify the following Allele Types and counts:
+                <table>
+                	<tr><th>Allele Type</th><th>Count</th></tr>
+                	<tr><td>All alleles</td><td>40</td></tr>
+					<tr><td>Chemically and radiation induced</td><td></td></tr>
+					<tr><td>Chemically induced (ENU)</td><td></td></tr>
+					<tr><td>Chemically induced (other)</td><td></td></tr>
+					<tr><td>Gene trapped</td><td>19</td></tr>
+					<tr><td>Not Applicable</td><td></td></tr>
+					<tr><td>Not Specified</td><td></td></tr>
+					<tr><td>QTL</td><td></td></tr>
+					<tr><td>Radiation induced</td><td></td></tr>
+					<tr><td>Spontaneous</td><td>1</td></tr>
+					<tr><td>Targeted</td><td>19</td></tr>
+					<tr><td>Transgenic</td><td>1</td></tr>
+					<tr><td>Transposon induced</td><td></td></tr>
+                </table>
+				</li>
+                <li>Navigate to the marker detail page for Skor2 (MGI:3645984)</li>
+                <li>Verify the following Allele Types and counts:
+                <table>
+                	<tr><th>Allele Type</th><th>Count</th></tr>
+                	<tr><td>All alleles</td><td>4</td></tr>
+					<tr><td>Chemically and radiation induced</td><td></td></tr>
+					<tr><td>Chemically induced (ENU)</td><td></td></tr>
+					<tr><td>Chemically induced (other)</td><td></td></tr>
+					<tr><td>Gene trapped</td><td>1</td></tr>
+					<tr><td>Not Applicable</td><td></td></tr>
+					<tr><td>Not Specified</td><td></td></tr>
+					<tr><td>QTL</td><td></td></tr>
+					<tr><td>Radiation induced</td><td></td></tr>
+					<tr><td>Spontaneous</td><td></td></tr>
+					<tr><td>Targeted</td><td></td></tr>
+					<tr><td>Transgenic</td><td></td></tr>
+					<tr><td>Transposon induced</td><td>3</td></tr>
+                </table>
+				</li>
+                <li>Navigate to the marker detail page for Atp5a1 (MGI:88115)</li>
+                <li>Verify the following Allele Types and counts:
+                <table>
+                	<tr><th>Allele Type</th><th>Count</th></tr>
+                	<tr><td>All alleles</td><td>16</td></tr>
+					<tr><td>Chemically and radiation induced</td><td></td></tr>
+					<tr><td>Chemically induced (ENU)</td><td></td></tr>
+					<tr><td>Chemically induced (other)</td><td></td></tr>
+					<tr><td>Gene trapped</td><td>12</td></tr>
+					<tr><td>Not Applicable</td><td></td></tr>
+					<tr><td>Not Specified</td><td></td></tr>
+					<tr><td>QTL</td><td>2</td></tr>
+					<tr><td>Radiation induced</td><td></td></tr>
+					<tr><td>Spontaneous</td><td></td></tr>
+					<tr><td>Targeted</td><td>2</td></tr>
+					<tr><td>Transgenic</td><td></td></tr>
+					<tr><td>Transposon induced</td><td></td></tr>
+                </table>
+				</li>
+                <li>Navigate to the marker detail page for Fbn2 (MGI:95490)</li>
+                <li>Verify the following Allele Types and counts:
+                <table>
+                	<tr><th>Allele Type</th><th>Count</th></tr>
+                	<tr><td>All alleles</td><td>6</td></tr>
+					<tr><td>Chemically and radiation induced</td><td></td></tr>
+					<tr><td>Chemically induced (ENU)</td><td>1</td></tr>
+					<tr><td>Chemically induced (other)</td><td>1</td></tr>
+					<tr><td>Gene trapped</td><td></td></tr>
+					<tr><td>Not Applicable</td><td></td></tr>
+					<tr><td>Not Specified</td><td></td></tr>
+					<tr><td>QTL</td><td></td></tr>
+					<tr><td>Radiation induced</td><td></td></tr>
+					<tr><td>Spontaneous</td><td>3</td></tr>
+					<tr><td>Targeted</td><td>1</td></tr>
+					<tr><td>Transgenic</td><td></td></tr>
+					<tr><td>Transposon induced</td><td></td></tr>
+                </table>
+				</li>
+    		</ol>
+    		</li>
+
+    		<li>For a marker, a label and link is generated for alleles associated with disease models (OMIM annotations). The linked text is the count of all alleles of all types from any genotypes annotated to disease models EXCLUDING only "Not" annotations. No text or link appears if there are no OMIM-annotated alleles. The change is also supported on Prod. (sto105)
+ 			<p concordion:manual="true">passed. -klf 2014-03-10</p>
+    		<ol>
+                <li>Navigate to these marker detail pages.</li>
+                <li>Verify the count for Alleles Annotated to Human Diseases:
+                <table>
+                	<tr><th>Marker (ID)</th><th>Count</th></tr>
+					<tr><td>Apoe (MGI:88057)</td><td>5</td></tr>
+					<tr><td>Pax6 (MGI:97490)</td><td>10</td></tr>
+					<tr><td>Abcc8 (MGI:1352629)</td><td>1</td></tr>
+					<tr><td>Kit (MGI:96677)</td><td>6</td></tr>
+					<tr><td>Skor2 (MGI:3645984)</td><td>0</td></tr>
+					<tr><td>Atp5a1 (MGI:88115)</td><td>0</td></tr>
+					<tr><td>Psen1 (MGI:1202717)</td><td>10</td></tr>
+					<tr><td>Fbn2 (MGI:95490)</td><td>2</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+    		
+    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto92)
+ 			<p concordion:manual="true">Passed jeffc 03/31/2014</p>
+ 			<ol>
+                <li>Navigate to the marker detail page for Pet2 (MGI:101758)</li>
+                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to Mutagenix: <b>Incidental mutations (data from Mutagenetix )</b></li>
+			</ol>
+				</li>
+				
+    		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto92)
+ 			<p concordion:manual="true">Passed jeffc 03/31/2014</p>
+    		<ol>
+                <li>Navigate to these marker detail pages.</li>
+                <li>Verify the mutagentix link exists and works (link will look like this: <b>Incidental mutations (data from Mutagenetix )</b>):
+                <table>
+                	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
+					<tr><td>Klc1</td><td>MGI:107978</td></tr>
+					<tr><td>Ext2</td><td>MGI:108050</td></tr>
+					<tr><td>Prkg1</td><td>MGI:108174</td></tr>
+					<tr><td>Rgs8</td><td>MGI:108408</td></tr>
+					<tr><td>Ltbp1</td><td>MGI:109151</td></tr>
+					<tr><td>Ighmbp2</td><td>MGI:99954</td></tr>
+					<tr><td>Rptoros</td><td>MGI:2442055</td></tr>
+					<tr><td>Sema4a</td><td>MGI:107560</td></tr>
+                </table>
+              </li>
+               </ol>
+    		</li>
+
+    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the APF file is attached, it should create the ribbon along with the APF file link (sto92)
+ 			<p concordion:manual="true">passed jeffc 04/08/2014</p>
+ 			<ol>
+                <li>Navigate to the marker detail page for Gm8906 (MGI:3779820)</li>
+                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to APF: <b>Incidental mutations (data from APF )</b></li>			
+			</ol>
+			</li>			
+				
+    		<li>Verify these markers have the APF link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
+ 			<p concordion:manual="true">passed jeffc 04/08/2014</p>
+    		<ol>
+                <li>Navigate to these marker detail pages.</li>
+                <li>Verify the APF link exists and works (link will look like this: <b>Incidental mutations (data from APF )</b>):
+                <table>
+                	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
+					<tr><td>Atp4a</td><td>MGI:88113</td></tr>
+					<tr><td>Fitm2</td><td>MGI:2444508</td></tr>
+					<tr><td>hyi</td><td>MGI:1915430</td></tr>
+					<tr><td>Gm20388</td><td>MGI:5141853</td></tr>
+					<tr><td>Lvrq1</td><td>MGI:3042875</td></tr>
+					<tr><td>Gbx2</td><td>MGI:95668</td></tr>
+					<tr><td>Rgs19</td><td>MGI:1915153</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
