@@ -12,7 +12,7 @@
 	p {margin:2px 0px;}
 </style>
 
-    <title>Alleles Ribbon Tests</title>
+    <title>P-WI Marker Detail Tests</title>
 </head>
 <!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
@@ -27,25 +27,25 @@
 </div>
 
 <div id="maintitle">
-    <h1>Alleles Ribbon Tests</h1>
+    <h1>P-WI Marker Detail Tests</h1>
     <ul>
-        <li>User story 75, E4: Links from Marker Detail (Release 5.18)</li>
-        <li>User story 92, E8: Display Mutagenetix link on Marker Detail (MGI 5.18)</li>
-        <li>User story 105, E5: Allele and marker detail pages in prod wi (Release 5.18)</li>
-        <li>User Story 198, E8: Add Australian Phenome Facility(APF) file (Release 5.18)</li>
+        <li>User story 18, P-WI: Marker Detail (Release 5.2?)</li>
+        <li></li>
+        <li></li>
+        <li></li>
     </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>sto75: links to "all alleles"</li>
-		<li>sto75: links to per allele type</li>
-		<li>sto75: assume use exact same allele types here as in the db</li>
-		<li>sto92: Link to Mutagenetixs file in Alleles and Phenotypes ribbon for select detail pages</li>
-		<li>sto105: none</li>
-		<li>sto198: Link to APF file in alleles and Phenotypes ribbon for select detail pages</li>
-		<li>sto198: APF link will follow the Mutagenetix link when Marker has both links</li>
+		<li>sto18: URL to detail page is accessed by using MGI ID</li>
+		<li>sto18: Data displayed is Symbol, MGI ID, Name, Synonyms, Marker type, Feature type, Marker status, Chr/coordinates/strand and Marker detail clip</li>
+		<li>sto18: Link exists to Public Marker detail page</li>
+		<li>sto18: Marker detail clip field must interpret HTML code</li>
+		<li>sto18: </li>
+		<li>sto18: </li>
+		<li>sto18: </li>
 	</ul>
 </div>
 
@@ -61,208 +61,59 @@
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>For a marker, a label and link is generated for each Allele Type having alleles. The linked text is the count of all alleles for that marker having the Allele Type. The change is also supported on Prod. (sto105)
- 			<p concordion:manual="true">passed. -klf 2014-03-10</p>
+    		<li>Display a Marker detail page. (sto18)
+ 			<p concordion:manual="false">new test</p>
     		<ol>
-                <li>Navigate to the marker detail page for Pax6 (MGI:97490)</li>
-                <li>Verify the following Allele Types and counts:
+                <li>Display the  marker detail page for Pax6 (http://mgi-testweb4:5000/detail/marker/MGI:97490)</li>
+                <li>Verify the following fields:
                 <table>
-	                <tr><th>Allele Type</th><th>Count</th></tr>
-	                <tr><td>All alleles</td><td>53</td></tr>
-					<tr><td>Chemically and radiation induced</td><td>3</td></tr>
-					<tr><td>Chemically induced (ENU)</td><td>24</td></tr>
-					<tr><td>Chemically induced (other)</td><td>1</td></tr>
-					<tr><td>Gene trapped</td><td>7</td></tr>
-					<tr><td>Not Applicable</td><td></td></tr>
-					<tr><td>Not Specified</td><td></td></tr>
-					<tr><td>QTL</td><td></td></tr>
-					<tr><td>Radiation induced</td><td>2</td></tr>
-					<tr><td>Spontaneous</td><td>5</td></tr>
-					<tr><td>Targeted</td><td>11</td></tr>
-					<tr><td>Transgenic</td><td></td></tr>
-					<tr><td>Transposon induced</td><td></td></tr>
+	                <tr><th>field</th><th>Result</th></tr>
+	                <tr><td>Symbol:</td><td>Pax6</td></tr>
+					<tr><td>ID:</td><td>MGI:97490</td></tr>
+					<tr><td>Marker Staus:</td><td>official</td></tr>
+					<tr><td>Current Name:</td><td>paired box 6</td></tr>
+					<tr><td>Synonyms:</td><td>??</td></tr>
+					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
+					<tr><td>Marker type:</td><td>Gene</td></tr>
+					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
+					<tr><td>Location:</td><td>Chr2:105668900-105697364 bp, + strand From VEGA annotation of GRCm38</td></tr>
+					<tr><td>Marker  detail clip</td><td>Null and hypomorphic mutants show a range of phenotypes from viable with small eyes and lens/cornea fusion to microphthalmia and cataract to embryonic or perinatal lethality with anophthalmia and severe craniofacial and forebrain defects.</td></tr>
                 </table>
 				</li>
-                <li>Navigate to the marker detail page for Abcc8 (MGI:1352629)</li>
-                <li>Verify the following Allele Types and counts:
-                <table>
-	                <tr><th>Allele Type</th><th>Count</th></tr>
-	                <tr><td>All alleles</td><td>7</td></tr>
-					<tr><td>Targeted</td><td>7</td></tr>
-                </table>
-				</li>
-                <li>Navigate to the marker detail page for Kit (MGI:96677)</li>
-                <li>Verify the following Allele Types and counts:
-                <table>
-                	<tr><th>Allele Type</th><th>Count</th></tr>
-                	<tr><td>All alleles</td><td>150</td></tr>
-					<tr><td>Chemically and radiation induced</td><td></td></tr>
-					<tr><td>Chemically induced (ENU)</td><td>17</td></tr>
-					<tr><td>Chemically induced (other)</td><td>1</td></tr>
-					<tr><td>Gene trapped</td><td>39</td></tr>
-					<tr><td>Not Applicable</td><td>1</td></tr>
-					<tr><td>Not Specified</td><td></td></tr>
-					<tr><td>QTL</td><td></td></tr>
-					<tr><td>Radiation induced</td><td>2</td></tr>
-					<tr><td>Spontaneous</td><td>71</td></tr>
-					<tr><td>Targeted</td><td>19</td></tr>
-					<tr><td>Transgenic</td><td></td></tr>
-					<tr><td>Transposon induced</td><td></td></tr>
-                </table>
-				</li>
-                <li>Navigate to the marker detail page for Apoe (MGI:88057)</li>
-                <li>Verify the following Allele Types and counts:
-                <table>
-                	<tr><th>Allele Type</th><th>Count</th></tr>
-                	<tr><td>All alleles</td><td>40</td></tr>
-					<tr><td>Chemically and radiation induced</td><td></td></tr>
-					<tr><td>Chemically induced (ENU)</td><td></td></tr>
-					<tr><td>Chemically induced (other)</td><td></td></tr>
-					<tr><td>Gene trapped</td><td>19</td></tr>
-					<tr><td>Not Applicable</td><td></td></tr>
-					<tr><td>Not Specified</td><td></td></tr>
-					<tr><td>QTL</td><td></td></tr>
-					<tr><td>Radiation induced</td><td></td></tr>
-					<tr><td>Spontaneous</td><td>1</td></tr>
-					<tr><td>Targeted</td><td>19</td></tr>
-					<tr><td>Transgenic</td><td>1</td></tr>
-					<tr><td>Transposon induced</td><td></td></tr>
-                </table>
-				</li>
-                <li>Navigate to the marker detail page for Skor2 (MGI:3645984)</li>
-                <li>Verify the following Allele Types and counts:
-                <table>
-                	<tr><th>Allele Type</th><th>Count</th></tr>
-                	<tr><td>All alleles</td><td>4</td></tr>
-					<tr><td>Chemically and radiation induced</td><td></td></tr>
-					<tr><td>Chemically induced (ENU)</td><td></td></tr>
-					<tr><td>Chemically induced (other)</td><td></td></tr>
-					<tr><td>Gene trapped</td><td>1</td></tr>
-					<tr><td>Not Applicable</td><td></td></tr>
-					<tr><td>Not Specified</td><td></td></tr>
-					<tr><td>QTL</td><td></td></tr>
-					<tr><td>Radiation induced</td><td></td></tr>
-					<tr><td>Spontaneous</td><td></td></tr>
-					<tr><td>Targeted</td><td></td></tr>
-					<tr><td>Transgenic</td><td></td></tr>
-					<tr><td>Transposon induced</td><td>3</td></tr>
-                </table>
-				</li>
-                <li>Navigate to the marker detail page for Atp5a1 (MGI:88115)</li>
-                <li>Verify the following Allele Types and counts:
-                <table>
-                	<tr><th>Allele Type</th><th>Count</th></tr>
-                	<tr><td>All alleles</td><td>16</td></tr>
-					<tr><td>Chemically and radiation induced</td><td></td></tr>
-					<tr><td>Chemically induced (ENU)</td><td></td></tr>
-					<tr><td>Chemically induced (other)</td><td></td></tr>
-					<tr><td>Gene trapped</td><td>12</td></tr>
-					<tr><td>Not Applicable</td><td></td></tr>
-					<tr><td>Not Specified</td><td></td></tr>
-					<tr><td>QTL</td><td>2</td></tr>
-					<tr><td>Radiation induced</td><td></td></tr>
-					<tr><td>Spontaneous</td><td></td></tr>
-					<tr><td>Targeted</td><td>2</td></tr>
-					<tr><td>Transgenic</td><td></td></tr>
-					<tr><td>Transposon induced</td><td></td></tr>
-                </table>
-				</li>
-                <li>Navigate to the marker detail page for Fbn2 (MGI:95490)</li>
-                <li>Verify the following Allele Types and counts:
-                <table>
-                	<tr><th>Allele Type</th><th>Count</th></tr>
-                	<tr><td>All alleles</td><td>6</td></tr>
-					<tr><td>Chemically and radiation induced</td><td></td></tr>
-					<tr><td>Chemically induced (ENU)</td><td>1</td></tr>
-					<tr><td>Chemically induced (other)</td><td>1</td></tr>
-					<tr><td>Gene trapped</td><td></td></tr>
-					<tr><td>Not Applicable</td><td></td></tr>
-					<tr><td>Not Specified</td><td></td></tr>
-					<tr><td>QTL</td><td></td></tr>
-					<tr><td>Radiation induced</td><td></td></tr>
-					<tr><td>Spontaneous</td><td>3</td></tr>
-					<tr><td>Targeted</td><td>1</td></tr>
-					<tr><td>Transgenic</td><td></td></tr>
-					<tr><td>Transposon induced</td><td></td></tr>
-                </table>
-				</li>
+                
     		</ol>
     		</li>
 
-    		<li>For a marker, a label and link is generated for alleles associated with disease models (OMIM annotations). The linked text is the count of all alleles of all types from any genotypes annotated to disease models EXCLUDING only "Not" annotations. No text or link appears if there are no OMIM-annotated alleles. The change is also supported on Prod. (sto105)
- 			<p concordion:manual="true">passed. -klf 2014-03-10</p>
+    		<li>Display a marker detail that has html in the Marker detail clip section. (sto18)
+ 			<p concordion:manual="false">new test</p>
     		<ol>
-                <li>Navigate to these marker detail pages.</li>
-                <li>Verify the count for Alleles Annotated to Human Diseases:
+                <li>Display the marker detail page for snurf (http://mgi-testweb4:5000/detail/marker/MGI:1891236)</li>
+                <li>Verify the following fields:
                 <table>
-                	<tr><th>Marker (ID)</th><th>Count</th></tr>
-					<tr><td>Apoe (MGI:88057)</td><td>5</td></tr>
-					<tr><td>Pax6 (MGI:97490)</td><td>10</td></tr>
-					<tr><td>Abcc8 (MGI:1352629)</td><td>1</td></tr>
-					<tr><td>Kit (MGI:96677)</td><td>6</td></tr>
-					<tr><td>Skor2 (MGI:3645984)</td><td>0</td></tr>
-					<tr><td>Atp5a1 (MGI:88115)</td><td>0</td></tr>
-					<tr><td>Psen1 (MGI:1202717)</td><td>10</td></tr>
-					<tr><td>Fbn2 (MGI:95490)</td><td>2</td></tr>
+                	<tr><th>field</th><th>Result</th></tr>
+	                <tr><td>Symbol:</td><td>Snurf</td></tr>
+					<tr><td>ID:</td><td>MGI:1891236</td></tr>
+					<tr><td>Marker Status:</td><td>official</td></tr>
+					<tr><td>Current Name:</td><td>SNRPN upstream reading frame</td></tr>
+					<tr><td>Synonyms:</td><td>??</td></tr>
+					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
+					<tr><td>Marker type:</td><td>Gene</td></tr>
+					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
+					<tr><td>Location:</td><td>Chr7:59974149-60005064 bp, + strand From VEGA annotation of GRCm38</td></tr>
+					<tr><td>Marker detail clip</td><td>This marker is part of a bicistronic gene with Snrpn. All alleles are listed on the Snrpn detail page.</td></tr>
                 </table>
+                <li>*note: in Marker detail clip the word "Snrpn" is a link</li>
                 </li>
     		</ol>
     		</li>
-    		
-    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the Mutagenitix file is attached it create the ribbon along with the Mutagentix file link (sto92)
- 			<p concordion:manual="true">Passed jeffc 03/31/2014</p>
- 			<ol>
-                <li>Navigate to the marker detail page for Pet2 (MGI:101758)</li>
-                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to Mutagenix: <b>Incidental mutations (data from Mutagenetix )</b></li>
-			</ol>
-				</li>
-				
-    		<li>Verify these markers have the Mutagentix link in the Alleles and Phenotypes ribbon and the link works. (sto92)
- 			<p concordion:manual="true">Passed jeffc 03/31/2014</p>
-    		<ol>
-                <li>Navigate to these marker detail pages.</li>
-                <li>Verify the mutagentix link exists and works (link will look like this: <b>Incidental mutations (data from Mutagenetix )</b>):
-                <table>
-                	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
-					<tr><td>Klc1</td><td>MGI:107978</td></tr>
-					<tr><td>Ext2</td><td>MGI:108050</td></tr>
-					<tr><td>Prkg1</td><td>MGI:108174</td></tr>
-					<tr><td>Rgs8</td><td>MGI:108408</td></tr>
-					<tr><td>Ltbp1</td><td>MGI:109151</td></tr>
-					<tr><td>Ighmbp2</td><td>MGI:99954</td></tr>
-					<tr><td>Rptoros</td><td>MGI:2442055</td></tr>
-					<tr><td>Sema4a</td><td>MGI:107560</td></tr>
-                </table>
-              </li>
-               </ol>
-    		</li>
 
-    		<li>When a marker detail page does not have an Alleles and Phenotypes ribbon and the APF file is attached, it should create the ribbon along with the APF file link (sto92)
- 			<p concordion:manual="true">passed jeffc 04/08/2014</p>
+    		<li>All marker detail pages will have a link to their corresponding Public marker detail page. (sto18)
+ 			<p concordion:manual="false">new test</p>
  			<ol>
-                <li>Navigate to the marker detail page for Gm8906 (MGI:3779820)</li>
-                <li>Verify the Alleles and Phenotypes ribbon is created and the only item in this ribbon is a link to APF: <b>Incidental mutations (data from APF )</b></li>			
+                <li>Display the marker detail page for brca1 (http://mgi-testweb4:5000/detail/marker/MGI:104537)</li>
+                <li>Verify there is a link to the public detail page for brca1</li>			
 			</ol>
 			</li>			
-				
-    		<li>Verify these markers have the APF link or both Mutagenetix and APB links in the Alleles and Phenotypes ribbon and the link(s) works. (sto92)
- 			<p concordion:manual="true">passed jeffc 04/08/2014</p>
-    		<ol>
-                <li>Navigate to these marker detail pages.</li>
-                <li>Verify the APF link exists and works (link will look like this: <b>Incidental mutations (data from APF )</b>):
-                <table>
-                	<tr><th>Marker Symbol</th><th>MGI ID</th></tr>
-					<tr><td>Atp4a</td><td>MGI:88113</td></tr>
-					<tr><td>Fitm2</td><td>MGI:2444508</td></tr>
-					<tr><td>hyi</td><td>MGI:1915430</td></tr>
-					<tr><td>Gm20388</td><td>MGI:5141853</td></tr>
-					<tr><td>Lvrq1</td><td>MGI:3042875</td></tr>
-					<tr><td>Gbx2</td><td>MGI:95668</td></tr>
-					<tr><td>Rgs19</td><td>MGI:1915153</td></tr>
-                </table>
-                </li>
-    		</ol>
-    		</li>
 		</ol>
 	</div>
 
