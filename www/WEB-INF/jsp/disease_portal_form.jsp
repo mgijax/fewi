@@ -105,6 +105,8 @@
       <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>
       <br/><br/>
 	Use quotes for exact match. <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> for using AND, OR, NOT, quotes, partial word matching.
+      <br/><br/>
+		<label><input id="showingQuery" checked="checked" type='checkbox' />Show Effective Phenotype Query</label>
       </div>
     </div>
     </div>
@@ -116,13 +118,14 @@
 	<input type="hidden" name="fHeader" id="fHeader" />
 	<input type="hidden" name="referseF" id="reverseF"/>
 	<input type="hidden" name="numDCol" id=numDCol />
-    <input id="submit1" style="position:absolute; top:312px; left:640px; width:60px; font-size:20px;"
-      name="submit" class="formButtons" value="GO" type="submit"><br/>
-    <input id="reset1" class="formButtons"
-      style="position:absolute; top:319px; left:710px; width:60px; font-size:14px;" type="reset" >
+    <input id="submit1" style="position:absolute; top:295px; left:640px; width:60px; font-size:20px;" name="submit" class="formButtons" value="GO" type="submit"><br/>
+    <input id="reset1" class="formButtons" style="position:absolute; top:302px; left:710px; width:60px; font-size:14px;" type="reset" >
+
+	<div style="position:absolute; top:330px; left:15px; overflow-y: scroll; height:36px; width: 775px;">
+		<span id="queryText" style="font-size:x-small"><b>Effective Phenotype Query:</b></span>
+	</div>
+
     </form:form>
-
-
 
 	<div style="position:absolute; top:227px; left:380px; z-index: 1;">
         <img id="locationsFileHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />

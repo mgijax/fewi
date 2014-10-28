@@ -2,7 +2,7 @@
 * Autocomplete styles
 */
 .ui-autocomplete {
-  max-height: 145px;
+  max-height: 120px;
   overflow-y: auto;
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
@@ -139,7 +139,7 @@ td.yui-dt-col-coordinate
 textarea {resize:none; background-color:#FFE4B5;}
 #hdpPageWrapper {
   width: 820px;
-  height: 330px;
+  height: 360px;
   position: relative;
   margin: 0 auto;
   font-family: Verdana,Arial,Helvetica;
@@ -148,7 +148,7 @@ textarea {resize:none; background-color:#FFE4B5;}
 #hdpQueryFormWrapper{
   left:6px;
   width: 804px;
-  height: 350px;
+  height: 370px;
   border:2px solid;
   border-radius:22px;
   position:absolute;

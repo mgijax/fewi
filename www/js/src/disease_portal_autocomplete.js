@@ -12,16 +12,12 @@
  * 	It resolves any term IDs into their term names.
  * 	This only really needs to be used if the user had autocomplete interaction...
  */ 
-var resolveVocabTermIds = function(datain)
+var resolveVocabTermIds = function(updateYST)
 {
 	var data = "";
 
-	if($("#ysf-phenotypes").text().length > 0) {
-		data = "ids="+$("#ysf-phenotypes").text();
-	} else if($("#phenotypes").val().length > 0) {
+	if($("#phenotypes").val().length > 0) {
 		data = "ids="+$("#phenotypes").val();
-	} else if(datain) {
-		data = "ids="+datain;
 	} else {
 		data = "ids=";
 	}
@@ -31,24 +27,44 @@ var resolveVocabTermIds = function(datain)
 		type: "post",
 		data: data
 	});
-	request.done(function (response, textStatus, jqXHR){
-		if(textStatus=="success") {
+	if(updateYST) {
+		request.done(function (response, textStatus, jqXHR){
 			$("#ysf-phenotypes").text(response.ids);
-			if(response.error) {
-				$("#errorTextString").html(response.error);
-				$("#errorTextMessage").show();
-			}
-			if($("#showingQuery").prop("checked")) {
-				if(response.ids && response.ids.length > 0) {
-					$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
-				} else {
-					$("#queryText").html("<b>Effective Phenotype Query:</b> ");
+			if(textStatus=="success") {
+				$("#ysf-phenotypes").text(response.ids);
+				if(response.error) {
+					$("#errorTextString").html(response.error);
+					$("#errorTextMessage").show();
 				}
-			} else {
-				$("#queryText").html("");
+				if($("#showingQuery").prop("checked")) {
+					if(response.ids && response.ids.length > 0) {
+						$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
+					} else {
+						$("#queryText").html("<b>Effective Phenotype Query:</b> ");
+					}
+				} else {
+					$("#queryText").html("");
+				}
 			}
-		}
-   })
+	   });
+	} else {
+		request.done(function (response, textStatus, jqXHR){
+			if(textStatus=="success") {
+				if(response.error) {
+				}
+				if($("#showingQuery").prop("checked")) {
+					if(response.ids && response.ids.length > 0) {
+						$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
+					} else {
+						$("#queryText").html("<b>Effective Phenotype Query:</b> ");
+					}
+				} else {
+					$("#queryText").html("");
+				}
+			}
+	   });
+
+	}
 }
 
 var getErrorMessages = function()
@@ -70,22 +86,15 @@ function extractLast( term ) {
 	if (typeof(term) == 'undefined') { return ""; }
 	var term = split( term ).pop();
 	var terms = term.split(/\s+/);
-	//console.log("T1: " + terms);
 	while(terms[0] == "") { terms.shift(); }
-	//console.log("T2: " + terms);
-	//console.log("TL: " + terms.length);
 	if(terms.length > 0) {
-		//console.log("1 terms[0]: " + terms[0]);
 		if(terms[0] == "AND" || terms[0] == "OR") {
 			terms.shift();
 		}
-		//console.log("2 terms[0]: " + terms[0]);
 		if(terms.length > 0 && terms[0] == "NOT") {
 			terms.shift();
 		}
-		//console.log("3 terms[0]: " + terms[0]);
 	}
-	//console.log("T3: " + terms);
 	if(terms.length > 0) {
 		return terms.join(" ");
 	} else {

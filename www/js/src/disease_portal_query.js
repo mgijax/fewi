@@ -163,7 +163,7 @@ var updateQuerySummary = function() {
 	summaryDiv.append(ysfText);
 	
 	// make sure IDs turn into terms (just for the display purposes)
-	resolveVocabTermIds();
+	resolveVocabTermIds(true);
 	
 	// check if file upload is still cached
 	checkFileUploadCache();
