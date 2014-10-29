@@ -24,6 +24,19 @@ $("#locationsFileHelpImg").on("mouseout",function(e){
 	if(_locationsFileHelpTOID) clearTimeout(_locationsFileHelpTOID);
 });
 
+YAHOO.hdp.container.panelQueryHelp = new YAHOO.widget.Panel("queryHelp", { width:"520px", draggable:false, visible:false, constraintoviewport:true } );
+YAHOO.hdp.container.panelQueryHelp.render();
+
+var _queryHelpTOID;
+$("#queryHelpImg").on("mouseover",function(e){
+   _queryHelpTOID = setTimeout(function(){YAHOO.hdp.container.panelQueryHelp.show()},500);
+});
+$("#queryHelpImg").on("mouseout",function(e){
+   if(_queryHelpTOID) clearTimeout(_queryHelpTOID);
+});
+
+
+
 // ---------- functions for handling form submit action -----------
 //Instead of submitting the form, do an AJAX request
 var interceptSubmit = function(e) 

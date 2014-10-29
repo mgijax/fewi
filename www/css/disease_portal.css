@@ -135,6 +135,13 @@ td.yui-dt-col-coordinate
 	left: 40px;
 	top: 25px;
 }
+#queryHelpImg
+{
+   height: 20px;
+   position: relative;
+   left: 40px;
+   top: 25px;
+}
 
 textarea {resize:none; background-color:#FFE4B5;}
 #hdpPageWrapper {

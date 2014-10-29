@@ -49,7 +49,7 @@
 
   <div id="hdpQueryFormWrapper" >
     <div class='relativePos' >
-    <form:form method="GET" commandName="diseasePortalQueryForm" action="${configBean.FEWI_URL}diseasePortal/summary">
+    <form:form method="POST" commandName="diseasePortalQueryForm" action="${configBean.FEWI_URL}diseasePortal/summary">
 
     <div style="position:absolute; top:2px; left:2px; width:250px;">
     <div class='relativePos'>
@@ -101,8 +101,8 @@
       <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
       Ex:
-      <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=diabetes">diabetes</a>,
       <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>
+      <a onclick="document.forms['diseasePortalQueryForm'].phenotypes.value='Autism AND &quot;social behavior&quot;';document.forms['diseasePortalQueryForm'].numDCol.value=100;document.forms['diseasePortalQueryForm'].submit();" href="#">Autism AND "social behavior"</a>
       <br/><br/>
 	Use quotes for exact match. <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> for using AND, OR, NOT, quotes, partial word matching.
       <br/><br/>
@@ -118,7 +118,7 @@
 	<input type="hidden" name="fHeader" id="fHeader" />
 	<input type="hidden" name="referseF" id="reverseF"/>
 	<input type="hidden" name="numDCol" id=numDCol />
-    <input id="submit1" style="position:absolute; top:295px; left:640px; width:60px; font-size:20px;" name="submit" class="formButtons" value="GO" type="submit"><br/>
+    <input id="submit1" style="position:absolute; top:295px; left:640px; width:60px; font-size:20px;" name="submitgo" class="formButtons" value="GO" type="submit"><br/>
     <input id="reset1" class="formButtons" style="position:absolute; top:302px; left:710px; width:60px; font-size:14px;" type="reset" >
 
 	<div style="position:absolute; top:330px; left:15px; overflow-y: scroll; height:36px; width: 775px;">
@@ -126,6 +126,24 @@
 	</div>
 
     </form:form>
+
+
+  <div style="position:absolute; top:245px; left:725px; z-index: 1;">
+    <img id="queryHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
+   <div id="queryHelp">
+      <div class="hd">Show Effective Phenotype Query Help</div>
+      <div class="bd">
+         <p>This tells you how the Show Effective Phenotype Query checkbox works:</p>
+         <ul>
+            <li>Click the Box - Watch the text below disappear</li>
+            <li>Click the Box again - Watch the text below magically appear.</li>
+         </ul>
+         <p>The default is checked.
+           If you do not want to see the Effective Phenotype Query, uncheck the "Show Effective Phenotype Query" box.
+         </p>
+      </div>
+   </div>
+   </div>
 
 	<div style="position:absolute; top:227px; left:380px; z-index: 1;">
         <img id="locationsFileHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
