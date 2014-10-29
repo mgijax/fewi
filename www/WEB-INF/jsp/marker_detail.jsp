@@ -657,7 +657,7 @@ td.padded { padding:4px; }
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${mMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Mouse ${marker.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
-		  Alleles Annotated to Human Diseases(<a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
+		  Mutations Annotated to Human Diseases (<a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
 		  Phenotype Images(<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a>)
