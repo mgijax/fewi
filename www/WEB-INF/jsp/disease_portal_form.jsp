@@ -101,7 +101,7 @@
       <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
       Ex:
-      <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>,<br/>
       <a onclick="document.forms['diseasePortalQueryForm'].phenotypes.value='Autism AND &quot;social behavior&quot;';document.forms['diseasePortalQueryForm'].numDCol.value=100;document.forms['diseasePortalQueryForm'].submit();" href="#">Autism AND "social behavior"</a>
       <br/><br/>
 	Use quotes for exact match. <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> for using AND, OR, NOT, quotes, partial word matching.
