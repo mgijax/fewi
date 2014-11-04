@@ -141,7 +141,7 @@
       <div class="hd">Phenotype/Disease Query Help</div>
 		<div class="bd">
 			<p>The <b>Effective Phenotype Query</b> below displays how the text you enter in the <b>Search by disease or phenotype terms</b> box will be interpreted for the search. This display is on by default but may be turned off by removing the check from the box.</p>
-			<p>For example if you want to find autism models that have abnormalities in social behavior you would have typed:</p>
+			<p>For example if you want to find Autism models that have abnormalities in social behavior you would have typed:</p>
 			<ul>
 				<li>209850, AND, "social behavior"</li>
 			</ul>
