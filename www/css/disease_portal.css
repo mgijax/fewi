@@ -132,15 +132,13 @@ td.yui-dt-col-coordinate
 {
 	height: 20px;
 	position: relative;
-	left: 40px;
-	top: 25px;
 }
 #queryHelpImg
 {
    height: 20px;
    position: relative;
-   left: 40px;
-   top: 25px;
+   left: 495px;
+   top: 15px;
 }
 
 textarea {resize:none; background-color:#FFE4B5;}

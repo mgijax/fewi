@@ -100,14 +100,17 @@
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
+		<span style="font-size: smaller;">
       Ex:
-      <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>,<br/>
+      <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>,
       <a onclick="document.forms['diseasePortalQueryForm'].phenotypes.value='Autism AND &quot;social behavior&quot;';document.forms['diseasePortalQueryForm'].numDCol.value=100;document.forms['diseasePortalQueryForm'].submit();" href="#">Autism AND "social behavior"</a>
+		</span>
       <br/><br/>
 	Use quotes for exact match. <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> for using AND, OR, NOT, quotes, partial word matching.
-      <br/><br/>
-		<label><input id="showingQuery" checked="checked" type='checkbox' />Show Effective Phenotype Query</label>
       </div>
+		<div style="left: 6px; top:245px;position: absolute;">
+		<label><input id="showingQuery" checked="checked" type='checkbox' />Show Effective Phenotype Query</label>
+		</div>
     </div>
     </div>
 
@@ -128,24 +131,23 @@
     </form:form>
 
 
-  <div style="position:absolute; top:245px; left:725px; z-index: 1;">
+  <div style="position:absolute; top:230px; left:270px; z-index: 1;">
     <img id="queryHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
    <div id="queryHelp">
-      <div class="hd">Show Effective Phenotype Query Help</div>
-      <div class="bd">
-         <p>This tells you how the Show Effective Phenotype Query checkbox works:</p>
-         <ul>
-            <li>Click the Box - Watch the text below disappear</li>
-            <li>Click the Box again - Watch the text below magically appear.</li>
-         </ul>
-         <p>The default is checked.
-           If you do not want to see the Effective Phenotype Query, uncheck the "Show Effective Phenotype Query" box.
-         </p>
-      </div>
+      <div class="hd">Phenotype/Disease Query Help</div>
+         <div class="bd">
+             <p>The <b>Effective Phenotype Query</b> below displays how the Boolean parser interprets what you type in the <b>Search by disease or phenotype terms</b> box. This display is on by default but may be turned off by removing the check from the box.</p>
+             <p>For example if you want to find autism models that have abnormalities in social behavior you would have typed:</p>
+             <ul> <li>autism AND, "social behavior" </ul>
+             <p>The <b>Effective Phenotype Query</b> display for this would be:</p>
+             <ul> <li>(autism AND "social behavior") </ul>
+             <p>Note, the commas that were inserted to facilitate the function of the auto-complete tool are removed prior to running your search.</p>
+             <p>The <b>Effective Phenotype Query</b> shows only what you type in the <b>Search by disease or phenotype terms</b>. Entries in the <b>Search by genes</b> and <b>Search by genome locations</b> boxes are not displayed in this area but will be Boolean ANDed to what you entered in the <b>Search by disease or phenotype terms</b> box.</p>
+         </div>
    </div>
    </div>
 
-	<div style="position:absolute; top:227px; left:380px; z-index: 1;">
+	<div style="position:absolute; top:252px; left:420px; z-index: 1;">
         <img id="locationsFileHelpImg" src="${configBean.WEBSHARE_URL}images/help_large_transp.gif" />
 		<div id="locationsFileHelp">
 			<div class="hd">VCF File Uploading Tips</div>
