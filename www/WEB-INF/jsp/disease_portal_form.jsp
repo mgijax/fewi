@@ -58,10 +58,12 @@
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
       <form:textarea path="genes" style="height:80px; width:240px;" class=""/>
+		<span style="font-size: smaller;">
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Bmp4">Bmp4</a>,
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=Pax*">Pax*</a>,
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=NM_013627">NM_013627</a>
+		</span>
       <br/><br/>
       Enter symbols, names or ids.<br/>
       Use * for wildcard.
@@ -81,8 +83,10 @@
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
       <textarea id="locations" name="locations" style="height:80px; width:280px;"></textarea>
+		<span style="font-size: smaller;">
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?locations=Chr12:3000000-10000000">Chr12:3000000-10000000</a>
+		</span>
       <br/><br/>
       Need to convert genome build?<br/>
       Use this <a href='http://www.ncbi.nlm.nih.gov/genome/tools/remap#tab=asm'>converter tool</a>.
