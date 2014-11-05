@@ -29,7 +29,7 @@
 <div id="maintitle">
     <h1>P-WI Accession ID Search Tests</h1>
     <ul>
-        <li>User story 33, P-WI: ???Accid search to Detail page(marker) (Release 5.2?)</li>
+        <li>User story 33, P-WI: Accid search to Detail page(marker) (Release 5.2?)</li>
         <li></li>
         <li></li>
         <li></li>
@@ -43,7 +43,7 @@
 		<li>sto33: Supports MGI IDs and J#s</li>
 		<li>sto33: Supports only single ID entry</li>
 		<li>sto33: Acc ID search available on all  P-WI pages</li>
-		<li>sto33: </li>
+		<li>sto33: Acc ID search supports secondary MGI IDs</li>
 		<li>sto??: </li>
 		<li>sto??: </li>
 	</ul>
@@ -62,10 +62,10 @@
 		<h3>Manual tests</h3>
 		<ol>
     		<li>Confirm you can enter an ID by typing or by a copy and paste. (sto33)
- 			<p concordion:manual="false">new test</p>
+ 			<p concordion:manual="true">passed jeffc 11/05/2014</p>
     		<ol>
-                <li>Display the  marker detail page for Pax6 (http://mgi-testweb4:5000/detail/marker/MGI:97490)</li>
-                <li>Verify the following fields:
+                <li>Enter "MGI:97490" in the Accession ID field and click Search</li>
+                <li>Verify the following information is returned:
                 <table>
 	                <tr><th>field</th><th>Result</th></tr>
 	                <tr><td>Symbol:</td><td>Pax6</td></tr>
@@ -85,34 +85,45 @@
     		</li>
 
     		<li>Confirm the Acc ID search accepts MGI IDs and J numbers. (sto33)
- 			<p concordion:manual="false">new test</p>
+ 			<p concordion:manual="true">passed jeffc 11/05/2014</p>
     		<ol>
-                <li>Display the marker detail page for snurf (http://mgi-testweb4:5000/detail/marker/MGI:1891236)</li>
-                <li>Verify the following fields:
-                <table>
-                	<tr><th>field</th><th>Result</th></tr>
-	                <tr><td>Symbol:</td><td>Snurf</td></tr>
-					<tr><td>ID:</td><td>MGI:1891236</td></tr>
-					<tr><td>Marker Status:</td><td>official</td></tr>
-					<tr><td>Current Name:</td><td>SNRPN upstream reading frame</td></tr>
-					<tr><td>Synonyms:</td><td>[MGC:18604, MGC:30325]</td></tr>
-					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
-					<tr><td>Marker type:</td><td>Gene</td></tr>
-					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
-					<tr><td>Location:</td><td>Chr7:59974149-60005064 bp, + strand From VEGA annotation of GRCm38</td></tr>
-					<tr><td>Marker detail clip</td><td>This marker is part of a bicistronic gene with Snrpn. All alleles are listed on the Snrpn detail page.</td></tr>
-                </table></li>
-                <li>*note: in Marker detail clip the word "Snrpn" is a link</li>
+                <li>Enter "J:28000" in the Accession ID field and click Search</li>
+                <li>Verify the following error is returned: 
+                Error Found Reference(BIB_Refs) object with ID = J:28000, but no link URL has been defined.</li>
+                <li>*note: this error is displayed because the Reference Detail page has not been created yet.</li>
     		</ol>
     		</li>
 
     		<li>Confirm that multiple MGI IDs and J numbers are not accepted input. (sto33)
- 			<p concordion:manual="false">new test</p>
+ 			<p concordion:manual="true">passed jeffc 11/05/2014</p>
  			<ol>
-                <li>Display the marker detail page for brca1 (http://mgi-testweb4:5000/detail/marker/MGI:104537)</li>
-                <li>Verify there is a link to the public detail page for brca1</li>			
+                <li>Enter "MGI:97490, J:28000" in the Accession ID field and click Search</li>
+                <li>Verify the following error is returned: Error No accession object found for ID = MGI:97490, J:28000</li>
+                <li>*note: this error is because multiple IDs are not supported for  the Accession ID search.</li>			
 			</ol>
-			</li>			
+			</li>
+    		<li>Confirm you can enter a secondary ID and return the Primary ID data. (sto33)
+ 			<p concordion:manual="true">passed jeffc 11/05/2014]</p>
+    		<ol>
+                <li>Enter "MGI:2442292" in the Accession ID field and click Search</li>
+                <li>Verify the following information is returned:
+                <table>
+	                <tr><th>field</th><th>Result</th></tr>
+	                <tr><td>Symbol:</td><td>Pax6</td></tr>
+					<tr><td>ID:</td><td>MGI:97490</td></tr>
+					<tr><td>Marker Status:</td><td>official</td></tr>
+					<tr><td>Current Name:</td><td>paired box 6</td></tr>
+					<tr><td>Synonyms:</td><td>[1500038E17Rik, AEY11, Dey, Dickie's small eye, Gsfaey11, Pax-6]</td></tr>
+					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
+					<tr><td>Marker type:</td><td>Gene</td></tr>
+					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
+					<tr><td>Location:</td><td>Chr2:105668900-105697364 bp, + strand From VEGA annotation of GRCm38</td></tr>
+					<tr><td>Marker  detail clip</td><td>Null and hypomorphic mutants show a range of phenotypes from viable with small eyes and lens/cornea fusion to microphthalmia and cataract to embryonic or perinatal lethality with anophthalmia and severe craniofacial and forebrain defects.</td></tr>
+                </table>
+				</li>
+                
+    		</ol>
+    		</li>			
 		</ol>
 	</div>
 
