@@ -1,0 +1,133 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>P-WI Marker Detail Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>P-WI Marker Summary Tests</h1>
+    <ul>
+        <li>User story ??, P-WI: ???  (Release 5.2?)</li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto??:</li>
+		<li>sto??:</li>
+		<li>sto??:</li>
+		<li>sto??:</li>
+		<li>sto??: </li>
+		<li>sto??: </li>
+		<li>sto??: </li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Display a Marker detail page. (sto??)
+ 			<p concordion:manual="false">new test</p>
+    		<ol>
+                <li>Display the  marker detail page for Pax6 (http://mgi-testweb4:5000/detail/marker/MGI:97490)</li>
+                <li>Verify the following fields:
+                <table>
+	                <tr><th>field</th><th>Result</th></tr>
+	                <tr><td>Symbol:</td><td>Pax6</td></tr>
+					<tr><td>ID:</td><td>MGI:97490</td></tr>
+					<tr><td>Marker Staus:</td><td>official</td></tr>
+					<tr><td>Current Name:</td><td>paired box 6</td></tr>
+					<tr><td>Synonyms:</td><td>[1500038E17Rik, AEY11, Dey, Dickie's small eye, Gsfaey11, Pax-6]</td></tr>
+					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
+					<tr><td>Marker type:</td><td>Gene</td></tr>
+					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
+					<tr><td>Location:</td><td>Chr2:105668900-105697364 bp, + strand From VEGA annotation of GRCm38</td></tr>
+					<tr><td>Marker  detail clip</td><td>Null and hypomorphic mutants show a range of phenotypes from viable with small eyes and lens/cornea fusion to microphthalmia and cataract to embryonic or perinatal lethality with anophthalmia and severe craniofacial and forebrain defects.</td></tr>
+                </table>
+				</li>
+                
+    		</ol>
+    		</li>
+
+    		<li>Display a marker detail that has html in the Marker detail clip section. (sto??)
+ 			<p concordion:manual="false">new test</p>
+    		<ol>
+                <li>Display the marker detail page for snurf (http://mgi-testweb4:5000/detail/marker/MGI:1891236)</li>
+                <li>Verify the following fields:
+                <table>
+                	<tr><th>field</th><th>Result</th></tr>
+	                <tr><td>Symbol:</td><td>Snurf</td></tr>
+					<tr><td>ID:</td><td>MGI:1891236</td></tr>
+					<tr><td>Marker Status:</td><td>official</td></tr>
+					<tr><td>Current Name:</td><td>SNRPN upstream reading frame</td></tr>
+					<tr><td>Synonyms:</td><td>[MGC:18604, MGC:30325]</td></tr>
+					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
+					<tr><td>Marker type:</td><td>Gene</td></tr>
+					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
+					<tr><td>Location:</td><td>Chr7:59974149-60005064 bp, + strand From VEGA annotation of GRCm38</td></tr>
+					<tr><td>Marker detail clip</td><td>This marker is part of a bicistronic gene with Snrpn. All alleles are listed on the Snrpn detail page.</td></tr>
+                </table></li>
+                <li>*note: in Marker detail clip the word "Snrpn" is a link</li>
+    		</ol>
+    		</li>
+
+    		<li>All marker detail pages will have a link to their corresponding Public marker detail page. (sto??)
+ 			<p concordion:manual="false">new test</p>
+ 			<ol>
+                <li>Display the marker detail page for brca1 (http://mgi-testweb4:5000/detail/marker/MGI:104537)</li>
+                <li>Verify there is a link to the public detail page for brca1</li>			
+			</ol>
+			</li>			
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
