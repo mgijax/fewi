@@ -636,7 +636,7 @@ public class SolrHunter<T> implements Hunter<T> {
                 facet.add(c.getName());
                 if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
-        }
+        } 
 
         /**
          * Iterate through the response documents, extracting the information
@@ -784,7 +784,7 @@ public class SolrHunter<T> implements Hunter<T> {
 
         if (facet != null) {
             sr.setResultFacets(facet);
-        }
+        } 
 
         if (sp.includeSetMeta()) {
             sr.setResultSetMeta(new ResultSetMetaData(setHighlights));
@@ -865,7 +865,7 @@ public class SolrHunter<T> implements Hunter<T> {
                 facet.add(c.getName());
                 if(!sp.getSuppressLogs()) logger.debug(c.getName());
             }
-        }
+        } 
 
         /**
          * Iterate through the response documents, extracting the information
