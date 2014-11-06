@@ -272,7 +272,7 @@ function StateHandler(states)
 function GridFilter()
 {
 	// constants
-	this.filterIndicatorId = "gridFilterIndicator";
+	this.filterIndicatorId = "filterReset";
 	this.geneFilterId = "fGene";
 	this.headerFilterId = "fHeader";
 	this.fields = [this.geneFilterId,this.headerFilterId];

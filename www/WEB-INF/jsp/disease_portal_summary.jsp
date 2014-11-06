@@ -22,15 +22,40 @@
 }
 </style>
 <div id="summary">
-    <div id="paginationTop" style="float:right;">&nbsp;</div>
-    <div id="querySummary" style="float:none;margin-left:0;">
-        <div class="innertube" style="width:900px">
+    <div id="querySummary" style="float:left;margin-left:0">
+        <div class="innertube" style="width:500px;">
             <div id="searchSummary"> <!-- filled via js --> </div>
-            <div id="breadbox"><div id="gridFilterIndicator" class="hide">
-            	<span id="filterReset" class="filterItem">Remove Filters</span>
-            </div></div>
         </div>
     </div>
+
+    <div id="paginationTop" style="float:right; margin-top: 0px;">&nbsp;</div>
+
+    <div id="filterSection" style="width:600px">
+      <div id="contentcolumn" style="width:480px; margin-left: 510px;">
+	<span id="filterLabel" class="label">Filter results by:</span>
+	<a id="featureTypeFilter" class="filterButton">Feature&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8"/></a>
+	<br/>
+	<div id="breadbox">
+	    <span class="label">Filtered by:</span>
+	    &nbsp;<span id="defaultText" style="display:none">No filters selected.</span>
+	    <span id="filterList">
+            <span id="filterReset" class="filterItem">Remove row/column filters</span>
+	    </span><br/>
+	</div>
+      </div>
+    </div>
+
+    <div class="facetFilter" style="display:none">
+	<div id="facetDialog">
+	    <div class="hd">Filter</div>
+	    <div class="bd">
+		<form:form method="GET" action="${configBean.FEWI_URL}diseasePortal/summary">
+		<img src="/fewi/mgi/assets/images/loading.gif">
+		</form:form>
+	    </div>
+	</div>
+    </div>
+
     <br clear="all" />
 </div>
 <div id="resultSummary" class="yui-navset">

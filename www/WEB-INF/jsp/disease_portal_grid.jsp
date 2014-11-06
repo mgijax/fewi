@@ -18,7 +18,7 @@
 <div id="hdpGridTableWrap">
 	<c:if test="${empty gridClusters}">No genes found that match your search criteria.
 		<br/>
-		<button class="hide" id="filterReset">Remove Filters</button>
+		<button class="hide" id="filterReset">Remove row/column filters</button>
 	</c:if>
 	<c:if test="${not empty gridClusters}">
 	<!-- Grid Table -->
