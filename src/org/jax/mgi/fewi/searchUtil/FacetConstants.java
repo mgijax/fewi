@@ -23,4 +23,8 @@ public class FacetConstants {
 	public static final String INT_INTERACTION = "interaction";
 	public static final String INT_DATA_SOURCE = "dataSource";
 	public static final String INT_SCORE = "score";
+
+	// HMDC facets
+	
+	public static final String MARKER_FEATURE_TYPE = "featureType";
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.jax.mgi.fewi.hunter.SolrDiseasePortalHunter;
+import org.jax.mgi.fewi.hunter.SolrDiseasePortalFeatureTypeFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -33,6 +34,9 @@ public class DiseasePortalFinder
 
 	@Autowired
 	private SolrDiseasePortalHunter hdpHunter;
+
+	@Autowired
+	private SolrDiseasePortalFeatureTypeFacetHunter featureTypeFacetHunter;
 
 	@Autowired
 	private HibernateObjectGatherer<HdpGenoCluster> genoCGatherer;
@@ -429,6 +433,22 @@ public class DiseasePortalFinder
 		SearchResults<SolrVocTerm> srVT = new SearchResults<SolrVocTerm>();
 		srVT.cloneFrom(results,SolrVocTerm.class);
 		return srVT;
+	}
+
+	//----------------------------------------
+	//--- facet hunters (for filters) --------
+	//----------------------------------------
+
+	/* get the feature types for markers matching the search params
+	 */
+	public SearchResults<SolrString> getFeatureTypeFacet(
+		SearchParams params) {
+	    SearchResults<SolrHdpEntity> results =
+		new SearchResults<SolrHdpEntity>();
+	    featureTypeFacetHunter.hunt(params, results);
+	    SearchResults<SolrString> srss = new SearchResults<SolrString>();
+	    srss.cloneFrom(results, SolrString.class);
+	    return srss;
 	}
 
 	// -------- Hibernate accessors ----------

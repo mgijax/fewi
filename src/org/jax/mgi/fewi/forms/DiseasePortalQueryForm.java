@@ -24,6 +24,7 @@ public class DiseasePortalQueryForm
     private String locationsFileName;
     private String enableVcfFilter;
     private String geneFileName;
+    private List<String> featureTypeFilter;
     private int numDCol=100;
     
     // Filter queries
@@ -63,6 +64,13 @@ public class DiseasePortalQueryForm
     //--------------------//
     // accessors
     //--------------------//
+
+    public List<String> getFeatureTypeFilter() {
+	return featureTypeFilter;
+    }
+    public void setFeatureTypeFilter(List<String> featureTypeFilter) {
+	this.featureTypeFilter = featureTypeFilter;
+    }
 
     public String getPhenotypes() {
 		return phenotypes;

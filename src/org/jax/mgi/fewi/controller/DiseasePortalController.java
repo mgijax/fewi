@@ -28,6 +28,7 @@ import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
@@ -55,6 +56,7 @@ import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -66,6 +68,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.BindingResult;
 
 /*
  * This controller maps all /diseasePortal/ uri's
@@ -75,12 +78,27 @@ import org.springframework.web.servlet.ModelAndView;
 public class DiseasePortalController
 {
 
+    //--------------------//
+    // instance variables
+    //--------------------//
+
 	// logger for the class
 	private final Logger logger = LoggerFactory.getLogger(DiseasePortalController.class);
 
 	// get the finders used by various methods
 	@Autowired
 	private DiseasePortalFinder hdpFinder;
+
+	@Value("${solr.factetNumberDefault}")
+	private Integer facetLimit;
+
+    //--------------------//
+    // static variables
+    //--------------------//
+
+    // values for defining how we sort facet results
+    private static String ALPHA = "alphabetic";
+    private static String RAW = "raw";
 
     //--------------------------//
     // Disease Portal Query Form
@@ -1251,6 +1269,12 @@ public class DiseasePortalController
 			qFilters.add( new Filter(DiseasePortalFields.TERM_HEADER, tokens, Filter.Operator.OP_IN));
 		}
 
+		// retrict results based on the feature types (of the markers)
+		List<String> featureTypes = query.getFeatureTypeFilter();
+		if ((featureTypes != null) && (featureTypes.size() > 0)) {
+			qFilters.add(new Filter(DiseasePortalFields.MARKER_FEATURE_TYPE, featureTypes, Filter.Operator.OP_IN));
+		}
+
         // grid cluster key
 		String gridClusterKey = query.getGridClusterKey();
 		if(notEmpty(gridClusterKey))
@@ -1423,6 +1447,56 @@ public class DiseasePortalController
 		params.setFilter(parseQueryForm(query,session));
 		params.setPageSize(0);
 		return hdpFinder.getDiseaseCount(params);
+	}
+
+	// -----------------------------------------------------------------//
+	// facets for HMDC pages
+	// -----------------------------------------------------------------//
+
+	private Map<String, List<String>> facetGeneric (DiseasePortalQueryForm query, BindingResult result, HttpSession session, String facetType) {
+	    logger.debug(query.toString());
+	    String order = ALPHA;
+
+	    SearchParams params = new SearchParams();
+	    params.setFilter(this.parseQueryForm(query, session));
+
+	    SearchResults<SolrString> facetResults = null;
+
+	    if (FacetConstants.MARKER_FEATURE_TYPE.equals(facetType)){
+		facetResults = hdpFinder.getFeatureTypeFacet(params);
+	    } else {
+		facetResults = new SearchResults<SolrString>();
+	    }
+	    return this.parseFacetResponse(facetResults, order);
+	}
+
+	private Map<String, List<String>> parseFacetResponse (SearchResults<SolrString> facetResults, String order) {
+
+	    Map<String, List<String>> m = new HashMap<String, List<String>>();
+	    List<String> l = new ArrayList<String>();
+
+	    if (facetResults.getResultFacets().size() >= facetLimit) {
+		l.add("Too many results to display. Modify your search or try another filter first.");
+		m.put("error", l);
+	    } else if (ALPHA.equals(order)) {
+		m.put("resultFacets", facetResults.getSortedResultFacets());
+	    } else {
+		m.put("resultFacets", facetResults.getResultFacets());
+	    }
+	    return m; 
+	}
+
+	/* gets a list of feature types for markers which match the
+	 * current query, returned as JSON
+	 */
+	@RequestMapping("/facet/featureType")
+	public @ResponseBody Map<String, List<String>> facetFeatureType(
+		HttpSession session,
+		@ModelAttribute DiseasePortalQueryForm query, 
+		BindingResult result) {
+	
+	    return this.facetGeneric(query, result, session,
+		FacetConstants.MARKER_FEATURE_TYPE);
 	}
 
 	// -----------------------------------------------------------------//
