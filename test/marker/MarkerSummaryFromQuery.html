@@ -1471,8 +1471,8 @@
     		<ol>
                 <li>Enter <b concordion:set="#pheno">"the jejunum crypt, but not ileal crypts, are more resistant"</b> in the Phenotypes/Diseases input text field and submit the search. </li>
                
-                <li>Verify the following markers are excluded:
-	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
+                <li>Verify the following markers are included:
+	            <table cc:verifySupersetOf="#symbol : getSymbolsByPhenotype(#pheno)">
 								<tr>
 									<th concordion:assertEquals="#symbol">Marker Symbol</th>
 									<th>Notes</th>
