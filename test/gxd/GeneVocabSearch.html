@@ -186,7 +186,6 @@ order by m.symbol
             		</table>
             	</li>
             	
-            	</li>
             	<li>Do not return the following markers because they have no GXD results (they do pass roll-up rules though)
             		<table concordion:execute="#results = getGeneSymbolsByTermId(#query)">
             		<tr><th cc:assertNoResultsContain="#results">Marker</th></tr>
