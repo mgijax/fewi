@@ -16,7 +16,7 @@
 <table id="hdpSystemPopupTable">
 
 <!-- Column Headers -->
-<tr>
+<tr style="height: 240px;">
 	<c:choose>
 		<c:when  test="${empty popupRows and not empty humanPopupRows}">
 			<!-- if we have genes, but no genotypes, display "Gene" header -->
@@ -30,7 +30,7 @@
   <c:set var="lastColImage" />
   <c:forEach var="headerCol" items="${termColumns}" varStatus="status">
     <th class="vb">
-      <div><c:out value="${headerCol}" escapeXml="false" /></div>
+      <div class="rotate45"><c:out value="${headerCol}" escapeXml="false" /></div>
       <div style="position:relative;"><div class="partialRight"></div>
     </th>
     <c:if test="${status.last}"><c:set var="lastColImage" value="${headerCol}"/></c:if>
@@ -94,5 +94,5 @@
 </c:if>
 
 </table>
-<div id="hdpSystemPopupTablePadder"><c:out value="${lastColImage}" escapeXml="false" /></div>
+<div id="hdpSystemPopupTablePadder"></div>
 </div>

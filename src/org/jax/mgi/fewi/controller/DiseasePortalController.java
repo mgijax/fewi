@@ -46,7 +46,7 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.ImageUtils;
+//import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
 import org.jax.mgi.fewi.util.file.FileProcessorOutput;
@@ -114,23 +114,16 @@ public class DiseasePortalController
 		return "disease_portal_query";
 	}
 
-
-   	public String getRotatedTextImgTag(String text)
-   	{
-   		return getRotatedTextImgTag(text,30);
-   	}
-	public String getRotatedTextImgTag(String text,int maxChars)
-	{
-		try{
-			String rotatedTextTag = ImageUtils.getRotatedTextImageTagAbbreviated(text,310.0,maxChars);
-
-			return rotatedTextTag;
-		}catch(Exception e){
-			e.printStackTrace();
-			logger.error("error genning image",e);
+	public String truncateText(String in) {
+		return truncateText(in, 30);
+	}
+	
+	public String truncateText(String in, int bound) {
+		if(in.length() > bound) {
+			return in.substring(0, (bound - 3)) + "...";
+		} else {
+			return in;
 		}
-
-		return "";
 	}
 
     //----------------------------//
@@ -369,18 +362,15 @@ public class DiseasePortalController
       	// search for diseases in result set - make column headers and ID list
       	SearchResults<SolrString> diseaseNamesResults = getGridDiseaseColumns(request, query,session);
       	List<String> diseaseNames = new ArrayList<String>();
-      	for(SolrString ss : diseaseNamesResults.getResultObjects())
-      	{
+      	for(SolrString ss : diseaseNamesResults.getResultObjects()) {
       		diseaseNames.add(ss.toString());
       	}
       	boolean moreDiseasesNotShown = diseaseNamesResults.getTotalCount() > diseaseNames.size();
 
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
 		List<String> diseaseIds = new ArrayList<String>();
-		for(String disease : diseaseNames)
-		{
-			String headerText = disease;
-			diseaseColumnsToDisplay.add(getRotatedTextImgTag(headerText));
+		for(String disease : diseaseNames) {
+			diseaseColumnsToDisplay.add(truncateText(disease));
 			//diseaseIds.add(vt.getPrimaryId());
 			//diseaseNames.add(disease);
 		}
@@ -388,9 +378,8 @@ public class DiseasePortalController
       	// search for mp headers in result set & make column headers
       	List<String> mpHeaders = getGridMpHeaderColumns(request,query,session);
       	List<String> mpHeaderColumnsToDisplay = new ArrayList<String>();
-		for(String mpHeader : mpHeaders)
-		{
-			mpHeaderColumnsToDisplay.add(getRotatedTextImgTag(mpHeader));
+		for(String mpHeader : mpHeaders) {
+			mpHeaderColumnsToDisplay.add(truncateText(mpHeader));
 		}
 
 		logger.info("diseasePortal/grid -> querying solr for grid data");
@@ -512,8 +501,8 @@ public class DiseasePortalController
 
 		for(SolrVocTerm mpTerm : mpTerms)
 		{
-			// use 30 max characters for the popup
-			mpTermColumnsToDisplay.add(getRotatedTextImgTag(mpTerm.getTerm(),30));
+			// TODO
+			mpTermColumnsToDisplay.add(truncateText(mpTerm.getTerm(), 45));
 			termColIds.add(mpTerm.getPrimaryId());
 			termColNames.add(mpTerm.getTerm());
 		}
@@ -581,8 +570,8 @@ public class DiseasePortalController
 
 		for(SolrVocTerm diseaseTerm : diseaseTerms)
 		{
-			// use 30 max characters for the popup
-			diseaseTermColumnsToDisplay.add(getRotatedTextImgTag(diseaseTerm.getTerm(),30));
+			// TODO
+			diseaseTermColumnsToDisplay.add(truncateText(diseaseTerm.getTerm(), 45));
 			termColIds.add(diseaseTerm.getPrimaryId());
 			termColNames.add(diseaseTerm.getTerm());
 		}
@@ -1301,7 +1290,6 @@ public class DiseasePortalController
 		if(notEmpty(phenotypes))
 		{
 			Filter phenoFilter;
-			// TODO so I can find this place in the code
 			BooleanSearch bs = new BooleanSearch();
 			phenoFilter = bs.buildSolrFilter(SearchConstants.VOC_TERM, phenotypes.replace(",", " "));
 			if(phenoFilter == null) {

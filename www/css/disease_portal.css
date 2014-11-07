@@ -207,7 +207,7 @@ textarea {resize:none; background-color:#FFE4B5;}
     font-size: 20px;
   }
 
-  #hdpSystemPopupTablePadder{ display: table-cell; }
+  #hdpSystemPopupTablePadder{ display: table-cell; width: 210px; }
   #hdpSystemPopupTablePadder img { visibility: hidden; }
   #hdpSystemPopupTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; vertical-align: bottom;}
   #hdpSystemPopupTable th > div { width:20px; overflow: visible; }
@@ -330,7 +330,7 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   #hdpGridTableWrap a { text-decoration: none; }
   
-  #hdpGridTablePadder{ display: table-cell; }
+  #hdpGridTablePadder{ display: table-cell; width: 145px; }
   #hdpGridTablePadder img { visibility: hidden; }
    
   #hdpGridTable th {border: 1px solid #AAA; border-top: none; padding: 4px 3px; vertical-align:bottom;}
@@ -421,6 +421,13 @@ textarea {resize:none; background-color:#FFE4B5;}
   {
   	white-space: nowrap;
   }
+
+	.rotate45 {
+		-ms-transform: rotate(-45deg);
+		-webkit-transform: rotate(-45deg);
+		transform: rotate(-45deg);
+		white-space: nowrap;
+	}
   
   #hdpGridTable .mpBin_1 { background-color: #C6D6E8; }
   #hdpGridTable .mpBin_2 { background-color: #879EBA; }
@@ -448,10 +455,9 @@ textarea {resize:none; background-color:#FFE4B5;}
   #moreDiseases 
   {
   	position: relative;
-	top: -40px;
-	left: -20px;
+	left: 10px;
 	white-space: nowrap;
-	padding-right: 6px;
+	padding-right: 15px;
 	font-weight: bold;
 	cursor: pointer;
 	color: rgb(0, 0, 238);
