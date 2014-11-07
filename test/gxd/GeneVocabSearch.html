@@ -450,7 +450,7 @@ and not exists(select 1 from voc_marker_cache vm2 where
                 <li>Select the term '<b>Pituitary Adenoma, Growth Hormone-Secreting</b>' (<b concordion:set="#query">102200</b>) </li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Men1</b> should be returned (has only positive annotations).</li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Fbn1</b> should not be returned (has only NOT annotations).</li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Gnas</b> should not be returned (is ortholog of associated Human gene but has no positive annotations itself).</li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Gnas</b> should be returned (is ortholog of associated Human gene but has no mouse annotations itself).  As part of the 5.21 release the GXD QF will search for GXD results for mouse homologs of human genes annotated to an OMIM term.</li>
             </ol>
             </li>
         </ol>
