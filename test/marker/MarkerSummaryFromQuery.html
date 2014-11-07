@@ -1446,6 +1446,48 @@
     		</ol>
     		</li>
 
+            <li>Submitting text that is present in a normal MP annotation note -- this should not return the associated gene (5.21).
+    		<ol>
+                <li>Enter <b concordion:set="#pheno">"notably, supramammillary nuclei"</b> in the Phenotypes/Diseases input text field and submit the search. </li>
+               
+                <li>Verify the following markers are excluded:
+	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
+								<tr>
+									<th concordion:assertEquals="#symbol">Marker Symbol</th>
+									<th>Notes</th>
+								</tr>
+								
+								<tr>
+									<td>Foxb1</td>
+									<td>Normal annotation note to MP:0004162 - don't return matches to normal notes</td>
+								</tr>
+								
+							</table>
+						</li>
+    		</ol>
+    		</li>
+
+            <li>Submitting text that is present in a background MP annotation note -- this should return the associated gene.
+    		<ol>
+                <li>Enter <b concordion:set="#pheno">"the jejunum crypt, but not ileal crypts, are more resistant"</b> in the Phenotypes/Diseases input text field and submit the search. </li>
+               
+                <li>Verify the following markers are excluded:
+	            <table cc:verifyNotRows="#symbol : getSymbolsByPhenotype(#pheno)">
+								<tr>
+									<th concordion:assertEquals="#symbol">Marker Symbol</th>
+									<th>Notes</th>
+								</tr>
+								
+								<tr>
+									<td>Gpx1</td>
+									<td>background sensitivity note</td>
+								</tr>
+								
+							</table>
+						</li>
+    		</ol>
+    		</li>
+
     		<li>Test that booleans work
     		<ol>
                 <li>Query for <b concordion:set="#pheno">MP:0009754 AND MP:0009751</b> should return the following genes:
