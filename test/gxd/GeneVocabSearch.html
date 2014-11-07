@@ -174,27 +174,20 @@ order by m.symbol
 ;     
              -->
             	<li>Select the term 'retroesophageal right subclavian artery' (<b concordion:set="#query">MP:0004160</b>) </li>
-            	<li>Return the following markers:
-            		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
-            			<tr><th cc:assertEquals="#results">Marker</th></tr>
-            			<tr cc:dynamicDataTable="retroesophagealArteryGXDGenes"></tr>
+            	
+            	<li>Return the following markers (using roll-up rules in 5.21):
+            		<table concordion:execute="#results = getGeneSymbolsByTermId(#query)">
+            		<tr><th cc:assertResultsContain="#results">Marker</th></tr>
+            		<tr><td>Acvr1</td></tr>
+            		<tr><td>Chrd</td></tr>
+            		<tr><td>Eya1</td></tr>
+            		<tr><td>Fbln1</td></tr>
+            		<tr><td>Fgf8</td></tr>
             		</table>
-            	<!-- SELECT V._term_key, V._marker_key, V.annottype, M.symbol FROM mgd.voc_marker_cache V, mgd.mrk_marker M WHERE V._term_key = '1671269' and V._marker_key = M._marker_key -->
-            	<!-- SELECT distinct V._marker_key, V.annottype, M.symbol FROM mgd.voc_marker_cache V, mgd.mrk_marker M WHERE V._marker_key = M._marker_key and M._marker_key in (8726, 9027, 9936, 10498, 10502, 12181, 12242, 12243, 12559, 13300, 13762, 14103, 15433, 18737, 23133, 24907, 28691, 31369, 33109, 33682, 37270, 38210, 40822, 43537, 64487, 67204, 91436, 93329, 307082) and V.annottype like 'AD' -->
-            	<!-- COMBINED SQL:
-            	SELECT distinct V._marker_key, M.symbol
-				FROM mgd.voc_marker_cache V, mgd.mrk_marker M
-				WHERE V._marker_key = M._marker_key
-				AND V.annottype like '%AD%'
-				AND V._marker_key in 
-					(SELECT V._marker_key 
-					FROM mgd.voc_marker_cache V, mgd.mrk_marker M, mgd.voc_term VT
-					WHERE VT.term = 'retroesophageal right subclavian artery' 
-					and V._marker_key = M._marker_key 
-					and VT._term_key = V._term_key)
-            	 -->
             	</li>
-            	<li>Do not return the following markers:
+            	
+            	</li>
+            	<li>Do not return the following markers because they have no GXD results (they do pass roll-up rules though)
             		<table concordion:execute="#results = getGeneSymbolsByTermId(#query)">
             		<tr><th cc:assertNoResultsContain="#results">Marker</th></tr>
             		<tr><td>Del(16Dgcr2-Hira)1Rak</td></tr>
@@ -202,6 +195,15 @@ order by m.symbol
             		<tr><td>Sec24b</td></tr>
             		</table>
             	</li>
+            	<li>Do not return the following markers because the MP annotation did not roll up via a simple genotype
+            		<table concordion:execute="#results = getGeneSymbolsByTermId(#query)">
+            		<tr><th cc:assertNoResultsContain="#results">Marker</th></tr>
+            		<tr><td>Gt(ROSA)26Sor</td></tr>
+            		<tr><td>Vangl1</td></tr>
+            		<tr><td>Vangl2</td></tr>
+            		</table>
+            	</li>
+            	
             </ol>
             </li>
             <li>Selecting an MP term with children returns only the annotated genes which have expression data for the term and its child terms
