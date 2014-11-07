@@ -98,11 +98,11 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
 
 
-    		<li>All diseases are returned that are associated with a complex genotype which is annotated to the queried MP term.
+    		<li>No diseases are returned that are associated with a complex genotype which is annotated to the queried MP term (change made in 5.21 release)
     		<ol>
                 <li>Query for <b concordion:set="#pheno">MP:0009583</b> (by ID) (increased keratinocyte proliferation - same term as above).<br/>
                 (One genotype that should be associated is MGI:3842833 containing Tg(KRT14-cre)8Brn, Tg(KRT5-Akt1*)Jmpa, and Trp53&lt;tm1Brn&gt;.)</li>
-                <li>Verify that "Squamous Cell Carcinoma, Head and Neck; HNSCC", OMIM <b cc:assertResultsContain="getTermIdsByPhenotype(#pheno)">275355</b> is returned.</li>
+                <li>Verify that "Squamous Cell Carcinoma, Head and Neck; HNSCC", OMIM <b cc:assertNoResultsContain="getTermIdsByPhenotype(#pheno)">275355</b> is returned.</li>
     		</ol>
     		</li>
 
