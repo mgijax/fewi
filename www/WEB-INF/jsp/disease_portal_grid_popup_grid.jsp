@@ -2,21 +2,13 @@
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
-
-<!-- Assumes title and header are set -->
-
-<style type="text/css">
- 
-</style>
-
 
 <!-- Table and Wrapping div -->
 <div id="hdpSystemPopupWrap">
 <table id="hdpSystemPopupTable">
 
 <!-- Column Headers -->
-<tr style="height: 240px;">
+<tr style="height: 200px;">
 	<c:choose>
 		<c:when  test="${empty popupRows and not empty humanPopupRows}">
 			<!-- if we have genes, but no genotypes, display "Gene" header -->
@@ -32,6 +24,7 @@
     <th class="vb">
       <div class="rotate45"><c:out value="${headerCol}" escapeXml="false" /></div>
       <div style="position:relative;"><div class="partialRight"></div>
+		<div style="white-space: nowrap; z-index: 1;" class="hide tooltip"><c:out value="${termNames[status.index].term}" escapeXml="false" /></div>
     </th>
     <c:if test="${status.last}"><c:set var="lastColImage" value="${headerCol}"/></c:if>
   </c:forEach>
@@ -96,3 +89,19 @@
 </table>
 <div id="hdpSystemPopupTablePadder"></div>
 </div>
+
+<!-- JavaScript -->
+<script type="text/javascript">
+
+	$(".rotate45").hover(
+		function(e) {
+			var tdDiv = $(this);
+			tdDiv.siblings().find(".tooltip").show();
+		},
+		function(e) {
+			var tdDiv = $(this);
+			tdDiv.siblings().find(".tooltip").hide();
+		}
+	);
+
+</script>

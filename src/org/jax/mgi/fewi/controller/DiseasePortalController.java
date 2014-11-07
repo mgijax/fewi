@@ -523,6 +523,7 @@ public class DiseasePortalController
 		mav.addObject("popupRows", popupRows);
 		mav.addObject("genoClusters", genoClusters);
 		mav.addObject("termColumns", mpTermColumnsToDisplay);
+		mav.addObject("termNames", mpTerms);
 		mav.addObject("terms", termColNames);
 		mav.addObject("termHeader", query.getTermHeader());
 		mav.addObject("markers", markersInImsr);
@@ -638,6 +639,7 @@ public class DiseasePortalController
 		mav.addObject("genoClusters", genoClusters);
 		mav.addObject("gridClusterString",gridClusterString);
 		mav.addObject("termColumns", diseaseTermColumnsToDisplay);
+		mav.addObject("termNames", diseaseTerms);
 		mav.addObject("terms", termColNames);
 		mav.addObject("termHeader", query.getTermHeader());
 		mav.addObject("markers", markersInImsr);

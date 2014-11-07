@@ -2,6 +2,9 @@
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
+
+${templateBean.templateHeadHtml}
+
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 
@@ -18,6 +21,8 @@
   padding-bottom:4px;
 }
 </style>
+
+</head>
 
 <!-- Table and Wrapping div -->
 
