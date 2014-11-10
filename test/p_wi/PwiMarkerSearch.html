@@ -40,6 +40,7 @@
 		<li>sto31: Support the use of wildcard &quot;%&quot;</li>
 		<li>sto31: Withdrawn markers should be returned</li>
 		<li>sto31: Symbols are links to their Marker detail page</li>
+		<li>sto31: Existence of a link to view all marker records when results are more than 5000</li>
 	</ul>
 </div>
 
@@ -96,6 +97,15 @@
 			</ol>
 			</li>
 			
+    		<li>Confirm clicking on "View all marker matches" display the complete set of markers. (sto31)
+ 			<p concordion:manual="true">passed jeffc 11/10/2014</p>
+    		<ol>
+                <li>Enter "a%" in the nomenclature field and click Search</li>
+                <li>Verify the first 5000 matching marker records are displayed</li>
+                <li>Verify the existence of a link called "View all marker matches" exists just below the matching marker records heading.</li>
+                <li>Confirm clicking on this link displays the complete set of matching marker records.</li>
+    		</ol>
+    		</li>			
 		</ol>
 	</div>
 
