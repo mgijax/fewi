@@ -385,13 +385,18 @@ td.right { text-align: right }
 		    </td>
 		    <td>
 			<font style="font-weight: bold">${symbolSup}</font> expresses
-			${fn:length(expressesComponent)} component<c:if test="${fn:length(expressesComponent) > 1}">s</c:if>
+			${fn:length(expressesComponent)} gene<c:if test="${fn:length(expressesComponent) > 1}">s</c:if>
 			<div id="expressesComponentTable" style="display: none; margin-top: 2px">
+			    <c:set var="ecTitle" value="Knock-in expresses:"/>
+			    <c:if test="${not empty nonMouseExpressesComponent}">
+			        <c:set var="ecTitle" value="Transgene expresses:"/>
+			    </c:if>
+			    <font class="label">${ecTitle}</font><br/>
 			    <table class="detail">
 				<tr>
 				    <td class="detailCat3 cm">Organism</td>
-				    <td class="detailCat3 cm">Gene</td>
-				    <c:if test="${not empty nonMouseExpressesComponent}"><td class="detailCat3 cm">Mouse Homolog</td></c:if>
+				    <td class="detailCat3 cm">Expressed&nbsp;Gene</td>
+				    <c:if test="${not empty nonMouseExpressesComponent}"><td class="detailCat3 cm">Homolog&nbsp;in&nbsp;Mouse</td></c:if>
 				    <td class="detailCat3 cm">Note</td>
 				</tr>
 				<c:forEach var="ecMarker" items="${expressesComponent}" varStatus="ecStatus">
