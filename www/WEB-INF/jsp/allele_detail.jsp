@@ -92,6 +92,12 @@ td.cm {
     padding: 4px; 
     border: 1px solid black;
 }
+td.lm { 
+    text-align: left;
+    vertical-align: middle;
+    padding: 4px; 
+    border: 1px solid black;
+}
 </style>
 
 <script language="Javascript">
@@ -410,7 +416,7 @@ td.right { text-align: right }
 					<td class="cm">${ecOrganism}</td>
 					<td class="cm">${ecLink1}</td>
 					<c:if test="${not empty nonMouseExpressesComponent}"><td class="cm">${ecLink2}</td></c:if>
-					<td class="cm">${ecNote}</td>
+					<td class="lm"><font class="small">${ecNote}</font></td>
 				    </tr>
 				</c:forEach> 
 			    </table>
