@@ -630,7 +630,7 @@ td.padded { padding:4px; }
 		  &nbsp;<br/>
 		</c:if>
 		<c:if test="${marker.countOfHumanDiseases > 0}">
-		  Human Diseases Modeled Using Mouse ${marker.symbol} (<a href="" onclick="return overlib( '<span style=\'font-size:12px;\'>Diseases ' +
+		  Human Diseases Modeled in Mice Using ${marker.symbol} (<a href="" onclick="return overlib( '<span style=\'font-size:12px;\'>Diseases ' +
 			  'listed here are those where a mutant allele of this gene is involved in a mouse genotype used as ' +
 			  'a model. This does not mean that mutations in this gene contribute to or are causative of the disease.</span>' +
 			  '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'>' +
