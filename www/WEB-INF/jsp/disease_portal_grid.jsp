@@ -25,7 +25,7 @@
 	<table id="hdpGridTable">
 	
 	<!-- Row of Column Headers -->
-	<tr style="height: 145px;">
+	<tr style="height: 160px;">
 	  <th rowspan="2" style="white-space: nowrap;">Human Gene</th>
 	  <th rowspan="2">
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">

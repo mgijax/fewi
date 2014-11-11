@@ -8,7 +8,7 @@
 <table id="hdpSystemPopupTable">
 
 <!-- Column Headers -->
-<tr style="height: 200px;">
+<tr style="height: 220px;">
 	<c:choose>
 		<c:when  test="${empty popupRows and not empty humanPopupRows}">
 			<!-- if we have genes, but no genotypes, display "Gene" header -->
