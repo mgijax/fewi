@@ -302,6 +302,7 @@ border-collapse: collapse;
 		border: solid 1px black;
 		border-top: none;
 		border-left: none;
+		background-color: white;
 	}
 </style>
 <div id="summary">
