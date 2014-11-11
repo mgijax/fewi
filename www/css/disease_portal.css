@@ -330,7 +330,7 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   #hdpGridTableWrap a { text-decoration: none; }
   
-  #hdpGridTablePadder{ display: table-cell; width: 145px; }
+  #hdpGridTablePadder{ width: 145px; }
   #hdpGridTablePadder img { visibility: hidden; }
    
   #hdpGridTable th {border: 1px solid #AAA; border-top: none; padding: 4px 3px; vertical-align:bottom;}
