@@ -1,0 +1,126 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>P-WI Marker Detail Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>P-WI Marker Search Tests</h1>
+    <ul>
+        <li>User story 31, P-WI: Marker search by Nomen (Release 5.2?)</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto31: You can search by current symbol, Name, or mouse synonyms</li>
+		<li>sto31: Support the use of wildcard &quot;%&quot;</li>
+		<li>sto31: Withdrawn markers should be returned</li>
+		<li>sto31: Symbols are links to their Marker detail page</li>
+		<li>sto31: Existence of a link to view all marker records when results are more than 5000</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Confirm you can search by current symbol, Name, or mouse synonyms. (sto31)
+ 			<p concordion:manual="true">passed jeffc 11/06/2014</p>
+    		<ol>
+                
+                <li>Verify the following information is returned:
+                <table>
+	                <tr><th>enter</th><th>Symbol</th><th>Nomen Status</th><th>MGI ID</th><th>Name</th><th>Synonyms</th><th>Feature Type</th><th>Marker Status</th><th>Notes</th></tr>
+	                <tr><td>Shh</td><td>Shh</td><td>n/a<td>MGI:98297</td><td>sonic hedgehog</td><td>Hhg1, Hx, Hxl3, M100081</td><td>protein coding gene</td><td>official</td><td>Marker record</td></tr>
+					<tr><td>ani</td><td>Ani</td><td>In Progress</td><td>MGI:3619986</td><td>aniridia</td><td></td><td></td><td></td><td>Nomen record</td></tr>
+					<tr><td>aths</td><td>Aths</td><td>Deleted</td><td>MGI:1890626</td><td>atherosclerosis susceptibility</td><td></td><td></td><td></td><td>Nomen record</td></tr>
+					<tr><td>agit</td><td>Agit</td><td>Reserved</td><td>MGI:1891397</td><td>agitated</td><td></td><td></td><td></td><td>Nomen record</td></tr>
+					<tr><td>amot</td><td>Amot</td><td>Approved</td><td>MGI:2156559</td><td>angiomotin</td><td></td><td></td><td></td><td>Nomen record</td></tr>
+					<tr><td>-</td><td>Amot</td><td>n/a</td><td>MGI:108440</td><td>angiomotin</td><td>E230009N18Rik, mKIAA1071, Sii6</td><td>protein coding gene</td><td>official</td><td>Marker record</td></tr>
+					<tr><td>GM2952</td><td>Gm2952</td><td>n/a</td><td>MGI:3781130</td><td>withdrawn</td><td></td><td>protein coding gene</td><td>withdrawn</td><td>Marker record</td></tr>
+					<tr><td>angiomotin</td><td>Amot</td><td>Approved</td><td>MGI:2156559</td><td>angiomotin</td><td></td><td></td><td></td><td>Nomen record</td></tr>
+					<tr><td>-</td><td>Amot</td><td>n/a</td><td>MGI:108440</td><td>angiomotin</td><td>E230009N18Rik, mKIAA1071, Sii6</td><td>protein coding gene</td><td>official</td><td>Marker record</td></tr>
+					<tr><td>apg3</td><td>Atg3</td><td>n/a</td><td>MGI:1915091</td><td>autophagy related 3</td><td>2610016C12Rik, APG3, Apg3l, PC3-96</td><td>protein coding gene</td><td>official</td><td>Marker record</td></tr>
+                </table>
+				</li>
+                
+    		</ol>
+    		</li>
+
+    		<li>Confirm you can search using a wildcard. (sto31)
+ 			<p concordion:manual="true">passed jeffc 11/06/2014</p>
+    		<ol>
+                <li>Enter "%actin related gene" in the nomenclature field and click Search</li>
+                <li>Verify the following markers are returned: Act1, Act2, Act3, Act5, Act6, Act7</li>
+    		</ol>
+    		</li>
+
+    		<li>Confirm that symbols are links to their corresponding Marker detail page. (sto31)
+ 			<p concordion:manual="true">passed jeffc 11/06/2014</p>
+ 			<ol>
+                <li>Enter "pax%" in the nomenclature field and click Search</li>
+                <li>Verify every symbol is a link</li>
+                <li>Click on each symbol link.</li>	
+                <li>Verify the symbol links take you to the correct Marker detail page</li>		
+			</ol>
+			</li>
+			
+    		<li>Confirm clicking on "View all marker matches" display the complete set of markers. (sto31)
+ 			<p concordion:manual="true">passed jeffc 11/10/2014</p>
+    		<ol>
+                <li>Enter "a%" in the nomenclature field and click Search</li>
+                <li>Verify the first 5000 matching marker records are displayed</li>
+                <li>Verify the existence of a link called "View all marker matches" exists just below the matching marker records heading.</li>
+                <li>Confirm clicking on this link displays the complete set of matching marker records.</li>
+    		</ol>
+    		</li>			
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

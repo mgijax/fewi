@@ -1,0 +1,144 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>P-WI Marker Detail Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>P-WI Accession ID Search Tests</h1>
+    <ul>
+        <li>User story 33, P-WI: Accid search to Detail page(marker) (Release 5.2?)</li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto33: You can type or copy/paste IDs</li>
+		<li>sto33: Supports MGI IDs and J#s</li>
+		<li>sto33: Supports only single ID entry</li>
+		<li>sto33: Acc ID search available on all  P-WI pages</li>
+		<li>sto33: Acc ID search supports secondary MGI IDs</li>
+		<li>sto??: </li>
+		<li>sto??: </li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Confirm you can enter an ID by typing or by a copy and paste. (sto33)
+ 			<p concordion:manual="true">passed jeffc 11/05/2014</p>
+    		<ol>
+                <li>Enter "MGI:97490" in the Accession ID field and click Search</li>
+                <li>Verify the following information is returned:
+                <table>
+	                <tr><th>field</th><th>Result</th></tr>
+	                <tr><td>Symbol:</td><td>Pax6</td></tr>
+					<tr><td>ID:</td><td>MGI:97490</td></tr>
+					<tr><td>Marker Staus:</td><td>official</td></tr>
+					<tr><td>Current Name:</td><td>paired box 6</td></tr>
+					<tr><td>Synonyms:</td><td>[1500038E17Rik, AEY11, Dey, Dickie's small eye, Gsfaey11, Pax-6]</td></tr>
+					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
+					<tr><td>Marker type:</td><td>Gene</td></tr>
+					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
+					<tr><td>Location:</td><td>Chr2:105668900-105697364 bp, + strand From VEGA annotation of GRCm38</td></tr>
+					<tr><td>Marker  detail clip</td><td>Null and hypomorphic mutants show a range of phenotypes from viable with small eyes and lens/cornea fusion to microphthalmia and cataract to embryonic or perinatal lethality with anophthalmia and severe craniofacial and forebrain defects.</td></tr>
+                </table>
+				</li>
+                
+    		</ol>
+    		</li>
+
+    		<li>Confirm the Acc ID search accepts MGI IDs and J numbers. (sto33)
+ 			<p concordion:manual="true">passed jeffc 11/05/2014</p>
+    		<ol>
+                <li>Enter "J:28000" in the Accession ID field and click Search</li>
+                <li>Verify the following error is returned: 
+                Error Found Reference(BIB_Refs) object with ID = J:28000, but no link URL has been defined.</li>
+                <li>*note: this error is displayed because the Reference Detail page has not been created yet.</li>
+    		</ol>
+    		</li>
+
+    		<li>Confirm that multiple MGI IDs and J numbers are not accepted input. (sto33)
+ 			<p concordion:manual="true">passed jeffc 11/05/2014</p>
+ 			<ol>
+                <li>Enter "MGI:97490, J:28000" in the Accession ID field and click Search</li>
+                <li>Verify the following error is returned: Error No accession object found for ID = MGI:97490, J:28000</li>
+                <li>*note: this error is because multiple IDs are not supported for  the Accession ID search.</li>			
+			</ol>
+			</li>
+    		<li>Confirm you can enter a secondary ID and return the Primary ID data. (sto33)
+ 			<p concordion:manual="true">passed jeffc 11/05/2014]</p>
+    		<ol>
+                <li>Enter "MGI:2442292" in the Accession ID field and click Search</li>
+                <li>Verify the following information is returned:
+                <table>
+	                <tr><th>field</th><th>Result</th></tr>
+	                <tr><td>Symbol:</td><td>Pax6</td></tr>
+					<tr><td>ID:</td><td>MGI:97490</td></tr>
+					<tr><td>Marker Status:</td><td>official</td></tr>
+					<tr><td>Current Name:</td><td>paired box 6</td></tr>
+					<tr><td>Synonyms:</td><td>[1500038E17Rik, AEY11, Dey, Dickie's small eye, Gsfaey11, Pax-6]</td></tr>
+					<tr><td>Organism:</td><td>mouse, laboratory</td></tr>
+					<tr><td>Marker type:</td><td>Gene</td></tr>
+					<tr><td>Feature type:</td><td>protein coding gene</td></tr>
+					<tr><td>Location:</td><td>Chr2:105668900-105697364 bp, + strand From VEGA annotation of GRCm38</td></tr>
+					<tr><td>Marker  detail clip</td><td>Null and hypomorphic mutants show a range of phenotypes from viable with small eyes and lens/cornea fusion to microphthalmia and cataract to embryonic or perinatal lethality with anophthalmia and severe craniofacial and forebrain defects.</td></tr>
+                </table>
+				</li>
+                
+    		</ol>
+    		</li>			
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>
