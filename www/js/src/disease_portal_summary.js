@@ -241,7 +241,7 @@ var generateGrid = function(request)
 						key: pRequest["sort"]
 					};
 				}
-				var newState = mgiTab._rp.generateRequest(sortedBy, state.recordOffset, state.rowsPerPage);
+				var newState = mgiTab._rp.generateRequest(sortedBy, state.recordOffset, state.rowsPerPage, hmdcFilters.getFacets());
 				// Pass the state along to the Browser History Manager
 				History.navigate(mgiTab.historyMgrId, newState);
 			};
@@ -275,7 +275,8 @@ function GridFilter()
 	this.filterIndicatorId = "filterReset";
 	this.geneFilterId = "fGene";
 	this.headerFilterId = "fHeader";
-	this.fields = [this.geneFilterId,this.headerFilterId];
+	this.featureTypeId = "featureTypeFilter";
+	this.fields = [this.geneFilterId,this.headerFilterId,this.featureTypeId];
 	this.filterDelim = "|";
 	this.highlightCssClass = "gridHl";
 	this.checkBoxClass = "gridCheck";
@@ -641,12 +642,12 @@ var refreshTabCounts = function()
 	genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"diseasePortal/markers/totalCount",
     {	success:handleCountRequest,
     	failure:function(o){}
-    },querystring);
+    },querystring + hmdcFilters.getUrlFragment());
 
 	diseasesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"diseasePortal/diseases/totalCount",
     {	success:handleCountRequest,
     	failure:function(o){}
-    },querystring);
+    },querystring + hmdcFilters.getUrlFragment());
 }
 
 //----------- functions for configuring the datatables -------------------
@@ -736,7 +737,7 @@ var genesResultsTable = function() {
 	       key: oColumn.key
 	   };
 	   // Pass the state along to the Browser History Manager
-	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage(), hmdcFilters.getFacets()));
 	};
 	hdpDataTable.sortColumn = handleSorting;
 
@@ -896,7 +897,7 @@ var diseasesResultsTable = function() {
 	       key: oColumn.key
 	   };
 	   // Pass the state along to the Browser History Manager
-	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage(), hmdcFilters.getFacets()));
 	};
 	hdpDataTable.sortColumn = handleSorting;
 
@@ -960,7 +961,7 @@ function historyInit()
 	{
 		// switch to querystring specified tab
 		if (queryTabParam && queryTabParam in mgiTab.tabs) resultsTabs.set("activeIndex",mgiTab.tabs[queryTabParam]);
-		handleNavigation(generateRequest(null, 0, DEFAULT_PAGE_SIZE),true,true);
+		handleNavigation(generateRequest(null, 0, DEFAULT_PAGE_SIZE, hmdcFilters.getFacets()),true,true);
 	}
 };
 History.onReady(historyInit);

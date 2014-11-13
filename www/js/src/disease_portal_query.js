@@ -313,6 +313,11 @@ var getQueryString = function()
 	
 	if("numDCol" in values && values["numDCol"]!="") params.push("numDCol="+values["numDCol"]);
 	
+	if("featureTypeFilter" in values && values["featureTypeFilter"]!="")
+	{
+		params.push("featureTypeFilter=" + values["featureTypeFilter"]);
+	}
+
 	// try to add grid filters if they exist
 	var hasGridFilters = false;
 	if(!_GF.isState(_GF.gridState.working))
