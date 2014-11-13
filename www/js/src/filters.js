@@ -65,6 +65,10 @@ filters.callbacksInProgress = false;	// are we currently handling callbacks?
 
 filters.fewiUrl = null;		// base URL to fewi, used to pick up images
 
+filters.alternateCallback = null;	// if we are not managing a dataTable,
+					// ...what should we call when a
+					// ...filter's values are returned?
+
 /************************/
 /*** public functions ***/
 /************************/
@@ -104,6 +108,17 @@ filters.setFewiUrl = function(fewiUrl) {
  */
 filters.setDataTable = function(dataTable) {
     filters.dataTable = dataTable;
+};
+
+/* if we are not managing a dataTable, then what function should we call when
+ * a filter's set of values is returned?
+ * The alternateFn will be called with three parameters:
+ *    1. sRequest <String> - original request
+ *    2. oResponse <Object> YUI Response object
+ *    3. oPayload <MIXED, optional> additional argument(s)
+ */
+filters.setAlternateCallback = function(alternateFn) {
+    filters.alternateCallback = alternateFn;
 };
 
 /* notify this module of the names for the filter summary div and the span
@@ -683,11 +698,23 @@ filters.getQueryString = function() {
 filters.buildFilterDataSource = function(name, url) {
     filters.log("Building data source for " + name);
 
-    var oCallback = {
-	success : filters.dataTable.onDataReturnInitializeTable,
-	failure : filters.dataTable.onDataReturnInitializeTable,
-	scope : this 
-    };
+    var oCallback = null;
+
+    if (filters.dataTable) {
+    	oCallback = {
+	    success : filters.dataTable.onDataReturnInitializeTable,
+	    failure : filters.dataTable.onDataReturnInitializeTable,
+	    scope : this
+	};
+    } else if (filters.alternateCallback) {
+    	oCallback = {
+	    success : filters.alternateCallback,
+	    failure : filters.alternateCallback,
+	    scope : this
+	};
+    } else {
+	filters.log("Must set either dataTable or alternateCallback");
+    }
 
     var qs = filters.getQueryString();
 
@@ -732,7 +759,7 @@ filters.addHistoryEntry = function() {
 	} else {
 	    filters.log('filters.historyModule is missing');
 	}
-    } else {
+    } else if (!filters.alternateCallback) {
 	filters.log('filters.dataTable is missing');
     }
 };
@@ -752,7 +779,6 @@ filters.buildDialogBox = function() {
 
 	var selections = this.getData();
 	filters.log('selections: ' + selections);
-	filters.l
 
 	var list = [];
 	var filterName;
