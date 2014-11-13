@@ -121,6 +121,7 @@
     <input id="locationsFileName" type="hidden" name="locationsFileName" value="${locationsFileName}">
    	<input id="enableVcfFilterHid" type="hidden" name="enableVcfFilter" type="checkbox" value="true" />
     <input id="geneFileName" type="hidden" name="geneFileName" value="${geneFileName}">
+    <input type="hidden" name="featureTypeFilter" id="featureTypeFilter" />
     <input type="hidden" name="fGene" id="fGene" />
 	<input type="hidden" name="fHeader" id="fHeader" />
 	<input type="hidden" name="referseF" id="reverseF"/>

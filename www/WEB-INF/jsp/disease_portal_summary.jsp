@@ -20,6 +20,9 @@
   background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
   no-repeat right;
 }
+.facetFilter .yui-panel .bd {
+	width: 270px
+}
 </style>
 <div id="summary">
     <div id="querySummary" style="float:left;margin-left:0">
@@ -33,7 +36,7 @@
     <div id="filterSection" style="width:600px">
       <div id="contentcolumn" style="width:480px; margin-left: 510px;">
 	<span id="filterLabel" class="label">Filter results by:</span>
-	<a id="featureTypeFilter" class="filterButton">Feature&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8"/></a>
+	<a id="featureTypeButton" class="filterButton">Feature&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8"/></a>
 	<br/>
 	<div id="breadbox">
 	    <span class="label">Filtered by:</span>
@@ -45,7 +48,7 @@
       </div>
     </div>
 
-    <div class="facetFilter" style="display:none">
+    <div class="facetFilter" style="">
 	<div id="facetDialog">
 	    <div class="hd">Filter</div>
 	    <div class="bd">

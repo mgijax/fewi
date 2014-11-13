@@ -86,6 +86,8 @@ ${templateBean.templateBodyStartHdpHtml}
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/filters.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_filters.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_autocomplete.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_upload.js"></script>
@@ -96,6 +98,7 @@ ${templateBean.templateBodyStartHdpHtml}
 %>
 <script type="text/javascript">
 	var querystring = "${encodedQueryString}";
+	hmdcFilters.prepFilters();
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_summary.js"></script>
