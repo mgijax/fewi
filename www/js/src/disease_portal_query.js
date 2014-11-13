@@ -90,6 +90,8 @@ var resetQF = function (e) {
 	form.locationsFileName.value = "";
 	form.geneFileName.value = "";
 	form.enableVcfFilter = "true";
+
+	hmdcFilters.clearAllFilters();
 	
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
@@ -362,6 +364,9 @@ function reverseEngineerFormInput(request)
 
 	var foundParams = false;
 	resetQF();
+
+	hmdcFilters.setAllFilters(params);
+
 	for(var key in params)
 	{
 		if(key!=undefined && key!="" && params[key].length>0)
@@ -433,5 +438,6 @@ function reverseEngineerFormInput(request)
 	{
 		refreshEnableVcfFilterValue();
 	}
+
 	return foundParams;
 }

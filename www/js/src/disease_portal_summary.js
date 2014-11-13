@@ -90,6 +90,8 @@ handleNavigation = function (request, calledLocally, fromInit)
 	var tabState = values['tab'];
 	if($.isArray(tabState)) tabState = tabState[0];
 
+	hmdcFilters.setAllFilters(values);
+
 	var currentTab = getCurrentTab();
 
 	var foundParams = true;
@@ -276,7 +278,8 @@ function GridFilter()
 	this.geneFilterId = "fGene";
 	this.headerFilterId = "fHeader";
 	this.featureTypeId = "featureTypeFilter";
-	this.fields = [this.geneFilterId,this.headerFilterId,this.featureTypeId];
+	this.fields = [this.geneFilterId,this.headerFilterId];
+//	this.fields = [this.geneFilterId,this.headerFilterId,this.featureTypeId];
 	this.filterDelim = "|";
 	this.highlightCssClass = "gridHl";
 	this.checkBoxClass = "gridCheck";

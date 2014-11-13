@@ -140,16 +140,13 @@ hmdcFilters.getQueryString = function() {
 };
 
 hmdcFilters.updatePage = function() {
-    filters.log('in hmdcFilters.updatePage()...');
     var request = hmdcFilters.getQueryString() + hmdcFilters.getUrlFragment();
-    filters.log('  - request: ' + request);
 
     var facets = hmdcFilters.getFacets();
 
     for (var key in facets) {
 	try {
     	    document.getElementById(key).value = facets[key].join('|');
-	    filters.log('Set ' + key + ' value = ' + facets[key].join('|'));
 	} catch (e) {
 	    filters.log('Missing hidden field for: ' + key);
 	}
@@ -168,4 +165,10 @@ hmdcFilters.prepFilters = function() {
     filters.setAlternateCallback(hmdcFilters.filterValuesReturned);
     hmdcFilters.createFilters();
     hmdcFilters.registerCallback("updatePage", hmdcFilters.updatePage);
+};
+
+/* initialize the filters from a request object
+ */
+hmdcFilters.setAllFilters = function(pRequest) {
+    filters.setAllFilters(pRequest);
 };
