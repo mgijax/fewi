@@ -456,6 +456,7 @@ textarea {resize:none; background-color:#FFE4B5;}
   {
   	position: relative;
 	left: 10px;
+	top: 15px;
 	white-space: nowrap;
 	padding-right: 15px;
 	font-weight: bold;
