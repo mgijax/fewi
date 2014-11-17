@@ -537,12 +537,20 @@ td.padded { padding:4px; }
 	    <fmt:formatNumber value="${humanCoords.startCoordinate}" pattern="#0" var="humanStartCoord"/>
 	    <fmt:formatNumber value="${humanCoords.endCoordinate}" pattern="#0" var="humanEndCoord"/>
 
-	    <c:set var="borders" value=""/>
-	    <c:if test="${!status.first}">
-	      <c:set var="borders" value=' style="border-bottom:none;border-right:none;border-left:none;border-top:thin solid grey"'/>
-	    </c:if>
-
-	    <tr><td${borders}>Human Homolog</td><td${borders}>&nbsp;</td><td${borders}>${humanHomolog.symbol}, ${humanHomolog.name}</td></tr>
+	    <tr <c:if test="${!status.first}">style="border-top: thin solid grey;"</c:if>>
+	    	<td>Human Homolog</td>
+	    	<td>&nbsp;</td>
+	    	<td>
+	    		<c:choose>
+	    			<c:when test="${not empty humanHomolog.hgncID}">
+	    			<a href="${fn:replace(urls.HGNC, '@@@@', humanHomolog.hgncID.accID)}" target="_blank">${humanHomolog.symbol}, ${humanHomolog.name}</a>
+	    			</c:when>
+	    			<c:otherwise>
+	    			${humanHomolog.symbol}, ${humanHomolog.name}
+	    			</c:otherwise>
+	    		</c:choose>
+	    	</td>
+	    </tr>
 	  <tr><td>NCBI Gene ID</td><td>&nbsp;</td><td><a href="${fn:replace(urls.Entrez_Gene, '@@@@', humanHomolog.entrezGeneID.accID)}" target="_blank">${humanHomolog.entrezGeneID.accID}</a></td></tr>
 
 	  <c:if test="${not empty humanHomolog.neXtProtIDs}">
