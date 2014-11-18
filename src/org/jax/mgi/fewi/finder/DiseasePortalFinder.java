@@ -110,20 +110,20 @@ public class DiseasePortalFinder
 		
 		// need to ensure that only docs come back that have a grid cluster
 		Filter originalFilter = params.getFilter();
-		
-//		Filter f = new Filter(SearchConstants.VOC_RESTRICTION,"normal",Filter.Operator.OP_EQUAL);
-//		f.negate();
-//		
-//		Filter modifiedFilter = Filter.and(Arrays.asList(originalFilter, f));
-//		
-		params.getFilter().replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
-		//params.setFilter(modifiedFilter);
+		Filter modifiedFilter = Filter.and(
+				Arrays.asList(originalFilter,
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+				)
+		);
+		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+		params.setFilter(modifiedFilter);
 		
 		hdpHunter.joinHunt(params, results, "diseasePortalAnnotationHeaders");
 		
 		// need to also include the disease->human marker annotations somehow
-		Filter modifiedFilter = Filter.and(
+		modifiedFilter = Filter.and(
 				Arrays.asList(originalFilter,
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD),
 					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.Operator.OP_EQUAL),
 					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL)
 				)
@@ -149,14 +149,15 @@ public class DiseasePortalFinder
 //					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
 //				)
 //		);
-		originalFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+//		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
 //		params.setFilter(modifiedFilter);
 //		
-		hdpHunter.joinHunt(params, results, "diseasePortalAnnotationHeaders");
+//		hdpHunter.joinHunt(params, results, "diseasePortalAnnotationHeaders");
 		
 		// need to also include the disease->human marker annotations somehow
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(originalFilter,
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD),
 					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.Operator.OP_EQUAL),
 					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL)
 				)
@@ -200,15 +201,14 @@ public class DiseasePortalFinder
 
 		// make sure that only documents with grid cluster keys are included in the
 		// group (otherwise you get a weird off-by-one error in the count)
-		
-//		Filter f = new Filter(SearchConstants.VOC_RESTRICTION,"normal",Filter.Operator.OP_EQUAL);
-//		f.negate();
-//		
-//		Filter modifiedFilter = Filter.and(Arrays.asList(params.getFilter(), f));
-//		
-//		// replace the term search property with a disease specific one that includes mp terms that map to diseases
-		params.getFilter().replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
-//		params.setFilter(modifiedFilter);
+		Filter modifiedFilter = Filter.and(
+				Arrays.asList(params.getFilter(),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+				)
+		);
+		// replace the term search property with a disease specific one that includes mp terms that map to diseases
+		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,SearchConstants.DP_GRID_CLUSTER_KEY);
 
@@ -224,14 +224,14 @@ public class DiseasePortalFinder
 
 		// make sure that only documents with geno cluster keys are included in the
 		// group (otherwise you get a weird off-by-one error in the count)
-//		Filter modifiedFilter = Filter.and(
-//				Arrays.asList(params.getFilter(),
-//					new Filter(SearchConstants.DP_GENO_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
-//				)
-//		);
+		Filter modifiedFilter = Filter.and(
+				Arrays.asList(params.getFilter(),
+					new Filter(SearchConstants.DP_GENO_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+				)
+		);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
-		params.getFilter().replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
-		//params.setFilter(modifiedFilter);
+		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+		params.setFilter(modifiedFilter);
 
 		hdpHunter.hunt(params, results,SearchConstants.DP_GENO_CLUSTER_KEY);
 
@@ -311,8 +311,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with OMIM type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL)
-					//new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -331,9 +331,12 @@ public class DiseasePortalFinder
 	{
 		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 		// make sure that only documents with MP type are included in the group
-	
-		Filter modifiedFilter = Filter.and(Arrays.asList(params.getFilter(), new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.Operator.OP_EQUAL)));
-		
+		Filter modifiedFilter = Filter.and(
+				Arrays.asList(params.getFilter(),
+					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+				)
+			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
 		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
 		params.setFilter(modifiedFilter);
@@ -353,8 +356,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with MP type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.Operator.OP_EQUAL)
-					//new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -375,8 +378,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with Disease type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL)
-					//new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -397,8 +400,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with human organism type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.Operator.OP_EQUAL)
-					//new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
+					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
