@@ -204,6 +204,12 @@ hmdcFilters.updateHiddenFields = function() {
     window.querystring = hmdcFilters.getQueryString();
 };
 
+/* update the 'remove filter' buttons visible on the page
+ */
+hmdcFilters.manageButtons = function() {
+    filters.log('In manageButtons()');
+};
+
 /* update the page once a filter has been selected
  */
 hmdcFilters.updatePage = function() {
@@ -226,13 +232,10 @@ hmdcFilters.updatePage = function() {
 /* do prep work needed to initialize the filters
  */
 hmdcFilters.prepFilters = function() {
-    filters.log('in prepFilters, querystring = ' + querystring);
-    filters.log('in prepFilters, getQueryString() = ' + getQueryString());
-    filters.log('in prepFilters, hmdcFilters.getQueryString() = ' + hmdcFilters.getQueryString());
-
     prepFilters();			// from filters.js library
 
     hmdcFilters.setQueryStringFunction(hmdcFilters.getQueryString);
+    filters.setSummaryNames('filterSummary', 'filterList');
     filters.setAlternateCallback(hmdcFilters.filterValuesReturned);
     hmdcFilters.createFilters();
     hmdcFilters.registerCallback("updatePage", hmdcFilters.updatePage);

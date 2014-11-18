@@ -39,11 +39,13 @@
 	<a id="featureTypeButton" class="filterButton">Feature&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8"/></a>
 	<br/>
 	<div id="breadbox">
+	    <div id="filterSummary" class="filters" style="display:none">
 	    <span class="label">Filtered by:</span>
 	    &nbsp;<span id="defaultText" style="display:none">No filters selected.</span>
 	    <span id="filterList">
             <span id="filterReset" class="filterItem">Remove row/column filters</span>
 	    </span><br/>
+	    </div>
 	</div>
       </div>
     </div>

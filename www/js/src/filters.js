@@ -291,7 +291,8 @@ filters.addFilter = function(
 	for (var k in buttons) {
 	    buttons[k].set('disabled', 'true');
 	}
-	filters.populateDialogForFilter(filterName);
+	filters.logObject(oResponse, 'oResponse');
+//	filters.populateDialogForFilter(filterName);
     };
 
     // build a callback for when retrieving data from the data source
