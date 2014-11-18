@@ -79,11 +79,15 @@ var generateRequest = mgiTab._rp.generateRequest;
 // a global variable to help the summary know when to generate a new datatable
 var previousQueryString = "";
 var previousGAState = "";
+var previousFilterState = "";
+
 // Called by Browser History Manager to trigger a new state
 handleNavigation = function (request, calledLocally, fromInit)
 {
 	if (calledLocally==undefined) calledLocally = false;
 	if (fromInit==undefined) fromInit = false;
+
+	var filterState = hmdcFilters.getUrlFragment();
 
 	// we need the tab state of the request
 	var values = mgiParseRequest(request);
@@ -134,7 +138,7 @@ handleNavigation = function (request, calledLocally, fromInit)
 	}
 	else
 	{
-		var doNewQuery = (querystring != previousQueryString) || _GF.submitActive;
+		var doNewQuery = (querystring != previousQueryString) || _GF.submitActive || (previousFilterState != filterState);
 		_GF.submitActive=false;
 
 		if(doNewQuery)
@@ -145,6 +149,7 @@ handleNavigation = function (request, calledLocally, fromInit)
 
 		// only reset the previousQueryString if there is a query to do
 		previousQueryString = querystring;
+		previousFilterState = filterState;
 
 		if (typeof openSummaryControl == 'function')
 			openSummaryControl();
@@ -180,16 +185,16 @@ handleNavigation = function (request, calledLocally, fromInit)
 			// wire up any download buttons
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
-				markersTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/marker/report.txt?' + querystring);
+				markersTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/marker/report.txt?' + querystring + filterState);
 			}
 			var diseaseTextReportButton = YAHOO.util.Dom.get('diseaseTextDownload');
 			if (!YAHOO.lang.isNull(diseaseTextReportButton)) {
-				diseaseTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/disease/report.txt?' + querystring);
+				diseaseTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/disease/report.txt?' + querystring + filterState);
 			}
 		}
 
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
-		var GAState = "/diseasePortal/summary/"+tabState+"?"+querystring;
+		var GAState = "/diseasePortal/summary/"+tabState+"?"+querystring + filterState;
 		if(GAState != previousGAState)
 		{
 			gaA_pageTracker._trackPageview(GAState);
@@ -254,7 +259,7 @@ var generateGrid = function(request)
 	gridRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"diseasePortal/grid/totalCount",
 		    {	success:handleGridCountRequest,
 		    	failure:function(o){}
-		    },querystring);
+		    },querystring + hmdcFilters.getUrlFragment());
 }
 
 

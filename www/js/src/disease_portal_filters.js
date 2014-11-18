@@ -47,13 +47,33 @@ hmdcFilters.getFilterNames = function() {
 /* clear the selections for all filters
  */
 hmdcFilters.clearAllFilters = function() {
-    filters.clearAllFilters();
+    filters.clearAllValuesForFilter('featureType');
 };
 
 /* clear all selections for a single filter by name
  */
 hmdcFilters.clearAllValuesForFilter = function(filterName) {
     filters.clearAllValuesForFilter(filterName);
+
+    // need to clear the values of any associated hidden fields
+
+    var fieldsToClear = [];
+
+    if (filterName == 'featureType') {
+	fieldsToClear.push('featureTypeFilter');
+    }
+
+    for (var i = 0; i < fieldsToClear.length; i++) {
+	var el = document.getElementById(fieldsToClear[i]);
+	if (el) {
+	    try {
+		el.value = '';
+	    } catch (e) {
+		filters.log('Could not clear hidden field: '
+		    + fieldsToClear[i]);
+	    }
+	}
+    }
 };
 
 /* register a function to be called whenever the value for a filter changes
@@ -136,12 +156,60 @@ hmdcFilters.filterValuesReturned = function(sRequest, oResponse, oPayload) {
 /* function to pull the current querystring out of the window namespace
  */
 hmdcFilters.getQueryString = function() {
-    return window.querystring;
+    var qs = window.querystring;
+    try {
+	qs = getQueryString();
+	if (qs == '') {
+	    qs = window.querystring;
+	}
+    } catch (c) {}
+    return qs;
 };
 
-hmdcFilters.updatePage = function() {
-    var request = hmdcFilters.getQueryString() + hmdcFilters.getUrlFragment();
+/* update the hidden fields on the page to reflect the values currently
+ * stored for the filters
+ */
+hmdcFilters.updateHiddenFields = function() {
+    var values = {};	// all values that need to be set
 
+    for (var i = 0; i < filters.filterNames.length; i++) {
+	var name = filters.filterNames[i];
+	var fbn = filters.filtersByName[name];
+
+	// assumes fields are empty
+
+	for (var j = 0; j < fbn['fields'].length; j++){
+	    values[fbn['fields'][j]] = '';
+	}
+
+	// note values for non-empty filter fields
+
+	for (var fieldname in fbn['values']) {
+	    values[fieldname] = fbn['values'][fieldname].join('|');
+	}
+    }
+	 
+    // now go through and update hidden fields where we can find them
+
+    for (var fieldname in values) {
+	var el = document.getElementById(fieldname);
+	if (el) {
+	    try {
+		el.value = values[fieldname];
+	    } catch (e) {
+		filters.log('Cannot set value for field: ' + fieldname);
+	    }
+	}
+    }
+    window.querystring = hmdcFilters.getQueryString();
+};
+
+/* update the page once a filter has been selected
+ */
+hmdcFilters.updatePage = function() {
+    hmdcFilters.updateHiddenFields();
+
+    var request = hmdcFilters.getQueryString();
     var facets = hmdcFilters.getFacets();
 
     for (var key in facets) {
@@ -151,7 +219,6 @@ hmdcFilters.updatePage = function() {
 	    filters.log('Missing hidden field for: ' + key);
 	}
     } 
-
     handleNavigation(request);
     refreshTabCounts();
 };
@@ -159,6 +226,10 @@ hmdcFilters.updatePage = function() {
 /* do prep work needed to initialize the filters
  */
 hmdcFilters.prepFilters = function() {
+    filters.log('in prepFilters, querystring = ' + querystring);
+    filters.log('in prepFilters, getQueryString() = ' + getQueryString());
+    filters.log('in prepFilters, hmdcFilters.getQueryString() = ' + hmdcFilters.getQueryString());
+
     prepFilters();			// from filters.js library
 
     hmdcFilters.setQueryStringFunction(hmdcFilters.getQueryString);
@@ -171,4 +242,5 @@ hmdcFilters.prepFilters = function() {
  */
 hmdcFilters.setAllFilters = function(pRequest) {
     filters.setAllFilters(pRequest);
+    hmdcFilters.updateHiddenFields();
 };
