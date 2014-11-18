@@ -104,7 +104,7 @@ ${templateBean.templateBodyStartHdpHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_summary.js"></script>
 
 <script type="text/javascript">
-	hmdcFilters.prepFilters();
+	hmdcFilters.prepFilters('${configBean.FEWI_URL}');
 </script>
 
 

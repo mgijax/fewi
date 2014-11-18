@@ -35,7 +35,7 @@ hmdcFilters.setFewiUrl = function(fewiUrl) {
 hmdcFilters.createFilters = function() {
     filters.addFilter ('featureType', 'Feature Type', 'featureTypeButton',
 	'featureTypeFilter', 
-	'http://cardolan.informatics.jax.org:58080/fewi/mgi/diseasePortal/facet/featureType');
+	filters.fewiUrl + 'diseasePortal/facet/featureType');
 };
 
 /* get a list of strings, each of which is a filter name
@@ -231,9 +231,10 @@ hmdcFilters.updatePage = function() {
 
 /* do prep work needed to initialize the filters
  */
-hmdcFilters.prepFilters = function() {
+hmdcFilters.prepFilters = function(fewiUrl) {
     prepFilters();			// from filters.js library
 
+    filters.setFewiUrl(fewiUrl);
     hmdcFilters.setQueryStringFunction(hmdcFilters.getQueryString);
     filters.setSummaryNames('filterSummary', 'filterList');
     filters.setAlternateCallback(hmdcFilters.filterValuesReturned);
@@ -247,3 +248,4 @@ hmdcFilters.setAllFilters = function(pRequest) {
     filters.setAllFilters(pRequest);
     hmdcFilters.updateHiddenFields();
 };
+
