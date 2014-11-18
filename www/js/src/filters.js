@@ -807,6 +807,8 @@ filters.buildDialogBox = function() {
 	    } else {
 	        filters.filtersByName[filterName]['values'][i] = [];
 		filters.log('skipped selectionValue = null');
+		filters.log('set filters.filtersByName[' + filterName + '].values[' + i + '] = []');
+		filters.log('confirmation: ' + filters.filtersByName[filterName]['values'][i]);
 	    }
 	}
 
