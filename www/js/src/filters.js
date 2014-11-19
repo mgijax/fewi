@@ -69,9 +69,39 @@ filters.alternateCallback = null;	// if we are not managing a dataTable,
 					// ...what should we call when a
 					// ...filter's values are returned?
 
+/* special handling for extra 'remove row/col filters' button for HMDC */
+
+filters.hmdcButtonID = null;		// ID of extra button
+filters.hmdcButtonText = null;		// text to show on extra button
+filters.hmdcButtonTooltip = null;	// tooltip to show for extra button
+filters.hmdcButtonVisible = false;	// show the extra button?
+filters.hmdcButtonCallback = null;	// function to call to remove filters
+
 /************************/
 /*** public functions ***/
 /************************/
+
+/* register a button specifically for the HMDC 'remove row/column filters'
+ * functionality
+ */
+filters.registerHmdcButton = function (id, text, tooltip, visible, callback) {
+    filters.hmdcButtonID = id;
+    filters.hmdcButtonText = text;
+    filters.hmdcButtonTooltip = tooltip;
+    filters.hmdcButtonVisible = visible;
+    filters.hmdcButtonCallback = callback;
+};
+
+/* set the HMDC button (if one was registered) to be 'visible' (assumed to
+ * be either boolean true or false)
+ */
+filters.setHmdcButtonVisible = function (visible) {
+    if (filters.hmdcButtonID) {
+	filters.hmdcButtonVisible = visible;
+    } else {
+	filters.hmdcButtonVisible = false;
+    }
+};
 
 /* notify this module of the function to call to retrieve the parameter string
  * for the general query form parameters
@@ -483,6 +513,17 @@ filters.getAllSummaryButtons = function() {
 	if (results) {
 	    list = list.concat(results);
 	}
+    }
+
+    // add the extra HMDC button, if needed
+    if (filters.hmdcButtonVisible) {
+	var el = document.createElement('a');
+	el.setAttribute('class', 'filterItem'); 
+	el.setAttribute('id', filters.hmdcButtonID);
+	el.setAttribute('style', 'line-height: 2.2');
+	el.setAttribute('title', filters.hmdcButtonTooltip);
+	setText(el, filters.hmdcButtonText);
+	list.push(el); 
     }
 
     if (list.length > 0) {
@@ -1149,6 +1190,14 @@ filters.logObject = function(obj, objectName, level) {
  * 	clearAllFilters
  */
 filters.clearFilter = function() {
+
+    // special case where we want to clear the HMDC row/column filters
+
+    if (this.id == filters.hmdcButtonID) {
+	filters.hmdcButtonVisible = false;
+	filters.hmdcButtonCallback();
+	return;
+    }
 
     // special case where we want to clear all filters
 

@@ -433,10 +433,22 @@ function GridFilter()
 
 	this.toggleFiltersIndicator = function(show)
 	{
-		var filterIndicatorDiv = $("#"+_self.filterIndicatorId);
+//		var filterIndicatorDiv = $("#"+_self.filterIndicatorId);
 
-		if(show==true) filterIndicatorDiv.show();
-		else filterIndicatorDiv.hide();
+		/* If we are to show this row/col filter button, then we know
+		 * we also need to show its containing DIV.
+		 * If we are to hide it, then we only hide the containing DIV
+		 * if there are no other filters.
+		 */
+		if(show==true) {
+		    filters.setHmdcButtonVisible(true);
+//		    filterIndicatorDiv.show();
+//		    $("#filterSummary").show();
+		} else if (hmdcFilters.getUrlFragment() == '') {
+//		    filterIndicatorDiv.hide();
+		    filters.setHmdcButtonVisible(false);
+		}
+		filters.populateFilterSummary();
 	}
 
 	// save the modified filters object to the hidden input fields
@@ -1032,4 +1044,6 @@ function showPanel2() {
 $(function(){
 	// put anything here that you definitally want to happen only after page is rendered.
 	$("#filterReset").click(resetFiltersClick);
+	filters.registerHmdcButton('filterReset', 'Remove row/column filters',
+	    'click to remove row/column filters', false, resetFiltersClick);
 });
