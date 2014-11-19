@@ -203,7 +203,7 @@ hmdcFilters.updateHiddenFields = function() {
 	// note values for non-empty filter fields
 
 	for (var fieldname in fbn['values']) {
-	    values[fieldname] = fbn['values'][fieldname].join('|');
+	    values[fieldname] = fbn['values'][fieldname].join(',');
 	}
     }
 	 
@@ -237,10 +237,16 @@ hmdcFilters.updatePage = function() {
 
     var request = hmdcFilters.getQueryString();
     var facets = hmdcFilters.getFacets();
+    if (typeof(getCurrentTab) === 'function') {
+	var tab = getCurrentTab();
+	if (tab) {
+	    request = filters.consolidateParameters(request + '&tab=' + tab);
+	}
+    }
 
     for (var key in facets) {
 	try {
-    	    document.getElementById(key).value = facets[key].join('|');
+    	    document.getElementById(key).value = facets[key].join(',');
 	} catch (e) {
 	    filters.log('Missing hidden field for: ' + key);
 	}
