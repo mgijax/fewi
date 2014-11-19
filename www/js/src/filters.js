@@ -723,7 +723,8 @@ filters.buildFilterDataSource = function(name, url) {
 	qs = qs + '&';
     }
 
-    var dsUrl = url + "?" + qs;
+//    var dsUrl = url + "?" + qs;
+    var dsUrl = url + "?";
     filters.log("Data source URL: " + dsUrl);
 
     var facetDS = new YAHOO.util.DataSource(dsUrl);
@@ -856,16 +857,39 @@ filters.buildDialogBox = function() {
     filters.log ("Built global filters.dialogBox");
 };
 
+/* consolidate any duplicate parameters down into at most one occurrence each
+ */
+filters.consolidateParameters = function(s) {
+    var parms = s.split('&');
+    var hash = {};
+
+    for (var i = 0; i < parms.length; i++) {
+	hash[parms[i]] = 1;
+    }
+
+    var out = [];
+    for (var parm in hash) {
+	out.push(parm);
+    }
+    return out.join('&');
+};
+
 /* populate the dialog box for the filter with the given name.  Specify either
  * by 'filterName', or use 'title', 'body', and 'error'.
  */
 filters.populateDialogForFilter = function(filterName) {
     filters.log('populating dialog for ' + filterName);
 
+    var parms = filters.getQueryString();
+    if (parms) {
+	parms = parms + '&';
+    }
+    parms = filters.consolidateParameters(parms + filters.getUrlFragment());
+
     if (filters.listIndexOf(filters.filterNames, filterName) >= 0) {
 	var dataSource = filters.filtersByName[filterName]['dataSource'];
 	dataSource.flushCache();
-	dataSource.sendRequest(filters.getUrlFragment(),
+	dataSource.sendRequest(parms,
 	    filters.filtersByName[filterName]['callback']);
     } else {
 	filters.log("Unknown filterName in populateDialogForFilter(" + filterName + ")");
