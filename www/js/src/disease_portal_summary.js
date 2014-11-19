@@ -94,7 +94,11 @@ handleNavigation = function (request, calledLocally, fromInit)
 	var tabState = values['tab'];
 	if($.isArray(tabState)) tabState = tabState[0];
 
-	hmdcFilters.setAllFilters(values);
+	hmdcFilters.callbacksOff();
+
+	if (!calledLocally) {
+	    hmdcFilters.setAllFilters(values);
+	}
 
 	var currentTab = getCurrentTab();
 
@@ -107,6 +111,8 @@ handleNavigation = function (request, calledLocally, fromInit)
 	// if there is no getQueryString function, we assume that window.querystring is already set
 	if (typeof getQueryString == 'function')
 		window.querystring = getQueryString();
+
+	hmdcFilters.callbacksOn();
 
 //	// Handle proper behavior for back and forward navigation
 //	// if we have no tab state in the request, then we won't try to switch tabs.

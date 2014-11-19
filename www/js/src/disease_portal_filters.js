@@ -13,9 +13,27 @@
  */
 window.hmdcFilters = {};
 
+/* by default, enable the callback functions.  We need to do this in addition
+ * to the standard filters.callbacksActive, as this shim is shoe-horned over
+ * the standard library and integration is ugly.
+ */
+hmdcFilters.callbacksActive = true;
+
 /************************
  *** public functions ***
  ************************/
+
+/* turn the callback function(s) on
+ */
+hmdcFilters.callbacksOn = function() {
+    hmdcFilters.callbacksActive = true;
+};
+
+/* turn the callback function(s) off
+ */
+hmdcFilters.callbacksOff = function() {
+    hmdcFilters.callbacksActive = false;
+};
 
 /* notify this module of the function that can be called to retrieve the
  * current query string (URL parameters)
@@ -213,6 +231,8 @@ hmdcFilters.manageButtons = function() {
 /* update the page once a filter has been selected
  */
 hmdcFilters.updatePage = function() {
+    if (!hmdcFilters.callbacksActive) { return; }
+
     hmdcFilters.updateHiddenFields();
 
     var request = hmdcFilters.getQueryString();
@@ -225,7 +245,7 @@ hmdcFilters.updatePage = function() {
 	    filters.log('Missing hidden field for: ' + key);
 	}
     } 
-    handleNavigation(request);
+    handleNavigation(request, true);
     refreshTabCounts();
 };
 
