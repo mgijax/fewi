@@ -532,7 +532,11 @@ filters.setAllFilters = function(pRequest) {
     for (var field in pRequest) {
 	if ((pRequest[field]) && (field in filters.fieldnameToFilterName)) {
 	    var filterName = filters.fieldnameToFilterName[field];
-	    filters.filtersByName[filterName]['values'][field] = [pRequest[field]];
+	    var fValues = pRequest[field];
+	    if (typeof(fValues) === 'string') {
+		fValues = fValues.split(',');
+	    }
+	    filters.filtersByName[filterName]['values'][field] = fValues;
 	}
     }
     filters.populateFilterSummary();
