@@ -21,11 +21,11 @@
 	padding:0px;
 }
 
-
 /* style shortcuts */
 .left { float: left; }
 .right { float: right; }
 .hide { display: none; }
+.highlight { background-color: #FFC0FF; }
 table.noborder, table.noborder td , table.noborder th { border: none; }
   
 button { cursor: pointer; }

@@ -73,6 +73,12 @@ public class DiseasePortalFinder
 		SearchResults<HdpGenoCluster> results = huntGenoClustersGroup(params);
 		return results;
 	}
+	
+	// Get Header terms for lighted columns
+	public SearchResults<SolrString> getHighlightedColumns(SearchParams params) {
+		SearchResults<SolrString> results = huntHighlightedColumns(params);
+		return results;
+	}
 
 	// Group results by term id to return the distinct matching diseases (but only diseases that would appear on Grid)
 	public SearchResults<SolrString> getGridDiseases(SearchParams params)
@@ -304,6 +310,26 @@ public class DiseasePortalFinder
 		srVT.cloneFrom(results,SolrVocTerm.class);
 		return srVT;
 	}
+	
+	
+	
+	// TODO
+  	//highLightedColumns.put("Autism", "Autism");
+  	//highLightedColumns.put("nervous system", "nervous system");
+	
+
+	private SearchResults<SolrString> huntHighlightedColumns(SearchParams params) {
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
+
+		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_HIGHLIGHT);
+
+		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_HEADER);
+		
+		SearchResults<SolrString> srS = new SearchResults<SolrString>();
+		srS.cloneFrom(results,SolrString.class);
+		return srS;
+	}
+	
 	// get distinct list of diseases for the grid
 	private SearchResults<SolrString> huntGridDiseasesGroup(SearchParams params)
 	{
@@ -456,4 +482,5 @@ public class DiseasePortalFinder
 	{
 		return genoCGatherer.get(HdpGenoCluster.class,Arrays.asList(genoClusterKey));
 	}
+
 }

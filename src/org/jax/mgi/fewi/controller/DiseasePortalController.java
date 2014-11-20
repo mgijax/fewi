@@ -24,7 +24,9 @@ import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
 import org.jax.mgi.fewi.searchUtil.Paginator;
+import org.jax.mgi.fewi.searchUtil.PrettyFilterPrinter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -369,17 +371,31 @@ public class DiseasePortalController
 
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
 		List<String> diseaseIds = new ArrayList<String>();
+		
+		SearchResults<SolrString> columns = getHighlightedColumns(request, query, session);
+		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
+		for(SolrString ss : columns.getResultObjects()) {
+			highLightedColumns.put(ss.toString(), ss.toString());
+      	}
+		
 		for(String disease : diseaseNames) {
-			diseaseColumnsToDisplay.add(truncateText(disease));
-			//diseaseIds.add(vt.getPrimaryId());
-			//diseaseNames.add(disease);
+			if(highLightedColumns.containsKey(disease)) {
+				diseaseColumnsToDisplay.add("<span class=\"highlight\">" + truncateText(disease) + "</span>");
+			} else {
+				diseaseColumnsToDisplay.add(truncateText(disease));
+			}
 		}
 
       	// search for mp headers in result set & make column headers
       	List<String> mpHeaders = getGridMpHeaderColumns(request,query,session);
       	List<String> mpHeaderColumnsToDisplay = new ArrayList<String>();
-		for(String mpHeader : mpHeaders) {
-			mpHeaderColumnsToDisplay.add(truncateText(mpHeader));
+
+      	for(String mpHeader : mpHeaders) {
+			if(highLightedColumns.containsKey(mpHeader)) {
+				mpHeaderColumnsToDisplay.add("<span class=\"highlight\">" + truncateText(mpHeader) + "</span>");
+			} else {
+				mpHeaderColumnsToDisplay.add(truncateText(mpHeader));
+			}
 		}
 
 		logger.info("diseasePortal/grid -> querying solr for grid data");
@@ -501,7 +517,6 @@ public class DiseasePortalController
 
 		for(SolrVocTerm mpTerm : mpTerms)
 		{
-			// TODO
 			mpTermColumnsToDisplay.add(truncateText(mpTerm.getTerm(), 45));
 			termColIds.add(mpTerm.getPrimaryId());
 			termColNames.add(mpTerm.getTerm());
@@ -571,7 +586,6 @@ public class DiseasePortalController
 
 		for(SolrVocTerm diseaseTerm : diseaseTerms)
 		{
-			// TODO
 			diseaseTermColumnsToDisplay.add(truncateText(diseaseTerm.getTerm(), 45));
 			termColIds.add(diseaseTerm.getPrimaryId());
 			termColNames.add(diseaseTerm.getTerm());
@@ -878,6 +892,33 @@ public class DiseasePortalController
 		return hdpFinder.getGridClusters(params);
 	}
 
+	public SearchResults<SolrString> getHighlightedColumns(
+		HttpServletRequest request,
+		@ModelAttribute DiseasePortalQueryForm query,
+		HttpSession session) {
+		
+		logger.debug("getHighlightedColumns disease column query: " + query.toString());
+
+		// parse the various query parameter to generate SearchParams object
+		SearchParams params = new SearchParams();
+
+		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM_HEADER)));
+		params.setPageSize(10000);
+		
+		Filter f = parseQueryForm(query,session);
+		
+		Filter or = new Filter();
+		or.setFilterJoinClause(JoinClause.FC_OR);
+		Filter.extractTermFlatenMakeOrFilter(f, or);
+		
+		params.setFilter(or);
+		
+		logger.debug("getHighlightedColumns finished");
+		SearchResults<SolrString> results = hdpFinder.getHighlightedColumns(params);
+
+		return results;
+	}
+	
 	public SearchResults<SolrString> getGridDiseaseColumns(
 			HttpServletRequest request,
 			@ModelAttribute DiseasePortalQueryForm query,

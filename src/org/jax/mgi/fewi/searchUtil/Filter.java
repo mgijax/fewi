@@ -270,6 +270,20 @@ public class Filter {
 
 
 
+	public static void extractTermFlatenMakeOrFilter(Filter filter, Filter orFilter) {
+		if(filter.getNestedFilters().size() > 0) {
+			for(Filter f: filter.getNestedFilters()) {
+				extractTermFlatenMakeOrFilter(f, orFilter);
+			}
+		} else {
+			if(filter.getProperty().equals(SearchConstants.VOC_TERM)) {
+				orFilter.addNestedFilter(filter);
+			}
+		}
+	}
+
+
+
     // overriding toString() method to display property values
 	@Override
 	public String toString() {
