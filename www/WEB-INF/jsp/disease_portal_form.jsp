@@ -65,7 +65,7 @@
       <a href="${configBean.FEWI_URL}diseasePortal/summary?genes=NM_013627">NM_013627</a>
 		</span>
       <br/><br/>
-      Enter symbols, names or ids.<br/>
+      Enter symbols, names or IDs.<br/>
       Use * for wildcard.
       <div id="geneFilePlaceholder" style="height:30px; width: 1px;"></div>
       </div>

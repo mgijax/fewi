@@ -590,7 +590,7 @@ td.padded { padding:4px; }
 				'<td width=\'4\'>'  +
 				<c:forEach var="star" items="${marker.OMIMAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
-						<c:set var="hMessage" value="* Disease is associated with mutations in mouse ${marker.symbol}." />
+						<c:set var="hMessage" value="* Disease is modeled in mouse using ${marker.symbol}." />
 						'*' +
 					</c:if>
 				</c:forEach>
