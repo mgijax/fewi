@@ -312,7 +312,8 @@ function popupHelp(help_cat){
 	    <b>Click on the disease term ...</b><ul><li>to see the mouse genotypes used as disease models.</li></ul>";
 	// text for mp help popup
 	var mp_help = "<b>Phenotype Annotations</b><ul><li>Mammalian Phenotype (MP) terms appear by gene.</li>\
-	    <li>Each term describes a mouse phenotype with some mutation in that gene.</li></ul><b>Caveats</b>\
+       <li>Each term describes a mouse phenotype with some mutation in that gene.</li>\
+       <li>Mutations may be in the endogenous gene or an insertion of the gene or its homolog.</li></ul><b>Caveats</b>\
 	    <ul><li>The term does not necessarily imply that mutations in that gene contribute to or cause the phenotype.</li>\
 	    <li>Analyzed mice may have causative mutations in other genes.</li>\
 	    <li>Wide phenotypic variation exists due to homozygotes vs. heterozygotes and different strain backgrounds.</li></ul>\
