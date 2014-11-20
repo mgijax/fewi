@@ -1501,7 +1501,6 @@ public class GXDController {
 			query.getMarkerSymbolFilter(), Filter.Operator.OP_IN));
 		}
 		
-
 		// matrix only query fields
 		// absolute filter on structure ID (used by popups to restrict query to only this structure, but still keep the other structure queries and filters
 		if(query.getMatrixStructureId() !=null && query.getMatrixStructureId().size() > 0) {
@@ -1518,7 +1517,6 @@ public class GXDController {
 		if(query.getMatrixMarkerSymbol() !=null && !query.getMatrixMarkerSymbol().equals("")) {
 				queryFilters.add(new Filter(SearchConstants.MRK_SYMBOL, query.getMatrixMarkerSymbol()));
 		}
-
 
 		// process normal query form parameter.  the resulting filter objects
 		// are added to queryList.

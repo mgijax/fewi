@@ -65,44 +65,7 @@ public class SolrGxdLitSummaryHunter extends SolrHunter<GxdLitIndexRecord> {
 		propertyMap.put(SearchConstants.GXD_LIT_MRK_NOMEN_BEGINS, new SolrPropertyMapper(IndexConstants.GXD_MRK_NOMEN_BEGINS));
 		propertyMap.put(SearchConstants.GXD_LIT_MRK_SYMBOL, new SolrPropertyMapper(IndexConstants.GXD_MRK_SYMBOL));
 
-		/*
-		 * The name of the field we want to iterate through the documents for
-		 * and place into the output. In this case we want the standard list of
-		 * object keys returned.
-		 */
 		keyString = IndexConstants.GXD_LIT_SINGLE_KEY;
-
-		/*
-		 * highlightFields.add(IndexConstants.REF_TITLE_STEMMED);
-		 * highlightFields.add(IndexConstants.REF_TITLE_UNSTEMMED);
-		 * highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_STEMMED);
-		 * highlightFields.add(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED);
-		 * highlightFields.add(IndexConstants.REF_FIRST_AUTHOR);
-		 * highlightFields.add(IndexConstants.REF_LAST_AUTHOR);
-		 * highlightFields.add(IndexConstants.REF_AUTHOR_FORMATTED);
-		 */
-
-		/*
-		 * A reverse Mapping of Highlightable fields in the index to what
-		 * parameter it came from
-		 */
-
-		/*
-		 * fieldToParamMap.put(IndexConstants.REF_TITLE_STEMMED,
-		 * SearchConstants.GXD_LIT_LONG_CITATION);
-		 * fieldToParamMap.put(IndexConstants.REF_TITLE_UNSTEMMED,
-		 * SearchConstants.GXD_LIT_LONG_CITATION);
-		 * fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_STEMMED,
-		 * SearchConstants.GXD_LIT_LONG_CITATION);
-		 * fieldToParamMap.put(IndexConstants.REF_TITLE_ABSTRACT_UNSTEMMED,
-		 * SearchConstants.GXD_LIT_LONG_CITATION);
-		 * fieldToParamMap.put(IndexConstants.REF_AUTHOR_FORMATTED,
-		 * SearchConstants.GXD_LIT_LONG_CITATION);
-		 * fieldToParamMap.put(IndexConstants.REF_FIRST_AUTHOR,
-		 * SearchConstants.GXD_LIT_LONG_CITATION);
-		 * fieldToParamMap.put(IndexConstants.REF_LAST_AUTHOR,
-		 * SearchConstants.GXD_LIT_LONG_CITATION);
-		 */
 	}
 
 	private void checkFilter(Filter filter) {

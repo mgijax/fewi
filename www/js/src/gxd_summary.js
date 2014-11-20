@@ -958,7 +958,9 @@ var structureGeneGrid = function()
 		    	batchSize: 50000,
 		    	offsetField: "startIndex",
 		    	limitField: "results",
-		        MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)...',
+		        MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)... ' +
+		        	'<br/>If the dataset contains thousands of genes, the Tissue x Gene Matrix may not load. ' +
+		        	'<br/>Consider filtering the data set.',
 		 	   	MSG_EMPTY: 'No assay results with expression data found.'
 			},
 	        cellSize: 24,

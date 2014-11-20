@@ -49,7 +49,7 @@ public class FormWidgetValues {
 		widgetValues.put("MP:0005367","renal/urinary system");
 		widgetValues.put("MP:0005389","reproductive system");
 		widgetValues.put("MP:0005388","respiratory system");
-		widgetValues.put("MP:0005390","sekeleton");
+		widgetValues.put("MP:0005390","skeleton");
 		widgetValues.put("MP:0005394","taste/olfaction");
 		widgetValues.put("MP:0002006","tumorigenesis");
 		widgetValues.put("MP:0005391","vision/eye");

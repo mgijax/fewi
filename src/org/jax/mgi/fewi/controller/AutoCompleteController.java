@@ -182,7 +182,6 @@ public class AutoCompleteController {
 
 			Filter outerFilter = new Filter();
 			outerFilter.setNestedFilters(finalList,Filter.JoinClause.FC_AND);
-			
 			params.setFilter(outerFilter);
 		}
 		else {
@@ -532,9 +531,6 @@ public class AutoCompleteController {
 			searchList[index] = result.getTermId();
 			index++;
 		}
-		
-		
-		
 		
 		Filter f = bs.buildSolrFilter(SearchConstants.VOC_TERM, ids);
 		
