@@ -576,9 +576,31 @@ filters.setAllFilters = function(pRequest) {
 	if ((pRequest[field]) && (field in filters.fieldnameToFilterName)) {
 	    var filterName = filters.fieldnameToFilterName[field];
 	    var fValues = pRequest[field];
+
+	    // need to handle strings and lists, split comma-separate terms,
+	    // and remove redundancy
+
+	    d = {};
+
 	    if (typeof(fValues) === 'string') {
 		fValues = fValues.split(',');
 	    }
+
+	    for (var k = 0; k < fValues.length; k++) {
+		var v = fValues[k];
+		if (typeof(v === 'string')) {
+		    v = v.split(',')
+		}
+		for (var i = 0; i < v.length; i++) {
+		    d[v[i]] = 1;
+		}
+	    }
+
+	    fValues = [];
+	    for (var fv in d) {
+		fValues.push(fv);
+	    }
+
 	    filters.filtersByName[filterName]['values'][field] = fValues;
 	}
     }
