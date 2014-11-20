@@ -1484,6 +1484,7 @@ public class DiseasePortalController
 	// facets for HMDC pages
 	// -----------------------------------------------------------------//
 
+	// now unused, kept for future use
 	private Map<String, List<String>> facetGeneric (DiseasePortalQueryForm query, BindingResult result, HttpSession session, String facetType) {
 	    logger.debug(query.toString());
 	    String order = ALPHA;
@@ -1501,6 +1502,7 @@ public class DiseasePortalController
 	    return this.parseFacetResponse(facetResults, order);
 	}
 
+	// now unused, kept for future use
 	private Map<String, List<String>> parseFacetResponse (SearchResults<SolrString> facetResults, String order) {
 
 	    Map<String, List<String>> m = new HashMap<String, List<String>>();
@@ -1522,12 +1524,61 @@ public class DiseasePortalController
 	 */
 	@RequestMapping("/facet/featureType")
 	public @ResponseBody Map<String, List<String>> facetFeatureType(
+		HttpServletRequest request,
 		HttpSession session,
 		@ModelAttribute DiseasePortalQueryForm query, 
 		BindingResult result) {
 	
-	    return this.facetGeneric(query, result, session,
-		FacetConstants.MARKER_FEATURE_TYPE);
+	    // get all the markers on the Genes tab
+
+	    SearchResults<SolrDiseasePortalMarker> searchResults =
+		getSummaryResultsByGene(request, query, Paginator.ALL_PAGES,
+			session, true);
+
+	    // collect a set of all feature types for those markers
+
+	    HashSet<String> featureTypes = new HashSet<String>();
+
+	    for (SolrDiseasePortalMarker m : searchResults.getResultObjects()) {
+		if (m != null) {
+		    featureTypes.add(m.getType());
+		}
+	    }
+
+	    // need to sort in a case insensitive manner
+
+	    HashMap<String,String> lowerToUpper = new HashMap<String,String>();
+
+	    for (String ft : featureTypes.toArray(new String[0])) {
+		if (ft != null) {
+		    lowerToUpper.put (ft.toLowerCase(), ft);
+		}
+	    }
+
+	    String[] lowerFeatureTypes =
+		lowerToUpper.keySet().toArray(new String[0]);
+	    Arrays.sort(lowerFeatureTypes);
+
+	    // now assemble the corresponding mixed-case list
+	    
+	    List<String> ftList = new ArrayList<String>();
+
+	    for (String ft : lowerFeatureTypes) {
+		ftList.add(lowerToUpper.get(ft));
+	    }
+
+	    // finally, compose the map to be sent out via JSON
+
+	    Map<String, List<String>> m = new HashMap<String, List<String>>();
+
+	    if (ftList.size() >= facetLimit) {
+	    	List<String> l = new ArrayList<String>();
+		l.add("Too many results to display. Modify your search or try another filter first.");
+		m.put("error", l);
+	    } else {
+		m.put("resultFacets", ftList);
+	    }
+	    return m; 
 	}
 
 	// -----------------------------------------------------------------//
