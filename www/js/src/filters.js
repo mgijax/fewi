@@ -408,9 +408,11 @@ filters.getFilterNames = function() {
 
 /* clear the selected values for all filters
  */
-filters.clearAllFilters = function() {
+filters.clearAllFilters = function(suppressCallback) {
     var i = 0;
     var hadValues = 0;	// number of filters with values before clearing
+
+    if (suppressCallback === null) { suppressCallback = false; }
 
     filters.callbacksOff();
 
@@ -421,7 +423,7 @@ filters.clearAllFilters = function() {
     
     filters.callbacksOn();
 
-    if (hadValues > 0) {
+    if (!suppressCallback && (hadValues > 0)) {
 	filters.issueCallbacks();
     }
 };
@@ -1202,10 +1204,25 @@ filters.clearFilter = function() {
     // special case where we want to clear all filters
 
     if (this.id === 'clearAllFilters') {
-	filters.clearAllFilters();
-	filters.addHistoryEntry();
+	if (filters.hmdcButtonVisible) {
+	    /* We've filtered by rows/columns (possibly in addition to other
+	     * filters), which needs special handling.
+	     */
+
+	    filters.clearAllFilters(true);
+	    hmdcFilters.updateHiddenFields();
+	    filters.hmdcButtonVisible = false;
+	    filters.hmdcButtonCallback();
+	} else {
+	    /* We've only filtered by filters in this library, not by rows
+	     * and column on the HMDC grid.
+	     */
+	    filters.clearAllFilters();
+	    filters.addHistoryEntry();
+	}
 	return;
     }
+
     var kv = this.id.split(':');
 
     // special case where we want to clear all values for a filter
