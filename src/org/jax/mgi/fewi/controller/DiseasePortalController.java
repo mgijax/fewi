@@ -349,7 +349,8 @@ public class DiseasePortalController
       @ModelAttribute DiseasePortalQueryForm query,
       @ModelAttribute Paginator page) throws Exception
     {
-    	logger.debug("->diseaseGrid started");
+    	logger.debug("->diseaseGrid started ("
+		+ page.getResults() + " results per page)");
 
       	// add headers to allow AJAX access
       	AjaxUtils.prepareAjaxHeaders(response);
