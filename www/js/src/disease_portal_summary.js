@@ -10,6 +10,9 @@ var GENES_PAGE_SIZE = 250;
 var DISEASES_PAGE_SIZE = 250;
 var DEFAULT_PAGE_SIZE = GENES_PAGE_SIZE;
 
+// number of rows to be displayed for the currently selected tab
+var CURRENT_PAGE_SIZE = GRID_PAGE_SIZE;
+
 // Shortcut variable for the YUI history manager
 var History = YAHOO.util.History;
 
@@ -241,6 +244,9 @@ var generateGrid = function(request)
 						totalCount, // totalCount
 						Number(pRequest['startIndex']) || 0 // recordOffset
 			);
+
+			CURRENT_PAGE_SIZE = Number(pRequest['results']) || GRID_PAGE_SIZE;
+
 			var handlePagination = function(state)
 			{
 				// The next state will reflect the new pagination values
@@ -789,6 +795,7 @@ var genesResultsTable = function() {
 			recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+		CURRENT_PAGE_SIZE = Number(pRequest['results']) || paginator.getRowsPerPage();
 
 		// add jQuery UI tooltips for genes
 		refreshJQTooltips();
@@ -948,6 +955,7 @@ var diseasesResultsTable = function() {
 			recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+		CURRENT_PAGE_SIZE = Number(pRequest['results']) || paginator.getRowsPerPage();
 		return true;
 	};
 

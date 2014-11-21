@@ -235,12 +235,19 @@ hmdcFilters.updatePage = function() {
 
     hmdcFilters.updateHiddenFields();
 
+    var pageSize = 250;
+    if (CURRENT_PAGE_SIZE) {
+	pageSize = CURRENT_PAGE_SIZE;
+    }
+
     var request = hmdcFilters.getQueryString();
     var facets = hmdcFilters.getFacets();
     if (typeof(getCurrentTab) === 'function') {
 	var tab = getCurrentTab();
 	if (tab) {
-	    request = filters.consolidateParameters(request + '&tab=' + tab);
+	    request = filters.consolidateParameters(request
+		+ "&startIndex=0&dir=asc&sort=&results=" + pageSize
+		+ "&tab=" + tab);
 	}
     }
 
