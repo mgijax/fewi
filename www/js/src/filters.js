@@ -36,7 +36,7 @@ filters.callbackNames = [];	// list of functions to be called when the
 filters.callbacksByName = {};	// maps from callback name to function to call
 filters.callbacksActive = true;	// are the callback functions active?
 
-filters.logging = true;		// write log messages to browser error log?
+filters.logging = false;		// write log messages to browser error log?
 
 filters.queryStringFunction = null;	// funtion to call to get parameter
 					// ...string for general query form

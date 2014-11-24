@@ -206,6 +206,15 @@ public class SolrDiseasePortalHunter extends SolrDiseasePortalBaseHunter
         		keyToGroupKeyMap.put(uniqueKey,markerKeyString);
 
         	}
+        	else if(gc.getName().equals(DiseasePortalFields.TERM_GROUP))
+        	{
+        		String term = (String) sd.getFieldValue(DiseasePortalFields.TERM_GROUP);
+
+        		// return just the term name for now
+        		sr.addResultObjects(new SolrString(term));
+        		keys.add(term);
+        		keyToGroupKeyMap.put(uniqueKey,term);
+        	}
         	else if(gc.getName().equals(DiseasePortalFields.TERM_HEADER))
         	{
         		String header = (String) sd.getFieldValue(DiseasePortalFields.TERM_HEADER);

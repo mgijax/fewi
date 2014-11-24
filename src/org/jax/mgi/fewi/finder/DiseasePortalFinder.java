@@ -79,6 +79,12 @@ public class DiseasePortalFinder
 		SearchResults<SolrString> results = huntHighlightedColumns(params);
 		return results;
 	}
+	
+	// Get Header terms for lighted columns
+	public SearchResults<SolrString> getHighlightedColumnHeaders(SearchParams params) {
+		SearchResults<SolrString> results = huntHighlightedColumnHeaders(params);
+		return results;
+	}
 
 	// Group results by term id to return the distinct matching diseases (but only diseases that would appear on Grid)
 	public SearchResults<SolrString> getGridDiseases(SearchParams params)
@@ -310,23 +316,35 @@ public class DiseasePortalFinder
 		srVT.cloneFrom(results,SolrVocTerm.class);
 		return srVT;
 	}
-	
-	
-	
-	// TODO
-  	//highLightedColumns.put("Autism", "Autism");
-  	//highLightedColumns.put("nervous system", "nervous system");
-	
 
 	private SearchResults<SolrString> huntHighlightedColumns(SearchParams params) {
 		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 
 		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_HIGHLIGHT);
-
-		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_HEADER);
+		
+		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_GROUP);
 		
 		SearchResults<SolrString> srS = new SearchResults<SolrString>();
 		srS.cloneFrom(results,SolrString.class);
+		
+//		for(String s: srS.getResultKeys()) {
+//			logger.info("huntHighlightedColumns: Solr String: " + s);
+//		}
+		return srS;
+	}
+	
+	private SearchResults<SolrString> huntHighlightedColumnHeaders(SearchParams params) {
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
+
+		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_HIGHLIGHT);
+
+		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_HEADER);
+
+		SearchResults<SolrString> srS = new SearchResults<SolrString>();
+		srS.cloneFrom(results,SolrString.class);
+//		for(String s: srS.getResultKeys()) {
+//			logger.info("huntHighlightedColumnHeaders: Solr String: " + s);
+//		}
 		return srS;
 	}
 	

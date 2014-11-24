@@ -126,10 +126,10 @@
 	<input type="hidden" name="fHeader" id="fHeader" />
 	<input type="hidden" name="referseF" id="reverseF"/>
 	<input type="hidden" name="numDCol" id=numDCol />
-    <input id="submit1" style="position:absolute; top:295px; left:640px; width:60px; font-size:20px;" name="submitgo" class="formButtons" value="GO" type="submit"><br/>
-    <input id="reset1" class="formButtons" style="position:absolute; top:302px; left:710px; width:60px; font-size:14px;" type="reset" >
+    <input id="submit1" style="position:absolute; top:330px; left:40px; width:60px; font-size:20px;" name="submitgo" class="formButtons" value="GO" type="submit"><br/>
+    <input id="reset1" class="formButtons" style="position:absolute; top:337px; left:110px; width:60px; font-size:14px;" type="reset" >
 
-	<div style="position:absolute; top:330px; left:15px; overflow-y: scroll; height:36px; width: 775px;">
+	<div style="position:absolute; top:277px; left:553px; overflow-y: scroll; height:85px; width: 245px;">
 		<span id="queryText" style="font-size:x-small"><b>Effective Phenotype Query:</b></span>
 	</div>
 

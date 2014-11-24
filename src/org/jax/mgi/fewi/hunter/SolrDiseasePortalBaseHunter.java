@@ -181,6 +181,7 @@ public class SolrDiseasePortalBaseHunter extends SolrHunter<SolrHdpEntity>
         this.groupFields.put(SearchConstants.MRK_KEY,DiseasePortalFields.MARKER_KEY);
         this.groupFields.put(DiseasePortalFields.TERM_HEADER,DiseasePortalFields.TERM_HEADER);
         this.groupFields.put(SearchConstants.VOC_TERM_ID,DiseasePortalFields.TERM_ID_GROUP);
+        this.groupFields.put(DiseasePortalFields.TERM_GROUP,DiseasePortalFields.TERM_GROUP);
         this.groupFields.put("bareMarkerKey",DiseasePortalFields.MARKER_KEY);
 
 
@@ -237,6 +238,7 @@ public class SolrDiseasePortalBaseHunter extends SolrHunter<SolrHdpEntity>
         // term fields
         returnedFields.add(DiseasePortalFields.TERM_ID);
         returnedFields.add(DiseasePortalFields.TERM);
+        returnedFields.add(DiseasePortalFields.TERM_GROUP);
         returnedFields.add(DiseasePortalFields.TERM_TYPE);
         returnedFields.add(DiseasePortalFields.TERM_HEADER);
         returnedFields.add(DiseasePortalFields.DISEASE_MODEL_COUNTS);

@@ -42,7 +42,8 @@ ${templateBean.templateHeadHtml}
 <table id="hdpSystemPopupLegend">
 <tr>
 	<td>*</td><td>Aspects of the system are reported to show a normal phenotype</td></tr><tr>
-	<td class="bsn_legend">!</td><td>Indicates phenotype varies with strain background</td>
+	<td class="bsn_legend">!</td><td>Indicates phenotype varies with strain background</td></tr><tr>
+	<td></td><td><span class="highlight">Highlighted Column</span> contains a phenotype or disease term matching one in the search</td>
 </tr>
 </table>
 

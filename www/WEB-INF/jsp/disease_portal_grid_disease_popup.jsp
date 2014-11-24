@@ -37,4 +37,9 @@ ${templateBean.templateHeadHtml}
 </c:forEach>
 </div>
 
+<table id="hdpSystemPopupLegend">
+<tr>
+   <td><span class="highlight">Highlighted Column</span> contains a phenotype or disease term matching one in the search</td>
+</tr>
+</table>
 <%@ include file="/WEB-INF/jsp/disease_portal_grid_popup_grid.jsp" %>

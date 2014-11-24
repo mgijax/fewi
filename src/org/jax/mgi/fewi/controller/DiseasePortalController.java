@@ -373,7 +373,8 @@ public class DiseasePortalController
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
 		List<String> diseaseIds = new ArrayList<String>();
 		
-		SearchResults<SolrString> columns = getHighlightedColumns(request, query, session);
+		// TODO
+		SearchResults<SolrString> columns = getHighlightedColumnHeaders(request, query, session);
 		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
 		for(SolrString ss : columns.getResultObjects()) {
 			highLightedColumns.put(ss.toString(), ss.toString());
@@ -516,13 +517,24 @@ public class DiseasePortalController
 		List<String> termColIds = new ArrayList<String>();
 		List<String> termColNames = new ArrayList<String>(); // needed to automated tests
 
+		// TODO 
+		SearchResults<SolrString> columns = getHighlightedColumns(request, query, session);
+		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
+		for(SolrString ss : columns.getResultObjects()) {
+			highLightedColumns.put(ss.toString(), ss.toString());
+	  	}
+		
 		for(SolrVocTerm mpTerm : mpTerms)
 		{
-			mpTermColumnsToDisplay.add(truncateText(mpTerm.getTerm(), 45));
+			if(highLightedColumns.containsKey(mpTerm.getTerm())) {
+				mpTermColumnsToDisplay.add("<span class=\"highlight\">" + truncateText(mpTerm.getTerm(), 45) + "</span>");
+			} else {
+				mpTermColumnsToDisplay.add(truncateText(mpTerm.getTerm(), 45));
+			}
 			termColIds.add(mpTerm.getPrimaryId());
 			termColNames.add(mpTerm.getTerm());
 		}
-
+		
 		// cross reference them
 		List<HdpGenoByHeaderPopupRow> popupRows = new ArrayList<HdpGenoByHeaderPopupRow>();
 		// map the columns with the data
@@ -585,9 +597,20 @@ public class DiseasePortalController
 		List<String> termColIds = new ArrayList<String>();
 		List<String> termColNames = new ArrayList<String>(); // needed to automated tests
 
+		// TODO
+		SearchResults<SolrString> columns = getHighlightedColumns(request, query, session);
+		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
+		for(SolrString ss : columns.getResultObjects()) {
+			highLightedColumns.put(ss.toString(), ss.toString());
+	  	}
+		
 		for(SolrVocTerm diseaseTerm : diseaseTerms)
 		{
-			diseaseTermColumnsToDisplay.add(truncateText(diseaseTerm.getTerm(), 45));
+			if(highLightedColumns.containsKey(diseaseTerm.getTerm())) {
+				diseaseTermColumnsToDisplay.add("<span class=\"highlight\">" + truncateText(diseaseTerm.getTerm(), 45) + "</span>");
+			} else {
+				diseaseTermColumnsToDisplay.add(truncateText(diseaseTerm.getTerm(), 45));
+			}
 			termColIds.add(diseaseTerm.getPrimaryId());
 			termColNames.add(diseaseTerm.getTerm());
 		}
@@ -894,28 +917,51 @@ public class DiseasePortalController
 	}
 
 	public SearchResults<SolrString> getHighlightedColumns(
-		HttpServletRequest request,
-		@ModelAttribute DiseasePortalQueryForm query,
-		HttpSession session) {
-		
+			HttpServletRequest request,
+			@ModelAttribute DiseasePortalQueryForm query,
+			HttpSession session) {
+
 		logger.debug("getHighlightedColumns disease column query: " + query.toString());
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 
-		params.setSorts(Arrays.asList(new Sort(SortConstants.VOC_TERM_HEADER)));
-		params.setPageSize(10000);
-		
 		Filter f = parseQueryForm(query,session);
-		
+
 		Filter or = new Filter();
 		or.setFilterJoinClause(JoinClause.FC_OR);
 		Filter.extractTermFlatenMakeOrFilter(f, or);
-		
+
 		params.setFilter(or);
+		params.setPageSize(100000);
 		
 		logger.debug("getHighlightedColumns finished");
 		SearchResults<SolrString> results = hdpFinder.getHighlightedColumns(params);
+
+		return results;
+	}
+
+	public SearchResults<SolrString> getHighlightedColumnHeaders(
+			HttpServletRequest request,
+			@ModelAttribute DiseasePortalQueryForm query,
+			HttpSession session) {
+
+		logger.debug("getHighlightedColumns disease column query: " + query.toString());
+
+		// parse the various query parameter to generate SearchParams object
+		SearchParams params = new SearchParams();
+
+		Filter f = parseQueryForm(query,session);
+
+		Filter or = new Filter();
+		or.setFilterJoinClause(JoinClause.FC_OR);
+		Filter.extractTermFlatenMakeOrFilter(f, or);
+
+		params.setFilter(or);
+		params.setPageSize(100000);
+		
+		logger.debug("getHighlightedColumns finished");
+		SearchResults<SolrString> results = hdpFinder.getHighlightedColumnHeaders(params);
 
 		return results;
 	}
