@@ -38,9 +38,9 @@ var resolveVocabTermIds = function(updateYST)
 				}
 				if($("#showingQuery").prop("checked")) {
 					if(response.ids && response.ids.length > 0) {
-						$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
+						$("#queryText").html("<b>Effective Phenotype Query:</b><br/> " + response.ids);
 					} else {
-						$("#queryText").html("<b>Effective Phenotype Query:</b> ");
+						$("#queryText").html("<b>Effective Phenotype Query:</b><br/> ");
 					}
 				} else {
 					$("#queryText").html("");
@@ -54,9 +54,9 @@ var resolveVocabTermIds = function(updateYST)
 				}
 				if($("#showingQuery").prop("checked")) {
 					if(response.ids && response.ids.length > 0) {
-						$("#queryText").html("<b>Effective Phenotype Query:</b> " + response.ids);
+						$("#queryText").html("<b>Effective Phenotype Query:</b><br/> " + response.ids);
 					} else {
-						$("#queryText").html("<b>Effective Phenotype Query:</b> ");
+						$("#queryText").html("<b>Effective Phenotype Query:</b><br/> ");
 					}
 				} else {
 					$("#queryText").html("");
