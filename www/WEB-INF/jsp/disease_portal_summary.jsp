@@ -90,6 +90,7 @@
                                 <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml#hdp_results'); return false;" 
                                   href="${configBean.USERHELP_URL}disease_connection_help.shtml">More..</a>
 		    		</div>
+			        <div style="margin-left:2px;"><span class="highlight">Highlighted Column</span> contains a phenotype or disease term matching one in the search.</div>
 			        </div>
     		</div>
 	        <div id="griddata"></div>
