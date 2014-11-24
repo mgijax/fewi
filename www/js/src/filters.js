@@ -975,6 +975,10 @@ filters.fillAndShowDialog = function (title, body, error) {
 	filters.buildDialogBox();
     }
 
+    if (!body) {
+	body = 'No values in results to filter';
+    }
+
     filters.dialogBox.setHeader(title);
     filters.dialogBox.form.innerHTML = body;
 

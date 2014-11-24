@@ -82,6 +82,10 @@ var resetQF = function (e) {
 		fromButtonClick = true;
 	}
 	
+	hmdcFilters.callbacksOff()
+	hmdcFilters.clearAllFilters();
+	hmdcFilters.callbacksOn()
+	
 	var form = YAHOO.util.Dom.get(qfId);
 	form.phenotypes.value = "";
 	form.genes.value = "";
@@ -91,8 +95,6 @@ var resetQF = function (e) {
 	form.geneFileName.value = "";
 	form.enableVcfFilter = "true";
 
-	hmdcFilters.clearAllFilters();
-	
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
 	if(_GF && !_GF.isState(_GF.gridState.working)) _GF.resetFields();
