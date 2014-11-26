@@ -362,14 +362,8 @@ public class DiseasePortalController
       	SearchResults<SolrHdpGridCluster> searchResults = getGridClusters(request, query, page,session);
       	List<SolrHdpGridCluster> gridClusters = searchResults.getResultObjects();
 
-	// now that we've chosen our gridClusters (the rows of the grid), we
-	// want all data for those rows -- so remove the FeatureType filter.
-	
-	DiseasePortalQueryForm queryNoFilters = query;
-	queryNoFilters.setFeatureTypeFilter(null);
-
       	// search for diseases in result set - make column headers and ID list
-      	SearchResults<SolrString> diseaseNamesResults = getGridDiseaseColumns(request, queryNoFilters,session);
+      	SearchResults<SolrString> diseaseNamesResults = getGridDiseaseColumns(request, query,session);
       	List<String> diseaseNames = new ArrayList<String>();
       	for(SolrString ss : diseaseNamesResults.getResultObjects()) {
       		diseaseNames.add(ss.toString());
@@ -380,7 +374,7 @@ public class DiseasePortalController
 		List<String> diseaseIds = new ArrayList<String>();
 		
 		// TODO
-		SearchResults<SolrString> columns = getHighlightedColumnHeaders(request, queryNoFilters, session);
+		SearchResults<SolrString> columns = getHighlightedColumnHeaders(request, query, session);
 		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
 		for(SolrString ss : columns.getResultObjects()) {
 			highLightedColumns.put(ss.toString(), ss.toString());
@@ -395,7 +389,7 @@ public class DiseasePortalController
 		}
 
       	// search for mp headers in result set & make column headers
-      	List<String> mpHeaders = getGridMpHeaderColumns(request,queryNoFilters,session);
+      	List<String> mpHeaders = getGridMpHeaderColumns(request,query,session);
       	List<String> mpHeaderColumnsToDisplay = new ArrayList<String>();
 
       	for(String mpHeader : mpHeaders) {
@@ -409,6 +403,13 @@ public class DiseasePortalController
 		logger.info("diseasePortal/grid -> querying solr for grid data");
       	// Search for the genotype clusters used to generate the result set
       	// and save as map for later
+
+	// now that we've chosen our gridClusters (the rows of the grid), we
+	// want all data for those rows -- so remove the FeatureType filter.
+	
+	DiseasePortalQueryForm queryNoFilters = query;
+	queryNoFilters.setFeatureTypeFilter(null);
+
       	List<SolrHdpGridData> annotationsInResults = getAnnotationsInResults(queryNoFilters,searchResults.getResultKeys(),session);
         Map<Integer,List<SolrHdpGridData>> gridClusterToMPResults = new HashMap<Integer,List<SolrHdpGridData>>();
         Map<Integer,List<SolrHdpGridData>> gridClusterToDiseaseResults = new HashMap<Integer,List<SolrHdpGridData>>();
