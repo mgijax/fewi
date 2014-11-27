@@ -65,6 +65,10 @@ var interceptSubmit = function(e)
 
 		if(typeof hdpDataTable != 'undefined')
 			hdpDataTable.setAttributes({ width: "100%" }, true);
+
+		hmdcFilters.callbacksOff()
+		hmdcFilters.clearAllFilters();
+		hmdcFilters.callbacksOn()
 	}
 };
 $("#"+qfId).on("submit",interceptSubmit);
@@ -82,10 +86,6 @@ var resetQF = function (e) {
 		fromButtonClick = true;
 	}
 	
-	hmdcFilters.callbacksOff()
-	hmdcFilters.clearAllFilters();
-	hmdcFilters.callbacksOn()
-	
 	var form = YAHOO.util.Dom.get(qfId);
 	form.phenotypes.value = "";
 	form.genes.value = "";
@@ -94,6 +94,7 @@ var resetQF = function (e) {
 	form.locationsFileName.value = "";
 	form.geneFileName.value = "";
 	form.enableVcfFilter = "true";
+	window.querystring = '';
 
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
