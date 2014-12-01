@@ -911,7 +911,7 @@ filters.buildDialogBox = function() {
 	visible : false,
 	context : [ "filterDiv", "tl", "bl", [ "beforeShow" ] ],
 	constraintoviewport : true,
-	width: "290px",
+	width: "305px",
 	buttons : [{ text:"Filter", handler: handleSubmit, isDefault: true} ]
     } );
 
