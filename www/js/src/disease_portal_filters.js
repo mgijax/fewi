@@ -51,9 +51,10 @@ hmdcFilters.setFewiUrl = function(fewiUrl) {
 /* create filters for HMDC (beyond the traditional row/column filters)
  */
 hmdcFilters.createFilters = function() {
-    filters.addFilter ('featureType', 'Feature Type', 'featureTypeButton',
-	'featureTypeFilter', 
-	filters.fewiUrl + 'diseasePortal/facet/featureType');
+    filters.addFilter ('featureType', 'Genome Feature Type',
+	'featureTypeButton', 'featureTypeFilter', 
+	filters.fewiUrl + 'diseasePortal/facet/featureType', null, null,
+	'Filter by Mouse Genome Feature Type');
 };
 
 /* get a list of strings, each of which is a filter name
