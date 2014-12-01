@@ -36,7 +36,7 @@
     <div id="filterSection" style="width:600px">
       <div id="contentcolumn" style="width:480px; margin-left: 510px;">
 	<span id="filterLabel" class="label">Filter results by:</span>
-	<a id="featureTypeButton" class="filterButton">Feature&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8"/></a>
+	<a id="featureTypeButton" class="filterButton">Genome&nbsp;Feature&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8"/></a>
 	<br/>
 	<div id="breadbox">
 	    <div id="filterSummary" class="filters" style="display:none">
