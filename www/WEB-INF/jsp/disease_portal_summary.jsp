@@ -21,7 +21,7 @@
   no-repeat right;
 }
 .facetFilter .yui-panel .bd {
-	width: 270px
+	width: 285px
 }
 </style>
 <div id="summary">
