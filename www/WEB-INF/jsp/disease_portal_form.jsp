@@ -129,7 +129,7 @@
     <input id="submit1" style="position:absolute; top:330px; left:40px; width:60px; font-size:20px;" name="submitgo" class="formButtons" value="GO" type="submit"><br/>
     <input id="reset1" class="formButtons" style="position:absolute; top:337px; left:110px; width:60px; font-size:14px;" type="reset" >
 
-	<div style="position:absolute; top:277px; left:553px; overflow-y: scroll; height:85px; width: 245px;">
+	<div id="queryTextDiv" style="position:absolute; top:277px; left:553px; overflow-y: scroll; height:85px; width: 245px; border-style: solid; border-width: 1px; border-radius: 5px;">
 		<span id="queryText" style="font-size:x-small"><b>Effective Phenotype Query:</b><br/></span>
 	</div>
 

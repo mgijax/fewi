@@ -205,9 +205,9 @@ $(function(){
 	var showQuery = $( "#showingQuery" ).click(function() {
 		if(this.checked) {
 			resolveVocabTermIds();
-			$("#queryText").show();
+			$("#queryTextDiv").show();
 		} else {
-			$("#queryText").hide();
+			$("#queryTextDiv").hide();
 		}
 	});
 
