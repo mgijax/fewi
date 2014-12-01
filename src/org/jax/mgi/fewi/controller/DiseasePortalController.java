@@ -959,18 +959,17 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 
 		Filter f = parseQueryForm(query,session);
-
 		Filter or = new Filter();
 		or.setFilterJoinClause(JoinClause.FC_OR);
 		Filter.extractTermFlatenMakeOrFilter(f, or);
-		
-		Filter and = new Filter();
-		and.setFilterJoinClause(JoinClause.FC_AND);
-		and.addNestedFilter(or);
-		and.addNestedFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,gridClusterKeys,Filter.Operator.OP_IN));
-
-		params.setFilter(and);
-		params.setPageSize(100000);
+		if(or.getNestedFilters() != null && or.getNestedFilters().size() > 0) {
+			Filter and = new Filter();
+			and.setFilterJoinClause(JoinClause.FC_AND);
+			and.addNestedFilter(or);
+			and.addNestedFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,gridClusterKeys,Filter.Operator.OP_IN));
+			params.setFilter(and);
+			params.setPageSize(100000);
+		}
 		
 		logger.debug("getHighlightedColumns finished");
 		SearchResults<SolrString> results = hdpFinder.getHighlightedColumnHeaders(params);
