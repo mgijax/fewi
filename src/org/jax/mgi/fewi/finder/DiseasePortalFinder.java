@@ -320,7 +320,7 @@ public class DiseasePortalFinder
 	private SearchResults<SolrString> huntHighlightedColumns(SearchParams params) {
 		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 
-		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_HIGHLIGHT);
+		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
 		
 		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_GROUP);
 		

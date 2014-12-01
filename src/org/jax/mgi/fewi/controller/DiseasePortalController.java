@@ -373,8 +373,8 @@ public class DiseasePortalController
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
 		List<String> diseaseIds = new ArrayList<String>();
 		
-		// TODO
-		SearchResults<SolrString> columns = getHighlightedColumnHeaders(request, query, session);
+		// TODO Fix 
+		SearchResults<SolrString> columns = getHighlightedColumnHeaders(query, searchResults.getResultKeys(), session);
 		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
 		for(SolrString ss : columns.getResultObjects()) {
 			highLightedColumns.put(ss.toString(), ss.toString());
@@ -949,8 +949,8 @@ public class DiseasePortalController
 	}
 
 	public SearchResults<SolrString> getHighlightedColumnHeaders(
-			HttpServletRequest request,
-			@ModelAttribute DiseasePortalQueryForm query,
+			DiseasePortalQueryForm query,
+			List<String> gridClusterKeys,
 			HttpSession session) {
 
 		logger.debug("getHighlightedColumns disease column query: " + query.toString());
@@ -963,8 +963,13 @@ public class DiseasePortalController
 		Filter or = new Filter();
 		or.setFilterJoinClause(JoinClause.FC_OR);
 		Filter.extractTermFlatenMakeOrFilter(f, or);
+		
+		Filter and = new Filter();
+		and.setFilterJoinClause(JoinClause.FC_AND);
+		and.addNestedFilter(or);
+		and.addNestedFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,gridClusterKeys,Filter.Operator.OP_IN));
 
-		params.setFilter(or);
+		params.setFilter(and);
 		params.setPageSize(100000);
 		
 		logger.debug("getHighlightedColumns finished");
