@@ -25,7 +25,7 @@
 .left { float: left; }
 .right { float: right; }
 .hide { display: none; }
-.highlight { background-color: #FFC0FF; }
+.highlight { background-color: #D6C6E8; }
 table.noborder, table.noborder td , table.noborder th { border: none; }
   
 button { cursor: pointer; }
@@ -400,7 +400,7 @@ textarea {resize:none; background-color:#FFE4B5;}
 
   .gridHl
   {
-  	background-color: #FFFFCC;
+  	background-color: #FFFF8C;
   }
   
   #hdpGridTable .tooltip,

@@ -74,7 +74,7 @@
 
     <div style="position:absolute; top:2px; left:254px; width:300px;">
     <div class='relativePos'>
-      <div style="position:absolute; top:6px; left:15px; ">
+      <div style="position:absolute; top:6px; left:10px; ">
         <span class='queryHeaderText'>Search by genome locations</span>
         <div style='padding-top:42px;font-size:smaller;'>
         <label><input id="organismHuman1" name="organism" class="organism" type="radio" value="human"/> Human(GRCh38)</label>
@@ -82,7 +82,7 @@
         </div>
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
-      <textarea id="locations" name="locations" style="height:80px; width:280px;"></textarea>
+      <textarea id="locations" name="locations" style="height:80px; width:240px;"></textarea><br/>
 		<span style="font-size: smaller;">
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?locations=Chr12:3000000-10000000">Chr12:3000000-10000000</a>
@@ -94,16 +94,16 @@
     </div>
     </div>
 
-    <div style="position:absolute; top:2px; left:546px; width:250px;">
+    <div style="position:absolute; top:2px; left:506px; width:290px;">
     <div class='relativePos'>
-      <div style="position:absolute; top:6px; left:15px; ">
+      <div style="position:absolute; top:6px; left:10px; ">
         <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span>
 			<div style="padding-top: 12px;">
         <span style="font-style: italic;font-size: 11px;">Click "GO" to search by entered text without selecting a term from the list.</span>
 			</div>
       </div>
       <div style="position:absolute; top:85px; left:6px; ">
-      <textarea id="phenotypes" name="phenotypes" style="height:80px; width:240px;"></textarea>
+      <textarea id="phenotypes" name="phenotypes" style="height:80px; width:280px;"></textarea><br/>
 		<span style="font-size: smaller;">
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>,
@@ -127,9 +127,9 @@
 	<input type="hidden" name="referseF" id="reverseF"/>
 	<input type="hidden" name="numDCol" id=numDCol />
     <input id="submit1" style="position:absolute; top:330px; left:40px; width:60px; font-size:20px;" name="submitgo" class="formButtons" value="GO" type="submit"><br/>
-    <input id="reset1" class="formButtons" style="position:absolute; top:337px; left:110px; width:60px; font-size:14px;" type="reset" >
+    <input id="resetButton" class="formButtons" style="position:absolute; top:337px; left:110px; width:60px; font-size:14px;" type="reset" >
 
-	<div id="queryTextDiv" style="position:absolute; top:277px; left:553px; overflow-y: scroll; height:85px; width: 245px; border-style: solid; border-width: 1px; border-radius: 5px;">
+	<div id="queryTextDiv" style="position:absolute; top:277px; left:513px; overflow-y: scroll; height:85px; width: 285px; border-style: solid; border-width: 1px; border-radius: 5px;">
 		<span id="queryText" style="font-size:x-small"><b>Effective Phenotype Query:</b><br/></span>
 	</div>
 
