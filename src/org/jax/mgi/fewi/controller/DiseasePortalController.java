@@ -362,6 +362,13 @@ public class DiseasePortalController
       	SearchResults<SolrHdpGridCluster> searchResults = getGridClusters(request, query, page,session);
       	List<SolrHdpGridCluster> gridClusters = searchResults.getResultObjects();
 
+		// TODO Fix 
+		SearchResults<SolrString> columns = getHighlightedColumnHeaders(query, session);
+		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
+		for(SolrString ss : columns.getResultObjects()) {
+			highLightedColumns.put(ss.toString(), ss.toString());
+      	}
+      	
       	// search for diseases in result set - make column headers and ID list
       	SearchResults<SolrString> diseaseNamesResults = getGridDiseaseColumns(request, query,session);
       	List<String> diseaseNames = new ArrayList<String>();
@@ -372,13 +379,6 @@ public class DiseasePortalController
 
 		List<String> diseaseColumnsToDisplay = new ArrayList<String>();
 		List<String> diseaseIds = new ArrayList<String>();
-		
-		// TODO Fix 
-		SearchResults<SolrString> columns = getHighlightedColumnHeaders(query, searchResults.getResultKeys(), session);
-		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
-		for(SolrString ss : columns.getResultObjects()) {
-			highLightedColumns.put(ss.toString(), ss.toString());
-      	}
 		
 		for(String disease : diseaseNames) {
 			if(highLightedColumns.containsKey(disease)) {
@@ -933,12 +933,9 @@ public class DiseasePortalController
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 
-		Filter f = parseQueryForm(query,session);
-
-		Filter or = new Filter();
+		Filter or = Filter.extractTermsForNestedFilter(parseQueryForm(query,session));
 		or.setFilterJoinClause(JoinClause.FC_OR);
-		Filter.extractTermFlatenMakeOrFilter(f, or);
-
+		
 		params.setFilter(or);
 		params.setPageSize(100000);
 		
@@ -950,24 +947,24 @@ public class DiseasePortalController
 
 	public SearchResults<SolrString> getHighlightedColumnHeaders(
 			DiseasePortalQueryForm query,
-			List<String> gridClusterKeys,
 			HttpSession session) {
 
 		logger.debug("getHighlightedColumns disease column query: " + query.toString());
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
-
-		Filter f = parseQueryForm(query,session);
-		Filter or = new Filter();
-		or.setFilterJoinClause(JoinClause.FC_OR);
-		Filter.extractTermFlatenMakeOrFilter(f, or);
-		if(or.getNestedFilters() != null && or.getNestedFilters().size() > 0) {
-			Filter and = new Filter();
-			and.setFilterJoinClause(JoinClause.FC_AND);
-			and.addNestedFilter(or);
-			and.addNestedFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,gridClusterKeys,Filter.Operator.OP_IN));
-			params.setFilter(and);
+		
+		Filter gridClusterFilter = parseQueryForm(query,session);
+		Filter termSearchFilter = Filter.extractTermsForNestedFilter(gridClusterFilter);
+		gridClusterFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
+		termSearchFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
+	
+		if(gridClusterFilter.getNestedFilters() != null && gridClusterFilter.getNestedFilters().size() > 0 && termSearchFilter.getNestedFilters() != null && termSearchFilter.getNestedFilters().size() > 0) {
+			Filter andFilter = new Filter();
+			andFilter.addNestedFilter(gridClusterFilter);
+			andFilter.addNestedFilter(termSearchFilter);
+			andFilter.setFilterJoinClause(JoinClause.FC_AND);
+			params.setFilter(andFilter);
 			params.setPageSize(100000);
 		}
 		

@@ -268,21 +268,23 @@ public class Filter {
 		return filter;
 	}
 
+	public static Filter extractTermsForNestedFilter(Filter filter) {
+		Filter nestedFilter = new Filter();
+		extractTermsForNestedFilter(filter, nestedFilter);
+		return nestedFilter;
+	}
 
-
-	public static void extractTermFlatenMakeOrFilter(Filter filter, Filter orFilter) {
+	public static void extractTermsForNestedFilter(Filter filter, Filter nestedFilter) {
 		if(filter.getNestedFilters().size() > 0) {
 			for(Filter f: filter.getNestedFilters()) {
-				extractTermFlatenMakeOrFilter(f, orFilter);
+				extractTermsForNestedFilter(f, nestedFilter);
 			}
 		} else {
 			if(filter.getProperty().equals(SearchConstants.VOC_TERM)) {
-				orFilter.addNestedFilter(filter);
+				nestedFilter.addNestedFilter(new Filter(filter.getProperty(), filter.getValue()));
 			}
 		}
 	}
-
-
 
     // overriding toString() method to display property values
 	@Override
