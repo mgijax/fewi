@@ -18,14 +18,14 @@
 <div id="hdpGridTableWrap">
 	<c:if test="${empty gridClusters}">No genes found that match your search criteria.
 		<br/>
-		<button class="hide" id="filterReset">Remove Filters</button>
+		<button class="hide" id="filterReset">Remove row/column filters</button>
 	</c:if>
 	<c:if test="${not empty gridClusters}">
 	<!-- Grid Table -->
 	<table id="hdpGridTable">
 	
 	<!-- Row of Column Headers -->
-	<tr>
+	<tr style="height: 160px;">
 	  <th rowspan="2" style="white-space: nowrap;">Human Gene</th>
 	  <th rowspan="2">
 	  		<div style="position:relative; padding-top: 20px; width:100%; text-align: right;">
@@ -41,16 +41,24 @@
 		<!--  mp header columns -->
 		<c:set var="lastColImage" />
 		<c:forEach var="mpHeaderCol" items="${mpHeaderColumns}" varStatus="status">
-			<th class="vb"><div><c:out value="${mpHeaderCol}" escapeXml="false" /></div>
-			<div style="position:relative;">
-			<div class="<c:out value="${status.last && not empty diseaseColumns ? 'partialDoubleRight': 'partialRight'}"/>"></div>
-			</div></th>
+			<th class="vb">
+				<div class="rotate45"><c:out value="${mpHeaderCol}" escapeXml="false" /></div>
+				<div style="position:relative;">
+					<div class="<c:out value="${status.last && not empty diseaseColumns ? 'partialDoubleRight': 'partialRight'}"/>"></div>
+					<div style="white-space: nowrap;" class="hide tooltip"><c:out value="${mpHeaders[status.index]}" escapeXml="false" /></div>
+				</div>
+			</th>
 			<c:if test="${status.last}"><c:set var="lastColImage" value="${mpHeaderCol}"/></c:if>
 	    </c:forEach>
 		<!-- disease columns -->
 		<c:forEach var="diseaseCol" items="${diseaseColumns}" varStatus="status">
-			<th class="vb"><div><c:out value="${diseaseCol}" escapeXml="false" /></div>
-			<div style="position:relative;"><div class="dc partialRight"></div></div></th>
+			<th class="vb">
+				<div class="rotate45"><c:out value="${diseaseCol}" escapeXml="false" /></div>
+				<div style="position:relative;">
+					<div class="dc partialRight"></div>
+					<div style="white-space: nowrap;" class="hide tooltip"><c:out value="${diseaseNames[status.index]}" escapeXml="false" /></div>
+				</div>
+			</th>
 			<c:if test="${status.last}"><c:set var="lastColImage" value="${diseaseCol}"/></c:if>
 	    </c:forEach>
 	</tr>
@@ -92,7 +100,7 @@
 	</c:forEach>
 	
 	</table>
-	<div id="hdpGridTablePadder"><c:out value="${lastColImage}" escapeXml="false" /></div>
+	<div id="hdpGridTablePadder"></div>
 	<c:if test="${moreDiseases}"><div id="moreDiseases" title="Click to rebuild grid with no disease column limit"><a>See more diseases not shown</a></div></c:if>
 	</c:if>
 </div>
@@ -188,6 +196,17 @@ $(".gridCellLink").hover(function(e){
 	var tdDiv = $(this);
 	tdDiv.siblings().find(".tooltip").hide();
 });
+
+$(".rotate45").hover(
+	function(e) {
+		var tdDiv = $(this);
+		tdDiv.siblings().find(".tooltip").show();
+	},
+	function(e) {
+		var tdDiv = $(this);
+		tdDiv.siblings().find(".tooltip").hide();
+	}
+);
 
 if(typeof refreshJQTooltips=='function')
 {

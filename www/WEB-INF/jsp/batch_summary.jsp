@@ -118,5 +118,10 @@ ${templateBean.templateBodyStartHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/batch_summary.js"></script>
 
-${templateBean.templateBodyStopHtml}
+<c:if test="${empty isFromQueryForm}">
+<script type="text/javascript">
+    YAHOO.util.Event.onDOMReady(function() { showQF(); });
+</script>
+</c:if>
 
+${templateBean.templateBodyStopHtml}

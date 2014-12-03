@@ -76,7 +76,7 @@ public class MarkerFinder {
     public SearchResults<Marker> getMarkerByID(String id) 
     {
         SearchParams searchParams = new SearchParams();
-        searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.OP_EQUAL));
+        searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.Operator.OP_EQUAL));
         return getMarkerByID(searchParams);
     }
     
@@ -108,7 +108,7 @@ public class MarkerFinder {
     /* Retrieval of multiple markers
     /*---------------------------------*/
 
-    // TODO: should this be using the markerSummaryHunter? 
+    //      Should this be using the markerSummaryHunter? 
     //		This gets a bit confusing, but am unsure about removing - kstone
     public SearchResults<Marker> getMarkers(SearchParams searchParams) {
 

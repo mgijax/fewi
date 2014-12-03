@@ -20,17 +20,47 @@
   background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
   no-repeat right;
 }
+.facetFilter .yui-panel .bd {
+	width: 285px
+}
 </style>
 <div id="summary">
-    <div id="paginationTop" style="float:right;">&nbsp;</div>
-    <div id="querySummary" style="float:none;margin-left:0;">
-        <div class="innertube" style="width:500px">
+    <div id="querySummary" style="float:left;margin-left:0">
+        <div class="innertube" style="width:500px;">
             <div id="searchSummary"> <!-- filled via js --> </div>
-            <div id="breadbox"><div id="gridFilterIndicator" class="hide">
-            	<span id="filterReset" class="filterItem">Remove Filters</span>
-            </div></div>
         </div>
     </div>
+
+    <div id="paginationTop" style="float:right; margin-top: 0px;">&nbsp;</div>
+
+    <div id="filterSection" style="width:600px">
+      <div id="contentcolumn" style="width:480px; margin-left: 510px;">
+	<span id="filterLabel" class="label">Filter results by:</span>
+	<a id="featureTypeButton" class="filterButton">Genome&nbsp;Feature&nbsp;Type&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8"/></a>
+	<br/>
+	<div id="breadbox">
+	    <div id="filterSummary" class="filters" style="display:none">
+	    <span class="label">Filtered by:</span>
+	    &nbsp;<span id="defaultText" style="display:none">No filters selected.</span>
+	    <span id="filterList">
+            <span id="filterReset" class="filterItem">Remove row/column filters</span>
+	    </span><br/>
+	    </div>
+	</div>
+      </div>
+    </div>
+
+    <div class="facetFilter" style="">
+	<div id="facetDialog">
+	    <div class="hd">Filter</div>
+	    <div class="bd">
+		<form:form method="GET" action="${configBean.FEWI_URL}diseasePortal/summary">
+		<img src="/fewi/mgi/assets/images/loading.gif">
+		</form:form>
+	    </div>
+	</div>
+    </div>
+
     <br clear="all" />
 </div>
 <div id="resultSummary" class="yui-navset">
@@ -54,10 +84,13 @@
 			        </div>
 			        </div>
 			        <div style="margin-left:65px; display:none;"><span style=" border:1px solid; border-left-color:#FF0000; border-right-color:#FF0000; border-bottom-color:#CCC; border-top-color:#CCC;">&nbsp;&nbsp;&nbsp;</span> - Affected system contains the queried term.</div>
-			        <div style="display:block; margin-left:65px;"><strong>N</strong> - No abnormal phenotype observed.</div>
+			        <div style="display:block; margin-left:65px;">
+							<strong>N</strong> - No abnormal phenotype observed.<br/>
+			        		<span class="highlight">Highlighted Column</span> contains a phenotype or disease term matching one in the search.
+						</div>
 		    		<div class="summary-helptext shared-helptext" style="color:#000; padding:4px 2px; font-style:normal;">
-		    			<span style="font-weight:bold;">NOTE:</span> Searching by phenotype/disease term restricts the gene results based on the search term. Search by gene or genome location for the complete phenotype profile of gene mutations. 
-                                <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml'); return false;" 
+		    			<span style="font-weight:bold;">NOTE:</span> When searching by phenotype/disease, only a subset of phenotypes for a gene may be displayed. Search by gene or genome location for the complete phenotype profile of gene mutations.
+                                <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml#hdp_results'); return false;" 
                                   href="${configBean.USERHELP_URL}disease_connection_help.shtml">More..</a>
 		    		</div>
 			        </div>
@@ -90,3 +123,16 @@
         </div>
 </div>
 	<div id="paginationBottom" style="float:right;">&nbsp;</div>
+
+<div id="showMgiHumanGenesHelpDivDialog">
+   <div class="hd">Source of Gene-Disease Associations</div>
+   <div class="bd">
+      <p>Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests. Mouse genes are associated with human diseases through mouse genotypes described in publications.</p>
+   </div>
+</div>
+<div id="showMgiHumanDiseaseHelpDivDialog">
+   <div class="hd">Source of Gene-Disease Associations</div>
+   <div class="bd">
+      <p>Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests.</p>
+   </div>
+</div>

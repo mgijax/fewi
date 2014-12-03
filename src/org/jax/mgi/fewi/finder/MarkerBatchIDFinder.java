@@ -29,7 +29,7 @@ public class MarkerBatchIDFinder
 	{
 		this.finder=finder;
 		this.searchParams = new SearchParams();
-		searchParams.setFilter( new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.OP_HAS_WORD));
+		searchParams.setFilter( new Filter(SearchConstants.PRIMARY_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
 	}
 	
 	public MarkerBatchIDFinder(MarkerFinder finder,SearchParams searchParams)

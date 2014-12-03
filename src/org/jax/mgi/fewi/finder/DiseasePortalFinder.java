@@ -6,6 +6,7 @@ import java.util.List;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.jax.mgi.fewi.hunter.SolrDiseasePortalHunter;
+import org.jax.mgi.fewi.hunter.SolrDiseasePortalFeatureTypeFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -33,6 +34,9 @@ public class DiseasePortalFinder
 
 	@Autowired
 	private SolrDiseasePortalHunter hdpHunter;
+
+	@Autowired
+	private SolrDiseasePortalFeatureTypeFacetHunter featureTypeFacetHunter;
 
 	@Autowired
 	private HibernateObjectGatherer<HdpGenoCluster> genoCGatherer;
@@ -69,6 +73,18 @@ public class DiseasePortalFinder
 		SearchResults<HdpGenoCluster> results = huntGenoClustersGroup(params);
 		return results;
 	}
+	
+	// Get Header terms for lighted columns
+	public SearchResults<SolrString> getHighlightedColumns(SearchParams params) {
+		SearchResults<SolrString> results = huntHighlightedColumns(params);
+		return results;
+	}
+	
+	// Get Header terms for lighted columns
+	public SearchResults<SolrString> getHighlightedColumnHeaders(SearchParams params) {
+		SearchResults<SolrString> results = huntHighlightedColumnHeaders(params);
+		return results;
+	}
 
 	// Group results by term id to return the distinct matching diseases (but only diseases that would appear on Grid)
 	public SearchResults<SolrString> getGridDiseases(SearchParams params)
@@ -87,7 +103,7 @@ public class DiseasePortalFinder
 	{
 		SearchParams params = new SearchParams();
 		params.setPageSize(1);
-		params.setFilter(new Filter(SearchConstants.VOC_TERM_ID, diseaseId,Filter.OP_EQUAL));
+		params.setFilter(new Filter(SearchConstants.VOC_TERM_ID, diseaseId,Filter.Operator.OP_EQUAL));
 		
 		return getDiseases(params).getResultObjects();
 	}
@@ -108,7 +124,7 @@ public class DiseasePortalFinder
 		Filter originalFilter = params.getFilter();
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(originalFilter,
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 		);
 		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
@@ -119,9 +135,9 @@ public class DiseasePortalFinder
 		// need to also include the disease->human marker annotations somehow
 		modifiedFilter = Filter.and(
 				Arrays.asList(originalFilter,
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD),
-					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.OP_EQUAL),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.OP_EQUAL)
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD),
+					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL)
 				)
 		);
 		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
@@ -153,9 +169,9 @@ public class DiseasePortalFinder
 		// need to also include the disease->human marker annotations somehow
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(originalFilter,
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD),
-					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.OP_EQUAL),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.OP_EQUAL)
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD),
+					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL)
 				)
 		);
 		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
@@ -199,7 +215,7 @@ public class DiseasePortalFinder
 		// group (otherwise you get a weird off-by-one error in the count)
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 		);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -222,7 +238,7 @@ public class DiseasePortalFinder
 		// group (otherwise you get a weird off-by-one error in the count)
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.DP_GENO_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(SearchConstants.DP_GENO_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 		);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -259,10 +275,10 @@ public class DiseasePortalFinder
 		Filter originalFilter = params.getFilter();
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(originalFilter,
-					new Filter(SearchConstants.MRK_KEY,"[* TO *]",Filter.OP_HAS_WORD),
-					new Filter(SearchConstants.GENOTYPE_TYPE,"complex",Filter.OP_NOT_EQUAL),
-					new Filter(DiseasePortalFields.TERM_QUALIFIER,"normal",Filter.OP_NOT_EQUAL),
-					new Filter(DiseasePortalFields.TERM_QUALIFIER,"not",Filter.OP_NOT_EQUAL)
+					new Filter(SearchConstants.MRK_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD),
+					new Filter(SearchConstants.GENOTYPE_TYPE,"complex",Filter.Operator.OP_NOT_EQUAL),
+					new Filter(DiseasePortalFields.TERM_QUALIFIER,"normal",Filter.Operator.OP_NOT_EQUAL),
+					new Filter(DiseasePortalFields.TERM_QUALIFIER,"not",Filter.Operator.OP_NOT_EQUAL)
 				)
 			);
 		modifiedFilter.replaceProperty(SearchConstants.VOC_TERM,DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
@@ -285,8 +301,8 @@ public class DiseasePortalFinder
 		Filter originalFilter = params.getFilter();
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(originalFilter,
-					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.OP_EQUAL),
-					new Filter(DiseasePortalFields.TERM_QUALIFIER,"not",Filter.OP_NOT_EQUAL)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL),
+					new Filter(DiseasePortalFields.TERM_QUALIFIER,"not",Filter.Operator.OP_NOT_EQUAL)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -300,6 +316,38 @@ public class DiseasePortalFinder
 		srVT.cloneFrom(results,SolrVocTerm.class);
 		return srVT;
 	}
+
+	private SearchResults<SolrString> huntHighlightedColumns(SearchParams params) {
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
+
+		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
+		
+		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_GROUP);
+		
+		SearchResults<SolrString> srS = new SearchResults<SolrString>();
+		srS.cloneFrom(results,SolrString.class);
+		
+//		for(String s: srS.getResultKeys()) {
+//			logger.info("huntHighlightedColumns: Solr String: " + s);
+//		}
+		return srS;
+	}
+	
+	private SearchResults<SolrString> huntHighlightedColumnHeaders(SearchParams params) {
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
+
+		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
+
+		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_HEADER);
+
+		SearchResults<SolrString> srS = new SearchResults<SolrString>();
+		srS.cloneFrom(results,SolrString.class);
+//		for(String s: srS.getResultKeys()) {
+//			logger.info("huntHighlightedColumnHeaders: Solr String: " + s);
+//		}
+		return srS;
+	}
+	
 	// get distinct list of diseases for the grid
 	private SearchResults<SolrString> huntGridDiseasesGroup(SearchParams params)
 	{
@@ -307,8 +355,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with OMIM type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.OP_EQUAL),
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -329,8 +377,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with MP type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.OP_EQUAL),
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -352,8 +400,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with MP type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.OP_EQUAL),
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -374,8 +422,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with Disease type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.OP_EQUAL),
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(SearchConstants.VOC_TERM_TYPE,"OMIM",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -396,8 +444,8 @@ public class DiseasePortalFinder
 		// make sure that only documents with human organism type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.OP_EQUAL),
-					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.OP_HAS_WORD)
+					new Filter(DiseasePortalFields.ORGANISM,"human",Filter.Operator.OP_EQUAL),
+					new Filter(SearchConstants.DP_GRID_CLUSTER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD)
 				)
 			);
 		// replace the term search property with a disease specific one that includes mp terms that map to diseases
@@ -419,7 +467,7 @@ public class DiseasePortalFinder
 		// make sure that only documents with MP type are included in the group
 		Filter modifiedFilter = Filter.and(
 				Arrays.asList(params.getFilter(),
-						new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.OP_EQUAL)
+						new Filter(SearchConstants.VOC_TERM_TYPE,"Mammalian Phenotype",Filter.Operator.OP_EQUAL)
 					)
 				);
 		params.setFilter(modifiedFilter);
@@ -431,9 +479,26 @@ public class DiseasePortalFinder
 		return srVT;
 	}
 
+	//----------------------------------------
+	//--- facet hunters (for filters) --------
+	//----------------------------------------
+
+	/* get the feature types for markers matching the search params
+	 */
+	public SearchResults<SolrString> getFeatureTypeFacet(
+		SearchParams params) {
+	    SearchResults<SolrHdpEntity> results =
+		new SearchResults<SolrHdpEntity>();
+	    featureTypeFacetHunter.hunt(params, results);
+	    SearchResults<SolrString> srss = new SearchResults<SolrString>();
+	    srss.cloneFrom(results, SolrString.class);
+	    return srss;
+	}
+
 	// -------- Hibernate accessors ----------
 	public List<HdpGenoCluster> getGenoClusterByKey(String genoClusterKey) 
 	{
 		return genoCGatherer.get(HdpGenoCluster.class,Arrays.asList(genoClusterKey));
 	}
+
 }

@@ -2,6 +2,9 @@
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
+
+${templateBean.templateHeadHtml}
+
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 
@@ -19,6 +22,8 @@
 }
 </style>
 
+</head>
+
 <!-- Table and Wrapping div -->
 
 <div id="hdpSystemPopupHeader">Data for ${gridClusterString} and ${termHeader}</div>
@@ -32,4 +37,9 @@
 </c:forEach>
 </div>
 
+<table id="hdpSystemPopupLegend">
+<tr>
+   <td><span class="highlight">Highlighted Column</span> contains a phenotype or disease term matching one in the search</td>
+</tr>
+</table>
 <%@ include file="/WEB-INF/jsp/disease_portal_grid_popup_grid.jsp" %>

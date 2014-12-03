@@ -42,11 +42,22 @@
           <c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_blank" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
         </c:forEach>
         ) 
+	<c:set var="showRefs" value=""/>
+	<c:if test="${fn:length(term.references) > 1}">
+	    <c:set var="showRefs" value="1"/>
+	</c:if>
 
       </div>
 		<div class="sexDiv" style="margin-left:${term.displayIndent+10}px;">
 		<table>
 		<c:forEach var="annotation" items="${term.annots}" varStatus="annotStatus">
+
+		    <c:set var="showMgi" value=""/>
+		    <c:forEach var="reference" items="${annotation.references}">
+		        <c:if test="${reference.hasNonMgiSource}">
+			  <c:set var="showMgi" value="1"/>
+			</c:if>
+		    </c:forEach>
 
 		<tr class="<c:if test="${annotStatus.index>0}">borderTop</c:if>"><td class="sexTd" rowspan="1}">
 				<c:if test="${annotation.sex=='M'}"><img class="mp_glyph" src="${configBean.FEWI_URL}assets/images/Mars_symbol.svg"/></c:if>
@@ -55,19 +66,19 @@
         	<td>
 		      <c:forEach var="reference" items="${annotation.references}" varStatus="refStatus">
 		      	  <!-- This is a check to suppress certain rows from displaying -->
-			      <c:if test="${!annotation.isBoth || !annotation.isCall || reference.hasNotes || reference.hasNonMgiSource}">
+			      <c:if test="${!annotation.isBoth || !annotation.isCall || reference.hasNotes || reference.hasNonMgiSource || (not empty showMgi)}">
 				      <div class="refSection" >
-				          <c:if test="${refStatus.index==0 && reference.hasNonMgiSource}">
-			       				 <span class="sourceDisplay">${reference.sourceDisplay}</span>
+				          <c:if test="${(not empty showMgi) || reference.hasNonMgiSource}">
+					  <span class="sourceDisplay" onMouseOver="return overlib('${reference.sourceDescription}', LEFT, WIDTH, 200);" onMouseOut="nd();">${reference.sourceDisplay}</span>
 			       			</c:if>
 				        <c:forEach var="note" items="${reference.notes}" varStatus="noteStatus">
 				        	<div class="mpNote">
 				            &bull; ${note.note} 
 				            <!-- check to determine when to display jnumID -->
-				            <c:if test="${fn:length(term.references)>1 || annotation.hasNonEmptyGlyph }">(${reference.jnumID})</c:if>
+				            <c:if test="${not empty showRefs}">(${reference.jnumID})</c:if>
 				            </div>
 				        </c:forEach> <!-- reference.notes -->
-				       <c:if test="${fn:length(reference.notes)==0}">
+				       <c:if test="${fn:length(reference.notes)==0 && not empty showRefs}">
 				      	<span class="mpNote">(${reference.jnumID})</span>
 				      	</c:if>
 			      </div>
@@ -88,28 +99,31 @@
 </div>
 
 <!-- Disease Models -->
+<style>
+td.outline { border: 1px solid black; }
+</style>
 <c:if test="${hasDiseaseModels}" >
 	<div id="diseaseModelDiv">
-		<table border='1' cellpadding='3' cellspacing='0' class='results'>
+		<table border='1' cellpadding='3' cellspacing='0' class='results' style="border-collapse: collapse;">
 		<tr class='resultsHeaderYellow'>
-			<td colspan='2' class='resultsHeader' style='align:left'><div align='left'>Mouse Models of Human Disease</div></td>
-			<td class='resultsHeader'>OMIM ID</td><td class='resultsHeader'>Ref(s)</td>
+			<td colspan='2' class='resultsHeader outline' style='align:left'><div align='left'>Mouse Models of Human Disease</div></td>
+			<td class='resultsHeader outline'>OMIM ID</td><td class='resultsHeader outline'>Ref(s)</td>
 		</tr>
 		<c:forEach var="disease" items="${genotype.diseases}" varStatus="diseaseStatus">
 			<tr class="${diseaseStatus.index % 2==0 ? ' stripe1' : ' stripe2'}">
 				<c:choose>
 				<c:when test="${disease.isNot}">
-				<td>NOT</td><td>
+				<td class="outline">NOT</td><td>
 				</c:when>
 				<c:otherwise>
-				<td colspan='2' rowspan='1'>
+				<td class="outline" colspan='2' rowspan='1'>
 				</c:otherwise>
 				</c:choose>
 				<a class='MP' target="_blank" href="${configBean.FEWI_URL}disease/${disease.termID}">${disease.term}</a></td>
-				<td>
+				<td class="outline">
 					<a class='MP' target="_blank" href="http://www.omim.org/entry/${disease.termID}">${disease.termID}</a>
 				</td>
-				<td>
+				<td class="outline">
 				<c:forEach var="reference" items="${disease.references}" varStatus="refStatus">
 	          		<c:if test="${refStatus.index>0}">, </c:if><a class='MP' target="_blank" href='${configBean.FEWI_URL}reference/${reference.jnumID}'>${reference.jnumID}</a>
 	        	</c:forEach>

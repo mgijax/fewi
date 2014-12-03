@@ -438,19 +438,19 @@ public class FooController {
         //
         if ((param1 != null) && (!"".equals(param1))) {
             filterList.add(new Filter (SearchConstants.FOO_ID, param1,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
 
         //
         if ((param2 != null) && (!"".equals(param2))) {
             filterList.add(new Filter (SearchConstants.FOO_ID, param2,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
 
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
+            containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
             containerFilter.setNestedFilters(filterList);
         }
 

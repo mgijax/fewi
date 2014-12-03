@@ -338,7 +338,7 @@ public class SequenceController {
 
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
+            containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
             containerFilter.setNestedFilters(filterList);
 		}
         params.setFilter(containerFilter);

@@ -11,13 +11,14 @@ ${templateBean.templateHeadHtml}
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 
 <!-- import jquery UI specifically for this page -->
 <link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 <script src="${configBean.WEBSHARE_URL}js/jquery-ui-1.10.2.custom.min.js"></script>
 
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 <%-- Please add styles to disease_portal.css
+Also disease_portal.css need to be imported last in order for the styles to override jquery-ui
 <style>
 </style>
 --%>
@@ -84,10 +85,13 @@ ${templateBean.templateBodyStartHdpHtml}
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/fewi_utils.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_query.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_autocomplete.js"></script>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_upload.js"></script>
+<c:set var="jsHome" value="${configBean.FEWI_URL}assets/js/"/>
+<script type="text/javascript" src="${jsHome}fewi_utils.js"></script>
+<script type="text/javascript" src="${jsHome}filters.js"></script>
+<script type="text/javascript" src="${jsHome}disease_portal_filters.js"></script>
+<script type="text/javascript" src="${jsHome}disease_portal_query.js"></script>
+<script type="text/javascript" src="${jsHome}disease_portal_autocomplete.js"></script>
+<script type="text/javascript" src="${jsHome}disease_portal_upload.js"></script>
 <% 	
  	String queryString = (String) request.getAttribute("querystring");
 	// need to url encode the querystring
@@ -98,6 +102,11 @@ ${templateBean.templateBodyStartHdpHtml}
 </script>
 
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/disease_portal_summary.js"></script>
+
+<script type="text/javascript">
+	hmdcFilters.prepFilters('${configBean.FEWI_URL}');
+</script>
+
 
 
 ${templateBean.templateBodyStopHtml}

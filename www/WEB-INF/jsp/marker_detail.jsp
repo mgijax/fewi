@@ -590,7 +590,7 @@ td.padded { padding:4px; }
 				'<td width=\'4\'>'  +
 				<c:forEach var="star" items="${marker.OMIMAnnotations}">
 					<c:if test="${annotation.termID eq star.termID}">
-						<c:set var="hMessage" value="* Disease is associated with mutations in mouse ${marker.symbol}." />
+						<c:set var="hMessage" value="* Disease is modeled in mouse using ${marker.symbol}." />
 						'*' +
 					</c:if>
 				</c:forEach>
@@ -638,7 +638,7 @@ td.padded { padding:4px; }
 		  &nbsp;<br/>
 		</c:if>
 		<c:if test="${marker.countOfHumanDiseases > 0}">
-		  Human Diseases Modeled Using Mouse ${marker.symbol} (<a href="" onclick="return overlib( '<span style=\'font-size:12px;\'>Diseases ' +
+		  Human Diseases Modeled in Mice Using ${marker.symbol} (<a href="" onclick="return overlib( '<span style=\'font-size:12px;\'>Diseases ' +
 			  'listed here are those where a mutant allele of this gene is involved in a mouse genotype used as ' +
 			  'a model. This does not mean that mutations in this gene contribute to or are causative of the disease.</span>' +
 			  '<table name=\'results\' border=\'0\' cellpadding=\'3\' cellspacing=\'0\' width=\'100%\'>' +
@@ -665,7 +665,7 @@ td.padded { padding:4px; }
 			'<tr align=\'left\' valign=\'top\'><td  colspan=\'3\'>${mMessage}</td></tr></table>', STICKY, CAPTION, 'Human Disease Models Associated with Alleles of Mouse ${marker.symbol}', RIGHT, BELOW, WIDTH, 500, DELAY, 250, CLOSECLICK, CLOSETEXT, 'Close X');" onmouseout="nd();">${marker.countOfHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
-		  Alleles Annotated to Human Diseases(<a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
+		  Mutations Annotated to Human Diseases (<a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a>)&nbsp;&nbsp;&nbsp;
 		</c:if>
 		<c:if test="${marker.countOfPhenotypeImages > 0}">
 		  Phenotype Images(<a href="${configBean.FEWI_URL}image/phenoSummary/marker/${marker.primaryID}">${marker.countOfPhenotypeImages}</a>)

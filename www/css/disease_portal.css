@@ -2,7 +2,7 @@
 * Autocomplete styles
 */
 .ui-autocomplete {
-  max-height: 300px;
+  max-height: 120px;
   overflow-y: auto;
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
@@ -21,11 +21,11 @@
 	padding:0px;
 }
 
-
 /* style shortcuts */
 .left { float: left; }
 .right { float: right; }
 .hide { display: none; }
+.highlight { background-color: #D6C6E8; }
 table.noborder, table.noborder td , table.noborder th { border: none; }
   
 button { cursor: pointer; }
@@ -103,8 +103,8 @@ td.yui-dt-col-coordinate
 }
 .organism
 {
-	margin-left: 6px;
-	margin-right: 3px;
+	/* margin-left: 6px; */
+	/* margin-right: 3px; */
 }
 #alertBoxPosition
 {
@@ -130,16 +130,21 @@ td.yui-dt-col-coordinate
 }
 #locationsFileHelpImg
 {
-	height: 24px;
+	height: 20px;
 	position: relative;
-	left: 100px;
-	top: 4px;
+	left: 330px;
+}
+#queryHelpImg
+{
+   height: 20px;
+   position: relative;
+   left: 500px;
 }
 
 textarea {resize:none; background-color:#FFE4B5;}
 #hdpPageWrapper {
   width: 820px;
-  height: 330px;
+  height: 360px;
   position: relative;
   margin: 0 auto;
   font-family: Verdana,Arial,Helvetica;
@@ -148,7 +153,7 @@ textarea {resize:none; background-color:#FFE4B5;}
 #hdpQueryFormWrapper{
   left:6px;
   width: 804px;
-  height: 350px;
+  height: 370px;
   border:2px solid;
   border-radius:22px;
   position:absolute;
@@ -188,7 +193,7 @@ textarea {resize:none; background-color:#FFE4B5;}
   	display: table-cell;
   	border-spacing:0px; 
   	border-collapse:collapse; 
-  	font-family: Verdana,Arial,Helvetica;
+  	font-family: Arial,Helvetica;
   	font-size: 12px;
   }
   #hdpSystemPopupHeader{ 
@@ -201,7 +206,8 @@ textarea {resize:none; background-color:#FFE4B5;}
     font-family: Verdana,Arial,Helvetica; 
     font-size: 20px;
   }
-  #hdpSystemPopupTablePadder{ display: table-cell; }
+
+  #hdpSystemPopupTablePadder{ width: 200px; }
   #hdpSystemPopupTablePadder img { visibility: hidden; }
   #hdpSystemPopupTable th {border: 1px solid #AAA; border-top: none; padding: 4px 4px; vertical-align: bottom;}
   #hdpSystemPopupTable th > div { width:20px; overflow: visible; }
@@ -290,20 +296,20 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   .bsn_legend
   {
- 	color: #FF8300;
+ 	color: #FF4700;
   	font-weight: bold;
-  	font-size: 120%;
+  	font-size: 150%;
   	font-family: serif;
   }
   /* style for the backgroudn sensitivity note */
   .bsn
   {
-  	color: #FF8300;
+  	color: #FF4700;
   	font-weight: bold;
-  	font-size: 120%;
+  	font-size: 200%;
   	font-family: serif;
-  	top: -4px;
-  	right: 4px;
+  	top: -7px;
+  	right: 2px;
   	position: absolute;
   }
   
@@ -324,7 +330,7 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   #hdpGridTableWrap a { text-decoration: none; }
   
-  #hdpGridTablePadder{ display: table-cell; }
+  #hdpGridTablePadder{ width: 145px; }
   #hdpGridTablePadder img { visibility: hidden; }
    
   #hdpGridTable th {border: 1px solid #AAA; border-top: none; padding: 4px 3px; vertical-align:bottom;}
@@ -387,10 +393,14 @@ textarea {resize:none; background-color:#FFE4B5;}
   }
   .gridCheck:hover { background-color: #FFFFCC;}
   #hdpGridTable tr .rcb { width: 18px; }
-  
+
+  .queryHeaderText {
+	font: 15px Verdana,Arial,Helvetica;
+  }
+
   .gridHl
   {
-  	background-color: #FFFFCC;
+  	background-color: #ECECEC;
   }
   
   #hdpGridTable .tooltip,
@@ -411,6 +421,13 @@ textarea {resize:none; background-color:#FFE4B5;}
   {
   	white-space: nowrap;
   }
+
+	.rotate45 {
+		-ms-transform: rotate(-45deg);
+		-webkit-transform: rotate(-45deg);
+		transform: rotate(-45deg);
+		white-space: nowrap;
+	}
   
   #hdpGridTable .mpBin_1 { background-color: #C6D6E8; }
   #hdpGridTable .mpBin_2 { background-color: #879EBA; }
@@ -438,10 +455,10 @@ textarea {resize:none; background-color:#FFE4B5;}
   #moreDiseases 
   {
   	position: relative;
-	top: -40px;
-	left: -20px;
+	left: 10px;
+	top: 15px;
 	white-space: nowrap;
-	padding-right: 6px;
+	padding-right: 15px;
 	font-weight: bold;
 	cursor: pointer;
 	color: rgb(0, 0, 238);

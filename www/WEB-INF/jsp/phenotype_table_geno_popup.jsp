@@ -15,4 +15,5 @@
 
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_header.jsp" %>
 <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_content.jsp" %>
+<script type="text/javascript" src="${configBean.WEBSHARE_URL}js/mgi_template01.js"></script>
 

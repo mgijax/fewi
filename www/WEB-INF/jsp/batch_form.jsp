@@ -85,4 +85,5 @@
 				</td>
 			</tr>
 		</table>
+		<form:hidden path="viaQF" value="true" />
 	</form:form>

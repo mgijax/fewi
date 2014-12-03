@@ -345,25 +345,25 @@ public class GOController {
         //
         if ((refsKey != null) && (!"".equals(refsKey))) {
             filterList.add(new Filter (SearchConstants.REF_KEY, refsKey,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
         if ((mrkKey != null) && (!"".equals(mrkKey))) {
             filterList.add(new Filter (SearchConstants.MRK_KEY, mrkKey,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
         if ((vocab != null) && (!"".equals(vocab))) {
             filterList.add(new Filter (SearchConstants.VOC_VOCAB, vocab,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
         if ((restriction != null) && (!"".equals(restriction))) {
             filterList.add(new Filter (SearchConstants.VOC_RESTRICTION, restriction,
-                Filter.OP_NOT_EQUAL));
+                Filter.Operator.OP_NOT_EQUAL));
         }   
 
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
+            containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
             containerFilter.setNestedFilters(filterList);
         }
 

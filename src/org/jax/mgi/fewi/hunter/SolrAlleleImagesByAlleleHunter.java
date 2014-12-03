@@ -51,17 +51,17 @@ public class SolrAlleleImagesByAlleleHunter extends SolrHunter<ImageSummaryRow>
     filterList.add(searchParams.getFilter());
 
     // additional filter for image class
-    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Phenotypes", Filter.OP_EQUAL);
+    Filter phenotype = new Filter(SearchConstants.IMG_CLASS, "Phenotypes", Filter.Operator.OP_EQUAL);
     filterList.add(phenotype);
 
     // additional filter thumbnails
-    Filter isThumb = new Filter(SearchConstants.IMG_IS_THUMB, "0", Filter.OP_EQUAL);
+    Filter isThumb = new Filter(SearchConstants.IMG_IS_THUMB, "0", Filter.Operator.OP_EQUAL);
     filterList.add(isThumb);
 
     // container filter -- 'AND' the old and new filters together
     Filter containerFilter = new Filter();
     containerFilter.setNestedFilters(filterList);
-    containerFilter.setFilterJoinClause(Filter.FC_AND);
+    containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
 
     // reset the filters for this search with the new filer container
     searchParams.setFilter(containerFilter);

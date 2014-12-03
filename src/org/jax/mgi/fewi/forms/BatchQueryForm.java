@@ -17,10 +17,13 @@ public class BatchQueryForm {
 	private Integer idColumn = new Integer(1);
 	private List<String> attributes = new ArrayList<String>();
 	private String association = "None";
-		
+
 	private Map<String, String> attributeList = new LinkedHashMap<String, String>();
 	private Map<String, String> associationList = new LinkedHashMap<String, String>();
 	
+	// is this submission from the query form?
+	private String viaQF = "false";
+		
 	public BatchQueryForm() {
 		idTypes.put("auto", "Search all input types");
 		idTypes.put("MGI", "MGI Gene/Marker ID");
@@ -99,6 +102,18 @@ public class BatchQueryForm {
 	}
 	public void setIdFile(MultipartFile idFile) {
 		this.idFile = idFile;
+	}
+	public String getViaQF() {
+		return viaQF;
+	}
+	public void setViaQF(String viaQF) {
+		this.viaQF = viaQF;
+	}
+	public boolean isFromQueryForm() {
+		if ("true".equals(this.viaQF)) {
+			return true;
+		}
+		return false;
 	}
 	public boolean getHasFile(){
 		if (idFile == null || idFile.isEmpty()){

@@ -10,11 +10,36 @@ var GENES_PAGE_SIZE = 250;
 var DISEASES_PAGE_SIZE = 250;
 var DEFAULT_PAGE_SIZE = GENES_PAGE_SIZE;
 
+// number of rows to be displayed for the currently selected tab
+var CURRENT_PAGE_SIZE = GRID_PAGE_SIZE;
+
 // Shortcut variable for the YUI history manager
 var History = YAHOO.util.History;
 
 // HTML/YUI page widgets
 YAHOO.namespace("hdp.container");
+
+YAHOO.hdp.container.panel1 = new YAHOO.widget.Panel(
+	"showMgiHumanGenesHelpDivDialog", {
+		width : "420px",
+		visible : false,
+		constraintoviewport : true,
+		context : [ 'showMgiHumanGenesHelpDiv', 'tr', 'bl' ]
+	});
+YAHOO.hdp.container.panel1.render();
+
+// Instantiate a Panel from markup
+YAHOO.hdp.container.panel2 = new YAHOO.widget.Panel(
+	"showMgiHumanDiseaseHelpDivDialog", {
+		width : "420px",
+		visible : false,
+		constraintoviewport : true,
+		context : [ 'showMgiHumanDiseaseHelpDiv', 'tr', 'bl' ]
+	});
+YAHOO.hdp.container.panel2.render();
+
+YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
 
 // ------ tab definitions + functions ------------
 var mgiTab = new MGITabSummary({
@@ -57,16 +82,26 @@ var generateRequest = mgiTab._rp.generateRequest;
 // a global variable to help the summary know when to generate a new datatable
 var previousQueryString = "";
 var previousGAState = "";
+var previousFilterState = "";
+
 // Called by Browser History Manager to trigger a new state
 handleNavigation = function (request, calledLocally, fromInit)
 {
 	if (calledLocally==undefined) calledLocally = false;
 	if (fromInit==undefined) fromInit = false;
 
+	var filterState = hmdcFilters.getUrlFragment();
+
 	// we need the tab state of the request
 	var values = mgiParseRequest(request);
 	var tabState = values['tab'];
 	if($.isArray(tabState)) tabState = tabState[0];
+
+	hmdcFilters.callbacksOff();
+
+	if (!calledLocally) {
+	    hmdcFilters.setAllFilters(values);
+	}
 
 	var currentTab = getCurrentTab();
 
@@ -79,6 +114,8 @@ handleNavigation = function (request, calledLocally, fromInit)
 	// if there is no getQueryString function, we assume that window.querystring is already set
 	if (typeof getQueryString == 'function')
 		window.querystring = getQueryString();
+
+	hmdcFilters.callbacksOn();
 
 //	// Handle proper behavior for back and forward navigation
 //	// if we have no tab state in the request, then we won't try to switch tabs.
@@ -110,7 +147,7 @@ handleNavigation = function (request, calledLocally, fromInit)
 	}
 	else
 	{
-		var doNewQuery = (querystring != previousQueryString) || _GF.submitActive;
+		var doNewQuery = (querystring != previousQueryString) || _GF.submitActive || (previousFilterState != filterState);
 		_GF.submitActive=false;
 
 		if(doNewQuery)
@@ -121,6 +158,7 @@ handleNavigation = function (request, calledLocally, fromInit)
 
 		// only reset the previousQueryString if there is a query to do
 		previousQueryString = querystring;
+		previousFilterState = filterState;
 
 		if (typeof openSummaryControl == 'function')
 			openSummaryControl();
@@ -156,16 +194,16 @@ handleNavigation = function (request, calledLocally, fromInit)
 			// wire up any download buttons
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
-				markersTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/marker/report.txt?' + querystring);
+				markersTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/marker/report.txt?' + querystring + filterState);
 			}
 			var diseaseTextReportButton = YAHOO.util.Dom.get('diseaseTextDownload');
 			if (!YAHOO.lang.isNull(diseaseTextReportButton)) {
-				diseaseTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/disease/report.txt?' + querystring);
+				diseaseTextReportButton.setAttribute('href', fewiurl + 'diseasePortal/disease/report.txt?' + querystring + filterState);
 			}
 		}
 
 		// Shh, do not tell anyone about this. We are sneaking in secret Google Analytics calls, even though there is no approved User Story for it.
-		var GAState = "/diseasePortal/summary/"+tabState+"?"+querystring;
+		var GAState = "/diseasePortal/summary/"+tabState+"?"+querystring + filterState;
 		if(GAState != previousGAState)
 		{
 			gaA_pageTracker._trackPageview(GAState);
@@ -206,6 +244,9 @@ var generateGrid = function(request)
 						totalCount, // totalCount
 						Number(pRequest['startIndex']) || 0 // recordOffset
 			);
+
+			CURRENT_PAGE_SIZE = Number(pRequest['results']) || GRID_PAGE_SIZE;
+
 			var handlePagination = function(state)
 			{
 				// The next state will reflect the new pagination values
@@ -219,7 +260,7 @@ var generateGrid = function(request)
 						key: pRequest["sort"]
 					};
 				}
-				var newState = mgiTab._rp.generateRequest(sortedBy, state.recordOffset, state.rowsPerPage);
+				var newState = mgiTab._rp.generateRequest(sortedBy, state.recordOffset, state.rowsPerPage, hmdcFilters.getFacets());
 				// Pass the state along to the Browser History Manager
 				History.navigate(mgiTab.historyMgrId, newState);
 			};
@@ -230,7 +271,7 @@ var generateGrid = function(request)
 	gridRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"diseasePortal/grid/totalCount",
 		    {	success:handleGridCountRequest,
 		    	failure:function(o){}
-		    },querystring);
+		    },querystring + hmdcFilters.getUrlFragment());
 }
 
 
@@ -250,10 +291,12 @@ function StateHandler(states)
 function GridFilter()
 {
 	// constants
-	this.filterIndicatorId = "gridFilterIndicator";
+	this.filterIndicatorId = "filterReset";
 	this.geneFilterId = "fGene";
 	this.headerFilterId = "fHeader";
+	this.featureTypeId = "featureTypeFilter";
 	this.fields = [this.geneFilterId,this.headerFilterId];
+//	this.fields = [this.geneFilterId,this.headerFilterId,this.featureTypeId];
 	this.filterDelim = "|";
 	this.highlightCssClass = "gridHl";
 	this.checkBoxClass = "gridCheck";
@@ -396,10 +439,22 @@ function GridFilter()
 
 	this.toggleFiltersIndicator = function(show)
 	{
-		var filterIndicatorDiv = $("#"+_self.filterIndicatorId);
+//		var filterIndicatorDiv = $("#"+_self.filterIndicatorId);
 
-		if(show==true) filterIndicatorDiv.show();
-		else filterIndicatorDiv.hide();
+		/* If we are to show this row/col filter button, then we know
+		 * we also need to show its containing DIV.
+		 * If we are to hide it, then we only hide the containing DIV
+		 * if there are no other filters.
+		 */
+		if(show==true) {
+		    filters.setHmdcButtonVisible(true);
+//		    filterIndicatorDiv.show();
+//		    $("#filterSummary").show();
+		} else if (hmdcFilters.getUrlFragment() == '') {
+//		    filterIndicatorDiv.hide();
+		    filters.setHmdcButtonVisible(false);
+		}
+		filters.populateFilterSummary();
 	}
 
 	// save the modified filters object to the hidden input fields
@@ -619,12 +674,12 @@ var refreshTabCounts = function()
 	genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"diseasePortal/markers/totalCount",
     {	success:handleCountRequest,
     	failure:function(o){}
-    },querystring);
+    },querystring + hmdcFilters.getUrlFragment());
 
 	diseasesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"diseasePortal/diseases/totalCount",
     {	success:handleCountRequest,
     	failure:function(o){}
-    },querystring);
+    },querystring + hmdcFilters.getUrlFragment());
 }
 
 //----------- functions for configuring the datatables -------------------
@@ -644,7 +699,7 @@ var genesResultsTable = function() {
 		{key: "symbol", label: "Gene Symbol", sortable: true },
 		{key: "location", label: "Genetic Location", sortable: false },
 		{key: "coordinate", label: "Genome Coordinates", sortable: true },
-		{key: "disease", label: "Associated Human Diseases", sortable: false, width:240 },
+		{key: "disease", label: "Associated Human Diseases (<span id=\"showMgiHumanGenesHelpDiv\" style=\"color: #06F;cursor: pointer;\">source</span>)", sortable: false, width:240 },
 		{key: "system", label: "Abnormal Mouse Phenotypes<br/> Reported in these Systems", sortable: false },
 		{key: "allRefCount", label: "References in MGI", sortable: false },
 		{key: "imsrCount", label: "Mice With Mutations<br/> In this Gene (IMSR)", sortable: false },
@@ -714,7 +769,7 @@ var genesResultsTable = function() {
 	       key: oColumn.key
 	   };
 	   // Pass the state along to the Browser History Manager
-	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage(), hmdcFilters.getFacets()));
 	};
 	hdpDataTable.sortColumn = handleSorting;
 
@@ -740,6 +795,7 @@ var genesResultsTable = function() {
 			recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+		CURRENT_PAGE_SIZE = Number(pRequest['results']) || paginator.getRowsPerPage();
 
 		// add jQuery UI tooltips for genes
 		refreshJQTooltips();
@@ -792,6 +848,9 @@ var genesResultsTable = function() {
 
 		return true;
 	};
+
+	YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+	YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
 };
 var diseasesResultsTable = function() {
 
@@ -804,8 +863,8 @@ var diseasesResultsTable = function() {
 		{key: "disease", label: "Disease", sortable: true },
 		{key: "diseaseId", label: "OMIM ID", sortable: true },
 		{key: "diseaseModels", label: "Mouse Models", sortable: false },
-		{key: "mouseMarkers", label: "Associated Mouse Genes", sortable: false },
-		{key: "humanMarkers", label: "Associated Human Genes", sortable: false },
+		{key: "mouseMarkers", label: "Associated Genes from Mouse Models", sortable: false },
+		{key: "humanMarkers", label: "Associated Human Genes (<span id=\"showMgiHumanDiseaseHelpDiv\" style=\"color: #06F;cursor: pointer;\">source</span>)", sortable: false },
 		{key: "refCount", label: "References using <br/>Mouse Models", sortable: false },
 		{key: "score",label: "score",sortable: false,hidden: true}
 	];
@@ -871,7 +930,7 @@ var diseasesResultsTable = function() {
 	       key: oColumn.key
 	   };
 	   // Pass the state along to the Browser History Manager
-	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+	   History.navigate("hdp", generateRequest(sortedBy, 0, paginator.getRowsPerPage(), hmdcFilters.getFacets()));
 	};
 	hdpDataTable.sortColumn = handleSorting;
 
@@ -896,9 +955,14 @@ var diseasesResultsTable = function() {
 			recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
+		CURRENT_PAGE_SIZE = Number(pRequest['results']) || paginator.getRowsPerPage();
 		return true;
 	};
+
+	YAHOO.util.Event.addListener("showMgiHumanGenesHelpDiv", "click", showPanel1);
+	YAHOO.util.Event.addListener("showMgiHumanDiseaseHelpDiv", "click", showPanel2);
 };
+
 genesResultsTable();
 History.register("hdp", History.getBookmarkedState("hdp") || "", handleNavigation);
 
@@ -931,9 +995,9 @@ function historyInit()
 	{
 		// switch to querystring specified tab
 		if (queryTabParam && queryTabParam in mgiTab.tabs) resultsTabs.set("activeIndex",mgiTab.tabs[queryTabParam]);
-		handleNavigation(generateRequest(null, 0, DEFAULT_PAGE_SIZE),true,true);
+		handleNavigation(generateRequest(null, 0, DEFAULT_PAGE_SIZE, hmdcFilters.getFacets()),true,true);
 	}
-}
+};
 History.onReady(historyInit);
 
 
@@ -967,9 +1031,27 @@ function refreshJQTooltips()
 		});
 	},400);
 
+};
+
+function showPanel1() {
+	YAHOO.hdp.container.panel1.cfg.setProperty("context",['showMgiHumanGenesHelpDiv','tr','bl']);
+	YAHOO.hdp.container.panel1.show();
+	if (ev) { 
+		YAHOO.util.Event.stopEvent(ev); 
+	} 
+}
+
+function showPanel2() {
+	YAHOO.hdp.container.panel2.cfg.setProperty("context",['showMgiHumanDiseaseHelpDiv','tr','bl']);
+	YAHOO.hdp.container.panel2.show();
+	if (ev) { 
+		YAHOO.util.Event.stopEvent(ev); 
+	} 
 }
 
 $(function(){
 	// put anything here that you definitally want to happen only after page is rendered.
 	$("#filterReset").click(resetFiltersClick);
+	filters.registerHmdcButton('filterReset', 'Remove row/column filters',
+	    'click to remove row/column filters', false, resetFiltersClick);
 });

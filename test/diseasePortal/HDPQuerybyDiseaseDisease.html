@@ -134,15 +134,15 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Query should ONLY return the following diseases: 
                 	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td></tr>
-                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td></tr>
-                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td></tr>
+                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td><td>contained in name</td></tr>
+                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td><td>contained in name</td></tr>
+                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td><td>contained in name</td></tr>
+                	<tr><td>248200</td><td>Stargardt Disease 1; STGD1</td><td>associated to human gene that has annotation to one of the above diseases (change in 5.21)</td></tr>
                 	</table></li>
     		</ol>
     		</li>
 
-    		<li>Querying with a partial word <b>preceded by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym.
-    		<ol>
+    		<li>Querying with a partial word <b>preceded by</b> the wildcard symbol returns all diseases containing that partial word in a name or synonym (same results as above).<ol>
                 <li>Query by <b concordion:set="#disease">*chromatopsia</b></li>
                 <li>Query should ONLY return the following diseases: 
                 	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
@@ -150,6 +150,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td></tr>
                 	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td></tr>
                 	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td></tr>
+                	<tr><td>248200</td><td>Stargardt Disease 1; STGD1</td></tr>
                 	</table></li>
     		</ol>
     		</li>
@@ -168,11 +169,18 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li>Querying with an ID returns all diseases matching the ID. <span class="hilite">Note: are we supporting a wildcard (partial matching) on IDs??</span>
     		<ol>
-                <li>Query by OMIM ID <b concordion:set="#disease">114480</b></li>
-                <li>Should return ONLY one disease:
+                <li>Query by OMIM ID <b concordion:set="#disease">105830</b></li>
+                <li>Should return disease associated to this id PLUS other diseases that are associated to the mouse genoclusters and human genes annoated to this id (change in 5.21):
                 <table cc:verifyRowsUnordered="#termId : getTermsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">Disease Name</th></tr>
-                	<tr><td>Breast Cancer</td></tr>
+                	<tr><td>Angelman Syndrome; AS</td></tr>
+                	<tr><td>Autism, Susceptibility to, X-Linked 3; AUTSX3</td></tr>
+                	<tr><td>Encephalopathy, Neonatal Severe, Due to Mecp2 Mutations</td></tr>
+                	<tr><td>Epileptic Encephalopathy, Early Infantile, 2; EIEE2</td></tr>
+                	<tr><td>Lubs X-Linked Mental Retardation Syndrome; MRXSL</td></tr>
+                	<tr><td>Mental Retardation, X-Linked, Syndromic 13; MRXS13</td></tr>
+                	<tr><td>Prader-Willi Syndrome; PWS</td></tr>
+                	<tr><td>Rett Syndrome; RTT</td></tr>
                 	</table>
                 </li>
     		</ol>
@@ -215,7 +223,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	<tr><td>Aase-Smith Syndrome I</td><td>Contains the unquoted text</td></tr>
                 	</table>
                 </li>
-                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">16</b> - the query should NOT be returning every term with "Syndrome" in it.</li>
+                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">37</b> - the query should NOT be returning every term with "Syndrome" in it.</li>
     		</ol>
     		</li>
     		
@@ -315,7 +323,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</li>
     			<ol>
     			<li>Query for OMIM gene records: <b concordion:set="#disease">+141900 +141800 +142830 #300194 #300100 #300676 #300699 #301835 %300605 %300660 %300614 %300619 %300612 300602 301800 301840 303650 309120</b></li>
-    			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">18</b> disease terms are returned.</li>
+    			<li>Verify that <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">30</b> disease terms are returned. Change in 5.21 now returns diseases associated to human genes returned (indirect associations).</li>
     			</ol>
     			
     		<li>All diseases are returned when searching with just a stop word (sto58).

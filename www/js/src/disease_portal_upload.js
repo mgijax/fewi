@@ -37,7 +37,7 @@ function HDPFileUploadWidget(config)
         qFormParent.append(hiddenDiv);
         
         // also add the alertBox dialog
-        var alertDiv = "<div class=\"hide\" id=\""+_self.alertBoxId+"\" style=\"position:relative;\">";
+        var alertDiv = "<div class=\"hide\" id=\""+_self.alertBoxId+"\" style=\"position:relative; z-index: 1;\">";
         	alertDiv += "<div id=\"alertBoxPosition\" style=\"position:absolute;background-color: #ffeac3; border: 1px solid black; "+
         			"border-radius:4px; text-align: center;padding: 20px;max-height:400px;max-width:800px;overflow:auto;\">";
 	            alertDiv += "<div id=\""+_self.alertBoxContentId+"\"></div>";
@@ -173,7 +173,7 @@ function HDPFileUploadWidget(config)
 var resetLocationsFileFields,resetGeneFileFields;
 var repositionUploadWidgets = function()
 {
-	$("#geneFileDiv").position({of:$("#geneFilePlaceholder"),my:"left"});
+	//$("#geneFileDiv").position({of:$("#geneFilePlaceholder"),my:"left"});
 	//$("#locationsFileDiv").position({of:$("#locationsFileHome"),my:"right"});
 }
 var HDP_FUW;

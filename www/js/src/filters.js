@@ -36,7 +36,7 @@ filters.callbackNames = [];	// list of functions to be called when the
 filters.callbacksByName = {};	// maps from callback name to function to call
 filters.callbacksActive = true;	// are the callback functions active?
 
-filters.logging = true;		// write log messages to browser error log?
+filters.logging = false;	// write log messages to browser error log?
 
 filters.queryStringFunction = null;	// funtion to call to get parameter
 					// ...string for general query form
@@ -65,9 +65,43 @@ filters.callbacksInProgress = false;	// are we currently handling callbacks?
 
 filters.fewiUrl = null;		// base URL to fewi, used to pick up images
 
+filters.alternateCallback = null;	// if we are not managing a dataTable,
+					// ...what should we call when a
+					// ...filter's values are returned?
+
+/* special handling for extra 'remove row/col filters' button for HMDC */
+
+filters.hmdcButtonID = null;		// ID of extra button
+filters.hmdcButtonText = null;		// text to show on extra button
+filters.hmdcButtonTooltip = null;	// tooltip to show for extra button
+filters.hmdcButtonVisible = false;	// show the extra button?
+filters.hmdcButtonCallback = null;	// function to call to remove filters
+
 /************************/
 /*** public functions ***/
 /************************/
+
+/* register a button specifically for the HMDC 'remove row/column filters'
+ * functionality
+ */
+filters.registerHmdcButton = function (id, text, tooltip, visible, callback) {
+    filters.hmdcButtonID = id;
+    filters.hmdcButtonText = text;
+    filters.hmdcButtonTooltip = tooltip;
+    filters.hmdcButtonVisible = visible;
+    filters.hmdcButtonCallback = callback;
+};
+
+/* set the HMDC button (if one was registered) to be 'visible' (assumed to
+ * be either boolean true or false)
+ */
+filters.setHmdcButtonVisible = function (visible) {
+    if (filters.hmdcButtonID) {
+	filters.hmdcButtonVisible = visible;
+    } else {
+	filters.hmdcButtonVisible = false;
+    }
+};
 
 /* notify this module of the function to call to retrieve the parameter string
  * for the general query form parameters
@@ -104,6 +138,17 @@ filters.setFewiUrl = function(fewiUrl) {
  */
 filters.setDataTable = function(dataTable) {
     filters.dataTable = dataTable;
+};
+
+/* if we are not managing a dataTable, then what function should we call when
+ * a filter's set of values is returned?
+ * The alternateFn will be called with three parameters:
+ *    1. sRequest <String> - original request
+ *    2. oResponse <Object> YUI Response object
+ *    3. oPayload <MIXED, optional> additional argument(s)
+ */
+filters.setAlternateCallback = function(alternateFn) {
+    filters.alternateCallback = alternateFn;
 };
 
 /* notify this module of the names for the filter summary div and the span
@@ -276,7 +321,8 @@ filters.addFilter = function(
 	for (var k in buttons) {
 	    buttons[k].set('disabled', 'true');
 	}
-	filters.populateDialogForFilter(filterName);
+	filters.logObject(oResponse, 'oResponse');
+//	filters.populateDialogForFilter(filterName);
     };
 
     // build a callback for when retrieving data from the data source
@@ -362,9 +408,11 @@ filters.getFilterNames = function() {
 
 /* clear the selected values for all filters
  */
-filters.clearAllFilters = function() {
+filters.clearAllFilters = function(suppressCallback) {
     var i = 0;
     var hadValues = 0;	// number of filters with values before clearing
+
+    if (suppressCallback === null) { suppressCallback = false; }
 
     filters.callbacksOff();
 
@@ -375,7 +423,7 @@ filters.clearAllFilters = function() {
     
     filters.callbacksOn();
 
-    if (hadValues > 0) {
+    if (!suppressCallback && (hadValues > 0)) {
 	filters.issueCallbacks();
     }
 };
@@ -469,6 +517,17 @@ filters.getAllSummaryButtons = function() {
 	}
     }
 
+    // add the extra HMDC button, if needed
+    if (filters.hmdcButtonVisible) {
+	var el = document.createElement('a');
+	el.setAttribute('class', 'filterItem'); 
+	el.setAttribute('id', filters.hmdcButtonID);
+	el.setAttribute('style', 'line-height: 2.2');
+	el.setAttribute('title', filters.hmdcButtonTooltip);
+	setText(el, filters.hmdcButtonText);
+	list.push(el); 
+    }
+
     if (list.length > 0) {
 	// if there were some filters selected, need to add a 'clear all'
 	// button
@@ -516,7 +575,33 @@ filters.setAllFilters = function(pRequest) {
     for (var field in pRequest) {
 	if ((pRequest[field]) && (field in filters.fieldnameToFilterName)) {
 	    var filterName = filters.fieldnameToFilterName[field];
-	    filters.filtersByName[filterName]['values'][field] = [pRequest[field]];
+	    var fValues = pRequest[field];
+
+	    // need to handle strings and lists, split comma-separate terms,
+	    // and remove redundancy
+
+	    d = {};
+
+	    if (typeof(fValues) === 'string') {
+		fValues = fValues.split(',');
+	    }
+
+	    for (var k = 0; k < fValues.length; k++) {
+		var v = fValues[k];
+		if (typeof(v === 'string')) {
+		    v = v.split(',')
+		}
+		for (var i = 0; i < v.length; i++) {
+		    d[v[i]] = 1;
+		}
+	    }
+
+	    fValues = [];
+	    for (var fv in d) {
+		fValues.push(fv);
+	    }
+
+	    filters.filtersByName[filterName]['values'][field] = fValues;
 	}
     }
     filters.populateFilterSummary();
@@ -683,11 +768,23 @@ filters.getQueryString = function() {
 filters.buildFilterDataSource = function(name, url) {
     filters.log("Building data source for " + name);
 
-    var oCallback = {
-	success : filters.dataTable.onDataReturnInitializeTable,
-	failure : filters.dataTable.onDataReturnInitializeTable,
-	scope : this 
-    };
+    var oCallback = null;
+
+    if (filters.dataTable) {
+    	oCallback = {
+	    success : filters.dataTable.onDataReturnInitializeTable,
+	    failure : filters.dataTable.onDataReturnInitializeTable,
+	    scope : this
+	};
+    } else if (filters.alternateCallback) {
+    	oCallback = {
+	    success : filters.alternateCallback,
+	    failure : filters.alternateCallback,
+	    scope : this
+	};
+    } else {
+	filters.log("Must set either dataTable or alternateCallback");
+    }
 
     var qs = filters.getQueryString();
 
@@ -695,7 +792,8 @@ filters.buildFilterDataSource = function(name, url) {
 	qs = qs + '&';
     }
 
-    var dsUrl = url + "?" + qs;
+//    var dsUrl = url + "?" + qs;
+    var dsUrl = url + "?";
     filters.log("Data source URL: " + dsUrl);
 
     var facetDS = new YAHOO.util.DataSource(dsUrl);
@@ -732,7 +830,7 @@ filters.addHistoryEntry = function() {
 	} else {
 	    filters.log('filters.historyModule is missing');
 	}
-    } else {
+    } else if (!filters.alternateCallback) {
 	filters.log('filters.dataTable is missing');
     }
 };
@@ -752,7 +850,6 @@ filters.buildDialogBox = function() {
 
 	var selections = this.getData();
 	filters.log('selections: ' + selections);
-	filters.l
 
 	var list = [];
 	var filterName;
@@ -781,6 +878,8 @@ filters.buildDialogBox = function() {
 	    } else {
 	        filters.filtersByName[filterName]['values'][i] = [];
 		filters.log('skipped selectionValue = null');
+		filters.log('set filters.filtersByName[' + filterName + '].values[' + i + '] = []');
+		filters.log('confirmation: ' + filters.filtersByName[filterName]['values'][i]);
 	    }
 	}
 
@@ -812,7 +911,7 @@ filters.buildDialogBox = function() {
 	visible : false,
 	context : [ "filterDiv", "tl", "bl", [ "beforeShow" ] ],
 	constraintoviewport : true,
-	width: "290px",
+	width: "305px",
 	buttons : [{ text:"Filter", handler: handleSubmit, isDefault: true} ]
     } );
 
@@ -827,16 +926,39 @@ filters.buildDialogBox = function() {
     filters.log ("Built global filters.dialogBox");
 };
 
+/* consolidate any duplicate parameters down into at most one occurrence each
+ */
+filters.consolidateParameters = function(s) {
+    var parms = s.split('&');
+    var hash = {};
+
+    for (var i = 0; i < parms.length; i++) {
+	hash[parms[i]] = 1;
+    }
+
+    var out = [];
+    for (var parm in hash) {
+	out.push(parm);
+    }
+    return out.join('&');
+};
+
 /* populate the dialog box for the filter with the given name.  Specify either
  * by 'filterName', or use 'title', 'body', and 'error'.
  */
 filters.populateDialogForFilter = function(filterName) {
     filters.log('populating dialog for ' + filterName);
 
+    var parms = filters.getQueryString();
+    if (parms) {
+	parms = parms + '&';
+    }
+    parms = filters.consolidateParameters(parms + filters.getUrlFragment());
+
     if (filters.listIndexOf(filters.filterNames, filterName) >= 0) {
 	var dataSource = filters.filtersByName[filterName]['dataSource'];
 	dataSource.flushCache();
-	dataSource.sendRequest(filters.getUrlFragment(),
+	dataSource.sendRequest(parms,
 	    filters.filtersByName[filterName]['callback']);
     } else {
 	filters.log("Unknown filterName in populateDialogForFilter(" + filterName + ")");
@@ -851,6 +973,10 @@ filters.fillAndShowDialog = function (title, body, error) {
 
     if (filters.dialogBox === null) {
 	filters.buildDialogBox();
+    }
+
+    if (!body) {
+	body = 'No values in results to filter';
     }
 
     filters.dialogBox.setHeader(title);
@@ -1093,13 +1219,36 @@ filters.logObject = function(obj, objectName, level) {
  */
 filters.clearFilter = function() {
 
+    // special case where we want to clear the HMDC row/column filters
+
+    if (this.id == filters.hmdcButtonID) {
+	filters.hmdcButtonVisible = false;
+	filters.hmdcButtonCallback();
+	return;
+    }
+
     // special case where we want to clear all filters
 
     if (this.id === 'clearAllFilters') {
-	filters.clearAllFilters();
-	filters.addHistoryEntry();
+	if (filters.hmdcButtonVisible) {
+	    /* We've filtered by rows/columns (possibly in addition to other
+	     * filters), which needs special handling.
+	     */
+
+	    filters.clearAllFilters(true);
+	    hmdcFilters.updateHiddenFields();
+	    filters.hmdcButtonVisible = false;
+	    filters.hmdcButtonCallback();
+	} else {
+	    /* We've only filtered by filters in this library, not by rows
+	     * and column on the HMDC grid.
+	     */
+	    filters.clearAllFilters();
+	    filters.addHistoryEntry();
+	}
 	return;
     }
+
     var kv = this.id.split(':');
 
     // special case where we want to clear all values for a filter

@@ -51,10 +51,12 @@
       </TD>
 
       <TD>
-        &nbsp;&nbsp;&nbsp;
+      <table class="dataSources"><tr><td style="text-align:center">
 	<input value=" Print " onClick="window.print();return false;"
 	  type="button" class="buttonLabel">
-	&nbsp;&nbsp;&nbsp;
+	  </td></tr><tr><td>
+	  <%@ include file="/WEB-INF/jsp/phenotype_table_geno_popup_source.jsp" %>
+	</td></tr></table>
        </TD>
 
     </TR>

@@ -386,9 +386,6 @@ public class RecombinaseController {
     /* private instance methods                                            */
     /*---------------------------------------------------------------------*/
 
-    /** TODO : needs to be adjusted for alleles
-     *
-     */
     private List<Sort> parseSummarySorts(HttpServletRequest request) {
 
         List<Sort> sorts = new ArrayList<Sort>();
@@ -460,14 +457,14 @@ public class RecombinaseController {
         String driver = query.getDriver();
         if ((driver != null) && (!"".equals(driver))) {
             filterList.add(new Filter (SearchConstants.ALL_DRIVER, driver,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
 
         // build system query filter
         String system = query.getSystem();
         if ((system != null) && (!"".equals(system))) {
             filterList.add(new Filter (SearchConstants.ALL_SYSTEM, system,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
 
         String structure = query.getStructure();
@@ -485,13 +482,13 @@ public class RecombinaseController {
 			{
 				// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
 				String sToken = "\""+phraseSearch+"\"~100";
-				filterList.add(new Filter(SearchConstants.STRUCTURE,sToken,Filter.OP_HAS_WORD));
+				filterList.add(new Filter(SearchConstants.STRUCTURE,sToken,Filter.Operator.OP_HAS_WORD));
 			}
         }
 
         // build container filter and return
         Filter containerFilter = new Filter();
-        containerFilter.setFilterJoinClause(Filter.FC_AND);
+        containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
         containerFilter.setNestedFilters(filterList);
         return containerFilter;
     }
@@ -514,25 +511,25 @@ public class RecombinaseController {
         // build the possible filters
         if ((driver != null) && (!"".equals(driver))) {
             filterList.add(new Filter (SearchConstants.ALL_DRIVER, driver,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
         if ((system != null) && (!"".equals(system))) {
             filterList.add(new Filter (SearchConstants.ALL_SYSTEM, system,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
         if ((id != null) && (!"".equals(id))) {
             filterList.add(new Filter (SearchConstants.ALL_ID, id,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
         if ((systemKey != null) && (!"".equals(systemKey))) {
             filterList.add(new Filter (SearchConstants.CRE_SYSTEM_KEY, systemKey,
-                Filter.OP_EQUAL));
+                Filter.Operator.OP_EQUAL));
         }
 
         // if we have filters, collapse them into a single filter
         Filter containerFilter = new Filter();
         if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.FC_AND);
+            containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
             containerFilter.setNestedFilters(filterList);
         }
 

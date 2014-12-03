@@ -19,6 +19,13 @@ import org.jax.mgi.fewi.searchUtil.Filter;
 import org.apache.solr.client.solrj.util.ClientUtils;
 }
 
+@rulecatch {
+  catch (RecognitionException re) {
+    //Custom handling of an exception. Any java code is allowed.
+    throw re;
+  }
+}
+
 @lexer::header {package org.jax.mgi.fewi.antlr.BooleanSearch;}
 
 @members {
@@ -62,13 +69,13 @@ private void setWordFilter(Filter f,String text)
 	if(text!=null && text.contains("*"))
 	{
 		// Have solr escape any special characters, but make sure asterisk remains in tact
-		f.setValue(ClientUtils.escapeQueryChars(text).replaceAll("\\\\\\*","*"));
-		f.setOperator(Filter.OP_HAS_WORD);
+		f.setValue(text);
+		f.setOperator(Filter.Operator.OP_HAS_WORD);
 	}
 	else
 	{
 		f.setValue(text); 
-		f.setOperator(Filter.OP_EQUAL);
+		f.setOperator(Filter.Operator.OP_EQUAL);
 	}
 }
 }
@@ -78,15 +85,13 @@ query	returns[Filter queryNode]:
 	(AND|OR)* andExpr=and_expr { queryNode = andExpr; } (AND|OR|NOT)*
 	;
 	
-and_expr	returns[Filter andExpression] @init { andExpression = new Filter(); andExpression.setFilterJoinClause(Filter.FC_AND); }:	
+and_expr	returns[Filter andExpression] @init { andExpression = new Filter(); andExpression.setFilterJoinClause(Filter.JoinClause.FC_AND); }:	
 	oe1=or_expr { if(oe1!=null) andExpression.addNestedFilter(oe1); } (AND oe2=or_expr { andExpression.addNestedFilter(oe2); })* 
 	;
 	
-or_expr	returns[Filter orExpression] @init { orExpression = new Filter(); orExpression.setFilterJoinClause(Filter.FC_OR); }:	
+or_expr	returns[Filter orExpression] @init { orExpression = new Filter(); orExpression.setFilterJoinClause(Filter.JoinClause.FC_OR); }:	
 	t1=term { if(notEmpty(t1)) orExpression.addNestedFilter(t1); } ((OR)? t2=term { if(notEmpty(t2)) orExpression.addNestedFilter(t2); })*
 	;
-or_expr2 
-	:	term ((OR)? term)*;
 
 term	returns[Filter termNode] @init { termNode = new Filter(); boolean neg=false; }:	
 	(NOT { neg=true; })? s=str { termNode=s; if(neg) termNode.negate(); }
@@ -94,11 +99,11 @@ term	returns[Filter termNode] @init { termNode = new Filter(); boolean neg=false
 	;
 
 str returns[Filter stringFilter] @init { stringFilter = new Filter(); } :
-        q=QUOTED { String text=sanitizeQuoted($q.text); stringFilter.setValue(text); stringFilter.setOperator(Filter.OP_EQUAL); }
-        | q2=WORD { String text=sanitizeQuoted($q2.text); setWordFilter(stringFilter,text); }
+        q=QUOTED { stringFilter.setQuoted(true); stringFilter.setValue(sanitizeQuoted($q.text)); stringFilter.setOperator(Filter.Operator.OP_EQUAL); }
+        | q2=WORD { setWordFilter(stringFilter,sanitizeQuoted($q2.text)); }
         ;
 
-WORD :  (~( ' ' | '\t' | '\r' | '\n' | '(' | ')' ))+;
+WORD :  (~( ' ' | '\t' | '\r' | '\n' | '(' | ')' | '"' ))+;
 
 QUOTED: '"'(~'"')*'"';
 

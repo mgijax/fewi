@@ -24,6 +24,19 @@ $("#locationsFileHelpImg").on("mouseout",function(e){
 	if(_locationsFileHelpTOID) clearTimeout(_locationsFileHelpTOID);
 });
 
+YAHOO.hdp.container.panelQueryHelp = new YAHOO.widget.Panel("queryHelp", { width:"520px", draggable:false, visible:false, constraintoviewport:true } );
+YAHOO.hdp.container.panelQueryHelp.render();
+
+var _queryHelpTOID;
+$("#queryHelpImg").on("mouseover",function(e){
+   _queryHelpTOID = setTimeout(function(){YAHOO.hdp.container.panelQueryHelp.show()},500);
+});
+$("#queryHelpImg").on("mouseout",function(e){
+   if(_queryHelpTOID) clearTimeout(_queryHelpTOID);
+});
+
+
+
 // ---------- functions for handling form submit action -----------
 //Instead of submitting the form, do an AJAX request
 var interceptSubmit = function(e) 
@@ -52,6 +65,10 @@ var interceptSubmit = function(e)
 
 		if(typeof hdpDataTable != 'undefined')
 			hdpDataTable.setAttributes({ width: "100%" }, true);
+
+		hmdcFilters.callbacksOff()
+		hmdcFilters.clearAllFilters();
+		hmdcFilters.callbacksOn()
 	}
 };
 $("#"+qfId).on("submit",interceptSubmit);
@@ -77,7 +94,8 @@ var resetQF = function (e) {
 	form.locationsFileName.value = "";
 	form.geneFileName.value = "";
 	form.enableVcfFilter = "true";
-	
+	window.querystring = '';
+
 	//form.fGene.value = "";
 	//form.fHeader.value = "";
 	if(_GF && !_GF.isState(_GF.gridState.working)) _GF.resetFields();
@@ -128,12 +146,14 @@ var updateQuerySummary = function() {
 	var summaryDiv = $('#searchSummary');
 	summaryDiv.html("");
 	var ysfText = "<b>You searched for: </b>";
+
+	ysfText += "<span id=\"errorTextMessage\" style=\"display: none;\"><br>There is an error in your query, indicated by bolded text:<br><span id=\"errorTextString\"></span><br><b>Query was modified and run in the following way:</b></span>";
 	
 	var values = serializeQF();
 	if ("phenotypes" in values && values["phenotypes"]!="")
 	{
 		ysfText += "<br/>"
-		ysfText += "Phenotypes or Diseases matching [<b id=\"ysf-phenotypes\">"+values["phenotypes"]+"</b>]";
+		ysfText += "Phenotypes or Diseases matching: <b id=\"ysf-phenotypes\">"+values["phenotypes"]+"</b>";
 	}
 	if ("genes" in values && values["genes"]!="")
 	{
@@ -149,22 +169,25 @@ var updateQuerySummary = function() {
 	{
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
-		ysfText += organism+" locations matching [<b>"+$('<div/>').text(values["locations"]).html()+"</b>]";
+		ysfText += organism+" loci overlapping interval: [<b>"+$('<div/>').text(values["locations"]).html()+"</b>]";
 	}
 	if ("locationsFileName" in values && values["locationsFileName"]!="")
 	{
 		ysfText += "<br/>"
 		var organism = values["organism"] == "human" ? "Human" : "Mouse";
-		ysfText += organism+" locations matching [<b id=\"ysf-locationsFile\">file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
+		ysfText += organism+" loci overlapping interval: [<b id=\"ysf-locationsFile\">file="+$('<div/>').text(values["locationsFileName"]).html()+"</b>]";
 	}
 	
 	summaryDiv.append(ysfText);
 	
 	// make sure IDs turn into terms (just for the display purposes)
-	resolveVocabTermIds();
+	resolveVocabTermIds(true);
 	
 	// check if file upload is still cached
 	checkFileUploadCache();
+
+	// Run query againt parser to check for errors
+	getErrorMessages();
 };
 
 
@@ -295,6 +318,11 @@ var getQueryString = function()
 	
 	if("numDCol" in values && values["numDCol"]!="") params.push("numDCol="+values["numDCol"]);
 	
+	if("featureTypeFilter" in values && values["featureTypeFilter"]!="")
+	{
+		params.push("featureTypeFilter=" + values["featureTypeFilter"]);
+	}
+
 	// try to add grid filters if they exist
 	var hasGridFilters = false;
 	if(!_GF.isState(_GF.gridState.working))
@@ -339,6 +367,9 @@ function reverseEngineerFormInput(request)
 
 	var foundParams = false;
 	resetQF();
+
+	hmdcFilters.setAllFilters(params);
+
 	for(var key in params)
 	{
 		if(key!=undefined && key!="" && params[key].length>0)
@@ -410,5 +441,6 @@ function reverseEngineerFormInput(request)
 	{
 		refreshEnableVcfFilterValue();
 	}
+
 	return foundParams;
 }

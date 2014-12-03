@@ -305,14 +305,15 @@ function parseRequest(request){
 
 function popupHelp(help_cat){	 
 	var omim_help = "<b>Human Disease (OMIM) Annotations</b><ul><li>Human Disease (OMIM) terms appear by gene.</li>\
-	    <li>Each term listed indicates that a mutant allele of this gene is involved in a mouse genotype used as a disease model.</li></ul><b>Caveats</b>\
+	    <li>Each term listed indicates that a mutant allele involving this gene is present in a mouse genotype used as a disease model.</li></ul><b>Caveats</b>\
 	    <ul><li>The term does not necessarily imply that mutations in that gene contribute to or cause the disease.</li>\
 	    <li>Analyzed mice may have causative mutations in other genes.</li>\
 	    <li>Wide variation exists due to homozygotes vs. heterozygotes and different strain backgrounds.</li></ul>\
 	    <b>Click on the disease term ...</b><ul><li>to see the mouse genotypes used as disease models.</li></ul>";
 	// text for mp help popup
 	var mp_help = "<b>Phenotype Annotations</b><ul><li>Mammalian Phenotype (MP) terms appear by gene.</li>\
-	    <li>Each term describes a mouse phenotype with some mutation in that gene.</li></ul><b>Caveats</b>\
+       <li>Each term describes a mouse phenotype with some mutation in that gene.</li>\
+       <li>Mutations may be in the endogenous gene or an insertion of the gene or its homolog.</li></ul><b>Caveats</b>\
 	    <ul><li>The term does not necessarily imply that mutations in that gene contribute to or cause the phenotype.</li>\
 	    <li>Analyzed mice may have causative mutations in other genes.</li>\
 	    <li>Wide phenotypic variation exists due to homozygotes vs. heterozygotes and different strain backgrounds.</li></ul>\

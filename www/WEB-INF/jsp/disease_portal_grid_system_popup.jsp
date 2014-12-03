@@ -2,6 +2,9 @@
 <%@ page import = "org.jax.mgi.fewi.util.*" %>
 
 <%@ page trimDirectiveWhitespaces="true" %>
+
+${templateBean.templateHeadHtml}
+
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 
@@ -18,6 +21,8 @@
   padding-bottom:4px;
 }
 </style>
+
+</head>
 
 <!-- Table and Wrapping div -->
 
@@ -37,7 +42,8 @@
 <table id="hdpSystemPopupLegend">
 <tr>
 	<td>*</td><td>Aspects of the system are reported to show a normal phenotype</td></tr><tr>
-	<td class="bsn_legend">!</td><td>Indicates phenotype varies with strain background</td>
+	<td class="bsn_legend">!</td><td>Indicates phenotype varies with strain background</td></tr><tr>
+	<td></td><td><span class="highlight">Highlighted Column</span> contains a phenotype or disease term matching one in the search</td>
 </tr>
 </table>
 
