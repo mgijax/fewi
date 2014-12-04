@@ -119,7 +119,10 @@ ${templateBean.templateHeadHtml}
 	      <td><%= allCompNoBR %></td><td>${gelLane.sex}</td>
 	      <c:if test="${assay.hasLaneNotes}">
     	    <c:set var="lanenoteString" value="${gelLane.laneNote}" scope="request"/>
-            <% String lanenoteString = (String)request.getAttribute("lanenoteString"); %>
+	    <% String lanenoteString = (String)request.getAttribute("lanenoteString");
+	       // quick fix to avoid printing "null"
+	       if (lanenoteString == null) { lanenoteString = ""; }
+	    %>
 	        <td>
 	      	<%= FormatHelper.formatVerbatim(lanenoteString) %> 
 	        </td>
