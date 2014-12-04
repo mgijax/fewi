@@ -12,9 +12,15 @@ var querystring = "";
 
 // HTML/YUI page widgets
 YAHOO.namespace("gxd.container");
+
 YAHOO.gxd.container.panelVocab = new YAHOO.widget.Panel("gxdVocabHelp", { width:"520px", draggable:false, visible:false, constraintoviewport:true } );
 YAHOO.gxd.container.panelVocab.render();
 YAHOO.util.Event.addListener("gxdVocabHelpImage", "mouseover", YAHOO.gxd.container.panelVocab.show, YAHOO.gxd.container.panelVocab, true);
+
+YAHOO.gxd.container.panelStructure = new YAHOO.widget.Panel("gxdStructureHelp", { width:"320px", draggable:false, visible:false, constraintoviewport:true } );
+YAHOO.gxd.container.panelStructure.render();
+YAHOO.util.Event.addListener("gxdStructureHelpImage", "mouseover", YAHOO.gxd.container.panelStructure.show, YAHOO.gxd.container.panelStructure, true);
+
 YAHOO.gxd.container.panelDifStruct1 = new YAHOO.widget.Panel("gxdDifStruct1Help", { width:"320px", draggable:false, visible:false, constraintoviewport:true,close:false } );
 YAHOO.gxd.container.panelDifStruct1.render();
 YAHOO.util.Event.addListener("gxdDifStruct1HelpImage", "mouseover", YAHOO.gxd.container.panelDifStruct1.show, YAHOO.gxd.container.panelDifStruct1, true);

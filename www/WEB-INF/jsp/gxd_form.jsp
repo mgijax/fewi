@@ -90,6 +90,11 @@ span.smallGrey { font-size: 75%; color: #999999; }
     <![endif]-->
     min-width: 100px;
 }
+#gxdStructureHelp {
+    font-family: Verdana,Arial,Helvetica;
+    font-size: 12px;
+    font-weight: normal;
+}
 <!--[if IE]> -->
 #ageStageDiv {width:21em;}
 #theilerStage {margin-left:0px;margin-right:12px;height:9.5em}
@@ -199,7 +204,19 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<td colspan="3"> Find assay results where expression is&nbsp;&nbsp;&nbsp;&nbsp;<form:radiobuttons class="detected" path="detected" items="${gxdQueryForm.detectedOptions}" /><br />
 			<hr style="border:none; border-bottom: solid black 1px; height: 1px;" width="100%" /></td>
 			</tr>
-			<tr><th>Anatomical Structures:</th>
+			<tr><th>Anatomical Structures:
+				<img id="gxdStructureHelpImage" src="${configBean.WEBSHARE_URL}images/help_icon.png" />
+				<div id="gxdStructureHelp" style="visibility: hidden; height:0px;">
+					<div class="hd">Anatomical Structures...</div>
+					<div class="bd">
+					<p>Use the Anatomical Structure field
+					to quickly find and select anatomy
+					terms for searching expression data.</p>
+					<p>To explore the full anatomy
+					ontology, you can use the
+					<a href="${configBean.FEWI_URL}vocab/gxd/anatomy/EMAPA:16039" target="_blank">Mouse Developmental Anatomy Browser.</a></p>
+					</div>
+				</div></th>
 			<th>AND&nbsp;/&nbsp;OR</th>
 			<th>&nbsp;&nbsp;&nbsp;&nbsp;Developmental Stages:</th>
 			</tr>
