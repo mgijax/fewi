@@ -13,8 +13,6 @@ td.top { vertical-align: top; }
     protein domains, etc.</i><hr/>
     <input class="buttonLabel" value="Search" type="submit">&nbsp;&nbsp;
     <input class="reset" type="reset">
-    <span class="example">Specify sorting and output options
-      <a href="#output">below</a></span>.
   </td></tr>
 
   <!-- row 1-->
