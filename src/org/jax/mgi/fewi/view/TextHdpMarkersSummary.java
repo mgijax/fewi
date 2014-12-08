@@ -38,7 +38,7 @@ public class TextHdpMarkersSummary extends AbstractTextView
 		// write the headers
 		String[] headerTitles = {
 			    "Organism",
-				"Marker Symbol",
+				"Gene Symbol",
 				"ID",
 				"Genetic Location",
 				"Genome Coordinates",

@@ -36,8 +36,8 @@ public class TextHdpDiseaseSummary extends AbstractTextView
 			    "Disease",
 				"OMIM Id",
 				"Mouse Models",
-				"Associated Mouse Markers",
-				"Associated Human Markers"
+				"Associated Mouse Genes",
+				"Associated Human Genes"
 		};
 		for (int i=0;i<headerTitles.length;i++) {
 			writer.write(headerTitles[i]+"\t");
