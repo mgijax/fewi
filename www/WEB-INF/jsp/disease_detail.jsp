@@ -169,7 +169,7 @@ ${templateBean.templateBodyStartHtml}
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td colspan="4" style="">${asterisk}<font size="-1"><b>Gene</b> is associated with the disease in this species</font></td>
+	<td colspan="4" style="">${asterisk}<font size="-1">Disease is associated/modeled with this <b>Gene</b> or a homolog. <a href="http://www.informatics.jax.org/userhelp/VOCAB_omim_browser_detail_help.shtml#how_interpret">More...</a></font></td>
 	</tr>
 	
 	<!-- heading row -->
