@@ -328,18 +328,20 @@ tr.gray td {background-color:#EEEEEE;}
 			<li>Testing that the same alleles are returned regardless of word order
 			<ol>
 				<li>open the Allele query form</li>
-				<li>Type <b concordion:set="#query">cDNA 0610009L18</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">cDNA 1500015O10</b> in the nomenclature field and press the search button</li>
 				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only these alleles are returned</th></tr>
-				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
-				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1Lex&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1a(EUCOMM)Hmgu&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1e(EUCOMM)Hmgu&gt;</td></tr>
 				    </table>
 				</li>
-				<li>Type <b concordion:set="#query">0610009L18 cDNA</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">1500015O10 cDNA</b> in the nomenclature field and press the search button</li>
 				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only these alleles are returned</th></tr>
-				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
-				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1Lex&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1a(EUCOMM)Hmgu&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1e(EUCOMM)Hmgu&gt;</td></tr>
 				    </table>
 				</li>
 			</ol>
@@ -358,18 +360,20 @@ tr.gray td {background-color:#EEEEEE;}
 			<li>Testing that wildcards work in different places of the string
 			<ol>
 				<li>open the Allele query form</li>
-				<li>Type <b concordion:set="#query">*IKEN 0610009L1*</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">*IKEN 1500015O*</b> in the nomenclature field and press the search button</li>
 				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
-				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
-				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1Lex&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1a(EUCOMM)Hmgu&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1e(EUCOMM)Hmgu&gt;</td></tr>
 				    </table>
 				</li>
-				<li>Type <b concordion:set="#query">RIKE* *610009L18</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">RIKE* *1500015O10</b> in the nomenclature field and press the search button</li>
 				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
-				        <tr><td>0610009L18Rik&lt;tm1a(EUCOMM)Wtsi&gt;</td></tr>
-				        <tr><td>0610009L18Rik&lt;tm1e(EUCOMM)Wtsi&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1Lex&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1a(EUCOMM)Hmgu&gt;</td></tr>
+				        <tr><td>1500015O10Rik&lt;tm1e(EUCOMM)Hmgu&gt;</td></tr>
 				    </table>
 				</li>
 			</ol>
