@@ -95,7 +95,7 @@
 							<td></td><td><strong>N</strong> - No abnormal phenotype observed.<br/></td>
 						</tr><tr>
 							<td style="vertical-align: top;"><span style="font-weight:bold;">NOTE:</span></td>
-							<td>In searches with phenotype/disease terms, only the phenotypes/diseases of the matching models/genes are displayed. In searches without phenotype/disease terms, the complete phenotype profiles of the matching gene mutations are displayed. <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml#hdp_results'); return false;" href="${configBean.USERHELP_URL}disease_connection_help.shtml">More..</a>
+							<td>In searches with phenotype/disease terms, only the phenotypes/diseases of the matching models/genes are displayed. In searches using gene or location parameters only, the complete phenotype profiles of the matching gene mutations are displayed. <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml'); return false;" href="${configBean.USERHELP_URL}disease_connection_help.shtml">More..</a>
 							</td>
 						</tr>
 					</table>
