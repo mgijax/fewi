@@ -174,7 +174,7 @@ circle {
 
 	<style>
 		.facetFilter .yui-panel .bd {
-			width: 270px
+			width: 285px
 		}
 		
 		.yui-skin-sam .yui-h-slider {
