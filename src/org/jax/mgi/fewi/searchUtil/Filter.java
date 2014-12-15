@@ -268,28 +268,20 @@ public class Filter {
 		return filter;
 	}
 
-	public static Filter extractTermsForNestedFilter(Filter filter, boolean addBeginsWith) {
+	public static Filter extractTermsForNestedFilter(Filter filter) {
 		Filter nestedFilter = new Filter();
-		extractTermsForNestedFilter(filter, nestedFilter, addBeginsWith);
+		extractTermsForNestedFilter(filter, nestedFilter, Operator.OP_EQUAL);
 		return nestedFilter;
 	}
 
-	public static void extractTermsForNestedFilter(Filter filter, Filter nestedFilter, boolean addBeginsWith) {
+	public static void extractTermsForNestedFilter(Filter filter, Filter nestedFilter, Operator defaultOperator) {
 		if(filter.getNestedFilters().size() > 0) {
 			for(Filter f: filter.getNestedFilters()) {
-				extractTermsForNestedFilter(f, nestedFilter, addBeginsWith);
+				extractTermsForNestedFilter(f, nestedFilter, defaultOperator);
 			}
 		} else {
 			if(filter.getProperty().equals(SearchConstants.VOC_TERM)) {
-				if(addBeginsWith) {
-					Filter or = new Filter();
-					or.setFilterJoinClause(JoinClause.FC_OR);
-					or.addNestedFilter(new Filter(filter.getProperty(), filter.getValue()));
-					or.addNestedFilter(new Filter(filter.getProperty(), filter.getValue(), Operator.OP_BEGINS));
-					nestedFilter.addNestedFilter(or);
-				} else {
-					nestedFilter.addNestedFilter(new Filter(filter.getProperty(), filter.getValue()));
-				}
+				nestedFilter.addNestedFilter(new Filter(filter.getProperty(), filter.getValue(), defaultOperator));
 			}
 		}
 	}

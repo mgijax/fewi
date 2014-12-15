@@ -151,7 +151,7 @@ public class SolrPropertyMapper
             val =  field + ":" + "*" + ClientUtils.escapeQueryChars(value) + "*";
         }
         else if (operand == Filter.Operator.OP_GREEDY_BEGINS) {
-        	val =  "("+field + ":" + value + " OR "+field + ":" + value+"* )";
+        	val =  "("+field + ":\"" + value + "\" OR "+field + ":\"" + value+"*\")";
         }
         
         if(negate) val = "-("+val+")";
