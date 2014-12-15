@@ -196,16 +196,6 @@ textarea {resize:none; background-color:#FFE4B5;}
   	font-family: Arial,Helvetica;
   	font-size: 12px;
   }
-  #hdpSystemPopupHeader{ 
-    min-height:32px; 
-    min-width:500px;
-    background-color:#DFEFFF; 
-    margin-bottom:12px;
-    padding:3px;
-    border:thin solid #002255;
-    font-family: Verdana,Arial,Helvetica; 
-    font-size: 20px;
-  }
 
   #hdpSystemPopupTablePadder{ width: 200px; }
   #hdpSystemPopupTablePadder img { visibility: hidden; }
@@ -269,16 +259,6 @@ textarea {resize:none; background-color:#FFE4B5;}
   #hdpSystemPopupTable .dHBin_8 { background-color: #ff8700; }
   
   
-  #hdpSystemPopupHeader{ 
-    min-height:32px; 
-    min-width:500px;
-    background-color:#DFEFFF; 
-    margin-bottom:12px;
-    padding:3px;
-    border:thin solid #002255;
-    font-family: Verdana,Arial,Helvetica; 
-    font-size: 20px;
-  }
   #hdpSystemPopupLegend
   {
   	display: table-cell;

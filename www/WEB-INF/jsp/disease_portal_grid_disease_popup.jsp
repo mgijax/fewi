@@ -24,6 +24,8 @@ ${templateBean.templateHeadHtml}
 
 </head>
 
+<body style="margin: 8px; min-width: 1px;">
+
 <!-- Table and Wrapping div -->
 
 <div id="hdpSystemPopupHeader">Data for ${gridClusterString} and ${termHeader}</div>
@@ -43,3 +45,6 @@ ${templateBean.templateHeadHtml}
 </tr>
 </table>
 <%@ include file="/WEB-INF/jsp/disease_portal_grid_popup_grid.jsp" %>
+
+</body>
+</html>
