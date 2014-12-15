@@ -25,6 +25,7 @@ import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.PrettyFilterPrinter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -362,9 +363,9 @@ public class DiseasePortalController
       	SearchResults<SolrHdpGridCluster> searchResults = getGridClusters(request, query, page,session);
       	List<SolrHdpGridCluster> gridClusters = searchResults.getResultObjects();
 
-		// TODO Fix 
 		SearchResults<SolrString> columns = getHighlightedColumnHeaders(query, session);
 		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
+		
 		for(SolrString ss : columns.getResultObjects()) {
 			highLightedColumns.put(ss.toString(), ss.toString());
       	}
@@ -516,7 +517,6 @@ public class DiseasePortalController
         		markersInImsr.add(genoClusterMarker);
 			}
         }
-    	//logger.debug("->markersInImsr=" + markersInImsr.size());
 
         // get the mp term columns
     	List<SolrVocTerm> mpTerms = getGridMpTermColumns(request,query,session);
@@ -524,7 +524,6 @@ public class DiseasePortalController
 		List<String> termColIds = new ArrayList<String>();
 		List<String> termColNames = new ArrayList<String>(); // needed to automated tests
 
-		// TODO 
 		SearchResults<SolrString> columns = getHighlightedColumns(request, query, session);
 		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
 		for(SolrString ss : columns.getResultObjects()) {
@@ -604,7 +603,6 @@ public class DiseasePortalController
 		List<String> termColIds = new ArrayList<String>();
 		List<String> termColNames = new ArrayList<String>(); // needed to automated tests
 
-		// TODO
 		SearchResults<SolrString> columns = getHighlightedColumns(request, query, session);
 		HashMap<String, String> highLightedColumns = new HashMap<String, String>();
 		for(SolrString ss : columns.getResultObjects()) {
@@ -951,11 +949,18 @@ public class DiseasePortalController
 
 		logger.debug("getHighlightedColumns disease column query: " + query.toString());
 
+		
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 		
 		Filter gridClusterFilter = parseQueryForm(query,session);
 		Filter termSearchFilter = Filter.extractTermsForNestedFilter(gridClusterFilter);
+		
+		// TODO Remove once settled
+		for(Filter f: termSearchFilter.getNestedFilters()) {
+			f.setOperator(Operator.OP_BEGINS);
+		}
+		
 		gridClusterFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
 		termSearchFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
 	
