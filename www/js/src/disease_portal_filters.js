@@ -66,7 +66,7 @@ hmdcFilters.getFilterNames = function() {
 /* clear the selections for all filters
  */
 hmdcFilters.clearAllFilters = function() {
-    filters.clearAllValuesForFilter('featureType');
+    hmdcFilters.clearAllValuesForFilter('featureType');
 };
 
 /* clear all selections for a single filter by name
