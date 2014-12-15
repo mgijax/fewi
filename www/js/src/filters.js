@@ -956,6 +956,8 @@ filters.populateDialogForFilter = function(filterName) {
     parms = filters.consolidateParameters(parms + filters.getUrlFragment());
 
     if (filters.listIndexOf(filters.filterNames, filterName) >= 0) {
+	filters.fillAndShowDialog('Retrieving filter values', 'Please wait...',
+	    true);
 	var dataSource = filters.filtersByName[filterName]['dataSource'];
 	dataSource.flushCache();
 	dataSource.sendRequest(parms,
