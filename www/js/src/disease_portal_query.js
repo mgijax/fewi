@@ -50,6 +50,10 @@ var interceptSubmit = function(e)
 
 		if(_GF) _GF.init();
 		
+		hmdcFilters.callbacksOff()
+		hmdcFilters.clearAllFilters();
+		hmdcFilters.callbacksOn()
+
 		// Set the global querystring to the form values
 		window.querystring = getQueryString();
 		
@@ -65,10 +69,6 @@ var interceptSubmit = function(e)
 
 		if(typeof hdpDataTable != 'undefined')
 			hdpDataTable.setAttributes({ width: "100%" }, true);
-
-		hmdcFilters.callbacksOff()
-		hmdcFilters.clearAllFilters();
-		hmdcFilters.callbacksOn()
 	}
 };
 $("#"+qfId).on("submit",interceptSubmit);
