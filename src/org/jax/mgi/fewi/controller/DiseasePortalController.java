@@ -931,7 +931,7 @@ public class DiseasePortalController
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 
-		Filter or = Filter.extractTermsForNestedFilter(parseQueryForm(query,session));
+		Filter or = Filter.extractTermsForNestedFilter(parseQueryForm(query,session), true);
 		or.setFilterJoinClause(JoinClause.FC_OR);
 		
 		params.setFilter(or);
@@ -954,12 +954,7 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 		
 		Filter gridClusterFilter = parseQueryForm(query,session);
-		Filter termSearchFilter = Filter.extractTermsForNestedFilter(gridClusterFilter);
-		
-		// TODO Remove once settled
-		for(Filter f: termSearchFilter.getNestedFilters()) {
-			f.setOperator(Operator.OP_BEGINS);
-		}
+		Filter termSearchFilter = Filter.extractTermsForNestedFilter(gridClusterFilter, true);
 		
 		gridClusterFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
 		termSearchFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);

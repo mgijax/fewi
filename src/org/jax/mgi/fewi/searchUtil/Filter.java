@@ -268,20 +268,28 @@ public class Filter {
 		return filter;
 	}
 
-	public static Filter extractTermsForNestedFilter(Filter filter) {
+	public static Filter extractTermsForNestedFilter(Filter filter, boolean addBeginsWith) {
 		Filter nestedFilter = new Filter();
-		extractTermsForNestedFilter(filter, nestedFilter);
+		extractTermsForNestedFilter(filter, nestedFilter, addBeginsWith);
 		return nestedFilter;
 	}
 
-	public static void extractTermsForNestedFilter(Filter filter, Filter nestedFilter) {
+	public static void extractTermsForNestedFilter(Filter filter, Filter nestedFilter, boolean addBeginsWith) {
 		if(filter.getNestedFilters().size() > 0) {
 			for(Filter f: filter.getNestedFilters()) {
-				extractTermsForNestedFilter(f, nestedFilter);
+				extractTermsForNestedFilter(f, nestedFilter, addBeginsWith);
 			}
 		} else {
 			if(filter.getProperty().equals(SearchConstants.VOC_TERM)) {
-				nestedFilter.addNestedFilter(new Filter(filter.getProperty(), filter.getValue()));
+				if(addBeginsWith) {
+					Filter or = new Filter();
+					or.setFilterJoinClause(JoinClause.FC_OR);
+					or.addNestedFilter(new Filter(filter.getProperty(), filter.getValue()));
+					or.addNestedFilter(new Filter(filter.getProperty(), filter.getValue(), Operator.OP_BEGINS));
+					nestedFilter.addNestedFilter(or);
+				} else {
+					nestedFilter.addNestedFilter(new Filter(filter.getProperty(), filter.getValue()));
+				}
 			}
 		}
 	}
