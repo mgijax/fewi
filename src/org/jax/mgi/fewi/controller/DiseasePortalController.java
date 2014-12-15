@@ -954,8 +954,7 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 		
 		Filter gridClusterFilter = parseQueryForm(query,session);
-		Filter termSearchFilter = new Filter();
-		Filter.extractTermsForNestedFilter(gridClusterFilter, termSearchFilter, Operator.OP_GREEDY_BEGINS);
+		Filter termSearchFilter = Filter.extractTermsForNestedFilter(gridClusterFilter);
 		
 		gridClusterFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
 		termSearchFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);

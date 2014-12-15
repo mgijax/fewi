@@ -270,18 +270,18 @@ public class Filter {
 
 	public static Filter extractTermsForNestedFilter(Filter filter) {
 		Filter nestedFilter = new Filter();
-		extractTermsForNestedFilter(filter, nestedFilter, Operator.OP_EQUAL);
+		extractTermsForNestedFilter(filter, nestedFilter);
 		return nestedFilter;
 	}
 
-	public static void extractTermsForNestedFilter(Filter filter, Filter nestedFilter, Operator defaultOperator) {
+	public static void extractTermsForNestedFilter(Filter filter, Filter nestedFilter) {
 		if(filter.getNestedFilters().size() > 0) {
 			for(Filter f: filter.getNestedFilters()) {
-				extractTermsForNestedFilter(f, nestedFilter, defaultOperator);
+				extractTermsForNestedFilter(f, nestedFilter);
 			}
 		} else {
 			if(filter.getProperty().equals(SearchConstants.VOC_TERM)) {
-				nestedFilter.addNestedFilter(new Filter(filter.getProperty(), filter.getValue(), defaultOperator));
+				nestedFilter.addNestedFilter(new Filter(filter.getProperty(), filter.getValue(), filter.getOperator()));
 			}
 		}
 	}
