@@ -81,7 +81,7 @@
 							<td>The matrix includes all phenotypes/diseases associated with mouse models and human genes returned.</td>
 						</tr><tr>
 							<td></td>
-							<td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s)</td>
+							<td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td>
 						</tr><tr>
 							<td></td>
 							<td style="padding-left: 20px; padding-top: 5px;">
