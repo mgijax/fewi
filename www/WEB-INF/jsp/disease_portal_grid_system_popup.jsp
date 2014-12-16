@@ -45,7 +45,7 @@ ${templateBean.templateHeadHtml}
 <tr>
 	<td>*</td><td>Aspects of the system are reported to show a normal phenotype</td></tr><tr>
 	<td class="bsn_legend">!</td><td>Indicates phenotype varies with strain background</td></tr><tr>
-	<td></td><td><span class="highlight">Highlighted Column</span> contain at least one phenotype or disease result matching your search term(s)</td>
+	<td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s)</td>
 </tr>
 </table>
 

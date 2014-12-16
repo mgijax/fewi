@@ -41,7 +41,7 @@ ${templateBean.templateHeadHtml}
 
 <table id="hdpSystemPopupLegend">
 <tr>
-   <td><span class="highlight">Highlighted Column</span> contain at least one phenotype or disease result matching your search term(s)</td>
+   <td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s)</td>
 </tr>
 </table>
 <%@ include file="/WEB-INF/jsp/disease_portal_grid_popup_grid.jsp" %>
