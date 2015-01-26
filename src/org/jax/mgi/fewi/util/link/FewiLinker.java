@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.util;
+package org.jax.mgi.fewi.util.link;
 
 import java.util.HashMap;
 import java.util.Map;

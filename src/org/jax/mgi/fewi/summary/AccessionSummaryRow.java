@@ -4,9 +4,9 @@ import mgi.frontend.datamodel.Accession;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.searchUtil.ObjectTypes;
-import org.jax.mgi.fewi.util.FewiLinker;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.util.link.FewiLinker;
+import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

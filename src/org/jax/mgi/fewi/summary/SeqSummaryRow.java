@@ -13,7 +13,7 @@ import mgi.frontend.datamodel.SequenceSource;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.DBConstants;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.ProviderLinker;
+import org.jax.mgi.fewi.util.link.ProviderLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

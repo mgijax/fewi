@@ -1,10 +1,12 @@
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
-<%@ page import = "org.jax.mgi.fewi.util.ProviderLinker" %>
+<%@ page import = "org.jax.mgi.fewi.util.link.ProviderLinker" %>
+<%@ page import = "org.jax.mgi.fewi.util.link.IDLinker" %>
 <%@ page import = "org.jax.mgi.fewi.util.DBConstants" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% Sequence sequence = (Sequence)request.getAttribute("sequence"); %>
+<% IDLinker idLinker = IDLinker.getInstance(); %>
 
 ${templateBean.templateHeadHtml}
 
@@ -266,9 +268,10 @@ ${templateBean.templateBodyStartHtml}
     </tr>
 
     <c:forEach var="marker" items="${markers}" >
+      <% Marker marker = (Marker)pageContext.getAttribute("marker"); %>
       <tr>
       <td valign=top>${marker.markerType}</td>
-      <td valign=top><a href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a></td>
+      <td valign=top><%=idLinker.getDefaultMarkerLink(marker)%></td>
       <td valign=top>${marker.name}</td>
       <td valign=top>${marker.countOfGOTerms}</td>
       <td valign=top>${marker.countOfGxdAssays}</td>

@@ -1,4 +1,6 @@
-package org.jax.mgi.fewi.util;
+package org.jax.mgi.fewi.util.link;
+
+import org.jax.mgi.fewi.util.DBConstants;
 
 import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceID;

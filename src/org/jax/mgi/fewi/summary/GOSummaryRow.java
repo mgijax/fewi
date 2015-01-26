@@ -9,7 +9,7 @@ import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
 
 import org.jax.mgi.fewi.config.ContextLoader;
-import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.util.link.IDLinker;
 
 
 /**

@@ -1,4 +1,4 @@
-package org.jax.mgi.fewi.util;
+package org.jax.mgi.fewi.util.link;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import mgi.frontend.datamodel.AccessionID;
 import mgi.frontend.datamodel.ActualDatabase;
+import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.MarkerID;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.ActualDatabaseFinder;
@@ -41,14 +43,28 @@ public class IDLinker {
 	// maps from a given logical database to a List of ActualDB objects
 	private HashMap<String,List<ActualDB>> ldbToAdb = new HashMap<String,List<ActualDB>> ();
 
-	private Properties config = null;
+	/**
+	 * externalUrls properties object
+	 */
+	private Properties externalUrlsConfig = null;
+	
+	/**
+	 * All other global properties object
+	 */
+	private Properties propertiesConfig = null;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	@Autowired
 	private ActualDatabaseFinder actualDatabaseFinder;
 
-	private boolean initialized = false;
+	/**
+	 * exposed for testing
+	 */
+	public boolean initialized = false;
+	
+	public IDLinker() {
+	}
 
 	public void setup() 
 	{
@@ -60,11 +76,16 @@ public class IDLinker {
 		}
 
 		try {
-			config = ContextLoader.getExternalUrls();
+			externalUrlsConfig = ContextLoader.getExternalUrls();
 		} catch (Exception e) {
 			logger.error("Failed to read externalUrls.properties",e);
 		};
 
+		try {
+			propertiesConfig = ContextLoader.getConfigBean();
+		} catch (Exception e) {
+			logger.error("Failed to read global properties",e);
+		};
 
 		List<ActualDB> adbs;	// list of ActualDBs for this logical db
 
@@ -77,10 +98,10 @@ public class IDLinker {
 		Pattern hasName = Pattern.compile("\\$\\{([A-Za-z0-9_]+)\\}");
 		Properties configBean = ContextLoader.getConfigBean();
 
-		for (Object key: config.keySet())
+		for (Object key: externalUrlsConfig.keySet())
 		{
 			String name = (String)key;
-			String value = config.getProperty(name);
+			String value = externalUrlsConfig.getProperty(name);
 
 			Matcher hasNameMatcher = hasName.matcher(value);
 			// not sure what this section does - kstone
@@ -210,6 +231,20 @@ public class IDLinker {
 			this.initialized = true;
 		}
 	}
+	
+	/**
+	 * Exposed for testing
+	 */
+	public void setPropertiesConfig(Properties config) {
+		this.propertiesConfig = config;
+	}
+	
+	/**
+	 * Exposed for testing
+	 */
+	public void setLdbToAdb(HashMap<String,List<ActualDB>> ldbToAdb) {
+		this.ldbToAdb = ldbToAdb;
+	}
 
 	//--- Private Instance Methods ---
 
@@ -237,10 +272,19 @@ public class IDLinker {
 	/** return the <a href>...</a> tag for the given parameters
 	 */
 	private String makeLink (String url, String id, String label) {
+		return makeLink(url, id, label, true);
+	}
+	/** return the <a href>...</a> tag for the given parameters
+	 */
+	private String makeLink (String url, String id, String label, boolean targetBlank) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<a href='");
 		sb.append(url.replace("@@@@", id));
-		sb.append("' target='_blank'>");
+		sb.append("'");
+		if (targetBlank) {
+			sb.append(" target='_blank'");
+		}
+		sb.append(">");
 		sb.append(label);
 		sb.append("</a>");
 		return sb.toString();
@@ -289,6 +333,34 @@ public class IDLinker {
 		return byLdb;
 	}
 
+	//-- Specific object related link methods
+	
+	/**
+	 * Returns the default marker link by Symbol
+	 * 	depending on 
+	 * 	organism and other attributes
+	 * 
+	 */
+	public String getDefaultMarkerLink(Marker marker) {
+		
+		if (marker.getOrganism().equalsIgnoreCase("mouse")) {
+			String url = propertiesConfig.getProperty("FEWI_URL") + "marker/" + marker.getPrimaryID();
+			return this.makeLink(url, "", marker.getSymbol(), false);
+		}
+		
+		MarkerID entrezGeneID = marker.getEntrezGeneID();
+		
+		if (entrezGeneID != null 
+				&& entrezGeneID.getAccID() != null 
+				&& !entrezGeneID.getAccID().equals("")) {
+			return this.getLink("Entrez Gene", entrezGeneID.getAccID(), marker.getSymbol());
+		}
+		
+		// no link can be made
+		return marker.getSymbol();
+	}
+	
+	
 	//--- Public Instance Methods ---
 
 	/** get basic link using ID as link text, using first actual db for
@@ -408,7 +480,7 @@ public class IDLinker {
 
 	//--- Inner Classes ---
 
-	private class ActualDB implements Comparable<ActualDB> {
+	public class ActualDB implements Comparable<ActualDB> {
 		private String url;
 		private int orderVal = 9999;
 		private final String name;
