@@ -1,7 +1,6 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%@ page import = "org.jax.mgi.fewi.util.link.ProviderLinker" %>
-<%@ page import = "org.jax.mgi.fewi.util.link.IDLinker" %>
 <%@ page import = "java.util.List" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -24,7 +23,6 @@ ${templateBean.templateHeadHtml}
       = new StyleAlternator("detailListCat1","detailCat2");
     StyleAlternator rightTdStyles 
       = new StyleAlternator("detailListBg1","detailListBg2");
-//    IDLinker idLinker = (IDLinker) request.getAttribute("idLinker");
     VocabTerm term = (VocabTerm) request.getAttribute("term");
 %>
 

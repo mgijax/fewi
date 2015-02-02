@@ -1,10 +1,8 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
-<%@ page import = "org.jax.mgi.fewi.util.link.IDLinker" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<% IDLinker idLinker = (IDLinker)request.getAttribute("idLinker"); %>
 
 ${templateBean.templateHeadHtml}
 

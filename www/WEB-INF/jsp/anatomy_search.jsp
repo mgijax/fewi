@@ -1,7 +1,6 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%@ page import = "org.jax.mgi.fewi.util.link.ProviderLinker" %>
-<%@ page import = "org.jax.mgi.fewi.util.link.IDLinker" %>
 <%@ page import = "java.util.List" %>
 <%@ page import = "org.jax.mgi.fewi.searchUtil.entities.SolrAnatomyTerm" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" 

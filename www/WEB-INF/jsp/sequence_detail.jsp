@@ -6,7 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% Sequence sequence = (Sequence)request.getAttribute("sequence"); %>
-<% IDLinker idLinker = IDLinker.getInstance(); %>
+<% IDLinker idLinker = (IDLinker)request.getAttribute("idLinker"); %>
 
 ${templateBean.templateHeadHtml}
 
