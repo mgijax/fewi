@@ -28,9 +28,8 @@ public class IDLinkerTest {
 	@Before
 	public void setUp() {
 		this.linker = new IDLinker();
-		this.linker.initialized = true;
-		this.linker.setPropertiesConfig(makeTestProperties());
-		this.linker.setLdbToAdb(makeTestActualDbMap());
+		this.linker.setGlobalProperties(makeTestProperties());
+		this.linker.setlogicalDbMap(makeTestActualDbMap());
 	}
 	
 	private Properties makeTestProperties() {

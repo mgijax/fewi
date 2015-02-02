@@ -20,17 +20,17 @@ public class AccessionSummaryRow {
 	// instance variables
 	//-------------------
 
-    private Logger logger = LoggerFactory.getLogger(AccessionSummaryRow.class);
+    private final Logger logger = LoggerFactory.getLogger(AccessionSummaryRow.class);
 
 	// encapsulated row object
-	private Accession acc;
+	private final Accession acc;
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
-    private IDLinker  linker = ContextLoader.getIDLinker();
+    private final IDLinker  linker = IDLinker.getInstance();
     
-    private FewiLinker  feLinker = FewiLinker.getInstance();
+    private final FewiLinker  feLinker = FewiLinker.getInstance();
     
     private Boolean useKeyUrl = Boolean.FALSE;
 

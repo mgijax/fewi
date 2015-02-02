@@ -342,7 +342,6 @@ public class AlleleController {
 	ModelAndView mav = new ModelAndView("allele_mutation_involves");
 	mav.addObject("allele", allele);
 
-	idLinker.setup();
         mav.addObject("idLinker", idLinker);
 
     	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
@@ -748,7 +747,6 @@ public class AlleleController {
 
 		dbDate(mav);
 
-		idLinker.setup();
 	        mav.addObject("idLinker", idLinker);
 
 		// add a Properties object with URLs for use at the JSP level

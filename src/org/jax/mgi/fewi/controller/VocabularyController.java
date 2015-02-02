@@ -85,8 +85,7 @@ public class VocabularyController {
         
         ModelAndView mav = new ModelAndView("omim_browser");
 
-	idLinker.setup();
-	mav.addObject("idLinker", idLinker);
+        mav.addObject("idLinker", idLinker);
 
         mav.addObject("subsetLetter",subsetLetter);
         mav.addObject("terms",terms);
@@ -117,7 +116,6 @@ public class VocabularyController {
 	mav.addObject("term", term);
 	mav.addObject("title", term.getTerm() + " Protein Superfamily Detail");
 
-	idLinker.setup();
 	mav.addObject("idLinker", idLinker);
 
 	return mav;

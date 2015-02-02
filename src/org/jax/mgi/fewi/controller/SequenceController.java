@@ -27,6 +27,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import org.jax.mgi.fewi.util.StyleAlternator;
+import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ public class SequenceController {
     private final Logger logger
       = LoggerFactory.getLogger(SequenceController.class);
 
+    @Autowired
+    private IDLinker idLinker;
+    
     @Autowired
     private SequenceFinder sequenceFinder;
 
@@ -101,8 +105,41 @@ public class SequenceController {
             return mav;
         }
         // success - we have a single object;
+        
+        return renderSequenceDetail(seqList.get(0));
+    }
+    
 
-        // generate ModelAndView object to be passed to detail page
+    /*
+     * Sequence Detail by key
+     */
+    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
+    public ModelAndView seqDetailByKey(@PathVariable("dbKey") String dbKey) {
+
+        logger.debug("->seqDetailByKey started");
+
+        // find the requested sequence
+        SearchResults<Sequence> searchResults
+          = sequenceFinder.getSequenceByKey(dbKey);
+        List<Sequence> seqList = searchResults.getResultObjects();
+
+        // handle error conditions
+        if (seqList.size() < 1) { // none found
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", "No Sequence Found");
+            return mav;
+        }
+        // success - we have a single object;
+
+        return renderSequenceDetail(seqList.get(0));
+    }
+
+    /**
+     * Render the sequence detail page
+     */
+    private ModelAndView renderSequenceDetail(Sequence sequence)
+    {
+    	// generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("sequence_detail");
 
         // package detail page style alternators
@@ -112,7 +149,6 @@ public class SequenceController {
           new StyleAlternator("detailData1","detailData2"));
 
         //pull out the sequence, and add to mav
-        Sequence sequence = seqList.get(0);
         mav.addObject("sequence", sequence);
 
         // package annotated markers
@@ -173,6 +209,8 @@ public class SequenceController {
               + "could not be resolved to an MGI controlled vocabulary.");
         }
 
+        mav.addObject("idLinker",idLinker);
+        
         return mav;
     }
 
@@ -370,91 +408,6 @@ public class SequenceController {
         jsonResponse.setTotalCount(searchResults.getTotalCount());
         return jsonResponse;
     }
-
-
-    /*
-     * Sequence Detail by key
-     */
-    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView seqDetailByKey(@PathVariable("dbKey") String dbKey) {
-
-        logger.debug("->seqDetailByKey started");
-
-        // find the requested sequence
-        SearchResults<Sequence> searchResults
-          = sequenceFinder.getSequenceByKey(dbKey);
-        List<Sequence> seqList = searchResults.getResultObjects();
-
-        // handle error conditions
-        if (seqList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No Sequence Found");
-            return mav;
-        }
-        // success - we have a single object;
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("sequence_detail");
-
-        // package detail page style alternators
-        mav.addObject("leftTdStyles",
-          new StyleAlternator("detailCat1","detailCat2"));
-        mav.addObject("rightTdStyles",
-          new StyleAlternator("detailData1","detailData2"));
-
-        //pull out the sequence, and add to mav
-        Sequence sequence = seqList.get(0);
-        mav.addObject("sequence", sequence);
-
-        // package annotated markers
-        Set<Marker> markers = sequence.getMarkers();
-        if (!markers.isEmpty()) {
-            mav.addObject("markers", markers);
-        }
-
-        // package probes
-        Set<Probe> probes = sequence.getProbes();
-        if (!probes.isEmpty()) {
-            mav.addObject("probes", probes);
-        }
-
-        // package referenes
-        List<Reference> references = sequence.getReferences();
-        if (!references.isEmpty()) {
-            mav.addObject("references", references);
-        }
-
-        // package chromosome value
-        List<SequenceLocation> locList = sequence.getLocations();
-        if (!locList.isEmpty()) {
-            mav.addObject("chromosome", locList.get(0).getChromosome());
-        }
-
-        // package other IDs for this sequence
-        Set<SequenceID> ids = sequence.getIds();
-        if (!ids.isEmpty() && ids.size() > 1) {
-
-            List<SequenceID> otherIDs = new ArrayList<SequenceID>();
-            
-            for (SequenceID otherId: sequence.getIds()) {
-            	if (!otherId.getAccID().equalsIgnoreCase(sequence.getPrimaryID())) {
-            		otherIDs.add(otherId);
-            	}
-            }
-
-            // package other IDs
-            mav.addObject("otherIDs", otherIDs);
-        }
-
-        // package source notificaiton
-        if (sequence.hasRawValues()) {
-            mav.addObject("sourceNotice", "* Value from GenBank/EMBL/DDBJ "
-              + "could not be resolved to an MGI controlled vocabulary.");
-        }
-
-        return mav;
-    }
-
 
 
     //--------------------------------------------------------------------//

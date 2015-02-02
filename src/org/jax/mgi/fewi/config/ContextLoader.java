@@ -12,7 +12,6 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -33,7 +32,7 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
     
     private static String webInfPath = null;
 
-    private Logger logger = LoggerFactory.getLogger(ContextLoader.class);
+    private final Logger logger = LoggerFactory.getLogger(ContextLoader.class);
 
     @Autowired
     private WebTemplate webTemplate;
@@ -100,14 +99,6 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
     public static String getWebInfPath()
     {
     	return webInfPath;
-    }
-
-    public static IDLinker getIDLinker(){
-	IDLinker idLinker = IDLinker.getInstance();
-//	if (idLinker == null) { idLinker = new IDLinker(); }
-//	idLinker.setup();
-	return idLinker;
-//	return IDLinker.getInstance();
     }
 
     public void setApplicationContext(ApplicationContext ac)

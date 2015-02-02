@@ -141,7 +141,6 @@ public class DiseaseController {
         mav.addObject("disease", disease);
 
         // add an IDLinker to the mav for use at the JSP level
-        idLinker.setup();
         mav.addObject("idLinker", idLinker);
 
 		// add a pre-computed link for the disease ID

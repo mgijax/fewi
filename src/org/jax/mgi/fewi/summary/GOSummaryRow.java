@@ -24,7 +24,7 @@ public class GOSummaryRow {
 	// encapsulated row object
 	private Annotation annot;
 	
-	private IDLinker  linker = ContextLoader.getIDLinker();
+	private final IDLinker  linker = IDLinker.getInstance();
 
 	// config values
     String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
@@ -104,10 +104,6 @@ public class GOSummaryRow {
             String inferredString = "";
             Boolean first = Boolean.TRUE;
             
-	    if (linker == null) {
-		linker = ContextLoader.getIDLinker();
-	    }
-
             for (AnnotationInferredFromID aifi: inferred) {
                 if (first) {
 			first = Boolean.FALSE;

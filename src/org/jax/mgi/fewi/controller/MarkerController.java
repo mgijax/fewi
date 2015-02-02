@@ -374,7 +374,6 @@ public class MarkerController {
         sessionFactory.getCurrentSession().enableFilter("markerDetailMarkerInteractions");
 
         // add an IDLinker to the mav for use at the JSP level
-	idLinker.setup();
         mav.addObject("idLinker", idLinker);
 
 	// add a Properties object with URLs for use at the JSP level
