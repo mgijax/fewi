@@ -37,7 +37,7 @@ public class IDLinker {
 	private static IDLinker instance = null;
 
 
-	private static Map<String,List<ActualDB>> logicalDbMapCache = new HashMap<String,List<ActualDB>> ();
+	private static Map<String,List<ActualDB>> logicalDbMapCache = null;
 	
 	//--- Instance Variables ---
 
@@ -48,7 +48,7 @@ public class IDLinker {
 	@Autowired
 	private ActualDatabaseFinder actualDatabaseFinder;
 	
-	private Map<String,List<ActualDB>> logicalDbMap = new HashMap<String,List<ActualDB>> ();
+	private Map<String,List<ActualDB>> logicalDbMap = null;
 	
 	
 	/**
@@ -100,9 +100,15 @@ public class IDLinker {
 	}
 	
 	private Map<String,List<ActualDB>> getLogicalDbMap() {
-		if (logicalDbMapCache.size() == 0) {
+		// initialize static cache if needed
+		if (logicalDbMapCache == null) {
 			this.logicalDbMap = this.initLogicalDbMapCache();
 			logicalDbMapCache = this.logicalDbMap;
+		}
+		
+		if (this.logicalDbMap == null) {
+			// pull from the cache if this is not set manually
+			this.logicalDbMap = logicalDbMapCache;
 		}
 
 		return this.logicalDbMap;
@@ -232,7 +238,6 @@ public class IDLinker {
 					    {
 					    	seenIt = true;
 					    }
-					    logger.debug ("Compare: *" + adbName + "* and *" + a.getName() + "*");
 					}
 					if (!seenIt) 
 					{
@@ -275,6 +280,7 @@ public class IDLinker {
 	 */
 	private ActualDB getActualDB (String ldb) {
 		List<ActualDB> adbs = this.getActualDBs(ldb);
+		
 		if (adbs == null) {
 			return null;
 		}
@@ -405,6 +411,7 @@ public class IDLinker {
 	public String getLink (String logicalDB, String id, String label) {
 		ActualDB adb = this.getActualDB(logicalDB);
 		if (adb == null) {
+			logger.warn("No ActualDB found for logicalDB = "+logicalDB);
 			return id;
 		}
 		return this.makeLink(adb.getUrl(), id, label);
