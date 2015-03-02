@@ -162,7 +162,7 @@ border-collapse: collapse;
 }
 .legendSection{
 	width: 100%;
-	margin-bottom:22px;
+	margin-bottom:20px;
 	font-size:11px;
 }
 .legendSelectionRow{
@@ -476,7 +476,7 @@ border-collapse: collapse;
 		  	<div class='hiddenNegIndicator'></div>
 		  </div>
 		</div>
-		<span class='legendExampleRange'> structure contains both present</span> <br/>
+		<span class='legendExampleRange'> structure has both present</span> <br/>
 		<span class='legendExampleRange'> and absent results </span>
 	</div>
 
@@ -524,7 +524,15 @@ border-collapse: collapse;
 	<div class='legendSection'>
 		<div style='padding-bottom:0px; text-align:center;'>Use gray checkboxes to select rows/columns for filtering</div>
 	</div>
-
+	
+	<div class='legendSection' style="margin-bottom: 0px;">
+		<div style="font-style:italic; text-align:center;" >
+			<a href="${configBean.USERHELP_URL}EXPRESSION_help.shtml#matrixcolors"
+				onclick="javascript:openUserhelpWindow('EXPRESSION_help.shtml#matrixcolors'); return false;"
+			>more details</a>
+		</div>
+	</div>
+	
   </div>
 </div>
 </div>
@@ -579,7 +587,7 @@ border-collapse: collapse;
 		  	<div class='hiddenNegIndicator'></div>
 		  </div>
 		</div>
-		<span class='legendExampleRange'> structure contains both present</span> <br/>
+		<span class='legendExampleRange'> structure has both present</span> <br/>
 		<span class='legendExampleRange'> and absent results </span>
 	</div>
 
@@ -616,6 +624,14 @@ border-collapse: collapse;
 	
 	<div class='legendSection'>
 		<div style='padding-bottom:0px; text-align:center;'>Use gray checkboxes to select rows/columns for filtering</div>
+	</div>
+	
+	<div class='legendSection' style="margin-bottom: 0px;">
+		<div style="font-style:italic; text-align:center;" >
+			<a href="${configBean.USERHELP_URL}EXPRESSION_help.shtml#matrixcolors"
+				onclick="javascript:openUserhelpWindow('EXPRESSION_help.shtml#matrixcolors'); return false;"
+			>more details</a>
+		</div>
 	</div>
 
   </div>
