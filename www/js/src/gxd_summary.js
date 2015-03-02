@@ -912,6 +912,7 @@ var structureStageGrid = function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
 	        	makeMatrixResizable("sgTarget",40,60);
+	        	structMatrixLegendPopupPanel.show();
 	        }
 	    });
 	}
@@ -995,6 +996,7 @@ var structureGeneGrid = function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
 	        	makeMatrixResizable("ggTarget",40,40);
+	        	geneMatrixLegendPopupPanel.show();
 	        }
 	    });
 	}
