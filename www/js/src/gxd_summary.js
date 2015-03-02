@@ -1010,14 +1010,14 @@ var structureGeneGrid = function()
 
 // popup for gene matrix legend
 window.geneMatrixLegendPopupPanel = new YAHOO.widget.Panel("geneLegendPopupPanel",
-		{ width:"320px", visible:false, constraintoviewport:true,
+		{ width:"260px", visible:false, constraintoviewport:true,
 			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
 });
 window.geneMatrixLegendPopupPanel.render();
 
 // popup for structure matrix legend
 window.structMatrixLegendPopupPanel = new YAHOO.widget.Panel("structLegendPopupPanel",
-		{ width:"320px", visible:false, constraintoviewport:true,
+		{ width:"260px", visible:false, constraintoviewport:true,
 			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
 });
 window.structMatrixLegendPopupPanel.render();

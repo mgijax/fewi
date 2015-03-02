@@ -157,7 +157,7 @@ border-collapse: collapse;
 	background:	#EEE;
 }
 #legendWrapper {
-	width:300px;
+	width:240px;
 	overflow: auto;
 }
 .legendSection{
@@ -267,9 +267,13 @@ border-collapse: collapse;
 	#sgTarget .red3, #ggTarget .red3 {
 		fill: rgb(192,0,0);
 	}
-	#sgTarget .gray, #ggTarget .gray {
-		fill: rgb(191,191,191);
-		/*fill: rgb(191,191,191);*/
+	#sgTarget .gray {
+		/* fill: rgb(191,191,191); */
+		fill: url(#sash28);
+	}
+	#ggTarget .gray {
+		/* fill: rgb(191,191,191); */
+		fill: url(#sash24);
 	}
 	#sgTarget .gold, #ggTarget .gold {
 		fill: rgb(255,219,103);
@@ -477,7 +481,9 @@ border-collapse: collapse;
 	</div>
 
 	<div class='legendSection' >
-		<div class='legendExampleCell' style='background:#BFBFBF ;'></div>
+		<div class='legendExampleCell'>
+			<img style="height: inherit; width: inherit;" src="${configBean.FEWI_URL}assets/images/sash.png" />
+		</div>
 		<span class='legendExampleRange'> ambiguous in structure </span>
 	</div>
 
@@ -499,8 +505,8 @@ border-collapse: collapse;
 		</div>
 		<span class='legendExampleRange'> tissue exists at
 		  <a id='tsGlossaryLink'
-		    href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler stage</a> (but has</span> <br/>
-		<span class='legendExampleRange'> no annotations)</span>
+		    href="${configBean.FEWI_URL}glossary/theiler" target="_blank">Theiler stage</a> (but </span> <br/>
+		<span class='legendExampleRange'>has no annotations)</span>
 	</div>
 
 	<div class='legendSection' >
@@ -509,6 +515,14 @@ border-collapse: collapse;
 		  </div>
 		</div>
 		<span class='legendExampleRange'> tissue does not exist at this stage </span>
+	</div>
+	
+	<div class='legendSection' style="margin-bottom:10px;">
+		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Filter</div>
+	</div>
+	
+	<div class='legendSection'>
+		<div style='padding-bottom:0px; text-align:center;'>Use gray checkboxes to select rows/columns for filtering</div>
 	</div>
 
   </div>
@@ -570,7 +584,9 @@ border-collapse: collapse;
 	</div>
 
 	<div class='legendSection' >
-		<div class='legendExampleCell' style='background:#BFBFBF ;'></div>
+		<div class='legendExampleCell'>
+			<img style="height: inherit; width: inherit;" src="${configBean.FEWI_URL}assets/images/sash.png" />
+		</div>
 		<span class='legendExampleRange'> ambiguous in structure </span>
 	</div>
 
@@ -589,11 +605,39 @@ border-collapse: collapse;
 		  <div class='inSubStructIndicatorWrapper'>
 		  </div>
 		</div>
-		<span class='legendExampleRange'> no annotations for the gene in this tissue </span>
+		<span class='legendExampleRange'> no annotations for the gene in this </span>
+		<br/>
+		<span class='legendExampleRange'>tissue </span>
+	</div>
+	
+	<div class='legendSection' style="margin-bottom:10px;">
+		<div style='padding-bottom:0px; text-align:center; font-weight:bold;'>Filter</div>
+	</div>
+	
+	<div class='legendSection'>
+		<div style='padding-bottom:0px; text-align:center;'>Use gray checkboxes to select rows/columns for filtering</div>
 	</div>
 
   </div>
 </div>
 </div>
+
+
+<!-- Patterns for matrix sash icon -->
+<svg height="0" width="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <defs>
+    <pattern id="sash28" patternUnits="userSpaceOnUse" width="28" height="28">
+      <image xlink:href="${configBean.FEWI_URL}assets/images/sash.png"
+        x="-3" y="-3" width="33" height="32">
+      </image>
+    </pattern>    
+    <pattern id="sash24" patternUnits="userSpaceOnUse" width="24" height="24">
+      <image xlink:href="${configBean.FEWI_URL}assets/images/sash.png"
+        x="-3" y="-3" width="29" height="28">
+      </image>
+    </pattern>
+  </defs>
+</svg>
+
 
 
