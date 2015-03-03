@@ -912,7 +912,9 @@ var structureStageGrid = function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
 	        	makeMatrixResizable("sgTarget",40,60);
-	        	structMatrixLegendPopupPanel.show();
+	        	if (SHOW_MATRIX_LEGENDS) {
+	        		structMatrixLegendPopupPanel.show();
+	        	}
 	        }
 	    });
 	}
@@ -996,7 +998,9 @@ var structureGeneGrid = function()
 	        {
 	        	//When matrix is drawn/redrawn we resize it with margins, to fit the browser window
 	        	makeMatrixResizable("ggTarget",40,40);
-	        	geneMatrixLegendPopupPanel.show();
+	        	if (SHOW_MATRIX_LEGENDS) {
+	        		geneMatrixLegendPopupPanel.show();
+	        	}
 	        }
 	    });
 	}
@@ -1023,6 +1027,25 @@ window.structMatrixLegendPopupPanel = new YAHOO.widget.Panel("structLegendPopupP
 			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
 });
 window.structMatrixLegendPopupPanel.render();
+
+
+// Handle legend default behavior
+window.SHOW_MATRIX_LEGENDS = true;
+
+var closeEl = YAHOO.util.Dom.getElementsByClassName("container-close", null, 
+		structMatrixLegendPopupPanel.element)[0];
+	
+YAHOO.util.Event.on(closeEl, "click", function(){
+	SHOW_MATRIX_LEGENDS = false;
+});
+
+var closeEl = YAHOO.util.Dom.getElementsByClassName("container-close", null, 
+		geneMatrixLegendPopupPanel.element)[0];
+	
+YAHOO.util.Event.on(closeEl, "click", function(){
+	SHOW_MATRIX_LEGENDS = false;
+});
+
 
 //Handle the initial state of the page through history manager
 function historyInit()
