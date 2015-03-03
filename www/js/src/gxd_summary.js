@@ -884,7 +884,7 @@ var structureStageGrid = function()
 	        	return 0;
 	        },
 	        openCloseStateKey: "sg_"+querystring,
-	        legendClickHandler: function(e){ structMatrixLegendPopupPanel.show() },
+	        legendClickHandler: function(e){ structMatrixLegendPopupPanel.show(); },
 	        filterSubmitHandler: function(rows,cols)
 	        {
 	        	var newFacets = window.facets;
@@ -969,7 +969,7 @@ var structureGeneGrid = function()
 	        columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
 			verticalColumnLabels: true,
 	        openCloseStateKey: "gg_"+querystring,
-	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show() },
+	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
 	        filterSubmitHandler: function(rows,cols)
 	        {
 	        	var newFacets = window.facets;

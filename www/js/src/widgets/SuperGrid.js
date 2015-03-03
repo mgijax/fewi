@@ -1234,12 +1234,12 @@ function SuperGrid(config)
     {
     	var buttonXOffset = 50;
        	var buttonYOffset = 66;
-    	filterButtonGroup = _self.spacerGroup.append("g")
+    	_self.filterButtonGroup = _self.spacerGroup.append("g")
 			.style("cursor","pointer")
 			.on("click",_self.filterClickHandler);
 
 		// underlay rect
-    	filterButtonGroup.append("rect")
+    	_self.filterButtonGroup.append("rect")
     		.attr("x",buttonXOffset)
     		.attr("y",buttonYOffset)
  	    	.attr("height",25)
@@ -1249,7 +1249,7 @@ function SuperGrid(config)
     		.style("stroke","black");
 
 		// overlay rect
-    	filterButtonGroup.append("rect")
+    	_self.filterButtonGroup.append("rect")
 			.attr("x",buttonXOffset +1)
 			.attr("y",buttonYOffset +1)
 	    	.attr("height",21)
@@ -1259,7 +1259,7 @@ function SuperGrid(config)
     		.append("svg:title").text("Click to apply row/column filters");
 
     	// filter button text
-    	filterButtonGroup.append("text")
+    	_self.filterButtonGroup.append("text")
 		    .attr("x", buttonXOffset+8)
 		    .attr("y", buttonYOffset+4)
 		    .attr("dy", "1em")
@@ -1274,7 +1274,7 @@ function SuperGrid(config)
     	// add graffic
     	if(_self.filterButtonIconUrl)
     	{
-    		filterButtonGroup.append("image")
+    		_self.filterButtonGroup.append("image")
     			.attr("x", buttonXOffset+64)
     			.attr("y", buttonYOffset+6)
     			.attr("width",_self.cellSize * (1/2))
@@ -1286,7 +1286,7 @@ function SuperGrid(config)
     	}
     	else
     	{
-    		filterButtonGroup.append("text")
+    		_self.filterButtonGroup.append("text")
     		.attr("x",4)
     		.attr("y",_self.cellSize/1.5)
     		.text("F");
@@ -2101,7 +2101,7 @@ function SuperGrid(config)
 		// adjust filter buttons
 		if(_self.doFilters())
 		{
-			SGUtil.translateElementRight(_self.filterButtonGroup,newWidth - _self.cellSize);
+			//SGUtil.translateElementRight(_self.filterButtonGroup,newWidth - _self.cellSize);
 
 			_self.rowGroup.selectAll(".rowFilter").attr("x",newWidth-_self.cellSize);
 			_self.rowGroup.selectAll(".rowFilterImage").attr("x",newWidth-(_self.cellSize * (7/8)));
@@ -2174,7 +2174,7 @@ function SuperGrid(config)
 		// adjust filter button
 		if(_self.doFilters())
 		{
-			SGUtil.translateElementDown(_self.filterButtonGroup,newHeight - _self.cellSize);
+			//SGUtil.translateElementDown(_self.filterButtonGroup,newHeight - _self.cellSize);
 
 			_self.colGroup.selectAll(".colFilter").attr("y",newHeight-_self.cellSize);
 			_self.colGroup.selectAll(".colFilterImage").attr("y",newHeight-(_self.cellSize * (7/8)));
@@ -2389,13 +2389,13 @@ function SuperGrid(config)
     	var filteredColumns = _self.getFilteredColumns();
     	if((filteredRows && filteredRows.length) || (filteredColumns && filteredColumns.length))
     	{
-			$("#filterTextID").css("opacity","1");
-			$("#filterIconID").css("opacity","1");
+			_self.filterButtonGroup.select("#filterTextID").style("opacity","1");
+			_self.filterButtonGroup.select("#filterIconID").style("opacity","1");
     	}
     	else
     	{
-			$("#filterTextID").css("opacity","0.5");
-			$("#filterIconID").css("opacity","0.5");
+    		_self.filterButtonGroup.select("#filterTextID").style("opacity","0.5");
+			_self.filterButtonGroup.select("#filterIconID").style("opacity","0.5");
 		}
 	}
 
