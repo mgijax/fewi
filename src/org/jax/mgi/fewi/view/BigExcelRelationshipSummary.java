@@ -33,6 +33,12 @@ public class BigExcelRelationshipSummary extends AbstractBigExcelView {
 		row.createCell(col++).setCellValue("ScoreSource");
 		row.createCell(col++).setCellValue("Validation");
 		row.createCell(col++).setCellValue("ReferenceId");
+		
+		row.createCell(col++).setCellValue("ParticipantProductID");
+		row.createCell(col++).setCellValue("OrganizerProductID");
+		row.createCell(col++).setCellValue("Algorithm");
+		row.createCell(col++).setCellValue("OtherReferences");
+		
 		row.createCell(col++).setCellValue("Notes");
 
 		@SuppressWarnings("unchecked")
@@ -50,6 +56,12 @@ public class BigExcelRelationshipSummary extends AbstractBigExcelView {
 			row.createCell(col++).setCellValue(r.getScoreSource());
 			row.createCell(col++).setCellValue(r.getValidation());
 			row.createCell(col++).setCellValue(r.getJnumID());
+			
+			row.createCell(col++).setCellValue(r.getParticipantProductID());
+			row.createCell(col++).setCellValue(r.getOrganizerProductID());
+			row.createCell(col++).setCellValue(r.getAlgorithm());
+			row.createCell(col++).setCellValue(r.getOtherReferences());
+			
 			row.createCell(col++).setCellValue(r.getNotes());
 		}
 	}

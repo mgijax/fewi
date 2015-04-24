@@ -11,7 +11,6 @@ import mgi.frontend.datamodel.Reference;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.link.IDLinker;
 
-
 /**
  * wrapper around an Annotation;  represents on row in summary
  */
@@ -94,23 +93,55 @@ public class GOSummaryRow {
     	}
         return termText;
     }
+
+    /** return the String that should be sent to the browser for the 
+     * evidence code column in the GO table.  This now includes a tooltip.
+     */
     public String getEvidence() {
-    	return annot.getEvidenceCode();
+	String ec = annot.getEvidenceCode();
+	String et = annot.getEvidenceTerm();
+
+	// if we don't have the abbreviation mapped, then skip the tooltip
+	if (et == null) {
+    	    return ec;
+	}
+
+	String tooltipTemplate = "<span onMouseOver='return overlib(\"<TERM>\", LEFT, WIDTH, <WIDTH>);' onMouseOut='nd();'><CODE></span>";
+
+	int width = Math.min(200, 7 * et.length());
+
+	return tooltipTemplate
+		.replace("<CODE>", ec)
+		.replace("<TERM>", et)
+		.replace("<WIDTH>", "" + width);
     }
+
     public String getInferred() {
         List<AnnotationInferredFromID> inferred = annot.getInferredFromList();
         if (inferred.size() >= 1)
         {
+	    String tooltipTemplate = "<span onMouseOver='return overlib(\"<ORGANISM>\", LEFT, WIDTH, <WIDTH>);' onMouseOut='nd();'><LINK></span>";
+
             String inferredString = "";
             Boolean first = Boolean.TRUE;
             
             for (AnnotationInferredFromID aifi: inferred) {
+		String link = linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
+		String organism = aifi.getOrganism();
+
+		if (organism != null) {
+		    link = tooltipTemplate
+			.replace("<LINK>", link)
+			.replace("<WIDTH>", "" + (10 * organism.length()))
+			.replace("<ORGANISM>", organism);
+		}
+
                 if (first) {
 			first = Boolean.FALSE;
-                	inferredString = linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
+                	inferredString = link;
                 }
                 else {
-                	inferredString = inferredString + " | " + linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
+                	inferredString = inferredString + " | " + link;
                 }
             }
             
@@ -126,18 +157,43 @@ public class GOSummaryRow {
             return "";
         }
         
+	if (linker == null) {
+	    linker = ContextLoader.getIDLinker();
+	}
+
         String refString = "";
         Boolean first = Boolean.TRUE;
+	
+	// fill in pubmed ID with line break, citation, link to reference
+	String tooltipTemplate = "<span onMouseOver='return overlib(\"<CITATION>\", LEFT, WIDTH, 200, CLOSECLICK, CLOSETEXT, \"Close X\");' onMouseOut='nd();'><LINK></span>";
+
+	String jnumLink = "<a href='" + fewiUrl
+	    + "reference/<JNUM>'><JNUM></a>";
+
         for (Reference ref: references) {
+	    String citation = ref.getMiniCitation();
+	    String jnum = jnumLink.replace("<CITATION>", citation)
+		.replace("<JNUM>", ref.getJnumID());
+	    String mgiLink = tooltipTemplate.replace("<CITATION>", citation)
+		.replace("<LINK>", jnum);
+
             if (first) {
-		refString = "<a href='" + fewiUrl + "reference/" + ref.getJnumID() 
-                            + "'>" + ref.getJnumID() + "</a>";
+		refString = refString + mgiLink;
                 first = Boolean.FALSE;
             }
             else {
-		refString = refString + ", <a href='" + fewiUrl + "reference/" + ref.getJnumID() 
-                            + "'>" + ref.getJnumID() + "</a>";
+		refString = refString + ", " + mgiLink;
             }
+
+	    if (ref.getPubMedID() != null) {
+		String pubmedLink = tooltipTemplate
+		    .replace("<CITATION>", citation)
+		    .replace("<LINK>",
+			linker.getLink("MEDLINE", ref.getPubMedID(),
+			    "PMID:" + ref.getPubMedID()));
+
+		refString = refString + "&nbsp;[" + pubmedLink + "]";
+	    }
         }
         return refString;
     }

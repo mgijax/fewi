@@ -79,10 +79,6 @@ public class GxdAssayResultSummaryRow {
 		return result.getAssayType();
 	}
 
-	public String getAnatomicalSystem() {
-		return result.getAnatomicalSystem();
-	}
-
 	public String getAge() {
 		return result.getAge();
 	}

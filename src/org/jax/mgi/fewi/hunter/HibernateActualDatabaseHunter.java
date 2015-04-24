@@ -34,7 +34,7 @@ public class HibernateActualDatabaseHunter
     @SuppressWarnings("unchecked")
 	public void hunt(SearchParams searchParams,SearchResults<ActualDatabase> searchResults) 
     {
-        logger.debug("HibernateActualDatabaseHunter.hunt()");         
+        //logger.debug("HibernateActualDatabaseHunter.hunt()");         
         
     	StringBuffer hql = new StringBuffer("FROM ActualDatabase");
 		if (sessionFactory == null) {

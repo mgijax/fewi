@@ -59,7 +59,7 @@ public class HomologyController {
 
 
     //--------------------------------------//
-    // Homology Detail by Marker ID
+    // HomoloGene Detail by Marker ID
     //--------------------------------------//
     @RequestMapping(value="/marker/{markerID:.+}", method = RequestMethod.GET)
     public ModelAndView homologyClusterDetailByMarker(@PathVariable("markerID") String markerID) {
@@ -95,14 +95,14 @@ public class HomologyController {
 	// now we can go ahead and pass off to the normal code for links by
 	// HomoloGene ID
 	
-	return this.prepareHomoloGeneClass(hgID);
+	return this.prepareHomologyClassByID(hgID);
     }
 
     //--------------------------------------//
-    // Homology Detail by Marker Key
+    // HomoloGene Detail by Marker Key
     //--------------------------------------//
     @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView homologyClusterDetailByKey(@PathVariable("dbKey") String dbKey) {
+    public ModelAndView homologyClusterDetailByMarkerKey(@PathVariable("dbKey") String dbKey) {
 	logger.debug ("-> homologyDetailByKey started");
 
 	// find the requested marker by database key
@@ -131,25 +131,36 @@ public class HomologyController {
 	// now we can go ahead and pass off to the normal code for links by
 	// HomoloGene ID
 	
-	return this.prepareHomoloGeneClass(hgID);
+	return this.prepareHomologyClassByID(hgID);
     }
 
     //--------------------//
-    // Homology Detail By ID
+    // HomoloGene Detail By ID
     //--------------------//
     @RequestMapping(value="/{homologyID:.+}", method = RequestMethod.GET)
     public ModelAndView homologyClusterDetailByID(@PathVariable("homologyID") String homologyID) {
 
         logger.debug("->homologyDetailByID started");
 
-	return this.prepareHomoloGeneClass(homologyID);
+	return this.prepareHomologyClassByID(homologyID);
+    }
+
+    //------------------------------------------------------------
+    // homology cluster (either HGNC or HomoloGene) by cluster key
+    //------------------------------------------------------------
+    @RequestMapping(value="/cluster/key/{clusterKey:.+}", method = RequestMethod.GET)
+    private ModelAndView homologyClusterDetailByKey(@PathVariable("clusterKey") String clusterKey) {
+
+	HomologyCluster homology = homologyFinder.getClusterByKey(clusterKey);
+	return this.prepareHomologyClass(homology);
     }
 
     // code shared to send back a HomoloGene class detail page, regardless of
     // whether the initial link was by HG ID or by non-mouse marker key
-    private ModelAndView prepareHomoloGeneClass (String homologyID) {
+    private ModelAndView prepareHomologyClassByID (String homologyID) {
 
-        List<HomologyCluster> homologyList = homologyFinder.getHomologyClusterByID(homologyID);
+        List<HomologyCluster> homologyList =
+		homologyFinder.getHomologyClusterByID(homologyID);
 
         // there can be only one...
         if (homologyList.size() < 1) { // none found
@@ -159,14 +170,22 @@ public class HomologyController {
         }
         // success - we have a single object
 
+	return this.prepareHomologyClass(homologyList.get(0));
+    }
+
+    // code shared to send back a HomoloGene class detail page, regardless of
+    // whether the initial link was by HG ID or by non-mouse marker key
+    private ModelAndView prepareHomologyClass (HomologyCluster homology) {
+
         // generate ModelAndView object to be passed to detail page
         ModelAndView mav = new ModelAndView("homology_detail");
         
-        //pull out the HomologyCluster, and add to mav
-        HomologyCluster homology = homologyList.get(0);
-        
-        
-        //logger.debug("PRE_INIT SEQUENCES");
+	// first marker symbol (for page title)
+	String firstSymbol = null;
+
+	// SEO keywords
+	StringBuffer keywords = new StringBuffer("MGI");
+
         // kstone - Somehow pre-looping through the markers and sequences makes the MAV do half as many queries on average.
         // I have no idea why, but it cuts a second or two off the load time.
         homology.getOrthologs().size();
@@ -176,12 +195,32 @@ public class HomologyController {
         	for(Marker m : oo.getMarkers())
         	{
         		m.getSequenceAssociations().size();
+			if (firstSymbol == null) {
+			    firstSymbol = m.getSymbol();
+			}
+			keywords.append(", ");
+			keywords.append(m.getSymbol());
         	}
         }
-        //logger.debug("SEQUENCES INITIALISED");
         
         mav.addObject("homology", homology);
+	mav.addObject("source", homology.getSource());
+	mav.addObject("seoDescription", 
+		"View " + firstSymbol + " mouse/human homology from "
+		+ homology.getSource() + " with: genes, location, sequences, "
+		+ "associated human diseases");
+	mav.addObject("seoKeywords", keywords.toString());
 
+	if ("HGNC".equals(homology.getSource())) {
+	    mav.addObject("browserTitle", firstSymbol
+		+ " Mouse/Human Homology HGNC");
+	    mav.addObject("pageTitle", "HGNC Mouse/Human Homology");
+	} else {
+	    mav.addObject("browserTitle", firstSymbol
+		+ " Vertebrate Homology HomoloGene:"
+		+ homology.getPrimaryID());
+	    mav.addObject("pageTitle", "HomoloGene Vertebrate Homology");
+	}
         return mav;
     }
 

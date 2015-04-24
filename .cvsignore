@@ -1,1 +1,8 @@
 build.properties
+www/WEB-INF/properties/GlobalConfig.properties
+www/WEB-INF/properties/fewi.properties
+www/WEB-INF/web.xml
+src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearch.tokens
+src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearchLexer.java
+src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearchParser.java
+unittest-results

@@ -27,6 +27,7 @@ public class FewiLinker {
 
 		idUrlMap.put(ObjectTypes.MARKER,  baseUrl +"marker/%s");
 		idUrlMap.put(ObjectTypes.REFERENCE, baseUrl +"reference/%s");
+		idUrlMap.put(ObjectTypes.ANTIBODY, baseUrl +"antibody/%s");
 		idUrlMap.put(ObjectTypes.ALLELE, baseUrl +"allele/%s");
 		idUrlMap.put(ObjectTypes.SEQUENCE, baseUrl +"sequence/%s");
 		idUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/%s");
@@ -49,8 +50,7 @@ public class FewiLinker {
 		keyUrlMap.put(ObjectTypes.PROBECLONE, pythonWiUrl +"searches/probe.cgi?%s");
 		keyUrlMap.put(ObjectTypes.IMAGE, baseUrl +"image/key/%s");
 		keyUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/key/%s");
-		keyUrlMap.put(ObjectTypes.ANTIBODY, pythonWiUrl +"searches/antibody.cgi?%s");
-		keyUrlMap.put(ObjectTypes.ANTIGEN, pythonWiUrl +"searches/antigen.cgi?%s");
+		keyUrlMap.put(ObjectTypes.ANTIBODY, baseUrl +"antibody/key/%s");
 		keyUrlMap.put(ObjectTypes.MAPPING, baseUrl +"mapping/key/%s");
 		keyUrlMap.put(ObjectTypes.DISEASE, baseUrl +"disease/key/%s");
 		keyUrlMap.put(ObjectTypes.HOMOLOGY, baseUrl +"homology/key/%s");

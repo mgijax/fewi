@@ -40,6 +40,10 @@ public class HdpGridClusterSummaryRow {
     	this.mpHeaderRowMapper = mpHeaderRowMapper;
     }
 
+    public String getHomologySource() {
+	return this.gridCluster.getHomologySource();
+    }
+
     public SolrHdpGridCluster getGridCluster()
     {
     	return gridCluster;

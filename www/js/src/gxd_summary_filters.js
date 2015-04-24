@@ -1,6 +1,10 @@
 /* Name: gxd_summary_filters.js
  * Purpose: added for GXD Anatomy release, to allow filtering on GXD summary
  *   page.  Modeled after code from reference_summary.js.
+ * Notes:
+ * 1. (April 2015) - switched the anatomical system filter to no longer be a
+ * traditional filter, but instead to piggyback on the grid's structureIdFilter
+ * field and use its handling.
  */
 
 /* Globals
@@ -45,7 +49,7 @@ var displayStageDayMap = {
 
 function gsfLog(msg) {
     // log a message to the browser console
-	//console.log(msg);
+//	console.log(msg);
 }
 
 // encode an individual value selected for a filter, to be URL-safe
@@ -167,6 +171,110 @@ var parseFacetResponse = function (oRequest, oResponse, oPayload) {
 		}
 	});
 
+	populateFacetDialog(oPayload.title, options.join('<br/>'), false);
+};
+
+/* parse the results we get back to populate the system filter
+ */
+var parseSystemFacetResponse = function (oRequest, oResponse, oPayload) {
+	var results = oResponse.results;
+	var targetFacetName = 'structureIDFilter';
+	var options = [];	// contents of the popup box so far
+
+	// tracks which already-selected IDs we've seen so far
+	var seen = { 'length' : 0 };
+
+	/* cases to consider for structure filtering:
+	 * 1. no values already chosen
+	 *    - show high-level terms which are ancestors of terms in results
+	 * 2. one or more high-level terms chosen
+	 *    - show only options for the selected terms and have them checked
+	 * 3. no high-level terms chosen, but more specific term(s) chosen
+	 *    - show only message "More specific filter(s) already selected"
+	 * 4. both high-level term(s) and more specific term(s) chosen
+	 *    - show options for selected high-level term(s), have them checked,
+	 *      and show message "Additional more specific filter(s) already
+	 *      selected"
+	 */
+
+	results.forEach(function(facet){
+		/* if we have a structureIDFilter already in-place, then we
+		 * only want to show those checkboxes and we want to show them
+		 * checked.
+		 */
+		var checked = '';
+		var fVal = encode(facet);
+		var skipIt = 0;
+
+		if (targetFacetName in window.facets) {
+			var fil = facets[targetFacetName];
+			var i = fil.length;
+			skipIt = 1;
+
+			while (i--) {
+				// if this string ends with an EMAPA number
+				// that we've filtered by, then note it as
+				// a 'checked' one
+
+				if (fVal.indexOf(fil[i]) == (fVal.length - fil[i].length)) {
+					checked = ' checked ';
+					seen[fil[i]] = 1;
+					seen.length = 1 + seen.length;
+					skipIt = 0;
+				}
+			}
+		}
+
+		if (skipIt == 0) {
+			var pieces = facet.split("_");
+			options[options.length] =
+				'<label><input type="checkbox" name="'
+				+ targetFacetName + '" value="'
+				+ pieces[1] + '"'
+				+ checked + '> '
+				+ pieces[0] + '</label>';
+		}
+	});
+
+	// go through and look for already-selected IDs that we didn't find
+	// in our list of facets.  If we didn't find them, then we need to
+	// include them as hidden fields.
+	
+	var hasSpecifics = 0;
+	if (targetFacetName in window.facets) {
+		facets[targetFacetName].forEach(function(facet) {
+			var fVal = encode(facet);
+			if (!(fVal in seen)) {
+				hasSpecifics = 1;
+				options[options.length] =
+					"<span style='display:none'>"
+					+ "<input type='checkbox' name='"
+					+ targetFacetName
+					+ "' checked='checked' "
+					+ "value='" + fVal + "'></span>";
+			}
+		});
+	}
+
+	// now nail down which case we're in (of the 4 listed above)
+	
+	if (targetFacetName in window.facets) {
+		if (seen.length == 0) {
+			// case 3
+	    		populateFacetDialog(oPayload.title,
+			    "Additional anatomical filters have been selected",
+			    true);
+			return;
+		} else if (hasSpecifics == 1) {
+			// case 4 -- add additional message, then let it fall
+			// through
+			options[options.length] = "Additional anatomical filters have been selected";
+		} else {
+			// case 2 -- let if fall through as-is
+		}
+	} else {
+		// case 1 -- let it fall through as-is
+	}
 	populateFacetDialog(oPayload.title, options.join('<br/>'), false);
 };
 
@@ -313,7 +421,15 @@ var prepFilters = function(qfRequest) {
 	};
     };
 
-    var systemCallback = buildCallback('systemFilter', 'Anatomical System');
+    var buildSystemCallback = function (filterName, title) {
+	return { success: parseSystemFacetResponse,
+	    failure: handleError,
+	    scope: this,
+	    argument: { name: filterName, title: title }
+	};
+    };
+
+    var systemCallback = buildSystemCallback('systemFilter', 'Anatomical System');
     var assayTypeCallback = buildCallback('assayTypeFilter', 'Assay Type');
     var detectedCallback = buildCallback('detectedFilter', 'Detected?');
     var wildtypeCallback = buildCallback('wildtypeFilter', 'Wild type?');

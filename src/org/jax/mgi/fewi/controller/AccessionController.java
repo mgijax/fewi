@@ -129,12 +129,19 @@ public class AccessionController {
         	else if (objectType.equals(ObjectTypes.PROBECLONE) || 
         			objectType.equals(ObjectTypes.GO_CC) ||
         			objectType.equals(ObjectTypes.GO_MF) ||
-        			objectType.equals(ObjectTypes.GO_BP) ||
-        			objectType.equals(ObjectTypes.ANTIBODY) ||
-        			objectType.equals(ObjectTypes.ANTIGEN)) {
+        			objectType.equals(ObjectTypes.GO_BP)) {
         		logger.debug("Old WI Case");
         		url = linker.getFewiKeyLink(objectType, "" + acc.getObjectKey());
         	}
+
+		// error case - antigen links now unsupported.
+		else if (objectType.equals(ObjectTypes.ANTIGEN)) {
+        		mav = new ModelAndView("error");
+ 	   	        mav.addObject("errorMsg",
+				"Links to antigens are no longer supported");
+    		        return mav; 
+		}
+
         	else {
         		logger.debug("Base case.");
             	url = linker.getFewiIDLink(acc.getObjectType(), acc.getDisplayID());        			

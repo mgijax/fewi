@@ -63,12 +63,13 @@
 	</c:if>
 	<c:forEach var="popupRow" items="${humanPopupRows}" varStatus="status">
 	
-		<c:set var="hasHomologeneId" value="${not empty popupRow.marker.homologeneId}"/>
+		<c:set var="clusterKey" value="${popupRow.marker.homologyClusterKey}"/>
+		<c:set var="hasHomology" value="${not empty popupRow.marker.homologySource and not empty clusterKey}"/>
 		
-		<tr <c:if test="${hasHomologeneId}">title="click gene for homology details"</c:if> class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
-			<c:if test="${hasHomologeneId}">onClick="window.open('${configBean.FEWI_URL}homology/${popupRow.marker.homologeneId}'); return true;"</c:if> >
+		<tr <c:if test="${hasHomology}">title="click gene for homology details"</c:if> class="genoRow ${status.index % 2 == 0 ? 'row1' : 'row2'}" 
+			<c:if test="${hasHomology}">onClick="window.open('${configBean.FEWI_URL}homology/cluster/key/${clusterKey}'); return true;"</c:if> >
 	    
-	    <td <c:if test="${hasHomologeneId}">style="color:blue;"</c:if> > 
+	    <td <c:if test="${hasHomology}">style="color:blue;"</c:if> > 
 	    ${popupRow.marker.symbol}
 	    </td>
 	

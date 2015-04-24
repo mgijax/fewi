@@ -7,7 +7,11 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Vertebrate Homology Class</title>
+<title>${browserTitle}</title>
+<meta name="description" content="${seoDescription}"/>
+<meta name="keywords" content="${seoKeywords}"/>
+<meta name="robots" content="NOODP"/>
+<meta name="robots" content="NOYDIR"/>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -54,30 +58,59 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="HOMOLOGY_class_help.shtml">	
-	<span class="titleBarMainTitle">Vertebrate Homology Class</span>
+	<span class="titleBarMainTitle">${pageTitle}</span>
 </div>
 
 <%@ include file="/WEB-INF/jsp/homology_header.jsp" %>
 <br/>
 
+<c:set var="popupTitle" value="MGI HomoloGene Information"/>
+<c:set var="popupText" value='<p>MGI loads vertebrate homology data from NCBI <A HREF="http://www.ncbi.nlm.nih.gov/homologene"><u>HomoloGene</u></A>, 
+		which programmatically detects homologs among the genome features of completely sequenced eukaryotic genomes 
+		(see: <A HREF="http://www.ncbi.nlm.nih.gov/HomoloGene/HTML/homologene_buildproc.html"><u>HomoloGene Build Procedure</u></A>).</p>
+		
+		<p>MGI includes homology for the following selected vertebrate species from HomoloGene:<br>
+		&nbsp;- human<br>
+		&nbsp;- mouse<br>
+		&nbsp;- rat<br>
+		&nbsp;- cattle<br>
+		&nbsp;- chicken<br>
+		&nbsp;- chimpanzee<br>
+		&nbsp;- dog<br>
+		&nbsp;- monkey, Rhesus<br>
+		&nbsp;- western clawed frog (Xenopus tropicalis)<br>
+		&nbsp;- zebrafish<p>
+
+		<p>These are a subset of the total species represented in HomoloGene Classes at NCBI.<br>
+		Additional species may be present in an NCBI HomoloGene Class than appear in MGI.</font></p>'/>
+
+<c:if test="${source == 'HGNC'}">
+    <c:set var="popupTitle" value="MGI HGNC Homology Information"/>
+    <c:set var="popupText" value="MGI loads human and mouse homology data from <a href='http://www.genenames.org/'>HUGO Gene Nomenclature Committee (HGNC)</a>, which are made by expert analysis as part of nomenclature assignment."/>
+</c:if>
+
 <div id="summary">
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
+				<c:if test="${not empty homology.primaryID}">
 				 <span class="small"><a href='http://www.ncbi.nlm.nih.gov/sites/entrez?cmd=Retrieve&db=homologene&dopt=MultipleAlignment&list_uids=${homology.primaryID}'>HomoloGene:${homology.primaryID} Multiple Sequence Alignment</a></span>
+				 </c:if>
 			</div>
 		</div>
 	</div>
 	<div id="querySummary">
 		<div class="innertube">
+		<c:if test="${source == 'HomoloGene'}">
 		    <c:if test="${homology.hasComparativeGOGraph == 1}">
 			<span class="small"><a href="${configBean.FEWI_URL}homology/GOGraph/${homology.primaryID}">Comparative GO Graph</a> (mouse, human, rat)</span>	
 		    </c:if>&nbsp;
+		</c:if>
 		</div>
 	</div>
 	<div id="rightcolumn">
 		<div class="innertube">
-			<span class="filterButton" id="show" style="text-align: right;">MGI Homology Information</span>
+			<span class="filterButton" id="show" style="text-align: right;">${popupTitle}</span>
 		</div>
 	</div>
 </div>
@@ -142,6 +175,23 @@ ${templateBean.templateBodyStartHtml}
 		</c:if>
 
 		</c:forEach>
+
+		<c:set var="clusterKey" value=""/>
+		<c:set var="clusterText" value=""/>
+
+		<c:if test="${source == 'HGNC'}">
+		  <c:set var="clusterKey" value="${m.homoloGeneClusterKey}"/> 
+		  <c:set var="clusterText" value="HomoloGene homology ${m.homoloGeneID.accID}"/>
+		</c:if>
+
+		<c:if test="${source == 'HomoloGene'}">
+		  <c:set var="clusterKey" value="${m.hgncClusterKey}"/> 
+		  <c:set var="clusterText" value="HGNC homology"/>
+		</c:if>
+
+		<c:if test="${not empty clusterText and not empty clusterKey}">
+		  <a href='${configBean.FEWI_URL}homology/cluster/key/${clusterKey}'>${clusterText}</a><br/>
+		</c:if>
 	    </td>
 	    
 	    <td class="${style}">
@@ -260,26 +310,8 @@ ${templateBean.templateBodyStartHtml}
 </form>
 
 <div id="homologyDialog" class="facetFilter">
-	<div class="hd">MGI Homology Information</div>	
-	<div class="bd">
-		<p>MGI loads vertebrate homology data from NCBI <A HREF="http://www.ncbi.nlm.nih.gov/homologene"><u>HomoloGene</u></A>, 
-		which programmatically detects homologs among the genome features of completely sequenced eukaryotic genomes 
-		(see: <A HREF="http://www.ncbi.nlm.nih.gov/HomoloGene/HTML/homologene_buildproc.html"><u>HomoloGene Build Procedure</u></A>).</p>
-		
-		<p>MGI includes homology for the following selected vertebrate species from HomoloGene:<br>
-		&nbsp;- human<br>
-		&nbsp;- mouse<br>
-		&nbsp;- rat<br>
-		&nbsp;- cattle<br>
-		&nbsp;- chicken<br>
-		&nbsp;- chimpanzee<br>
-		&nbsp;- dog<br>
-		&nbsp;- monkey, Rhesus<br>
-		&nbsp;- western clawed frog (Xenopus tropicalis)<br>
-		&nbsp;- zebrafish<p>
-
-		<p>These are a subset of the total species represented in HomoloGene Classes at NCBI.<br>
-		Additional species may be present in an NCBI HomoloGene Class than appear in MGI.</font></p>
+	<div class="hd">${popupTitle}</div>	
+	<div class="bd">${popupText}
 	</div>
 </div>
 

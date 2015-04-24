@@ -13,7 +13,16 @@ public class SolrHdpGridCluster implements SolrHdpEntity
 	List<String> mouseSymbols;
 	// humanSymbols are just marker symbols
 	List<String> humanSymbols;
+	// source of homology data
+	String homologySource;
 	
+	public String getHomologySource() {
+		return this.homologySource;
+	}
+	public void setHomologySource(String homologySource) {
+		this.homologySource = homologySource;
+	}
+
 	public Integer getGridClusterKey() {
 		return gridClusterKey;
 	}

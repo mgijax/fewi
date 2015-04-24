@@ -155,6 +155,7 @@ public class SolrDiseasePortalHunter extends SolrDiseasePortalBaseHunter
 
         		gridCluster.setGridClusterKey(gridClusterKey);
         		gridCluster.setHomologeneId((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGENE_ID));
+        		gridCluster.setHomologySource((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGY_SOURCE));
         		gridCluster.setMouseSymbols((List<String>)sd.getFieldValue(DiseasePortalFields.GRID_MOUSE_SYMBOLS));
         		gridCluster.setHumanSymbols((List<String>)sd.getFieldValue(DiseasePortalFields.GRID_HUMAN_SYMBOLS));
 
@@ -187,7 +188,10 @@ public class SolrDiseasePortalHunter extends SolrDiseasePortalBaseHunter
 	        		SolrDiseasePortalMarker dpMarker = new SolrDiseasePortalMarker();
 	        		dpMarker.setMarkerKey(markerKey.toString());
 	                dpMarker.setOrganism((String)sd.getFieldValue(DiseasePortalFields.ORGANISM));
+	                dpMarker.setGridClusterKey((Integer)sd.getFieldValue(DiseasePortalFields.GRID_CLUSTER_KEY));
+	                dpMarker.setHomologyClusterKey((Integer)sd.getFieldValue(DiseasePortalFields.HOMOLOGY_CLUSTER_KEY));
 	                dpMarker.setHomologeneId((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGENE_ID));
+	                dpMarker.setHomologySource((String)sd.getFieldValue(DiseasePortalFields.HOMOLOGY_SOURCE));
 	                dpMarker.setName((String)sd.getFieldValue(DiseasePortalFields.MARKER_NAME));
 	                dpMarker.setSymbol((String)sd.getFieldValue(DiseasePortalFields.MARKER_SYMBOL));
 	                dpMarker.setMgiId((String)sd.getFieldValue(DiseasePortalFields.MARKER_MGI_ID));

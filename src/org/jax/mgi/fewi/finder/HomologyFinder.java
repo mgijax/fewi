@@ -74,6 +74,12 @@ public class HomologyFinder {
     {
         return homologyGatherer.get( HomologyCluster.class, id, "primaryID" );
     }
+
+    public HomologyCluster getClusterByKey(String key) {
+	logger.debug("->getClusterByKey(" + key + ")");
+	return homologyGatherer.get (HomologyCluster.class, key);
+    }
+
 //    // convenience wrapper
 //    public SearchResults<HomologyCluster> getHomologyByID(String id) {
 //        SearchParams searchParams = new SearchParams();

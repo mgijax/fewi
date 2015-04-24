@@ -177,10 +177,10 @@ ${templateBean.templateBodyStartHtml}
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
 	<td style="">&nbsp;</td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Homologs</font></font></td>
 	<td class="headerStripe allBorders"><font class="label"><font size="-1">Human Homologs</font></font></td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Homologs</font></font></td>
 	<td class="headerStripe allBorders"><font class="label"><font size="-1">Mouse Models</font></font></td>
-	<td class="headerStripe allBorders"><font class="label"><font size="-1"><abbr class="underline" title="The number of Human and Mouse genes present in a corresponding Homology Class are indicated.">Mouse : Human<br>Homology Class</abbr></font></font></td>
+	<td class="headerStripe allBorders"><font class="label"><font size="-1">Homology Source</font></font></td>
 	</tr>
 
 	<c:set var="mouseIcon" value="<img src='${configBean.WEBSHARE_URL}images/black_mouse_small.gif'>"/>
@@ -194,7 +194,7 @@ ${templateBean.templateBodyStartHtml}
 	  <c:set var="diseaseRowCount" value="${fn:length(diseaseGroup.diseaseRows)}"/>
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
-	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${mouseIcon}${humanIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
+	  <c:set var="prefix" value="<td rowspan='${diseaseRowCount}' class='centerMiddle'>${humanIcon}${mouseIcon}&nbsp;</td><td rowspan='${diseaseRowCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseRowCount}'>&nbsp;</td>"/>
 
 	  <%@ include file="/WEB-INF/jsp/disease_detail_subtable.jsp" %> 
 	</c:if>

@@ -347,7 +347,7 @@ public class IDLinker {
 				}
 			}
 		}
-		logger.debug ("Got info for " + byLdb.size() + " ldbs");
+		//logger.debug ("Got info for " + byLdb.size() + " ldbs");
 		return byLdb;
 	}
 

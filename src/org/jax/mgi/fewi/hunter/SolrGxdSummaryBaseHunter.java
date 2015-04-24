@@ -165,8 +165,6 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 				GxdResultFields.R_BY_ASSAY_TYPE));
 		sortMap.put(GxdResultFields.A_BY_ASSAY_TYPE, new SolrSortMapper(
 				GxdResultFields.A_BY_ASSAY_TYPE));
-		sortMap.put(SortConstants.GXD_SYSTEM, new SolrSortMapper(
-				GxdResultFields.R_BY_ANATOMICAL_SYSTEM));
 		sortMap.put(SortConstants.GXD_AGE, new SolrSortMapper(
 				GxdResultFields.R_BY_AGE));
 		sortMap.put(SortConstants.GXD_STRUCTURE, new SolrSortMapper(
@@ -230,7 +228,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			String assayKey = (String) doc
 					.getFieldValue(GxdResultFields.ASSAY_KEY);
 			String age = (String) doc.getFieldValue(GxdResultFields.AGE);
-			String anatomicalSystem = (String) doc
+			List<String> anatomicalSystems = (List<String>) doc
 					.getFieldValue(GxdResultFields.ANATOMICAL_SYSTEM);
 			String assayMgiid = (String) doc
 					.getFieldValue(GxdResultFields.ASSAY_MGIID);
@@ -267,7 +265,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			resultObject.setAssayKey(assayKey);
 			resultObject.setAssayType(assayType);
 			resultObject.setAge(age);
-			resultObject.setAnatomicalSystem(anatomicalSystem);
+//			resultObject.setAnatomicalSystems(anatomicalSystems);
 			resultObject.setAssayMgiid(assayMgiid);
 			resultObject.setDetectionLevel(detectionLevel);
 			resultObject.setFigures(figures);

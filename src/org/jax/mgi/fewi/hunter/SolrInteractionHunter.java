@@ -120,6 +120,11 @@ public class SolrInteractionHunter extends SolrInteractionBaseHunter {
 			item.setNotes((String)doc.getFieldValue(IndexConstants.NOTES));
 			item.setJnumID((String)doc.getFieldValue(IndexConstants.JNUM_ID));
 			item.setMatureTranscript((String)doc.getFieldValue(IndexConstants.MATURE_TRANSCRIPT));
+			
+			item.setAlgorithm((String) doc.getFieldValue(IndexConstants.ALGORITHM));
+			item.setOrganizerProductID((String) doc.getFieldValue(IndexConstants.ORGANIZER_PRODUCT_ID));
+			item.setParticipantProductID((String) doc.getFieldValue(IndexConstants.PARTICIPANT_PRODUCT_ID));
+			item.setOtherReferences((String) doc.getFieldValue(IndexConstants.OTHER_REFERENCES));
 
 			sr.addResultObjects(item);
 		}

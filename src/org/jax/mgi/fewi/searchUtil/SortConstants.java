@@ -6,7 +6,6 @@ public class SortConstants {
 	public static final String GXD_GENE         = "gene";
 	public static final String GXD_ASSAY_ID     = "assayID";
 	public static final String GXD_ASSAY_TYPE   = "assayType";
-	public static final String GXD_SYSTEM       = "anatomicalSystem";
 	public static final String GXD_AGE          = "age";
 	public static final String GXD_STRUCTURE    = "structure";
 	public static final String GXD_DETECTION    = "detectionLevel";
@@ -52,6 +51,8 @@ public class SortConstants {
 	public static final String MRK_BY_SYMBOL					= "byMrkSymbol";
 	public static final String MRK_BY_LOCATION 					= "byMarkerLocation";
 	public static final String MRK_BY_TYPE 						= "byMarkerType";
+	public static final String MRK_BY_EVIDENCE_CODE				= "byEvidenceCode";
+	public static final String MRK_BY_EVIDENCE_TERM				= "byEvidenceTerm";
 
 	// Sequence Summary page
 	public static final String SEQUENCE_TYPE       = "sequenceType";
@@ -62,6 +63,7 @@ public class SortConstants {
 	public static final String VOC_TERM            = "term";
 	public static final String VOC_TERM_ID         = "termId";
 	public static final String VOC_TERM_HEADER 		= "termHeader";
+	public static final String VOC_DAG_NAME         = "dagName";
 	public static final String VOC_BY_DAG_STRUCT   = "byDagStruct";
 	public static final String VOC_BY_DAG_TERM      = "byDagTerm";
 	public static final String MARKER_DAG_TERM      = "byMarkerDagTerm";

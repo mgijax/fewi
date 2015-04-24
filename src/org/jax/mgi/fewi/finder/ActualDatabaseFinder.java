@@ -46,7 +46,7 @@ public class ActualDatabaseFinder {
 
     public List<ActualDatabase> getAll() {
 
-        logger.debug("HibernateActualDatabaseHunter.getAll()");
+        //logger.debug("HibernateActualDatabaseHunter.getAll()");
 
 	SearchParams searchParams = new SearchParams();
 
@@ -60,7 +60,7 @@ public class ActualDatabaseFinder {
         // ask the hunter to identify which objects to return
         actualDbHunter.hunt(searchParams, searchResults);
 
-	logger.debug ("Received searchResults");
+	//logger.debug ("Received searchResults");
 
         return searchResults.getResultObjects();
     }

@@ -1,5 +1,5 @@
-// The YUI components required for setting up the data table and
-// source to do the AJAX call
+//The YUI components required for setting up the data table and
+//source to do the AJAX call
 var gxdDataTable;
 var gxdDataSource;
 var defaultSort = "";
@@ -13,10 +13,10 @@ var IMAGES_PAGE_SIZE = 25;
 var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";
 var LOADING_IMG = "<img src=\""+LOADING_IMG_SRC+"\" height=\"24\" width=\"24\">";
 
-// Shortcut variable for the YUI history manager
+//Shortcut variable for the YUI history manager
 var History = YAHOO.util.History;
 
-// HTML/YUI page widgets
+//HTML/YUI page widgets
 YAHOO.namespace("gxd.container");
 
 //------ tab definitions + functions ------------
@@ -28,37 +28,37 @@ var mgiTab = new MGITabSummary({
 });
 
 var stageDayMap = {
-	1:"E0-2.5",
-	2:"E1-2.5",
-	3:"E1-3.5",
-	4:"E2-4",
-	5:"E3-5.5",
-	6:"E4-5.5",
-	7:"E4.5-6",
-	8:"E5-6.5",
-	9:"E6.25-7.25",
-	10:"E6.5-7.75",
-	11:"E7.25-8",
-	12:"E7.5-8.75",
-	13:"E8-9.25",
-	14:"E8.5-9.75",
-	15:"E9-10.25",
-	16:"E9.5-10.75",
-	17:"E10-11.25",
-	18:"E10.5-11.25",
-	19:"E11-12.25",
-	20:"E11.5-13",
-	21:"E12.5-14",
-	22:"E13.5-15",
-	23:"E15",
-	24:"E16",
-	25:"E17",
-	26:"E18",
-	27:"P0-3",
-	28:"P4-Adult"
+		1:"E0-2.5",
+		2:"E1-2.5",
+		3:"E1-3.5",
+		4:"E2-4",
+		5:"E3-5.5",
+		6:"E4-5.5",
+		7:"E4.5-6",
+		8:"E5-6.5",
+		9:"E6.25-7.25",
+		10:"E6.5-7.75",
+		11:"E7.25-8",
+		12:"E7.5-8.75",
+		13:"E8-9.25",
+		14:"E8.5-9.75",
+		15:"E9-10.25",
+		16:"E9.5-10.75",
+		17:"E10-11.25",
+		18:"E10.5-11.25",
+		19:"E11-12.25",
+		20:"E11.5-13",
+		21:"E12.5-14",
+		22:"E13.5-15",
+		23:"E15",
+		24:"E16",
+		25:"E17",
+		26:"E18",
+		27:"P0-3",
+		28:"P4-Adult"
 };
 
-// TODO: refactor these to use the mgiTab.summaryTabs object instead of resultsTabs
+//TODO: refactor these to use the mgiTab.summaryTabs object instead of resultsTabs
 var resultsTabs = mgiTab.summaryTabs;
 var getCurrentTab = mgiTab.getCurrentTab;
 
@@ -67,9 +67,9 @@ var getCurrentTab = mgiTab.getCurrentTab;
  * and building AJAX requests
  */
 
-// TODO: refactor these functions to use the shared lib names (i.e. mgiParseRequest() instead of parseRequest())
+//TODO: refactor these functions to use the shared lib names (i.e. mgiParseRequest() instead of parseRequest())
 var parseRequest=mgiParseRequest;
-// need to add grid filters to the generateRequest function via extraParams
+//need to add grid filters to the generateRequest function via extraParams
 mgiTab._rp.getExtraParams = function()
 {
 	var params = [];
@@ -83,14 +83,29 @@ mgiTab._rp.getExtraParams = function()
 }
 var generateRequest = mgiTab._rp.generateRequest;
 
-// a global variable to helpthe tab change handler know when to fire off a new query
+// This method gets the marker ids on the genes tab based on
+// the query string and selected filters, to be unsed in forwarding
+// to mousemine
+var getMarkerIds = function() {
+	
+	var url = fewiurl + "gxd/markers/idList?" + getQueryStringWithFilters();
+	
+	var callback = {
+		success : function(oResponse) {
+			$("#mousemineids").val(oResponse.responseText);
+		},
+	};
+	YAHOO.util.Connect.asyncRequest('GET', url, callback);
+};
+
+//a global variable to helpthe tab change handler know when to fire off a new query
 var newQueryState = false;
 
 //a globabl variable to help the summary know when to generate a new datatable
 var previousQueryString = "none";
 var previousFilterString = "none";
 var previousGAState = "";
-// Called by Browser History Manager to trigger a new state
+//Called by Browser History Manager to trigger a new state
 handleNavigation = function (request, calledLocally) {
 
 	// ensure any popups get hidden
@@ -107,14 +122,14 @@ handleNavigation = function (request, calledLocally) {
 	// collect any filters and ensure that we use them
 	var filters = {};
 	for (k in values) {
-	    if (isFilterable(k)) { filters[k] = [].concat(values[k]); }
+		if (isFilterable(k)) { filters[k] = [].concat(values[k]); }
 	}
 	if (filters) { resetFacets(filters); }
 
 	var foundParams = true;
 	// test if there is a form that needs to be populated
 	if (typeof reverseEngineerFormInput == 'function')
-		 foundParams = reverseEngineerFormInput(request);
+		foundParams = reverseEngineerFormInput(request);
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
@@ -159,7 +174,7 @@ handleNavigation = function (request, calledLocally) {
 		var querystringWithFilters = getQueryStringWithFilters();
 		if (querystringWithFilters != previousFilterString)
 		{
-		    previousFilterString = querystringWithFilters;
+			previousFilterString = querystringWithFilters;
 
 			if(currentStageGrid) currentStageGrid.cancelDataSource();
 			if(currentGeneGrid) currentGeneGrid.cancelDataSource();
@@ -195,7 +210,7 @@ handleNavigation = function (request, calledLocally) {
 		if(GAState != previousGAState)
 		{
 			try {
-			gaA_pageTracker._trackPageview(GAState);
+				gaA_pageTracker._trackPageview(GAState);
 			} catch (e) {};
 			previousGAState = GAState;
 		}
@@ -231,18 +246,18 @@ function buildSummary(request,tabState)
 	}
 
 	// Load the appropriate summary
-    if(doStageGrid)
-    {
-    	structureStageGrid();
-    }
-    else if(doGeneGrid)
-    {
-    	structureGeneGrid();
-    }
-    else
-    {
-    	loadDatatable(dataTableInitFunction,request);
-    }
+	if(doStageGrid)
+	{
+		structureStageGrid();
+	}
+	else if(doGeneGrid)
+	{
+		structureGeneGrid();
+	}
+	else
+	{
+		loadDatatable(dataTableInitFunction,request);
+	}
 }
 
 function loadDatatable(dataTableInitFunction,request)
@@ -267,29 +282,29 @@ function loadDatatable(dataTableInitFunction,request)
 
 
 function getQueryStringWithFilters() {
-    var filterString = getFilterCriteria();
-    var querystringWithFilters = querystring;
-    if (filterString) {
-	querystringWithFilters = querystringWithFilters + "&" + filterString;
-    }
-    return querystringWithFilters;
+	var filterString = getFilterCriteria();
+	var querystringWithFilters = querystring;
+	if (filterString) {
+		querystringWithFilters = querystringWithFilters + "&" + filterString;
+	}
+	return querystringWithFilters;
 }
 
-// refresh all four counts in each tab via AJAX
-// store the request objects to verify the correct IDs;
+//refresh all four counts in each tab via AJAX
+//store the request objects to verify the correct IDs;
 var resultsRq,assaysRs,genesRq,imagesRq;
 window.previousTabQuery="";
 function refreshTabCounts()
 {
-    var querystringWithFilters = getQueryStringWithFilters();
-    if(querystringWithFilters==window.previousTabQuery)
-    {
-    	// don't refresh counts if query is the same.
-    	return;
-    }
-    window.previousTabQuery=querystringWithFilters;
+	var querystringWithFilters = getQueryStringWithFilters();
+	if(querystringWithFilters==window.previousTabQuery)
+	{
+		// don't refresh counts if query is the same.
+		return;
+	}
+	window.previousTabQuery=querystringWithFilters;
 
-	 //get the tab counts via ajax
+	//get the tab counts via ajax
 	var handleCountRequest = function(o)
 	{
 		if(o.responseText == "-1") o.responseText = "0"; // set count to zero if errors
@@ -306,33 +321,33 @@ function refreshTabCounts()
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 
-    resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
-    {	success:handleCountRequest,
-    	failure:function(o){}
-    },null);
-    assaysRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystringWithFilters,
-    {	success:handleCountRequest,
-    	failure:function(o){}
-    },null);
-    genesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystringWithFilters,
-    {	success:handleCountRequest,
-    	failure:function(o){}
-    },null);
-    imagesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/images/totalCount?"+querystringWithFilters,
-    {	success:handleCountRequest,
-    	failure:function(o){}
-    },null);
+	resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
+			{	success:handleCountRequest,
+		failure:function(o){}
+			},null);
+	assaysRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/assays/totalCount?"+querystringWithFilters,
+			{	success:handleCountRequest,
+		failure:function(o){}
+			},null);
+	genesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/markers/totalCount?"+querystringWithFilters,
+			{	success:handleCountRequest,
+		failure:function(o){}
+			},null);
+	imagesRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/images/totalCount?"+querystringWithFilters,
+			{	success:handleCountRequest,
+		failure:function(o){}
+			},null);
 }
 
 window.previousGxdLitQuery=""
-function refreshGxdLitLink()
+	function refreshGxdLitLink()
 {
-    if(querystring==window.previousGxdLitQuery)
-    {
-    	// don't refresh gxd lit count if query is the same.
-    	return;
-    }
-    window.previousGxdLitQuery=querystring;
+	if(querystring==window.previousGxdLitQuery)
+	{
+		// don't refresh gxd lit count if query is the same.
+		return;
+	}
+	window.previousGxdLitQuery=querystring;
 
 	// Fire off an AJAX call to generate the link
 	var handleGxdLitCount = function(o)
@@ -342,15 +357,15 @@ function refreshGxdLitLink()
 		{
 			var gxdLitUrl = fewiurl+"gxd/gxdLitForward?"+querystring;
 			YAHOO.util.Dom.get("gxdLitInfo").innerHTML = "<a href=\""+gxdLitUrl+"\">"+o.responseText+"</a>"+
-				" Gene Expression Literature Records match your unfiltered query.";
+			" Gene Expression Literature Records match your unfiltered query.";
 		}
 	};
 
 	YAHOO.util.Dom.get("gxdLitInfo").innerHTML = "";
 	YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/gxdLitCount?"+querystring,
-		    {	success:handleGxdLitCount,
-		    	failure:function(o){}
-		    },null);
+			{	success:handleGxdLitCount,
+		failure:function(o){}
+			},null);
 }
 
 
@@ -358,9 +373,9 @@ function refreshGxdLitLink()
  * Definitions of all the datatables
  */
 
-//
+
 //Gene results table population function
-//
+
 var gxdGenesTable = function (oCallback) {
 
 	//
@@ -371,40 +386,40 @@ var gxdGenesTable = function (oCallback) {
 
 	// Column definitions
 	var myColumnDefs = [ // sortable:true enables sorting
-		{key:"primaryID", label:"MGI ID", sortable:false, width:75},
-		{key:"symbol", label:"Gene", sortable:true, width:100},
-		{key:"name", label:"Gene Name", sortable:false, minWidth:400},
-		{key:"type", label:"Type", sortable:false, minWidth:200},
-		{key:"chr", label:"Chr", sortable:true, width:40},
-		{key:"location", label:"Genome Location - " + assemblyBuild, sortable:false, minWidth:300},
-		{key:"cm", label:"cM", sortable:false, width:50},
-		{key:"strand", label:"Strand", sortable:false},
-		{key:"score", label:"score", sortable:false, hidden:true}
-	];
+	                     {key:"primaryID", label:"MGI ID", sortable:false, width:75},
+	                     {key:"symbol", label:"Gene", sortable:true, width:100},
+	                     {key:"name", label:"Gene Name", sortable:false, minWidth:400},
+	                     {key:"type", label:"Type", sortable:false, minWidth:200},
+	                     {key:"chr", label:"Chr", sortable:true, width:40},
+	                     {key:"location", label:"Genome Location - " + assemblyBuild, sortable:false, minWidth:300},
+	                     {key:"cm", label:"cM", sortable:false, width:50},
+	                     {key:"strand", label:"Strand", sortable:false},
+	                     {key:"score", label:"score", sortable:false, hidden:true}
+	                     ];
 
 	// DataSource instance
 	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json?");
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
-		resultsList: "summaryRows",
-		fields: [
-			{key:"primaryID"},
-			{key:"symbol"},
-			{key:"name"},
-			{key:"type"},
-			{key:"chr"},
-			{key:"location"},
-			{key:"cm"},
-			{key:"strand"},
-			{key:"score"}
-		],
-		metaFields: {
-			totalRecords: "totalCount",
-			paginationRecordOffset : "startIndex",
-			paginationRowsPerPage : "pageSize",
-			sortKey: "sort",
-			sortDir: "dir"
-		}
+			resultsList: "summaryRows",
+			fields: [
+			         {key:"primaryID"},
+			         {key:"symbol"},
+			         {key:"name"},
+			         {key:"type"},
+			         {key:"chr"},
+			         {key:"location"},
+			         {key:"cm"},
+			         {key:"strand"},
+			         {key:"score"}
+			         ],
+			         metaFields: {
+			        	 totalRecords: "totalCount",
+			        	 paginationRecordOffset : "startIndex",
+			        	 paginationRowsPerPage : "pageSize",
+			        	 sortKey: "sort",
+			        	 sortDir: "dir"
+			         }
 	};
 
 	gxdDataSource.maxCacheEntries = 3;
@@ -417,11 +432,11 @@ var gxdGenesTable = function (oCallback) {
 
 	// DataTable configurations
 	var myConfigs = {
-		paginator : paginator,
-		dynamicData : true,
-		initialLoad : false,
-		MSG_LOADING:  LOADING_IMG+' Searching...',
-		MSG_EMPTY:    'No genes with expression data found.'
+			paginator : paginator,
+			dynamicData : true,
+			initialLoad : false,
+			MSG_LOADING:  LOADING_IMG+' Searching...',
+			MSG_EMPTY:    'No genes with expression data found.'
 	};
 
 	// DataTable instance
@@ -458,17 +473,19 @@ var gxdGenesTable = function (oCallback) {
 		}
 
 		oPayload.sortedBy = {
-			key: pRequest['sort'] || "symbol",
-			dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
+				key: pRequest['sort'] || "symbol",
+				dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc" // Convert from server value to DataTable format
 		};
 
 		oPayload.pagination = {
-			rowsPerPage: Number(pRequest['results']) || GENES_PAGE_SIZE,
-			recordOffset: Number(pRequest['startIndex']) || 0
+				rowsPerPage: Number(pRequest['results']) || GENES_PAGE_SIZE,
+				recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
 		return true;
 	};
+
+	getMarkerIds();
 
 	return {"datatable": gxdDataTable, "datasource": gxdDataSource};
 };
@@ -484,42 +501,42 @@ var addCameraIconTooltips = function() {
 		new YAHOO.widget.Tooltip("tsCamera"+i,{context:icons[i], text:ttText, showdelay:1000});
 	}
 };
-//
+
 //Assays table population function
-//
+
 var gxdAssaysTable = function() {
 
 	var numConfig = {thousandsSeparator: ','};
 
 	// Column definitions
 	var myColumnDefs = [
-		// sortable:true enables sorting
-		{key: "gene", label: "Gene", sortable: true },
-		{key: "assayID", label: "Assay Details", sortable: false },
-		{key: "assayType", label: "Assay Type", sortable: true },
-		{key: "reference",label: "Reference",sortable: true},
-		{key: "score",label: "score",sortable: false,hidden: true}
-	];
+	                    // sortable:true enables sorting
+	                    {key: "gene", label: "Gene", sortable: true },
+	                    {key: "assayID", label: "Assay Details", sortable: false },
+	                    {key: "assayType", label: "Assay Type", sortable: true },
+	                    {key: "reference",label: "Reference",sortable: true},
+	                    {key: "score",label: "score",sortable: false,hidden: true}
+	                    ];
 
 	// DataSource instance
 	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/assays/json?");
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
-		resultsList: "summaryRows",
-		fields: [
-			{key: "assayType"},
-			{key: "assayID"},
-			{key: "gene"},
-			{key: "reference"},
-			{key: "score"}
-		],
-		metaFields: {
-			totalRecords: "totalCount",
-			paginationRecordOffset: "startIndex",
-			paginationRowsPerPage: "pageSize",
-			sortKey: "sort",
-			sortDir: "dir"
-		}
+			resultsList: "summaryRows",
+			fields: [
+			         {key: "assayType"},
+			         {key: "assayID"},
+			         {key: "gene"},
+			         {key: "reference"},
+			         {key: "score"}
+			         ],
+			         metaFields: {
+			        	 totalRecords: "totalCount",
+			        	 paginationRecordOffset: "startIndex",
+			        	 paginationRowsPerPage: "pageSize",
+			        	 sortKey: "sort",
+			        	 sortDir: "dir"
+			         }
 	};
 
 	gxdDataSource.maxCacheEntries = 3;
@@ -532,11 +549,11 @@ var gxdAssaysTable = function() {
 
 	// DataTable configurations
 	var myConfigs = {
-	   paginator: paginator,
-	   dynamicData: true,
-	   initialLoad: false,
-	   MSG_LOADING: LOADING_IMG+' Searching...',
-	   MSG_EMPTY: 'No assays with expression data found.'
+			paginator: paginator,
+			dynamicData: true,
+			initialLoad: false,
+			MSG_LOADING: LOADING_IMG+' Searching...',
+			MSG_EMPTY: 'No assays with expression data found.'
 	};
 
 	// DataTable instance
@@ -549,15 +566,15 @@ var gxdAssaysTable = function() {
 
 	// Define a custom function to route sorting through the Browser History Manager
 	var handleSorting = function(oColumn) {
-	   // The next state will reflect the new sort values
-	   // while preserving existing pagination rows-per-page
-	   // As a best practice, a new sort will reset to page 0
-	   var sortedBy = {
-	       dir: this.getColumnSortDir(oColumn),
-	       key: oColumn.key
-	   };
-	   // Pass the state along to the Browser History Manager
-	   History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+		// The next state will reflect the new sort values
+		// while preserving existing pagination rows-per-page
+		// As a best practice, a new sort will reset to page 0
+		var sortedBy = {
+				dir: this.getColumnSortDir(oColumn),
+				key: oColumn.key
+		};
+		// Pass the state along to the Browser History Manager
+		History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
 	};
 	gxdDataTable.sortColumn = handleSorting;
 
@@ -573,14 +590,14 @@ var gxdAssaysTable = function() {
 		}
 
 		oPayload.sortedBy = {
-			key: pRequest['sort'] || "gene",
-			dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc"
-				// Convert from server value to DataTable format
+				key: pRequest['sort'] || "gene",
+				dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-desc"
+					// Convert from server value to DataTable format
 		};
 
 		oPayload.pagination = {
-			rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
-			recordOffset: Number(pRequest['startIndex']) || 0
+				rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
+				recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
 		return true;
@@ -593,54 +610,52 @@ var gxdAssaysTable = function() {
 };
 
 
-//
+
 //Assay results table population function
-//
+
 var gxdResultsTable = function() {
 
 	var numConfig = {thousandsSeparator: ','};
 
 	// Column definitions
 	var myColumnDefs = [
-	// sortable:true enables sorting
-		{key: "gene", label: "Gene", sortable: true },
-		{key: "assayID", label: "Result Details", sortable: false },
-		{key: "assayType", label: "Assay Type", sortable: true },
-		{key: "anatomicalSystem", label: "Anatomical System", sortable: true },
-		{key: "age", label: "Age", sortable: true },
-		{key: "structure", label: "Structure",sortable: true},
-		{key: "detectionLevel",label: "Detected?",sortable: true},
-		{key: "figures", label: "Images",sortable: false},
-		{key: "genotype",label: "Mutant Allele(s)",sortable: false},
-		{key: "reference",label: "Reference",sortable: true},
-		{key: "score",label: "score",sortable: false,hidden: true}
-	];
+	                    // sortable:true enables sorting
+	                    {key: "gene", label: "Gene", sortable: true },
+	                    {key: "assayID", label: "Result Details", sortable: false },
+	                    {key: "assayType", label: "Assay Type", sortable: true },
+	                    {key: "age", label: "Age", sortable: true },
+	                    {key: "structure", label: "Structure",sortable: true},
+	                    {key: "detectionLevel",label: "Detected?",sortable: true},
+	                    {key: "figures", label: "Images",sortable: false},
+	                    {key: "genotype",label: "Mutant Allele(s)",sortable: false},
+	                    {key: "reference",label: "Reference",sortable: true},
+	                    {key: "score",label: "score",sortable: false,hidden: true}
+	                    ];
 
 	// DataSource instance
 	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/results/json?");
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
-		resultsList: "summaryRows",
-		fields: [
-			{key: "gene"},
-			{key: "assayID"},
-			{key: "assayType"},
-			{key: "anatomicalSystem"},
-			{key: "age"},
-			{key: "structure"},
-			{key: "detectionLevel"},
-			{key: "figures"},
-			{key: "genotype"},
-			{key: "reference"},
-			{key: "score"}
-		],
-		metaFields: {
-			totalRecords: "totalCount",
-			paginationRecordOffset: "startIndex",
-			paginationRowsPerPage: "pageSize",
-			sortKey: "sort",
-			sortDir: "dir"
-		}
+			resultsList: "summaryRows",
+			fields: [
+			         {key: "gene"},
+			         {key: "assayID"},
+			         {key: "assayType"},
+			         {key: "age"},
+			         {key: "structure"},
+			         {key: "detectionLevel"},
+			         {key: "figures"},
+			         {key: "genotype"},
+			         {key: "reference"},
+			         {key: "score"}
+			         ],
+			         metaFields: {
+			        	 totalRecords: "totalCount",
+			        	 paginationRecordOffset: "startIndex",
+			        	 paginationRowsPerPage: "pageSize",
+			        	 sortKey: "sort",
+			        	 sortDir: "dir"
+			         }
 	};
 
 	gxdDataSource.maxCacheEntries = 3;
@@ -654,11 +669,11 @@ var gxdResultsTable = function() {
 
 	// DataTable configurations
 	var myConfigs = {
-	   paginator: paginator,
-	   dynamicData: true,
-	   initialLoad: false,
-	   MSG_LOADING: LOADING_IMG+' Searching...',
-	   MSG_EMPTY: 'No results with expression data found.'
+			paginator: paginator,
+			dynamicData: true,
+			initialLoad: false,
+			MSG_LOADING: LOADING_IMG+' Searching...',
+			MSG_EMPTY: 'No results with expression data found.'
 	};
 
 	// DataTable instance
@@ -671,15 +686,15 @@ var gxdResultsTable = function() {
 
 	// Define a custom function to route sorting through the Browser History Manager
 	var handleSorting = function(oColumn) {
-	   // The next state will reflect the new sort values
-	   // while preserving existing pagination rows-per-page
-	   // As a best practice, a new sort will reset to page 0
-	   var sortedBy = {
-	       dir: this.getColumnSortDir(oColumn),
-	       key: oColumn.key
-	   };
-	   // Pass the state along to the Browser History Manager
-	   History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+		// The next state will reflect the new sort values
+		// while preserving existing pagination rows-per-page
+		// As a best practice, a new sort will reset to page 0
+		var sortedBy = {
+				dir: this.getColumnSortDir(oColumn),
+				key: oColumn.key
+		};
+		// Pass the state along to the Browser History Manager
+		History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
 	};
 	gxdDataTable.sortColumn = handleSorting;
 
@@ -696,33 +711,33 @@ var gxdResultsTable = function() {
 
 		var sortKey = "gene";
 		if ('sort' in pRequest) {
-		    sortKey = pRequest['sort'];
+			sortKey = pRequest['sort'];
 		}
 
 		var sortDir = "yui-dt-desc";
 		if ('dir' in pRequest) {
-		    sortDir = "yui-dt-" + pRequest['dir'];
+			sortDir = "yui-dt-" + pRequest['dir'];
 		}
 
 		oPayload.sortedBy = {
-			key: sortKey,
-			dir: sortDir
+				key: sortKey,
+				dir: sortDir
 				// Convert from server value to DataTable format
 		};
 
 		var rowCount = paginator.getRowsPerPage();
 		if ('results' in pRequest) {
-		    rowCount = Number(pRequest['results']);
+			rowCount = Number(pRequest['results']);
 		}
 
 		var offset = 0;
 		if ('startIndex' in pRequest) {
-		    offset = Number(pRequest['startIndex']);
+			offset = Number(pRequest['startIndex']);
 		}
 
 		oPayload.pagination = {
-			rowsPerPage: rowCount,
-			recordOffset: offset
+				rowsPerPage: rowCount,
+				recordOffset: offset
 		};
 
 		return true;
@@ -731,36 +746,36 @@ var gxdResultsTable = function() {
 	return {"datatable": gxdDataTable, "datasource": gxdDataSource};
 };
 
-//
+
 //Images table population function
-//
+
 var gxdImagesTable = function() {
 
 	var numConfig = {thousandsSeparator: ','};
 
 	// Column definitions
 	var myColumnDefs = [
-		// sortable:true enables sorting
-		{key: "image", label: "Image", sortable: false},
-		{key: "metaData", label: "Meta Data", sortable:false}
-	];
+	                    // sortable:true enables sorting
+	                    {key: "image", label: "Image", sortable: false},
+	                    {key: "metaData", label: "Meta Data", sortable:false}
+	                    ];
 
 	// DataSource instance
 	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/images/json?");
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
-		resultsList: "summaryRows",
-		fields: [
-			{key: "image"},
-			{key: "metaData"}
-		],
-		metaFields: {
-			totalRecords: "totalCount",
-			paginationRecordOffset: "startIndex",
-			paginationRowsPerPage: "pageSize",
-			sortKey: "sort",
-			sortDir: "dir"
-		}
+			resultsList: "summaryRows",
+			fields: [
+			         {key: "image"},
+			         {key: "metaData"}
+			         ],
+			         metaFields: {
+			        	 totalRecords: "totalCount",
+			        	 paginationRecordOffset: "startIndex",
+			        	 paginationRowsPerPage: "pageSize",
+			        	 sortKey: "sort",
+			        	 sortDir: "dir"
+			         }
 	};
 
 	gxdDataSource.maxCacheEntries = 3;
@@ -773,11 +788,11 @@ var gxdImagesTable = function() {
 
 	// DataTable configurations
 	var myConfigs = {
-	   paginator: paginator,
-	   dynamicData: true,
-	   initialLoad: false,
-	   MSG_LOADING: LOADING_IMG+' Searching...',
-	   MSG_EMPTY: 'No expression images found.'
+			paginator: paginator,
+			dynamicData: true,
+			initialLoad: false,
+			MSG_LOADING: LOADING_IMG+' Searching...',
+			MSG_EMPTY: 'No expression images found.'
 	};
 
 	// DataTable instance
@@ -790,15 +805,15 @@ var gxdImagesTable = function() {
 
 	// Define a custom function to route sorting through the Browser History Manager
 	var handleSorting = function(oColumn) {
-	   // The next state will reflect the new sort values
-	   // while preserving existing pagination rows-per-page
-	   // As a best practice, a new sort will reset to page 0
-	   var sortedBy = {
-	       dir: this.getColumnSortDir(oColumn),
-	       key: oColumn.key
-	   };
-	   // Pass the state along to the Browser History Manager
-	   History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
+		// The next state will reflect the new sort values
+		// while preserving existing pagination rows-per-page
+		// As a best practice, a new sort will reset to page 0
+		var sortedBy = {
+				dir: this.getColumnSortDir(oColumn),
+				key: oColumn.key
+		};
+		// Pass the state along to the Browser History Manager
+		History.navigate("gxd", generateRequest(sortedBy, 0, paginator.getRowsPerPage()));
 	};
 	gxdDataTable.sortColumn = handleSorting;
 
@@ -814,8 +829,8 @@ var gxdImagesTable = function() {
 		}
 
 		oPayload.pagination = {
-			rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
-			recordOffset: Number(pRequest['startIndex']) || 0
+				rowsPerPage: Number(pRequest['results']) || paginator.getRowsPerPage(),
+				recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
 		return true;
@@ -827,10 +842,10 @@ var gxdImagesTable = function() {
 	return {"datatable": gxdDataTable, "datasource": gxdDataSource};
 };
 
-//
-// Initialize the data table to the results table and
-// Register the module with the browser history manager
-//
+
+//Initialize the data table to the results table and
+//Register the module with the browser history manager
+
 window.gxdDataTable = gxdResultsTable().datatable;
 History.register("gxd", History.getBookmarkedState("gxd") || "", handleNavigation);
 
@@ -848,12 +863,12 @@ var structureStageGrid = function()
 	// hide page controls
 	$(".yui-pg-container").hide()
 
-	 var querystringWithFilters = getQueryStringWithFilters();
-    if(querystringWithFilters==window.prevStageGridQuery)
-    {
-    	// don't refresh grid if query is the same.
-    	return;
-    }
+	var querystringWithFilters = getQueryStringWithFilters();
+	if(querystringWithFilters==window.prevStageGridQuery)
+	{
+		// don't refresh grid if query is the same.
+		return;
+	}
 	window.prevStageGridQuery=querystringWithFilters;
 
 	var buildGrid = function()
@@ -861,20 +876,20 @@ var structureStageGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString();
 
 		currentStageGrid = GxdTissueMatrix({
-	        target : "sgTarget",
-	        // the datasource allows supergrid to make ajax calls for the initial data,
-	        // 	as well as subsequent calls for expanding rows
-	        dataSource: {
+			target : "sgTarget",
+			// the datasource allows supergrid to make ajax calls for the initial data,
+			// 	as well as subsequent calls for expanding rows
+			dataSource: {
 				url: fewiurl + "gxd/stagegrid/json?" + querystringWithFilters,
-		    	batchSize: 50000,
-		    	offsetField: "startIndex",
-		    	limitField: "results",
-		        MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)...',
-		 	   	MSG_EMPTY: 'No assay results with expression data found.'
-	        },
-	        cellSize: 28,
-	        cellRenderer: GxdRender.StructureStageCellRenderer,
-	        columnRenderer: GxdRender.TSColumnRenderer,
+				batchSize: 50000,
+				offsetField: "startIndex",
+				limitField: "results",
+				MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)...',
+				MSG_EMPTY: 'No assay results with expression data found.'
+			},
+			cellSize: 28,
+			cellRenderer: GxdRender.StructureStageCellRenderer,
+			columnRenderer: GxdRender.TSColumnRenderer,
 			verticalColumnLabels: true,
 	        columnSort: function(a,b){
 	        	var aint = parseInt(a.cid);
@@ -893,10 +908,10 @@ var structureStageGrid = function()
 	        		rowIds[rowIds.length] = row.rowId;
 	        	});
 
-	        	var colIds = [];
-	        	cols.forEach(function(col){
-	        		colIds[colIds.length] = col.cid;
-	        	});
+				var colIds = [];
+				cols.forEach(function(col){
+					colIds[colIds.length] = col.cid;
+				});
 
 	        	if (rowIds.length > 0)
 	        	{
@@ -922,7 +937,7 @@ var structureStageGrid = function()
 
 	if(currentStageGrid)
 	{
-			currentStageGrid.cancelDataSource();
+		currentStageGrid.cancelDataSource();
 	}
 	buildGrid();
 }
@@ -941,11 +956,11 @@ var structureGeneGrid = function()
 	$(".yui-pg-container").hide()
 
 	var querystringWithFilters = getQueryStringWithFilters();
-    if(querystringWithFilters==window.prevGeneGridQuery)
-    {
-    	// don't refresh grid if query is the same.
-    	return;
-    }
+	if(querystringWithFilters==window.prevGeneGridQuery)
+	{
+		// don't refresh grid if query is the same.
+		return;
+	}
 	window.prevGeneGridQuery=querystringWithFilters;
 
 	var buildGrid = function()
@@ -953,22 +968,22 @@ var structureGeneGrid = function()
 		if (typeof getQueryString == 'function') window.querystring = getQueryString();
 
 		currentGeneGrid = GxdTissueMatrix({
-	        target : "ggTarget",
-	        // the datasource allows supergrid to make ajax calls for the initial data,
-	        // 	as well as subsequent calls for expanding rows
-	        dataSource: {
-		    	url: fewiurl + "gxd/genegrid/json?" + querystringWithFilters,
-		    	batchSize: 50000,
-		    	offsetField: "startIndex",
-		    	limitField: "results",
-		        MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)... ' +
-		        	'<br/>If the dataset contains thousands of genes, the Tissue x Gene Matrix may not load. ' +
-		        	'<br/>Consider filtering the data set.',
-		 	   	MSG_EMPTY: 'No assay results with expression data found.'
+			target : "ggTarget",
+			// the datasource allows supergrid to make ajax calls for the initial data,
+			// 	as well as subsequent calls for expanding rows
+			dataSource: {
+				url: fewiurl + "gxd/genegrid/json?" + querystringWithFilters,
+				batchSize: 50000,
+				offsetField: "startIndex",
+				limitField: "results",
+				MSG_LOADING: LOADING_IMG+' Searching for data (may take a couple minutes for large datasets)... ' +
+				'<br/>If the dataset contains thousands of genes, the Tissue x Gene Matrix may not load. ' +
+				'<br/>Consider filtering the data set.',
+				MSG_EMPTY: 'No assay results with expression data found.'
 			},
-	        cellSize: 24,
-	        cellRenderer: GxdRender.StructureGeneCellRenderer,
-	        columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
+			cellSize: 24,
+			cellRenderer: GxdRender.StructureGeneCellRenderer,
+			columnSort: function(a,b){ return FewiUtil.SortSmartAlpha(a.cid,b.cid);},
 			verticalColumnLabels: true,
 	        openCloseStateKey: "gg_"+querystring,
 	        legendClickHandler: function(e){ geneMatrixLegendPopupPanel.show(); },
@@ -1014,14 +1029,14 @@ var structureGeneGrid = function()
 	buildGrid();
 }
 
-// popup for gene matrix legend
+//popup for gene matrix legend
 window.geneMatrixLegendPopupPanel = new YAHOO.widget.Panel("geneLegendPopupPanel",
 		{ width:"260px", visible:false, constraintoviewport:true,
 			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
 });
 window.geneMatrixLegendPopupPanel.render();
 
-// popup for structure matrix legend
+//popup for structure matrix legend
 window.structMatrixLegendPopupPanel = new YAHOO.widget.Panel("structLegendPopupPanel",
 		{ width:"260px", visible:false, constraintoviewport:true,
 			context:['tabSummaryContent', 'tl', 'tr',['beforeShow','windowResize']]
@@ -1079,7 +1094,6 @@ function historyInit()
 History.onReady(historyInit);
 
 
-//
-// Initialize the YUI browser history manager control
-//
+//Initialize the YUI browser history manager control
+
 History.initialize("yui-history-field", "yui-history-iframe");

@@ -1,11 +1,22 @@
 var myDataSource;
 var myDataTable;
+var handleIdSet;
 var generateRequest;
 var totalCount = 0;
 var numConfig = {thousandsSeparator: ','};
 
 // Integrate with Browser History Manager
 var History = YAHOO.util.History;
+
+var getMarkerIds = function() {
+   var url = fewiurl + "batch/idList?"   + querystring + "&";
+   var callback = {
+      success : function(oResponse) {
+         $("#mousemineids").val(oResponse.responseText);
+      },
+   };
+   YAHOO.util.Connect.asyncRequest('GET', url, callback);
+};
 
 (function () {		
     // Column definitions -- sortable:true enables sorting
@@ -125,7 +136,7 @@ var History = YAHOO.util.History;
     }
 
     // DataSource instance
-    var myDataSource = new YAHOO.util.XHRDataSource(fewiurl + "batch/json?" + querystring + "&");
+    var myDataSource =    new YAHOO.util.XHRDataSource(fewiurl + "batch/json?"   + querystring + "&");
 
     myDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
     myDataSource.responseSchema = {
@@ -196,8 +207,7 @@ var History = YAHOO.util.History;
     };   
     
     // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("batchdata", myColumnDefs, 
-    	    myDataSource, myConfigs);
+    var myDataTable = new YAHOO.widget.DataTable("batchdata", myColumnDefs, myDataSource, myConfigs);
     
     // Show loading message while page is being rendered
     myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);    
@@ -258,6 +268,10 @@ var History = YAHOO.util.History;
         results = results || 25;
         return "results="+results+"&startIndex="+startIndex;
     };
+
+    handleIdSet = function(data, other) {
+       console.log(other);
+    };
     
     // Called by Browser History Manager to trigger a new state
     handleHistoryNavigation = function (request) {
@@ -269,6 +283,7 @@ var History = YAHOO.util.History;
             scope : myDataTable,
             argument : {} // Pass in container for population at runtime via doBeforeLoadData
         });
+        getMarkerIds();
     };
 
     // Calculate the first request

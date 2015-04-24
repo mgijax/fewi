@@ -269,7 +269,7 @@ ${templateBean.templateBodyStartHtml}
        </td>
        <td>
          <span class='' id='assayAntibody'>
-          <a href="${configBean.WI_URL}searches/antibody.cgi?${assay.antibodyKey}">
+          <a href="${configBean.FEWI_URL}antibody/key/${assay.antibodyKey}">
             <%= FormatHelper.superscript(assay.getAntibody()) %> 
           </a>
          </span>

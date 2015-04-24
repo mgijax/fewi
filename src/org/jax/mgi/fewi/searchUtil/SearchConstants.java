@@ -36,6 +36,9 @@ public class SearchConstants {
     public static final String MRK_NOMENCLATURE			= "nomenclature";
 	public static final String FEATURE_TYPE = "featureType";
 	public static final String FEATURE_TYPE_KEY = "featureTypeKey";
+	public static final String EVIDENCE_CODE		= "evidenceCode";
+	public static final String EVIDENCE_TERM		= "evidenceTerm";
+	
 
     // allele constants
     public static final String ALL_KEY              = "allele_key";
@@ -98,6 +101,7 @@ public class SearchConstants {
     // Vocab Constants
 
     public static final String VOC_VOCAB            = "vocab";
+	public static final String VOC_DAG_NAME			= "dagName";
     public static final String VOC_TERM		    = "term";
     public static final String VOC_TERM_ID			= "termId";
     public static final String VOC_TERM_TYPE		= "termType";

@@ -133,7 +133,10 @@ function main() {
 		if (!YAHOO.lang.isNull(excelReportButton)) {
 			excelReportButton.setAttribute('href', fewiurl + 'marker/report.xlsx?' + querystring);
 		}
-
+		var markersBatchForwardButton = YAHOO.util.Dom.get('markersBatchForward');
+		if (!YAHOO.lang.isNull(markersBatchForwardButton)) {
+			markersBatchForwardButton.setAttribute('href', fewiurl + 'marker/batch?' + querystring);
+		}
         return true;
     };
 

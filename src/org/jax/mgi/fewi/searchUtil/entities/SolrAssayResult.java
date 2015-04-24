@@ -13,7 +13,7 @@ public class SolrAssayResult implements SolrGxdEntity
 	private String markerMgiid;
 	private String markerName;
 	private String printname;
-	private String anatomicalSystem;
+	private List<String> anatomicalSystems;
 	private Integer theilerStage;
 	private List<String> figures;
 	private List<String> figuresPlain;
@@ -47,11 +47,11 @@ public class SolrAssayResult implements SolrGxdEntity
 	public void setPrintname(String printname) {
 		this.printname = printname;
 	}
-	public String getAnatomicalSystem() {
-		return anatomicalSystem;
+	public List<String> getAnatomicalSystems() {
+		return anatomicalSystems;
 	}
-	public void setAnatomicalSystem(String anatomicalSystem) {
-		this.anatomicalSystem = anatomicalSystem;
+	public void setAnatomicalSystems(List<String> anatomicalSystems) {
+		this.anatomicalSystems = anatomicalSystems;
 	}
 	public Integer getTheilerStage() {
 		return theilerStage;

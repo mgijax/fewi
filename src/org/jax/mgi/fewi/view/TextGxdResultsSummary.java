@@ -39,7 +39,6 @@ public class TextGxdResultsSummary extends AbstractTextView
 				"Gene Name",
 				"MGI Assay ID",
 				"Assay Type",
-				"Anatomical System",
 				"Age",
 				"Theiler Stage",
 				"Structure",
@@ -68,7 +67,6 @@ public class TextGxdResultsSummary extends AbstractTextView
 				writer.write(r.getMarkerName()+"\t");
 				writer.write(r.getAssayMgiid()+"\t");
 				writer.write(r.getAssayType() + "\t");
-				writer.write(r.getAnatomicalSystem() + "\t");
 				writer.write(r.getAge() + "\t");
 				writer.write(r.getTheilerStage() + "\t");
 				writer.write(r.getPrintname() + "\t");

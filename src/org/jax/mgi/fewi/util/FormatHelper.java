@@ -25,621 +25,608 @@ import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.util.UriUtils;
 
 /**
-* provides static methods to help with formatting of JSP pages
-*/
-public class FormatHelper
-{
+ * provides static methods to help with formatting of JSP pages
+ */
+public class FormatHelper {
 
-    // logger for the class
-    private static Logger logger = LoggerFactory.getLogger(FormatHelper.class);
+	// logger for the class
+	private static Logger logger = LoggerFactory.getLogger(FormatHelper.class);
 
-    // maps from Theiler stage (Integer) to corresponding DPC String
-    private static HashMap<Integer,String> tsToDPC = null;
+	// maps from Theiler stage (Integer) to corresponding DPC String
+	private static HashMap<Integer,String> tsToDPC = null;
 
-    // maps from Theiler stage (Integer) to stage description
-    private static HashMap<Integer,String> tsToDescription = null;
+	// maps from Theiler stage (Integer) to stage description
+	private static HashMap<Integer,String> tsToDescription = null;
 
-    // populate tsToDPC
-    private static void populateTsToDPC() {
-	tsToDPC = new HashMap<Integer,String>();
+	// populate tsToDPC
+	private static void populateTsToDPC() {
+		tsToDPC = new HashMap<Integer,String>();
 
-	tsToDPC.put(0, "Any developmental stage");
-    	tsToDPC.put(1, "(0.0-2.5 dpc)");
-    	tsToDPC.put(2, "(1.0-2.5 dpc)");
-    	tsToDPC.put(3, "(1.0-3.5 dpc)");
-    	tsToDPC.put(4, "(2.0-4.0 dpc)");
-    	tsToDPC.put(5, "(3.0-5.5 dpc)");
-    	tsToDPC.put(6, "(4.0-5.5 dpc)");
-    	tsToDPC.put(7, "(4.5-6.0 dpc)");
-    	tsToDPC.put(8, "(5.0-6.5 dpc)");
-    	tsToDPC.put(9, "(6.25-7.25 dpc)");
-    	tsToDPC.put(10, "(6.5-7.75 dpc)");
-    	tsToDPC.put(11, "(7.25-8.0 dpc)");
-    	tsToDPC.put(12, "(7.5-8.75 dpc)");
-    	tsToDPC.put(13, "(8.0-9.25 dpc)");
-    	tsToDPC.put(14, "(8.5-9.75 dpc)");
-    	tsToDPC.put(15, "(9.0-10.25 dpc)");
-    	tsToDPC.put(16, "(9.5-10.75 dpc)");
-    	tsToDPC.put(17, "(10.0-11.25 dpc)");
-    	tsToDPC.put(18, "(10.5-11.25 dpc)");
-    	tsToDPC.put(19, "(11.0-12.25 dpc)");
-    	tsToDPC.put(20, "(11.5-13.0 dpc)");
-    	tsToDPC.put(21, "(12.5-14.0 dpc)");
-    	tsToDPC.put(22, "(13.5-15.0 dpc)");
-    	tsToDPC.put(23, "(15 dpc)");
-    	tsToDPC.put(24, "(16 dpc)");
-    	tsToDPC.put(25, "(17 dpc)");
-    	tsToDPC.put(26, "(18 dpc)");
-    	tsToDPC.put(27, "(newborn)");
-    	tsToDPC.put(28, "(postnatal)");
-	return;
-    }
-
-    public static String getDPC (int theilerStage) {
-	if (tsToDPC == null) { populateTsToDPC(); }
-
-	if (tsToDPC.containsKey(theilerStage)) {
-	    return tsToDPC.get(theilerStage);
+		tsToDPC.put(0, "Any developmental stage");
+		tsToDPC.put(1, "(0.0-2.5 dpc)");
+		tsToDPC.put(2, "(1.0-2.5 dpc)");
+		tsToDPC.put(3, "(1.0-3.5 dpc)");
+		tsToDPC.put(4, "(2.0-4.0 dpc)");
+		tsToDPC.put(5, "(3.0-5.5 dpc)");
+		tsToDPC.put(6, "(4.0-5.5 dpc)");
+		tsToDPC.put(7, "(4.5-6.0 dpc)");
+		tsToDPC.put(8, "(5.0-6.5 dpc)");
+		tsToDPC.put(9, "(6.25-7.25 dpc)");
+		tsToDPC.put(10, "(6.5-7.75 dpc)");
+		tsToDPC.put(11, "(7.25-8.0 dpc)");
+		tsToDPC.put(12, "(7.5-8.75 dpc)");
+		tsToDPC.put(13, "(8.0-9.25 dpc)");
+		tsToDPC.put(14, "(8.5-9.75 dpc)");
+		tsToDPC.put(15, "(9.0-10.25 dpc)");
+		tsToDPC.put(16, "(9.5-10.75 dpc)");
+		tsToDPC.put(17, "(10.0-11.25 dpc)");
+		tsToDPC.put(18, "(10.5-11.25 dpc)");
+		tsToDPC.put(19, "(11.0-12.25 dpc)");
+		tsToDPC.put(20, "(11.5-13.0 dpc)");
+		tsToDPC.put(21, "(12.5-14.0 dpc)");
+		tsToDPC.put(22, "(13.5-15.0 dpc)");
+		tsToDPC.put(23, "(15 dpc)");
+		tsToDPC.put(24, "(16 dpc)");
+		tsToDPC.put(25, "(17 dpc)");
+		tsToDPC.put(26, "(18 dpc)");
+		tsToDPC.put(27, "(newborn)");
+		tsToDPC.put(28, "(postnatal)");
+		return;
 	}
-	return null;
-    }
 
-    private static void populateTsToDescription() {
-	tsToDescription = new HashMap<Integer,String>();
+	public static String getDPC (int theilerStage) {
+		if (tsToDPC == null) { populateTsToDPC(); }
 
-	tsToDescription.put(1, "One cell stage");
-	tsToDescription.put(2, "Beginning of cell division; 2-4 cells");
-	tsToDescription.put(3, "Morula; 4-16 cells");
-	tsToDescription.put(4, "Blastocyst (inner cell mass apparent); 16-40 cells");
-	tsToDescription.put(5, "Blastocyst (zona free)");
-	tsToDescription.put(6, "Implantation");
-	tsToDescription.put(7, "Formation of egg cylinder");
-	tsToDescription.put(8, "Differentiation of egg cylinder");
-	tsToDescription.put(9, "Prestreak; early streak");
-	tsToDescription.put(10, "Midstreak; late streak; allantoic bud first appears; amnion forms");
-	tsToDescription.put(11, "Neural plate stage; elongated allantoic bud; early headfold; late headfold");
-	tsToDescription.put(12, "1-7 somites");
-	tsToDescription.put(13, "8-12 somites; turning of embryo");
-	tsToDescription.put(14, "13-20 somites; formation and closure of anterior neuropore");
-	tsToDescription.put(15, "21-29 somites; formation of posterior neuropore and forelimb bud");
-	tsToDescription.put(16, "30-34 somites; closure of posterior neuropore; formation of hindlimb and tail bud");
-	tsToDescription.put(17, "35-39 somites; deep indentation of lens vesicle");
-	tsToDescription.put(18, "40-44 somites; closure of lens vesicle");
-	tsToDescription.put(19, "45-47 somites; complete separation of lens vesicle");
-	tsToDescription.put(20, "48-51 somites; earliest sign of handplate digits");
-	tsToDescription.put(21, "52-55 somites; indentation of handplate");
-	tsToDescription.put(22, "56-~60 somites; distal separation of handplate digits");
-	tsToDescription.put(23, "Separation of footplate digits");
-	tsToDescription.put(24, "Reposition of umbilical hernia");
-	tsToDescription.put(25, "Digits joined together; skin wrinkled");
-	tsToDescription.put(26, "Long whiskers");
-	tsToDescription.put(27, "Newborn mouse");
-	tsToDescription.put(28, "Postnatal development");
-	return;
-    }
-
-    public static String getDescription (int theilerStage) {
-	if (tsToDescription == null) { populateTsToDescription(); }
-
-	if (tsToDescription.containsKey(theilerStage)) {
-	    return tsToDescription.get(theilerStage);
+		if (tsToDPC.containsKey(theilerStage)) {
+			return tsToDPC.get(theilerStage);
+		}
+		return null;
 	}
-	return null;
-    }
 
-    /** convert 'verbatimString' to its HTML equivalent
-    * @param verbatimString string of data in verbatim format (where what
-    *        should display on the web is exactly what is typed, so
-    *        HTML-relevant characters must be escaped)
-    * @return String
-    */
-    public static String formatVerbatim (String verbatimString)
-    {
-        if (verbatimString == null) { return null;}
+	private static void populateTsToDescription() {
+		tsToDescription = new HashMap<Integer,String>();
 
- 
-        return HtmlUtils.htmlEscape(verbatimString);
-    }
+		tsToDescription.put(1, "One cell stage");
+		tsToDescription.put(2, "Beginning of cell division; 2-4 cells");
+		tsToDescription.put(3, "Morula; 4-16 cells");
+		tsToDescription.put(4, "Blastocyst (inner cell mass apparent); 16-40 cells");
+		tsToDescription.put(5, "Blastocyst (zona free)");
+		tsToDescription.put(6, "Implantation");
+		tsToDescription.put(7, "Formation of egg cylinder");
+		tsToDescription.put(8, "Differentiation of egg cylinder");
+		tsToDescription.put(9, "Prestreak; early streak");
+		tsToDescription.put(10, "Midstreak; late streak; allantoic bud first appears; amnion forms");
+		tsToDescription.put(11, "Neural plate stage; elongated allantoic bud; early headfold; late headfold");
+		tsToDescription.put(12, "1-7 somites");
+		tsToDescription.put(13, "8-12 somites; turning of embryo");
+		tsToDescription.put(14, "13-20 somites; formation and closure of anterior neuropore");
+		tsToDescription.put(15, "21-29 somites; formation of posterior neuropore and forelimb bud");
+		tsToDescription.put(16, "30-34 somites; closure of posterior neuropore; formation of hindlimb and tail bud");
+		tsToDescription.put(17, "35-39 somites; deep indentation of lens vesicle");
+		tsToDescription.put(18, "40-44 somites; closure of lens vesicle");
+		tsToDescription.put(19, "45-47 somites; complete separation of lens vesicle");
+		tsToDescription.put(20, "48-51 somites; earliest sign of handplate digits");
+		tsToDescription.put(21, "52-55 somites; indentation of handplate");
+		tsToDescription.put(22, "56-~60 somites; distal separation of handplate digits");
+		tsToDescription.put(23, "Separation of footplate digits");
+		tsToDescription.put(24, "Reposition of umbilical hernia");
+		tsToDescription.put(25, "Digits joined together; skin wrinkled");
+		tsToDescription.put(26, "Long whiskers");
+		tsToDescription.put(27, "Newborn mouse");
+		tsToDescription.put(28, "Postnatal development");
+		return;
+	}
 
-    /** convert newline characters in a string to an html br markup.
-     * @param str The string that needs newlines coverted to html line breaks
-     * @return the original string with all newline characters converted to
-     *         html line breaks.
-     * @assumes this assumes that it is a unix new line '\n' that is being
-     *          converted.  Also assumes that you don't want trailing newlines,
-     *          and these are trimmed off.
-     * @effects nothing
-     * @throws nothing
-     */
-    public static String newline2HTMLBR(String str)
-    {
-        // In many cases there was trailing whitespace that had newlines in it.
-        //  I'm trimming them off now.
-        String newStr = "";
-        if (str != null) {
-            newStr = str.trim();
-            newStr = newStr.replaceAll("\\n","<br>");
-        }
-        return newStr;
-    }
+	public static String getDescription (int theilerStage) {
+		if (tsToDescription == null) { populateTsToDescription(); }
 
-    public static String newline2Comma(String str)
-    {
-    	 String newStr = "";
-         if (str != null) {
-             newStr = str.trim();
-             newStr = newStr.replaceAll("\\n",",");
-         }
-         return newStr;
-    }
+		if (tsToDescription.containsKey(theilerStage)) {
+			return tsToDescription.get(theilerStage);
+		}
+		return null;
+	}
 
-    // specify any kind of text to replace the newlines, if the above two methods don't meet requirements
-    public static String replaceNewline(String str,String replacement)
-    {
-   	 String newStr = "";
-     if (str != null) {
-         newStr = str.trim();
-         newStr = newStr.replaceAll("\\n",replacement);
-     }
-     return newStr;
-    }
-
-    /** convert all 'start' and 'stop' pair in 's' to be HTML
-     *    superscript tags.
-     * @param s the source String
-     * @param start the String which indicates the position for the HTML
-     *    superscript start tag "<sup>"
-     * @param stop the String which indicates the position for the HTML
-     *    superscript stop tag "</sup>"
-     * @return String as 's', but with the noted replacement made.  returns
-     *    null if 's' is null.  returns 's' if either 'start' or 'stop' is
-     *    null.
-     * @assumes nothing
-     * @effects nothing
-     * @throws nothing
-     */
-    public static String superscript (String s, String start, String stop)
-    {
-        return TextFormat.superscript(s,start,stop);
-    }
-
-    /** convenience wrapper over superscript(s, "<", ">"), which is the common use case
-     */
-    public static String superscript (String s)
-    {
-        return TextFormat.superscript(s);
-    }
-
-    /** returns the correct plural/singular form of the given 'singular'
-     * string, based on the given 'count'.
-     * @assumes that we make 'singular' plural by appending an 's'
-     */
-    public static String plural (int count, String singular) {
-        return plural (count, singular, singular + "s");
-    }
-
-    /** returns value of 'singular' when count is 1, or value of 'plural'
-     * when the count is 0 or more than 1
-     */
-    public static String plural (int count, String singular, String plural) {
-        if (count == 1) {
-            return singular;
-        }
-        return plural;
-    }
-
-    /**
-     * Init cap all words in a given string
-     */
-    public static String initCap(String in) {
-        if (in == null || in.length() == 0)
-            return new String("");
-
-        boolean capitalize = true;
-        char[] data = in.toCharArray();
-        for (int i = 0; i < data.length; i++) {
-            if (data[i] == ' ' || Character.isWhitespace(data[i]))
-                capitalize = true;
-            else if (capitalize) {
-                data[i] = Character.toUpperCase(data[i]);
-                capitalize = false;
-            } else
-                data[i] = Character.toLowerCase(data[i]);
-        }
-        return new String(data);
-    }
-
-    /**
-     * for a given collection, create a comma delimited string
-     */
-    public static String commaDelimit (Collection<String> collection)
-    {
-    	return StringUtils.join(collection,", ");
-    }
-
-    /**
-     * for a given collection, create a pipe delimited string
-     */
-    public static String pipeDelimit (Collection<String> collection)
-    {
-    	return StringUtils.join(collection," | ");
-    }
+	/** convert 'verbatimString' to its HTML equivalent
+	 * @param verbatimString string of data in verbatim format (where what
+	 *        should display on the web is exactly what is typed, so
+	 *        HTML-relevant characters must be escaped)
+	 * @return String
+	 */
+	public static String formatVerbatim (String verbatimString) {
+		if (verbatimString == null) { return null;}
 
 
-    /** returns value used to forward a sequence to either the sequence
-     * retrieval too, or mouse blast select-a-sequence report
-     */
-    public static String getSeqForwardValue (Sequence seq)
-    {
-        // buffer to collect/build value
-        StringBuffer seqForwardValue = new StringBuffer();
+		return HtmlUtils.htmlEscape(verbatimString);
+	}
 
-        // sequence info
-        String provider = getSeqProviderForward(seq);
+	/** convert newline characters in a string to an html br markup.
+	 * @param str The string that needs newlines coverted to html line breaks
+	 * @return the original string with all newline characters converted to
+	 *         html line breaks.
+	 * @assumes this assumes that it is a unix new line '\n' that is being
+	 *          converted.  Also assumes that you don't want trailing newlines,
+	 *          and these are trimmed off.
+	 * @effects nothing
+	 * @throws nothing
+	 */
+	public static String newline2HTMLBR(String str) {
+		// In many cases there was trailing whitespace that had newlines in it.
+		//  I'm trimming them off now.
+		String newStr = "";
+		if (str != null) {
+			newStr = str.trim();
+			newStr = newStr.replaceAll("\\n","<br>");
+		}
+		return newStr;
+	}
 
-        //coords
-        List<SequenceLocation> locList = seq.getLocations();
-        if (provider.equals("mousegenome") && !locList.isEmpty()) {
+	public static String newline2Comma(String str) {
+		String newStr = "";
+		if (str != null) {
+			newStr = str.trim();
+			newStr = newStr.replaceAll("\\n",",");
+		}
+		return newStr;
+	}
 
-          // first location is the primary loc to be used
-          SequenceLocation seqLoc = locList.get(0);
+	// specify any kind of text to replace the newlines, if the above two methods don't meet requirements
+	public static String replaceNewline(String str,String replacement) {
+		String newStr = "";
+		if (str != null) {
+			newStr = str.trim();
+			newStr = newStr.replaceAll("\\n",replacement);
+		}
+		return newStr;
+	}
 
-          seqForwardValue.append (provider);
-          seqForwardValue.append ("!");
-          seqForwardValue.append (seq.getPrimaryID());
-          seqForwardValue.append ("!");
-          seqForwardValue.append (seqLoc.getChromosome());
-          seqForwardValue.append ("!");
-          seqForwardValue.append (String.valueOf(seqLoc.getStartCoordinate().intValue()));
-          seqForwardValue.append ("!");
-          seqForwardValue.append (String.valueOf(seqLoc.getEndCoordinate().intValue()));
-          seqForwardValue.append ("!");
-          seqForwardValue.append ("+");
-          seqForwardValue.append ("!"); // offset may be appended later.
-        }
-        else {
-          seqForwardValue.append (provider);
-          seqForwardValue.append ("!");
+	/** convert all 'start' and 'stop' pair in 's' to be HTML
+	 *    superscript tags.
+	 * @param s the source String
+	 * @param start the String which indicates the position for the HTML
+	 *    superscript start tag "<sup>"
+	 * @param stop the String which indicates the position for the HTML
+	 *    superscript stop tag "</sup>"
+	 * @return String as 's', but with the noted replacement made.  returns
+	 *    null if 's' is null.  returns 's' if either 'start' or 'stop' is
+	 *    null.
+	 * @assumes nothing
+	 * @effects nothing
+	 * @throws nothing
+	 */
+	public static String superscript (String s, String start, String stop) {
+		return TextFormat.superscript(s,start,stop);
+	}
 
-	  if (seq.getPreferredGenBankID() != null) {
-              seqForwardValue.append (seq.getPreferredGenBankID().getAccID());
-	  } else {
-              seqForwardValue.append (seq.getPrimaryID());
-	  }
+	/** convenience wrapper over superscript(s, "<", ">"), which is the common use case
+	 */
+	public static String superscript (String s) {
+		return TextFormat.superscript(s);
+	}
 
-          seqForwardValue.append ("!");
-          seqForwardValue.append ("!");
-          seqForwardValue.append ("!");
-          seqForwardValue.append ("!");
-          seqForwardValue.append ("!"); // offset may be appended later.
-       }
+	/** returns the correct plural/singular form of the given 'singular'
+	 * string, based on the given 'count'.
+	 * @assumes that we make 'singular' plural by appending an 's'
+	 */
+	public static String plural (int count, String singular) {
+		return plural (count, singular, singular + "s");
+	}
 
-        return seqForwardValue.toString();
-    }
+	/** returns value of 'singular' when count is 1, or value of 'plural'
+	 * when the count is 0 or more than 1
+	 */
+	public static String plural (int count, String singular, String plural) {
+		if (count == 1) {
+			return singular;
+		}
+		return plural;
+	}
 
-    public static String getSeqProviderForward(Sequence seq)
-    {
-        // the primary key identifying the logical database
-        String seqProvider = seq.getProvider();
-        String providerForward = "";
+	/**
+	 * Init cap all words in a given string
+	 */
+	public static String initCap(String in) {
+		if (in == null || in.length() == 0)
+			return new String("");
 
-        if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {
-            providerForward = "genbank";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_SWISSPROT)) {
-            providerForward = "swissprot";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_TREMBL)) {
-            providerForward = "trembl";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
-            providerForward = "refseq";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_DOTS)) {
-            providerForward = "dotsm";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
-            providerForward = "dfcimgi";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_NIA)) {
-            providerForward = "niamgi";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
-            providerForward = "vega_mus_prot";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
-            providerForward = "vega_mus_cdna";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLPROTEIN)) {
-            providerForward = "ensembl_mus_prot";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
-            providerForward = "ensembl_mus_cdna";
-        }else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
-          seqProvider.equals(DBConstants.PROVIDER_ENSEMBL) ||
-          seqProvider.equals(DBConstants.PROVIDER_VEGA)) {
-            providerForward = "mousegenome";
-        }
+		boolean capitalize = true;
+		char[] data = in.toCharArray();
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] == ' ' || Character.isWhitespace(data[i]))
+				capitalize = true;
+			else if (capitalize) {
+				data[i] = Character.toUpperCase(data[i]);
+				capitalize = false;
+			} else
+				data[i] = Character.toLowerCase(data[i]);
+		}
+		return new String(data);
+	}
 
-        return providerForward;
-    }
+	/**
+	 * for a given collection, create a comma delimited string
+	 */
+	public static String commaDelimit (Collection<String> collection) {
+		return StringUtils.join(collection,", ");
+	}
 
-    /** examine s, and upon finding an <a href> tag, set its target to be
-     * that given in the parameter.
-     */
-    public static String setTarget (String s, String target) {
-        StringBuffer t = new StringBuffer();
-        String sLower = s.toLowerCase();
+	/**
+	 * for a given collection, create a pipe delimited string
+	 */
+	public static String pipeDelimit (Collection<String> collection) {
+		return StringUtils.join(collection," | ");
+	}
 
-        int ltPos = sLower.indexOf("<a href");
-        int gtPos = sLower.indexOf(">", ltPos);
-        int targetPos = sLower.indexOf("target=");
 
-        // Did we find a proper <a href...> set of angle brackets?  If not, bail.
-        if ((ltPos < 0) || (gtPos < ltPos)) {
-            return s;
-        }
+	/** returns value used to forward a sequence to either the sequence
+	 * retrieval too, or mouse blast select-a-sequence report
+	 */
+	public static String getSeqForwardValue (Sequence seq) {
+		// buffer to collect/build value
+		StringBuffer seqForwardValue = new StringBuffer();
 
-        // if we don't already have a target, then we can just insert one
-        if ((targetPos < 0) || (targetPos > gtPos)) {
-            t.append(s.substring(0, gtPos));
-            t.append(" target='" + target + "'");
-            t.append(s.substring(gtPos));
-            return t.toString();
-        }
+		// sequence info
+		String provider = getSeqProviderForward(seq);
 
-        // otherwise, we need to modify an existing target
-        t.append (s.substring(0, targetPos));
-        t.append (s.substring(targetPos).replaceFirst(
-            "[tT][Aa][rR][gG][eE][tT]= *['\"][^'\"]*['\"]",
-            "target='" + target + "'"));
-        return t.toString();
-    }
+		//coords
+		List<SequenceLocation> locList = seq.getLocations();
+		if (provider.equals("mousegenome") && !locList.isEmpty()) {
 
-    /** examine s, and upon finding an <a href> tag, set its target to be a
-     * new window
-     */
-    public static String setNewWindow (String s) {
-        return setTarget(s, "_new");
-    }
+			// first location is the primary loc to be used
+			SequenceLocation seqLoc = locList.get(0);
 
-    /**
-     * formats location coordinates
-     */
-    public static String formatCoordinates(Double start, Double end)
-    {
-    	if(start==null && end == null) return "";
-    	NumberFormat nf = new DecimalFormat("#0");
-    	if(start!=null)
+			seqForwardValue.append (provider);
+			seqForwardValue.append ("!");
+			seqForwardValue.append (seq.getPrimaryID());
+			seqForwardValue.append ("!");
+			seqForwardValue.append (seqLoc.getChromosome());
+			seqForwardValue.append ("!");
+			seqForwardValue.append (String.valueOf(seqLoc.getStartCoordinate().intValue()));
+			seqForwardValue.append ("!");
+			seqForwardValue.append (String.valueOf(seqLoc.getEndCoordinate().intValue()));
+			seqForwardValue.append ("!");
+			seqForwardValue.append ("+");
+			seqForwardValue.append ("!"); // offset may be appended later.
+		}
+		else {
+			seqForwardValue.append (provider);
+			seqForwardValue.append ("!");
+
+			if (seq.getPreferredGenBankID() != null) {
+				seqForwardValue.append (seq.getPreferredGenBankID().getAccID());
+			} else {
+				seqForwardValue.append (seq.getPrimaryID());
+			}
+
+			seqForwardValue.append ("!");
+			seqForwardValue.append ("!");
+			seqForwardValue.append ("!");
+			seqForwardValue.append ("!");
+			seqForwardValue.append ("!"); // offset may be appended later.
+		}
+
+		return seqForwardValue.toString();
+	}
+
+	public static String getSeqProviderForward(Sequence seq) {
+		// the primary key identifying the logical database
+		String seqProvider = seq.getProvider();
+		String providerForward = "";
+
+		if (seqProvider.startsWith(DBConstants.PROVIDER_SEQUENCEDB)) {
+			providerForward = "genbank";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_SWISSPROT)) {
+			providerForward = "swissprot";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_TREMBL)) {
+			providerForward = "trembl";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
+			providerForward = "refseq";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_DOTS)) {
+			providerForward = "dotsm";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
+			providerForward = "dfcimgi";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_NIA)) {
+			providerForward = "niamgi";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
+			providerForward = "vega_mus_prot";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {
+			providerForward = "vega_mus_cdna";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLPROTEIN)) {
+			providerForward = "ensembl_mus_prot";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBLTRANSCRIPT)) {
+			providerForward = "ensembl_mus_cdna";
+		}else if (seqProvider.equals(DBConstants.PROVIDER_NCBI) ||
+				seqProvider.equals(DBConstants.PROVIDER_ENSEMBL) ||
+				seqProvider.equals(DBConstants.PROVIDER_VEGA)) {
+			providerForward = "mousegenome";
+		}
+
+		return providerForward;
+	}
+
+	/** examine s, and upon finding an <a href> tag, set its target to be
+	 * that given in the parameter.
+	 */
+	public static String setTarget (String s, String target) {
+		StringBuffer t = new StringBuffer();
+		String sLower = s.toLowerCase();
+
+		int ltPos = sLower.indexOf("<a href");
+		int gtPos = sLower.indexOf(">", ltPos);
+		int targetPos = sLower.indexOf("target=");
+
+		// Did we find a proper <a href...> set of angle brackets?  If not, bail.
+		if ((ltPos < 0) || (gtPos < ltPos)) {
+			return s;
+		}
+
+		// if we don't already have a target, then we can just insert one
+		if ((targetPos < 0) || (targetPos > gtPos)) {
+			t.append(s.substring(0, gtPos));
+			t.append(" target='" + target + "'");
+			t.append(s.substring(gtPos));
+			return t.toString();
+		}
+
+		// otherwise, we need to modify an existing target
+		t.append (s.substring(0, targetPos));
+		t.append (s.substring(targetPos).replaceFirst(
+				"[tT][Aa][rR][gG][eE][tT]= *['\"][^'\"]*['\"]",
+				"target='" + target + "'"));
+		return t.toString();
+	}
+
+	/** examine s, and upon finding an <a href> tag, set its target to be a
+	 * new window
+	 */
+	public static String setNewWindow (String s) {
+		return setTarget(s, "_new");
+	}
+
+	/**
+	 * formats location coordinates
+	 */
+	public static String formatCoordinates(Double start, Double end) {
+		if(start==null && end == null) return "";
+		NumberFormat nf = new DecimalFormat("#0");
+		if(start!=null)
 			nf.format(start);
-    	if(end!=null)
+		if(end!=null)
 			nf.format(end);
-    	return nf.format(start)+"-"+nf.format(end);
-    }
-
-    public static String javascriptEncode(String s)
-    {
-    	return StringEscapeUtils.escapeJavaScript(s);
-    }
-
-    // try to keep this in sync with the DatamodelUtils version
-    // it helps make consistent anchor links
-    public static String makeCssSafe(String input)
-    {
-    	return DatamodelUtils.makeCssSafe(input);
-    }
-    
- // returns http query string by reverse engineering HttpRequest
-    public static String queryStringFromPost(HttpServletRequest request)
-    {
-      StringBuilder sb = new StringBuilder("");
-      for (@SuppressWarnings("unchecked")
-      		Enumeration<String> e = request.getParameterNames();e.hasMoreElements();)
-      {
-        String param = e.nextElement();
-        sb.append(param).append("=").append(request.getParameter(param)).append("&");
-      }
-      String queryString = sb.toString();
-      if(queryString.length()>0) queryString = queryString.substring(0, sb.length() - 1);
-      return queryString;
-    }
-
-    /* build a tree-like structure of HTML checkboxes for a list of query form
-     * options.  (like the Feature Type vocabulary on the marker QF when the
-     * browser has javascript turned off)
-     */
-    public static String buildHtmlTree (List<QueryFormOption> options) {
-	StringBuffer sb = new StringBuffer();
-
-	int prevIndentLevel = 1;
-	int indentLevel = 1;
-
-	for (QueryFormOption option : options) {
-	    if (option.getIndentLevel() != null) {
-		indentLevel = option.getIndentLevel().intValue();
-	    }
-
-	    if (indentLevel < prevIndentLevel) {
-		sb.append ("&nbsp;<br/>");
-	    }
-
-	    for (int i = 0; i < indentLevel; i++) {
-		sb.append ("&nbsp;&nbsp;&nbsp;&nbsp;");
-	    }
-
-	    sb.append ("<input type='checkbox' name='mcv' value='");
-	    sb.append (option.getSubmitValue());
-	    sb.append ("'/><span class='ygtvlabel' style='line-height: 1.5em'>");
-	    sb.append (option.getDisplayValue());
-	    if (option.getObjectCount() != null) {
-	        sb.append (" (");
-	        sb.append (String.format("%,d", option.getObjectCount()));
-	        sb.append (")");
-	    }
-	    sb.append ("</span><br/>");
-
-	    prevIndentLevel = indentLevel;
+		return nf.format(start)+"-"+nf.format(end);
 	}
 
-	return sb.toString();
-    }
+	public static String javascriptEncode(String s) {
+		return StringEscapeUtils.escapeJavaScript(s);
+	}
 
-    public static String buildJsonTree (List<QueryFormOption> options) {
-	StringBuffer sb = new StringBuffer();
+	// try to keep this in sync with the DatamodelUtils version
+	// it helps make consistent anchor links
+	public static String makeCssSafe(String input) {
+		return DatamodelUtils.makeCssSafe(input);
+	}
 
-	int prevIndentLevel = 1;
-	int indentLevel = 1;
-	boolean firstNode = true;
+	// returns http query string by reverse engineering HttpRequest
+	public static String queryStringFromPost(HttpServletRequest request) {
+		StringBuilder sb = new StringBuilder("");
+		for (@SuppressWarnings("unchecked")
+		Enumeration<String> e = request.getParameterNames();e.hasMoreElements();)
+		{
+			String param = e.nextElement();
+			sb.append(param).append("=").append(request.getParameter(param)).append("&");
+		}
+		String queryString = sb.toString();
+		if(queryString.length()>0) queryString = queryString.substring(0, sb.length() - 1);
+		return queryString;
+	}
 
-	// start the list of nodes
-	sb.append ("[");
+	/* build a tree-like structure of HTML checkboxes for a list of query form
+	 * options.  (like the Feature Type vocabulary on the marker QF when the
+	 * browser has javascript turned off)
+	 */
+	public static String buildHtmlTree (List<QueryFormOption> options) {
+		StringBuffer sb = new StringBuffer();
 
-	for (QueryFormOption option : options) {
-	    if (option.getIndentLevel() != null) {
-		indentLevel = option.getIndentLevel().intValue();
-	    }
+		int prevIndentLevel = 1;
+		int indentLevel = 1;
 
-	    if (firstNode) {
-		sb.append ("{");
-		firstNode = false;
+		for (QueryFormOption option : options) {
+			if (option.getIndentLevel() != null) {
+				indentLevel = option.getIndentLevel().intValue();
+			}
 
-	    } else if (indentLevel == prevIndentLevel) {
-		// end one node, start a sibling node
-		sb.append ("},{");
+			if (indentLevel < prevIndentLevel) {
+				sb.append ("&nbsp;<br/>");
+			}
 
-	    } else if (indentLevel > prevIndentLevel) {
-		// cannot end the prior node, as we need to begin its list of
-		// child nodes
-		sb.append (",children:[{");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append ("&nbsp;&nbsp;&nbsp;&nbsp;");
+			}
 
-	    } else { // (indentLevel < prevIndentLevel)
-		// close the previously open node
+			sb.append ("<input type='checkbox' name='mcv' value='");
+			sb.append (option.getSubmitValue());
+			sb.append ("'/><span class='ygtvlabel' style='line-height: 1.5em'>");
+			sb.append (option.getDisplayValue());
+			if (option.getObjectCount() != null) {
+				sb.append (" (");
+				sb.append (String.format("%,d", option.getObjectCount()));
+				sb.append (")");
+			}
+			sb.append ("</span><br/>");
+
+			prevIndentLevel = indentLevel;
+		}
+
+		return sb.toString();
+	}
+
+	public static String buildJsonTree (List<QueryFormOption> options) {
+		StringBuffer sb = new StringBuffer();
+
+		int prevIndentLevel = 1;
+		int indentLevel = 1;
+		boolean firstNode = true;
+
+		// start the list of nodes
+		sb.append ("[");
+
+		for (QueryFormOption option : options) {
+			if (option.getIndentLevel() != null) {
+				indentLevel = option.getIndentLevel().intValue();
+			}
+
+			if (firstNode) {
+				sb.append ("{");
+				firstNode = false;
+
+			} else if (indentLevel == prevIndentLevel) {
+				// end one node, start a sibling node
+				sb.append ("},{");
+
+			} else if (indentLevel > prevIndentLevel) {
+				// cannot end the prior node, as we need to begin its list of
+				// child nodes
+				sb.append (",children:[{");
+
+			} else { // (indentLevel < prevIndentLevel)
+				// close the previously open node
+				sb.append ("}");
+
+				// close one or more nodes previously left open for children
+				for (int i = indentLevel; i < prevIndentLevel; i++) {
+					sb.append ("]}");
+				}
+
+				sb.append (",{");
+			}
+
+			// contents of the current node
+
+			sb.append ("type:\"text\",");
+			sb.append ("label:\"");
+			sb.append (option.getDisplayValue());
+			if (option.getObjectCount() != null) {
+				sb.append (" (");
+				sb.append (String.format("%,d", option.getObjectCount()));
+				sb.append (")\"");
+			}
+			if (option.getShowExpanded() == 1) {
+				sb.append(",expanded:");
+				sb.append ("true");
+			}
+			sb.append (",key:\"");
+			sb.append (option.getSubmitValue());
+			sb.append ("\",head:\"");
+			sb.append (option.getDisplayValue());
+			sb.append ("\",help:\"");
+			sb.append (option.getHelpText().trim());
+			sb.append ("\"");
+
+			prevIndentLevel = indentLevel;
+		}
+
+		// close final node
 		sb.append ("}");
 
-		// close one or more nodes previously left open for children
-		for (int i = indentLevel; i < prevIndentLevel; i++) {
-		    sb.append ("]}");
+		// close any nodes which had lists of children still open
+		for (int i = 1; i < prevIndentLevel; i++) {
+			sb.append ("]}");
 		}
 
-		sb.append (",{");
-	    }
+		// close the list of nodes itself
+		sb.append ("]");
 
-	    // contents of the current node
-
-	    sb.append ("type:\"text\",");
-	    sb.append ("label:\"");
-	    sb.append (option.getDisplayValue());
-	    if (option.getObjectCount() != null) {
-	    	sb.append (" (");
-	    	sb.append (String.format("%,d", option.getObjectCount()));
-	    	sb.append (")\"");
-	    }
-	    if (option.getShowExpanded() == 1) {
-	        sb.append(",expanded:");
-	        sb.append ("true");
-	    }
-	    sb.append (",key:\"");
-	    sb.append (option.getSubmitValue());
-	    sb.append ("\",head:\"");
-	    sb.append (option.getDisplayValue());
-	    sb.append ("\",help:\"");
-	    sb.append (option.getHelpText().trim());
-	    sb.append ("\"");
-
-	    prevIndentLevel = indentLevel;
+		return sb.toString();
 	}
 
-	// close final node
-	sb.append ("}");
+	/* build the default JSON tree for the given anatomy term (for the anatomy
+	 * term detail page).  This shows the term's default parent (open),
+	 * siblings (closed), and following the trail of ancestors (closed) from
+	 * the default parent up through its default parent (and so on) until
+	 * reaching the root node.  The JSON format we are generating is:
+	 * [
+	 *   { type:"text",
+	 *     label:"HTML string to display for the node",
+	 *     expanded:true or false,
+	 *     key:"database key for term",
+	 *	   head:"minimal label",
+	 *	   help:"help text for mouse-over",
+	 *	   children: [ { other similar nodes for children, recursively } ]
+	 *	   }
+	 * ]
+	 */
+	public static String buildDefaultJsonTree (VocabTerm anatomyTerm) {
+		TreeNode startNode = new TreeNode(anatomyTerm);
+		startNode.setExpanded(true);
+		//	startNode.setHighlighted(true);
+		startNode.setSelected(true);
 
-	// close any nodes which had lists of children still open
-	for (int i = 1; i < prevIndentLevel; i++) {
-	    sb.append ("]}");
-	}
+		// add children of the starting node
 
-	// close the list of nodes itself
-	sb.append ("]");
-
-	return sb.toString();
-    }
-
-    /* build the default JSON tree for the given anatomy term (for the anatomy
-     * term detail page).  This shows the term's default parent (open),
-     * siblings (closed), and following the trail of ancestors (closed) from
-     * the default parent up through its default parent (and so on) until
-     * reaching the root node.  The JSON format we are generating is:
-     * [
-     *   { type:"text",
-     *     label:"HTML string to display for the node",
-     *     expanded:true or false,
-     *     key:"database key for term",
-     *	   head:"minimal label",
-     *	   help:"help text for mouse-over",
-     *	   children: [ { other similar nodes for children, recursively } ]
-     *	   }
-     * ]
-     */
-    public static String buildDefaultJsonTree (VocabTerm anatomyTerm) {
-	TreeNode startNode = new TreeNode(anatomyTerm);
-	startNode.setExpanded(true);
-//	startNode.setHighlighted(true);
-	startNode.setSelected(true);
-
-	// add children of the starting node
-
-	for (VocabTerm child : anatomyTerm.getChildren()) {
-		startNode.addChild (new TreeNode(child));
-	}
-
-	// add immediate parent of the starting node
-	
-	VocabTerm parent = anatomyTerm.getDefaultParent();
-	if (parent == null) {
-		// startNode is a root (no parent), so just return it
-		return "[" + startNode.getJson() + "]"; 
-	}
-
-	TreeNode parentNode = new TreeNode(parent);
-	parentNode.setExpanded(true);
-	parentNode.setIsOnDefaultPath(true);
-
-	// add siblings of the starting node
-	
-	for (VocabTerm sibling : parent.getChildren()) {
-		if (sibling.getTermKey() == anatomyTerm.getTermKey()) {
-			parentNode.addChild(startNode);
-		} else {
-			parentNode.addChild(new TreeNode(sibling));
-		}
-	}
-
-	// add other ancestors from the parent up to the root
-	
-	VocabTerm priorParent = parent.getDefaultParent();
-	TreeNode priorParentNode = null;
-
-	while (priorParent != null) {
-		priorParentNode = new TreeNode(priorParent);
-		priorParentNode.setIsOnDefaultPath(true);
-		priorParentNode.setExpanded(true);
-
-		// siblings of the ancestor node...
-
-		for (VocabTerm otherChild : priorParent.getChildren()) {
-		    if (otherChild.getTermKey() == parent.getTermKey()) {
-			priorParentNode.addChild(parentNode);
-		    } else {
-			priorParentNode.addChild(new TreeNode(otherChild));
-		    }
+		for (VocabTerm child : anatomyTerm.getChildren()) {
+			startNode.addChild (new TreeNode(child));
 		}
 
-		parent = priorParent;
-		parentNode = priorParentNode;
+		// add immediate parent of the starting node
 
-		priorParent = parent.getDefaultParent();
+		VocabTerm parent = anatomyTerm.getDefaultParent();
+		if (parent == null) {
+			// startNode is a root (no parent), so just return it
+			return "[" + startNode.getJson() + "]"; 
+		}
+
+		TreeNode parentNode = new TreeNode(parent);
+		parentNode.setExpanded(true);
+		parentNode.setIsOnDefaultPath(true);
+
+		// add siblings of the starting node
+
+		for (VocabTerm sibling : parent.getChildren()) {
+			if (sibling.getTermKey() == anatomyTerm.getTermKey()) {
+				parentNode.addChild(startNode);
+			} else {
+				parentNode.addChild(new TreeNode(sibling));
+			}
+		}
+
+		// add other ancestors from the parent up to the root
+
+		VocabTerm priorParent = parent.getDefaultParent();
+		TreeNode priorParentNode = null;
+
+		while (priorParent != null) {
+			priorParentNode = new TreeNode(priorParent);
+			priorParentNode.setIsOnDefaultPath(true);
+			priorParentNode.setExpanded(true);
+
+			// siblings of the ancestor node...
+
+			for (VocabTerm otherChild : priorParent.getChildren()) {
+				if (otherChild.getTermKey() == parent.getTermKey()) {
+					priorParentNode.addChild(parentNode);
+				} else {
+					priorParentNode.addChild(new TreeNode(otherChild));
+				}
+			}
+
+			parent = priorParent;
+			parentNode = priorParentNode;
+
+			priorParent = parent.getDefaultParent();
+		}
+
+		return "[" + parentNode.getJson() + "]";
 	}
 
-	return "[" + parentNode.getJson() + "]";
-    }
-
-    public static String encodeQueryString(String query)
-    {
-    	try {
-			return UriUtils.encodeQuery(query,"UTF-8");
+	public static String encodeQueryString(String query) {
+		try {
+			return UriUtils.encodeQuery(query,"UTF-8").replaceAll("%E2%80%99", "%27").replaceAll("'", "%27");
+			// Removed the single quote for %27 if this is not done all links will break due to "javascript('var=peyer's')"
+			// The %27 gets decoded correctly with the link to the other page
+			// The %E2%80%99 is a right single quote Microsoft products convert single quotes to this in all their products :-(
 		} catch (UnsupportedEncodingException e) {
 			logger.error("query encode failed",e);
 			return query;
 		}
-    }
+	}
 } // end of class FormatHelper
 

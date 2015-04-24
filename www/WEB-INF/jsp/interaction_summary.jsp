@@ -13,7 +13,7 @@ ${templateBean.templateHeadHtml}
 ${templateBean.templateBodyStartHtml}
 <div style="padding: 4px;">
 
-<!-- iframe for history manager's use -->
+<!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
@@ -135,12 +135,18 @@ circle {
 	<input type="hidden" value="Location" name="attributes">
 	<input type="hidden" value="" name="ids" id="ids">
 </form>
+<form action="${configBean.MOUSEMINE_URL}mousemine/portal.do" method="post" target="_blank" name="mouseMineWeb" style="display:inline;" id="mouseMineForm">
+	<input type="hidden" value="SequenceFeature" name="class">
+	<input type="hidden" value="" name="externalids" id="mousemineids">
+</form>
 <br style="clear: both;" />
 <div style="float: left; width: 1245px;">
 	<div style="margin-top: 30px; float: left;">
 		<span class="filterButton" id="showGraphHelpDiv" style="margin-right: 10px;">Graph Help</span>
 		<span class="filterButton" style="margin-right: 10px;"><a target="_blank" href="${configBean.FTP_BASE_URL}feature_relationships_downloads" title="Download the full data set from the MGI ftp site">Download Data</a></span>
 		<a id="toBatchQuery" target="_blank" class="filterButton" onClick="javascript: batchWeb.submit();" style="display:none" title="Forward the genome features from the table to the Batch Query form"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> Batch Query</a>
+		<span style="margin-right: 10px"></span>
+		<a id="toMouseMine" target="_blank" class="filterButton" onClick="javascript: mouseMineWeb.submit();" style="display:none" title="Forward the genome features from the table to MouseMine"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
 		<div style="display: none"><span class="label">Export:</span>
 		<a id="relationshipTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
 		<a id="relationshipExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a></div>
@@ -205,6 +211,7 @@ circle {
     filters.setFewiUrl("${configBean.FEWI_URL}");
     filters.setHistoryManagement("myDataTable", handleNavigationRaw);
     filters.setDataTable(is_getDataTable());
+    filters.setGeneratePageRequestFunction(is_generateRequest);
     filters.addFilter('termFilter', 'Interaction', 'termFilter', 'relationshipTermFilter', fewiurl + 'interaction/facet/interaction');
     filters.addFilter('validationFilter', 'Validation', 'validationFilter', 'validationFilter', fewiurl + 'interaction/facet/validation');
     filters.addFilter('dataSourceFilter', 'Data Source', 'dataSourceFilter', 'dataSourceFilter', fewiurl + 'interaction/facet/dataSource');

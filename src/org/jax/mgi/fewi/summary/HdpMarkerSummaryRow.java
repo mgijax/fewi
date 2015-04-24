@@ -71,13 +71,17 @@ public class HdpMarkerSummaryRow {
     	String displayText = "<span class=\"jquiTT\" title=\"Name: " + solrDiseasePortalMarker.getName() + " <br/>Feature Type: " + solrDiseasePortalMarker.getType() + "\" ><a href=\"" + url + "/\">" + symbol + "</a></span>";
     	if("human".equalsIgnoreCase(solrDiseasePortalMarker.getOrganism()))
     	{
-    		if(solrDiseasePortalMarker.getHomologeneId() == null || solrDiseasePortalMarker.getHomologeneId().equals(""))
-    		{
-    			// simply return the unlinked symbol if there is no homologene ID for the human marker
+		if ((solrDiseasePortalMarker.getHomologyClusterKey() != null)
+		    && (solrDiseasePortalMarker.getHomologyClusterKey() != 0)
+		    && (solrDiseasePortalMarker.getHomologySource() != null))
+		{
+			url = fewiUrl + "homology/cluster/key/"
+				+ solrDiseasePortalMarker.getHomologyClusterKey();
+		} else {
+    			// simply return the unlinked symbol if there is no homology class for the human marker
     			return symbol;
     		}
-    		url = fewiUrl + "homology/key/" + solrDiseasePortalMarker.getMarkerKey();
-	    	displayText = "<span class=\"jquiTT\" title=\"Name: " + solrDiseasePortalMarker.getName() + "\" ><a href=\"" + url + "/\">" + symbol + "</a></span>";
+	    	displayText = "<span class=\"jquiTT\" title=\"Name: " + solrDiseasePortalMarker.getName() + "\" ><a href=\"" + url + "\">" + symbol + "</a></span>";
     	}
 
         return displayText;

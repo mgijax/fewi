@@ -148,8 +148,7 @@ public class SolrInteractionBaseHunter extends SolrHunter<SolrInteraction> {
 	}
 
 	@Override
-	protected void packInformation (QueryResponse rsp, SearchResults<SolrInteraction> sr,
-			SearchParams sp) {
+	protected void packInformation (QueryResponse rsp, SearchResults<SolrInteraction> sr, SearchParams sp) {
 
 		logger.debug ("Entering SolrInteractionBaseHunter.packInformation()");
 
@@ -166,21 +165,25 @@ public class SolrInteractionBaseHunter extends SolrHunter<SolrInteraction> {
 			item.setParticipantSymbol ((String) doc.getFieldValue(IndexConstants.PARTICIPANT_SYMBOL));
 			item.setRelationshipTerm ((String) doc.getFieldValue(IndexConstants.RELATIONSHIP_TERM));
 			item.setEvidenceCode ((String) doc.getFieldValue(IndexConstants.EVIDENCE_CODE));
-
+			
 			item.setScore ((String) doc.getFieldValue(IndexConstants.SCORE_VALUE));
 			item.setScoreSource ((String) doc.getFieldValue(IndexConstants.SCORE_SOURCE));
 			item.setValidation ((String) doc.getFieldValue(IndexConstants.VALIDATION));
 			item.setNotes ((String) doc.getFieldValue(IndexConstants.NOTES));
 			item.setJnumID ((String) doc.getFieldValue(IndexConstants.JNUM_ID));
 			item.setMatureTranscript ((String) doc.getFieldValue(IndexConstants.MATURE_TRANSCRIPT));
-
+			
+			item.setAlgorithm((String) doc.getFieldValue(IndexConstants.ALGORITHM));
+			item.setOrganizerProductID((String) doc.getFieldValue(IndexConstants.ORGANIZER_PRODUCT_ID));
+			item.setParticipantProductID((String) doc.getFieldValue(IndexConstants.PARTICIPANT_PRODUCT_ID));
+			item.setOtherReferences((String) doc.getFieldValue(IndexConstants.OTHER_REFERENCES));
+			
 			sr.addResultObjects(item);
 		}
 
 		this.packFacetData(rsp, sr);
 
-		logger.debug ("Exiting packInformation() with "
-				+ sr.getResultObjects().size() + " items");
+		logger.debug ("Exiting packInformation() with " + sr.getResultObjects().size() + " items");
 	}
 
 	/* gather and facet-related data from 'rsp' and package it into 'sr'

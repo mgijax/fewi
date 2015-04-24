@@ -47,7 +47,6 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 					"Gene Name",
 					"MGI Assay ID",
 					"Assay Type",
-					"Anatomical System",
 					"Age",
 					"Theiler Stage",
 					"Structure",
@@ -80,11 +79,10 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 					row.createCell(2).setCellValue(r.getMarkerName());
 					row.createCell(3).setCellValue(r.getAssayMgiid());
 					row.createCell(4).setCellValue(r.getAssayType());
-					row.createCell(5).setCellValue(r.getAnatomicalSystem());
-					row.createCell(6).setCellValue(r.getAge());
-					row.createCell(7).setCellValue(r.getTheilerStage());
-					row.createCell(8).setCellValue(r.getPrintname());
-					row.createCell(9).setCellValue(r.getDetectionLevel());
+					row.createCell(5).setCellValue(r.getAge());
+					row.createCell(6).setCellValue(r.getTheilerStage());
+					row.createCell(7).setCellValue(r.getPrintname());
+					row.createCell(8).setCellValue(r.getDetectionLevel());
 
 					// generate the figure text
 					String figureText = "";
@@ -103,20 +101,20 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 					{
 						figureText = StringUtils.join(formattedFigures,", ");
 					}
-					row.createCell(10).setCellValue(figureText); // figure
+					row.createCell(9).setCellValue(figureText); // figure
 
 					String genotypeText = "";
 					if(r.getGenotype() !=null && !r.getGenotype().equals(""))
 					{
 						genotypeText = FormatHelper.newline2Comma(ntc.convertNotes(r.getGenotype(), '|',true,true));
 					}
-					row.createCell(11).setCellValue(genotypeText); // mutant alleles
+					row.createCell(10).setCellValue(genotypeText); // mutant alleles
 
-					row.createCell(12).setCellValue(r.getJNum());
+					row.createCell(11).setCellValue(r.getJNum());
 
-					row.createCell(13).setCellValue(r.getPubmedId()); //pub med id
+					row.createCell(12).setCellValue(r.getPubmedId()); //pub med id
 
-					row.createCell(14).setCellValue(r.getShortCitation());
+					row.createCell(13).setCellValue(r.getShortCitation());
 				}
 			}
 

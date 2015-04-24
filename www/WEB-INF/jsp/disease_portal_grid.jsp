@@ -78,8 +78,8 @@
 	  <tr class="${gcStatus.index % 2 == 0 ? 'row1' : 'row2'}">
 	    <td><div class="mc jquiTT">
 	      <c:forEach var="humanMarker" items="${gridCluster.humanMarkers}" varStatus="status">
-		      <c:if test="${ not empty gridCluster.homologeneId}"><a href="${configBean.FEWI_URL}homology/${gridCluster.homologeneId}" title="Name: ${humanMarker.name}"><fewi:super value="${humanMarker.symbol}"/></a></c:if>
-		      <c:if test="${ empty gridCluster.homologeneId}"><span title="Name: ${humanMarker.name}"><fewi:super value="${humanMarker.symbol}"/></span></c:if>
+		      <c:if test="${not empty gridCluster.homologySource}"><a href="${configBean.FEWI_URL}homology/cluster/key/${gridCluster.gridClusterKey}" title="Name: ${humanMarker.name}"><fewi:super value="${humanMarker.symbol}"/></a></c:if>
+		      <c:if test="${empty gridCluster.homologySource}"><span title="Name: ${humanMarker.name}"><fewi:super value="${humanMarker.symbol}"/></span></c:if>
 	        <c:if test="${!status.last}">, </c:if>
 	      </c:forEach>
 	    </div></td>

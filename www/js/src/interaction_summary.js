@@ -341,13 +341,14 @@ var is_fetchAndCall = function(url, callbackFn) {
 var is_updateBatchQueryLink = function() {
     var url = fewiurl + 'interaction/idList?' + getQuerystring() + '&sort='
 	+ is_getSort() + '&dir=' + is_getSortDir();
-    is_fetchAndCall(url, is_setBatchSymbolListWeb);
+    is_fetchAndCall(url, is_setButtonSymbolListWeb);
 };
 
-var is_setBatchTooltip = function(s) {
+var is_setButtonTooltip = function(s) {
     var el = document.getElementById('ids');
     if (el) {
 	var tooltip = 'Forward genome features to Batch Query';
+
 	try {
 	    var rowCount = is_dataTable.configs.paginator.getTotalRecords();
 	    var rowCountStr = rowCount + ' interactions';
@@ -376,10 +377,15 @@ var is_setBatchTooltip = function(s) {
 	if (el2) {
 	    el2.title = tooltip;
 	}
+
+	var el3 = document.getElementById('toMouseMine');
+	if (el3) {
+	    el3.title = tooltip.replace('Batch Query', 'MouseMine');
+	}
     }
 };
 
-var is_setBatchSymbolListWeb = function(s) {
+var is_setButtonSymbolListWeb = function(s) {
     if ((s === null) || (s == '')) {
 	// if can't get the full list, fall back on the main marker(s) for the
 	// page
@@ -394,7 +400,17 @@ var is_setBatchSymbolListWeb = function(s) {
 	    el2.style.display = 'inline';
 	}
     }
+
+    var el3 = document.getElementById('mousemineids');
+    if (el3) {
+	el3.value = s;
+	var el4 = document.getElementById('toMouseMine');
+	if (el4) {
+	    el4.style.display = 'inline';
+	}
+    }
+
     // use a 100ms delay before updating the tooltip, to give the paginator
     // time to work
-    setTimeout(function() { is_setBatchTooltip(s); }, 100);
+    setTimeout(function() { is_setButtonTooltip(s); }, 100);
 };

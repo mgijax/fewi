@@ -33,152 +33,151 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class InteractionFinder 
 {
-    private final Logger logger = LoggerFactory.getLogger(InteractionFinder.class);
-    
-    @Autowired
-    private SessionFactory sessionFactory;
+	private final Logger logger = LoggerFactory.getLogger(InteractionFinder.class);
 
-    @Autowired
-    private SolrInteractionHunter interactionHunter;
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    @Autowired
-    private SolrInteractionTermFacetHunter intTermFacetHunter;
+	@Autowired
+	private SolrInteractionHunter interactionHunter;
 
-    @Autowired
-    private SolrInteractionValidationFacetHunter intValidationFacetHunter;
+	@Autowired
+	private SolrInteractionTermFacetHunter intTermFacetHunter;
 
-    @Autowired
-    private SolrInteractionDataSourceFacetHunter intDataSourceFacetHunter;
+	@Autowired
+	private SolrInteractionValidationFacetHunter intValidationFacetHunter;
+
+	@Autowired
+	private SolrInteractionDataSourceFacetHunter intDataSourceFacetHunter;
 
 
-    /** get the interaction relationships which match the given search
-     * parameters (to support the new interaction explorer)
-     */
-    public SearchResults<SolrInteraction> getInteraction (
-    		SearchParams searchParams) {
+	/** get the interaction relationships which match the given search
+	 * parameters (to support the new interaction explorer)
+	 */
+	public SearchResults<SolrInteraction> getInteraction (
+			SearchParams searchParams) {
 
 		logger.debug("->InteractionFinder.getInteraction()");
-	
+
 		// result object to be returned
 		SearchResults<SolrInteraction> searchResults =
-		    new SearchResults<SolrInteraction>();
-	
+				new SearchResults<SolrInteraction>();
+
 		// ask the hunter to identify which objects to return
 		interactionHunter.hunt(searchParams, searchResults);
 		logger.debug("->hunter found "
-		    + searchResults.getResultObjects().size() + " interaction relationships");
-	
-		return searchResults;
-    }
+				+ searchResults.getResultObjects().size() + " interaction relationships");
 
-    public SearchResults<SolrInteraction> getValidationFacet(SearchParams params) {
+		return searchResults;
+	}
+
+	public SearchResults<SolrInteraction> getValidationFacet(SearchParams params) {
 		SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
 		intValidationFacetHunter.hunt (params, results);
 		return results;
-    }
+	}
 
-    public SearchResults<SolrInteraction> getInteractionFacet(SearchParams params) {
+	public SearchResults<SolrInteraction> getInteractionFacet(SearchParams params) {
 		SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
 		intTermFacetHunter.hunt (params, results);
 		return results;
-    }
+	}
 
-    public SearchResults<SolrInteraction> getDataSourceFacet(SearchParams params) {
+	public SearchResults<SolrInteraction> getDataSourceFacet(SearchParams params) {
 		SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
 		intDataSourceFacetHunter.hunt (params, results);
 		return results;
-    }
-
-    /** special method to truncate the 'score' to a three decimal places, with
-     * a forced round 'up' or down (if not 'up')
-     */
-    private String abbreviateScore (String score, boolean up) {
-	int decimalPos = score.indexOf('.');
-
-	// no decimal point, no truncation needed
-	if (decimalPos < 0) {
-	    return score;
 	}
 
-	int truncationPoint = decimalPos + 3;
+	/** special method to truncate the 'score' to a three decimal places, with
+	 * a forced round 'up' or down (if not 'up')
+	 */
+	private String abbreviateScore (String score, boolean up) {
+		int decimalPos = score.indexOf('.');
 
-	// too few digits, no truncation needed
-	if ((score.length() - 1) <= truncationPoint) {
-	    return score;
+		// no decimal point, no truncation needed
+		if (decimalPos < 0) {
+			return score;
+		}
+
+		int truncationPoint = decimalPos + 3;
+
+		// too few digits, no truncation needed
+		if ((score.length() - 1) <= truncationPoint) {
+			return score;
+		}
+
+		DecimalFormat fmt = new DecimalFormat("#.###");
+		if (up) {
+			fmt.setRoundingMode (RoundingMode.CEILING);
+		} else {
+			fmt.setRoundingMode (RoundingMode.FLOOR);
+		}
+
+		try {
+			Float fScoreObj = new Float(score);
+			float fScore = fScoreObj.floatValue();
+			return fmt.format(fScore);
+
+		} catch (NumberFormatException e) {
+			return score;
+		}
 	}
 
-	DecimalFormat fmt = new DecimalFormat("#.###");
-	if (up) {
-	    fmt.setRoundingMode (RoundingMode.CEILING);
-	} else {
-	    fmt.setRoundingMode (RoundingMode.FLOOR);
+	public SearchResults<SolrInteraction> getScoreFacet(SearchParams params) {
+		List<Sort> sorts = new ArrayList<Sort>();
+
+		logger.debug("Entering getScoreFacet()");
+		SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
+
+		// We just want one record returned from each end of the data set.
+
+		params.setPageSize(1);
+
+		// find record with the lowest score in this set
+
+		sorts.add(new Sort(SortConstants.BY_SCORE, true));
+		params.setSorts(sorts);
+
+		SearchResults<SolrInteraction> searchResults1 =
+				new SearchResults<SolrInteraction>();
+
+		interactionHunter.hunt(params, searchResults1);
+
+		String first = "0";
+		if (searchResults1.getResultObjects().size() >= 1) {
+			first = searchResults1.getResultObjects().get(0).getScore();
+			first = abbreviateScore(first, false);
+		}
+		logger.debug("Found first: " + first);
+
+		// find record with the highest score in this set
+
+		sorts.remove(0);
+		sorts.add(new Sort(SortConstants.BY_SCORE, false));
+		params.setSorts(sorts);
+
+		SearchResults<SolrInteraction> searchResults2 = new SearchResults<SolrInteraction>();
+
+		interactionHunter.hunt(params, searchResults2);
+
+		String last = "1";
+		if (searchResults2.getResultObjects().size() >= 1) {
+			last = searchResults2.getResultObjects().get(0).getScore();
+			last = abbreviateScore(last, false);
+		}
+		logger.debug("Found last: " + last);
+
+		// collect into a single list and add as the facets to be returned
+
+		List<String> resultObjects = new ArrayList<String>();
+		resultObjects.add(first);
+		resultObjects.add(last);
+
+		results.setResultFacets(resultObjects); 
+		results.setTotalCount(resultObjects.size()); 
+
+		logger.debug("Exiting getScoreFacet()");
+		return results;
 	}
-
-	try {
-	    Float fScoreObj = new Float(score);
-	    float fScore = fScoreObj.floatValue();
-	    return fmt.format(fScore);
-
-	} catch (NumberFormatException e) {
-	    return score;
-	}
-    }
-
-    public SearchResults<SolrInteraction> getScoreFacet(SearchParams params) {
-	List<Sort> sorts = new ArrayList<Sort>();
-
-	logger.debug("Entering getScoreFacet()");
-	SearchResults<SolrInteraction> results = new SearchResults<SolrInteraction>();
-
-	// We just want one record returned from each end of the data set.
-
-	params.setPageSize(1);
-
-	// find record with the lowest score in this set
-
-	sorts.add(new Sort(SortConstants.BY_SCORE, true));
-	params.setSorts(sorts);
-
-	SearchResults<SolrInteraction> searchResults1 =
-	    new SearchResults<SolrInteraction>();
-
-	interactionHunter.hunt(params, searchResults1);
-
-	String first = "0";
-	if (searchResults1.getResultObjects().size() >= 1) {
-	    first = searchResults1.getResultObjects().get(0).getScore();
-	    first = abbreviateScore(first, false);
-	}
-	logger.debug("Found first: " + first);
-
-	// find record with the highest score in this set
-
-	sorts.remove(0);
-	sorts.add(new Sort(SortConstants.BY_SCORE, false));
-	params.setSorts(sorts);
-
-	SearchResults<SolrInteraction> searchResults2 =
-	    new SearchResults<SolrInteraction>();
-
-	interactionHunter.hunt(params, searchResults2);
-
-	String last = "1";
-	if (searchResults2.getResultObjects().size() >= 1) {
-	    last = searchResults2.getResultObjects().get(0).getScore();
-	    last = abbreviateScore(last, false);
-	}
-	logger.debug("Found last: " + last);
-
-	// collect into a single list and add as the facets to be returned
-	
-	List<String> resultObjects = new ArrayList<String>();
-	resultObjects.add(first);
-	resultObjects.add(last);
-
-	results.setResultFacets(resultObjects); 
-	results.setTotalCount(resultObjects.size()); 
-
-	logger.debug("Exiting getScoreFacet()");
-	return results;
-    }
 }

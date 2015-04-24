@@ -113,8 +113,7 @@ public class InteractionController {
 			if (markerList.size() < 1) {
 				return this.errorMav("No marker found for ID " + id);
 			} else if (markerList.size() > 1) {
-				return this.errorMav("ID " + id + " refers to " + 
-						markerList.size() + " markers");
+				return this.errorMav("ID " + id + " refers to " + markerList.size() + " markers");
 			}
 
 			markers.add(markerList.get(0));
@@ -139,87 +138,82 @@ public class InteractionController {
 	 */
 
 	@RequestMapping("/idList")
-	public @ResponseBody String getIdList (HttpServletRequest request) {
-	    logger.debug("starting getIdList()");
-	    
-	    // parse the various query parameters to generate SearchParams
-	    // object
+	public @ResponseBody String getIdList (HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("starting getIdList()");
 
-	    SearchParams params = new SearchParams();
-	    params.setFilter(requestToFilter(request));
-	    params.setSorts(this.genSorts(request));
-	    params.setPageSize(20000);
+		// parse the various query parameters to generate SearchParams
+		// object
+		AjaxUtils.prepareAjaxHeaders(response);
+		SearchParams params = new SearchParams();
+		params.setFilter(requestToFilter(request));
+		params.setSorts(this.genSorts(request));
+		params.setPageSize(20000);
 
-	    logger.debug("Params: " + params);
-		
-	    SearchResults<SolrInteraction> sr = interactionFinder.getInteraction(params);
-	    List<SolrInteraction> interactionList = sr.getResultObjects();
-	    logger.debug("Controller received " + interactionList.size()
-		+ " SolrInteraction objects");
+		logger.debug("Params: " + params);
 
-	    // gather marker id strings in batches
-		
-	    // We want to ensure that we are building our query string of IDs
-	    // in the order that we want the batch query to return them (which
-	    // is the order displayed in the interactions table).  So, we use
-	    // the map to track which ones we've already included, but we
-	    // don't generate the list from it or we lose our ordering.
+		SearchResults<SolrInteraction> sr = interactionFinder.getInteraction(params);
+		List<SolrInteraction> interactionList = sr.getResultObjects();
+		logger.debug("Controller received " + interactionList.size()
+				+ " SolrInteraction objects");
 
-	    // maps from an ID to an empty string, signfying that we have
-	    // already included that ID in our request string
-	    HashMap<String, String> map = new HashMap<String, String>();
+		// gather marker id strings in batches
 
-	    // collects the IDs to be passed to be batch query
-	    StringBuffer ids = new StringBuffer();
-		
-	    // add the input IDs first
-	    @SuppressWarnings("unchecked")
+		// We want to ensure that we are building our query string of IDs
+		// in the order that we want the batch query to return them (which
+		// is the order displayed in the interactions table).  So, we use
+		// the map to track which ones we've already included, but we
+		// don't generate the list from it or we lose our ordering.
+
+		// maps from an ID to an empty string, signfying that we have
+		// already included that ID in our request string
+		HashMap<String, String> map = new HashMap<String, String>();
+
+		// collects the IDs to be passed to be batch query
+		StringBuffer ids = new StringBuffer();
+
+		// add the input IDs first
+		@SuppressWarnings("unchecked")
 		Map<String,String[]> parms = request.getParameterMap();
-	    List<String> inputIDs = Arrays.asList(
-		parms.get("markerIDs"));
+		List<String> inputIDs = Arrays.asList(parms.get("markerIDs"));
 
-	    for (String myId : inputIDs) {
-		map.put(myId, "");
-		ids.append(myId);
-		ids.append(", ");
-	    }
-
-	    // now look up and add any other IDs
-
-	    Iterator<SolrInteraction> it = interactionList.iterator();
-	    while (it.hasNext()) {
-		SolrInteraction reg = it.next();
-		if (reg != null) {
-		    String orgID = reg.getOrganizerID();
-		    String partID = reg.getParticipantID();
-
-		    if (!map.containsKey(orgID)) {
-			ids.append(orgID);
+		for (String myId : inputIDs) {
+			map.put(myId, "");
+			ids.append(myId);
 			ids.append(", ");
-			map.put(orgID, "");
-		    }
-
-		    if (!map.containsKey(partID)) {
-			ids.append(partID);
-			ids.append(", ");
-			map.put(partID, "");
-		    }
 		}
-	    }
-		
-	    logger.debug("Found " + map.size() + " IDs");
-	    return ids.toString();
+
+		// now look up and add any other IDs
+
+		Iterator<SolrInteraction> it = interactionList.iterator();
+		while (it.hasNext()) {
+			SolrInteraction reg = it.next();
+			if (reg != null) {
+				String orgID = reg.getOrganizerID();
+				String partID = reg.getParticipantID();
+
+				if (!map.containsKey(orgID)) {
+					ids.append(orgID);
+					ids.append(", ");
+					map.put(orgID, "");
+				}
+
+				if (!map.containsKey(partID)) {
+					ids.append(partID);
+					ids.append(", ");
+					map.put(partID, "");
+				}
+			}
+		}
+
+		logger.debug("Found " + map.size() + " IDs");
+		return ids.toString();
 	}
 
 	//----------------------//
 	// JSON summary results
 	//----------------------//
 	@RequestMapping("/json")
-	public @ResponseBody JsonSummaryResponse<InteractionSummaryRow>
-	interactionSummaryJson(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			@ModelAttribute Paginator page) {
+	public @ResponseBody JsonSummaryResponse<InteractionSummaryRow> interactionSummaryJson(HttpServletRequest request, HttpServletResponse response, @ModelAttribute Paginator page) {
 
 		logger.debug("->interactionSummaryResponse started");
 		AjaxUtils.prepareAjaxHeaders(response);
@@ -262,8 +256,7 @@ public class InteractionController {
 
 		// build the List of SummaryRow wrapper objects for interactionList
 
-		List<InteractionSummaryRow> summaryRows =
-				new ArrayList<InteractionSummaryRow> ();
+		List<InteractionSummaryRow> summaryRows = new ArrayList<InteractionSummaryRow> ();
 
 		Iterator<SolrInteraction> it = interactionList.iterator();
 		logger.debug("About to enter loop");
@@ -277,8 +270,7 @@ public class InteractionController {
 
 		// The JSON return object will be serialized to a JSON response.
 		// Client-side JavaScript expects this object
-		JsonSummaryResponse<InteractionSummaryRow> jsonResponse
-		= new JsonSummaryResponse<InteractionSummaryRow>();
+		JsonSummaryResponse<InteractionSummaryRow> jsonResponse = new JsonSummaryResponse<InteractionSummaryRow>();
 
 		// place data into JSON response, and return
 		jsonResponse.setSummaryRows(summaryRows);
@@ -375,7 +367,7 @@ public class InteractionController {
 
 		return sorts;
 	}
-	
+
 
 
 	/*
@@ -391,15 +383,15 @@ public class InteractionController {
 		params.setFilter(requestToFilter(request));
 		params.setSorts(this.genSorts(request));
 		params.setPageSize(20000);
-		
+
 		logger.debug("Params: " + params);
-		
+
 		SearchResults<SolrInteraction> sr = interactionFinder.getInteraction(params);
 		List<SolrInteraction> interactionList = sr.getResultObjects();
 		logger.debug("Controller received " + interactionList.size() + " SolrInteraction objects");
 
 		// gather marker id strings in batches
-		
+
 		// We want to ensure that we are building our query string of
 		// IDs in the order that we want the batch query to return
 		// them (which is the order displayed in the interactions 
@@ -413,7 +405,7 @@ public class InteractionController {
 
 		// collects the IDs to be passed to be batch query
 		StringBuffer ids = new StringBuffer();
-		
+
 		Iterator<SolrInteraction> it = interactionList.iterator();
 		logger.debug("About to enter loop");
 		while (it.hasNext()) {
@@ -423,19 +415,19 @@ public class InteractionController {
 				String partID = reg.getParticipantID();
 
 				if (!map.containsKey(orgID)) {
-				    ids.append(orgID);
-				    ids.append(", ");
-				    map.put(orgID, "");
+					ids.append(orgID);
+					ids.append(", ");
+					map.put(orgID, "");
 				}
 
 				if (!map.containsKey(partID)) {
-				    ids.append(partID);
-				    ids.append(", ");
-				    map.put(partID, "");
+					ids.append(partID);
+					ids.append(", ");
+					map.put(partID, "");
 				}
 			}
 		}
-		
+
 		//logger.debug("Batch Ids: " + ids);
 		logger.debug("Batch Ids: " + map.size());
 
@@ -479,24 +471,20 @@ public class InteractionController {
 		logger.debug("parseInteractionQueryForm()");
 
 		if (qf.getMarkerIDs().size() > 0) {
-			filters.add(new Filter(SearchConstants.MRK_ID, 
-					splitCommas(qf.getMarkerIDs()), Filter.Operator.OP_IN));
+			filters.add(new Filter(SearchConstants.MRK_ID, splitCommas(qf.getMarkerIDs()), Filter.Operator.OP_IN));
 			logger.debug("marker IDs: " + qf.getMarkerIDs().toString());
 		}
 
 		if (qf.getRelationshipTermFilter().size() > 0) {
-			filters.add(new Filter(SearchConstants.RELATIONSHIP_TERM,
-					splitCommas(qf.getRelationshipTermFilter()), Filter.Operator.OP_IN));
+			filters.add(new Filter(SearchConstants.RELATIONSHIP_TERM, splitCommas(qf.getRelationshipTermFilter()), Filter.Operator.OP_IN));
 		}
 
 		if (qf.getValidationFilter().size() > 0) {
-			filters.add(new Filter(SearchConstants.VALIDATION,
-					splitCommas(qf.getValidationFilter()), Filter.Operator.OP_IN));
+			filters.add(new Filter(SearchConstants.VALIDATION, splitCommas(qf.getValidationFilter()), Filter.Operator.OP_IN));
 		}
 
 		if (qf.getDataSourceFilter().size() > 0) {
-			filters.add(new Filter(SearchConstants.DATA_SOURCE,
-					splitCommas(qf.getDataSourceFilter()), Filter.Operator.OP_IN));
+			filters.add(new Filter(SearchConstants.DATA_SOURCE, splitCommas(qf.getDataSourceFilter()), Filter.Operator.OP_IN));
 		}
 
 		if (qf.getScoreFilter() != null) {
@@ -524,8 +512,7 @@ public class InteractionController {
 	/* parse the response from Solr for a facet query and return it as a
 	 * Map with two possible keys (error and resultFacets).
 	 */
-	private Map<String, List<String>> parseFacetResponse (
-			SearchResults<SolrInteraction> results, String order) {
+	private Map<String, List<String>> parseFacetResponse (SearchResults<SolrInteraction> results, String order) {
 
 		Map<String, List<String>> m = new HashMap<String, List<String>>();
 		List<String> l = new ArrayList<String>();
@@ -563,8 +550,7 @@ public class InteractionController {
 
 		while (it.hasNext()) {
 			String field = it.next();
-			List<String> values =
-					Arrays.asList(parms.get(field));
+			List<String> values = Arrays.asList(parms.get(field));
 
 			logger.debug("field: " + field);
 			logger.debug("values: " + values);
@@ -584,18 +570,14 @@ public class InteractionController {
 
 			} else if ("validationFilter".equals(field)) {
 				form.setValidationFilter(values);
-
 			} else if ("relationshipTermFilter".equals(field)) {
 				form.setRelationshipTermFilter(values);
-
 			} else if ("dataSourceFilter".equals(field)) {
 				form.setDataSourceFilter(values);
-
 			} else if ("scoreFilter".equals(field)) {
 				if (values.size() >= 1) {
 					form.setScoreFilter(values.get(0));
 				}
-
 			} else if ("requireScore".equals(field)) {
 				if (values.size() >= 1) {
 					if ("true".equals(values.get(0).toLowerCase())) {
@@ -606,15 +588,14 @@ public class InteractionController {
 				}
 			}
 		}
-		return this.parseInteractionQueryForm(form);
+		return parseInteractionQueryForm(form);
 	}
 
 	// -----------------------
 	// handle facets (filters)
 	// -----------------------
 
-	public Map<String, List<String>> facetGeneric (InteractionQueryForm qf,
-			BindingResult result, String facetType) {
+	public Map<String, List<String>> facetGeneric (InteractionQueryForm qf, BindingResult result, String facetType) {
 
 		logger.debug(qf.toString());
 		String order = ALPHA;
@@ -630,20 +611,15 @@ public class InteractionController {
 
 		if (FacetConstants.INT_SCORE.equals(facetType)) {
 			facetResults = interactionFinder.getScoreFacet(params);
-
 		} else if (FacetConstants.INT_VALIDATION.equals(facetType)) {
 			facetResults = interactionFinder.getValidationFacet(params);
-
 		} else if (FacetConstants.INT_INTERACTION.equals(facetType)) {
 			facetResults = interactionFinder.getInteractionFacet(params);
-
 		} else if (FacetConstants.INT_DATA_SOURCE.equals(facetType)) {
 			facetResults = interactionFinder.getDataSourceFacet(params);
-		}
-		else {
+		} else {
 			facetResults = new SearchResults<SolrInteraction>();
 		}
-
 		return this.parseFacetResponse(facetResults, order);
 	}
 
@@ -651,42 +627,35 @@ public class InteractionController {
 	 * returned as JSON
 	 */
 	@RequestMapping("/facet/validation")
-	public @ResponseBody Map<String, List<String>> facetValidation (
-			@ModelAttribute InteractionQueryForm qf, BindingResult result) {
-
-		return this.facetGeneric (qf, result,
-				FacetConstants.INT_VALIDATION);
+	public @ResponseBody Map<String, List<String>> facetValidation (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return this.facetGeneric (qf, result, FacetConstants.INT_VALIDATION);
 	}
 
 	/* get a list of interaction terms for the interaction facet list,
 	 * returned as JSON
 	 */
 	@RequestMapping("/facet/interaction")
-	public @ResponseBody Map<String, List<String>> facetInteraction (
-			@ModelAttribute InteractionQueryForm qf, BindingResult result) {
-
-		return this.facetGeneric (qf, result,
-				FacetConstants.INT_INTERACTION);
+	public @ResponseBody Map<String, List<String>> facetInteraction (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return this.facetGeneric (qf, result, FacetConstants.INT_INTERACTION);
 	}
 
 	/* get a list of data source values for the data source facet list,
 	 * returned as JSON
 	 */
 	@RequestMapping("/facet/dataSource")
-	public @ResponseBody Map<String, List<String>> facetDataSource (
-			@ModelAttribute InteractionQueryForm qf, BindingResult result) {
-
-		return this.facetGeneric (qf, result,
-				FacetConstants.INT_DATA_SOURCE);
+	public @ResponseBody Map<String, List<String>> facetDataSource (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
+		return this.facetGeneric (qf, result, FacetConstants.INT_DATA_SOURCE);
 	}
 
 	/* get the minimum and maximum numeric scores for the score filter,
 	 * returned as JSON
 	 */
 	@RequestMapping("/facet/score")
-	public @ResponseBody Map<String, List<String>> facetScore (
-			@ModelAttribute InteractionQueryForm qf, BindingResult result) {
-
+	public @ResponseBody Map<String, List<String>> facetScore (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
+		AjaxUtils.prepareAjaxHeaders(response);
 		return this.facetGeneric (qf, result, FacetConstants.INT_SCORE);
 	}
 }

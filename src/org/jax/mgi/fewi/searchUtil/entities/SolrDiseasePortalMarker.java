@@ -13,15 +13,23 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	String type = new String();
 	String organism = new String();
 	String homologeneId = new String();
+	String homologySource = new String();
+	Integer homologyClusterKey = 0;
 	String location = new String();
 	String coordinate = new String();
 	String coordinateBuild = new String();
 	String markerId = new String();
+	Integer gridClusterKey = 0;
 	Integer allRefCount = 0;
 	Integer diseaseRefCount = 0;
 	Integer imsrCount = 0;
 	List<String> disease;
 	List<String> system;
+
+	public String getHomologySource() { return homologySource; }
+	public void setHomologySource(String homologySource) {
+		this.homologySource = homologySource;
+	}
 
 	public String getMarkerKey() {return markerKey;}
 	public void setMarkerKey(String markerKey) {
@@ -32,6 +40,20 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	public String getSymbol() {return symbol;}
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
+	}
+
+	// homology cluster key is distinct from grid cluster key, as it is
+	// used to link to homology cluster pages.  We cannot use the grid
+	// cluster key for this purpose, as there are markers we want to link
+	// from the Genes tab which do not appear on the grid.
+	public Integer getHomologyClusterKey() { return homologyClusterKey; }
+	public void setHomologyClusterKey(Integer homologyClusterKey) {
+		this.homologyClusterKey = homologyClusterKey;
+	}
+
+	public Integer getGridClusterKey() { return gridClusterKey; }
+	public void setGridClusterKey(Integer gridClusterKey) {
+		this.gridClusterKey = gridClusterKey;
 	}
 
 	// marker MGI ID

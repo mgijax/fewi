@@ -281,12 +281,12 @@ order by AA.accID
                 	<tr><td>Disease</td><td><b  cc:assertResultsContain="getTermsByDisease(#disease)">Breast-Ovarian Cancer, Familial, Susceptibility to, 1; BROVCA1</b></td></tr>
                 	<tr><td>OMIM ID</td><td><b cc:assertResultsContain="getTermIdsByDisease(#disease)">604370</b></td></tr>
                 	<tr><td>Mouse Models</td><td><b concordion:manual="true">3</b> <em>(MANUAL CHECK: klf 8/13/13)</em></td></tr>
-                	<tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Brca1</b> <em> (NOTE: associated by Allele-OMIM annotation)</em>, 
+                	<!-- <tr><td>Associated Mouse Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">Brca1</b> <em> (NOTE: associated by Allele-OMIM annotation)</em>, 
                 					<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Trp53</b> <em>(NOTE: associated by Allele-OMIM annotation)</em>, 
                 					<b cc:assertResultsContain="getSymbolsByDisease(#disease)">Tg(MMTV-cre)4Mam</b> <em>(NOTE: associated by Allele-OMIM annotation)</em>.<br/>
                 					Results should not contain: <b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Tg(MMTV-rtTA)1Lach</b>, 
                 					<b cc:assertNoResultsContain="getSymbolsByDisease(#disease)">Tg(tetO-Esr1)#Paf</b>.
-                	</td></tr>
+                	</td></tr>  REMOVED for release 5.22; requirement change; no longer return genes by Allele/OMIM annotations -->
                 	<tr><td>Associated Human Markers</td><td><b cc:assertResultsContain="getSymbolsByDisease(#disease)">BRCA1</b></td></tr>
                 	</table>
                 </li>

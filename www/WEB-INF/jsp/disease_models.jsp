@@ -2,6 +2,7 @@
 <%@ page import = "org.jax.mgi.fewi.util.FormatHelper" %>
 <%@ page import = "org.jax.mgi.fewi.util.NotesTagConverter" %>
 <%@ page import = "org.jax.mgi.fewi.config.ContextLoader" %>
+<%@ page import = "org.jax.mgi.fewi.util.DiseaseModelFilter" %>
 <%@ page import = "mgi.frontend.datamodel.*" %>
 <%@ page import = "java.util.List" %>
 <%@ page import = "java.util.ArrayList" %>
@@ -93,6 +94,12 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 
+<%
+  // used to filter out disease models which would otherwise be shown
+  // multiple times on the page
+  DiseaseModelFilter dmFilter = new DiseaseModelFilter();
+%>
+
 <!-- structural table -->
 <table class="detailStructureTable">
 
@@ -133,25 +140,27 @@ ${templateBean.templateBodyStartHtml}
 	<c:set var="sectionCount" value="0"/>
 
 	<!-- both mouse and human markers known to cause the disease -->
-	<c:if test="${not empty disease.mouseAndHumanModels}">
-	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 <%
-	  models = disease.getMouseAndHumanModels();
+	models = disease.getMouseAndHumanModels();
+	models = dmFilter.filter(models);
+	pageContext.setAttribute("diseaseModelCount", models.size());
 %>
-	  <c:set var="diseaseModelCount" value="${fn:length(disease.mouseAndHumanModels)}"/>
+	<c:if test="${diseaseModelCount > 0}">
+	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
-	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'>${mouseIcon}${humanIcon}&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>
+	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'>${humanIcon}${mouseIcon}&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>
 	  <%@ include file="/WEB-INF/jsp/disease_models_subtable.jsp" %> 
 	</c:if>
 
 	<!-- only mouse markers known to cause the disease -->
-	<c:if test="${not empty disease.mouseOnlyModels}">
-	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 <%
-	  models = disease.getMouseOnlyModels();
+	models = disease.getMouseOnlyModels();
+	models = dmFilter.filter(models);
+	pageContext.setAttribute("diseaseModelCount", models.size());
 %>
-	  <c:set var="diseaseModelCount" value="${fn:length(disease.mouseOnlyModels)}"/>
+	<c:if test="${diseaseModelCount > 0}">
+	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'>${mouseIcon}&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>
@@ -159,12 +168,13 @@ ${templateBean.templateBodyStartHtml}
 	</c:if>
 
 	<!-- only human markers known to cause the disease -->
-	<c:if test="${not empty disease.humanOnlyModels}">
-	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 <%
-	  models = disease.getHumanOnlyModels();
+	models = disease.getHumanOnlyModels();
+	models = dmFilter.filter(models);
+	pageContext.setAttribute("diseaseModelCount", models.size());
 %>
-	  <c:set var="diseaseModelCount" value="${fn:length(disease.humanOnlyModels)}"/>
+	<c:if test="${diseaseModelCount > 0}">
+	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'>${humanIcon}&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>
@@ -174,12 +184,13 @@ ${templateBean.templateBodyStartHtml}
 
 	<!-- only transgenes and other genome features known to cause the
 	     disease -->
-	<c:if test="${not empty disease.otherModels}">
-	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 <%
-	  models = disease.getOtherModels();
+	models = disease.getOtherModels();
+	models = dmFilter.filter(models);
+	pageContext.setAttribute("diseaseModelCount", models.size());
 %>
-	  <c:set var="diseaseModelCount" value="${fn:length(disease.otherModels)}"/>
+	<c:if test="${diseaseModelCount > 0}">
+	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'><font class='label'>Transgenes and<br/>Other Mutations</font></td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>
@@ -188,12 +199,13 @@ ${templateBean.templateBodyStartHtml}
 
 
 	<!-- additional models known to cause the disease -->
-	<c:if test="${not empty disease.additionalModels}">
-	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 <%
-	  models = disease.getAdditionalModels();
+	models = disease.getAdditionalModels();
+	models = dmFilter.filter(models);
+	pageContext.setAttribute("diseaseModelCount", models.size());
 %>
-	  <c:set var="diseaseModelCount" value="${fn:length(disease.additionalModels)}"/>
+	<c:if test="${diseaseModelCount > 0}">
+	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'><font class='label'>Additional Complex Models</font></td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>
@@ -209,7 +221,12 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- ROW2 : NOT models -->
 
-  <c:if test="${not empty disease.notModels}">
+<%
+  models = disease.getNotModels();
+  models = dmFilter.filter(models);
+  pageContext.setAttribute("diseaseModelCount", models.size());
+%>
+  <c:if test="${diseaseModelCount > 0}">
     <tr  valign=top ALIGN=left>
       <td class="<%=leftTdStyles.getNext() %>" >
         Disease phenotype<br/>not observed
@@ -231,10 +248,6 @@ ${templateBean.templateBodyStartHtml}
 	<td class="headerStripe allBorders"><font class="label"><font size="-1">Phenotypes</font></font></td>
 	</tr>
 	  <%@ include file="/WEB-INF/jsp/disease_models_stripe.jsp" %> 
-<%
-	  models = disease.getNotModels();
-%>
-	  <c:set var="diseaseModelCount" value="${fn:length(disease.notModels)}"/>
 	  <c:set var="sectionBorder" value="allBorders bottomBorderDark"/>
 
 	  <c:set var="prefix" value="<td rowspan='${diseaseModelCount}' class='centerMiddle'><font class='label'>NOT Models</font></td><td rowspan='${diseaseModelCount}'>&nbsp;</td><td rowspan='${diseaseModelCount}' class='topBorder bottomBorder leftBorder'>&nbsp;&nbsp;</td><td rowspan='${diseaseModelCount}'>&nbsp;</td>"/>

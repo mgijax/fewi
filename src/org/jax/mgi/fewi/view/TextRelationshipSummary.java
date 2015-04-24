@@ -39,6 +39,12 @@ public class TextRelationshipSummary extends AbstractTextView {
 			writer.write(r.getScoreSource() + "\t");
 			writer.write(r.getValidation() + "\t");
 			writer.write(r.getJnumID() + "\t");
+			
+			writer.write(r.getParticipantProductID() + "\t");
+			writer.write(r.getOrganizerProductID() + "\t");
+			writer.write(r.getAlgorithm() + "\t");
+			writer.write(r.getOtherReferences() + "\t");
+			
 			writer.write(r.getNotes() + "\r\n");
 			//writer.newLine();
 		}

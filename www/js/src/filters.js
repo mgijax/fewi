@@ -37,6 +37,7 @@ filters.callbacksByName = {};	// maps from callback name to function to call
 filters.callbacksActive = true;	// are the callback functions active?
 
 filters.logging = false;	// write log messages to browser error log?
+filters.loggingConsole = false; // write log message to browser console?
 
 filters.queryStringFunction = null;	// funtion to call to get parameter
 					// ...string for general query form
@@ -46,6 +47,9 @@ filters.dialogBox = null;	// the actual dialog box the user sees
 
 filters.fieldnameToFilterName = {}	// maps from a field name to the name
 					// ...of the filter having the field
+
+filters.generatePageRequest = null; // External Method used to generate the url
+									// for the request to update the datatable
 
 filters.historyModule = null;	// set this to be the name of your module for
 				// ...history management purposes
@@ -132,6 +136,12 @@ filters.setHistoryManagement = function(module, navigateFunction) {
  */
 filters.setFewiUrl = function(fewiUrl) {
     filters.fewiUrl = fewiUrl;
+};
+
+/* set the function to build the page request */
+
+filters.setGeneratePageRequestFunction = function(fn) {
+	filters.generatePageRequest = fn;
 };
 
 /* notify this module of the name of the YUI DataTable managed by the filters
@@ -746,12 +756,15 @@ filters.encode = function(val) {
     return val.replace('&', '%26');
 };
 
-/* write the given string 'msg' out to the browser's error log
+/* write the given string 'msg' out to the browser's error log and / or borwsers consolt log
  */
 filters.log = function(msg) {
-    if (filters.logging) {
-	setTimeout(function() { throw new Error('filters.js: ' + msg); }, 0);
-    }
+	if (filters.logging) {
+		setTimeout(function() { throw new Error('filters.js: ' + msg); }, 0);
+	}
+	if(filters.loggingConsole) {
+		console.log('filters.js: ' + msg);
+	}
 };
 
 /* return URL-encoded form parameters (but not filter values) as a string
@@ -815,24 +828,24 @@ filters.buildFilterDataSource = function(name, url) {
 /* log a new entry in browser history for the current state of things
  */
 filters.addHistoryEntry = function() {
-    if (filters.dataTable) {
-	var state = filters.dataTable.getState();
-	var newState = is_generateRequest (0, state.sortedBy.key, 
-	    state.sortedBy.dir,
-	    filters.dataTable.get("paginator").getRowsPerPage());
-
-
-	if (filters.historyModule) {
-	    YAHOO.util.History.navigate(filters.historyModule, newState);
-	} else if (filters.navigateFn) {
-	    filters.navigateFn(newState);
-    	    filters.populateFilterSummary();
-	} else {
-	    filters.log('filters.historyModule is missing');
+	if (filters.dataTable) {
+		var state = filters.dataTable.getState();
+		if(filters.generatePageRequest) {
+			var newState = filters.generatePageRequest(0, state.sortedBy.key, state.sortedBy.dir, filters.dataTable.get("paginator").getRowsPerPage());
+			if (filters.historyModule) {
+				YAHOO.util.History.navigate(filters.historyModule, newState);
+			} else if (filters.navigateFn) {
+				filters.navigateFn(newState);
+				filters.populateFilterSummary();
+			} else {
+				filters.log('filters.historyModule is missing');
+			}
+		} else {
+			filters.log('filters.generatePageRequest is missing');
+		}
+	} else if (!filters.alternateCallback) {
+		filters.log('filters.dataTable is missing');
 	}
-    } else if (!filters.alternateCallback) {
-	filters.log('filters.dataTable is missing');
-    }
 };
 
 /* build the dialog box once and only once

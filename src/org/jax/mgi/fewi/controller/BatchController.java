@@ -54,116 +54,111 @@ import org.springframework.web.servlet.ModelAndView;
 public class BatchController {
 
 
-    //--------------------//
-    // instance variables
-    //--------------------//
+	//--------------------//
+	// instance variables
+	//--------------------//
 
-    private final Logger logger
-      = LoggerFactory.getLogger(BatchController.class);
+	private final Logger logger = LoggerFactory.getLogger(BatchController.class);
 
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Autowired
-    private BatchFinder batchFinder;
-    
-
-    //--------------------------------------------------------------------//
-    // public methods
-    //--------------------------------------------------------------------//
+	private BatchFinder batchFinder;
 
 
-    //--------------------//
-    // Foo Query Form
-    //--------------------//
-    @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getQueryForm() {
-
-        logger.debug("-> getQueryForm started");
-
-        ModelAndView mav = new ModelAndView("batch_query");
-        mav.addObject("sort", new Paginator());
-        mav.addObject(new BatchQueryForm());
-        return mav;
-    }
+	//--------------------------------------------------------------------//
+	// public methods
+	//--------------------------------------------------------------------//
 
 
-    //-------------------------//
-    // Foo Query Form Summary
-    //-------------------------//
-    @RequestMapping("/summary")
-    public ModelAndView batchSummary(MultipartHttpServletRequest request,
-    		HttpSession session,
-            @ModelAttribute BatchQueryForm queryForm) {
+	//--------------------//
+	// Foo Query Form
+	//--------------------//
+	@RequestMapping(method=RequestMethod.GET)
+	public ModelAndView getQueryForm() {
 
-        logger.debug("-> batchSummary POST started");       
+		logger.debug("-> getQueryForm started");
+
+		ModelAndView mav = new ModelAndView("batch_query");
+		mav.addObject("sort", new Paginator());
+		mav.addObject(new BatchQueryForm());
+		return mav;
+	}
+
+
+	//-------------------------//
+	// Foo Query Form Summary
+	//-------------------------//
+	@RequestMapping("/summary")
+	public ModelAndView batchSummary(MultipartHttpServletRequest request, HttpSession session, @ModelAttribute BatchQueryForm queryForm) {
+
+		logger.debug("-> batchSummary POST started");       
 		logger.debug("queryString: " + request.getQueryString());		
 		return processSummary(session, queryForm);
-    }
-    
-    //-------------------------//
-    // Foo Query Form Summary
-    //-------------------------//
-    @RequestMapping(value="/summary", method=RequestMethod.GET)
-    public ModelAndView batchSummaryGet(HttpSession session,
-            @ModelAttribute BatchQueryForm queryForm,Model model) {
+	}
 
-    	logger.debug(model.toString());
-        logger.debug("-> batchSummary GET started");        
-        return processSummary(session, queryForm);
-    }
-    
-    //-------------------------//
-    // Forward from other page/form
-    //-------------------------//
-    @RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
-    public ModelAndView batchSummary2Get(HttpSession session,HttpServletRequest request) {
+	//-------------------------//
+	// Foo Query Form Summary
+	//-------------------------//
+	@RequestMapping(value="/summary", method=RequestMethod.GET)
+	public ModelAndView batchSummaryGet(HttpSession session, @ModelAttribute BatchQueryForm queryForm,Model model) {
 
-    	BatchQueryForm queryForm = (BatchQueryForm) request.getAttribute("queryForm");
-        logger.debug("-> batchSummary GET started");        
-        return processSummary(session, queryForm);
-    }
-    
-    private ModelAndView processSummary (HttpSession session,
-            BatchQueryForm queryForm){
+		logger.debug(model.toString());
+		logger.debug("-> batchSummary GET started");        
+		return processSummary(session, queryForm);
+	}
 
-        logger.info(queryForm.toString());
-        
-        session.removeAttribute("idSet");        
-        logger.debug("sessionId: " + session.getId());
-        
-        List<String> idList = null; 
-        MultipartFile file = queryForm.getIdFile();
+	//-------------------------//
+	// Forward from other page/form
+	//-------------------------//
+	@RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
+	public ModelAndView batchSummary2Get(HttpSession session,HttpServletRequest request) {
 
-        if (file != null && !file.isEmpty()){
-        	logger.debug("process file");
-            String sep = "";
-            String fileType = queryForm.getFileType();
-            if (fileType != null && "".equals("cvs")) {
-            	sep = ",";             
-            } else {
-                sep = "\t";
-            }
-            
-            Integer col = queryForm.getIdColumn();
+		BatchQueryForm queryForm = (BatchQueryForm) request.getAttribute("queryForm");
+		logger.debug("-> batchSummary GET started");        
+		return processSummary(session, queryForm);
+	}
 
-            InputStream idStream;
-            StringWriter writer = new StringWriter();
-            try {
-            	idStream = file.getInputStream();
-    			IOUtils.copy(idStream , writer);
-    			idList = parseColumn(writer.toString(), col, sep);
-    			
-    			writer.close();
-    			idStream.close();
-    			
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}        	    	
-        } else {     	
-        	idList = parseIds(queryForm.getIds());
-        }
+	private ModelAndView processSummary (HttpSession session, BatchQueryForm queryForm){
+
+		logger.info(queryForm.toString());
+
+		session.removeAttribute("idSet");        
+		logger.debug("sessionId: " + session.getId());
+
+		List<String> idList = null; 
+		MultipartFile file = queryForm.getIdFile();
+
+		if (file != null && !file.isEmpty()){
+			logger.debug("process file");
+			String sep = "";
+			String fileType = queryForm.getFileType();
+			if (fileType != null && "".equals("cvs")) {
+				sep = ",";             
+			} else {
+				sep = "\t";
+			}
+
+			Integer col = queryForm.getIdColumn();
+
+			InputStream idStream;
+			StringWriter writer = new StringWriter();
+			try {
+				idStream = file.getInputStream();
+				IOUtils.copy(idStream , writer);
+				idList = parseColumn(writer.toString(), col, sep);
+
+				writer.close();
+				idStream.close();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}        	    	
+		} else {     	
+			idList = parseIds(queryForm.getIds());
+		}
 
 		if (idList != null && idList.size() > 0){
 			logger.debug("new id set: " + idList.iterator().next());
@@ -173,241 +168,277 @@ public class BatchController {
 			queryForm.setIds(StringUtils.join(idList, "\n"));
 		}
 		int inputIdCount = idList != null ? idList.size() : 0;
+
+		ModelAndView mav = new ModelAndView("batch_summary");
+		System.out.println("queryString: " + queryForm.toQueryString());
+		mav.addObject("queryString", queryForm.toQueryString());
+		mav.addObject("batchQueryForm", queryForm);
+		if (idList != null && idList.size() > 0) {
+			StringBuffer ids = new StringBuffer();
+			ids.append("[");
+			for(String id : idList) {
+				ids.append("\"" + id + "\",");
+			}
+			ids.append("]");
+			mav.addObject("markerIds", ids.toString());
+		}
+		mav.addObject("inputIdCount", inputIdCount);
+		if (queryForm.isFromQueryForm()) {
+			mav.addObject("isFromQueryForm", "true");
+		}
+		logger.debug("processSummary done");
+		return mav;
+
+	}
+
+
+	//----------------------//
+	// JSON summary results
+	//----------------------//
+	@RequestMapping("/json")
+	public @ResponseBody JsonSummaryResponse<BatchSummaryRow> batchSummaryJson(HttpSession session, HttpServletRequest request, @ModelAttribute BatchQueryForm queryForm, @ModelAttribute Paginator page) {
+
+		logger.debug("-> JsonSummaryResponse started");
+
+		// perform query, and pull out the requested objects
+		SearchResults<BatchMarkerId> searchResults = getSummaryResults(session, request, queryForm, page);
+		List<BatchMarkerId> markerList = searchResults.getResultObjects();
+
+		// create/load the list of SummaryRow wrapper objects
+		List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>(); 
+		logger.debug("json results: " + markerList.size());
+		for (BatchMarkerId marker: markerList){
+			if (marker == null) {
+				logger.debug("--> Null Object");
+			}else {
+				summaryRows.add(new BatchSummaryRow(marker, queryForm));
+			} 	
+		}
+		logger.debug("total: " + searchResults.getTotalCount());
+		// The JSON return object will be serialized to a JSON response.
+		// Client-side JavaScript expects this object
+		JsonSummaryResponse<BatchSummaryRow> jsonResponse = new JsonSummaryResponse<BatchSummaryRow>();
+
+		// place data into JSON response, and return
+		jsonResponse.setSummaryRows(summaryRows);
+		jsonResponse.setTotalCount(searchResults.getTotalCount());
+		jsonResponse.setMeta(searchResults.getResultSetMeta());
+		logger.debug("json -> complete!");
+		return jsonResponse;
+	}
+	
+	@RequestMapping("/idList")
+	public @ResponseBody String batchSummaryIdList(HttpSession session, HttpServletRequest request, @ModelAttribute BatchQueryForm queryForm, @ModelAttribute Paginator page) {
 		
-        ModelAndView mav = new ModelAndView("batch_summary");
-        mav.addObject("queryString", queryForm.toQueryString());
-        mav.addObject("batchQueryForm", queryForm);
-        mav.addObject("inputIdCount", inputIdCount);
-    	if (queryForm.isFromQueryForm()) {
-    	    mav.addObject("isFromQueryForm", "true");
-    	}
-        logger.debug("processSummary done");
-        return mav;
-    	
-    }
+		
+		logger.debug("sessionId: " + session.getId());
 
+		SearchParams params = new SearchParams();
 
-    //----------------------//
-    // JSON summary results
-    //----------------------//
-    @RequestMapping("/json")
-    public @ResponseBody JsonSummaryResponse<BatchSummaryRow> batchSummaryJson(
-    		HttpSession session,
-    		HttpServletRequest request,
-			@ModelAttribute BatchQueryForm queryForm,
-            @ModelAttribute Paginator page) {
+		logger.debug("page: " + page);
 
-        logger.debug("-> JsonSummaryResponse started");
-
-        // perform query, and pull out the requested objects
-        SearchResults<BatchMarkerId> searchResults = 
-        	getSummaryResults(session, request, queryForm, page);
-        List<BatchMarkerId> markerList = searchResults.getResultObjects();
-
-        // create/load the list of SummaryRow wrapper objects
-        List<BatchSummaryRow> summaryRows = new ArrayList<BatchSummaryRow>(); 
-        logger.debug("json results: " + markerList.size());
-        for (BatchMarkerId marker: markerList){
-            if (marker == null) {
-                logger.debug("--> Null Object");
-            }else {
-                summaryRows.add(new BatchSummaryRow(marker, queryForm));
-            } 	
-        }
-        logger.debug("total: " + searchResults.getTotalCount());
-        // The JSON return object will be serialized to a JSON response.
-        // Client-side JavaScript expects this object
-        JsonSummaryResponse<BatchSummaryRow> jsonResponse
-          = new JsonSummaryResponse<BatchSummaryRow>();
-
-        // place data into JSON response, and return
-        jsonResponse.setSummaryRows(summaryRows);
-        jsonResponse.setTotalCount(searchResults.getTotalCount());
-        jsonResponse.setMeta(searchResults.getResultSetMeta());
-        logger.debug("json -> complete!");
-        return jsonResponse;
-    }
-
-    /*
-     * Testing asynchronous processing in Spring 3.2
-     */
-	@RequestMapping("/report*")
-	public ModelAndView batchSummaryReport(
-			final HttpServletRequest request,
-			final HttpSession session,
-			final @ModelAttribute BatchQueryForm queryForm,
-            final @ModelAttribute Paginator page) {
-
-			logger.debug("batchSummaryReport");
-			//logger.debug(queryForm.toString());
-	        // perform query, and pull out the requested objects
-	        SearchResults<BatchMarkerId> searchResults = 
-	        	getSummaryResults(session, request, queryForm, page);
-			
-			logger.debug("# of report results: " + searchResults.getResultObjects().size());
-			
-			ModelAndView mav = new ModelAndView("batchSummaryReport");
-			mav.addObject("queryForm", queryForm);
-			mav.addObject("totalCount", searchResults.getTotalCount());
-			mav.addObject("markerCount", searchResults.getResultSetMeta().getCount("marker"));		
-			mav.addObject("results", searchResults.getResultObjects());
-			mav.addObject("sessionFactory", sessionFactory);
-			return mav;
-				
-	}
-	
-	private SearchResults<BatchMarkerId> getSummaryResults(    		
-			HttpSession session,
-    		HttpServletRequest request,
-			BatchQueryForm query,
-            Paginator page){
-        logger.debug("sessionId: " + session.getId());
-        
-        SearchParams params = new SearchParams();
-        
-        logger.debug("page: " + page);
-        
-        @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
-        if(idSet == null)
-        {
-        	idSet = parseIds(query.getIds());
-        }
-        if (idSet != null && idSet.size()>0){
-        	logger.debug("ids: " + idSet.size());
-        	// generate params object;  add pagination, sorts, and filters
-            params.setPaginator(page);
-            params.setSorts(this.genSorts(request));
-            params.setFilter(this.genFilters(query, idSet));
-            // perform query, and pull out the requested objects
-            return batchFinder.getBatch(params);
-        } else {
-        	logger.debug("no idSet");
-        }        
-         return new SearchResults<BatchMarkerId>();
+		if(idSet == null)
+		{
+			idSet = parseIds(queryForm.getIds());
+		}
+		
+		SearchResults<BatchMarkerId> searchResults = null;
+		
+		if (idSet != null && idSet.size()>0){
+			//logger.debug("ids: " + idSet.size());
+			// generate params object;  add pagination, sorts, and filters
+			params.setPaginator(Paginator.ALL_PAGES);
+			//params.setSorts(genSorts(request));
+			params.setFilter(genFilters(queryForm, idSet));
+			// perform query, and pull out the requested objects
+			searchResults = batchFinder.getBatch(params);
+		} else {
+			//logger.debug("no idSet");
+			searchResults = new SearchResults<BatchMarkerId>();
+		}
+		
+		ArrayList<String> list = new ArrayList<String>();
+		for(BatchMarkerId marker: searchResults.getResultObjects()) {
+			list.add(marker.getMarker().getPrimaryID());
+		}
+		
+		return StringUtils.join(list, ",");
 	}
 
-    //--------------------------------------------------------------------//
-    // private methods
-    //--------------------------------------------------------------------//
+	/*
+	 * Testing asynchronous processing in Spring 3.2
+	 */
+	@RequestMapping("/report*")
+	public ModelAndView batchSummaryReport(final HttpServletRequest request, final HttpSession session,
+			final @ModelAttribute BatchQueryForm queryForm, final @ModelAttribute Paginator page) {
 
-    // generate the sorts
-    private List<Sort> genSorts(HttpServletRequest request) {
+		logger.debug("batchSummaryReport");
+		//logger.debug(queryForm.toString());
+		// perform query, and pull out the requested objects
+		SearchResults<BatchMarkerId> searchResults = getSummaryResults(session, request, queryForm, page);
 
-        logger.debug("->genSorts started");
+		logger.debug("# of report results: " + searchResults.getResultObjects().size());
 
-        List<Sort> sorts = new ArrayList<Sort>();
+		ModelAndView mav = new ModelAndView("batchSummaryReport");
+		mav.addObject("queryForm", queryForm);
+		mav.addObject("totalCount", searchResults.getTotalCount());
+		mav.addObject("markerCount", searchResults.getResultSetMeta().getCount("marker"));		
+		mav.addObject("results", searchResults.getResultObjects());
+		mav.addObject("sessionFactory", sessionFactory);
+		return mav;
 
-        // retrieve requested sort order; set default if not supplied
-        String sortRequested = request.getParameter("sort");
-        if (sortRequested == null) {
-            sortRequested = SortConstants.FOO_SORT;
-        }
+	}
 
-        String dirRequested  = request.getParameter("dir");
-        boolean desc = false;
-        if("desc".equalsIgnoreCase(dirRequested)){
-            desc = true;
-        }
+	private SearchResults<BatchMarkerId> getSummaryResults(HttpSession session, HttpServletRequest request, BatchQueryForm query, Paginator page){
+		logger.debug("sessionId: " + session.getId());
 
-        Sort sort = new Sort(sortRequested, desc);
-        sorts.add(sort);
+		SearchParams params = new SearchParams();
 
-        logger.debug ("sort: " + sort.toString());
-        return sorts;
-    }
+		logger.debug("page: " + page);
 
-    // generate the filters
-    private Filter genFilters(BatchQueryForm query, List<String> idSet){
+		@SuppressWarnings("unchecked")
+		List<String> idSet = (ArrayList<String>)session.getAttribute("idSet");
+		if(idSet == null)
+		{
+			idSet = parseIds(query.getIds());
+		}
+		if (idSet != null && idSet.size()>0){
+			logger.debug("ids: " + idSet.size());
+			// generate params object;  add pagination, sorts, and filters
+			params.setPaginator(page);
+			params.setSorts(genSorts(request));
+			params.setFilter(genFilters(query, idSet));
+			// perform query, and pull out the requested objects
+			return batchFinder.getBatch(params);
+		} else {
+			logger.debug("no idSet");
+		}        
+		return new SearchResults<BatchMarkerId>();
+	}
 
-        logger.debug("->genFilters started");
-        logger.debug("QueryForm -> " + query);
+	//--------------------------------------------------------------------//
+	// private methods
+	//--------------------------------------------------------------------//
 
-        // start filter list to add filters to
-        List<Filter> filterList = new ArrayList<Filter>();
-        
-       // logger.debug("set ids");
-        if (idSet.size() > 0){
-        	filterList.add(new Filter(SearchConstants.BATCH_TERM, idSet, Filter.Operator.OP_IN));
-        }
-        //logger.debug("set type");
-        String idType = query.getIdType();
-        if (idType != null && !"".equals(idType) && !"auto".equalsIgnoreCase(idType)){
-        	logger.debug(idType);
-        	filterList.add(new Filter(SearchConstants.BATCH_TYPE, query.getIdType().trim(), Filter.Operator.OP_EQUAL));
-        }
-        
-        //logger.debug("build");
-        // if we have filters, collapse them into a single filter
-        Filter containerFilter = new Filter();
-        if (filterList.size() > 0){
-            containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
-            containerFilter.setNestedFilters(filterList);
-        }
+	// generate the sorts
+	private List<Sort> genSorts(HttpServletRequest request) {
 
-        //logger.debug("done");
-        return containerFilter;
-    }
+		logger.debug("->genSorts started");
 
-    private List<String> parseColumn(String data, int column, String delimiter) {
+		List<Sort> sorts = new ArrayList<Sort>();
 
-    	int maxRows = 200000;
-        // hold strings from parsed column
-    	Set<String> parsedIds = new LinkedHashSet<String>();
+		// retrieve requested sort order; set default if not supplied
+		String sortRequested = request.getParameter("sort");
+		if (sortRequested == null) {
+			sortRequested = SortConstants.FOO_SORT;
+		}
 
-        // convert mac \c to \n and split lines into rows
-        String[] rows = data.replaceAll("\r", "\n").split("\n");
-        // column cells
-        String[] cols;
-        
-        // If a column is requested, loop through the rows and parse the
-        // contents of the requested column.
-        if (column > 0) {
-            // holds contents of requested column
-            String col;
-            for (int i = 0; i < rows.length; i++) {
-            	if(i>maxRows) break; // make sure there is some limit to how much we will process
-            	
-                if (!delimiter.equals("")) {
-                    // split cols by delimiter
-                    cols = rows[i].split(delimiter);
-                } else {
-                    // no delimiter, col is entire row
-                    cols = new String[] { rows[i] };
-                }
-                if (cols.length >= column) {
-                    // trim column cell
-                    col = cols[column - 1].trim();
-                    // trim trailing comma
-                    if (col.endsWith(",")) {
-                    	col = col.substring(0, ( col.length() - 1) );
-                    }
-                    // ignore blank cell
-                    if (!col.equals("")) {
-                    	parsedIds.add(col);
-                    }
-                }
-            }
-        }
-        // return array of parsed column contents
-        return new ArrayList<String>(parsedIds);
-    }
-    
-    private List<String> parseIds(String data) {
-    	
-    	if(data==null) return new ArrayList<String>();
-    	
-    	Set<String> parsedIds = new LinkedHashSet<String>();
-    	
-	    StreamTokenizer tok = new StreamTokenizer(new StringReader(data));
-	    tok.resetSyntax();
-	
-	    tok.wordChars(35, 126);
-	    tok.quoteChar('"');
-	    tok.whitespaceChars(0, ' ');
-	
-	    try {
-	    	String s = "";
+		String dirRequested  = request.getParameter("dir");
+		boolean desc = false;
+		if("desc".equalsIgnoreCase(dirRequested)){
+			desc = true;
+		}
+
+		Sort sort = new Sort(sortRequested, desc);
+		sorts.add(sort);
+
+		logger.debug ("sort: " + sort.toString());
+		return sorts;
+	}
+
+	// generate the filters
+	private Filter genFilters(BatchQueryForm query, List<String> idSet){
+
+		logger.debug("->genFilters started");
+		logger.debug("QueryForm -> " + query);
+
+		// start filter list to add filters to
+		List<Filter> filterList = new ArrayList<Filter>();
+
+		// logger.debug("set ids");
+		if (idSet.size() > 0){
+			filterList.add(new Filter(SearchConstants.BATCH_TERM, idSet, Filter.Operator.OP_IN));
+		}
+		//logger.debug("set type");
+		String idType = query.getIdType();
+		if (idType != null && !"".equals(idType) && !"auto".equalsIgnoreCase(idType)){
+			logger.debug(idType);
+			filterList.add(new Filter(SearchConstants.BATCH_TYPE, query.getIdType().trim(), Filter.Operator.OP_EQUAL));
+		}
+
+		//logger.debug("build");
+		// if we have filters, collapse them into a single filter
+		Filter containerFilter = new Filter();
+		if (filterList.size() > 0){
+			containerFilter.setFilterJoinClause(Filter.JoinClause.FC_AND);
+			containerFilter.setNestedFilters(filterList);
+		}
+
+		//logger.debug("done");
+		return containerFilter;
+	}
+
+	private List<String> parseColumn(String data, int column, String delimiter) {
+
+		int maxRows = 200000;
+		// hold strings from parsed column
+		Set<String> parsedIds = new LinkedHashSet<String>();
+
+		// convert mac \c to \n and split lines into rows
+		String[] rows = data.replaceAll("\r", "\n").split("\n");
+		// column cells
+		String[] cols;
+
+		// If a column is requested, loop through the rows and parse the
+		// contents of the requested column.
+		if (column > 0) {
+			// holds contents of requested column
+			String col;
+			for (int i = 0; i < rows.length; i++) {
+				if(i>maxRows) break; // make sure there is some limit to how much we will process
+
+				if (!delimiter.equals("")) {
+					// split cols by delimiter
+					cols = rows[i].split(delimiter);
+				} else {
+					// no delimiter, col is entire row
+					cols = new String[] { rows[i] };
+				}
+				if (cols.length >= column) {
+					// trim column cell
+					col = cols[column - 1].trim();
+					// trim trailing comma
+					if (col.endsWith(",")) {
+						col = col.substring(0, ( col.length() - 1) );
+					}
+					// ignore blank cell
+					if (!col.equals("")) {
+						parsedIds.add(col);
+					}
+				}
+			}
+		}
+		// return array of parsed column contents
+		return new ArrayList<String>(parsedIds);
+	}
+
+	private List<String> parseIds(String data) {
+
+		if(data==null) return new ArrayList<String>();
+
+		Set<String> parsedIds = new LinkedHashSet<String>();
+
+		StreamTokenizer tok = new StreamTokenizer(new StringReader(data));
+		tok.resetSyntax();
+
+		tok.wordChars(35, 126);
+		tok.quoteChar('"');
+		tok.whitespaceChars(0, ' ');
+
+		try {
+			String s = "";
 			while(tok.nextToken() != StreamTokenizer.TT_EOF){
 				if (tok.ttype == StreamTokenizer.TT_NUMBER){
 					s = new Double(tok.nval).toString();
@@ -419,9 +450,9 @@ public class BatchController {
 							s.indexOf('[') + 1,
 							s.lastIndexOf(']'));
 				}
-	            if (s.endsWith(",")) {
-	            	s = s.substring(0,s.length()-1);
-	            }
+				if (s.endsWith(",")) {
+					s = s.substring(0,s.length()-1);
+				}
 				if (s != null) 
 				{
 					s=s.trim();
@@ -433,5 +464,5 @@ public class BatchController {
 			e.printStackTrace();
 		}
 		return new ArrayList<String>(parsedIds);
-    }
+	}
 }

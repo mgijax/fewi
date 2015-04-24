@@ -11,7 +11,7 @@ ${templateBean.templateHeadHtml}
 
 ${templateBean.templateBodyStartHtml}
 
-<!-- iframe for history manager's use -->
+<!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html" ></iframe>
 <input id="yui-history-field" type="hidden">
 
@@ -71,12 +71,21 @@ ${templateBean.templateBodyStartHtml}
 		</div>
 	</div>
 </div>
-	
+
+<form action="${configBean.MOUSEMINE_URL}mousemine/portal.do" method="post" name="mousemine" target="_blank">
+	<input id="mousemineids" type="hidden" value="" name="externalids">
+	<input type="hidden" value="SequenceFeature" name="class">
+</form>
+<script type="text/javascript">
+	var markerIDs = ${markerIds};
+</script>
+
 <div id="toolbar" class="bluebar">
 	<div id="downloadDiv">
 		<span class="label">Export:</span> 
 		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
 		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a> 
+		<a id="mouseMineLink" target="_blank" class="filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
 	</div>
 	<div id="filterDiv"></div>
 	<div id="otherDiv"></div>

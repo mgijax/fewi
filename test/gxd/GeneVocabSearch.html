@@ -205,7 +205,7 @@ order by m.symbol
             	
             </ol>
             </li>
-            <li>Selecting an MP term with children returns only the annotated genes which have expression data for the term and its child terms (Ptpn11 returned due to expresses component allele)
+            <li>Selecting an MP term with children returns only the annotated genes which have expression data for the term and its child terms
             <ol>
             	<li>Select the term 'abnormal conotruncal ridge morphology' (<b concordion:set="#query">MP:0010585</b>) </li>
             	<li>Return the following markers:
@@ -223,7 +223,6 @@ order by m.symbol
 						<tr><td>Hspg2</td></tr>
 						<tr><td>Kras</td></tr>
 						<tr><td>Pkd1</td></tr>
-						<tr><td>Ptpn11</td></tr>
 						<tr><td>Rxra</td></tr>
 						<tr><td>Sox4</td></tr>
 						<tr><td>Sox9</td></tr>
@@ -383,7 +382,7 @@ order by 2
             <ol>
                 <li>Select the term '<b>kinase activity</b>' (<b concordion:set="#query">GO:0016301</b>) </li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Abl2</b> should be returned.</li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Fgr</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Gm14147</b> should not be returned.</li>
             </ol>
             </li>
             <li>Selecting a GO term that is 'molecular_function', 'biological_process', or 'cellular_component' returns only genes annotated to child terms  which have expression data
@@ -391,13 +390,13 @@ order by 2
             (Note: if a gene has both an 'ND' to a high-level term and positive annotations to child terms, the 'ND' should be ignored. As of May 2012, this can happen only via Electronic annotations to child terms. Curation policy forbids literature annotations to child terms.)
             <ol>
                 <li>Select the molecular_function term '<b>molecular_function</b>' (<b concordion:set="#query">GO:0003674</b>) </li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Commd3</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Gm22</b> should not be returned.</li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Cyp2d13</b> should not be returned.</li>
                 <li>Select the biological_process term '<b>biological_process</b>' (<b concordion:set="#query">GO:0008150</b>) </li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Commd3</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Gm22</b> should not be returned.</li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Cyp2d13</b> should not be returned.</li>
                 <li>Select the cellular_component term '<b>cellular_component</b>' (<b concordion:set="#query">GO:0005575</b>) </li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Commd3</b> should not be returned.</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Gm22</b> should not be returned.</li>
                 <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Cyp2d13</b> should not be returned.</li>
             </ol>
             </li>
@@ -449,10 +448,10 @@ and not exists(select 1 from voc_marker_cache vm2 where
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Npr2</b> should be returned (has only positive annotations).</li>
                 <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Fgfr3</b> should be returned (has positive and NOT annotations).</li>
                 
-                <li>Select the term '<b>Pituitary Adenoma, Growth Hormone-Secreting</b>' (<b concordion:set="#query">102200</b>) </li>
-                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Men1</b> should be returned (has only positive annotations).</li>
-                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Fbn1</b> should not be returned (has only NOT annotations).</li>
-                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Gnas</b> should be returned (is ortholog of associated Human gene but has no mouse annotations itself).  As part of the 5.21 release the GXD QF will search for GXD results for mouse homologs of human genes annotated to an OMIM term.</li>
+                <li>Select the term '<b>Asthma, Susceptibility to</b>' (<b concordion:set="#query">600807</b>) </li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Runx3</b> should be returned (has only positive annotations).</li>
+                <li>The marker <b cc:assertNoResultsContain="getGeneSymbolsByTermId(#query)">Adam33</b> should not be returned (has only NOT annotations).</li>
+                <li>The marker <b cc:assertResultsContain="getGeneSymbolsByTermId(#query)">Alox5</b> should be returned (is ortholog of associated Human gene but has no mouse annotations itself).  As part of the 5.21 release the GXD QF will search for GXD results for mouse homologs of human genes annotated to an OMIM term.</li>
             </ol>
             </li>
         </ol>
