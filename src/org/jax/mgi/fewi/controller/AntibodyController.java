@@ -5,8 +5,7 @@ import java.util.List;
 import mgi.frontend.datamodel.Antibody;
 
 import org.jax.mgi.fewi.finder.AntibodyFinder;
-import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.util.IDLinker;
+import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +123,6 @@ public class AntibodyController {
         mav.addObject("antibody", antibody);
 
         // add an IDLinker to the mav for use at the JSP level
-        idLinker.setup();
         mav.addObject("idLinker", idLinker);
 
         return mav;
