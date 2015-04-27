@@ -1,0 +1,157 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: MGI Interactions API
+  description: "#### These endpoints are used to serve interaction data to the end user\nThe three endpoints are used to filter and facet the data based on how the user would like to seach.\nThese endpoints could change at anytime. Feel free to make a path or an operation and use **Try Operation**\nto test it. The server will render back everything that it finds.\n"
+schemes:
+  - http
+host: scrumbob.informatics.jax.org
+basePath: /
+paths:
+  /interaction/idList:
+    get:
+      summary: Used to get an idList of all the participating interactions for specified Marker Ids
+      description: If a single Marker Id is entered then the resulting list will be all the other marker ids that this marker participates in. This list can be filtered using the filter options.
+      produces:
+        - text/html
+      parameters:
+        - name: markerIDs
+          in: query
+          required: true
+          description: Comma Seperated list of Marker Ids
+          type: string
+        - name: validationFilter
+          in: query
+          description: List of Vaidation Facets to be applyed to the query
+          type: array
+          items:
+            type: string
+        - name: relationshipTermFilter
+          in: query
+          description: List of Relationship Term Facets to be applyed to the query
+          type: array
+          items:
+            type: string
+        - name: dataSourceFilter
+          in: query
+          description: List of Data Source Facets to be applyed to the query
+          type: array
+          items:
+            type: string
+        - name: scoreFilter
+          in: query
+          description: Set the score for relationships to be greater than or equal
+          type: number
+          format: double
+      responses:
+        "200":
+          description: Returns a list of Facet names that can be used in the filters
+          schema:
+            type: array
+            items:
+              type: string
+  "/interaction/facet/{facetType}":
+    get:
+      summary: Used for retrieving the facets used in the filters
+      description: "Given the different facet types (\"validation\" , \"interaction\", \"dataSource\", \"score\") this endpoint will give all the values for the facets based on the Id list. The list that is returned can be as a filter in the json and idList calls for the correct facetType filter. Interaction in this case is synomous with relationshipTerm in the filters."
+      produces:
+        - application/json
+      parameters:
+        - name: facetType
+          in: path
+          required: true
+          description: "Facet Type which has to be one of [\"validation\" , \"interaction\", \"dataSource\", \"score\"]"
+          type: string
+        - name: markerIDs
+          in: query
+          required: true
+          description: "Comma Seperated list of Marker Ids, the results from idList can used here for geting a list of facets."
+          type: string
+      responses:
+        "200":
+          description: Returns a list of Facet names that can be used in the filters
+          schema:
+            type: array
+            items:
+              type: string
+  /interaction/json:
+    get:
+      summary: Used to get the data for each interaction.
+      description: This is a test
+      produces:
+        - application/json
+      parameters:
+        - name: markerIDs
+          in: query
+          required: true
+          description: Comma Seperated list of Marker Ids
+          type: string
+        - name: validationFilter
+          in: query
+          description: List of Vaidation Facets to be applyed to the query
+          type: array
+          items:
+            type: string
+        - name: relationshipTermFilter
+          in: query
+          description: List of Relationship Term Facets to be applyed to the query
+          type: array
+          items:
+            type: string
+        - name: dataSourceFilter
+          in: query
+          description: List of Data Source Facets to be applyed to the query
+          type: array
+          items:
+            type: string
+        - name: scoreFilter
+          in: query
+          description: Set the score for relationships to be greater than or equal
+          type: number
+          format: double
+        - name: results
+          in: query
+          description: "The amount of results to be returned via this query (default: 25)"
+          default: 25
+          type: integer
+        - name: startIndex
+          in: query
+          description: "The start index for which to get results from (default: 0)"
+          default: 0
+          type: integer
+        - name: sort
+          in: query
+          description: "This specifies the column to sort the data on. Valid values are (\"linkedOrganizer\", \"linkedParticipant\", \"relationshipTerm\", \"validation\", \"dataSource\", \"score\", \"reference\")"
+          type: string
+        - name: dir
+          in: query
+          description: "The direction in which to sort the data. Valid values are (\"asc\", \"desc\")"
+          type: string
+      responses:
+        "200":
+          description: Returns a list of Facet names that can be used in the filters
+          schema:
+            type: string
+  /batch/json:
+    get:
+      summary: Used to get data from MGI
+      description: THis is a test
+      produces:
+        - application/json
+      parameters:
+        - name: ids
+          in: query
+          description: "The ids or symbols that the batch query will search for. These ids must be seperated with a comma followed by a space. Valid: \"kras, tomt\", Invalid: \"kras,tomt\""
+          required: true
+          type: string
+        - name: idType
+          in: query
+          description: "This specifies the type of ids that will be sent to batch query. Valid values are (\"auto\", \"MGI\", \"current symbol\", \"nomen\", \"Entrez Gene\", \"Ensembl\", \"VEGA\", \"UniGene\", \"miRBase\", \"GenBank\", \"UniProt\", \"Gene Ontology (GO)\", \"RefSNP\", \"Affy 1.0 ST\", \"Affy 430 2.0\")"
+          default: auto
+          required: true
+          type: string
+      responses:
+        "200":
+          description: This is a test
+          schema:
+            type: string

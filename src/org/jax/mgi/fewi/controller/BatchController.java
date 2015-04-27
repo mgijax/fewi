@@ -135,7 +135,13 @@ public class BatchController {
 
 		if (file != null && !file.isEmpty()){
 			logger.debug("process file");
+			String sep = "";
 			String fileType = queryForm.getFileType();
+			if (fileType != null && "".equals("cvs")) {
+				sep = ",";             
+			} else {
+				sep = "\t";
+			}
 
 			Integer col = queryForm.getIdColumn();
 
@@ -144,7 +150,7 @@ public class BatchController {
 			try {
 				idStream = file.getInputStream();
 				IOUtils.copy(idStream , writer);
-				idList = parseColumn(writer.toString(), col, "\t");
+				idList = parseColumn(writer.toString(), col, sep);
 
 				writer.close();
 				idStream.close();
@@ -383,7 +389,7 @@ public class BatchController {
 		Set<String> parsedIds = new LinkedHashSet<String>();
 
 		// convert mac \c to \n and split lines into rows
-		String[] rows = data.replaceAll(",", "\n").replaceAll("\r", "\n").split("\n");
+		String[] rows = data.replaceAll("\r", "\n").split("\n");
 		// column cells
 		String[] cols;
 
