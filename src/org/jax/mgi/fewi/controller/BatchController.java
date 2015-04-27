@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mgi.frontend.datamodel.BatchMarkerId;
@@ -29,6 +30,7 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.BatchSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
+import org.jax.mgi.fewi.util.AjaxUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,13 +135,7 @@ public class BatchController {
 
 		if (file != null && !file.isEmpty()){
 			logger.debug("process file");
-			String sep = "";
 			String fileType = queryForm.getFileType();
-			if (fileType != null && "".equals("cvs")) {
-				sep = ",";             
-			} else {
-				sep = "\t";
-			}
 
 			Integer col = queryForm.getIdColumn();
 
@@ -148,7 +144,7 @@ public class BatchController {
 			try {
 				idStream = file.getInputStream();
 				IOUtils.copy(idStream , writer);
-				idList = parseColumn(writer.toString(), col, sep);
+				idList = parseColumn(writer.toString(), col, "\t");
 
 				writer.close();
 				idStream.close();
@@ -196,10 +192,10 @@ public class BatchController {
 	// JSON summary results
 	//----------------------//
 	@RequestMapping("/json")
-	public @ResponseBody JsonSummaryResponse<BatchSummaryRow> batchSummaryJson(HttpSession session, HttpServletRequest request, @ModelAttribute BatchQueryForm queryForm, @ModelAttribute Paginator page) {
+	public @ResponseBody JsonSummaryResponse<BatchSummaryRow> batchSummaryJson(HttpSession session, HttpServletRequest request, HttpServletResponse response, @ModelAttribute BatchQueryForm queryForm, @ModelAttribute Paginator page) {
 
 		logger.debug("-> JsonSummaryResponse started");
-
+		AjaxUtils.prepareAjaxHeaders(response);
 		// perform query, and pull out the requested objects
 		SearchResults<BatchMarkerId> searchResults = getSummaryResults(session, request, queryForm, page);
 		List<BatchMarkerId> markerList = searchResults.getResultObjects();
@@ -387,7 +383,7 @@ public class BatchController {
 		Set<String> parsedIds = new LinkedHashSet<String>();
 
 		// convert mac \c to \n and split lines into rows
-		String[] rows = data.replaceAll("\r", "\n").split("\n");
+		String[] rows = data.replaceAll(",", "\n").replaceAll("\r", "\n").split("\n");
 		// column cells
 		String[] cols;
 
