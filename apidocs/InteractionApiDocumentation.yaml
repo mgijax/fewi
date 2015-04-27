@@ -12,6 +12,8 @@ paths:
     get:
       summary: Used to get an idList of all the participating interactions for specified Marker Ids
       description: If a single Marker Id is entered then the resulting list will be all the other marker ids that this marker participates in. This list can be filtered using the filter options.
+      tags:
+        - interaction
       produces:
         - text/html
       parameters:
@@ -54,6 +56,8 @@ paths:
     get:
       summary: Used for retrieving the facets used in the filters
       description: "Given the different facet types (\"validation\" , \"interaction\", \"dataSource\", \"score\") this endpoint will give all the values for the facets based on the Id list. The list that is returned can be as a filter in the json and idList calls for the correct facetType filter. Interaction in this case is synomous with relationshipTerm in the filters."
+      tags:
+        - interaction
       produces:
         - application/json
       parameters:
@@ -78,6 +82,8 @@ paths:
     get:
       summary: Used to get the data for each interaction.
       description: This is a test
+      tags:
+        - interaction
       produces:
         - application/json
       parameters:
@@ -136,6 +142,8 @@ paths:
     get:
       summary: Used to get data from MGI
       description: THis is a test
+      tags:
+        - batch
       produces:
         - application/json
       parameters:
