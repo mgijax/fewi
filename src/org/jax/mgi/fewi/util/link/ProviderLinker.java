@@ -17,7 +17,7 @@ public class ProviderLinker
 	// logger for the class
 
 	private static String genBankUrl = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nuccore&id=";
-	private static String emblUrl = "http://www.ebi.ac.uk/htbin/emblfetch?";
+	private static String emblUrl = "http://www.ebi.ac.uk/ena/data/view/";
 	private static String ddbjUrl = "http://getentry.ddbj.nig.ac.jp/cgi-bin/get_entry.pl?";
 	private static String dfciUrl = "http://compbio.dfci.harvard.edu/tgi/cgi-bin/tgi/tc_report.pl?species=mouse&tc=";
 	private static String ensemblGmUrl = "http://www.ensembl.org/Mus_musculus/geneview?gene=";
