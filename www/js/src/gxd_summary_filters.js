@@ -193,8 +193,7 @@ var parseSystemFacetResponse = function (oRequest, oResponse, oPayload) {
 	 *    - show only message "More specific filter(s) already selected"
 	 * 4. both high-level term(s) and more specific term(s) chosen
 	 *    - show options for selected high-level term(s), have them checked,
-	 *      and show message "Additional more specific filter(s) already
-	 *      selected"
+	 *      and show message "Tissue matrix filters have been selected."
 	 */
 
 	results.forEach(function(facet){
@@ -259,16 +258,15 @@ var parseSystemFacetResponse = function (oRequest, oResponse, oPayload) {
 	// now nail down which case we're in (of the 4 listed above)
 	
 	if (targetFacetName in window.facets) {
+		var msg = "Tissue matrix filters have been selected.";
 		if (seen.length == 0) {
 			// case 3
-	    		populateFacetDialog(oPayload.title,
-			    "Additional anatomical filters have been selected",
-			    true);
+	    		populateFacetDialog(oPayload.title, msg, true);
 			return;
 		} else if (hasSpecifics == 1) {
 			// case 4 -- add additional message, then let it fall
 			// through
-			options[options.length] = "Additional anatomical filters have been selected";
+			options[options.length] = msg;
 		} else {
 			// case 2 -- let if fall through as-is
 		}
