@@ -737,8 +737,8 @@ public class MarkerController {
 					(location.getStrand() != null) &&
 					(seqs != null) && (seqs.size() > 0)	) {
 				mav.addObject ("needKompLink", "yes");
-				otherIDs.put("International Mouse Knockout Project Status", idLinker.getLink("KnockoutMouse", marker.getPrimaryID(), marker.getSymbol()) );
-				logicalDBs.add("International Mouse Knockout Project Status");
+				otherIDs.put("International Mouse Phenotype Consortium Status", idLinker.getLink("KnockoutMouse", marker.getPrimaryID(), marker.getSymbol()) );
+				logicalDBs.add("International Mouse Phenotype Consortium Status");
 				seoDescription.append(" Chr");
 				seoDescription.append(location.getChromosome());
 				seoDescription.append(":");
