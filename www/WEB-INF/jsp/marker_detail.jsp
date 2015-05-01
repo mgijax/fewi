@@ -334,7 +334,7 @@ ${templateBean.templateBodyStartHtml}
 			<div class="detail <%=rightTdStyles.getNext() %>">
 				<table cellspacing=2 cellpadding=2>
 					<c:forEach var="item" items="${logicalDBs}">
-						<tr><td>${item}</td><td>${otherIDs[item]}</td></tr>
+						<tr><td>${item}&nbsp;</td><td>${otherIDs[item]}</td></tr>
 					</c:forEach>
 				</table>
 			</div>
