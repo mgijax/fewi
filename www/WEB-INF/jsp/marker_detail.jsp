@@ -332,7 +332,7 @@ ${templateBean.templateBodyStartHtml}
 				Other&nbsp;database<br/>links
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
-				<table>
+				<table cellspacing=2 cellpadding=2>
 					<c:forEach var="item" items="${logicalDBs}">
 						<tr><td>${item}</td><td>${otherIDs[item]}</td></tr>
 					</c:forEach>
