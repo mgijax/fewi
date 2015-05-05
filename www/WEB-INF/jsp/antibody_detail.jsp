@@ -107,6 +107,8 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitleGxd">Antibody</span>
 	<br>Detail
     </div>
+    <div id="headerRightGxd">
+    </div>
 </div>
 
 
