@@ -308,6 +308,7 @@ public class HomologyController {
         mav.addObject("homology", homology);
 	mav.addObject("goGraphText", goGraphText);
 	mav.addObject("organisms", organisms.toString());
+	mav.addObject("source", homology.getSource());
 
         return mav;
     }
