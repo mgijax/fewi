@@ -30,5 +30,6 @@ public class ObjectTypes {
 	public static String MP = "Mammalian Phenotype";
 	public static String PIRSF = "PIR Superfamily";
 	public static String INTERPRO = "InterPro Domains";
+	public static String GENOTYPE = "Genotype";
 	
 }

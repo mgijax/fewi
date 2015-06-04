@@ -40,6 +40,7 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.GO_CC, pythonWiUrl +"searches/GO.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.MP, pythonWiUrl +"searches/Phat.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/%s");
+		idUrlMap.put(ObjectTypes.GENOTYPE, baseUrl +"allele/genoview/%s");
 
 		// Mapping that is key based
 
