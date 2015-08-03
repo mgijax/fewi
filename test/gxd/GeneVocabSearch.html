@@ -209,7 +209,7 @@ order by m.symbol
             <ol>
             	<li>Select the term 'abnormal conotruncal ridge morphology' (<b concordion:set="#query">MP:0010585</b>) </li>
             	<li>Return the following markers:
-            		<table cc:verifyRowsUnordered="#results : getGeneSymbolsByTermId(#query)">
+            		<table cc:verifySupersetOf="#results : getGeneSymbolsByTermId(#query)">
 						<tr><th concordion:assertEquals="#results">Marker</th></tr>
 						<tr><td>Acvr1</td></tr>
 						<tr><td>Aldh1a2</td></tr>
