@@ -1149,7 +1149,8 @@
     			<li>Verify that <i>no positive results</i> for <b>aortic valve</b> or its children in Stages <b>23,24,25</b> are returned. <span concordion:manual="true">passed. -klf 2014-05-30</span></li>
     		</ol>
     		</li>
- 				<li>QUERY FOR genes with expression detected in Structure metanephric mesenchyme (<b  concordion:set="#struct1">EMAPA:17375</b>) at Stages <b  concordion:set="#stages1">22</b>, not detected or analyzed in Structure hepatic primordium (<b  concordion:set="#struct2">EMAPA:16847</b>) at Stages <b  concordion:set="#stages2">17</b>. (revised for sto16)</li>
+ 				<li>QUERY FOR genes with expression detected in Structure mesenchyme of metanephros (<b  concordion:set="#struct1">EMAPA:36437</b>) at Stages <b  concordion:set="#stages1">22</b>, 
+ 					not detected or analyzed in Structure hepatic primordium (<b  concordion:set="#struct2">EMAPA:16847</b>) at Stages <b  concordion:set="#stages2">17</b>. (revised for sto16)</li>
     			<li>Verify that <i>at least</i> the following genes are returned:
 	    			<table cc:verifySupersetOf="#result : getGeneSymbolsByBoth(#struct1,#stages1,#struct2,#stages2)">
 	    			<tr><th concordion:assertEquals="#result">Gene</th><th>Notes</th></tr>
