@@ -65,10 +65,7 @@
 		<ul>
 			<li>In situ reporter (knock in) <i>(_AssayType_key = 9)</i>
 			<ul>
-				<li>Reporter gene = Cre ... return for Cre and for GXD queries</li>
-				<li>Reporter gene = FLP ... return for Cre and for GXD queries</li>
-				<li>Reporter gene = anything else ... return ONLY for GXD queries</li>
-				<li>Note: reporter genes are a Vocabulary, not markers with marker keys. Find values in VOC_Term where _vocab_key = 14.</li>
+				<li>Allele in genotype has a driver note</li>
 			</ul>
 			</li>
 		</ul>
@@ -188,9 +185,6 @@
                 	     which is marked as <b>not</b> having cre data.</li>
 				<li>Enter input: <b concordion:set="#struct">renal pelvis smooth muscle</b>. Verify the autocomplete displays
                 	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">renal pelvis smooth muscle</b>
-                		 which is marked as <b>not</b> having cre data.</li>
-                <li>Enter input: <b concordion:set="#struct">brain</b>. Verify the autocomplete displays
-                	<b cc:assertResultsContain="getTermsWithoutCre(#struct)">brain nucleus</b>
                 		 which is marked as <b>not</b> having cre data.</li>
     		</ol>
     	</li>
