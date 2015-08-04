@@ -188,11 +188,11 @@ tr.gray td {background-color:#EEEEEE;}
 
     		<li>Querying with quotation marks returns all diseases exactly matching the string enclosed in the quotation marks.
     		<ol>
-                <li>Query by <b concordion:set="#disease">"Parkinson Disease 11, Autosomal Dominant; PARK11"</b> in double quotes.</li>
+                <li>Query by <b concordion:set="#disease">"Parkinson Disease 11, Autosomal Dominant, Susceptibility To; PARK11"</b> in double quotes.</li>
                 <li>Should return ONLY one disease:
                 <table cc:verifyRowsUnordered="#termId : getTermsByDisease(#disease)">
                 	<tr><th concordion:assertEquals="#termId">Disease Name</th></tr>
-                	<tr><td>Parkinson Disease 11, Autosomal Dominant; PARK11</td></tr>
+                	<tr><td>Parkinson Disease 11, Autosomal Dominant, Susceptibility To; PARK11</td></tr>
                 	</table>
                 </li>
     		</ol>
