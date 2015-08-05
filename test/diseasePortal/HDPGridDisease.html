@@ -49,7 +49,7 @@ tr.gray td {background-color:#EEEEEE;}
     <h1>Grid Tab, Disease Column Tests</h1>
     <ul>
         <li>User story 32, E4: Basic grid - right hand side and OMIM Terms</li>
-        <li>User story 88, E3: Phenotype-only genes - load and display in HDP pages</li>
+        <!-- <li>User story 88, E3: Phenotype-only genes - load and display in HDP pages</li> -->
         <li>User story 107, Restrict checkmarks in grid to genotypes that satisfy the query</li>
         <li>sto135: Grid: switch from OMGs to simples</li>
         <li>User story 136, Grid: don't always return all diseases for human genes</li>
@@ -313,6 +313,13 @@ tr.gray td {background-color:#EEEEEE;}
               	</ol>
 			</li>
     		
+    		<!-- 
+    			TEMPORARILY REMOVED TESTS FOR PHENOTYPE-ONLY HUMAN GENES
+    			SINCE DATA HAS DISAPPEARED FROM SOURCE FILE (mim2gene_medgen) FROM NCBI.
+    			WILL NEED TO ADDRESS THESE WITH FUTURE CHANGES REQUESTED BY SUE 
+    				(POSSIBLY SUPPRESSING THESE GENES ALTOGETHER)
+    			-kstone
+    		
     		<li>Test that a Phenotype-only  Human gene displays correctly in the HDP tabs (sto88)
  			<p concordion:manual="true">passed - kstone 2013/10/31</p> 
     		<ol>
@@ -361,6 +368,8 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click on the Disease tab and confirm the only disease is <b>Rhabdomyosarcoma 2; RMS2</b> the Human Markers associated are <b>FOXO1, PAX3, PAX7</b> and the mouse markers associated are <b>Myf6, Pax3, Trp53</b></li>
     		</ol>
     		</li>
+    		
+    		-->
     		
     		<li>Disease terms are displayed in "clumped" columns (sto117)
     		<p concordion:manual="true">klf 11/04/2013</p>
