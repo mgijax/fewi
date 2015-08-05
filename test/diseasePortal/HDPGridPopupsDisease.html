@@ -161,7 +161,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click the checkmark or colored cell for <b concordion:set="#row">Aire</b> and <b concordion:set="#column">Sjogren Syndrome</b>; 
                 	verify the genotype in the Disease Popup is <b cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>.</li>
                 <li>Click the checkmark or colored cell for 
-                	<b concordion:set="#row">Aire</b> and <b concordion:set="#column">Autoimmune Polyendocrine Syndrome, Type I, with or without Reversible Metaphyseal Dysplasia; APS1</b>; 
+                	<b concordion:set="#row">Aire</b> and <b concordion:set="#column">Autoimmune Polyendocrinopathy Syndrome</b>; 
                 	verify the same genotype appears (<b cc:assertResultsContain="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Aire&lt;tm1Mmat&gt;/Aire&lt;tm1Mmat&gt;</b>) in the Disease Popup.</li>
     		</ol>
     		</li>
@@ -395,7 +395,7 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
                 <li>Open the HDP query form</li>
                 <li>Enter <b concordion:set="#pheno">300624</b> (Fragile X Mental Retardation Syndrome) in the Phenotypes and Diseases section and hit search</li>
-                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Fmr1</b> row and <b concordion:set="#column">Fragile X Mental Retardation Syndrome</b> column. </li>
+                <li>Click the checkmark at the intersection of the <b concordion:set="#row">Fmr1</b> row and <b concordion:set="#column">Mental Retardation, X-Linked, Syndromic</b> column. </li>
                 <li>Confirm that <b>1</b> genotype row is displayed for <b cc:assertValueAppearsOnlyOnce="diseaseGridPopupGenoClustersByPheno(#pheno,#row,#column)">Fmr1&lt;tm1Cgr&gt;/Y</b> (2 genotypes exist).</li>
                 <li>Confirm that human <b cc:assertResultsContain="diseaseGridPopupHumanMarkersByPheno(#pheno,#row,#column)">FMR1</b> IS LISTED.</li>
                 <li>Clear the query form.</li>
