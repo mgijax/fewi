@@ -163,7 +163,7 @@
     		<li>The count of Cre alleles returned for a text string queried against Sybase should match the count returned from the FeWI.
     		<table cc:execute="#count = getAlleleCountByStructure(#struct)">
     		<tr><th concordion:set="#struct">Text string</th><th>Notes</th><th cc:assertEquals="#count">Cre Alleles in Sybase (via SQL)<br/>(green if FeWI count matches)</th></tr>
-    		<tr><td>heart</td><td>should have many child terms</td><td><b cc:dynamicData="creHeartAlleleCount"></b></td></tr>
+    		<tr><td>aorta</td><td>single token match</td><td><b cc:dynamicData="creAortaAlleleCount"></b></td></tr>
     		<tr><td>esophagus</td><td>is a synonym of term "oesophagus"</td><td><b cc:dynamicData="creEsophagusAlleleCount"></b></td></tr>
     		<tr><td>bronchus epithelium</td><td>has 2 tokens in the term</td><td><b cc:dynamicData="creBronchusEpitheliumAlleleCount"></b></td></tr>
     		<tr><td>bronchial epithelium</td><td>is synonym of term above and has 2 tokens in the term</td><td><b cc:dynamicData="creBronchialEpitheliumAlleleCount"></b></td></tr>
