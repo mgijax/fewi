@@ -108,7 +108,8 @@
  			<p concordion:manual="true">passed. klf 9/18/2012</p>
     		<ol>
     			<li>Naviage to allele Foxb1<sup>tm1Lby</sup>, genotype <b>MGI:3843799</b>  </li>
-    			<li>Under <b >reproductive system</b>, for term <b>abnormal milk ejection</b>, verify that the note &quot;females fail to eject milk to feed their young&quot; is preceded by the text <b>Background Sensitivity:</b> (including uppercase and colon)</li>
+    			<li>Under <b >reproductive system</b>, for term <b>abnormal milk ejection</b>, 
+    				verify that the note &quot;females fail to eject milk to feed their young&quot; is preceded by the text <b>Background Sensitivity:</b> (including uppercase and colon)</li>
     		</ol>
     		</li>
     		<li>Verify that the page header contains the correct content
@@ -211,7 +212,7 @@
                 <li>Navigate to the Allele Detail Page for <b>Foxb1<sup>tm1Lby</sup></b> (<b>MGI:2384415</b>)</li>
                 <li>For Genotype <b concordion:set="#gid">MGI:3843796</b> (hm2), 
                 	under <b concordion:set="#system">reproductive system</b> 
-                	for term abnormal milk ejection (<b concordion:set="#termID">MP:0003838</b>)</li>
+                	for term galactostasis (<b concordion:set="#termID">MP:0013718</b>)</li>
                 <li>Verify note type <b>Background Sensitivity</b> with content 
                 	&quot;<b cc:assertValueAppearsOnlyOnce="getNotesByTermIgnoreSystem(#gid,#termID)">Background Sensitivity: females fail to eject milk to feed their young</b>&quot; exists</li>
  				<li>Also verify note with no initial label exists: &quot;<b cc:assertValueAppearsOnlyOnce="getNotesByTermIgnoreSystem(#gid,#termID)">lactation can often be restored by oxytocin injection</b>&quot;</li>
