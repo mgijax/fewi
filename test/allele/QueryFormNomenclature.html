@@ -159,8 +159,8 @@ tr.gray td {background-color:#EEEEEE;}
     		<ol>
 				<li>open the allele query form</li>
 				<li>type <b concordion:set="#query">SMMCI</b> (a synonym of sonic hedgehog in human) in to the nomenclature field</li>
-				<li>verify that <b concordion:assertEquals="getAlleleCountByNomen(#query)">30</b> results are returned</li>
-				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				<li>verify that 31 results are returned</li>
+				<li><table cc:verifySupersetOf="#result : getAlleleSymbolsByNomen(#query)">
 						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
 					    <tr><td>Shh&lt;Dsh&gt;</td></tr>
 					    <tr><td>Shh&lt;Dz&gt;</td></tr>
@@ -215,11 +215,11 @@ tr.gray td {background-color:#EEEEEE;}
     			<li>Testing to verify that tokens are combined using AND not OR
 				<ol>
 				<li>open the Allele query form</li>
-				<li>type <b concordion:set="#query">RIKEN 1110057K04</b> in the nomenclature field</li>
+				<li>type <b concordion:set="#query">lipid droplet associated hydrolase</b> in the nomenclature field</li>
 				<li>Verify that only 1110057K04Rik alleles are returned by verifying the correct marker symbols:
 					<table cc:verifyRowsUnordered="#result : getMarkerSymbolsByNomen(#query)">
 						<tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
-					    <tr><td>1110057K04Rik</td></tr>
+					    <tr><td>Ldah</td></tr>
 					</table>
 				</li>
 				</ol>    		
