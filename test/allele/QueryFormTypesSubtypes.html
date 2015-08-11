@@ -130,7 +130,7 @@ order by v._Marker_key, v._Allele_key
 					<li>from all_allele a join</li>
 					<li>voc_term t on t._term_key=a._allele_type_key</li>
 					<li>where iswildtype=0</li> 
-					<li>and exists (select 1 from all_marker_assoc ama where a._allele_key=ama._allele_key)</li>
+					<li>and a._marker_key is not null</li>
 					<li>group by allele_type</li>
 					<li>order by allele_type</li>
     			</ul>
@@ -203,7 +203,7 @@ order by v._Marker_key, v._Allele_key
 					<li>voc_annot va on (va._object_key=a._allele_key and va._annottype_key=1014) join</li>
 					<li>voc_term t on t._term_key=va._term_key</li>
 					<li>where iswildtype=0</li> 
-					<li>and exists (select 1 from all_marker_assoc ama where a._allele_key=ama._allele_key)</li>
+					<li>and a._marker_key is not null</li>
 					<li>group by allele_subtype</li>
 					<li>order by allele_subtype</li>
     			</ul>
