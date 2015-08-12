@@ -43,6 +43,9 @@ function toggleExpressesComponent() {
 </SCRIPT>
 
 <title>${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})</title>
+
+<link rel="canonical" href="${configBean.FEWI_URL}allele/${allele.primaryID}" />
+
 <meta name="description" content="${seoDescription}" />
 <meta name="keywords" content="${seoKeywords}" />
 <meta name="robots" content="NOODP" />
