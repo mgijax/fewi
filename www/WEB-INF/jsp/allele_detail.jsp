@@ -8,9 +8,9 @@
 
 ${templateBean.templateHeadHtml}
 
-<title>${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})</title>
-
 <link rel="canonical" href="${configBean.FEWI_URL}allele/${allele.primaryID}" />
+
+<title>${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})</title>
 
 <meta name="description" content="${seoDescription}" />
 <meta name="keywords" content="${seoKeywords}" />
