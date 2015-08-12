@@ -9,6 +9,8 @@ ${templateBean.templateHeadHtml}
 
 <title>${marker.symbol} MGI Mouse ${marker.markerType} Detail - ${marker.primaryID} - ${marker.name}</title>
 
+<link rel="canonical" href="${configBean.FEWI_URL}marker/${marker.primaryID}" />
+
 <meta name="description" content="${seoDescription}" />
 <meta name="keywords" content="${seoKeywords}" />
 <meta name="robots" content="NOODP" />
