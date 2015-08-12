@@ -8,40 +8,6 @@
 
 ${templateBean.templateHeadHtml}
 
-<SCRIPT TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></SCRIPT>
-<SCRIPT TYPE="text/javascript">
-function toggleMutationDescription ()
-{
-    toggle ("downArrowMutationDescription");
-    toggle ("rightArrowMutationDescription");
-    toggle ("mutationDescription");
-    if (mgihomeUrl != null) {
-        hitUrl (mgihomeUrl + "other/monitor.html", "toggleMutationDescription=1");
-    }
-}
-
-function toggleRecomGrid() {
-    toggle("recomRibbonTeaser");
-    toggle("recomRibbonWrapper");
-}
-
-function toggleUserNotes() {
-    toggle("recomUserNotesTeaser");
-    toggle("recomUserNotes");
-}
-
-function toggleSequenceTags() {
-    toggle("rightArrowSeqTag");
-    toggle("downArrowSeqTag");
-    toggle("seqTagTable");
-}
-function toggleExpressesComponent() {
-    toggle("rightArrowExpressesComponent");
-    toggle("downArrowExpressesComponent");
-    toggle("expressesComponentTable");
-}
-</SCRIPT>
-
 <title>${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})</title>
 
 <link rel="canonical" href="${configBean.FEWI_URL}allele/${allele.primaryID}" />
@@ -103,7 +69,40 @@ td.lm {
 }
 </style>
 
+
+<script TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></script>
+
 <script language="Javascript">
+function toggleMutationDescription ()
+{
+    toggle ("downArrowMutationDescription");
+    toggle ("rightArrowMutationDescription");
+    toggle ("mutationDescription");
+    if (mgihomeUrl != null) {
+        hitUrl (mgihomeUrl + "other/monitor.html", "toggleMutationDescription=1");
+    }
+}
+
+function toggleRecomGrid() {
+    toggle("recomRibbonTeaser");
+    toggle("recomRibbonWrapper");
+}
+
+function toggleUserNotes() {
+    toggle("recomUserNotesTeaser");
+    toggle("recomUserNotes");
+}
+
+function toggleSequenceTags() {
+    toggle("rightArrowSeqTag");
+    toggle("downArrowSeqTag");
+    toggle("seqTagTable");
+}
+function toggleExpressesComponent() {
+    toggle("rightArrowExpressesComponent");
+    toggle("downArrowExpressesComponent");
+    toggle("expressesComponentTable");
+}
 function formatForwardArgs() {
       // fill and submit either seqfetchForm or mouseblastForm
 
