@@ -95,27 +95,7 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
-
-
-<!-- marker header table -->
-<table class="summaryHeader">
-	<tr >
-	  <td class="summaryHeaderCat1Gxd">
-	       <div style="padding-top:7px;">Symbol</div>
-	       <div style="padding-top:3px;">Name</div>
-	       <div style="padding-top:2px;">ID</span>
-	  </td>
-	  <td class="summaryHeaderData1">
-	    <a style="font-size:large;  font-weight: bold;" 
-	      href="${configBean.FEWI_URL}marker/${marker.primaryID}">${marker.symbol}</a>
-	    <br/>
-	    <span style="font-weight: bold;">${marker.name}</span>
-	    <br/>
-	    <span style="">${marker.primaryID}</span>
-	  </td>
-	</tr>
-</table>
-
+<%@ include file="/WEB-INF/jsp/gxd_marker_header.jsp" %>
 
 <!-- GXD Summary -->
 <div class="summaryControl" style="">
@@ -127,6 +107,8 @@ ${templateBean.templateBodyStartHtml}
     var mgiMarkerId = "${marker.primaryID}";
     var searchedStage = "${theilerStage}";
     var searchedAssayType = "${assayType}";
+    var searchedStructure = "${structure}";
+    var searchedStructureId = "${strucureId}";
     var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>

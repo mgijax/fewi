@@ -34,7 +34,7 @@ public class SeqSummaryRow {
 
 	// config values
     String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-    String mblastUrl = ContextLoader.getConfigBean().getProperty("MOUSEBLAST_URL") + "seqSelect.cgi?seqs=";
+    String mblastUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "sequence/blast?seq1=";
     String seqFetchUrl = ContextLoader.getConfigBean().getProperty("SEQFETCH_URL") + "seqs=";
 
 
@@ -59,7 +59,7 @@ public class SeqSummaryRow {
         StringBuffer seqForward = new StringBuffer();
         seqForward.append("<a href='" + seqFetchUrl + FormatHelper.getSeqForwardValue(seq) + "'>FASTA</a>");
         seqForward.append("<br/>");
-        seqForward.append("<a href='" + mblastUrl + FormatHelper.getSeqForwardValue(seq) + "'>MouseBLAST</a>");
+        seqForward.append("<a href='" + mblastUrl + FormatHelper.getSeqForwardValue(seq).replace("+", "%2B") + "' target='_blank'>BLAST at NCBI</a>");
 
     	return seqForward.toString();
     }

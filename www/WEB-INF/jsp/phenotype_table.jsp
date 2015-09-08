@@ -116,9 +116,8 @@ td.padTop { padding-top:4px }
 <c:forEach var="phenoTableGenotype" items="${phenoTableGenotypes}" varStatus="gStatus">
 	  <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>" colspan="${phenoTableGenotype.columnSpan}">
 	  <c:set var="genotype" value="${phenoTableGenotype.genotype}" scope="request"/>
-	  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton" 
-	  	onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}', '${phenoTableGenotype.genotypeSeq}', '${genotype.primaryID}'); return false;">
-	  <a href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}' target="new" class='genoLink small' title='phenotype details'>
+	  <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
+	  	<a href='${configBean.FEWI_URL}allele/genoview/${phenoTableGenotype.genotype.primaryID}?counter=${phenoTableGenotype.genotypeSeq}' target="_blank" class='genoLink small' title='phenotype details'>
 	  ${phenoTableGenotype.genotype.genotypeType}${phenoTableGenotype.genotypeSeq}</a></div>
 	
 	  </th>
@@ -227,9 +226,7 @@ td.padTop { padding-top:4px }
       <c:forEach var="cell" items="${phenoTableSystem.cells}" varStatus="cStatus">
 		<td class="<c:if test="${genoID!=cell.genotypeID}">genoBorder </c:if> borderUnder <c:if test="${genoID==cell.genotypeID && sex=='F' && cell.sex=='M'}">sexBorder </c:if> <c:if test="${cStatus.last}">rightGenoBorder</c:if>" style="text-align:center;">
           <c:if test="${cell.hasCall}">
-	          <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}' target="new" 
-	  			class='genoLink' style="font-weight:bold;" title='details'
-	  			onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}', '${cell.genotypeSeq}', '${cell.genotypeID}'); return false;">
+	          <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}' target="_blank" class='genoLink' style="font-weight:bold;" title='details'>
 	  			<c:out value="${cell.callString}" escapeXml="false"/></a>
   			</c:if>
         </td>
@@ -256,9 +253,7 @@ td.padTop { padding-top:4px }
         <c:forEach var="cell" items="${phenoTableTerm.cells}" varStatus="cStatus">
           <td class="<c:if test="${genoID!=cell.genotypeID}">genoBorder </c:if> borderUnder <c:if test="${genoID==cell.genotypeID && sex=='F' && cell.sex=='M'}">sexBorder </c:if> <c:if test="${cStatus.last}">rightGenoBorder</c:if>" style="text-align:center;">
 		    <c:if test="${cell.hasCall}">
-		    <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}' target="new" 
-  			class='genoLink small' title='details'
-  			onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}_${phenoTableTerm.cssId}', '${cell.genotypeSeq}', '${cell.genotypeID}'); return false;">
+		    <a href='${configBean.FEWI_URL}allele/genoview/${cell.genotypeID}?counter=${cell.genotypeSeq}#${phenoTableSystem.cssId}_${phenoTableTerm.cssId}' target="_blank" class='genoLink small' title='details'>
   			<c:out value="${cell.callString}" escapeXml="false"/></a>
   			</c:if>
           </td>

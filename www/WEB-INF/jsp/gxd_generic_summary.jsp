@@ -6,9 +6,15 @@
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 ${templateBean.templateHeadHtml}
 
-<title>Mouse Gene Expression Data Search</title>
-
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
+<c:if test="${empty fromSlimgrid}">
+  <c:set var="pageTitle" value="Mouse Gene Expression Data Search"/>
+</c:if>
+<c:if test="${not empty fromSlimgrid}">
+  <c:set var="pageTitle" value="${marker.symbol} ${structure} gene expression"/>
+</c:if>
+<title>${pageTitle}</title>
 
 <style>
 .left { float: left; }
@@ -90,6 +96,9 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
+<!-- include a marker header, if needed -->
+<%@ include file="/WEB-INF/jsp/gxd_marker_header.jsp" %>
+
 <!-- GXD Summary -->
 <div class="summaryControl" style="">
 	<%@ include file="/WEB-INF/jsp/gxd_summary.jsp" %>
@@ -100,6 +109,9 @@ ${templateBean.templateBodyStartHtml}
     var mgiMarkerId = "${marker.primaryID}";
     var searchedStage = "${theilerStage}";
     var searchedAssayType = "${assayType}";
+    var searchedStructure = "${structure}";
+    var searchedStructureId = "${structureId}";
+    var nomenclature = "${nomenclature}";
     var querystring = "${queryString}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -116,35 +118,47 @@ public class GOController {
 	}
 
 	@RequestMapping(value="/marker/{markerID}")
-	public ModelAndView goSummeryByMarkerId(@PathVariable("markerID") String markerID) {
-		logger.debug("->goSummeryByMarkerId started");
+	public ModelAndView goSummaryByMarkerId(HttpServletRequest request,
+	    @PathVariable("markerID") String markerID) {
+		logger.debug("->goSummaryByMarkerId started");
+
+		// look for an (optional) GO slimgrid header term, which would
+		// restrict our set of results
+
+		String header = request.getParameter("header");
 
 		// setup search parameters object to gather the requested object
 		SearchParams searchParams = new SearchParams();
 		Filter markerIDFilter = new Filter(SearchConstants.MRK_ID, markerID);
 		searchParams.setFilter(markerIDFilter);
 
-		// find the requested reference
+		// find the requested marker
 		SearchResults<Marker> searchResults
-		= markerFinder.getMarkerByID(searchParams);
+			= markerFinder.getMarkerByID(searchParams);
 		List<Marker> markerList = searchResults.getResultObjects();
 
-		return goSummeryByMarker(markerList, markerID);
+		return goSummaryByMarker(markerList, markerID, header);
 	}
 
 	@RequestMapping(value="/marker")
-	public ModelAndView goSummeryByMarkerKey(@RequestParam("key") String markerKey) {
-		logger.debug("->goSummeryByMarkerrKey started: " + markerKey);
+	public ModelAndView goSummaryByMarkerKey(HttpServletRequest request,
+	    @RequestParam("key") String markerKey) {
+		logger.debug("->goSummaryByMarkerKey started: " + markerKey);
 
-		// find the requested reference
+		// look for an (optional) GO slimgrid header term, which would
+		// restrict our set of results
+
+		String header = request.getParameter("header");
+
+		// find the requested markers
 		SearchResults<Marker> searchResults
-		= markerFinder.getMarkerByKey(markerKey);
+			= markerFinder.getMarkerByKey(markerKey);
 		List<Marker> markerList = searchResults.getResultObjects();
 
-		return goSummeryByMarker(markerList, markerKey);
+		return goSummaryByMarker(markerList, markerKey, header);
 	}
 
-	private ModelAndView goSummeryByMarker(List<Marker> markerList, String mrk){
+	private ModelAndView goSummaryByMarker(List<Marker> markerList, String mrk, String header){
 
 		ModelAndView mav = new ModelAndView("go_summary_marker");
 
@@ -161,12 +175,19 @@ public class GOController {
 			mav.addObject("errorMsg", "Dupe marker found for " + mrk);
 			return mav;
 		}
-		// pull out the reference, and place into the mav
+		// pull out the marker, and place into the mav
 		Marker marker = markerList.get(0);
 		mav.addObject("marker", marker);
 
+		// handle the (optional) GO slimgrid header term
+		String headerParam = "";
+		if (header != null) {
+			mav.addObject("headerTerm", header);
+			headerParam = "&header=" + header;
+		}
+
 		// pre-generate query string
-		mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey() + "&vocab=GO");
+		mav.addObject("queryString", "mrkKey=" + marker.getMarkerKey() + "&vocab=GO" + headerParam);
 
 		return mav;
 	}
@@ -309,12 +330,14 @@ public class GOController {
 		String refsKey = query.getReferenceKey();
 		String vocab = query.getVocab();
 		String restriction = query.getRestriction();
-		List<String> categoryFilter = query.getCategoryFilter();
+		String header = query.getHeader();
+		List<String> aspectFilter = query.getAspectFilter();
 		List<String> evidenceFilter = query.getEvidenceFilter();
-		//List<String> inferredFilter = query.getInferredFilter();
 		List<String> referenceFilter = query.getReferenceFilter();
 		
-		//
+		if ((header != null) && (!"".equals(header))) {
+			filterList.add(new Filter (SearchConstants.SLIM_TERM, header));
+		}
 		if ((refsKey != null) && (!"".equals(refsKey))) {
 			filterList.add(new Filter (SearchConstants.REF_KEY, refsKey, Filter.Operator.OP_EQUAL));
 		}
@@ -327,11 +350,11 @@ public class GOController {
 		if ((restriction != null) && (!"".equals(restriction))) {
 			filterList.add(new Filter (SearchConstants.VOC_RESTRICTION, restriction, Filter.Operator.OP_NOT_EQUAL));
 		}   
-		if (categoryFilter.size() > 0) {
-			filterList.add(new Filter(SearchConstants.VOC_DAG_NAME, categoryFilter, Filter.Operator.OP_IN));
+		if (aspectFilter.size() > 0) {
+			filterList.add(new Filter(SearchConstants.VOC_DAG_NAME, aspectFilter, Filter.Operator.OP_IN));
 		}
 		if (evidenceFilter.size() > 0) {
-			filterList.add(new Filter(SearchConstants.EVIDENCE_TERM, evidenceFilter, Filter.Operator.OP_IN));
+			filterList.add(new Filter(SearchConstants.EVIDENCE_CATEGORY, evidenceFilter, Filter.Operator.OP_IN));
 		}
 		if (referenceFilter.size() > 0) {
 			filterList.add(new Filter(SearchConstants.REF_KEY, referenceFilter, Filter.Operator.OP_IN));
@@ -361,20 +384,52 @@ public class GOController {
 		params.setFilter(genFilters(qf));
 
 		if("evidence".equalsIgnoreCase(facetType)) {
-			facetType = SortConstants.MRK_BY_EVIDENCE_TERM;
+			facetType = SearchConstants.EVIDENCE_CATEGORY;
 		} else if("term".equalsIgnoreCase(facetType)) {
 			facetType = SortConstants.VOC_TERM;
 		} else if("reference".equalsIgnoreCase(facetType)) {
 			facetType = SortConstants.BY_REFERENCE;
-		} else if("category".equalsIgnoreCase(facetType)){
+		} else if("aspect".equalsIgnoreCase(facetType)){
 			facetType = SortConstants.VOC_DAG_NAME;
 		}
 		
 		SearchResults<Annotation> facetResults = markerAnnotationFinder.getFacetResults(params, facetType);
-		facets.put("resultFacets", facetResults.getSortedResultFacets());
+
+		List<String> results = facetResults.getSortedResultFacets();
+
+		// need to customize sorting for evidence facets:
+		//	Experimental, Homology, Automated, Other
+		if (SearchConstants.EVIDENCE_CATEGORY.equalsIgnoreCase(facetType)) {
+			Collections.sort (results, new EvidenceFacetSorter());
+		}
+
+		facets.put("resultFacets", results);
 		return facets;
 	}
-
-	
-
 }
+
+class EvidenceFacetSorter implements Comparator<String> {
+	public EvidenceFacetSorter() {}
+
+	public int rank(String a) {
+		if (a.startsWith("Experimental")) { return 0; }
+		if (a.startsWith("Homology")) { return 1; }
+		if (a.startsWith("Automated")) { return 2; }
+		if (a.startsWith("Other")) { return 3; }
+		return 4;
+	}
+
+	public int compare (String a, String b) {
+		int aRank = this.rank(a);
+		int bRank = this.rank(b);
+
+		if (aRank == bRank) { return a.compareTo(b); }
+		return Double.compare(aRank, bRank);
+	}
+
+	public boolean equals (Object c) {
+		if (this == c) { return true; }
+		return false;
+	}
+}	
+

@@ -17,6 +17,8 @@ public class ReferenceQueryForm {
 	private String key = "";
 	private String diseaseRelevantMarkerId = "";
 	private String diseaseId = "";
+	private String goMarkerId = "";
+	private String phenoMarkerId = "";
 	
 	private Integer seqKey;
 	private Integer alleleKey;
@@ -26,7 +28,20 @@ public class ReferenceQueryForm {
 	private List<String> journalFilter = new ArrayList<String>();
 	private List<Integer> yearFilter = new ArrayList<Integer>();
 	private List<String> dataFilter = new ArrayList<String>();
+	private List<String> typeFilter = new ArrayList<String>();
 	
+	public String getGoMarkerId() {
+		return goMarkerId;
+	}
+	public void setGoMarkerId(String goMarkerId) {
+		this.goMarkerId = goMarkerId;
+	}
+	public String getPhenoMarkerId() {
+		return phenoMarkerId;
+	}
+	public void setPhenoMarkerId(String phenoMarkerId) {
+		this.phenoMarkerId = phenoMarkerId;
+	}
 	public String getAuthor() {
 		return author;
 	}
@@ -93,6 +108,33 @@ public class ReferenceQueryForm {
 	public void setAuthorFilter(List<String> authorFilter) {
 		this.authorFilter = authorFilter;
 	}
+	public List<String> getCleanedTypeFilter() {
+		List<String> baseFilter = this.getTypeFilter();
+		List<String> cleanedFilter = new ArrayList<String>();
+
+		StringBuffer other = new StringBuffer();
+
+		for (String s : baseFilter) {
+			if ("Literature".equals(s)) {
+				cleanedFilter.add(s);
+			} else if (other.length() == 0) {
+				other.append(s);
+			} else {
+				other.append(", ");
+				other.append(s);
+			}
+		}
+		if (other.length() > 0) {
+			cleanedFilter.add(other.toString());
+		}
+		return cleanedFilter;
+	}
+	public List<String> getTypeFilter() {
+		return typeFilter;
+	}
+	public void setTypeFilter(List<String> typeFilter) {
+		this.typeFilter = typeFilter;
+	}
 	public List<String> getJournalFilter() {
 		return journalFilter;
 	}
@@ -149,6 +191,19 @@ public class ReferenceQueryForm {
 		this.diseaseId = diseaseId;
 	}
 	
+	/* return a subset of parameters than can be appended to a URL to
+	 * restrict the query
+	 */
+	public String getUrlFragment() {
+		StringBuffer sb = new StringBuffer();
+		
+		for (String s : this.getCleanedTypeFilter()) {
+			sb.append("&typeFilter=");
+			sb.append(s);
+		}
+		return sb.toString();
+	}
+
 	@Override
 	public String toString() {
 		return "ReferenceQueryForm [author=" + author + ", authorScope="
@@ -158,7 +213,8 @@ public class ReferenceQueryForm {
 				+ seqKey + ", alleleKey=" + alleleKey + ", markerKey="
 				+ markerKey + ", authorFilter=" + authorFilter
 				+ ", journalFilter=" + journalFilter + ", yearFilter="
-				+ yearFilter + ", dataFilter=" + dataFilter + "]";
+				+ yearFilter + ", typeFilter=" + typeFilter
+				+ ", dataFilter=" + dataFilter + "]";
 	}
 	
 }

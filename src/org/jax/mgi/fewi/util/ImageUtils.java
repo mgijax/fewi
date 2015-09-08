@@ -52,8 +52,9 @@ public class ImageUtils
 				pane.getImage().getWidth(),
 				pane.getImage().getHeight(),
 				pane.getImage().getPixeldbNumericID(),
-				maxWidth,maxHeight);
+				maxWidth,maxHeight, null);
 	}
+
 	public static String createImagePaneHTML(SolrGxdImage image, Integer maxWidth, Integer maxHeight)
 	{
 		return createImagePaneHTML(image.getPaneWidth(),image.getPaneHeight(),
@@ -61,7 +62,17 @@ public class ImageUtils
 				image.getImageWidth(),
 				image.getImageHeight(),
 				image.getPixeldbID(),
-				maxWidth,maxHeight);
+				maxWidth,maxHeight, null);
+	}
+
+	public static String createImagePaneHTML(SolrGxdImage image, Integer maxWidth, Integer maxHeight, String extraDivStyle)
+	{
+		return createImagePaneHTML(image.getPaneWidth(),image.getPaneHeight(),
+				image.getPaneX(),image.getPaneY(),
+				image.getImageWidth(),
+				image.getImageHeight(),
+				image.getPixeldbID(),
+				maxWidth,maxHeight, extraDivStyle);
 	}
 	
 	// a super specific method signature to allow bypassing hibernate objects
@@ -69,7 +80,7 @@ public class ImageUtils
 			Integer paneX, Integer paneY,
 			Integer imageWidth, Integer imageHeight,
 			String pixeldbID,
-			Integer maxWidth,Integer maxHeight)
+			Integer maxWidth,Integer maxHeight, String extraDivStyle)
 	{
 		// need to account for null pane values
 		// if height or width is null(or less than 1), we need to set them to the height/width of the image object as a failsafe
@@ -113,6 +124,11 @@ public class ImageUtils
 		String divStyle = "position:relative; "+
 				"width:"+paneWidth+"px; "+
 				"height:"+paneHeight+"px; ";
+		
+		if (extraDivStyle != null) {
+			divStyle = divStyle + extraDivStyle;
+		}
+
 		// the img tag needs to be positioned to the offset where the pane is
 		// also the clip must be defined as rect(top,right,bottom,left);
 		String imgStyle = "position:absolute; "+

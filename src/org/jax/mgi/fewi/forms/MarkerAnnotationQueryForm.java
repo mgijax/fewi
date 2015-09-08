@@ -15,7 +15,8 @@ public class MarkerAnnotationQueryForm {
     private String mrkKey;
     private String vocab;
     private String restriction;
-	private List<String> categoryFilter = new ArrayList<String>();
+    private String header;
+	private List<String> aspectFilter = new ArrayList<String>();
 	private List<String> evidenceFilter = new ArrayList<String>();
 	private List<String> inferredFilter = new ArrayList<String>();
 	private List<String> referenceFilter = new ArrayList<String>();
@@ -38,21 +39,36 @@ public class MarkerAnnotationQueryForm {
     public void setVocab(String vocab) {
         this.vocab = vocab;
     }
+    public String getHeader() {
+	return header;
+    }
+    public void setHeader(String header) {
+	this.header = header;
+    }
     public String getRestriction() {
         return restriction;
     }
     public void setRestriction(String restriction) {
         this.restriction = restriction;
     }
-    public List<String> getCategoryFilter() {
-		return categoryFilter;
+    public List<String> getAspectFilter() {
+		return aspectFilter;
+    }
+    public void setAspectFilter(List<String> aspectFilter) {
+		this.aspectFilter = aspectFilter;
+    }
+    public List<String> getEvidenceFilter() {
+	/* need to convert any left parentheses back into commas (they
+	 * were tweaked in JS to avoid appearing like mulitiple values)
+	 */
+	List<String> tweaked = new ArrayList<String>();
+
+	for (String s : this.evidenceFilter) {
+	    tweaked.add(s.replace("(", ","));
 	}
-	public void setCategoryFilter(List<String> categoryFilter) {
-		this.categoryFilter = categoryFilter;
-	}
-	public List<String> getEvidenceFilter() {
-		return evidenceFilter;
-	}
+
+	return tweaked;
+    }
 	public void setEvidenceFilter(List<String> evidenceFilter) {
 		this.evidenceFilter = evidenceFilter;
 	}

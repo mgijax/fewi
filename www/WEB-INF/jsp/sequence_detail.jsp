@@ -23,7 +23,13 @@ ${templateBean.templateBodyStartHtml}
         flank = ''
     }
     document.sequenceForm.action = document.seqPullDownForm.seqPullDown.options[document.seqPullDownForm.seqPullDown.selectedIndex].value;
-    document.sequenceForm.seqs.value = document.seqData.arg.value + flank;
+    document.sequenceForm.seq1.value = document.seqData.arg.value + flank;
+
+    if (document.sequenceForm.action.indexOf("blast") >= 0) {
+	document.sequenceForm.target = "_blank";
+    } else {
+	document.sequenceForm.target = "";
+    }
     document.sequenceForm.submit();
   }
 </script>
@@ -116,7 +122,7 @@ ${templateBean.templateBodyStartHtml}
        <input name ="arg" value="<%=FormatHelper.getSeqForwardValue(sequence)%>" type=hidden>
       </form>
       <form name="sequenceForm" method="get">
-        <input name="seqs"  type="hidden">
+        <input name="seq1"  type="hidden">
       </form>
     
       <div style="width:22em; position: absolute; top: 0px; left: 160px; ">
@@ -137,7 +143,7 @@ ${templateBean.templateBodyStartHtml}
         <i>For this sequence</i>
         <select name='seqPullDown'>
           <option value="${configBean.SEQFETCH_URL}" selectED>download in FASTA format
-          <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi">forward to MouseBLAST
+          <option value="${configBean.FEWI_URL}sequence/blast">forward to NCBI BLAST
         </select>
         <input type=button value="Go" onClick=formatForwardArgs()><br>
         </form>

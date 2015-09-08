@@ -20,7 +20,7 @@ public class TextGoMarkerSummary extends AbstractTextView {
 		
 		response.setHeader("Content-Disposition","attachment; filename=\"goMarkerReport.txt\"");
 
-		writer.write("Category\tClassification Term\tEvidence\tInferred From\tReference(s)\r\n");
+		writer.write("Aspect\tCategory\tQualifier\tClassification Term\tEvidence\tInferred From\tReference(s)\r\n");
 		
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");		
@@ -28,7 +28,12 @@ public class TextGoMarkerSummary extends AbstractTextView {
 		StringBuffer inferred;
 		StringBuffer refs;
 		for (Annotation annot: results){
+			String qualifier = annot.getQualifier();
+			if (qualifier == null) { qualifier = ""; }
+
 			writer.write(annot.getDagName() + "\t");
+			writer.write(annot.getHeaderAbbreviations() + "\t");
+			writer.write(qualifier + "\t");
 			writer.write(annot.getTerm() + "\t");
 			writer.write(annot.getEvidenceCode() + "\t");
 			

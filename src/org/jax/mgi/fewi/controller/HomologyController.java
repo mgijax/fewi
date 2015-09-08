@@ -27,11 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-
-/*-------*/
-/* class */
-/*-------*/
-
 /*
  * This controller maps all /homology/ uri's
  */
@@ -40,284 +35,261 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomologyController {
 
 
-    //--------------------//
-    // instance variables
-    //--------------------//
+	private Logger logger = LoggerFactory.getLogger(HomologyController.class);
 
-    private Logger logger
-      = LoggerFactory.getLogger(HomologyController.class);
+	@Autowired
+	private HomologyFinder homologyFinder;
 
-    @Autowired
-    private HomologyFinder homologyFinder;
+	@Autowired
+	private MarkerFinder markerFinder;
 
-    @Autowired
-    private MarkerFinder markerFinder;
+	@RequestMapping(value="/marker/{markerID:.+}", method = RequestMethod.GET)
+	public ModelAndView homologyClusterDetailByMarker(@PathVariable("markerID") String markerID) {
+		logger.debug ("-> homologyClusterDetailByMarker started");
 
-    //--------------------------------------------------------------------//
-    // public methods
-    //--------------------------------------------------------------------//
+		// find the requested marker by ID
 
+		SearchParams searchParams = new SearchParams();
+		Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
+		searchParams.setFilter(markerIdFilter);
 
-    //--------------------------------------//
-    // HomoloGene Detail by Marker ID
-    //--------------------------------------//
-    @RequestMapping(value="/marker/{markerID:.+}", method = RequestMethod.GET)
-    public ModelAndView homologyClusterDetailByMarker(@PathVariable("markerID") String markerID) {
-	logger.debug ("-> homologyClusterDetailByMarker started");
+		SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
+		List<Marker> markerList = searchResults.getResultObjects();
 
-	// find the requested marker by ID
+		// should only be one.  error condition if not.
 
-	SearchParams searchParams = new SearchParams();
-	Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
-	searchParams.setFilter(markerIdFilter);
+		if (markerList.size() < 1) {
+			return errorMav("No Marker Found");
+		} else if (markerList.size() > 1) {
+			return errorMav("Non-Unique Marker ID Found");
+		}
 
-	SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
-	List<Marker> markerList = searchResults.getResultObjects();
+		// So, we now have found our marker.  Get its HomoloGene ID.
+		Marker mouse = markerList.get(0);
+		MarkerID mouseID = mouse.getHomoloGeneID();
 
-	// should only be one.  error condition if not.
+		if (mouseID == null) {
+			return errorMav("Non-Mouse Marker Has No HomoloGene ID");
+		}
 
-	if (markerList.size() < 1) {
-	    return errorMav("No Marker Found");
-	} else if (markerList.size() > 1) {
-	    return errorMav("Non-Unique Marker ID Found");
+		String hgID = mouseID.getAccID();
+
+		// now we can go ahead and pass off to the normal code for links by
+		// HomoloGene ID
+
+		return this.prepareHomologyClassByID(hgID);
 	}
 
-	// So, we now have found our marker.  Get its HomoloGene ID.
-	Marker mouse = markerList.get(0);
-	MarkerID mouseID = mouse.getHomoloGeneID();
+	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
+	public ModelAndView homologyClusterDetailByMarkerKey(@PathVariable("dbKey") String dbKey) {
+		logger.debug ("-> homologyDetailByKey started");
 
-	if (mouseID == null) {
-	    return errorMav("Non-Mouse Marker Has No HomoloGene ID");
+		// find the requested marker by database key
+
+		SearchResults<Marker> searchResults = markerFinder.getMarkerByKey(dbKey);
+		List<Marker> markerList = searchResults.getResultObjects();
+
+		// should only be one.  error condition if not.
+
+		if (markerList.size() < 1) {
+			return errorMav("No Marker Found");
+		} else if (markerList.size() > 1) {
+			return errorMav("Non-Unique Marker Key Found");
+		}
+
+		// So, we now have found our marker.  Get its HomoloGene ID.
+		Marker mouse = markerList.get(0);
+		MarkerID mouseID = mouse.getHomoloGeneID();
+
+		if (mouseID == null) {
+			return errorMav("Non-Mouse Marker Has No HomoloGene ID");
+		}
+
+		String hgID = mouseID.getAccID();
+
+		// now we can go ahead and pass off to the normal code for links by
+		// HomoloGene ID
+
+		return this.prepareHomologyClassByID(hgID);
 	}
 
-	String hgID = mouseID.getAccID();
+	//--------------------//
+	// HomoloGene Detail By ID
+	//--------------------//
+	@RequestMapping(value="/{homologyID:.+}", method = RequestMethod.GET)
+	public ModelAndView homologyClusterDetailByID(@PathVariable("homologyID") String homologyID) {
 
-	// now we can go ahead and pass off to the normal code for links by
-	// HomoloGene ID
-	
-	return this.prepareHomologyClassByID(hgID);
-    }
+		logger.debug("->homologyDetailByID started");
 
-    //--------------------------------------//
-    // HomoloGene Detail by Marker Key
-    //--------------------------------------//
-    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView homologyClusterDetailByMarkerKey(@PathVariable("dbKey") String dbKey) {
-	logger.debug ("-> homologyDetailByKey started");
-
-	// find the requested marker by database key
-
-	SearchResults<Marker> searchResults = markerFinder.getMarkerByKey(dbKey);
-	List<Marker> markerList = searchResults.getResultObjects();
-
-	// should only be one.  error condition if not.
-
-	if (markerList.size() < 1) {
-	    return errorMav("No Marker Found");
-	} else if (markerList.size() > 1) {
-	    return errorMav("Non-Unique Marker Key Found");
+		return this.prepareHomologyClassByID(homologyID);
 	}
 
-	// So, we now have found our marker.  Get its HomoloGene ID.
-	Marker mouse = markerList.get(0);
-	MarkerID mouseID = mouse.getHomoloGeneID();
+	//------------------------------------------------------------
+	// homology cluster (either HGNC or HomoloGene) by cluster key
+	//------------------------------------------------------------
+	@RequestMapping(value="/cluster/key/{clusterKey:.+}", method = RequestMethod.GET)
+	private ModelAndView homologyClusterDetailByKey(@PathVariable("clusterKey") String clusterKey) {
 
-	if (mouseID == null) {
-	    return errorMav("Non-Mouse Marker Has No HomoloGene ID");
+		HomologyCluster homology = homologyFinder.getClusterByKey(clusterKey);
+		return this.prepareHomologyClass(homology);
 	}
 
-	String hgID = mouseID.getAccID();
+	// code shared to send back a HomoloGene class detail page, regardless of
+	// whether the initial link was by HG ID or by non-mouse marker key
+	private ModelAndView prepareHomologyClassByID (String homologyID) {
 
-	// now we can go ahead and pass off to the normal code for links by
-	// HomoloGene ID
-	
-	return this.prepareHomologyClassByID(hgID);
-    }
+		List<HomologyCluster> homologyList =
+				homologyFinder.getHomologyClusterByID(homologyID);
 
-    //--------------------//
-    // HomoloGene Detail By ID
-    //--------------------//
-    @RequestMapping(value="/{homologyID:.+}", method = RequestMethod.GET)
-    public ModelAndView homologyClusterDetailByID(@PathVariable("homologyID") String homologyID) {
+		// there can be only one...
+		if (homologyList.size() < 1) { // none found
+			return errorMav("No Homology Cluster Found");
+		} else if (homologyList.size() > 1) { // dupe found
+			return errorMav("Duplicate ID");
+		}
+		// success - we have a single object
 
-        logger.debug("->homologyDetailByID started");
+		return this.prepareHomologyClass(homologyList.get(0));
+	}
 
-	return this.prepareHomologyClassByID(homologyID);
-    }
+	// code shared to send back a HomoloGene class detail page, regardless of
+	// whether the initial link was by HG ID or by non-mouse marker key
+	private ModelAndView prepareHomologyClass (HomologyCluster homology) {
 
-    //------------------------------------------------------------
-    // homology cluster (either HGNC or HomoloGene) by cluster key
-    //------------------------------------------------------------
-    @RequestMapping(value="/cluster/key/{clusterKey:.+}", method = RequestMethod.GET)
-    private ModelAndView homologyClusterDetailByKey(@PathVariable("clusterKey") String clusterKey) {
+		// generate ModelAndView object to be passed to detail page
+		ModelAndView mav = new ModelAndView("homology_detail");
 
-	HomologyCluster homology = homologyFinder.getClusterByKey(clusterKey);
-	return this.prepareHomologyClass(homology);
-    }
+		// first marker symbol (for page title)
+		String firstSymbol = null;
 
-    // code shared to send back a HomoloGene class detail page, regardless of
-    // whether the initial link was by HG ID or by non-mouse marker key
-    private ModelAndView prepareHomologyClassByID (String homologyID) {
+		// SEO keywords
+		StringBuffer keywords = new StringBuffer("MGI");
 
-        List<HomologyCluster> homologyList =
-		homologyFinder.getHomologyClusterByID(homologyID);
-
-        // there can be only one...
-        if (homologyList.size() < 1) { // none found
-            return errorMav("No Homology Cluster Found");
-        } else if (homologyList.size() > 1) { // dupe found
-            return errorMav("Duplicate ID");
-        }
-        // success - we have a single object
-
-	return this.prepareHomologyClass(homologyList.get(0));
-    }
-
-    // code shared to send back a HomoloGene class detail page, regardless of
-    // whether the initial link was by HG ID or by non-mouse marker key
-    private ModelAndView prepareHomologyClass (HomologyCluster homology) {
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("homology_detail");
-        
-	// first marker symbol (for page title)
-	String firstSymbol = null;
-
-	// SEO keywords
-	StringBuffer keywords = new StringBuffer("MGI");
-
-        // kstone - Somehow pre-looping through the markers and sequences makes the MAV do half as many queries on average.
-        // I have no idea why, but it cuts a second or two off the load time.
-        homology.getOrthologs().size();
-        for(OrganismOrtholog oo : homology.getOrthologs())
-        {
-        	oo.getMarkers().size();
-        	for(Marker m : oo.getMarkers())
-        	{
-        		m.getSequenceAssociations().size();
-			if (firstSymbol == null) {
-			    firstSymbol = m.getSymbol();
+		// kstone - Somehow pre-looping through the markers and sequences makes the MAV do half as many queries on average.
+		// I have no idea why, but it cuts a second or two off the load time.
+		homology.getOrthologs().size();
+		for(OrganismOrtholog oo : homology.getOrthologs())
+		{
+			oo.getMarkers().size();
+			for(Marker m : oo.getMarkers())
+			{
+				m.getSequenceAssociations().size();
+				if (firstSymbol == null) {
+					firstSymbol = m.getSymbol();
+				}
+				keywords.append(", ");
+				keywords.append(m.getSymbol());
 			}
-			keywords.append(", ");
-			keywords.append(m.getSymbol());
-        	}
-        }
-        
-        mav.addObject("homology", homology);
-	mav.addObject("source", homology.getSource());
-	mav.addObject("seoDescription", 
-		"View " + firstSymbol + " mouse/human homology from "
-		+ homology.getSource() + " with: genes, location, sequences, "
-		+ "associated human diseases");
-	mav.addObject("seoKeywords", keywords.toString());
+		}
 
-	if ("HGNC".equals(homology.getSource())) {
-	    mav.addObject("browserTitle", firstSymbol
-		+ " Mouse/Human Homology HGNC");
-	    mav.addObject("pageTitle", "HGNC Mouse/Human Homology");
-	} else {
-	    mav.addObject("browserTitle", firstSymbol
-		+ " Vertebrate Homology HomoloGene:"
-		+ homology.getPrimaryID());
-	    mav.addObject("pageTitle", "HomoloGene Vertebrate Homology");
-	}
-        return mav;
-    }
+		mav.addObject("homology", homology);
+		mav.addObject("source", homology.getSource());
+		mav.addObject("seoDescription", "View " + firstSymbol + " mouse/human homology from " + homology.getSource() + " with: genes, location, sequences, " + "associated human diseases");
+		mav.addObject("seoKeywords", keywords.toString());
 
-    //---------------------------------------------------------------
-    // Comparative GO Graph for a HomoloGene class (by HomoloGene ID)
-    //---------------------------------------------------------------
-    @RequestMapping(value="/GOGraph/{homologyID:.+}", method = RequestMethod.GET)
-    public ModelAndView comparativeGOGraphByID(@PathVariable("homologyID") String homologyID) {
-
-        logger.debug("->comparativeGOGraphByID started");
-
-        List<HomologyCluster> homologyList = homologyFinder.getHomologyClusterByID(homologyID);
-
-        // there can be only one...
-        if (homologyList.size() < 1) { // none found
-            return errorMav("No Homology Cluster Found");
-        } else if (homologyList.size() > 1) { // dupe found
-            return errorMav("Duplicate ID");
-        }
-        // success - we have a single object
-
-        //pull out the HomologyCluster
-        HomologyCluster homology = homologyList.get(0);
-
-	// if this HomologyCluster has no comparative GO graph, it's an error
-	if (homology.getHasComparativeGOGraph() == 0) {
-	    return errorMav("Homology Cluster has no comparative GO graph");
+		if ("HGNC".equals(homology.getSource())) {
+			mav.addObject("browserTitle", firstSymbol + " Mouse/Human Homology HGNC");
+			mav.addObject("pageTitle", "HGNC Mouse/Human Homology");
+		} else {
+			mav.addObject("browserTitle", firstSymbol + " Vertebrate Homology HomoloGene:" + homology.getPrimaryID());
+			mav.addObject("pageTitle", "HomoloGene Vertebrate Homology");
+		}
+		return mav;
 	}
 
-	String goGraphText = null;
-	try {
-	    String goGraphPath = 
-		ContextLoader.getConfigBean().getProperty("GO_GRAPHS_PATH");
+	//---------------------------------------------------------------
+	// Comparative GO Graph for a HomoloGene class (by HomoloGene ID)
+	//---------------------------------------------------------------
+	@RequestMapping(value="/GOGraph/{homologyID:.+}", method = RequestMethod.GET)
+	public ModelAndView comparativeGOGraphByID(@PathVariable("homologyID") String homologyID) {
 
-	    if (!goGraphPath.endsWith("/")) {
-		goGraphPath = goGraphPath + "/orthology/" + homologyID + ".html";
-	    } else {
-		goGraphPath = goGraphPath + "orthology/" + homologyID + ".html";
-	    }
-	    logger.debug("Reading GO Graph from: " + goGraphPath);
+		logger.debug("->comparativeGOGraphByID started");
 
-	    goGraphText = TextFileReader.readFile(goGraphPath);
+		List<HomologyCluster> homologyList = homologyFinder.getHomologyClusterByID(homologyID);
 
-	    if (goGraphText == null) {
-		    logger.debug ("GO Graph text is null");
-	    } else {
-		    logger.debug ("GO Graph text length: "
-			+ goGraphText.length());
-	    }
+		// there can be only one...
+		if (homologyList.size() < 1) { // none found
+			return errorMav("No Homology Cluster Found");
+		} else if (homologyList.size() > 1) { // dupe found
+			return errorMav("Duplicate ID");
+		}
+		// success - we have a single object
 
-	    // convert special MGI markups to their full HTML equivalents
-	    NotesTagConverter ntc = new NotesTagConverter();
-	    goGraphText = ntc.convertNotes(goGraphText, '|');
+		//pull out the HomologyCluster
+		HomologyCluster homology = homologyList.get(0);
 
-	    GOGraphConverter ggc = new GOGraphConverter();
-	    goGraphText = ggc.translateMarkups(goGraphText);
+		// if this HomologyCluster has no comparative GO graph, it's an error
+		if (homology.getHasComparativeGOGraph() == 0) {
+			return errorMav("Homology Cluster has no comparative GO graph");
+		}
 
-	} catch (IOException e) {
-	    return errorMav("Could not read comparative GO graph from file");
+		String goGraphText = null;
+		try {
+			String goGraphPath = 
+					ContextLoader.getConfigBean().getProperty("GO_GRAPHS_PATH");
+
+			if (!goGraphPath.endsWith("/")) {
+				goGraphPath = goGraphPath + "/orthology/" + homologyID + ".html";
+			} else {
+				goGraphPath = goGraphPath + "orthology/" + homologyID + ".html";
+			}
+			logger.debug("Reading GO Graph from: " + goGraphPath);
+
+			goGraphText = TextFileReader.readFile(goGraphPath);
+
+			if (goGraphText == null) {
+				logger.debug ("GO Graph text is null");
+			} else {
+				logger.debug ("GO Graph text length: " + goGraphText.length());
+			}
+
+			// convert special MGI markups to their full HTML equivalents
+			NotesTagConverter ntc = new NotesTagConverter();
+			goGraphText = ntc.convertNotes(goGraphText, '|');
+
+			GOGraphConverter ggc = new GOGraphConverter();
+			goGraphText = ggc.translateMarkups(goGraphText);
+
+		} catch (IOException e) {
+			return errorMav("Could not read comparative GO graph from file");
+		}
+
+		// determine which organisms appear in the title (mouse, human, rat)
+		StringBuffer organisms = new StringBuffer();
+
+		if (homology.getMouseMarkerCount() > 0) {
+			organisms.append("mouse");
+		}
+
+		if (homology.getHumanMarkerCount() > 0) {
+			if (organisms.length() > 0) {
+				organisms.append(", ");
+			}
+			organisms.append("human");
+		}
+
+		if (homology.getRatMarkerCount() > 0) {
+			if (organisms.length() > 0) {
+				organisms.append(", ");
+			}
+			organisms.append("rat");
+		}
+
+		// generate ModelAndView object to be passed to detail page
+		ModelAndView mav = new ModelAndView("homology_go_graph");
+		mav.addObject("homology", homology);
+		mav.addObject("goGraphText", goGraphText);
+		mav.addObject("organisms", organisms.toString());
+		mav.addObject("source", homology.getSource());
+
+		return mav;
 	}
 
-	// determine which organisms appear in the title (mouse, human, rat)
-	StringBuffer organisms = new StringBuffer();
-
-	if (homology.getMouseMarkerCount() > 0) {
-	    organisms.append("mouse");
+	// convenience method -- construct a ModelAndView for the error page and
+	// include the given 'msg' as the error String to be reported
+	private ModelAndView errorMav (String msg) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", msg);
+		return mav;
 	}
-	
-	if (homology.getHumanMarkerCount() > 0) {
-	    if (organisms.length() > 0) {
-		organisms.append(", ");
-	    }
-	    organisms.append("human");
-	}
-
-	if (homology.getRatMarkerCount() > 0) {
-	    if (organisms.length() > 0) {
-		organisms.append(", ");
-	    }
-	    organisms.append("rat");
-	}
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView("homology_go_graph");
-        mav.addObject("homology", homology);
-	mav.addObject("goGraphText", goGraphText);
-	mav.addObject("organisms", organisms.toString());
-	mav.addObject("source", homology.getSource());
-
-        return mav;
-    }
-
-    // convenience method -- construct a ModelAndView for the error page and
-    // include the given 'msg' as the error String to be reported
-    private ModelAndView errorMav (String msg) {
-	ModelAndView mav = new ModelAndView("error");
-	mav.addObject("errorMsg", msg);
-	return mav;
-    }
 }

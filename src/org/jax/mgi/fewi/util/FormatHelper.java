@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -627,6 +629,43 @@ public class FormatHelper {
 			logger.error("query encode failed",e);
 			return query;
 		}
+	}
+
+	/* look for all "\Allele(ID|symbol|)" tags in the input string and
+	 * convert them to just be their corresponding allele symbols
+	 */
+	public static String stripAlleleTags(String s) {
+		if (s == null) { return null; }
+
+		Pattern p = Pattern.compile("\\\\Allele\\([^\\|]+\\|([^\\|]+)\\|\\)");
+		String t = s.trim();
+		Matcher m = p.matcher(t);
+
+		while (m.find()) {
+			t = t.replace(m.group(0), m.group(1));
+			m = p.matcher(t);
+		}
+		return t;
+	}
+
+	/* find the length of the longest line in the input string (assumes
+	 * lines are delimited by a newline character)
+	 */
+	public static int maxWidth(String s) {
+		if (s == null) { return 0; }
+
+		int prevPos = 0;
+		int pos = s.indexOf("\n");
+		int width = 0;
+
+		while (pos >= 0) {
+			width = Math.max(width, pos - prevPos);
+			prevPos = pos;
+			pos = s.indexOf("\n", pos + 1);
+		}
+
+		width = Math.max(width, s.length() - prevPos);
+		return width;
 	}
 } // end of class FormatHelper
 

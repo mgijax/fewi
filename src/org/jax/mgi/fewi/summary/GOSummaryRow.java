@@ -7,6 +7,7 @@ import mgi.frontend.datamodel.AnnotationInferredFromID;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Term;
 
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -195,5 +196,10 @@ public class GOSummaryRow {
 		return refString;
 	}
 
-
+	/* get the GO slimgrid headers that this annotation would roll up to,
+	 * as a comma-separated string
+	 */
+	public String getHeaders() {
+		return annot.getHeaderAbbreviations();
+	}
 }

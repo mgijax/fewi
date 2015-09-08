@@ -16,7 +16,7 @@ function main() {
             width:360, 
             sortable:false},
         {key:"category", 
-            label:"Category",
+            label:"Aspect",
             width:150, 
             sortable:false},
         {key:"evidence", 

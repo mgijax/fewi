@@ -1,9 +1,14 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +32,7 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.SeqSummaryRow;
 import org.jax.mgi.fewi.util.StyleAlternator;
+import org.jax.mgi.fewi.util.BlastableSequence;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -409,10 +415,372 @@ public class SequenceController {
         return jsonResponse;
     }
 
+    /*
+     * Handles submission of sequences to (NCBI) BLAST.  This involves 
+     * receiving seqfetch-style parameters, loading Sequence objects, working
+     * through some rules to build a suitable URL to redirect us to NCBI's
+     * BLAST query form.  Added Summer 2015 in MGI 5.23 (TR11726).
+     */
+    @RequestMapping(value="/blast")
+    public ModelAndView forwardToBlast(HttpServletRequest request)
+    {
+	/* Parameters are submitted named as seq1, seq2, seq3, ... seqN.  Need
+	 * to collect the associated strings of values for each.  Each string
+	 * of values is delimited by exclamation points and includes:
+	 * 1. provider
+	 * 2. seq ID
+	 * 3. chromosome (optional)
+	 * 4. start coordinate (optional)
+	 * 5. end coord (optional)
+	 * 6. strand (optional)
+	 * 7. centimorgan offset (optional and currently unused)
+	 */
+	Map<String,String[]> parameters = request.getParameterMap();
+
+	/* maps from the index of the parameter to its corresponding BLASTable
+	 * sequence
+	 */
+	Map<String,BlastableSequence> seqs =
+	    new HashMap<String,BlastableSequence>();
+
+	// used to split the parameters into alphabetic prefix / numeric suffix
+	// pieces (eg.- seq1 --> seq + 1)
+	Pattern paramPattern = Pattern.compile("([a-zA-Z]+)([0-9]+)");
+
+	// list of errors which occurred when seeking Sequence objects
+	List<String> errors = new ArrayList<String>();
+
+	// list of integers which are (as Strings) keys of 'seqs', so we can
+	// properly order the sequences later on
+	List<Integer> integerKeys = new ArrayList<Integer>();
+
+	String blastSpec = null;	// special param for mouse-specific QF
+
+	BlastableSequence seq = null;  // the object for the current index
+	    
+	for (String key : parameters.keySet()) {
+	    /* We only support a single value for any given parameter name, so
+	     * give an error message if this one has multiple.
+	     */
+
+	    // all values for this parameter
+	    String[] values = parameters.get(key);
+
+    	    // the one (valid) value for this parameter
+	    String value = null;
+
+	    if ("seqs".equals(key)) {
+		// this parameter is allowed to have multiple values
+	    } else if (values.length > 1) {
+		errors.add("Parameter (" + key + ") has multiple values");
+	    } else if (values.length == 0) {
+		errors.add("Parameter (" + key + ") is missing a value");
+	    } else {
+		value = values[0];
+	    }
+
+	    /* We support two types of parameters:
+	     *   seq1, seq2, ... seqN -- seqfetch-style sequence descriptions
+	     *   flank1, flank2, ... flankN -- amount of flanking sequence to
+	     *   	add to each end of the sequence
+	     * Any other fields will be flagged as errant.
+	     */
+	    Matcher matcher = paramPattern.matcher(key);
+
+	    String prefix;	// the alphabetic part of the parameter name
+	    String index;	// the numeric part of the parameter name
+
+	    if (matcher.matches()) {
+		// If we've already dealt with a sequence for this index, then
+		// retrieve it.  Otherwise, instantiate one and remember it
+		// for this index.
+
+		prefix = matcher.group(1);
+		index = matcher.group(2);
+
+		if (seqs.containsKey(index)) {
+		    seq = seqs.get(index);
+		} else {
+		    seq = new BlastableSequence();
+		    seqs.put(index, seq);
+		    integerKeys.add(new Integer(index));
+		}
+
+		if ("flank".equals(prefix)) {
+		    // remember the flank amount specified for this sequence
+		    seq.setFlankAmount(value);
+
+		} else if ("seq".equals(prefix)) {
+		    if (value != null) {
+			seq.setParameters(value);
+
+			// The set of parameters must at least specify the
+			// provider and the seq ID.  If not, log the error.
+
+			String[] fields = value.split("!");
+			if (fields.length < 2) {
+			    errors.add("Invalid set of fields for " + key
+				+ ": " + value);
+			} else {
+			    // We have an ID, so try to load the Sequence
+			    // object and add it to 'seq'.
+
+			    String seqID = fields[1];
+			    seq.setSequenceID(seqID);
+
+			    Sequence seqObj = sequenceFinder.getSequenceByID(
+				seqID);
+			    if (seqObj == null) {
+				errors.add(seqID
+				    + " did not uniquely identify a sequence");
+			    } else {
+				seq.setSequence(seqObj);
+			    }
+			}
+		    }
+		} else {
+		    errors.add("Unexpected parameter: " + key);
+		}
+
+	    } else if ("blastSpec".equals(key)) {
+		// special parameter for the mouse-specific query form
+		blastSpec = value;
+
+	    } else if ("snpID".equals(key)) {
+		// special handling for flanking sequence submitted for a SNP.
+		// assumes no other sequences submitted at the same time.
+
+		if (seq == null) {
+		    seq = new BlastableSequence();
+		    seqs.put("1", seq);
+		    integerKeys.add(new Integer(1));
+		}
+		seq.setSnpID(value);
+
+	    } else if ("snpFlank".equals(key)) {
+		// special handling for flanking sequence submitted for a SNP.
+		// assumes no other sequences submitted at the same time.
+
+		if (seq == null) {
+		    seq = new BlastableSequence();
+		    seqs.put("1", seq);
+		    integerKeys.add(new Integer(1));
+		}
+		seq.setSnpFlank(value);
+
+	    } else if ("seqs".equals(key)) {
+		// special field can have multiple sequence values and to have
+		// multiple sequences in a single value, separated by "#SEP#".
+		// We assume there are no numbered seq fields at the same
+		// time.
+
+		int i = 0;
+
+		for (String seq1 : values) {
+		    for (String s : seq1.split("#SEP#")) {
+			seq = new BlastableSequence();
+			seq.setParameters(s);
+
+			String[] fields = s.split("!");
+			if (fields.length < 2) {
+			    errors.add("Invalid sequence string: " + s);
+			} else {
+			    // We have an ID, so try to load the sequence
+			    // object and add it to 'seq'.
+
+			    String seqID = fields[1];
+			    seq.setSequenceID(seqID);
+
+			    Sequence seqObj = sequenceFinder.getSequenceByID(
+				seqID);
+			    if (seqObj == null) {
+				errors.add(seqID +
+				    " did not uniquely identify a sequence");
+			    } else {
+				seq.setSequence(seqObj);
+			    }
+			}
+			i++;
+			index = i + "";
+			seqs.put(index, seq);
+		        integerKeys.add(new Integer(index));
+		    }
+		}
+
+	    } else if ("seqPullDown".equals(key)) {
+		// ignore this parameter (homology detail page)
+
+	    } else {
+		errors.add("Unexpected parameter: " + key);
+	    }
+	}
+
+	// if we had a flank1 parameter and no seq1 parameter, then we can
+	// just remove that from consideration
+	
+	if (seqs.containsKey("1")) {
+	    BlastableSequence seq1 = seqs.get("1");
+	    if ((seq1.getSeqID() == null) && (seq1.getSnpFlank() == null)) {
+		seqs.remove("1");
+		integerKeys.remove(integerKeys.indexOf(new Integer(1)));
+	    }
+	}
+
+	// put our keys in order and retrieve the FASTA format for any
+	// sequences where we need to
+
+	Collections.sort(integerKeys);
+	List<BlastableSequence> byID = new ArrayList<BlastableSequence>();
+	List<BlastableSequence> byFasta = new ArrayList<BlastableSequence>();
+
+	for (Integer index : integerKeys) {
+		seq = seqs.get(index.toString());
+
+		// Try to get the FASTA text for the sequence (which detects
+		// errors and caches the text in the object itself).  Also,
+		// add this sequence to its proper list, as we need to ensure
+		// that ID submissions occur before FASTA submissions.
+
+		if (!seq.canSubmitByID()) {
+		    String fasta = seq.getFasta();
+		    byFasta.add(seq);
+		} else {
+		    byID.add(seq);
+		}
+
+		// collect any error messages for this sequence
+
+		for (String s : seq.getErrors()) {
+		    errors.add(s);
+		}
+	} 
+
+	if (integerKeys.size() == 0) {
+	    errors.add("No sequences were selected to forward to NCBI BLAST.");
+	}
+
+	// if we encountered errors, report them
+
+	if (errors.size() > 0) {
+            ModelAndView mav = new ModelAndView("error");
+	    StringBuffer sb = new StringBuffer();
+	    sb.append("The following error(s) were found:<P><UL>");
+	    for (String e : errors) {
+		sb.append("<LI>" + e + "</LI>");
+	    }
+	    sb.append("</UL>");
+            mav.addObject("errorMsg", sb.toString());
+            return mav;
+	}
+
+	// no problems with the sequences, so pass them along to NCBI BLAST
+
+	List<BlastableSequence> sequences = new ArrayList<BlastableSequence>();
+	if (!sequences.addAll(byID)) {
+	    for (BlastableSequence s : byID) {
+		sequences.add(s);
+	    }
+	}
+	if (!sequences.addAll(byFasta)) {
+	    for (BlastableSequence s : byFasta) {
+		sequences.add(s);
+	    }
+	}
+
+        ModelAndView mav = new ModelAndView("blast_redirect");
+        mav.addObject("sequences", sequences);
+
+	addBlastParameters(sequences, blastSpec, mav);
+
+        return mav;
+    }
 
     //--------------------------------------------------------------------//
     // private methods
     //--------------------------------------------------------------------//
+
+    /* go through the 'sequences' and analyze them to determine what to set
+     * for BLAST parameters in 'mav', then do it.
+     */
+    private void addBlastParameters(List<BlastableSequence> sequences,
+	String blastSpec, ModelAndView mav) {
+
+	String pageType = "BlastSearch";	// always BlastSearch
+	String linkLoc = "blasthome";		// blasthome or blasttab
+	String program = null;			// blastp or blastn
+	String filter = null;			// R for rodent filter
+	String repeats = null;			// repeat_9989 for rodent filter
+	StringBuffer query = null;		// IDs and FASTA sequence
+
+	for (BlastableSequence seq : sequences) {
+	    String seqType = seq.getType();
+
+	    // if we find a mouse nucleotide sequence, that trumps everything
+	    // else and should set both the program and the filter info
+
+	    if ("mouse".equals(seq.getOrganism()) &&
+		("DNA".equals(seqType) || "RNA".equals(seqType) )
+		) {
+		program = "blastn";
+		filter = "R";
+		repeats = "repeat_9989";
+	    } else if (program == null) {
+
+		// otherwise, we just pick up the program from the first
+		// sequence in the bunch
+
+		// if we know it's a nucleotide sequence, then pick blastn
+
+		if ("DNA".equals(seqType) || "RNA".equals(seqType)){
+		    program = "blastn";
+
+		} else if ("Not Loaded".equals(seqType)) {
+		    // if the type is "not loaded", then we can identify
+		    // polypeptide sequences as those beginning with "NP_" or
+		    // "XP_" (both RefSeqs).  Otherwise, they're going to be
+		    // nucleotide sequences (either RefSeqs which start with
+		    // NB, XR, XM, and NM, or GenBank sequences)
+
+		    String seqID = seq.getSeqID();
+		    if (seqID == null) {
+			program = "blastn";
+		    } else if (seqID.startsWith("NP_")
+			    || seqID.startsWith("XP_") ) {
+			program = "blastp";
+		    } else {
+			program = "blastn";
+		    }
+
+		} else {
+		    // We've fallen through to this for polypeptide sequences.
+		    program = "blastp";
+		}
+	    }
+
+	    if (query != null) { query.append("\n"); }
+	    else { query = new StringBuffer(); }
+
+	    if (seq.canSubmitByID()) { query.append(seq.getSeqID()); }
+	    else if (seq.getFasta() != null ) { query.append(seq.getFasta()); }
+	}
+
+	mav.addObject("pageType", pageType);
+	mav.addObject("linkLoc", linkLoc);
+
+	// if blastSpec is not specified, we need to set the program manually
+	if (blastSpec == null) {
+	    if (program != null) { mav.addObject("program", program); }
+
+	} else {
+	    // otherwise, blastn is assumed when we go to the special mouse-
+	    // specific query form
+
+	    mav.addObject("blastSpec", blastSpec);
+	}
+	if (filter != null) { mav.addObject("filter", filter); }
+	if (repeats != null) { mav.addObject("repeats", repeats); }
+	if (query != null) { mav.addObject("query", query.toString()); }
+    }
 
     // generate the sorts
     private List<Sort> genSorts(HttpServletRequest request) {

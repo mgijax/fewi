@@ -25,7 +25,9 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.DatabaseInfo;
+import mgi.frontend.datamodel.DiseaseModel;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerAlleleAssociation;
@@ -41,6 +43,7 @@ import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.QueryFormOption;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.RelatedMarker;
+import mgi.frontend.datamodel.Sequence;
 import mgi.frontend.datamodel.SequenceSource;
 
 import org.apache.commons.lang.StringUtils;
@@ -66,14 +69,18 @@ import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
+import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
+import org.jax.org.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,30 +89,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-/*-------*/
-/* class */
-/*-------*/
-
-/*
- * This controller maps all /marker/ uri's
- */
 @Controller
 @RequestMapping(value="/marker")
 public class MarkerController {
 
-
-	//--------------------//
-	// static variables
-	//--------------------//
-
 	// maps from marker key to the URL for the minimap image
 	private static HashMap<Integer,String> minimaps =  new HashMap<Integer,String>();
 
-	//--------------------//
-	// instance variables
-	//--------------------//
-
 	private final Logger logger = LoggerFactory.getLogger(MarkerController.class);
+
+	@Autowired
+	private GXDController gxdController;
 
 	@Autowired
 	private MarkerFinder markerFinder;
@@ -135,14 +129,6 @@ public class MarkerController {
 	private String genomeBuild = null;
 	private String mpHeaders = null;
 
-	//--------------------------------------------------------------------//
-	// public methods
-	//--------------------------------------------------------------------//
-
-
-	//--------------------//
-	// Marker Query Form
-	//--------------------//
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView getQueryForm() {
 
@@ -159,10 +145,6 @@ public class MarkerController {
 		return mav;
 	}
 
-
-	//-------------------------//
-	// Marker Query Form - phenotype popup
-	//-------------------------//
 	@RequestMapping("/phenoPopup")
 	public ModelAndView phenoPopup (HttpServletRequest request) {
 		if (mpHeaders == null) {
@@ -190,27 +172,18 @@ public class MarkerController {
 		return mav;
 	}
 
-	//-------------------------//
-	// Marker Query Form Summary
-	//-------------------------//
 	@RequestMapping("/summary")
-	public ModelAndView markerSummary(HttpServletRequest request,
-			@ModelAttribute MarkerQueryForm queryForm)
-	{
+	public ModelAndView markerSummary(HttpServletRequest request, @ModelAttribute MarkerQueryForm queryForm) {
 		logger.debug("->markerSummary started");
 		logger.debug("queryString: " + request.getQueryString());
 
 		// flag any errors for start and end marker, if specified
 		String startMarker = queryForm.getStartMarker();
 		String endMarker = queryForm.getEndMarker();
-		if(notEmpty(startMarker) || notEmpty(endMarker))
-		{
-			if(!notEmpty(startMarker))
-			{
+		if(notEmpty(startMarker) || notEmpty(endMarker)) {
+			if(!notEmpty(startMarker)) {
 				return errorMav("start marker not specified");
-			}
-			else if(!notEmpty(endMarker))
-			{
+			} else if(!notEmpty(endMarker)) {
 				return errorMav("end marker not specified");
 			}
 			// query for the start and end markers to check their coordinates and chromosomes
@@ -218,12 +191,9 @@ public class MarkerController {
 			SearchParams sp = new SearchParams();
 			sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.Operator.OP_EQUAL));
 			SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
-			if(sr.getTotalCount()<1)
-			{
+			if(sr.getTotalCount()<1) {
 				return errorMav("start marker <b>"+startMarker+"</b> not found");
-			}
-			else if(sr.getTotalCount()>1)
-			{
+			} else if(sr.getTotalCount()>1) {
 				return errorMav("start marker symbol <b>"+startMarker+"</b> matches multiple markers");
 			}
 			SolrSummaryMarker startMarkerObj = sr.getResultObjects().get(0);
@@ -231,30 +201,24 @@ public class MarkerController {
 			// check that we can find the end marker
 			sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.Operator.OP_EQUAL));
 			sr = markerFinder.getSummaryMarkers(sp);
-			if(sr.getTotalCount()<1)
-			{
+			if(sr.getTotalCount()<1) {
 				return errorMav("end marker <b>"+endMarker+"</b> not found");
-			}
-			else if(sr.getTotalCount()>1)
-			{
+			} else if(sr.getTotalCount()>1) {
 				return errorMav("end marker symbol <b>"+endMarker+"</b> matches multiple markers");
 			}
 			SolrSummaryMarker endMarkerObj = sr.getResultObjects().get(0);
 
 			// check chromosome
-			if(!startMarkerObj.getChromosome().equals(endMarkerObj.getChromosome()))
-			{
+			if(!startMarkerObj.getChromosome().equals(endMarkerObj.getChromosome())) {
 				return errorMav("Marker <b>"+startMarker+"("+startMarkerObj.getChromosome()+")</b> not on same chromosome as " +
 						"<b>"+endMarker+"("+endMarkerObj.getChromosome()+")</b>");
 			}
 
 			// check that coordinate exist for both
-			if(!notEmpty(startMarkerObj.getCoordStart()) || !notEmpty(startMarkerObj.getCoordEnd()))
-			{
+			if(!notEmpty(startMarkerObj.getCoordStart()) || !notEmpty(startMarkerObj.getCoordEnd())) {
 				return errorMav("start marker <b>"+startMarker+"</b> has no coordinates");
 			}
-			if(!notEmpty(endMarkerObj.getCoordStart()) || !notEmpty(endMarkerObj.getCoordEnd()))
-			{
+			if(!notEmpty(endMarkerObj.getCoordStart()) || !notEmpty(endMarkerObj.getCoordEnd())) {
 				return errorMav("end marker <b>"+endMarker+"</b> has no coordinates");
 			}
 		}
@@ -327,9 +291,88 @@ public class MarkerController {
 		return mav;
 	}
 
-	//--------------------//
-	// Marker Detail By ID
-	//--------------------//
+	@RequestMapping(value="/phenotypes/report.xlsx", params={"markerId"})
+	public ModelAndView downloadPhenotypes(HttpServletRequest request,
+		@RequestParam("markerId") String mrkID) {
+
+		logger.debug("->downloadPhenotypes started");
+
+		// setup search parameters object
+		SearchParams searchParams = new SearchParams();
+		Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, mrkID);
+		searchParams.setFilter(markerIdFilter);
+
+		// find the requested marker
+		SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
+		List<Marker> markerList = searchResults.getResultObjects();
+
+		// there can be only one...
+		if (markerList.size() < 1) { // none found
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No Marker Found");
+			return mav;
+		}
+		if (markerList.size() > 1) { // dupe found
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Duplicate ID");
+			return mav;
+		}
+
+		ModelAndView mav = new ModelAndView("markerPhenotypesReport");
+
+		mav.addObject("marker", markerList.get(0));
+
+		String multigenic = request.getParameter("multigenic");
+		if (multigenic != null) {
+			logger.debug("multigenic = " + multigenic);
+		} else {
+			logger.debug("multigenic = null");
+		}
+		if ("1".equals(multigenic)) {
+			mav.addObject("multigenic", "1");
+			logger.debug("added multigenic param = " + multigenic);
+		}
+		return mav;
+	}
+
+	@RequestMapping(value="/phenotypes/{mrkID:[MGImgi0-9:]+}")
+	public ModelAndView tableOfPhenotypes(HttpServletRequest request,
+		@PathVariable("mrkID") String mrkID) {
+
+		logger.debug("->tableOfPhenotypes started");
+
+		// setup search parameters object
+		SearchParams searchParams = new SearchParams();
+		Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, mrkID);
+		searchParams.setFilter(markerIdFilter);
+
+		// find the requested marker
+		SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
+		List<Marker> markerList = searchResults.getResultObjects();
+
+		// there can be only one...
+		if (markerList.size() < 1) { // none found
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No Marker Found");
+			return mav;
+		}
+		if (markerList.size() > 1) { // dupe found
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Duplicate ID");
+			return mav;
+		}
+
+		ModelAndView mav = new ModelAndView("marker_phenotypes");
+
+		mav.addObject("marker", markerList.get(0));
+
+		String multigenic = request.getParameter("multigenic");
+		if ("1".equals(multigenic)) {
+			mav.addObject("multigenic", "1");
+		}
+		return mav;
+	}
+
 	@RequestMapping(value="/{markerID:.+}", method = RequestMethod.GET)
 	public ModelAndView markerDetailByID(@PathVariable("markerID") String markerID) {
 
@@ -356,7 +399,7 @@ public class MarkerController {
 			return mav;
 		}
 
-		return this.prepareMarker(markerList.get(0));
+		return prepareMarker(markerList.get(0));
 	}
 
 	/* look up a bunch of extra data and toss it in the MAV; a convenience
@@ -387,29 +430,6 @@ public class MarkerController {
 			}
 		}
 
-		// search engine optimization data
-		ArrayList<String> seoKeywords = new ArrayList<String>();
-		ArrayList<String> seoDataTypes = new ArrayList<String>();
-		StringBuffer seoDescription = new StringBuffer();
-
-		seoDescription.append("View mouse ");
-		seoDescription.append(marker.getSymbol());
-
-		seoKeywords.add("MGI");
-		seoKeywords.add(marker.getSymbol());
-		seoKeywords.add(marker.getName());
-		seoKeywords.add("mouse");
-		seoKeywords.add("mice");
-		seoKeywords.add("murine");
-		seoKeywords.add("Mus musculus");
-		seoKeywords.add(marker.getMarkerType());
-		seoKeywords.add(marker.getMarkerSubtype());
-
-		for (MarkerSynonym s : marker.getSynonyms()) {
-			seoKeywords.add(s.getSynonym());
-		}
-		seoKeywords.add(marker.getPrimaryID());
-
 		// generate ModelAndView object to be passed to detail page
 		ModelAndView mav = new ModelAndView("marker_detail");
 
@@ -417,592 +437,80 @@ public class MarkerController {
 		sessionFactory.getCurrentSession().enableFilter("markerDetailRefs");
 		sessionFactory.getCurrentSession().enableFilter("markerDetailMarkerInteractions");
 
+
+
+
+
+		// search engine optimization data
+		ArrayList<String> seoKeywords = new ArrayList<String>();
+		ArrayList<String> seoDataTypes = new ArrayList<String>();
+		StringBuffer seoDescription = new StringBuffer();
+
+		setupSEO(marker, seoKeywords, seoDataTypes, seoDescription);
+
+		setupPageVariables(mav, marker);
+
+		setupRibbon1(mav, marker);
+		setupRibbon4(mav, marker);
+		setupRibbon5(mav, marker);
+		setupDiseaseRibbon(mav, marker);
+		setupHomologyRibbons(mav, marker);
+		setupInteractinosRibbon(mav, marker);
+		setupGoClassificationsRibbon(mav, marker, seoDataTypes);
+		setupExpressionRibbon(mav, marker, seoDataTypes);
+		setupOtherDatabaseLinks(mav, marker, seoDescription);
+		setupSequencesRibbon(mav, marker);
+		setupProteinAnnotationsRibbon(mav, marker);
+		setupReferencesRibbon(mav, marker);
+
+		finalizeSEO(mav, marker, seoKeywords, seoDataTypes, seoDescription);
+
+		return mav;
+	}
+
+
+	private void setupPageVariables(ModelAndView mav, Marker marker) {
+
 		// add an IDLinker to the mav for use at the JSP level
 		mav.addObject("idLinker", idLinker);
-
-		// add a Properties object with URLs for use at the JSP level
-		Properties urls = idLinker.getUrlsAsProperties();
-		mav.addObject("urls", urls);
 
 		// add the marker to mav
 		mav.addObject("marker", marker);
 
 		dbDate(mav);
 
-		// add human homologs to model if present
-		List<OrganismOrtholog> mouseOOs = marker.getOrganismOrthologsFiltered();
-		
-		// MGI:id, Marker
-		TreeMap<String, Marker> sortedMap = new TreeMap<String, Marker>();
-
-		// Organism, Symbol Ordered, Marker
-		LinkedHashMap<String, TreeMap<String, Marker>> hcopLinks = new LinkedHashMap<String, TreeMap<String, Marker>>();
-		
-		List<HomologyCluster> homologyClusteres = new ArrayList<HomologyCluster>();
-		// TODO remove this comment
-		for(OrganismOrtholog mouseOO: mouseOOs) {
-			HomologyCluster homologyCluster = mouseOO.getHomologyCluster();
-			if (homologyCluster != null) {
-				homologyClusteres.add(homologyCluster);
-				
-				
-				// Uncomment the next few lines if they want to turn on Mouse
-//				OrganismOrtholog mouseOOtoOO = homologyCluster.getOrganismOrtholog("mouse");
-//				if(!hcopLinks.containsKey("mouse")) {
-//					hcopLinks.put("mouse", new TreeMap<String, Marker>());
-//				}
-//				if (mouseOOtoOO != null) {
-//					for(Marker hh: mouseOOtoOO.getMarkers()) {
-//
-//						hcopLinks.get("mouse").put(hh.getSymbol(), hh);
-//					}
-//				}
-				OrganismOrtholog humanOO = homologyCluster.getOrganismOrtholog("human");
-				if(!hcopLinks.containsKey("human")) {
-					hcopLinks.put("human", new TreeMap<String, Marker>());
-				}
-				if (humanOO != null) {
-					for(Marker hh : humanOO.getMarkers()) {
-						// preload these associations for better hibernate query planning
-						hh.getLocations().size();
-						hh.getAliases().size();
-						hh.getSynonyms().size();
-						hh.getBiotypeConflicts().size();
-						hh.getIds().size();
-						sortedMap.put(hh.getSymbol(), hh);
-						hcopLinks.get("human").put(hh.getSymbol(), hh);
-					}
-				}
-			}
+		List<String> memberSymbols = new ArrayList<String>();
+		for (RelatedMarker member : marker.getClusterMembers()) {
+			memberSymbols.add(member.getRelatedMarkerSymbol());
 		}
-		mav.addObject("homologyClasses", homologyClusteres);
-		mav.addObject("hcopLinks", hcopLinks);
-		
-		List<Marker> humanHomologs = new ArrayList<Marker>();
-		for(String key: sortedMap.keySet()) {
-			humanHomologs.add(sortedMap.get(key));
-		}
-		mav.addObject("humanHomologs", humanHomologs);
+		mav.addObject("memberSymbols", StringUtils.join(memberSymbols, ", "));
 
-		// add an IDLinker to the mav for use at the JSP level
-		mav.addObject("idLinker", idLinker);
+	}
 
-		// phenotypes keyword needs to come before function
-
-		if (marker.getMPAnnotations().size() > 0) {
-			seoDataTypes.add("phenotypes");
-		}
-
-		// We need to pull out the GO terms we want to use as teasers for
-		// each ontology.  (This is easier in Java than JSTL, so we do
-		// it here.)
-
-		List<mgi.frontend.datamodel.Annotation> pAnnot = this.noDuplicates(marker.getGoProcessAnnotations());
-		List<mgi.frontend.datamodel.Annotation> cAnnot = this.noDuplicates(marker.getGoComponentAnnotations());
-		List<mgi.frontend.datamodel.Annotation> fAnnot = this.noDuplicates(marker.getGoFunctionAnnotations());
-
-		boolean hasGO = false;
-
-		if (!pAnnot.isEmpty()) {
-			if (pAnnot.size() > 2) {
-				mav.addObject ("processAnnot3", pAnnot.get(2));
-			}
-			if (pAnnot.size() > 1) {
-				mav.addObject ("processAnnot2", pAnnot.get(1));
-			}
-			mav.addObject ("processAnnot1", pAnnot.get(0));
-			hasGO = true;
-		}
-
-		if (!fAnnot.isEmpty()) {
-			if (fAnnot.size() > 2) {
-				mav.addObject ("functionAnnot3", fAnnot.get(2));
-			}
-			if (fAnnot.size() > 1) {
-				mav.addObject ("functionAnnot2", fAnnot.get(1));
-			}
-			mav.addObject ("functionAnnot1", fAnnot.get(0));
-			hasGO = true;
-		}
-
-		if (!cAnnot.isEmpty()) {
-			if (cAnnot.size() > 2) {
-				mav.addObject ("componentAnnot3", cAnnot.get(2));
-			}
-			if (cAnnot.size() > 1) {
-				mav.addObject ("componentAnnot2", cAnnot.get(1));
-			}
-			mav.addObject ("componentAnnot1", cAnnot.get(0));
-			hasGO = true;
-		}
-
-		if (hasGO) {
-			seoDataTypes.add("function");
-		}
-
-		// need to pull out and re-package the expression counts for assays
-		// and results
-
-		Iterator<MarkerCountSetItem> assayIterator = marker.getGxdAssayCountsByType().iterator();
-		Iterator<MarkerCountSetItem> resultIterator = marker.getGxdResultCountsByType().iterator();
-		MarkerCountSetItem item;
-
-		ArrayList<String> gxdAssayTypes = new ArrayList<String>();
-		HashMap<String,String> gxdAssayCounts = new HashMap<String,String>();
-		HashMap<String,String> gxdResultCounts = new HashMap<String,String>();
-
-		while (assayIterator.hasNext()) {
-			item = assayIterator.next();
-			gxdAssayTypes.add(item.getCountType());
-			gxdAssayCounts.put(item.getCountType(),
-					Integer.toString(item.getCount()) );
-		}
-		while (resultIterator.hasNext()) {
-			item = resultIterator.next();
-			gxdResultCounts.put(item.getCountType(),
-					Integer.toString(item.getCount()) );
-		}
-
-		mav.addObject ("gxdAssayTypes", gxdAssayTypes);
-		mav.addObject ("gxdAssayCounts", gxdAssayCounts);
-		mav.addObject ("gxdResultCounts", gxdResultCounts);
-
-		// expression, sequences, polymorphisms, proteins, references keywords
-
-		if ((gxdAssayTypes.size() > 0) ||
-				(marker.getCountOfGxdLiterature() > 0)) {
-			seoDataTypes.add("expression");
-		}
-
-		if (marker.getCountOfSequences() > 0) {
-			seoDataTypes.add("sequences");
-		}
-
-		if (marker.getPolymorphismCountsByType().size() > 0) {
-			seoDataTypes.add("polymorphisms");
-		}
-
-		if (marker.getProteinAnnotations().size() > 0) {
-			seoDataTypes.add("proteins");
-		}
-
-		if (marker.getCountOfReferences() > 0) {
-			seoDataTypes.add("references");
-		}
-
-		// disease relevant reference count is now cached in the
-		// database, rather than being retrieved from solr
-
-		if (marker.getCountOfDiseaseRelevantReferences() > 0) {
-			mav.addObject("diseaseRefCount",
-				marker.getCountOfDiseaseRelevantReferences());
-		}
-
-		// pull out the strain/species and provider links for each
-		// representative sequence
-		mgi.frontend.datamodel.Sequence repGenomic = marker.getRepresentativeGenomicSequence();
-		if (repGenomic != null) {
-			List<SequenceSource> genomicSources = repGenomic.getSources();
-			if ((genomicSources != null) && (genomicSources.size() > 0)) {
-				mav.addObject ("genomicSource", genomicSources.get(0).getStrain());
-			}
-			mav.addObject ("genomicLink", ProviderLinker.getSeqProviderLinks(repGenomic));
-		}
-		mgi.frontend.datamodel.Sequence repTranscript = marker.getRepresentativeTranscriptSequence();
-		if (repTranscript != null) {
-			List<SequenceSource> transcriptSources = repTranscript.getSources();
-			if ((transcriptSources != null) && (transcriptSources.size() > 0)) {
-				mav.addObject ("transcriptSource", transcriptSources.get(0).getStrain());
-			}
-			mav.addObject ("transcriptLink", ProviderLinker.getSeqProviderLinks(repTranscript));
-		}
-		mgi.frontend.datamodel.Sequence repPolypeptide = marker.getRepresentativePolypeptideSequence();
-		if (repPolypeptide != null) {
-			List<SequenceSource> polypeptideSources = repPolypeptide.getSources();
-			if ((polypeptideSources != null) && (polypeptideSources.size() > 0)) {
-				mav.addObject ("polypeptideSource", polypeptideSources.get(0).getStrain());
-			}
-			mav.addObject ("polypeptideLink", ProviderLinker.getSeqProviderLinks(repPolypeptide));
-		}
-
-		ArrayList<String> qtlIDs = new ArrayList<String>();
-
-		for (MarkerID anId: marker.getIds()) {
-			if (anId.getLogicalDB().equalsIgnoreCase("Download data from the QTL Archive")) {
-				qtlIDs.add(idLinker.getLink(anId));
-			}
-		}
-		mav.addObject ("qtlIDs", qtlIDs);
-
-		// slice and dice the data for the "Other database links" section, to
-		// ease the formatting requirements that would be cumbersome in JSTL
-		ArrayList<String> logicalDBs = new ArrayList<String>();
-		HashMap<String,String> otherIDs = new HashMap<String,String>();
-
-		Iterator<MarkerID> it = marker.getOtherIDs().iterator();
-		MarkerID myID;
-		String myLink;
-		String logicaldb;
-		String otherLinks;
-		MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
-		boolean isGeneModelID = false;
+	private void setupRibbon1(ModelAndView mav, Marker marker) {
 
 		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
-		while (it.hasNext()) {
-			myID = it.next();
-			logicaldb = myID.getLogicalDB();
-			myLink = idLinker.getLink(myID);
-
-			// for gene model sequences, we need to add evidence links where possible
-			if ("VEGA Gene Model".equals(logicaldb)) {
-				myLink = myLink + " (" + FormatHelper.setNewWindow(
-						idLinker.getLink("VEGA Gene Model Evidence",
-								myID.getAccID(), "Evidence")) + ")";
-				isGeneModelID = true;
-			} else if ("Ensembl Gene Model".equals(logicaldb)) {
-				myLink = myLink + " (" + FormatHelper.setNewWindow(
-						idLinker.getLink("Ensembl Gene Model Evidence",
-								myID.getAccID(), "Evidence")) + ")";
-				isGeneModelID = true;
-			} else if ("Entrez Gene".equals(logicaldb) && (ncbiEvidenceID != null)) {
-				logger.info(ncbiEvidenceID.getAccID());
-				myLink = myLink + " (" + FormatHelper.setNewWindow(
-						idLinker.getLink("NCBI Gene Model Evidence",
-								myID.getAccID(), "Evidence").replace ("contig=",
-										"contig=" + ncbiEvidenceID.getAccID())) + ")";
-				isGeneModelID = true;
-			}
-
-			// special note about gene model IDs which overlap other markers, if needed
-			if (isGeneModelID) {
-				List<MarkerIDOtherMarker> otherMarkers = myID.getOtherMarkers();
-				MarkerIDOtherMarker otherMarker;
-
-				if ((otherMarkers != null) && (otherMarkers.size() > 0)) {
-					myLink = myLink + " (also overlaps ";
-					Iterator<MarkerIDOtherMarker> markerIterator = otherMarkers.iterator();
-					while (markerIterator.hasNext()) {
-						otherMarker = markerIterator.next();
-
-						myLink = myLink + "<a href='" + fewiUrl + "marker/"
-								+ otherMarker.getPrimaryID() + "'>"
-								+ otherMarker.getSymbol() + "</a>";
-
-						if (markerIterator.hasNext()) {
-							myLink = myLink + ", ";
-						}
-					}
-					myLink = myLink + ") ";
-				}
-			}
-
-			if (!otherIDs.containsKey(logicaldb)) {
-				logicalDBs.add(logicaldb);
-				otherIDs.put(logicaldb, myLink);
-			} else {
-				otherLinks = otherIDs.get(logicaldb);
-				otherIDs.put(logicaldb, otherLinks + ", " + myLink);
-			}
-		}
-
-		String refGenomeUrl = ContextLoader.getConfigBean().getProperty(
-				"MGIHOME_URL");
-
-		if (!refGenomeUrl.endsWith("/")) {
-			refGenomeUrl = refGenomeUrl + "/";
-		}
-		refGenomeUrl = refGenomeUrl + "GO/reference_genome_project.shtml";
-		mav.addObject ("referenceGenomeURL", refGenomeUrl);
-
-		mav.addObject ("otherIDs", otherIDs);
-		mav.addObject ("logicalDBs", logicalDBs);
-
-		// determine if we need a KOMP linkout (complex rules, so better in
-		// Java than JSTL); for a link we must have (new per TR10311):
-		// 1. has marker type of Pseudogene or Gene
-		// 2. has bp coordinates
-		// 3. has a strand
-		// 4. has at least one sequence
-
-		String markerType = marker.getMarkerType();
-		MarkerLocation location = marker.getPreferredCoordinates();
-		List<MarkerSequenceAssociation> seqs = marker.getSequenceAssociations();
-		boolean hadCoords = false;
-
-		if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
-			if ((location != null) &&
-					(location.getStartCoordinate() != null) &&
-					(location.getEndCoordinate() != null) &&
-					(location.getStrand() != null) &&
-					(seqs != null) && (seqs.size() > 0)	) {
-				mav.addObject ("needKompLink", "yes");
-				otherIDs.put("International Mouse Phenotyping Consortium Status", idLinker.getLink("KnockoutMouse", marker.getPrimaryID(), marker.getSymbol()) );
-				logicalDBs.add("International Mouse Phenotyping Consortium Status");
-				seoDescription.append(" Chr");
-				seoDescription.append(location.getChromosome());
-				seoDescription.append(":");
-				seoDescription.append(location.getStartCoordinate().longValue());
-				seoDescription.append("-");
-				seoDescription.append(location.getEndCoordinate().longValue());
-				hadCoords = true;
-			}
-		}
-
-		if (!hadCoords) {
-			if (!"UN".equals(marker.getChromosome())) {
-				seoDescription.append(" Chr");
-				seoDescription.append(marker.getChromosome());
-			}
-		}
-
-		// links to genome browsers (complex rules so put them here and
-		// keep the JSP simple)
-
-		// new simpler rules as of C4AM (coordinates for any marker) project:
-		// 1. Any marker with coordinates gets links to all five genome
-		//    browsers (VEGA, Ensembl, NCBI, UCSC, GBrowse).  No more
-		//    restrictions by marker type.
-		// 2. If a marker has multiple IDs, use the first one returned to make
-		//    the link.
-		// 3. External links go to build 38 (GRCm38) data.
-		// 4. For VEGA or Ensembl, use either a VEGA ID or coordinates -- or
-		//    both if both are available.
-		// 5. NCBI's map viewer needs to use two different URLs for cases
-		//    where:
-		//	a. there are coordinates and marker is not a dna segment, or
-		//	b. there are coordinates and marker is a dna segment.
-		// 6. If a marker has coordinates, both link to GBrowse and show a
-		//    thumbnail image from GBrowse.
-		// 7. The UCSC genome browser (when the marker has coordinates)
-
-		String vegaGenomeBrowserUrl = null;
-		String ensemblGenomeBrowserUrl = null;
-		String ucscGenomeBrowserUrl = null;
-		String ncbiMapViewerUrl = null;
-		String gbrowseUrl = null;
-		String jbrowseUrl = null;
-		String gbrowseThumbnailUrl = null;
-
-		boolean isDnaSegment = "DNA Segment".equals(markerType);
-
-		String startCoordinate = null;
-		String endCoordinate = null;
-		String chromosome = null;
-		String vegaEnsemblLocation = null;
-
-		MarkerLocation coords = marker.getPreferredCoordinates();
-		if (coords != null) {
-			startCoordinate = Long.toString(coords.getStartCoordinate().longValue());
-			endCoordinate = Long.toString(coords.getEndCoordinate().longValue());
-			chromosome = coords.getChromosome();
-			vegaEnsemblLocation = chromosome + ":" + startCoordinate + "-" + endCoordinate;
-		}
-
-		Properties externalUrls = ContextLoader.getExternalUrls();
-
-		// VEGA Genome Browser
-		if (vegaEnsemblLocation != null) {
-			vegaGenomeBrowserUrl = externalUrls.getProperty (
-					"VEGA_Genome_Browser");
-
-			MarkerID vegaID = marker.getVegaGeneModelID();
-
-			// plug in VEGA ID, if available
-			if (vegaID != null) {
-				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace (
-						"<id>", vegaID.getAccID());
-			} else {
-				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace (
-						"g=<id>", "");
-				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace (
-						";", "");
-			}
-
-			// plug in coordinates, if available
-			vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace (
-					"<location>", vegaEnsemblLocation);
-		}
-
-		// Ensembl Genome Browser
-		if (vegaEnsemblLocation != null) {
-			ensemblGenomeBrowserUrl = externalUrls.getProperty (
-					"Ensembl_Genome_Browser");
-
-			MarkerID ensemblGmID = marker.getEnsemblGeneModelID();
-
-			// plug in Ensembl gene model ID, if available
-			if (ensemblGmID != null) {
-				ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace (
-						"<id>", ensemblGmID.getAccID());
-			} else {
-				ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace (
-						"g=<id>", "");
-				ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace (
-						";", "");
-			}
-
-			// plug in coordinates, if available
-			ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace (
-					"<location>", vegaEnsemblLocation);
-		}
-
-		// NCBI Map Viewer (2 separate URLs -- see notes above)
-		if ((coords != null) && !isDnaSegment) {
-			ncbiMapViewerUrl = externalUrls.getProperty (
-					"NCBI_Map_Viewer_by_Coordinates");
-			ncbiMapViewerUrl = ncbiMapViewerUrl.replace (
-					"<chromosome>", chromosome).replace (
-							"<start>", startCoordinate).replace (
-									"<end>", endCoordinate);
-
-		} else if ((coords != null) && isDnaSegment) {
-			ncbiMapViewerUrl = externalUrls.getProperty (
-					"NCBI_Map_Viewer_by_Coordinates_DNA_Segment");
-			ncbiMapViewerUrl = ncbiMapViewerUrl.replace (
-					"<chromosome>", chromosome).replace (
-							"<start>", startCoordinate).replace (
-									"<end>", endCoordinate);
-		}
-
-		// GBrowse
-		if (coords != null) {
-
-			gbrowseUrl = externalUrls.getProperty("GBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
-
-			jbrowseUrl = externalUrls.getProperty("JBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
-
-			gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
-
-			// add tracks for special marker "types"
-			if(marker.getIsSTS())
-			{
-				jbrowseUrl = jbrowseUrl + ",STS";
-				gbrowseUrl = gbrowseUrl.replace("label=","label=STS-");
-				gbrowseThumbnailUrl = gbrowseThumbnailUrl.replace("t=","t=STS;t=");
-			}
-		}
-
-		// UCSC Genome Browser
-		if (coords != null) {
-			ucscGenomeBrowserUrl = externalUrls.getProperty("UCSC_Genome_Browser").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
-		}
-
-		// whichever genome browser URLs we found, fill them in the mav
-
-		if (vegaGenomeBrowserUrl != null) {
-			mav.addObject ("vegaGenomeBrowserUrl", vegaGenomeBrowserUrl);
-		}
-		if (ensemblGenomeBrowserUrl != null) {
-			mav.addObject ("ensemblGenomeBrowserUrl", ensemblGenomeBrowserUrl);
-		}
-		if (ucscGenomeBrowserUrl != null) {
-			mav.addObject ("ucscGenomeBrowserUrl", ucscGenomeBrowserUrl);
-		}
-		if (ncbiMapViewerUrl != null) {
-			mav.addObject ("ncbiMapViewerUrl", ncbiMapViewerUrl);
-		}
-		if (jbrowseUrl != null) {
-			mav.addObject ("jbrowseUrl", jbrowseUrl);
-		}
-		if (gbrowseUrl != null) {
-			mav.addObject ("gbrowseUrl", gbrowseUrl);
-		}
-		if (gbrowseThumbnailUrl != null) {
-			mav.addObject ("gbrowseThumbnailUrl", gbrowseThumbnailUrl);
-		}
-
-		// add data for biotype conflicts
+		// Ribbon 1
+		mav.addObject("hasClusters", marker.getClusters().size() > 0);
+		mav.addObject("hasClusterMembers", marker.getClusterMembers().size() > 0);
 
 		List<MarkerBiotypeConflict> conflicts = marker.getBiotypeConflicts();
 		if ((conflicts != null) && (conflicts.size() > 0)) {
 			StringBuffer conflictTable = new StringBuffer();
 			conflictTable.append ("<table class=bioMismatch>");
 			conflictTable.append ("<tr class=header><td>Source</td><td>BioType</td><td>Gene ID</td></tr>");
-			conflictTable.append ("<tr><td>MGI</td><td>" + marker.getMarkerSubtype() + "</td><td>"
-					+ "<a href=" + fewiUrl + "marker/" + marker.getPrimaryID() + ">" + marker.getPrimaryID() + "</a></td></tr>");
+			conflictTable.append ("<tr><td>MGI</td><td>" + marker.getMarkerSubtype() + "</td><td><a href=" + fewiUrl + "marker/" + marker.getPrimaryID() + ">" + marker.getPrimaryID() + "</a></td></tr>");
 			for (MarkerBiotypeConflict conflict : conflicts) {
-				conflictTable.append ("<tr>");
-				conflictTable.append ("<td>" + conflict.getLogicalDB() + "</td>");
-				conflictTable.append ("<td>" + conflict.getBiotype() + "</td>");
-				conflictTable.append ("<td>" + idLinker.getLink(conflict.getLogicalDB(), conflict.getAccID()).replaceAll("'", "") + "</td>");
-				conflictTable.append ("</tr>");
+				conflictTable.append("<tr>");
+				conflictTable.append("<td>" + conflict.getLogicalDB() + "</td>");
+				conflictTable.append("<td>" + conflict.getBiotype() + "</td>");
+				conflictTable.append("<td>" + idLinker.getLink(conflict.getLogicalDB(), conflict.getAccID()).replaceAll("'", "") + "</td>");
+				conflictTable.append("</tr>");
 			}
 			conflictTable.append ("</table>");
 			mav.addObject ("biotypeConflictTable", conflictTable.toString());
 		}
-
-		// add regulation data (compose these as individual rows here, rather
-		// than in the JSP due to complexity of mapping RV terms currently)
-
-		ArrayList<String> interactions = new ArrayList<String>();
-		FewiLinker linker = FewiLinker.getInstance();
-
-		MarkerCountSetItem countItem;
-		Iterator<MarkerCountSetItem> interactionIterator = 
-				marker.getInteractionCountsByType().iterator();
-
-		while (interactionIterator.hasNext()) {
-			countItem = interactionIterator.next();
-
-			String countType = countItem.getCountType();
-			int count = countItem.getCount();
-
-			StringBuffer sb = new StringBuffer();
-
-			sb.append(marker.getSymbol());
-			sb.append(" ");
-			sb.append(countType);
-			sb.append(" ");
-			sb.append(count);
-			sb.append(" marker");
-			if (count > 1) {
-				sb.append("s");
-			}
-
-			Iterator<Marker> teaserIt = 
-					marker.getInteractionTeaserMarkers().iterator();
-
-			if (teaserIt != null) {
-				sb.append(" (");
-
-				Marker rm;
-				while (teaserIt.hasNext()) {
-					rm = teaserIt.next();
-
-					sb.append("<a href='");
-					sb.append(linker.getFewiIDLink(ObjectTypes.MARKER, 
-							rm.getPrimaryID() ));
-					sb.append("'>");
-					sb.append(rm.getSymbol());
-					sb.append("</a>");
-
-					if (teaserIt.hasNext()) {
-						sb.append(", ");
-					}
-
-				}
-
-				if (count > 3) {
-					sb.append(", ...");
-				}
-				sb.append(")");
-			}
-			interactions.add(sb.toString());
-		}
-
-		/* Logical values for cluster members section */
-		mav.addObject("interactions", interactions);
-		mav.addObject("memberCount", marker.getClusterMembers().size());
-		mav.addObject("hasClusters", marker.getClusters().size() > 0);
-		mav.addObject("hasClusterMembers", marker.getClusterMembers().size() > 0);
-		List<String> memberSymbols = new ArrayList<String>();
-		for (RelatedMarker member : marker.getClusterMembers())
-		{
-			memberSymbols.add(member.getRelatedMarkerSymbol());
-		}
-		mav.addObject("memberSymbols", StringUtils.join(memberSymbols, ", "));
-
 
 		/* add data for strain-specific markers */
 		String ssNote = marker.getStrainSpecificNote();
@@ -1010,19 +518,23 @@ public class MarkerController {
 			List<Reference> ssRefs = marker.getStrainSpecificReferences();
 			boolean isFirst = true;
 
-			if ((ssRefs != null) && (ssRefs.size() > 0)) {
+			if((ssRefs != null) && (ssRefs.size() > 0)) {
 				ssNote = ssNote + "(";
-				for (Reference ref : ssRefs) {
-					if (!isFirst) { ssNote = ssNote + ", "; }
+				for(Reference ref : ssRefs) {
+					if(!isFirst) { ssNote = ssNote + ", "; }
 					else { isFirst = false; }
 
-					ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_new>"
-							+ ref.getJnumID() + "</a>";
+					ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_new>" + ref.getJnumID() + "</a>";
 				}
 				ssNote = ssNote + ")";
 			}
 			mav.addObject ("strainSpecificNote", ssNote);
 		}
+
+		mav.addObject("memberCount", marker.getClusterMembers().size());
+	}
+
+	private void setupRibbon4(ModelAndView mav, Marker marker) {
 
 		// if we have not yet looked up the full suite of marker minimaps that
 		// have already been generated, then do so
@@ -1068,6 +580,650 @@ public class MarkerController {
 			}
 		}
 
+		if (minimapUrl != null) {
+			mav.addObject ("miniMap", minimapUrl);
+		}
+
+		ArrayList<String> qtlIDs = new ArrayList<String>();
+
+		for (MarkerID anId: marker.getIds()) {
+			if (anId.getLogicalDB().equalsIgnoreCase("Download data from the QTL Archive")) {
+				qtlIDs.add(idLinker.getLink(anId));
+			}
+		}
+		mav.addObject ("qtlIDs", qtlIDs);
+
+	}
+
+	private void setupRibbon5(ModelAndView mav, Marker marker) {
+
+		Properties externalUrls = ContextLoader.getExternalUrls();
+
+		String startCoordinate = null;
+		String endCoordinate = null;
+		String chromosome = null;
+
+		String vegaEnsemblLocation = null;
+		MarkerLocation coords = marker.getPreferredCoordinates();
+		if (coords != null) {
+			startCoordinate = Long.toString(coords.getStartCoordinate().longValue());
+			endCoordinate = Long.toString(coords.getEndCoordinate().longValue());
+			chromosome = coords.getChromosome();
+			vegaEnsemblLocation = chromosome + ":" + startCoordinate + "-" + endCoordinate;
+		}
+
+		// VEGA Genome Browser
+		String vegaGenomeBrowserUrl = null;
+		if (vegaEnsemblLocation != null) {
+			vegaGenomeBrowserUrl = externalUrls.getProperty("VEGA_Genome_Browser");
+
+			MarkerID vegaID = marker.getVegaGeneModelID();
+
+			// plug in VEGA ID, if available
+			if (vegaID != null) {
+				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace("<id>", vegaID.getAccID());
+			} else {
+				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace("g=<id>", "");
+				vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace(";", "");
+			}
+
+			// plug in coordinates, if available
+			vegaGenomeBrowserUrl = vegaGenomeBrowserUrl.replace("<location>", vegaEnsemblLocation);
+		}
+		if (vegaGenomeBrowserUrl != null) {
+			mav.addObject ("vegaGenomeBrowserUrl", vegaGenomeBrowserUrl);
+		}
+
+		String ensemblGenomeBrowserUrl = null;
+		// Ensembl Genome Browser
+		if (vegaEnsemblLocation != null) {
+			ensemblGenomeBrowserUrl = externalUrls.getProperty("Ensembl_Genome_Browser");
+
+			MarkerID ensemblGmID = marker.getEnsemblGeneModelID();
+
+			// plug in Ensembl gene model ID, if available
+			if (ensemblGmID != null) {
+				ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace("<id>", ensemblGmID.getAccID());
+			} else {
+				ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace("g=<id>", "");
+				ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace(";", "");
+			}
+
+			// plug in coordinates, if available
+			ensemblGenomeBrowserUrl = ensemblGenomeBrowserUrl.replace("<location>", vegaEnsemblLocation);
+		}
+		if (ensemblGenomeBrowserUrl != null) {
+			mav.addObject ("ensemblGenomeBrowserUrl", ensemblGenomeBrowserUrl);
+		}
+
+		String ucscGenomeBrowserUrl = null;
+		if (coords != null) {
+			ucscGenomeBrowserUrl = externalUrls.getProperty("UCSC_Genome_Browser").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+		}
+		if (ucscGenomeBrowserUrl != null) {
+			mav.addObject ("ucscGenomeBrowserUrl", ucscGenomeBrowserUrl);
+		}
+
+		String gbrowseUrl = null;
+		String jbrowseUrl = null;
+		String gbrowseThumbnailUrl = null;
+		if (coords != null) {
+
+			gbrowseUrl = externalUrls.getProperty("GBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+
+			jbrowseUrl = externalUrls.getProperty("JBrowse").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+
+			gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+
+			// add tracks for special marker "types"
+			if(marker.getIsSTS()) {
+				jbrowseUrl = jbrowseUrl + ",STS";
+				gbrowseUrl = gbrowseUrl.replace("label=","label=STS-");
+				gbrowseThumbnailUrl = gbrowseThumbnailUrl.replace("t=","t=STS;t=");
+			}
+		}
+		if (gbrowseUrl != null) {
+			mav.addObject ("gbrowseUrl", gbrowseUrl);
+		}
+		if (jbrowseUrl != null) {
+			mav.addObject ("jbrowseUrl", jbrowseUrl);
+		}
+		if (gbrowseThumbnailUrl != null) {
+			mav.addObject ("gbrowseThumbnailUrl", gbrowseThumbnailUrl);
+		}
+
+		boolean isDnaSegment = "DNA Segment".equals(marker.getMarkerType());
+		String ncbiMapViewerUrl = null;
+		// NCBI Map Viewer (2 separate URLs -- see notes above)
+		if ((coords != null) && !isDnaSegment) {
+			ncbiMapViewerUrl = externalUrls.getProperty("NCBI_Map_Viewer_by_Coordinates");
+			ncbiMapViewerUrl = ncbiMapViewerUrl.replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+		} else if ((coords != null) && isDnaSegment) {
+			ncbiMapViewerUrl = externalUrls.getProperty("NCBI_Map_Viewer_by_Coordinates_DNA_Segment");
+			ncbiMapViewerUrl = ncbiMapViewerUrl.replace("<chromosome>", chromosome).replace("<start>", startCoordinate).replace("<end>", endCoordinate);
+		}
+		if (ncbiMapViewerUrl != null) {
+			mav.addObject ("ncbiMapViewerUrl", ncbiMapViewerUrl);
+		}
+	}
+
+	private void setupHomologyRibbons(ModelAndView mav, Marker marker) {
+		// links to genome browsers (complex rules so put them here and
+		// keep the JSP simple)
+
+		// new simpler rules as of C4AM (coordinates for any marker) project:
+		// 1. Any marker with coordinates gets links to all five genome
+		//    browsers (VEGA, Ensembl, NCBI, UCSC, GBrowse).  No more
+		//    restrictions by marker type.
+		// 2. If a marker has multiple IDs, use the first one returned to make
+		//    the link.
+		// 3. External links go to build 38 (GRCm38) data.
+		// 4. For VEGA or Ensembl, use either a VEGA ID or coordinates -- or
+		//    both if both are available.
+		// 5. NCBI's map viewer needs to use two different URLs for cases
+		//    where:
+		//	a. there are coordinates and marker is not a dna segment, or
+		//	b. there are coordinates and marker is a dna segment.
+		// 6. If a marker has coordinates, both link to GBrowse and show a
+		//    thumbnail image from GBrowse.
+		// 7. The UCSC genome browser (when the marker has coordinates)
+
+
+		// add human homologs to model if present
+		List<OrganismOrtholog> mouseOOs = marker.getOrganismOrthologsFiltered();
+
+		TreeMap<String, Marker> sortedMap = new TreeMap<String, Marker>();
+
+		// Organism, Symbol Ordered, Marker
+		LinkedHashMap<String, TreeMap<String, Marker>> hcopLinks = new LinkedHashMap<String, TreeMap<String, Marker>>();
+
+		List<HomologyCluster> homologyClusteres = new ArrayList<HomologyCluster>();
+
+		for(OrganismOrtholog mouseOO: mouseOOs) {
+			HomologyCluster homologyCluster = mouseOO.getHomologyCluster();
+			if (homologyCluster != null) {
+				homologyClusteres.add(homologyCluster);
+
+//				 				Uncomment the next few lines if they want to turn on Mouse
+//								OrganismOrtholog mouseOOtoOO = homologyCluster.getOrganismOrtholog("mouse");
+//
+//								if (mouseOOtoOO != null) {
+//									for(Marker hh: mouseOOtoOO.getMarkers()) {
+//										if(!hcopLinks.containsKey("mouse")) {
+//											hcopLinks.put("mouse", new TreeMap<String, Marker>());
+//										}
+//										hcopLinks.get("mouse").put(hh.getSymbol(), hh);
+//									}
+//								}
+				OrganismOrtholog humanOO = homologyCluster.getOrganismOrtholog("human");
+				
+				if (humanOO != null) {
+					for(Marker hh : humanOO.getMarkers()) {
+						// preload these associations for better hibernate query planning
+						hh.getLocations().size();
+						hh.getAliases().size();
+						hh.getSynonyms().size();
+						hh.getBiotypeConflicts().size();
+						hh.getIds().size();
+						sortedMap.put(hh.getSymbol(), hh);
+						if(!hcopLinks.containsKey("human")) {
+							hcopLinks.put("human", new TreeMap<String, Marker>());
+						}
+						hcopLinks.get("human").put(hh.getSymbol(), hh);
+					}
+				}
+			}
+		}
+		mav.addObject("homologyClasses", homologyClusteres);
+		mav.addObject("hcopLinks", hcopLinks);
+
+		List<Marker> humanHomologs = new ArrayList<Marker>();
+		for(String key: sortedMap.keySet()) {
+			humanHomologs.add(sortedMap.get(key));
+		}
+		mav.addObject("humanHomologs", humanHomologs);
+	}
+	
+	// TODO remove this comment
+	private void setupDiseaseRibbon(ModelAndView mav, Marker marker) {
+		
+		// DiseaseTerm -> DiseaseTermId
+		TreeMap<String, String> sortedDiseaseMapByTerm = new TreeMap<String, String>();
+		// DiseaseId -> Annotation
+		HashMap<String, Annotation> MouseOMIMAnnotations = new HashMap<String, Annotation>();
+		for(Annotation a: marker.getOMIMAnnotations()) {
+			sortedDiseaseMapByTerm.put(a.getTerm(), a.getTermID());
+			MouseOMIMAnnotations.put(a.getTermID(), a);
+		}
+
+		// Symbol -> {DiseaseId -> Annoation}
+		HashMap<String, HashMap<String, Annotation>> humanAnnotations = marker.getHumanHomologOMIMAnnotations();
+		// DiseaseId -> Annoation
+		HashMap<String, Annotation> HumanOMIMAnnotations = new HashMap<String, Annotation>();
+		// Symbol -> Symbol (sorted)
+		TreeMap<String, String> sortedAllHumanMarkers = new TreeMap<String, String>();
+		for(String symbol: humanAnnotations.keySet()) {
+			for(String annotId: humanAnnotations.get(symbol).keySet()) {
+				String term = humanAnnotations.get(symbol).get(annotId).getTerm();
+				sortedDiseaseMapByTerm.put(term, annotId);
+				HumanOMIMAnnotations.put(annotId, humanAnnotations.get(symbol).get(annotId));
+			}
+			sortedAllHumanMarkers.put(symbol, symbol);
+		}
+		
+
+		// Sort Mouse first then both then Human
+		ArrayList<String> mouse = new ArrayList<String>();
+		ArrayList<String> both = new ArrayList<String>();
+		ArrayList<String> human = new ArrayList<String>();
+		
+		int mouseDiseaseCount = 0;
+		int bothDiseaseCount = 0;
+		int humanDiseaseCount = 0;
+		
+		for(String diseaseTerm: sortedDiseaseMapByTerm.keySet()) {
+			String diseaseId = sortedDiseaseMapByTerm.get(diseaseTerm);
+			if(MouseOMIMAnnotations.containsKey(diseaseId) && HumanOMIMAnnotations.containsKey(diseaseId)) {
+				both.add(diseaseTerm);
+				bothDiseaseCount++;
+			} else if(MouseOMIMAnnotations.containsKey(diseaseId)) {
+				mouse.add(diseaseTerm);
+				mouseDiseaseCount++;
+			} else if(HumanOMIMAnnotations.containsKey(diseaseId)) {
+				human.add(diseaseTerm);
+				humanDiseaseCount++;
+			}
+		}
+		
+		// Condordance
+		ArrayList<String> sortedCondordanceMouseBothHuman = new ArrayList<String>();
+		sortedCondordanceMouseBothHuman.addAll(both);
+		sortedCondordanceMouseBothHuman.addAll(mouse);
+		sortedCondordanceMouseBothHuman.addAll(human);
+		
+		// List[ Column -> Data ]
+		ArrayList<HashMap<String, String>> rowMap = new ArrayList<HashMap<String,String>>();
+	
+		int mouseCount = 0;
+		int bothCount = 0;
+		int humanCount = 0;
+		
+		for(String diseaseTerm: sortedCondordanceMouseBothHuman) {
+			HashMap<String, String> row = new HashMap<String, String>();
+			String diseaseId = sortedDiseaseMapByTerm.get(diseaseTerm);
+			
+			if(MouseOMIMAnnotations.containsKey(diseaseId) && HumanOMIMAnnotations.containsKey(diseaseId)) {
+				row.put("type", "both");
+				if(bothCount == 0) {
+					row.put("headerRow", bothDiseaseCount + "");
+					bothCount++;
+				}
+			} else if(MouseOMIMAnnotations.containsKey(diseaseId)) {
+				row.put("type", "mouse");
+				if(mouseCount == 0) {
+					row.put("headerRow", mouseDiseaseCount + "");
+					mouseCount++;
+				}
+			} else if(HumanOMIMAnnotations.containsKey(diseaseId)) {
+				row.put("type", "human");
+				if(humanCount == 0) {
+					row.put("headerRow", humanDiseaseCount + "");
+					humanCount++;
+				}
+			}
+			
+			row.put("diseaseId", diseaseId);
+			row.put("diseaseTerm", diseaseTerm);
+			
+			rowMap.add(row);
+		}
+		
+
+
+		// Disease ID -> List<GenotypeId>
+		HashMap<String, ArrayList<DiseaseModel>> modelsMap = marker.getMouseModelsMap();
+		HashMap<String, ArrayList<DiseaseModel>> notModelsMap = marker.getNotMouseModelsMap();
+		mav.addObject("MouseModels", modelsMap);
+		mav.addObject("NotMouseModels", notModelsMap);
+		mav.addObject("AllHumanSymbols", StringUtils.join(sortedAllHumanMarkers.keySet(), ","));
+		mav.addObject("MouseOMIMAnnotations", MouseOMIMAnnotations);
+		mav.addObject("HumanOMIMAnnotations", HumanOMIMAnnotations);
+		mav.addObject("DiseaseRows", rowMap);
+		
+		// Formaters for Super scripts
+		mav.addObject("tf", new TextFormat());
+		mav.addObject("ntc", new NotesTagConverter());
+		
+	}
+	
+	
+	
+	
+	
+	
+
+	private void setupInteractinosRibbon(ModelAndView mav, Marker marker) {
+		// add regulation data (compose these as individual rows here, rather
+		// than in the JSP due to complexity of mapping RV terms currently)
+
+		ArrayList<String> interactions = new ArrayList<String>();
+		FewiLinker linker = FewiLinker.getInstance();
+
+		MarkerCountSetItem countItem;
+		Iterator<MarkerCountSetItem> interactionIterator = marker.getInteractionCountsByType().iterator();
+
+		while (interactionIterator.hasNext()) {
+			countItem = interactionIterator.next();
+
+			String countType = countItem.getCountType();
+			int count = countItem.getCount();
+
+			StringBuffer sb = new StringBuffer();
+
+			sb.append(marker.getSymbol());
+			sb.append(" ");
+			sb.append(countType);
+			sb.append(" ");
+			sb.append(count);
+			sb.append(" marker");
+			if (count > 1) {
+				sb.append("s");
+			}
+
+			Iterator<Marker> teaserIt = marker.getInteractionTeaserMarkers().iterator();
+
+			if(teaserIt != null) {
+				sb.append(" (");
+
+				Marker rm;
+				while (teaserIt.hasNext()) {
+					rm = teaserIt.next();
+
+					sb.append("<a href='");
+					sb.append(linker.getFewiIDLink(ObjectTypes.MARKER, rm.getPrimaryID() ));
+					sb.append("'>");
+					sb.append(rm.getSymbol());
+					sb.append("</a>");
+
+					if (teaserIt.hasNext()) {
+						sb.append(", ");
+					}
+
+				}
+
+				if (count > 3) {
+					sb.append(", ...");
+				}
+				sb.append(")");
+			}
+			interactions.add(sb.toString());
+		}
+
+		/* Logical values for cluster members section */
+		mav.addObject("interactions", interactions);
+
+	}
+
+	/* For the GO ribbon, we need to update the SEO data types and to add
+	 * the reference genome project URL.
+	 */
+	private void setupGoClassificationsRibbon(ModelAndView mav, Marker marker, ArrayList<String> seoDataTypes) {
+
+		if (!(marker.getGoProcessAnnotations().isEmpty()
+			&& marker.getGoComponentAnnotations().isEmpty()
+			&& marker.getGoFunctionAnnotations().isEmpty() ) ) {
+				seoDataTypes.add("function");
+		}
+
+		String refGenomeUrl = ContextLoader.getConfigBean().getProperty("MGIHOME_URL");
+
+		if (!refGenomeUrl.endsWith("/")) {
+			refGenomeUrl = refGenomeUrl + "/";
+		}
+		refGenomeUrl = refGenomeUrl + "GO/reference_genome_project.shtml";
+		mav.addObject ("referenceGenomeURL", refGenomeUrl);
+
+	}
+
+	private void setupExpressionRibbon(ModelAndView mav, Marker marker, ArrayList<String> seoDataTypes) {
+
+		// need to pull out and re-package the expression counts for assays
+		// and results
+
+		Iterator<MarkerCountSetItem> assayIterator = marker.getGxdAssayCountsByType().iterator();
+		Iterator<MarkerCountSetItem> resultIterator = marker.getGxdResultCountsByType().iterator();
+		MarkerCountSetItem item;
+
+		ArrayList<String> gxdAssayTypes = new ArrayList<String>();
+		HashMap<String,String> gxdAssayCounts = new HashMap<String,String>();
+		HashMap<String,String> gxdResultCounts = new HashMap<String,String>();
+
+		while (assayIterator.hasNext()) {
+			item = assayIterator.next();
+			gxdAssayTypes.add(item.getCountType());
+			gxdAssayCounts.put(item.getCountType(), Integer.toString(item.getCount()));
+		}
+		while (resultIterator.hasNext()) {
+			item = resultIterator.next();
+			gxdResultCounts.put(item.getCountType(), Integer.toString(item.getCount()));
+		}
+
+		mav.addObject ("gxdAssayTypes", gxdAssayTypes);
+		mav.addObject ("gxdAssayCounts", gxdAssayCounts);
+		mav.addObject ("gxdResultCounts", gxdResultCounts);
+
+		// expression, sequences, polymorphisms, proteins, references keywords
+
+		if ((gxdAssayTypes.size() > 0) || (marker.getCountOfGxdLiterature() > 0)) {
+			seoDataTypes.add("expression");
+		}
+
+		// get the expression teaser image, if there is one
+		if (marker.getCountOfGxdImages() > 0) {
+		    GxdImageSummaryRow gxdImage = gxdController.getMarkerDetailTeaserImage(marker);
+		    if (gxdImage != null) {
+			mav.addObject("gxdImage", gxdImage.getImage());
+		    }
+		} 
+	}
+
+	private void setupOtherDatabaseLinks(ModelAndView mav, Marker marker, StringBuffer seoDescription) {
+
+		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+		// slice and dice the data for the "Other database links" section, to
+		// ease the formatting requirements that would be cumbersome in JSTL
+		ArrayList<String> logicalDBs = new ArrayList<String>();
+		HashMap<String,String> otherIDs = new HashMap<String,String>();
+
+		Iterator<MarkerID> it = marker.getOtherIDs().iterator();
+		MarkerID myID;
+		String myLink;
+		String logicaldb;
+		String otherLinks;
+		MarkerID ncbiEvidenceID = marker.getSingleID("NCBI Gene Model Evidence");
+		boolean isGeneModelID = false;
+
+		while (it.hasNext()) {
+			myID = it.next();
+			logicaldb = myID.getLogicalDB();
+			myLink = idLinker.getLink(myID);
+
+			// for gene model sequences, we need to add evidence links where possible
+			if ("VEGA Gene Model".equals(logicaldb)) {
+				myLink = myLink + " (" + FormatHelper.setNewWindow(idLinker.getLink("VEGA Gene Model Evidence", myID.getAccID(), "Evidence")) + ")";
+				isGeneModelID = true;
+			} else if ("Ensembl Gene Model".equals(logicaldb)) {
+				myLink = myLink + " (" + FormatHelper.setNewWindow(idLinker.getLink("Ensembl Gene Model Evidence", myID.getAccID(), "Evidence")) + ")";
+				isGeneModelID = true;
+			} else if ("Entrez Gene".equals(logicaldb) && (ncbiEvidenceID != null)) {
+				logger.info(ncbiEvidenceID.getAccID());
+				myLink = myLink + " (" + FormatHelper.setNewWindow(idLinker.getLink("NCBI Gene Model Evidence", myID.getAccID(), "Evidence").replace ("contig=", "contig=" + ncbiEvidenceID.getAccID())) + ")";
+				isGeneModelID = true;
+			}
+
+			// special note about gene model IDs which overlap other markers, if needed
+			if (isGeneModelID) {
+				List<MarkerIDOtherMarker> otherMarkers = myID.getOtherMarkers();
+				MarkerIDOtherMarker otherMarker;
+
+				if ((otherMarkers != null) && (otherMarkers.size() > 0)) {
+					myLink = myLink + " (also overlaps ";
+					Iterator<MarkerIDOtherMarker> markerIterator = otherMarkers.iterator();
+					while (markerIterator.hasNext()) {
+						otherMarker = markerIterator.next();
+
+						myLink = myLink + "<a href='" + fewiUrl + "marker/" + otherMarker.getPrimaryID() + "'>" + otherMarker.getSymbol() + "</a>";
+
+						if (markerIterator.hasNext()) {
+							myLink = myLink + ", ";
+						}
+					}
+					myLink = myLink + ") ";
+				}
+			}
+
+			if (!otherIDs.containsKey(logicaldb)) {
+				logicalDBs.add(logicaldb);
+				otherIDs.put(logicaldb, myLink);
+			} else {
+				otherLinks = otherIDs.get(logicaldb);
+				otherIDs.put(logicaldb, otherLinks + ", " + myLink);
+			}
+		}
+
+
+		// determine if we need a KOMP linkout (complex rules, so better in
+		// Java than JSTL); for a link we must have (new per TR10311):
+		// 1. has marker type of Pseudogene or Gene
+		// 2. has bp coordinates
+		// 3. has a strand
+		// 4. has at least one sequence
+
+		String markerType = marker.getMarkerType();
+		MarkerLocation location = marker.getPreferredCoordinates();
+		List<MarkerSequenceAssociation> seqs = marker.getSequenceAssociations();
+		boolean hadCoords = false;
+
+		if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
+			if ((location != null) &&
+					(location.getStartCoordinate() != null) &&
+					(location.getEndCoordinate() != null) &&
+					(location.getStrand() != null) &&
+					(seqs != null) && (seqs.size() > 0)	) {
+				mav.addObject ("needKompLink", "yes");
+				otherIDs.put("International Mouse Phenotyping Consortium Status", idLinker.getLink("KnockoutMouse", marker.getPrimaryID(), marker.getSymbol()) );
+				logicalDBs.add("International Mouse Phenotyping Consortium Status");
+				seoDescription.append(" Chr");
+				seoDescription.append(location.getChromosome());
+				seoDescription.append(":");
+				seoDescription.append(location.getStartCoordinate().longValue());
+				seoDescription.append("-");
+				seoDescription.append(location.getEndCoordinate().longValue());
+				hadCoords = true;
+			}
+		}
+
+		if (!hadCoords) {
+			if (!"UN".equals(marker.getChromosome())) {
+				seoDescription.append(" Chr");
+				seoDescription.append(marker.getChromosome());
+			}
+		}
+
+		mav.addObject ("otherIDs", otherIDs);
+		mav.addObject ("logicalDBs", logicalDBs);
+
+	}
+
+	private void setupSequencesRibbon(ModelAndView mav, Marker marker) {
+
+		// pull out the strain/species and provider links for each
+		// representative sequence
+		Sequence repGenomic = marker.getRepresentativeGenomicSequence();
+		if (repGenomic != null) {
+			List<SequenceSource> genomicSources = repGenomic.getSources();
+			if ((genomicSources != null) && (genomicSources.size() > 0)) {
+				mav.addObject ("genomicSource", genomicSources.get(0).getStrain());
+			}
+			mav.addObject ("genomicLink", ProviderLinker.getSeqProviderLinks(repGenomic));
+		}
+		Sequence repTranscript = marker.getRepresentativeTranscriptSequence();
+		if (repTranscript != null) {
+			List<SequenceSource> transcriptSources = repTranscript.getSources();
+			if ((transcriptSources != null) && (transcriptSources.size() > 0)) {
+				mav.addObject ("transcriptSource", transcriptSources.get(0).getStrain());
+			}
+			mav.addObject ("transcriptLink", ProviderLinker.getSeqProviderLinks(repTranscript));
+		}
+		Sequence repPolypeptide = marker.getRepresentativePolypeptideSequence();
+		if (repPolypeptide != null) {
+			List<SequenceSource> polypeptideSources = repPolypeptide.getSources();
+			if ((polypeptideSources != null) && (polypeptideSources.size() > 0)) {
+				mav.addObject ("polypeptideSource", polypeptideSources.get(0).getStrain());
+			}
+			mav.addObject ("polypeptideLink", ProviderLinker.getSeqProviderLinks(repPolypeptide));
+		}
+	}
+
+	private void setupProteinAnnotationsRibbon(ModelAndView mav, Marker marker) {
+		// add a Properties object with URLs for use at the JSP level
+		Properties urls = idLinker.getUrlsAsProperties();
+		mav.addObject("urls", urls);
+	}
+
+	private void setupReferencesRibbon(ModelAndView mav, Marker marker) {
+		// disease relevant reference count is now cached in the
+		// database, rather than being retrieved from solr
+
+		if (marker.getCountOfDiseaseRelevantReferences() > 0) {
+			mav.addObject("diseaseRefCount", marker.getCountOfDiseaseRelevantReferences());
+		}
+	}
+
+	private void setupSEO(Marker marker, ArrayList<String> seoKeywords, ArrayList<String> seoDataTypes, StringBuffer seoDescription) {
+
+		seoDescription.append("View mouse ");
+		seoDescription.append(marker.getSymbol());
+
+		seoKeywords.add("MGI");
+		seoKeywords.add(marker.getSymbol());
+		seoKeywords.add(marker.getName());
+		seoKeywords.add("mouse");
+		seoKeywords.add("mice");
+		seoKeywords.add("murine");
+		seoKeywords.add("Mus musculus");
+		seoKeywords.add(marker.getMarkerType());
+		seoKeywords.add(marker.getMarkerSubtype());
+
+		for (MarkerSynonym s : marker.getSynonyms()) {
+			seoKeywords.add(s.getSynonym());
+		}
+		seoKeywords.add(marker.getPrimaryID());
+
+
+		if (marker.getMPAnnotations().size() > 0) {
+			seoDataTypes.add("phenotypes");
+		}
+
+		if (marker.getCountOfSequences() > 0) {
+			seoDataTypes.add("sequences");
+		}
+
+		if (marker.getPolymorphismCountsByType().size() > 0) {
+			seoDataTypes.add("polymorphisms");
+		}
+
+		if (marker.getProteinAnnotations().size() > 0) {
+			seoDataTypes.add("proteins");
+		}
+
+		if (marker.getCountOfReferences() > 0) {
+			seoDataTypes.add("references");
+		}
+	}
+	private void finalizeSEO(ModelAndView mav, Marker marker, ArrayList<String> seoKeywords, ArrayList<String> seoDataTypes, StringBuffer seoDescription) {
+
 		// SEO meta tags
 
 		if (seoDataTypes.size() > 0) {
@@ -1101,17 +1257,10 @@ public class MarkerController {
 
 		// finally, add the minimap URL to the mav
 
-		if (minimapUrl != null) {
-			mav.addObject ("miniMap", minimapUrl);
-		}
-
-		return mav;
 	}
 
 
-	//--------------------//
-	// Marker Detail By Key
-	//--------------------//
+
 	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
 	public ModelAndView markerDetailByKey(@PathVariable("dbKey") String dbKey) {
 
@@ -1131,10 +1280,6 @@ public class MarkerController {
 		return this.prepareMarker(markerList.get(0));
 	}
 
-
-	//-------------------------------//
-	// Marker Summary by Reference
-	//-------------------------------//
 	@RequestMapping(value="/reference/{refID}")
 	public ModelAndView markerSummaryByRefId(@PathVariable("refID") String refID) {
 
@@ -1166,13 +1311,8 @@ public class MarkerController {
 		return markerSummaryByRef(refList.get(0));
 	}
 
-	// Marker Summary (By Reference) Shell
-	//------------------------------------//
 	@RequestMapping(value="/reference/key/{refKey}")
-	public ModelAndView markerSummeryByRefKey(
-			HttpServletRequest request,
-			@PathVariable("refKey") String refKey)
-	{
+	public ModelAndView markerSummeryByRefKey(HttpServletRequest request, @PathVariable("refKey") String refKey) {
 		logger.debug("->markerSummeryByRefKey started");
 
 		SearchResults<Reference> referenceResults = referenceFinder.getReferenceByKey(refKey);
@@ -1192,9 +1332,7 @@ public class MarkerController {
 		return markerSummaryByRef(referenceList.get(0));
 	}
 
-	private  ModelAndView markerSummaryByRef(
-			Reference reference)
-	{
+	private  ModelAndView markerSummaryByRef(Reference reference) {
 		ModelAndView mav = new ModelAndView("marker_summary_reference");
 		new MarkerQueryForm();
 
@@ -1207,9 +1345,6 @@ public class MarkerController {
 		return mav;
 	}
 
-	//-------------------------------------//
-	// Marker's Microarray Probeset Summary
-	//-------------------------------------//
 	@RequestMapping(value="/probeset/{markerID}")
 	public ModelAndView markerProbesets(@PathVariable("markerID") String markerID) {
 
@@ -1263,31 +1398,21 @@ public class MarkerController {
 		mav.addObject("reports", reports);
 
 		// add the date
-		this.dbDate(mav);
+		dbDate(mav);
 
 		return mav;
 	}
 
-
-	//----------------------//
-	// JSON summary results
-	//----------------------//
 	@RequestMapping("/json")
-	public @ResponseBody JsonSummaryResponse<MarkerSummaryRow> seqSummaryJson(
-			HttpServletRequest request,
-			@ModelAttribute MarkerQueryForm query,
-			@ModelAttribute Paginator page) throws org.antlr.runtime.RecognitionException
-			{
+	public @ResponseBody JsonSummaryResponse<MarkerSummaryRow> seqSummaryJson(HttpServletRequest request, @ModelAttribute MarkerQueryForm query, @ModelAttribute Paginator page) throws org.antlr.runtime.RecognitionException {
 		logger.debug("->JsonSummaryResponse started");
-
 
 		SearchResults<SolrSummaryMarker> searchResults = getSummaryMarkers(request,query,page);
 		List<SolrSummaryMarker> markerList = searchResults.getResultObjects();
 
 		// create/load the list of SummaryRow wrapper objects
 		List<MarkerSummaryRow> summaryRows = new ArrayList<MarkerSummaryRow>();
-		for(SolrSummaryMarker marker : markerList)
-		{
+		for(SolrSummaryMarker marker : markerList) {
 			//logger.info("marker="+marker);
 			summaryRows.add(new MarkerSummaryRow(marker));
 		}
@@ -1299,15 +1424,12 @@ public class MarkerController {
 		jsonResponse.setSummaryRows(summaryRows);
 		jsonResponse.setTotalCount(searchResults.getTotalCount());
 		return jsonResponse;
-			}
+	}
 
 	/*
 	 * This is exposed for our automated tests to use
 	 */
-	public SearchResults<SolrSummaryMarker> getSummaryMarkers(HttpServletRequest request,
-			MarkerQueryForm query,
-			Paginator page) throws org.antlr.runtime.RecognitionException
-			{
+	public SearchResults<SolrSummaryMarker> getSummaryMarkers(HttpServletRequest request, MarkerQueryForm query, Paginator page) throws org.antlr.runtime.RecognitionException {
 		// parameter parsing
 		String refKey = request.getParameter("refKey");
 
@@ -1315,8 +1437,7 @@ public class MarkerController {
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		// if we have nomen query, do text highlighting
-		if(notEmpty(query.getNomen()))
-		{
+		if(notEmpty(query.getNomen())) {
 			params.setIncludeMetaHighlight(true);
 			params.setIncludeSetMeta(true);
 		}
@@ -1329,16 +1450,10 @@ public class MarkerController {
 
 		// perform query, and pull out the requested objects
 		return markerFinder.getSummaryMarkers(params);
-			}
+	}
 
-	//--------------------------------//
-	// Marker Summary Reports
-	//--------------------------------//
 	@RequestMapping("/report*")
-	public ModelAndView markerSummaryExport(
-			HttpServletRequest request,
-			@ModelAttribute MarkerQueryForm query) throws org.antlr.runtime.RecognitionException
-			{
+	public ModelAndView markerSummaryExport(HttpServletRequest request, @ModelAttribute MarkerQueryForm query) throws org.antlr.runtime.RecognitionException {
 
 		logger.debug("generating report");
 
@@ -1347,8 +1462,7 @@ public class MarkerController {
 		sp.setFilter(this.genFilters(query));
 
 		// if we have nomen query, do text highlighting
-		if(notEmpty(query.getNomen()))
-		{
+		if(notEmpty(query.getNomen())) {
 			sp.setIncludeMetaHighlight(true);
 			sp.setIncludeSetMeta(true);
 			sp.setIncludeHighlightMarkup(false);
@@ -1362,12 +1476,7 @@ public class MarkerController {
 		mav.addObject("markers", markers);
 		return mav;
 
-			}
-
-
-	//--------------------------------------------------------------------//
-	// private methods
-	//--------------------------------------------------------------------//
+	}
 
 	private void dbDate(ModelAndView mav) {
 		List<DatabaseInfo> dbInfo = dbInfoFinder.getInfo(new SearchParams()).getResultObjects();
@@ -1402,12 +1511,14 @@ public class MarkerController {
 	 * parm is "all", then it will be a line break-delimited string containing
 	 * the URLs for all minimaps currently rendered.
 	 */
-	private String getMinimapUrl(String parm){
+	private String getMinimapUrl(String parm) {
 		StringBuffer urlString = new StringBuffer();
 		logger.debug("get minimap: " + parm);
 		try {
-			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") +
-					"searches/markerMiniMap.cgi?" + parm);
+			// TODO Revert this back to the config param for release
+			// TODO and remove this comment
+			// URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + "searches/markerMiniMap.cgi?" + parm);
+			URL url = new URL("http://www.informatics.jax.org/searches/markerMiniMap.cgi?" + parm);
 			URLConnection urlConnection = url.openConnection();
 			HttpURLConnection connection = null;
 
@@ -1438,8 +1549,7 @@ public class MarkerController {
 	}
 
 	// generate the sorts
-	private List<Sort> genSorts(HttpServletRequest request,MarkerQueryForm query)
-	{
+	private List<Sort> genSorts(HttpServletRequest request,MarkerQueryForm query) {
 		logger.debug("->genSorts started");
 
 		List<Sort> sorts = new ArrayList<Sort>();
@@ -1451,8 +1561,7 @@ public class MarkerController {
 		// User can set initialSort and dir via link, but we want datatable sort to override
 		if((sortRequested==null || sortRequested.equals("default"))
 				&& notEmpty(query.getInitialSort())
-				&& notEmpty(query.getInitialDir()))
-		{
+				&& notEmpty(query.getInitialDir())) {
 			sortRequested = query.getInitialSort();
 			dirRequested = query.getInitialDir();
 		}
@@ -1463,26 +1572,17 @@ public class MarkerController {
 		}
 
 		logger.debug("user requested marker sort="+sortRequested+", dir="+dirRequested);
-		if("symbol".equalsIgnoreCase(sortRequested))
-		{
+		if("symbol".equalsIgnoreCase(sortRequested)) {
 			sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL, desc));
-		}
-		else if("coordinates".equalsIgnoreCase(sortRequested))
-		{
+		} else if("coordinates".equalsIgnoreCase(sortRequested)) {
 			sorts.add(new Sort(SortConstants.MRK_BY_LOCATION, desc));
-		}
-		else if("featureType".equalsIgnoreCase(sortRequested))
-		{
+		} else if("featureType".equalsIgnoreCase(sortRequested)) {
 			sorts.add(new Sort(SortConstants.MRK_BY_TYPE, desc));
 			sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
-		}
-		else if(notEmpty(query.getNomen()) || notEmpty(query.getGo()) || notEmpty(query.getInterpro()))
-		{
+		} else if(notEmpty(query.getNomen()) || notEmpty(query.getGo()) || notEmpty(query.getInterpro())) {
 			sorts.add(new Sort("score",true));
 			sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
-		}
-		else
-		{
+		} else {
 			// default is by symbol
 			sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL,false));
 		}
@@ -1498,8 +1598,7 @@ public class MarkerController {
 		List<Filter> queryFilters = new ArrayList<Filter>();
 
 		String nomen = query.getNomen();
-		if(notEmpty(nomen))
-		{
+		if(notEmpty(nomen)) {
 			Filter nomenFilter = Filter.or(Arrays.asList(
 					FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE,nomen),
 					// try to boost an exact match
@@ -1510,8 +1609,7 @@ public class MarkerController {
 
 		// Phenotypes
 		String phenotype = query.getPhenotype();
-		if(notEmpty(phenotype))
-		{
+		if(notEmpty(phenotype)) {
 			BooleanSearch bs = new BooleanSearch();
 			Filter f = bs.buildSolrFilter(SearchConstants.PHENOTYPE,phenotype);
 			queryFilters.add(f);
@@ -1519,15 +1617,7 @@ public class MarkerController {
 
 		//InterPro
 		String interpro = query.getInterpro();
-		if(notEmpty(interpro))
-		{
-			//			 List<Filter> interproFilters = new ArrayList<Filter>();
-			//
-			//			 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(interpro))
-			//			 {
-			//				 interproFilters.add(new Filter(SearchConstants.INTERPRO_TERM,token,Filter.OP_STRING_CONTAINS));
-			//			 }
-			//			 queryFilters.add(Filter.and(interproFilters));
+		if(notEmpty(interpro)) {
 
 			BooleanSearch bs = new BooleanSearch();
 			Filter f = bs.buildSolrFilter(SearchConstants.INTERPRO_TERM,interpro);
@@ -1537,27 +1627,15 @@ public class MarkerController {
 
 		//GO
 		String go = query.getGo();
-		if(notEmpty(go))
-		{
+		if(notEmpty(go)) {
 			List<String> goVocabs = query.getGoVocab();
 			List<Filter> goVocabFilters = new ArrayList<Filter>();
-			if(!(notEmpty(goVocabs) && goVocabs.size()<3))
-			{
+			if(!(notEmpty(goVocabs) && goVocabs.size()<3)) {
 				// goVocabs = Arrays.asList(SearchConstants.GO_TERM);
 				goVocabs = new ArrayList<String>(query.getGoVocabDisplay().keySet());
 			}
 			goVocabs.add(SearchConstants.MRK_TERM_ID);
-			for(String goVocab : goVocabs)
-			{
-				//List<Filter> containsFilters = new ArrayList<Filter>();
-
-				//containsFilters.add();
-				//				 for(String token : QueryParser.tokeniseOnWhitespaceAndComma(go))
-				//				 {
-				//					 //containsFilters.add(new Filter(goVocab,token,Filter.OP_STRING_CONTAINS));
-				//				 }
-				// AND the contains search tokens
-				//goVocabFilters.add(Filter.and(containsFilters));
+			for(String goVocab : goVocabs) {
 
 				BooleanSearch bs = new BooleanSearch();
 				Filter f = bs.buildSolrFilter(goVocab,go);
@@ -1576,8 +1654,7 @@ public class MarkerController {
 
 		// Chromosome
 		List<String> chr = query.getChromosome();
-		if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY))
-		{
+		if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY)) {
 			Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME);
 			if(chrFilter!=null) queryFilters.add(chrFilter);
 		}
@@ -1585,8 +1662,7 @@ public class MarkerController {
 		// Coordinate Search
 		String coord = query.getCoordinate();
 		String coordUnit = query.getCoordUnit();
-		if(notEmpty(coord))
-		{
+		if(notEmpty(coord)) {
 			Filter coordFilter = FilterUtil.genCoordFilter(coord,coordUnit);
 			if(coordFilter==null) coordFilter = nullFilter();
 			queryFilters.add(coordFilter);
@@ -1594,8 +1670,7 @@ public class MarkerController {
 
 		// CM Search
 		String cm = query.getCm();
-		if(notEmpty(cm))
-		{
+		if(notEmpty(cm)) {
 			Filter cmFilter = FilterUtil.genCmFilter(cm);
 			if(cmFilter==null) cmFilter = nullFilter();
 			queryFilters.add(cmFilter);
@@ -1603,21 +1678,18 @@ public class MarkerController {
 
 		String startMarker = query.getStartMarker();
 		String endMarker = query.getEndMarker();
-		if(notEmpty(startMarker) && notEmpty(endMarker))
-		{
+		if(notEmpty(startMarker) && notEmpty(endMarker)) {
 			// query for the start and end markers to check their coordinates and chromosomes
 			// check that we can find the start marker
 			SearchParams sp = new SearchParams();
 			sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,startMarker,Filter.Operator.OP_EQUAL));
 			SearchResults<SolrSummaryMarker> sr = markerFinder.getSummaryMarkers(sp);
-			if(sr.getTotalCount()>0)
-			{
+			if(sr.getTotalCount()>0) {
 				SolrSummaryMarker startMarkerObj = sr.getResultObjects().get(0);
 				// check that we can find the end marker
 				sp.setFilter(new Filter(SearchConstants.MRK_SYMBOL,endMarker,Filter.Operator.OP_EQUAL));
 				sr = markerFinder.getSummaryMarkers(sp);
-				if(sr.getTotalCount()>0)
-				{
+				if(sr.getTotalCount()>0) {
 					SolrSummaryMarker endMarkerObj = sr.getResultObjects().get(0);
 
 					if(notEmpty(startMarkerObj.getChromosome())
@@ -1625,8 +1697,7 @@ public class MarkerController {
 							&& notEmpty(startMarkerObj.getCoordEnd())
 							&& notEmpty(endMarkerObj.getChromosome())
 							&& notEmpty(endMarkerObj.getCoordStart())
-							&& notEmpty(endMarkerObj.getCoordEnd()))
-					{
+							&& notEmpty(endMarkerObj.getCoordEnd())) {
 						Integer startCoord = Math.min(startMarkerObj.getCoordStart(),endMarkerObj.getCoordStart());
 						Integer endCoord = Math.max(startMarkerObj.getCoordEnd(),endMarkerObj.getCoordEnd());
 
@@ -1641,8 +1712,7 @@ public class MarkerController {
 			}
 		}
 		String refKey = query.getRefKey();
-		if(notEmpty(refKey))
-		{
+		if(notEmpty(refKey)) {
 			queryFilters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.Operator.OP_EQUAL));
 		}
 
@@ -1651,8 +1721,7 @@ public class MarkerController {
 	}
 
 	// returns a filter that should always fail to retrieve results
-	private Filter nullFilter()
-	{
+	private Filter nullFilter() {
 		return new Filter("markerKey","-99999",Filter.Operator.OP_EQUAL);
 	}
 
@@ -1660,29 +1729,26 @@ public class MarkerController {
 	 * terms stripped out.  Also strip out any annotations with a NOT
 	 * qualifier.
 	 */
-	private List<mgi.frontend.datamodel.Annotation> noDuplicates (
-			List<mgi.frontend.datamodel.Annotation> annotations) {
+	private List<Annotation> noDuplicates (List<Annotation> annotations) {
 
 		// the list we will compose to be returned
-		ArrayList<mgi.frontend.datamodel.Annotation> a = new
-				ArrayList<mgi.frontend.datamodel.Annotation>();
+		ArrayList<Annotation> a = new ArrayList<Annotation>();
 
 		// iterates over the input list
-		Iterator<mgi.frontend.datamodel.Annotation> it = annotations.iterator();
+		Iterator<Annotation> it = annotations.iterator();
 
 		// tracks which terms we've seen already
 		HashMap<String, String> done = new HashMap<String, String>();
 
 		// which term we are looking at currently
-		mgi.frontend.datamodel.Annotation annot;
+		Annotation annot;
 
 		while (it.hasNext()) {
 			annot = it.next();
 			if (!done.containsKey(annot.getTerm())) {
 				// if we have no qualifier or we have a qualifier that's
 				// not "NOT" then we ca use this term
-				if ((annot.getQualifier() == null) ||
-						(!annot.getQualifier().toLowerCase().equals("not"))) {
+				if ((annot.getQualifier() == null) || (!annot.getQualifier().toLowerCase().equals("not"))) {
 					done.put (annot.getTerm(), "");
 					a.add (annot);
 				}
@@ -1705,14 +1771,11 @@ public class MarkerController {
 		return minimaps.size();
 	}
 
-	private Filter makeListFilter(List<String> values, String searchConstant)
-	{
+	private Filter makeListFilter(List<String> values, String searchConstant) {
 		Filter f = null;
-		if(values!=null && values.size()>0)
-		{
+		if(values!=null && values.size()>0) {
 			List<Filter> vFilters = new ArrayList<Filter>();
-			for(String value : values)
-			{
+			for(String value : values) {
 				vFilters.add(new Filter(searchConstant,value,Filter.Operator.OP_EQUAL));
 			}
 			f = Filter.or(vFilters);
@@ -1721,22 +1784,18 @@ public class MarkerController {
 	}
 
 
-	private void initQueryForm(List<QueryFormOption> options)
-	{
-		if(!MarkerQueryForm.initialized)
-		{
+	private void initQueryForm(List<QueryFormOption> options) {
+		if(!MarkerQueryForm.initialized) {
 			// do stuff
 			Map<String,String> mcvToDisplay = new HashMap<String,String>();
-			for(QueryFormOption option : options)
-			{
+			for(QueryFormOption option : options) {
 				mcvToDisplay.put(option.getSubmitValue(),option.getDisplayValue());
 			}
 			MarkerQueryForm.setMarkerTypeKeyToDisplayMap(mcvToDisplay);
 		}
 	}
 	/* For automated test access */
-	public void initQueryForm()
-	{
+	public void initQueryForm() {
 		/* if we don't have a cached version of the chromosome options (for
 		 * the selction list), then we need to pull them out of the database,
 		 * generate it, and cache it
@@ -1747,8 +1806,7 @@ public class MarkerController {
 
 			this.chromosomeOptions = new LinkedHashMap<String,String>();
 			this.chromosomeOptions.put(MarkerQueryForm.CHROMOSOME_ANY,"Any");
-			for (QueryFormOption chromosome : chromosomes)
-			{
+			for (QueryFormOption chromosome : chromosomes) {
 				this.chromosomeOptions.put(chromosome.getSubmitValue(),chromosome.getDisplayValue());
 			}
 		}
@@ -1758,11 +1816,9 @@ public class MarkerController {
 		 * database, generate it, and cache it
 		 */
 		if (featureTypeHtml == null) {
-			SearchResults<QueryFormOption> mtResults =
-					queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
+			SearchResults<QueryFormOption> mtResults = queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
 			List<QueryFormOption> markerTypes = mtResults.getResultObjects();
-			logger.debug("getQueryForm() received " + markerTypes.size()
-					+ " Feature Type options");
+			logger.debug("getQueryForm() received " + markerTypes.size() + " Feature Type options");
 
 			featureTypeHtml = FormatHelper.buildHtmlTree(markerTypes);
 			featureTypeJson = FormatHelper.buildJsonTree(markerTypes);
@@ -1773,34 +1829,23 @@ public class MarkerController {
 		// if we don't have a cached version of the build number, retrieve it
 		// and cache it
 		if (genomeBuild == null) {
-			SearchResults<QueryFormOption> gbResults =
-					queryFormOptionFinder.getQueryFormOptions("marker",
-							"build_number");
+			SearchResults<QueryFormOption> gbResults = queryFormOptionFinder.getQueryFormOptions("marker", "build_number");
 			List<QueryFormOption> genomeBuilds = gbResults.getResultObjects();
-			logger.debug("getQueryForm() received " + genomeBuilds.size()
-					+ " Genome Build options");
+			logger.debug("getQueryForm() received " + genomeBuilds.size() + " Genome Build options");
 
 			if (genomeBuilds.size() > 0) {
 				genomeBuild = genomeBuilds.get(0).getDisplayValue();
 			}
 		}
-		//    	if(!MarkerQueryForm.initialized)
-		//    	{
-		//    		SearchResults<QueryFormOption> mtResults = queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
-		//    		initQueryForm(mtResults.getResultObjects());
-		//    	}
 	}
-	private boolean notEmpty(String s)
-	{
+	private boolean notEmpty(String s) {
 		return s!=null && !s.equals("");
 	}
-	private boolean notEmpty(Integer i)
-	{
+	private boolean notEmpty(Integer i) {
 		return i!=null && i>0;
 	}
 	@SuppressWarnings("rawtypes")
-	private boolean notEmpty(List l)
-	{
+	private boolean notEmpty(List l) {
 		return l!=null && l.size()>0;
 	}
 }

@@ -96,9 +96,14 @@ function main() {
 	var myColumnDefs = [
 		{
 			key:"category", 
-			label:"Category",
+			label:"Aspect",
 			width:150, 
 			sortable:true
+		}, {
+			key:"headers", 
+			label:"Category",
+			width:150, 
+			sortable:false
 		}, {
 			key:"term", 
 			label:"Classification Term",
@@ -130,6 +135,7 @@ function main() {
 		resultsList: "summaryRows",
 		fields: [
 			{key:"category"},
+			{key:"headers"},
 			{key:"term"},
 			{key:"evidence"},
 			{key:"inferred"},

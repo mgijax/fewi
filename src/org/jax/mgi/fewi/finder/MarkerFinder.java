@@ -19,146 +19,117 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
-/*-------*/
-/* class */
-/*-------*/
-
-/*
- * This finder is responsible for finding marker(s)
- */
-
 @Repository
 public class MarkerFinder {
 
-    /*--------------------*/
-    /* instance variables */
-    /*--------------------*/
 
-    private Logger logger = LoggerFactory.getLogger(MarkerFinder.class);
+	private Logger logger = LoggerFactory.getLogger(MarkerFinder.class);
 
-    @Autowired
-    private SolrMarkerKeyHunter mrkKeyHunter;
-    
-    @Autowired
-    private SolrMarkerIDHunter mrkIDHunter;
-    
-    @Autowired
-    private SolrMarkerSummaryHunter markerSummaryHunter;
+	@Autowired
+	private SolrMarkerKeyHunter mrkKeyHunter;
 
-    @Autowired
-    private HibernateObjectGatherer<Marker> mrkGatherer;
+	@Autowired
+	private SolrMarkerIDHunter mrkIDHunter;
 
+	@Autowired
+	private SolrMarkerSummaryHunter markerSummaryHunter;
 
-    /*-----------------------------------------*/
-    /* Retrieval of a marker, for a given ID
-    /*-----------------------------------------*/
+	@Autowired
+	private HibernateObjectGatherer<Marker> mrkGatherer;
 
-    public SearchResults<Marker> getMarkerByID(SearchParams searchParams) {
+	public SearchResults<Marker> getMarkerByID(SearchParams searchParams) {
 
-        logger.debug("->getMarkerByID()");
+		logger.debug("->getMarkerByID()");
 
-        // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+		// result object to be returned
+		SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
-        // ask the hunter to identify which objects to return
-        mrkKeyHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
+		// ask the hunter to identify which objects to return
+		mrkKeyHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
 
-        // gather objects identified by the hunter, add them to the results
-        List<Marker> mrkList = mrkGatherer.get( Marker.class, searchResults.getResultKeys() );
-        searchResults.setResultObjects(mrkList);
+		// gather objects identified by the hunter, add them to the results
+		List<Marker> mrkList = mrkGatherer.get( Marker.class, searchResults.getResultKeys() );
+		searchResults.setResultObjects(mrkList);
 
-        return searchResults;
-    }
-    // convenience wrapper
-    public SearchResults<Marker> getMarkerByID(String id) 
-    {
-        SearchParams searchParams = new SearchParams();
-        searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.Operator.OP_EQUAL));
-        return getMarkerByID(searchParams);
-    }
-    
-    public List<Marker> getMarkerByPrimaryId(String id)
-    {
-    	return mrkGatherer.get(Marker.class,Arrays.asList(id),"primaryID");
-    }
+		return searchResults;
+	}
 
-    /*--------------------------------------------*/
-    /* Retrieval of a marker, for a given db key
+	// convenience wrapper
+	public SearchResults<Marker> getMarkerByID(String id) {
+		SearchParams searchParams = new SearchParams();
+		searchParams.setFilter(new Filter(SearchConstants.MRK_ID,id,Filter.Operator.OP_EQUAL));
+		return getMarkerByID(searchParams);
+	}
+
+	public List<Marker> getMarkerByPrimaryId(String id) {
+		return mrkGatherer.get(Marker.class,Arrays.asList(id),"primaryID");
+	}
+
+	/*--------------------------------------------*/
+	/* Retrieval of a marker, for a given db key
     /*--------------------------------------------*/
 
-    public SearchResults<Marker> getMarkerByKey(String dbKey) {
+	public SearchResults<Marker> getMarkerByKey(String dbKey) {
 
-        logger.debug("->getMarkerByKey()");
+		logger.debug("->getMarkerByKey()");
 
-        // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+		SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
-        // gather objects, add them to the results
-        Marker marker = mrkGatherer.get( Marker.class, dbKey );
-        searchResults.addResultObjects(marker);
+		// gather objects, add them to the results
+		Marker marker = mrkGatherer.get( Marker.class, dbKey );
+		searchResults.addResultObjects(marker);
 
-        return searchResults;
-    }
+		return searchResults;
+	}
 
+	//      Should this be using the markerSummaryHunter? 
+	//		This gets a bit confusing, but am unsure about removing - kstone
+	public SearchResults<Marker> getMarkers(SearchParams searchParams) {
 
-    /*---------------------------------*/
-    /* Retrieval of multiple markers
-    /*---------------------------------*/
+		logger.debug("->getMarkers");
 
-    //      Should this be using the markerSummaryHunter? 
-    //		This gets a bit confusing, but am unsure about removing - kstone
-    public SearchResults<Marker> getMarkers(SearchParams searchParams) {
+		// result object to be returned
+		SearchResults<SolrSummaryMarker> searchResults = new SearchResults<SolrSummaryMarker>();
 
-        logger.debug("->getMarkers");
+		// ask the hunter to identify which objects to return
+		markerSummaryHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
 
-        // result object to be returned
-        SearchResults<SolrSummaryMarker> searchResults = new SearchResults<SolrSummaryMarker>();
+		// clone SearchResults to allow us to set Marker objects instead of SolrSummaryMarker
+		SearchResults<Marker> srMarker = new SearchResults<Marker>();
+		srMarker.cloneFrom(searchResults);
 
-        // ask the hunter to identify which objects to return
-        markerSummaryHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
+		// gather objects identified by the hunter, add them to the results
+		List<Marker> markerList = mrkGatherer.get( Marker.class, srMarker.getResultKeys() );
+		srMarker.setResultObjects(markerList);
 
-        // clone SearchResults to allow us to set Marker objects instead of SolrSummaryMarker
-        SearchResults<Marker> srMarker = new SearchResults<Marker>();
-        srMarker.cloneFrom(searchResults);
-        
-        // gather objects identified by the hunter, add them to the results
-        List<Marker> markerList = mrkGatherer.get( Marker.class, srMarker.getResultKeys() );
-        srMarker.setResultObjects(markerList);
+		return srMarker;
+	}
 
-        return srMarker;
-    }
-    
-    /*
-     * Retrieval of just marker IDs
-     */
-    public SearchResults<String> getMarkerIDs(SearchParams searchParams)
-    {
-    	logger.debug("->getMarkerIDs()");
+	/*
+	 * Retrieval of just marker IDs
+	 */
+	public SearchResults<String> getMarkerIDs(SearchParams searchParams) {
+		logger.debug("->getMarkerIDs()");
 
-        // result object to be returned
-        SearchResults<String> searchResults = new SearchResults<String>();
+		SearchResults<String> searchResults = new SearchResults<String>();
 
-        mrkIDHunter.hunt(searchParams,searchResults);
+		mrkIDHunter.hunt(searchParams,searchResults);
 
-        return searchResults;
-    }
-    
-    /*
-     * Retrieval for marker summary
-     */
-    public SearchResults<SolrSummaryMarker> getSummaryMarkers(SearchParams searchParams)
-    {
-    	logger.debug("->getSummaryMarkers()");
+		return searchResults;
+	}
 
-        // result objects to be returned
-        SearchResults<SolrSummaryMarker> searchResults = new SearchResults<SolrSummaryMarker>();
+	/*
+	 * Retrieval for marker summary
+	 */
+	public SearchResults<SolrSummaryMarker> getSummaryMarkers(SearchParams searchParams) {
+		logger.debug("->getSummaryMarkers()");
 
-        markerSummaryHunter.hunt(searchParams,searchResults);
+		SearchResults<SolrSummaryMarker> searchResults = new SearchResults<SolrSummaryMarker>();
 
-        return searchResults;
-    }
+		markerSummaryHunter.hunt(searchParams,searchResults);
+
+		return searchResults;
+	}
 }

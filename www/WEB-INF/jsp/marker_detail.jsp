@@ -30,7 +30,6 @@ ${templateBean.templateHeadHtml}
 	.link {
 		color:#000099;
 		cursor: pointer;
-		border-bottom: 1px #000099 solid;
 		text-decoration: none;
 	}
 
@@ -51,7 +50,34 @@ ${templateBean.templateHeadHtml}
 		border-bottom-style:solid;
 		border-bottom-width:1px;
 	}
-	
+
+	.topBorder {
+		border-top-color: #000000;
+		border-top-style:solid;
+		border-top-width:1px;
+	}
+
+	.leftBorder {
+		border-left-color :#000000; 
+		border-left-style:solid;
+		border-left-width:1px;
+	}
+
+	.rightBorder {
+		border-right-color :#000000; 
+		border-right-style:solid;
+		border-right-width:1px;
+	}
+
+	.bottomBorderDark {
+		border-bottom-color: #000000;
+		border-bottom-style:solid;
+		border-bottom-width:2px;
+	}
+
+	.stripe1 { background-color: #FFFFFF; }
+	.stripe2 { background-color: #DDDDDD; }
+	.headerStripe { background-color: #D0E0F0; }	
 	
 	/* Turning divs into table layout */
 	.container {
@@ -96,12 +122,61 @@ ${templateBean.templateHeadHtml}
 	.container .detailData2 {
 		background-color: #F0F0F0;
 	}
+
+	.td_disease_tbl_hdr {
+		text-align:center;
+		vertical-align:bottom;
+		padding: 0px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	.td_disease_tbl {
+		text-align:left;
+		vertical-align:center;
+		padding: 0px 10px 4px 10px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	.td_disease_tbl_center {
+		text-align:center;
+		vertical-align:center;
+		padding: 0px 10px 4px 10px;
+		height: 12px;
+		border-left:thin solid grey;border-right:thin solid grey;border-top:thin solid grey;border-bottom:thin solid grey;
+	}
+	.superscript {
+		vertical-align: super;
+		font-size: 90%;
+	}
+
+	.toggleImage {
+		float: right;
+		padding: 8px;
+		margin: 5px 8px;
+		cursor: pointer;
+	}
+
+	.hdExpand {
+		background: url("${configBean.WEBSHARE_URL}images/rightArrow.gif") no-repeat;
+	}
+
+	.hdCollapse {
+		background: url("${configBean.WEBSHARE_URL}images/downArrow.gif") no-repeat;
+	}
+
 </style>
 
 
 <script TYPE="text/javascript" SRC='${configBean.WEBSHARE_URL}js/hideshow.js'></script>
 
 <script language="Javascript">
+
+	function showHideById(id) {
+		if(document.getElementById(id).style.display=='none') {
+			document.getElementById(id).style.display = '';
+		} else {
+			document.getElementById(id).style.display = 'none';
+		}
+	}
+
 	$(function(){
 		window.isIntegerFlank = function(flank) {
 		// error if non-numeric flank
@@ -126,6 +201,11 @@ ${templateBean.templateHeadHtml}
 	
 		window.formatForwardArgs = function() {
 			document.sequenceForm.action = document.sequenceFormPullDown.seqPullDown.options[document.sequenceFormPullDown.seqPullDown.selectedIndex].value;
+			if (document.sequenceForm.action.indexOf("blast") >= 0) {
+			    document.sequenceForm.target = "_blank";
+			} else {
+			    document.sequenceForm.target = "";
+		        }
 	
 			// ensure we have a valid value for Flank before proceeding
 			if (document.sequenceForm.flank1 && !isIntegerFlank(document.sequenceForm.flank1.value)) {
@@ -224,11 +304,48 @@ ${templateBean.templateHeadHtml}
 			}
 		}
 		formatGxdSection();
+		$(window).resize(formatGxdSection);
 
 		window.toggleHomologTags = function() {
 			toggle("rightArrowHomologTag");
 			toggle("downArrowHomologTag");
 			toggle("moreHomologs");
+		}
+
+		window.alignLocationRibbonDivs = function(name) {
+			if (name == 'LocationRibbon') {
+				var coordTopDiv = document.getElementById('coordsTopDiv');
+				var geneticTopDiv = document.getElementById('geneticTopDiv');
+				var minimapDiv = document.getElementById('minimapDiv');
+
+				if ((coordTopDiv != null) && (geneticTopDiv != null) && (minimapDiv != null)) {
+					geneticTopDiv.style.height =
+						coordTopDiv.getBoundingClientRect().height + 'px';
+				}
+			}
+		};
+
+		window.toggleRibbon = function(name) {
+			var span = "toggle" + name;
+			var opened = "opened" + name;
+			var closed = "closed" + name;
+
+			if(YAHOO.util.Dom.hasClass(span, 'hdCollapse')) {
+				YAHOO.util.Dom.removeClass(span, 'hdCollapse');
+				YAHOO.util.Dom.addClass(span, 'hdExpand');
+				YAHOO.util.Dom.get(span).title = "Show More";
+				pageTracker._trackEvent("MarkerDetailPageEvent", "close", name);
+			} else if(YAHOO.util.Dom.hasClass(span, 'hdExpand')) {
+				YAHOO.util.Dom.removeClass(span, 'hdExpand');
+				YAHOO.util.Dom.addClass(span, 'hdCollapse');
+				YAHOO.util.Dom.get(span).title = "Show Less";
+				pageTracker._trackEvent("MarkerDetailPageEvent", "open", name);
+			}
+
+			showHideById(opened);
+			showHideById(closed);
+
+			window.alignLocationRibbonDivs(name);
 		}
 
 	});
@@ -238,6 +355,51 @@ ${templateBean.templateBodyStartHtml}
 
 <style type="text/css">
 	td.padded { padding:4px; }
+	td.top { vertical-align: top; }
+	a:link{text-decoration: none}
+	a:hover{color:#c00; background-color: #c7e3fe; text-decoration: none}
+	div.centered { text-align: center; }
+	td.rightPadded { padding-right: 4px; }
+</style>
+<style type="text/css"><% /* needed for slimgrids */ %>
+.sgHeaderDiv {
+color: black;
+font-weight: 10;
+font-size: 90%;
+text-indent: 2px;
+transform: rotate(-45deg);
+-webkit-transform: rotate(-45deg);
+width: 20px;
+}
+.sgHeader {
+height: 100px;
+padding-bottom: 0;
+text-align: left;
+vertical-align: bottom;
+white-space: nowrap;
+font-weight: normal;
+}
+.box { border: 1px solid gray; height: 16px; background-color: white; }
+.blue {
+    background-color: #0000FF;
+    width: 20px;
+    height: 16px;
+}
+.dogear { 
+    border-color: transparent #cccccc transparent transparent;
+    border-style: solid;
+    border-width: 0 20px 16px 0;
+    height: 0;
+    left: 0;
+    width: 0;
+}
+.cup {
+height: 8px;
+border-left: 1px solid gray;
+border-right: 1px solid gray;
+border-bottom: 1px solid gray;
+}
+.sgWidth { width: 20px; }
 </style>
 
 
@@ -254,183 +416,25 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 </div>
 
-<!-- structural table -->
 <div class="container detailStructureTable">
 
-	<!-- ROW1 -->
-	<%@ include file="MarkerDetail_Row1Ribbon.jsp" %>
-
-	<!-- ROW1a -->
-	<c:if test="${not empty marker.aliases}">
-		<div class="row" >
-			<div class="header <%=leftTdStyles.getNext() %>">
-				<c:if test="${marker.markerType == 'Gene'}">STS</c:if>
-				<c:if test="${marker.markerType != 'Gene'}">STS for</c:if>
-			</div>
-			<div class="detail <%=rightTdStyles.getNext() %>">
-				<c:forEach var="alias" items="${marker.aliases}" varStatus="status">
-					<a href="${configBean.FEWI_URL}marker/${alias.aliasID}">${alias.aliasSymbol}</a><c:if test="${!status.last}">, </c:if>
-				</c:forEach>
-			</div>
-		</div>
-	</c:if>
-
-	<!-- ROW2 -->
-	<c:if test="${not empty marker.synonyms}">
-		<div class="row" >
-			<div class="header <%=leftTdStyles.getNext() %>">
-				Synonyms
-			</div>
-			<div class="detail <%=rightTdStyles.getNext() %>">
-				<c:forEach var="synonym" items="${marker.synonyms}" varStatus="status">
-					<fewi:super value="${synonym.synonym}"/><c:if test="${!status.last}">, </c:if>
-				</c:forEach>
-			</div>
-		</div>
-	</c:if>
-
-	<!-- ROW3 -->
-	<c:if test="${not empty marker.markerSubtype}">
-		<div class="row" >
-			<div class="header <%=leftTdStyles.getNext() %>">
-				Feature&nbsp;Type
-			</div>
-			<div class="detail <%=rightTdStyles.getNext() %>">
-				${marker.markerSubtype}
-			</div>
-		</div>
-	</c:if>
-
-	<!-- ROW4 -->
-	<%@ include file="MarkerDetail_Row4Ribbon.jsp" %>
-
-	<!-- ROW5 -->
-	<%@ include file="MarkerDetail_Row5Ribbon.jsp" %>
-
-	<!-- Vertebrate homology ribbon -->
-	<%@ include file="MarkerDetail_VertebrateHomologyRibbon.jsp" %>
-
-	<!-- Human Homologs ribbon -->
-	<%@ include file="MarkerDetail_HumanHomologsRibbon.jsp" %>
-
-	<!-- Allele ribbon -->
+	<%@ include file="MarkerDetail_SummaryRibbon.jsp" %>
+	<%@ include file="MarkerDetail_LocationRibbon.jsp" %>
+	<%@ include file="MarkerDetail_HomologyRibbon.jsp" %>
+	<%@ include file="MarkerDetail_DiseaseRibbon.jsp" %>
 	<%@ include file="MarkerDetail_AlleleRibbon.jsp" %>
-
-	<!-- interactions ribbon -->
-	<%@ include file="MarkerDetail_InteractionsRibbon.jsp" %>
-
-	<!-- go classifications ribbon -->
-	<%@ include file="MarkerDetail_GoClassificationsRibbon.jsp" %>
-
-	<!-- Expression ribbon -->
+	<%@ include file="MarkerDetail_GORibbon.jsp" %>
 	<%@ include file="MarkerDetail_ExpressionRibbon.jsp" %>
 
-	<!-- Molecular reagents ribbon -->
-	<%@ include file="MarkerDetail_MolecularReagentsRibbon.jsp" %>
+	<%@ include file="MarkerDetail_InteractionRibbon.jsp" %>
+	<%@ include file="MarkerDetail_MolecularReagentRibbon.jsp" %>
+	<%@ include file="MarkerDetail_DatabaseLinkRibbon.jsp" %>
+	<%@ include file="MarkerDetail_SequenceRibbon.jsp" %>
+	<%@ include file="MarkerDetail_PolymorphismRibbon.jsp" %>
+	<%@ include file="MarkerDetail_ProteinRibbon.jsp" %>
+	<%@ include file="MarkerDetail_ReferenceRibbon.jsp" %>
+	<%@ include file="MarkerDetail_OtherAccessRibbon.jsp" %>
 
-	<!-- Other database links -->
-	<c:if test="${not empty logicalDBs}">
-		<div class="row" >
-			<div class="header <%=leftTdStyles.getNext() %>">
-				Other&nbsp;database<br/>links
-			</div>
-			<div class="detail <%=rightTdStyles.getNext() %>">
-				<table cellspacing=2 cellpadding=2>
-					<c:forEach var="item" items="${logicalDBs}">
-						<tr><td>${item}&nbsp;</td><td>${otherIDs[item]}</td></tr>
-					</c:forEach>
-				</table>
-			</div>
-		</div>
-	</c:if>
-
-
-	<!-- Sequences ribbon -->
-	<%@ include file="MarkerDetail_SequencesRibbon.jsp" %>
-
-	<!-- Polymorphisms ribbon -->
-	<%@ include file="MarkerDetail_PolymorphismsRibbon.jsp" %>
-
-	<!-- ROW14 -->
-	<c:set var="proteinAnnotations" value="${marker.proteinAnnotations}"/>
-	<c:if test="${not empty proteinAnnotations}">
-		<div class="row" >
-			<div class="header <%=leftTdStyles.getNext() %>">
-				Protein-related<br/>information
-			</div>
-			<div class="detail <%=rightTdStyles.getNext() %>">
-				<table>
-					<tr><td>Resource</td><td>ID</td><td>Description</td></tr>
-					<c:forEach var="item" items="${proteinAnnotations}">
-						<c:set var="url" value=""/>
-						<c:if test="${item.vocabName == 'InterPro Domains'}">
-							<c:set var="url" value="${urls.InterPro}"/>
-						</c:if>
-						<c:if test="${item.vocabName == 'Protein Ontology'}">
-							<c:set var="url" value="${urls.Protein_Ontology}"/>
-						</c:if>
-						<tr><td>${fn:replace (item.vocabName, " Domains", "")}</td>
-						<c:if test="${url != ''}">
-							<td><a href="${fn:replace(url, '@@@@', item.termID)}">${item.termID}</a></td>
-						</c:if>
-						<c:if test="${url == ''}">
-							<td>${item.termID}</td>
-						</c:if>
-						<td>${item.term}</td></tr>
-					</c:forEach>
-				</table>
-				<c:if test="${not empty marker.representativePolypeptideSequence}">
-					<c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
-					<c:if test="${seq.provider == 'SWISS-PROT'}">
-						<c:set var="url" value="${urls.InterPro_ISpy}"/>
-						<a href="${fn:replace(url, '@@@@', seq.primaryID)}" target="_new">Graphical View of Protein Domain Structure</a>
-					</c:if>
-				</c:if>
-			</div>
-		</div>
-	</c:if>
-
-	<!-- References -->
-	<c:if test="${not empty marker.references}">
-		<div class="row">
-			<div class="header <%=leftTdStyles.getNext() %>" >
-				References
-			</div>
-			<div class="detail <%=rightTdStyles.getNext() %>" >
-				<c:set var="earliestRef" value="${marker.earliestReference}"/>
-				<c:set var="latestRef" value="${marker.latestReference}"/>
-				<c:if test="${not empty earliestRef}">(Earliest) <a href="${configBean.FEWI_URL}reference/${earliestRef.jnumID}">${earliestRef.jnumID}</a>
-					${earliestRef.shortCitation}<br/>
-				</c:if>
-				<c:if test="${not empty latestRef}">(Latest) <a href="${configBean.FEWI_URL}reference/${latestRef.jnumID}">${latestRef.jnumID}</a>
-					${latestRef.shortCitation}<br/>
-				</c:if>
-				<c:if test="${marker.countOfReferences > 0}">
-					All references(<a href="${configBean.FEWI_URL}reference/marker/${marker.primaryID}">${marker.countOfReferences}</a>)<br/>
-				</c:if>
-				<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
-					Disease annotation references (<a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a>)
-				</c:if>
-			</div>
-		</div>
-	</c:if>
-
-	<!-- ROW16 -->
-	<c:set var="otherMgiIDs" value="${marker.otherMgiIDs}"/>
-	<c:if test="${not empty otherMgiIDs}">
-		<div class="row">
-			<div class="header <%=leftTdStyles.getNext() %>" >
-				Other<br/>accession&nbsp;IDs
-			</div>
-			<div class="detail <%=rightTdStyles.getNext() %>" >
-				<c:forEach var="item" items="${otherMgiIDs}" varStatus="status">
-					${item.accID}<c:if test="${not status.last}">, </c:if>
-				</c:forEach>
-			</div>
-		</div>
-	</c:if>
-
-<!-- close structural table -->
 </div>
 
 <!-- Elements not part of page structure that are hidden by default -->
@@ -463,5 +467,16 @@ ${templateBean.templateBodyStartHtml}
 	</c:if>
 </div>
 
+<script language="Javascript">
+YAHOO.namespace("gxd.container");
+YAHOO.gxd.container.anatomyHelp = new YAHOO.widget.Panel("sgAnatomyHelp", { width:"400px", draggable:false, visible:false, constraintoviewport:true } );
+YAHOO.gxd.container.anatomyHelp.render();
+YAHOO.util.Event.addListener("sgAnatomyHelpImage", "mouseover", YAHOO.gxd.container.anatomyHelp.show, YAHOO.gxd.container.anatomyHelp, true);
+
+YAHOO.namespace("mp.container");
+YAHOO.mp.container.phenoHelp = new YAHOO.widget.Panel("sgPhenoHelp", { width:"360px", draggable:false, visible:false, constraintoviewport:true } );
+YAHOO.mp.container.phenoHelp.render();
+YAHOO.util.Event.addListener("sgPhenoHelpImage", "mouseover", YAHOO.mp.container.phenoHelp.show, YAHOO.mp.container.phenoHelp, true);
+</script>
 <!--	close page template -->
 ${templateBean.templateBodyStopHtml}

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -299,6 +300,7 @@ public class ReferenceController {
 	@RequestMapping("/allele/{alleleID}")
 	public ModelAndView referenceSummaryByAlleleId(			
 			@PathVariable("alleleID") String alleleID,
+			@ModelAttribute ReferenceQueryForm queryForm,
 			HttpServletRequest request, Model model) {		
 		
         // setup search parameters object
@@ -310,21 +312,22 @@ public class ReferenceController {
         SearchResults<Allele> searchResults
           = alleleFinder.getAlleleByID(searchParams);
 
-        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleID);
+        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleID, queryForm);
 	}
 	
     @RequestMapping(value="/summary",  params={"_Allele_key"})
-    public ModelAndView referenceSummaryByAlleleKey(@RequestParam("_Allele_key") String alleleKey) {
+    public ModelAndView referenceSummaryByAlleleKey(@RequestParam("_Allele_key") String alleleKey,
+		@ModelAttribute ReferenceQueryForm queryForm) {
         logger.debug("->referenceSummaryByAlleleKey started: " + alleleKey);
        
         // find the requested reference
         SearchResults<Allele> searchResults
         	= alleleFinder.getAlleleByKey(alleleKey);
 
-        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleKey);
+        return referenceSummaryByAllele(searchResults.getResultObjects(), alleleKey, queryForm);
     }
     
-    private ModelAndView referenceSummaryByAllele(List<Allele> alleleList, String allele){
+    private ModelAndView referenceSummaryByAllele(List<Allele> alleleList, String allele, ReferenceQueryForm query){
     	ModelAndView mav = new ModelAndView("reference_summary_allele");
     	
         if (alleleList.size() < 1) {
@@ -340,7 +343,8 @@ public class ReferenceController {
         }
         
         mav.addObject("allele", alleleList.get(0));
-		mav.addObject("queryString", "alleleKey=" + alleleList.get(0).getAlleleKey());
+	mav.addObject("queryString", "alleleKey=" + alleleList.get(0).getAlleleKey());
+	addFieldsFromQF(mav, query);
     	
     	return mav;   	
     }
@@ -388,16 +392,87 @@ public class ReferenceController {
 		return "reference_summary_sequence";
 	}
 
+	/* references for GO annotations for a marker
+	 */
+	@RequestMapping("/go/marker/{mrkID}")
+	public ModelAndView goReferencesByMarkerId (
+		@PathVariable("mrkID") String mrkID,
+		HttpServletRequest request, Model model) {		
+
+	    logger.debug("->goReferencesByMarkerId started: " + mrkID);
+
+	    // find the requested marker
+            List<Marker> markerList = markerFinder.getMarkerByPrimaryId(mrkID);
+
+            ModelAndView mav = new ModelAndView("reference_summary_marker");
+        
+            if (markerList.size() < 1) {
+		// forward to error page
+		mav = new ModelAndView("error");
+		mav.addObject("errorMsg", "No Marker Found");
+		return mav;
+	    } else if (markerList.size() > 1) {
+		// forward to error page
+		mav = new ModelAndView("error");
+		mav.addObject("errorMsg", "Duplicate ID");
+		return mav;
+	    }
+        
+	    mav.addObject("marker", markerList.get(0));
+                
+            // pre-generate query string
+            mav.addObject("queryString", "goMarkerId=" + mrkID);
+            mav.addObject("isGOSummary", true);
+    	
+	    return mav;   	
+	}
+
+	/* references for alleles of a marker
+	 */
+	@RequestMapping("/phenotype/marker/{mrkID}")
+	public ModelAndView phenoReferencesByMarkerId (
+		@PathVariable("mrkID") String mrkID,
+		HttpServletRequest request, Model model) {		
+
+	    logger.debug("->phenoReferencesByMarkerId started: " + mrkID);
+
+	    // find the requested marker
+            List<Marker> markerList = markerFinder.getMarkerByPrimaryId(mrkID);
+
+            ModelAndView mav = new ModelAndView("reference_summary_marker");
+        
+            if (markerList.size() < 1) {
+		// forward to error page
+		mav = new ModelAndView("error");
+		mav.addObject("errorMsg", "No Marker Found");
+		return mav;
+	    } else if (markerList.size() > 1) {
+		// forward to error page
+		mav = new ModelAndView("error");
+		mav.addObject("errorMsg", "Duplicate ID");
+		return mav;
+	    }
+        
+	    mav.addObject("marker", markerList.get(0));
+                
+            // pre-generate query string
+            mav.addObject("queryString", "phenoMarkerId=" + mrkID);
+            mav.addObject("isPhenotypeSummary", true);
+    	
+	    return mav;   	
+	}
+
 	/*
-	 * This method maps requests for the reference summary for a sequence. 
+	 * This method maps requests for the reference summary for a marker.
 	 * Note that this method does not process the actual query, but rather maps
 	 * the request to the apropriate view and returns any Model objects needed
 	 * by the view.  The view is responsible for issuing the ajax query that 
 	 * will return the results to populate the data table.
 	 */
-	@RequestMapping("/marker/{markerID}")
+	@RequestMapping("/marker/{markerID:[A-Za-z0-9\\:_]+}")
 	public ModelAndView referenceSummaryByMarkerId(
 			@PathVariable("markerID") String markerID,
+			@ModelAttribute ReferenceQueryForm queryForm,
 			HttpServletRequest request, Model model) {		
 		logger.debug("->referenceSummaryByMarkerId started: " + markerID);
 		
@@ -410,11 +485,13 @@ public class ReferenceController {
         SearchResults<Marker> searchResults
           = markerFinder.getMarkerByID(searchParams);
 
-        return referenceSummaryByMarker(searchResults.getResultObjects(), markerID);
+        return referenceSummaryByMarker(searchResults.getResultObjects(), markerID, queryForm);
 	}
 	
     @RequestMapping(value="/summary",  params={"_Marker_key"})
-    public ModelAndView referenceSummaryByMarkerKey(@RequestParam("_Marker_key") String markerKey) {
+    public ModelAndView referenceSummaryByMarkerKey(@RequestParam("_Marker_key") String markerKey,
+	@ModelAttribute ReferenceQueryForm queryForm) {
+
         logger.debug("->referenceSummaryByMarkerKey started: " + markerKey);
 
         // find the requested reference
@@ -422,10 +499,23 @@ public class ReferenceController {
           = markerFinder.getMarkerByKey(markerKey);
         List<Marker> markerList = searchResults.getResultObjects();
 
-        return referenceSummaryByMarker( markerList, markerKey);
+        return referenceSummaryByMarker( markerList, markerKey, queryForm);
     }
     
-    private ModelAndView referenceSummaryByMarker(List<Marker> markerList, String markerKey){
+    /* add a subset of fields from the query form to the mav
+     */
+    private ModelAndView addFieldsFromQF(ModelAndView mav,
+	ReferenceQueryForm query) {
+	    List<String> typeFilters = query.getCleanedTypeFilter();
+
+	    // assumes we only filter by one value
+	    if ((typeFilters != null) && (typeFilters.size() > 0)) {
+		mav.addObject("typeFilter", typeFilters.get(0));
+	    }
+	    return mav;
+    }
+
+    private ModelAndView referenceSummaryByMarker(List<Marker> markerList, String markerKey, ReferenceQueryForm query){
     	ModelAndView mav = new ModelAndView("reference_summary_marker");
     	
         if (markerList.size() < 1) {
@@ -445,6 +535,11 @@ public class ReferenceController {
                 
         // pre-generate query string
         mav.addObject("queryString", "markerKey=" + marker.getMarkerKey());
+
+	addFieldsFromQF(mav, query);
+
+//        mav.addObject("queryString", "markerKey=" + marker.getMarkerKey()
+//		+ query.getUrlFragment());
     	
     	return mav;   	
     }
@@ -540,6 +635,18 @@ public class ReferenceController {
 			queryList.add(new Filter(IndexConstants.REF_DISEASE_ID,diseaseId,Filter.Operator.OP_EQUAL));
 		}
 		
+		// search for references used for a marker's GO annotations
+		String goMarkerId = query.getGoMarkerId();
+		if (goMarkerId != null && !goMarkerId.equals("")) {
+			queryList.add(new Filter(IndexConstants.REF_GO_MARKER_ID, goMarkerId, Filter.Operator.OP_EQUAL));
+		}
+
+		// search for references of a marker's alleles
+		String phenoMarkerId = query.getPhenoMarkerId();
+		if (phenoMarkerId != null && !phenoMarkerId.equals("")) {
+			queryList.add(new Filter(IndexConstants.REF_PHENO_MARKER_ID, phenoMarkerId, Filter.Operator.OP_EQUAL));
+		}
+
 		//build author query filter
 		String authorText = query.getAuthor().trim();
 		if(authorText != null && !"".equals(authorText)){
@@ -707,6 +814,11 @@ public class ReferenceController {
 			facetList.add(new Filter(FacetConstants.REF_AUTHORS, 
 					query.getAuthorFilter(), Filter.Operator.OP_IN));
 		}
+		// build type/grouping (literature vs. non-literature) facet query filter
+		if(query.getCleanedTypeFilter().size() > 0){
+			facetList.add(new Filter(FacetConstants.REF_GROUPING, 
+				query.getCleanedTypeFilter(), Filter.Operator.OP_IN));
+		}
 		// build journal facet query filter
 		if (query.getJournalFilter().size() > 0){
 			facetList.add(new Filter(FacetConstants.REF_JOURNALS, 
@@ -843,6 +955,30 @@ public class ReferenceController {
 		logger.debug("params parsed");
 
 		return this.parseFacetResponse(referenceFinder.getAuthorFacet(params));
+	}
+	
+	/*
+	 * This method maps requests for the type/grouping (literature vs. non-literature) facet list.  The results are returned as JSON.  
+	 */
+	@RequestMapping("/facet/type")
+	public @ResponseBody Map<String, List<String>> facetType(
+			@ModelAttribute ReferenceQueryForm query,
+			BindingResult result) {
+			
+		logger.debug(query.toString());
+		
+		SearchParams params = new SearchParams();
+		params.setFilter(this.parseReferenceQueryForm(query, result));
+	
+		// perform query and return results as json
+		logger.debug("params parsed");
+
+		Map<String, List<String>> response = this.parseFacetResponse(referenceFinder.getTypeFacet(params));
+
+		if (response.containsKey("resultFacets")) {
+			Collections.reverse(response.get("resultFacets"));
+		}
+		return response;
 	}
 	
 	/*

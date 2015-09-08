@@ -46,4 +46,23 @@ var updateQuerySummary = function() {
 		el.appendTo(searchSummary);
 	}
 
+	// if we searched by structure, add to search summary
+	if (searchedStructure != "") {
+
+       // Create a container span
+		var el = new YAHOO.util.Element(document.createElement('span'));
+
+		//add the text node to the newly created span
+		var b = new YAHOO.util.Element(document.createElement('b'));
+		var newContent = document.createTextNode("Data Summary: ");
+		b.appendChild(newContent);
+		el.appendChild(b);
+		el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+		el.appendChild(document.createTextNode("Expression results in "));
+		var b2 = new YAHOO.util.Element(document.createElement('b'));
+		var newContent2 = document.createTextNode(searchedStructure);
+		b2.appendChild(newContent2);
+		el.appendChild(b2);
+		el.appendTo(searchSummary);
+	}
 }; 

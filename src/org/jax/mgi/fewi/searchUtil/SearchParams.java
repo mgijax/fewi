@@ -31,6 +31,25 @@ public class SearchParams {
 	private boolean fetchKeysOnly = false;
 	private boolean suppressLogs = false;
 
+	public String toString() {
+	    String s = "SearchParams [Filter: ";
+	    s = s + filter.toString();
+	    s = s + ", Sorts: " + sorts.toString();
+	    s = s + ", Paginator: " + paginator;
+
+	    if (includeRowMeta) { s = s + ", includeRowMeta"; }
+	    if (includeSetMeta) { s = s + ", includeSetMeta"; }
+	    if (includeMetaScore) { s = s + ", includeMetaScore"; }
+	    if (includeMetaHighlight) { s = s + ", includeMetaHighlight"; }
+	    if (includeHighlightMarkup) { s = s + ", includeHighlightMarkup"; }
+	    if (includeGenerated) { s = s + ", includeGenerated"; }
+	    if (fetchKeysOnly) { s = s + ", fetchKeysOnlyl"; }
+	    if (suppressLogs) { s = s + ", suppressLogs"; }
+	    s = s + "]";
+
+	    return s;
+	}
+
     //////////////////////////////////////////////////////////////////////////
     //  BASIC ACCESSORS
     //////////////////////////////////////////////////////////////////////////

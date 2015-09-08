@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import mgi.frontend.datamodel.Term;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
@@ -21,6 +22,8 @@ import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
+import org.jax.mgi.fewi.finder.MarkerFinder;
+import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -91,6 +94,12 @@ public class DiseasePortalController
 	// get the finders used by various methods
 	@Autowired
 	private DiseasePortalFinder hdpFinder;
+
+	@Autowired
+	private MarkerFinder markerFinder;
+
+	@Autowired
+	private TermFinder termFinder;
 
 	@Value("${solr.factetNumberDefault}")
 	private Integer facetLimit;
@@ -487,6 +496,110 @@ public class DiseasePortalController
    		return mav;
     }
 
+
+    //--------------------------//
+    // Grid - detail info from marker detail MP slimgrid
+    //--------------------------//
+
+    @RequestMapping(value="/sgCell")
+    public ModelAndView slimgridCell(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      HttpSession session,
+      @ModelAttribute DiseasePortalQueryForm query)
+    {
+    	logger.debug("->slimgridCell started");
+
+	// get the (one) marker that is identified by ID in the 'genes' field
+
+	String markerID = query.getGenes();
+	if ((markerID == null) || ("".equals(markerID))) {
+	    return errorMav("No gene specified in 'genes' field.");
+	}
+
+	SearchResults<Marker> markerSR = markerFinder.getMarkerByID(markerID);
+	if (markerSR.getTotalCount() == 0) {
+	    return errorMav("No gene matches ID '" + markerID + "'");
+
+	} else if (markerSR.getTotalCount() > 1) {
+	    return errorMav(markerSR.getTotalCount() + " genes match ID '"
+		+ markerID + "'");
+	}
+
+	Marker marker = markerSR.getResultObjects().get(0);
+
+	// get the (one) MP header term that is identified by ID in the
+	// 'phenotypes' field
+	
+	String mpID = query.getPhenotypes();
+	if ((mpID == null) || ("".equals(mpID))) {
+	    return errorMav("No MP ID specified in 'phenotypes' field.");
+	}
+
+	List<Term> termList = termFinder.getTermsByID(mpID);
+	if ((termList == null) || (termList.size() == 0)) {
+	    return errorMav("No MP term matches ID '" + mpID + "'");
+	} else if (termList.size() > 1) {
+	    return errorMav(termList.size() + " MP terms match ID '" +
+		mpID + "'");
+	}
+	Term headerTerm = termList.get(0);
+
+	// preserve the termHeader passed in (for display purposes, then
+	// replace it out of the query form)
+	
+	String termHeader = query.getTermHeader();
+	query.setTermHeader(headerTerm.getAbbreviation());
+
+    	// get the geno cluster rows
+        SearchResults<HdpGenoCluster> searchResults = getGenoClusters(request, query,session);
+        List<HdpGenoCluster> genoClusters = searchResults.getResultObjects();
+
+        // get unique list of markers in IMSR
+        Marker genoClusterMarker;
+        List<Marker> markersInImsr = new ArrayList<Marker>();
+        for (HdpGenoCluster genoCluster : genoClusters) {
+        	genoClusterMarker = genoCluster.getMarker();
+        	if ((genoCluster.getMarker().getCountForImsr() > 0) && (!markersInImsr.contains(genoCluster.getMarker()))) {
+        		markersInImsr.add(genoClusterMarker);
+			}
+        }
+
+        // get the mp term columns
+    	List<SolrVocTerm> mpTerms = getGridMpTermColumns(request,query,session);
+      	List<String> mpTermColumnsToDisplay = new ArrayList<String>();
+	List<String> termColIds = new ArrayList<String>();
+	List<String> termColNames = new ArrayList<String>(); // needed to automated tests
+
+	for(SolrVocTerm mpTerm : mpTerms) {
+		mpTermColumnsToDisplay.add(truncateText(mpTerm.getTerm(), 45));
+		termColIds.add(mpTerm.getPrimaryId());
+		termColNames.add(mpTerm.getTerm());
+	}
+		
+	// cross reference them
+	List<HdpGenoByHeaderPopupRow> popupRows = new ArrayList<HdpGenoByHeaderPopupRow>();
+	// map the columns with the data
+	for(HdpGenoCluster gc : genoClusters) {
+		// map the diseases with column info
+		HdpGridMapper mpMapper = new HdpGridMapper(termColIds, gc.getMpTerms());
+		HdpGenoByHeaderPopupRow popupRow = new HdpGenoByHeaderPopupRow(gc, mpMapper);
+		popupRows.add(popupRow);
+	}
+
+      	// setup view object
+      	ModelAndView mav = new ModelAndView("disease_portal_slimgrid_detail");
+	mav.addObject("popupRows", popupRows);
+	mav.addObject("genoClusters", genoClusters);
+	mav.addObject("termColumns", mpTermColumnsToDisplay);
+	mav.addObject("termNames", mpTerms);
+	mav.addObject("terms", termColNames);
+	mav.addObject("termHeader", termHeader);
+	mav.addObject("markers", markersInImsr);
+	mav.addObject("marker", marker);
+
+   	return mav;
+    }
 
     //--------------------------//
     // Grid - Phenotype System Cell Popup
@@ -1732,4 +1845,13 @@ public class DiseasePortalController
 		return geneFileName!=null && geneFileName.equals(session.getAttribute(DiseasePortalQueryForm.GENE_FILE_VAR_NAME));
 	}
 
+
+	/* build and return a MAV that goes to the error page and shows the
+	 * given message
+	 */
+	private static ModelAndView errorMav(String message) {
+            ModelAndView mav = new ModelAndView("error");
+            mav.addObject("errorMsg", message);
+            return mav;
+	}
 }

@@ -221,8 +221,14 @@ filters.defaultFilterFormatter = function(mydata) {
 	el.setAttribute('id', id);
 	el.setAttribute('style', 'line-height: 2.2');
 	el.setAttribute('title', 'click to remove this filter');
-	setText(el, text);
 
+	// if we have a left parenthesis in the text, assume that it was
+	// converted from a comma and change it back for the displayed text.
+	if (find('(', text)) {
+	    setText(el, text.replace(/\(/g, ','));
+	} else {
+	    setText(el, text);
+	}
 	list.push(el);
     } 
     filters.log('returning ' + list.length + ' buttons for ' + mydata.name);
@@ -1058,10 +1064,18 @@ filters.parseResponse = function(oRequest, oResponse, oPayload) {
     for (var x in res) {
 	var checked = '';
 	var fVal = filters.encode(res[x]);
+	var fVal2 = fVal.replace(/\(/g, ',');
 
 	var i = selectedList.length;
 	while (i--) {
 	    if (selectedList[i] == fVal) {
+		checked = ' CHECKED';
+		break;
+	    }
+
+	    // need to also check if there would be a match if we converted
+	    // left parentheses back to commas
+	    if (selectedList[i].replace(/\(/g, ',') == fVal2) {
 		checked = ' CHECKED';
 		break;
 	    }
@@ -1072,6 +1086,11 @@ filters.parseResponse = function(oRequest, oResponse, oPayload) {
 	} else {
 	    list.push(res[x]);
 	}
+
+	// We convert any commas to a left parenthesis (odd choice...),
+	// seemingly to avoid the submitted string getting broken up into
+	// multiple strings when the QueryForm object is constructed on
+	// the fewi side of the fence.  (my best guess)
 
 	options[x] = '<label><input type="checkbox" name="'
 	    + fieldname + '" value="'

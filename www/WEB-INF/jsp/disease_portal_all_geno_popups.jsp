@@ -32,10 +32,6 @@
       </TD>
 
       <TD class='genotypeType'>
-        <%-- <%@ include file="/WEB-INF/jsp/phenotype_table_geno_box.jsp" %>
-        <div>
-          ${genotype.genotypeType}${counter}
-        </div> --%>
       </TD>
 
       <TD>

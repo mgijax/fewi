@@ -8,9 +8,14 @@
     
 ${templateBean.templateHeadHtml}
 
-<title>Gene Ontology Classifications</title>
-
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
+<c:if test="${empty headerTerm}">
+<title>Gene Ontology Classifications</title>
+</c:if>
+<c:if test="${not empty headerTerm}">
+<title>${marker.symbol} ${headerTerm} gene ontology</title>
+</c:if>
 
 <style type="text/css">
 .yui-skin-sam .yui-dt th{
@@ -39,17 +44,46 @@ ${templateBean.templateBodyStartHtml}
 	<span class="titleBarMainTitle">Gene Ontology Classifications</span>
 </div>
 
-<jsp:include page="marker_header.jsp"></jsp:include><br>
+<jsp:include page="marker_header.jsp"></jsp:include>
 
+<c:if test="${empty headerTerm}">
+<br>
 <div class="GO">
 <a name="text"></a><h3 class="extraLarge"><b>Go Annotations as Summary Text</b> <a href="#tabular" class="GO">(Tabular View)</a>
 <c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOMarkerGraph&id=${marker.primaryID}" class="GO">(GO Graph)</a></c:if></h3>
 
 <%=ntc.convertNotes(marker.getGOText(), '|')%><br><hr><br>
 </div>
+</c:if>
 
-<a name="tabular"></a><h3 class="extraLarge"><b>Go Annotations in Tabular Form</b> <a href="#text" class="GO">(Text View)</a>
-<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOMarkerGraph&id=${marker.primaryID}" class="GO">(GO Graph)</a></c:if></h3>
+<c:if test="${not empty headerTerm}">
+<style>
+div.headerTerm {
+    background-color: #dfefff;
+    border: thin solid #002255;
+    font-family: Verdana,Arial,Helvetica;
+    font-size: 20px;
+    margin-bottom: 12px;
+    min-height: 32px;
+    min-width: 500px;
+    padding: 3px;
+}
+div.allAnnot {
+    float: right; font-size: 12px; font-weight: bold; padding-top: 8px;
+}
+</style>
+<div class="headerTerm">Gene Ontology (GO) annotations for ${headerTerm}
+<div id="allClassificationsLink" class="allAnnot">
+All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}#tabular">${marker.countOfGOTerms}</a>)
+</div>
+</div>
+</c:if>
+<c:if test="${empty headerTerm}">
+<a name="tabular"></a><h3 class="extraLarge"><b>Go Annotations in Tabular Form</b>
+<a href="#text" class="GO">(Text View)</a>
+<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOMarkerGraph&id=${marker.primaryID}" class="GO">(GO Graph)</a></c:if>
+</h3>
+</c:if>
 
 <!-- paginator -->
 <div id="summary" style="width:1080px;">
@@ -57,9 +91,9 @@ ${templateBean.templateBodyStartHtml}
 		<div id="contentcolumn" style="margin: 0 0 0 0;">
 			<div class="innertube">
 				<div style="width: 470px; margin-top: 20px;">
-					<span id="filterLabel" class="label">Filter Markers by:</span>
-					<a id="categoryFilterMenu" class="filterButton">Category&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
-					<a id="evidenceFilterMenu" class="filterButton">Evidence Code&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+					<span id="filterLabel" class="label">Filter annotations by:</span>
+					<a id="aspectFilterMenu" class="filterButton">Aspect&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+					<a id="evidenceFilterMenu" class="filterButton">Evidence&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<!-- Implemented by ref id.  oblod <a id="referenceMenu" class="filterButton">Reference&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> -->
 				</div><br />
 				<div id="breadbox" style="width: 765px; margin-top: 10px;">
@@ -81,7 +115,7 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 </div>
 
-<div id="toolbar" class="bluebar" style="width:1065px;">
+<div id="toolbar" class="bluebar" style="width:1236px;">
 	<div id="downloadDiv">
 		<span class="label">Export:</span> 
 		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
@@ -96,39 +130,7 @@ ${templateBean.templateBodyStartHtml}
 	<div id="paginationBottom">&nbsp;</div>
 </div>
 
-<div class="GO">
-<br>
-<hr><b>
-Gene Ontology Evidence Code Abbreviations:</b><br><br>
-<table>
-<tbody>
-<tr><td>&nbsp;&nbsp;<b>EXP</b> Inferred from experiment</td></tr>
-
-<tr><td>&nbsp;&nbsp;<b>IAS</b> Inferred from ancestral sequence</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IBA</b> Inferred from biological aspect of ancestor</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IBD</b> Inferred from biological aspect of descendant</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IC</b> Inferred by curator</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IDA</b> Inferred from direct assay</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IEA</b> Inferred from electronic annotation</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IGI</b> Inferred from genetic interaction</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IKR</b> Inferred from key residues</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IMP</b> Inferred from mutant phenotype</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IMR</b> Inferred from missing residues</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IPI</b> Inferred from physical interaction</td></tr>
-<tr><td>&nbsp;&nbsp;<b>IRD</b> Inferred from rapid divergence</td></tr>
-<tr><td>&nbsp;&nbsp;<b>ISS</b> Inferred from sequence or structural similarity</td></tr>
-<tr><td>&nbsp;&nbsp;<b>ISO</b> Inferred from sequence orthology</td></tr>
-<tr><td>&nbsp;&nbsp;<b>ISA</b> Inferred from sequence alignment</td></tr>
-<tr><td>&nbsp;&nbsp;<b>ISM</b> Inferred from sequence model</td></tr>
-<tr><td>&nbsp;&nbsp;<b>NAS</b> Non-traceable author statement</td></tr>
-
-
-<tr><td>&nbsp;&nbsp;<b>ND</b> No biological data available</td></tr>
-<tr><td>&nbsp;&nbsp;<b>RCA</b> Reviewed computational analysis</td></tr>
-<tr><td>&nbsp;&nbsp;<b>TAS</b> Traceable author statement</td></tr>
-</tbody></table>
-<hr>
-</div>
+<jsp:include page="go_summary_legend.jsp"></jsp:include>
 
    <div class="facetFilter">
       <div id="facetDialog">
@@ -160,7 +162,7 @@ Gene Ontology Evidence Code Abbreviations:</b><br><br>
     filters.setHistoryManagement("myDataTable", handleNavigationRaw);
     filters.setDataTable(getPageDataTable());
     filters.setGeneratePageRequestFunction(generatePageRequest);
-    filters.addFilter('categoryFilter', 'Category', 'categoryFilterMenu', 'categoryFilter', fewiurl + 'go/facet/category');
+    filters.addFilter('aspectFilter', 'Aspect', 'aspectFilterMenu', 'aspectFilter', fewiurl + 'go/facet/aspect');
     filters.addFilter('evidenceFilter', 'Evidence', 'evidenceFilterMenu', 'evidenceFilter', fewiurl + 'go/facet/evidence');
     filters.addFilter('referenceFilter', 'Reference', 'referenceFilterMenu', 'referenceFilter', fewiurl + 'go/facet/reference');
 </script>

@@ -86,116 +86,93 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/allele")
 public class AlleleController {
 
-    //--------------------//
-    // class variables
-    //--------------------//
+	//--------------------//
+	// class variables
+	//--------------------//
 
-    // keep this around, so we know what version of the assembly we have (even
-    // for alleles with a representative sequence without proper coordinates)
+	// keep this around, so we know what version of the assembly we have (even
+	// for alleles with a representative sequence without proper coordinates)
 	//
-    private static String assemblyVersion = null;
+	private static String assemblyVersion = null;
 
-    private static Integer DOWNLOAD_ROW_CAP = new Integer(250000);
+	private static Integer DOWNLOAD_ROW_CAP = new Integer(250000);
 
-    //--------------------//
-    // instance variables
-    //--------------------//
+	//--------------------//
+	// instance variables
+	//--------------------//
 
-    private final Logger logger = LoggerFactory.getLogger(AlleleController.class);
+	private final Logger logger = LoggerFactory.getLogger(AlleleController.class);
 
-    @Autowired
-    private IDLinker idLinker;
+	@Autowired
+	private IDLinker idLinker;
 
-    @Autowired
-    private DbInfoFinder dbInfoFinder;
+	@Autowired
+	private DbInfoFinder dbInfoFinder;
 
-    @Autowired
-    private AlleleFinder alleleFinder;
+	@Autowired
+	private AlleleFinder alleleFinder;
 
-    @Autowired
-    private ImageFinder imageFinder;
+	@Autowired
+	private ImageFinder imageFinder;
 
-    @Autowired
-    private GenotypeFinder genotypeFinder;
+	@Autowired
+	private GenotypeFinder genotypeFinder;
 
-    @Autowired
-    private ReferenceFinder referenceFinder;
+	@Autowired
+	private ReferenceFinder referenceFinder;
 
-    @Autowired
-    private MarkerFinder markerFinder;
+	@Autowired
+	private MarkerFinder markerFinder;
 
-    @Autowired
-    private SessionFactory sessionFactory;
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    //--------------------------------------------------------------------//
-    // public methods
-    //--------------------------------------------------------------------//
+	//--------------------------------------------------------------------//
+	// public methods
+	//--------------------------------------------------------------------//
 
-
-    //------------------------------------//
-    // Allele Query Form
-    //------------------------------------//
 	@RequestMapping(method=RequestMethod.GET)
-	 public ModelAndView getQueryForm(
-			  HttpServletRequest request,
-			  HttpServletResponse response,
-			  @ModelAttribute AlleleQueryForm query)
-	 {
+	public ModelAndView getQueryForm(HttpServletRequest request, HttpServletResponse response, @ModelAttribute AlleleQueryForm query) {
 		ModelAndView mav = new ModelAndView("allele_query");
 
-		this.initQFCache();
-        List<String> collectionValues = AlleleQueryForm.getCollectionValues();
+		initQFCache();
+		List<String> collectionValues = AlleleQueryForm.getCollectionValues();
 
-        // package data, and send to display layer
-        mav.addObject("alleleQueryForm", query);
+		// package data, and send to display layer
+		mav.addObject("alleleQueryForm", query);
 		mav.addObject("sort", new Paginator());
 		mav.addObject("collectionValues", collectionValues);
 		return mav;
 	}
 
-
-    //-------------------------//
-    // Allele Query System Popup
-    //-------------------------//
-    @RequestMapping("/phenoPopup")
-    public ModelAndView phenoPopup (HttpServletRequest request) 
-    {
+	@RequestMapping("/phenoPopup")
+	public ModelAndView phenoPopup (HttpServletRequest request) {
 		logger.debug("->systemPopup started");
 		String formName = request.getParameter("formName");
-		
-        ModelAndView mav = new ModelAndView("allele_query_system_popup");
-        if(notEmpty(formName)) mav.addObject("formName",formName);
-        mav.addObject("widgetValues1",FormWidgetValues.getPhenoSystemWidgetValues1());
-        mav.addObject("widgetValues2",FormWidgetValues.getPhenoSystemWidgetValues2());
 
-        return mav;
-    }
+		ModelAndView mav = new ModelAndView("allele_query_system_popup");
+		if(notEmpty(formName)) mav.addObject("formName",formName);
+		mav.addObject("widgetValues1",FormWidgetValues.getPhenoSystemWidgetValues1());
+		mav.addObject("widgetValues2",FormWidgetValues.getPhenoSystemWidgetValues2());
 
+		return mav;
+	}
 
-    //------------------------------------//
-    // Allele Summary Shell
-    //------------------------------------//
-	 @RequestMapping(value="/summary", method=RequestMethod.GET)
-	 public ModelAndView alleleSummary(
-			  HttpServletRequest request,
-			  HttpServletResponse response,
-			  @ModelAttribute AlleleQueryForm query)
-	 {
+	@RequestMapping(value="/summary", method=RequestMethod.GET)
+	public ModelAndView alleleSummary(HttpServletRequest request, HttpServletResponse response, @ModelAttribute AlleleQueryForm query) {
 		ModelAndView mav = new ModelAndView("allele_summary");
 
 		// direct to marker summary if marker is in link
-		if(notEmpty(query.getMarkerId()))
-		{
+		if(notEmpty(query.getMarkerId())) {
 			SearchResults<Marker> markerSR = markerFinder.getMarkerByID(query.getMarkerId());
-			if(markerSR.getTotalCount()>0)
-			{
+			if(markerSR.getTotalCount()>0) {
 				mav = new ModelAndView("allele_summary_by_marker");
 				mav.addObject("marker",markerSR.getResultObjects().get(0));
 			}
 		}
 
-		this.initQFCache();
-        List<String> collectionValues = AlleleQueryForm.getCollectionValues();
+		initQFCache();
+		List<String> collectionValues = AlleleQueryForm.getCollectionValues();
 		mav.addObject("alleleQueryForm",query);
 		mav.addObject("queryString", request.getQueryString());
 		mav.addObject("collectionValues", collectionValues);
@@ -206,548 +183,475 @@ public class AlleleController {
 			mav.addObject("mutationInvolves", "yes");
 		}
 		return mav;
-	 }
+	}
 
 
-    //------------------------------------//
-    // Allele Summary (By Refernce) Shell
-    //------------------------------------//
-    @RequestMapping(value="/reference/{refID}")
-    public ModelAndView alleleSummeryByRefId(
-          HttpServletRequest request,
-          @PathVariable("refID") String refID)
-    {
-        logger.debug("->alleleSummeryByRefId started");
+	//------------------------------------//
+	// Allele Summary (By Refernce) Shell
+	//------------------------------------//
+	@RequestMapping(value="/reference/{refID}")
+	public ModelAndView alleleSummeryByRefId(HttpServletRequest request, @PathVariable("refID") String refID) {
+		logger.debug("->alleleSummeryByRefId started");
 
-        // setup view object
-        ModelAndView mav = new ModelAndView("allele_summary_by_reference");
+		// setup view object
+		ModelAndView mav = new ModelAndView("allele_summary_by_reference");
 
 		// setup search parameters object to gather the requested marker
-        SearchParams referenceSearchParams = new SearchParams();
-        Filter refIdFilter = new Filter(SearchConstants.REF_ID, refID);
-        referenceSearchParams.setFilter(refIdFilter);
+		SearchParams referenceSearchParams = new SearchParams();
+		Filter refIdFilter = new Filter(SearchConstants.REF_ID, refID);
+		referenceSearchParams.setFilter(refIdFilter);
 
-        // find the requested reference
-        SearchResults<Reference> referenceSearchResults
-          = referenceFinder.searchReferences(referenceSearchParams);
-        List<Reference> referenceList = referenceSearchResults.getResultObjects();
+		// find the requested reference
+		SearchResults<Reference> referenceSearchResults = referenceFinder.searchReferences(referenceSearchParams);
+		List<Reference> referenceList = referenceSearchResults.getResultObjects();
 
-        // there can be only one...
-        if (referenceList.size() < 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No reference found for " + refID);
-            return mav;
-        }
-        if (referenceList.size() > 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe reference found for " + refID);
-            return mav;
-        }
-        Reference reference = referenceList.get(0);
+		// there can be only one...
+		if (referenceList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No reference found for " + refID);
+			return mav;
+		}
+		if (referenceList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe reference found for " + refID);
+			return mav;
+		}
+		Reference reference = referenceList.get(0);
 
-        // prep query form for summary js request
-        AlleleQueryForm query = new AlleleQueryForm();
-        query.setJnumId(refID);
+		// prep query form for summary js request
+		AlleleQueryForm query = new AlleleQueryForm();
+		query.setJnumId(refID);
 
-        // package data, and send to view layer
-        mav.addObject("reference", reference);
+		// package data, and send to view layer
+		mav.addObject("reference", reference);
 		mav.addObject("alleleQueryForm",query);
 		mav.addObject("queryString", "jnumId=" + refID);
 
-        logger.debug("alleleSummeryByRefId routing to view ");
+		logger.debug("alleleSummeryByRefId routing to view ");
 		return mav;
-    }
-
-
-    //--------------------//
-    // Allele Detail by ID
-    //--------------------//
-    @RequestMapping(value="/{alleleID:.+}", method=RequestMethod.GET)
-    public ModelAndView alleleDetailByID(
-		  HttpServletRequest request,
-		  HttpServletResponse response,
-	    @PathVariable("alleleID") String alleleID) {
-
-	logger.debug("->alleleDetailByID started");
-
-	// find the requested Allele
-	List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
-
-	// there can only be one Allele
-	if (alleleList.size() < 1) {
-	    return errorMav("No Allele Found");
-	} else if (alleleList.size() > 1) {
-	    return errorMav("Duplicate ID");
 	}
 
-	// pass on to shared code to flesh out data for the allele detail page
-	return this.prepareAllele(request, alleleList.get(0));
-    }
+	@RequestMapping(value="/{alleleID:.+}", method=RequestMethod.GET)
+	public ModelAndView alleleDetailByID(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
 
+		logger.debug("->alleleDetailByID started");
 
-    //---------------------//
-    // Allele Detail by Key
-    //---------------------//
-    @RequestMapping(value="/key/{dbKey:.+}", method=RequestMethod.GET)
-    public ModelAndView alleleDetailByKey(
-		  HttpServletRequest request,
-		  HttpServletResponse response,
-	    @PathVariable("dbKey") String dbKey) {
+		// find the requested Allele
+		List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
 
-	logger.debug("->alleleDetailByKey started");
+		// there can only be one Allele
+		if (alleleList.size() < 1) {
+			return errorMav("No Allele Found");
+		} else if (alleleList.size() > 1) {
+			return errorMav("Duplicate ID");
+		}
 
-	// find the requested Allele
-	SearchResults<Allele> searchResults = alleleFinder.getAlleleByKey(dbKey);
-	List<Allele> alleleList = searchResults.getResultObjects();
-
-	// there can only be one Allele
-	if (alleleList.size() < 1) {
-	    return errorMav("No Allele Found");
-	} else if (alleleList.size() > 1) {
-	    // should not happen
-	    return errorMav("Duplicate Key");
+		// pass on to shared code to flesh out data for the allele detail page
+		return this.prepareAllele(request, alleleList.get(0));
 	}
 
-	// pass on to shared code to flesh out data for the allele detail page
-	return this.prepareAllele(request, alleleList.get(0));
-    }
+	@RequestMapping(value="/key/{dbKey:.+}", method=RequestMethod.GET)
+	public ModelAndView alleleDetailByKey(HttpServletRequest request, HttpServletResponse response, @PathVariable("dbKey") String dbKey) {
 
-    //------------------------------------------------//
-    // 'Mutation Involves' relationships for an allele
-    //------------------------------------------------//
+		logger.debug("->alleleDetailByKey started");
 
-    @RequestMapping(value="/mutationInvolves/{alleleID:.+}", method=RequestMethod.GET)
-    public ModelAndView mutationInvolvesByID(
-		  HttpServletRequest request,
-		  HttpServletResponse response,
-	    @PathVariable("alleleID") String alleleID) {
+		// find the requested Allele
+		SearchResults<Allele> searchResults = alleleFinder.getAlleleByKey(dbKey);
+		List<Allele> alleleList = searchResults.getResultObjects();
 
-	logger.debug("->mutationInvolvesByID started");
+		// there can only be one Allele
+		if (alleleList.size() < 1) {
+			return errorMav("No Allele Found");
+		} else if (alleleList.size() > 1) {
+			// should not happen
+			return errorMav("Duplicate Key");
+		}
 
-	// find the requested Allele
-	List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
-
-	// there can only be one Allele
-	if (alleleList.size() < 1) {
-	    return errorMav("Unknown ID : No allele was found for " + alleleID);
-	} else if (alleleList.size() > 1) {
-	    return errorMav("Duplicate ID : " + alleleID
-		+ " is shared by " + alleleList.size() + " alleles");
+		// pass on to shared code to flesh out data for the allele detail page
+		return this.prepareAllele(request, alleleList.get(0));
 	}
 
-	Allele allele = alleleList.get(0);
+	//------------------------------------------------//
+	// 'Mutation Involves' relationships for an allele
+	//------------------------------------------------//
 
-	ModelAndView mav = new ModelAndView("allele_mutation_involves");
-	mav.addObject("allele", allele);
+	@RequestMapping(value="/mutationInvolves/{alleleID:.+}", method=RequestMethod.GET)
+	public ModelAndView mutationInvolvesByID(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
 
-        mav.addObject("idLinker", idLinker);
+		logger.debug("->mutationInvolvesByID started");
 
-    	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+		// find the requested Allele
+		List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
 
-	StringBuffer title = new StringBuffer();
-	title.append("Genes/genome features involved in mutation: ");
-	title.append("<a href='");
-	title.append(fewiUrl);
-	title.append("allele/");
-	title.append(allele.getPrimaryID());
-	title.append("' target='_blank' class='noUnderline'>");
-	title.append(FormatHelper.superscript(allele.getSymbol()));
-	title.append("</a>");
+		// there can only be one Allele
+		if (alleleList.size() < 1) {
+			return errorMav("Unknown ID : No allele was found for " + alleleID);
+		} else if (alleleList.size() > 1) {
+			return errorMav("Duplicate ID : " + alleleID + " is shared by " + alleleList.size() + " alleles");
+		}
 
-	String titleBar = allele.getSymbol() + 
-	    " : mouse genes/genome features involved in this mutation";
+		Allele allele = alleleList.get(0);
 
-	String seoDescription =
-	    "Mouse genes/genome features involved in mutation "
-	    + allele.getSymbol();
+		ModelAndView mav = new ModelAndView("allele_mutation_involves");
+		mav.addObject("allele", allele);
 
-	StringBuffer seoKeywords = new StringBuffer();
-	seoKeywords.append("MGI, ");
-	seoKeywords.append(allele.getSymbol());
-        seoKeywords.append(", ");
-	seoKeywords.append(allele.getName());
-	seoKeywords.append(", mouse, mice, murine, Mus musculus, ");
-	seoKeywords.append(allele.getAlleleType());
+		mav.addObject("idLinker", idLinker);
 
-	for (AlleleSynonym synonym : allele.getSynonyms()) {
-	    seoKeywords.append(", ");
-	    seoKeywords.append(synonym.getSynonym());
+		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
+		StringBuffer title = new StringBuffer();
+		title.append("Genes/genome features involved in mutation: ");
+		title.append("<a href='");
+		title.append(fewiUrl);
+		title.append("allele/");
+		title.append(allele.getPrimaryID());
+		title.append("' target='_blank' class='noUnderline'>");
+		title.append(FormatHelper.superscript(allele.getSymbol()));
+		title.append("</a>");
+
+		String titleBar = allele.getSymbol() + " : mouse genes/genome features involved in this mutation";
+
+		String seoDescription = "Mouse genes/genome features involved in mutation " + allele.getSymbol();
+
+		StringBuffer seoKeywords = new StringBuffer();
+		seoKeywords.append("MGI, ");
+		seoKeywords.append(allele.getSymbol());
+		seoKeywords.append(", ");
+		seoKeywords.append(allele.getName());
+		seoKeywords.append(", mouse, mice, murine, Mus musculus, ");
+		seoKeywords.append(allele.getAlleleType());
+
+		for (AlleleSynonym synonym : allele.getSynonyms()) {
+			seoKeywords.append(", ");
+			seoKeywords.append(synonym.getSynonym());
+		}
+
+		seoKeywords.append(", ");
+		seoKeywords.append(allele.getPrimaryID());
+
+		mav.addObject("pageTitle", titleBar);
+		mav.addObject("pageTitleSuperscript", title.toString());
+		mav.addObject("seoDescription", seoDescription);
+		mav.addObject("seoKeywords", seoKeywords.toString());
+		mav.addObject("alleleID", allele.getPrimaryID());
+		return mav;
 	}
 
-	seoKeywords.append(", ");
-	seoKeywords.append(allele.getPrimaryID());
+	/* method to retrieve data for the table on the mutation involves page and
+	 * feed it to the page in JSON format
+	 */
+	@RequestMapping("/mutationInvolvesJson")
+	public @ResponseBody JsonSummaryResponse<MutationInvolvesSummaryRow>
+	mutationInvolvesJson(HttpServletRequest request, @ModelAttribute MutationInvolvesQueryForm query, @ModelAttribute Paginator page) {
 
-	mav.addObject("pageTitle", titleBar);
-	mav.addObject("pageTitleSuperscript", title.toString());
-	mav.addObject("seoDescription", seoDescription);
-	mav.addObject("seoKeywords", seoKeywords.toString());
-        mav.addObject("alleleID", allele.getPrimaryID());
-	return mav;
-    }
+		logger.debug("->mutationInvolvesJson() started");
+		logger.debug("queryForm: " + query.toString());
 
-    /* method to retrieve data for the table on the mutation involves page and
-     * feed it to the page in JSON format
-     */
-    @RequestMapping("/mutationInvolvesJson")
-    public @ResponseBody JsonSummaryResponse<MutationInvolvesSummaryRow>
-	mutationInvolvesJson(HttpServletRequest request,
-	    @ModelAttribute MutationInvolvesQueryForm query,
-	    @ModelAttribute Paginator page) {
+		// find the allele and its key
 
-	logger.debug("->mutationInvolvesJson() started");
-	logger.debug("queryForm: " + query.toString());
+		String alleleID = query.getAlleleID();
+		int alleleKey = -1;
+		Allele allele = null;
 
-	// find the allele and its key
+		if (alleleID != null) {
+			// find the requested Allele
+			List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
 
-	String alleleID = query.getAlleleID();
-	int alleleKey = -1;
-	Allele allele = null;
+			// there can only be one Allele
+			if (alleleList.size() < 1) {
+				logger.debug("No Allele Found for ID: " + alleleID);
+			} else if (alleleList.size() > 1) {
+				logger.debug("ID matches multiple alleles: " + alleleID);
+			}
+			allele = alleleList.get(0);
+			alleleKey = allele.getAlleleKey();
+		}
 
-	if (alleleID != null) {
-	    // find the requested Allele
-	    List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
+		// build info needed to conduct the search
 
-	    // there can only be one Allele
-	    if (alleleList.size() < 1) {
-		logger.debug("No Allele Found for ID: " + alleleID);
-	    } else if (alleleList.size() > 1) {
-		logger.debug("ID matches multiple alleles: " + alleleID);
-	    }
-	    allele = alleleList.get(0);
-	    alleleKey = allele.getAlleleKey();
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setFilter(this.genMutationInvolvesFilter(query, alleleKey));
+		logger.debug("Filter: " + params.getFilter().toString());
+
+		// perform the query and pull out requested objects
+
+		SearchResults<AlleleRelatedMarker> searchResults = alleleFinder.getMutationInvolvesData(params);
+		List<AlleleRelatedMarker> markers = searchResults.getResultObjects();
+
+		// convert to SummaryRow wrapper objects
+
+		List<MutationInvolvesSummaryRow> summaryRows = new ArrayList<MutationInvolvesSummaryRow>();
+		Iterator<AlleleRelatedMarker> it = markers.iterator();
+		while (it.hasNext()) {
+			AlleleRelatedMarker marker = it.next();
+			if (marker != null) {
+				summaryRows.add(new MutationInvolvesSummaryRow(marker, allele));
+			}
+		}
+
+		JsonSummaryResponse<MutationInvolvesSummaryRow> jsonResponse = new JsonSummaryResponse<MutationInvolvesSummaryRow>();
+
+		jsonResponse.setSummaryRows(summaryRows);
+		jsonResponse.setTotalCount(searchResults.getTotalCount());
+		return jsonResponse;
 	}
 
-	// build info needed to conduct the search
+	private Filter genMutationInvolvesFilter(MutationInvolvesQueryForm query, int alleleKey) {
 
-	SearchParams params = new SearchParams();
-	params.setPaginator(page);
-	params.setFilter(this.genMutationInvolvesFilter(query, alleleKey));
-	logger.debug("Filter: " + params.getFilter().toString());
-
-	// perform the query and pull out requested objects
-	
-	SearchResults<AlleleRelatedMarker> searchResults = 
-	    alleleFinder.getMutationInvolvesData(params);
-	List<AlleleRelatedMarker> markers = searchResults.getResultObjects();
-
-	// convert to SummaryRow wrapper objects
-	
-	List<MutationInvolvesSummaryRow> summaryRows =
-	    new ArrayList<MutationInvolvesSummaryRow>();
-	Iterator<AlleleRelatedMarker> it = markers.iterator();
-	while (it.hasNext()) {
-	    AlleleRelatedMarker marker = it.next();
-	    if (marker != null) {
-		summaryRows.add(new MutationInvolvesSummaryRow(marker, allele));
-	    }
+		if (alleleKey > 0) {
+			return new Filter (SearchConstants.ALLELE_KEY, alleleKey, Filter.Operator.OP_EQUAL);
+		}
+		return null;
 	}
 
-	JsonSummaryResponse<MutationInvolvesSummaryRow> jsonResponse =
-	    new JsonSummaryResponse<MutationInvolvesSummaryRow>();
+	//------------------------------------//
+	// Allele Summary Data Retrieval
+	//------------------------------------//
+	@RequestMapping("/summary/json")
+	public @ResponseBody JsonSummaryResponse<AlleleSummaryRow> alleleSummaryJson(HttpServletRequest request, @ModelAttribute AlleleQueryForm query, @ModelAttribute Paginator page) throws RecognitionException {
+		SearchResults<Allele> sr = getAlleles(request,query,page);
+		logger.info("found "+sr.getTotalCount()+" alleles");
 
-	jsonResponse.setSummaryRows(summaryRows);
-	jsonResponse.setTotalCount(searchResults.getTotalCount());
-	return jsonResponse;
-    }
+		sessionFactory.getCurrentSession().enableFilter("teaserMarkers");
 
-    private Filter genMutationInvolvesFilter(MutationInvolvesQueryForm query,
-	int alleleKey) {
+		List<AlleleSummaryRow> sRows = new ArrayList<AlleleSummaryRow>();
+		for(Allele allele : sr.getResultObjects()) {
+			sRows.add(new AlleleSummaryRow(allele));
+		}
 
-	if (alleleKey > 0) {
-	    return new Filter (SearchConstants.ALLELE_KEY, alleleKey,
-		Filter.Operator.OP_EQUAL);
+		logger.info("building summary rows");
+		JsonSummaryResponse<AlleleSummaryRow> jsr = new JsonSummaryResponse<AlleleSummaryRow>();
+		jsr.setTotalCount(sr.getTotalCount());
+		jsr.setSummaryRows(sRows);
+		return jsr;
 	}
-	return null;
-    }
 
-    //------------------------------------//
-    // Allele Summary Data Retrieval
-    //------------------------------------//
-	 @RequestMapping("/summary/json")
-	 public @ResponseBody JsonSummaryResponse<AlleleSummaryRow> alleleSummaryJson(
-	            HttpServletRequest request,
-	            @ModelAttribute AlleleQueryForm query,
-	            @ModelAttribute Paginator page) throws RecognitionException
-	 {
-		 SearchResults<Allele> sr = getAlleles(request,query,page);
-		 logger.info("found "+sr.getTotalCount()+" alleles");
-
-		 sessionFactory.getCurrentSession().enableFilter(
-		    "teaserMarkers");
-
-		 List<AlleleSummaryRow> sRows = new ArrayList<AlleleSummaryRow>();
-		 for(Allele allele : sr.getResultObjects())
-		 {
-			 sRows.add(new AlleleSummaryRow(allele));
-		 }
-
-		 logger.info("building summary rows");
-		 JsonSummaryResponse<AlleleSummaryRow> jsr = new JsonSummaryResponse<AlleleSummaryRow>();
-		 jsr.setTotalCount(sr.getTotalCount());
-		 jsr.setSummaryRows(sRows);
-		 return jsr;
-	 }
-
-	 public SearchResults<Allele> getAlleles(
-	            HttpServletRequest request,
-	            @ModelAttribute AlleleQueryForm query,
-	            @ModelAttribute Paginator page) throws RecognitionException
-	 {
-		 SearchParams sp = new SearchParams();
-		 sp.setPaginator(page);
-		 sp.setFilter(parseQueryForm(query));
-		 sp.setSorts(parseAlleleSorts(request));
-		 SearchResults<Allele> sr = alleleFinder.getAlleleByID(sp);
-		 return sr;
-	 }
+	public SearchResults<Allele> getAlleles(HttpServletRequest request, @ModelAttribute AlleleQueryForm query, @ModelAttribute Paginator page) throws RecognitionException {
+		SearchParams sp = new SearchParams();
+		sp.setPaginator(page);
+		sp.setFilter(parseQueryForm(query));
+		sp.setSorts(parseAlleleSorts(request));
+		SearchResults<Allele> sr = alleleFinder.getAlleleByID(sp);
+		return sr;
+	}
 
 
-    //--------------------------------//
-    // Allele Summary Tab-Delim Report
-    //--------------------------------//
-    @RequestMapping("/report*")
-    public ModelAndView alleleSummaryExport(
-            HttpServletRequest request,
-			@ModelAttribute AlleleQueryForm query,
-			@ModelAttribute Paginator page) throws RecognitionException
-	{
+	//--------------------------------//
+	// Allele Summary Tab-Delim Report
+	//--------------------------------//
+	@RequestMapping("/report*")
+	public ModelAndView alleleSummaryExport(HttpServletRequest request, @ModelAttribute AlleleQueryForm query, @ModelAttribute Paginator page) throws RecognitionException {
 
-    	logger.debug("generating report");
+		logger.debug("generating report");
 
-        SearchParams sp = new SearchParams();
-        page.setResults(DOWNLOAD_ROW_CAP);
-        sp.setPaginator(page);
-        sp.setFilter(parseQueryForm(query));
-        List<Sort> sorts = new ArrayList<Sort>();
-        sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL));
-        sp.setSorts(sorts);
-        SearchResults<Allele> sr = alleleFinder.getAlleleByID(sp);
+		SearchParams sp = new SearchParams();
+		page.setResults(DOWNLOAD_ROW_CAP);
+		sp.setPaginator(page);
+		sp.setFilter(parseQueryForm(query));
+		List<Sort> sorts = new ArrayList<Sort>();
+		sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL));
+		sp.setSorts(sorts);
+		SearchResults<Allele> sr = alleleFinder.getAlleleByID(sp);
 
-        List<Allele> alleles = sr.getResultObjects();
+		List<Allele> alleles = sr.getResultObjects();
 
 		ModelAndView mav = new ModelAndView("alleleSummaryReport");
 		mav.addObject("alleles", alleles);
 		return mav;
 
-    }
+	}
 
 
-    //--------------------------------------------------------------------//
-    // private methods
-    //--------------------------------------------------------------------//
-	 private Filter parseQueryForm(AlleleQueryForm query) throws RecognitionException
-	 {
-		 List<Filter> filters = new ArrayList<Filter>();
-		 // Allele Key
-		 String allKey = query.getAllKey();
-		 if(notEmpty(allKey))
-		 {
-			 filters.add(new Filter(SearchConstants.ALL_KEY,allKey,Filter.Operator.OP_EQUAL));
-		 }
-		 // Allele IDs
-		 String allIds = query.getAllIds();
-		 if(notEmpty(allIds))
-		 {
-			 List<String> allIdTokens = QueryParser.tokeniseOnWhitespaceAndComma(allIds);
-			 filters.add(new Filter(SearchConstants.ALL_ID,allIdTokens,Filter.Operator.OP_IN));
-		 }
-		 // Allele Type
-		 Filter alleleTypeFilter = makeListFilter(query.getAlleleType(),SearchConstants.ALL_TYPE, false);
-		 if(alleleTypeFilter!=null) filters.add(alleleTypeFilter);
+	private Filter parseQueryForm(AlleleQueryForm query) throws RecognitionException {
+		List<Filter> filters = new ArrayList<Filter>();
+		// Allele Key
+		String allKey = query.getAllKey();
+		if(notEmpty(allKey)) {
+			filters.add(new Filter(SearchConstants.ALL_KEY,allKey,Filter.Operator.OP_EQUAL));
+		}
+		// Allele IDs
+		String allIds = query.getAllIds();
+		if(notEmpty(allIds)) {
+			List<String> allIdTokens = QueryParser.tokeniseOnWhitespaceAndComma(allIds);
+			filters.add(new Filter(SearchConstants.ALL_ID,allIdTokens,Filter.Operator.OP_IN));
+		}
+		// Allele Type
+		Filter alleleTypeFilter = makeListFilter(query.getAlleleType(),SearchConstants.ALL_TYPE, false);
+		if(alleleTypeFilter!=null) filters.add(alleleTypeFilter);
 
-		 // Allele Sub Type
-		 Filter alleleSubTypeFilter = makeListFilter(query.getAlleleSubType(),SearchConstants.ALL_SUBTYPE, true);
-		 if(alleleSubTypeFilter!=null) filters.add(alleleSubTypeFilter);
+		// Allele Sub Type
+		Filter alleleSubTypeFilter = makeListFilter(query.getAlleleSubType(),SearchConstants.ALL_SUBTYPE, true);
+		if(alleleSubTypeFilter!=null) filters.add(alleleSubTypeFilter);
 
-		 // Allele Collection
-		 Filter collectionFilter = makeListFilter(query.getCollection(),SearchConstants.ALL_COLLECTION, false);
-		 if(collectionFilter!=null) filters.add(collectionFilter);
+		// Allele Collection
+		Filter collectionFilter = makeListFilter(query.getCollection(),SearchConstants.ALL_COLLECTION, false);
+		if(collectionFilter!=null) filters.add(collectionFilter);
 
-		 // Phenotypes
-		 String phenotype = query.getPhenotype();
-		 if(notEmpty(phenotype))
-		 {
+		// Phenotypes
+		String phenotype = query.getPhenotype();
+		if(notEmpty(phenotype)) {
 			BooleanSearch bs = new BooleanSearch();
 			Filter f = bs.buildSolrFilter(SearchConstants.ALL_PHENOTYPE,phenotype);
 			filters.add(f);
-		 }
-
-		 // Nomenclature
-		 String nomen = query.getNomen();
-		 if(notEmpty(nomen))
-		 {
-			 Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.ALL_NOMEN,nomen);
-			 if(nomenFilter!=null) filters.add(nomenFilter);
-		 }
-
-		 // Reference Key
-		 String refKey = query.getRefKey();
-		 if(notEmpty(refKey))
-		 {
-			 filters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.Operator.OP_EQUAL));
-		 }
-
-		 // Reference JNUM ID
-		 String jnumId = query.getJnumId();
-		 if(notEmpty(jnumId))
-		 {
-			 filters.add(new Filter(SearchConstants.JNUM_ID,jnumId,Filter.Operator.OP_EQUAL));
-		 }
-
-		 // Has OMIM
-		 String hasOMIM = query.getHasOMIM();
-		 if(notEmpty(hasOMIM))
-		 {
-			 filters.add(new Filter(SearchConstants.ALL_HAS_OMIM,hasOMIM,Filter.Operator.OP_EQUAL));
-		 }
-
-		 // Exclude Cell Lines
-		 String isCellLine = query.getIsCellLine();
-		 if(notEmpty(isCellLine))
-		 {
-			 filters.add(new Filter(SearchConstants.ALL_IS_CELLLINE,isCellLine,Filter.Operator.OP_EQUAL));
-		 }
-
-		 //Marker ID has two meanings:
-		 // 1. if mutationInvolves is non-null, then look for the
-		 //    marker ID as one associated with alleles via the
-		 //    mutation involves field
-		 // 2. if not a mutationInvolves query, then look for alleles
-		 //    associated with the marker in the traditional sense
-
-		 String mrkId = query.getMarkerId();
-		 String mutationInvolves = query.getMutationInvolves();
-
-		 if(notEmpty(mrkId))
-		 {
-			 if (notEmpty(mutationInvolves)) {
-		    		filters.add(new Filter(
-					SearchConstants.ALL_MI_MARKER_IDS,
-					mrkId, Filter.Operator.OP_EQUAL));
-			 } else {
-			 	filters.add(new Filter(
-					SearchConstants.MRK_ID,
-					mrkId, Filter.Operator.OP_EQUAL));
-			 }
-		 }
-
-		 // Chromosome
-		 List<String> chr = query.getChromosome();
-		 if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY))
-		 {
-			 Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME, false);
-			 if(chrFilter!=null) filters.add(chrFilter);
-		 }
-		 // Coordinate Search
-		 String coord = query.getCoordinate();
-		 String coordUnit = query.getCoordUnit();
-		 if(notEmpty(coord))
-		 {
-			 Filter coordFilter = FilterUtil.genCoordFilter(coord,coordUnit);
-			 if(coordFilter==null) coordFilter = nullFilter();
-			 filters.add(coordFilter);
-		 }
-		
-		 // CM Search
-		 String cm = query.getCm();
-		 if(notEmpty(cm))
-		 {
-			 Filter cmFilter = FilterUtil.genCmFilter(cm);
-			 if(cmFilter==null) cmFilter = nullFilter();
-			 filters.add(cmFilter);
-		 }
-		 
-		 // Cytoband
-		 String cyto = query.getCyto();
-		 if(notEmpty(cyto))
-		 {
-			 filters.add(new Filter(SearchConstants.CYTOGENETIC_OFFSET,cyto,Filter.Operator.OP_EQUAL));
-		 }
-
-		 Filter f;
-		 if(filters.size()>0)
-		 {
-			 // make sure not specified alleles are excluded
-			 filters.add(new Filter(SearchConstants.ALL_IS_WILD_TYPE,0,Filter.Operator.OP_EQUAL));
-			 f=Filter.and(filters);
-		 }
-		 else f = nullFilter(); // return nothing if no valid filters
-		 return f;
-	 }
-	 
-	 private Filter nullFilter()
-	 {
-		 return new Filter(SearchConstants.ALL_KEY,"-9999",Filter.Operator.OP_EQUAL);
-	 }
-
-	 /*
-	 * Parses requested sort parameters for gxd marker assay summary.
-	 */
-	private List<Sort> parseAlleleSorts(HttpServletRequest request)
-	{
-        logger.debug("->parseAlleleSorts started");
-        List<Sort> sorts = new ArrayList<Sort>();
-
-        // retrieve requested sort order; set default if not supplied
-        String sortRequested = request.getParameter("sort");
-
-        String dirRequested  = request.getParameter("dir");
-        boolean desc = true;
-        if("asc".equalsIgnoreCase(dirRequested))
-        {
-        	desc=false;
-        }
-        boolean asc=!desc;
-
-        // expected sort values
-        if ("nomen".equalsIgnoreCase(sortRequested))
-        {
-            sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,desc));
-        }
-        else if ("category".equalsIgnoreCase(sortRequested))
-        {
-            sorts.add(new Sort(SortConstants.ALL_BY_TYPE,desc));
-            sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,desc));
-        }
-        else if ("chr".equalsIgnoreCase(sortRequested))
-        {
-            sorts.add(new Sort(SortConstants.ALL_BY_CHROMOSOME,desc));
-            sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,desc));
-        }
-        else if ("diseases".equalsIgnoreCase(sortRequested))
-        {
-            sorts.add(new Sort(SortConstants.ALL_BY_DISEASE,desc));
-            sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,false));
-        }
-        else
-        {
-        	// default sort
-        	sorts.add(new Sort(SortConstants.ALL_BY_TRANSMISSION,asc));
-            sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,asc));
 		}
 
-        logger.debug ("sort: " + sortRequested);
+		// Nomenclature
+		String nomen = query.getNomen();
+		if(notEmpty(nomen)) {
+			Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.ALL_NOMEN,nomen);
+			if(nomenFilter!=null) filters.add(nomenFilter);
+		}
 
-        return sorts;
+		// Reference Key
+		String refKey = query.getRefKey();
+		if(notEmpty(refKey)) {
+			filters.add(new Filter(SearchConstants.REF_KEY,refKey,Filter.Operator.OP_EQUAL));
+		}
+
+		// Reference JNUM ID
+		String jnumId = query.getJnumId();
+		if(notEmpty(jnumId)) {
+			filters.add(new Filter(SearchConstants.JNUM_ID,jnumId,Filter.Operator.OP_EQUAL));
+		}
+
+		// Has OMIM and remove mutation involves
+		String hasOMIM = query.getHasOMIM();
+		if(notEmpty(hasOMIM)) {
+			filters.add(new Filter(SearchConstants.ALL_HAS_OMIM, hasOMIM, Filter.Operator.OP_EQUAL));
+			if(hasOMIM.equals("1")) {
+				String mrkId = query.getMarkerId();
+				// -(mutationInvolvesMarkerIDs:"MGI:99999")
+				Filter f = new Filter(SearchConstants.ALL_MI_MARKER_IDS, mrkId, Filter.Operator.OP_EQUAL);
+				f.setNegate(true);
+				filters.add(f);
+			}
+		}
+
+		// Exclude Cell Lines
+		String isCellLine = query.getIsCellLine();
+		if(notEmpty(isCellLine)) {
+			filters.add(new Filter(SearchConstants.ALL_IS_CELLLINE,isCellLine,Filter.Operator.OP_EQUAL));
+		}
+
+		//Marker ID has two meanings:
+		// 1. if mutationInvolves is non-null, then look for the
+		//    marker ID as one associated with alleles via the
+		//    mutation involves field
+		// 2. if not a mutationInvolves query, then look for alleles
+		//    associated with the marker in the traditional sense
+
+		String mrkId = query.getMarkerId();
+		String mutationInvolves = query.getMutationInvolves();
+
+		if(notEmpty(mrkId)) {
+			if (notEmpty(mutationInvolves)) {
+				filters.add(new Filter(SearchConstants.ALL_MI_MARKER_IDS, mrkId, Filter.Operator.OP_EQUAL));
+			} else {
+				filters.add(new Filter(SearchConstants.MRK_ID, mrkId, Filter.Operator.OP_EQUAL));
+			}
+		}
+
+		// Chromosome
+		List<String> chr = query.getChromosome();
+		if(notEmpty(chr) && !chr.contains(AlleleQueryForm.COORDINATE_ANY)) {
+			Filter chrFilter = makeListFilter(chr,SearchConstants.CHROMOSOME, false);
+			if(chrFilter!=null) filters.add(chrFilter);
+		}
+		// Coordinate Search
+		String coord = query.getCoordinate();
+		String coordUnit = query.getCoordUnit();
+		if(notEmpty(coord)) {
+			Filter coordFilter = FilterUtil.genCoordFilter(coord,coordUnit);
+			if(coordFilter==null) coordFilter = nullFilter();
+			filters.add(coordFilter);
+		}
+
+		// CM Search
+		String cm = query.getCm();
+		if(notEmpty(cm)) {
+			Filter cmFilter = FilterUtil.genCmFilter(cm);
+			if(cmFilter==null) cmFilter = nullFilter();
+			filters.add(cmFilter);
+		}
+
+		// Cytoband
+		String cyto = query.getCyto();
+		if(notEmpty(cyto)) {
+			filters.add(new Filter(SearchConstants.CYTOGENETIC_OFFSET,cyto,Filter.Operator.OP_EQUAL));
+		}
+
+		Filter f;
+		if(filters.size()>0) {
+			// make sure not specified alleles are excluded
+			filters.add(new Filter(SearchConstants.ALL_IS_WILD_TYPE,0,Filter.Operator.OP_EQUAL));
+			f=Filter.and(filters);
+		}
+		else f = nullFilter(); // return nothing if no valid filters
+		return f;
 	}
 
-    //----------------------------//
-    // Allele Detail (shared code)
-    //----------------------------//
-    /* look up a bunch of extra data and toss it in the MAV; a convenience
-     * method for use by the individual methods to render allele detail pages
-     * either by key or by ID
-     */
-    private ModelAndView prepareAllele(HttpServletRequest request,Allele allele)
-    {
+	private Filter nullFilter() {
+		return new Filter(SearchConstants.ALL_KEY,"-9999",Filter.Operator.OP_EQUAL);
+	}
+
+	/*
+	 * Parses requested sort parameters for gxd marker assay summary.
+	 */
+	private List<Sort> parseAlleleSorts(HttpServletRequest request) {
+		logger.debug("->parseAlleleSorts started");
+		List<Sort> sorts = new ArrayList<Sort>();
+
+		// retrieve requested sort order; set default if not supplied
+		String sortRequested = request.getParameter("sort");
+
+		String dirRequested  = request.getParameter("dir");
+		boolean desc = true;
+		if("asc".equalsIgnoreCase(dirRequested))
+		{
+			desc=false;
+		}
+		boolean asc=!desc;
+
+		// expected sort values
+		if ("nomen".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,desc));
+		} else if ("category".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.ALL_BY_TYPE,desc));
+			sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,desc));
+		} else if ("chr".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.ALL_BY_CHROMOSOME,desc));
+			sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,desc));
+		} else if ("diseases".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.ALL_BY_DISEASE,desc));
+			sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,false));
+		} else {
+			// default sort
+			sorts.add(new Sort(SortConstants.ALL_BY_TRANSMISSION,asc));
+			sorts.add(new Sort(SortConstants.ALL_BY_SYMBOL,asc));
+		}
+
+		logger.debug ("sort: " + sortRequested);
+
+		return sorts;
+	}
+
+	//----------------------------//
+	// Allele Detail (shared code)
+	//----------------------------//
+	/* look up a bunch of extra data and toss it in the MAV; a convenience
+	 * method for use by the individual methods to render allele detail pages
+	 * either by key or by ID
+	 */
+	private ModelAndView prepareAllele(HttpServletRequest request,Allele allele) {
 		ModelAndView mav = new ModelAndView("allele_detail");
 		mav.addObject ("allele", allele);
 
 		dbDate(mav);
 
-	        mav.addObject("idLinker", idLinker);
+		mav.addObject("idLinker", idLinker);
 
 		// add a Properties object with URLs for use at the JSP level
 		Properties urls = idLinker.getUrlsAsProperties();
@@ -756,31 +660,26 @@ public class AlleleController {
 		// pick up and save our 'expresses component' markers before
 		// we enable the filter for the 'mutation involves' markers
 
-		sessionFactory.getCurrentSession().enableFilter(
-		    "expressesComponentMarkers");
-		List<AlleleRelatedMarker> expressesComponent =
-		    allele.getExpressesComponentMarkers();
+		sessionFactory.getCurrentSession().enableFilter("expressesComponentMarkers");
+		List<AlleleRelatedMarker> expressesComponent = allele.getExpressesComponentMarkers();
 		if (expressesComponent.size() > 0) {
-		    mav.addObject("expressesComponent", expressesComponent);
-		    for (AlleleRelatedMarker arm : expressesComponent) {
-			String otherOrganism = arm.getEcOrganism();
-			if (otherOrganism != null) {
-			    mav.addObject("nonMouseExpressesComponent", "1");
+			mav.addObject("expressesComponent", expressesComponent);
+			for (AlleleRelatedMarker arm : expressesComponent) {
+				String otherOrganism = arm.getEcOrganism();
+				if (otherOrganism != null) {
+					mav.addObject("nonMouseExpressesComponent", "1");
+				}
 			}
-		    }
 		}
 
 		// When retrieving 'mutation involves' markers for the teaser,
 		// ensure that we're only getting the ones we need, rather
 		// than the whole set.
-		sessionFactory.getCurrentSession().enableFilter(
-		    "teaserMarkers");
-		sessionFactory.getCurrentSession().enableFilter(
-		    "mutationInvolvesMarkers");
-		List<AlleleRelatedMarker> mutationInvolves =
-		    allele.getMutationInvolvesMarkers();
+		sessionFactory.getCurrentSession().enableFilter("teaserMarkers");
+		sessionFactory.getCurrentSession().enableFilter("mutationInvolvesMarkers");
+		List<AlleleRelatedMarker> mutationInvolves = allele.getMutationInvolvesMarkers();
 		if (mutationInvolves.size() > 0) {
-		    mav.addObject("mutationInvolves", mutationInvolves); 
+			mav.addObject("mutationInvolves", mutationInvolves); 
 		}
 
 		String alleleType = allele.getAlleleType();
@@ -801,75 +700,56 @@ public class AlleleController {
 		seoDescription.append (allele.getSymbol());
 		seoDescription.append (" allele: origin");
 
-		if (allele.getMolecularDescription() != null &&
-			allele.getMolecularDescription().length() != 0)
-		{
-		    seoDescription.append (", molecular description");
-		    mav.addObject("description", allele.getMolecularDescription());
+		if (allele.getMolecularDescription() != null && allele.getMolecularDescription().length() != 0) {
+			seoDescription.append (", molecular description");
+			mav.addObject("description", allele.getMolecularDescription());
 		}
 
-		if (alleleType.equals("Targeted"))
-		{
-		    seoKeywords.add("null");
-		    seoKeywords.add("KO");
-		    seoKeywords.add("knock out");
-		    seoKeywords.add("knockout");
-		    seoKeywords.add("floxed");
-		    seoKeywords.add("loxP");
-		    seoKeywords.add("frt");
-
-		}
-		else if (alleleType.indexOf("Cre") >= 0 ||
-			alleleType.indexOf("Flp") >= 0)
-		{
-		    seoKeywords.add("recombinase");
-		    seoKeywords.add("cre");
-		    seoKeywords.add("flp");
-		    seoKeywords.add("flpe");
-
-		}
-		else if (alleleType.indexOf("Transposase") >= 0)
-		{
-		    seoKeywords.add("transposase");
+		if (alleleType.equals("Targeted")) {
+			seoKeywords.add("null");
+			seoKeywords.add("KO");
+			seoKeywords.add("knock out");
+			seoKeywords.add("knockout");
+			seoKeywords.add("floxed");
+			seoKeywords.add("loxP");
+			seoKeywords.add("frt");
+		} else if (alleleType.indexOf("Cre") >= 0 || alleleType.indexOf("Flp") >= 0) {
+			seoKeywords.add("recombinase");
+			seoKeywords.add("cre");
+			seoKeywords.add("flp");
+			seoKeywords.add("flpe");
+		} else if (alleleType.indexOf("Transposase") >= 0) {
+			seoKeywords.add("transposase");
 		}
 
-		if (!alleleType.equals("QTL") &&
-		    !alleleType.equals("Not Applicable") &&
-		    !alleleType.equals("Other"))
-		{
-		    // all allele types except QTL and N/A get two standard seoKeywords
-		    seoKeywords.add("mutant");
-		    seoKeywords.add("mutation");
+		if (!alleleType.equals("QTL") && !alleleType.equals("Not Applicable") && !alleleType.equals("Other")) {
+			// all allele types except QTL and N/A get two standard seoKeywords
+			seoKeywords.add("mutant");
+			seoKeywords.add("mutation");
 		}
 
-		if (!alleleType.equals("Not Applicable") &&
-		    !alleleType.equals("Not Specified")	&&
-		    !alleleType.equals("Other"))
-		{
-		    // all allele types except N/A and N/S get their allele type as a
-		    // keyword
-		    seoKeywords.add(alleleType);
+		if (!alleleType.equals("Not Applicable") && !alleleType.equals("Not Specified")	&& !alleleType.equals("Other")) {
+			// all allele types except N/A and N/S get their allele type as a
+			// keyword
+			seoKeywords.add(alleleType);
 		}
 
-		if (allele.getHasDiseaseModel())
-		{
-		    seoKeywords.add("disease model");
-		    seoDescription.append(" and human disease models");
+		if (allele.getHasDiseaseModel()) {
+			seoKeywords.add("disease model");
+			seoDescription.append(" and human disease models");
 		}
 
-		if (allele.getPhenotypeImages().size() > 0)
-		{
-		    seoDescription.append(", images");
+		if (allele.getPhenotypeImages().size() > 0) {
+			seoDescription.append(", images");
 		}
 
 		seoDescription.append(", gene associations, and references.");
 
 		List<AlleleSynonym> synonyms = allele.getSynonyms();
 
-	    for (AlleleSynonym synonym : synonyms)
-	    {
-	        seoKeywords.add (synonym.getSynonym());
-	    }
+		for (AlleleSynonym synonym : synonyms) {
+			seoKeywords.add (synonym.getSynonym());
+		}
 
 		// set up page title, subtitle, and labels dependent on allele type
 		String title = FormatHelper.superscript(allele.getSymbol());
@@ -879,35 +759,25 @@ public class AlleleController {
 		String symbolLabel = "Symbol";
 
 		if (alleleType.equals("QTL")) {
-		    // is a QTL
-		    subtitle = "QTL Variant Detail";
-		    markerLabel = "QTL";
-		    typeCategory = "Variant";
-		    symbolLabel = "QTL variant";
+			// is a QTL
+			subtitle = "QTL Variant Detail";
+			markerLabel = "QTL";
+			typeCategory = "Variant";
+			symbolLabel = "QTL variant";
 
-		}
-		else if (alleleType.equals("Transgenic"))
-		{
-		    // is a transgene
-		    subtitle = "Transgenic Allele Detail";
-		    typeCategory = "Transgene";
-		}
-		else if (alleleType.equals("Not Specified") ||
-			     alleleType.equals("Not Applicable") ||
-			     alleleType.equals("Other"))
-		{
-		    // do not show allele type in labels if Not Specified/Applicable
-		    subtitle = "Allele Detail";
-		}
-		else if (alleleType.indexOf('(') >= 0)
-		{
-		    // trim out subtypes when putting allele type in labels
-		    subtitle = alleleType.replaceFirst("\\(.*\\)", "") + " Allele Detail";
-		}
-		else
-		{
-		    // add allele type to labels
-		    subtitle = alleleType + " Allele Detail";
+		} else if (alleleType.equals("Transgenic")) {
+			// is a transgene
+			subtitle = "Transgenic Allele Detail";
+			typeCategory = "Transgene";
+		} else if (alleleType.equals("Not Specified") || alleleType.equals("Not Applicable") || alleleType.equals("Other")) {
+			// do not show allele type in labels if Not Specified/Applicable
+			subtitle = "Allele Detail";
+		} else if (alleleType.indexOf('(') >= 0) {
+			// trim out subtypes when putting allele type in labels
+			subtitle = alleleType.replaceFirst("\\(.*\\)", "") + " Allele Detail";
+		} else {
+			// add allele type to labels
+			subtitle = alleleType + " Allele Detail";
 		}
 
 		String keywords = StringUtils.join(seoKeywords,", ");
@@ -925,58 +795,48 @@ public class AlleleController {
 
 		String namesRaw = allele.getName();
 		Marker marker = allele.getMarker();
-		if (marker != null)
-		{
-		    mav.addObject("marker", marker);
+		if (marker != null) {
+			mav.addObject("marker", marker);
 
-		    // adjust the marker label for transgene markers, regardless of
-		    // the allele type.  Also, we do not want to link to the marker
-		    // detail page for transgene markers.
-		    if ("Transgene".equals(marker.getMarkerType()))
-		    {
+			// adjust the marker label for transgene markers, regardless of
+			// the allele type.  Also, we do not want to link to the marker
+			// detail page for transgene markers.
+			if ("Transgene".equals(marker.getMarkerType())) {
 
 				// only update the page subtitle if the allele type is not
 				// Not Applicable or Not Specified
-				if (!"Allele Detail".equals(subtitle))
-				{
-				    subtitle = "Transgene Detail";
+				if (!"Allele Detail".equals(subtitle)) {
+					subtitle = "Transgene Detail";
 				}
 
 				markerLabel = "Transgene";
 				mav.addObject("linkToMarker", null);
-		    }
-		    else
-		    {
+			} else {
 				// if not a transgene, link to the marker detail page
 				mav.addObject("linkToMarker", "yes");
-		    }
+			}
 
-		    if (!marker.getName().equals(namesRaw))
-		    {
-		    	namesRaw = marker.getName() + "; " + namesRaw;
-		    }
+			if (!marker.getName().equals(namesRaw)) {
+				namesRaw = marker.getName() + "; " + namesRaw;
+			}
 
-		    // if this is a QTL marker, then add in the QTL notes (two types)
-		    if ("QTL".equals(allele.getAlleleType()))
-		    {
+			// if this is a QTL marker, then add in the QTL notes (two types)
+			if ("QTL".equals(allele.getAlleleType())) {
 				List<MarkerQtlExperiment> qtlExpts = marker.getQtlMappingNotes();
-				if (qtlExpts != null && qtlExpts.size() > 0)
-				{
-				    mav.addObject("qtlExpts", qtlExpts);
+				if (qtlExpts != null && qtlExpts.size() > 0) {
+					mav.addObject("qtlExpts", qtlExpts);
 				}
 
 				List<MarkerQtlExperiment> qtlCandidateGenes = marker.getQtlCandidateGeneNotes();
-				if (qtlCandidateGenes != null && qtlCandidateGenes.size() > 0)
-				{
-				    mav.addObject("qtlCandidateGenes", qtlCandidateGenes);
+				if (qtlCandidateGenes != null && qtlCandidateGenes.size() > 0) {
+					mav.addObject("qtlCandidateGenes", qtlCandidateGenes);
 				}
 
 				String qtlNote = marker.getQtlNote();
-				if (qtlNote != null && qtlNote.length() > 0)
-				{
-				    mav.addObject("qtlNote", qtlNote);
+				if (qtlNote != null && qtlNote.length() > 0) {
+					mav.addObject("qtlNote", qtlNote);
 				}
-		    }
+			}
 		}
 
 		mav.addObject("markerLabel", markerLabel);
@@ -999,21 +859,17 @@ public class AlleleController {
 		String gbrowseLabel = "View all gene trap sequence tags within a 10kb region";
 
 		// genomic and genetic locations of the marker
-		if (marker != null)
-		{
-		    MarkerLocation coords = marker.getPreferredCoordinates();
-		    MarkerLocation cmOffset = marker.getPreferredCentimorgans();
-		    MarkerLocation cytoband = marker.getPreferredCytoband();
+		if (marker != null) {
+			MarkerLocation coords = marker.getPreferredCoordinates();
+			MarkerLocation cmOffset = marker.getPreferredCentimorgans();
+			MarkerLocation cytoband = marker.getPreferredCytoband();
 
-		    StringBuffer genomicLocation = new StringBuffer();
-		    StringBuffer geneticLocation = new StringBuffer();
+			StringBuffer genomicLocation = new StringBuffer();
+			StringBuffer geneticLocation = new StringBuffer();
 
-		    if (coords == null)
-		    {
-		    	genomicLocation.append ("unknown");
-		    }
-		    else
-		    {
+			if (coords == null) {
+				genomicLocation.append ("unknown");
+			} else {
 				startCoord = coords.getStartCoordinate().longValue();
 				endCoord = coords.getEndCoordinate().longValue();
 				chromosome = coords.getChromosome();
@@ -1027,74 +883,64 @@ public class AlleleController {
 				genomicLocation.append (" bp");
 
 				String strand = coords.getStrand();
-				if (strand != null)
-				{
-				    genomicLocation.append (", ");
-				    genomicLocation.append (strand);
-				    genomicLocation.append (" strand");
+				if (strand != null) {
+					genomicLocation.append (", ");
+					genomicLocation.append (strand);
+					genomicLocation.append (" strand");
 				}
-		    }
-		    mav.addObject("genomicLocation", genomicLocation.toString());
+			}
+			mav.addObject("genomicLocation", genomicLocation.toString());
 
-		    if ((cmOffset != null) && (cmOffset.getCmOffset().floatValue() != -999.0))
-		    {
+			if ((cmOffset != null) && (cmOffset.getCmOffset().floatValue() != -999.0)) {
 				geneticLocation.append ("Chr");
 				geneticLocation.append (cmOffset.getChromosome());
 
 				float cM = cmOffset.getCmOffset().floatValue();
 
-				if (cM >= 0.0)
-				{
-				    geneticLocation.append (", ");
+				if (cM >= 0.0) {
+					geneticLocation.append (", ");
 
-				    // need to include a special label for QTLs
-				    if ("QTL".equals(marker.getMarkerType()))
-				    {
-				    	geneticLocation.append ("cM position of peak correlated region/allele: ");
-				    }
-				    geneticLocation.append (cmOffset.getCmOffset().toString());
-				    geneticLocation.append (" cM");
+					// need to include a special label for QTLs
+					if ("QTL".equals(marker.getMarkerType()))
+					{
+						geneticLocation.append ("cM position of peak correlated region/allele: ");
+					}
+					geneticLocation.append (cmOffset.getCmOffset().toString());
+					geneticLocation.append (" cM");
+				} else if (cM == -1.0 && cytoband == null) {
+					geneticLocation.append (", Syntenic");
 				}
-				else if (cM == -1.0 && cytoband == null)
-				{
-				    geneticLocation.append (", Syntenic");
-				}
-		    }
+			}
 
-		    if (cytoband != null)
-		    {
-				if (cmOffset == null)
-				{
-				    geneticLocation.append ("Chr");
-				    geneticLocation.append (cytoband.getChromosome());
+			if (cytoband != null) {
+				if (cmOffset == null) {
+					geneticLocation.append ("Chr");
+					geneticLocation.append (cytoband.getChromosome());
 				}
 				geneticLocation.append (", cytoband ");
 				geneticLocation.append (cytoband.getCytogeneticOffset());
-		    }
-		    mav.addObject("geneticLocation", geneticLocation.toString());
+			}
+			mav.addObject("geneticLocation", geneticLocation.toString());
 		}
 
 		// allele symbol, name, and synonyms with HTML superscript tags
 		String symbolSup = FormatHelper.superscript(allele.getSymbol());
 		String nameSup = FormatHelper.superscript(namesRaw);
-		if (marker != null)
-		{
-		    String markerSymbolSup = FormatHelper.superscript(marker.getSymbol());
-		    mav.addObject ("markerSymbolSup", markerSymbolSup);
+		if (marker != null) {
+			String markerSymbolSup = FormatHelper.superscript(marker.getSymbol());
+			mav.addObject ("markerSymbolSup", markerSymbolSup);
 		}
 
 		mav.addObject ("symbolSup", symbolSup);
 		mav.addObject ("nameSup", nameSup);
 
 		List<AlleleSynonym> synonymList = allele.getSynonyms();
-		if (synonymList.size() > 0)
-		{
-		    List<String> formattedSynonyms = new ArrayList<String>();
-		    for(AlleleSynonym synonym : synonymList)
-		    {
-		    	formattedSynonyms.add(FormatHelper.superscript(synonym.getSynonym()));
-		    }
-		    mav.addObject ("synonyms", StringUtils.join(formattedSynonyms,", "));
+		if (synonymList.size() > 0) {
+			List<String> formattedSynonyms = new ArrayList<String>();
+			for(AlleleSynonym synonym : synonymList) {
+				formattedSynonyms.add(FormatHelper.superscript(synonym.getSynonym()));
+			}
+			mav.addObject ("synonyms", StringUtils.join(formattedSynonyms,", "));
 		}
 
 		// mutations and mutation label
@@ -1102,53 +948,43 @@ public class AlleleController {
 		String mutationLabel = "Mutation";
 
 		List<String> mutationList = allele.getMutations();
-		if (mutationList == null || mutationList.size() == 0)
-		{
-		    mutations.append ("Undefined");
-		}
-		else if (mutationList.size() == 1)
-		{
-		    mutations.append (mutationList.get(0));
-		}
-		else
-		{
-		    for (String m : mutationList)
-		    {
+		if (mutationList == null || mutationList.size() == 0) {
+			mutations.append ("Undefined");
+		} else if (mutationList.size() == 1) {
+			mutations.append (mutationList.get(0));
+		} else {
+			for (String m : mutationList) {
 				if (mutations.length() > 0) mutations.append(", ");
 				mutations.append(m);
-		    }
-		    mutationLabel = "Mutations";
+			}
+			mutationLabel = "Mutations";
 		}
 
 		String mutationString = mutations.toString();
 
 		// We only want to show an Undefined mutation type if there is a
 		// molecular note as well.
-		if (!"Undefined".equals(mutationString) || allele.getMolecularDescription() != null)
-		{
-		    mav.addObject("mutations", mutationString);
-		    mav.addObject("mutationLabel", mutationLabel);
+		if (!"Undefined".equals(mutationString) || allele.getMolecularDescription() != null) {
+			mav.addObject("mutations", mutationString);
+			mav.addObject("mutationLabel", mutationLabel);
 		}
 
 		// vector and vector type
 		boolean hasMcl = false;
 		List<AlleleCellLine> mutantCellLines = allele.getMutantCellLines();
-		if (mutantCellLines.size() > 0)
-		{
-		    hasMcl = true;
-		    AlleleCellLine mcl = mutantCellLines.get(0);
-		    String vector = mcl.getVector();
-		    String vectorType = mcl.getVectorType();
+		if (mutantCellLines.size() > 0) {
+			hasMcl = true;
+			AlleleCellLine mcl = mutantCellLines.get(0);
+			String vector = mcl.getVector();
+			String vectorType = mcl.getVectorType();
 
-		    if ((vector != null) && (!"Not Specified".equals(vector)))
-		    {
-		    	mav.addObject("vector", vector);
-		    }
+			if ((vector != null) && (!"Not Specified".equals(vector))) {
+				mav.addObject("vector", vector);
+			}
 
-		    if ((vectorType != null) && (!"Not Specified".equals(vectorType)))
-		    {
-		    	mav.addObject("vectorType", vectorType);
-		    }
+			if ((vectorType != null) && (!"Not Specified".equals(vectorType))) {
+				mav.addObject("vectorType", vectorType);
+			}
 		}
 
 		// mutant cell lines; ugly, but we need to do some slicing and dicing,
@@ -1157,138 +993,129 @@ public class AlleleController {
 		AlleleID kompID = allele.getKompID();
 
 		if (hasMcl) {
-		    ArrayList<String> mcLines = new ArrayList<String>();
-		    String lastProvider = null;
-		    String idToLink = null;
-		    String provider = "";
-		    StringBuffer out = new StringBuffer();
-		    String name = null;
+			ArrayList<String> mcLines = new ArrayList<String>();
+			String lastProvider = null;
+			String idToLink = null;
+			String provider = "";
+			StringBuffer out = new StringBuffer();
+			String name = null;
 
-		    for (AlleleCellLine mcl : mutantCellLines)
-		    {
-		    	provider = mcl.getCreator();
+			for (AlleleCellLine mcl : mutantCellLines) {
+				provider = mcl.getCreator();
 
 				name = mcl.getPrimaryID();
 				if ((name == null) || "null".equals(name)) {
-				    name = mcl.getName();
+					name = mcl.getName();
 				}
 
 				if (lastProvider == null) {
-				    idToLink = name;
-				    lastProvider = provider;
-				    mcLines.add(idToLink);
-
+					idToLink = name;
+					lastProvider = provider;
+					mcLines.add(idToLink);
 				} else if (lastProvider.equals(provider)) {
-				    mcLines.add(name);
-
+					mcLines.add(name);
 				} else {
-				    if (out.length() > 0) {
-					out.append (", ");
-				    }
-				    out.append (formatMutantCellLines (mcLines, lastProvider,
-					idToLink, kompID));
-				    idToLink = name;
-				    lastProvider = provider;
-				    mcLines = new ArrayList<String>();
-				    mcLines.add(idToLink);
+					if (out.length() > 0) {
+						out.append (", ");
+					}
+					out.append (formatMutantCellLines (mcLines, lastProvider, idToLink, kompID));
+					idToLink = name;
+					lastProvider = provider;
+					mcLines = new ArrayList<String>();
+					mcLines.add(idToLink);
 				}
-		    }
-		    if (mcLines.size() > 0) {
-		        if (out.length() > 0) {
-			    out.append (", ");
-		        }
-			out.append (formatMutantCellLines (mcLines, lastProvider,
-			    idToLink, kompID));
-		    }
+			}
+			if (mcLines.size() > 0) {
+				if (out.length() > 0) {
+					out.append (", ");
+				}
+				out.append (formatMutantCellLines (mcLines, lastProvider, idToLink, kompID));
+			}
 
-		    // mixed alleles need a special message
+			// mixed alleles need a special message
 
-		    if (allele.getIsMixed() == 1) {
-		        out.append ("&nbsp;&nbsp;<B>More than one mutation may be present.</B>");
-		    }
+			if (allele.getIsMixed() == 1) {
+				out.append ("&nbsp;&nbsp;<B>More than one mutation may be present.</B>");
+			}
 
-		    mav.addObject("mutantCellLines", out.toString());
+			mav.addObject("mutantCellLines", out.toString());
 
-		    if (mutantCellLines.size() > 1) {
-			mav.addObject("mutantCellLineLabel", "Mutant Cell Lines");
-		    } else {
-			mav.addObject("mutantCellLineLabel", "Mutant Cell Line");
-		    }
+			if (mutantCellLines.size() > 1) {
+				mav.addObject("mutantCellLineLabel", "Mutant Cell Lines");
+			} else {
+				mav.addObject("mutantCellLineLabel", "Mutant Cell Line");
+			}
 		}
 
 		// parent cell line, background strain
 
 		AlleleCellLine pcl = allele.getParentCellLine();
 		if (pcl != null) {
-		    if (pcl.getPrimaryID() != null) {
-		        mav.addObject("parentCellLine", pcl.getPrimaryID());
-		    } else {
-			mav.addObject("parentCellLine", pcl.getName());
-		    }
+			if (pcl.getPrimaryID() != null) {
+				mav.addObject("parentCellLine", pcl.getPrimaryID());
+			} else {
+				mav.addObject("parentCellLine", pcl.getName());
+			}
 
-		    if ("Embryonic Stem Cell".equals(pcl.getCellLineType())) {
-			mav.addObject("parentCellLineType", "ES Cell");
-		    } else {
-			mav.addObject("parentCellLineType", pcl.getCellLineType());
-		    }
+			if ("Embryonic Stem Cell".equals(pcl.getCellLineType())) {
+				mav.addObject("parentCellLineType", "ES Cell");
+			} else {
+				mav.addObject("parentCellLineType", pcl.getCellLineType());
+			}
 		}
 
 		if (allele.getStrain() != null) {
-		    mav.addObject("strainLabel", allele.getStrainLabel());
-		    mav.addObject("backgroundStrain",
-		        FormatHelper.superscript(allele.getStrain()) );
+			mav.addObject("strainLabel", allele.getStrainLabel());
+			mav.addObject("backgroundStrain", FormatHelper.superscript(allele.getStrain()));
 		}
 
 		// add the allele's primary image and count of images (as a String)
 
 		Image image = allele.getPrimaryImage();
 		if (image != null) {
-		    mav.addObject("primaryImage", image);
+			mav.addObject("primaryImage", image);
 
-		    Integer thumbnailKey = image.getThumbnailImageKey();
+			Integer thumbnailKey = image.getThumbnailImageKey();
 
-		    if (thumbnailKey != null) {
-		        Image thumbnail = imageFinder.getImageObjectByKey(
-			    thumbnailKey.intValue());
-			mav.addObject("thumbnailImage", thumbnail);
+			if (thumbnailKey != null) {
+				Image thumbnail = imageFinder.getImageObjectByKey(thumbnailKey.intValue());
+				mav.addObject("thumbnailImage", thumbnail);
 
-			Integer width = thumbnail.getWidth();
-			Integer height = thumbnail.getHeight();
+				Integer width = thumbnail.getWidth();
+				Integer height = thumbnail.getHeight();
 
-			StringBuffer xy = new StringBuffer();
-			if (width != null) {
-			    xy.append (" width='" + width.toString() + "'");
+				StringBuffer xy = new StringBuffer();
+				if (width != null) {
+					xy.append (" width='" + width.toString() + "'");
+				}
+				if (height != null) {
+					xy.append (" heigh='" + height.toString() + "'");
+				}
+
+				mav.addObject("thumbnailDimensions", xy.toString());
 			}
-			if (height != null) {
-			    xy.append (" heigh='" + height.toString() + "'");
-			}
-
-			mav.addObject("thumbnailDimensions", xy.toString());
-		    }
 		}
 
-		if(allele.getMolecularImages().size() > 0)
-		{
+		if(allele.getMolecularImages().size() > 0) {
 			// just pick the first one
 			Image molImage = allele.getMolecularImages().get(0);
 			Integer thumbnailKey = molImage.getThumbnailImageKey();
 
 			logger.info("looking up thumbnail key="+thumbnailKey);
-		    if (thumbnailKey != null)
-		    {
-		        Image thumbnail = imageFinder.getImageObjectByKey(thumbnailKey.intValue());
-		        logger.info("found thumbnail = "+thumbnail);
-		        logger.info("thumbnail id="+thumbnail.getPixeldbNumericID());
-		        mav.addObject("molecularThumbnail",thumbnail);
+			if (thumbnailKey != null) {
+				Image thumbnail = imageFinder.getImageObjectByKey(thumbnailKey.intValue());
+				logger.info("found thumbnail = "+thumbnail);
+				logger.info("thumbnail id="+thumbnail.getPixeldbNumericID());
+				mav.addObject("molecularThumbnail",thumbnail);
 				mav.addObject("molecularImage",molImage);
-		    }
+			}
 		}
 
 		// add the allele's original reference
 
 		Reference ref = allele.getOriginalReference();
 		if (ref != null) {
-		    mav.addObject("originalReference", ref);
+			mav.addObject("originalReference", ref);
 		}
 
 		// add various notes for convenience
@@ -1303,25 +1130,19 @@ public class AlleleController {
 
 		// already added qtlExpts, if available
 
-	        String knockoutNote = null;
+		String knockoutNote = null;
 		if ((allele.getHolder() != null) && (allele.getCompanyID() != null)) {
-		    String company = allele.getHolder();
+			String company = allele.getHolder();
 
-		    if (company.equals("Lexicon")) {
-			company = "Lexicon Genetics, Inc.";
-		    } else if (company.equals("Deltagen")) {
-			company = "Deltagen, Inc.";
-		    }
+			if (company.equals("Lexicon")) {
+				company = "Lexicon Genetics, Inc.";
+			} else if (company.equals("Deltagen")) {
+				company = "Deltagen, Inc.";
+			}
 
-		    knockoutNote = "See also, <a href='"
-			+ ContextLoader.getConfigBean().getProperty("WI_URL")
-			+ "external/ko/"
-			+ allele.getHolder().toLowerCase()
-			+ "/"
-			+ allele.getCompanyID()
-			+ ".html' class='MP'>data</a> as provided by " + company;
+			knockoutNote = "See also, <a href='" + ContextLoader.getConfigBean().getProperty("WI_URL") + "external/ko/" + allele.getHolder().toLowerCase() + "/" + allele.getCompanyID() + ".html' class='MP'>data</a> as provided by " + company;
 
-		    mav.addObject("knockoutNote", knockoutNote);
+			mav.addObject("knockoutNote", knockoutNote);
 		}
 
 		// IMSR counts, labels, and links
@@ -1331,47 +1152,29 @@ public class AlleleController {
 		int imsrForMarkerCount = 0;
 
 		if (allele.getImsrCellLineCount() != null) {
-		    imsrCellLineCount = allele.getImsrCellLineCount().intValue();
+			imsrCellLineCount = allele.getImsrCellLineCount().intValue();
 		}
 		if (allele.getImsrStrainCount() != null) {
-		    imsrStrainCount = allele.getImsrStrainCount().intValue();
+			imsrStrainCount = allele.getImsrStrainCount().intValue();
 		}
 		if (allele.getImsrCountForMarker() != null) {
-		    imsrForMarkerCount = allele.getImsrCountForMarker().intValue();
+			imsrForMarkerCount = allele.getImsrCountForMarker().intValue();
 		}
 
-		String imsrCellLines = imsrCellLineCount + " "
-			+ FormatHelper.plural (imsrCellLineCount, "line")
-			+ " available";
-		String imsrStrains = imsrStrainCount + " "
-			+ FormatHelper.plural (imsrStrainCount, "strain")
-			+ " available";
-		String imsrForMarker = imsrForMarkerCount + " "
-			+ FormatHelper.plural (imsrForMarkerCount,
-			    "strain or line", "strains or lines")
-			+ " available";
+		String imsrCellLines = imsrCellLineCount + " " + FormatHelper.plural (imsrCellLineCount, "line") + " available";
+		String imsrStrains = imsrStrainCount + " " + FormatHelper.plural (imsrStrainCount, "strain") + " available";
+		String imsrForMarker = imsrForMarkerCount + " " + FormatHelper.plural (imsrForMarkerCount, "strain or line", "strains or lines") + " available";
 
 		String imsrUrl = ContextLoader.getConfigBean().getProperty("IMSRURL");
 
-		if (imsrCellLineCount > 0)
-		{
-		    imsrCellLines = "<a href='" + imsrUrl + "summary?gaccid="
-				+ allele.getPrimaryID()
-				+ "&states=ES+Cell' class='MP'>" + imsrCellLines + "</a>";
+		if (imsrCellLineCount > 0) {
+			imsrCellLines = "<a href='" + imsrUrl + "summary?gaccid=" + allele.getPrimaryID() + "&states=ES+Cell' class='MP'>" + imsrCellLines + "</a>";
 		}
-		if (imsrStrainCount > 0)
-		{
-		    imsrStrains = "<a href='" + imsrUrl + "summary?gaccid="
-				+ allele.getPrimaryID()
-				+ "&states=embryo&states=live&states=ovaries&states=sperm'"
-		        + " class='MP'>" + imsrStrains + "</a>";
+		if (imsrStrainCount > 0) {
+			imsrStrains = "<a href='" + imsrUrl + "summary?gaccid=" + allele.getPrimaryID() + "&states=embryo&states=live&states=ovaries&states=sperm'" + " class='MP'>" + imsrStrains + "</a>";
 		}
-		if (imsrForMarkerCount > 0)
-		{
-		    imsrForMarker = "<a href='" + imsrUrl + "summary?gaccid="
-				+ marker.getPrimaryID()
-				+ "&states=ES+Cell&states=embryo&states=live&states=ovaries"
-				+ "&states=sperm' class='MP'>" + imsrForMarker + "</a>";
+		if (imsrForMarkerCount > 0) {
+			imsrForMarker = "<a href='" + imsrUrl + "summary?gaccid=" + marker.getPrimaryID() + "&states=ES+Cell&states=embryo&states=live&states=ovaries&states=sperm' class='MP'>" + imsrForMarker + "</a>";
 		}
 
 		mav.addObject("imsrCellLines", imsrCellLines);
@@ -1384,31 +1187,26 @@ public class AlleleController {
 		String transmissionPhrase = allele.getTransmissionPhrase();
 		String transmissionLabel = "Germline Transmission";
 
-		if (transmissionType != null
-				&& !"Not Applicable".equals(transmissionType))
-		{
-		    if (transmissionType.equals("Chimeric"))
-		    {
-		    	transmissionLabel = "Mouse Generated";
-		    }
+		if (transmissionType != null && !"Not Applicable".equals(transmissionType)) {
+			if (transmissionType.equals("Chimeric")) {
+				transmissionLabel = "Mouse Generated";
+			}
 
-		    Reference transmissionRef = allele.getTransmissionReference();
-		    if (transmissionRef != null)
-		    {
-		    	mav.addObject("transmissionReference", transmissionRef);
-		    }
+			Reference transmissionRef = allele.getTransmissionReference();
+			if (transmissionRef != null) {
+				mav.addObject("transmissionReference", transmissionRef);
+			}
 
-		    mav.addObject("transmissionLabel", transmissionLabel);
-		    mav.addObject("transmissionPhrase", transmissionPhrase);
+			mav.addObject("transmissionLabel", transmissionLabel);
+			mav.addObject("transmissionPhrase", transmissionPhrase);
 		}
 
 		// GBrowse text strings -- adjust if we got coords from a marker, then
 		// add to the mav
 
-		if (startCoord > 0)
-		{
-		    gbrowseExtraLine = marker.getCountOfGeneTraps()+" gene trap insertions have trapped this gene<br/>";
-		    gbrowseLabel = "View all gene trap sequence tags in this region";
+		if (startCoord > 0) {
+			gbrowseExtraLine = marker.getCountOfGeneTraps()+" gene trap insertions have trapped this gene<br/>";
+			gbrowseLabel = "View all gene trap sequence tags in this region";
 		}
 
 		mav.addObject("gbrowseExtraLine", gbrowseExtraLine);
@@ -1420,103 +1218,75 @@ public class AlleleController {
 		List<Sequence> otherSeq = allele.getNonRepresentativeSequences();
 		String asmVersion = null;
 
-		if (representativeSeq != null)
-		{
-		    mav.addObject("representativeSeq", representativeSeq);
+		if (representativeSeq != null) {
+			mav.addObject("representativeSeq", representativeSeq);
 
-		    // need to pick up coords for GBrowse from representative sequence?
-		    // if so, add 5kb to each end.
-		    if (startCoord < 0)
-		    {
-				List<SequenceLocation> seqLocs =
-				    representativeSeq.getLocations();
+			// need to pick up coords for GBrowse from representative sequence?
+			// if so, add 5kb to each end.
+			if (startCoord < 0) {
+				List<SequenceLocation> seqLocs = representativeSeq.getLocations();
 
-				if (seqLocs != null && seqLocs.size() > 0)
-				{
-				    SequenceLocation seqLoc = seqLocs.get(0);
-				    startCoord = seqLoc.getStartCoordinate().longValue() - 5000;
-				    endCoord = seqLoc.getEndCoordinate().longValue() + 5000;
-				    chromosome = seqLoc.getChromosome();
-				    asmVersion = seqLoc.getVersion();
+				if (seqLocs != null && seqLocs.size() > 0) {
+					SequenceLocation seqLoc = seqLocs.get(0);
+					startCoord = seqLoc.getStartCoordinate().longValue() - 5000;
+					endCoord = seqLoc.getEndCoordinate().longValue() + 5000;
+					chromosome = seqLoc.getChromosome();
+					asmVersion = seqLoc.getVersion();
 				}
-		    }
+			}
 
-		    // need to pick up point coordinate from representative sequence
+			// need to pick up point coordinate from representative sequence
 
-		    Float point = representativeSeq.getPointCoordinate();
-		    if (point != null)
-		    {
-		        pointCoord = point.longValue();
-		    }
+			Float point = representativeSeq.getPointCoordinate();
+			if (point != null) {
+				pointCoord = point.longValue();
+			}
 		}
-		if (otherSeq != null && otherSeq.size() > 0)
-		{
-		    mav.addObject("otherSequences", otherSeq);
+		if (otherSeq != null && otherSeq.size() > 0) {
+			mav.addObject("otherSequences", otherSeq);
 
-		    // if we couldn't get an assembly version from the representative
-		    // sequence, then try to pull it from another sequence
-		    for (Sequence seq : otherSeq)
-		    {
-		        if (asmVersion == null)
-		        {
-				    List<SequenceLocation> seqLocs = seq.getLocations();
+			// if we couldn't get an assembly version from the representative
+			// sequence, then try to pull it from another sequence
+			for (Sequence seq : otherSeq) {
+				if (asmVersion == null) {
+					List<SequenceLocation> seqLocs = seq.getLocations();
 
-				    if (seqLocs != null && seqLocs.size() > 0)
-				    {
-				        SequenceLocation seqLoc = seqLocs.get(0);
-				        asmVersion = seqLoc.getVersion();
-				    }
-		        }
-		    }
+					if (seqLocs != null && seqLocs.size() > 0) {
+						SequenceLocation seqLoc = seqLocs.get(0);
+						asmVersion = seqLoc.getVersion();
+					}
+				}
+			}
 		}
 
-		if (allele.getSequenceAssociations() != null)
-		{
-		    mav.addObject("sequenceCount",allele.getSequenceAssociations().size());
+		if (allele.getSequenceAssociations() != null) {
+			mav.addObject("sequenceCount",allele.getSequenceAssociations().size());
 		}
 
 		// assemble and include GBrowse URLs (do here because of complexity,
 		// rather than in the JSP)
 
-		if (startCoord >= 0 && endCoord >= 0 && chromosome != null)
-		{
-		    Properties externalUrls = ContextLoader.getExternalUrls();
+		if (startCoord >= 0 && endCoord >= 0 && chromosome != null) {
+			Properties externalUrls = ContextLoader.getExternalUrls();
 
-		    // link to gbrowse
-		    String gbrowseUrl = externalUrls.getProperty(
-				"GBrowse_Allele").replace(
-				"<chromosome>", chromosome).replace(
-				"<start>", Long.toString(startCoord)).replace(
-				"<end>", Long.toString(endCoord));
+			// link to gbrowse
+			String gbrowseUrl = externalUrls.getProperty("GBrowse_Allele").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord));
 
-		    // thumbnail image for gbrowse
-		    String gbrowseThumbnailUrl = "foo";
+			// thumbnail image for gbrowse
+			String gbrowseThumbnailUrl = "foo";
 
-		    if (pointCoord < 0)
-		    {
-				gbrowseThumbnailUrl = externalUrls.getProperty(
-				    "GBrowse_Allele_Thumbnail").replace(
-				    "<chromosome>", chromosome).replace(
-				    "<start>", Long.toString(startCoord)).replace(
-				    "<end>", Long.toString(endCoord));
-		    }
-		    else
-		    {
-				gbrowseThumbnailUrl = externalUrls.getProperty(
-				    "GBrowse_Allele_Thumbnail_With_Highlight").replace(
-				    "<chromosome>", chromosome).replace(
-				    "<start>", Long.toString(startCoord)).replace(
-				    "<end>", Long.toString(endCoord)).replace(
-				    "<point>", Long.toString(pointCoord));
-		    }
+			if (pointCoord < 0) {
+				gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Allele_Thumbnail").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord));
+			} else {
+				gbrowseThumbnailUrl = externalUrls.getProperty("GBrowse_Allele_Thumbnail_With_Highlight").replace("<chromosome>", chromosome).replace("<start>", Long.toString(startCoord)).replace("<end>", Long.toString(endCoord)).replace("<point>", Long.toString(pointCoord));
+			}
 
-		    // we only actually want the gbrowse thumbnail and link if we have
-		    // a point coordinate.
-		    if (pointCoord >= 0)
-		    {
-		        mav.addObject("gbrowseLink", gbrowseUrl);
-		        mav.addObject("gbrowseThumbnail", gbrowseThumbnailUrl);
-		    }
+			// we only actually want the gbrowse thumbnail and link if we have
+			// a point coordinate.
+			if (pointCoord >= 0) {
+				mav.addObject("gbrowseLink", gbrowseUrl);
+				mav.addObject("gbrowseThumbnail", gbrowseThumbnailUrl);
+			}
 		}
 
 		// if we had sequence tags, then we need to have an assembly version.
@@ -1528,25 +1298,19 @@ public class AlleleController {
 		//   3. from class variable
 		//   4. fall back on "GRCm38" if none for 1-3
 
-		if(asmVersion==null)
-		{
-		    if (marker!=null)
-		    {
+		if(asmVersion==null) {
+			if (marker!=null) {
 				MarkerLocation mrkLoc = marker.getPreferredCoordinates();
-				if(mrkLoc!=null)
-				{
-				    asmVersion = mrkLoc.getBuildIdentifier();
+				if(mrkLoc!=null) {
+					asmVersion = mrkLoc.getBuildIdentifier();
 				}
-		    }
+			}
 		}
 
 		// if still null, try the class variable
-		if(asmVersion==null)
-		{
+		if(asmVersion==null) {
 			asmVersion = assemblyVersion!=null ? assemblyVersion : "GRCm38";
-		}
-		else
-		{
+		} else {
 			// cache the asmVersion in class variable
 			assemblyVersion=asmVersion;
 		}
@@ -1554,26 +1318,22 @@ public class AlleleController {
 		mav.addObject("assemblyVersion", asmVersion);
 
 		// do we need to show the recombinase ribbon as Open?
-		if ("open".equals(request.getParameter("recomRibbon")))
-		{
-		    mav.addObject("recomTeaserStyle", "display:none");
-		    mav.addObject("recomWrapperStyle", "display:");
-		}
-		else
-		{
-		    mav.addObject("recomTeaserStyle", "display:");
-		    mav.addObject("recomWrapperStyle", "display:none");
+		if ("open".equals(request.getParameter("recomRibbon"))) {
+			mav.addObject("recomTeaserStyle", "display:none");
+			mav.addObject("recomWrapperStyle", "display:");
+		} else {
+			mav.addObject("recomTeaserStyle", "display:");
+			mav.addObject("recomWrapperStyle", "display:none");
 		}
 
 		String userNote = allele.getRecombinaseUserNote();
-		if (userNote != null && !userNote.equals(""))
-		{
-		    try {
+		if (userNote != null && !userNote.equals("")) {
+			try {
 				NotesTagConverter ntc = new NotesTagConverter();
 				mav.addObject("recombinaseUserNote",ntc.convertNotes(userNote, '|'));
-		    } catch (Exception e) {
-		    	mav.addObject("recombinaseUserNote", userNote);
-		    }
+			} catch (Exception e) {
+				mav.addObject("recombinaseUserNote", userNote);
+			}
 		}
 
 		// identify which sections will appear, based on what data is present
@@ -1584,374 +1344,354 @@ public class AlleleController {
 
 		mav.addObject("alleleDetail",alleleDetail);
 
-		if(allele.getPhenotypeImages().size() > 0 && allele.getPrimaryImage()!=null)
-		{
+		if(allele.getPhenotypeImages().size() > 0 && allele.getPrimaryImage()!=null) {
 			mav.addObject("imageCount",allele.getPhenotypeImages().size());
 			mav.addObject("hasPrimaryPhenoImage",true);
 		}
 
 		return mav;
-    }
+	}
 
-    //---------------------//
-    // Allele Pheno-Table
-    //---------------------//
-    @RequestMapping(value="/phenotable/{allID}")
-    public ModelAndView phenoTableByAllId(
-		  HttpServletRequest request,HttpServletResponse response,
-		  @PathVariable("allID") String allID) {
+	@RequestMapping(value="/phenotable/{allID}")
+	public ModelAndView phenoTableByAllId(HttpServletRequest request,HttpServletResponse response, @PathVariable("allID") String allID) {
 
-        logger.debug("->phenoTableByAllId started");
+		logger.debug("->phenoTableByAllId started");
 
-        // need to add headers to allow AJAX access
-        AjaxUtils.prepareAjaxHeaders(response);
+		// need to add headers to allow AJAX access
+		AjaxUtils.prepareAjaxHeaders(response);
 
-    	// setup view object
-        ModelAndView mav = new ModelAndView("phenotype_table");
+		// setup view object
+		ModelAndView mav = new ModelAndView("phenotype_table");
 
-    	// find the requested Allele
-        logger.debug("->asking alleleFinder for allele");
-    	List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
-    	// there can be only one...
-        if (alleleList.size() < 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No allele found for " + allID);
-            return mav;
-        }
-        if (alleleList.size() > 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe reference found for " + allID);
-            return mav;
-        }
-        Allele allele = alleleList.get(0);
-        logger.debug("->1 allele found");
+		// find the requested Allele
+		logger.debug("->asking alleleFinder for allele");
+		List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
+		// there can be only one...
+		if (alleleList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No allele found for " + allID);
+			return mav;
+		}
+		if (alleleList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe reference found for " + allID);
+			return mav;
+		}
+		Allele allele = alleleList.get(0);
+		logger.debug("->1 allele found");
 
-        List<PhenoTableSystem> phenoTableSystems =
-          allele.getPhenoTableSystems();
-        Hibernate.initialize(phenoTableSystems);
-        logger.debug("->List<PhenoTableSystem> size - " + phenoTableSystems.size());
+		List<PhenoTableSystem> phenoTableSystems = allele.getPhenoTableSystems();
+		Hibernate.initialize(phenoTableSystems);
+		logger.debug("->List<PhenoTableSystem> size - " + phenoTableSystems.size());
 
-        // predetermine existance of a few columns.
-        boolean hasSexCols=false;
-        boolean hasSourceCols=false;
-	List<PhenoTableProvider> providerList = null;
+		// predetermine existance of a few columns.
+		boolean hasSexCols=false;
+		boolean hasSourceCols=false;
+		List<PhenoTableProvider> providerList = null;
 
-        for(PhenoTableGenotype g : allele.getPhenoTableGenotypeAssociations())
-        {
-        	if(g.getSexDisplay()!=null && !g.getSexDisplay().trim().equals(""))
-        	{
-        		hasSexCols=true;
-        	}
+		for(PhenoTableGenotype g : allele.getPhenoTableGenotypeAssociations()) {
+			if(g.getSexDisplay()!=null && !g.getSexDisplay().trim().equals("")) {
+				hasSexCols=true;
+			}
 
-		providerList = g.getPhenoTableProviders();
-		if ((providerList != null) && ((providerList.size() > 1) || 
-			(providerList.size() == 1 &&
-			 !"MGI".equalsIgnoreCase(
-			    providerList.get(0).getInterpretationCenterName())) ))
-/*        	if(g.getPhenoTableProviders().size()>1 || (g.getPhenoTableProviders().size()==1 &&
-** 			!g.getPhenoTableProviders().get(0).getPhenotypingCenterName().equalsIgnoreCase("MGI")))
-*/
-		{
-        		hasSourceCols=true;
-        	}
-        }
-        mav.addObject("allele",allele);
-        mav.addObject("phenoTableSystems",phenoTableSystems);
-        mav.addObject("phenoTableGenotypes",allele.getPhenoTableGenotypeAssociations());
-        mav.addObject("hasSexCols",hasSexCols);
-        mav.addObject("hasSourceCols",hasSourceCols);
-        mav.addObject("phenoTableGenoSize",allele.getPhenoTableGenotypeAssociations().size());
+			providerList = g.getPhenoTableProviders();
+			if ((providerList != null) && ((providerList.size() > 1) || (providerList.size() == 1 && !"MGI".equalsIgnoreCase(providerList.get(0).getInterpretationCenterName())))) {
+				hasSourceCols=true;
+			}
+		}
+		mav.addObject("allele",allele);
+		mav.addObject("phenoTableSystems",phenoTableSystems);
+		mav.addObject("phenoTableGenotypes",allele.getPhenoTableGenotypeAssociations());
+		mav.addObject("hasSexCols",hasSexCols);
+		mav.addObject("hasSourceCols",hasSourceCols);
+		mav.addObject("phenoTableGenoSize",allele.getPhenoTableGenotypeAssociations().size());
 
-    	return mav;
-    }
+		return mav;
+	}
 
 
-    /*
-     *
-     * Test genotype IDs [MGI:2166662]
-     */
-    @RequestMapping(value="/genoview/{genoID}")
-    public ModelAndView genoview(
-		  HttpServletRequest request,
-		  HttpServletResponse response,
-		  @PathVariable("genoID") String genoID) {
+	/*
+	 *
+	 * Test genotype IDs [MGI:2166662]
+	 */
+	@RequestMapping(value="/genoview/{genoID}")
+	public ModelAndView genoview(HttpServletRequest request, HttpServletResponse response, @PathVariable("genoID") String genoID) {
 
-        logger.debug("->genoview started");
+		logger.debug("->genoview started");
 
-     // need to add headers to allow AJAX access
-        AjaxUtils.prepareAjaxHeaders(response);
+		// need to add headers to allow AJAX access
+		AjaxUtils.prepareAjaxHeaders(response);
 
-    	// setup view object
-        ModelAndView mav = new ModelAndView("phenotype_table_geno_popup");
+		// setup view object
+		ModelAndView mav = new ModelAndView("phenotype_table_geno_popup");
 
-    	// find the requested Allele
-        logger.debug("->asking genotypeFinder for genotype");
+		// find the requested Allele
+		logger.debug("->asking genotypeFinder for genotype");
 
-        List<Genotype> genotypeList = genotypeFinder.getGenotypeByID(genoID);
-    	// there can be only one...
-        if (genotypeList.size() < 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "No genotype found for " + genoID);
-            return mav;
-        }
-        if (genotypeList.size() > 1) {
-            // forward to error page
-            mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Dupe reference found for " + genoID);
-            return mav;
-        }
-        Genotype genotype = genotypeList.get(0);
+		List<Genotype> genotypeList = genotypeFinder.getGenotypeByID(genoID);
+		// there can be only one...
+		if (genotypeList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No genotype found for " + genoID);
+			return mav;
+		}
+		if (genotypeList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe reference found for " + genoID);
+			return mav;
+		}
+		Genotype genotype = genotypeList.get(0);
 
-        logger.debug("->1 genotype found");
+		logger.debug("->1 genotype found");
 
-        // eager load the entire collection
-        // calling .size() is another trick eager load the entire collection
-        Hibernate.initialize(genotype.getMPSystems());
-        mav.addObject("genotype",genotype);
-        mav.addObject("mpSystems", genotype.getMPSystems());
+		// eager load the entire collection
+		// calling .size() is another trick eager load the entire collection
+		Hibernate.initialize(genotype.getMPSystems());
+		mav.addObject("genotype",genotype);
+		mav.addObject("mpSystems", genotype.getMPSystems());
 
-        for (GenotypeDisease gd : genotype.getDiseases())
-        {
-        	logger.info(" found disease: "+gd.getTerm());
-        	for(GenotypeDiseaseReference gr : gd.getReferences())
-        	{
-        		logger.info(" found disease reference: "+gr.getJnumID());
-        	}
-        }
-        if(genotype.hasPrimaryImage())
-        {
-        	logger.info(" has Image: "+genotype.getPrimaryImage().getMgiID());
-        }
-        mav.addObject("hasDiseaseModels", genotype.getDiseases().size()>0);
-        mav.addObject("hasImage",genotype.hasPrimaryImage());
-        mav.addObject("counter", request.getParameter("counter") );
+		for (GenotypeDisease gd : genotype.getDiseases()) {
+			logger.info(" found disease: "+gd.getTerm());
+			for(GenotypeDiseaseReference gr : gd.getReferences()) {
+				logger.info(" found disease reference: "+gr.getJnumID());
+			}
+		}
+		if(genotype.hasPrimaryImage()) {
+			logger.info(" has Image: "+genotype.getPrimaryImage().getMgiID());
+		}
+		mav.addObject("hasDiseaseModels", genotype.getDiseases().size()>0);
+		mav.addObject("hasImage",genotype.hasPrimaryImage());
+		mav.addObject("counter", request.getParameter("counter") );
 
-    	return mav;
-    }
+		
+		// Setup SEO
 
-    /*
-    *
-    * Test allele IDs [MGI:2166662]
-    */
-   @RequestMapping(value="/allgenoviews/{alleleID}")
-   public ModelAndView allGenoviews(
-		  HttpServletRequest request,
-		  HttpServletResponse response,
-		  @PathVariable("alleleID") String alleleID) {
+		NotesTagConverter ntc = new NotesTagConverter();
+		String alleleSymbolConv = ntc.convertNotes(genotype.getCombination1(), '|', true, true).trim();
+		
+		String description = "View ";
+		String keywords = "";
+		if(alleleSymbolConv != null) {
+			description += alleleSymbolConv;
+			keywords += alleleSymbolConv + ", ";
+		}
+		if(genotype.getBackgroundStrain() != null && !genotype.getBackgroundStrain().equals("Not Specified")) {
+			description += " " + genotype.getBackgroundStrain();
+			keywords += genotype.getBackgroundStrain() + ", ";
+		}
+		if(genotype.getCellLines() != null) {
+			keywords += genotype.getCellLines() + ", ";
+		}
+		description += ": phenotypes, images, diseases, and references.";
+		keywords += "mouse, mice, murine, Mus";
+		
+		//description="View ${alleleSymbolConv} ${genotype.backgroundStrain}: phenotypes, images, diseases, and references.";
+		//keywords="${alleleSymbolConv}, ${genotype.backgroundStrain}, ${genotype.cellLines}, mouse, mice, murine, Mus";
+		
+		mav.addObject("seodescription", description);
+		mav.addObject("seokeywords", keywords);
+		
+		return mav;
+	}
 
-       logger.debug("->all genoviews started");
+	@RequestMapping(value="/allgenoviews/{alleleID}")
+	public ModelAndView allGenoviews(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
 
-       // need to add headers to allow AJAX access
-       AjaxUtils.prepareAjaxHeaders(response);
+		logger.debug("->all genoviews started");
 
-   	// setup view object
-       ModelAndView mav = new ModelAndView("phenotype_table_all_geno_popups");
+		// need to add headers to allow AJAX access
+		AjaxUtils.prepareAjaxHeaders(response);
 
-   	// find the requested Allele
-       logger.debug("->asking alleleFinder for allele");
+		// setup view object
+		ModelAndView mav = new ModelAndView("phenotype_table_all_geno_popups");
 
-       List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
-   	// there can be only one...
-       if (alleleList.size() < 1) {
-           // forward to error page
-           mav = new ModelAndView("error");
-           mav.addObject("errorMsg", "No allele found for " + alleleID);
-           return mav;
-       }
-       if (alleleList.size() > 1) {
-           // forward to error page
-           mav = new ModelAndView("error");
-           mav.addObject("errorMsg", "Dupe reference found for " + alleleID);
-           return mav;
-       }
-       Allele allele = alleleList.get(0);
+		// find the requested Allele
+		logger.debug("->asking alleleFinder for allele");
 
-       logger.debug("->1 allele found");
+		List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
+		// there can be only one...
+		if (alleleList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No allele found for " + alleleID);
+			return mav;
+		}
+		if (alleleList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe reference found for " + alleleID);
+			return mav;
+		}
+		Allele allele = alleleList.get(0);
 
-       // eager load the entire collection
-       // calling .size() is another trick eager load the entire collection
-       Hibernate.initialize(allele.getPhenoTableGenotypeAssociations());
-       mav.addObject("genotypeAssociations",allele.getPhenoTableGenotypeAssociations());
-   	return mav;
-   }
+		logger.debug("->1 allele found");
 
-   @RequestMapping(value="/alldiseasegenoviews/{alleleID}")
-   public ModelAndView allDiseaseGenoviews(
-		  HttpServletRequest request,
-		  HttpServletResponse response,
-		  @PathVariable("alleleID") String alleleID) {
+		// eager load the entire collection
+		// calling .size() is another trick eager load the entire collection
+		Hibernate.initialize(allele.getPhenoTableGenotypeAssociations());
+		mav.addObject("allele", allele);
+		mav.addObject("genotypeAssociations",allele.getPhenoTableGenotypeAssociations());
+		return mav;
+	}
 
-       logger.debug("->all disease genoviews started");
+	@RequestMapping(value="/alldiseasegenoviews/{alleleID}")
+	public ModelAndView allDiseaseGenoviews(HttpServletRequest request, HttpServletResponse response, @PathVariable("alleleID") String alleleID) {
 
-       // need to add headers to allow AJAX access
-       AjaxUtils.prepareAjaxHeaders(response);
+		logger.debug("->all disease genoviews started");
 
-   	// setup view object
-       ModelAndView mav = new ModelAndView("phenotype_table_all_geno_popups");
+		// need to add headers to allow AJAX access
+		AjaxUtils.prepareAjaxHeaders(response);
 
-   	// find the requested Allele
-       logger.debug("->asking alleleFinder for allele");
+		// setup view object
+		ModelAndView mav = new ModelAndView("phenotype_table_all_geno_popups");
 
-       List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
-   	// there can be only one...
-       if (alleleList.size() < 1) {
-           // forward to error page
-           mav = new ModelAndView("error");
-           mav.addObject("errorMsg", "No allele found for " + alleleID);
-           return mav;
-       }
-       if (alleleList.size() > 1) {
-           // forward to error page
-           mav = new ModelAndView("error");
-           mav.addObject("errorMsg", "Dupe reference found for " + alleleID);
-           return mav;
-       }
-       Allele allele = alleleList.get(0);
+		// find the requested Allele
+		logger.debug("->asking alleleFinder for allele");
 
-       logger.debug("->1 allele found");
+		List<Allele> alleleList = alleleFinder.getAlleleByID(alleleID);
+		// there can be only one...
+		if (alleleList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No allele found for " + alleleID);
+			return mav;
+		}
+		if (alleleList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe reference found for " + alleleID);
+			return mav;
+		}
+		Allele allele = alleleList.get(0);
 
-       // eager load the entire collection
-       // calling .size() is another trick eager load the entire collection
-       Hibernate.initialize(allele.getDiseaseTableGenotypeAssociations());
-       mav.addObject("genotypeAssociations",allele.getDiseaseTableGenotypeAssociations());
+		logger.debug("->1 allele found");
 
-   	return mav;
-   }
+		// eager load the entire collection
+		// calling .size() is another trick eager load the entire collection
+		Hibernate.initialize(allele.getDiseaseTableGenotypeAssociations());
+		mav.addObject("genotypeAssociations",allele.getDiseaseTableGenotypeAssociations());
 
-   //---------------------//
-   // Allele Disease-Table
-   //---------------------//
-   @RequestMapping(value="/diseasetable/{allID}")
-   public ModelAndView diseaseTableByAllId(
-		  HttpServletRequest request,HttpServletResponse response,
-		  @PathVariable("allID") String allID) {
+		return mav;
+	}
 
-       logger.debug("->diseaseTableByAllId started");
+	//---------------------//
+	// Allele Disease-Table
+	//---------------------//
+	@RequestMapping(value="/diseasetable/{allID}")
+	public ModelAndView diseaseTableByAllId(HttpServletRequest request,HttpServletResponse response, @PathVariable("allID") String allID) {
 
-       // need to add headers to allow AJAX access
-       AjaxUtils.prepareAjaxHeaders(response);
+		logger.debug("->diseaseTableByAllId started");
 
-   	// setup view object
-       ModelAndView mav = new ModelAndView("disease_table");
+		// need to add headers to allow AJAX access
+		AjaxUtils.prepareAjaxHeaders(response);
 
-   	// find the requested Allele
-       logger.debug("->asking alleleFinder for allele");
-   	List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
-   	// there can be only one...
-       if (alleleList.size() < 1) {
-           // forward to error page
-           mav = new ModelAndView("error");
-           mav.addObject("errorMsg", "No allele found for " + allID);
-           return mav;
-       }
-       if (alleleList.size() > 1) {
-           // forward to error page
-           mav = new ModelAndView("error");
-           mav.addObject("errorMsg", "Dupe reference found for " + allID);
-           return mav;
-       }
-       Allele allele = alleleList.get(0);
-       logger.debug("->1 allele found");
+		// setup view object
+		ModelAndView mav = new ModelAndView("disease_table");
 
-       List<DiseaseTableDisease> diseaseTableDiseases =
-         allele.getDiseaseTableDiseases();
-       Hibernate.initialize(diseaseTableDiseases);
-       logger.debug("->List<DiseaseTableDisease> size - " + diseaseTableDiseases.size());
-       mav.addObject("allele",allele);
-       mav.addObject("diseases",diseaseTableDiseases);
-       mav.addObject("genotypes",allele.getDiseaseTableGenotypeAssociations());
-       mav.addObject("diseaseTableGenoSize",allele.getDiseaseTableGenotypeAssociations().size());
+		// find the requested Allele
+		logger.debug("->asking alleleFinder for allele");
+		List<Allele> alleleList = alleleFinder.getAlleleByID(allID);
+		// there can be only one...
+		if (alleleList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No allele found for " + allID);
+			return mav;
+		}
+		if (alleleList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe reference found for " + allID);
+			return mav;
+		}
+		Allele allele = alleleList.get(0);
+		logger.debug("->1 allele found");
 
-   	return mav;
-   }
+		List<DiseaseTableDisease> diseaseTableDiseases = allele.getDiseaseTableDiseases();
+		Hibernate.initialize(diseaseTableDiseases);
+		logger.debug("->List<DiseaseTableDisease> size - " + diseaseTableDiseases.size());
+		mav.addObject("allele",allele);
+		mav.addObject("diseases",diseaseTableDiseases);
+		mav.addObject("genotypes",allele.getDiseaseTableGenotypeAssociations());
+		mav.addObject("diseaseTableGenoSize",allele.getDiseaseTableGenotypeAssociations().size());
 
-    // convenience method -- construct a ModelAndView for the error page and
-    // include the given 'msg' as the error String to be reported
-    private ModelAndView errorMav (String msg) {
-	ModelAndView mav = new ModelAndView("error");
-	mav.addObject("errorMsg", msg);
-	return mav;
-    }
+		return mav;
+	}
 
-    // format mutant cell lines for output on allele detail page, with link
-    // to provider
-    private String formatMutantCellLines (List<String> mcLines,
-	String provider, String idToLink, AlleleID kompID)
-    {
+	// convenience method -- construct a ModelAndView for the error page and
+	// include the given 'msg' as the error String to be reported
+	private ModelAndView errorMav (String msg) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", msg);
+		return mav;
+	}
+
+	// format mutant cell lines for output on allele detail page, with link
+	// to provider
+	private String formatMutantCellLines (List<String> mcLines, String provider, String idToLink, AlleleID kompID) {
 		StringBuffer s = new StringBuffer();
 
 		// comma-delimited list of mutant cell line IDs
-		if(mcLines.size()>0)
-		{
-			s.append("<b>")
-				.append(StringUtils.join(mcLines,"</b>, <b>"))
-				.append("</b>");
+		if(mcLines.size()>0) {
+			s.append("<b>").append(StringUtils.join(mcLines,"</b>, <b>")).append("</b>");
 		}
 
 		// link to provider, if possible.  provider name if not.
 		String link = "";
 
-		if (kompID == null)
-		{
+		if (kompID == null) {
 			link = idLinker.getLink (provider, idToLink, provider);
-		}
-		else
-		{
+		} else {
 			link = idLinker.getLink ("KOMP-CSD-Project", kompID.getAccID(),"PROVIDER_HERE");
 			if(provider!=null) link = link.replace("PROVIDER_HERE", provider);
 		}
 
 		if (link.equals(idToLink)) link = provider;
 
-		s.append (" (")
-			.append (link.replace(">", " CLASS='MP'>"))
-			.append (")");
+		s.append (" (").append (link.replace(">", " CLASS='MP'>")).append (")");
 
 		return s.toString();
-    }
+	}
 
-        private void dbDate(ModelAndView mav) {
-	        List<DatabaseInfo> dbInfo = dbInfoFinder.getInfo(new SearchParams()).getResultObjects();
-	        for (DatabaseInfo db: dbInfo)
-	        {
-	        	if (db.getName().equalsIgnoreCase("built from mgd database date"))
-	        	{
-	        		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-	        		try {
-						mav.addObject("databaseDate", df.parse(db.getValue()));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-	        	}
-	        }
-	    }
+	private void dbDate(ModelAndView mav) {
+		List<DatabaseInfo> dbInfo = dbInfoFinder.getInfo(new SearchParams()).getResultObjects();
+		for (DatabaseInfo db: dbInfo) {
+			if (db.getName().equalsIgnoreCase("built from mgd database date")) {
+				DateFormat df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+				try {
+					mav.addObject("databaseDate", df.parse(db.getValue()));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
-        private boolean notEmpty(String s)
-        {
-        	return s!=null && !s.equals("");
-        }
-        @SuppressWarnings("rawtypes")
-		private boolean notEmpty(List l)
-        {
-        	return l!=null && l.size()>0;
-        }
-        // checks any cachable fields of the allele query form, and initializes them if needed
-        private void initQFCache()
-        {
-        	if(AlleleQueryForm.getCollectionValues()==null)
-        	{
-        		// get collection facets
-        		SearchParams sp = new SearchParams();
-        		sp.setPageSize(0);
-        		sp.setFilter(new Filter(SearchConstants.ALL_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
-        		SearchResults<String> sr = alleleFinder.getCollectionFacet(sp);
-        		List<String> collectionValues = sr.getResultFacets();
-        		AlleleQueryForm.setCollectionValues(collectionValues);
-        	}
-        }
+	private boolean notEmpty(String s) {
+		return s!=null && !s.equals("");
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private boolean notEmpty(List l) {
+		return l!=null && l.size()>0;
+	}
+	
+	// checks any cachable fields of the allele query form, and initializes them if needed
+	private void initQFCache() {
+		if(AlleleQueryForm.getCollectionValues()==null) {
+			// get collection facets
+			SearchParams sp = new SearchParams();
+			sp.setPageSize(0);
+			sp.setFilter(new Filter(SearchConstants.ALL_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
+			SearchResults<String> sr = alleleFinder.getCollectionFacet(sp);
+			List<String> collectionValues = sr.getResultFacets();
+			AlleleQueryForm.setCollectionValues(collectionValues);
+		}
+	}
 
 	/* take a list of possible values for a field named by 'searchConstant'
 	 * and turn them into an appropriate Filter for Solr.  if 'joinWithAnd'
@@ -1959,23 +1699,19 @@ public class AlleleController {
 	 * AND).  if false then we require at least one of those values (a
 	 * boolean OR).
 	 */
-        private Filter makeListFilter(List<String> values,
-	    String searchConstant, boolean joinWithAnd)
-        {
-        	Filter f = null;
-	   		if(values!=null && values.size()>0)
-	   		{
-	   			 List<Filter> vFilters = new ArrayList<Filter>();
-	   			 for(String value : values)
-	   			 {
-	   				vFilters.add(new Filter(searchConstant,value,Filter.Operator.OP_EQUAL));
-	   			 }
-				 if (joinWithAnd) {
-	   			     f = Filter.and(vFilters);
-				 } else {
-	   			     f = Filter.or(vFilters);
-				 }
-	   		}
-	   		return f;
-        }
+	private Filter makeListFilter(List<String> values, String searchConstant, boolean joinWithAnd) {
+		Filter f = null;
+		if(values!=null && values.size()>0) {
+			List<Filter> vFilters = new ArrayList<Filter>();
+			for(String value : values) {
+				vFilters.add(new Filter(searchConstant,value,Filter.Operator.OP_EQUAL));
+			}
+			if (joinWithAnd) {
+				f = Filter.and(vFilters);
+			} else {
+				f = Filter.or(vFilters);
+			}
+		}
+		return f;
+	}
 }

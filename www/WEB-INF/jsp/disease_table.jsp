@@ -67,9 +67,8 @@ td.padSmall { padding: 2px }
     <th class="genoHeader genoBorder <c:if test="${gStatus.last}">rightGenoBorder</c:if>">
     <c:set var="genotype" value="${diseaseGenotype.genotype}" scope="request"/>
     <div class="${genotype.genotypeType}Geno ${genotype.genotypeType}GenoButton genoButton">
-    <a href='${configBean.FEWI_URL}allele/genoview/${diseaseGenotype.genotype.primaryID}' target="new" 
-    class='genoLink small' title='phenotype details'
-    onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/genoview/${genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}', '${diseaseGenotype.genotypeSeq}', '${genotype.primaryID}'); return false;">
+    <a href='${configBean.FEWI_URL}allele/genoview/${diseaseGenotype.genotype.primaryID}?counter=${diseaseGenotype.genotypeSeq}' target="_blank" 
+    class='genoLink small' title='phenotype details'>
     ${genotype.genotypeType}${diseaseGenotype.genotypeSeq}</a></div>
     </th>
   </c:forEach>

@@ -19,6 +19,11 @@ public class GxdImageSummaryRow {
 	// config values
 	String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
+	private int maxWidth = 200;
+	private int maxHeight = 200;
+	private boolean showCopyright = true;
+	private boolean linkToDetail = true;
+
 	// -------------
 	// constructors
 	// -------------
@@ -27,11 +32,26 @@ public class GxdImageSummaryRow {
 		this.image = image;
 	}
 
+	public void setMaxWidth(int width) { this.maxWidth = width; }
+	public void setMaxHeight(int height) { this.maxHeight = height; }
+	public void hideCopyright() { this.showCopyright = false; }
+	public void skipDetailLink() { this.linkToDetail = false; }
+
 	public String getImage() {
+		String copyright = "";
+		if (showCopyright) {
+			copyright = "<span class=\"copySymbol\">&copy;</span>";
+		}
+
+		if (!linkToDetail) {
+			return "<span style=\"display:inline-block; padding-top: 3px;\">"
+				+ ImageUtils.createImagePaneHTML(image, maxWidth, maxHeight, "border: 1px solid black;") + "</span>" + copyright;
+		}
+
 		return "<a style=\"display:inline-block;\" href=\"" + fewiUrl
 				+ "image/" + image.getImageID() + "\">"
-				+ ImageUtils.createImagePaneHTML(image, 200, 200) + "</a>"
-				+ "<span class=\"copySymbol\">&copy;</span>";
+				+ ImageUtils.createImagePaneHTML(image, maxWidth, maxHeight) + "</a>"
+				+ copyright;
 	}
 
 	public String getImageLabel() {

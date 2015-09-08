@@ -60,4 +60,8 @@
 	border-right: 2px solid #AAA;
   	border-bottom: 2px solid #AAA;
 }
+
+td.padded { padding:4px; }
+td.top { vertical-align: top; }
+
 </style>

@@ -69,6 +69,18 @@ function invertAll(){
                 !document.sequenceForm.seqs.checked;
 	}
 }
+
+function formatForwardArgs() {
+	document.sequenceForm.action=document.controls.pullDown.options[document.controls.pullDown.selectedIndex].value;
+
+	if (document.sequenceForm.action.indexOf("blast") >= 0) {
+	    document.sequenceForm.target = "_blank";
+	} else {
+	    document.sequenceForm.target = "";
+        }
+
+	document.sequenceForm.submit();
+}
 </script>
 
 <c:set var="sCount" value="1" scope="page"/>
@@ -102,7 +114,7 @@ ${templateBean.templateBodyStartHtml}
     <div id="contentcolumn" style="margin: 0 335px 0 0">
       <div class="innertube">
 	<span class="label">Mouse Protein Superfamily Annotations</span><p/>
-	<span class="small" style="line-height:110%"><i>Select one or more mouse PIRSF members to download protein sequences or forward to MouseBLAST.</i><br/>
+	<span class="small" style="line-height:110%"><i>Select one or more mouse PIRSF members to download protein sequences or forward to NCBI BLAST.</i><br/>
 	<i>Selections return the entire set of mouse, human, and rat homologs of the mouse PIRSF superfamily member selected.</i><br/></span>
       </div>
     </div>
@@ -120,7 +132,7 @@ ${templateBean.templateBodyStartHtml}
 	<div class="hd">MGI Superfamily Information</div>	
 	<div class="bd">
 	  MGI protein superfamily detail pages represent the protein classification set for a homeomorphic superfamily from the Protein Information Resource SuperFamily (<a href="http://pir.georgetown.edu/pirsf/" target="_new">PIRSF</a>) site.<p/>
-	  Mouse superfamily members are shown with links to their corresponding HomoloGene Classes. Note that pseudogenes are included in PIRSF families but not in orthology sets used here. You can select a given mouse superfamily member and download (or forward to MouseBLAST) FASTA formatted protein sequences of that mouse gene and its mouse, human and rat homologs, as defined in the corresponding HomoloGene Class. The numbers of mouse, human and rat genes in the HomoloGene Class are shown. You can also "Select all" mouse superfamily members to obtain their protein sequences and the protein sequences for all mouse, human and rat homologs of the mouse superfamily members.<p/>
+	  Mouse superfamily members are shown with links to their corresponding HomoloGene Classes. Note that pseudogenes are included in PIRSF families but not in orthology sets used here. You can select a given mouse superfamily member and download (or forward to NCBI BLAST) FASTA formatted protein sequences of that mouse gene and its mouse, human and rat homologs, as defined in the corresponding HomoloGene Class. The numbers of mouse, human and rat genes in the HomoloGene Class are shown. You can also "Select all" mouse superfamily members to obtain their protein sequences and the protein sequences for all mouse, human and rat homologs of the mouse superfamily members.<p/>
 	  The number of protein sequences returned does not always match the numbers of homologs shown, because the same protein sequence can be associated with multiple homologs. For mouse superfamily members not included in any HomoloGene Class, only the mouse protein sequence is returned. 
 	</div>
 </div>
@@ -154,9 +166,9 @@ table.detail {
 	<span style='font-size:80%'><em>For the selected sequences</em></span>
 	<select name="pullDown">
 	  <option value="${configBean.SEQFETCH_URL}" selected="selected">download in FASTA format</option>
-	  <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi">forward to MouseBLAST</option>
+	  <option value="${configBean.FEWI_URL}sequence/blast">forward to NCBI BLAST</option>
 	</select>
-	<input onclick="document.sequenceForm.action=document.controls.pullDown.options[document.controls.pullDown.selectedIndex].value;document.sequenceForm.submit();" value="Go" type="button">
+	<input onclick="formatForwardArgs();" value="Go" type="button">
       </td>
     </tr>
   </table>

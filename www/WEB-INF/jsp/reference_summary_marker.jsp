@@ -31,7 +31,12 @@ ${templateBean.templateBodyStartHtml}
 <!-- end header bar -->
 
 <%@ include file="/WEB-INF/jsp/marker_header.jsp" %>
-<c:if test="${isDiseaseRelevantSummary}"><span style="font-weight:bold;">Displaying only references relevant to disease models.</span></c:if>
+<style>
+div.message { font-weight: bold; padding-top: 10px; padding-bottom: 10px }
+</style>
+<c:if test="${isDiseaseRelevantSummary}"><div class="message">Displaying only references relevant to ${marker.symbol} disease models.</div></c:if>
+<c:if test="${isGOSummary}"><div class="message">Displaying only references relevant to ${marker.symbol} Gene Ontology annotations.</div></c:if>
+<c:if test="${isPhenotypeSummary}"><div class="message">Displaying only references relevant to ${marker.symbol} alleles and phenotypes.</div></c:if>
 <div id="summary">
 
 	<div id="breadbox">
@@ -60,21 +65,7 @@ ${templateBean.templateBodyStartHtml}
 	</div>
 </div>
 	
-<div id="toolbar" class="bluebar">
-	<div id="downloadDiv">
-		<span class="label">Export:</span> <a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
-	</div>
-	<div id="filterDiv">
-		<span class="label">Filter references by:</span> 
-		<a id="authorFilter" class="filterButton">Author <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
-		<a id="journalFilter" class="filterButton">Journal <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
-		<a id="yearFilter" class="filterButton">Year <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> 
-		<a id="curatedDataFilter" class="filterButton">Data <img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
-	</div>
-	<div id="otherDiv">
-		<a id="toggleAbstract" class="filterButton">Show All Abstracts</a> 
-	</div>
-</div>
+<%@ include file="/WEB-INF/jsp/reference_summary_toolbar.jsp" %>
 
 <div id="dynamicdata"></div>
 <div id="paginationWrap">
@@ -103,3 +94,24 @@ ${templateBean.templateBodyStartHtml}
 </script>
 
 ${templateBean.templateBodyStopHtml}
+
+<c:if test="${not empty typeFilter}">
+  <script>
+    var messageSpan = document.getElementById('defaultText');
+    var savedText = messageSpan.innerHTML;
+
+    messageSpan.innerHTML = 'Retrieving full data set before filtering...';
+    messageSpan.style.display = '';
+
+    setTimeout(function() {
+      var filterVal = "${typeFilter}";
+      facets['typeFilter'] = [ filterVal ];
+      var filteredState = generateRequest(myDataTable.getState().sortedBy, 0,
+        myDataTable.get('paginator').getRowsPerPage());
+      handleHistoryNavigation(filteredState);
+      setTimeout(function() {
+        messageSpan.innerHTML = savedText;
+      }, 1500);
+    }, 1500);
+  </script>
+</c:if>

@@ -38,6 +38,7 @@ public class SearchConstants {
 	public static final String FEATURE_TYPE_KEY = "featureTypeKey";
 	public static final String EVIDENCE_CODE		= "evidenceCode";
 	public static final String EVIDENCE_TERM		= "evidenceTerm";
+	public static final String EVIDENCE_CATEGORY	= "evidenceCategory";
 	
 
     // allele constants
@@ -97,6 +98,7 @@ public class SearchConstants {
     // Annotations
     public static final String ANNOTATED_TERM_ID    = "annotatedTermID";
     public static final String JNUM_ID		    = "jnumID";
+    public static final String SLIM_TERM	    = "slimTerm";
 
     // Vocab Constants
 

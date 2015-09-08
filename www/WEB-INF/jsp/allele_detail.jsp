@@ -10,23 +10,17 @@ ${templateBean.templateHeadHtml}
 
 <link rel="canonical" href="${configBean.FEWI_URL}allele/${allele.primaryID}" />
 
-<title>${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})</title>
-
-<meta name="description" content="${seoDescription}" />
-<meta name="keywords" content="${seoKeywords}" />
-<meta name="robots" content="NOODP" />
-<meta name="robots" content="NOYDIR" />
-
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-<%  // Pull detail object into servlet scope
-    // EXAMPLE - Marker marker = (Marker)request.getAttribute("marker");
+<fewi:simpleseo
+	title="${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})"
+	description="${seoDescription}"
+	keywords="${seoKeywords}"
+/>
 
-    StyleAlternator leftTdStyles
-      = new StyleAlternator("detailCat1","detailCat2");
-    StyleAlternator rightTdStyles
-      = new StyleAlternator("detailData1","detailData2");
-
+<% 
+    StyleAlternator leftTdStyles = new StyleAlternator("detailCat1","detailCat2");
+    StyleAlternator rightTdStyles = new StyleAlternator("detailData1","detailData2");
 %>
 
 <style>
@@ -104,7 +98,7 @@ function toggleExpressesComponent() {
     toggle("expressesComponentTable");
 }
 function formatForwardArgs() {
-      // fill and submit either seqfetchForm or mouseblastForm
+      // fill and submit either seqfetchForm or blastForm
 
       var i = document.seqPullDownForm.seqPullDown.selectedIndex;
       var seqStr = document.sequenceForm.seq.value;
@@ -128,10 +122,8 @@ function formatForwardArgs() {
       }
       else
       {
-	 // extract the ID from between the first two exclamation points
-	 var id = seqStr.match("!([^!]*)")[1];
-	 document.mouseblastForm.seqid.value = id;
-	 document.mouseblastForm.submit();
+	 document.blastForm.seq1.value = seqStr;
+	 document.blastForm.submit();
       }
 }
 
@@ -490,7 +482,7 @@ td.right { text-align: right }
 		<td class="padded" width="*" style='vertical-align:top'>
 		  Sequence tag details (${sequenceCount} tag<c:if test='${sequenceCount > 1}'>s</c:if>)
 		  <form name='seqfetchForm' method='GET' action='${configBean.SEQFETCH_URL}'><input type='hidden' name='seq1' value=''></form>
-		  <form name='mouseblastForm' method='GET' action='${configBean.MOUSEBLAST_URL}index.cgi'><input type='hidden' name='blastableDB' value='assembly37'><input type='hidden' name='seqid' value=''></form>
+		  <form name='blastForm' method='GET' action='${configBean.FEWI_URL}sequence/blast' target='_blank'><input type='hidden' name='blastSpec' value='OGP__10090__9559'><input type='hidden' name='seq1' value=''></form>
 		  <style>
 		  td.seqTagTH { text-align: left; background-color: #D0E0F0; padding: 4px; border: 1px solid black; }
 		  td.seqTag { text-align: center; vertical-align: middle; padding: 4px; border: 1px solid black; }
@@ -579,7 +571,7 @@ td.right { text-align: right }
 			<form name='seqPullDownForm' id='seqPullDownForm'><i>Selected Tags:</i>
 			  <select name='seqPullDown'>
 			    <option value='download' selected>download
-			    <option value='mouseblast'>MouseBLAST
+			    <option value='blast'>BLAST at NCBI
 			  </select>
 			  <input type='button' value='Go' onClick='formatForwardArgs()'>
 			</form>
@@ -714,9 +706,7 @@ td.right { text-align: right }
         </div>
 
         <div class='' style='margin-top:8px;margin-left:4px;'>
-          <a class="" href='${configBean.FEWI_URL}allele/allgenoviews/${allele.primaryID}' target="new" title='phenotype details'
-	   onClick="javascript:popupGenotype ('${configBean.FEWI_URL}allele/allgenoviews/${allele.primaryID}', ''); return false;"
-          >View</a> phenotypes for all genotypes (concatenated display).
+          <a class="" href='${configBean.FEWI_URL}allele/allgenoviews/${allele.primaryID}' target="new" title='phenotype details'>View</a> phenotypes for all genotypes (concatenated display).
         </div>
     </td>
   </tr>
@@ -836,7 +826,7 @@ td.right { text-align: right }
       </c:if>
       <c:if test="${allele.countOfReferences > 0}">
 	<tr><td class="rightBorderThinGray" align="right" nowrap="nowrap" width="1%"><font class="label">All:</font>&nbsp;</td>
-	<td class="padded" width="*"><a href="${configBean.FEWI_URL}reference/allele/${allele.primaryID}" class="MP">${allele.countOfReferences} reference(s)</a></td>
+	<td class="padded" width="*"><a href="${configBean.FEWI_URL}reference/allele/${allele.primaryID}?typeFilter=Literature" class="MP">${allele.countOfReferences} reference(s)</a></td>
 	</tr>
       </c:if>
       </table>

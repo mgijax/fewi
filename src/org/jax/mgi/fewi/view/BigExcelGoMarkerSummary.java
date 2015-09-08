@@ -32,7 +32,9 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 		int col = 0;
 		
 		row = sheet.createRow(rownum++);
+		row.createCell(col++).setCellValue("Aspect");
 		row.createCell(col++).setCellValue("Category");
+		row.createCell(col++).setCellValue("Qualifier");
 		row.createCell(col++).setCellValue("Classification Term");
 		row.createCell(col++).setCellValue("Evidence");
 		row.createCell(col++).setCellValue("Inferred From");
@@ -45,6 +47,12 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 			col = 0;
 			
 			row.createCell(col++).setCellValue(annot.getDagName());
+			row.createCell(col++).setCellValue(annot.getHeaderAbbreviations());
+			if (annot.getQualifier() != null) {
+			    row.createCell(col++).setCellValue(annot.getQualifier());
+			} else {
+			    row.createCell(col++).setCellValue("");
+			}
 			row.createCell(col++).setCellValue(annot.getTerm());
 			row.createCell(col++).setCellValue(annot.getEvidenceCode());
 			

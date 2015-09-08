@@ -2,19 +2,26 @@ package org.jax.mgi.fewi.view;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.support.RequestContextUtils;
+
+import org.jax.mgi.fewi.util.FormatHelper;
 
 /**
  * We need to use a special POI implementation that can handle files with more than 65536 rows
@@ -24,12 +31,21 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  */
 public abstract class AbstractBigExcelView extends AbstractReportView
 {
+	//--- class variables ---//
+
 	private static final String EXTENSION = ".xls";
 
 	private static final String SEPARATOR = "_";
 
+	private static final String HEADER_STYLE = "header";
+	private static final String WRAPPED_STYLE = "wrapped";
+	private static final String TOP_STYLE = "top";
+
+	//--- instance variables ---//
 
 	private String url;
+
+	//--- methods ---//
 
 	public AbstractBigExcelView() {
 		setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -166,7 +182,11 @@ public abstract class AbstractBigExcelView extends AbstractReportView
 	 */
 	protected void addNextCellValue(Row row, String value)
 	{
-		row.createCell(getNextCellIdx(row)).setCellValue(value);
+		if (value != null) {
+			row.createCell(getNextCellIdx(row)).setCellValue(value);
+		} else {
+			row.createCell(getNextCellIdx(row)).setCellValue("");
+		}
 	}
 	
 	private int getNextCellIdx(Row row)
@@ -174,5 +194,120 @@ public abstract class AbstractBigExcelView extends AbstractReportView
 		int idx = row.getLastCellNum();
 		if(idx<0) return 0;
 		return idx;
+	}
+
+	/* check that we have styles defined; if not, define them in the wkbk.
+	 */
+	protected void addStyles(Sheet sheet, Map<String, CellStyle> styles) {
+		// header style - bold and italic with thin bottom border
+
+		CellStyle hs = sheet.getWorkbook().createCellStyle();
+		hs.setBorderBottom(CellStyle.BORDER_THIN);
+
+		Font bold = sheet.getWorkbook().createFont();
+		bold.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		bold.setItalic(true);
+		bold.setBold(true);
+		hs.setFont(bold);
+
+		styles.put(HEADER_STYLE, hs);
+
+		// set up a style for wrapped text (allowing multiple lines)
+		
+		CellStyle wrapped = sheet.getWorkbook().createCellStyle();
+		wrapped.setWrapText(true);
+		wrapped.setVerticalAlignment(CellStyle.VERTICAL_TOP);
+
+		styles.put(WRAPPED_STYLE, wrapped);
+
+		// set up a style for non-wrapped text
+
+		CellStyle top = sheet.getWorkbook().createCellStyle();
+		top.setVerticalAlignment(CellStyle.VERTICAL_TOP);
+
+		styles.put(TOP_STYLE, top);
+	}
+
+	/* if we've not yet added any rows to the worksheet, add the specified
+	 * column headers and format them.
+	 */
+	protected void addHeaderRow (Sheet sheet, int[] columnWidth,
+		Map<String, CellStyle> styles, String[] titles) throws Exception {
+		// get header style
+
+		CellStyle hs = styles.get(HEADER_STYLE);
+
+		// now add the titles
+
+		Row header = sheet.createRow(0);
+		for (int i=0; i < titles.length; i++) {
+			Cell cell = header.createCell(i);
+			cell.setCellValue(titles[i]);
+			if (hs != null) {
+				cell.setCellStyle(hs);
+			}
+
+			int desiredWidth = FormatHelper.maxWidth(titles[i]);
+			if (desiredWidth > columnWidth[i]) {
+				columnWidth[i] = desiredWidth;
+			}
+		}
+	}
+
+	/* add a new data row to the worksheet, formatted as needed (wrapping,
+	 * column width monitoring)
+	 */
+	protected void addDataRow (Sheet sheet, int[] columnWidth, Map<String, CellStyle> styles, List<String> values) {
+		Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+		int col = -1;
+
+		CellStyle top = styles.get(TOP_STYLE);
+		CellStyle wrapped = styles.get(WRAPPED_STYLE);
+
+		for (String s : values) {
+			col++;
+			Cell cell = row.createCell(getNextCellIdx(row));
+			if (s == null) {
+				cell.setCellValue("");
+			} else {
+				cell.setCellValue(s);
+
+				int desiredWidth = FormatHelper.maxWidth(s);
+				if (desiredWidth > columnWidth[col]) {
+					columnWidth[col] = desiredWidth;
+				}
+
+				if ((wrapped != null) && (top != null)) {
+					if (s.indexOf("\n") >= 0) {
+						cell.setCellStyle(wrapped);
+					} else {
+						cell.setCellStyle(top);
+					}
+				}
+			}
+		}
+	}
+
+	/* add any last minute style adjustments (like the freeze pane and
+	 * column widths)
+	 */
+	protected void applyStandardFormat(Sheet sheet, int[] columnWidth,
+		int[] maxColumnWidth) {
+
+		// apply the column width for each column, with a cap applied
+		// from maxColumnWidth).  
+
+		for (int i = 0; i < columnWidth.length; i++) {
+			int width = Math.min(columnWidth[i], maxColumnWidth[i]);
+			if (width > 0) {
+				sheet.setColumnWidth(i, (width + 1) * 255);
+			}
+		}
+
+		// freeze the sheet so the headers remain while scrolling
+		sheet.createFreezePane(0,1);
+
+		logger.debug("normal exit from applyStandardFormat()");
+		return;
 	}
 }

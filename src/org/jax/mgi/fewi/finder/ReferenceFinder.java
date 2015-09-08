@@ -7,6 +7,7 @@ import mgi.frontend.datamodel.Reference;
 import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
 import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceAuthorFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrReferenceTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceHasDataFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceJournalFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceSummaryHunter;
@@ -35,6 +36,9 @@ public class ReferenceFinder {
 
 	@Autowired
 	private SolrReferenceAuthorFacetHunter authorFacetHunter;
+
+	@Autowired
+	private SolrReferenceTypeFacetHunter typeFacetHunter;
 
 	@Autowired
 	private SolrReferenceJournalFacetHunter journalFacetHunter;
@@ -121,6 +125,12 @@ public class ReferenceFinder {
 	public SearchResults<String> getAuthorFacet(SearchParams params) {
 		SearchResults<String> results = new SearchResults<String>();
 		authorFacetHunter.hunt(params, results);
+		return results;
+	}
+
+	public SearchResults<String> getTypeFacet(SearchParams params) {
+		SearchResults<String> results = new SearchResults<String>();
+		typeFacetHunter.hunt(params, results);
 		return results;
 	}
 

@@ -9,6 +9,33 @@ var numConfig = {thousandsSeparator: ','};
 // Integrate with Browser History Manager
 var History = YAHOO.util.History;
 
+// returns the current state of facets as a string
+var facetString = function() {
+	var s = '{';
+	for (k in facets) {
+		if (s.length > 1) { s = s + ', '; }
+		s = s + k + ':' + facets[k];
+	}
+	var s = s + '}';
+	return s;
+};
+
+// interrogates the URL parameters and uses them to pre-fill a certain subset
+// of the filters; pass in the desired querystring
+
+var parseParameters = function(qs, updateSummaryNow) {
+	var req = parseRequest(qs);
+	var foundOne = 0;
+
+	if (req.typeFilter != undefined) {
+		facets['typeFilter'] = req.typeFilter;
+		foundOne++;
+	}
+	if ((updateSummaryNow == true) && (foundOne > 0)) {
+		populateFilterSummary();
+	}
+}
+
 // this function populates the 'breadbox' with current filters
 var populateFilterSummary = function () {
 	var fSum = YAHOO.util.Dom.get('filterSummary');
@@ -32,7 +59,7 @@ var populateFilterSummary = function () {
 	    for (k in facets) {
 	    	var inner = facets[k];
 	    	var brTag = false;
-        	list = facets[key];
+        	list = facets[k];
 			for(v=0; v < inner.length; v++) {
 				YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 	    		vis = true;
@@ -41,7 +68,7 @@ var populateFilterSummary = function () {
 	            el.setAttribute('class', 'filterItem');
 	            el.setAttribute('id', k + ':' + inner[v]);
 	            var val = k.charAt(0).toUpperCase() + k.slice(1);
-	            val = val.replace('Filter', '') + ': ' + inner[v].replace('*', ',');
+	            val = val.replace('Filter', '') + ': ' + inner[v].replace(/\*/g, ',');
 	            setText(el, val);
 
 	            filterList.appendChild(el);
@@ -243,6 +270,7 @@ var clearFilter = function () {
         if (!YAHOO.lang.isNull(toggleAbs)){
         	setText(toggleAbs, txt);
         }
+
         populateFilterSummary();
         return true;
     };
@@ -414,6 +442,19 @@ YAHOO.util.Event.onDOMReady(function () {
 	};
 
 
+	var facetTypeDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/type?" + querystring);
+	facetTypeDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
+	facetTypeDS.responseSchema = {resultsList: "resultFacets",   
+			metaFields: {
+				 message: "message"}
+	};
+	facetTypeDS.maxCacheEntries = 3;
+	
+	facetTypeDS.doBeforeParseData = function(oRequest , oFullResponse , oCallback){
+		oCallback.argument.error = oFullResponse.error;
+		return oFullResponse;
+	};
+
 	var facetJournalDS = new YAHOO.util.DataSource(fewiurl + "reference/facet/journal?" + querystring);
 	facetJournalDS.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	facetJournalDS.responseSchema = {resultsList: "resultFacets",   
@@ -470,7 +511,11 @@ YAHOO.util.Event.onDOMReady(function () {
 					}
 				}
 			}
-			options[x] = '<label><input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"' + checked + '> ' + res[x] + '</label>';
+			if (oPayload.name == 'typeFilter') {
+			    options[x] = '<label><input type="checkbox" name="' + oPayload.name + '" value="' + res[x] + '"' + checked + '> ' + res[x] + '</label>';
+			} else {
+			    options[x] = '<label><input type="checkbox" name="' + oPayload.name + '" value="' + res[x].replace(/,/g, '*') + '"' + checked + '> ' + res[x] + '</label>';
+			}
 		}
 		populateFacetDialog(oPayload.title, options.join('<br/>'), false);
 	};
@@ -506,6 +551,12 @@ YAHOO.util.Event.onDOMReady(function () {
 			argument:{name:'journalFilter', title:'Journal'}
 		};
 
+	var typeCallback = {success:parseFacetResponse,
+			failure:handleError,
+			scope:this,
+			argument:{name:'typeFilter', title:'Reference Type'}
+		};
+
 	var yearCallback = {success:parseFacetResponse,
 			failure:handleError,
 			scope:this,
@@ -525,6 +576,11 @@ YAHOO.util.Event.onDOMReady(function () {
 
 	var populateJournalDialog = function () {
 		facetJournalDS.sendRequest(genFacetQuery("journalFilter"), journalCallback);		
+		facetDialog.show();
+	};
+
+	var populateTypeDialog = function () {
+		facetTypeDS.sendRequest(genFacetQuery("typeFilter"), typeCallback);		
 		facetDialog.show();
 	};
 
@@ -553,6 +609,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	// add listeners to the filter buttons
 	YAHOO.util.Event.addListener("authorFilter", "click", populateAuthorDialog, true);
 	YAHOO.util.Event.addListener("journalFilter", "click", populateJournalDialog, true);
+	YAHOO.util.Event.addListener("typeFilter", "click", populateTypeDialog, true);
 	YAHOO.util.Event.addListener("yearFilter", "click", populateYearDialog, true);
 	YAHOO.util.Event.addListener("curatedDataFilter", "click", populateDataDialog, true);
 	
@@ -584,7 +641,7 @@ YAHOO.util.Event.onDOMReady(function () {
         }
 	};
 
-	// add toggleAbstract functio to the UI button
+	// add toggleAbstract function to the UI button
 	YAHOO.util.Event.addListener("toggleAbstract", "click", toggleAbstract);
 	
 	(function() {

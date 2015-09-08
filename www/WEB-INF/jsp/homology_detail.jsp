@@ -29,6 +29,11 @@ ${templateBean.templateHeadHtml}
 
 function formatForwardArgs() {
     document.sequenceForm.action = document.sequenceForm.seqPullDown.options[document.sequenceForm.seqPullDown.selectedIndex].value;
+    if (document.sequenceForm.action.indexOf("blast") >= 0) {
+	document.sequenceForm.target = "_blank";
+    } else {
+	document.sequenceForm.target = "";
+    }
     document.sequenceForm.submit();
 }
 
@@ -136,7 +141,7 @@ ${templateBean.templateBodyStartHtml}
         		<a class="filterButton" onClick="deselectAllSeqs()">deselect all</a>
         		<select name="seqPullDown">
 				  <option value="${configBean.SEQFETCH_URL}" selected>get FASTA</option>
-				  <option value="${configBean.MOUSEBLAST_URL}seqSelect.cgi">MouseBLAST</option>
+				  <option value="${configBean.FEWI_URL}sequence/blast">BLAST at NCBI</option>
 				</select>
 				<a class="filterButton" onClick="formatForwardArgs()">Go</a>
 				</span>

@@ -212,9 +212,58 @@ public class GXDController {
 
 		ModelAndView mav = new ModelAndView("gxd_generic_summary");
 		mav.addObject("queryString", request.getQueryString());
-		return mav;
 
+		// the marker ID is an optional field; if it exists, get the
+		// corresponding marker and add it to the mav.  This supports
+		// the link from the anatomy slimgrid on the marker detail pg.
+
+		boolean hasMarkerID = false;
+		boolean hasStructure = false;
+
+		String markerId = request.getParameter("markerMgiId");
+		if (markerId != null) {
+			String error = addMarkerToMav(mav, markerId);
+			if (error != null) {
+				return errorMav(error);
+			}
+			hasMarkerID = true;
+		}
+
+		// structure and structureId get special handling, in case
+		// we're coming from the anatomy slimgrid on the marker
+		// detail page
+
+		String structure = request.getParameter("structure");
+		String structureId = request.getParameter("structureID");
+
+		if (structure != null) {
+			mav.addObject("structure", structure);
+		}
+		if (structureId != null) {
+			mav.addObject("structureId", structureId);
+			hasStructure = true;
+		}
+
+		// if we have a marker ID and a structure ID, then we can 
+		// assume we have arrived from a slimgrid on the marker
+		// detail page.
+
+		if (hasMarkerID && hasStructure) {
+			mav.addObject("fromSlimgrid", "yes");
+		}
+
+		return mav;
 	}
+
+	/* build and return a mav which will present the given error message
+	 * to the user
+	 */
+	private ModelAndView errorMav (String error) {
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("errorMsg", error);
+		return mav;
+	}
+
 	/*
 	 * report by markers
 	 */
@@ -268,15 +317,11 @@ public class GXDController {
 		// there can be only one...
 		if (structureList.size() < 1) {
 			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "No anatomy term found for " + emapID);
-			return mav;
+			return errorMav("No anatomy term found for " + emapID);
 		}
 		if (structureList.size() > 1) {
 			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "Multiple anatomy terms found for " + emapID);
-			return mav;
+			return errorMav("Multiple anatomy terms found for " + emapID);
 		}
 		VocabTerm structure = structureList.get(0);
 		mav.addObject("structure", structure);
@@ -312,15 +357,11 @@ public class GXDController {
 		// there can be only one...
 		if (referenceList.size() < 1) {
 			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "No reference found for " + refID);
-			return mav;
+			return errorMav("No reference found for " + refID);
 		}
 		if (referenceList.size() > 1) {
 			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "Dupe reference found for " + refID);
-			return mav;
+			return errorMav("Dupe reference found for " + refID);
 		}
 		Reference reference = referenceList.get(0);
 		mav.addObject("reference", reference);
@@ -358,15 +399,11 @@ public class GXDController {
 		// there can be only one...
 		if (alleleList.size() < 1) {
 			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "No allele found for " + allID);
-			return mav;
+			return errorMav("No allele found for " + allID);
 		}
 		if (alleleList.size() > 1) {
 			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "Dupe reference found for " + allID);
-			return mav;
+			return errorMav("Dupe reference found for " + allID);
 		}
 		Allele allele = alleleList.get(0);
 		mav.addObject("allele", allele);
@@ -376,6 +413,33 @@ public class GXDController {
 		return mav;
 	}
 
+
+	/* looks up the Marker object associated with the given marker ID, and
+	 * adds it to the mav with the 'marker' name.  Returns null if 
+	 * successful, or an error message if it fails for some reason.
+	 */
+	private String addMarkerToMav (ModelAndView mav, String mrkID) {
+		// setup search parameters object to get the requested marker
+		SearchParams markerSearchParams = new SearchParams();
+		Filter markerIdFilter = new Filter(SearchConstants.MRK_ID,
+			mrkID);
+		markerSearchParams.setFilter(markerIdFilter);
+
+		// find the requested marker
+		SearchResults<Marker> searchResults
+			= markerFinder.getMarkerByID(markerSearchParams);
+		List<Marker> markerList = searchResults.getResultObjects();
+
+		// there can be only one...
+		if (markerList.size() < 1) {
+			return "No marker found for " + mrkID;
+		} else if (markerList.size() > 1) {
+			return "Dupe marker ID found for " + mrkID;
+		}
+		Marker marker = markerList.get(0);
+		mav.addObject("marker", marker);
+		return null;
+	}
 
 	/*
 	 * Summary by Marker
@@ -390,31 +454,11 @@ public class GXDController {
 		// setup view object
 		ModelAndView mav = new ModelAndView("gxd_summary_by_marker");
 
-		// setup search parameters object to gather the requested marker
-		SearchParams markerSearchParams = new SearchParams();
-		Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, mrkID);
-		markerSearchParams.setFilter(markerIdFilter);
-
-		// find the requested marker
-		SearchResults<Marker> markerSearchResults
-		= markerFinder.getMarkerByID(markerSearchParams);
-		List<Marker> markerList = markerSearchResults.getResultObjects();
-
-		// there can be only one...
-		if (markerList.size() < 1) {
-			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "No marker found for " + mrkID);
-			return mav;
+		String error = addMarkerToMav(mav, mrkID);
+		if (error != null) {
+			return errorMav(error);
 		}
-		if (markerList.size() > 1) {
-			// forward to error page
-			mav = new ModelAndView("error");
-			mav.addObject("errorMsg", "Dupe marker ID found for " + mrkID);
-			return mav;
-		}
-		Marker marker = markerList.get(0);
-		mav.addObject("marker", marker);
+
 		mav.addObject("queryString", request.getQueryString());
 
 		// handle requests for a specific Theiler Stage
@@ -436,7 +480,6 @@ public class GXDController {
 		}else {
 			mav.addObject("assayType", "");
 		}
-
 
 		logger.debug("summeryByMrkId routing to view ");
 		return mav;
@@ -624,6 +667,47 @@ public class GXDController {
 		logger.debug("gxdImageSummaryJson() found "+searchResults.getTotalCount()+" images");
 
 		return jsonResponse;
+	}
+
+	/* retrieve the expression image that serves as the teaser image on
+	 * the marker detail page for the given marker, or null if there are
+	 * no expression images for the marker
+	 */
+	public GxdImageSummaryRow getMarkerDetailTeaserImage(Marker marker) {
+		logger.debug("gxdMarkerDetailTeaserImage() started");
+
+		// parse the various query parameter to generate SearchParams object
+		GxdQueryForm query = new GxdQueryForm();
+		query.setMarkerMgiId(marker.getPrimaryID());
+
+		Paginator page = new Paginator(1);
+
+		SearchParams params = new SearchParams();
+		params.setIncludeSetMeta(true);
+		params.setIncludeMetaHighlight(true);
+		params.setIncludeRowMeta(true);
+		params.setIncludeMetaScore(true);
+		params.setPaginator(page);
+		params.setFilter(this.parseGxdQueryForm(query));
+
+		// sort using byDefaultSort
+		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
+
+		SearchResults<SolrGxdImage> results = gxdFinder.searchImages(params);
+
+		List<SolrGxdImage> imageList = results.getResultObjects();
+
+		for (SolrGxdImage image : imageList) {
+			if (image != null){
+				GxdImageSummaryRow row = new GxdImageSummaryRow(image);
+				row.setMaxWidth(90);
+				row.setMaxHeight(65);
+				row.hideCopyright();
+				row.skipDetailLink();
+				return row;
+			}
+		}
+		return null;
 	}
 
 	@RequestMapping("/stageMatrixPopup/json")

@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-/*-------*/
-/* class */
-/*-------*/
-
 /*
  * This controller maps all /disease/ uri's
  */
@@ -30,123 +26,103 @@ import org.springframework.web.servlet.ModelAndView;
 public class DiseaseController {
 
 
-    //--------------------//
-    // instance variables
-    //--------------------//
+	private final Logger logger = LoggerFactory.getLogger(DiseaseController.class);
 
-    private final Logger logger
-      = LoggerFactory.getLogger(DiseaseController.class);
+	@Autowired
+	private DiseaseFinder diseaseFinder;
 
-    @Autowired
-    private DiseaseFinder diseaseFinder;
-    
-    @Autowired 
-    DiseasePortalFinder diseasePortalFinder;
- 
-    @Autowired
-    private IDLinker idLinker;
+	@Autowired 
+	DiseasePortalFinder diseasePortalFinder;
 
-    //--------------------------------------------------------------------//
-    // public methods
-    //--------------------------------------------------------------------//
+	@Autowired
+	private IDLinker idLinker;
 
+	//--------------------------------------//
+	// Disease Detail by Disease Key
+	//--------------------------------------//
+	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
+	public ModelAndView diseaseDetailByKey(@PathVariable("dbKey") String dbKey) {
+		logger.debug ("-> diseaseDetailByKey started");
 
-    //--------------------------------------//
-    // Disease Detail by Disease Key
-    //--------------------------------------//
-    @RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
-    public ModelAndView diseaseDetailByKey(@PathVariable("dbKey") String dbKey) {
-	logger.debug ("-> diseaseDetailByKey started");
+		// find the requested disease by database key
 
-	// find the requested disease by database key
+		SearchResults<Disease> searchResults = diseaseFinder.getDiseaseByKey(dbKey);
+		List<Disease> diseaseList = searchResults.getResultObjects();
 
-	SearchResults<Disease> searchResults = diseaseFinder.getDiseaseByKey(dbKey);
-	List<Disease> diseaseList = searchResults.getResultObjects();
+		// should only be one.  error condition if not.
 
-	// should only be one.  error condition if not.
+		if (diseaseList == null) {
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject ("errorMsg", "No Disease Found");
+			return mav;
+		} else if (diseaseList.size() < 1) {
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject ("errorMsg", "No Disease Found");
+			return mav;
+		} else if (diseaseList.size() > 1) {
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject ("errorMsg", "Non-Unique Disease Key Found");
+			return mav;
+		}
 
-	if (diseaseList == null) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "No Disease Found");
-	    return mav;
-	} else if (diseaseList.size() < 1) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "No Disease Found");
-	    return mav;
-	} else if (diseaseList.size() > 1) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "Non-Unique Disease Key Found");
-	    return mav;
+		Disease disease = diseaseList.get(0);
+		if (disease == null) {
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject ("errorMsg", "No Disease Found");
+			return mav;
+		}
+
+		return this.prepareDisease(disease.getPrimaryID(), "disease_detail");
 	}
 
-        Disease disease = diseaseList.get(0);
-	if (disease == null) {
-	    ModelAndView mav = new ModelAndView("error");
-	    mav.addObject ("errorMsg", "No Disease Found");
-	    return mav;
+	@RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView diseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
+
+		logger.debug("->diseaseDetailByID started");
+
+		return this.prepareDisease(diseaseID, "disease_detail");
 	}
 
-	return this.prepareDisease(disease.getPrimaryID(), "disease_detail");
-    }
+	@RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
+	public ModelAndView diseaseModelsByID(@PathVariable("diseaseID") String diseaseID) {
 
-    //--------------------//
-    // Disease Detail By ID
-    //--------------------//
-    @RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
-    public ModelAndView diseaseDetailByID(@PathVariable("diseaseID") String diseaseID) {
+		logger.debug("->diseaseModelsByID started");
 
-        logger.debug("->diseaseDetailByID started");
+		return this.prepareDisease(diseaseID, "disease_models");
+	}
 
-	return this.prepareDisease(diseaseID, "disease_detail");
-    }
+	// code shared to send back a disease detail page, regardless of
+	// whether the initial link was by disease ID or by database key
+	private ModelAndView prepareDisease (String diseaseID, String view) {
 
-    //---------------------------------//
-    // All disease models by disease ID
-    //---------------------------------//
-    @RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
-    public ModelAndView diseaseModelsByID(@PathVariable("diseaseID") String diseaseID) {
+		List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
+		// there can be only one...
+		if (diseaseList.size() < 1) { // none found
+			ModelAndView mav = new ModelAndView("error");
+			logger.info("No Disease Found");
+			mav.addObject("errorMsg", "No Disease Found");
+			return mav;
+		} else if (diseaseList.size() > 1) { // dupe found
+			ModelAndView mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Duplicate Disease ID");
+			return mav;
+		}
+		// success - we have a single object
 
-        logger.debug("->diseaseModelsByID started");
+		// generate ModelAndView object to be passed to detail page
+		ModelAndView mav = new ModelAndView(view);
 
-	return this.prepareDisease(diseaseID, "disease_models");
-    }
+		//pull out the Disease, and add to mav
+		Disease disease = diseaseList.get(0);
+		mav.addObject("disease", disease);
 
-    // --------------------------------------------------//
-    // Shared code for populating the ModelAndView object
-    // --------------------------------------------------//
-
-    // code shared to send back a disease detail page, regardless of
-    // whether the initial link was by disease ID or by database key
-    private ModelAndView prepareDisease (String diseaseID, String view) {
-
-        List<Disease> diseaseList = diseaseFinder.getDiseaseByID(diseaseID);
-        // there can be only one...
-        if (diseaseList.size() < 1) { // none found
-            ModelAndView mav = new ModelAndView("error");
-            logger.info("No Disease Found");
-            mav.addObject("errorMsg", "No Disease Found");
-            return mav;
-        } else if (diseaseList.size() > 1) { // dupe found
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("errorMsg", "Duplicate Disease ID");
-            return mav;
-        }
-        // success - we have a single object
-
-        // generate ModelAndView object to be passed to detail page
-        ModelAndView mav = new ModelAndView(view);
-        
-        //pull out the Disease, and add to mav
-        Disease disease = diseaseList.get(0);
-        mav.addObject("disease", disease);
-
-        // add an IDLinker to the mav for use at the JSP level
-        mav.addObject("idLinker", idLinker);
+		// add an IDLinker to the mav for use at the JSP level
+		mav.addObject("idLinker", idLinker);
 
 		// add a pre-computed link for the disease ID
 		mav.addObject("linkOut", idLinker.getLink(disease.getLogicalDB(),
 				disease.getPrimaryID(), disease.getPrimaryID() ) );
-		
+
 		// get disease reference count from DiseasePortal logic
 		logger.debug("hitting diseasePortal index for diseaseRefCount");
 		List<SolrVocTerm> dpDiseases = diseasePortalFinder.getDiseaseByID(diseaseID);
@@ -155,7 +131,7 @@ public class DiseaseController {
 			SolrVocTerm dpDisease = dpDiseases.get(0);
 			mav.addObject("diseaseRefCount",dpDisease.getDiseaseRefCount());
 		}
-    
-        return mav;
-    }
+
+		return mav;
+	}
 }
