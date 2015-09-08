@@ -63,7 +63,6 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
@@ -381,6 +380,7 @@ public class MarkerController {
 				ModelAndView mav = new ModelAndView("redirect:" + linker.getFewiIDLink(ObjectTypes.ALLELE, alleleID));
 				return mav;
 			} catch (Exception e) {
+				logger.error("Could not find allele ID for transgene marker", e);
 				ModelAndView mav = new ModelAndView("error");
 				mav.addObject("errorMsg", "Could not find allele ID for transgene marker");
 				return mav;
