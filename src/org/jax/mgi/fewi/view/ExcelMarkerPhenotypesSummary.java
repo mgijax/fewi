@@ -33,6 +33,17 @@ public class ExcelMarkerPhenotypesSummary  extends AbstractBigExcelView
 			Map<String,Object> model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 	{
 		logger.debug("buildExcelDocument");
+		logger.debug("user-agent: " + request.getHeader("User-Agent"));
+
+		String userAgent = request.getHeader("User-Agent");
+		boolean isMac = false;
+		if (userAgent != null) {
+			if (userAgent.indexOf("Macintosh") > 0) {
+				isMac = true;
+			} else if (userAgent.indexOf("OS X") > 0) {
+				isMac = true;
+			}
+		}
 
 		// get the marker
 		Marker marker = (Marker) model.get("marker");
@@ -91,11 +102,34 @@ public class ExcelMarkerPhenotypesSummary  extends AbstractBigExcelView
 			genotype.getAllelePairs());
 		    String genotypeID = genotype.getPrimaryID();
 
+		    if (isMac) {
+			    alleles = alleles.replace("\n", "\r");
+		    }
+
 		    for (MPAnnotation annot : genotype.getMpAnnotations()) {
 			String term = annot.getTerm();
 			String qualifier = annot.getQualifier();
 
-			for (String mpHeader : annot.getMPHeaders()) {
+			List<String> mpHeaders = annot.getMPHeaders();
+
+			if ((mpHeaders != null) && (mpHeaders.size() > 0)) {
+			  for (String mpHeader : mpHeaders) {
+			    for (MPAnnotationReference ref : annot.getMpReferences()) {
+				List<String> row = new ArrayList<String>();
+				row.add(alleles);
+				row.add(strain);
+				row.add(genotypeID);
+				row.add(qualifier);
+				row.add(term);
+				row.add(mpHeader);
+				row.add(ref.getJnumID());
+				addDataRow(sheet, columnWidths, styles, row);
+			    }
+			  }
+			} else {
+			    // no MP headers, but still need refs
+
+			    String mpHeader = "";
 			    for (MPAnnotationReference ref : annot.getMpReferences()) {
 				List<String> row = new ArrayList<String>();
 				row.add(alleles);
