@@ -40,6 +40,9 @@ var parseParameters = function(qs, updateSummaryNow) {
 var populateFilterSummary = function () {
 	var fSum = YAHOO.util.Dom.get('filterSummary');
 	// clear state
+
+	var addClearAllButton = false;		// need to add a Clear All btn?
+
 	if (!YAHOO.lang.isUndefined(fSum)){
 		var filterList = new YAHOO.util.Element('filterList');
 		var fCount = YAHOO.util.Dom.get('fCount');
@@ -48,12 +51,7 @@ var populateFilterSummary = function () {
 			while (filterList.hasChildNodes()) {
 				filterList.removeChild(filterList.get('firstChild'));
 			}
-		    clear = document.createElement("a");
-		    clear.setAttribute('class', 'filterItem');
-		    clear.setAttribute('id', 'clearFilter');
-		    setText(clear, 'Remove All Filters');
-		    filterList.appendChild(clear);
-		    YAHOO.util.Event.addListener(clear, "click", clearFilter);	
+		    addClearAllButton = true;
 		}
 	    var vis = false;
 	    for (k in facets) {
@@ -63,12 +61,16 @@ var populateFilterSummary = function () {
 			for(v=0; v < inner.length; v++) {
 				YAHOO.util.Dom.setStyle(fSum, 'display', 'block');
 	    		vis = true;
-	    		brTag = true;
+	    		//brTag = true;
 	            var el = document.createElement("a");
 	            el.setAttribute('class', 'filterItem');
 	            el.setAttribute('id', k + ':' + inner[v]);
 	            var val = k.charAt(0).toUpperCase() + k.slice(1);
 	            val = val.replace('Filter', '') + ': ' + inner[v].replace(/\*/g, ',');
+
+		    if (val.startsWith("Type")) {
+			    val = val.replace("Type", "Reference Type");
+		    }
 	            setText(el, val);
 
 	            filterList.appendChild(el);
@@ -80,6 +82,18 @@ var populateFilterSummary = function () {
 				filterList.appendChild(document.createElement("br"));
 			}
 	    }
+
+	    // Clear All button is at the end now
+
+	    if (addClearAllButton) {
+		    clear = document.createElement("a");
+		    clear.setAttribute('class', 'filterItem');
+		    clear.setAttribute('id', 'clearFilter');
+		    setText(clear, 'Remove All Filters');
+		    filterList.appendChild(clear);
+		    YAHOO.util.Event.addListener(clear, "click", clearFilter);	
+	    }
+
 		if (vis){
 			if(!YAHOO.lang.isNull(fCount)){
 				YAHOO.util.Dom.setStyle(fCount, 'display', 'block');
