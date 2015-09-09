@@ -975,9 +975,6 @@ public class ReferenceController {
 
 		Map<String, List<String>> response = this.parseFacetResponse(referenceFinder.getTypeFacet(params));
 
-		if (response.containsKey("resultFacets")) {
-			Collections.reverse(response.get("resultFacets"));
-		}
 		return response;
 	}
 	
