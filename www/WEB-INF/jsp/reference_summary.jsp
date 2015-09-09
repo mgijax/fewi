@@ -11,6 +11,7 @@ ${templateBean.templateHeadHtml}
 </script>
 
 <script src="${configBean.FEWI_URL}assets/js/rowexpansion.js"></script>
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/reference_summary.css" />
 
 <title>References</title>
 
@@ -38,18 +39,7 @@ ${templateBean.templateBodyStartHtml}
 
 <div id="summary">
 
-	<div id="breadbox">
-		<div id="contentcolumn">
-			<div class="innertube">
-				<div id="filterSummary" class="filters">
-					<span class="label">Filters:</span>
-					&nbsp;<span id="defaultText"  style="display:none;">No filters selected. Filter these references below.</span>
-					<span id="filterList"></span><br/>					
-					<span id="fCount" style="display:none;" ><span id="filterCount">0</span> reference(s) match after applying filter(s)</span>
-				</div>
-			</div>
-		</div>
-	</div>
+	<%@ include file="/WEB-INF/jsp/reference_summary_filters.jsp" %>
 
 	<div id="querySummary">
 		<div class="innertube">
@@ -86,7 +76,7 @@ ${templateBean.templateBodyStartHtml}
 			<c:if test="${not empty referenceQueryForm.id}">
 				<span class="label">ID:</span> 
 				${referenceQueryForm.id}<br/></c:if>
-			<span id="totalCount" class="count">0</span> reference(s) match your unfiltered search.<br/>
+				<span class="bold"><span id="totalCount" class="count">0</span> reference(s)</span> match your unfiltered search.<br/>
 		</div>
 	</div>
 
