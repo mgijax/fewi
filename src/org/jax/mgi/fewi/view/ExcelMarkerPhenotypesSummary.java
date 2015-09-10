@@ -33,17 +33,8 @@ public class ExcelMarkerPhenotypesSummary  extends AbstractBigExcelView
 			Map<String,Object> model, SXSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 	{
 		logger.debug("buildExcelDocument");
-		logger.debug("user-agent: " + request.getHeader("User-Agent"));
 
 		String userAgent = request.getHeader("User-Agent");
-		boolean isMac = false;
-		if (userAgent != null) {
-			if (userAgent.indexOf("Macintosh") > 0) {
-				isMac = true;
-			} else if (userAgent.indexOf("OS X") > 0) {
-				isMac = true;
-			}
-		}
 
 		// get the marker
 		Marker marker = (Marker) model.get("marker");
@@ -101,10 +92,6 @@ public class ExcelMarkerPhenotypesSummary  extends AbstractBigExcelView
 		    String alleles = FormatHelper.stripAlleleTags (
 			genotype.getAllelePairs());
 		    String genotypeID = genotype.getPrimaryID();
-
-		    if (isMac) {
-			    alleles = alleles.replace("\n", "\r");
-		    }
 
 		    for (MPAnnotation annot : genotype.getMpAnnotations()) {
 			String term = annot.getTerm();
