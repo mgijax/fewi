@@ -263,7 +263,7 @@ ${templateBean.templateBodyStartHtml}
 		References
       </td>
       <td class="<%=rightTdStyles.getNext() %>" >
-		Disease References using Mouse Models <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}">(${diseaseRefCount})</a>
+		Disease References using Mouse Models <a href="${configBean.FEWI_URL}reference/disease/${disease.primaryID}?typeFilter=Literature">(${diseaseRefCount})</a>
       </td>
     </tr>
 </c:if>

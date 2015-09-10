@@ -61,7 +61,7 @@ td.limitWidth { max-width: 500px }
 												<c:if test="${marker.countOfPhenotypeReferences > 0}">
 													<tr>
 														<td class="rightBorderThinGray label padded top right">${psHeader}</td>
-														<td class="padded"><a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}">${marker.countOfPhenotypeReferences}</a> phenotype reference<c:if test="${marker.countOfPhenotypeReferences > 1}">s</c:if></td>
+														<td class="padded"><a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfPhenotypeReferences}</a> phenotype reference<c:if test="${marker.countOfPhenotypeReferences > 1}">s</c:if></td>
 													</tr>
 												</c:if>
 											</table>

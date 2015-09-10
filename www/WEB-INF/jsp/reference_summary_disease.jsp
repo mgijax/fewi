@@ -73,3 +73,5 @@ ${templateBean.templateBodyStartHtml}
 </script>
 
 ${templateBean.templateBodyStopHtml}
+
+<%@ include file="/WEB-INF/jsp/reference_summary_filter_setup.jsp" %>

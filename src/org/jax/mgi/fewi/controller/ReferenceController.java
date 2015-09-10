@@ -397,6 +397,7 @@ public class ReferenceController {
 	@RequestMapping("/go/marker/{mrkID}")
 	public ModelAndView goReferencesByMarkerId (
 		@PathVariable("mrkID") String mrkID,
+		@ModelAttribute ReferenceQueryForm query,
 		HttpServletRequest request, Model model) {		
 
 	    logger.debug("->goReferencesByMarkerId started: " + mrkID);
@@ -423,6 +424,7 @@ public class ReferenceController {
             // pre-generate query string
             mav.addObject("queryString", "goMarkerId=" + mrkID);
             mav.addObject("isGOSummary", true);
+	    addFieldsFromQF(mav, query);
     	
 	    return mav;   	
 	}
@@ -432,6 +434,7 @@ public class ReferenceController {
 	@RequestMapping("/phenotype/marker/{mrkID}")
 	public ModelAndView phenoReferencesByMarkerId (
 		@PathVariable("mrkID") String mrkID,
+		@ModelAttribute ReferenceQueryForm query,
 		HttpServletRequest request, Model model) {		
 
 	    logger.debug("->phenoReferencesByMarkerId started: " + mrkID);
@@ -458,6 +461,7 @@ public class ReferenceController {
             // pre-generate query string
             mav.addObject("queryString", "phenoMarkerId=" + mrkID);
             mav.addObject("isPhenotypeSummary", true);
+	    addFieldsFromQF(mav, query);
     	
 	    return mav;   	
 	}
@@ -537,16 +541,13 @@ public class ReferenceController {
         mav.addObject("queryString", "markerKey=" + marker.getMarkerKey());
 
 	addFieldsFromQF(mav, query);
-
-//        mav.addObject("queryString", "markerKey=" + marker.getMarkerKey()
-//		+ query.getUrlFragment());
-    	
     	return mav;   	
     }
     
     @RequestMapping("/diseaseRelevantMarker/{markerID}")
 	public ModelAndView referenceSummaryByMarkerIdDiseaseRelevant(
 			@PathVariable("markerID") String markerID,
+			@ModelAttribute ReferenceQueryForm query,
 			HttpServletRequest request, Model model) {		
 		logger.debug("->referenceSummaryByMarkerIdDiseaseRelevant started: " + markerID);
 		
@@ -572,6 +573,7 @@ public class ReferenceController {
         // pre-generate query string
         mav.addObject("queryString", "diseaseRelevantMarkerId=" + markerID);
         mav.addObject("isDiseaseRelevantSummary", true);
+	addFieldsFromQF(mav, query);
     	
     	return mav;   	
 	}
@@ -579,6 +581,7 @@ public class ReferenceController {
     @RequestMapping("/disease/{diseaseID}")
    	public ModelAndView referenceSummaryByDiseaseID(
    			@PathVariable("diseaseID") String diseaseID,
+			@ModelAttribute ReferenceQueryForm query,
    			HttpServletRequest request, Model model) {		
    		logger.debug("->referenceSummaryByDiseaseID started: " + diseaseID);
    		
@@ -602,6 +605,7 @@ public class ReferenceController {
                    
            // pre-generate query string
            mav.addObject("queryString", "diseaseId=" + diseaseID);
+	   addFieldsFromQF(mav, query);
        	
        	return mav;   	
    	}

@@ -30,7 +30,7 @@
 												<c:if test="${(not empty marker.countOfGOReferences) and (marker.countOfGOReferences > 0)}">
 													<tr>
 														<td class="rightBorderThinGray label padded top right"><font class="label">GO References</font></td>
-														<td class="padded"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}">${marker.countOfGOReferences}</a></td>
+														<td class="padded"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></td>
 													</tr>
 												</c:if>
 											</table>

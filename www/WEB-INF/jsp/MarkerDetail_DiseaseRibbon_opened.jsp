@@ -89,7 +89,7 @@
 										</c:if>
 										<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
 											<td class="rightBorderThinGray label padded top right"><font class="label">References</font></td>
-											<td class="padded"><a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a> with disease annotations</td>
+											<td class="padded"><a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}?typeFilter=Literature">${diseaseRefCount}</a> with disease annotations</td>
 										</c:if>
 									</tr>
 								</table>

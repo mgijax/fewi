@@ -105,7 +105,7 @@ public class HdpDiseaseSummaryRow {
 		public String getRefCount(){
 			if(term.getDiseaseRefCount()!=null && term.getDiseaseRefCount()>0)
 			{
-				return "<a href=\""+fewiUrl+"reference/disease/"+term.getPrimaryId()+"\">"+term.getDiseaseRefCount()+"</a>";
+				return "<a href=\""+fewiUrl+"reference/disease/"+term.getPrimaryId()+"?typeFilter=Literature\">"+term.getDiseaseRefCount()+"</a>";
 			}
 			return "";
 		}

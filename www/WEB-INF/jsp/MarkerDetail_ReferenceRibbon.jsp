@@ -21,16 +21,16 @@
 											<td class='rightBorderThinGray label padded top right'><font class="label">Summaries</font></td>
 											<td class='padded'><div class="refPad">All <a href="${configBean.FEWI_URL}reference/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfReferences}</a></div>
 												<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
-													<div class="refPad">Diseases <a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a></div>
+													<div class="refPad">Diseases <a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}?typeFilter=Literature">${diseaseRefCount}</a></div>
 												</c:if>
 												<c:if test="${marker.countOfGxdLiterature > 0}">
 													<div class="refPad">Expression <a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a></div>
 												</c:if>
 												<c:if test="${marker.countOfGOReferences > 0}">
-													<div class="refPad">Gene Ontology <a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}">${marker.countOfGOReferences}</a></div>
+													<div class="refPad">Gene Ontology <a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
 												</c:if>
 												<c:if test="${marker.countOfPhenotypeReferences > 0}">
-													<div class="refPad">Phenotypes <a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}">${marker.countOfPhenotypeReferences}</a></div>
+													<div class="refPad">Phenotypes <a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfPhenotypeReferences}</a></div>
 												</c:if>
 											</td>
 										</tr>
@@ -44,16 +44,16 @@
 											<td class='rightBorderThinGray label padded top right'><font class="label">Summaries</font></td>
 											<td class='padded'><div class="refPad">All <a href="${configBean.FEWI_URL}reference/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfReferences}</a></div>
 												<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
-													<div class="refPad">Diseases <a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a></div>
+													<div class="refPad">Diseases <a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}?typeFilter=Literature">${diseaseRefCount}</a></div>
 												</c:if>
 												<c:if test="${marker.countOfGxdLiterature > 0}">
 													<div class="refPad">Expression <a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a></div>
 												</c:if>
 												<c:if test="${marker.countOfGOReferences > 0}">
-													<div class="refPad">Gene Ontology <a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}">${marker.countOfGOReferences}</a></div>
+													<div class="refPad">Gene Ontology <a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
 												</c:if>
 												<c:if test="${marker.countOfPhenotypeReferences > 0}">
-													<div class="refPad">Phenotypes <a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}">${marker.countOfPhenotypeReferences}</a></div>
+													<div class="refPad">Phenotypes <a href="${configBean.FEWI_URL}reference/phenotype/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfPhenotypeReferences}</a></div>
 												</c:if>
 											</td>
 										</tr>

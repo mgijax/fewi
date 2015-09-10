@@ -151,14 +151,14 @@ public class HdpMarkerSummaryRow {
 
     	StringBuffer refDisplay = new StringBuffer();
         refDisplay.append("All Mouse: <a href=\"").append(fewiUrl).append("reference/marker/");
-        refDisplay.append(solrDiseasePortalMarker.getMgiId()).append("\">");
+        refDisplay.append(solrDiseasePortalMarker.getMgiId()).append("?typeFilter=Literature\">");
         refDisplay.append(solrDiseasePortalMarker.getAllRefCount());
         refDisplay.append("</a>");
         if(solrDiseasePortalMarker.getDiseaseRefCount()!=null && solrDiseasePortalMarker.getDiseaseRefCount() > 0)
         {
             refDisplay.append("<br/><span style=\"white-space: nowrap;\">Disease Relevant: <a href=\"")
             	.append(fewiUrl).append("reference/diseaseRelevantMarker/")
-            	.append(solrDiseasePortalMarker.getMgiId()).append("\">")
+            	.append(solrDiseasePortalMarker.getMgiId()).append("?typeFilter=Literature\">")
             	.append(solrDiseasePortalMarker.getDiseaseRefCount())
             	.append("</a></span>");
         }

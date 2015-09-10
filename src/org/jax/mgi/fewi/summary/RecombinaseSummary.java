@@ -57,7 +57,7 @@ public class RecombinaseSummary {
 
     public String getCountOfReferences() {
     	return "<a href='"+fewiUrl+"/reference/allele/" + this.allele.getPrimaryID()
-    		+ "' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
+    		+ "?typeFilter=Literature' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
     }
 
     public String getDetectedCount() 

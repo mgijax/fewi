@@ -117,3 +117,5 @@ ${templateBean.templateBodyStartHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/reference_summary.js"></script>
 
 ${templateBean.templateBodyStopHtml}
+
+<%@ include file="/WEB-INF/jsp/reference_summary_filter_setup.jsp" %>

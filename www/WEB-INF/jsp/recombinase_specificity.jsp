@@ -586,7 +586,7 @@ ${templateBean.templateBodyStartHtml}
           <span class='creDataCat'>All for this allele: </span>
         </td>
         <td>
-          <a href="${configBean.FEWI_URL}reference/allele/${allele.primaryID}">
+          <a href="${configBean.FEWI_URL}reference/allele/${allele.primaryID}?typeFilter=Literature">
             ${allele.countOfReferences} reference(s)
           </a>
         </td>
