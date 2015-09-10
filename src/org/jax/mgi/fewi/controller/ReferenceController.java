@@ -1,5 +1,14 @@
 package org.jax.mgi.fewi.controller;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -8,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Collections;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +28,7 @@ import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
 import mgi.frontend.datamodel.Sequence;
 
+import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.DiseaseFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
@@ -343,8 +355,10 @@ public class ReferenceController {
         }
         
         mav.addObject("allele", alleleList.get(0));
-	mav.addObject("queryString", "alleleKey=" + alleleList.get(0).getAlleleKey());
-	addFieldsFromQF(mav, query);
+	String queryString = "alleleKey=" + alleleList.get(0).getAlleleKey();
+	mav.addObject("queryString", queryString);
+
+	addFieldsFromQF(mav, queryString, query);
     	
     	return mav;   	
     }
@@ -422,9 +436,10 @@ public class ReferenceController {
 	    mav.addObject("marker", markerList.get(0));
                 
             // pre-generate query string
-            mav.addObject("queryString", "goMarkerId=" + mrkID);
+            String queryString = "goMarkerId=" + mrkID;
+            mav.addObject("queryString", queryString);
             mav.addObject("isGOSummary", true);
-	    addFieldsFromQF(mav, query);
+	    addFieldsFromQF(mav, queryString, query);
     	
 	    return mav;   	
 	}
@@ -459,9 +474,10 @@ public class ReferenceController {
 	    mav.addObject("marker", markerList.get(0));
                 
             // pre-generate query string
-            mav.addObject("queryString", "phenoMarkerId=" + mrkID);
+            String queryString = "phenoMarkerId=" + mrkID;
+            mav.addObject("queryString", queryString);
             mav.addObject("isPhenotypeSummary", true);
-	    addFieldsFromQF(mav, query);
+	    addFieldsFromQF(mav, queryString, query);
     	
 	    return mav;   	
 	}
@@ -508,15 +524,92 @@ public class ReferenceController {
     
     /* add a subset of fields from the query form to the mav
      */
-    private ModelAndView addFieldsFromQF(ModelAndView mav,
+    private ModelAndView addFieldsFromQF(ModelAndView mav, String queryString,
 	ReferenceQueryForm query) {
-	    List<String> typeFilters = query.getCleanedTypeFilter();
 
-	    // assumes we only filter by one value
-	    if ((typeFilters != null) && (typeFilters.size() > 0)) {
-		mav.addObject("typeFilter", typeFilters.get(0));
+	    // only add the extra filters to the mav if they would still allow
+	    // at least one reference to be displayed
+
+	    if (this.anyRefsLeft(queryString, query)) {
+		List<String> typeFilters = query.getCleanedTypeFilter();
+
+		// assumes we only filter by one value
+		if ((typeFilters != null) && (typeFilters.size() > 0)) {
+		    mav.addObject("typeFilter", typeFilters.get(0));
+		}
 	    }
 	    return mav;
+    }
+
+    /* determine if there would be any references to display after applying
+     * any filters from 'query' to the given 'queryString'.  Returns true if
+     * yes, false if no.
+     */
+    private boolean anyRefsLeft (String queryString, ReferenceQueryForm query) {
+	List<String> typeFilters = query.getCleanedTypeFilter();
+
+	// if no type filters, no problem
+	if ((typeFilters == null) || (typeFilters.size() == 0)) {
+		return true;
+	}
+
+	// if both type filters, no problem
+	if (typeFilters.size() > 1) {
+		return true;
+	}
+
+	// make an HTTP request to get no results, just the count of records
+	// that would be returned with the type filter applied
+
+	StringBuffer s = new StringBuffer();
+
+	try {
+	    URL url = new URL(ContextLoader.getConfigBean().getProperty("FEWI_URL") + "reference/json?" + queryString + "&results=0&typeFilter=" + typeFilters.get(0));
+	    URLConnection urlConn = url.openConnection();
+	    HttpURLConnection conn = null;
+	    
+	    if (urlConn instanceof HttpURLConnection) {
+		conn = (HttpURLConnection) urlConn;
+		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String current;
+		current = in.readLine();
+		while (current != null) {
+		    if (s.length() > 0) {
+			s.append("\n");
+		    }
+		    s.append(current);
+		    current = in.readLine();
+		    }
+		in.close();
+		conn.disconnect();
+	    } else {
+		logger.error("FEWI_URL is not an HTTP URL");
+		return false;
+	    }
+
+	} catch (MalformedURLException mue) {
+	    logger.error("MalformedURLException : " + mue.getMessage());
+	    return false;
+	} catch (IOException ioe) {
+	    logger.error("IOException : " + ioe.getMessage());
+	    return false;
+	}
+
+	// The return should look something like this:
+	//     {"totalCount":1105,"summaryRows":[],"meta":null}
+	// Pull out the count in a regex group and see if it's > 0.
+	
+	Pattern p = Pattern.compile("\"totalCount\":([0-9]+)");
+	Matcher m = p.matcher(s.toString());
+
+	if (m.find()) {
+	    int count = Integer.parseInt(m.group(1));
+	    if (count > 0) {
+		return true;
+	    }
+	}
+
+	return false; 
     }
 
     private ModelAndView referenceSummaryByMarker(List<Marker> markerList, String markerKey, ReferenceQueryForm query){
@@ -538,9 +631,10 @@ public class ReferenceController {
         mav.addObject("marker", marker);
                 
         // pre-generate query string
-        mav.addObject("queryString", "markerKey=" + marker.getMarkerKey());
+        String queryString = "markerKey=" + marker.getMarkerKey();
+        mav.addObject("queryString", queryString);
 
-	addFieldsFromQF(mav, query);
+	addFieldsFromQF(mav, queryString, query);
     	return mav;   	
     }
     
@@ -571,9 +665,10 @@ public class ReferenceController {
         mav.addObject("marker", markerList.get(0));
                 
         // pre-generate query string
-        mav.addObject("queryString", "diseaseRelevantMarkerId=" + markerID);
+        String queryString = "diseaseRelevantMarkerId=" + markerID;
+        mav.addObject("queryString", queryString);
         mav.addObject("isDiseaseRelevantSummary", true);
-	addFieldsFromQF(mav, query);
+	addFieldsFromQF(mav, queryString, query);
     	
     	return mav;   	
 	}
@@ -604,8 +699,9 @@ public class ReferenceController {
            mav.addObject("disease", diseaseList.get(0));
                    
            // pre-generate query string
-           mav.addObject("queryString", "diseaseId=" + diseaseID);
-	   addFieldsFromQF(mav, query);
+           String queryString = "diseaseId=" + diseaseID;
+           mav.addObject("queryString", queryString);
+	   addFieldsFromQF(mav, queryString, query);
        	
        	return mav;   	
    	}
