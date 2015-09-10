@@ -1,0 +1,31 @@
+#summary {
+	display: block;
+	line-height: 1.5em;
+	margin-top: 10px;
+	width: 100%;
+}
+
+#querySummary .count {
+	margin-left: 0px;
+}
+
+.innertube {
+	margin-left: 0px;
+}
+
+#filterDiv {
+	width: 450px;
+	float: none;
+}
+
+#fCount {
+	padding: none;
+	padding-top: 10px;
+	padding-left: 0px;
+	padding-bottom: 0px;
+}
+
+#filterSummary {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
