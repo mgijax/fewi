@@ -64,8 +64,13 @@
 							</c:if>
 
 							<tr>
-								<td class="rightBorderThinGray label padded top right"><font class="label">MGI&nbsp;ID</font></td>
-								<td class="padded" style="width: 100%">${marker.primaryID}</td>
+								<td class="rightBorderThinGray label padded top right"><font class="label">IDs</font></td>
+								<td class="padded" style="width: 100%">${marker.primaryID}
+								<c:if test="${not empty marker.entrezGeneID}">
+								<br/>
+								NCBI Gene: <a href="${fn:replace(externalUrls.Entrez_Gene, '@@@@', marker.entrezGeneID.accID)}" target="_blank">${marker.entrezGeneID.accID}</a>
+								</c:if>
+							</td>
 							</tr>
 							<c:if test="${hasClusters}">
 								<tr>
