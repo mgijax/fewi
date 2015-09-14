@@ -471,12 +471,12 @@ border-bottom: 1px solid gray;
 YAHOO.namespace("gxd.container");
 YAHOO.gxd.container.anatomyHelp = new YAHOO.widget.Panel("sgAnatomyHelp", { width:"400px", draggable:false, visible:false, constraintoviewport:true } );
 YAHOO.gxd.container.anatomyHelp.render();
-YAHOO.util.Event.addListener("sgAnatomyHelpImage", "mouseover", YAHOO.gxd.container.anatomyHelp.show, YAHOO.gxd.container.anatomyHelp, true);
+YAHOO.util.Event.addListener("sgAnatomyHelpImage", "click", YAHOO.gxd.container.anatomyHelp.show, YAHOO.gxd.container.anatomyHelp, true);
 
 YAHOO.namespace("mp.container");
 YAHOO.mp.container.phenoHelp = new YAHOO.widget.Panel("sgPhenoHelp", { width:"360px", draggable:false, visible:false, constraintoviewport:true } );
 YAHOO.mp.container.phenoHelp.render();
-YAHOO.util.Event.addListener("sgPhenoHelpImage", "mouseover", YAHOO.mp.container.phenoHelp.show, YAHOO.mp.container.phenoHelp, true);
+YAHOO.util.Event.addListener("sgPhenoHelpImage", "click", YAHOO.mp.container.phenoHelp.show, YAHOO.mp.container.phenoHelp, true);
 </script>
 <!--	close page template -->
 ${templateBean.templateBodyStopHtml}
