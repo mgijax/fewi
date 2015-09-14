@@ -70,7 +70,7 @@ td.limitWidth { max-width: 500px }
 
 									<c:if test="${mpHasSlimgrid}">
 										<div id="mpSlimgridWrapper" class="sgWrapper">
-											<div class="label" style="width: 566px; text-align:center; padding-bottom: 6px;">Phenotype Overview<img id="sgPhenoHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px"/></div>
+											<div class="label" style="width: 566px; text-align:center; padding-bottom: 6px;">Phenotype Overview<img id="sgPhenoHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div>
 											<div id="sgPhenoHelp" style="visibility: hidden; height:0px;">
 												<div class="hd">Phenotype Overview</div>
 												<div class="bd" style="text-align: center">

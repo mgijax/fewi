@@ -77,7 +77,7 @@ td.width140 { width : 140px }
 
 									<c:if test="${gxdHasSlimgrid}">
 										<div id="anatomySlimgridWrapper">
-											<div class="label" style="width: 566px; text-align:center; padding-bottom: 15px">Expression Overview<img id="sgAnatomyHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px"/></div>
+											<div class="label" style="width: 566px; text-align:center; padding-bottom: 15px">Expression Overview<img id="sgAnatomyHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div>
 											<div id="sgAnatomyHelp" style="visibility: hidden; height:0px;">
 												<div class="hd">Expression Overview</div>
 												<div class="bd" style="text-align: left">
