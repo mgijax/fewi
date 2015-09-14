@@ -99,13 +99,14 @@ public class AlleleQueryForm
 
     	subTypeGroup1.put("Conditional ready","Conditional ready");
     	subTypeGroup1.put("Recombinase","Recombinase");
-    	subTypeGroup1.put("RMCE-Ready","RMCE-Ready");
+    	subTypeGroup1.put("RMCE-ready","RMCE-ready");
 
     	subTypeGroup2.put("Inserted expressed sequence","Inserted expressed sequence");
     	subTypeGroup2.put("Humanized sequence","Humanized sequence");
     	subTypeGroup2.put("Reporter","Reporter");
     	subTypeGroup2.put("Transposase","Transposase");
     	subTypeGroup2.put("Transposon concatemer","Transposon concatemer");
+    	subTypeGroup2.put("Transactivator","Transactivator");
 
     	subTypeGroup3.put("Constitutively active","Constitutively active");
     	subTypeGroup3.put("Dominant negative","Dominant negative");
