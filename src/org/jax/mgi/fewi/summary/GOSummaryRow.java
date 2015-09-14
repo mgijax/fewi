@@ -127,7 +127,12 @@ public class GOSummaryRow {
 			Boolean first = Boolean.TRUE;
 
 			for (AnnotationInferredFromID aifi: inferred) {
-				String link = linker.getLink(aifi.getLogicalDB(), aifi.getAccID());
+			    // use a comma for a separator if we're after the
+			    // 1st ID for a comma-delimimed set
+			    boolean useComma = false;
+
+			    for (String myID : aifi.getAccID().split(",")) {
+				String link = linker.getLink(aifi.getLogicalDB(), myID);
 				String organism = aifi.getOrganism();
 
 				if (organism != null) {
@@ -141,9 +146,13 @@ public class GOSummaryRow {
 					first = Boolean.FALSE;
 					inferredString = link;
 				}
-				else {
+				else if (!useComma) {
 					inferredString = inferredString + " | " + link;
+				} else {
+					inferredString = inferredString + "," + link;
 				}
+				useComma = true;
+			   } // walk through IDs, even comma-separated
 			}
 
 			return inferredString;
