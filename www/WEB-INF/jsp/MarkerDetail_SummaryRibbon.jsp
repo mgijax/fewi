@@ -37,7 +37,7 @@
 						</table>
 					</td>
 					<td style="vertical-align:top;">
-						<table width="450px">
+						<table width="100%">
 							<c:if test="${not empty marker.markerSubtype}">
 								<tr>
 									<td class="rightBorderThinGray label padded top right"><font class="label">Feature&nbsp;Type</font></td>
@@ -66,9 +66,10 @@
 							<tr>
 								<td class="rightBorderThinGray label padded top right"><font class="label">IDs</font></td>
 								<td class="padded" style="width: 100%">${marker.primaryID}
-								<c:if test="${not empty marker.entrezGeneID}">
+									<c:if test="${not (empty marker.entrezGeneIDs or fn:length(marker.entrezGeneIDs) < 1)}">
 								<br/>
-								NCBI Gene: <a href="${fn:replace(externalUrls.Entrez_Gene, '@@@@', marker.entrezGeneID.accID)}" target="_blank">${marker.entrezGeneID.accID}</a>
+								NCBI Gene:
+								<c:forEach var="egID" items="${marker.entrezGeneIDs}" varStatus="status"><a href="${fn:replace(externalUrls.Entrez_Gene, '@@@@', egID.accID)}" target="_blank">${egID.accID}</a><c:if test="${!status.last}">, </c:if></c:forEach>
 								</c:if>
 							</td>
 							</tr>
