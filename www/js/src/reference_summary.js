@@ -36,6 +36,12 @@ var parseParameters = function(qs, updateSummaryNow) {
 	}
 }
 
+// Safari doesn't yet have startsWith for strings, so we include it here;
+// returns true if 'x' starts with 'y', false if not.
+var startsWith= function (x, y) {
+	return (x.lastIndexOf(y, 0) === 0);
+}
+
 // this function populates the 'breadbox' with current filters
 var populateFilterSummary = function () {
 	var fSum = YAHOO.util.Dom.get('filterSummary');
@@ -68,7 +74,7 @@ var populateFilterSummary = function () {
 	            var val = k.charAt(0).toUpperCase() + k.slice(1);
 	            val = val.replace('Filter', '') + ': ' + inner[v].replace(/\*/g, ',');
 
-		    if (val.startsWith("Type")) {
+		    if (startsWith(val, "Type")) {
 			    val = val.replace("Type", "Reference Type");
 		    }
 	            setText(el, val);
