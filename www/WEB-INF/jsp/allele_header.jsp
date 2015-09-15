@@ -12,6 +12,7 @@
 <style>
 .allBorders { border: 1px solid black }
 .left { text-align: left }
+.white { background-color: white }
 </style>
 
 <!-- header table -->
@@ -42,26 +43,26 @@
     <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px;">
     <table>
       <tr>
-	<td class="allBorders label left">Jump to</td>
-	<td class="allBorders label left">Genotype</td>
-	<td class="allBorders label left">Genetic Background</td>
-	<td class="allBorders label left">MGI ID</td>
+	<td class="allBorders label left white">Jump to</td>
+	<td class="allBorders label left white">Genotype</td>
+	<td class="allBorders label left white">Genetic Background</td>
+	<td class="allBorders label left white">MGI ID</td>
       </tr>
       <c:forEach var="gtAssociation" items="${allele.phenoTableGenotypeAssociations}">
         <c:set var="genotype" value="${gtAssociation.genotype}" scope="request"/>
 	<c:set var="counter" value="${gtAssociation.genotypeSeq}" scope="request"/>
 
         <tr>
-	  <td class="allBorders">
+	  <td class="allBorders white">
 	    <a href="#${genotype.primaryID}" style="text-decoration: none">
 	      <c:if test="${not empty counter and (counter > 0)}">
 	        <div class="${genotype.genotypeType}Geno genotypeType" style="margin-left: 7px; text-align: center; padding-bottom: 8px;">${genotype.genotypeType}${counter}</div>
 	      </c:if>
 	    </a>
 	  </td>
-	  <td class="allBorders"><span class="genotypeCombo"><fewi:genotype value="${genotype}" newWindow="${true}"/></span></td>
-	  <td class="allBorders"><fewi:super value="${genotype.backgroundStrain}"/></td>
-	  <td class="allBorders">${genotype.primaryID}</td>
+	  <td class="allBorders white"><span class="genotypeCombo"><fewi:genotype value="${genotype}" newWindow="${true}"/></span></td>
+	  <td class="allBorders white"><fewi:super value="${genotype.backgroundStrain}"/></td>
+	  <td class="allBorders white">${genotype.primaryID}</td>
 	</tr>
       </c:forEach>
     </table>
