@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${marker.symbol} Gene Expression Tissue Summary - GXD</title>
 
@@ -24,7 +24,7 @@ ${templateBean.templateHeadHtml}
 
 <% Marker marker = (Marker)request.getAttribute("marker"); %>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -95,5 +95,5 @@ ${templateBean.templateBodyStartHtml}
   <%@ include file="/js/marker_tissue_summary.js" %>
 </script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

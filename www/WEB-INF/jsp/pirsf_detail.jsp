@@ -7,7 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${title}</title>
 
@@ -85,7 +85,7 @@ function formatForwardArgs() {
 
 <c:set var="sCount" value="1" scope="page"/>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -268,4 +268,4 @@ table.detail {
 toggle("pirsfDialog");
 </script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

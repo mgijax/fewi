@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Accession ID Results - MGI</title>
 
@@ -20,7 +20,7 @@ ${templateBean.templateHeadHtml}
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -50,5 +50,5 @@ ${templateBean.templateBodyStartHtml}
   <%@ include file="/js/accession_summary.js" %>
 </script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

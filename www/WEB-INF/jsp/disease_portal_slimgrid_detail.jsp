@@ -2,7 +2,7 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
@@ -17,7 +17,7 @@ ${templateBean.templateHeadHtml}
 }
 </style>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- Table and Wrapping div -->
 
@@ -48,4 +48,4 @@ ${templateBean.templateBodyStartHtml}
 document.title = '${marker.symbol} ';
 document.title = document.title + ' ${termHeader} phenotype data';
 </script>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

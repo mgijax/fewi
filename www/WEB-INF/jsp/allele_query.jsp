@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <title>Phenotypes, Alleles & Disease Models Search</title>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="ALLELE_help.shtml">
@@ -30,4 +30,4 @@ ${templateBean.templateBodyStartHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/allele_query.js"></script>
 
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

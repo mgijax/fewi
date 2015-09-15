@@ -6,14 +6,13 @@
     pageEncoding="ISO-8859-1"%>
 <% IDLinker idLinker = (IDLinker)request.getAttribute("idLinker"); %>
 
-${templateBean.templateHeadHtml}
-
-<link rel="canonical" href="${configBean.FEWI_URL}allele/${allele.primaryID}" />
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <fewi:simpleseo
 	title="${allele.symbol} ${subtitle} MGI Mouse (${allele.primaryID})"
+	canonical="${configBean.FEWI_URL}allele/${allele.primaryID}"
 	description="${seoDescription}"
 	keywords="${seoKeywords}"
 />
@@ -136,7 +135,7 @@ function formatFastaArgs() {
 }
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <style type="text/css">
 td.padded { padding:4px; }
@@ -854,4 +853,4 @@ $(function()
 	"recomTableInsert");
 })
 </script>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

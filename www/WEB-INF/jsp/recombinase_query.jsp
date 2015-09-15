@@ -8,13 +8,13 @@
 </style>
 
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <title>Recombinase Query</title>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- begin header bar -->
 <div id="titleBarWrapper" style="max-width:1200px" userdoc="recombinase_help.shtml">	
@@ -72,4 +72,4 @@ Not a real query form -- for testing purposes only:
 </TABLE>
 </form:form>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

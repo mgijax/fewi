@@ -8,12 +8,12 @@
 <% Sequence sequence = (Sequence)request.getAttribute("sequence"); %>
 <% IDLinker idLinker = (IDLinker)request.getAttribute("idLinker"); %>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
   <title>Sequence Detail</title>
   <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <script>
   function formatForwardArgs() {
@@ -352,4 +352,4 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- close structural table and page template-->
 </table>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

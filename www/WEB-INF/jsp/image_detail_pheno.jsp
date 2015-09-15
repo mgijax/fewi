@@ -5,7 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Phenotype Image Detail </title>
 
@@ -29,7 +29,7 @@ ${templateBean.templateHeadHtml}
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -171,4 +171,4 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- close structural table and page template-->
 </table>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

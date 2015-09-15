@@ -5,9 +5,9 @@
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
  
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
   <title>Page not found</title>
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
 <div id="titleBarWrapper">    
@@ -17,4 +17,4 @@ ${templateBean.templateBodyStartHtml}
 
 Sorry, the requested page does not exist...
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

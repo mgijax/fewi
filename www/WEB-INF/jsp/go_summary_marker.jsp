@@ -6,7 +6,7 @@
 <% Marker marker = (Marker)request.getAttribute("marker");
    NotesTagConverter ntc = new NotesTagConverter("GO");%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -31,7 +31,7 @@ ${templateBean.templateHeadHtml}
 }
 </style>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history managers use -->
@@ -167,5 +167,5 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
     filters.addFilter('referenceFilter', 'Reference', 'referenceFilterMenu', 'referenceFilter', fewiurl + 'go/facet/reference');
 </script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

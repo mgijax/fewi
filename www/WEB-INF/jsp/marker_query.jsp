@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Genes and Markers Query Form</title>
 
@@ -17,7 +17,7 @@ td.top { vertical-align: top; }
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="GENE_help.shtml">	
@@ -37,4 +37,4 @@ ${templateBean.templateBodyStartHtml}
 	var qDisplay = false;
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_query.js"></script>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

@@ -5,9 +5,9 @@
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
  
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
   <title>Error Page</title>
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -22,4 +22,4 @@ ${errorMsg}
 
 
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

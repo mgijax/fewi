@@ -7,13 +7,13 @@
 </style>
 
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <title>BLAST Sequences</title>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- begin header bar -->
 <div id="titleBarWrapper" style="max-width:1200px" userdoc="recombinase_help.shtml">	
@@ -54,4 +54,4 @@ window.onload = function() {
     mgiSequences.submit();
 }
 </script>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

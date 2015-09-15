@@ -5,7 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Human Disease Vocabulary Browser</title>
 
@@ -48,7 +48,7 @@ ${templateBean.templateHeadHtml}
 }
 </style>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -130,4 +130,4 @@ ${templateBean.templateBodyStartHtml}
 </table>
 </div>
 </div>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

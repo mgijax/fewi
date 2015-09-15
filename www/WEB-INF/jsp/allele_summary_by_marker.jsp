@@ -4,7 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>MGI Allele Summary</title>
 
@@ -24,7 +24,7 @@ ${templateBean.templateHeadHtml}
 <script type="text/javascript" src="${configBean.WEBSHARE_URL}js/hideshow.js"></script>
 
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -83,4 +83,4 @@ window.fewiurl="${configBean.FEWI_URL}";
 
 
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

@@ -4,7 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -47,7 +47,7 @@ ${templateBean.templateHeadHtml}
    NotesTagConverter ntc = new NotesTagConverter();
 %>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="VOCAB_mp_browser_help.shtml#mp_summary" style="padding-bottom: 5px;">	
@@ -122,5 +122,5 @@ td.spaced { line-height: 1.5em; }
   </c:forEach>
 </table>
 </div>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

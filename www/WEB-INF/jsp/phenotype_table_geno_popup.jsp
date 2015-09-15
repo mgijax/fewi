@@ -10,7 +10,7 @@
    StyleAlternator rightTdStyles = new StyleAlternator("detailData1","detailData2");
 %>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <fewi:simpleseo
 	title="Phenotype Detail MGI Mouse (${genotype.primaryID})"
@@ -18,7 +18,7 @@ ${templateBean.templateHeadHtml}
 	keywords="${seokeywords}"
 />
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <%@ include file="phenotype_table_geno_popup_imports.jsp" %>
 
@@ -28,4 +28,4 @@ ${templateBean.templateBodyStartHtml}
 
 <%@ include file="phenotype_table_geno_popup_content.jsp" %>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

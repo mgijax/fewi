@@ -6,7 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${title}</title>
 <meta name="description" content="${seoDescription}" />
@@ -54,7 +54,7 @@ td.padTop { padding-top: 2px }
 .ygtv-highlight2 { background-color: white }
 </style>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
 <div id="titleBarWrapperGxd" userdoc="VOCAB_mad_browser_help.shtml">
@@ -650,4 +650,4 @@ try {
 } catch (e) {};
 </script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

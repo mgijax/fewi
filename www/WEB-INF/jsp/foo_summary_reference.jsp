@@ -4,7 +4,7 @@
     pageEncoding="ISO-8859-1"%>
 <% Reference reference = (Reference)request.getAttribute("reference"); %>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Foo Query Summary</title>
 
@@ -16,7 +16,7 @@ ${templateBean.templateHeadHtml}
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -62,5 +62,5 @@ ${templateBean.templateBodyStartHtml}
   <%@ include file="/js/foo_summary.js" %>
 </script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

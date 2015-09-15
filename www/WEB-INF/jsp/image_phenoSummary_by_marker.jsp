@@ -12,7 +12,7 @@
     = new StyleAlternator("detailData1","detailData2");
 %>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>
   Phenotype Images associated with this ${marker.markerType}
@@ -33,7 +33,7 @@ table.imageTable td{
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -153,5 +153,5 @@ Click on allele symbol for full phenotype details.
 
 </table>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

@@ -11,7 +11,7 @@
     pageEncoding="ISO-8859-1"%>
     
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${antibody.name} MGI Antibody Detail - ${antibody.primaryID}</title>
 <meta name="robots" content="NOODP"/>
@@ -95,7 +95,7 @@ ${templateBean.templateHeadHtml}
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -273,4 +273,4 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- close structural table and page template-->
 </table>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

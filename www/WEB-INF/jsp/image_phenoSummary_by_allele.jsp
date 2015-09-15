@@ -12,7 +12,7 @@
     = new StyleAlternator("detailData1","detailData2");
 %>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title> ${pageTitle} </title>
 
@@ -39,7 +39,7 @@ table.nomenInfo td{
 
 
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -168,5 +168,5 @@ ${templateBean.templateBodyStartHtml}
 
 
 </table>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

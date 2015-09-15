@@ -6,7 +6,7 @@
 <% Reference reference = (Reference)request.getAttribute("reference");
    NotesTagConverter ntc = new NotesTagConverter("GO");%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Gene Ontology Annotations</title>
 
@@ -18,7 +18,7 @@ ${templateBean.templateHeadHtml}
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -97,5 +97,5 @@ ${templateBean.templateBodyStartHtml}
 <!-- including this file will start the data injection -->
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/go_summary_reference.js"></script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

@@ -5,12 +5,12 @@
     pageEncoding="ISO-8859-1"%>
 <% List<Marker> markers = (List<Marker>)request.getAttribute("markers"); %>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <title>Interaction Explorer</title>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 <div style="padding: 4px;">
 
 <!-- iframe for history managers use -->
@@ -341,4 +341,4 @@ circle {
 
 
 </div>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

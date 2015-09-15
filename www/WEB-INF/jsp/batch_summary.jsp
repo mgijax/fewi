@@ -3,13 +3,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Batch Summary</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html" ></iframe>
@@ -133,4 +133,4 @@ ${templateBean.templateBodyStartHtml}
 </script>
 </c:if>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

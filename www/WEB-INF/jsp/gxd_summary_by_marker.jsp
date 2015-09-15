@@ -4,7 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${marker.symbol} Gene Expression Results - GXD</title>
 
@@ -81,7 +81,7 @@ body.yui-skin-sam div#outer {position:relative;}
     document.documentElement.className = "yui-pe";
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -123,4 +123,4 @@ prepFilters();
 </script>
 
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

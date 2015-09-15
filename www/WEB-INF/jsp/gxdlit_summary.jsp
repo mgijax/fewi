@@ -5,7 +5,7 @@
     pageEncoding="ISO-8859-1"%>
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Gene Expression Literature Summary - MGI</title>
 
@@ -18,7 +18,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -164,5 +164,5 @@ ${templateBean.templateBodyStartHtml}
 </div>
 
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

@@ -5,7 +5,7 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -19,7 +19,7 @@ ${templateBean.templateHeadHtml}
 
 <title>References</title>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/js/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
@@ -73,6 +73,6 @@ ${templateBean.templateBodyStartHtml}
 	<%@ include file="/js/reference_summary.js" %>
 </script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 
 <%@ include file="/WEB-INF/jsp/reference_summary_filter_setup.jsp" %>

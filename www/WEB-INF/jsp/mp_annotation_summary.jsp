@@ -23,12 +23,12 @@
     logger.debug("Entering mp_annotation_summary.jsp");
     %>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Mammalian Phenotype Ontology Annotations</title>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
 <div id="titleBarWrapper" style="max-width:1200px" userdoc="VOCAB_mp_browser_help.shtml#mp_summary">    
@@ -133,5 +133,5 @@ span.tall { line-height: 150%; }
 
 <!-- close structural table and page template-->
 </table>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 <% logger.debug ("JSP finished"); %>

@@ -4,7 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Human – Mouse Disease Connection</title>
 
@@ -42,8 +42,7 @@ body.yui-skin-sam div#outer {position:relative;}
     document.documentElement.className = "yui-pe";
 </script>
 
-${templateBean.templateBodyStartHdpHtml}
-
+<%@ include file="/WEB-INF/jsp/templates/templateHdpBodyStart.html" %>
 
 <!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" name="yui-history-iframe" src="/fewi/blank.html"></iframe>
@@ -109,4 +108,4 @@ ${templateBean.templateBodyStartHdpHtml}
 
 
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

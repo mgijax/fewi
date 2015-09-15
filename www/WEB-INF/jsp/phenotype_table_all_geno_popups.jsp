@@ -12,7 +12,7 @@
    NotesTagConverter ntc = new NotesTagConverter();	
 %>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <fewi:simpleseo
    title="All Phenotypes ${allele.symbol} MGI Mouse"
@@ -20,7 +20,7 @@ ${templateBean.templateHeadHtml}
    keywords="${allele.symbol}, phenotypes, genotypes, genetic background, MP, Mammalian Phenotype, mouse, mice, murine, Mus"
 />
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <%@ include file="phenotype_table_geno_popup_imports.jsp" %>
 
@@ -48,4 +48,4 @@ ${templateBean.templateBodyStartHtml}
 	<br/><br/><br/>
 </c:forEach>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

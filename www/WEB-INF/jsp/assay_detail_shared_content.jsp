@@ -1,5 +1,5 @@
 <!-- all imports are declared in the wrapping jsp either assay_gel_detail or assay_insitu_detail -->
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${assay.markerSymbol} ${assay.assayType} Gene Expression Assay - GXD</title>
 
@@ -20,7 +20,7 @@ ${templateBean.templateHeadHtml}
 %>
 <% ExpressionAssay assay = (ExpressionAssay) request.getAttribute("assay"); %>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->

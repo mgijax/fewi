@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>MGI Allele Summary</title>
 
@@ -15,7 +15,7 @@ ${templateBean.templateHeadHtml}
 <meta name="robots" content="NOYDIR"/>
 
 <script type="text/javascript" src="${configBean.WEBSHARE_URL}js/hideshow.js"></script>
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
@@ -93,5 +93,5 @@ ${templateBean.templateBodyStartHtml}
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/allele_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/allele_summary.js"></script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

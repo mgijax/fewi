@@ -4,7 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${allele.symbol} - ${systemDisplayStr} Recombinase Activity Detail MGI Mouse</title>
 
@@ -123,7 +123,7 @@ function show (i)
 </script>
 
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history manager's use -->
@@ -604,4 +604,4 @@ ${templateBean.templateBodyStartHtml}
 
 <!-- close structural table and page template-->
 </table>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

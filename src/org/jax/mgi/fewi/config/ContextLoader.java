@@ -33,9 +33,6 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
     private static String webInfPath = null;
 
     private final Logger logger = LoggerFactory.getLogger(ContextLoader.class);
-
-    @Autowired
-    private WebTemplate webTemplate;
     
 	@Autowired
 	ServletContext servletContext;
@@ -43,7 +40,6 @@ public class ContextLoader implements ApplicationContextAware, ServletContextAwa
     @PostConstruct
     public void init() {
         System.out.println("---ContextLoader.init() PostConstruct");
-        sc.setAttribute("templateBean", webTemplate);
         logger.debug("configs loaded");
         if(ac.containsBean("configBean")){
             properties =  (Properties)ac.getBean("configBean");

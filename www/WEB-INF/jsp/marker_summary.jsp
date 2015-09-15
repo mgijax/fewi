@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 	
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Marker Query Summary</title>
 
@@ -21,7 +21,7 @@ ${templateBean.templateHeadHtml}
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- iframe for history managers use -->
@@ -101,5 +101,5 @@ var qDisplay = true;
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/marker_summary.js"></script>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

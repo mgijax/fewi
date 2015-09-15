@@ -5,7 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Microarray Probeset Summary - MGI</title>
 
@@ -33,7 +33,7 @@ th.box { border-top:thin solid grey;border-left:thin solid grey;border-right:thi
       = new StyleAlternator("detailData1","detailData2");
 %>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- header bar -->
 <div id="titleBarWrapper" userdoc="EXPRESSION_affy_probe_help.shtml">	
@@ -120,5 +120,5 @@ var myColumnDefs = [
 var myDataTable = new YAHOO.widget.DataTable("myMarkedUpContainer", myColumnDefs, myDataSource,  {sortedBy:{key:"Probeset ID", dir:YAHOO.widget.DataTable.CLASS_ASC}}); 
 </script> 
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

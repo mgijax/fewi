@@ -9,7 +9,7 @@
 <%
   NotesTagConverter ntc = new NotesTagConverter();
 %>
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/assay_detail_shared_content.jsp" %>
 
@@ -288,4 +288,4 @@ function toggleSpecimenInfo(idToHide, idToShow) {
 
 <!-- close structural table and page template-->
 </table>
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

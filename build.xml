@@ -55,12 +55,13 @@
 		<mkdir dir="${compile.dir}" />
 		<copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true" />
 		<copy file="${lib_java_fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true" />
+		<copy todir="./www/WEB-INF/jsp/templates" overwrite="true">
+			<fileset dir="${global_config.dir}" includes="*.html" />
+		</copy>
 		<copy file="${global_config.dir}/GlobalConfig.properties" todir="./www/WEB-INF/properties" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/ehcache.xml" todir="./www/WEB-INF/classes" overwrite="true" />
-		<echo>Use ${config.dir}\${config.file}</echo>
+		<echo message="Use ${config.dir}\${config.file}" />
 		<copy file="${config.dir}/${config.file}" tofile="./www/WEB-INF/properties/fewi.properties" overwrite="false" />
-		<replace file="./www/WEB-INF/properties/fewi.properties" token="@TEMPLATE_DIR@" value="${template.dir}" />
-		<echo>Use ${config.dir}\${web_xml.file}</echo>
 		<copy file="${config.dir}/${web_xml.file}" tofile="./www/WEB-INF/web.xml" overwrite="false" />
 	</target>
 

@@ -4,12 +4,12 @@
     pageEncoding="ISO-8859-1"%>
 <% Reference reference = (Reference)request.getAttribute("reference"); %>
 
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <title>Mouse Sequences Summary Report</title>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 <!-- iframe for history manager's use -->
 <iframe id="yui-history-iframe" src="${configBean.FEWI_URL}assets/blank.html"></iframe>
@@ -73,5 +73,5 @@ ${templateBean.templateBodyStartHtml}
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/sequence_summary.js"></script>
 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
 

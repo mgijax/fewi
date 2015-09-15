@@ -11,7 +11,7 @@
     pageEncoding="ISO-8859-1"%>
     
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-${templateBean.templateHeadHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>${disease.disease} MGI Mouse Model Detail - ${disease.primaryID}</title>
 <meta name="description" content="<c:choose><c:when test="${empty disease.mouseHumanGroup and empty disease.mouseOnlyGroup and empty disease.humanOnlyGroup}">There are currently no human or mouse genes associated with this disease in the MGI database.</c:when><c:otherwise>Mutations in human and/or mouse homologs are associated with this disease.</c:otherwise></c:choose><c:if test="${not empty disease.diseaseSynonyms}"> Synonyms: <c:forEach var="synonym" items="${disease.diseaseSynonyms}" varStatus="status">${synonym.synonym}<c:if test="${!status.last}">; </c:if></c:forEach></c:if>">
@@ -76,7 +76,7 @@ ${templateBean.templateHeadHtml}
 <script>
 </script>
 
-${templateBean.templateBodyStartHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
 <!-- header bar -->
@@ -271,4 +271,4 @@ ${templateBean.templateBodyStartHtml}
 <!-- close structural table and page template-->
 </table>
 <%@ include file="/WEB-INF/jsp/disease_detail_popups.jsp" %> 
-${templateBean.templateBodyStopHtml}
+<%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
