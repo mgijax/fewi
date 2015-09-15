@@ -40,8 +40,8 @@
   </td> 
   <td class="detailData2">
     ${fn:length(genotypeAssociations)} models<br/>
-    <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px;">
-    <table>
+    <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px;" id="modelSummaryDiv">
+    <table id="modelSummaryTable">
       <tr>
 	<td class="allBorders label left white">Jump to</td>
 	<td class="allBorders label left white">Genotype</td>
