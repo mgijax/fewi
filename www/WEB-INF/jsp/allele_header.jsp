@@ -39,7 +39,7 @@
     <span class="label">Summary</span>
   </td> 
   <td class="detailData2">
-    ${fn:length(genotypeAssociations)} models<br/>
+    ${fn:length(genotypeAssociations)} model<c:if test="${fn:length(genotypeAssociations) > 1}">s</c:if><br/>
     <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px;" id="modelSummaryDiv">
     <table id="modelSummaryTable">
       <tr>

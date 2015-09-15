@@ -705,7 +705,7 @@ td.right { text-align: right }
         </div>
 
         <div class='' style='margin-top:8px;margin-left:4px;'>
-          <a class="" href='${configBean.FEWI_URL}allele/allgenoviews/${allele.primaryID}' target="new" title='phenotype details'>View</a> phenotypes for all genotypes (concatenated display).
+          <a class="" href='${configBean.FEWI_URL}allele/allgenoviews/${allele.primaryID}' target="_blank" title='phenotype details'>View</a> phenotypes for all genotypes (concatenated display).
         </div>
     </td>
   </tr>
