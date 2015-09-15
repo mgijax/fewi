@@ -90,7 +90,7 @@ body.yui-skin-sam div#outer {position:relative;}
 
 
 <!-- header bar -->
-<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml#tissuematrix">	
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml#summary">	
 	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>

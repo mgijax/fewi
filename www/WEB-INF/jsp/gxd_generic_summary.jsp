@@ -89,9 +89,14 @@ body.yui-skin-sam div#outer {position:relative;}
 <iframe id="yui-history-iframe" src="/fewi/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
+<% // special help link for slimgrid %>
+<c:set var="helpHash" value="#summary"/>
+<c:if test="${not (empty marker or empty structure or empty structureId)}">
+  <c:set var="helpHash" value="#tissuematrix"/>
+</c:if>
 
 <!-- header bar -->
-<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml#summary">	
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml${helpHash}">	
 		<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>

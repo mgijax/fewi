@@ -12,9 +12,11 @@
 
 <c:if test="${empty headerTerm}">
 <title>Gene Ontology Classifications</title>
+<c:set var="helpHash" value=""/>
 </c:if>
 <c:if test="${not empty headerTerm}">
 <title>${marker.symbol} ${headerTerm} gene ontology</title>
+<c:set var="helpHash" value="#tabular"/>
 </c:if>
 
 <style type="text/css">
@@ -40,7 +42,7 @@
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml#tabular">	
+<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml${helpHash}">	
 	<span class="titleBarMainTitle">Gene Ontology Classifications</span>
 </div>
 
