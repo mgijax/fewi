@@ -49,3 +49,13 @@
 </c:forEach>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
+<script>
+var summaryTbl = document.getElementById('modelSummaryTable');
+var summaryDiv = document.getElementById('modelSummaryDiv');
+if ((summaryTbl != null) && (summaryDiv != null)) {
+   var rect = summaryTbl.getBoundingClientRect();
+   if (rect != null) {
+	summaryDiv.style.width = (rect.width + 16) + 'px';
+   }
+}
+</script>
