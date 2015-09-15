@@ -1,9 +1,10 @@
+<a name="${genotype.primaryID}"></a>
 <div class="container detailStructureTable">
 	<div class="row" >
 		<div class="header <%=leftTdStyles.getNext() %>">
-			Summary<br/><br/>
+			Model
 			<c:if test="${not empty counter && counter > 0}">
-				<div class="${genotype.genotypeType}Geno genotypeType" style="float: right;text-align: center; padding: 2px;">${genotype.genotypeType}${counter}</div>
+				<div class="${genotype.genotypeType}Geno genotypeType" style="float: right;text-align: center; padding: 2px; margin-left: 4px;">${genotype.genotypeType}${counter}</div>
 			</c:if>
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">

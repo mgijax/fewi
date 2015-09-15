@@ -90,7 +90,7 @@ td.padTop { padding-top:4px }
 
 
 <tr>
-  <td class="rightBorderThinGray padTop padLR" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Genotype/Background:</span></td>
+  <td class="rightBorderThinGray padTop padLR" ALIGN="right" WIDTH="1%" style="vertical-align:top;"><span class="label">Genotype/<br/>Background:</span></td>
   <td class="padTop padLR">
     <%@ include file="/WEB-INF/jsp/phenotype_table_geno_legend.jsp" %>
   </td>

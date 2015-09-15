@@ -26,6 +26,10 @@ ${templateBean.templateBodyStartHtml}
 
 <fewi:pagetitle title="Phenotypes associated with this allele" userdoc="ALLELE_detail_pheno_summary_help.shtml#see_annot" />
 
+<c:if test="${(not empty genotypeAssociations) and (fn:length(genotypeAssociations) > 0)}">
+  <c:set var="showGenotypes" value="true"/>
+</c:if>
+
 <%@ include file="allele_header.jsp" %>
 <br/><br/>
 <c:forEach var="genotypeAssociation" items="${genotypeAssociations}" varStatus="genoStatus">
