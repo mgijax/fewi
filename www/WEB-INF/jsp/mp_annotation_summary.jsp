@@ -31,7 +31,7 @@ ${templateBean.templateHeadHtml}
 ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
-<div id="titleBarWrapper" style="max-width:1200px" userdoc="MP_annotation_summary_help.shtml">    
+<div id="titleBarWrapper" style="max-width:1200px" userdoc="VOCAB_mp_browser_help.shtml#mp_summary">    
     <span class="titleBarMainTitle">Mammalian Phenotype Ontology Annotations</span><br/>
     <span class="titleBarSubTitle">Query Results - Summary</span>
 </div>

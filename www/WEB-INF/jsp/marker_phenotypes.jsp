@@ -50,7 +50,7 @@ ${templateBean.templateHeadHtml}
 ${templateBean.templateBodyStartHtml}
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="foo.shtml" style="padding-bottom: 5px;">	
+<div id="titleBarWrapper" userdoc="VOCAB_mp_browser_help.shtml#mp_summary" style="padding-bottom: 5px;">	
 	<div name="centeredTitle">
 		<span class="titleBarMainTitle">Mammalian Phenotype Ontology Annotations</span>
 		<br/>

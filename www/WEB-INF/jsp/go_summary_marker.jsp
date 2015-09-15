@@ -40,7 +40,7 @@ ${templateBean.templateBodyStartHtml}
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml">	
+<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml#tabular">	
 	<span class="titleBarMainTitle">Gene Ontology Classifications</span>
 </div>
 
