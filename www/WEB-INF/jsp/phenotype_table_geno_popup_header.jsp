@@ -5,7 +5,7 @@
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Model
 			<c:if test="${not empty counter && counter > 0}">
-				<div class="${genotype.genotypeType}Geno genotypeType" style="float: right;text-align: center; padding: 2px; margin-left: 4px; line-height: 1.5em; font-weight: normal;">${genotype.genotypeType}${counter}</div>
+				<div class="${genotype.genotypeType}Geno genotypeType" style="float: right;text-align: center; padding: 2px; margin-left: 4px; line-height: 1.5em; font-weight: normal; padding-bottom: 8px;">${genotype.genotypeType}${counter}</div>
 			</c:if>
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
