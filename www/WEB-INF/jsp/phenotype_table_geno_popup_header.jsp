@@ -1,4 +1,5 @@
 <a name="${genotype.primaryID}"></a>
+<c:set var="imsrAlleles" value="${genotype.imsrAlleles}"/>
 <div class="container detailStructureTable">
 	<div class="row" >
 		<div class="header <%=leftTdStyles.getNext() %>">
@@ -46,6 +47,23 @@
 									</td>
 								</tr>
 							</c:if>  
+							<c:if test="${not empty imsrAlleles}">
+							<c:set var="imsrUrl" value="${configBean.IMSRURL}summary?states=embryo&states=live&states=ovaries&states=sperm"/>
+								<tr>
+									<td class="rightBorderThinGray label padded top right"><font class="label">Find Mice</font></td>
+									<td classs="padded" style="padding-right: 30px">
+									<c:forEach var="allele" items="${imsrAlleles}">
+									<c:if test="${allele.imsrStrainCount > 0}">
+									<span style="line-height: 1.5em">IMSR strains carrying <fewi:super value="${allele.symbol}"/> (<a href="${imsrUrl}&gaccid=${allele.primaryID}" target="_blank">${allele.imsrStrainCount} available</a>)<br/></span>
+									</c:if>
+									<c:if test="${(allele.imsrStrainCount == 0) and (allele.imsrCountForMarker > 0)}">
+									<span style="line-height: 1.5em">IMSR strains or lines carrying other mutations in <fewi:super value="${allele.marker.symbol}"/> (<a href="${imsrUrl}&states=ES+Cell&gaccid=${allele.marker.primaryID}" target="_blank">${allele.imsrCountForMarker} available</a>)<br/></span>
+									</c:if>
+
+									</c:forEach>
+									</td>
+								</tr>
+							</c:if>
 						</table>
 					</td>
 					<td>
