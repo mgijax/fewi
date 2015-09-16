@@ -332,6 +332,7 @@ public class GOController {
 		String restriction = query.getRestriction();
 		String header = query.getHeader();
 		List<String> aspectFilter = query.getAspectFilter();
+		List<String> categoryFilter = query.getCategoryFilter();
 		List<String> evidenceFilter = query.getEvidenceFilter();
 		List<String> referenceFilter = query.getReferenceFilter();
 		
@@ -352,6 +353,9 @@ public class GOController {
 		}   
 		if (aspectFilter.size() > 0) {
 			filterList.add(new Filter(SearchConstants.VOC_DAG_NAME, aspectFilter, Filter.Operator.OP_IN));
+		}
+		if (categoryFilter.size() > 0) {
+			filterList.add(new Filter(SearchConstants.SLIM_TERM, categoryFilter, Filter.Operator.OP_IN));
 		}
 		if (evidenceFilter.size() > 0) {
 			filterList.add(new Filter(SearchConstants.EVIDENCE_CATEGORY, evidenceFilter, Filter.Operator.OP_IN));
@@ -391,6 +395,8 @@ public class GOController {
 			facetType = SortConstants.BY_REFERENCE;
 		} else if("aspect".equalsIgnoreCase(facetType)){
 			facetType = SortConstants.VOC_DAG_NAME;
+		} else if("category".equalsIgnoreCase(facetType)){
+			facetType = SearchConstants.SLIM_TERM;
 		}
 		
 		SearchResults<Annotation> facetResults = markerAnnotationFinder.getFacetResults(params, facetType);

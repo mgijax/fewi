@@ -95,6 +95,7 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
 				<div style="width: 470px; margin-top: 20px;">
 					<span id="filterLabel" class="label">Filter annotations by:</span>
 					<a id="aspectFilterMenu" class="filterButton">Aspect&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
+					<a id="categoryFilterMenu" class="filterButton">Category&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<a id="evidenceFilterMenu" class="filterButton">Evidence&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a>
 					<!-- Implemented by ref id.  oblod <a id="referenceMenu" class="filterButton">Reference&nbsp;<img src="${configBean.WEBSHARE_URL}images/filter.png" width="8" height="8" /></a> -->
 				</div><br />
@@ -165,6 +166,7 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
     filters.setDataTable(getPageDataTable());
     filters.setGeneratePageRequestFunction(generatePageRequest);
     filters.addFilter('aspectFilter', 'Aspect', 'aspectFilterMenu', 'aspectFilter', fewiurl + 'go/facet/aspect');
+    filters.addFilter('categoryFilter', 'Category', 'categoryFilterMenu', 'categoryFilter', fewiurl + 'go/facet/category');
     filters.addFilter('evidenceFilter', 'Evidence', 'evidenceFilterMenu', 'evidenceFilter', fewiurl + 'go/facet/evidence');
     filters.addFilter('referenceFilter', 'Reference', 'referenceFilterMenu', 'referenceFilter', fewiurl + 'go/facet/reference');
 </script>

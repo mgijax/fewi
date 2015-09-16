@@ -20,6 +20,7 @@ public class MarkerAnnotationQueryForm {
 	private List<String> evidenceFilter = new ArrayList<String>();
 	private List<String> inferredFilter = new ArrayList<String>();
 	private List<String> referenceFilter = new ArrayList<String>();
+	private List<String> categoryFilter = new ArrayList<String>();
 
     public String getReferenceKey() {
         return referenceKey;
@@ -83,6 +84,12 @@ public class MarkerAnnotationQueryForm {
 	}
 	public void setReferenceFilter(List<String> referenceFilter) {
 		this.referenceFilter = referenceFilter;
+	}
+	public List<String> getCategoryFilter() {
+		return categoryFilter;
+	}
+	public void setCategoryFilter(List<String> categoryFilter) {
+		this.categoryFilter = categoryFilter;
 	}
 
     @Override
