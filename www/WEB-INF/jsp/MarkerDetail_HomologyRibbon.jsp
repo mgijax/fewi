@@ -5,7 +5,6 @@
 
 				<section class="summarySec1 extra open">
 					<ul>
-
 						<c:if test="${fn:length(humanHomologs) > 0}">
 							<c:set var="humanHomolog" value="${humanHomologs[0]}" />
 							<li>

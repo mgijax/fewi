@@ -87,6 +87,7 @@
 											&nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb flank
 										</form>
 									</div>
+									<br />
 								</li>
 							</c:if>
 
