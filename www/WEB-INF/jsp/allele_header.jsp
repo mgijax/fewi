@@ -41,8 +41,8 @@
   </td> 
   <td class="detailData2">
     ${fn:length(genotypeAssociations)} model<c:if test="${fn:length(genotypeAssociations) > 1}">s</c:if><br/>
-    <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px;" id="modelSummaryDiv">
-    <table id="modelSummaryTable">
+    <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="modelSummaryDiv">
+    <table id="modelSummaryTable" style="width: 100%">
       <tr>
 	<td class="allBorders label left white">Jump to</td>
 	<td class="allBorders label left white">Genotype</td>
