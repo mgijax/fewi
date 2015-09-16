@@ -4,24 +4,17 @@
 				Other&nbsp;Database<br/>Links
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
-				<table>
-					<tr>
-						<td class="top">
-							<span id="toggleDatabaseLinkRibbon" title="Show More" class="toggleImage hdCollapse" onclick="toggleRibbon('DatabaseLinkRibbon'); return false;"></span>
-						</td>
-						<td>
-							<div id="closedDatabaseLinkRibbon" style="display:none;">
-							</div>
-							<div id="openedDatabaseLinkRibbon" style="display:block;">
-								<table cellspacing=2 cellpadding=2>
-									<c:forEach var="item" items="${logicalDBs}">
-										<tr><td>${item}&nbsp;</td><td>${otherIDs[item]}</td></tr>
-									</c:forEach>
-								</table>
-							</div>
-						</td>
-					</tr>
-				</table>
+				<section class="summarySec1">
+					<div id="toggleDatabaseLinkRibbon" title="Show More" class="toggleImage hdCollapse"></div>
+					<ul class="extra open">
+						<c:forEach var="item" items="${logicalDBs}">
+							<li>
+								<div class="label">${item}</div>
+								<div class="value">${otherIDs[item]}</div>
+							</li>
+						</c:forEach>
+					</ul>
+				</section>
 			</div>
 		</div>
 	</c:if>

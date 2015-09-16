@@ -9,12 +9,10 @@
 				<table>
 					<tr>
 						<td class="top">
-							<span id="toggleInteractionRibbon" title="Show More" class="toggleImage hdCollapse" onclick="toggleRibbon('InteractionRibbon'); return false;"></span>
+							<div id="toggleInteractionRibbon" title="Show More" class="toggleImage hdCollapse"></div>
 						</td>
 						<td>
-							<div id="closedInteractionRibbon" style="display:none;">
-							</div>
-							<div id="openedInteractionRibbon" style="display:block;">
+							<div id="openedInteractionRibbon" class="extra open" style="display:block;">
 								<span style="display: inline; line-height: 130%">
 									<c:forEach var="interaction" items="${interactions}" varStatus="status">
 										${interaction}<c:if test="${!status.last}"><br/></c:if>
