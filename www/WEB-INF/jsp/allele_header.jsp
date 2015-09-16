@@ -56,7 +56,7 @@
 	  <td class="allBorders white">
 	    <a href="#${genotype.primaryID}" style="text-decoration: none">
 	      <c:if test="${not empty counter and (counter > 0)}">
-	        <div class="${genotype.genotypeType}Geno genotypeType" style="margin-left: 7px; text-align: center; padding-bottom: 8px;">${genotype.genotypeType}${counter}</div>
+	      <div class="${genotype.genotypeType}Geno genotypeType" style="margin-left: 7px; text-align: center; padding-bottom: 8px; <c:if test='${counter > 99}'>padding-right: 3px;</c:if>">${genotype.genotypeType}${counter}</div>
 	      </c:if>
 	    </a>
 	  </td>
