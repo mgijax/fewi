@@ -41,6 +41,20 @@
 						<li>
 							<div class="label">Feature Type</div>
 							<div class="value">${marker.markerSubtype}</div>
+							<div class="value">
+								<c:if test="${not empty biotypeConflictTable or not empty strainSpecificNote}">
+									<div class="biotypeConflictDiv" style="padding-bottom: 4px;padding-left: 4px;">
+										<c:if test="${not empty biotypeConflictTable}">
+											<a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'BL', 'BR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img style="position: relative; top: 4px;" src="${configBean.WEBSHARE_URL}images/warning2.gif" height="18" width="18" id="warning" border="0"></a>
+											<a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'BL', 'BR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>BioType Conflict</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										</c:if>
+										<c:if test="${not empty strainSpecificNote}">
+											<a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'BL', 'BR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img style="position: relative; top: 7px;" src="${configBean.WEBSHARE_URL}images/mice.jpg" height="25" width="25" id="mice" border="0"></a>
+											<a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'BL', 'BR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>Strain-Specific Marker</a>
+										</c:if>
+									</div>
+								</c:if>
+							</div>
 						</li>
 					</c:if>
 
@@ -49,7 +63,7 @@
 						<div class="value">${marker.primaryID}
 							<c:if test="${not (empty marker.entrezGeneIDs or fn:length(marker.entrezGeneIDs) < 1)}">
 								<br/>
-								NCBI Gene: <a href="${fn:replace(externalUrls.Entrez_Gene, '@@@@', marker.entrezGeneID.accID)}" target="_blank">${marker.entrezGeneID.accID}</a>
+								NCBI Gene:
 								<c:forEach var="egID" items="${marker.entrezGeneIDs}" varStatus="status"><a href="${fn:replace(externalUrls.Entrez_Gene, '@@@@', egID.accID)}" target="_blank">${egID.accID}</a><c:if test="${!status.last}">, </c:if></c:forEach>
 							</c:if>
 						</div>
@@ -80,19 +94,6 @@
 					</c:if>
 				</ul>
 			</section>
-
-			<c:if test="${not empty biotypeConflictTable or not empty strainSpecificNote}">
-				<div class="biotypeConflictDiv" style="padding-bottom: 4px;padding-left: 4px;">
-					<c:if test="${not empty biotypeConflictTable}">
-						<a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'BL', 'BR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img style="position: relative; top: 4px;" src="${configBean.WEBSHARE_URL}images/warning2.gif" height="18" width="18" id="warning" border="0"></a>
-						<a onClick="return overlib('${biotypeConflictTable}', STICKY, CAPTION, 'BioType Annotation Conflict', ANCHOR, 'warning', ANCHORALIGN, 'BL', 'BR', CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>BioType Conflict</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					</c:if>
-					<c:if test="${not empty strainSpecificNote}">
-						<a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'BL', 'BR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#"><img style="position: relative; top: 7px;" src="${configBean.WEBSHARE_URL}images/mice.jpg" height="25" width="25" id="mice" border="0"></a>
-						<a onClick="return overlib('${strainSpecificNote}', STICKY, CAPTION, 'Strain-Specific Marker', ANCHOR, 'mice', ANCHORALIGN, 'BL', 'BR', WIDTH, 400, CLOSECLICK, CLOSETEXT, 'Close X');" href="#" class="markerNoteButton" style='display:inline;'>Strain-Specific Marker</a>
-					</c:if>
-				</div>
-			</c:if>
 
 			<!--<font color='#0000A0'><span onClick="showHideById('whatDoesThisGeneDoDiv');" onMouseOver="this.style.color = '#cc0000'; this.style.backgroundColor='#c7e3fe';" onMouseOut="this.style.color ='#0000A0'; this.style.backgroundColor='#FFFFFF';">Show/Hide</span></font> -->
 			<div id="whatDoesThisGeneDoDiv" style="display:none;"></div>
