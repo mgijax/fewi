@@ -5,7 +5,7 @@
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Model
 			<c:if test="${not empty counter && counter > 0}">
-				<div class="${genotype.genotypeType}Geno genotypeType" style="float: right;text-align: center; padding: 2px; margin-left: 4px;">${genotype.genotypeType}${counter}</div>
+				<div class="${genotype.genotypeType}Geno genotypeType" style="float: right;text-align: center; padding: 2px; margin-left: 4px; line-height: 1.5em; font-weight: normal;">${genotype.genotypeType}${counter}</div>
 			</c:if>
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
@@ -51,7 +51,7 @@
 							<c:set var="imsrUrl" value="${configBean.IMSRURL}summary?states=embryo&states=live&states=ovaries&states=sperm"/>
 								<tr>
 									<td class="rightBorderThinGray label padded top right"><font class="label">Find Mice</font></td>
-									<td classs="padded" style="padding-right: 30px">
+									<td class="padded" style="padding-right: 30px">
 									<c:forEach var="allele" items="${imsrAlleles}">
 									<c:if test="${allele.imsrStrainCount > 0}">
 									<span style="line-height: 1.5em">IMSR strains carrying <fewi:super value="${allele.symbol}"/> (<a href="${imsrUrl}&gaccid=${allele.primaryID}" target="_blank">${allele.imsrStrainCount} available</a>)<br/></span>
