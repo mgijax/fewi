@@ -24,10 +24,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="rightBorderThinGray label padded top right"><font class="label">Genetic Background</font></td>
-								<td class="padded" style="padding-right: 30px;">
-									<fewi:super value="${genotype.backgroundStrain}"/>
-								</td>
+								<td class="rightBorderThinGray label padded top right"><font class="label">Model ID</font></td>
+								<td class="padded" style="padding-right: 30px;">${genotype.primaryID}</td>
 								<td>&nbsp;</td>
 							</tr>
 						</table>
@@ -35,8 +33,10 @@
 					<td class="top">
 						<table border="none">
 							<tr>
-								<td class="rightBorderThinGray label padded top right"><font class="label">MGI ID</font></td>
-								<td class="padded" style="padding-right: 30px;">${genotype.primaryID}</td>
+								<td class="rightBorderThinGray label padded top right"><font class="label">Genetic Background</font></td>
+								<td class="padded" style="padding-right: 30px;">
+									<fewi:super value="${genotype.backgroundStrain}"/>
+								</td>
 							</tr>
 							<c:if test="${not empty genotype.cellLines}">
 								<tr>

@@ -7,6 +7,7 @@
 <c:if test="${not empty showGenotypes}">
   <c:set var="ahCat1" value="detailCat1"/>
   <c:set var="ahData1" value="detailData1"/>
+  <c:set var="idPrefix" value="Allele "/>
 </c:if>
 
 <style>
@@ -21,7 +22,7 @@
   <td class="${ahCat1}">
        <span class="label">Allele Symbol</span><br/>
        <span class="label">Allele Name</span><br/>
-       <span class="label">ID</span>
+       <span class="label">${idPrefix}ID</span>
   </td>
   <td class="${ahData1}">
   	<% Allele myAllele = (Allele)request.getAttribute("allele"); %>
