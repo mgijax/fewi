@@ -47,7 +47,7 @@
 	<td class="allBorders label left white">Jump to</td>
 	<td class="allBorders label left white">Genotype</td>
 	<td class="allBorders label left white">Genetic Background</td>
-	<td class="allBorders label left white">MGI ID</td>
+	<td class="allBorders label left white">Model ID</td>
       </tr>
       <c:forEach var="gtAssociation" items="${allele.phenoTableGenotypeAssociations}">
         <c:set var="genotype" value="${gtAssociation.genotype}" scope="request"/>
