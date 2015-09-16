@@ -34,7 +34,7 @@ function main() {
         {key:"markerSymbol", 
             label:"Marker<br/>Symbol", 
             sortable:false, 
-            width:80}
+            width:100}
     ];
 
     // DataSource instance
