@@ -8,7 +8,7 @@
 	      -- PDB, EC, InterPro Domains
 	      -->
 
-	    <c:set var="proteinUnindent" value=" style='margin-left: -26px'" />
+	    <c:set var="proteinUnindent" value=" style='width: calc(13.219em - 26px);'" />
 	    <section class="summarySec1 wide">
 		<div id="toggleProteinRibbon" class="toggleImage hdCollapse" title="Show More"></div>
 		<ul>
