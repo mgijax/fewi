@@ -64,8 +64,8 @@
 	}
 
 	#body .summarySec1 {
-		width: 55%;
-		min-width: 400px;
+		width: 50%;
+		min-width: 550px;
 	}
 
 	#body  .container li {
@@ -98,26 +98,26 @@
 
 
 	#body .summarySec1 .label{
-		width: 10.219em;
-		text-align: right;
-	}
-
-	#body .summarySec1 .value{
-		margin-left: 10.813em;
-		margin-right: 0em;
-	}
-
-	#body .summarySec2 {
-		width: 38%;
-	}
-
-	#body .summarySec2 .label{
 		width: 13.219em;
 		text-align: right;
 	}
 
-	#body .summarySec2 .value{
+	#body .summarySec1 .value{
 		margin-left: 13.813em;
+		margin-right: 0em;
+	}
+
+	#body .summarySec2 {
+		width: 47%;
+	}
+
+	#body .summarySec2 .label{
+		width: 16.219em;
+		text-align: right;
+	}
+
+	#body .summarySec2 .value{
+		margin-left: 16.613em;
 	}
 
 
@@ -125,13 +125,13 @@
 
 
 	#body .phenoRibbon .summarySec1 {
-		width: 60%;
+		width: 48%;
 	}
 
 	#body .phenoRibbon .summarySec2 {
-		width: 38%;
+		width: 47%;
 		min-width: 28.813em;
-		margin-left: -2em;
+		padding-left: 2em;
 	}
 
 	#body .phenoRibbon #openedAlleleRibbon .summarySec1 {
@@ -139,7 +139,7 @@
 	}
 
 	#body .phenoRibbon .summarySec2 
-	li:nth-of-type(n+2):nth-of-type(-n+7) .label {
+	li:nth-of-type(n+2):nth-last-of-type(n+3) .label {
 		font-weight:normal;
 		color: #585858;
 	}
@@ -185,13 +185,13 @@
 	}
 
 	#body .gxdRibbon .summarySec2 {
-		width: 38%;
+		width: 47%;
 		min-width: 28.813em;
 		margin-left: -2em;
 	}
 
 	#body .gxdRibbon .summarySec2 .value {
-		margin-left: 13.625em;
+		margin-left: 16.625em;
 		margin-bottom: .406em;
 	}
 
@@ -303,6 +303,7 @@
 	#body #mpMarkerClip {
 		padding-top: .8215em;
 		padding-bottom: 1em;
+		margin-left: 2em;
 	}
 
 	#body #goSlimgridWrapper .sgWrapperHeight {
@@ -371,6 +372,7 @@
 	#body .container #mpSlimgridWrapper {
 		padding-top: 1.406em;
 		margin-bottom: 1em;
+		margin-left: 2em;
 	}
 
 	#body .container #mpSlimgridWrapper h3 {
