@@ -41,6 +41,8 @@ public class FewiLinker {
 		idUrlMap.put(ObjectTypes.MP, pythonWiUrl +"searches/Phat.cgi?id=%s");
 		idUrlMap.put(ObjectTypes.ASSAY, baseUrl +"assay/%s");
 		idUrlMap.put(ObjectTypes.GENOTYPE, baseUrl +"allele/genoview/%s");
+		idUrlMap.put(ObjectTypes.EMAPA, baseUrl +"vocab/gxd/anatomy/%s");
+		idUrlMap.put(ObjectTypes.EMAPS, baseUrl +"vocab/gxd/anatomy/%s");
 
 		// Mapping that is key based
 
@@ -60,9 +62,17 @@ public class FewiLinker {
 	}
 
 	public String getFewiIDLink(String objectType, String id) {
+		/* Note that we purposely omitted VOCAB_TERM from the idUrlMap,
+		 * so we can have custom handling here based on the type of the
+		 * particular ID (eg.- EMAPA/EMAPS IDs).
+		 */
 
 		if (idUrlMap.containsKey(objectType)) {
 			return String.format(idUrlMap.get(objectType), id);
+		} else if (ObjectTypes.VOCAB_TERM.equals(objectType)) {
+			if ((id != null) && id.toUpperCase().startsWith("EMAP")) {
+				return config.getProperty("FEWI_URL") + "vocab/gxd/anatomy/" + id;
+			}
 		}
 
 		return null;

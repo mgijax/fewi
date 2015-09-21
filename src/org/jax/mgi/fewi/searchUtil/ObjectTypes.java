@@ -31,5 +31,7 @@ public class ObjectTypes {
 	public static String PIRSF = "PIR Superfamily";
 	public static String INTERPRO = "InterPro Domains";
 	public static String GENOTYPE = "Genotype";
-	
+	public static String EMAPA = "EMAPA";
+	public static String EMAPS = "EMAPS";
+	public static String VOCAB_TERM = "Vocabulary Term";
 }
