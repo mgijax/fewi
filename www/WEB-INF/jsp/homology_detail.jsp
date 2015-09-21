@@ -290,19 +290,19 @@ function deselectAllSeqs() {
 		    	<c:set var="seq" value="${m.representativeGenomicSequence}" scope="page" />
 		    	<input type="checkbox" name="seq${sCount}" value="<%= FormatHelper.getSeqForwardValue((Sequence)pageContext.getAttribute("seq")) %>">
 		    	 <c:set var="sCount" value="${sCount + 1}" scope="page"/>
-		    	${seq.primaryID} (<%=ProviderLinker.getSeqProviderLinks((Sequence)pageContext.getAttribute("seq"))%>)<br/>
+			 <span title="DNA">${seq.primaryID}</span> (<%=ProviderLinker.getSeqProviderLinks((Sequence)pageContext.getAttribute("seq"))%>)<br/>
 			</c:if>		
 			<c:if test="${not empty m.representativePolypeptideSequence}">
 				<c:set var="seq" value="${m.representativePolypeptideSequence}" scope="page" />
 		    	<input type="checkbox" name="seq${sCount}" value="<%= FormatHelper.getSeqForwardValue((Sequence)pageContext.getAttribute("seq")) %>"> 
 		    	<c:set var="sCount" value="${sCount + 1}" scope="page"/>
-		    	${seq.primaryID} (<%=ProviderLinker.getSeqProviderLinks((Sequence)pageContext.getAttribute("seq"))%>)<br/>	    	
+			<span title="Polypeptide">${seq.primaryID}</span> (<%=ProviderLinker.getSeqProviderLinks((Sequence)pageContext.getAttribute("seq"))%>)<br/>	    	
 			</c:if>	
 			<c:if test="${not empty m.representativeTranscriptSequence}">
 				<c:set var="seq" value="${m.representativeTranscriptSequence}" scope="page" />
 		    	<input type="checkbox" name="seq${sCount}" value="<%= FormatHelper.getSeqForwardValue((Sequence)pageContext.getAttribute("seq")) %>"> 
 		    	<c:set var="sCount" value="${sCount + 1}" scope="page"/>
-		    	${seq.primaryID} (<%=ProviderLinker.getSeqProviderLinks((Sequence)pageContext.getAttribute("seq"))%>)<br/>	    	
+			<span title="RNA">${seq.primaryID}</span> (<%=ProviderLinker.getSeqProviderLinks((Sequence)pageContext.getAttribute("seq"))%>)<br/>	    	
 			</c:if>	
 		</td>
 		</tr>
