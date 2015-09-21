@@ -69,12 +69,11 @@ public class FewiLinker {
 
 		if (idUrlMap.containsKey(objectType)) {
 			return String.format(idUrlMap.get(objectType), id);
-		} else if (ObjectTypes.VOCAB_TERM.equals(objectType)) {
-			if ((id != null) && id.toUpperCase().startsWith("EMAP")) {
+		} else if (objectType.startsWith("EMAPS")) {
+			if (id != null) {
 				return config.getProperty("FEWI_URL") + "vocab/gxd/anatomy/" + id;
 			}
 		}
-
 		return null;
 	}
 
