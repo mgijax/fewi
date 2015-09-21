@@ -84,7 +84,7 @@
 											<input type="hidden" name="seq1" value="${seqfetchParms}">
 											<input type="button" value="Get FASTA" onClick="formatFastaArgs()">
 											&nbsp;&nbsp;${lengthStr} bp
-											&nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb flank
+											&nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb&nbsp;flank
 										</form>
 									</div>
 									<br />
@@ -134,7 +134,7 @@
 					<ul>
 						<li>
 							<div class="label">Genetic Map</div>
-							<div class="value">
+							<div class="value" style="height: 45px;">
 								<c:if test="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0)}">
 									<c:if test="${not empty marker.preferredCentimorgans}">
 										<c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
@@ -174,15 +174,16 @@
 
 						<section class="summarySec1">
 							<ul>
+							<c:if test="${not empty linkmapUrl}">
 								<li>
 									<div class="value">
-
 										<a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
 										<c:if test="${not empty miniMap}">
 											<br/><a href="${linkmapUrl}" style="background-color: transparent"><img src="${miniMap}" border="0" style="padding-top: 4px"></a>
 										</c:if>
 									</div>
 								</li>
+							</c:if>
 
 							<c:if test="${not empty qtlIDs}">
 								<li>
