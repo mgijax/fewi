@@ -9,7 +9,7 @@
 	      -->
 
 	    <c:set var="proteinUnindent" value=" style='margin-left: -26px'" />
-	    <section class="summarySec1">
+	    <section class="summarySec1" style="width: 90%">
 		<div id="toggleProteinRibbon" class="toggleImage hdCollapse" title="Show More"></div>
 		<ul>
 		    <c:if test='${marker.countOfUniProtSequences > 0}'>
