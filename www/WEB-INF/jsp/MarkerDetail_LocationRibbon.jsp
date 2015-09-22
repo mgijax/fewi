@@ -1,6 +1,6 @@
 	<div class="row locationRibbon">
 		<div class="header <%=leftTdStyles.getNext() %>">
-			<header>Location & Maps</header>
+			Location & Maps
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
 
@@ -135,7 +135,7 @@
 					<ul>
 						<li>
 							<div class="label">Genetic Map</div>
-							<div class="value" style="height: 45px;">
+							<div class="value">
 								<c:if test="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0)}">
 									<c:if test="${not empty marker.preferredCentimorgans}">
 										<c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">

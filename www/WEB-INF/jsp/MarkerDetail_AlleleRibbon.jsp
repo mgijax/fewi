@@ -61,16 +61,8 @@
 						</div>
 					</c:if>
 
-					<c:if test="${not empty marker.markerClip}">
-						<div id="mpMarkerClip">
-							${marker.markerClip}
-						</div>
-					</c:if>
-
 				</section>
 			</c:if>
-
-
 
 				<section class="summarySec2 extra open">
 					<ul>
@@ -87,7 +79,7 @@
 
 							<c:forEach var="item" items="${marker.alleleCountsByType}">
 								<li>
-									<div class="label">${item.countType}</div>
+									<div class="label unbold">${item.countType}</div>
 									<div class="value">
 										<a href="${alleleUrl}&alleleType=${item.countType}">${item.count}</a>
 									</div>
@@ -97,9 +89,9 @@
 
 						<c:if test="${marker.countOfMutationInvolves > 0}">
 							<li>
-								<div class="label">Genomic Mutations Involving ${marker.symbol}</div>
+								<div class="label">Genomic Mutations</div>
 								<div class="value">
-									<a href="${alleleUrl}&mutationInvolves=1">${marker.countOfMutationInvolves}</a>
+									<a href="${alleleUrl}&mutationInvolves=1">${marker.countOfMutationInvolves}</a> involving ${marker.symbol}
 								</div>
 							</li>
 						</c:if>
@@ -119,6 +111,15 @@
 
 				</section>
 
+				<section class="wide summarySec1 extra open">
+
+					<c:if test="${not empty marker.markerClip}">
+						<div id="mpMarkerClip">
+							${marker.markerClip}
+						</div>
+					</c:if>
+
+				</section>
 
 			</div>
 		</div>

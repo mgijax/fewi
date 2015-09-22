@@ -65,7 +65,7 @@
 
 	#body .summarySec1 {
 		width: 50%;
-		min-width: 550px;
+		min-width: 565px;
 	}
 
 	#body  .container li {
@@ -123,23 +123,16 @@
 
 	/* pheno ribbon */
 
-
-	#body .phenoRibbon .summarySec1 {
-		width: 48%;
-	}
-
 	#body .phenoRibbon .summarySec2 {
 		width: 47%;
 		min-width: 28.813em;
-		padding-left: 2em;
 	}
 
 	#body .phenoRibbon #openedAlleleRibbon .summarySec1 {
 		padding-left: 2em;
 	}
 
-	#body .phenoRibbon .summarySec2 
-	li:nth-of-type(n+2):nth-last-of-type(n+3) .label {
+	#body .summarySec2 .unbold {
 		font-weight:normal;
 		color: #585858;
 	}
@@ -277,19 +270,9 @@
 		white-space: nowrap;
 	}
 
-
-	/*#body .row {
-		border-bottom: 1px solid black;
-		margin-bottom: 16px;
+	#body .row {
+		min-height: 32px;
 	}
-
-	#body .detailCat2 {
-		background-color: #DFEFFF;
-	}
-
-	#body .detailData2 {
-		background-color: white;
-	}*/
 
 	#body #mpSlimgridWrapper .label {
 		padding-top: 1.625em;

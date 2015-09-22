@@ -59,6 +59,59 @@ td.width140 { width : 140px }
 
 							<%@ include file="MarkerDetail_slimgrid.jsp" %>
 							<div style="font-size: 90%">Click cells to view annotations.</div>
+						</div><br/><br/>
+					</c:if>
+
+					<c:if test="${marker.countOfGxdResults > 0 or marker.countOfGxdTissues > 0 or marker.countOfCdnaSources > 0 or marker.countOfGxdLiterature > 0}">
+						<div class="item">
+							<ul>
+								<c:if test="${marker.countOfGxdResults > 0}">
+									<li>
+										<div class="label">All Results</div>
+										<div class="value"><a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}">${marker.countOfGxdResults}</a></div>
+									</li>
+								</c:if>
+
+								<c:if test="${marker.countOfGxdTissues > 0}">
+									<li>
+										<div class="label">Tissues</div>
+										<div class="value"><a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a></div>
+									</li>
+								</c:if>
+
+								<c:if test="${marker.countOfCdnaSources > 0}">
+									<li>
+										<div class="label">cDNA Data</div>
+										<div class="value"><a href="${configBean.WI_URL}searches/estclone_report.cgi?_Marker_key=${marker.markerKey}&sort=Tissue">${marker.countOfCdnaSources}</a></div>
+									</li>
+								</c:if>
+
+								<c:if test="${marker.countOfGxdLiterature > 0}">
+									<li>
+										<div class="label">Literature Summary</div>
+										<div class="value"><a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a></div>
+									</li>
+								</c:if>
+							</ul>
+						</div>
+					</c:if>
+
+					<c:if test="${(marker.countOfGxdImages > 0) && not empty gxdImage}">
+						<div class="item">
+							<div id="gxdImageDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px; padding-top: 14px;">
+								<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=imagestab" title="View ${marker.countOfGxdImages} expression image<c:if test='${marker.countOfGxdImages > 1}'>s</c:if>">
+									<span style="padding-bottom: 3px">Images<br/></span>
+									${gxdImage}
+								</a>
+							</div>
+						</div>
+					</c:if>
+
+					<c:if test="${marker.countOfGxdResults > 0}">
+						<div class="item">
+							<div id="gxdMatrixDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px; padding-top: 14px;">
+								<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=stagegridtab">Tissue x Stage Matrix<br/><img id="gxdMatrixIcon" style="padding-top: 3px" src="${configBean.FEWI_URL}assets/images/gxd_matrix_icon.png"></a>
+							</div>
 						</div>
 					</c:if>
 				</section>
@@ -116,65 +169,6 @@ td.width140 { width : 140px }
 
 					</ul>
 				</section>
-						
-
-				<section class="summarySec1 wide extra open">
-					<c:if test="${marker.countOfGxdResults > 0 or marker.countOfGxdTissues > 0 or marker.countOfCdnaSources > 0 or marker.countOfGxdLiterature > 0}">
-						<div class="item">
-							<ul>
-								<c:if test="${marker.countOfGxdResults > 0}">
-									<li>
-										<div class="label">All Results</div>
-										<div class="value"><a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}">${marker.countOfGxdResults}</a></div>
-									</li>
-								</c:if>
-
-								<c:if test="${marker.countOfGxdTissues > 0}">
-									<li>
-										<div class="label">Tissues</div>
-										<div class="value"><a href="${configBean.FEWI_URL}tissue/marker/${marker.primaryID}">${marker.countOfGxdTissues}</a></div>
-									</li>
-								</c:if>
-
-								<c:if test="${marker.countOfCdnaSources > 0}">
-									<li>
-										<div class="label">cDNA Data</div>
-										<div class="value"><a href="${configBean.WI_URL}searches/estclone_report.cgi?_Marker_key=${marker.markerKey}&sort=Tissue">${marker.countOfCdnaSources}</a></div>
-									</li>
-								</c:if>
-
-								<c:if test="${marker.countOfGxdLiterature > 0}">
-									<li>
-										<div class="label">Literature Summary</div>
-										<div class="value"><a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a></div>
-									</li>
-								</c:if>
-							</ul>
-						</div>
-					</c:if>
-
-					<c:if test="${(marker.countOfGxdImages > 0) && not empty gxdImage}">
-						<div class="item">
-							<div id="gxdImageDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px; padding-top: 14px;">
-								<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=imagestab" title="View ${marker.countOfGxdImages} expression image<c:if test='${marker.countOfGxdImages > 1}'>s</c:if>">
-									<span style="padding-bottom: 3px">Images<br/></span>
-									${gxdImage}
-								</a>
-							</div>
-						</div>
-					</c:if>
-
-					<c:if test="${marker.countOfGxdResults > 0}">
-						<div class="item">
-							<div id="gxdMatrixDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px; padding-top: 14px;">
-								<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=stagegridtab">Tissue x Stage Matrix<br/><img id="gxdMatrixIcon" style="padding-top: 3px" src="${configBean.FEWI_URL}assets/images/gxd_matrix_icon.png"></a>
-							</div>
-						</div>
-					</c:if>
-				</section>
-
-
-						
 
 			</div>
 		</div>

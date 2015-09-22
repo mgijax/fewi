@@ -4,8 +4,8 @@
 				References
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>" >
-				<section class="summarySec1">
-					<div id="toggleReferenceRibbon" title="Show More" class="toggleImage hdCollapse"></div>
+				<div id="toggleReferenceRibbon" title="Show More" class="toggleImage hdExpand"></div>
+				<section class="summarySec1 wide">
 					<ul>
 						<c:if test="${marker.countOfReferences > 0}">
 							<li>
@@ -28,13 +28,13 @@
 							</li>
 						</c:if>
 						<c:if test="${not empty marker.earliestReference}">
-							<li class="extra open">
+							<li class="extra closed">
 								<div class="label">Earliest</div>
 								<div class="value"><a href="${configBean.FEWI_URL}reference/${marker.earliestReference.jnumID}">${marker.earliestReference.jnumID}</a> ${marker.earliestReference.shortCitation}</div>
 							</li>
 						</c:if>
 						<c:if test="${not empty marker.latestReference}">
-							<li class="extra open">
+							<li class="extra closed">
 								<div class="label">Latest</div>
 								<div class="value"><a href="${configBean.FEWI_URL}reference/${marker.latestReference.jnumID}">${marker.latestReference.jnumID}</a> ${marker.latestReference.shortCitation}</div>
 							</li>

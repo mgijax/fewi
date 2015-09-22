@@ -1,6 +1,6 @@
 	<div class="row">
 		<div class="header <%=leftTdStyles.getNext() %>">
-			<header>Summary</header>
+			Summary
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %> summaryRibbon">
 			<section class="summarySec1 ">
