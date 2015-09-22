@@ -8,48 +8,42 @@
 			  -- PDB, EC, InterPro Domains
 			  -->
 
-			<c:set var="proteinUnindent" value=" style='width: calc(13.219em - 26px);'" />
-			<section class="summarySec1 wide">
-				<div id="toggleProteinRibbon" class="toggleImage hdCollapse" title="Show More"></div>
+			<div id="toggleProteinRibbon" class="toggleImage hdCollapse" title="Show More"></div>
+			<section class="summarySec1 extra wide">
 				<ul>
 					<c:if test='${marker.countOfUniProtSequences > 0}'>
-						<li class="extra open">
-							<div class="label"${proteinUnindent}>UniProt</div>
+						<li>
+							<div class="label">UniProt</div>
 							<div class="value"><a href='${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=UniProt'>${marker.countOfUniProtSequences}</a> Sequences</div>
 						</li>
-						<c:set var="proteinUnindent" value=""/>
 					</c:if>
 					<c:if test='${not empty marker.proteinOntologyAnnotations}'>
-						<li class="extra open">
-							<div class="label"${proteinUnindent}>Protein Ontology</div>
+						<li>
+							<div class="label">Protein Ontology</div>
 							<c:forEach var="item" items="${marker.proteinOntologyAnnotations}">
 								<div class="value"><a href="${fn:replace(urls.Protein_Ontology, '@@@@', item.termID)}">${item.termID}</a> ${item.term}</div>
 							</c:forEach>
 						</li>
-						<c:set var="proteinUnindent" value=""/>
 					</c:if>
 					<c:if test='${not empty marker.pdbIDs}'>
-						<li class="extra open">
-							<div class="label"${proteinUnindent}>PDB</div>
+						<li>
+							<div class="label">PDB</div>
 							<div class="value">${otherIDs["PDB"]}</div>
 						</li>
-						<c:set var="proteinUnindent" value=""/>
 					</c:if>
 					<c:if test='${not empty marker.ecIDs}'>
-						<li class="extra open">
-							<div class="label"${proteinUnindent}>EC</div>
+						<li>
+							<div class="label">EC</div>
 							<div class="value">${otherIDs["EC"]}</div>
 						</li>
-						<c:set var="proteinUnindent" value=""/>
 					</c:if>
 					<c:if test='${not empty marker.interProAnnotations}'>
-						<li class="extra open">
-							<div class="label"${proteinUnindent}>InterPro Domains</div>
+						<li>
+							<div class="label">InterPro Domains</div>
 							<c:forEach var="item" items="${marker.interProAnnotations}">
 								<div class="value"><a href="${fn:replace(urls.InterPro, '@@@@', item.termID)}">${item.termID}</a> ${item.term}</div>
 							</c:forEach>
 						</li>
-						<c:set var="proteinUnindent" value=""/>
 					</c:if>
 				</ul>
 			</section>
