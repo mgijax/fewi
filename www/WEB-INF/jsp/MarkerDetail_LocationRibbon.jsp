@@ -4,11 +4,12 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
 
+			<div id="toggleLocationRibbon" title="Show More" class="toggleImage hdExpand"></div>
+
 			<section class="summarySec1">
 				<ul>
 					<li>
 						<div class="label">
-							<div id="toggleLocationRibbon" title="Show More" class="toggleImage hdExpand"></div>
 							Sequence map
 						</div>
 						<div class="value">

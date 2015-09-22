@@ -83,7 +83,7 @@
 
 	#body .summaryRibbon .summarySec1 li:first-of-type .label {
 		font-size: 1.406em;
-		width: 7.31em;
+		width: 9.31em;
 		margin-right: .31em;
 	}
 
@@ -208,10 +208,6 @@
 	#body .gxdRibbon section:last-of-type {
 		margin-top: .625em;
 		margin-bottom: 1em;
-	}
-
-	#body .gxdRibbon .toggleImage {
-		margin-left: -2em;
 	}
 
 	#body .otherLinksRibbon .label {
@@ -339,6 +335,7 @@
 		padding: .813em 1em;
 		margin: 0px;
 		float: left;
+		position: absolute;
 	}
 
 	#body table.2col1 {

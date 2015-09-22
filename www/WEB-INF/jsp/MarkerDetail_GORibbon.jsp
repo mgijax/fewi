@@ -6,20 +6,9 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-				<section class="summarySec1 wide">
-
+				<div id="toggleGORibbon" title="Show More" class="toggleImage hdCollapse"></div>
+				<section class="summarySec1 wide extra">
 					<ul>
-
-						<c:if test="${(not empty marker.countOfGOReferences) and (marker.countOfGOReferences > 0)}">
-							<li style="padding-right: 4em;">
-								<div class="label">
-									<div id="toggleGORibbon" title="Show More" class="toggleImage hdCollapse"></div>
-									GO References
-								</div>
-								<div class="value"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
-							</li>
-						</c:if>
-
 						<c:if test="${marker.countOfGOTerms > 0}">
 							<li>
 								<div class="label">
@@ -28,6 +17,7 @@
 								<div class="value"><a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a></div>
 							</li>
 						</c:if>
+
 						<c:if test="${not empty marker.funcBaseID}">
 							<li>
 								<div class="label">
@@ -36,6 +26,16 @@
 								<div class="value"><a href="${fn:replace(urls.FuncBase, '@@@@', marker.funcBaseID.accID)}" target="_blank">FuncBase</a></div>
 							</li>
 						</c:if>
+
+						<c:if test="${(not empty marker.countOfGOReferences) and (marker.countOfGOReferences > 0)}">
+							<li style="padding-right: 4em;">
+								<div class="label">
+									GO References
+								</div>
+								<div class="value"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
+							</li>
+						</c:if>
+
 					</ul>
 				</section>
 
@@ -58,7 +58,7 @@
 											<c:if test="${not (empty marker.slimgridCellsFunction and empty marker.slimgridCellsProcess and empty marker.slimgridCellsComponent)}">
 												<div id="goSlimgridWrapper">
 													<div id="mfSlimgridWrapper" class="sgWrapper sgWrapperHeight">
-														<div class="label sgWrapperTitle">Molecular Function</div><br/>
+														<div class="label sgWrapperTitle" style="text-align: center;">Molecular Function</div><br/>
 														<c:set var="sgID" value="mfSlimgrid"/>
 														<c:set var="sgCells" value="${marker.slimgridCellsFunction}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
@@ -68,7 +68,7 @@
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="bpSlimgridWrapper" class="sgWrapper sgWrapperHeight">
-														<div class="label sgWrapperTitle">Biological Process</div><br/>
+														<div class="label sgWrapperTitle" style="text-align: center;">Biological Process</div><br/>
 														<c:set var="sgID" value="bpSlimgrid"/>
 														<c:set var="sgCells" value="${marker.slimgridCellsProcess}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
@@ -77,7 +77,7 @@
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="ccSlimgridWrapper" class="sgWrapper sgWrapperHeight">
-														<div class="label sgWrapperTitle">Cellular Component</div><br/>
+														<div class="label sgWrapperTitle" style="text-align: center;">Cellular Component</div><br/>
 														<c:set var="sgID" value="ccSlimgrid"/>
 														<c:set var="sgCells" value="${marker.slimgridCellsComponent}"/>
 														<c:set var="sgShowAbbrev" value="true"/>

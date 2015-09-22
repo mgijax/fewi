@@ -5,6 +5,7 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
+				<div id="toggleDiseaseRibbon" title="Show More" class="toggleImage hdExpand"></div>
 				<section class="summarySec1 wide">
 					<ul>
 
@@ -12,7 +13,6 @@
 							<c:when test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
 								<li>
 									<div class="label">
-										<div id="toggleDiseaseRibbon" title="Show More" class="toggleImage hdExpand"></div>
 										Diseases
 									</div>
 									<div class="value">
