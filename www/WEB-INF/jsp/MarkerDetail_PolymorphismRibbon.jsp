@@ -5,9 +5,8 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-				<section class="summarySec1">
-					<div id="togglePolymorphismRibbon" title="Show More" class="toggleImage hdCollapse"></div>
-
+				<div id="togglePolymorphismRibbon" title="Show More" class="toggleImage hdCollapse"></div>
+				<section class="summarySec1 extra">
 					<ul>
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
 							<c:if test="${fn:startsWith(item.countType, 'SNP')}">
@@ -28,7 +27,7 @@
 				</section>
 
 				
-				<section class="summarySec2">
+				<section class="summarySec2 extra">
 					<ul>
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
 							<c:if test="${(item.countType == 'PCR') or (item.countType == 'RFLP')}">
