@@ -42,7 +42,7 @@
 
 					<c:if test="${not empty marker.slimgridCellsMP}">
 						<div id="mpSlimgridWrapper" class="sgWrapper">
-							<div class="label" style="width: 566px; text-align:center; padding-bottom: 6px;">Phenotype Overview<img id="sgPhenoHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div><br />
+							<div class="label" style="width: 566px; text-align:center; padding-bottom: 14px;">Phenotype Overview<img id="sgPhenoHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div><br />
 							<div id="sgPhenoHelp" style="visibility: hidden; height:0px;">
 								<div class="hd">Phenotype Overview</div>
 								<div class="bd" style="text-align: center">

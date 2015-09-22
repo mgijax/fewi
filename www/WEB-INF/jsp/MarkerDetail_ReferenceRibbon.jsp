@@ -5,7 +5,7 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>" >
 				<section class="summarySec1">
-					<div id="toggleReferenceRibbon" title="Show More" class="toggleImage hdExpand"></div>
+					<div id="toggleReferenceRibbon" title="Show More" class="toggleImage hdCollapse"></div>
 					<ul>
 						<c:if test="${marker.countOfReferences > 0}">
 							<li>
