@@ -121,17 +121,7 @@ tr.underlined { border-bottom: solid thin black }
 						</select>
 					</form>
 				</section>
-</c:if>
 
 		</div> <!-- sequence details -->
 	</div><!-- sequence ribbon -->
-
-<!--
-							<div id="openedSequenceRibbon" style="display:block;">
-							</div>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	-->
+</c:if>
