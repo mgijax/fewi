@@ -1036,7 +1036,7 @@ public class MarkerController {
 		ArrayList<String> logicalDBs = new ArrayList<String>();
 		HashMap<String,String> otherIDs = new HashMap<String,String>();
 
-		Iterator<MarkerID> it = marker.getOtherIDs().iterator();
+		Iterator<MarkerID> it = marker.getIds().iterator();
 		MarkerID myID;
 		String myLink;
 		String logicaldb;
@@ -1084,7 +1084,9 @@ public class MarkerController {
 			}
 
 			if (!otherIDs.containsKey(logicaldb)) {
-				logicalDBs.add(logicaldb);
+				if (myID.getIsForOtherDbSection() == 1) {
+					logicalDBs.add(logicaldb);
+				}
 				otherIDs.put(logicaldb, myLink);
 			} else {
 				otherLinks = otherIDs.get(logicaldb);
@@ -1092,43 +1094,23 @@ public class MarkerController {
 			}
 		}
 
+		// update the SEO description with information about the
+		// marker's coordinates
 
-		// determine if we need a KOMP linkout (complex rules, so better in
-		// Java than JSTL); for a link we must have (new per TR10311):
-		// 1. has marker type of Pseudogene or Gene
-		// 2. has bp coordinates
-		// 3. has a strand
-		// 4. has at least one sequence
-
-		String markerType = marker.getMarkerType();
 		MarkerLocation location = marker.getPreferredCoordinates();
-		List<MarkerSequenceAssociation> seqs = marker.getSequenceAssociations();
-		boolean hadCoords = false;
+		if ((location != null) &&
+			(location.getStartCoordinate() != null) &&
+			(location.getEndCoordinate() != null) ) {
 
-		if (markerType.equals("Pseudogene") || markerType.equals("Gene")) {
-			if ((location != null) &&
-					(location.getStartCoordinate() != null) &&
-					(location.getEndCoordinate() != null) &&
-					(location.getStrand() != null) &&
-					(seqs != null) && (seqs.size() > 0)	) {
-				mav.addObject ("needKompLink", "yes");
-				otherIDs.put("International Mouse Phenotyping Consortium Status", idLinker.getLink("KnockoutMouse", marker.getPrimaryID(), marker.getSymbol()) );
-				logicalDBs.add("International Mouse Phenotyping Consortium Status");
-				seoDescription.append(" Chr");
-				seoDescription.append(location.getChromosome());
-				seoDescription.append(":");
-				seoDescription.append(location.getStartCoordinate().longValue());
-				seoDescription.append("-");
-				seoDescription.append(location.getEndCoordinate().longValue());
-				hadCoords = true;
-			}
-		}
-
-		if (!hadCoords) {
-			if (!"UN".equals(marker.getChromosome())) {
-				seoDescription.append(" Chr");
-				seoDescription.append(marker.getChromosome());
-			}
+			seoDescription.append(" Chr");
+			seoDescription.append(location.getChromosome());
+			seoDescription.append(":");
+			seoDescription.append(location.getStartCoordinate().longValue());
+			seoDescription.append("-");
+			seoDescription.append(location.getEndCoordinate().longValue());
+		} else if (!"UN".equals(marker.getChromosome())) {
+			seoDescription.append(" Chr");
+			seoDescription.append(marker.getChromosome());
 		}
 
 		mav.addObject ("otherIDs", otherIDs);
