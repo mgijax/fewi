@@ -44,7 +44,7 @@ td.width140 { width : 140px }
 				<section class="summarySec1 extra">
 					<c:if test="${not empty marker.slimgridCellsAnatomy}">
 						<div id="anatomySlimgridWrapper" style="display: inline-block;">
-							<div class="label" style="width: 566px; text-align:center;">Expression Overview<img id="sgAnatomyHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div><br />
+							<div class="label" style="width: 100%; text-align:center;">Expression Overview<img id="sgAnatomyHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div><br />
 							<div id="sgAnatomyHelp" style="visibility: hidden; height:0px;">
 								<div class="hd">Expression Overview</div>
 								<div class="bd" style="text-align: left">

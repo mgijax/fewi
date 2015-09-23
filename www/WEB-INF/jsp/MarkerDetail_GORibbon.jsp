@@ -58,7 +58,7 @@
 											<c:if test="${not (empty marker.slimgridCellsFunction and empty marker.slimgridCellsProcess and empty marker.slimgridCellsComponent)}">
 												<div id="goSlimgridWrapper">
 													<div id="mfSlimgridWrapper" class="sgWrapper sgWrapperHeight">
-														<div class="label sgWrapperTitle" style="text-align: center;">Molecular Function</div><br/>
+														<div class="label sgWrapperTitle" style="width: 100%; text-align: center;">Molecular Function</div><br/>
 														<c:set var="sgID" value="mfSlimgrid"/>
 														<c:set var="sgCells" value="${marker.slimgridCellsFunction}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
@@ -68,7 +68,7 @@
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="bpSlimgridWrapper" class="sgWrapper sgWrapperHeight">
-														<div class="label sgWrapperTitle" style="text-align: center;">Biological Process</div><br/>
+														<div class="label sgWrapperTitle" style="width: 100%; text-align: center;">Biological Process</div><br/>
 														<c:set var="sgID" value="bpSlimgrid"/>
 														<c:set var="sgCells" value="${marker.slimgridCellsProcess}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
@@ -77,7 +77,7 @@
 													</div>
 													<div class="sgSpacer"></div>
 													<div id="ccSlimgridWrapper" class="sgWrapper sgWrapperHeight">
-														<div class="label sgWrapperTitle" style="text-align: center;">Cellular Component</div><br/>
+														<div class="label sgWrapperTitle" style="width: 100%; text-align: center;">Cellular Component</div><br/>
 														<c:set var="sgID" value="ccSlimgrid"/>
 														<c:set var="sgCells" value="${marker.slimgridCellsComponent}"/>
 														<c:set var="sgShowAbbrev" value="true"/>
