@@ -21,7 +21,7 @@
 						<li>
 							<div class="label">Protein Ontology</div>
 							<c:forEach var="item" items="${marker.proteinOntologyAnnotations}">
-								<div class="value"><a href="${fn:replace(urls.Protein_Ontology, '@@@@', item.termID)}">${item.termID}</a> ${item.term}</div>
+								<div class="value"><a href="${fn:replace(urls.Protein_Ontology, '@@@@', item.termID)}" target="_blank">${item.termID}</a> ${item.term}</div>
 							</c:forEach>
 						</li>
 					</c:if>
@@ -41,7 +41,7 @@
 						<li>
 							<div class="label">InterPro Domains</div>
 							<c:forEach var="item" items="${marker.interProAnnotations}">
-								<div class="value"><a href="${fn:replace(urls.InterPro, '@@@@', item.termID)}">${item.termID}</a> ${item.term}</div>
+								<div class="value"><a href="${fn:replace(urls.InterPro, '@@@@', item.termID)}" target="_blank">${item.termID}</a> ${item.term}</div>
 							</c:forEach>
 						</li>
 					</c:if>
