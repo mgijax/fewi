@@ -65,7 +65,7 @@
 
 	#body .summarySec1 {
 		width: 50%;
-		min-width: 565px;
+		min-width: 555px;
 	}
 
 	#body  .container li {
@@ -98,17 +98,16 @@
 
 
 	#body .summarySec1 .label{
-		width: 13.219em;
+		width: 16.219em;
 		text-align: right;
 	}
 
 	#body .summarySec1 .value{
-		margin-left: 13.813em;
-		margin-right: 0em;
+		margin-left: 16.813em;
 	}
 
 	#body .summarySec2 {
-		width: 47%;
+		width: 50%;
 	}
 
 	#body .summarySec2 .label{
@@ -124,7 +123,7 @@
 	/* pheno ribbon */
 
 	#body .phenoRibbon .summarySec2 {
-		width: 47%;
+		width: 49%;
 		min-width: 28.813em;
 	}
 
@@ -173,14 +172,9 @@
 		padding-bottom: 0em;
 	}
 
-	#body .gxdRibbon .summarySec1:first-of-type {
-		padding-left: 2em;
-	}
-
 	#body .gxdRibbon .summarySec2 {
 		width: 47%;
 		min-width: 28.813em;
-		margin-left: -2em;
 	}
 
 	#body .gxdRibbon .summarySec2 .value {
@@ -195,7 +189,6 @@
 	#body .gxdRibbon .item:not(:last-of-type) {
 		float: left;
 		vertical-align: top;
-		margin-right: 2em;
 	}
 
 	#body .gxdRibbon section:last-of-type {
