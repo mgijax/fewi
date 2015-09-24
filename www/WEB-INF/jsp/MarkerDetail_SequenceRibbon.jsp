@@ -3,7 +3,7 @@
 .inheritColor {background-color: inherit}
 </style>
 
-<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs)}">
+<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs) or (not empty otherIDs['VEGA Gene Model']) or (not empty otherIDs['Entrez Gene']) or (not empty otherIDs['Ensembl Gene Model'])}">
 	<div class="row sequenceRibbon" >
 		<div class="header <%=leftTdStyles.getNext() %>">
 			Sequences &amp;<br/>
@@ -124,7 +124,8 @@ tr.underlined { border-bottom: solid thin black }
 						</select>
 					</form>
 				</section>
-
+</c:if>
+<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs) or (not empty otherIDs['VEGA Gene Model']) or (not empty otherIDs['Entrez Gene']) or (not empty otherIDs['Ensembl Gene Model'])}">
 		</div> <!-- sequence details -->
 	</div><!-- sequence ribbon -->
 </c:if>
