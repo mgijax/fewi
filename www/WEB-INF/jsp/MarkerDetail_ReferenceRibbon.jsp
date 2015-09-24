@@ -12,11 +12,11 @@
 								<div class="label">Summaries</div>
 								<div class="value">
 									<div style="display: inline-block; padding-right: 50px;">All <a href="${configBean.FEWI_URL}reference/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfReferences}</a></div>
-									<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
-										<div style="display: inline-block; padding-right: 50px;">Diseases <a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}?typeFilter=Literature">${diseaseRefCount}</a></div>
-									</c:if>
 									<c:if test="${marker.countOfGxdLiterature > 0}">
 										<div style="display: inline-block; padding-right: 50px;">Developmental Gene Expression <a href="${configBean.FEWI_URL}gxdlit/marker/${marker.primaryID}">${marker.countOfGxdLiterature}</a></div>
+									</c:if>
+									<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
+										<div style="display: inline-block; padding-right: 50px;">Diseases <a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}?typeFilter=Literature">${diseaseRefCount}</a></div>
 									</c:if>
 									<c:if test="${marker.countOfGOReferences > 0}">
 										<div style="display: inline-block; padding-right: 50px;">Gene Ontology <a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
