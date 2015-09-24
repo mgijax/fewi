@@ -54,13 +54,13 @@
 	<%@ include file="MarkerDetail_ExpressionRibbon.jsp" %>
 
 	<%@ include file="MarkerDetail_InteractionRibbon.jsp" %>
-	<%@ include file="MarkerDetail_MolecularReagentRibbon.jsp" %>
-	<%@ include file="MarkerDetail_DatabaseLinkRibbon.jsp" %>
 	<%@ include file="MarkerDetail_SequenceRibbon.jsp" %>
 	<%@ include file="MarkerDetail_PolymorphismRibbon.jsp" %>
 	<%@ include file="MarkerDetail_ProteinRibbon.jsp" %>
-	<%@ include file="MarkerDetail_ReferenceRibbon.jsp" %>
+	<%@ include file="MarkerDetail_MolecularReagentRibbon.jsp" %>
+	<%@ include file="MarkerDetail_DatabaseLinkRibbon.jsp" %>
 	<%@ include file="MarkerDetail_OtherAccessRibbon.jsp" %>
+	<%@ include file="MarkerDetail_ReferenceRibbon.jsp" %>
 
 </div>
 
