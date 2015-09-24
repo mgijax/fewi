@@ -1,3 +1,8 @@
+<style>
+.left {text-align: left}
+.inheritColor {background-color: inherit}
+</style>
+
 <c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs)}">
 	<div class="row sequenceRibbon" >
 		<div class="header <%=leftTdStyles.getNext() %>">
@@ -8,23 +13,22 @@
 			<div id="toggleSequenceRibbon" class="toggleImage hdCollapse" title="Show More"></div>
 			<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs)}">
 				<section class="summarySec1 extra">
-				<div class="label" style="font-size: 104%; width: 60%; text-align: center;">Sequences</div><br/>
 					<ul>
 					<c:if test="${marker.countOfSequences > 0}">
 					<li>
-					<div class="label">All</div>
+					<div class="label">All Sequences</div>
 					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}">${marker.countOfSequences}</a></div>
 					</li>
 					</c:if>
 					<c:if test="${marker.countOfRefSeqSequences > 0}">
 					<li>
-					<div class="label">RefSeq</div>
+					<div class="label" style="font-weight: normal">RefSeq</div>
 					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=RefSeq">${marker.countOfRefSeqSequences}</a></div>
 					</li>
 					</c:if>
 					<c:if test="${marker.countOfUniProtSequences > 0}">
 					<li>
-					<div class="label">UniProt</div>
+					<div class="label" style="font-weight: normal">UniProt</div>
 					<div class="value"><a href="${configBean.FEWI_URL}sequence/marker/${marker.primaryID}?provider=UniProt">${marker.countOfUniProtSequences}</a></div>
 					</li>
 					</c:if>
@@ -46,8 +50,7 @@
 </c:if>
 
 <c:if test="${(not empty otherIDs['VEGA Gene Model']) or (not empty otherIDs['Ensembl Gene Model']) or (not empty otherIDs['Entrez Gene'])}">
-				<section class="summarySec2 extra">
-				<div class="label" style="font-size: 104%; width: 100%; text-align: center;">Gene Models</div><br/>
+				<section class="summarySec2 extra" style="width: 49%">
 					<ul>
 					<c:if test="${not empty otherIDs['VEGA Gene Model']}">
 					<li>
@@ -79,34 +82,34 @@ tr.underlined { border-bottom: solid thin black }
 				<section class="summarySec1 extra wide" style="margin-left: 91px;">
 					<form name="sequenceForm" method="GET">
 						<table class="padded">
-							<tr class="underlined"><td class="padded" colspan="4"><div class="label" style="font-size: 104%">Representative Sequences</div></td><td class="padded">Length</td><td class="padded">Strain/Species</td><td class="padded">Flank</td></tr>
+							<tr class="headerStripe"><th class="left td_disease_tbl_hdr" colspan="4">Representative Sequences</th><th class="left td_disease_tbl_hdr">Length</th><th class="left td_disease_tbl_hdr">Strain/Species</th><th class="left td_disease_tbl_hdr">Flank</th></tr>
 							<c:if test="${not empty marker.representativeGenomicSequence}">
 								<c:set var="seq" value="${marker.representativeGenomicSequence}" scope="request"/>
 								<% Sequence seqDna = (Sequence) request.getAttribute("seq"); %>
-								<tr class="underlined"><td class="padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td>genomic</td>
-								<td class="padded">${marker.representativeGenomicSequence.primaryID}</td>
-								<td class="padded">${fn:replace(fn:replace(genomicLink, "VEGA", "VEGA Gene Model"), "href", "target='blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
-								<td class="padded">${marker.representativeGenomicSequence.length}</td>
-								<td class="padded">${genomicSource}</td>
-								<td class="padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb</td></tr>
+								<tr class="underlined"><td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td class="padded">genomic</td>
+								<td class="td_disease_tbl padded">${marker.representativeGenomicSequence.primaryID}</td>
+								<td class="td_disease_tbl padded">${fn:replace(fn:replace(genomicLink, "VEGA", "VEGA Gene Model"), "href", "target='blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
+								<td class="td_disease_tbl padded">${marker.representativeGenomicSequence.length}</td>
+								<td class="td_disease_tbl padded">${genomicSource}</td>
+								<td class="td_disease_tbl padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb</td></tr>
 							</c:if>
 							<c:if test="${not empty marker.representativeTranscriptSequence}">
 								<c:set var="seq" value="${marker.representativeTranscriptSequence}" scope="request"/>
 								<% Sequence seqRna = (Sequence) request.getAttribute("seq"); %>
-								<tr class="underlined"><td class="padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td>transcript</td>
-								<td class="padded">${marker.representativeTranscriptSequence.primaryID}</td>
-								<td class="padded">${fn:replace(transcriptLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
-								<td class="padded">${marker.representativeTranscriptSequence.length}</td>
-								<td class="padded">${transcriptSource}</td><td>&nbsp;</td></tr>
+								<tr class="underlined"><td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td class="padded">transcript</td>
+								<td class="td_disease_tbl padded">${marker.representativeTranscriptSequence.primaryID}</td>
+								<td class="td_disease_tbl padded">${fn:replace(transcriptLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
+								<td class="td_disease_tbl padded">${marker.representativeTranscriptSequence.length}</td>
+								<td class="td_disease_tbl padded">${transcriptSource}</td><td class="td_disease_tbl padded">&nbsp;</td></tr>
 							</c:if>
 							<c:if test="${not empty marker.representativePolypeptideSequence}">
 								<c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
 								<% Sequence seqPoly = (Sequence) request.getAttribute("seq"); %>
-								<tr class="underlined"><td class="padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td>polypeptide</td>
-								<td class="padded">${marker.representativePolypeptideSequence.primaryID}</td>
-								<td class="padded">${fn:replace(polypeptideLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
-								<td class="padded">${marker.representativePolypeptideSequence.length}</td>
-								<td class="padded">${polypeptideSource}</td><td>&nbsp;</td></tr>
+								<tr class="underlined"><td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td class="padded">polypeptide</td>
+								<td class="td_disease_tbl padded">${marker.representativePolypeptideSequence.primaryID}</td>
+								<td class="td_disease_tbl padded">${fn:replace(polypeptideLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
+								<td class="td_disease_tbl padded">${marker.representativePolypeptideSequence.length}</td>
+								<td class="td_disease_tbl padded">${polypeptideSource}</td><td class="td_disease_tbl padded">&nbsp;</td></tr>
 							</c:if>
 						</table>
 					</form>
