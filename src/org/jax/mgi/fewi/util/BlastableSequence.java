@@ -84,7 +84,7 @@ public class BlastableSequence {
     // set the amount of flanking sequence requested (in kb)
     public void setFlankAmount(String flank) {
 	// just ignore null and zero amounts
-	if ((flank == null) || ("0".equals(flank))) {
+	if ((flank == null) || ("0".equals(flank)) || "".equals(flank)) {
 	    return;
 	}
 
