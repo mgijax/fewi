@@ -99,7 +99,7 @@ td.width140 { width : 140px }
 
 						<c:if test="${(marker.countOfGxdImages > 0) && not empty gxdImage}">
 							<div class="item">
-								<div id="gxdImageDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px; padding-top: 14px;">
+								<div id="gxdImageDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px;">
 									<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=imagestab" title="View ${marker.countOfGxdImages} expression image<c:if test='${marker.countOfGxdImages > 1}'>s</c:if>">
 										<span style="padding-bottom: 3px">Images<br/></span>
 										${gxdImage}
@@ -110,7 +110,7 @@ td.width140 { width : 140px }
 
 						<c:if test="${marker.countOfGxdResults > 0}">
 							<div class="item">
-								<div id="gxdMatrixDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px; padding-top: 14px;">
+								<div id="gxdMatrixDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px;">
 									<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=stagegridtab">Tissue x Stage Matrix<br/><img id="gxdMatrixIcon" style="padding-top: 3px" src="${configBean.FEWI_URL}assets/images/gxd_matrix_icon.png"></a>
 								</div>
 							</div>
