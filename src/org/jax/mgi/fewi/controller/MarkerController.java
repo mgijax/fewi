@@ -1032,7 +1032,12 @@ public class MarkerController {
 		String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
 		// slice and dice the data for the "Other database links" section, to
-		// ease the formatting requirements that would be cumbersome in JSTL
+		// ease the formatting requirements that would be cumbersome in JSTL.
+
+		// Note: All IDs now go into 'otherIDs', but only those logical
+		// databases which should appear in the 'other database links'
+		// section should go into 'logicalDBs'.
+
 		ArrayList<String> logicalDBs = new ArrayList<String>();
 		HashMap<String,String> otherIDs = new HashMap<String,String>();
 
