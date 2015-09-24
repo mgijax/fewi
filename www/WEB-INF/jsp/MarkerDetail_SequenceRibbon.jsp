@@ -85,7 +85,7 @@ tr.underlined { border-bottom: solid thin black }
 								<% Sequence seqDna = (Sequence) request.getAttribute("seq"); %>
 								<tr class="underlined"><td class="padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td>genomic</td>
 								<td class="padded">${marker.representativeGenomicSequence.primaryID}</td>
-								<td class="padded">${fn:replace(genomicLink, "VEGA", "VEGA Gene Model")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
+								<td class="padded">${fn:replace(fn:replace(genomicLink, "VEGA", "VEGA Gene Model"), "href", "target='blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
 								<td class="padded">${marker.representativeGenomicSequence.length}</td>
 								<td class="padded">${genomicSource}</td>
 								<td class="padded">&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb</td></tr>
@@ -95,7 +95,7 @@ tr.underlined { border-bottom: solid thin black }
 								<% Sequence seqRna = (Sequence) request.getAttribute("seq"); %>
 								<tr class="underlined"><td class="padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td>transcript</td>
 								<td class="padded">${marker.representativeTranscriptSequence.primaryID}</td>
-								<td class="padded">${transcriptLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
+								<td class="padded">${fn:replace(transcriptLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
 								<td class="padded">${marker.representativeTranscriptSequence.length}</td>
 								<td class="padded">${transcriptSource}</td><td>&nbsp;</td></tr>
 							</c:if>
@@ -104,7 +104,7 @@ tr.underlined { border-bottom: solid thin black }
 								<% Sequence seqPoly = (Sequence) request.getAttribute("seq"); %>
 								<tr class="underlined"><td class="padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td>polypeptide</td>
 								<td class="padded">${marker.representativePolypeptideSequence.primaryID}</td>
-								<td class="padded">${polypeptideLink} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
+								<td class="padded">${fn:replace(polypeptideLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
 								<td class="padded">${marker.representativePolypeptideSequence.length}</td>
 								<td class="padded">${polypeptideSource}</td><td>&nbsp;</td></tr>
 							</c:if>
@@ -112,7 +112,7 @@ tr.underlined { border-bottom: solid thin black }
 					</form>
 					<form name="sequenceFormPullDown" style="margin-top: 5px; margin-bottom: 5px">
 					<span style="margin-left: 5px">
-					<I>For the selected sequences</I>
+					<I>For the selected sequence</I>
 					</span>
 						<select name="seqPullDown">
 						<option value="${configBean.SEQFETCH_URL}" selected> download in FASTA format</option>
