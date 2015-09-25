@@ -5,52 +5,35 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-				<div id="toggleDiseaseRibbon" title="Show More" class="toggleImage hdExpand"></div>
-				<section class="summarySec1 wide">
-					<ul>
+				<c:set var="arrowstate" value="hdCollapse" />
+				<c:if test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
+					<c:set var="arrowstate" value="hdExpand" />
+				</c:if>
 
-						<c:choose>
-							<c:when test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
-								<li>
-									<div class="label">
-										Diseases
-									</div>
-									<div class="value">
-										<c:if test="${fn:length(MouseOMIMAnnotations) > 0}">
-											${fn:length(MouseOMIMAnnotations)} with ${marker.symbol} mouse models<c:if test="${fn:length(HumanOMIMAnnotations) > 0}">;</c:if>
-										</c:if>
-										<c:if test="${fn:length(HumanOMIMAnnotations) > 0}">
-											${fn:length(HumanOMIMAnnotations)} with human ${AllHumanSymbols} associations
-										</c:if>
-									</div>
-								</li>
+				<div id="toggleDiseaseRibbon" title="Show More" class="toggleImage ${arrowstate}"></div>
 
-							</c:when>
-							<c:otherwise>
-								<c:if test="${(not empty diseaseRefCount && diseaseRefCount > 0) or (marker.countOfAllelesWithHumanDiseases > 0)}">
-									<div class="value">
-										<table border="none">
-											<tr>
-												<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
-													<td class="rightBorderThinGray label padded top right"><font class="label">Mutations/Alleles</font></td>
-													<td class="padded" style="padding-right: 30px;"><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a> with disease annotations</td>
-												</c:if>
-												<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
-													<td class="rightBorderThinGray label padded top right"><font class="label">References</font></td>
-													<td class="padded"><a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a> with disease annotations</td>
-												</c:if>
-											</tr>
-										</table>
-									</div>
-								</c:if>
-							</c:otherwise>
-						</c:choose>
+				<c:set var="sectionstate" value="open" />
 
-					</ul>
+				<c:if test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
+					<section class="summarySec1 wide">
+						<ul>
+							<li>
+								<div class="label">
+									Diseases
+								</div>
+								<div class="value">
+									<c:if test="${fn:length(MouseOMIMAnnotations) > 0}">
+										${fn:length(MouseOMIMAnnotations)} with ${marker.symbol} mouse models<c:if test="${fn:length(HumanOMIMAnnotations) > 0}">;</c:if>
+									</c:if>
+									<c:if test="${fn:length(HumanOMIMAnnotations) > 0}">
+										${fn:length(HumanOMIMAnnotations)} with human ${AllHumanSymbols} associations
+									</c:if>
+								</div>
+							</li>
+						</ul>
 
-					<div class="extra closed second">
+						<div class="extra closed second">
 
-						<c:if test="${fn:length(MouseOMIMAnnotations) > 0 or fn:length(HumanOMIMAnnotations) > 0}">
 							<br/>
 							<table>
 								<tbody>
@@ -109,28 +92,36 @@
 							<div style="padding-top: 6px">
 								<font style="font-size: 90%">Click on a disease name to see all genes associated with that disease.</font>
 							</div>
-						</c:if>
+							<br/>
+						</div>
+					</section>
+					
+					<c:set var="sectionstate" value="closed" />
+				</c:if>
 
-						<c:if test="${(not empty diseaseRefCount && diseaseRefCount > 0) or (marker.countOfAllelesWithHumanDiseases > 0)}">
-							<c:if test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
-								<br/>
-							</c:if>
-							<table border="none">
-								<tr>
-									<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
-										<td class="rightBorderThinGray label padded top right"><font class="label">Mutations/Alleles</font></td>
-										<td class="padded" style="padding-right: 30px;"><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a> with disease annotations</td>
-									</c:if>
-									<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
-										<td class="rightBorderThinGray label padded top right"><font class="label">References</font></td>
-										<td class="padded"><a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}?typeFilter=Literature">${diseaseRefCount}</a> with disease annotations</td>
-									</c:if>
-								</tr>
-							</table>
-						</c:if>
 
-					</div>
-				</section>
+				<c:if test="${(not empty diseaseRefCount && diseaseRefCount > 0) or (marker.countOfAllelesWithHumanDiseases > 0)}">
+					<c:if test="${marker.countOfAllelesWithHumanDiseases > 0}">
+						<section class="summarySec1 extra ${sectionstate}">
+							<ul>
+								<li>
+									<div class="label">Mutations/Alleles</div>
+									<div class="value"><a href="${configBean.FEWI_URL}allele/summary?markerId=${marker.primaryID}&hasOMIM=1">${marker.countOfAllelesWithHumanDiseases}</a> with disease annotations</div>
+								</li>
+							</ul>
+						</section>
+					</c:if>
+					<c:if test="${not empty diseaseRefCount && diseaseRefCount > 0}">
+						<section class="summarySec2 extra ${sectionstate}">
+							<ul>
+								<li>
+									<div class="label">References</div>
+									<div class="value"><a href="${configBean.FEWI_URL}reference/diseaseRelevantMarker/${marker.primaryID}">${diseaseRefCount}</a> with disease annotations</div>
+								</li>
+							</ul>
+						</section>
+					</c:if>
+				</c:if>
 
 			</div>
 		</div>

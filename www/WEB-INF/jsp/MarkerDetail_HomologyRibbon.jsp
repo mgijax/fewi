@@ -13,20 +13,20 @@
 
 				<c:if test="${fn:length(humanHomologs) > 0}">
 					<section class="summarySec1 extra open">
-							<ul>
-								<c:set var="humanHomolog" value="${humanHomologs[0]}" />
-								<li>
-									<div class="label">
-										Human Ortholog
-									</div>
-									<div class="value">
-										<c:set var="humanCoords" value="${humanHomolog.preferredCoordinates}"/>
-										<fmt:formatNumber value="${humanCoords.startCoordinate}" pattern="#0" var="humanStartCoord"/>
-										<fmt:formatNumber value="${humanCoords.endCoordinate}" pattern="#0" var="humanEndCoord"/>
-										${humanHomolog.symbol}, ${humanHomolog.name}
-									</div>
-								</li>
-							</ul>
+						<ul>
+							<c:set var="humanHomolog" value="${humanHomologs[0]}" />
+							<li>
+								<div class="label">
+									Human Ortholog
+								</div>
+								<div class="value">
+									<c:set var="humanCoords" value="${humanHomolog.preferredCoordinates}"/>
+									<fmt:formatNumber value="${humanCoords.startCoordinate}" pattern="#0" var="humanStartCoord"/>
+									<fmt:formatNumber value="${humanCoords.endCoordinate}" pattern="#0" var="humanEndCoord"/>
+									${humanHomolog.symbol}, ${humanHomolog.name}
+								</div>
+							</li>
+						</ul>
 					</section>
 
 					<section class="summarySec2 extra open">
