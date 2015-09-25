@@ -3,10 +3,17 @@
 			<div class="header <%=leftTdStyles.getNext() %>">Homology</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-				<div id="toggleHomologyRibbon" title="Show More" class="toggleImage hdExpand"></div>
-				<section class="summarySec1 extra open">
-						<ul>
-							<c:if test="${fn:length(humanHomologs) > 0}">
+				<c:set var="arrowstate" value="hdExpand" />
+				<c:if test="${fn:length(humanHomologs) == 0}">
+					<c:set var="arrowstate" value="hdCollapse" />
+				</c:if>
+
+
+				<div id="toggleHomologyRibbon" title="Show More" class="toggleImage ${arrowstate}"></div>
+
+				<c:if test="${fn:length(humanHomologs) > 0}">
+					<section class="summarySec1 extra open">
+							<ul>
 								<c:set var="humanHomolog" value="${humanHomologs[0]}" />
 								<li>
 									<div class="label">
@@ -19,76 +26,9 @@
 										${humanHomolog.symbol}, ${humanHomolog.name}
 									</div>
 								</li>
-							</c:if>
-					
-							<c:if test="${fn:length(humanHomologs) == 0}">
-								<c:forEach var="homologyClass" items="${homologyClasses}">
-									<c:if test="${not empty homologyClass.primaryID}">
-										<li>
-											<div class="label">
-												HomoloGene
-											</div>
-											<div class="value">
-												<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach>
-											</div>
-									</c:if>
-								</c:forEach>
-							</c:if>
+							</ul>
+					</section>
 
-							<c:forEach var="homologyClass" items="${homologyClasses}">
-								<c:if test="${not empty homologyClass.primaryID}">
-									<li>
-										<div class="label">HomoloGene</div>
-										<div class="value">
-											<a href="${configBean.FEWI_URL}homology/${homologyClass.primaryID}">Vertebrate Homology Class ${homologyClass.primaryID}</a><br/>
-											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach><br/>
-										</div>
-									</li>
-								</c:if>
-							</c:forEach>
-
-							<c:if test="${not empty hcopLinks}">
-								<li>
-									<div class="label">HCOP</div>
-									<div class="value">
-										<c:forEach var="organism" items="${hcopLinks}">
-											<c:if test="${fn:length(organism.value) > 0}">
-												${organism.key} homology predictions:
-												<c:forEach var="hmarker" items="${organism.value}" varStatus="hcstat">
-													<c:if test="${organism.key == 'human'}">
-														<a href="${fn:replace(urls.HCOP, '@@@@', hmarker.value.symbol)}" target="_blank">${hmarker.value.symbol}</a><c:if test="${!hcstat.last}">, </c:if>
-													</c:if>
-												</c:forEach>
-											</c:if>
-										</c:forEach>
-									</div>
-								</li>
-							</c:if>
-
-							<c:if test="${not empty marker.pirsfAnnotation}">
-								<li>
-									<div class="label">Protein&nbsp;SuperFamily</div>
-									<div class="value">
-										<a href="${configBean.FEWI_URL}vocab/pirsf/${marker.pirsfAnnotation.termID}">${marker.pirsfAnnotation.term}</a>
-									</div>
-								</li>
-							</c:if>
-
-							<c:if test="${marker.hasOneEnsemblGeneModelID}">
-								<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>
-								<c:set var="genetreeUrl" value="${fn:replace(genetreeUrl, '<model_id>', marker.ensemblGeneModelID.accID)}"/>
-								<li>
-									<div class="label">Gene&nbsp;Tree</div>
-									<div class="value">
-										<a href="${configBean.GENETREE_URL}${marker.ensemblGeneModelID.accID}" target="_blank">${marker.symbol}</a><br/>
-									</div>
-								</li>
-							</c:if>
-
-						</ul>
-				</section>
-
-				<c:if test="${fn:length(humanHomologs) > 0}">
 					<section class="summarySec2 extra open">
 						<ul>
 							<li>
@@ -111,7 +51,13 @@
 					</section>
 				</c:if>
 
-				<div class="homologyExtra extra closed">
+				<c:set var="sectionstate" value="closed" />
+				<c:if test="${fn:length(humanHomologs) == 0}">
+					<c:set var="sectionstate" value="open" />
+				</c:if>
+
+				<div class="homologyExtra extra ${sectionstate}">
+
 					<c:forEach var="humanHomolog" items="${humanHomologs}" varStatus="humanHomologStatus">
 
 						<section class="summarySec1 wide">
@@ -190,6 +136,74 @@
 						</section>
 						<hr>
 					</c:forEach>
+
+					<section class="summarySec1">
+						<ul>
+
+							<c:if test="${fn:length(humanHomologs) == 0}">
+								<c:forEach var="homologyClass" items="${homologyClasses}">
+									<c:if test="${not empty homologyClass.primaryID}">
+										<li>
+											<div class="label">HomoloGene</div>
+											<div class="value">
+												<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach>
+											</div>
+									</c:if>
+								</c:forEach>
+							</c:if>
+
+							<c:forEach var="homologyClass" items="${homologyClasses}">
+								<c:if test="${not empty homologyClass.primaryID}">
+									<li>
+										<div class="label">HomoloGene</div>
+										<div class="value">
+											<a href="${configBean.FEWI_URL}homology/${homologyClass.primaryID}">Vertebrate Homology Class ${homologyClass.primaryID}</a><br/>
+											<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach><br/>
+										</div>
+									</li>
+								</c:if>
+							</c:forEach>
+
+							<c:if test="${not empty hcopLinks}">
+								<li>
+									<div class="label">HCOP</div>
+									<div class="value">
+										<c:forEach var="organism" items="${hcopLinks}">
+											<c:if test="${fn:length(organism.value) > 0}">
+												${organism.key} homology predictions:
+												<c:forEach var="hmarker" items="${organism.value}" varStatus="hcstat">
+													<c:if test="${organism.key == 'human'}">
+														<a href="${fn:replace(urls.HCOP, '@@@@', hmarker.value.symbol)}" target="_blank">${hmarker.value.symbol}</a><c:if test="${!hcstat.last}">, </c:if>
+													</c:if>
+												</c:forEach>
+											</c:if>
+										</c:forEach>
+									</div>
+								</li>
+							</c:if>
+
+							<c:if test="${not empty marker.pirsfAnnotation}">
+								<li>
+									<div class="label">Protein&nbsp;SuperFamily</div>
+									<div class="value">
+										<a href="${configBean.FEWI_URL}vocab/pirsf/${marker.pirsfAnnotation.termID}">${marker.pirsfAnnotation.term}</a>
+									</div>
+								</li>
+							</c:if>
+
+							<c:if test="${marker.hasOneEnsemblGeneModelID}">
+								<c:set var="genetreeUrl" value="${configBean.GENETREE_URL}"/>
+								<c:set var="genetreeUrl" value="${fn:replace(genetreeUrl, '<model_id>', marker.ensemblGeneModelID.accID)}"/>
+								<li>
+									<div class="label">Gene&nbsp;Tree</div>
+									<div class="value">
+										<a href="${configBean.GENETREE_URL}${marker.ensemblGeneModelID.accID}" target="_blank">${marker.symbol}</a><br/>
+									</div>
+								</li>
+							</c:if>
+
+						</ul>
+					</section>
 
 				</div>
 			</div>
