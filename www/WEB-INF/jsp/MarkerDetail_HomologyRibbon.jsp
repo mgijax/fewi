@@ -140,18 +140,6 @@
 					<section class="summarySec1">
 						<ul>
 
-							<c:if test="${fn:length(humanHomologs) == 0}">
-								<c:forEach var="homologyClass" items="${homologyClasses}">
-									<c:if test="${not empty homologyClass.primaryID}">
-										<li>
-											<div class="label">HomoloGene</div>
-											<div class="value">
-												<c:forEach var="organismOrthology" items="${homologyClass.orthologs}" varStatus="status">${organismOrthology.markerCount} ${organismOrthology.organism}<c:if test="${!status.last}">;</c:if></c:forEach>
-											</div>
-									</c:if>
-								</c:forEach>
-							</c:if>
-
 							<c:forEach var="homologyClass" items="${homologyClasses}">
 								<c:if test="${not empty homologyClass.primaryID}">
 									<li>

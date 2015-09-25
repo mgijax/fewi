@@ -10,7 +10,7 @@
 				<ul>
 					<li>
 						<div class="label">
-							Sequence map
+							Sequence Map
 						</div>
 						<div class="value">
 							<c:if test="${not (empty marker.preferredCoordinates and empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty gbrowseUrl and empty jbrowseUrl)}">

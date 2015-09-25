@@ -17,7 +17,7 @@
 										${interaction}<c:if test="${!status.last}"><br/></c:if>
 									</c:forEach>
 									<div style="display: inline; margin-left: 5px;">
-										<a id="interactionLink" href="${configBean.FEWI_URL}interaction/explorer?markerIDs=${marker.primaryID}" class="markerNoteButton" style="display:inline;">View All</a>
+										<a id="interactionLink" href="${configBean.FEWI_URL}interaction/explorer?markerIDs=${marker.primaryID}" class="markerNoteButton" style="display:inline;">View&nbsp;All</a>
 									</div>
 								</span>
 							</div>

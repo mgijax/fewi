@@ -33,7 +33,7 @@ td.width140 { width : 140px }
 				<div id="gxdHeading">
 					Expression
 				</div>
-				<div id="gxdLogo" style="margin-top: auto; text-align: center;">
+				<div id="gxdLogo" class="extra open" style="margin-top: auto; text-align: center;">
 					<a href="${configBean.HOMEPAGES_URL}expression.shtml" style="background-color: transparent"> <img id="gxdLogoImage" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" style='width: 90%;'> </a>
 				</div>
 			</div>
