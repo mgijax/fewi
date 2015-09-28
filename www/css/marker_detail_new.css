@@ -71,13 +71,12 @@
 
 	#body .summaryRibbon .summarySec1 li:first-of-type .label {
 		font-size: 1.406em;
-		width: 9.31em;
-		margin-right: .31em;
+		width: 11.519em;
 	}
 
 	#body .summaryRibbon .summarySec1 li:first-of-type .value {
 		font-size: 1.406em;
-		margin-left: 7.406em;
+		margin-left: 0em;
 	}
 
 	#body .summarySec1.wide {
