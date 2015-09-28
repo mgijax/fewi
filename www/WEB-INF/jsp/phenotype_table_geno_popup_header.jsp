@@ -67,7 +67,7 @@
 									<c:set var="divider" value=""/>
 								</c:if>
 
-								<span class="imsrIndent"><fewi:super value="${allele.symbol}"/></span> allele
+								<span class="imsrIndent"><fewi:super value="${allele.symbol}"/></span> mutation
 								<c:if test="${allele.imsrStrainCount == 0}">
 								(0 available)${divider}
 								</c:if>
@@ -76,9 +76,9 @@
 								</c:if>
 
 								<c:if test="${not isTransgene}">
-								any mutations in gene <fewi:super value="${allele.marker.symbol}"/>
+								any <fewi:super value="${allele.marker.symbol}"/> mutation
 								<c:if test="${allele.imsrCountForMarker == 0}">
-								(0 available);
+								(0 available)
 								</c:if>
 								<c:if test="${allele.imsrCountForMarker > 0}">
 								(<a href="${imsrUrl}&states=ES+Cell&gaccid=${allele.marker.primaryID}" target="_blank">${allele.imsrCountForMarker} available</a>)
