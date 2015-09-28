@@ -66,7 +66,7 @@ public class ExcelMarkerPhenotypesSummary  extends AbstractBigExcelView
 
 		// add the header row column headings
 		String[] headerTitles = {
-			"Genotype",
+			"Allelic Composition",
 			"Genetic Background",
 			"Genotype ID",
 			"Qualifier",
