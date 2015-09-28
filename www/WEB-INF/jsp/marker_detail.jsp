@@ -76,10 +76,9 @@
 		</form>
 	
 		<div id="clusterMemberDiv" class="" style="visibility:hidden;">
-			<div class="hd"> ${marker.symbol} Cluster contains:
-				<div style="float:right; margin-right:25px"><span id="clusterBatchLink" style="cursor: pointer; text-decoration: underline; color: #0000ff">More Data</span> for these features</div>
-			</div>
+			<div class="hd">${marker.symbol} Cluster contains:</div>
 			<div class="bd" style="overflow:auto">
+				<span id="clusterBatchLink" style="cursor: pointer; color: #0000ff">More Data</span> for these features
 				<table id="clusterMemberTable">
 					<tr><td class="bold leftAlign allBorders">Member</td><td class="bold leftAlign allBorders">Feature Type</td><td class="bold leftAlign allBorders">Location</td></tr>
 					<c:forEach var="member" items="${marker.clusterMembers}">
