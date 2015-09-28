@@ -7,7 +7,7 @@
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
 				<div id="toggleGORibbon" title="Show More" class="toggleImage hdCollapse"></div>
-				<section class="summarySec1 wide extra">
+				<section class="summarySec1 extra">
 					<ul>
 						<c:if test="${marker.countOfGOTerms > 0}">
 							<li>
@@ -15,15 +15,6 @@
 									All GO Annotations
 								</div>
 								<div class="value"><a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a></div>
-							</li>
-						</c:if>
-
-						<c:if test="${not empty marker.funcBaseID}">
-							<li>
-								<div class="label">
-									External Resources
-								</div>
-								<div class="value"><a href="${fn:replace(urls.FuncBase, '@@@@', marker.funcBaseID.accID)}" target="_blank">FuncBase</a></div>
 							</li>
 						</c:if>
 
@@ -38,6 +29,19 @@
 
 					</ul>
 				</section>
+
+				<c:if test="${not empty marker.funcBaseID}">
+					<section class="summarySec2 extra">
+						<ul>
+							<li>
+								<div class="label">
+									External Resources
+								</div>
+								<div class="value"><a href="${fn:replace(urls.FuncBase, '@@@@', marker.funcBaseID.accID)}" target="_blank">FuncBase</a></div>
+							</li>
+						</ul>
+					</section>
+				</c:if>
 
 				<div class="extra open goGrids">
 					<section class="summarySec1 wide">

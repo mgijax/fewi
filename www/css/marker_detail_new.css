@@ -156,6 +156,7 @@
 	#body .gxdRibbon .item:not(:last-of-type) {
 		float: left;
 		vertical-align: top;
+		margin-right: 5px;
 	}
 
 	#body .gxdRibbon section:last-of-type {
