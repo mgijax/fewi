@@ -68,7 +68,7 @@ td.width140 { width : 140px }
 								<ul>
 									<c:if test="${marker.countOfGxdResults > 0}">
 										<li>
-											<div class="label">All Results</div>
+											<div class="label">Assay Results</div>
 											<div class="value"><a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}">${marker.countOfGxdResults}</a></div>
 										</li>
 									</c:if>
