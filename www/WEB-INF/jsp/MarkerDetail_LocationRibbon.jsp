@@ -4,11 +4,26 @@
 		</div>
 		<div class="detail <%=rightTdStyles.getNext() %>">
 
-			<div id="toggleLocationRibbon" title="Show More" class="toggleImage hdExpand"></div>
+			<c:set var="showJBrowser" value="${not empty marker.preferredCoordinates or not empty jbrowseUrl}" />
+			<c:set var="showDownloadSequence" value="${not empty marker.preferredCoordinates}" />
+			<c:set var="showGenomeBrowserLinks" value="${not (empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty ncbiMapViewerUrl)}" />
+
+			<c:set var="showGeneticMap" value="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}" />
+			
+			<c:set var="geneticMapExtra" value="${not empty linkmapUrl or not empty qtlIDs or marker.countOfMappingExperiments > 0 or not empty marker.aliases}" />
+
+			<c:set var="arrowstate" value="hdExpand" />
+			<c:set var="extrastate" value="" />
+			<c:if test="${not (showJBrowser or showDownloadSequence or showGenomeBrowserLinks or geneticMapExtra)}">
+				<c:set var="arrowstate" value="hdCollapse" />
+				<c:set var="extrastate" value="extra" />
+			</c:if>
+
+			<div id="toggleLocationRibbon" title="Show More" class="toggleImage ${arrowstate}"></div>
 
 			<section class="summarySec1">
 				<ul>
-					<li>
+					<li class="${extrastate}">
 						<div class="label">
 							Sequence Map
 						</div>
@@ -32,108 +47,103 @@
 							</c:if>
 						</div>
 					</li>
+
+					<c:if test="${showJBrowser}">
+						<li class="extra closed">
+							<div class="value">
+
+								<c:if test="${not empty marker.preferredCoordinates}">
+									From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br />
+								</c:if>
+								<p />
+
+								<c:if test="${not empty jbrowseUrl}">
+									<table>
+										<tbody>
+											<tr>
+												<td align="center">
+													<a href="${jbrowseUrl}">Mouse Genome Browser</a><br />
+													<c:if test="${not empty gbrowseThumbnailUrl}">
+														<a href="${jbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}" style="padding-top: 4px"/></a> <br/>
+													</c:if>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</c:if>
+
+							</div>
+						</li>
+					</c:if>
+
+					<c:if test="${showDownloadSequence}">
+						<li class="extra closed">
+							<div class="label">
+								Download<br/>Sequence
+							</div>
+							<div class="value">
+								<form name="markerCoordForm" method="GET" action="${configBean.SEQFETCH_URL}">
+									<c:set var="length" value="${marker.preferredCoordinates.endCoordinate - marker.preferredCoordinates.startCoordinate + 1}"/>
+									<c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${startCoord}!${endCoord}!!"/>
+
+									<!-- handle end < start, which is very atypical -->
+									<c:if test="${length < 0}">
+										<c:set var="length" value="${marker.preferredCoordinates.startCoordinate - marker.preferredCoordinates.endCoordinate + 1}"/>
+										<c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${endCoord}!${startCoord}!!"/>
+									</c:if>
+
+									<fmt:formatNumber value="${length}" pattern="#0" var="lengthStr"/>
+
+									<input type="hidden" name="seq1" value="${seqfetchParms}">
+									<input type="button" value="Get FASTA" onClick="formatFastaArgs()">
+									&nbsp;&nbsp;${lengthStr} bp
+									&nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb&nbsp;flank
+								</form>
+							</div>
+							<br />
+						</li>
+					</c:if>
+
+					<c:if test="${showGenomeBrowserLinks}">
+						<c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
+						<c:set var="ensemblID" value="${marker.ensemblGeneModelID.accID}"/>
+						<c:set var="ncbiID" value="${marker.ncbiGeneModelID.accID}"/>
+						<c:set var="foundOne" value="0"/>
+						<li class="extra closed">
+							<div class="label">
+								Genome<br/>Browser Links
+							</div>
+							<div class="value">
+								<c:if test="${not empty vegaGenomeBrowserUrl}">
+									<a href="${vegaGenomeBrowserUrl}" target="_new">VEGA</a>
+									<c:set var="foundOne" value="1"/>
+								</c:if>
+								<c:if test="${not empty ensemblGenomeBrowserUrl}">
+									<c:if test="${foundOne > 0}"> | </c:if>
+									<a href="${ensemblGenomeBrowserUrl}" target="_new">Ensembl</a>
+									<c:set var="foundOne" value="1"/>
+								</c:if>
+								<c:if test="${not empty ucscGenomeBrowserUrl}">
+									<c:if test="${foundOne > 0}"> | </c:if>
+									<a href="${ucscGenomeBrowserUrl}" target="_new">UCSC</a>
+									<c:set var="foundOne" value="1"/>
+								</c:if>
+								<c:if test="${not empty ncbiMapViewerUrl}">
+									<c:if test="${foundOne > 0}"> | </c:if>
+									<a href="${ncbiMapViewerUrl}" target="_new">NCBI</a>
+								</c:if>
+							</div>
+						</li>
+					</c:if>
+
+
 				</ul>
-
-				<div class="extra closed">
-
-					<section class="summarySec1">
-						<ul>
-							<li>
-								<div class="value">
-
-									<c:if test="${not empty marker.preferredCoordinates}">
-										From ${marker.preferredCoordinates.provider} annotation of ${marker.preferredCoordinates.buildIdentifier}<br />
-									</c:if>
-									<p />
-
-									<c:if test="${not empty jbrowseUrl}">
-										<table>
-											<tbody>
-												<tr>
-													<td align="center">
-														<a href="${jbrowseUrl}">Mouse Genome Browser</a><br />
-														<c:if test="${not empty gbrowseThumbnailUrl}">
-															<a href="${jbrowseUrl}"><img border="0" src="${gbrowseThumbnailUrl}" style="padding-top: 4px"/></a> <br/>
-														</c:if>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</c:if>
-
-								</div>
-							</li>
-
-							<c:if test="${not empty marker.preferredCoordinates}">
-								<li>
-									<div class="label">
-										Download<br/>Sequence
-									</div>
-									<div class="value">
-										<form name="markerCoordForm" method="GET" action="${configBean.SEQFETCH_URL}">
-											<c:set var="length" value="${marker.preferredCoordinates.endCoordinate - marker.preferredCoordinates.startCoordinate + 1}"/>
-											<c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${startCoord}!${endCoord}!!"/>
-
-											<!-- handle end < start, which is very atypical -->
-											<c:if test="${length < 0}">
-												<c:set var="length" value="${marker.preferredCoordinates.startCoordinate - marker.preferredCoordinates.endCoordinate + 1}"/>
-												<c:set var="seqfetchParms" value="mousegenome!!${marker.preferredCoordinates.chromosome}!${endCoord}!${startCoord}!!"/>
-											</c:if>
-
-											<fmt:formatNumber value="${length}" pattern="#0" var="lengthStr"/>
-
-											<input type="hidden" name="seq1" value="${seqfetchParms}">
-											<input type="button" value="Get FASTA" onClick="formatFastaArgs()">
-											&nbsp;&nbsp;${lengthStr} bp
-											&nbsp;&nbsp;&#177; <input type="text" size="3" name="flank1" value="0">&nbsp;kb&nbsp;flank
-										</form>
-									</div>
-									<br />
-								</li>
-							</c:if>
-
-							<c:if test="${not (empty vegaGenomeBrowserUrl and empty ensemblGenomeBrowserUrl and empty ucscGenomeBrowserUrl and empty ncbiMapViewerUrl)}">
-								<c:set var="vegaID" value="${marker.vegaGeneModelID.accID}"/>
-								<c:set var="ensemblID" value="${marker.ensemblGeneModelID.accID}"/>
-								<c:set var="ncbiID" value="${marker.ncbiGeneModelID.accID}"/>
-								<c:set var="foundOne" value="0"/>
-								<li>
-									<div class="label">
-										Genome<br/>Browser Links
-									</div>
-									<div class="value">
-										<c:if test="${not empty vegaGenomeBrowserUrl}">
-											<a href="${vegaGenomeBrowserUrl}" target="_new">VEGA</a>
-											<c:set var="foundOne" value="1"/>
-										</c:if>
-										<c:if test="${not empty ensemblGenomeBrowserUrl}">
-											<c:if test="${foundOne > 0}"> | </c:if>
-											<a href="${ensemblGenomeBrowserUrl}" target="_new">Ensembl</a>
-											<c:set var="foundOne" value="1"/>
-										</c:if>
-										<c:if test="${not empty ucscGenomeBrowserUrl}">
-											<c:if test="${foundOne > 0}"> | </c:if>
-											<a href="${ucscGenomeBrowserUrl}" target="_new">UCSC</a>
-											<c:set var="foundOne" value="1"/>
-										</c:if>
-										<c:if test="${not empty ncbiMapViewerUrl}">
-											<c:if test="${foundOne > 0}"> | </c:if>
-											<a href="${ncbiMapViewerUrl}" target="_new">NCBI</a>
-										</c:if>
-									</div>
-								</li>
-							</c:if>
-
-						</ul>
-					</section>
-
-				</div>
 			</section>
 
-			<c:if test="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0) or (not empty qtlIDs) or (not empty marker.aliases)}">
+			<c:if test="${showGeneticMap}">
 				<section class="summarySec2">
 					<ul>
-						<li>
+						<li class="${extrastate}">
 							<div class="label">Genetic Map</div>
 							<div class="value">
 								<c:if test="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0)}">
@@ -169,61 +179,56 @@
 								</c:if>
 							</div>
 						</li>
-					</ul>
 					
-					<div class="extra closed">
+						<c:if test="${not empty linkmapUrl}">
+							<li class="extra closed">
+								<div class="value">
+									<a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
+									<c:if test="${not empty miniMap}">
+										<br/><a href="${linkmapUrl}" style="background-color: transparent"><img src="${miniMap}" border="0" style="padding-top: 4px"></a>
+									</c:if>
+								</div>
+							</li>
+						</c:if>
 
-						<section class="summarySec1">
-							<ul>
-							<c:if test="${not empty linkmapUrl}">
-								<li>
-									<div class="value">
-										<a href="${linkmapUrl}">Detailed Genetic Map &#177; 1 cM</a>
-										<c:if test="${not empty miniMap}">
-											<br/><a href="${linkmapUrl}" style="background-color: transparent"><img src="${miniMap}" border="0" style="padding-top: 4px"></a>
-										</c:if>
-									</div>
-								</li>
-							</c:if>
+						<c:if test="${not empty qtlIDs}">
+							<li class="extra closed">
+								<div class="label">QTL Archive</div>
+								<div class="value">
+									<c:forEach var="qtlID" items="${qtlIDs}" varStatus="status">
+										${qtlID} download<c:if test="${!status.last}">, </c:if>
+									</c:forEach>
+								</div>
+							</li>
+						</c:if>
 
-							<c:if test="${not empty qtlIDs}">
-								<li>
-									<div class="label">QTL Archive</div>
-									<div class="value">
-										<c:forEach var="qtlID" items="${qtlIDs}" varStatus="status">
-											${qtlID} download<c:if test="${!status.last}">, </c:if>
-										</c:forEach>
-									</div>
-								</li>
-							</c:if>
-
-							<c:if test="${marker.countOfMappingExperiments > 0}">
-								<li>
-									<div class="label">Mapping Data</div>
-									<div class="value">
-										<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a> experiment<c:if test="${marker.countOfMappingExperiments > 1}">s</c:if>
-									</div>
-								</li>
-							</c:if>
+						<c:if test="${marker.countOfMappingExperiments > 0}">
+							<li class="extra closed">
+								<div class="label">Mapping Data</div>
+								<div class="value">
+									<a href="${configBean.WI_URL}searches/mapdata_report_by_marker.cgi?${marker.markerKey}">${marker.countOfMappingExperiments}</a> experiment<c:if test="${marker.countOfMappingExperiments > 1}">s</c:if>
+								</div>
+							</li>
+						</c:if>
 
 
-							<c:if test="${not empty marker.aliases}">
-								<li>
-									<div class="label">
-										<c:if test="${marker.markerType == 'Gene'}">Sequence Tag<c:if test="${fn:length(marker.aliases) > 1}">s</c:if></c:if>
-										<c:if test="${marker.markerType != 'Gene'}">Sequence Tag for</c:if>
-									</div>
-									<div class="value">
-										<c:forEach var="alias" items="${marker.aliases}" varStatus="status">
-											<a href="${configBean.FEWI_URL}marker/${alias.aliasID}">${alias.aliasSymbol}</a><c:if test="${!status.last}">, </c:if>
-										</c:forEach>
-									</div>
-								</li>
-							</c:if>
-							</ul>
-						</section>
-					</div>
+						<c:if test="${not empty marker.aliases}">
+							<li class="extra closed">
+								<div class="label">
+									<c:if test="${marker.markerType == 'Gene'}">Sequence Tag<c:if test="${fn:length(marker.aliases) > 1}">s</c:if></c:if>
+									<c:if test="${marker.markerType != 'Gene'}">Sequence Tag for</c:if>
+								</div>
+								<div class="value">
+									<c:forEach var="alias" items="${marker.aliases}" varStatus="status">
+										<a href="${configBean.FEWI_URL}marker/${alias.aliasID}">${alias.aliasSymbol}</a><c:if test="${!status.last}">, </c:if>
+									</c:forEach>
+								</div>
+							</li>
+						</c:if>
+
+					</ul>
 				</section>
 			</c:if>
+
 		</div>
 	</div>
