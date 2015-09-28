@@ -91,7 +91,7 @@ initGenoLegendTable = function() {
 
   var genoLegendColDefs = [
     {key:"genotypeCol",  label:""},
-    {key:"allCompCol", label:"Genotype"},
+    {key:"allCompCol", label:"Allelic Composition"},
     {key:"genBackCol", label:"Genetic Background"},
     {key:"cellLineCol", label:"Cell Line(s)"}
   ];

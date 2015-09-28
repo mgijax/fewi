@@ -22,7 +22,7 @@
 
 <%@ include file="phenotype_table_geno_popup_imports.jsp" %>
 
-<fewi:pagetitle title="Phenotype Detail" userdoc="ALLELE_detail_pheno_summary_help.shtml#see_annot" />
+<fewi:pagetitle title="Phenotypes Associated with This Genotype" userdoc="ALLELE_detail_pheno_summary_help.shtml#see_annot" />
 
 <%@ include file="phenotype_table_geno_popup_header.jsp" %>
 

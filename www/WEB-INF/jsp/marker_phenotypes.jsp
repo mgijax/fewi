@@ -80,7 +80,7 @@ td.spaced { line-height: 1.5em; }
 <div id="phenotypeTableDiv">
 <table id="phenotypeTable" width="100%">
   <tr>
-  <td class="header">Genotype<br/>Genetic Background</td>
+  <td class="header">Allelic Composition<br/>Genetic Background</td>
   <td class="header">Annotated Term</td>
   <td class="header">Reference</td>
   </tr>

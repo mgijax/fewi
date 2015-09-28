@@ -40,14 +40,14 @@
     <span class="label">Summary</span>
   </td> 
   <td class="detailData2">
-    ${fn:length(genotypeAssociations)} model<c:if test="${fn:length(genotypeAssociations) > 1}">s</c:if><br/>
+    ${fn:length(genotypeAssociations)} genotype<c:if test="${fn:length(genotypeAssociations) > 1}">s</c:if><br/>
     <div style="max-height: 125px; overflow-y: scroll; overflow-x: hidden; margin-top: 5px; margin-left: 15px; max-width: 95%" id="modelSummaryDiv">
     <table id="modelSummaryTable" style="width: 100%">
       <tr>
 	<td class="allBorders label left white">Jump to</td>
-	<td class="allBorders label left white">Genotype</td>
+	<td class="allBorders label left white">Allelic Composition</td>
 	<td class="allBorders label left white">Genetic Background</td>
-	<td class="allBorders label left white">Model ID</td>
+	<td class="allBorders label left white">Genotype ID</td>
       </tr>
       <c:forEach var="gtAssociation" items="${allele.phenoTableGenotypeAssociations}">
         <c:set var="genotype" value="${gtAssociation.genotype}" scope="request"/>
