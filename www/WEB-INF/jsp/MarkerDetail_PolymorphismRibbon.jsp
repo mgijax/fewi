@@ -7,7 +7,7 @@
 
 				<div id="togglePolymorphismRibbon" title="Show More" class="toggleImage hdCollapse"></div>
 				<section class="summarySec1 extra">
-					<ul>
+					<ul style="display: table-cell;">
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
 							<c:if test="${fn:startsWith(item.countType, 'SNP')}">
 								<li>
@@ -15,7 +15,8 @@
 									<c:if test="${fn:contains(item.countType, 'multiple')}">
 										<c:set var="polyUrl" value="${polyUrl}&includeMultiples=1"/>
 									</c:if>
-									<div class="label" style="white-space: normal;">${item.countType}
+									<div class="label" style="white-space: normal;">
+										${item.countType}
 										<c:if test="${not empty configBean.SNP_BUILD}"><br/><span style="font-size: smaller; font-weight: normal;">from ${configBean.SNP_BUILD}</span></c:if>
 									</div>
 									<div class="value"><a href="${polyUrl}">${item.count}</a></div>
