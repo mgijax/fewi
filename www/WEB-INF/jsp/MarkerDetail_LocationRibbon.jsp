@@ -149,7 +149,9 @@
 								<c:if test="${(not empty marker.preferredCentimorgans) or (not empty marker.preferredCytoband) or (marker.countOfMappingExperiments > 0)}">
 									<c:if test="${not empty marker.preferredCentimorgans}">
 										<c:if test="${marker.preferredCentimorgans.chromosome != 'UN'}">
-											<c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
+											<c:if test="${marker.preferredCentimorgans.cmOffset != -1.0}">
+												<c:set var="linkmapUrl" value="${configBean.WI_URL}searches/linkmap.cgi?chromosome=${marker.preferredCentimorgans.chromosome}&midpoint=${marker.preferredCentimorgans.cmOffset}&cmrange=1.0&dsegments=1&syntenics=0"/>
+											</c:if>
 											Chromosome ${marker.preferredCentimorgans.chromosome},
 											<c:if test="${marker.preferredCentimorgans.cmOffset > 0.0}">
 												<fmt:formatNumber value="${marker.preferredCentimorgans.cmOffset}" minFractionDigits="2" maxFractionDigits="2"/> ${marker.preferredCentimorgans.mapUnits}<c:if test="${not empty marker.preferredCytoband}">, cytoband ${marker.preferredCytoband.cytogeneticOffset}</c:if>

@@ -15,7 +15,7 @@
 									<c:if test="${fn:contains(item.countType, 'multiple')}">
 										<c:set var="polyUrl" value="${polyUrl}&includeMultiples=1"/>
 									</c:if>
-									<div class="label">${item.countType}
+									<div class="label" style="white-space: normal;">${item.countType}
 										<c:if test="${not empty configBean.SNP_BUILD}"><br/><span style="font-size: smaller; font-weight: normal;">from ${configBean.SNP_BUILD}</span></c:if>
 									</div>
 									<div class="value"><a href="${polyUrl}">${item.count}</a></div>
@@ -34,7 +34,7 @@
 								<li>
 									<c:set var="polyUrl" value="${configBean.WI_URL}searches/polymorphism_report.cgi?_Marker_key=${marker.markerKey}"/>
 									<c:set var="polyUrl" value="${polyUrl}&search=${item.countType}"/>
-									<div class="label">${item.countType}</div>
+									<div class="label" style="white-space: normal;">${item.countType}</div>
 									<div class="value"><a href="${polyUrl}">${item.count}</a></div>
 								</li>
 							</c:if>

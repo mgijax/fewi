@@ -58,12 +58,11 @@
 	}
 
 	#body  .container li {
-		margin-bottom: .625em;
+		margin-bottom: .825em;
 	}
 
 	#body .summaryRibbon .summarySec1 li:first-of-type {
 		margin-top: -.219em;
-		margin-bottom: .625em;
 	}
 
 	#body .summaryRibbon .summarySec2 li:first-of-type {
