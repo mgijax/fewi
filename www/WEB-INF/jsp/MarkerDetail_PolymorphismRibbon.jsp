@@ -15,11 +15,10 @@
 									<c:if test="${fn:contains(item.countType, 'multiple')}">
 										<c:set var="polyUrl" value="${polyUrl}&includeMultiples=1"/>
 									</c:if>
-									<div class="label" style="white-space: normal;">
-										${item.countType}
-										<c:if test="${not empty configBean.SNP_BUILD}"><br/><span style="font-size: smaller; font-weight: normal;">from ${configBean.SNP_BUILD}</span></c:if>
+									<div class="label" style="white-space: normal;">${item.countType}</div>
+									<div class="value"><a href="${polyUrl}">${item.count}</a>
+										<c:if test="${not empty configBean.SNP_BUILD}"><span style="font-size: smaller; font-weight: normal;">from ${configBean.SNP_BUILD}</span></c:if>
 									</div>
-									<div class="value"><a href="${polyUrl}">${item.count}</a></div>
 								</li>
 							</c:if>
 

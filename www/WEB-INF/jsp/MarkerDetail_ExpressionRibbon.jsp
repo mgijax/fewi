@@ -99,7 +99,7 @@ td.width140 { width : 140px }
 
 						<c:if test="${(marker.countOfGxdImages > 0) && not empty gxdImage}">
 							<div class="item">
-								<div id="gxdImageDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 150px;">
+								<div id="gxdImageDiv" style="display:inline-block; vertical-align: top; text-align: center; width: 130px;">
 									<a href="${configBean.FEWI_URL}gxd/marker/${marker.primaryID}?tab=imagestab" title="View ${marker.countOfGxdImages} expression image<c:if test='${marker.countOfGxdImages > 1}'>s</c:if>">
 										<span style="padding-bottom: 3px">Images<br/></span>
 										${gxdImage}

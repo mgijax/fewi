@@ -7,28 +7,32 @@
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
 				<div id="toggleGORibbon" title="Show More" class="toggleImage hdCollapse"></div>
-				<section class="summarySec1 extra">
-					<ul>
-						<c:if test="${marker.countOfGOTerms > 0}">
-							<li>
-								<div class="label">
-									All GO Annotations
-								</div>
-								<div class="value"><a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a></div>
-							</li>
-						</c:if>
 
-						<c:if test="${(not empty marker.countOfGOReferences) and (marker.countOfGOReferences > 0)}">
-							<li style="padding-right: 4em;">
-								<div class="label">
-									GO References
-								</div>
-								<div class="value"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
-							</li>
-						</c:if>
+				<c:if test="${marker.countOfGOTerms > 0 or ((not empty marker.countOfGOReferences) and (marker.countOfGOReferences > 0))}">
 
-					</ul>
-				</section>
+					<section class="summarySec1 extra">
+						<ul>
+							<c:if test="${marker.countOfGOTerms > 0}">
+								<li>
+									<div class="label">
+										All GO Annotations
+									</div>
+									<div class="value"><a href="${configBean.FEWI_URL}go/marker/${marker.primaryID}">${marker.countOfGOTerms}</a></div>
+								</li>
+							</c:if>
+
+							<c:if test="${(not empty marker.countOfGOReferences) and (marker.countOfGOReferences > 0)}">
+								<li>
+									<div class="label">
+										GO References
+									</div>
+									<div class="value"><a href="${configBean.FEWI_URL}reference/go/marker/${marker.primaryID}?typeFilter=Literature">${marker.countOfGOReferences}</a></div>
+								</li>
+							</c:if>
+
+						</ul>
+					</section>
+				</c:if>
 
 				<c:if test="${not empty marker.funcBaseID}">
 					<section class="summarySec2 extra">
