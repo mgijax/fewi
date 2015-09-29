@@ -5,7 +5,7 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-			<div id="toggleAlleleRibbon" title="Show More" class="toggleImage hdCollapse"></div>
+			<div title="Show Less" class="toggleImage hdCollapse">less</div>
 
 			<c:if test="${marker.countOfAllelesMP > 0 or marker.countOfOtherPhenotypeAnnotations > 0 or marker.countOfPhenotypeImages > 0 or marker.countOfPhenotypeReferences > 0 or not empty marker.slimgridCellsMP or not empty marker.markerClip}">
 				<section class="summarySec1 extra open">

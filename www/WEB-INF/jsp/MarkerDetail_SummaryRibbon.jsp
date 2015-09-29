@@ -94,7 +94,6 @@
 				</ul>
 			</section>
 
-			<!--<font color='#0000A0'><span onClick="showHideById('whatDoesThisGeneDoDiv');" onMouseOver="this.style.color = '#cc0000'; this.style.backgroundColor='#c7e3fe';" onMouseOut="this.style.color ='#0000A0'; this.style.backgroundColor='#FFFFFF';">Show/Hide</span></font> -->
 			<div id="whatDoesThisGeneDoDiv" style="display:none;"></div>
 		</div>
 	</div>

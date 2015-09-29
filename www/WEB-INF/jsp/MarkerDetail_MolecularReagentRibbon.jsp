@@ -4,12 +4,13 @@
 				Molecular<br/>Reagents
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
-				<div id="toggleMolecularReagentRibbon" title="Show More" class="toggleImage hdCollapse"></div>
+
+				<div title="Show Less" class="toggleImage hdCollapse">less</div>
 
 				<section class="summarySec1 extra open">
 					<ul>
 						<li>
-							<div style="padding-left: 35px;">
+							<div style="padding-left: 90px;">
 								<c:set var="reagentUrl" value="${configBean.WI_URL}searches/probe_report.cgi?_Marker_key=${marker.markerKey}"/>
 								<c:forEach var="item" items="${marker.molecularReagentCountsByType}">
 									<c:set var="reagentType" value="&DNAtypes=${item.countType}"/>

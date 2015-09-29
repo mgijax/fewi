@@ -8,7 +8,8 @@
 			  -- PDB, EC, InterPro Domains
 			  -->
 
-			<div id="toggleProteinRibbon" class="toggleImage hdCollapse" title="Show More"></div>
+			<div class="toggleImage hdCollapse" title="Show Less">less</div>
+
 			<section class="summarySec1 extra wide">
 				<ul>
 					<c:if test='${marker.countOfUniProtSequences > 0}'>

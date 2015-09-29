@@ -44,17 +44,6 @@
 			document.markerCoordForm.submit();
 		}
 	
-		window.toggleHomologyDetails = function() {
-			toggle ("downArrowHomologs");
-			toggle ("rightArrowHomologs");
-			toggle ("humanHomologDetails");
-			if (mgihomeUrl != null) {
-				hitUrl (mgihomeUrl + "other/monitor.html", "toggleHomologyDetails=1");
-			}
-		}
-	
-		/* cluster membership */
-	
 		function initializeClusterMembersPopup () {
 			var elem = document.getElementById("clusterMemberTable");
 
@@ -130,56 +119,6 @@
 		formatGxdSection();
 		$(window).resize(formatGxdSection);
 
-		window.toggleHomologTags = function() {
-			toggle("rightArrowHomologTag");
-			toggle("downArrowHomologTag");
-			toggle("moreHomologs");
-		}
-
-		window.alignLocationRibbonDivs = function(name) {
-			if (name == 'LocationRibbon') {
-				var coordTopDiv = document.getElementById('coordsTopDiv');
-				var geneticTopDiv = document.getElementById('geneticTopDiv');
-				var minimapDiv = document.getElementById('minimapDiv');
-
-				if ((coordTopDiv != null) && (geneticTopDiv != null) && (minimapDiv != null)) {
-					geneticTopDiv.style.height =
-						coordTopDiv.getBoundingClientRect().height + 'px';
-				}
-			}
-		};
-
-		window.toggleRibbon = function(name) {
-			var span = "toggle" + name;
-			var opened = "opened" + name;
-			var closed = "closed" + name;
-
-			if(YAHOO.util.Dom.hasClass(span, 'hdCollapse')) {
-				YAHOO.util.Dom.removeClass(span, 'hdCollapse');
-				YAHOO.util.Dom.addClass(span, 'hdExpand');
-				YAHOO.util.Dom.get(span).title = "Show More";
-				pageTracker._trackEvent("MarkerDetailPageEvent", "close", name);
-			} else if(YAHOO.util.Dom.hasClass(span, 'hdExpand')) {
-				YAHOO.util.Dom.removeClass(span, 'hdExpand');
-				YAHOO.util.Dom.addClass(span, 'hdCollapse');
-				YAHOO.util.Dom.get(span).title = "Show Less";
-				pageTracker._trackEvent("MarkerDetailPageEvent", "open", name);
-			}
-
-			window.showHideById(opened);
-			window.showHideById(closed);
-
-			window.alignLocationRibbonDivs(name);
-		}
-
-		window.showHideById = function showHideById(id) {
-			if(document.getElementById(id).style.display=='none') {
-				document.getElementById(id).style.display = '';
-			} else {
-				document.getElementById(id).style.display = 'none';
-			}
-		}
-
 		$(".toggleImage").click(function(event) {
 			var parent = $(this).parents(".row");
 			// find the parent ribbon div, then toggle any extra content
@@ -187,6 +126,18 @@
 			// toggle the image class
 			parent.find(".toggleImage").toggleClass("hdExpand");
 			parent.find(".toggleImage").toggleClass("hdCollapse");
+
+			//$(this).title = "Show Less";
+			//$(this).textContent = "Show Less";
+
+			if($(this).hasClass("hdCollapse")) {
+				$(this).text("less");
+				$(this).attr('title', 'Show Less');
+			}
+			if($(this).hasClass("hdExpand")) {
+				$(this).text("more");
+				$(this).attr('title', 'Show More');
+			}
 		});
 
 	});

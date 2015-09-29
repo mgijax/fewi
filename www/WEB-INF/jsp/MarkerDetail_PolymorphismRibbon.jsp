@@ -5,7 +5,8 @@
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
-				<div id="togglePolymorphismRibbon" title="Show More" class="toggleImage hdCollapse"></div>
+				<div title="Show Less" class="toggleImage hdCollapse">less</div>
+
 				<section class="summarySec1 extra">
 					<ul style="display: table-cell;">
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">

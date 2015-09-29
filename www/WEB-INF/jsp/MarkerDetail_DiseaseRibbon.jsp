@@ -6,11 +6,15 @@
 			<div class="detail <%=rightTdStyles.getNext() %>">
 
 				<c:set var="arrowstate" value="hdCollapse" />
+				<c:set var="arrowtext" value="more" />
+				<c:set var="titletext" value="Show More" />
 				<c:if test="${(fn:length(MouseOMIMAnnotations) > 0) or (fn:length(HumanOMIMAnnotations) > 0)}">
 					<c:set var="arrowstate" value="hdExpand" />
+					<c:set var="arrowtext" value="less" />
+					<c:set var="titletext" value="Show Less" />
 				</c:if>
 
-				<div id="toggleDiseaseRibbon" title="Show More" class="toggleImage ${arrowstate}"></div>
+				<div title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
 
 				<c:set var="sectionstate" value="open" />
 

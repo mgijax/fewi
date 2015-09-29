@@ -10,7 +10,7 @@
 			Gene Models
 		</div>
 		<div id="sequence" class="detail <%=rightTdStyles.getNext() %>">
-			<div id="toggleSequenceRibbon" class="toggleImage hdCollapse" title="Show More"></div>
+			<div class="toggleImage hdCollapse" title="Show Less">less</div>
 			<c:if test="${(marker.countOfSequences > 0) or (not empty marker.ccdsIDs) or (not empty marker.uniGeneIDs)}">
 				<section class="summarySec1 extra">
 					<ul>

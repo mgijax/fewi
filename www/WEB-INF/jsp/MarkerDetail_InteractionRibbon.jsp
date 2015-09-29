@@ -6,12 +6,13 @@
 				</span>
 			</div>
 			<div class="detail <%=rightTdStyles.getNext() %>">
-				<div id="toggleInteractionRibbon" title="Show More" class="toggleImage hdCollapse"></div>
+
+				<div title="Show Less" class="toggleImage hdCollapse">less</div>
 
 				<section class="summarySec1 wide extra open">
 					<ul>
 						<li>
-							<div style="padding-left: 35px;">
+							<div style="padding-left: 90px;">
 								<span style="display: inline; line-height: 160%">
 									<c:forEach var="interaction" items="${interactions}" varStatus="status">
 										${interaction}<c:if test="${!status.last}"><br/></c:if>

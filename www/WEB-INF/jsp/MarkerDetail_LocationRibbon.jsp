@@ -14,12 +14,16 @@
 
 			<c:set var="arrowstate" value="hdExpand" />
 			<c:set var="extrastate" value="" />
+			<c:set var="arrowtext" value="more" />
+			<c:set var="titletext" value="Show More" />
 			<c:if test="${not (showJBrowser or showDownloadSequence or showGenomeBrowserLinks or geneticMapExtra)}">
 				<c:set var="arrowstate" value="hdCollapse" />
 				<c:set var="extrastate" value="extra" />
+				<c:set var="arrowtext" value="less" />
+				<c:set var="titletext" value="Show Less" />
 			</c:if>
 
-			<div id="toggleLocationRibbon" title="Show More" class="toggleImage ${arrowstate}"></div>
+			<div title="${titletext}" class="toggleImage ${arrowstate}">${arrowtext}</div>
 
 			<section class="summarySec1">
 				<ul>
