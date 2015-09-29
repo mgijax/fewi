@@ -98,7 +98,7 @@
 							</tr>
 						</table>
 					</td>
-					<td>
+					<td class="top">
 						<%@ include file="phenotype_table_geno_popup_source.jsp" %>
 					</td>
 				</tr>
