@@ -3,7 +3,14 @@
 .imsrIndent { padding-left: 5px }
 </style>
 <a name="${genotype.primaryID}"></a>
-<c:set var="imsrAlleles" value="${genotype.imsrAlleles}"/>
+<c:set var="imsrAlleles" value="${genotype.mutantAlleles}"/>
+<c:set var="anyImsrData" value="false"/>
+<c:forEach var="allele" items="${imsrAlleles}">
+	<c:if test="${(allele.imsrStrainCount > 0) or (allele.imsrCountForMarker > 0)}">
+		<c:set var="anyImsrData" value="true"/>
+	</c:if>
+</c:forEach>
+
 <div class="container detailStructureTable">
 	<div class="row" >
 		<div class="header <%=leftTdStyles.getNext() %>">
@@ -51,11 +58,11 @@
 								<td class="rightBorderThinGray label padded top right"><font class="label">Find Mice</font></td>
 								<td class="padded" style="padding-right: 30px; line-height: 150%">
 								Using the International Mouse Strain Resource (<a href="http://www.findmice.org/" target="_blank">IMSR</a>)<br/>
-							<c:if test="${empty imsrAlleles}">
+							<c:if test="${not anyImsrData}">
 							No mouse lines available in IMSR.<br/>
 							See publication links below for author information.
 							</c:if>
-							<c:if test="${not empty imsrAlleles}">
+							<c:if test="${anyImsrData}">
 							Mouse lines carrying:<br/>
 
 							<c:set var="imsrUrl" value="${configBean.IMSRURL}summary?states=embryo&states=live&states=ovaries&states=sperm"/>

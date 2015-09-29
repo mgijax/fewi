@@ -12,8 +12,12 @@
 
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<fewi:simpleseo
-	title="Phenotype Detail MGI Mouse (${genotype.primaryID})"
+<c:set var="markerSymbols" value=""/>
+<c:forEach var="marker" items="${genotype.mutatedMarkers}">
+    <c:set var="markerSymbols" value="${markerSymbols} ${marker.symbol}"/>
+</c:forEach>
+
+<fewi:simpleseo title="Phenotypes for${markerSymbols} ${genotype.primaryID} MGI Mouse"
 	description="${seodescription}"
 	keywords="${seokeywords}"
 />
