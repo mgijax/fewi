@@ -50,7 +50,7 @@ td.width140 { width : 140px }
 								<div id="sgAnatomyHelp" style="visibility: hidden; height:0px;">
 									<div class="hd">Expression Overview</div>
 									<div class="bd" style="text-align: left">
-										GXD's primary emphasis is on endogenous gene expression during development.<br/>Click on grid cells to view annotations.<br/><ul><li>Blue cells = expressed in wild-type.</li><li>Gray triangles = other expression annotations only<br/>(e.g. absence of expression or data from mutants).</li></ul>
+										GXD's primary emphasis is on endogenous gene expression during development. Click on grid cells to view annotations.<br/><ul><li><strong>Blue cells</strong> = expressed in wild-type.<br/><strong>Gray triangles</strong> = other expression annotations only<br/>(e.g. absence of expression or data from mutants).</li></ul>
 									</div>
 								</div>
 								<c:set var="sgID" value="anatomySlimgrid"/>
