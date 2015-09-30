@@ -7,7 +7,7 @@
 
 				<div title="Show Less" class="toggleImage hdCollapse">less</div>
 
-				<section class="summarySec1 extra open">
+				<section class="summarySec1 wide extra open">
 					<ul>
 						<li>
 							<div style="padding-left: 90px;">

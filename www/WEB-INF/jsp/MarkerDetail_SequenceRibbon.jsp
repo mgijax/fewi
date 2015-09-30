@@ -74,10 +74,6 @@
 				</section>
 </c:if>
 
-<style>
-tr.underlined { border-bottom: solid thin black }
-</style>
-
 <c:if test="${(not empty marker.representativeGenomicSequence) or (not empty marker.representativeTranscriptSequence) or (not empty marker.representativePolypeptideSequence)}">
 				<section class="summarySec1 extra wide" style="margin-left: 91px;">
 					<form name="sequenceForm" method="GET">
@@ -86,7 +82,9 @@ tr.underlined { border-bottom: solid thin black }
 							<c:if test="${not empty marker.representativeGenomicSequence}">
 								<c:set var="seq" value="${marker.representativeGenomicSequence}" scope="request"/>
 								<% Sequence seqDna = (Sequence) request.getAttribute("seq"); %>
-								<tr class="underlined"><td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td><td class="padded">genomic</td>
+								<tr>
+								<td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqDna) %>"></td>
+								<td class="td_disease_tbl padded">genomic</td>
 								<td class="td_disease_tbl padded">${marker.representativeGenomicSequence.primaryID}</td>
 								<td class="td_disease_tbl padded">${fn:replace(fn:replace(genomicLink, "VEGA", "VEGA Gene Model"), "href", "target='blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeGenomicSequence.primaryID}">MGI Sequence Detail</a></td>
 								<td class="td_disease_tbl padded">${marker.representativeGenomicSequence.length}</td>
@@ -96,20 +94,26 @@ tr.underlined { border-bottom: solid thin black }
 							<c:if test="${not empty marker.representativeTranscriptSequence}">
 								<c:set var="seq" value="${marker.representativeTranscriptSequence}" scope="request"/>
 								<% Sequence seqRna = (Sequence) request.getAttribute("seq"); %>
-								<tr class="underlined"><td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td><td class="padded">transcript</td>
+								<tr>
+								<td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqRna) %>"></td>
+								<td class="td_disease_tbl padded">transcript</td>
 								<td class="td_disease_tbl padded">${marker.representativeTranscriptSequence.primaryID}</td>
 								<td class="td_disease_tbl padded">${fn:replace(transcriptLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativeTranscriptSequence.primaryID}">MGI Sequence Detail</a></td>
 								<td class="td_disease_tbl padded">${marker.representativeTranscriptSequence.length}</td>
-								<td class="td_disease_tbl padded">${transcriptSource}</td><td class="td_disease_tbl padded">&nbsp;</td></tr>
+								<td class="td_disease_tbl padded">${transcriptSource}</td>
+								<td class="td_disease_tbl padded">&nbsp;</td></tr>
 							</c:if>
 							<c:if test="${not empty marker.representativePolypeptideSequence}">
 								<c:set var="seq" value="${marker.representativePolypeptideSequence}" scope="request"/>
 								<% Sequence seqPoly = (Sequence) request.getAttribute("seq"); %>
-								<tr class="underlined"><td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td><td class="padded">polypeptide</td>
+								<tr>
+								<td class="td_disease_tbl padded"><input type="radio" name="seq1" value="<%= FormatHelper.getSeqForwardValue(seqPoly) %>"></td>
+								<td class="td_disease_tbl padded">polypeptide</td>
 								<td class="td_disease_tbl padded">${marker.representativePolypeptideSequence.primaryID}</td>
 								<td class="td_disease_tbl padded">${fn:replace(polypeptideLink, "href", "target='_blank' href")} | <a href="${configBean.FEWI_URL}sequence/${marker.representativePolypeptideSequence.primaryID}">MGI Sequence Detail</a></td>
 								<td class="td_disease_tbl padded">${marker.representativePolypeptideSequence.length}</td>
-								<td class="td_disease_tbl padded">${polypeptideSource}</td><td class="td_disease_tbl padded">&nbsp;</td></tr>
+								<td class="td_disease_tbl padded">${polypeptideSource}</td>
+								<td class="td_disease_tbl padded">&nbsp;</td></tr>
 							</c:if>
 						</table>
 					</form>
