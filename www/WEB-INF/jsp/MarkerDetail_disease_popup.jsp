@@ -6,14 +6,14 @@
 	<div class="bd" style="overflow: auto; max-height: 150px; max-width: 750px;">
 		<a></a><!-- this empty 'a' tag is to keep Chrome and Safari from putting a selection box aroudn the first link displayed -->
 		<p/>
-		<font class="label">Human Disease Modeled:</font> ${dTerm}<br/>
+		<strong>Human Disease Modeled:</strong> ${dTerm}<br/>
 		<c:if test="${fn:length(MouseModels.get(dId)) > 0}">
 			<c:set var="models" value="${MouseModels.get(dId)}" />
 			<%@ include file="/WEB-INF/jsp/MarkerDetail_disease_popup_table.jsp" %>
 		</c:if>
 		<c:if test="${fn:length(NotMouseModels.get(dId)) > 0}">
 			<p/>
-			<font class="label">NOT Models</font><br/>
+			<strong>NOT Models</strong><br/>
 			No similarity to the expected human disease phenotype was found.<br/>
 			<c:set var="models" value="${NotMouseModels.get(dId)}" />
 			<%@ include file="/WEB-INF/jsp/MarkerDetail_disease_popup_table.jsp" %>

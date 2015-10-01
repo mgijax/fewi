@@ -215,12 +215,6 @@
 		padding-top: 1em;
 	}
 
-	#body font.label {
-		font-size: 1em;
-		margin-right:-4px;
-		white-space: nowrap;
-	}
-
 	#body .row {
 		min-height: 45px;
 	}

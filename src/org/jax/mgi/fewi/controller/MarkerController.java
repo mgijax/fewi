@@ -783,8 +783,7 @@ public class MarkerController {
 		}
 		mav.addObject("humanHomologs", humanHomologs);
 	}
-	
-	// TODO remove this comment
+
 	private void setupDiseaseRibbon(ModelAndView mav, Marker marker) {
 		
 		// DiseaseTerm -> DiseaseTermId
@@ -1502,10 +1501,7 @@ public class MarkerController {
 		StringBuffer urlString = new StringBuffer();
 		logger.debug("get minimap: " + parm);
 		try {
-			// TODO Revert this back to the config param for release
-			// TODO and remove this comment
-			// URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + "searches/markerMiniMap.cgi?" + parm);
-			URL url = new URL("http://www.informatics.jax.org/searches/markerMiniMap.cgi?" + parm);
+			URL url = new URL(ContextLoader.getConfigBean().getProperty("WI_URL") + "searches/markerMiniMap.cgi?" + parm);
 			URLConnection urlConnection = url.openConnection();
 			HttpURLConnection connection = null;
 

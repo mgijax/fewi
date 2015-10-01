@@ -1,20 +1,3 @@
-<style>
-#sgAnatomyHelp {
-font-family: Verdana,Arial,Helvetica;
-font-size: 12px;
-font-weight: normal;
-}
-body.yui-skin-sam .yui-panel .hd, body.yui-skin-sam .yui-ac-hd {
-	background: #025 none repeat scroll 0 0;
-	color: #fff;
-	font-weight: bold;
-}
-body.yui-skin-sam .yui-panel .bd {
-	padding: 10px;
-	border-bottom: thin solid black;
-}
-td.width140 { width : 140px }
-</style>
 	<!-- expression row -->
 
 	<c:set var="gxdHasMouseLinks" value="false"/>
@@ -47,7 +30,7 @@ td.width140 { width : 140px }
 						<c:if test="${not empty marker.slimgridCellsAnatomy}">
 							<div id="anatomySlimgridWrapper" style="display: inline-block;">
 								<div class="label" style="width: 100%; text-align:center;">Expression Overview<img id="sgAnatomyHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div><br />
-								<div id="sgAnatomyHelp" style="visibility: hidden; height:0px;">
+								<div id="sgAnatomyHelp" style="visibility: hidden;">
 									<div class="hd">Expression Overview</div>
 									<div class="bd" style="text-align: left">
 										GXD's primary emphasis is on endogenous gene expression during development. Click on grid cells to view annotations.<br/><ul><li><strong>Blue cells</strong> = expressed in wild-type.<br/><strong>Gray triangles</strong> = other expression annotations only<br/>(e.g. absence of expression or data from mutants).</li></ul>

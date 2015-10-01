@@ -43,7 +43,7 @@
 					<c:if test="${not empty marker.slimgridCellsMP}">
 						<div id="mpSlimgridWrapper" class="sgWrapper">
 							<div class="label" style="width: 100%; text-align:center;">Phenotype Overview<img id="sgPhenoHelpImage" src="${configBean.FEWI_URL}assets/images/help_icon_16.png" style="margin-bottom: -3px; margin-left: 3px; cursor: pointer;"/></div><br />
-							<div id="sgPhenoHelp" style="visibility: hidden; height:0px;">
+							<div id="sgPhenoHelp" style="visibility: hidden;">
 								<div class="hd">Phenotype Overview</div>
 								<div class="bd" style="text-align: center">
 									Blue squares indicate phenotypes directly attributed to mutations/alleles of this gene.

@@ -1,9 +1,9 @@
 <table style="filter:alpha(opacity=100);">
 	<tr>
-		<td class="headerStripe allBorders" style="max-width='80%'"><font class="label">Allelic Composition</font></td>
-		<td class="headerStripe allBorders"><font class="label">Genetic Background</font></td>
-		<td class="headerStripe allBorders"><font class="label">Reference</font></td>
-		<td class="headerStripe allBorders"><font class="label">Phenotypes</font></td>
+		<th class="headerStripe allBorders" style="max-width='80%'">Allelic Composition</th>
+		<th class="headerStripe allBorders">Genetic Background</th>
+		<th class="headerStripe allBorders">Reference</th>
+		<th class="headerStripe allBorders">Phenotypes</th>
 	</tr>
 
 	<c:forEach var="dm" items="${models}">
