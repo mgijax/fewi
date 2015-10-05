@@ -10,7 +10,7 @@
 				<section class="summarySec1 extra">
 					<ul style="display: table-cell;">
 						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
-							<c:if test="${fn:startsWith(item.countType, 'SNP')}">
+						<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
 								<li>
 									<c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
 									<c:if test="${fn:contains(item.countType, 'multiple')}">
