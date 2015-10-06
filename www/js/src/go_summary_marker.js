@@ -57,6 +57,15 @@ var handleNavigationRaw = function (request) {
 	});
 };
 
+var scrollToTableTop = function() {
+    setTimeout( function() {
+	var x = document.getElementById('tableTop');
+	if (x != null) {
+	    x.scrollIntoView();
+	}
+    }, 500);
+};
+
 var handleNavigation = function(request) {
 	if (!request) {
 		request = getQuerystring();
