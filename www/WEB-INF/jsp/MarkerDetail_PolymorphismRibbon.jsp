@@ -7,7 +7,7 @@
 
 				<div title="Show Less" class="toggleImage hdCollapse">less</div>
 
-				<c:if test="#{not empty marker.polymorphismCountsByType}">
+				<c:if test="${not empty marker.polymorphismCountsByType}">
 					<section class="summarySec1 extra">
 						<ul style="display: table-cell;">
 							<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
