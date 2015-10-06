@@ -7,7 +7,14 @@
 
 				<div title="Show Less" class="toggleImage hdCollapse">less</div>
 
-				<c:if test="${not empty marker.polymorphismCountsByType}">
+				<c:set var="snpsfound" value="false"/>
+				<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+					<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
+						<c:set var="snpsfound" value="true"/>
+					</c:if>
+				</c:forEach>
+
+				<c:if test="${snpsfound}">
 					<section class="summarySec1 extra">
 						<ul style="display: table-cell;">
 							<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
