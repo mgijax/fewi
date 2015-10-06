@@ -57,13 +57,21 @@ var handleNavigationRaw = function (request) {
 	});
 };
 
-var scrollToTableTop = function() {
-    setTimeout( function() {
-	var x = document.getElementById('tableTop');
-	if (x != null) {
+var scrollToTableTop = function(count) {
+    if (count == null) { count = 0; }
+
+    var x = document.getElementById('tableTop');
+    if (x != null) {
+	if (Math.abs(x.getBoundingClientRect().y) > 1.0) {
 	    x.scrollIntoView();
 	}
-    }, 500);
+    }
+
+    if (count < 40) {
+	setTimeout( function() {
+	    scrollToTableTop(count + 1);
+	}, 25);
+    }
 };
 
 var handleNavigation = function(request) {
