@@ -62,7 +62,7 @@ var scrollToTableTop = function(count) {
 
     var x = document.getElementById('tableTop');
     if (x != null) {
-	if (Math.abs(x.getBoundingClientRect().y) > 1.0) {
+	if (Math.abs(x.getBoundingClientRect().bottom) > 1.0) {
 	    x.scrollIntoView();
 	}
     }
