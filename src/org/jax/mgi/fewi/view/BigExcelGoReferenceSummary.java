@@ -62,8 +62,12 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 			    row.createCell(col++).setCellValue("Unknown");
 			}
 
-			row.createCell(col++).setCellValue(
-				annot.getQualifier());
+			String qualifier = annot.getQualifier();
+			if (qualifier == null) {
+			    qualifier = "";
+			}
+
+			row.createCell(col++).setCellValue(qualifier);
 			row.createCell(col++).setCellValue(annot.getTerm());
 			row.createCell(col++).setCellValue(annot.getDagName());
 			row.createCell(col++).setCellValue(
