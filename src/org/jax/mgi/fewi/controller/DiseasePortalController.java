@@ -548,8 +548,8 @@ public class DiseasePortalController
 	// preserve the termHeader passed in (for display purposes, then
 	// replace it out of the query form)
 	
+	String abbrev = headerTerm.getTerm().replace(" phenotype", "");
 	String termHeader = query.getTermHeader();
-	String abbrev = headerTerm.replace(" phenotype", "");
 	query.setTermHeader(abbrev);
 
     	// get the geno cluster rows
