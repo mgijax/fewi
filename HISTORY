@@ -1,8 +1,12 @@
+TAG: fewi-6-0-1-7
 TAG: fewi-6-0-1-6
 TAG: fewi-6-0-1-5
 DATE: 10/12/2015
 STAFF: jsb
-CHANGES: fix for now-null abbreviation of MP headers
+CHANGES:
+1) fix for now-null abbreviation of MP headers
+2) fix for null pointer (for qualifier) in Excel download for GO ref page
+3) fix for expression results for ref page (javascript bug)
 
 TAG: fewi-6-0-1-4
 DATE: 10/07/2015
