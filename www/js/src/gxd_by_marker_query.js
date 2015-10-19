@@ -47,7 +47,7 @@ var updateQuerySummary = function() {
 	}
 
 	// if we searched by structure, add to search summary
-	if (searchedStructure != "") {
+	if ((typeof searchedStruture != 'undefined') && (searchedStructure != "")) {
 
        // Create a container span
 		var el = new YAHOO.util.Element(document.createElement('span'));

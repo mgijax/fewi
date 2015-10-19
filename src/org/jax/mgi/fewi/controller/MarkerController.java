@@ -524,7 +524,7 @@ public class MarkerController {
 					if(!isFirst) { ssNote = ssNote + ", "; }
 					else { isFirst = false; }
 
-					ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_new>" + ref.getJnumID() + "</a>";
+					ssNote = ssNote + "<a href=" + fewiUrl + "reference/" + ref.getJnumID() + " target=_blank>" + ref.getJnumID() + "</a>";
 				}
 				ssNote = ssNote + ")";
 			}

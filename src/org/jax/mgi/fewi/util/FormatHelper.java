@@ -381,7 +381,7 @@ public class FormatHelper {
 	 * new window
 	 */
 	public static String setNewWindow (String s) {
-		return setTarget(s, "_new");
+		return setTarget(s, "_blank");
 	}
 
 	/**

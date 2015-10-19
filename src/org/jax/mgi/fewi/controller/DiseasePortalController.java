@@ -549,7 +549,7 @@ public class DiseasePortalController
 	// replace it out of the query form)
 	
 	String termHeader = query.getTermHeader();
-	query.setTermHeader(headerTerm.getAbbreviation());
+	query.setTermHeader(headerTerm.getSlimGridHeading());
 
     	// get the geno cluster rows
         SearchResults<HdpGenoCluster> searchResults = getGenoClusters(request, query,session);

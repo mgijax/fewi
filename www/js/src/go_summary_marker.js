@@ -57,6 +57,23 @@ var handleNavigationRaw = function (request) {
 	});
 };
 
+var scrollToTableTop = function(count) {
+    if (count == null) { count = 0; }
+
+    var x = document.getElementById('tableTop');
+    if (x != null) {
+	if (Math.abs(x.getBoundingClientRect().bottom) > 1.0) {
+	    x.scrollIntoView();
+	}
+    }
+
+    if (count < 40) {
+	setTimeout( function() {
+	    scrollToTableTop(count + 1);
+	}, 25);
+    }
+};
+
 var handleNavigation = function(request) {
 	if (!request) {
 		request = getQuerystring();

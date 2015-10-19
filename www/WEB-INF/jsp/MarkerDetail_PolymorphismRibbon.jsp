@@ -7,26 +7,30 @@
 
 				<div title="Show Less" class="toggleImage hdCollapse">less</div>
 
-				<section class="summarySec1 extra">
-					<ul style="display: table-cell;">
-						<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
-							<c:if test="${fn:startsWith(item.countType, 'SNP')}">
-								<li>
-									<c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}"/>
-									<c:if test="${fn:contains(item.countType, 'multiple')}">
-										<c:set var="polyUrl" value="${polyUrl}&includeMultiples=1"/>
-									</c:if>
-									<div class="label" style="white-space: normal;">${item.countType}</div>
-									<div class="value"><a href="${polyUrl}">${item.count}</a>
-										<c:if test="${not empty configBean.SNP_BUILD}"><span style="font-size: smaller; font-weight: normal;">from ${configBean.SNP_BUILD}</span></c:if>
-									</div>
-								</li>
-							</c:if>
+				<c:set var="snpsfound" value="false"/>
+				<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+					<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
+						<c:set var="snpsfound" value="true"/>
+					</c:if>
+				</c:forEach>
 
-						</c:forEach>
-					</ul>
-				</section>
-
+				<c:if test="${snpsfound}">
+					<section class="summarySec1 extra">
+						<ul style="display: table-cell;">
+							<c:forEach var="item" items="${marker.polymorphismCountsByType}" varStatus="status">
+								<c:if test="${(fn:startsWith(item.countType, 'SNP')) and (item.count > 0)}">
+									<li>
+										<c:set var="polyUrl" value="${configBean.WI_URL}searches/snp_report.cgi?_Marker_key=${marker.markerKey}&includeMultiples=1"/>
+										<div class="label" style="white-space: normal;">${item.countType}</div>
+										<div class="value"><a href="${polyUrl}">${item.count}</a>
+											<c:if test="${not empty configBean.SNP_BUILD}"><span style="font-size: smaller; font-weight: normal;">from ${configBean.SNP_BUILD}</span></c:if>
+										</div>
+									</li>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</section>
+				</c:if>
 				
 				<section class="summarySec2 extra">
 					<ul>

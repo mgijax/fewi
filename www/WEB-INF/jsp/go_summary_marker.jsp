@@ -58,6 +58,7 @@
 </div>
 </c:if>
 
+<span id="tableTop"></span>
 <c:if test="${not empty headerTerm}">
 <style>
 div.headerTerm {
@@ -169,6 +170,7 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
     filters.addFilter('categoryFilter', 'Category', 'categoryFilterMenu', 'categoryFilter', fewiurl + 'go/facet/category');
     filters.addFilter('evidenceFilter', 'Evidence', 'evidenceFilterMenu', 'evidenceFilter', fewiurl + 'go/facet/evidence');
     filters.addFilter('referenceFilter', 'Reference', 'referenceFilterMenu', 'referenceFilter', fewiurl + 'go/facet/reference');
+    filters.registerCallback('scrollUp', scrollToTableTop);
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

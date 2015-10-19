@@ -115,7 +115,7 @@
 						<c:set var="foundOne" value="0"/>
 						<li class="extra closed">
 							<div class="label">
-								Genome<br/>Browser Links
+								Genome Browsers
 							</div>
 							<div class="value">
 								<c:if test="${not empty vegaGenomeBrowserUrl}">
