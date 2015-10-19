@@ -1,3 +1,23 @@
+TAG: fewi-tr11937-1
+DATE: 10/19/2015
+STAFF: jsb
+CHANGES: merged post-branch changes up from trunk into our SNP dev branch
+
+TAG: fewi-6-0-1-7
+TAG: fewi-6-0-1-6
+TAG: fewi-6-0-1-5
+DATE: 10/12/2015
+STAFF: jsb
+CHANGES:
+1) fix for now-null abbreviation of MP headers
+2) fix for null pointer (for qualifier) in Excel download for GO ref page
+3) fix for expression results for ref page (javascript bug)
+
+TAG: fewi-6-0-1-4
+DATE: 10/07/2015
+STAFF: jsb
+CHANGES: more fixes for Gene View project (GO/Marker, SNPs, etc.)
+
 TAG: fewi-tr11937-BP
 DATE: 10/02/2015
 STAFF: oblod
