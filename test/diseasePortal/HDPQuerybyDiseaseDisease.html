@@ -133,10 +133,11 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Query by <b concordion:set="#disease">Achroma*</b></li>
                 <li>Query should ONLY return the following diseases: 
                 	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
                 	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td><td>contained in name</td></tr>
                 	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td><td>contained in name</td></tr>
                 	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td><td>contained in name</td></tr>
+                	<tr><td>616517</td><td>Achromatopsia 7; ACHM7</td><td>contained in name</td></tr>
                 	<tr><td>248200</td><td>Stargardt Disease 1; STGD1</td><td>associated to human gene that has annotation to one of the above diseases (change in 5.21)</td></tr>
                 	</table></li>
     		</ol>
@@ -146,11 +147,12 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Query by <b concordion:set="#disease">*chromatopsia</b></li>
                 <li>Query should ONLY return the following diseases: 
                 	<table cc:verifyRowsUnordered="#termId : getTermIdsByDisease(#disease)">
-                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th></tr>
-                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td></tr>
-                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td></tr>
-                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td></tr>
-                	<tr><td>248200</td><td>Stargardt Disease 1; STGD1</td></tr>
+                	<tr><th concordion:assertEquals="#termId">OMIM ID</th><th>Disease Name</th><th>Why it should have matched</th></tr>
+                	<tr><td>216900</td><td>Achromatopsia 2; ACHM2</td><td>contained in name</td></tr>
+                	<tr><td>262300</td><td>Achromatopsia 3; ACHM3</td><td>contained in name</td></tr>
+                	<tr><td>613856</td><td>Achromatopsia 4; ACHM4</td><td>contained in name</td></tr>
+                	<tr><td>616517</td><td>Achromatopsia 7; ACHM7</td><td>contained in name</td></tr>
+                	<tr><td>248200</td><td>Stargardt Disease 1; STGD1</td><td>associated to human gene that has annotation to one of the above diseases (change in 5.21)</td></tr>
                 	</table></li>
     		</ol>
     		</li>
@@ -223,7 +225,7 @@ tr.gray td {background-color:#EEEEEE;}
                 	<tr><td>Aase-Smith Syndrome I</td><td>Contains the unquoted text</td></tr>
                 	</table>
                 </li>
-                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">37</b> - the query should NOT be returning every term with "Syndrome" in it.</li>
+                <li>Count of terms returned should be <b concordion:assertEquals="getDiseaseCountByDisease(#disease)">38</b> - the query should NOT be returning every term with "Syndrome" in it. <i  class="hilite">NOTE: looks like correct count on Public as of 01-dec-2015 should be <b>39</b>. Will check again and update for Build Sprint integration testing. -klf</i></li>
     		</ol>
     		</li>
     		

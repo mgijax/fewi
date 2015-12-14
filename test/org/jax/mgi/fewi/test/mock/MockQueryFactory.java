@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.test.mock;
 
 import org.jax.mgi.fewi.controller.AlleleController;
 import org.jax.mgi.fewi.controller.DiseasePortalController;
+import org.jax.mgi.fewi.controller.GOController;
 import org.jax.mgi.fewi.controller.GXDController;
 import org.jax.mgi.fewi.controller.MarkerController;
 
@@ -30,6 +31,35 @@ public class MockQueryFactory
 		return new MockAlleleControllerQuery(controller);
 	}
 	
+	
+	/*
+	 * Cre Mock Queries
+	 */
+	public MockCreHttpQuery creHttp() throws Exception
+	{
+		return new MockCreHttpQuery(mr);
+	}
+	
+	/*
+	 * Disease Portal Mock Queries
+	 */
+	public MockHdpControllerQuery diseasePortalController(DiseasePortalController controller) throws Exception
+	{
+		return new MockHdpControllerQuery(controller);
+	}
+	public MockHdpHttpQuery diseasePortalHttp() throws Exception
+	{
+		return new MockHdpHttpQuery(mr);
+	}
+	
+	/*
+	 * GO Mock Queries
+	 */
+	public MockGOControllerQuery goController(GOController controller) throws Exception
+	{
+		return new MockGOControllerQuery(controller);
+	}
+	
 	/*
 	 * GXD Mock Queries
 	 */
@@ -50,24 +80,6 @@ public class MockQueryFactory
 	{
 		return new MockMarkerControllerQuery(controller);
 	}
-	
-	/*
-	 * Disease Portal Mock Queries
-	 */
-	public MockHdpControllerQuery diseasePortalController(DiseasePortalController controller) throws Exception
-	{
-		return new MockHdpControllerQuery(controller);
-	}
-	public MockHdpHttpQuery diseasePortalHttp() throws Exception
-	{
-		return new MockHdpHttpQuery(mr);
-	}
-	
-	/*
-	 * Cre Mock Queries
-	 */
-	public MockCreHttpQuery creHttp() throws Exception
-	{
-		return new MockCreHttpQuery(mr);
-	}
+
+
 }

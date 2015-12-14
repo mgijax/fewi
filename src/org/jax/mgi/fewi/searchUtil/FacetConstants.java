@@ -13,8 +13,8 @@ public class FacetConstants {
 	// expression facets
 
 	public static final String GXD_SYSTEM = "anatomicalSystem";
-	public static final String GXD_ASSAY_TYPE = "assayType"; 
-	public static final String GXD_DETECTED = "detectionLevelFacet"; 
+	public static final String GXD_ASSAY_TYPE = "assayType";
+	public static final String GXD_DETECTED = "detectionLevelFacet";
 	public static final String GXD_THEILER_STAGE = "theilerStage";
 	public static final String GXD_WILDTYPE = "isWildType";
 
@@ -26,6 +26,11 @@ public class FacetConstants {
 	public static final String INT_SCORE = "score";
 
 	// HMDC facets
-	
+
 	public static final String MARKER_FEATURE_TYPE = "featureType";
+
+	// cre facets
+
+	public static final String CRE_INDUCER = "inducer";
+
 }

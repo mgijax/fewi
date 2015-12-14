@@ -7,46 +7,56 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
+import mgi.frontend.datamodel.AnnotationProperty;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 
-public class BigExcelGoReferenceSummary extends AbstractBigExcelView 
-{	
+public class BigExcelGoReferenceSummary extends AbstractBigExcelView
+{
+	private final NotesTagConverter ntc = new NotesTagConverter();
+
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook, 
+	protected void buildExcelDocument(Map<String,Object> model, SXSSFWorkbook workbook,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		List<Annotation> results = (List<Annotation>) model.get("results");	
-		
+		String filename = "GO_reference_summary_"+getCurrentDate();
+		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".xlsx\"");
+
+		List<Annotation> results = (List<Annotation>) model.get("results");
+
 		Sheet sheet = workbook.createSheet();
 		Row row;
-	
+
 		int rownum = 0;
 		int col = 0;
-		
+
 		row = sheet.createRow(rownum++);
 		row.createCell(col++).setCellValue("MGI Gene/Marker ID");
 		row.createCell(col++).setCellValue("Symbol");
 		row.createCell(col++).setCellValue("Name");
+		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Chr");
 		row.createCell(col++).setCellValue("Qualifier");
 		row.createCell(col++).setCellValue("Annotated Term");
+		row.createCell(col++).setCellValue("Additional Term Context");
 		row.createCell(col++).setCellValue("Aspect");
 		row.createCell(col++).setCellValue("Evidence");
 		row.createCell(col++).setCellValue("Inferred From");
-		
+
 		Marker m;
 		MarkerLocation ml;
+		StringBuffer proteoforms;
 
 		for (Annotation annot: results){
 			row = sheet.createRow(rownum++);
 			col = 0;
-			
+
 			m = annot.getMarkers().get(0);
 			ml = m.getPreferredCentimorgans();
 			if (ml == null) { ml = m.getPreferredLocation(); }
@@ -55,6 +65,15 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 			row.createCell(col++).setCellValue(m.getSymbol());
 			row.createCell(col++).setCellValue(m.getName());
 
+			// Proteoform
+			proteoforms = new StringBuffer();
+			for (AnnotationProperty prop: annot.getIsoforms()) {
+				String displayItem = prop.getValue();
+				displayItem = ntc.convertNotes(displayItem, '|', true);
+				proteoforms.append(displayItem);
+			}
+			row.createCell(col++).setCellValue(proteoforms.toString());
+
 			if (ml != null) {
 			    row.createCell(col++).setCellValue(
 				ml.getChromosome());
@@ -62,13 +81,17 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 			    row.createCell(col++).setCellValue("Unknown");
 			}
 
-			String qualifier = annot.getQualifier();
-			if (qualifier == null) {
-			    qualifier = "";
+			if (annot.getQualifier() != null) {
+			    row.createCell(col++).setCellValue(annot.getQualifier());
+			} else {
+			    row.createCell(col++).setCellValue("");
 			}
 
-			row.createCell(col++).setCellValue(qualifier);
 			row.createCell(col++).setCellValue(annot.getTerm());
+
+			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
+			row.createCell(col++).setCellValue(annotExtensions);
+
 			row.createCell(col++).setCellValue(annot.getDagName());
 			row.createCell(col++).setCellValue(
 				annot.getEvidenceCode());

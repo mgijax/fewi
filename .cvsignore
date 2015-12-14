@@ -1,3 +1,5 @@
+.*
+*.war
 build.properties
 www/WEB-INF/properties/GlobalConfig.properties
 www/WEB-INF/properties/fewi.properties

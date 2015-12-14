@@ -1,0 +1,149 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+	table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+	table, th, td {border: 1px solid #CCCCCC;}
+	td, th {padding:2px;}
+	.man {background-color:#FFFFCC;}
+	ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+	li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+	p {margin:2px 0px;}
+</style>
+
+    <title>Cre Driver Autocomplete Tests</title>
+</head>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+-->
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Cre Query Form - Driver Autocomplete Tests</h1>
+    <ul>
+        <li>Project Blizzard User story 48, Driver pick List becomes an Autocomplete list</li>
+        <li>Project Blizzard User story 48, Driver Autocomplete conforms to system standards</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto48: driver input field becomes a type-in that provides autocomplete functionality</li>
+		<li>sto48: autocomplete list is the list of drivers that match what the user is typing</li>
+		<li>sto48: wildcard support not necessary; query is always about 0 or 1 driver</li>
+		
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Verify that if no driver is selected, all results are returned
+ 			<p concordion:manual="true">jeffc 11/17/2015</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Leave the Recombinase driven by field blank and click on Search</li>
+                <li>Verify all driver results are returned</li>
+    		</ol>
+    		</li>
+    		<li>Verify that autocomplete begins working on the 1st character
+ 			<p concordion:manual="true">jeffc 11/17/2015</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Type <b>w</b> in the recombinase driven by field</li>
+                <li>Verify the autocomplete list appears after the "w" is entered</li>
+                <li>Clear the recombinase driven by field</li>
+                <li>Type <b>W</b> in the recombinase driven by field</li>
+                <li>Verify the autocomplete list appears after the "W" is entered</li>
+    		</ol>
+    		</li>
+    		<li>Verify that text copied-and-pasted into the driver input box returns proper results
+ 			<p concordion:manual="true">jeffc 11/17/2015</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Copy "acan", then paste it into the recombinase driven by field, hit the space bar</li>
+                <li>Verify that the autocomplete functions and that the matching driver is displayed</li>
+    		</ol>
+    		</li>
+    		<li>Verify that the browser's native "autofill" functionality is disabled by this Auto-Complete functionality
+ 			<p concordion:manual="true">klf 11/17/2015</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Confirm the browser's "autofill" functionality is turned on</li>
+                <li>Enter some text in a different input text box (e.g., another query form like the Quick Search) - for example, "mgi:104876" - and Search.</li>
+                <li>Clear the field and verify that entering the first few characters of the text from the previous step to reappear as a suggestion</li>
+                <li>Enter the same first few characters in the recombinase driven by field and verify that the text from the previous step does not reappear as a suggestion</li>
+                <li>Repeat these steps for supported browsers, versions, and OSes.</li>
+    		</ol>
+    		</li>
+    		<li>Verify long lists scroll properly
+ 			<p concordion:manual="true">klf 11/17/2015</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Type <b>T</b> in the reocombinase driven by field and scroll back and forth through the auto list</li>
+                <li>Verify the user can scroll up and down the list using a mouse or keyboard interaction</li>
+                <li>Verify the last value in the list is "Tyrp1".</li>
+    		</ol>
+    		</li>
+    		<li>Verify long lists do not get cut off by some other piece of the UI
+ 			<p concordion:manual="true">klf 11/17/2015</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Type <b>br</b> in the recombinase driven by field</li>
+                <li>Verify the full dimensions of the drop-down list are visible</li>
+    		</ol>
+    		</li>
+    		<li>Verify that any driver appears just once in the list <i>Note: some apparent duplicates require data clean-up (Tie1, Ucp1, Vav1, others?)</i>
+ 			<p concordion:manual="true">klf 11/17/2015</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Type <b>abl</b> in the recombinase driven by field</li>
+                <li>Verify the driver "Alb, ALB" appears just once</li>
+    		</ol>
+    		</li>
+<!-- Address this one later on perhaps.  -KLF 11/17/2015
+    		<li>Verify that fast typing gives the proper list of terms when typing ceases (THIS IS A Q4 TEST. CANNOT VERIFY FROM WITHIN THE FIREWALL)
+ 			<p concordion:manual="false">jeffc 8/13/2012</p>
+    		<ol>
+                <li>Open the CRE query form</li>
+                <li>Type a long driver very quickly in the vocabulary field</li>
+                <li>Verify that the autocomplete function displays as expected</li>
+    		</ol>
+    		</li>
+ -->
+		</ol>
+	</div>
+
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

@@ -7,12 +7,14 @@ import mgi.frontend.datamodel.Reference;
 import org.jax.mgi.fewi.hunter.SolrAuthorsACHunter;
 import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceAuthorFacetHunter;
-import org.jax.mgi.fewi.hunter.SolrReferenceTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceHasDataFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceJournalFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceSummaryHunter;
+import org.jax.mgi.fewi.hunter.SolrReferenceTypeFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrReferenceYearFacetHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.slf4j.Logger;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ReferenceFinder {
 
-	private Logger logger = LoggerFactory.getLogger(ReferenceFinder.class);
+	private final Logger logger = LoggerFactory.getLogger(ReferenceFinder.class);
 
 	@Autowired
 	private SolrReferenceSummaryHunter referenceHunter;
@@ -94,6 +96,17 @@ public class ReferenceFinder {
 
         return searchResults;
     }
+    
+    // Convenience wrapper
+    public SearchResults<Reference> getReferenceByID(String id) {
+
+        logger.debug("->getReferenceByID()");
+        SearchParams searchParams = new SearchParams();
+		searchParams.setFilter(new Filter(SearchConstants.REF_ID,id,Filter.Operator.OP_EQUAL));
+
+        return this.getReferenceByID(searchParams);
+    }
+    
 
 
     public SearchResults<Reference> getReferenceByKey(String dbKey) {

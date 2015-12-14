@@ -116,12 +116,9 @@ public class SeqSummaryRow {
         String seqProvider = seq.getProvider();
 
         // for these providers, clone collections are not applicable
-        if (seqProvider.equals(DBConstants.PROVIDER_DFCI) ||
-            seqProvider.equals(DBConstants.PROVIDER_REFSEQ) ||
+        if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ) ||
             seqProvider.equals(DBConstants.PROVIDER_TREMBL) ||
-            seqProvider.equals(DBConstants.PROVIDER_SWISSPROT) ||
-            seqProvider.equals(DBConstants.PROVIDER_NIA) ||
-            seqProvider.equals(DBConstants.PROVIDER_DOTS) )
+            seqProvider.equals(DBConstants.PROVIDER_SWISSPROT) )
         {
             probeSB.append("Not Applicable");
         }

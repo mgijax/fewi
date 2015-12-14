@@ -120,6 +120,11 @@ public class NotesTagConverter
 			tagConversionList.add(new TagConversion("\\\\AMA\\((.*?[|].*?[|].*?)\\)",
 					String.format ("<a class=\"%s\" href=\"%sama/%s\" %s>%s</a>",
 							"%s", fewiURL, "%s", "%s", "%s")));
+			
+			// EMAPA
+			tagConversionList.add(new TagConversion("\\\\EMAPA\\((.*?[|].*?[|].*?)\\)",
+					String.format ("<a class=\"%s\" href=\"%svocab/gxd/anatomy/%s\" %s>%s</a>",
+							"%s", fewiURL, "%s", "%s", "%s")));
 
 			// GO
 			tagConversionList.add(new TagConversion("\\\\GO\\((.*?[|].*?[|].*?)\\)",

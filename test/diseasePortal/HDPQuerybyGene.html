@@ -13,7 +13,7 @@
  -->
 
 
-    <title>Query By Genes</title>
+    <title>Query By Gene</title>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
 </div>
 
 <div id="maintitle">
-    <h1>Query By Genes</h1>
+    <h1>Query By Gene</h1>
     <ul>
         <li>User story 21, Query by gene (part 1)</li>
     </ul>
@@ -190,40 +190,40 @@
                 <table concordion:execute="#symbols = getSymbolsByGene(#geneId)">
                 	<tr><th concordion:set="#geneId">Marker ID</th>
                 	<th cc:assertResultsContain="#symbols">Marker Symbol</th>
-                	<th>Type of ID</th></tr>
-	 				<!-- <tr><td>11287</td><td>Pzp</td><td>ABA</td></tr> -->
-					<tr><td>10570741</td><td>Defb1</td><td>Affy 1.0 ST</td></tr>
-					<tr><td>1457120_at</td><td>Gm12167</td><td>Affy 430 2.0</td></tr>
-					<tr><td>102065_at</td><td>Fcna</td><td>Affy U74</td></tr>
-					<tr><td>MGI:88264</td><td>Capn2</td><td>ArrayExpress</td></tr>
-					<tr><td>CCDS22831.1</td><td>Izumo1r</td><td>Consensus CDS Project</td></tr>
-					<tr><td>TC1572537</td><td>Fam32a</td><td>DFCI</td></tr>
-					<tr><td>DT.97391691</td><td>H3f3b</td><td>DoTS</td></tr>
+                	<th>Type of ID</th><th>Comment</th></tr>
+	 				<!-- <tr><td>11287</td><td>Pzp</td><td>ABA</td><td></td></tr> -->
+					<tr><td>10570741</td><td>Defb1</td><td>Affy 1.0 ST</td><td></td></tr>
+					<tr><td>1457120_at</td><td>Gm12167</td><td>Affy 430 2.0</td><td></td></tr>
+					<tr><td>102065_at</td><td>Fcna</td><td>Affy U74</td><td></td></tr>
+					<tr><td>MGI:88264</td><td>Capn2</td><td>ArrayExpress</td><td></td></tr>
+					<tr><td>CCDS22831.1</td><td>Izumo1r</td><td>Consensus CDS Project</td><td></td></tr>
+					<tr><td>TC1572537</td><td>Fam32a</td><td>DFCI</td><td>Comment out this row following the 6.02 release</td></tr>
+					<tr><td>DT.97391691</td><td>H3f3b</td><td>DoTS</td><td>Comment out this row following the 6.02 release</td></tr>
 					<!-- <tr><td>"Dorward 2005"</td><td>Gct1</td><td>Download data from the QTL Archive</td></tr> -->
-					<tr><td>3.6.4.12</td><td>Chd7</td><td>EC</td></tr>
-					<tr><td>ENSMUSG00000076252</td><td>Mir302b</td><td>Ensembl Gene Model</td></tr>
-					<tr><td>ENSMUSP00000134610</td><td>Hoxa7</td><td>Ensembl Protein</td></tr>
-					<tr><td>ENSMUST00000144653</td><td>Ttc33</td><td>Ensembl Transcript</td></tr>
-					<tr><td>105763</td><td>AA960008</td><td>Entrez Gene</td></tr>
-					<!-- <tr><td>3588286</td><td>4930415L06Rik</td><td>FuncBase</td></tr> -->
-					<!-- <tr><td>67933</td><td>Hcfc2</td><td>GENSAT</td></tr>
-					<tr><td>72439</td><td>2610007B07Rik</td><td>GEO</td></tr> -->
-					<tr><td>MGI:2443685</td><td>5830411N06Rik</td><td>MGI</td></tr>
-					<tr><td>MI0000570</td><td>Mir22</td><td>miRBase</td></tr>
-					<tr><td>54373</td><td>Prss16</td><td>NCBI Gene Model</td></tr>
-					<tr><td>NT_039718</td><td>Apex2</td><td>NCBI Gene Model Evidence</td></tr>
-					<tr><td>U043246</td><td>Tmc8</td><td>NIA Mouse Gene Index</td></tr>
-					<tr><td>1WII</td><td>Elof1</td><td>PDB</td></tr>
-					<tr><td>PR:000004206</td><td>Arfgap1</td><td>Protein Ontology</td></tr>
-					<tr><td>NM_009756</td><td>Bmp10</td><td>RefSeq</td></tr>
-					<!-- <tr><td>2202</td><td>Zfp329</td><td>RIKEN Cluster</td></tr> -->
-					<tr><td>AI480946</td><td>Lctl</td><td>Sequence DB</td></tr>
-					<tr><td>Q61838</td><td>Pzp</td><td>SWISS-PROT</td></tr>
-					<tr><td>Q3TUE8</td><td>Abat</td><td>TrEMBL</td></tr>
-					<!-- <tr><td>399829</td><td>Rps3a1</td><td>UniGene</td></tr> -->
-					<tr><td>OTTMUSG00000005850</td><td>Ttc19</td><td>VEGA Gene Model</td></tr>
-					<tr><td>OTTMUSP00000052052</td><td>Iqch</td><td>VEGA Protein</td></tr>
-					<tr><td>OTTMUST00000026576</td><td>Gm20878</td><td>VEGA Transcript</td></tr>
+					<tr><td>3.6.4.12</td><td>Chd7</td><td>EC</td><td></td></tr>
+					<tr><td>ENSMUSG00000076252</td><td>Mir302b</td><td>Ensembl Gene Model</td><td></td></tr>
+					<tr><td>ENSMUSP00000134610</td><td>Hoxa7</td><td>Ensembl Protein</td><td></td></tr>
+					<tr><td>ENSMUST00000144653</td><td>Ttc33</td><td>Ensembl Transcript</td><td></td></tr>
+					<tr><td>105763</td><td>AA960008</td><td>Entrez Gene</td><td></td></tr>
+					<!-- <tr><td>3588286</td><td>4930415L06Rik</td><td>FuncBase</td><td></td></tr> -->
+					<!-- <tr><td>67933</td><td>Hcfc2</td><td>GENSAT</td><td></td></tr>
+					<tr><td>72439</td><td>2610007B07Rik</td><td>GEO</td><td></td></tr> -->
+					<tr><td>MGI:2443685</td><td>5830411N06Rik</td><td>MGI</td><td></td></tr>
+					<tr><td>MI0000570</td><td>Mir22</td><td>miRBase</td><td></td></tr>
+					<tr><td>54373</td><td>Prss16</td><td>NCBI Gene Model</td><td></td></tr>
+					<tr><td>NT_039718</td><td>Apex2</td><td>NCBI Gene Model Evidence</td><td></td></tr>
+					<tr><td>U043246</td><td>Tmc8</td><td>NIA Mouse Gene Index</td><td>Comment out this row following the 6.02 release</td></tr>
+					<tr><td>1WII</td><td>Elof1</td><td>PDB</td><td></td></tr>
+					<tr><td>PR:000004206</td><td>Arfgap1</td><td>Protein Ontology</td><td></td></tr>
+					<tr><td>NM_009756</td><td>Bmp10</td><td>RefSeq</td><td></td></tr>
+					<!-- <tr><td>2202</td><td>Zfp329</td><td>RIKEN Cluster</td><td></td></tr> -->
+					<tr><td>AI480946</td><td>Lctl</td><td>Sequence DB</td><td></td></tr>
+					<tr><td>Q61838</td><td>Pzp</td><td>SWISS-PROT</td><td></td></tr>
+					<tr><td>Q3TUE8</td><td>Abat</td><td>TrEMBL</td><td></td></tr>
+					<!-- <tr><td>399829</td><td>Rps3a1</td><td>UniGene</td><td></td></tr> -->
+					<tr><td>OTTMUSG00000005850</td><td>Ttc19</td><td>VEGA Gene Model</td><td></td></tr>
+					<tr><td>OTTMUSP00000052052</td><td>Iqch</td><td>VEGA Protein</td><td></td></tr>
+					<tr><td>OTTMUST00000026576</td><td>Gm20878</td><td>VEGA Transcript</td><td></td></tr>
                 </table>
                 </li>
                 <li>Queries by the following IDs should return the appropriate <i>human</i> marker
@@ -231,7 +231,7 @@
                 	<tr><th concordion:set="#geneId">Marker ID</th>
                 	<th cc:assertResultsContain="#symbols">Marker Symbol</th>
                 	<th>Type of ID</th></tr>
-					<tr><td>729991</td><td>MEF2BNB</td><td>Entrez Gene</td></tr>
+					<tr><td>729991</td><td>BORCS8</td><td>Entrez Gene</td></tr>
 					<!-- <tr><td>154215</td><td>NKAIN2</td><td>GENSAT</td></tr> -->
 					<tr><td>HGNC:36824</td><td>RPL37AP6</td><td>HGNC</td></tr>
 					<tr><td>NX_Q99884</td><td>SLC6A7</td><td>neXtProt</td></tr>
@@ -252,8 +252,8 @@
 					<tr><td>167953_i_at</td><td>MROH8</td><td>human</td><td>Mroh8</td><td>mouse</td><td>Affy U74</td></tr>
 					<tr><td>MGI:3836251</td><td>Zfp345</td><td>mouse</td><td>Gm14139</td><td>mouse</td><td>ArrayExpress</td></tr>
 					<tr><td>CCDS26368.1</td><td>HIST1H3D</td><td>human</td><td>Hist1h3a</td><td>mouse</td><td>Consensus CDS Project</td></tr>
-					<tr><td>TC1580129</td><td>WNT5A</td><td>human</td><td>Wnt5a</td><td>mouse</td><td>DFCI</td></tr>
-					<tr><td>DT.94198586</td><td>RNF114</td><td>human</td><td>Rnf114</td><td>mouse</td><td>DoTS</td></tr>
+					<tr><td>TC1580129</td><td>WNT5A</td><td>human</td><td>Wnt5a</td><td>mouse</td><td>DFCI. Comment out this row following 6.02 release</td></tr>
+					<tr><td>DT.94198586</td><td>RNF114</td><td>human</td><td>Rnf114</td><td>mouse</td><td>DoTS. Comment out this row following 6.02 release</td></tr>
 					<tr><td>2.3.1.15</td><td>GPAT2</td><td>human</td><td>Gpat2</td><td>mouse</td><td>EC</td></tr>
 					<tr><td>ENSMUSG00000067855</td><td>Gm7347</td><td>mouse</td><td>Speer3</td><td>mouse</td><td>Ensembl Gene Model</td></tr>
 					<tr><td>ENSMUSP00000124035</td><td>Cd300c</td><td>mouse</td><td>AF251705</td><td>mouse</td><td>Ensembl Protein</td></tr>
@@ -262,7 +262,7 @@
 					<tr><td>770022</td><td>HIST2H3D</td><td>human</td><td>LOC770022</td><td>chicken</td><td>Entrez Gene</td></tr>
 					<tr><td>473776</td><td>Utp14a</td><td>mouse</td><td>UTP14A</td><td>chimpanzee</td><td>Entrez Gene</td></tr>
 					<tr><td>477375</td><td>Ebf2</td><td>mouse</td><td>EBF2</td><td>dog</td><td>Entrez Gene</td></tr>
-					<tr><td>729991</td><td>2310045N01Rik</td><td>mouse</td><td>MEF2BNB</td><td>human</td><td>Entrez Gene</td></tr>
+					<tr><td>729991</td><td>Borcs8</td><td>mouse</td><td>BORCS8</td><td>human</td><td>Entrez Gene</td></tr>
 					<tr><td>434172</td><td>Gm21136</td><td>mouse</td><td>Gm5592</td><td>mouse</td><td>Entrez Gene</td></tr>
 					<tr><td>29686</td><td>SCN1B</td><td>human</td><td>Scn1b</td><td>rat</td><td>Entrez Gene</td></tr>
 					<tr><td>699563</td><td>MDM4</td><td>human</td><td>MDM4</td><td>rhesus macaque</td><td>Entrez Gene</td></tr>
@@ -273,7 +273,7 @@
 					<tr><td>107849</td><td>Prl2c2</td><td>mouse</td><td>Prl2c5</td><td>mouse</td><td>NCBI Gene Model</td></tr>
 					<tr><td>NT_039433</td><td>NSMCE4A</td><td>human</td><td>Nsmce4a</td><td>mouse</td><td>NCBI Gene Model Evidence</td></tr>
 					<tr><td>NX_Q96B01</td><td>Rad51ap1</td><td>mouse</td><td>RAD51AP1</td><td>human</td><td>neXtProt</td></tr>
-					<tr><td>U021931</td><td>FAM20B</td><td>human</td><td>Fam20b</td><td>mouse</td><td>NIA Mouse Gene Index</td></tr>
+					<tr><td>U021931</td><td>FAM20B</td><td>human</td><td>Fam20b</td><td>mouse</td><td>NIA Mouse Gene Index. Comment out this row following 6.02 release</td></tr>
 					<tr><td>2L9C</td><td>Mup18</td><td>mouse</td><td>Mup20</td><td>mouse</td><td>PDB</td></tr>
 					<tr><td>PR:000009284</td><td>KIDINS220</td><td>human</td><td>Kidins220</td><td>mouse</td><td>Protein Ontology</td></tr>
 					<tr><td>RGD:2466</td><td>Cyp2b10</td><td>mouse</td><td>Cyp2b1</td><td>rat</td><td>Rat Genome Database</td></tr>

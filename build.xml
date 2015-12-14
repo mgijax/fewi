@@ -244,9 +244,13 @@
 	
 	<!-- Clean static content -->
 	<target name="static-content-cleanup">
-		<delete>
+		<echo>Deleting javascript build files</echo>
+		<delete includeemptydirs="true">
 			<fileset dir="www/js/">
-				<include name="*.js"/>
+				<include name="**/*"/>
+				<exclude name="src/**/*"/>
+				<exclude name="external/**/*"/>
+				<exclude name="tests/**/*"/>
 			</fileset>
 		</delete>
 		<delete dir="www/js/widgets" />
@@ -258,7 +262,9 @@
 		<echo>Build war file</echo>
 		<copy file="./www/WEB-INF/properties/excelviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
-		<war destfile="${project.name}.war" webxml="www/WEB-INF/web.xml">
+		<delete file="${war.file}"/>
+		<delete dir="${war.file}"/>
+		<war destfile="${war.file}" webxml="www/WEB-INF/web.xml">
 			<fileset dir="www" />
 			<exclude name="www/js/tests/**" />
 			<exclude name="www/js/src/**" />
@@ -267,17 +273,128 @@
 		<!-- Clear minified js build files -->
 		<antcall target="static-content-cleanup"/>
 	</target>
+	
 
 	<!--deploy -->
 	<target name="deploy" depends="war">
 		<echo>Deploy war</echo>
-		<move file="${project.name}.war" todir="${deploy.dir}" overwrite="true" />
+		
+		<!-- Remove existing war (which could be file or directory) -->
+		<delete dir="${deploy.dir}/${war.file}" />
+		
+		<move file="${war.file}" todir="${deploy.dir}" overwrite="true" />
 	</target>
-
+	
     <!--deploy-ds -->
     <target name="deploy-ds" >
             <echo>Deploy datasource</echo>
             <copy file="${datasource}" todir="${deploy.dir}" overwrite="true"/>
             <copy file="${jdbcdriver}" todir="${deploy.dir}" overwrite="true"/>
     </target>
+	
+	
+	<!-- For development ONLY -->
+	<property name="war.file" value="${project.name}.war" />
+	<property name="war.file.temp" value="${project.name}_temp.war" />
+	
+	<!-- Enable WatchTask -->
+	<taskdef name="watch"
+	           classname="org.apache.tools.ant.taskdefs.optional.watch.WatchTask"
+	           classpath="${lib.dir}/watch-task-1.0.jar" />
+	
+	<!--deploy-exploded -->
+	<target name="deploy-exploded" depends="war">
+		<move file="${war.file}" tofile="${war.file.temp}" overwrite="true" />
+		<unzip src="${war.file.temp}" dest="${war.file}"/>
+		
+		<!-- Remove existing war (which could be file or directory) -->
+		<delete file="${deploy.dir}/${war.file}" />
+		<delete dir="${deploy.dir}/${war.file}" />
+		
+		<copy todir="${deploy.dir}/${war.file}" overwrite="true">
+			<fileset dir="${war.file}"/>
+		</copy>
+		<touch file="${deploy.dir}/${war.file}.dodeploy"/>
+	</target>
+	
+	<!-- Watch task for file changes -->
+	<target name="watch" depends="deploy-exploded">
+		<watch>
+          <when>
+              <target>
+                <echo>Detected file change: ${watched.file}</echo>
+              	<antcall target="dev-copy-css"/>
+              </target>
+              <fileset dir="www/css" includes="**/*"/>
+          </when>
+		 <when>
+              <target>
+                <echo>Detected file change: ${watched.file}</echo>
+              	<antcall target="dev-copy-images"/>
+              </target>
+          	  <fileset dir="www/images" includes="**/*"/>
+          </when>
+		  <when>
+              <target>
+                <echo>Detected file change: ${watched.file}</echo>
+              	<antcall target="dev-copy-js"/>
+              </target>
+          	  <fileset dir="www/js/src" includes="**/*"/>
+          </when>
+		  <when>
+              <target>
+                <echo>Detected file change: ${watched.file}</echo>
+              	<antcall target="dev-copy-jsp"/>
+              </target>
+          	  <fileset dir="www/WEB-INF/jsp" includes="**/*"/>
+          	  <fileset dir="www/WEB-INF/tags" includes="**/*"/>
+          </when>
+      </watch>
+	</target>
+	
+	<!-- copy over the www files for development to deployment directory -->
+	<target name="dev-copy-files">
+		<antcall target="dev-copy-css"/>
+		<antcall target="dev-copy-images"/>
+		<antcall target="dev-copy-js"/>
+		<antcall target="dev-copy-jsp"/>
+	</target>
+	
+	<target name="dev-copy-css">
+		<echo>Copying to ${deploy.dir}/${war.file}</echo>
+		<copy todir="${deploy.dir}/${war.file}" >
+			<fileset dir="www" >
+				<include name="css/**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="dev-copy-images">
+		<echo>Copying to ${deploy.dir}/${war.file}</echo>
+		<copy todir="${deploy.dir}/${war.file}" >
+			<fileset dir="www" >
+				<include name="images/**"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="dev-copy-js">
+		<echo>Copying to ${deploy.dir}/${war.file}</echo>
+		<antcall target="static-content-package"/>
+		<copy todir="${deploy.dir}/${war.file}" >
+			<fileset dir="www" >
+				<include name="js/**"/>
+				<exclude name="js/src/**"/>
+				<exclude name="js/tests/**"/>
+			</fileset>
+		</copy>
+		<antcall target="static-content-cleanup"/>
+	</target>
+	<target name="dev-copy-jsp">
+		<echo>Copying to ${deploy.dir}/${war.file}</echo>
+		<copy todir="${deploy.dir}/${war.file}" >
+			<fileset dir="www" >
+				<include name="WEB-INF/jsp/**"/>
+				<include name="WEB-INF/tags/**"/>
+			</fileset>
+		</copy>
+	</target>
 </project>

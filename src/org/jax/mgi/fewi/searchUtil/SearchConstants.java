@@ -39,11 +39,12 @@ public class SearchConstants {
 	public static final String EVIDENCE_CODE		= "evidenceCode";
 	public static final String EVIDENCE_TERM		= "evidenceTerm";
 	public static final String EVIDENCE_CATEGORY	= "evidenceCategory";
-	
+
 
     // allele constants
     public static final String ALL_KEY              = "allele_key";
     public static final String ALL_SYSTEM           = "allele_system";
+	public static final String ALL_SYSTEM_KEY		 = "allele_system_key";
     public static final String ALL_DRIVER           = "allele_driver";
     public static final String ALL_ID               = "allele_id";
     public static final String ALL_TYPE				= "allele_type";
@@ -72,7 +73,15 @@ public class SearchConstants {
 
     // Cre Constants
 
-    public static final String CRE_SYSTEM_KEY       = "system_key";
+    public static final String CRE_SYSTEM_KEY       	= "system_key";
+    public static final String CRE_DRIVER           	= "driver";
+    public static final String CRE_INDUCER          	= "inducer";
+	public static final String CRE_STRUCTURE 			= "structure";
+	public static final String CRE_DETECTED 			= "detected";
+	public static final String CRE_SYSTEM_HL_GROUP		= "systemHlGroup";
+
+	public static final String CRE_SYSTEM_DETECTED		= "alleleSystemDetected";
+	public static final String CRE_SYSTEM_NOT_DETECTED	= "alleleSystemNotDetected";
 
     // GXD Lit
 
@@ -130,6 +139,7 @@ public class SearchConstants {
 	public static final String INTERPRO_TERM = "interProTerm";
 
 	// go
+	public static final String GO_ID = "go_id";
 	public static final String GO_TERM = "goTerm";
 	public static final String GO_PROCESS_TERM = "goProcessTerm";
 	public static final String GO_FUNCTION_TERM = "goFunctionTerm";
@@ -196,5 +206,4 @@ public class SearchConstants {
 	// matrix view groups
 	public static final String STAGE_MATRIX_GROUP = "stageMatrixGroup";
 	public static final String GENE_MATRIX_GROUP = "geneMatrixGroup";
-
 }

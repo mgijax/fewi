@@ -1,0 +1,29 @@
+
+/* annotation extensions column */
+.yui-dt-liner .goProperties span.propertyWrap {
+	display: block;
+}
+.yui-dt-liner .goProperties .stanza span.propertyWrap:not(:last-child):after {
+	/* semicolon delimiter for properties */
+	content: ",";
+}
+.yui-dt-liner .goProperties .stanza span.propertyWrap:last-child:after {
+	/* end a stanza with a period */
+	content: ".";
+}
+
+.yui-dt-liner .goProperties span.term {
+	/* font-weight: bold; */
+}
+
+
+.yui-dt-liner .goProperties hr {
+	margin: 0px;
+	margin-top: 2px;
+	border-color: #fff;
+}
+
+/* remove underline from all anchor links */
+.yui-dt-liner a {
+	text-decoration: none;
+}

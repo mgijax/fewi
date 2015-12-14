@@ -9,18 +9,20 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
+
 /**
  * Testing any logic methods in the recombinase summary object
  */
 public class RecombinaseSummaryTest {
+	
 
 	@Test
-	public void testisSystemHighlighted() 
+	public void testIsSystemHighlighted() 
 	{
 		// set up mock object
 		Set<String> highlights = new HashSet<String>(Arrays.asList("tail",
-						"reproductiveSystem",
-						"cavitiesAndLinings"
+						"reproductive system",
+						"cavities and their linings"
 					));
 		
 		Assert.assertTrue("single word system should match",
@@ -36,8 +38,8 @@ public class RecombinaseSummaryTest {
 	{
 		// set up mock object
 		Set<String> highlights = new HashSet<String>(Arrays.asList("tail",
-				"reproductiveSystem",
-				"cavitiesAndLinings"
+				"reproductive system",
+				"cavities and their linings"
 			));
 		
 		Assert.assertFalse("blank should not match",

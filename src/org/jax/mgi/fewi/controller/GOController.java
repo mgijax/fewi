@@ -1,22 +1,24 @@
 package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.Reference;
+import mgi.frontend.datamodel.Term;
 
 import org.jax.mgi.fewi.finder.MarkerAnnotationFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
+import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.MarkerAnnotationQueryForm;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -46,7 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/go")
 public class GOController {
 
-	private Logger logger = LoggerFactory.getLogger(GOController.class);
+	private final Logger logger = LoggerFactory.getLogger(GOController.class);
 
 	@Autowired
 	private MarkerAnnotationFinder markerAnnotationFinder;
@@ -56,6 +58,58 @@ public class GOController {
 
 	@Autowired
 	private MarkerFinder markerFinder;
+
+	@Autowired
+	private TermFinder termFinder;
+
+
+	/////////////////////////////
+	// GO ANNOTS FOR TERM
+	/////////////////////////////
+
+	@RequestMapping(value="/term/{termID}")
+	public ModelAndView goSummaryByTermId(@PathVariable("termID") String termID) {
+		logger.debug("->goSummaryByTermId started");
+
+		// find the requested term
+		List<Term> termList
+			= termFinder.getTermsByID(termID);
+
+		return goSummaryByTerm(termList, termID);
+	}
+
+	private ModelAndView goSummaryByTerm(List<Term> termList,
+			String termID){
+
+		ModelAndView mav = new ModelAndView("go_summary_term");
+
+		// there can be only one...
+		if (termList.size() < 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "No term found for " + termID);
+			return mav;
+		}
+		if (termList.size() > 1) {
+			// forward to error page
+			mav = new ModelAndView("error");
+			mav.addObject("errorMsg", "Dupe term found for " + termID);
+			return mav;
+		}
+		// pull out the reference, and place into the mav
+		Term term = termList.get(0);
+		mav.addObject("term", term);
+
+		// pre-generate query string
+		mav.addObject("queryString", "goID=" + termID );
+
+		return mav;
+	}
+
+
+	/////////////////////////////
+	// GO ANNOTS FOR REFERENCE
+	/////////////////////////////
 
 	@RequestMapping(value="/reference/{referenceID}")
 	public ModelAndView goSummaryByReferenceId(@PathVariable("referenceID") String referenceID) {
@@ -116,6 +170,11 @@ public class GOController {
 
 		return mav;
 	}
+
+
+	//////////////////////////
+	// GO ANNOTS FOR MARKER
+	//////////////////////////
 
 	@RequestMapping(value="/marker/{markerID}")
 	public ModelAndView goSummaryByMarkerId(HttpServletRequest request,
@@ -192,17 +251,20 @@ public class GOController {
 		return mav;
 	}
 
+
+	//////////////////////////
+	// JSON HANDLING
+	//////////////////////////
+
 	@RequestMapping("/json")
-	public @ResponseBody JsonSummaryResponse<GOSummaryRow> seqSummaryJson(HttpServletRequest request,
+	public @ResponseBody JsonSummaryResponse<GOSummaryRow> goSummaryJson(HttpServletRequest request,
 			@ModelAttribute MarkerAnnotationQueryForm query, @ModelAttribute Paginator page) {
 
 		logger.debug("->JsonSummaryResponse started");
 
-		// generate search parms object;  add pagination, sorts, and filters
-		SearchParams params = new SearchParams();
-		params.setPaginator(page);
-		params.setSorts(genSorts(request));
-		params.setFilter(genFilters(query));
+
+		SearchResults<Annotation> searchResults = getAnnotations(request, query, page);
+		List<Annotation> annotList = searchResults.getResultObjects();
 
 		Marker m = null;
 		Reference r = null;
@@ -217,10 +279,6 @@ public class GOController {
 			r = sr.getResultObjects().get(0);
 		}
 
-		// perform query, and pull out the requested objects
-		SearchResults<Annotation> searchResults = markerAnnotationFinder.getMarkerAnnotations(params);
-		List<Annotation> annotList = searchResults.getResultObjects();
-
 		// create/load the list of SummaryRow wrapper objects
 		List<GOSummaryRow> summaryRows = new ArrayList<GOSummaryRow> ();
 		Iterator<Annotation> it = annotList.iterator();
@@ -232,6 +290,8 @@ public class GOController {
 				summaryRows.add(new GOSummaryRow(annot, m));
 			} else if (r != null) {
 				summaryRows.add(new GOSummaryRow(annot, r));
+			} else {
+				summaryRows.add(new GOSummaryRow(annot));
 			}
 		}
 
@@ -245,9 +305,28 @@ public class GOController {
 		return jsonResponse;
 	}
 
-	//----------------------//
-	// JSON summary results
-	//----------------------//
+	/*
+	 * For automated tests
+	 */
+	public SearchResults<Annotation> getAnnotations(HttpServletRequest request,
+			@ModelAttribute MarkerAnnotationQueryForm query, @ModelAttribute Paginator page) {
+
+		// generate search parms object;  add pagination, sorts, and filters
+		SearchParams params = new SearchParams();
+		params.setPaginator(page);
+		params.setSorts(genSorts(request));
+		params.setFilter(genFilters(query));
+
+		// perform query, and pull out the requested objects
+		SearchResults<Annotation> searchResults = markerAnnotationFinder.getMarkerAnnotations(params);
+		return searchResults;
+	}
+
+
+	//////////////////////////
+	// DOWNLOADS
+	//////////////////////////
+
 	@RequestMapping("/report*")
 	public ModelAndView seqSummaryExport(HttpServletRequest request, @ModelAttribute MarkerAnnotationQueryForm query, @ModelAttribute Paginator page) {
 
@@ -275,6 +354,10 @@ public class GOController {
 			view = "goReferenceSummaryReport";
 		}
 
+		if (query.getGoID() != null) {
+			view = "goTermSummaryReport";
+		}
+
 		// perform query, and pull out the requested objects
 		SearchResults<Annotation> searchResults = markerAnnotationFinder.getMarkerAnnotations(params);
 
@@ -284,6 +367,54 @@ public class GOController {
 		mav.addObject("results", searchResults.getResultObjects());
 		return mav;
 	}
+
+
+	//////////////////////////
+	// FACET HANDLING
+	//////////////////////////
+
+	@RequestMapping(value="/facet/{type}")
+	public @ResponseBody Map<String, List<String>> facets (@ModelAttribute MarkerAnnotationQueryForm qf, BindingResult result, @PathVariable("type") String facetType) {
+
+		System.out.println("facetType: " + facetType);
+		System.out.println("qf: " + qf);
+
+		Map<String, List<String>> facets = new HashMap<String, List<String>>();
+		//List<String> l = new ArrayList<String>();
+
+		SearchParams params = new SearchParams();
+		params.setFilter(genFilters(qf));
+
+		if("evidence".equalsIgnoreCase(facetType)) {
+			facetType = SearchConstants.EVIDENCE_CATEGORY;
+		} else if("term".equalsIgnoreCase(facetType)) {
+			facetType = SortConstants.VOC_TERM;
+		} else if("reference".equalsIgnoreCase(facetType)) {
+			facetType = SortConstants.BY_REFERENCE;
+		} else if("aspect".equalsIgnoreCase(facetType)){
+			facetType = SortConstants.VOC_DAG_NAME;
+		} else if("category".equalsIgnoreCase(facetType)){
+			facetType = SearchConstants.SLIM_TERM;
+		}
+
+		SearchResults<Annotation> facetResults = markerAnnotationFinder.getFacetResults(params, facetType);
+
+		List<String> results = facetResults.getSortedResultFacets();
+
+		// need to customize sorting for evidence facets:
+		//	Experimental, Homology, Automated, Other
+		if (SearchConstants.EVIDENCE_CATEGORY.equalsIgnoreCase(facetType)) {
+			Collections.sort (results, new EvidenceFacetSorter());
+		}
+
+		facets.put("resultFacets", results);
+		return facets;
+	}
+
+
+	//////////////////////////
+	// PRIVATE METHODS
+	//////////////////////////
 
 	// generate the sorts
 	private List<Sort> genSorts(HttpServletRequest request) {
@@ -300,15 +431,21 @@ public class GOController {
 		if("desc".equalsIgnoreCase(dirRequested)){
 			desc = true;
 		}
-		
+
 		logger.debug("Sort: " + sortRequested);
 
 		if("evidence".equalsIgnoreCase(sortRequested)) {
 			sorts.add(new Sort(SortConstants.MRK_BY_EVIDENCE_CODE, desc));
-		} else if("term".equalsIgnoreCase(sortRequested)) {
+		}
+		else if("term".equalsIgnoreCase(sortRequested)) {
+			sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL, desc));
 			sorts.add(new Sort(SortConstants.VOC_TERM, desc));
-		} else {
+			sorts.add(new Sort(SortConstants.MRK_BY_EVIDENCE_CODE, desc));
+		}
+		else {
 			// Original Default
+			sorts.add(new Sort(SortConstants.MRK_BY_SYMBOL, desc));
+			sorts.add(new Sort(SortConstants.BY_ISOFORM, desc));
 			sorts.add(new Sort(SortConstants.VOC_DAG_NAME, desc));
 			sorts.add(new Sort(SortConstants.VOC_TERM, false));
 		}
@@ -329,13 +466,14 @@ public class GOController {
 		String mrkKey = query.getMrkKey();
 		String refsKey = query.getReferenceKey();
 		String vocab = query.getVocab();
+		String goID = query.getGoID();
 		String restriction = query.getRestriction();
 		String header = query.getHeader();
 		List<String> aspectFilter = query.getAspectFilter();
 		List<String> categoryFilter = query.getCategoryFilter();
 		List<String> evidenceFilter = query.getEvidenceFilter();
 		List<String> referenceFilter = query.getReferenceFilter();
-		
+
 		if ((header != null) && (!"".equals(header))) {
 			filterList.add(new Filter (SearchConstants.SLIM_TERM, header));
 		}
@@ -348,9 +486,12 @@ public class GOController {
 		if ((vocab != null) && (!"".equals(vocab))) {
 			filterList.add(new Filter (SearchConstants.VOC_VOCAB, vocab, Filter.Operator.OP_EQUAL));
 		}
+		if ((goID != null) && (!"".equals(goID))) {
+			filterList.add(new Filter (SearchConstants.GO_ID, goID, Filter.Operator.OP_EQUAL));
+		}
 		if ((restriction != null) && (!"".equals(restriction))) {
 			filterList.add(new Filter (SearchConstants.VOC_RESTRICTION, restriction, Filter.Operator.OP_NOT_EQUAL));
-		}   
+		}
 		if (aspectFilter.size() > 0) {
 			filterList.add(new Filter(SearchConstants.VOC_DAG_NAME, aspectFilter, Filter.Operator.OP_IN));
 		}
@@ -363,7 +504,7 @@ public class GOController {
 		if (referenceFilter.size() > 0) {
 			filterList.add(new Filter(SearchConstants.REF_KEY, referenceFilter, Filter.Operator.OP_IN));
 		}
-		
+
 		// if we have filters, collapse them into a single filter
 		Filter containerFilter = new Filter();
 		if (filterList.size() > 0){
@@ -380,10 +521,10 @@ public class GOController {
 
 		System.out.println("facetType: " + facetType);
 		System.out.println("qf: " + qf);
-		
+
 		Map<String, List<String>> facets = new HashMap<String, List<String>>();
 		//List<String> l = new ArrayList<String>();
-		
+
 		SearchParams params = new SearchParams();
 		params.setFilter(genFilters(qf));
 
@@ -398,7 +539,7 @@ public class GOController {
 		} else if("category".equalsIgnoreCase(facetType)){
 			facetType = SearchConstants.SLIM_TERM;
 		}
-		
+
 		SearchResults<Annotation> facetResults = markerAnnotationFinder.getFacetResults(params, facetType);
 
 		List<String> results = facetResults.getSortedResultFacets();
@@ -408,11 +549,11 @@ public class GOController {
 		if (SearchConstants.EVIDENCE_CATEGORY.equalsIgnoreCase(facetType)) {
 			Collections.sort (results, new EvidenceFacetSorter());
 		}
-
-		facets.put("resultFacets", results);
-		return facets;
 	}
-}
+
+/////////////////////////
+// CLASSES
+/////////////////////////
 
 class EvidenceFacetSorter implements Comparator<String> {
 	public EvidenceFacetSorter() {}
@@ -437,5 +578,5 @@ class EvidenceFacetSorter implements Comparator<String> {
 		if (this == c) { return true; }
 		return false;
 	}
-}	
+}
 

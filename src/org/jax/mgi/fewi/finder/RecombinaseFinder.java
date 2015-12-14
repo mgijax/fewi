@@ -9,13 +9,16 @@ import java.util.List;
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.AlleleSystemAssayResult;
+import mgi.frontend.datamodel.group.RecombinaseEntity;
 
-import org.jax.mgi.fewi.hunter.SolrCreAlleleSystemKeyHunter;
+import org.jax.mgi.fewi.highlight.RecombinaseHighlightInfo;
 import org.jax.mgi.fewi.hunter.SolrCreAssayResultSummaryHunter;
-import org.jax.mgi.fewi.hunter.SolrCreSummaryHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.searchUtil.entities.SolrCreSystemHighlight;
+import org.jax.mgi.shr.fe.indexconstants.CreFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +35,8 @@ public class RecombinaseFinder {
 	/* instance variables */
 	/*--------------------*/
 
-	private Logger logger = LoggerFactory.getLogger (
+	private final Logger logger = LoggerFactory.getLogger (
 		RecombinaseFinder.class);
-
-	@Autowired
-	private SolrCreSummaryHunter creSummaryHunter;
-
-	@Autowired
-	private SolrCreAlleleSystemKeyHunter creAlleleSystemKeyHunter;
 
 	@Autowired
 	private SolrCreAssayResultSummaryHunter creAssayHunter;
@@ -53,47 +50,43 @@ public class RecombinaseFinder {
 	@Autowired
 	private HibernateObjectGatherer<AlleleSystemAssayResult> assayResultGatherer;
 
+
 	/*-------------------------*/
 	/* public instance methods */
 	/*-------------------------*/
+
 
 	// Recombinase Summary
 	public SearchResults<Allele> searchRecombinases(SearchParams params) {
 
 		logger.debug ("searchRecombinases");
 
-		SearchResults<Allele> results = new SearchResults<Allele>();
+		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
 
 		logger.debug ("hunt");
-		creSummaryHunter.hunt (params, results);
+		creAssayHunter.hunt(params, results, SearchConstants.ALL_KEY);
+
+		SearchResults<Allele> srA = new SearchResults<Allele>();
+		srA.cloneFrom(results, Allele.class);
 
 		logger.debug ("gather");
-		List<Allele> alleles = summaryGatherer.get (Allele.class, results.getResultKeys());
+		List<Allele> alleles = summaryGatherer.get (Allele.class, srA.getResultKeys());
 
-		results.setResultObjects (alleles);
-		return results;
+		srA.setResultObjects (alleles);
+		return srA;
 	}
 
 
 	// Recombinase Specificity
-	public SearchResults<AlleleSystem> getAlleleSystem(SearchParams params) {
+	public SearchResults<AlleleSystem> getAlleleSystemByKey(String alleleSystemKey) {
 
-		logger.debug ("getAlleleSystem");
+		logger.debug ("->getAlleleSystemByKey("+alleleSystemKey+")");
+		SearchResults<AlleleSystem> searchResults = new SearchResults<AlleleSystem>();
+		AlleleSystem alleleSystem = alleleSystemGatherer.get (AlleleSystem.class, alleleSystemKey);
 
-		SearchResults<AlleleSystem> results = new SearchResults<AlleleSystem>();
-
-		logger.debug ("hunt");
-		creAlleleSystemKeyHunter.hunt (params, results);
-
-		logger.debug ("gather");
-		List<AlleleSystem> alleleSystem
-		  = alleleSystemGatherer.get (AlleleSystem.class, results.getResultKeys());
-
-		results.setResultObjects (alleleSystem);
-		return results;
+		searchResults.addResultObjects (alleleSystem);
+		return searchResults;
 	}
-
-
 
 
 	// Recombinase Specificity Assay Summary
@@ -101,19 +94,95 @@ public class RecombinaseFinder {
 
 		logger.debug ("getAssaySummary");
 
-		SearchResults<AlleleSystemAssayResult> results
-		  = new SearchResults<AlleleSystemAssayResult>();
+		SearchResults<RecombinaseEntity> results
+		  = new SearchResults<RecombinaseEntity>();
 
 		logger.debug ("hunt");
 		creAssayHunter.hunt (params, results);
 
+		SearchResults<AlleleSystemAssayResult> srAR = new SearchResults<AlleleSystemAssayResult>();
+		srAR.cloneFrom(results, AlleleSystemAssayResult.class);
+
 		logger.debug ("gather");
 		List<AlleleSystemAssayResult> alleleSystem
-		  = assayResultGatherer.get (AlleleSystemAssayResult.class, results.getResultKeys());
+		  = assayResultGatherer.get (AlleleSystemAssayResult.class, srAR.getResultKeys());
 
-		results.setResultObjects (alleleSystem);
+		srAR.setResultObjects (alleleSystem);
+		return srAR;
+	}
+
+
+	// Recombinase Allele Sumary - System Highlights
+	public RecombinaseHighlightInfo searchRecombinaseHighlights(SearchParams params) {
+
+		logger.debug ("searchRecombinasesHighlights");
+		// adjust pageSize for this query
+		int originalPageSize = params.getPageSize();
+		params.setPageSize(100000);
+
+		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
+
+		logger.debug ("hunt");
+		creAssayHunter.hunt(params, results, SearchConstants.CRE_SYSTEM_HL_GROUP);
+
+		// restore originalPageSize
+		params.setPageSize(originalPageSize);
+
+		SearchResults<SolrCreSystemHighlight> srSL = new SearchResults<SolrCreSystemHighlight>();
+		srSL.cloneFrom(results, SolrCreSystemHighlight.class);
+
+
+		RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
+		highlightInfo.addSystemHighlights(srSL.getResultObjects());
+
+
+		return highlightInfo;
+	}
+
+	// filtering facets
+
+	public SearchResults<RecombinaseEntity> getDriverFacet(SearchParams params) {
+
+		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
+
+		logger.debug ("hunt");
+		creAssayHunter.setFacet(CreFields.DRIVER);
+		creAssayHunter.hunt(params, results, SearchConstants.ALL_KEY);
+
 		return results;
 	}
 
+	public SearchResults<RecombinaseEntity> getInducerFacet(SearchParams params) {
+
+		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
+
+		logger.debug ("hunt");
+		creAssayHunter.setFacet(CreFields.INDUCER);
+		creAssayHunter.hunt(params, results, SearchConstants.ALL_KEY);
+
+		return results;
+	}
+
+	public SearchResults<RecombinaseEntity> getSystemDetectedFacet(SearchParams params) {
+
+		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
+
+		logger.debug ("hunt");
+		creAssayHunter.setFacet(CreFields.ALL_SYSTEM_DETECTED);
+		creAssayHunter.hunt(params, results, SearchConstants.ALL_KEY);
+
+		return results;
+	}
+
+	public SearchResults<RecombinaseEntity> getSystemNotDetectedFacet(SearchParams params) {
+
+		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
+
+		logger.debug ("hunt");
+		creAssayHunter.setFacet(CreFields.ALL_SYSTEM_NOT_DETECTED);
+		creAssayHunter.hunt(params, results, SearchConstants.ALL_KEY);
+
+		return results;
+	}
 
 }

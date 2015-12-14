@@ -135,7 +135,7 @@ tr.gray td {background-color:#EEEEEE;}
 			<ol>
 				<li>open the Allele query form</li>
 				<li>Type <b concordion:set="#query">AGTR1</b> in the nomenclature field and press the search button</li>
-				<li><table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
+				<li><table cc:verifySupersetOf="#result : getAlleleSymbolsByNomen(#query)">
 				         <tr><th concordion:assertEquals="#result">Verify that only these alleles are returned</th></tr>
 				        <tr><td>Agtr1a&lt;tm1.1Cof&gt;</td></tr>
 				        <tr><td>Agtr1a&lt;tm1.1Uky&gt;</td></tr>
@@ -269,11 +269,7 @@ tr.gray td {background-color:#EEEEEE;}
 			<li>open the Allele query form</li>
 
 				<li>Type <b concordion:set="#query">Ddt*</b> in the nomenclature field and press the search button</li>
-				<li>verify that only the alleles with <b>Ddt</b> are returned
-					<table cc:verifyRowsUnordered="#result : getAlleleSymbolsByNomen(#query)">
-				         <tr><th concordion:assertEquals="#result">Expected Result Set</th></tr>
-					    <tr><td>Ddt&lt;tm1(KOMP)Vlcg&gt;</td></tr>
-					</table>
+				<li>verify that only the alleles with <b concordion:assertEquals="getFirstMarkerSymbolByNomen(#query)">Ddt</b> are returned.
 				</li>
 			</ol>
 			</li>

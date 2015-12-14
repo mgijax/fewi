@@ -19,6 +19,7 @@ public class SortConstants {
 	public static final String REF_BY_AUTHOR       = "authorSort";
 	public static final String REF_JOURNAL_AC      = "journalSortLower";
 	public static final String REF_YEAR            = "year";
+	public static final String REF_KEY             = "referenceKey";
 
 	// recombinase summary page
 	public static final String CRE_DRIVER          = "driver";
@@ -53,6 +54,7 @@ public class SortConstants {
 	public static final String MRK_BY_TYPE 						= "byMarkerType";
 	public static final String MRK_BY_EVIDENCE_CODE				= "byEvidenceCode";
 	public static final String MRK_BY_EVIDENCE_TERM				= "byEvidenceTerm";
+	public static final String BY_ISOFORM						= "byIsoform";
 
 	// Sequence Summary page
 	public static final String SEQUENCE_TYPE       = "sequenceType";
@@ -86,9 +88,9 @@ public class SortConstants {
 	public static final String BY_DATA_SOURCE		= "byDataSource";
 	public static final String BY_SCORE			= "byScore";
 	public static final String BY_REFERENCE		= "byReference";
-	
+
 	// Allele
-	public static final String ALL_BY_TRANSMISSION = "byTransmission";	
+	public static final String ALL_BY_TRANSMISSION = "byTransmission";
 	public static final String ALL_BY_SYMBOL = "bySymbol";
 	public static final String ALL_BY_TYPE = "byType";
 	public static final String ALL_BY_CHROMOSOME = "byChr";

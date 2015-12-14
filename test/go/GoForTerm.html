@@ -1,0 +1,436 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>GO Annots for a Term</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>GO Annotations for a Term Test Suite</h1>
+    <ul>
+    	<li>sto18, E1: GO: Load Uberon IDs as EMAPA ids</li>
+        <li>sto19, E1: GO: Data migration (EMAP -> EMAPA+stage)</li>
+        <li>sto20, E1: GO: Data migration (MA -> EMAPA+stage)</li>
+    	<li>sto23, E1: GO: Convert term summary page to fewi <i>(NOTE: this story came first!) </i></li>
+        <li>sto24, E1: GO: Translate property values (IDs) to labels</li>
+        <li>sto25, E1: GO: Display links in annotation ext in fewi</li>
+        <li>sto26, E1: GO: Display converted property names</li>
+        <li>sto27, E1: GO: Display isoform links</li>
+        <li>sto61, TR12124 - Change col 17 GAF logic </li>
+        <li>sto69, E1: GO: Load external mouse IDs as MGI ids</li>
+        <li>sto71: E1: GO: Display stanzas on separate lines</li>
+        <li>sto86, E1: GO: Collapse identical stanzas</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto18: Uberon IDs coming from the Uniprot/GO load
+		<ul>
+			<li>sto18: are displayed in the WI as EMAPA terms linked to EMAPA browser page</li>
+			<li>sto18: are exported to the GAF file as EMAPA ids</li>
+		</ul>
+		</li>
+		<li>sto18: Uberon-to-EMAPA mappings are available within the uberon obo file.</li>
+		<li>sto18: If an uberon id cannot be mapped, display as uberon id (these should be reported in QC)</li>
+		<li>sto19: "all" GO annotation property values that are EMAP ids converted to EMAPA ids + stage</li>
+		<li>sto19: Don't want stage to go out in GAF or appear on the web- just the EMAPA</li>
+		<li>sto19: But also don't want to lose the stage info</li>
+		<li>sto21: Annotation extension data displayed in GO annotation display tables (property names + values)
+		<ul>
+			<li>Go annots for a gene</li>
+			<li>Go annots for a reference</li>
+		</ul></li>
+		<li>sto21: display raw names and values</li>
+		<li>sto21: use same logic as in GAF generation</li>
+		<li>sto22: display raw isoform value</li>
+		<li>sto22: simplify logic from what is currently used to populate GAF column 17. Just use what is in the gene product property. If nothing there, display nothing. See TR12124.</li>
+		<li>sto23: Verify certain property terms are excluded(not displayed) <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: display same data as public <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: display properties values on this page <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: remove the Category column <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: Add the Properties column <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: verify default sort order is maintained <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: verify that IDs are either translated correctly to their term text, or are left alone. <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: verify the pagination is correct. <i>(NOTE: these tests came first!)</i></li>
+		<li>sto23: Verify download by Text or excel files are correct. <i>(NOTE: these tests came first!)</i></li>
+		<li>sto24: front end displays labels (terms, maybe including IDs) not just IDs</li>
+		<li>sto24: Just the term? Term plus ID? (format questions)</li>
+		<li>sto24: verify that IDs are either translated correctly to their term text, or are left alone.</li>
+		<li>sto24: The following ID prefixes should trigger a translation:
+		<ul>
+			<li>MGI</li>
+			<li>CL</li>
+			<li>GO</li>
+			<li>EMAPA</li>
+		</ul>
+		</li>
+		<li>sto24: all other IDs get displayed as is.</li>
+		<li>sto25: accids are displayed as links</li>
+		<li>sto25: for vocabs, display term not just id</li>
+		<li>sto25: for proteins, just id</li>
+		<li>sto25: MGI genes link to detail pages</li>
+		<li>sto25: CL links to obtobee (ala Amigo)</li>
+		<li>sto25: GO ids link to MGI GO browser</li>
+		<li>sto25: EMAPA links to browser</li>
+		<li>sto25: UniProtKB links to Uniprot</li>
+		<li>sto25: Ensembl links to Ensembl</li>
+		<li>sto25: PRs link to Pro (georgetown)</li>
+		<li>sto25: anything else displayed as plain text</li>
+		<li>sto26: curator can specify arbitrary text to be displayed for a term via EI</li>
+		<li>sto26: curator can change whenever, without SE intervention</li>
+		<li>sto26: fe displays the text rather than the raw property name</li>
+		<li>sto27: <i>no acceptance tests for Isoform links</i></li>
+		<li>sto61: no forked logic - fewi and GAF show same col 17 contents</li>
+		<li>sto61: whatever value is in db for "gene_product" is what shows in col 17 - EXCEPT convert NCBI: to RefSeq:</li>
+		<li>sto61: EMBL ids link to EMBL</li>
+		<li>sto69: OK to implement this for just Ensembl IDs and Entrez IDs. (In particular, Uniprot id's can still just be links to uniprot.)</li>
+		<li>sto69: Other requirements as stated in the comment:
+		<ul>
+			<li>instead of Ensembl/Entrez ids, display the mouse symbol, linked to the detail page</li>
+			<li>non-mouse, non-gene, or multi-gene ids displayed as (untranslated) ids that link out to Ensenbl/NCBI.</li>
+		</ul>
+		</li>
+		<li>sto69: However, we WILL output MGI ids to the GAF. (This means you have the option to translate at load time, if you wish.)</li>
+		<li>sto69: May affect up to 5 loads. All will need to be tested</li>
+		<li>sto69: Example: cardolan.informatics.jax.org/go/marker/MGI:1891409
+		<ul>
+			<li>For J:75967, currently displays "regulates NCBI_Gene:15379".</li>
+			<li>Should display "regulates Onecut1", with the gene symbol linked.</li>
+		</ul>
+		</li>
+		<li>sto69: Stats should be the same.</li>
+		<li>sto71: if an annotation has multiple stanzas, the annotation summary separates the stanzas visually</li>
+		<li>sto71: this is already reflected in the GAF files; should be the same in the download files</li>
+		<li>sto86: does not affect the GAF</li>
+		<li>sto86: use the Kit example as ONE example:
+		<ul>
+			<li>should have same number of annotation lines, but</li>
+			<li>the mast cell example should collapse</li>
+		</ul>
+		</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Certain GO Property (_vocab_key = 82) terms are EXCLUDED from the display. (sto23) 
+   			<p concordion:manual="true">klf 06-oct-2015</p>
+ 			<table>
+ 				<thead>
+ 				<tr><th>Property term</th></tr>
+ 				</thead>
+ 				<tbody>
+ 				<tr><td>anatomy</td></tr>
+ 				<tr><td>cell type</td></tr>
+ 				<tr><td>dual-taxon ID</td></tr>
+ 				<tr><td>evidence</td></tr>
+ 				<tr><td>external ref</td></tr>
+ 				<tr><td>gene product</td></tr>
+ 				<tr><td>modification</td></tr>
+ 				<tr><td>target</td></tr>
+ 				<tr><td>text</td></tr>
+ 				</tbody>
+ 			</table>
+    		<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0090331">GO Annotations term display</a> 
+                	for <b>negative regulation of platelet aggregation</b> (<b concordion:set="#geneId">GO:0090331</b>). 
+                	Verify that the following Markers associated with this term are displayed(sto23):
+                <table> <!--  concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">Marker Name</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term</th> <!--  cc:assertNoResultsContain="#types" -->
+                		<th>Evidence</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>Prkcd</td><td>J:140440</td><td></td><td>IMP</td></tr>
+                	<tr><td>Adrb2</td><td>J:155856</td><td></td><td>ISO</td></tr>
+                	<tr><td>Serpine2</td><td>J:155899</td><td></td><td>IMP</td></tr>
+                	<tr><td>Abat</td><td>J:155856</td><td></td><td>ISO</td></tr>
+                	<tr><td>Alox12</td><td>J:46896</td><td></td><td>IMP</td></tr>
+                	<tr><td>Adamts18</td><td>J:73065</td><td></td><td>ISO</td></tr>
+                	<tr><td>Ubash3b</td><td>J:165882</td><td></td><td>IMP</td></tr>
+                	<tr><td>Adamts18</td><td>J:149378</td><td></td><td>IMP</td></tr>
+                	<tr><td>Prkg1</td><td>J:164563</td><td></td><td>ISO</td></tr>
+                	<tr><td>C1qtnf1</td><td>J:164563</td><td></td><td>ISO</td></tr>
+                	<tr><td>Ptger3</td><td>J:155856</td><td></td><td>ISO</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0016328">GO Annotations term display</a> 
+                	for <b>lateral plasma membrane</b> (<b concordion:set="#geneId">GO:0016328</b>). 
+                	Verify that the following Markers associated with this term are displayed(sto23) but the Properties field are blank(these markers have properties that should not be displayed), the last marker has property terms associated with other J-numbers:
+                <table> <!-- concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">Marker Name</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term</th> <!--  cc:assertNoResultsContain="#types" -->
+                		<th>Evidence</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>Axin1</td><td>J:73065</td><td></td><td>ISO</td></tr>
+                	<tr><td>Apc</td><td>J:73065</td><td></td><td>ISO</td></tr>
+                	<tr><td>Ctnnb1</td><td>J:73065</td><td>(is a part of EMAPA:18941)</td><td>ISO</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0097470">GO Annotations term display</a> 
+                	for <b>ribbon synapse</b> (<b concordion:set="#geneId">GO:0097470</b>). 
+                	Verify that the following Markers associated with this term are displayed, the last marker is the only one  that has a property term.(sto23):
+                <table> <!-- concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">Marker Name</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term</th> <!--  cc:assertNoResultsContain="#types" -->
+                		<th>Evidence</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>Rapgef3</td><td>J:155856</td><td></td><td>ISO</td></tr>
+                	<tr><td>Nlgn2</td><td>J:155856</td><td></td><td>ISO</td></tr>
+                	<tr><td>Pclo</td><td>J:155856</td><td></td><td>ISO</td></tr>
+                	<tr><td>Bsn</td><td>J:155856</td><td></td><td>ISO</td></tr>
+                	<tr><td>Atp2a2</td><td>J:159546</td><td></td><td>IDA</td></tr>
+                	<tr><td>Ctbp2</td><td>J:159546</td><td></td><td>IDA</td></tr>
+                	<tr><td>Nphp4</td><td>J:167232</td><td>(is a part of retina)</td><td>IDA</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                </ol>
+            </li>
+
+   		<li>The remaining GO Property (_vocab_key = 82) terms ARE DISPLAYED. (sto23) Associated GO Property Values are displayed. ID values are translated to terms where needed. <br/>
+   		Some Values are linked to their web resource page. (sto25) Identical annotation extension stanzas (Property-Value pairs in multiple stanzas) associated with identical annotations (Term + marker + Reference-evidence code + Inferred from) should be displayed only once. (sto86)<br/>
+   		Proteoform values are displayed. Proteoforms link out to their web resource where appropriate.<br/>
+   		External mouse IDs coming in as NCBI_Gene or Ensembl IDs are translated to MGI mouse gene IDs correctly (sto69).
+    		<p>See <a href="/../GoForMarker.html">GO Annots for a Marker</a> test suite for additional details and tests regarding Properties, Values, Protein Forms, etc.</p>
+    			
+    			<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0044085">GO Term Annotations Summary Display</a> 
+                	for <b>cellular component biogenesis</b>, <b>GO:0044085</b>. Verify that the following Values associated with a GO annotation and Property terms, and Proteoforms ARE DISPLAYED and linked where appropriate:
+    			<p concordion:manual="true">klf 09-nov-2015</p>  
+                <table>
+                	<thead>
+                	<tr>
+                		<th>MGI ID</th>
+                		<th>Symbol</th>
+                		<th>Name</th>
+                		<th>Proteoform</th>
+                		<th>Chromosome</th>
+                		<th>GO ID Annot Term</th>
+                		<th>Annotated Term</th>
+                		<th>Property Type</th>
+                		<th>Value</th>
+                		<th>Additional Term Context</th>
+                		<th>Evidence</th>
+                		<th>Reference</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>MGI:87860</td><td>Abl2</td><td>v-abl Abelson murine leukemia viral oncogene 2 (arg, Abelson-related gene)</td><td></td><td>1</td><td>GO:0006930</td><td>substrate-dependent cell migration, cell extension</td><td>occurs_in</td><td>CL:0000057</td><td>happens in <a href="http://purl.obolibrary.org/obo/CL_0000057">fibroblast</a>.</td><td>IGI</td><td>J:149136</td></tr>
+                	<tr><td>MGI:87874</td><td>Ace</td><td>angiotensin I converting enzyme (peptidyl-dipeptidase A) 1</td><td></td><td>11</td><td>GO:1903597</td><td>negative regulation of gap junction assembly</td><td>occurs_in<br/>occurs_in</td><td>EMAPA:17337 (was UBERON:0002084)<br/>CL:0000746</td><td>happens in <a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17337">heart left ventricle</a>,<br/>happens in <a href="http://purl.obolibrary.org/obo/CL_0002084">cardiac muscle cell</a>.</td><td>IMP</td><td>J:215922</td></tr>
+                	<tr><td>MGI:87961</td><td>Agrn</td><td>agrin</td><td><a href="http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=NP_067617">RefSeq:NP_067617</a></td><td>4</td><td>GO:0008582</td><td>regulation of synaptic growth at neuromuscular junction</td><td></td><td></td><td></td><td>IMP</td><td>J:64996</td></tr>
+                	<tr><td>MGI:104652</td><td>Capzb</td><td>capping protein (actin filament) muscle Z-line, beta</td><td><a href="http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:P47757-2">PR:P47757-2</a></td><td>4</td><td>GO:0051016</td><td>barbed-end actin filament capping</td><td></td><td></td><td></td><td>IDA</td><td>J:125384</td></tr>
+                	<tr><td>MGI:104652</td><td>Capzb</td><td>capping protein (actin filament) muscle Z-line, beta</td><td><a href="http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:P47757-2">PR:P47757-2</a></td><td>4</td><td>GO:0030032</td><td>lamellipodium assembly</td><td>occurs_in</td><td>CL:0002608</td><td>happens in <a href="http://purl.obolibrary.org/obo/CL_0002608">hippocampal neuron</a>.</td><td>IMP</td><td>J:154619</td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0044085">GO Term Annotations Summary Display</a> 
+                	for <b>cell surface</b>, <b>GO:0009986</b>. Verify that the following Values associated with a GO annotation and Property terms, and Proteoforms ARE DISPLAYED and linked where appropriate:
+    			<p concordion:manual="true">klf 04-oct-2015</p>  
+                <table>
+                	<thead>
+                	<tr>
+                		<th>MGI ID</th>
+                		<th>Symbol</th>
+                		<th>Name</th>
+                		<th>Proteoform</th>
+                		<th>Chromosome</th>
+                		<th>GO ID Annot Term</th>
+                		<th>Annotated Term</th>
+                		<th>Property Type</th>
+                		<th>Value</th>
+                		<th>Additional Term Context</th>
+                		<th>Evidence</th>
+                		<th>Reference</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>MGI:87961</td><td>Agrn</td><td>agrin</td><td><a href="http://www.ebi.ac.uk/ena/data/view/AAG02119">EMBL:AAG02119</a></td><td>4</td><td>GO:0009986</td><td>cell surface</td><td></td><td></td><td></td><td>IDA</td><td>J:64996</td></tr>
+                	<tr><td>MGI:107511</td><td>Art1</td><td>ADP-ribosyltransferase 1</td><td><a href="http://www.uniprot.org/entry/Q60935">UniProtKB:Q60935</a></td><td>7</td><td>GO:0009986</td><td>cell surface</td><td></td><td></td><td></td><td>IDA</td><td>J:34530 [PMID:8704249]</td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0030509">GO Term Annotations Summary Display</a> 
+                	for <b>BMP signalling pathway</b>, <b>GO:0030509</b>. Verify that the following Values associated with a GO annotation and Property terms, and Proteoforms ARE DISPLAYED and linked where appropriate. IDENTICAL annotation extension stanzas (Property-Value pairs in multiple stanzas) associated with identical annotations (Term + marker + Reference-evidence code + Inferred from) should be displayed ONLY ONCE. (sto86):
+    			<p concordion:manual="true">klf 06-nov-2015</p>  
+                <table>
+                	<thead>
+                	<tr>
+                		<th>MGI ID</th>
+                		<th>Symbol</th>
+                		<th>Name</th>
+                		<th>Proteoform</th>
+                		<th>Chromosome</th>
+                		<th>GO ID Annot Term</th>
+                		<th>Annotated Term</th>
+                		<th>Property Type</th>
+                		<th>Value</th>
+                		<th>Additional Term Context</th>
+                		<th>Evidence</th>
+                		<th>Reference(s)</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>MGI:88180</td><td>Bmp4</td><td>bone morphogenetic protein 4</td><td></td><td>14</td><td>GO:0030509</td><td>BMP signaling pathway</td><td></td><td></td><td></td><td>ISO</td><td>J:123381, J:164563</td><td>Display a single row. In "roll-up" logic, ignore Properties that are not displayed.</td></tr>
+                	<tr><td>MGI:1338938</td><td>Bmpr1a</td><td>bone morphogenetic protein receptor, type 1A</td><td></td><td>14</td><td>GO:0030509</td><td>BMP signaling pathway</td><td>occurs_in</td><td>EMAPA:16039</td><td>happens in embryo. | happens in visceral extraembryonic endoderm.</td><td>IMP</td><td>J:124681 [PMID:17699604]</td><td>Display two stanzas, unduplicated (combined with the row below here). In "roll-up" logic, ignore TS values because not displayed.</td></tr>
+                	<tr><td>MGI:1338938</td><td>Bmpr1a</td><td>bone morphogenetic protein receptor, type 1A</td><td></td><td>14</td><td>GO:0030509</td><td>BMP signaling pathway</td><td>occurs_in</td><td>EMAPA:16058</td><td>happens in embryo. | happens in visceral extraembryonic endoderm.</td><td>IMP</td><td>J:124681 [PMID:17699604]</td><td>Display two stanzas, unduplicated (combined with the row above here). In "roll-up" logic, ignore TS values because not displayed.</td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0045944">GO Term Annotations Summary Display</a> 
+                	for <b>positive regulation of transcription from RNA polymerase II promoter</b>, <b>GO:0045944</b>. Verify that the following Values associated with a GO annotation and Property terms, and Proteoforms ARE DISPLAYED and linked where appropriate. IDENTICAL annotation extension stanzas (Property-Value pairs in multiple stanzas) associated with identical annotations (Term + marker + Reference-evidence code + Inferred from) should be displayed ONLY ONCE. (sto86) External mouse IDs should be translated correctly (as described above) (sto69):
+    			<p concordion:manual="true">klf 12-nov-2015</p>  
+                <table>
+                	<thead>
+                	<tr>
+                		<th>MGI ID</th>
+                		<th>Symbol</th>
+                		<th>Name</th>
+                		<th>Proteoform</th>
+                		<th>Chromosome</th>
+                		<th>GO ID Annot Term</th>
+                		<th>Annotated Term</th>
+                		<th>Property Type</th>
+                		<th>Value</th>
+                		<th>Additional Term Context</th>
+                		<th>Evidence</th>
+                		<th>Reference(s)</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>MGI:101893</td><td>Pou5f1</td><td>...</td><td></td><td>...</td><td>GO:0045944</td><td>positive regulation of transcription from RNA polymerase II promoter</td><td>has_regulation_target</td><td>MGI:1276125</td><td>regulates Utf1</td><td>IDA</td><td>J:210931 [PMID:12615074]</td><td>Translate from NCBI_Gene:22286 in load file (sto69).</td></tr>
+                	<tr><td>MGI:102469</td><td>Nfatc1</td><td>...</td><td></td><td>...</td><td>GO:0045944</td><td>positive regulation of transcription from RNA polymerase II promoter</td><td>has_regulation_target</td><td>NCBI_gene:1513</td><td>regulates NCBI_gene:1513</td><td>IDA</td><td>J:180479 [PMID:15304486]</td><td>NCBI_Gene:1513 in load file does not match mouse gene ID in MGI (sto69).</td></tr>
+                	<tr><td>MGI:1096381</td><td>Arntl</td><td>...</td><td></td><td>...</td><td>GO:0045944</td><td>positive regulation of transcription from RNA polymerase II promoter</td><td>has_regulation_target</td><td>MGI:1098283</td><td>regulates Per1</td><td>IDA</td><td>J:186072 [PMID:15193144]</td><td>Translate from (ENSEMBL:ENSMUSG00000020893 in load file (sto69).</td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                </ol>
+		</li> 
+
+  		<li>The Properties data is displayed as a column in the downloadable Text and Excel reports.(sto23) Stanzas and property/value pairs are separated by pipes "|" and commas ",", respectively (sto71).
+    			<p concordion:manual="true">klf 09-nov-2015</p>  
+
+				<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/term/GO:0044085">GO Term Annotations Summary Display</a> 
+                	for <b>cellular component biogenesis</b>, <b>GO:0044085</b>. Verify that the following Values associated with a GO annotation and Property terms are included in the Text and Excel files:
+                <table>
+                	<thead>
+                	<tr>
+                		<th>MGI ID</th>
+                		<th>Symbol</th>
+                		<th>Name</th>
+                		<th>Proteoform</th>
+                		<th>Chromosome</th>
+                		<th>GO ID Annot Term</th>
+                		<th>Annotated Term</th>
+                		<th>Property Type</th>
+                		<th>Value</th>
+                		<th>Additional Term Context (links are only in WI not files)</th>
+                		<th>Evidence</th>
+                		<th>Reference</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>MGI:1920942</td><td>2410089E03Rik</td><td>Riken cDNA 2410089E03 gene</td><td></td><td>15</td><td>GO:0042384</td><td>cilium assembly</td><td>occurs_in<br/>occurs_in<br/>occurs_in</td><td>EMAPA:28407 TS22 (was EMAP:6678)<br/>CL:0000057<br/>EMAPA:17787 TS26 (was EMAP:11736)</td><td>happens in collecting duct| happens in fibroblast| happens in cerebellum</td><td>IMP</td><td>J:223340</td></tr>                	
+                	<tr><td>MGI:87860</td><td>Abl2</td><td>v-abl Abelson murine leukemia viral oncogene 2 (arg, Abelson-related gene)</td><td></td><td>1</td><td>GO:0006930</td><td>substrate-dependent cell migration, cell extension</td><td>occurs_in</td><td>CL:0000057</td><td>happens in fibroblast</td><td>IGI</td><td>J:149136</td></tr>
+                	<tr><td>MGI:87874</td><td>Ace</td><td>angiotensin I converting enzyme (peptidyl-dipeptidase A) 1</td><td></td><td>11</td><td>GO:1903597</td><td>negative regulation of gap junction assembly</td><td>occurs_in<br/>occurs_in</td><td>EMAPA:17337 (was UBERON:0002084)<br/>CL:0000746</td><td>happens in heart left ventricle,happens in cardiac muscle cell</td><td>IMP</td><td>J:215922</td></tr>
+                	<tr><td>MGI:87961</td><td>Agrn</td><td>agrin</td><td>RefSeq:NP_067617</td><td>4</td><td>GO:0008582</td><td>regulation of synaptic growth at neuromuscular junction</td><td></td><td></td><td></td><td>IMP</td><td>J:64996</td></tr>
+                	<tr><td>MGI:104652</td><td>Capzb</td><td>capping protein (actin filament) muscle Z-line, beta</td><td>PR:P47757-2</td><td>4</td><td>GO:0051016</td><td>barbed-end actin filament capping</td><td></td><td></td><td></td><td>IDA</td><td>J:125384</td></tr>
+                	<tr><td>MGI:104652</td><td>Capzb</td><td>capping protein (actin filament) muscle Z-line, beta</td><td>PR:P47757-2</td><td>4</td><td>GO:0030032</td><td>lamellipodium assembly</td><td>occurs_in</td><td>CL:0002608</td><td>happens in hippocampal neuron</td><td>IMP</td><td>J:154619</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                </ol>
+    		</li>
+        </ol>
+
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

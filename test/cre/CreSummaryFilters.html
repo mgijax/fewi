@@ -1,0 +1,384 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>Cre Summary Filtering Tests</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>Cre Summary Filtering Tests</h1>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+	
+<!--  	<li>US51 - Selecting just 1 filter field returns just that detected item or child</li>
+		<li>US51 - Selecting 2 or more filter fields returns those items or its children</li>
+		<li>US51 - Selecting Remove all filters clears the filtering</li>
+		<li>US51 - Items in the filter selection list can be checked and unchecked</li>
+		<li>US52 - Selecting just 1 filter field returns just that inducable item</li>
+		<li>US52 - Selecting 2 or more filter fields returns those items</li>
+		<li>US84 - Selecting just 1 filter field returns just that not detected item or child</li>
+		<li>US84 - Selecting 2 or more filter fields returns those items or its children</li>
+-->
+		<li>sto51: cre summary supports filtering by the values in the detected-in system column</li>
+		<li>sto51: using MGI standard filtering LAF</li>
+		<li>sto84: cre summary supports filtering by the values in the not-detected-in system column</li>
+		<li>sto84: using MGI standard filtering LAF</li>
+		<li>sto52: cre summary supports filtering by the values in the inducible column</li>
+		<li>sto52: using MGI standard filtering LAF</li>
+		</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+
+    		<li>The set of filter values for "Detected in" matches the values displayed in that column for the search that was conducted. (sto51) 
+ 			<p concordion:manual="true">jeffc 12/08/2015</p>
+    		<ol>
+                <li>Search for Recombinase Activity in any system (just click the Search button to return all results).</li>
+                <li>Open the "Recombinase Activity Detected" filter options and verify that the following values exist:
+                <table>
+                	<tr><th>System</th></tr>
+					<tr><td>adipose tissue</td></tr>
+					<tr><td>alimentary system</td></tr>
+					<tr><td>branchial arches</td></tr>
+					<tr><td>cardiovascular system</td></tr>
+					<tr><td>cavities &amp; their linings</td></tr>
+					<tr><td>early embryo</td></tr>
+					<tr><td>embryo-other</td></tr>
+					<tr><td>endocrine system</td></tr>
+					<tr><td>extraembryonic component</td></tr>
+					<tr><td>head</td></tr>
+					<tr><td>hemolymphoid system</td></tr>
+					<tr><td>integumental system</td></tr>
+					<tr><td>limbs</td></tr>
+					<tr><td>liver &amp; biliary system</td></tr>
+					<tr><td>mesenchyme</td></tr>
+					<tr><td>muscle</td></tr>
+					<tr><td>nervous system</td></tr>
+					<tr><td>postnatal-other</td></tr>
+					<tr><td>renal &amp; urinary system</td></tr>
+					<tr><td>reproductive system</td></tr>
+					<tr><td>respiratory system</td></tr>
+					<tr><td>sensory organs</td></tr>
+					<tr><td>skeletal system</td></tr>
+					<tr><td>tail</td></tr>
+                </table>
+                </li>
+                <li>Search for Recombinase Activity driven by <b>Slc6a3</b>.</li>
+                <li>Open the "Recombinase Activity Detected" filter options and verify that the following values exist:
+                <table>
+                	<tr><th>System</th></tr>
+					<tr><td>hemolymphoid system</td></tr>
+					<tr><td>nervous system</td></tr>
+					<tr><td>skeletal system</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>The set of filter values for "Not detected in" matches the values displayed in that column for the search that was conducted. (sto84) 
+ 			<p concordion:manual="true">newjeffc 12/08/2015</p>
+    		<ol>
+                <li>Search for Recombinase Activity in any system (just click the Search button to return all results).</li>
+                <li>Open the "Recombinase Activity Not Detected" filter options and verify that the following values exist:
+                <table>
+                	<tr><th>System</th></tr>
+					<tr><td>adipose tissue</td></tr>
+					<tr><td>alimentary system</td></tr>
+					<tr><td>branchial arches</td></tr>
+					<tr><td>cardiovascular system</td></tr>
+					<tr><td>cavities &amp; their linings</td></tr>
+					<tr><td>early embryo</td></tr>
+					<tr><td>embryo-other</td></tr>
+					<tr><td>endocrine system</td></tr>
+					<tr><td>extraembryonic component</td></tr>
+					<tr><td>head</td></tr>
+					<tr><td>hemolymphoid system</td></tr>
+					<tr><td>integumental system</td></tr>
+					<tr><td>limbs</td></tr>
+					<tr><td>liver &amp; biliary system</td></tr>
+					<tr><td>mesenchyme</td></tr>
+					<tr><td>muscle</td></tr>
+					<tr><td>nervous system</td></tr>
+					<tr><td>postnatal-other</td></tr>
+					<tr><td>renal &amp; urinary system</td></tr>
+					<tr><td>reproductive system</td></tr>
+					<tr><td>respiratory system</td></tr>
+					<tr><td>sensory organs</td></tr>
+					<tr><td>skeletal system</td></tr>
+					<tr><td>tail</td></tr>
+                </table>
+                </li>
+                <li>Search for Recombinase Activity driven by <b>Slc6a3</b>.</li>
+                <li>Open the "Recombinase Activity Not Detected" filter options and verify that the following values exist:
+                <table>
+                	<tr><th>System</th></tr>
+					<tr><td>adipose tissue</td></tr>
+					<tr><td>alimentary system</td></tr>
+					<tr><td>cardiovascular system</td></tr>
+					<tr><td>embryo-other</td></tr>
+					<tr><td>endocrine system</td></tr>
+					<tr><td>integumental system</td></tr>
+					<tr><td>liver and biliary system</td></tr>
+					<tr><td>muscle</td></tr>
+					<tr><td>renal and urinary system</td></tr>
+					<tr><td>reproductive system</td></tr>
+					<tr><td>respiratory system</td></tr>
+					<tr><td>sensory organs</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Filtering by value(s) in the "Detected in" column keeps only those rows where the selected value(s) exists. (sto51)
+ 			<p concordion:manual="true">jeffc 12/08/2015</p>
+    		<ol>
+                <li>Search for Recombinase Activity in <b>nephric duct</b>.</li>
+                <li>Verify the following alleles are returned:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)1Rob</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)5526Cmb</td></tr>
+                	<tr><td>Osr1<sup>tm1(EGFP/cre/ERT2)Amc</sup></td></tr>
+                	<tr><td>Osr2<sup>tm2(cre)Jian</sup></td></tr>
+                	<tr><td>Tg(Pax2-cre)1Akg</td></tr>
+                	<tr><td>Tg(Pax2-cre)10Shwl</td></tr>
+                	<tr><td>Tg(Rarb-cre)1Bhr</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)1Aia</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)5Aia</td></tr>
+                </table>
+                </li>
+                <li>Filter the results by <b>Detected</b> selecting the option <b>reproductive system</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                	<tr><td>Osr1<sup>tm1(EGFP/cre/ERT2)Amc</sup></td></tr>
+                	<tr><td>Tg(Pax2-cre)10Shwl</td></tr>
+                	<tr><td>Tg(Rarb-cre)1Bhr</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)1Aia</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)5Aia</td></tr>
+                </table>
+                </li>
+                <li>Clear the filters and verify that the original results set is displayed.</li>
+                <li>Filter the results by <b>Detected</b> selecting the options <b>alimentary system</b> and <b>mesenchyme</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                	<tr><td>Osr1<sup>tm1(EGFP/cre/ERT2)Amc</sup></td></tr>
+                	<tr><td>Osr2<sup>tm2(cre)Jian</sup></td></tr>
+                	<tr><td>Tg(Pax2-cre)10Shwl</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Filtering by value(s) in the "Not detected in" column keeps only those rows where the selected value(s) exists. (sto84)
+ 			<p concordion:manual="true">jeffc 12/08/2015</p>
+    		<ol>
+                <li>Search for Recombinase Activity in <b>nephric duct</b>.</li>
+                <li>Verify the following alleles are returned:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)1Rob</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)5526Cmb</td></tr>
+                	<tr><td>Osr1<sup>tm1(EGFP/cre/ERT2)Amc</sup></td></tr>
+                	<tr><td>Osr2<sup>tm2(cre)Jian</sup></td></tr>
+                	<tr><td>Tg(Pax2-cre)1Akg</td></tr>
+                	<tr><td>Tg(Pax2-cre)10Shwl</td></tr>
+                	<tr><td>Tg(Rarb-cre)1Bhr</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)1Aia</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)5Aia</td></tr>
+                </table>
+                </li>
+                <li>Filter the results by <b>Not detected</b> selecting the option <b>adipose tissue</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                </table>
+                </li>
+                <li>Clear the filters and verify that the original results set is displayed.</li>
+                <li>Filter the results by <b>Not detected</b> selecting the options <b>adipose tissue</b> and <b>cardiovascular system</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                </table>
+                </li>
+                <li>Clear the filters and verify that the original results set is displayed.</li>
+                <li>Filter the results by <b>Not detected</b> selecting the options <b>adipose tissue</b> and <b>respiratory system</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+    		<li>Filtering by value(s) in the "Not detected in" column keeps only those rows where the selected value(s) exists. 
+    		The list of filter values for "Detected in" is updated to reflect only those values in the modified results set. 
+    		Subsequent filtering by values in the "Detected in" column keeps only those rows where all selected values exist. (sto84)
+ 			<p concordion:manual="true">jeffc 12/08/2015</p>
+    		<ol>
+                <li>Search for Recombinase Activity in <b>nephric duct</b>.</li>
+                <li>Verify the following alleles are returned:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)1Rob</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)5526Cmb</td></tr>
+                	<tr><td>Osr1<sup>tm1(EGFP/cre/ERT2)Amc</sup></td></tr>
+                	<tr><td>Osr2<sup>tm2(cre)Jian</sup></td></tr>
+                	<tr><td>Tg(Pax2-cre)1Akg</td></tr>
+                	<tr><td>Tg(Pax2-cre)10Shwl</td></tr>
+                	<tr><td>Tg(Rarb-cre)1Bhr</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)1Aia</td></tr>
+                	<tr><td>Tg(Rxfp2-cre)5Aia</td></tr>
+                </table>
+                </li>
+                <li>Filter the results by <b>Not detected</b> selecting the options <b>adipose tissue</b> and <b>respiratory system</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Cdh16-cre)91Igr</td></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                </table>
+                </li>
+				<li>Open the "Recombinase activity detected" filter options and verify that ONLY the following values exist:
+				<table>
+					<tr><th>System</th></tr>
+					<tr><td>alimentary system</td></tr>
+					<tr><td>embryo-other</td></tr>
+					<tr><td>endocrine system</td></tr>
+					<tr><td>hemolymphoid system</td></tr>
+					<tr><td>liver and biliary system</td></tr>
+					<tr><td>nervous system</td></tr>
+					<tr><td>renal and urinary system</td></tr>
+					<tr><td>reproductive system</td></tr>
+					<tr><td>respiratory system</td></tr>
+					<tr><td>skeletal system</td></tr>
+					<tr><td>tail</td></tr>
+				</table>
+				</li> 
+                <li>Filter the results by <b>Detected</b> selecting the option <b>tail</b>.</li>
+                <li>Verify that ONLY the following allele remains in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Hoxb7-cre)13Amc</td></tr>
+                </table>
+                </li>
+            </ol>
+            </li>
+
+    		<li>Verify filtering by <b>Inducible</b> column keeps only those rows where the selected value(s) exists. (sto52)
+ 			<p concordion:manual="true">passed jeffc 12/08/2015</p>
+    		<ol>
+                <li>Search for Recombinase Activity in <b>nervous system</b> (big high level term, around 675 alleles).</li>
+                <li>Filter the results by <b>Inducible</b> selecting the filter option <b>Induced by RU486 (mifepristone)</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Camk2a-cre/PGR)1Gsc</td></tr>
+                	<tr><td>Grid2<sup>tm1(cre/PGR)Ksak</sup></td></tr>
+                	<tr><td>Mapt<sup>tm3(cre/PGR)Aha</sup></td></tr>
+                	<tr><td>Tg(Thy1-cre/PGR)1Gsc</td></tr>
+                </table>
+                </li>
+                <li>Verify that the allele <b>Tg(Grin2c-cre/PGR)25Mim</b> is not returned (the inducible value is "induced by RU486 (mifepristone) or Org 31806").</li>
+                <li>Clear the "Inducible" filter and verify that the full results set is restored.</li>
+                <li>Filter the results by <b>Inducible</b> selecting the filter options <b>Induced by RU486 (mifepristone)</b> and <b>Induced by androgens (in females)</b>.</li>
+                <li>Verify that ONLY the following alleles remain in the results set:
+                <table>
+                	<tr><th>Allele Symbol</th></tr>
+                	<tr><td>Tg(Camk2a-cre/PGR)1Gsc</td></tr>
+                	<tr><td>Grid2<sup>tm1(cre/PGR)Ksak</sup></td></tr>
+                	<tr><td>Tg(Kap-icre)29066/2Sig</td></tr>
+                	<tr><td>Mapt<sup>tm3(cre/PGR)Aha</sup></td></tr>
+                	<tr><td>Tg(Thy1-cre/PGR)1Gsc</td></tr>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

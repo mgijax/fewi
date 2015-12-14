@@ -12,7 +12,7 @@
 	p {margin:2px 0px;}
 </style>
 
-    <title>Recombinase Activity Search Tests</title>
+    <title>Cre Search Tests</title>
 </head>
 <!-- declare strict doctype to look for disallowed html errors
  **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
@@ -32,6 +32,7 @@
         <li>MGI 5.14: User story 115, Cre: improved anatomy search (no autocomplete)</li>
         <li>MGI 5.14: User story 136, Cre: improved anatomy search (with autocomplete)</li>
         <li>MGI 5.18: User story 127 (HTMP2), Cre: use EMAP vocabulary instead of AD</li>
+        <li>MGI 6.02?: sto47, Cre QF combined anatomy and driver search</li>
     </ul>
 </div>
 
@@ -50,6 +51,12 @@
 		<li>MGI 5.18 Sto127: On recombinase specificity pages, in place of AD terms, display corresponding EMAPS terms</li>
 		<li>MGI 5.18 Sto127: In the recombinase activity section of allele detail page, display EMAPS terms</li>
 		<li>MGI 5.18 Sto127: Change wording in various places to refer to EMAPA/EMAPS rather than the AD</li>
+		<li>MGI 6.02? Sto47: User can search for both an anatomy term and driver to get a combined result</li>
+		<li>MGI 6.02? sto47: user can specify both anatomy and driver</li>
+		<li>MGI 6.02? sto47: user can still specify either without the other</li>
+		<li>MGI 6.02? sto47: logical AND</li>
+		<li>MGI 6.02? sto47: wording changes: (from wiki page) change first label to something like "Recombinase activity reported for..."</li>
+		<li>MGI 6.02? sto47: layout changes to reflect the logical change (grouping of the fields, "Go" buttons, instructions, etc.)</li>
 	</ul>
 
 
@@ -102,7 +109,7 @@
 				</li>
 				<li>Search for <b concordion:set="#struct">cerebral cortex marginal layer</b>
  					<ul>
- 					<li> returns Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Tg(Fev-FLPe)1Dym</b> with results for <b>in situ reporter (transgenic) [reporter=FLP]</b></li>
+ 					<li> returns Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Tg(Fev-flpe)1Dym</b> with results for <b>in situ reporter (transgenic) [reporter=FLP]</b></li>
  					<li> returns Allele <b cc:assertResultsContain="getAlleleSymbolsByStructure(#struct)">Neurod6&lt;tm1(cre)Kan&gt;</b> with results for <b>in situ reporter (knock in) [reporter=cre]</b></li>
  					<li> exclude results for <b>in situ reporter (knock in)</b> where allele is <b><i>any other allele</i>  [reporter=lacZ]</b> <span concordion:manual="true">klf 4/2/13</span> (verify by looking at each Recombinase Specificity page for the other alleles: should see no assays of this type)</li>
  					</ul>
@@ -152,6 +159,31 @@
 				</li>
 				</ul>
 			</li>
+
+    		<li>Searching for an anatomy term with a driver returns only alleles having the specified driver and also having at least one "present" or "absent" result in Cre assays.(sto47)
+    		<ul type="A">
+    			<li>
+    			Enter <b>visceral percardium</b> in the activity box and <b>Wt1</b> in the driver box and press <b>Go</b>. The result should be just this one:
+				<p concordion:manual="true">klf 17-nov-2015</p>
+    			<table>
+    			<tr><th>Driver</th><th>Allele Symbol Gene; Allele Name</th><th>Recombinase Activity Detected</th><th>Recombinase Activity Not Detected</th><th>Allele Synonym</th><th>Inducible</th><th>Find Mice (IMSR)</th><th>Refs</th></tr>
+    			<tr><td>Wt1</td><td>Wt1<sup>tm2(cre/ERT2)Wtp</sup> Wilms tumor 1 homolog; targeted mutation 2, William T Pu</td><td><b>cardiovascular system</b>, cavities and their linings</td><td></td><td>Wt1<sup>CreERT2</sup>, Wt1<sup>iCre</sup> (i represents inducible), Wt1<sup>tm2(cre/ESR1)Wtp</sup></td><td>tamoxifen</td><td>1</td><td>23</td></tr>
+    			</table>
+    			</li>
+    			
+    			<li>
+	    		Enter <b>head</b> in the activity box and <b>Acan</b> in the driver box and press <b>Go</b>. The result should be this:
+				<p concordion:manual="true">klf 17-nov-2015</p>
+    			<table>
+    			<tr><th>Driver</th><th>Allele Symbol Gene; Allele Name</th><th>Recombinase Activity Detected</th><th>Recombinase Activity Not Detected</th><th>Allele Synonym</th><th>Inducible</th><th>Find Mice (IMSR)</th><th>Refs</th></tr>
+    			<tr><td>Acan</td><td>Acan<sup>tm1(cre/ERT2)Crm</sup> aggrecan; targeted mutation 1, Benoit de Crombrugghe</td><td>embryo-other, limbs, postnatal-other, respiratory system, <b>sensory organs</b>, skeletal system</td><td>cardiovascular system, liver and biliary system, <b>nervous system</b>, renal and urinary system</td><td>Agc1<sup>tm(IRES-creERT2)</sup></td><td>tamoxifen</td><td>1</td><td>3</td></tr>
+    			<tr><td>Acan</td><td>Tg<sup>tm2(Acan-cre/ERT2,-luc)1Gbg</sup> transgene insertion 1, George Bou-Gharios</td><td><b>alimentary system</b>, embryo-other, <b>head</b>, limbs, postnatal-other, <b>sensory organs</b>, skeletal system, tail</td><td></td><td>Acan-CreER-ires-Luc</td><td>tamoxifen</td><td></td><td>1</td></tr>    		
+    			</table>
+    			</li>
+    		</ul>
+    		</li>
+
+
 		</ol>
 	</div>
 
@@ -163,7 +195,6 @@
     		<li>The count of Cre alleles returned for a text string queried against Sybase should match the count returned from the FeWI.
     		<table cc:execute="#count = getAlleleCountByStructure(#struct)">
     		<tr><th concordion:set="#struct">Text string</th><th>Notes</th><th cc:assertEquals="#count">Cre Alleles in Sybase (via SQL)<br/>(green if FeWI count matches)</th></tr>
-    		<tr><td>aorta</td><td>single token match</td><td><b cc:dynamicData="creAortaAlleleCount"></b></td></tr>
     		<tr><td>esophagus</td><td>is a synonym of term "oesophagus"</td><td><b cc:dynamicData="creEsophagusAlleleCount"></b></td></tr>
     		<tr><td>bronchus epithelium</td><td>has 2 tokens in the term</td><td><b cc:dynamicData="creBronchusEpitheliumAlleleCount"></b></td></tr>
     		<tr><td>bronchial epithelium</td><td>is synonym of term above and has 2 tokens in the term</td><td><b cc:dynamicData="creBronchialEpitheliumAlleleCount"></b></td></tr>

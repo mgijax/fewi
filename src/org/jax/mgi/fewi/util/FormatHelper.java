@@ -322,12 +322,6 @@ public class FormatHelper {
 			providerForward = "trembl";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 			providerForward = "refseq";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_DOTS)) {
-			providerForward = "dotsm";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
-			providerForward = "dfcimgi";
-		}else if (seqProvider.equals(DBConstants.PROVIDER_NIA)) {
-			providerForward = "niamgi";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGAPROTEIN)) {
 			providerForward = "vega_mus_prot";
 		}else if (seqProvider.equals(DBConstants.PROVIDER_VEGATRANSCRIPT)) {

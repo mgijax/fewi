@@ -5,7 +5,7 @@
     pageEncoding="ISO-8859-1"%>
 <% Marker marker = (Marker)request.getAttribute("marker");
    NotesTagConverter ntc = new NotesTagConverter("GO");%>
-    
+
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
@@ -33,6 +33,9 @@
 }
 </style>
 
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/go_summary.css" />
+
+
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
 
@@ -42,7 +45,7 @@
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml${helpHash}">	
+<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml${helpHash}">
 	<span class="titleBarMainTitle">Gene Ontology Classifications</span>
 </div>
 
@@ -119,11 +122,11 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
 	</div>
 </div>
 
-<div id="toolbar" class="bluebar" style="width:1236px;">
+<div id="toolbar" class="bluebar" style="width:1453px;">
 	<div id="downloadDiv">
-		<span class="label">Export:</span> 
-		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
-		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a> 
+		<span class="label">Export:</span>
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
 	</div>
 	<div id="filterDiv"></div>
 	<div id="otherDiv"></div>

@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import mgi.frontend.datamodel.Term;
 import mgi.frontend.datamodel.Marker;
+import mgi.frontend.datamodel.Term;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.apache.commons.lang.StringUtils;
@@ -28,13 +28,10 @@ import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
-import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
-import org.jax.mgi.fewi.searchUtil.PrettyFilterPrinter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
-import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrDiseasePortalMarker;
@@ -52,7 +49,6 @@ import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.FewiUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.fewi.util.ImageUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
 import org.jax.mgi.fewi.util.file.FileProcessorOutput;
@@ -65,6 +61,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +71,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.validation.BindingResult;
 
 /*
  * This controller maps all /diseasePortal/ uri's
@@ -107,10 +103,6 @@ public class DiseasePortalController
     //--------------------//
     // static variables
     //--------------------//
-
-    // values for defining how we sort facet results
-    private static String ALPHA = "alphabetic";
-    private static String RAW = "raw";
 
     //--------------------------//
     // Disease Portal Query Form
@@ -1652,40 +1644,6 @@ public class DiseasePortalController
 	// facets for HMDC pages
 	// -----------------------------------------------------------------//
 
-	// now unused, kept for future use
-	private Map<String, List<String>> facetGeneric (DiseasePortalQueryForm query, BindingResult result, HttpSession session, String facetType) {
-	    logger.debug(query.toString());
-	    String order = ALPHA;
-
-	    SearchParams params = new SearchParams();
-	    params.setFilter(this.parseQueryForm(query, session));
-
-	    SearchResults<SolrString> facetResults = null;
-
-	    if (FacetConstants.MARKER_FEATURE_TYPE.equals(facetType)){
-		facetResults = hdpFinder.getFeatureTypeFacet(params);
-	    } else {
-		facetResults = new SearchResults<SolrString>();
-	    }
-	    return this.parseFacetResponse(facetResults, order);
-	}
-
-	// now unused, kept for future use
-	private Map<String, List<String>> parseFacetResponse (SearchResults<SolrString> facetResults, String order) {
-
-	    Map<String, List<String>> m = new HashMap<String, List<String>>();
-	    List<String> l = new ArrayList<String>();
-
-	    if (facetResults.getResultFacets().size() >= facetLimit) {
-		l.add("Too many results to display. Modify your search or try another filter first.");
-		m.put("error", l);
-	    } else if (ALPHA.equals(order)) {
-		m.put("resultFacets", facetResults.getSortedResultFacets());
-	    } else {
-		m.put("resultFacets", facetResults.getResultFacets());
-	    }
-	    return m; 
-	}
 
 	/* gets a list of feature types for markers which match the
 	 * current query, returned as JSON

@@ -1,0 +1,62 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+<title>GO Annotations Tests</title>
+<style>
+h5 {font-size:1em; font-variant:small-caps;}
+th {background-color:#D0E0F0;}
+</style>
+</head>
+<body>
+
+    <h1>GO Annotation Pages tests</h1>
+
+	<div>
+	<h2>Functional Description</h2>
+
+	<h3>Planned Functionality:</h3>
+	<p>In GO annotation tables on 3 pages, add a column displaying Annotation Extension data and a column displaying gene product Protein Form data.  Two pages are currently in the FEWI. The third page (annotations for GO term) will be moved from the Python WI to the FEWI for this project.</p>
+	
+	</div>
+
+	<div>
+	<h2>Test Suites</h2>
+		<table>
+			<tr>
+				<th>Description</th>
+				<th>Release</th>
+				<th>User story IDs</th>
+				<th>Contains Manual Tests?</th>
+				<th>Notes</th>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GoForMarker.html">GO Annots for Marker</a></td>
+				<td>6.?</td>
+				<td>18, 19, 20, 21, 22, 24, 25, 26, 27, 61, 69, 71, 86</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GoForReference.html">GO Annots for Reference</a></td>
+				<td>6.?</td>
+				<td>18, 19, 20, 21, 22, 24, 25, 26, 27, 61, 69, 71, 86</td>
+				<td>Yes</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GoForTerm.html">GO Annots for GO Term</a></td>
+				<td>6.?</td>
+				<td>18, 19, 20, 23, 24, 25, 26, 27, 61, 69, 71, 86</td>
+				<td>Yes</td>
+				<td>Sto23 included the work of sto21 and sto22 from the other test suites. <br/>Verify for changes listed in Marker and Reference test suites as well.</td>
+			</tr>
+			<tr>
+				<td><a concordion:run="concordion" href="GoFromSlimGrid.html">GO Annots for Marker and Slim Grid Header</a></td>
+				<td>6.?</td>
+				<td>None</td>
+				<td>No</td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

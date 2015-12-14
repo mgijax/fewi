@@ -8,13 +8,15 @@
     
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>${title}</title>
-<meta name="description" content="${seoDescription}" />
-<meta name="keywords" content="${seoKeywords}" />
-<meta name="robots" content="NOODP" />
-<meta name="robots" content="NOYDIR" />
-
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
+
+<fewi:simpleseo
+	title="${title}"
+	canonical="${configBean.FEWI_URL}vocab/gxd/anatomy/${term.primaryId}"
+	description="${seoDescription}"
+	keywords="${seoKeywords}"
+/>
+
 
 <%  // Pull detail object into servlet scope
     // EXAMPLE - Marker foo = (Marker)request.getAttribute("foo");

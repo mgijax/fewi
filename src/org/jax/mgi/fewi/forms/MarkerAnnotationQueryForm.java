@@ -3,8 +3,6 @@ package org.jax.mgi.fewi.forms;
 import java.util.ArrayList;
 import java.util.List;
 
-import mgi.frontend.datamodel.Reference;
-
 /*----------------------------------------------------------------------------------*/
 /* class: represents the query parameters that can be used with a marker annotation */
 /*----------------------------------------------------------------------------------*/
@@ -16,6 +14,7 @@ public class MarkerAnnotationQueryForm {
     private String vocab;
     private String restriction;
     private String header;
+    private String goID;
 	private List<String> aspectFilter = new ArrayList<String>();
 	private List<String> evidenceFilter = new ArrayList<String>();
 	private List<String> inferredFilter = new ArrayList<String>();
@@ -40,11 +39,17 @@ public class MarkerAnnotationQueryForm {
     public void setVocab(String vocab) {
         this.vocab = vocab;
     }
+    public String getGoID() {
+        return goID;
+    }
+    public void setGoID(String goID) {
+        this.goID = goID;
+    }
     public String getHeader() {
-	return header;
+        return header;
     }
     public void setHeader(String header) {
-	this.header = header;
+        this.header = header;
     }
     public String getRestriction() {
         return restriction;

@@ -1,0 +1,82 @@
+/* Styles for the recombinase homepage */
+
+/* Set title and icon on one line */
+.creTitle {
+	box-sizing: border-box;
+	width: 66%;
+	text-align: center;
+	float: left;
+}
+
+.creTitle p {
+	font-size: 12px;
+	font-style: italic;
+}
+
+#recombinaseIcon {
+	border: solid 1px black;
+}
+
+/* Access Data becomes left column */
+.accessData {
+	float: left;
+	margin-right: 20px;
+	max-width: 52%;
+}
+@media screen and (max-width: 800px) {
+	.accessData {
+		max-width: 100%;
+	}
+}
+
+
+/* Form section */
+
+#creForm label.searchLabel {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 2px;
+}
+#creForm label.searchLabel::after {
+	content: ":";
+}
+
+#creForm input[type="text"] {
+	display: block;
+	margin-left: 20px;
+}
+
+/* The "AND" text between inputs */
+#creForm #creAndDivider {
+	opacity: 0;
+	transition: opacity 700ms;
+	font-weight: bold;
+	font-size: 15px;
+	display: block;
+	margin: 7px 0px 5px 128px;
+}
+
+#creForm > .wrapper {
+	float: left;
+	margin-top: 4px;
+	margin-bottom: 12px;
+}
+
+#creForm .goButton {
+	clear: left;
+	margin-top: 30px;
+	padding: 4px 16px;
+	cursor: pointer;
+}
+
+.ui-autocomplete {
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	font-size:90%;
+}
+/* IE 6 handling */
+* html .ui-autocomplete {height: 300px;}
+.ui-menu .ui-menu-item {padding-left:0.4em;}
+.ui-menu .ui-menu-item a {padding:0px;}

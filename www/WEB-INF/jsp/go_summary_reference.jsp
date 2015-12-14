@@ -5,7 +5,7 @@
     pageEncoding="ISO-8859-1"%>
 <% Reference reference = (Reference)request.getAttribute("reference");
    NotesTagConverter ntc = new NotesTagConverter("GO");%>
-    
+
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
 <title>Gene Ontology Annotations</title>
@@ -14,6 +14,7 @@
 
 <style type="text/css">
 </style>
+<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/go_summary.css" />
 
 <script>
 </script>
@@ -27,7 +28,7 @@
 
 
 <!-- header bar -->
-<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml#tabular">	
+<div id="titleBarWrapper" userdoc="GO_classification_report_help.shtml#tabular">
 	<span class="titleBarMainTitle">Gene Ontology Annotations</span>
 </div>
 
@@ -38,21 +39,21 @@
        <b>Reference</b>
   </td>
   <td class="summaryHeaderData1">
-    
-    <a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;" 
+
+    <a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;"
       href="${configBean.FEWI_URL}reference/${reference.jnumID}">
       ${reference.jnumID}
     </a>
-    
+
     <div style="padding:4px;"> </div>
-    
+
     ${reference.shortCitation}
   </td>
 </tr>
 </table>
 
 <!-- paginator -->
-<div id="summary" style="width:1240px;">
+<div id="summary" style="width:1238px;">
 	<div id="breadbox">
 		<div id="contentcolumn">
 			<div class="innertube">
@@ -72,11 +73,11 @@
 	</div>
 </div>
 
-<div id="toolbar" class="bluebar" style="width:1245px;">
+<div id="toolbar" class="bluebar" style="width:1443px;">
 	<div id="downloadDiv">
-		<span class="label">Export:</span> 
-		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a> 
-		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a> 
+		<span class="label">Export:</span>
+		<a id="textDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
+		<a id="excelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
 	</div>
 	<div id="filterDiv"></div>
 	<div id="otherDiv"></div>

@@ -3,30 +3,38 @@ function main() {
     // These are our actual columns, in the default ordering.
 
     var myColumnDefs = [
-        {key:"marker", 
+        {key:"marker",
             label:"Symbol, Name",
-            width:270, 
+            width:260,
             sortable:false},
-        {key:"chromosome", 
+        {key:"isoforms",
+            label:"Proteoform",
+            width:130,
+            sortable:false},
+        {key:"chromosome",
             label:"Chr",
-            width:50, 
+            width:30,
             sortable:false},
-        {key:"term", 
+        {key:"term",
             label:"Annotated Term",
-            width:360, 
+            width:320,
             sortable:false},
-        {key:"category", 
+        {key:"annotationExtensions",
+            label:"Additional Term Context",
+            width:240,
+            sortable:false},
+        {key:"category",
             label:"Aspect",
-            width:150, 
+            width:130,
             sortable:false},
-        {key:"evidence", 
+        {key:"evidence",
             label:"Evidence",
-            width:150, 
+            width:55,
             sortable:false},
-	{key:"inferred",
-	    label:"Inferred From",
-	    width:160,
-	    sortable:false}
+        {key:"inferred",
+            label:"Inferred From",
+            width:130,
+            sortable:false}
     ];
 
     // DataSource instance
@@ -37,11 +45,13 @@ function main() {
         resultsList: "summaryRows",
         fields: [
             {key:"marker"},
+            {key:"isoforms"},
             {key:"chromosome"},
             {key:"term"},
             {key:"category"},
             {key:"evidence"},
-	    {key:"inferred"}
+			{key:"annotationExtensions"},
+            {key:"inferred"}
         ],
         metaFields: {
             totalRecords: "totalCount"
@@ -52,7 +62,7 @@ function main() {
     var myPaginator = new YAHOO.widget.Paginator({
         template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
         pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
-        rowsPerPageOptions : [10,25,50,100],
+        rowsPerPageOptions : [100, 500, 1000],
         rowsPerPage : 100,
         containers   : ["paginationTop", "paginationBottom"],
         pageLinks: 3,
@@ -65,16 +75,16 @@ function main() {
         dynamicData : true,
         draggableColumns : true,
         initialLoad : false
-    };  
-    
+    };
+
     // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, 
+    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs,
     	    myDataSource, myConfigs);
-    
+
     // Show loading message while page is being rendered
-    myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), 
-    	    YAHOO.widget.DataTable.CLASS_LOADING);    
-    	    
+    myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"),
+    	    YAHOO.widget.DataTable.CLASS_LOADING);
+
     // Integrate with Browser History Manager
     var History = YAHOO.util.History;
 
@@ -82,11 +92,11 @@ function main() {
     var handleSorting = function (oColumn) {
         // Calculate next sort direction for given Column
         var sDir = this.getColumnSortDir(oColumn);
-        
+
         // The next state will reflect the new sort values
         // while preserving existing pagination rows-per-page
         // As a best practice, a new sort will reset to page 0
-        var newState = generateRequest(0, oColumn.key, sDir, 
+        var newState = generateRequest(0, oColumn.key, sDir,
                 this.get("paginator").getRowsPerPage());
 
         // Pass the state along to the Browser History Manager
@@ -111,9 +121,9 @@ function main() {
     // ...then we hook up our custom function
     myPaginator.subscribe("changeRequest", handlePagination, myDataTable, true);
 
-    // Update payload data on the fly for tight integration with latest values from server 
+    // Update payload data on the fly for tight integration with latest values from server
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
-    	
+
         var pRequest = parseRequest(oRequest);
 
 	if (oResponse != null) {
@@ -134,7 +144,7 @@ function main() {
         	facetQuery = generateRequest(0, 'term', 'asc', oPayload.totalRecords);
 	        reportButton.setAttribute('href', fewiurl + 'go/report.xlsx?' + querystring + '&' + facetQuery);
         }
-        
+
         return true;
     };
 

@@ -29,6 +29,8 @@ public class SolrMarkerAnnotationSummaryHunter extends SolrHunter<Annotation> {
 		sortMap.put(SortConstants.MRK_BY_EVIDENCE_CODE, new SolrSortMapper(IndexConstants.BY_EVIDENCE_CODE));
 		sortMap.put(SortConstants.MRK_BY_EVIDENCE_TERM, new SolrSortMapper(IndexConstants.BY_EVIDENCE_TERM));
 		sortMap.put(SortConstants.BY_REFERENCE, new SolrSortMapper(IndexConstants.REF_KEY));
+		sortMap.put(SortConstants.MRK_BY_SYMBOL, new SolrSortMapper(IndexConstants.MRK_BY_SYMBOL));
+		sortMap.put(SortConstants.BY_ISOFORM, new SolrSortMapper(IndexConstants.BY_ISOFORM));
 
 		/*
 		 * Setup the property map.  This maps from the properties of the incoming
@@ -41,6 +43,7 @@ public class SolrMarkerAnnotationSummaryHunter extends SolrHunter<Annotation> {
 		propertyMap.put(SearchConstants.MRK_KEY, new SolrPropertyMapper(IndexConstants.MRK_KEY));
 		propertyMap.put(SearchConstants.VOC_VOCAB, new SolrPropertyMapper(IndexConstants.VOC_VOCAB));
 		propertyMap.put(SearchConstants.VOC_RESTRICTION, new SolrPropertyMapper(IndexConstants.VOC_QUALIFIER));
+		propertyMap.put(SearchConstants.GO_ID, new SolrPropertyMapper(IndexConstants.VOC_ID));
 
 		/*
 		 * The name of the field we want to iterate through the documents for

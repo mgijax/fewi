@@ -3,43 +3,82 @@
 // This file contains functions to reset the checkboxes at the top of the
 // page, to define and display the DataTable, and to create its Tooltips.
 
+var recombinaseDataTable = null;
+var recombinaseDataSource = null;
+
+function getRecombinaseDataTable() {
+    return recombinaseDataTable;
+}
+function getRecombinaseDataSource() {
+	return recombinaseDataSource;
+}
+
+// Returns a request string for consumption by the DataSource
+var generateRequest = function(startIndex,sortKey,dir,results) {
+	startIndex = startIndex || 0;
+	sortKey   = sortKey || "driver";
+	dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
+	results   = results || 25;
+
+	var filterString = "";
+	try {
+		filterString = filters.getUrlFragment();
+		if (filterString) {
+			filterString = '&' + filterString;
+		}
+	} catch (e) {}
+	return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir+filterString;
+};
+
+var handleNavigationRaw = function (request) {
+	recombinaseDataTable.showTableMessage(recombinaseDataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);
+
+	// Sends a new request to the DataSource
+	recombinaseDataSource.sendRequest(request,{
+		success : recombinaseDataTable.onDataReturnSetRows,
+		failure : recombinaseDataTable.onDataReturnSetRows,
+		scope : recombinaseDataTable,
+		argument : {} // Pass in container for population at runtime via doBeforeLoadData
+	});
+};
+
 function main() {
     // Column definitions -- sortable:true enables sorting
     // These are our actual columns, in the default ordering.
     var myColumnDefs = [
-        {key:"driver", 
+        {key:"driver",
             label:"Driver",
-            width:90, 
+            width:90,
             sortable:true},
-        {key:"nomenclature", 
+        {key:"nomenclature",
             label:"Allele Symbol<br/>Gene; Allele Name",
 			sortable:true,
-			width:245}, 
-		{key:"detectedCount", 
-			label:"Recombinase Activity<br/>Detected", 
-			sortable:true, 
+			width:245},
+		{key:"detectedCount",
+			label:"Recombinase Activity<br/>Detected",
+			sortable:true,
 			sortOptions: { defaultDir: YAHOO.widget.DataTable.CLASS_DESC },
 			width:220},
-		{key:"notDetectedCount", 
-			label:"Recombinase Activity<br/>Not Detected", 
-			sortable:true, 
+		{key:"notDetectedCount",
+			label:"Recombinase Activity<br/>Not Detected",
+			sortable:true,
 			sortOptions: { defaultDir: YAHOO.widget.DataTable.CLASS_DESC },
 			width:220},
         {key:"synonyms",
             label:"Allele Synonym",
             width:170,
             sortable:false},
-        {key:"inducibleNote", 
-            label:"Inducible",
-            width:58, 
+        {key:"inducibleNote",
+            label:"Induced By",
+            width:80,
             sortable:true},
-        {key:"imsrCount", 
+        {key:"imsrCount",
             label:"Find Mice<br/>(IMSR)",
-            width:60, 
+            width:60,
             sortable:true},
-        {key:"countOfReferences", 
+        {key:"countOfReferences",
             label:"Refs",
-            width:36, 
+            width:36,
             sortable:true}
     ];
 
@@ -68,6 +107,9 @@ function main() {
         }
     };
 
+    // save in a global variable
+	recombinaseDataSource = myDataSource;
+
     // Create the Paginator
     var myPaginator = new YAHOO.widget.Paginator({
         template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
@@ -85,18 +127,22 @@ function main() {
         dynamicData : true,
         draggableColumns : true,
         initialLoad : false
-    };  
-    
+    };
+
     // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, 
+    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs,
     	    myDataSource, myConfigs);
-    
+
+    // save in a global variable
+    recombinaseDataTable = myDataTable;
+
+
     YAHOO.mgiData.myDataTable = myDataTable;
 
     // Show loading message while page is being rendered
-    myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"), 
-    	    YAHOO.widget.DataTable.CLASS_LOADING);    
-    
+    myDataTable.showTableMessage(myDataTable.get("MSG_LOADING"),
+    	    YAHOO.widget.DataTable.CLASS_LOADING);
+
     // Integrate with Browser History Manager
     var History = YAHOO.util.History;
 
@@ -104,11 +150,11 @@ function main() {
     var handleSorting = function (oColumn) {
         // Calculate next sort direction for given Column
         var sDir = this.getColumnSortDir(oColumn);
-        
+
         // The next state will reflect the new sort values
         // while preserving existing pagination rows-per-page
         // As a best practice, a new sort will reset to page 0
-        var newState = generateRequest(0, oColumn.key, sDir, 
+        var newState = generateRequest(0, oColumn.key, sDir,
                 this.get("paginator").getRowsPerPage());
 
         // Pass the state along to the Browser History Manager
@@ -134,7 +180,7 @@ function main() {
     // ...then we hook up our custom function
     myPaginator.subscribe("changeRequest", handlePagination, myDataTable, true);
 
-    // Update payload data on the fly for tight integration with latest values from server 
+    // Update payload data on the fly for tight integration with latest values from server
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		var pRequest = parseRequest(oRequest);
         var meta = oResponse.meta;
@@ -149,15 +195,6 @@ function main() {
             dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : "yui-dt-asc" // Convert from server value to DataTable format
         };
         return true;
-    };
-
-    // Returns a request string for consumption by the DataSource
-    var generateRequest = function(startIndex,sortKey,dir,results) {
-    	startIndex = startIndex || 0;
-        sortKey   = sortKey || "driver";
-        dir   = (dir) ? dir.substring(7) : "asc"; // Converts from DataTable format "yui-dt-[dir]" to server value "[dir]"
-        results   = results || 25;
-        return "results="+results+"&startIndex="+startIndex+"&sort="+sortKey+"&dir="+dir;
     };
 
     // Called by Browser History Manager to trigger a new state

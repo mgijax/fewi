@@ -1,8 +1,5 @@
 package org.jax.mgi.fewi.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +13,6 @@ import mgi.frontend.datamodel.AlleleCellLine;
 import mgi.frontend.datamodel.AlleleID;
 import mgi.frontend.datamodel.AlleleRelatedMarker;
 import mgi.frontend.datamodel.AlleleSynonym;
-import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.Genotype;
 import mgi.frontend.datamodel.GenotypeDisease;
 import mgi.frontend.datamodel.GenotypeDiseaseReference;
@@ -1658,17 +1654,7 @@ public class AlleleController {
 	}
 
 	private void dbDate(ModelAndView mav) {
-		List<DatabaseInfo> dbInfo = dbInfoFinder.getInfo(new SearchParams()).getResultObjects();
-		for (DatabaseInfo db: dbInfo) {
-			if (db.getName().equalsIgnoreCase("built from mgd database date")) {
-				DateFormat df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-				try {
-					mav.addObject("databaseDate", df.parse(db.getValue()));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		mav.addObject("databaseDate", dbInfoFinder.getSourceDatabaseDate());
 	}
 
 	private boolean notEmpty(String s) {

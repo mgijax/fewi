@@ -1,0 +1,29 @@
+<!-- Content for the Recombinase home "tabs" at the bottom of page -->
+
+<style>
+/* Custom page styles */
+
+</style>
+
+<div id="creTabs">
+	<ul class="shadetabs">
+		<li class="selected"><a href="#tabs-1">About Recombinase Activity</a></li>
+		<li class="selected"><a href="#tabs-2">Help Documents</a></li>
+		<li class="selected"><a href="#tabs-3">Collaborators</a></li>
+	</ul>
+	<div id="tabs-1">
+	<%@ include file="tabContents/Cre_About.html" %>
+	</div>
+	<div id="tabs-2">
+	<%@ include file="tabContents/Cre_Help.html" %>
+	</div>
+	<div id="tabs-3">
+	<%@ include file="tabContents/Cre_Collaborators.html" %>
+	</div>
+</div>
+
+<script type="text/javascript">
+    (function() {
+    	$( "#creTabs" ).tabs();
+    })();
+</script>

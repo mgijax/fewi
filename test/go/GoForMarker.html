@@ -1,0 +1,1361 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:cc="http://fewi.custom.commands.FewiExtensions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Not working on the server quite yet. Putting styles back into this local doc. 12/20/2012 klf.
+     Put test suite specific styles here. To add global styles, see fewi/test/concordion.css -->
+<style>
+li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:25px;}
+ol {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+ul {padding: 0px; padding-bottom:3px; padding-top:0px; margin: 0px;}
+p {margin:2px 0px;}
+table {border-collapse: collapse; padding-bottom:5px; margin-bottom:5px;}
+table, th, td {border: 1px solid #CCCCCC;}
+td, th {padding:2px;}
+td>ul {padding: 0px; padding-bottom:1px; padding-top:0px; margin: 0px;}
+td>ul li {padding-left:2px; padding-top:0px; padding-bottom:0px; margin-left:10px;}
+td.xl65 {background-color:#FFFF00;}
+
+
+h5 {font-size:1em; font-variant:small-caps; margin-top:4px; padding-top:4px;}
+tr.small th, tr.small td {font-size:0.75em;}
+tr.blue th {background-color:#D0E0F0;}
+tr.gray td {background-color:#EEEEEE;}
+
+.hide {display:none;}
+.hilite {background-color:#FFFF00;} /*bright yellow*/
+.lowlite {background-color:#FFFFDD;} /*palest yellow*/
+.man {background-color:#FFFFCC;} /*less-pale yellow*/
+
+.regressHi {background-color:#FFAB57;} /*medium-orange*/
+.regressLo {background-color:#90DDF5;} /*light blue*/
+</style>
+<!-- declare strict doctype to look for disallowed html errors
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+ **  **  **  **  ** REMOVE THE LINE before committing the file **  **  **  **  **  **  **
+ -->
+
+
+    <title>GO Annots for a Marker</title>
+</head>
+
+<body>
+
+<div id="TOC">
+	<p>Contents: <a href="#maintitle">Title</a> | <a href="#acceptance">Acceptance Criteria</a> | <a href="#manual">Manual Tests</a> | <a href="#auto">Automated Tests</a></p>
+</div>
+
+<div id="maintitle">
+    <h1>GO Annotations for a Marker Test Suite</h1>
+    <ul>
+    	<li>sto18, E1: GO: Load Uberon IDs as EMAPA ids</li>
+        <li>sto19, E1: GO: Data migration (EMAP -> EMAPA+stage)</li>
+        <li>sto20, E1: GO: Data migration (MA -> EMAPA+stage)</li>
+        <li>sto21, E1: GO: Display annotation extension info in fewi</li>
+        <li>sto22, E1: GO: Display isoform column in fewi</li>
+        <li>sto24, E1: GO: Translate property values (IDs) to labels</li>
+        <li>sto26, E1: GO: Display converted property names</li>
+        <li>sto25, E1: GO: Display links in annotation ext in fewi</li>
+        <li>sto27, E1: GO: Display isoform links</li>
+        <li>sto61, TR12124 - Change col 17 GAF logic </li>
+        <li>sto69, E1: GO: Load external mouse IDs as MGI ids</li>
+        <li>sto71, E1: GO: Display stanzas on separate lines</li> 
+        <li>sto86, E1: GO: Collapse identical stanzas</li>
+    </ul>
+</div>
+
+<div id="acceptance">
+    <h2>Acceptance Criteria</h2>
+	<ul>
+		<li>sto18: Uberon IDs coming from the Uniprot/GO load
+		<ul>
+			<li>sto18: are displayed in the WI as EMAPA terms linked to EMAPA browser page</li>
+			<li>sto18: are exported to the GAF file as EMAPA ids</li>
+		</ul>
+		</li>
+		<li>sto18: Uberon-to-EMAPA mappings are available within the uberon obo file.</li>
+		<li>sto18: If an uberon id cannot be mapped, display as uberon id (these should be reported in QC)</li>
+		<li>sto19: "all" GO annotation property values that are EMAP ids converted to EMAPA ids + stage</li>
+		<li>sto19: Don't want stage to go out in GAF or appear on the web- just the EMAPA</li>
+		<li>sto19: But also don't want to lose the stage info</li>
+		<li>sto21: Annotation extension data displayed in GO annotation display tables (property names + values)
+		<ul>
+			<li>Go annots for a gene</li>
+			<li>Go annots for a reference</li>
+		</ul></li>
+		<li>sto21: display raw values</li>
+		<li>sto21: use same logic as in GAF generation</li>
+		<li>sto22: display raw isoform value</li>
+		<li>sto22: simplify logic from what is currently used to populate GAF column 17. Just use what is in the gene product property. If nothing there, display nothing. See TR12124.</li>
+		<li>sto24: front end displays labels (terms, maybe including IDs) not just IDs</li>
+		<li>sto24: Just the term? Term plus ID? (format questions)</li>
+		<li>sto24: verify that IDs are either translated correctly to their term text, or are left alone.</li>
+		<li>sto24: The following ID prefixes should trigger a translation:
+		<ul>
+			<li>MGI</li>
+			<li>CL</li>
+			<li>GO</li>
+			<li>EMAPA</li>
+		</ul>
+		</li>
+		<li>sto24: all other IDs get displayed as is.</li>
+		<li>sto26: curator can specify arbitrary text to be displayed for a term via EI</li>
+		<li>sto26: curator can change whenever, without SE intervention</li>
+		<li>sto26: fe displays the text rather than the raw property name</li>
+		<li>sto25: accids are displayed as links</li>
+		<li>sto25: for vocabs, display term not just id</li>
+		<li>sto25: for proteins, just id</li>
+		<li>sto25: MGI genes link to detail pages</li>
+		<li>sto25: CL links to obtobee (ala Amigo)</li>
+		<li>sto25: GO ids link to MGI GO browser</li>
+		<li>sto25: EMAPA links to browser</li>
+		<li>sto25: UniProtKB links to Uniprot</li>
+		<li>sto25: Ensembl links to Ensembl</li>
+		<li>sto25: PRs link to Pro (georgetown)</li>
+		<li>sto25: anything else displayed as plain text</li>
+		<li>sto27: <i>no acceptance tests for Isoform links</i></li>
+		<li>sto61: no forked logic - fewi and GAF show same col 17 contents</li>
+		<li>sto61: whatever value is in db for "gene_product" is what shows in col 17 - EXCEPT convert NCBI: to RefSeq:</li>
+		<li>sto61: EMBL ids link to EMBL</li>
+		<li>sto69: OK to implement this for just Ensembl IDs and Entrez IDs. (In particular, Uniprot id's can still just be links to uniprot.)</li>
+		<li>sto69: Other requirements as stated in the comment:
+		<ul>
+			<li>instead of Ensembl/Entrez ids, display the mouse symbol, linked to the detail page</li>
+			<li>non-mouse, non-gene, or multi-gene ids displayed as (untranslated) ids that link out to Ensenbl/NCBI.</li>
+		</ul>
+		</li>
+		<li>sto69: However, we WILL output MGI ids to the GAF. (This means you have the option to translate at load time, if you wish.)</li>
+		<li>sto69: May affect up to 5 loads. All will need to be tested</li>
+		<li>sto69: Example: cardolan.informatics.jax.org/go/marker/MGI:1891409
+		<ul>
+			<li>For J:75967, currently displays "regulates NCBI_Gene:15379".</li>
+			<li>Should display "regulates Onecut1", with the gene symbol linked.</li>
+		</ul>
+		</li>
+		<li>sto69: Stats should be the same.</li>
+		<li>sto71: if an annotation has multiple stanzas, the annotation summary separates the stanzas visually</li>
+		<li>sto71: this is already reflected in the GAF files; should be the same in the download files</li>
+		<li>sto86: does not affect the GAF</li>
+		<li>sto86: use the Kit example as ONE example:
+		<ul>
+			<li>should have same number of annotation lines, but</li>
+			<li>the mast cell example should collapse</li>
+		</ul>
+		</li>
+	</ul>
+</div>
+
+
+
+<div id="tests">
+    <h2>Tests</h2>
+    <p>Skip to <a href="#manual">Manual Tests</a> |  <a href="#auto">Automated Tests</a></p>
+	<div id="manual">
+<!-- To insert manual test results, use the following:
+<p concordion:manual="true">testing assertTrue - displays as green</p>
+<p concordion:manual="false">testing assertFalse - displays as red</p>
+ -->
+		<h3>Manual tests</h3>
+		<ol>
+    		<li>Certain GO Property (_vocab_key = 82) terms or types are EXCLUDED from the display of Annotation Extensions. (sto21) <br/>
+    		<em><b>NOTE: Column Header is "Additional Term Context" (2015-10-05 klf).</b></em>
+ 			<table>
+ 				<thead>
+ 				<tr><th>Property term or type</th></tr>
+ 				</thead>
+ 				<tbody>
+ 				<tr><td>anatomy</td></tr>
+ 				<tr><td>cell type</td></tr>
+ 				<tr><td>dual-taxon ID</td></tr>
+ 				<tr><td>evidence</td></tr>
+ 				<tr><td>external ref</td></tr>
+ 				<tr><td>gene product</td></tr>
+ 				<tr><td>modification</td></tr>
+ 				<tr><td>target</td></tr>
+ 				<tr><td>text</td></tr>
+ 				</tbody>
+ 			</table>
+    		<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:87916#tabular">GO Annotations tabular display</a> 
+                	for <b>Ada</b> (<b concordion:set="#geneId">MGI:87916</b>). 
+                	Verify that the following Property terms associated with a GO annotation are NOT displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th cc:assertNoResultsContain="#types">Property term or type</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0004000</td><td>J:73418</td><td>anatomy</td></tr>
+                	<tr><td>GO:0004000</td><td>J:73418</td><td>evidence</td></tr>
+                	<tr><td>GO:0004000</td><td>J:10680</td><td>cell type</td></tr>
+                	<tr><td>GO:0004000</td><td>J:73065</td><td>external ref</td></tr>
+                	<tr><td>GO:0006154</td><td>J:10680</td><td>text</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:87883#tabular">GO Annotations tabular display</a> 
+                	for <b>Acp5</b> (<b concordion:set="#geneId">MGI:87883</b>). 
+                	Verify that the following Property terms associated with a GO annotation are NOT displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th cc:assertNoResultsContain="#types">Property term or type</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0003993</td><td>J:72955</td><td>gene product</td></tr>
+                	<tr><td>GO:0005764</td><td>J:72955</td><td>gene product</td></tr>
+                	<tr><td>GO:0050830</td><td>J:67213</td><td>dual-taxon ID</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:108443#tabular">GO Annotations tabular display</a> 
+                	for <b>Camp</b> (<b concordion:set="#geneId">MGI:108443</b>). 
+                	Verify that the following Property terms associated with a GO annotation are NOT displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th cc:assertNoResultsContain="#types">Property term or type</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0044140</td><td>J:104215</td><td>cell type</td></tr>
+                	<tr><td>GO:0044140</td><td>J:104215</td><td>dual-taxon ID</td></tr>
+                	<tr><td>GO:0044140</td><td>J:104215</td><td>evidence</td></tr>
+                	<tr><td>GO:0044140</td><td>J:104215</td><td>text</td></tr>
+                	<tr><td>GO:0044140</td><td>J:73065</td><td>cell type</td></tr>
+                	<tr><td>GO:0044140</td><td>J:73065</td><td>dual-taxon ID</td></tr>
+                	<tr><td>GO:0044140</td><td>J:73065</td><td>evidence</td></tr>
+                	<tr><td>GO:0044140</td><td>J:73065</td><td>external ref</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1096327#tabular">GO Annotations tabular display</a> 
+                	for <b>Axin1</b> (<b concordion:set="#geneId">MGI:1096327</b>). 
+                	Verify that the following Property terms associated with a GO annotation are NOT displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th cc:assertNoResultsContain="#types">Property term or type</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0008013</td><td>J:162068</td><td>modification</td></tr>
+                	<tr><td>GO:0008013</td><td>J:162068</td><td>text</td></tr>
+                	<tr><td>GO:0016328</td><td>J:73065</td><td>anatomy</td></tr>
+                	<tr><td>GO:0016328</td><td>J:73065</td><td>cell type</td></tr>
+                	<tr><td>GO:0016328</td><td>J:73065</td><td>evidence</td></tr>
+                	<tr><td>GO:0016328</td><td>J:73065</td><td>external ref</td></tr>
+                	<tr><td>GO:0016328</td><td>J:73065</td><td>text</td></tr>
+                	<tr><td>GO:0030178</td><td>J:162068</td><td>gene product</td></tr>
+                	<tr><td>GO:0030178</td><td>J:162068</td><td>modification</td></tr>
+                	<tr><td>GO:0034244</td><td>J:54993</td><td>cell type</td></tr>
+                	<tr><td>GO:0034244</td><td>J:54993</td><td>target</td></tr>
+                	<tr><td>GO:0034244</td><td>J:54993</td><td>text</td></tr>
+                	</tbody>
+                </table>
+                </li>
+    		</ol>
+       		</li>
+    		<li>Other GO Property (_vocab_key = 82) terms are DISPLAYED as their synonyms.  (sto21, sto26) 
+    			(Nearly 60 distinct terms are used in the data. A subset of terms is tested here.)<br/>
+    		<em><b>NOTE: Column Header is "Additional Term Context" (2015-10-05 klf).</b></em>
+ 			<table>
+	 			<thead>
+ 				<tr><th>Property term or type (database)</th><th>Displayed term (synonym)</th></tr>
+ 				</thead>
+ 				<tbody>
+				<tr><td>during</td><td>during the process of</td></tr>
+ 				<tr><td>has_direct_input</td><td>uses</td></tr>
+ 				<tr><td>has_participant</td><td>has the participant</td></tr>
+ 				<tr><td>has_regulation_target</td><td>regulates</td></tr>
+ 				<tr><td>imports</td><td>imports (only 1 row for this Property term?)</td></tr>
+ 				<tr><td>occurs_at</td><td>happens near</td></tr>
+ 				<tr><td>occurs_in</td><td>happens in</td></tr>
+ 				<tr><td>part_of</td><td>is a part of</td></tr>
+ 				<tr><td>regulates_o_acts_on_population_of</td><td>regulates the proliferation of</td></tr>
+ 				<tr><td>regulates_o_has_participant</td><td>regulates a function/process that has the participant</td></tr>
+ 				<tr><td>regulates_o_occurs_in</td><td>regulates a function/process that happens in</td></tr>
+ 				<tr><td>regulates_o_results_in_acquisition_of_features_of</td><td>regulates the differentiation of</td></tr>
+ 				<tr><td>results_in_acquisition_of_features_of</td><td>results in the differentiation of</td></tr>
+ 				<tr><td>results_in_development_of</td><td>results in the development of</td></tr>
+ 				<tr><td>stabilizes</td><td>the process stabilizes (only 2 rows for this Property term?)</td></tr>
+ 				</tbody>
+ 			</table>
+    		<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1351646#tabular">GO Annotations tabular display</a> 
+                	for <b>Abca7</b> (<b concordion:set="#geneId">MGI:1351646</b>). 
+                	Verify that the following Property terms associated with a GO annotation ARE displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term or type (database)</th>
+                		<th cc:assertResultsContain="#types">Displayed term (synonym)</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0001891</td><td>J:112621</td><td>during</td><td>during the process of</td></tr>
+                	<tr><td>GO:0032587</td><td>J:112621</td><td>during</td><td>during the process of</td></tr>
+                	<tr><td>GO:1900223</td><td>J:196282</td><td>during</td><td>during the process of</td></tr>
+                	<tr><td>GO:0005622</td><td>J:94706</td><td>part_of</td><td>is a part of</td></tr>
+                	<tr><td>GO:0016324</td><td>J:94706</td><td>part_of</td><td>is a part of</td></tr>
+                	<tr><td>GO:0005515</td><td>J:207821</td><td>occurs_at</td><td>happens near</td></tr>
+                	<tr><td>GO:1902430</td><td>J:196282</td><td>occurs_in</td><td>happens in</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:2676312#tabular">GO Annotations tabular display</a> 
+                	for <b>Abca12</b> (<b concordion:set="#geneId">MGI:2676312</b>). 
+                	Verify that the following Property terms associated with a GO annotation ARE displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term or type (database)</th>
+                		<th cc:assertResultsContain="#types">Displayed term (synonym)</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0061436</td><td>J:139048</td><td>has_participant</td><td>has the participant</td></tr>
+                	<tr><td>GO:0010875</td><td>J:200990</td><td>regulates_o_occurs_in</td><td>regulates a function/process that happens in</td></tr>
+                	<tr><td>GO:0048286</td><td>J:139048</td><td>results_in_development_of</td><td>results in the development of</td></tr>
+                	<tr><td>GO:0048286</td><td>J:144062</td><td>results_in_development_of</td><td>results in the development of</td></tr>
+                	<tr><td>GO:0030216</td><td>J:161652</td><td>results_in_acquisition_of_features_of</td><td>results in the differentiation of</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:109192#tabular">GO Annotations tabular display</a> 
+                	for <b>Actn2 </b> (<b concordion:set="#geneId">MGI:109192</b>). 
+                	Verify that the following Property terms associated with a GO annotation ARE displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term or type (database)</th>
+                		<th cc:assertResultsContain="#types">Displayed term (synonym)</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:2001137</td><td>J:153742</td><td>has_direct_input</td><td>uses</td></tr>
+                	<tr><td>GO:2001259</td><td>J:153742</td><td>has_regulation_target</td><td>regulates</td></tr>
+                	<tr><td>GO:0030017</td><td>J:211364</td><td>part_of</td><td>is a part of</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:87964#tabular">GO Annotations tabular display</a> 
+                	for <b>Agtr1a</b> (<b concordion:set="#geneId">MGI:87964</b>). 
+                	Verify that the following Property terms associated with a GO annotation ARE displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term or type (database)</th>
+                		<th cc:assertResultsContain="#types">Displayed term (synonym)</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0008284</td><td>J:154247</td><td>regulates_o_acts_on_population_of</td><td>regulates the proliferation of</td></tr>
+                	<tr><td>GO:0002019</td><td>J:78903</td><td>regulates_o_has_participant</td><td>regulates a function/process that has the participant</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:107187#tabular">GO Annotations tabular display</a> 
+                	for <b>Bcl6</b> (<b concordion:set="#geneId">MGI:107187</b>). 
+                	Verify that the following Property terms associated with a GO annotation ARE displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term or type (database)</th>
+                		<th cc:assertResultsContain="#types">Displayed term (synonym)</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0045666</td><td>J:197487</td><td>regulates_o_results_in_acquisition_of_features_of</td><td>regulates the differentiation of</td></tr>
+                	<tr><td>GO:0030183</td><td>J:87846</td><td>results_in_acquisition_of_features_of</td><td>results in the differentiation of</td></tr>
+                	<tr><td>GO:0031065</td><td>J:197487</td><td>regulates_o_has_participant</td><td>regulates a function/process that has the participant</td></tr>
+                	<tr><td>GO:0031065</td><td>J:197487</td><td>regulates_o_occurs_in</td><td>regulates a function/process that happens in</td></tr>
+                	<tr><td>GO:0031065</td><td>J:197487</td><td>occurs_in</td><td>happens in</td></tr>
+                	<tr><td>GO:0001227</td><td>J:193867</td><td>has_regulation_target</td><td>regulates</td></tr>
+                	<tr><td>GO:0000902</td><td>J:98043</td><td>has_participant</td><td>has the participant</td></tr>
+                	<tr><td>GO:0002467</td><td>J:39815</td><td>has_participant</td><td>has the participant</td></tr>
+                	<tr><td>GO:0002467</td><td>J:40769</td><td>has_participant</td><td>has the participant</td></tr>
+                	<tr><td>GO:0003677</td><td>J:57856</td><td>has_participant</td><td>has the participant</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:893578#tabular">GO Annotations tabular display</a> 
+                	for <b>Scarb1</b> (<b concordion:set="#geneId">MGI:893578</b>). 
+                	Verify that the following Property terms associated with a GO annotation ARE displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term or type (database)</th>
+                		<th cc:assertResultsContain="#types">Displayed term (synonym)</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0050892</td><td>J:221145</td><td>imports</td><td>imports</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1921376#tabular">GO Annotations tabular display</a> 
+                	for <b>Syvn1</b> (<b concordion:set="#geneId">MGI:1921376</b>). 
+                	Verify that the following Property terms associated with a GO annotation ARE displayed:
+                <table concordion:execute="#types = getPropertyTypes(#geneId,#jnum,#termId)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th>Property term or type (database)</th>
+                		<th cc:assertResultsContain="#types">Displayed term (synonym)</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0050821</td><td>J:222676</td><td>stabilizes</td><td>the process stabilizes</td></tr>
+                	</tbody>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Values associated with GO Property terms are displayed. (sto21) Some values are displayed as the text of vocabulary terms; others are displayed as IDs, as stored. (sto24)  Some values are linked to their web resource page. (sto25) Identical annotation extension stanzas (Property-Value pairs in multiple stanzas) associated with identical annotations (Term + marker + Reference-evidence code + Inferred from) should be displayed only once. (sto86) <br/>
+    		(Several thousand unique values are used in the data. At least one of each type is tested here.)<br/>
+    		<em><b>NOTE: Column Header is "Additional Term Context" (2015-10-05 klf).</b></em>
+			<table>
+			<thead>
+				<tr><th>Prefix</th><th>Count distinct<br/>8/28/15</th><th>Display as...</th><th>Comment</th><th>Link to...</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>EMAPA</td><td>3,271</td><td>stored</td><td>converted to EMAPA + TS from EMAP &amp; MA, but TS is not displayed</td><td>EMAPA browser</td></tr>
+				<tr><td>MGI</td><td>1,457</td><td>MGI marker symbol</td><td></td><td>Marker detail</td></tr>
+				<tr><td>CL</td><td>728</td><td>CL vocab term</td><td></td><td>Ontobee (like AMIGO2)</td></tr>
+				<tr><td>UniProtKB</td><td>508</td><td>stored</td><td></td><td>UniProt</td></tr>
+				<tr><td>GO</td><td>240</td><td>GO vocab term</td><td></td><td>GO browser</td></tr>
+				<tr><td>UBERON</td><td>158</td><td>stored</td><td>Data migrated to EMAPA via GAF loads. If no EMAPA exists, display original UBERON id. (sto18)</td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>NCBI_Gene</td><td>55</td><td>stored</td><td>If corresponds to Mouse gene, data migrated to MGI IDs via GAF file loads. Otherwise, display as-is. (sto69)</td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>CHEBI</td><td>48</td><td>stored</td><td></td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>PR</td><td>27</td><td>stored</td><td>NEVER translate, even if we have the term in VOC_Term (sto24).<br/>Only 1 value used is also in VOC_Term (as of 9/24/2015)</td><td>PRO (Georgetown)</td></tr>
+				<tr><td>ENSEMBL</td><td>11</td><td>stored</td><td>If corresponds to Mouse gene, data migrated to MGI IDs via GAF file loads. Otherwise, display as-is. (sto69)</td><td>Ensembl</td></tr>
+				<tr><td>RNAcentral</td><td>4</td><td>stored</td><td></td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>SO</td><td>4</td><td>stored</td><td></td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>ECO</td><td>2</td><td>stored</td><td>David changed/removed annotations in Prod 19-Oct-2015. IDs should no longer exist.</td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>CLO</td><td>1</td><td>stored</td><td>David changed/removed annotations in Prod 19-Oct-2015. IDs should no longer exist.</td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>RefSeq</td><td>1</td><td>stored</td><td></td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>EMAP</td><td>0</td><td>---</td><td>Data migrated to EMAPA + TS. If no EMAPA exists, display original EMAP id. (sto19)</td><td><i style="color:#777;">no link</i></td></tr>
+				<tr><td>MA</td><td>0</td><td>---</td><td>Data migrated to EMAPA + TS28. If no EMAPA exists, display original MA id. (sto20)</td><td><i style="color:#777;">no link</i></td></tr>
+			</tbody>
+			</table>
+    		<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1351646#tabular">GO Annotations tabular display</a> 
+                	for <b>Abca7</b> (<b concordion:set="#geneId">MGI:1351646</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf 09-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0001891</td><td>J:112621</td><td>IDA</td><td>during</td><td>during the process of</td><td>GO:0006909</td><td>phagocytosis</td><td><a href="http://cardolan.informatics.jax.org/searches/GO.cgi?id=GO:0006909">phagocytosis</a></td></tr>
+                	<tr><td>GO:0032587</td><td>J:112621</td><td>IDA</td><td>during</td><td>during the process of</td><td>GO:0006909</td><td>phagocytosis</td><td><a href="http://cardolan.informatics.jax.org/searches/GO.cgi?id=GO:0006909">phagocytosis</a></td></tr>
+                	<tr><td>GO:1900223</td><td>J:196282</td><td>IMP</td><td>during</td><td>during the process of</td><td>GO:0006909</td><td>phagocytosis</td><td><a href="http://cardolan.informatics.jax.org/searches/GO.cgi?id=GO:0006909">phagocytosis</a></td></tr>
+                	<tr><td>GO:0005622</td><td>J:94706</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>CL:0000235</td><td>macrophage</td><td><a href="http://purl.obolibrary.org/obo/CL_0000235">macrophage</a></td></tr>
+                	<tr><td>GO:0005515</td><td>J:207821</td><td>IPI</td><td>occurs_at</td><td>happens near</td><td>GO:0009986</td><td>cell surface</td><td><a href="http://cardolan.informatics.jax.org/searches/GO.cgi?id=GO:0009986">cell surface</a></td></tr>
+                	<tr><td>GO:1902430</td><td>J:196282</td><td>IMP</td><td>occurs_in</td><td>happens in</td><td>EMAPA:32772 (was UBERON:0003876)</td><td>hippocampus region</td><td><a href="http://www.informatics.jax.org/vocab/gxd/anatomy/EMAPA:32772">hippocampus region</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:2676312#tabular">GO Annotations tabular display</a> 
+                	for <b>Abca12</b> (<b concordion:set="#geneId">MGI:2676312</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comments</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0061436</td><td>J:139048</td><td>IMP</td><td>has_participant</td><td>has the participant</td><td>EMAPA:16039 TS26</td><td>embryo</td><td>Was EMAP:11159</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16039">embryo</a></td></tr>
+                	<tr><td>GO:0010875</td><td>J:200990</td><td>IMP</td><td>regulates_o_occurs_in</td><td>regulates a function/process that happens in</td><td>CL:0000091</td><td>Kupffer cell</td><td></td><td><a href="http://purl.obolibrary.org/obo/CL_0000091">Kupffer cell</a></td></tr>
+                	<tr><td>GO:0048286</td><td>J:139048</td><td>IMP</td><td>results in the development of</td><td>results in the development of</td><td>EMAPA:32692 TS28</td><td>alveolar system</td><td>Was MA:0000416</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:32692">alveolar system</a></td></tr>
+                	<tr><td>GO:0048286</td><td>J:144062</td><td>IMP</td><td>results in the development of</td><td>results in the development of</td><td>EMAPA:16728 TS28</td><td>lung</td><td>Was MA:0000415. This has a NOT qualifier</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16728">lung</a></td></tr>
+                	<tr><td>GO:0030216</td><td>J:161652</td><td>IMP</td><td>results_in_acquisition_of_features_of</td><td>results in the differentiation of</td><td>CL:0000312</td><td>keratinocyte</td><td></td><td><a href="http://purl.obolibrary.org/obo/CL_0000312">keratinocyte</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:109192#tabular">GO Annotations tabular display</a> 
+                	for <b>Actn2 </b> (<b concordion:set="#geneId">MGI:109192</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:2001137</td><td>J:153742</td><td>IMP</td><td>has_direct_input</td><td>uses</td><td>UniProtKB:P58390</td><td>UniProtKB:P58390</td><td><a href="http://www.uniprot.org/entry/P58390">UniProtKB:P58390</a></td></tr>
+                	<tr><td>GO:2001259</td><td>J:153742</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>UniProtKB:P58390</td><td>UniProtKB:P58390</td><td><a href="http://www.uniprot.org/entry/P58390">UniProtKB:P58390</a></td></tr>
+                	<tr><td>GO:0030017</td><td>J:211364</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>CL:0000746</td><td>cardiac muscle cell</td><td><a href="http://purl.obolibrary.org/obo/CL_0000746">cardiac muscle cell</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:87964#tabular">GO Annotations tabular display</a> 
+                	for <b>Agtr1a</b> (<b concordion:set="#geneId">MGI:87964</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0008284</td><td>J:154247</td><td>IMP</td><td>regulates_o_acts_on_population_of</td><td>regulates the proliferation of</td><td>CL:0000359</td><td>vascular associated smooth muscle cell</td><td><a href="http://purl.obolibrary.org/obo/CL_0000359">vascular associated smooth muscle cell</a></td></tr>
+                	<tr><td>GO:0002019</td><td>J:78903</td><td>IMP</td><td>regulates_o_has_participant</td><td>regulates a function/process that has the participant</td><td>EMAPA:17373 TS28</td><td>metanephros</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17373">metanephros</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:107187#tabular">GO Annotations tabular display</a> 
+                	for <b>Bcl6</b> (<b concordion:set="#geneId">MGI:107187</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25): 
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0045666</td><td>J:197487</td><td>IDA</td><td>regulates_o_results_in_acquisition_of_features_of</td><td>regulates the differentiation of</td><td>CL:0000598</td><td>pyramidal neuron</td><td><a href="http://purl.obolibrary.org/obo/CL_0000598">pyramidal neuron</a></td></tr>
+                	<tr><td>GO:0030183</td><td>J:87846</td><td>IGI</td><td>results_in_acquisition_of_features_of</td><td>results in the differentiation of</td><td>CL:0000236</td><td>B cell</td><td><a href="http://purl.obolibrary.org/obo/CL_0000236">B cell</a></td></tr>
+                	<tr><td>GO:0031065</td><td>J:197487</td><td>IGI</td><td>regulates_o_has_participant</td><td>regulates a function/process that has the participant</td><td>MGI:104876</td><td>Hes5</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:104876">Hes5</a></td></tr>
+                	<tr><td>GO:0031065</td><td>J:197487</td><td>IGI</td><td>regulates_o_occurs_in</td><td>regulates a function/process that happens in</td><td>EMAPA:17544 TS24</td><td>cerebral cortex</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17544">cerebral cortex</a></td></tr>
+                	<tr><td>GO:0031065</td><td>J:197487</td><td>IGI</td><td>occurs_in</td><td>happens in</td><td>EMAPA:17544 TS24</td><td>cerebral cortex</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17544">cerebral cortex</a></td></tr>
+                	<tr><td>GO:0001227</td><td>J:193867</td><td>IDA</td><td>has_regulation_target</td><td>regulates</td><td>MGI:1889575</td><td>Adar</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:1889575">Adar</a></td></tr>
+                	<tr><td>GO:0000902</td><td>J:98043</td><td>IGI</td><td>has_participant</td><td>has the participant</td><td>CL:0000235</td><td>macrophage</td><td><a href="http://purl.obolibrary.org/obo/CL_0000235">macrophage</a></td></tr>
+                	<tr><td>GO:0002467</td><td>J:39815</td><td>IMP</td><td>has_participant</td><td>has the participant</td><td>EMAPA:35803 TS28</td><td>spleen germinal center</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:35803">spleen germinal center</a></td></tr>
+                	<tr><td>GO:0002467</td><td>J:40769</td><td>IMP</td><td>has_participant</td><td>has the participant</td><td>EMAPA:35684 TS28</td><td>peyer's patch germinal center</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:35684">peyer's patch germinal center</a></td></tr>
+                	<tr><td>GO:0003677</td><td>J:57856</td><td>IDA</td><td>has_participant</td><td>has the participant</td><td>MGI:96449</td><td>Igh-7</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:96449">Igh-7</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:893578#tabular">GO Annotations tabular display</a> 
+                	for <b>Scarb1</b> (<b concordion:set="#geneId">MGI:893578</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0050892</td><td>J:221145</td><td>IMP</td><td>imports</td><td>imports</td><td>CHEBI:27325</td><td>CHEBI:27325</td><td>none</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1921376#tabular">GO Annotations tabular display</a> 
+                	for <b>Syvn1</b> (<b concordion:set="#geneId">MGI:1921376</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0050821</td><td>J:222676</td><td>IDA</td><td>stabilizes</td><td>the process stabilizes</td><td>UniProtKB:Q9Z2G6</td><td>UniProtKB:Q9Z2G6</td><td><a href="http://www.uniprot.org/entry/Q9Z2G6">UniProtKB:Q9Z2G6</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:95842#tabular">GO Annotations tabular display</a> 
+                	for <b>Gsx1</b> (<b concordion:set="#geneId">MGI:95842</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf 12-nov-2015</p>                
+                 <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0045944</td><td>J:72881</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>NCBI_Gene:29446</td><td>NCBI_Gene:29446</td><td>none</td><td>Rat Entrez Gene ID, no mouse ID (sto69)</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:95751#tabular">GO Annotations tabular display</a> 
+                	for <b>Glrb</b> (<b concordion:set="#geneId">MGI:95751</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                 <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0072578</td><td>J:153519</td><td>IGI</td><td>has_direct_input</td><td>uses</td><td>PR:000044498</td><td>PR:000044498</td><td><a href="http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:000044498">PR:000044498</a></td></tr>
+                	<tr><td>GO:0097112</td><td>J:153519</td><td>IGI</td><td>has_direct_input</td><td>uses</td><td>PR:Q91XP5-1</td><td>PR:Q91XP5-1</td><td><a href="http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:Q91XP5-1">PR:Q91XP5-1</a></td></tr>
+                	<tr><td>GO:0097112</td><td>J:153519</td><td>IGI</td><td>has_direct_input</td><td>uses</td><td>PR:000044498</td><td>PR:000044498</td><td><a href="http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:000044498">PR:000044498</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:2446630#tabular">GO Annotations tabular display</a> 
+                	for <b>Ago1</b> (<b concordion:set="#geneId">MGI:2446630</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 12-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                		<th>Comments</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0044212</td><td>J:197739</td><td>IMP</td><td>has_direct_input</td><td>uses</td><td>MGI:88302</td><td>Ccnb1</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:88302">Ccnb1</a></td><td>Translated from ENSEMBL:ENSMUSG00000041431 during load (sto69).</td></tr>
+                	<tr><td>GO:0045944</td><td>J:197739</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>MGI:88302</td><td>Ccnb1</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:88302">Ccnb1</a></td><td>Translated from ENSEMBL:ENSMUSG00000041431 during load (sto69).</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1890081#tabular">GO Annotations tabular display</a> 
+                	for <b>Foxo3</b> (<b concordion:set="#geneId">MGI:1890081</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0001228</td><td>J:168129</td><td>IDA</td><td>has_direct_input</td><td>uses</td><td>RNAcentral:URS000075D8E6_10090</td><td>RNAcentral:URS000075D8E6_10090</td><td>none</td></tr>
+                	<tr><td>GO:0045944</td><td>J:168129</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>RNAcentral:URS00001DC04F_10090</td><td>RNAcentral:URS00001DC04F_10090</td><td>none</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:95842#tabular">GO Annotations tabular display</a> 
+                	for <b>Gsx1</b> (<b concordion:set="#geneId">MGI:95842</b>).<br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25, sto69):
+					<p concordion:manual="true">klf 12-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0045944</td><td>J:72881</td><td>IDA</td><td>has_regulation_target</td><td>regulates</td><td>NCBI_Gene:29446</td><td>NCBI_Gene:29446</td><td>Entrez Gene ID for rat; not a Mouse ID (sto69)</td><td>none</td></tr>
+                	<tr><td>GO:0045944</td><td>J:72881</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>NCBI_Gene:29446</td><td>NCBI_Gene:29446</td><td>Entrez Gene ID for rat; not a Mouse ID (sto69)</td><td>none</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:96770#tabular">GO Annotations tabular display</a> 
+                	for <b>Lef1</b> (<b concordion:set="#geneId">MGI:96770</b>).<br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25, sto69):
+					<p concordion:manual="true">klf 12-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0045944</td><td>J:210934</td><td>IDA</td><td>has_regulation_target</td><td>regulates</td><td>MGI:97849</td><td>Rag2</td><td>Entrez Gene ID NCBI_Gene:19374 corresponds to MGI mouse ID (sto69)</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:97849">Rag2</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:97350#tabular">GO Annotations tabular display</a> 
+                	for <b>Nkx2-5</b> (<b concordion:set="#geneId">MGI:97350</b>).<br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25, sto69):
+					<p concordion:manual="true">klf 12-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0045944</td><td>J:143802</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>MGI:1201678</td><td>Cacna1g</td><td>Ensembl ID ENSEMBL:ENSMUSG00000020866 corresponds to MGI mouse ID (sto69). there are 6 stanzas in this 1 annotation.</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:1201678">Cacna1g</a></td></tr>
+                	<tr><td>GO:0045944</td><td>J:143802</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>MGI:1928842</td><td>Cacna1h</td><td>see above ENSEMBL:ENSMUSG00000024112</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:1928842">Cacna1h</a></td></tr>
+                	<tr><td>GO:0045944</td><td>J:143802</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>MGI:98251</td><td>Scn5a</td><td>see above ENSEMBL:ENSMUSG00000032511</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:98251">Scn5a</a></td></tr>
+                	<tr><td>GO:0045944</td><td>J:143802</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>MGI:99685</td><td>Ryr2</td><td>see above ENSEMBL:ENSMUSG00000021313</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:99685">Ryr2</a></td></tr>
+                	<tr><td>GO:0045944</td><td>J:143802</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>MGI:96673</td><td>Kcne1</td><td>see above ENSEMBL:ENSMUSG00000039639</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:96673">Kcne1</a></td></tr>
+                	<tr><td>GO:0045944</td><td>J:143802</td><td>IMP</td><td>has_regulation_target</td><td>regulates</td><td>MGI:1916782</td><td>Hopx</td><td>see above ENSEMBL:ENSMUSG00000059325</td><td><a href="http://cardolan.informatics.jax.org/marker/MGI:1916782">Hopx</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1344416#tabular">GO Annotations tabular display</a> 
+                	for <b>Ash2l</b> (<b concordion:set="#geneId">MGI:1344416</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0048096</td><td>J:185349</td><td>NAS</td><td>occurs_at</td><td>happens near</td><td>SO:0000170</td><td>SO:0000170</td><td>none</td></tr>
+                	<tr><td>GO:0051568</td><td>J:185349</td><td>IC</td><td>occurs_at</td><td>happens near</td><td>SO:0000170</td><td>SO:0000170</td><td>none</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:97837#tabular">GO Annotations tabular display</a> 
+                	for <b>Qk</b> (<b concordion:set="#geneId">MGI:97837</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0003729</td><td>J:182851</td><td>IDA</td><td>has_direct_input</td><td>uses</td><td>RefSeq:NM_011715</td><td>RefSeq:NM_011715</td><td>none</td></tr>
+                	<tr><td>GO:0061158</td><td>J:182851</td><td>IDA</td><td>has_direct_input</td><td>uses</td><td>RefSeq:NM_011715</td><td>RefSeq:NM_011715</td><td>none</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1313297#tabular">GO Annotations tabular display</a> 
+                	for <b>Gpr37</b> (<b concordion:set="#geneId">MGI:1313297</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0043410</td><td>J:213894</td><td>IMP</td><td>in_presence_of</td><td>is observed in the presence of</td><td>PR:000031300</td><td>PR:000031300</td><td>only PR ID used that is also in Voc Term (9/24/2015)</td><td><a href="http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:000031300">PR:000031300</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                
+                <!-- for EMAPA -->
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:98961#tabular">GO Annotations tabular display</a> 
+                	for <b>Wnt7a</b> (<b concordion:set="#geneId">MGI:98961</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0035115</td><td>J:112</td><td>IMP</td><td>has_participant</td><td>has the participant</td><td>EMAPA:17245 TS19</td><td>handplate</td><td>Term only exists at TS19</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17245">handplate</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:98218#tabular">GO Annotations tabular display</a> 
+                	for <b>Prrx2</b> (<b concordion:set="#geneId">MGI:98218</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed and Links are correct (sto25):
+					<p concordion:manual="true">klf Value Links 20-oct-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0048704</td><td>J:50488</td><td>IGI</td><td>has_participant</td><td>has the participant</td><td>EMAPA:17355 TS19</td><td>mandibular process</td><td>Was EMAP:3812. Both EMAPA:17355 and EMAPA:17741 belong to same VOC_Evidence record</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17355">mandibular process</a></td></tr>
+                	<tr><td>GO:0048704</td><td>J:50488</td><td>IGI</td><td>has_participant</td><td>has the participant</td><td>EMAPA:17741 TS21</td><td>tibia-fibula pre-cartilage condensation</td><td>Was EMAP:4891. Both EMAPA:17355 and EMAPA:17741 belong to same VOC_Evidence record</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17741">tibia-fibula pre-cartilage condensation</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:88332#tabular">GO Annotations tabular display</a> 
+                	for <b>Cd3e</b> (<b concordion:set="#geneId">MGI:88332</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed, and are displayed ONLY ONCE (sto86), and Links are correct (sto25):
+					<p concordion:manual="true">klf 06-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0009897</td><td>J:53400</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>CL:0000084</td><td>T cell</td><td>Also display J:33466, J:92334, and J:98326 for this row.</td><td><a href="http://purl.obolibrary.org/obo/CL_0000084">T cell</a></td></tr>
+                	<tr><td>GO:0042102</td><td>J:53400</td><td>IDA</td><td>regulates_o_acts_on_population_of</td><td>regulates the proliferation of</td><td>CL:0000084</td><td>T cell</td><td>Also display J:92334, J:98326, and J:142709 for this row.</td><td><a href="http://purl.obolibrary.org/obo/CL_0000084">T cell</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:88180#tabular">GO Annotations tabular display</a> 
+                	for <b>Bmp4</b> (<b concordion:set="#geneId">MGI:88180</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed, and are displayed ONLY ONCE (sto86), and Links are correct (sto25):
+					<p concordion:manual="true">klf 06-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0007281</td><td>J:91660</td><td>IMP</td><td>occurs_in</td><td>happens in</td><td>EMAPA:16039 TS08</td><td>embryo</td><td>The single full stanza is: "happens in embryo, results in the development of germ cell."</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16039">embryo</a></td></tr>
+                	<tr><td>GO:0007281</td><td>J:91660</td><td>IMP</td><td>results_in_development_of</td><td>results in the development of</td><td>CL:0000586</td><td>germ cell</td><td>See row above.</td><td><a href="http://purl.obolibrary.org/obo/CL_0000586">germ cell</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1338938#tabular">GO Annotations tabular display</a> 
+                	for <b>Bmpr1a</b> (<b concordion:set="#geneId">MGI:1338938</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed, and are displayed ONLY ONCE (sto86), and Links are correct (sto25):
+					<p concordion:manual="true">klf 06-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0030509</td><td>J:124681</td><td>IMP</td><td>occurs_in</td><td>happens in</td><td>EMAPA:16039 TS09</td><td>embryo</td><td>Two full stanzas: "happens in embryo. | happens in visceral extraembryonic endoderm."</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16039">embryo</a></td></tr>
+                	<tr><td>GO:0030509</td><td>J:124681</td><td>IMP</td><td>occurs_in</td><td>happens in</td><td>EMAPA:16058 TS09</td><td>visceral extraembryonic endoderm</td><td>See above. This data is part of that display.</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16058">visceral extraembryonic endoderm</a></td></tr>
+                	<tr><td>GO:0030509</td><td>J:124681</td><td>IMP</td><td>occurs_in</td><td>happens in</td><td>EMAPA:16039 TS11</td><td>embryo</td><td>See above. This data is part of that display.</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16039">embryo</a></td></tr>
+                	<tr><td>GO:0030509</td><td>J:124681</td><td>IMP</td><td>occurs_in</td><td>happens in</td><td>EMAPA:16058 TS11</td><td>visceral extraembryonic endoderm</td><td>See above. This data is part of that display.</td><td><a href="http://cardolan.informatics.jax.org/vocab/gxd/anatomy/EMAPA:16058">visceral extraembryonic endoderm</a></td></tr>
+                	</tbody>
+                </table>
+                </li>
+
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1913719#tabular">GO Annotations tabular display</a> 
+                	for <b>Fam213b</b> (<b concordion:set="#geneId">MGI:1913719</b>). <br/>
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed, where possible the UBERON IDs are converted to EMAPA IDs (sto18) and Links are correct (sto25):
+					<p concordion:manual="true">klf 09-nov-2015</p>                
+                <table concordion:execute="#values = getPropertyValues(#geneId,#jnum,#code,#termId,#type)">
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th concordion:set="#type">Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th cc:assertResultsContain="#values">Display</th>
+                		<th>Comment</th>
+                		<th>Link</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0005783</td><td>J:130170</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>CL:0000100</td><td>motor neuron</td><td>Three stanzas: "is a part of motor neuron, is a part of UBERON:0002260. | is a part of glial cell, is a part of spinal cord. | is a part of UBERON:0002256."</td><td><a href="http://purl.obolibrary.org/obo/CL_0000100">motor neuron</a></td></tr>
+                	<tr><td>GO:0005783</td><td>J:130170</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>UBERON:0002260</td><td>UBERON:0002260</td><td>See row above. UBERON:0002260 has no EMAPA mapping.</td><td></td></tr>
+                	<tr><td>GO:0005783</td><td>J:130170</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>CL:0000125</td><td>glial cell</td><td>See row above.</td><td><a href="http://purl.obolibrary.org/obo/CL_0000125">glial cell</a></td></tr>
+                	<tr><td>GO:0005783</td><td>J:130170</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>EMAPA:17577</td><td>spinal cord</td><td>See row above. UBERON:0002240 was mapped to EMAPA:17577.</td><td><a href="http://valinor.informatics.jax.org/vocab/gxd/anatomy/EMAPA:17577">spinal cord</a></td></tr>
+                	<tr><td>GO:0005783</td><td>J:130170</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>UBERON:0002256</td><td>UBERON:0002256</td><td>See row above. UBERON:0002256 maps to both EMAPA:18574, and EMAPA:35790.</td><td></td></tr>
+                	</tbody>
+                </table>
+                </li>
+                
+    		</ol>
+    		</li>
+    		<li>Property terms + values are displayed ordered by "Stanza" then by "SequenceNum" for a given Marker + GO Term + Reference annotation. (sto21) <br/>
+    		Stanzas are displayed as "separate lines" and are indicated separately in download files (sto71). Multiple property/value pairs are separated by commas; each property/value pair is on a new line; the final property/value pair ends with a period (not in download and GAF files); stanzas are separated by a horizontal line (display) or pipe symbol "|" (download and GAF files) (sto71).<br/>
+    		<em><b>NOTE: Column Header is "Additional Term Context" (2015-10-05 klf).</b></em>
+ 			<p concordion:manual="true">klf 09-nov-2015</p>
+    		<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:87961#tabular">GO Annotations tabular display</a> 
+                	for <b>Agrn</b> (<b concordion:set="#geneId">MGI:87961</b>). 
+                	Verify that the following Values associated with GO annotation <b concordion:set="#termId">GO:0042030</b>, <b concordion:set="#jnum">J:151007</b> and Property terms shown are displayed in the order shown here:
+                <table>
+                	<thead>
+                	<tr><th>Stanza</th><th>SequenceNum</th><th>Property term</th><th>Value</th><th>Display</th><th>Comment</th></tr>
+                	</thead>
+                	<tbody>
+					<tr><td>1</td><td>1</td><td>happens in</td><td>CL:0002131</td><td>regular ventricular cardiac myocyte</td><td></td></tr>
+					<tr><td>1</td><td>2</td><td>regulates</td><td>UniProtKB:Q6PIC6</td><td>UniProtKB:Q6PIC6</td><td></td></tr>
+					<tr><td>1</td><td>3</td><td>happens in</td><td>GO:0042383</td><td>sarcolemma</td><td></td></tr>
+					<tr><td>2</td><td>1</td><td>regulates</td><td>UniProtKB:Q6PIC6</td><td>UniProtKB:Q6PIC6</td><td></td></tr>
+					<tr><td>2</td><td>2</td><td>happens in</td><td>EMAPA:16894</td><td>brain</td><td>EMAPA:16894 (was UBERON:0000955)</td></tr>
+					<tr><td>2</td><td>3</td><td>happens in</td><td>GO:0005886</td><td>plasma membrane</td><td></td></tr>
+					<tr><td>3</td><td>1</td><td>happens in</td><td>UBERON:0009953</td><td>UBERON:0009953</td><td>no EMAPA for this Uberon</td></tr>
+					<tr><td>3</td><td>2</td><td>happens in</td><td>EMAPA:17331</td><td>heart ventricle</td><td>EMAPA:17331 (was UBERON:0002082)</td></tr>
+					<tr><td>3</td><td>3</td><td>happens in</td><td>GO:0042383</td><td>sarcolemma</td><td></td></tr>
+					</tbody>
+                </table>
+                	Verify that the following Values associated with GO annotation <b concordion:set="#termId">GO:1903407</b>, <b concordion:set="#jnum">J:151007</b> and Property terms shown are displayed in the order shown here:
+                <table>
+                	<thead>
+                	<tr><th>Stanza</th><th>SequenceNum</th><th>Property term</th><th>Value</th><th>Display</th><th>Comment</th></tr>
+                	</thead>
+                	<tbody>
+					<tr><td>1</td><td>1</td><td>happens in</td><td>CL:0002131</td><td>regular ventricular cardiac myocyte</td><td></td></tr>
+					<tr><td>1</td><td>2</td><td>regulates</td><td>UniProtKB:Q6PIC6</td><td>UniProtKB:Q6PIC6</td><td></td></tr>
+					<tr><td>1</td><td>3</td><td>happens in</td><td>GO:0042383</td><td>sarcolemma</td><td></td></tr>
+					<tr><td>2</td><td>1</td><td>regulates</td><td>UniProtKB:Q6PIC6</td><td>UniProtKB:Q6PIC6</td><td></td></tr>
+					<tr><td>2</td><td>2</td><td>happens in</td><td>EMAPA:16894</td><td>brain</td><td>EMAPA:16894 (was UBERON:0000955)</td></tr>
+					<tr><td>2</td><td>3</td><td>happens in</td><td>GO:0005886</td><td>plasma membrane</td><td></td></tr>
+					<tr><td>3</td><td>1</td><td>happens in</td><td>UBERON:0009953</td><td>UBERON:0009953</td><td>no EMAPA for this Uberon</td></tr>
+					<tr><td>3</td><td>2</td><td>happens in</td><td>EMAPA:17331</td><td>heart ventricle</td><td>EMAPA:17331 (was UBERON:0002082)</td></tr>
+					<tr><td>3</td><td>3</td><td>happens in</td><td>GO:0042383</td><td>sarcolemma</td><td></td></tr>
+					<tr><td>4</td><td>1</td><td>happens in</td><td>CL:0000010</td><td>cultured cell</td><td></td></tr>
+					<tr><td>4</td><td>2</td><td>happens in</td><td>CL:0000746</td><td>cardiac muscle cell</td><td></td></tr>
+					<tr><td>4</td><td>3</td><td>regulates</td><td>UniProtKB:Q6PIC6</td><td>UniProtKB:Q6PIC6</td><td></td></tr>
+					</tbody>
+                </table>
+                </li>
+    		</ol>
+    		</li>
+    		<li>Property names that do not have a synonym are displayed as is.
+    			<p concordion:manual="true">klf 24-sep-2015</p>
+    			
+    			<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:87961#tabular">GO Annotations tabular display</a> 
+                	for <b>Agrn</b> (<b concordion:set="#geneId">MGI:87961</b>). 
+                	
+                	Find the following property and value:
+                	<table>
+                	<tr>
+                		<th>GO term ID</th>
+                		<th>Ref</th>
+                		<th>Ev Code</th>
+                		<th>Property term (database)</th>
+                		<th>Displayed term (synonym)</th>
+                		<th>Value</th>
+                	</tr>
+                	<tr>
+                		<td>GO:0030548 (acetylcholine receptor regulator activity)</td>
+                		<td>J:86639</td>
+                		<td>IDA</td><td>fake</td>
+                		<td>fake <em>(there isn't one)</em></td>
+                		<td>test data</td>
+                	</tr>
+                	</table>
+                </li>
+                </ol>
+    		</li>
+    		
+    		<li>The Properties data is displayed as a column in the downloadable Text and Excel reports. Stanzas and property/value pairs are separated by pipes "|" and commas ",", respectively (sto71). 
+    			<p concordion:manual="true">klf 19-oct-2015 verified additional data from tests above</p>  
+
+				<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:97837#tabular">GO Annotations tabular display</a> 
+                	for <b>Qk</b> (<b>MGI:97837</b>). Click the buttons to download the <b>Text File</b> and the <b>Excel File</b>. 
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed:
+                <table>
+                	<thead>
+                	<tr>
+                		<th>GO term ID</th>
+                		<th>Ref</th>
+                		<th>Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th>Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th>Display</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0003729</td><td>J:182851</td><td>IDA</td><td>has_direct_input</td><td>uses</td><td>RefSeq:NM_011715</td><td>RefSeq:NM_011715</td></tr>
+                	<tr><td>GO:0061158</td><td>J:182851</td><td>IDA</td><td>has_direct_input</td><td>uses</td><td>RefSeq:NM_011715</td><td>RefSeq:NM_011715</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1313297#tabular">GO Annotations tabular display</a> 
+                	for <b>Gpr37</b> (<b>MGI:1313297</b>).  Click the buttons to download the <b>Text File</b> and the <b>Excel File</b>.
+                	Verify that the following Values associated with a GO annotation and Property terms ARE displayed:
+                <table>
+                	<thead>
+                	<tr>
+                		<th>GO term ID</th>
+                		<th>Ref</th>
+                		<th>Ev Code</th>
+                		<th>Property term or type (database)</th>
+                		<th>Displayed term (synonym)</th>
+                		<th>Value</th>
+                		<th>Display</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                	<tr><td>GO:0043410</td><td>J:213894</td><td>IMP</td><td>in_presence_of</td><td>is observed in the presence of</td><td>PR:000031300</td><td>PR:000031300</td><td>only PR ID used that is also in Voc Term (9/24/2015)</td></tr>
+                	</tbody>
+                </table>
+                </li>
+                </ol>
+    		</li>
+    		
+    		<li>Protein isoforms are displayed as links to their web resource. Column heading is "Proteoforms". Two or more values in separate Stanzas of an annotation are delimited with pipes "|". (sto22, sto27) <br/>
+    		Whatever value is in db for "gene_product" is what is displayed (no values are excluded) - EXCEPT convert NCBI: to RefSeq:. EMBL ids link to EMBL. (sto71)
+    			 <p concordion:manual="true">klf 20-oct-2015</p>  
+    			  		
+    			<ol type="A">
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1197518#tabular">GO Annotations tabular display</a> 
+                	for <b>Aatk</b> (<b concordion:set="#geneId">MGI:1197518</b>). 
+                	Verify that the following Proteoforms associated with a GO annotation and Property types/values are displayed:
+                	<table>  <!-- METHOD:  concordion:execute="#isoforms = getIsoforms(#geneId,#jnum,#code,#termId,#type,#value)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property type (database)</th>
+                		<th concordion:set="#type">Displayed type (synonym)</th>
+                		<th>Value</th>
+                		<th concordion:set="#value">Displayed value</th>
+                		<th>Proteoform(s)</th> <!-- ASSERTION:  cc:assertResultsContain="#isoforms" -->
+                		<th>Proteoform link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                		<tr><td>GO:0005515</td><td>J:142139</td><td>IPI</td><td></td><td></td><td></td><td></td><td>PR:000035696</td><td>http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:000035696</td><td>GO: protein binding</td></tr>
+                		<tr><td>GO:0005515</td><td>J:142139</td><td>IPI</td><td></td><td></td><td></td><td></td><td>PR:000035377</td><td>http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:000035377</td><td>GO: protein binding</td></tr>
+                		<tr><td>GO:0005515</td><td>J:142139</td><td>IPI</td><td>occurs_in</td><td>happens in</td><td>EMAPA:16894 TS28</td><td>brain</td><td>UniProtKB:Q80YE4</td><td>http://www.uniprot.org/uniprot/Q80YE4</td><td>GO: protein binding</td></tr>
+                		<tr><td>GO:0046777</td><td>J:128285</td><td>IDA</td><td></td><td></td><td></td><td></td><td>PR:Q80YE4-1</td><td>http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:Q80YE4-1</td><td>GO: protein autophosphorylation</td></tr>
+                		<tr><td>GO:0046777</td><td>J:128285</td><td>IDA</td><td></td><td></td><td></td><td></td><td>PR:Q80YE4-2</td><td>http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:Q80YE4-2</td><td>GO: protein autophosphorylation</td></tr>
+                		<tr><td>GO:0046777</td><td>J:128285</td><td>IDA</td><td></td><td></td><td></td><td></td><td>PR:Q80YE4-3</td><td>http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:Q80YE4-3</td><td>GO: protein autophosphorylation</td></tr>
+                	</tbody>
+	                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1919129#tabular">GO Annotations tabular display</a> 
+                	for <b>Acsl5</b> (<b concordion:set="#geneId">MGI:1919129</b>). 
+                	Verify that the following Proteoforms associated with a GO annotation and Property types/values are displayed:
+                	<table>  <!-- METHOD:  concordion:execute="#isoforms = getIsoforms(#geneId,#jnum,#code,#termId,#type,#value)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property type (database)</th>
+                		<th concordion:set="#type">Displayed type (synonym)</th>
+                		<th>Value</th>
+                		<th concordion:set="#value">Displayed value</th>
+                		<th>Proteoform(s)</th> <!-- ASSERTION:  cc:assertResultsContain="#isoforms" -->
+                		<th>Proteoform link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                		<tr><td>GO:0005739</td><td>J:86816</td><td>IDA</td><td>part_of<br/>part_of<br/>part_of<br/>part_of</td><td>is a part of<br/>is a part of<br/>is a part of<br/>is a part of</td><td>EMAPA:16846 TS28<br/>EMAPA:16894 TS28<br/>EMAPA:17373 TS28<br/>EMAPA:16105 TS28</td><td>liver<br/>brain<br/>metanephros<br/>heart</td><td>RefSeq:NP_082252</td><td>http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=NP_082252</td><td>GO: mitochondrion. Gene Product in database = NCBI:NP_082252</td></tr>
+                		<tr><td>GO:0005739</td><td>J:86816</td><td>IDA</td><td></td><td></td><td></td><td></td><td>RefSeq:NP_082252</td><td>http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=NP_082252</td><td>GO: mitochondrion. Gene Product in database = NCBI:NP_082252. Our DB says "NCBI:" but GAF and AMIGO2 say "RefSeq:".</td></tr>
+                	</tbody>
+	                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1916167#tabular">GO Annotations tabular display</a> 
+                	for <b>Hint2</b> (<b concordion:set="#geneId">MGI:1916167</b>). 
+                	Verify that the following Proteoforms associated with a GO annotation and Property types/values are displayed:
+                	<table>  <!-- METHOD:  concordion:execute="#isoforms = getIsoforms(#geneId,#jnum,#code,#termId,#type,#value)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property type (database)</th>
+                		<th concordion:set="#type">Displayed type (synonym)</th>
+                		<th>Value</th>
+                		<th concordion:set="#value">Displayed value</th>
+                		<th>Proteoform(s)</th> <!-- ASSERTION:  cc:assertResultsContain="#isoforms" -->
+                		<th>Isoform link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                		<tr><td>GO:0005739</td><td>J:86816</td><td>IDA</td><td>part_of<br/>part_of<br/>part_of<br/>part_of</td><td>is a part of<br/>is a part of<br/>is a part of<br/>is a part of</td><td>EMAPA:16846 TS28<br/>EMAPA:16894 TS28<br/>EMAPA:17373 TS28<br/>EMAPA:16105 TS28</td><td>liver<br/>brain<br/>metanephros<br/>heart</td><td>RefSeq:NP_081147</td><td>http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=NP_081147</td><td>GO: mitochondrion. Gene Product in database = NCBI:NP_081147.</td></tr>
+                		<tr><td>GO:0005739</td><td>J:86816</td><td>IDA</td><td></td><td></td><td></td><td></td><td>RefSeq:NP_081147</td><td>http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=NP_081147</td><td>GO: mitochondrion. Gene Product in database = NCBI:NP_081147. Our DB says "NCBI:" but GAF and AMIGO2 say "RefSeq:".</td></tr>
+                	</tbody>
+	                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:98968#tabular">GO Annotations tabular display</a> 
+                	for <b>Wt1</b> (<b concordion:set="#geneId">MGI:98968</b>). 
+                	Verify that the following Proteoforms associated with a GO annotation and Property types/values are displayed:
+                	<table>  <!-- METHOD:  concordion:execute="#isoforms = getIsoforms(#geneId,#jnum,#code,#termId,#type,#value)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property type (database)</th>
+                		<th concordion:set="#type">Displayed type (synonym)</th>
+                		<th>Value</th>
+                		<th concordion:set="#value">Displayed value</th>
+                		<th>Proteoform(s)</th> <!-- ASSERTION:  cc:assertResultsContain="#isoforms" -->
+                		<th>Proteoform link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                		<tr><td>GO:0045944</td><td>J:102417</td><td>IDA</td><td>has_regulation_target</td><td>regulates</td><td>MGI:97384</td><td>Ntrk2</td><td>PR:P22561-4</td><td>http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:P22561-4</td><td>GO: positive regulation of transcription from RNA polymerase II promoter</td></tr>
+                		<tr><td>GO:0045944</td><td>J:102417</td><td>IDA</td><td>has_regulation_target</td><td>regulates</td><td>MGI:97384</td><td>Ntrk2</td><td>PR:P22561-2</td><td>http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=PR:P22561-2</td><td>GO: positive regulation of transcription from RNA polymerase II promoter</td></tr>
+                	</tbody>
+	                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:1916455#tabular">GO Annotations tabular display</a> 
+                	for <b>Zfp748</b> (<b concordion:set="#geneId">MGI:1916455</b>). 
+                	Verify that the following Proteoforms associated with a GO annotation and Property types/values are displayed:
+                	<table>  <!-- METHOD:  concordion:execute="#isoforms = getIsoforms(#geneId,#jnum,#code,#termId,#type,#value)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property type (database)</th>
+                		<th concordion:set="#type">Displayed type (synonym)</th>
+                		<th>Value</th>
+                		<th concordion:set="#value">Displayed value</th>
+                		<th>Proteoform(s)</th> <!-- ASSERTION:  cc:assertResultsContain="#isoforms" -->
+                		<th>Proteoform link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                		<tr><td>GO:0005515</td><td>J:164348</td><td>IPI</td><td></td><td></td><td></td><td></td><td>UniProtKB:Q8BTB4 UniProtKB:Q8BTB4</td><td>http://www.uniprot.org/uniprot/Q8BTB4 <em>for both links</em></td><td>GO: protein binding. Gene_product values are in 2 different Stanzas.</td></tr>
+                		<tr><td>GO:0005634</td><td>J:164348</td><td>IDA</td><td></td><td></td><td></td><td></td><td>UniProtKB:Q8BTB4</td><td>http://www.uniprot.org/uniprot/Q8BTB4</td><td>GO: nucleus</td></tr>
+                		<tr><td>GO:0005737</td><td>J:164348</td><td>IDA</td><td></td><td></td><td></td><td></td><td>UniProtKB:Q8BTB4</td><td>http://www.uniprot.org/uniprot/Q8BTB4</td><td>GO: cytoplasm</td></tr>
+                	</tbody>
+	                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:2152844#tabular">GO Annotations tabular display</a> 
+                	for <b>Slc2a9</b> (<b concordion:set="#geneId">MGI:2152844</b>). 
+                	Verify that the following Proteoforms associated with a GO annotation and Property types/values are displayed:
+                	<table>  <!-- METHOD:  concordion:execute="#isoforms = getIsoforms(#geneId,#jnum,#code,#termId,#type,#value)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property type (database)</th>
+                		<th concordion:set="#type">Displayed type (synonym)</th>
+                		<th>Value</th>
+                		<th concordion:set="#value">Displayed value</th>
+                		<th>Proteoform(s)</th> <!-- ASSERTION:  cc:assertResultsContain="#isoforms" -->
+                		<th>Proteoform link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                		<tr><td>GO:0005887</td><td>J:88688</td><td>IDA</td><td>part_of<br/>part_of</td><td>is a part of<br/>is a part of</td><td>EMAPA:16036 TS02<br/>EMAPA:16033 TS01</td><td>2-cell stage embryo<br/>1-cell stage embryo</td><td>UniProtKB:Q7TSK9 UniProtKB:Q7TSK9</td><td>http://www.uniprot.org/uniprot/Q7TSK9 <em>for both links</em></td><td>GO: integral component of plasma membrane. Properties and gene_product values are in 2 different Stanzas. (EMAP terms are TS02 two-cell stage embryo; TS01 one-cell stage embryo)</td></tr>
+                		<tr><td>GO:0005635</td><td>J:88688</td><td>IDA</td><td>part_of</td><td>is a part of</td><td>EMAPA:16046 TS04</td><td>trophectoderm</td><td>UniProtKB:Q7TSK9</td><td>http://www.uniprot.org/uniprot/Q7TSK9</td><td>GO: nuclear envelope (EMAP term is TS04 trophectoderm)</td></tr>
+                	</tbody>
+	                </table>
+                </li>
+                <li>Navigate to the <a href="http://cardolan.informatics.jax.org/go/marker/MGI:87961#tabular">GO Annotations tabular display</a> 
+                	for <b>Agrn</b> (<b concordion:set="#geneId">MGI:87961</b>). 
+                	Verify that the following Proteoforms associated with a GO annotation and Property types/values are displayed:
+                	<table>  <!-- METHOD:  concordion:execute="#isoforms = getIsoforms(#geneId,#jnum,#code,#termId,#type,#value)" -->
+                	<thead>
+                	<tr>
+                		<th concordion:set="#termId">GO term ID</th>
+                		<th concordion:set="#jnum">Ref</th>
+                		<th concordion:set="#code">Ev Code</th>
+                		<th>Property type (database)</th>
+                		<th concordion:set="#type">Displayed type (synonym)</th>
+                		<th>Value</th>
+                		<th concordion:set="#value">Displayed value</th>
+                		<th>Proteoform(s)</th> <!-- ASSERTION:  cc:assertResultsContain="#isoforms" -->
+                		<th>Proteoform link</th>
+                		<th>Comment</th>
+                	</tr>
+                	</thead>
+                	<tbody>
+                		<tr><td>GO:0005605</td><td>J:64996</td><td>IDA</td><td></td><td></td><td></td><td></td><td>RefSeq:NP_067617</td><td>http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=NP_067617</td><td>GO: basal lamina. Gene Product in database = NCBI:NP_067617</td></tr>
+                		<tr><td>GO:0008582</td><td>J:64996</td><td>IMP</td><td></td><td></td><td></td><td></td><td>RefSeq:NP_067617</td><td>http://www.ncbi.nlm.nih.gov/entrez/viewer.cgi?val=NP_067617</td><td>GO: regulation of synaptic growth at neuromuscular junction. Gene Product in database = NCBI:NP_067617</td></tr>
+                		<tr><td>GO:0009986</td><td>J:64996</td><td>IDA</td><td></td><td></td><td></td><td></td><td>EMBL:AAG02119</td><td>http://www.ebi.ac.uk/ena/data/view/AAG02119</td><td>GO: cell surface</td></tr>
+                		<tr><td>GO:0030548</td><td>J:86639</td><td>IDA</td><td>fake</td><td>fake</td><td>test data</td><td>test data</td><td>EMBL:AA816246</td><td>http://www.ebi.ac.uk/ena/data/view/AA816246</td><td>GO: acetylcholine receptor regulator activity</td></tr>
+                	</tbody>
+	                </table>
+                </li>
+                </ol>
+    		</li>
+		</ol>
+	</div>
+	<div id="auto">
+		<h3>Automated tests</h3>
+		<ol>
+    		<li>Test 1
+    		<ol>
+                <li>Step 1</li>
+                <li>Step 2</li>
+    		</ol>
+    		</li>
+		</ol>
+ 	</div>
+</div>
+
+</body>
+</html>

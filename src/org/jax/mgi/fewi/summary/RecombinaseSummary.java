@@ -14,7 +14,6 @@ import mgi.frontend.datamodel.RecombinaseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.util.FormatHelper;
-import org.jax.mgi.shr.fe.indexconstants.CreFields;
 
 /** wrapper around an allele, to expose only certain data for a recombinase
  * summary page.  This will aid in efficient conversion to JSON notation and
@@ -28,15 +27,16 @@ public class RecombinaseSummary {
 	//-------------------
 
 	// primary object for a RecombinaseSummary is an Allele
-	private Allele allele;
+	private final Allele allele;
 
-	private Set<String> highlights;
-	
+	private Set<String> detectedHighlights;
+	private Set<String> notDetectedHighlights;
+
 	// for convenience, this is the allele's RecombinaseInfo object
-	private RecombinaseInfo recombinaseInfo;
+	private final RecombinaseInfo recombinaseInfo;
 
-	private String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-	
+	private final String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
+
 	// to be used in creating custom css ids
 	private int cssIdCounter=0;
 
@@ -44,10 +44,15 @@ public class RecombinaseSummary {
 	// constructors
 	//-------------
 
-    public RecombinaseSummary (Allele allele,Set<String> highlights) {
+    public RecombinaseSummary (Allele allele,Set<String> detectedHighlights, Set<String> notDetectedHighlights) {
     	this.allele = allele;
-    	this.highlights=highlights;
-    	if(this.highlights==null) this.highlights = new HashSet<String>();
+    	
+    	this.detectedHighlights=detectedHighlights;
+    	this.notDetectedHighlights=notDetectedHighlights;
+    	
+    	if(this.detectedHighlights==null) this.detectedHighlights = new HashSet<String>();
+    	if(this.notDetectedHighlights==null) this.notDetectedHighlights = new HashSet<String>();
+    	
     	this.recombinaseInfo = allele.getRecombinaseInfo();
     }
 
@@ -60,25 +65,25 @@ public class RecombinaseSummary {
     		+ "?typeFilter=Literature' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
     }
 
-    public String getDetectedCount() 
+    public String getDetectedCount()
     {
     	List<AlleleSystem> affectedSystems = this.recombinaseInfo.getAffectedSystems();
 
     	StringBuffer linkedSystems = new StringBuffer();
 
-    	if (affectedSystems.size() > 0) 
+    	if (affectedSystems.size() > 0)
     	{
     		String divID = getNextCssId("div");
 
-    		linkedSystems.append("<div id='" + divID + "' class='small' ");
-    		linkedSystems.append("style='color:blue; cursor:pointer;' >");
-    		
+    		linkedSystems.append("<div id='" + divID + "' class='systemWrap' >");
+
        		List<String> links = new ArrayList<String>();
     		for(AlleleSystem aSystem : affectedSystems)
     		{
     			String systemText = aSystem.getSystem();
-    			if(isSystemHighlighted(systemText,this.highlights)) systemText = "<b class=\"systemHl\">"+systemText+"</b>";
-    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getSystemKey(),systemText, null));
+    			if(isSystemHighlighted(systemText,this.detectedHighlights)) systemText = "<span class=\"systemHl exact\">"+systemText+"</span>";
+    			if(isSystemHighlighted(systemText,this.notDetectedHighlights)) systemText = "<span class=\"systemHl\">"+systemText+"</span>";
+    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getAlleleSystemKey(),systemText));
     		}
     		linkedSystems.append(StringUtils.join(links,", "));
 
@@ -89,24 +94,24 @@ public class RecombinaseSummary {
 	}
 
 
-    public String getNotDetectedCount() 
+    public String getNotDetectedCount()
     {
     	List<AlleleSystem> unaffectedSystems = this.recombinaseInfo.getUnaffectedSystems();
 
     	StringBuffer linkedSystems = new StringBuffer();
 
    		String divID = getNextCssId("div");
-   		linkedSystems.append("<div id='" + divID + "' class='small' ");
-   		linkedSystems.append("style='color:blue; cursor:pointer;' >");
-    	
-    	if (unaffectedSystems.size() > 0) 
+   		linkedSystems.append("<div id='" + divID + "' class='systemWrap' >");
+
+    	if (unaffectedSystems.size() > 0)
     	{
     		List<String> links = new ArrayList<String>();
     		for(AlleleSystem aSystem : unaffectedSystems)
     		{
     			String systemText = aSystem.getSystem();
-    			if(isSystemHighlighted(systemText,this.highlights)) systemText = "<b class=\"systemHl\">"+systemText+"</b>";
-    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getSystemKey(),systemText, null));
+    			if(isSystemHighlighted(systemText,this.notDetectedHighlights)) systemText = "<span class=\"systemHl exact\">"+systemText+"</span>";
+    			if(isSystemHighlighted(systemText,this.detectedHighlights)) systemText = "<span class=\"systemHl\">"+systemText+"</span>";
+    			links.add(specificityLink(aSystem.getAlleleID(), aSystem.getAlleleSystemKey(),systemText));
     		}
     		linkedSystems.append(StringUtils.join(links,", "));
     	}
@@ -116,23 +121,15 @@ public class RecombinaseSummary {
 	}
 
     public static boolean isSystemHighlighted(String systemText,Set<String> highlights) {
-    	// map solr field to displayed system
-    	for(String displayKey : CreFields.SYSTEM_FIELDS.keySet())
-    	{
-    		if(displayKey.equals(systemText))
-    		{
-    			// map display to solr field name to be able to line up with highlights
-    			return highlights.contains(CreFields.SYSTEM_FIELDS.get(displayKey));
-    		}
-    	}
-		return false;
+    	
+    	return highlights.contains(systemText);
 	}
 
 	public String getDriver() {
     	return this.allele.getDriver();
     }
 
-    public String getImsrCount() 
+    public String getImsrCount()
     {
     	Integer count = this.allele.getImsrStrainCount();
     	if ((count == null) || count.equals(0)) { return null; }
@@ -148,29 +145,19 @@ public class RecombinaseSummary {
     	return sb.toString();
     }
 
-    public String getInducibleNote() 
+    public String getInducibleNote()
     {
-    	String note = this.allele.getInducibleNote();
-    	if (note == null) {
-    		return note;
-    	}
-    	StringBuffer sb = new StringBuffer();
-    	sb.append("<span id='");
-    	sb.append(getNextCssId("tt"));
-    	sb.append("' title='");
-    	sb.append(note);
-    	sb.append("'>Yes</span>");
-    	return sb.toString();
+    	return this.allele.getInducibleNote();
     }
 
-	public String getNomenclature() 
+	public String getNomenclature()
 	{
         StringBuffer sb = new StringBuffer();
 
-        sb.append("<a href='" + fewiUrl + "allele/"
+        sb.append("<a class=\"alleleSymbol\" href='" + fewiUrl + "allele/"
           + this.allele.getPrimaryID()
           + "?recomRibbon=open' target='_blank'>"
-          + FormatHelper.superscript(this.allele.getSymbol()) + "</A>");
+          + FormatHelper.superscript(this.allele.getSymbol()) + "</a>");
 		sb.append("<br/><span class='small'>");
 		sb.append(FormatHelper.superscript(this.allele.getGeneName()));
 		if (!this.allele.getGeneName().equals(this.allele.getName())) {
@@ -184,14 +171,14 @@ public class RecombinaseSummary {
 	public String getAlleleSymbol()
 	{ return this.allele.getSymbol(); }
 
-	public String getSynonyms() 
+	public String getSynonyms()
 	{
 		List<AlleleSynonym> alleleSynonyms = this.allele.getSynonyms();
 		ArrayList<String> synonyms = new ArrayList<String>();
-		
+
 		for(AlleleSynonym alleleSynonym : alleleSynonyms)
 		{
-			synonyms.add(FormatHelper.superscript(alleleSynonym.getSynonym()));
+			synonyms.add("<span class=\"synonym\">"+FormatHelper.superscript(alleleSynonym.getSynonym()) + "</span>");
 		}
 		Collections.sort(synonyms);
 
@@ -202,10 +189,10 @@ public class RecombinaseSummary {
     //-------------------------
     // private instance methods
     //-------------------------
-	
-	/* 
-	 * For some reason we need a unique css id for this summary row. 
-	 * Allele key seems safe enough 
+
+	/*
+	 * For some reason we need a unique css id for this summary row.
+	 * Allele key seems safe enough
 	 */
 	private String getNextCssId(String suffix)
 	{
@@ -216,32 +203,27 @@ public class RecombinaseSummary {
     /** return a link to a recombinase specificity detail page for the
      * given alleleID and systemKey, and with the given label as the text
      * of the link
+     * 		
+     * 		AS OF 11/24/2015 these links are disabled
      */
     private  String specificityLink (String alleleID, Integer systemKey,
-    		String label, String tooltip) 
+    		String label)
     {
     	if (systemKey == null) {
 	    	if (label == null) {return "";}
 			return label;
 		}
     	StringBuffer sb = new StringBuffer();
-    	sb.append("<a href='"+fewiUrl+"/recombinase/specificity?id=");
-    	sb.append(alleleID);
-    	sb.append("&systemKey=");
-    	sb.append(systemKey.toString());
+    	
+    	//sb.append("<a href='"+fewiUrl+"/recombinase/specificity?id=");
+    	//sb.append(alleleID);
+    	//sb.append("&systemKey=");
+    	//sb.append(systemKey.toString());
 
-    	if (tooltip != null) 
-    	{
-    		String id = getNextCssId("tt");
-    		sb.append("' id='");
-    		sb.append(id);
-    		sb.append("' title='");
-    		sb.append(tooltip);
-    	}
 
-    	sb.append("' target='_blank'>");
+    	//sb.append("' target='_blank'>");
     	sb.append(label);
-    	sb.append("</a>");
+    	//sb.append("</a>");
     	return sb.toString();
     }
 }

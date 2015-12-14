@@ -86,7 +86,11 @@ public class MutantWildtypeSearchTest extends BaseConcordionTest
 		for(MockJSONGXDAssayResult result : results.getSummaryRows())
 		{
 			String genotype = result.getGenotype();
-			if(genotype == null || genotype.equals("")) mutatedGenes.add("");
+			if(genotype == null || genotype.equals(""))
+			{
+				mutatedGenes.add("");
+				break;
+			}
 			genotype = genotype.replace("SUP", "sup");
 			String[] allelePairs = genotype.split("<br>");
 			for(String allelePair : allelePairs)

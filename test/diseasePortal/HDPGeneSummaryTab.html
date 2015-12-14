@@ -37,7 +37,7 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 
 
-    <title>HDP: Querying by Disease Genes output</title>
+    <title>HDP: Genes Summary Tab</title>
 </head>
 
 <body>
@@ -46,7 +46,7 @@ tr.gray td {background-color:#EEEEEE;}
 </div>
 
 <div id="maintitle">
-    <h1>HDP:  Genes Summary Tab</h1>
+    <h1>HDP: Genes Summary Tab</h1>
     <ul>
         <li>User story 15, E2: Gene summary tab: part 1</li>
         <li>User story 65, E2 Bug query for diabetes shows Gt(ROSA) disease association</li>
@@ -120,7 +120,7 @@ tr.gray td {background-color:#EEEEEE;}
 		<h3>Manual and Automated tests</h3>
 
 		<ol>
-    		<li>The gene tab column headers are correct (<i>cannot automate</i>)(sto15)
+    		<li>The gene tab column headers are correct (sto15)
     		<p concordion:manual="true">jeffc 08/12/2013</p>
     		<ol>
                 <li>Query for Piebaldism</li>
@@ -138,22 +138,12 @@ tr.gray td {background-color:#EEEEEE;}
     		<li>Verify the Marker Symbol column is displaying superscript correctly
     		<p concordion:manual="true">jeffc 08/12/2013</p>
     		<ol>
-                <li>Query for "amyloid beta deposits", MP <b concordion:set="#phenotype">0003329</b>.</li>
+                <li>Query for "amyloid beta deposits", MP:<b concordion:set="#phenotype">0003329</b>.</li>
                 <li>Verify that the marker symbol <b>Tg(Thy1-APP<sup>SL</sup>)28Lpr</b> is displaying the superscript correctly</li>
     		</ol>
     		</li>
 
-<!--    		<li>Verify display of Marker Type (<i>no need to automate</i>)
-    		<p concordion:manual="true">jeffc 08/12/2013</p>
-    		<ol>
-                <li>Query for Breast Cancer, OMIM <b concordion:set="#disease">114480</b>.</li>
-                <li>Verify that gene <b>Brca1</b> has the Marker type of <b>protein coding gene</b></li>
-                <li>Verify that gene <b>T(9;17)138Ca</b> has the Marker type of <b>reciprocal chromosomal translocation</b></li>
-                <li>Verify that gene <b>Tg(Wnt1)1Hev</b> has the Marker type of <b>transgene</b></li>
-    		</ol>
-    		</li> -->
-
-    		<li>Verify display of Location data (<i>cannot automate</i>)
+    		<li>Verify display of Location data 
     		<p concordion:manual="true">jeffc 08/12/2014</p>    		
     		<ol>
                 <li>Query for Long QT Syndrome 1, OMIM <b concordion:set="#disease">192500</b> (<i>This is to verify mouse with chr, coordinates, strand, build</i>)</li>
@@ -192,7 +182,7 @@ tr.gray td {background-color:#EEEEEE;}
     		</ol>
     		</li>  -->
 
-    		<li>Verify the correct OMIM terms are displayed (<i>can automate</i>)
+    		<li>Verify the correct OMIM terms are displayed 
     		<ol>
                 <li>Query for <b concordion:set="#disease">Abdominal Obesity-Metabolic Syndrome</b>.</li>
                 <li>The following diseases should appear in the gene result set  due to text matches (not complete results):
@@ -223,6 +213,7 @@ tr.gray td {background-color:#EEEEEE;}
 						Breast Cancer<br/>
 						Cardiofaciocutaneous Syndrome 2; CFC2<br/>
 						Gastric Cancer, Hereditary Diffuse; HDGC<br/>
+						Leukemia, Acute Myeloid; AML<br/>
 						Lung Cancer<br/>
 						Noonan Syndrome 3; NS3<br/>
 						Pancreatic Cancer<br/>
@@ -245,13 +236,16 @@ tr.gray td {background-color:#EEEEEE;}
             </ol>
             </li>
             
-    		<li>Verify the correct MP Header terms are displayed (<i>can automate</i>)
+    		<li>Verify the correct MP Header terms are displayed
     		<ol>
                 <li>Query for <b concordion:set="#disease">Abdominal Obesity-Metabolic Syndrome</b>.</li>
-                <li>Only the following diseases should appear in the gene result set(not complete results):
+                <li>Only the following MP header terms should appear in the gene result set (other returned genes not included here):
                 	<table concordion:execute="#mSystems=getMarkerSystemByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mSystems">Abnormal Phenotypes</th></tr>
-                	<tr><td>mouse</td><td>Lmna</td><td>adipose tissue,
+                	<tr>
+                		<td>mouse</td>
+                		<td>Lmna</td>
+                		<td>adipose tissue,
 						behavior/neurological,
 						cardiovascular system,
 						cellular,
@@ -265,6 +259,7 @@ tr.gray td {background-color:#EEEEEE;}
 						immune system,
 						integument,
 						limbs/digits/tail,
+						liver/biliary system,
 						mortality/aging,
 						muscle,
 						nervous system,
@@ -273,8 +268,12 @@ tr.gray td {background-color:#EEEEEE;}
 						reproductive system,
 						respiratory system,
 						skeleton,
-						vision/eye</td></tr>
-                	<tr><td>mouse</td><td>Pparg</td><td>adipose tissue,
+						vision/eye</td>
+					</tr>
+                	<tr>
+                		<td>mouse</td>
+                		<td>Pparg</td>
+                		<td>adipose tissue,
 						behavior/neurological,
 						cardiovascular system,
 						cellular,
@@ -295,8 +294,9 @@ tr.gray td {background-color:#EEEEEE;}
 						vision/eye</td></tr>
                 	</table>
                 </li>
-                <li>Query for <b concordion:set="#disease">MP:114480</b>.</li>
-                <li>Only the following MP Header terms should appear in the gene result set(not complete results)(The MP header column should be blank):
+                <li>Query for <b concordion:set="#disease">Breast Cancer</b> (114480). 
+                <!-- NOTE: Changed this from "MP:114480" which is not a thing to "114480". Got null pointer exception. Don't know why it's failing. Changing to text of disease name instead of OMIM ID now. -klf 01-dec-2015. --></li>
+                <li>Only the following MP Header terms should appear in the gene result set (other returned genes not included here). (The MP header column should be blank.):
                 	<table concordion:execute="#mSystems=getMarkerSystemByPhenotypeSymbol(#disease,#symbol)">
                 	<tr><th>Organism</th><th concordion:set="#symbol">Marker Symbol</th><th cc:assertEquals="#mSystems">Abnormal Phenotypes</th></tr>
                 	<tr><td>human</td><td>AKT1</td><td></td></tr>
@@ -313,7 +313,7 @@ tr.gray td {background-color:#EEEEEE;}
             <li>Verify searching by a phenotype synonymn returns correct results
     		<p concordion:manual="true">jeffc 08/12/2013</p>            
     		<ol>
-                <li>Query for abnormal mucosa-associated lymphoid tissue morphology, MP <b concordion:set="#phenotype">0002377</b>.</li>
+                <li>Query for abnormal mucosa-associated lymphoid tissue morphology, MP:<b concordion:set="#phenotype">0002377</b>.</li>
                 <li>Verify that the returned genes are <b>Cebpb, Id2, and Lta</b></li>
                 <li>Query for "MALT abnormalities</li>
                 <li>Verify that the returned genes are <b>Cebpb, Id2, and Lta</b></li>
@@ -478,7 +478,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Click the <b>Text file</b> button and verify the data displayed is correct and displayed in the same order as the tab data</li>
     		</ol>
     		</li>
-    		<li>The genes tab column headers are correct for a tab-delimited file(<i>cannot automate</i>)(sto154)
+    		<li>The genes tab column headers are correct for a tab-delimited file (sto154)
     		<p concordion:manual="true">passed - kstone 2013/10/08</p>
     		<ol>
                 <li>Query for Cancer</li>
@@ -494,7 +494,7 @@ tr.gray td {background-color:#EEEEEE;}
                 </li>
     		</ol>
     		</li>
-    		<li>The genes ID column (both mouse/human) is correct for a tab-delimited file(<i>cannot automate</i>)(sto154)
+    		<li>The genes ID column (both mouse/human) is correct for a tab-delimited file (sto154)
     		<p concordion:manual="true">passed - kstone 2013/10/08</p>
     		<ol>
                 <li>Query for Smad7</li>

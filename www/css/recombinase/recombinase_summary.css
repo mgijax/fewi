@@ -1,0 +1,89 @@
+/* Styles for the recombinase allele summary */
+
+body {z-index=-2;}
+
+.pageAdvice {
+  font-size: 11px;
+  font-style: italic;
+  color: #002255;
+  padding:2px;
+}
+.selectText {
+  font-size:10px;
+}
+.smallerCellText{
+  font-size:10px;
+}
+.colSelectContainer{
+  width:700px;
+  position: relative;
+  height:200px;
+  border: 1px #AAA solid;
+}
+#summaryResetButton {
+font-size: 12px;
+font-family: Verdana,Arial,Helvetica;
+color: #002255;
+font-weight: bolder;
+background-color: #eeeeee;
+border: 1px #7D95B9 solid;
+padding: 2px;
+cursor: pointer;
+}
+
+table.checkBoxSelectTable{
+    border-collapse:collapse;
+    border:1px solid #AAA;
+    border-spacing:2px;
+    white-space:nowrap;
+    width:auto;
+    line-height:1.1;
+    line-height:110%;
+}
+table.checkBoxSelectTable td{
+    font-size:11px;
+    white-space:nowrap;
+    border-spacing:4px;
+    padding:4px;
+}
+span.smallGrey {
+font-size: 75%;
+color: #999999;
+}
+
+
+/* driver */
+td.yui-dt0-col-driver {
+	/* word-wrap: break-word; */
+}
+td.yui-dt0-col-driver div.yui-dt-liner {
+	margin-left: -4px;
+}
+
+/* allele symbol */
+.alleleSymbol {
+	font-size: 110%;
+}
+
+/* allele synonyms */
+.synonym {
+	font-size: 10px;
+}
+
+/* detected / not detected systems */
+.systemWrap {
+	font-size: 10px;
+}
+
+
+/* System highlights */
+.systemHl
+{
+	font-size: 110%;
+	/* text-decoration:underline; */
+	font-weight: bold;
+}
+
+.systemHl.exact {
+	font-weight: bold;
+}

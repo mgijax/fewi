@@ -7,9 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,7 +23,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.DatabaseInfo;
 import mgi.frontend.datamodel.DiseaseModel;
 import mgi.frontend.datamodel.HomologyCluster;
 import mgi.frontend.datamodel.Marker;
@@ -37,7 +33,6 @@ import mgi.frontend.datamodel.MarkerID;
 import mgi.frontend.datamodel.MarkerIDOtherMarker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.MarkerProbeset;
-import mgi.frontend.datamodel.MarkerSequenceAssociation;
 import mgi.frontend.datamodel.MarkerSynonym;
 import mgi.frontend.datamodel.OrganismOrtholog;
 import mgi.frontend.datamodel.QueryFormOption;
@@ -67,9 +62,9 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.SolrSummaryMarker;
+import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.MarkerSummaryRow;
-import org.jax.mgi.fewi.summary.GxdImageSummaryRow;
 import org.jax.mgi.fewi.util.FilterUtil;
 import org.jax.mgi.fewi.util.FormatHelper;
 import org.jax.mgi.fewi.util.NotesTagConverter;
@@ -80,12 +75,12 @@ import org.jax.org.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -1465,17 +1460,7 @@ public class MarkerController {
 	}
 
 	private void dbDate(ModelAndView mav) {
-		List<DatabaseInfo> dbInfo = dbInfoFinder.getInfo(new SearchParams()).getResultObjects();
-		for (DatabaseInfo db: dbInfo) {
-			if (db.getName().equalsIgnoreCase("built from mgd database date")){
-				DateFormat df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-				try {
-					mav.addObject("databaseDate", df.parse(db.getValue()));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		mav.addObject("databaseDate", dbInfoFinder.getSourceDatabaseDate());
 	}
 
 	/** get a String containing URLs to all currently rendered minimaps; they
@@ -1706,38 +1691,6 @@ public class MarkerController {
 	// returns a filter that should always fail to retrieve results
 	private Filter nullFilter() {
 		return new Filter("markerKey","-99999",Filter.Operator.OP_EQUAL);
-	}
-
-	/** return a List comparable to 'annotations' but with the duplicate
-	 * terms stripped out.  Also strip out any annotations with a NOT
-	 * qualifier.
-	 */
-	private List<Annotation> noDuplicates (List<Annotation> annotations) {
-
-		// the list we will compose to be returned
-		ArrayList<Annotation> a = new ArrayList<Annotation>();
-
-		// iterates over the input list
-		Iterator<Annotation> it = annotations.iterator();
-
-		// tracks which terms we've seen already
-		HashMap<String, String> done = new HashMap<String, String>();
-
-		// which term we are looking at currently
-		Annotation annot;
-
-		while (it.hasNext()) {
-			annot = it.next();
-			if (!done.containsKey(annot.getTerm())) {
-				// if we have no qualifier or we have a qualifier that's
-				// not "NOT" then we ca use this term
-				if ((annot.getQualifier() == null) || (!annot.getQualifier().toLowerCase().equals("not"))) {
-					done.put (annot.getTerm(), "");
-					a.add (annot);
-				}
-			}
-		}
-		return a;
 	}
 
 	/** force the cache of minimap URLs to be cleared, allowing it to be

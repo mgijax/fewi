@@ -61,11 +61,6 @@ public class ProviderLinker
 			links.append("<a href='" + emblUrl + genbankID + "'>EMBL</a> | ");
 			links.append("<a href='" + ddbjUrl + genbankID + "'>DDBJ</a>");
 		}
-        // DFCI
-        else if (seqProvider.equals(DBConstants.PROVIDER_DFCI)) {
-
-			links.append("<a href='" + dfciUrl + seqID + "'>DFCI</a>");
-		}
         else if (seqProvider.equals(DBConstants.PROVIDER_ENSEMBL)) {
 
 			links.append("<a href='" + ensemblGmUrl + seqID + "'>Ensembl Gene Model</a>");
@@ -88,10 +83,6 @@ public class ProviderLinker
 
 			links.append("<a href='" + ncbiGmUrl + seqID + "'>NCBI Gene Model</a>");
 		}
-        else if (seqProvider.equals(DBConstants.PROVIDER_NIA)) {
-
-			links.append("<a href='" + niaUrl + seqID + "'>NIA</a>");
-		}
         else if (seqProvider.equals(DBConstants.PROVIDER_REFSEQ)) {
 
 			links.append("<a href='" + refSeqUrl + seqID + "'>RefSeq</a>");
@@ -108,11 +99,6 @@ public class ProviderLinker
 
 			links.append("<a href='" + vegaProtUrl + seqID + "'>VEGA</a>");
 		}
-        else if (seqProvider.equals(DBConstants.PROVIDER_DOTS)) {
-
-			links.append("<a href='" + dotsUrl + seqID + "'>DoTS</a>");
-		}
-
 
         return links.toString();
     }

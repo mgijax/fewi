@@ -172,7 +172,6 @@ public class InteractionController {
 		StringBuffer ids = new StringBuffer();
 
 		// add the input IDs first
-		@SuppressWarnings("unchecked")
 		Map<String,String[]> parms = request.getParameterMap();
 		List<String> inputIDs = Arrays.asList(parms.get("markerIDs"));
 
@@ -543,7 +542,6 @@ public class InteractionController {
 		// process fields one-by-one and dump them in a query form, then
 		// use the method to convert a QF to a Filter
 
-		@SuppressWarnings("unchecked")
 		Map<String,String[]> parms = request.getParameterMap();
 
 		Iterator<String> it = parms.keySet().iterator();

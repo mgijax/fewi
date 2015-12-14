@@ -81,7 +81,7 @@ var handleNavigation = function(request) {
 
 	var pRequest = parsePageRequest(request);
 	filters.setAllFilters(pRequest);
-	
+
 	var dataTable = getPageDataTable();
 	dataTable.showTableMessage(dataTable.get("MSG_LOADING"), YAHOO.widget.DataTable.CLASS_LOADING);
 
@@ -112,34 +112,44 @@ function main() {
 
 	var myColumnDefs = [
 		{
-			key:"category", 
+			key:"isoforms",
+			label:"Proteoform",
+			width:130,
+			sortable:false
+		}, {
+			key:"category",
 			label:"Aspect",
-			width:150, 
+			width:130,
 			sortable:true
 		}, {
-			key:"headers", 
+			key:"headers",
 			label:"Category",
-			width:150, 
+			width:150,
 			sortable:false
 		}, {
-			key:"term", 
+			key:"term",
 			label:"Classification Term",
-			width:240, 
+			width:240,
 			sortable:true
 		}, {
-			key:"evidence", 
-			label:"Evidence",
-			width:150, 
-			sortable:true
-		}, {
-			key:"inferred", 
-			label:"Inferred From",
-			width:240, 
+			key:"annotationExtensions",
+			label:"Additional Term Context",
+			width:200,
 			sortable:false
 		}, {
-			key:"references", 
+			key:"evidence",
+			label:"Evidence",
+			width:55,
+			sortable:true
+		}, {
+			key:"inferred",
+			label:"Inferred From",
+			width:200,
+			sortable:false
+		}, {
+			key:"references",
 			label:"Reference(s)",
-			width:200, 
+			width:200,
 			sortable:false
 		}
 	];
@@ -151,10 +161,12 @@ function main() {
 	myDataSource.responseSchema = {
 		resultsList: "summaryRows",
 		fields: [
+		    {key:"isoforms"},
 			{key:"category"},
 			{key:"headers"},
 			{key:"term"},
 			{key:"evidence"},
+			{key:"annotationExtensions"},
 			{key:"inferred"},
 			{key:"references"}
 		],
@@ -162,15 +174,15 @@ function main() {
 			totalRecords: "totalCount"
 		}
 	};
-	
+
 	pageDataSource = myDataSource;
-	
+
 
 	// Create the Paginator
 	var myPaginator = new YAHOO.widget.Paginator({
 		template : "{FirstPageLink} {PreviousPageLink}<strong>{PageLinks}</strong> {NextPageLink} {LastPageLink} <span style=align:right;>{RowsPerPageDropdown}</span><br/>{CurrentPageReport}",
 		pageReportTemplate : "Showing items {startRecord} - {endRecord} of {totalRecords}",
-		rowsPerPageOptions : [10,25,50,100],
+		rowsPerPageOptions : [100, 500, 1000],
 		rowsPerPage : 100,
 		containers	: ["paginationTop", "paginationBottom"],
 		pageLinks: 3,
@@ -183,7 +195,7 @@ function main() {
 			dynamicData : true,
 			draggableColumns : false,
 			initialLoad : false
-	};  
+	};
 
 	// DataTable instance
 	var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
@@ -197,14 +209,14 @@ function main() {
 	var handleSorting = function (oColumn) {
 		// Calculate next sort direction for given Column
 		var sDir = this.getColumnSortDir(oColumn);
-	
+
 		// The next state will reflect the new sort values
 		// while preserving existing pagination rows-per-page
 		// As a best practice, a new sort will reset to page 0
 		var newState = generatePageRequest(0, oColumn.key, sDir, this.get("paginator").getRowsPerPage());
-	
+
 		setPageSort(oColumn.key, sDir);
-		
+
 		handleNavigationRaw(newState);
 	};
 	myDataTable.sortColumn = handleSorting;
@@ -219,7 +231,7 @@ function main() {
 		var sCol = tableState.sortedBy.key;
 
 		var newState = generatePageRequest(state.recordOffset, sCol, sDir, state.rowsPerPage);
-		
+
 		myPaginator.setState(newState);
 
 		handleNavigationRaw(newState);
@@ -229,19 +241,19 @@ function main() {
 	// ...then we hook up our custom function
 	myPaginator.subscribe("changeRequest", handlePagination, myDataTable, true);
 
-	// Update payload data on the fly for tight integration with latest values from server 
+	// Update payload data on the fly for tight integration with latest values from server
 	myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 
 		var pRequest = parsePageRequest(oRequest);
 		var meta = oResponse.meta;
-		
+
 		if (meta) {
 			oPayload.totalRecords = meta.totalRecords || oPayload.totalRecords;
 		} else {
 			oPayload.totalRecords = oPayload.totalRecords;
 		}
 		oPayload.pagination = {
-			rowsPerPage: Number(pRequest['results']) || 25,
+			rowsPerPage: Number(pRequest['results']) || 100,
 			recordOffset: Number(pRequest['startIndex']) || 0
 		};
 
@@ -255,7 +267,7 @@ function main() {
 			facetQuery = generatePageRequest(0, 'term', 'asc', oPayload.totalRecords);
 			reportButton.setAttribute('href', fewiurl + 'go/report.xlsx?' + querystring + '&' + facetQuery);
 		}
-		
+
 		oPayload.sortedBy = {
 			key: pRequest['sort'] || pageSortKey,
 			dir: pRequest['dir'] ? "yui-dt-" + pRequest['dir'] : pageSortDir // Convert from server value to DataTable format

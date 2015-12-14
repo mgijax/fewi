@@ -1,0 +1,167 @@
+/* General styles for home pages */
+
+/* 1st level header */
+h1 {
+	margin-top: 30px;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+/* information blocks with 2nd level headers */
+section.infoBlock {
+  border: solid 1px #DFEFFF;	
+  background-color: #F9F9F9;
+  margin-top: 10px;
+}
+
+section.infoBlock h2 {
+	font-weight: bold;
+	font-size: 14px;
+	background-color: #D0E0F0;
+	padding: 3px 2px;
+}
+
+/* Optional date inside header */
+section.infoBlock > .wrapper .headerDate {
+	font-size: 10px;
+	float: right;
+	margin-top: -22px;
+}
+
+/* sections within information blocks (3rd level headers) */
+section.infoBlock > .wrapper > section h3 {
+	text-transform: uppercase;
+	color: #002255;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: -10px;
+}
+
+section.infoBlock > .wrapper > section {
+	margin-bottom: 10px;
+	margin-left: 10px;
+	
+}
+
+section.infoBlock > .wrapper {
+	padding: .5em;
+}
+
+/* sub section divider bar */
+.hrblue {
+	width: 90%;
+    color: #DFEFFF;
+    background-color: #DFEFFF;
+    height: 2px;
+    margin-top: 12px;
+    margin-bottom: 0;
+    border: none;
+}
+
+/* sections that appear in a column should be stacked */
+.column {
+	display: inline-block;
+	max-width: 40%
+}
+
+@media screen and (max-width: 800px) {
+	.column {
+		max-width: 100%;
+	}
+	section.infoBlock:first-child + .column {
+	  max-width: 100%;
+	}
+}
+
+section.infoBlock:first-child + .column {
+  max-width: 20%;
+}
+
+
+/* FAQ list items */
+.faqList {
+	padding-top: 0px;
+}
+.faqList li {
+    margin-left: 5em;
+    display: block;
+    list-style-type: none;
+}
+.faqList li:not(:first-child) {
+	margin-top: .5em;
+}
+.faqList li::before {
+	content:".. ";
+}
+
+/* Sub-section search list items */
+.searchList {
+	padding: 0px;
+}
+.searchList li {
+	margin-left: 5em;
+	display: block;
+    list-style-type: none;
+}
+.searchList li:not(:first-child) {
+	margin-top: .5em;
+}
+
+/* links */
+a.homeLink:link{
+	color:#1433C8;
+	text-decoration:none;
+	border-bottom:dotted 1px #888;
+}
+a.homeLink:visited{
+	color:#513696;
+	text-decoration:none;
+	border-bottom:dotted 1px #999;
+}
+a.homeLink:hover{
+	color:#C00;
+	text-decoration:none;
+	border-bottom:dashed 1px #C00;
+}
+a.homeLink:active{
+	color:#1433C8;
+	text-decoration:none;
+	border-bottom:dotted 1px #888;
+}
+
+/* jQuery UI tabs */
+.ui-tabs {
+	margin-top: 10px;	
+}
+
+.ui-widget-header {
+	background-color: #D0E0F0;
+}
+.ui-widget-header a{
+	font-size: 12px;
+	font-weight: bold;
+	color: blue;
+}
+.ui-widget-header .ui-state-active a,
+.ui-widget-header .ui-state-default a {
+	color: blue;
+}
+
+
+/* statistics tables */
+.statsTable {
+	margin-left: 20px;
+}
+
+.statsTable td {
+	font-size: inherit;
+	padding-bottom: .5em;
+}
+
+.statsTable td:nth-of-type(1) {
+	text-align: right;
+}
+.statsTable td:nth-of-type(2) {
+	padding-left: 10px;
+}

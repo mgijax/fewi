@@ -13,7 +13,7 @@ import org.jax.mgi.fewi.test.mock.MockRecombinaseSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class RecomActivitySearchTest extends BaseConcordionTest 
+public class CreSearchTest extends BaseConcordionTest 
 {
 	 // The class being tested is autowired via spring's DI
    @Autowired

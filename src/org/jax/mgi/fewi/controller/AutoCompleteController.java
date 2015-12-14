@@ -24,6 +24,7 @@ import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrDriverACResult;
 import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
 import org.jax.mgi.fewi.summary.AutocompleteAuthorResult;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
@@ -32,6 +33,7 @@ import org.jax.mgi.fewi.summary.VocabACSummaryRow.ACType;
 import org.jax.mgi.fewi.util.AjaxUtils;
 import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.shr.fe.IndexConstants;
+import org.jax.mgi.shr.fe.indexconstants.CreFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,41 @@ public class AutoCompleteController {
 	@Autowired
 	private AutocompleteFinder autocompleteFinder;
 
+
+	/*
+	 * This method maps requests for driver auto complete results. The results
+	 * are returned as JSON.
+	 */
+	@RequestMapping("/driver")
+	public @ResponseBody SearchResults<SolrDriverACResult> driverAutoComplete(
+			@RequestParam("query") String query) {
+
+		// split input on any non-alpha characters
+		List<String> words = Arrays.asList(query.trim().split("[^a-zA-Z0-9]"));
+		logger.debug("driver query:" + words.toString());
+
+		//build SearchParams for driver auto complete query
+	    SearchParams params = new SearchParams();
+		params.setPageSize(1000);
+	    Filter f = new Filter();
+	    List<Filter> fList = new ArrayList<Filter>();
+
+	    for (String q : words) {
+			Filter wordFilter = new Filter(SearchConstants.CRE_DRIVER, q.toLowerCase(),
+			    Filter.Operator.OP_GREEDY_BEGINS);
+			fList.add(wordFilter);
+	    }
+	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
+	    params.setFilter(f);
+
+	    // sorts
+	    List<Sort> sorts = new ArrayList<Sort>();
+	    sorts.add(new Sort(CreFields.DRIVER, false));
+	    params.setSorts(sorts);
+
+		//return results
+		return autocompleteFinder.getDriverAutoComplete(params);
+	}
 
 	/*
 	 * This method maps requests for author auto complete results.  The results
@@ -301,7 +338,7 @@ public class AutoCompleteController {
 	    }
 
 	    f.setNestedFilters(fList,Filter.JoinClause.FC_AND);
-				
+
 	    params.setFilter(f);
 
 	    // default sorts are "score","autocomplete text"
@@ -399,7 +436,7 @@ public class AutoCompleteController {
 
 		// filter specific vocabs for this autocomplete
 		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.Operator.OP_IN);
-		
+
 		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
 		new ArrayList<VocabACSummaryRow>();
 
@@ -493,7 +530,7 @@ public class AutoCompleteController {
 	 */
 	@RequestMapping("/vocabTerm/resolve")
 	public @ResponseBody HashMap<String, String> resolveVocabTermId(@RequestParam("ids") String ids) {
-		
+
 		/*
 		 *  Honestly, I am too lazy to figure out how to get StringUtils.replaceEach() to do case-insensitive matching (which I don't think it does).
 		 *  	So, to satisfy the curators who feel the need to have lowercase MP IDs resolved in "you searched for" text,
@@ -504,16 +541,16 @@ public class AutoCompleteController {
 		BooleanSearch bs = new BooleanSearch();
 		ids = ids.replaceAll("mp:","MP:");
 		ids = bs.sanitizeInput(ids.replace(",", " "));
-		
+
 		HashMap<String, String> ret = new HashMap<String, String>();
 
 		SearchResults<VocabACResult> results = resolveVocabTermIdQuery(ids);
-		
+
 		if(results==null) {
 			ret.put("ids", ids);
 			return ret;
 		}
-		
+
 		// if there are any hits, map them here
 		Set<String> duplicates = new HashSet<String>();
 		// build parallel lists of search -> replacement strings
@@ -525,15 +562,15 @@ public class AutoCompleteController {
 			String termId = result.getTermId();
 			if(duplicates.contains(termId)) continue;
 			duplicates.add(termId);
-			
+
 			String replacement = result.getOriginalTerm() + " - " + result.getTermId();
 			replacementList[index] = replacement;
 			searchList[index] = result.getTermId();
 			index++;
 		}
-		
+
 		Filter f = bs.buildSolrFilter(SearchConstants.VOC_TERM, ids);
-		
+
 		if(f != null) {
 			PrettyFilterPrinter pfp = new PrettyFilterPrinter();
 			f.Accept(pfp);
@@ -551,7 +588,7 @@ public class AutoCompleteController {
 		}
 		return ret;
 	}
-	
+
 	private Filter generateTermFilter(String ids){
 		List<String> idTokens = QueryParser.tokeniseOnWhitespaceAndComma(ids);
 		List<Filter> filters = new ArrayList<Filter>();
@@ -569,12 +606,12 @@ public class AutoCompleteController {
 		}
 		return null;
 	}
-	
+
 	private SearchResults<VocabACResult> resolveVocabTermIdQuery(String ids) {
 		// filter specific vocabs for this autocomplete
-		
+
 		List<String> idTokens = new ArrayList<String>(Arrays.asList(ids.split("[\\s,]+|\\(|\\)")));
-		
+
 		// Not a construct for the newb.
 		while(idTokens.remove(""));
 

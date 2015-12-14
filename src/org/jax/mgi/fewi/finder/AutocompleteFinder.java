@@ -5,10 +5,12 @@ import org.jax.mgi.fewi.hunter.SolrEmapaACHunter;
 import org.jax.mgi.fewi.hunter.SolrGxdEmapaACHunter;
 import org.jax.mgi.fewi.hunter.SolrJournalsACHunter;
 import org.jax.mgi.fewi.hunter.SolrVocabACHunter;
+import org.jax.mgi.fewi.hunter.SolrDriverACHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.EmapaACResult;
 import org.jax.mgi.fewi.searchUtil.entities.VocabACResult;
+import org.jax.mgi.fewi.searchUtil.entities.SolrDriverACResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +33,10 @@ public class AutocompleteFinder
 	@Autowired
 	private SolrVocabACHunter vocabACHunter;
 
+	@Autowired
+	private SolrDriverACHunter driverACHunter;
+
+	// author
 	public SearchResults<String> getAuthorAutoComplete(SearchParams params)
 	{
 		SearchResults<String> results = new SearchResults<String>();
@@ -38,10 +44,19 @@ public class AutocompleteFinder
 		return results;
 	}
 
+	// journal
 	public SearchResults<String> getJournalAutoComplete(SearchParams params)
 	{
 		SearchResults<String> results = new SearchResults<String>();
 		journalACHunter.hunt(params, results);
+		return results;
+	}
+
+	// driver
+	public SearchResults<SolrDriverACResult> getDriverAutoComplete(SearchParams params)
+	{
+		SearchResults<SolrDriverACResult> results = new SearchResults<SolrDriverACResult>();
+		driverACHunter.hunt(params, results);
 		return results;
 	}
 

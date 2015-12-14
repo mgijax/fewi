@@ -47,28 +47,21 @@ tr.gray td {background-color:#EEEEEE;}
 
 <div id="maintitle">
     <h1>Cre Summary Tests</h1>
-    <ul>
-        <li>User story 118, Cre: Simplify summary page</li>
-        <li>User story 177, Cre: Highlighting matching systems(MGI 5.18)</li>
-    </ul>
 </div>
 
 <div id="acceptance">
     <h2>Acceptance Criteria</h2>
 	<ul>
-		<li>US118 - The checkbox section at the top of the page has been removed</li>
-		<li>US118 - The System column has been removed from the main table</li>
 		<li>US118 - The Detected in and Not detected in lists  now each have their own column</li>
-		<li>US118 - The text <b>Drag headings to rearrange columns.</b> has been removed from the You Searched for section</li>
 		<li>US118 - When no data is available for Detected in or Not Detected in, leave the field blank</li>
 		<li>US118 - Sorting works for all sortable columns</li>
-		<li>US118 - Summary table headings are correct</li>
 		<li>US177 - Querying by a subsystem term also highlights the correct systems involved</li>
 		<li>US177 - Querying by a synonym term highlights the correct systems involved</li>
 		<li>US177 - Querying by an ambiguous term highlights all matching systems</li>
 		<li>US177 - Querying by an EMAP term highlights all matching systems</li>
 		<li>US177 - Querying by an EMAP synonym term highlights all matching systems</li>
 		<li>US177 - Querying by a term highlights all matching systems for both Detected and Not Detected columns</li>
+		<li>Project Blizzard - US49 - Display inducer label on Summary(not just yes/no)</li>
 		</ul>
 </div>
 
@@ -84,20 +77,21 @@ tr.gray td {background-color:#EEEEEE;}
  -->
 		<h3>Manual tests</h3>
 		<ol>
-    		<li>Verify the checkbox section at the top of the summary page has been removed
- 			<p concordion:manual="true">KLF 3/26/2013</p>
+
+    		<li>Verify the <b>Inducible</b> column now contains the inducer text(sto49)
+ 			<p concordion:manual="true">jeffc 11/06/2015</p>
     		<ol>
-                <li>From the Recombinase query form search for Recombinase Activity in <b>adipose tissue</b></li>
-                <li>When the summary page displays verify the checkbox section is no longer displayed</li>
+    		<table>
+    		<tr><th>Option</th><th>Search Term</th><th>Allele</th><th>Inducable</th></tr>
+    		<tr><td>Activity</td><td>adipose tissue</td><td>Tg(Atoh1-cre/Esr1*)14Fsh</td><td>tamoxifen</td></tr>
+    		<tr><td>Activity</td><td>brown fat</td><td>Tg(Mx1-cre)1Cgn</td><td>Interferon(-alpha or -beta) or polyinosinic-polycytidylic acid (pI:pC)</td></tr>
+    		<tr><td>Driver</td><td>Alb</td><td>Alb<sup>tm1(cre/ERT2)Mtz</sup></td><td>tamoxifen</td></tr>
+    		<tr><td>Driver</td><td>Alb</td><td>Tg(ALB-cre,CMV-rtTA)#Wcyy</td><td>tetracycline</td></tr>
+    		<tr><td>Driver</td><td>Bmx</td><td>Tg(Bmx-cre/ERT2)1Rha</td><td>Bmx</td></tr>
+    		</table> 
     		</ol>
     		</li>
-    		<li>Verify the System column has been removed from the summary page
- 			<p concordion:manual="true">KLF 3/26/2013</p>
-    		<ol>
-                <li>From the Recombinase query form search for Recombinase Activity in <b>adipose tissue</b></li>
-                <li>When the summary page displays verify the <b>System</b> column is no longer displayed</li>
-    		</ol>
-    		</li>
+
     		<li>Verify the existance of the columns Detected and Not Detected in the main table
  			<p concordion:manual="true">KLF 3/26/2013</p>
     		<ol>
@@ -105,13 +99,7 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>When the summary page displays verify the columns <b>Recombinase Activity Detected</b> and <b>Recombinase Activity not Detected</b> display right after the <b>Allele Symbol</b> column</li>
     		</ol>
     		</li>
-    		<li>Verify the text <b>Drag headings to rearrange columns.</b> has been removed from the You Searched for section
- 			<p concordion:manual="true">KLF 3/26/2013</p>
-    		<ol>
-                <li>From the Recombinase query form search for Recombinase Activity in <b>adipose tissue</b></li>
-                <li>When the summary page displays the <b>You Searched for:</b> section with the text <b>Drag headings to rearrange columns.</b> removed</li>
-    		</ol>
-    		</li>
+
     		<li>Verify when no data is available for Recombinase Activity Detected or Recombinase Activity Not Detected, leave the field blank
  			<p concordion:manual="true">KLF 3/27/2013</p>
     		<ol>
@@ -124,8 +112,8 @@ tr.gray td {background-color:#EEEEEE;}
                 <li>Verify the <b>Recombinase Activity Detected</b> column has data and the <b>Recombinase Activity Not Detected</b> column has data</li>
     		</ol>
     		</li>
-    		<li>Verify sorting works for all sortable columns - NOTE: INDUCIBLE COLUMN PROBLEM IS CAPTURED IN STO137 IN THE PRODUCT BACKLOG AS A BUG AND HAS NOT BEEN PRIORITIZED TO DO YET. <!-- klf 4/29/2013 -->
-<!--		<p concordion:manual="false">currently the Inducible column is not sorting</p> -->
+
+    		<li>Verify sorting works for all sortable columns -
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>postnatal mouse</b></li>
                 <li>When the summary page displays click on each of the listed column headings to confirm the column sorts correctly:
@@ -137,10 +125,11 @@ tr.gray td {background-color:#EEEEEE;}
 	                	<li>Inducible</li>
 	                	<li>Find Mice(IMSR)</li>
 	                	<li>Refs</li>
-                	</ul>   
-                </li> 
+                	</ul>
+                </li>
             </ol>
             </li>
+
     		<li>Verify the summary table heads are correct
  			<p concordion:manual="true">KLF 3/26/2013</p>
     		<ol>
@@ -154,10 +143,11 @@ tr.gray td {background-color:#EEEEEE;}
                 	<li>Inducible</li>
                 	<li>Find Mice(IMSR)</li>
                 	<li>Refs</li>
-                	</ul>   
-                </li>            	
+                	</ul>
+                </li>
     		</ol>
     		</li>
+
     		<li>Verify that the column "Allele Type" no longer appears.
  			<p concordion:manual="true">KLF 3/26/2013</p>
     		<ol>
@@ -175,15 +165,16 @@ tr.gray td {background-color:#EEEEEE;}
 					<tr><td>1700009P17Rik&lt;tm1.1(icre)Heli&gt;</td><td>nervous system</td></tr>
 					<tr><td>Tg(A830010M20Rik-cre)KJ227Gsat</td><td>nervous system</td></tr>
 					<tr><td>Acan&lt;tm1(cre/ERT2)Crm&gt;</td><td>nervous system</td></tr>
-				</table>   
-                </li>            	
+				</table>
+                </li>
     		</ol>
     		</li>
+
     		<li>Verify querying by an ambiguous term highlights all matching systems(sto177)
  			<p concordion:manual="true">passed jeffc 04/09/2014</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>muscle</b></li>
-                <li>When the summary page displays confirm that for allele <b>Tg(ACTA1-cre)79Jme</b> 
+                <li>When the summary page displays confirm that for allele <b>Tg(ACTA1-cre)79Jme</b>
                 	the following systems are bolded(only the systems that contain the search term should be bolded):
                 	<table>
 					<tr><th>System</th></tr>
@@ -192,25 +183,27 @@ tr.gray td {background-color:#EEEEEE;}
 					<tr><td>limbs</td></tr>
 					<tr><td>muscle</td></tr>
 					<tr><td>renal and urinary system</td></tr>
-				</table>    
+				</table>
                 </li>
             </ol>
-            </li> 
+            </li>
+
         	<li>Verify querying by an EMAP term highlights all matching systems(sto177)
  			<p concordion:manual="true">passed jeffc 04/09/2014</p>
     		<ol>
-                <li>From the Recombinase query form search for Recombinase Activity in <b>barrel cortex</b> 
+                <li>From the Recombinase query form search for Recombinase Activity in <b>barrel cortex</b>
                 	(has no child terms, and words do not match any other term or synonym)</li>
                 <li>When the summary page displays confirm the following systems are bolded(only the systems that contain the search term should be bolded):
                 	<table>
 					<tr><th>Allele Symbol</th><th>System</th></tr>
 					<tr><td>Emx1&lt;tm1(cre)Ito&gt;</td><td>nervous system</td></tr>
 					<tr><td>Tg(Emx1-cre)1Ito</td><td>nervous system</td></tr>
-				</table>   
+				</table>
                 </li>
             </ol>
             </li>
-	<li>Verify querying by an EMAP synonym term highlights all matching systems(sto177)
+
+        	<li>Verify querying by an EMAP synonym term highlights all matching systems(sto177)
  			<p concordion:manual="true">passed jeffc 04/09/2014</p>
     		<ol>
     			<!-- The synonym chosen has word "bulbar" that does not appear in any EMAPA structure, to discount any false positives -->
@@ -220,11 +213,12 @@ tr.gray td {background-color:#EEEEEE;}
 					<tr><th>Allele Symbol</th><th>System</th></tr>
 					<tr><td>Tg(ACTA1-cre)79Jme</td><td>cardiovascular system</td></tr>
 					<tr><td>Tg(Cdh5-cre)7Mlia</td><td>cardiovascular system</td></tr>
-				</table>  
+				</table>
                 </li>
             </ol>
-            </li> 
-	<li>Verify querying by a term highlights all matching systems for both Detected and Not Detected columns(sto177)
+            </li>
+
+        	<li>Verify querying by a term highlights all matching systems for both Detected and Not Detected columns(sto177)
  			<p concordion:manual="true">passed jeffc 04/09/2014</p>
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>heart</b></li>
@@ -233,11 +227,11 @@ tr.gray td {background-color:#EEEEEE;}
 					<tr><th>Allele Symbol</th><th>Detected</th><th>Not Detected</th></tr>
 					<tr><td>1700009P17Rik&lt;tm1.1(icre)Heli&gt;</td><td>cardiovascular system</td><td></td></tr>
 					<tr><td>Acan&lt;tm1(cre/ERT2)Crm&gt;</td><td></td><td>cardiovascular system</td></tr>
-				</table>  
+				</table>
                 </li>
             </ol>
-            </li> 
-                 
+            </li>
+
 		</ol>
 	</div>
 	<div id="auto">

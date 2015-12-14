@@ -2,13 +2,13 @@ package org.jax.mgi.fewi.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,8 +31,8 @@ import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.SeqSummaryRow;
-import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.fewi.util.BlastableSequence;
+import org.jax.mgi.fewi.util.StyleAlternator;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -642,7 +642,6 @@ public class SequenceController {
 		// that ID submissions occur before FASTA submissions.
 
 		if (!seq.canSubmitByID()) {
-		    String fasta = seq.getFasta();
 		    byFasta.add(seq);
 		} else {
 		    byID.add(seq);

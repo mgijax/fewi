@@ -1,15 +1,18 @@
 package org.jax.mgi.fewi.summary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
+import mgi.frontend.datamodel.AnnotationProperty;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
-import mgi.frontend.datamodel.Term;
 
+import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
+import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.link.IDLinker;
 
 /**
@@ -25,6 +28,7 @@ public class GOSummaryRow {
 	private Annotation annot;
 
 	private final IDLinker  linker = IDLinker.getInstance();
+	private final NotesTagConverter ntc = new NotesTagConverter();
 
 	// config values
 	String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
@@ -34,6 +38,11 @@ public class GOSummaryRow {
 	//-------------
 	// constructors
 	//-------------
+
+	public GOSummaryRow (Annotation annot) {
+		this.annot = annot;
+		return;
+	}
 
 	public GOSummaryRow (Annotation annot, Marker marker) {
 		this.annot = annot;
@@ -87,15 +96,16 @@ public class GOSummaryRow {
 	public String getCategory() {
 		return annot.getDagName();
 	}
+
 	public String getTerm() {
-		String termText = "<a href='"+ wiUrl +"searches/GO.cgi?id=" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
+		String termText = "<a href='"+ this.wiUrl +"searches/GO.cgi?id=" + annot.getTermID() + "'> " + annot.getTerm() + "</a>";
 		if (annot.getQualifier() != null) {
 			return "<b>" + annot.getQualifier() + "</b> " + termText;
 		}
 		return termText;
 	}
 
-	/** return the String that should be sent to the browser for the 
+	/** return the String that should be sent to the browser for the
 	 * evidence code column in the GO table.  This now includes a tooltip.
 	 */
 	public String getEvidence() {
@@ -160,7 +170,7 @@ public class GOSummaryRow {
 
 		return "";
 	}
-	
+
 	public String getReferences() {
 		List<Reference> references = annot.getReferences();
 
@@ -204,6 +214,64 @@ public class GOSummaryRow {
 		}
 		return refString;
 	}
+
+	/*
+	 * Get the annotation extensions
+	 */
+	public String getAnnotationExtensions() {
+		List<AnnotationProperty> extensions = annot.getAnnotationExtensions();
+		
+		StringBuilder sb = new StringBuilder();
+		if (extensions.size() > 0) {
+			
+			sb.append("<div class=\"goProperties\"><div class=\"stanza\">");
+
+			Integer currentStanza = null;
+			for (AnnotationProperty property: extensions) {
+				
+				if (currentStanza == null) {
+					currentStanza = property.getStanza();
+				}
+				// Check if we have a new stanza
+				else if (currentStanza != property.getStanza()) {
+					
+					// stanza separator
+					sb.append("</div><hr><div class=\"stanza\">");
+					currentStanza = property.getStanza();
+				}
+				
+				// convert note tags in property value
+				String propertyValue = ntc.convertNotes(property.getValue(), '|');
+				
+				sb.append("<span class=\"propertyWrap\">");
+				
+				sb.append("<span class=\"term\">")
+					.append(property.getProperty())
+					.append("</span> <span class=\"value\">")
+					.append(propertyValue)
+					.append("</span>");
+				
+				sb.append("</span>");
+			}
+	
+			sb.append("</div></div>");
+		}
+		return sb.toString();
+	}
+
+	public String getIsoforms() {
+		List<AnnotationProperty> isoforms = annot.getIsoforms();
+
+		List<String> displayItems = new ArrayList<String>();
+		for (AnnotationProperty property: isoforms) {
+			String displayItem = property.getValue();
+			displayItem = ntc.convertNotes(displayItem, '|');
+			displayItems.add(displayItem);
+		}
+
+		return StringUtils.join(displayItems, "<br/>");
+	}
+	
 
 	/* get the GO slimgrid headers that this annotation would roll up to,
 	 * as a comma-separated string

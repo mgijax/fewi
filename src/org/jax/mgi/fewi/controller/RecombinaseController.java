@@ -4,12 +4,13 @@ package org.jax.mgi.fewi.controller;
 /* to change in each controller */
 /*------------------------------*/
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,11 +20,12 @@ import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.AlleleSystem;
 import mgi.frontend.datamodel.AlleleSystemAssayResult;
 import mgi.frontend.datamodel.Image;
+import mgi.frontend.datamodel.group.RecombinaseEntity;
 
-import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.AlleleFinder;
 import org.jax.mgi.fewi.finder.RecombinaseFinder;
 import org.jax.mgi.fewi.forms.RecombinaseQueryForm;
+import org.jax.mgi.fewi.highlight.RecombinaseHighlightInfo;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -31,6 +33,7 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.RecomImage;
 import org.jax.mgi.fewi.summary.RecomImageRow;
@@ -47,7 +50,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -69,7 +72,7 @@ public class RecombinaseController {
     /*--------------------*/
 
     // logger for the class
-    private Logger logger = LoggerFactory.getLogger (
+    private final Logger logger = LoggerFactory.getLogger (
         RecombinaseController.class);
 
     // get the finder to use for various methods
@@ -83,13 +86,6 @@ public class RecombinaseController {
     /* public instance methods */
     /*-------------------------*/
 
-    // add new RecombinaseQueryForm and Paginator objects to model for QF
-    @RequestMapping(method=RequestMethod.GET)
-    public String getQueryForm(Model model) {
-        model.addAttribute(new RecombinaseQueryForm());
-        model.addAttribute("sort", new Paginator());
-        return "recombinase_query";
-    }
 
     //-------------------------------//
     // Query Form Submission
@@ -99,13 +95,13 @@ public class RecombinaseController {
     public String recombinaseSummary(HttpServletRequest request, Model model,
             @ModelAttribute RecombinaseQueryForm queryForm) {
 
-        logger.debug("queryString: " + request.getQueryString());
+        logger.debug("recombinase /summary queryString: " + request.getQueryString());
 
         // objects needed by display
         model.addAttribute("recombinaseQueryForm", queryForm);
         model.addAttribute("queryString", request.getQueryString());
 
-        return "recombinase_summary";
+        return "recombinase/recombinase_summary";
     }
 
     //-------------------------------//
@@ -116,7 +112,7 @@ public class RecombinaseController {
     public @ResponseBody JsonSummaryResponse<RecombinaseSummary> recombinaseSummaryJson(
             HttpServletRequest request,
             @ModelAttribute RecombinaseQueryForm query,
-            @ModelAttribute Paginator page) 
+            @ModelAttribute Paginator page)
     {
         logger.debug(query.toString());
 
@@ -131,21 +127,27 @@ public class RecombinaseController {
         // issue the query and get back the matching Allele objects
         SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
 
-        Map<String,Set<String>> setHighlights = searchResults.getResultSetMeta().getSetHighlights();
+        RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
+        if (!empty(query.getStructure()) || !empty(query.getSystem()) || !empty(query.getDetected()))
+        {
+        	// get highlight information
+        	highlightInfo = recombinaseFinder.searchRecombinaseHighlights(params);
+        }
 
         // convert the Alleles to their RecombinaseSummary wrappers, and put
         // them in the JsonSummaryResponse object
         List<RecombinaseSummary> summaries = new ArrayList<RecombinaseSummary> ();
         for(Allele allele : searchResults.getResultObjects())
         {
-        	Set<String> highlights = new HashSet<String>();
         	String allKeyStr = ((Integer) allele.getAlleleKey()).toString();
-        	if(setHighlights.containsKey(allKeyStr))
-        	{
-        		highlights = setHighlights.get(allKeyStr);
-        		logger.info("allKey="+allKeyStr+" hls=["+StringUtils.join(highlights,",")+"]");
-        	}
-            summaries.add(new RecombinaseSummary(allele,highlights));
+        	Set<String> detectedHighlights = highlightInfo.getDetectedHighlights(allKeyStr);
+        	Set<String> notDetectedHighlights = highlightInfo.getNotDetectedHighlights(allKeyStr);
+
+        	//logger.debug("allKey="+allKeyStr+" +hls=["+StringUtils.join(detectedHighlights,",")+"]");
+        	//logger.debug("allKey="+allKeyStr+" -hls=["+StringUtils.join(notDetectedHighlights,",")+"]");
+
+
+            summaries.add(new RecombinaseSummary(allele, detectedHighlights, notDetectedHighlights));
         }
 
         JsonSummaryResponse<RecombinaseSummary> jsonResponse = new JsonSummaryResponse<RecombinaseSummary>();
@@ -164,58 +166,18 @@ public class RecombinaseController {
     //-------------------------------//
     @RequestMapping("/specificity")
     public ModelAndView creSpecificity( HttpServletRequest request,
-            @ModelAttribute RecombinaseQueryForm query) {
+    		@RequestParam("systemKey") String alleleSystemKey) {
 
         logger.debug("->creSpecificity() started");
 
-        ModelAndView mav = new ModelAndView("recombinase_specificity");
+        ModelAndView mav = new ModelAndView("recombinase/recombinase_specificity");
 
-        Image thisImage;
-        Iterator<Image> imageIter;
-        List<Image> validatedImages   = new ArrayList<Image>();
-
-        Allele allele = null;
-        List<AlleleSystem> alleleSystems = new ArrayList<AlleleSystem>();
-        AlleleSystem alleleSystem = null;
-
-        /*
-         * Lookup AlleleSystem object
-         */
-        String alleleKey = query.getAlleleKey();
-        if (alleleKey != null && !"".equals(alleleKey)) {
-        	SearchResults<Allele> alleleResults = alleleFinder.getAlleleByKey(alleleKey);
-        	if (alleleResults.getResultObjects().size() == 1) {
-        		allele = alleleResults.getResultObjects().get(0);
-        		logger.debug("found allele: " + allele.getSymbol());
-        		alleleSystems = allele.getAlleleSystems();
-        		logger.debug("Systems for allele: " + alleleSystems.size());
-        		for (AlleleSystem sys: alleleSystems) {
-        			logger.debug("system: " + sys.getSystemKey().toString());
-        			if (query.getSystemKey().equals(sys.getSystemKey().toString())) {
-        				alleleSystem = sys;
-        				break;
-        			}
-        		}
-        	}
-        } else {
-            // setup search parameters object to gather the requested object
-            SearchParams searchParams = new SearchParams();
-            searchParams.setFilter(this.genFilters(query));
-
-            // find the requested allele/system object
-            SearchResults<AlleleSystem> searchResults =
-                recombinaseFinder.getAlleleSystem(searchParams);
-            alleleSystems = searchResults.getResultObjects();
-
-            if (alleleSystems.size() == 1) {
-		        alleleSystem = alleleSystems.get(0);
-		        allele = alleleSystem.getAllele();
-            }
-        }
-
+        // search for allele system
+        SearchResults<AlleleSystem> results = recombinaseFinder.getAlleleSystemByKey(alleleSystemKey);
+        List<AlleleSystem> alleleSystems = results.getResultObjects();
 
         // ensure we found allele system
-        if (allele == null || alleleSystem == null) {
+        if (alleleSystems.size() != 1) {
             // forward to error page
             mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Allele/System not available");
@@ -224,6 +186,10 @@ public class RecombinaseController {
 	         * Remove sub-objects from AlleleSystem, and fill ModelAndView
 	         * with display data
 	         */
+        	AlleleSystem alleleSystem = alleleSystems.get(0);
+        	Allele allele = alleleSystem.getAllele();
+
+
         	String queryString = request.getQueryString();
         	if (request.getParameterMap().containsKey("alleleKey")){
         		logger.debug("hasKey");
@@ -251,11 +217,11 @@ public class RecombinaseController {
 	          FormatHelper.superscript(FormatHelper.commaDelimit(synonymList)));
 
 	        // remove images with 'null' values
-	        imageIter = alleleSystem.getImages().iterator();
-	        while (imageIter.hasNext()) {
-	          thisImage = imageIter.next();
-	          if (thisImage.getHeight() != null && thisImage.getWidth() != null) {
-				validatedImages.add(thisImage);
+	        List<Image> validatedImages = new ArrayList<Image>();
+
+	        for(Image image : alleleSystem.getImages()) {
+	          if (image.getHeight() != null && image.getWidth() != null) {
+				validatedImages.add(image);
 			  }
 		    }
 
@@ -263,22 +229,17 @@ public class RecombinaseController {
 	        int imageIndex = 0;
 	        List<RecomImage> recomImages = new ArrayList<RecomImage>();
 	        List<RecomImageRow> recomImageRows = new ArrayList<RecomImageRow>();
-	        imageIter = validatedImages.iterator();
-	        while (imageIter.hasNext()) {
-
-	          thisImage = imageIter.next();
-
+	        for(Image image : validatedImages) {
 	          imageIndex++;
-	          RecomImage thisRecomImage
-	            = new RecomImage(thisImage, imageIndex);
-	          recomImages.add(thisRecomImage);
+	          RecomImage recomImage = new RecomImage(image, imageIndex);
+	          recomImages.add(recomImage);
 
 	          // if we have enough images to fill a row, of if this is our last
 	          // image, create the row and add to row list
-	          if ( ((imageIndex % 8 ) == 0) || !imageIter.hasNext() ) {
-	            RecomImageRow thisRow = new RecomImageRow();
-	            thisRow.setRecomImages(recomImages);
-	            recomImageRows.add(thisRow);
+	          if ( ((imageIndex % 8 ) == 0) || imageIndex == validatedImages.size()) {
+	            RecomImageRow row = new RecomImageRow();
+	            row.setRecomImages(recomImages);
+	            recomImageRows.add(row);
 	            recomImages = new ArrayList<RecomImage>();
 	          }
 	        }
@@ -289,9 +250,9 @@ public class RecombinaseController {
 
 
 
-    //----------------------//
-    // JSON summary results
-    //----------------------//
+    //-------------------------//
+    // JSON Specificity results
+    //-------------------------//
     @RequestMapping("/jsonSpecificity")
     public @ResponseBody JsonSummaryResponse<RecomSpecificitySummaryRow> specificitySummaryJson(
             HttpServletRequest request,
@@ -383,6 +344,115 @@ public class RecombinaseController {
 
 
     /*---------------------------------------------------------------------*/
+    /* Facets for filters                                                  */
+    /*---------------------------------------------------------------------*/
+
+	// driver
+	@RequestMapping("/facet/driver")
+	public @ResponseBody Map<String, List<String>> facetDriver (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
+
+		logger.debug(qf.toString());
+
+		AjaxUtils.prepareAjaxHeaders(response);
+
+		// setup SearchParams & SearchResults
+		SearchParams params = new SearchParams();
+		params.setFilter(this.parseRecombinaseQueryForm(qf));
+
+		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getDriverFacet(params);
+
+		Map<String, List<String>> m = new HashMap<String, List<String>>();
+		List<String> l = new ArrayList<String>();
+		if (facetResults.getResultFacets().size() == 0) {
+			l.add("No values in results to filter.");
+			m.put("error", l);
+		} else {
+			m.put("resultFacets", facetResults.getSortedResultFacets());
+		}
+
+		return m;
+	}
+
+	// inducer
+	@RequestMapping("/facet/inducer")
+	public @ResponseBody Map<String, List<String>> facetInducer (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
+
+		logger.debug(qf.toString());
+
+		AjaxUtils.prepareAjaxHeaders(response);
+
+		// setup SearchParams & SearchResults
+		SearchParams params = new SearchParams();
+		params.setFilter(this.parseRecombinaseQueryForm(qf));
+
+		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getInducerFacet(params);
+
+		Map<String, List<String>> m = new HashMap<String, List<String>>();
+		List<String> l = new ArrayList<String>();
+		if (facetResults.getResultFacets().size() == 0) {
+			l.add("No values in results to filter.");
+			m.put("error", l);
+		} else {
+			m.put("resultFacets", facetResults.getSortedResultFacets());
+		}
+
+		return m;
+	}
+
+	// system detected
+	@RequestMapping("/facet/systemDetected")
+	public @ResponseBody Map<String, List<String>> facetSystemDetected (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
+
+		logger.debug(qf.toString());
+
+		AjaxUtils.prepareAjaxHeaders(response);
+
+		// setup SearchParams & SearchResults
+		SearchParams params = new SearchParams();
+		params.setFilter(this.parseRecombinaseQueryForm(qf));
+
+		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getSystemDetectedFacet(params);
+
+		Map<String, List<String>> m = new HashMap<String, List<String>>();
+		List<String> l = new ArrayList<String>();
+		if (facetResults.getResultFacets().size() == 0) {
+			l.add("No values in results to filter.");
+			m.put("error", l);
+		} else {
+			m.put("resultFacets", facetResults.getSortedResultFacets());
+		}
+
+		return m;
+	}
+
+	// system not detected
+	@RequestMapping("/facet/systemNotDetected")
+	public @ResponseBody Map<String, List<String>> facetSystemNotDetected (@ModelAttribute RecombinaseQueryForm qf, HttpServletResponse response) {
+
+		logger.debug(qf.toString());
+
+		AjaxUtils.prepareAjaxHeaders(response);
+
+		// setup SearchParams & SearchResults
+		SearchParams params = new SearchParams();
+		params.setFilter(this.parseRecombinaseQueryForm(qf));
+
+		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getSystemNotDetectedFacet(params);
+
+		Map<String, List<String>> m = new HashMap<String, List<String>>();
+		List<String> l = new ArrayList<String>();
+		if (facetResults.getResultFacets().size() == 0) {
+			l.add("No values in results to filter.");
+			m.put("error", l);
+		} else {
+			m.put("resultFacets", facetResults.getSortedResultFacets());
+		}
+
+		return m;
+	}
+
+
+    /*---------------------------------------------------------------------*/
     /* private instance methods                                            */
     /*---------------------------------------------------------------------*/
 
@@ -456,8 +526,17 @@ public class RecombinaseController {
         // build driver query filter
         String driver = query.getDriver();
         if ((driver != null) && (!"".equals(driver))) {
-            filterList.add(new Filter (SearchConstants.ALL_DRIVER, driver,
-                Filter.Operator.OP_EQUAL));
+
+			// remove starting comma - may be submitted with driver filter
+			driver = driver.startsWith(",") ? driver.substring(1) : driver;
+
+			List<String> drivers = new ArrayList<String>();
+			for (String driverToken : driver.split(",")) {
+	        	logger.debug("---->" + driverToken);
+				drivers.add(driverToken);
+			}
+			filterList.add(new Filter(SearchConstants.ALL_DRIVER,
+					drivers, Filter.Operator.OP_IN));
         }
 
         // build system query filter
@@ -467,7 +546,9 @@ public class RecombinaseController {
                 Filter.Operator.OP_EQUAL));
         }
 
+        // Structure queries
         String structure = query.getStructure();
+
         if ((structure != null) && (!"".equals(structure))) {
         	logger.debug("splitting structure query into tokens");
 			Collection<String> structureTokens = QueryParser.parseNomenclatureSearch(structure);
@@ -482,8 +563,51 @@ public class RecombinaseController {
 			{
 				// surround with double quotes to make a solr phrase. added a slop of 100 (longest name is 62 chars)
 				String sToken = "\""+phraseSearch+"\"~100";
-				filterList.add(new Filter(SearchConstants.STRUCTURE,sToken,Filter.Operator.OP_HAS_WORD));
+				filterList.add(new Filter(SearchConstants.CRE_STRUCTURE ,sToken,Filter.Operator.OP_HAS_WORD));
 			}
+        }
+
+        // detected / not detected
+        String detected = query.getDetected();
+        String notDetected = query.getNotDetected();
+        // detected and notDetected must be different to create a valid filter
+        // if both are null, or both are true, then we do not filter results
+        if( "true".equalsIgnoreCase(detected) && !detected.equalsIgnoreCase(notDetected) ) {
+        	// detected only
+        	filterList.add(new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD));
+        }
+        else if( "true".equalsIgnoreCase(notDetected) && !notDetected.equalsIgnoreCase(detected) ) {
+        	// absent only
+
+        	// Combine "no presents query" with "must have one absent query"
+        	Filter notPresentFilter = new Filter(SearchConstants.CRE_DETECTED, "true", Filter.Operator.OP_HAS_WORD);
+        	notPresentFilter.negate();
+        	Filter absentFilter = new Filter(SearchConstants.CRE_DETECTED, "false", Filter.Operator.OP_HAS_WORD);
+
+        	filterList.add(Filter.and(Arrays.asList(notPresentFilter, absentFilter)));
+        }
+
+        // inducer
+		if (query.getInducer().size() > 0){
+			filterList.add(new Filter(SearchConstants.CRE_INDUCER,
+					query.getInducer(), Filter.Operator.OP_IN));
+		}
+
+        // detected in system
+		if (query.getSystemDetected().size() > 0){
+			filterList.add(new Filter(SearchConstants.CRE_SYSTEM_DETECTED,
+					query.getSystemDetected(), Filter.Operator.OP_IN));
+		}
+
+        // not detected in system
+		if (query.getSystemNotDetected().size() > 0){
+			filterList.add(new Filter(SearchConstants.CRE_SYSTEM_NOT_DETECTED,
+					query.getSystemNotDetected(), Filter.Operator.OP_IN));
+		}
+
+       	// return everything for empty query
+        if (filterList.size() == 0) {
+        	filterList.add(new Filter(SearchConstants.ALL_DRIVER,"[* TO *]",Filter.Operator.OP_HAS_WORD));
         }
 
         // build container filter and return
@@ -537,4 +661,7 @@ public class RecombinaseController {
         return containerFilter;
     }
 
+    private boolean empty(String s) {
+    	return s == null || "".equals(s);
+    }
 }

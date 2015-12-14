@@ -10,13 +10,10 @@ package org.jax.mgi.fewi.util;
 public class DBConstants
 {
     // PROVIDERS
-    public static final String PROVIDER_DFCI              = "DFCI Mouse Gene Index";
     public static final String PROVIDER_NCBI              = "NCBI Gene Model";
-    public static final String PROVIDER_DOTS              = "DoTS";
     public static final String PROVIDER_TREMBL            = "TrEMBL";
     public static final String PROVIDER_SEQUENCEDB        = "GenBank/EMBL/DDBJ";
     public static final String PROVIDER_SWISSPROT         = "SWISS-PROT";
-    public static final String PROVIDER_NIA               = "NIA Mouse Gene Index";
     public static final String PROVIDER_REFSEQ            = "RefSeq";
     public static final String PROVIDER_ENTREZGENE        = "Entrez Gene";
     public static final String PROVIDER_ENSEMBL           = "Ensembl Gene Model";
