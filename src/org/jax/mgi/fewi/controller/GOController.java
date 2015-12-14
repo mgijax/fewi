@@ -374,7 +374,9 @@ public class GOController {
 	//////////////////////////
 
 	@RequestMapping(value="/facet/{type}")
-	public @ResponseBody Map<String, List<String>> facets (@ModelAttribute MarkerAnnotationQueryForm qf, BindingResult result, @PathVariable("type") String facetType) {
+	public @ResponseBody Map<String, List<String>> facets (@ModelAttribute MarkerAnnotationQueryForm qf, 
+			BindingResult result, 
+			@PathVariable("type") String facetType) {
 
 		System.out.println("facetType: " + facetType);
 		System.out.println("qf: " + qf);
@@ -515,41 +517,7 @@ public class GOController {
 		//	logger.debug("Filters: " + containerFilter.toString());
 		return containerFilter;
 	}
-
-	@RequestMapping(value="/facet/{type}")
-	public @ResponseBody Map<String, List<String>> facets (@ModelAttribute MarkerAnnotationQueryForm qf, BindingResult result, @PathVariable("type") String facetType) {
-
-		System.out.println("facetType: " + facetType);
-		System.out.println("qf: " + qf);
-
-		Map<String, List<String>> facets = new HashMap<String, List<String>>();
-		//List<String> l = new ArrayList<String>();
-
-		SearchParams params = new SearchParams();
-		params.setFilter(genFilters(qf));
-
-		if("evidence".equalsIgnoreCase(facetType)) {
-			facetType = SearchConstants.EVIDENCE_CATEGORY;
-		} else if("term".equalsIgnoreCase(facetType)) {
-			facetType = SortConstants.VOC_TERM;
-		} else if("reference".equalsIgnoreCase(facetType)) {
-			facetType = SortConstants.BY_REFERENCE;
-		} else if("aspect".equalsIgnoreCase(facetType)){
-			facetType = SortConstants.VOC_DAG_NAME;
-		} else if("category".equalsIgnoreCase(facetType)){
-			facetType = SearchConstants.SLIM_TERM;
-		}
-
-		SearchResults<Annotation> facetResults = markerAnnotationFinder.getFacetResults(params, facetType);
-
-		List<String> results = facetResults.getSortedResultFacets();
-
-		// need to customize sorting for evidence facets:
-		//	Experimental, Homology, Automated, Other
-		if (SearchConstants.EVIDENCE_CATEGORY.equalsIgnoreCase(facetType)) {
-			Collections.sort (results, new EvidenceFacetSorter());
-		}
-	}
+}
 
 /////////////////////////
 // CLASSES
