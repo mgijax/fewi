@@ -1,5 +1,6 @@
 package org.jax.mgi.fewi.searchUtil.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrHdpEntity;
@@ -123,6 +124,9 @@ public class SolrDiseasePortalMarker implements SolrHdpEntity
 	// system
 	public List<String> getSystem() {return system;}
 	public void   setSystem(List<String> system) {
+		if (system == null) {
+			system = new ArrayList<String>(); 
+		}
 		this.system = system;
 	}
 
