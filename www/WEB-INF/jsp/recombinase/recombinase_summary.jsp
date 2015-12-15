@@ -43,10 +43,16 @@
 .facetFilter .yui-panel .bd {
 	width: 285px
 }
+.facetFilter .facetHelp {
+	background-color: #F2F2F2;
+	border-bottom: solid 1px #ccc;
+}
+.facetFilter .facetHelp p {
+	padding: 4px 8px;
+	margin-left: 4px;
+	font-size: 10px;
+}
 </style>
-
-<!-- Browser History Manager source file -->
-<script src="http://yui.yahooapis.com/2.8.1/build/history/history-min.js"></script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStart.html" %>
 
@@ -109,6 +115,10 @@
 	<div class="facetFilter">
 		<div id="facetDialog">
 			<div class="hd">Filter</div>
+			<div class="facetHelp">
+			    <p>Selecting multiple terms will filter for results with any 
+				(i.e. logical OR) of the selected terms.</p>
+			</div>
 			<div class="bd">
 				<form:form method="GET"
 					action="${configBean.FEWI_URL}recombinase/summary">

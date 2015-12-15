@@ -48,7 +48,6 @@ function main() {
     var myColumnDefs = [
         {key:"driver",
             label:"Driver",
-            width:90,
             sortable:true},
         {key:"nomenclature",
             label:"Allele Symbol<br/>Gene; Allele Name",
@@ -64,10 +63,6 @@ function main() {
 			sortable:true,
 			sortOptions: { defaultDir: YAHOO.widget.DataTable.CLASS_DESC },
 			width:220},
-        {key:"synonyms",
-            label:"Allele Synonym",
-            width:170,
-            sortable:false},
         {key:"inducibleNote",
             label:"Induced By",
             width:80,
@@ -79,7 +74,11 @@ function main() {
         {key:"countOfReferences",
             label:"Refs",
             width:36,
-            sortable:true}
+            sortable:true},
+        {key:"synonyms",
+                label:"Allele Synonym",
+                width:120,
+                sortable:false},
     ];
 
     // DataSource instance
@@ -93,10 +92,10 @@ function main() {
 			{key:"nomenclature"},
             {key:"detectedCount"},
             {key:"notDetectedCount"},
-            {key:"synonyms"},
             {key:"inducibleNote"},
             {key:"imsrCount"},
-            {key:"countOfReferences"}
+            {key:"countOfReferences"},
+            {key:"synonyms"}
         ],
         metaFields: {
             totalRecords: "totalCount",
@@ -243,3 +242,27 @@ function parseRequest(request){
 // Tooltip object and pick up their contents from the Spans' title attributes
 YAHOO.mgiData.myTip = new YAHOO.widget.Tooltip ("mgiTip", {
 		context : YAHOO.util.Selector.query("span", YAHOO.mgiData.myDataTable) });
+
+
+
+
+(function(){
+	
+	// toggle facetHelp for certain filters
+	$(".filterButton").click(function(e){
+		
+		var $filterEl = $(this);
+		var filterId = $filterEl.attr("id");
+		
+		// only toggle facetHelp for the two allele systems filters
+		
+		if (filterId == "systemNotDetectedFilter"
+			|| filterId == "systemDetectedFilter") {
+			$(".facetHelp").show();
+		}
+		else {
+			$(".facetHelp").hide();
+		}
+	});
+	
+})();
