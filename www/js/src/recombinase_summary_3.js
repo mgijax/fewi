@@ -65,7 +65,7 @@ function main() {
 			width:220},
         {key:"inducibleNote",
             label:"Induced By",
-            width:80,
+            width:88,
             sortable:true},
         {key:"imsrCount",
             label:"Find Mice<br/>(IMSR)",
@@ -76,9 +76,10 @@ function main() {
             width:36,
             sortable:true},
         {key:"synonyms",
-                label:"Allele Synonym",
-                width:120,
-                sortable:false},
+            label:"Allele Synonym",
+            width:170,
+            sortable:false}
+
     ];
 
     // DataSource instance
@@ -247,15 +248,15 @@ YAHOO.mgiData.myTip = new YAHOO.widget.Tooltip ("mgiTip", {
 
 
 (function(){
-	
+
 	// toggle facetHelp for certain filters
 	$(".filterButton").click(function(e){
-		
+
 		var $filterEl = $(this);
 		var filterId = $filterEl.attr("id");
-		
+
 		// only toggle facetHelp for the two allele systems filters
-		
+
 		if (filterId == "systemNotDetectedFilter"
 			|| filterId == "systemDetectedFilter") {
 			$(".facetHelp").show();
@@ -264,5 +265,5 @@ YAHOO.mgiData.myTip = new YAHOO.widget.Tooltip ("mgiTip", {
 			$(".facetHelp").hide();
 		}
 	});
-	
+
 })();
