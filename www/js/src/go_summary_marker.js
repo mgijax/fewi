@@ -112,11 +112,6 @@ function main() {
 
 	var myColumnDefs = [
 		{
-			key:"isoforms",
-			label:"Proteoform",
-			width:130,
-			sortable:false
-		}, {
 			key:"category",
 			label:"Aspect",
 			width:130,
@@ -133,8 +128,13 @@ function main() {
 			sortable:true
 		}, {
 			key:"annotationExtensions",
-			label:"Additional Term Context",
+			label:"Context",
 			width:200,
+			sortable:false
+		}, {
+			key:"isoforms",
+			label:"Proteoform",
+			width:130,
 			sortable:false
 		}, {
 			key:"evidence",
