@@ -46,13 +46,13 @@ public class RecombinaseSummary {
 
     public RecombinaseSummary (Allele allele,Set<String> detectedHighlights, Set<String> notDetectedHighlights) {
     	this.allele = allele;
-    	
+
     	this.detectedHighlights=detectedHighlights;
     	this.notDetectedHighlights=notDetectedHighlights;
-    	
+
     	if(this.detectedHighlights==null) this.detectedHighlights = new HashSet<String>();
     	if(this.notDetectedHighlights==null) this.notDetectedHighlights = new HashSet<String>();
-    	
+
     	this.recombinaseInfo = allele.getRecombinaseInfo();
     }
 
@@ -121,7 +121,7 @@ public class RecombinaseSummary {
 	}
 
     public static boolean isSystemHighlighted(String systemText,Set<String> highlights) {
-    	
+
     	return highlights.contains(systemText);
 	}
 
@@ -147,7 +147,11 @@ public class RecombinaseSummary {
 
     public String getInducibleNote()
     {
-    	return this.allele.getInducibleNote();
+		String inducibleNote = this.allele.getInducibleNote();
+		if (inducibleNote != null) {
+			inducibleNote= inducibleNote.replace("-", "-&#8203;");
+		}
+    	return inducibleNote;
     }
 
 	public String getNomenclature()
@@ -203,7 +207,7 @@ public class RecombinaseSummary {
     /** return a link to a recombinase specificity detail page for the
      * given alleleID and systemKey, and with the given label as the text
      * of the link
-     * 		
+     *
      * 		AS OF 11/24/2015 these links are disabled
      */
     private  String specificityLink (String alleleID, Integer systemKey,
@@ -214,7 +218,7 @@ public class RecombinaseSummary {
 			return label;
 		}
     	StringBuffer sb = new StringBuffer();
-    	
+
     	//sb.append("<a href='"+fewiUrl+"/recombinase/specificity?id=");
     	//sb.append(alleleID);
     	//sb.append("&systemKey=");
