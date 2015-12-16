@@ -146,7 +146,7 @@ public class RecombinaseFinder {
 		SearchResults<RecombinaseEntity> results = new SearchResults<RecombinaseEntity>();
 
 		logger.debug ("hunt");
-		creAssayHunter.setFacet(CreFields.DRIVER);
+		creAssayHunter.setFacet(CreFields.DRIVE_EXACT);
 		creAssayHunter.hunt(params, results, SearchConstants.ALL_KEY);
 
 		return results;
