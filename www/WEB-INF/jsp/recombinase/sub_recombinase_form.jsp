@@ -4,9 +4,6 @@
 
 <form method="GET" action="${configBean.FEWI_URL}recombinase/summary" id="creForm" name="recombinaseQueryForm">
 
-	<p>Search for alleles assayed for recombinase activity in an anatomical
-	structure and/or using a particular promoter/driver.</p>
-	
 	<label class="searchLabel">Recombinase activity assayed <!-- and
 	   <label class="detectedLabel" for="creDetected">
 	     <input type="checkbox" name="detected" id="creDetected" value="true"
@@ -18,7 +15,7 @@
 	   </label>
 	   -->
 	 in</label>
-		 
+
 	<%-- Wrapper for positioning "Search" goButton --%>
 	<div class="wrapper">
 		<input type="text" size="40" name="structure" id="creStructureAC"
@@ -26,7 +23,7 @@
 			value="<c:out value="${recombinaseQueryForm.structure}"/>" />
 
 		<span id="creAndDivider">AND</span>
-		
+
 		<label class="searchLabel">Recombinase driven by</label>
 		<input type="text" size="40" name="driver" id="creDriverAC"
 			placeholder="any driver or promoter"
