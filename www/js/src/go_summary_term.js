@@ -27,6 +27,10 @@ function main() {
             label:"Evidence",
             width:50,
             sortable:false},
+        {key:"inferred",
+            label:"Inferred From",
+            width:130,
+            sortable:false},
 		{key:"references",
 			label:"Reference(s)",
 			width:180,
@@ -46,6 +50,7 @@ function main() {
             {key:"term"},
 			{key:"annotationExtensions"},
 			{key:"evidence"},
+            {key:"inferred"},
             {key:"references"}
         ],
         metaFields: {
