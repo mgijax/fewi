@@ -11,6 +11,7 @@ import java.util.Map;
 import org.jax.mgi.fewi.searchUtil.entities.UniqueableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jax.mgi.shr.fe.sort.SmartAlphaComparator;
 
 /**
  * Search Results
@@ -36,13 +37,13 @@ public class SearchResults<T> {
 
 	// Result Objects of a given search
 	protected List<T> resultObjects = new ArrayList<T>();
-	
+
 	// MetaData mapping
 	protected Map<String, MetaData> metaMapping = new HashMap <String, MetaData>();
 
 	// Metadata for the result set as a whole
 	protected ResultSetMetaData resultSetMeta = new ResultSetMetaData();
-	
+
 	// Total number of possible results
 	protected int totalCount = -1;
 
@@ -66,11 +67,11 @@ public class SearchResults<T> {
 		this.resultKeys = resultKeys;
 	}
 
-	/** 
+	/**
 	 * Get a mapping of object key -> MetaData
 	 * @return
 	 */
-	
+
 	public Map<String, MetaData> getMetaMapping() {
         return metaMapping;
     }
@@ -79,7 +80,7 @@ public class SearchResults<T> {
 	 * set the MetaData mapping list
 	 * @param metaMapping
 	 */
-	
+
     public void setMetaMapping(Map<String, MetaData> metaMapping) {
         this.metaMapping = metaMapping;
     }
@@ -163,10 +164,10 @@ public class SearchResults<T> {
     public List<String> getResultFacets() {
         return resultFacets;
     }
-	
+
 	public List<String> getSortedResultFacets() {
 		List<String> sortedFacets = new ArrayList<String>(resultFacets);
-		Collections.sort (sortedFacets, new FacetSorter());
+		Collections.sort (sortedFacets, new SmartAlphaComparator());
         return sortedFacets;
     }
 
@@ -176,7 +177,7 @@ public class SearchResults<T> {
     public void setResultFacets(List<String> resultFacets) {
         this.resultFacets = resultFacets;
     }
-    
+
     /**
      * uniques the list of result objects, and preserves order
      * result object must implement UniqueableObject interface
@@ -209,7 +210,7 @@ public class SearchResults<T> {
     		}
     	}
     }
-    
+
     /*
      * takes an existing SR object and copies over every non-T field (I.e. excludes resultObjects)
      * 	unless clazz != null, then it will try to cast every object in resultObjects to clazz
