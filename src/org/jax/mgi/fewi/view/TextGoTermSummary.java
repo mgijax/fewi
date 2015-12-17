@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationProperty;
+import mgi.frontend.datamodel.AnnotationInferredFromID;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
@@ -26,9 +27,9 @@ public class TextGoTermSummary extends AbstractTextView {
 
 		String filename = "GO_term_summary_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
-		
+
 		// column headings
-		writer.write("MGI Gene/Marker ID\tSymbol\tName\tProteoform\tChr\tAnnotated Term\tAdditional Term Context\tEvidence\tReference(s)\r\n");
+		writer.write("MGI Gene/Marker ID\tSymbol\tName\tProteoform\tChr\tAnnotated Term\tAdditional Term Context\tEvidence\tInferred From\tReference(s)\r\n");
 
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");
@@ -37,6 +38,7 @@ public class TextGoTermSummary extends AbstractTextView {
 		MarkerLocation ml;
 		StringBuffer refs;
 		StringBuffer proteoforms;
+		StringBuffer inferred;
 
 		for (Annotation annot: results){
 
@@ -74,6 +76,13 @@ public class TextGoTermSummary extends AbstractTextView {
 
 			// evidence code
 			writer.write(annot.getEvidenceCode() + "\t");
+
+			// Inferred From
+			inferred = new StringBuffer();
+			for (AnnotationInferredFromID inf: annot.getInferredFromList()) {
+				inferred.append(inf.getAccID() + " ");
+			}
+			writer.write(inferred.toString() + "\t");
 
 			// references
 			refs = new StringBuffer();

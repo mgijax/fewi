@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
 import mgi.frontend.datamodel.AnnotationProperty;
+import mgi.frontend.datamodel.AnnotationInferredFromID;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
@@ -28,7 +29,7 @@ public class BigExcelGoTermSummary extends AbstractBigExcelView
 
 		String filename = "GO_term_summary_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".xlsx\"");
-		
+
 		List<Annotation> results = (List<Annotation>) model.get("results");
 
 		Sheet sheet = workbook.createSheet();
@@ -46,12 +47,14 @@ public class BigExcelGoTermSummary extends AbstractBigExcelView
 		row.createCell(col++).setCellValue("Annotated Term");
 		row.createCell(col++).setCellValue("Additional Term Context");
 		row.createCell(col++).setCellValue("Evidence");
+		row.createCell(col++).setCellValue("Inferred From");
 		row.createCell(col++).setCellValue("Reference(s)");
 
 		Marker m;
 		MarkerLocation ml;
 		StringBuffer refs;
 		StringBuffer proteoforms;
+		StringBuffer inferred;
 
 		for (Annotation annot: results){
 			row = sheet.createRow(rownum++);
@@ -89,9 +92,16 @@ public class BigExcelGoTermSummary extends AbstractBigExcelView
 			// annotation extensions
 			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
 			row.createCell(col++).setCellValue(annotExtensions);
-			
+
 			// evidence code
 			row.createCell(col++).setCellValue(annot.getEvidenceCode());
+
+			// inferred
+			inferred = new StringBuffer();
+			for (AnnotationInferredFromID inf: annot.getInferredFromList()) {
+				inferred.append(inf.getAccID() + " ");
+			}
+			row.createCell(col++).setCellValue(inferred.toString());
 
 			// references
 			refs = new StringBuffer();
