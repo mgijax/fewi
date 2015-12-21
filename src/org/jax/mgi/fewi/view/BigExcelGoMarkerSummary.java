@@ -81,11 +81,6 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 			}
 			
 			// Classification Term
-			if (annot.getQualifier() != null) {
-			    row.createCell(col++).setCellValue(annot.getQualifier());
-			} else {
-			    row.createCell(col++).setCellValue("");
-			}
 			row.createCell(col++).setCellValue(annot.getTerm());
 			
 			// Additional term context
