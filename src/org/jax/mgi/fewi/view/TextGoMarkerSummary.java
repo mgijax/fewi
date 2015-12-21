@@ -27,7 +27,7 @@ public class TextGoMarkerSummary extends AbstractTextView {
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 		
 
-		writer.write("Proteoform\tAspect\tCategory\tQualifier\tClassification Term\tAdditional Term Context\tEvidence\tInferred From\tReference(s)\r\n");
+		writer.write("Aspect\tCategory\tQualifier\tClassification Term\tContext\tProteoform\tEvidence\tInferred From\tReference(s)\r\n");
 
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");
@@ -36,15 +36,6 @@ public class TextGoMarkerSummary extends AbstractTextView {
 		StringBuffer refs;
 		StringBuffer proteoforms;
 		for (Annotation annot: results){
-
-			// Proteoform
-			proteoforms = new StringBuffer();
-			for (AnnotationProperty prop: annot.getIsoforms()) {
-				String displayItem = prop.getValue();
-				displayItem = ntc.convertNotes(displayItem, '|', true);
-				proteoforms.append(displayItem);
-			}
-			writer.write(proteoforms.toString() + "\t");
 
 			// Vocab Info
 			writer.write(annot.getDagName() + "\t");
@@ -63,6 +54,16 @@ public class TextGoMarkerSummary extends AbstractTextView {
 			writer.write(annotExtensions);
 			writer.write("\t");
 
+
+			// Proteoform
+			proteoforms = new StringBuffer();
+			for (AnnotationProperty prop: annot.getIsoforms()) {
+				String displayItem = prop.getValue();
+				displayItem = ntc.convertNotes(displayItem, '|', true);
+				proteoforms.append(displayItem);
+			}
+			writer.write(proteoforms.toString() + "\t");
+			
 			// Evidence
 			writer.write(annot.getEvidenceCode() + "\t");
 

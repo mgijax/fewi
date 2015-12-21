@@ -39,12 +39,12 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 		int col = 0;
 
 		row = sheet.createRow(rownum++);
-		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Aspect");
 		row.createCell(col++).setCellValue("Category");
 		row.createCell(col++).setCellValue("Qualifier");
 		row.createCell(col++).setCellValue("Classification Term");
-		row.createCell(col++).setCellValue("Additional Term Context");
+		row.createCell(col++).setCellValue("Context");
+		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Evidence");
 		row.createCell(col++).setCellValue("Inferred From");
 		row.createCell(col++).setCellValue("Reference(s)");
@@ -56,16 +56,6 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 		for (Annotation annot: results){
 			row = sheet.createRow(rownum++);
 			col = 0;
-
-
-			// Proteoform
-			proteoforms = new StringBuffer();
-			for (AnnotationProperty prop: annot.getIsoforms()) {
-				String displayItem = prop.getValue();
-				displayItem = ntc.convertNotes(displayItem, '|', true);
-				proteoforms.append(displayItem);
-			}
-			row.createCell(col++).setCellValue(proteoforms.toString());
 
 			// Aspect
 			row.createCell(col++).setCellValue(annot.getDagName());
@@ -86,6 +76,15 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 			// Additional term context
 			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
 			row.createCell(col++).setCellValue(annotExtensions);
+
+			// Proteoform
+			proteoforms = new StringBuffer();
+			for (AnnotationProperty prop: annot.getIsoforms()) {
+				String displayItem = prop.getValue();
+				displayItem = ntc.convertNotes(displayItem, '|', true);
+				proteoforms.append(displayItem);
+			}
+			row.createCell(col++).setCellValue(proteoforms.toString());
 			
 			// evidence
 			row.createCell(col++).setCellValue(annot.getEvidenceCode());
