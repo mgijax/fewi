@@ -46,13 +46,16 @@ public class TextGoMarkerSummary extends AbstractTextView {
 			}
 			writer.write(proteoforms.toString() + "\t");
 
-			String qualifier = annot.getQualifier();
-			if (qualifier == null) { qualifier = ""; }
-
 			// Vocab Info
 			writer.write(annot.getDagName() + "\t");
 			writer.write(annot.getHeaderAbbreviations() + "\t");
+			
+			// qualifier
+			String qualifier = annot.getQualifier();
+			if (qualifier == null) { qualifier = ""; }
 			writer.write(qualifier + "\t");
+			
+			// term
 			writer.write(annot.getTerm() + "\t");
 
 			// Additional Term Context

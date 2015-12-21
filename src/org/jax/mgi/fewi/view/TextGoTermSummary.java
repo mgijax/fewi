@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.AnnotationProperty;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
+import mgi.frontend.datamodel.AnnotationProperty;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
@@ -29,7 +29,7 @@ public class TextGoTermSummary extends AbstractTextView {
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 
 		// column headings
-		writer.write("MGI Gene/Marker ID\tSymbol\tName\tProteoform\tChr\tAnnotated Term\tAdditional Term Context\tEvidence\tInferred From\tReference(s)\r\n");
+		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tAdditional Term Context\tProteoform\\tEvidence\tInferred From\tReference(s)\r\n");
 
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");
@@ -50,6 +50,28 @@ public class TextGoTermSummary extends AbstractTextView {
 			writer.write(m.getSymbol() + "\t");
 			writer.write(m.getName() + "\t");
 
+			// CHR location
+			if (ml != null) {
+			    writer.write(ml.getChromosome() + "\t");
+			} else {
+			    writer.write("Unknown\t");
+			}
+
+			// Qualifier
+			if (annot.getQualifier() != null) {
+			    writer.write(annot.getQualifier() + "\t");
+			} else {
+			    writer.write("\t");
+			}
+			
+			// term
+			writer.write(annot.getTerm() + "\t");
+
+			// Additional Term Context
+			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
+			writer.write(annotExtensions);
+			writer.write("\t");
+			
 			// Proteoform
 			proteoforms = new StringBuffer();
 			for (AnnotationProperty prop: annot.getIsoforms()) {
@@ -58,22 +80,7 @@ public class TextGoTermSummary extends AbstractTextView {
 				proteoforms.append(displayItem);
 			}
 			writer.write(proteoforms.toString() + "\t");
-
-			// CHR location
-			if (ml != null) {
-			    writer.write(ml.getChromosome() + "\t");
-			} else {
-			    writer.write("Unknown\t");
-			}
-
-			// term
-			writer.write(annot.getTerm() + "\t");
-
-			// Additional Term Context
-			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
-			writer.write(annotExtensions);
-			writer.write("\t");
-
+						
 			// evidence code
 			writer.write(annot.getEvidenceCode() + "\t");
 

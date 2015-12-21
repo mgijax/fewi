@@ -40,11 +40,11 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 		row.createCell(col++).setCellValue("MGI Gene/Marker ID");
 		row.createCell(col++).setCellValue("Symbol");
 		row.createCell(col++).setCellValue("Name");
-		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Chr");
 		row.createCell(col++).setCellValue("Qualifier");
 		row.createCell(col++).setCellValue("Annotated Term");
 		row.createCell(col++).setCellValue("Additional Term Context");
+		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Aspect");
 		row.createCell(col++).setCellValue("Evidence");
 		row.createCell(col++).setCellValue("Inferred From");
@@ -61,10 +61,33 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 			ml = m.getPreferredCentimorgans();
 			if (ml == null) { ml = m.getPreferredLocation(); }
 
+			// marker info
 			row.createCell(col++).setCellValue(m.getPrimaryID());
 			row.createCell(col++).setCellValue(m.getSymbol());
 			row.createCell(col++).setCellValue(m.getName());
 
+			// chr
+			if (ml != null) {
+			    row.createCell(col++).setCellValue(
+				ml.getChromosome());
+			} else {
+			    row.createCell(col++).setCellValue("Unknown");
+			}
+			
+			// qualifier
+			if (annot.getQualifier() != null) {
+			    row.createCell(col++).setCellValue(annot.getQualifier());
+			} else {
+			    row.createCell(col++).setCellValue("");
+			}
+			
+			// term
+			row.createCell(col++).setCellValue(annot.getTerm());
+
+			// context
+			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
+			row.createCell(col++).setCellValue(annotExtensions);
+			
 			// Proteoform
 			proteoforms = new StringBuffer();
 			for (AnnotationProperty prop: annot.getIsoforms()) {
@@ -74,29 +97,12 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 			}
 			row.createCell(col++).setCellValue(proteoforms.toString());
 
-			if (ml != null) {
-			    row.createCell(col++).setCellValue(
-				ml.getChromosome());
-			} else {
-			    row.createCell(col++).setCellValue("Unknown");
-			}
-
-			if (annot.getQualifier() != null) {
-			    row.createCell(col++).setCellValue(annot.getQualifier());
-			} else {
-			    row.createCell(col++).setCellValue("");
-			}
-
-			row.createCell(col++).setCellValue(annot.getTerm());
-
-			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
-			row.createCell(col++).setCellValue(annotExtensions);
-
+			// aspect
 			row.createCell(col++).setCellValue(annot.getDagName());
-			row.createCell(col++).setCellValue(
-				annot.getEvidenceCode());
-			row.createCell(col++).setCellValue(
-				annot.getInferredFrom());
+			// evidence
+			row.createCell(col++).setCellValue(annot.getEvidenceCode());
+			// inferredfrom
+			row.createCell(col++).setCellValue(annot.getInferredFrom());
 		}
 	}
 

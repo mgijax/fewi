@@ -27,7 +27,7 @@ public class TextGoReferenceSummary extends AbstractTextView {
 		String filename = "GO_reference_summary_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 		
-		writer.write("MGI Gene/Marker ID\tSymbol\tName\tProteoform\tChr\tQualifier\tAnnotated Term\tAdditional Term Context\tAspect\tEvidence\tInferred From\r\n");
+		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tAdditional Term Context\tProteoform\tAspect\tEvidence\tInferred From\r\n");
 
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");
@@ -46,6 +46,27 @@ public class TextGoReferenceSummary extends AbstractTextView {
 			writer.write(m.getSymbol() + "\t");
 			writer.write(m.getName() + "\t");
 
+			// CHR location
+			if (ml != null) {
+			    writer.write(ml.getChromosome() + "\t");
+			} else {
+			    writer.write("Unknown\t");
+			}
+
+			// Qualifier
+			if (annot.getQualifier() != null) {
+			    writer.write(annot.getQualifier() + "\t");
+			} else {
+			    writer.write("\t");
+			}
+			// Term
+			writer.write(annot.getTerm() + "\t");
+
+			// context
+			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
+			writer.write(annotExtensions);
+			writer.write("\t");
+			
 			// Proteoform
 			proteoforms = new StringBuffer();
 			for (AnnotationProperty prop: annot.getIsoforms()) {
@@ -55,25 +76,7 @@ public class TextGoReferenceSummary extends AbstractTextView {
 			}
 			writer.write(proteoforms.toString() + "\t");
 
-			// CHR location
-			if (ml != null) {
-			    writer.write(ml.getChromosome() + "\t");
-			} else {
-			    writer.write("Unknown\t");
-			}
-
-			// Term, DAG, and Qualifier
-			if (annot.getQualifier() != null) {
-			    writer.write(annot.getQualifier() + "\t");
-			} else {
-			    writer.write("\t");
-			}
-			writer.write(annot.getTerm() + "\t");
-
-			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
-			writer.write(annotExtensions);
-			writer.write("\t");
-			
+			// aspect
 			writer.write(annot.getDagName() + "\t");
 
 			// Evidence & Inferred From

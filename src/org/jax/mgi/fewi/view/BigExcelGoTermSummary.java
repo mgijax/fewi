@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mgi.frontend.datamodel.Annotation;
-import mgi.frontend.datamodel.AnnotationProperty;
 import mgi.frontend.datamodel.AnnotationInferredFromID;
+import mgi.frontend.datamodel.AnnotationProperty;
 import mgi.frontend.datamodel.Marker;
 import mgi.frontend.datamodel.MarkerLocation;
 import mgi.frontend.datamodel.Reference;
@@ -42,10 +42,11 @@ public class BigExcelGoTermSummary extends AbstractBigExcelView
 		row.createCell(col++).setCellValue("MGI Gene/Marker ID");
 		row.createCell(col++).setCellValue("Symbol");
 		row.createCell(col++).setCellValue("Name");
-		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Chr");
+		row.createCell(col++).setCellValue("Qualifier");
 		row.createCell(col++).setCellValue("Annotated Term");
 		row.createCell(col++).setCellValue("Additional Term Context");
+		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Evidence");
 		row.createCell(col++).setCellValue("Inferred From");
 		row.createCell(col++).setCellValue("Reference(s)");
@@ -69,15 +70,6 @@ public class BigExcelGoTermSummary extends AbstractBigExcelView
 			row.createCell(col++).setCellValue(m.getSymbol());
 			row.createCell(col++).setCellValue(m.getName());
 
-			// Proteoform
-			proteoforms = new StringBuffer();
-			for (AnnotationProperty prop: annot.getIsoforms()) {
-				String displayItem = prop.getValue();
-				displayItem = ntc.convertNotes(displayItem, '|', true);
-				proteoforms.append(displayItem);
-			}
-			row.createCell(col++).setCellValue(proteoforms.toString());
-
 			// CHR location
 			if (ml != null) {
 			    row.createCell(col++).setCellValue(
@@ -86,12 +78,27 @@ public class BigExcelGoTermSummary extends AbstractBigExcelView
 			    row.createCell(col++).setCellValue("Unknown");
 			}
 
+			if (annot.getQualifier() != null) {
+			    row.createCell(col++).setCellValue(annot.getQualifier());
+			} else {
+			    row.createCell(col++).setCellValue("");
+			}
+			
 			// annotated term
 			row.createCell(col++).setCellValue(annot.getTerm());
 
 			// annotation extensions
 			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
 			row.createCell(col++).setCellValue(annotExtensions);
+			
+			// Proteoform
+			proteoforms = new StringBuffer();
+			for (AnnotationProperty prop: annot.getIsoforms()) {
+				String displayItem = prop.getValue();
+				displayItem = ntc.convertNotes(displayItem, '|', true);
+				proteoforms.append(displayItem);
+			}
+			row.createCell(col++).setCellValue(proteoforms.toString());
 
 			// evidence code
 			row.createCell(col++).setCellValue(annot.getEvidenceCode());

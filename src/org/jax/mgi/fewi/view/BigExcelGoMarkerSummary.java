@@ -67,8 +67,20 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 			}
 			row.createCell(col++).setCellValue(proteoforms.toString());
 
+			// Aspect
 			row.createCell(col++).setCellValue(annot.getDagName());
+			
+			// Category
 			row.createCell(col++).setCellValue(annot.getHeaderAbbreviations());
+			
+			// Qualifier
+			if (annot.getQualifier() != null) {
+			    row.createCell(col++).setCellValue(annot.getQualifier());
+			} else {
+			    row.createCell(col++).setCellValue("");
+			}
+			
+			// Classification Term
 			if (annot.getQualifier() != null) {
 			    row.createCell(col++).setCellValue(annot.getQualifier());
 			} else {
@@ -76,17 +88,21 @@ public class BigExcelGoMarkerSummary extends AbstractBigExcelView {
 			}
 			row.createCell(col++).setCellValue(annot.getTerm());
 			
+			// Additional term context
 			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
 			row.createCell(col++).setCellValue(annotExtensions);
 			
+			// evidence
 			row.createCell(col++).setCellValue(annot.getEvidenceCode());
 
+			// inferredfrom
 			inferred = new StringBuffer();
 			for (AnnotationInferredFromID inf: annot.getInferredFromList()) {
 				inferred.append(inf.getAccID() + " ");
 			}
 			row.createCell(col++).setCellValue(inferred.toString());
 
+			// references
 			refs = new StringBuffer();
 			for (Reference ref: annot.getReferences()) {
 				refs.append(ref.getJnumID() + " ");
