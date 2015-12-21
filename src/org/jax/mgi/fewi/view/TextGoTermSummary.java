@@ -29,7 +29,7 @@ public class TextGoTermSummary extends AbstractTextView {
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 
 		// column headings
-		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tAdditional Term Context\tProteoform\\tEvidence\tInferred From\tReference(s)\r\n");
+		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tContext\tProteoform\tEvidence\tInferred From\tReference(s)\r\n");
 
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");

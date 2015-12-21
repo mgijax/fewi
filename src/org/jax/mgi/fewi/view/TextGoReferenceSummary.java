@@ -27,7 +27,7 @@ public class TextGoReferenceSummary extends AbstractTextView {
 		String filename = "GO_reference_summary_"+getCurrentDate();
 		response.setHeader("Content-Disposition","attachment; filename=\""+filename+".txt\"");
 		
-		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tAdditional Term Context\tProteoform\tAspect\tEvidence\tInferred From\r\n");
+		writer.write("MGI Gene/Marker ID\tSymbol\tName\tChr\tQualifier\tAnnotated Term\tContext\tProteoform\tAspect\tEvidence\tInferred From\r\n");
 
 		@SuppressWarnings("unchecked")
 		List<Annotation> results = (List<Annotation>) model.get("results");

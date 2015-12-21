@@ -43,7 +43,7 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 		row.createCell(col++).setCellValue("Chr");
 		row.createCell(col++).setCellValue("Qualifier");
 		row.createCell(col++).setCellValue("Annotated Term");
-		row.createCell(col++).setCellValue("Additional Term Context");
+		row.createCell(col++).setCellValue("Context");
 		row.createCell(col++).setCellValue("Proteoform");
 		row.createCell(col++).setCellValue("Aspect");
 		row.createCell(col++).setCellValue("Evidence");
