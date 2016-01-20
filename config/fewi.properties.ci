@@ -10,20 +10,11 @@
 #-------------------------------------------------------------------------------
 
 
-#----- FEWI_URL -----#
-
-# Overrides value normally set in GlobalConfig.properties.
-#FEWI_URL=http://server.informatics.jax.org/
-#FEWI_URL=http://cardolan.informatics.jax.org:8080/fewi/mgi/
-
 
 #----- solr server urls -----#
 
 # Weekly Proto
-solr.server1.url=http://mgi-testweb4.jax.org:8991/solr/
-
-# Front-end development indexes
-#solr.server1.url=http://cardolan:8985/solr/
+solr.server1.url=http://scrumdog.informatics.jax.org:8992/solr/
 
 
 #-------------------------------------------------------------------------------
