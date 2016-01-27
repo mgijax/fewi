@@ -20,7 +20,7 @@
 #----- solr server urls -----#
 
 # Weekly Proto
-solr.server1.url=http://scrumdog.informatics.jax.org:8992/solr
+solr.server1.url=http://scrumdog.informatics.jax.org:8992/solr/
 
 # Front-end development indexes
 #solr.server1.url=http://cardolan:8985/solr/
