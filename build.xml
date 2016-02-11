@@ -11,6 +11,7 @@
 	<path id="libs">
 		<fileset includes="*.jar" dir="${lib.dir}" />
 		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
+		<fileset includes="snpdatamodel.jar" dir="${snpdatamodel.dir}" />
 		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
 	</path>
 	
@@ -20,6 +21,7 @@
 		<fileset includes="*.jar" dir="${jboss.dir}/modules/javax/persistence/api/main" />
 		<fileset includes="*.jar" dir="${jboss.dir}/bundles/javax/servlet/api/v25" />
 		<fileset includes="fedatamodel.jar" dir="${fedatamodel.dir}" />
+		<fileset includes="snpdatamodel.jar" dir="${snpdatamodel.dir}" />
 		<fileset includes="fe.jar" dir="${lib_java_fe.dir}" />
 		<pathelement location="${test.dir}" />
 		<pathelement location="${compile.dir}" />
@@ -54,6 +56,7 @@
 		<echo>Creating build directory</echo>
 		<mkdir dir="${compile.dir}" />
 		<copy file="${fedatamodel.dir}/fedatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true" />
+		<copy file="${snpdatamodel.dir}/snpdatamodel.jar" todir="./www/WEB-INF/lib" overwrite="true" />
 		<copy file="${lib_java_fe.dir}/fe.jar" todir="./www/WEB-INF/lib" overwrite="true" />
 		<copy todir="./www/WEB-INF/jsp/templates" overwrite="true">
 			<fileset dir="${global_config.dir}" includes="*.html" />
@@ -69,7 +72,7 @@
 	<!--compile -->
 	<target name="compile" depends="prepare, antlr">
 		<echo>Compile source</echo>
-		<javac destdir="${compile.dir}" debug="on" debuglevel="lines,vars,source">
+		<javac destdir="${compile.dir}" debug="on" debuglevel="lines,vars,source" includeantruntime="false">
 			<src path="${src.dir}" />
 			<exclude name="org/jax/mgi/fewi/test/**" />
 			<classpath refid="libs" />

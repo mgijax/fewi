@@ -164,6 +164,18 @@ public class DiseasePortalQueryForm
 		this.fHeader = fHeader;
 	}
 	
+	/* convenience method for extracting an integer from a String param
+	 */
+	public void setNumDCol(String num) {
+		try {
+			int i = Integer.parseInt(num);
+			this.numDCol = i;
+		} catch (NumberFormatException e) {
+			// just leave the default, if we don't have an integer
+			// in the parameter string
+		}
+	}
+	
 	public void setNumDCol(int num) {
 		this.numDCol = num;
 	}

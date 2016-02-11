@@ -57,8 +57,7 @@ public class SolrAnatomyTermHunter extends SolrHunter<SolrAnatomyTerm> {
 
     @SuppressWarnings("unchecked")
 	@Override
-    protected void packInformation (QueryResponse rsp, SearchResults<SolrAnatomyTerm> sr,
-    		SearchParams sp) {
+    protected void packInformation (QueryResponse rsp, SearchResults<SolrAnatomyTerm> sr, SearchParams sp) {
 
 	logger.debug ("Entering SolrAnatomyTermHunter.packInformation()");
 

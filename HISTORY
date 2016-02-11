@@ -18,6 +18,11 @@ DATE: 12/13/15
 STAFF: pf
 CHANGES: pre-merge tag for fewi
 
+TAG: fewi-tr11937-1
+DATE: 10/19/2015
+STAFF: jsb
+CHANGES: merged post-branch changes up from trunk into our SNP dev branch
+
 TAG: fewi-6-0-1-8
 DATE: 10/13/2015
 STAFF: jsb

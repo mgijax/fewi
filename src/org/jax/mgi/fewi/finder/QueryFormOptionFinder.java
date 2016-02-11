@@ -2,6 +2,8 @@ package org.jax.mgi.fewi.finder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 import mgi.frontend.datamodel.QueryFormOption;
 
@@ -38,6 +40,21 @@ public class QueryFormOptionFinder {
     /* public methods */
     /*----------------*/
 
+    /* Convenience method to easily retrieve a Map appropriate to generate a
+     * select list (using the fewi:selectOptions tag) in a JSP page
+     */
+    public Map<String,String> getOptionMap (String formName, String fieldName) {
+	    SearchResults<QueryFormOption> qfOptions =
+		    getQueryFormOptions(formName, fieldName);
+
+	    Map<String, String> optionMap = new LinkedHashMap<String, String>();
+
+	    for (QueryFormOption o : qfOptions.getResultObjects()) {
+		    optionMap.put(o.getSubmitValue(), o.getDisplayValue());
+	    }
+	    return optionMap;
+    }
+
     /* Convenience method for easy retrieval of a list of options for a given
      * query form and field
     */
@@ -63,7 +80,7 @@ public class QueryFormOptionFinder {
 		searchParams.setFilter (containerFilter);
 		searchParams.setPageSize (1000);
 	
-		return this.getQueryFormOptions(searchParams);
+		return getQueryFormOptions(searchParams);
     }
 
     /* Retrieval of multiple QueryFormOption objects */

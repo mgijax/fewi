@@ -79,5 +79,6 @@
 	<classpathentry kind="lib" path="www/WEB-INF/lib/ognl-3.0.8.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/xom-1.2.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/snpdatamodel"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

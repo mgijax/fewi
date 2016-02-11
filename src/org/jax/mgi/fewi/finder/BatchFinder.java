@@ -2,6 +2,7 @@ package org.jax.mgi.fewi.finder;
 
 import mgi.frontend.datamodel.BatchMarkerId;
 
+import java.util.List;
 import org.jax.mgi.fewi.hunter.HibernateBatchSummaryHunter;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -50,6 +51,11 @@ public class BatchFinder {
         return searchResults;
     }
 
-
-
+    /*-------------------------------------------------*/
+    /* Retrieve a distinct list of matching marker IDs */
+    /*-------------------------------------------------*/
+    public List<String> getMarkerIDs(SearchParams searchParams) {
+	    logger.debug("in BatchFinder.getMarkerIDs()");
+	    return batchMarkerHunter.getMarkerIDs(searchParams);
+    }
 }

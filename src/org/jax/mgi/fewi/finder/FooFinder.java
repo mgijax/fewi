@@ -14,11 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
-/*-------*/
-/* class */
-/*-------*/
-
 /*
  * This finder is responsible for finding foo(s)
  */
@@ -26,90 +21,67 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class FooFinder {
 
-    /*--------------------*/
-    /* instance variables */
-    /*--------------------*/
+	private Logger logger = LoggerFactory.getLogger(FooFinder.class);
 
-    private Logger logger = LoggerFactory.getLogger(FooFinder.class);
+	@Autowired
+	private FooKeyHunter fooKeyHunter;
 
-    @Autowired
-    private FooKeyHunter fooKeyHunter;
+	@Autowired
+	private FooSummaryHunter fooSummaryHunter;
 
-    @Autowired
-    private FooSummaryHunter fooSummaryHunter;
-
-    @Autowired
-    private HibernateObjectGatherer<Marker> fooGatherer;
+	@Autowired
+	private HibernateObjectGatherer<Marker> fooGatherer;
 
 
-    /*-----------------------------------------*/
-    /* Retrieval of a foo, for a given ID
-    /*-----------------------------------------*/
+	public SearchResults<Marker> getFooByID(SearchParams searchParams) {
 
-    public SearchResults<Marker> getFooByID(SearchParams searchParams) {
+		logger.debug("->getFooByID()");
 
-        logger.debug("->getFooByID()");
+		// result object to be returned
+		SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
-        // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+		// ask the hunter to identify which objects to return
+		fooKeyHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
 
-        // ask the hunter to identify which objects to return
-        fooKeyHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
+		// gather objects identified by the hunter, add them to the results
+		List<Marker> fooList = fooGatherer.get( Marker.class, searchResults.getResultKeys() );
+		searchResults.setResultObjects(fooList);
 
-        // gather objects identified by the hunter, add them to the results
-        List<Marker> fooList
-          = fooGatherer.get( Marker.class, searchResults.getResultKeys() );
-        searchResults.setResultObjects(fooList);
-
-        return searchResults;
-    }
+		return searchResults;
+	}
 
 
-	/*--------------------------------------------*/
-	/* Retrieval of a foo, for a given db key
-	/*--------------------------------------------*/
+	public SearchResults<Marker> getFooByKey(String dbKey) {
 
-    public SearchResults<Marker> getFooByKey(String dbKey) {
+		logger.debug("->getFooByKey()");
 
-        logger.debug("->getFooByKey()");
+		// result object to be returned
+		SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
-        // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
+		// gather objects, add them to the results
+		Marker foo = fooGatherer.get( Marker.class, dbKey );
+		searchResults.addResultObjects(foo);
 
-        // gather objects, add them to the results
-        Marker foo = fooGatherer.get( Marker.class, dbKey );
-        searchResults.addResultObjects(foo);
+		return searchResults;
+	}
 
-        return searchResults;
-    }
+	public SearchResults<Marker> getFoos(SearchParams searchParams) {
 
+		logger.debug("->getFoos");
 
-    /*---------------------------------*/
-    /* Retrieval of multiple foos
-    /*---------------------------------*/
+		// result object to be returned
+		SearchResults<Marker> searchResults = new SearchResults<Marker>();
 
-    public SearchResults<Marker> getFoos(SearchParams searchParams) {
+		// ask the hunter to identify which objects to return
+		fooSummaryHunter.hunt(searchParams, searchResults);
+		logger.debug("->hunter found these resultKeys - " + searchResults.getResultKeys());
 
-        logger.debug("->getFoos");
+		// gather objects identified by the hunter, add them to the results
+		List<Marker> fooList = fooGatherer.get( Marker.class, searchResults.getResultKeys() );
+		searchResults.setResultObjects(fooList);
 
-        // result object to be returned
-        SearchResults<Marker> searchResults = new SearchResults<Marker>();
-
-        // ask the hunter to identify which objects to return
-        fooSummaryHunter.hunt(searchParams, searchResults);
-        logger.debug("->hunter found these resultKeys - "
-          + searchResults.getResultKeys());
-
-        // gather objects identified by the hunter, add them to the results
-        List<Marker> fooList
-          = fooGatherer.get( Marker.class, searchResults.getResultKeys() );
-        searchResults.setResultObjects(fooList);
-
-        return searchResults;
-    }
-
-
+		return searchResults;
+	}
 
 }

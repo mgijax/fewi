@@ -182,4 +182,77 @@ public class HibernateBatchSummaryHunter
         searchResults.setResultObjects(returnList.subList(searchParams.getStartIndex(), 
         		endIndex));
     }
+
+	/* skip the complexity of matching results to the IDs that matched each
+	 * and just consolidate the results into a list of matching marker IDs.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<String> getMarkerIDs(SearchParams searchParams) {
+ 	       logger.debug("-> getMarkerIDs()");
+        
+        	// the queried id set
+    		List<String> idSet = new ArrayList<String>();
+    		// actual ids sent to query are lowercased
+    		List<String> idSetLower = new ArrayList<String>();  	
+    	
+ 	   	// begin generating the HQSL clauses
+ 	   	StringBuffer hql = new StringBuffer("FROM BatchMarkerId WHERE ");
+ 	   	List<String> clauses = new ArrayList<String>();
+    	 		
+		for (Filter f : searchParams.getFilter().getNestedFilters()) {
+			String prop = f.getProperty();
+			if (SearchConstants.BATCH_TERM.equals(prop)){
+				idSet = f.getValues();
+				for (String id: idSet) {
+					idSetLower.add(id.toLowerCase());
+				}
+				clauses.add("lower(term) IN (:ids) ");
+			} 
+			else if (SearchConstants.BATCH_TYPE.equals(prop)) {
+			    	List<String> termTypes; 
+				if (typeMap.containsKey(f.getValue())){
+					termTypes = typeMap.get(f.getValue());
+				} 
+				else {
+					termTypes = Arrays.asList(f.getValue());
+				}
+				List<String> tClauses = new ArrayList<String>();
+				for (String type : termTypes) {
+					tClauses.add("term_type LIKE '" + type + "'");
+				}
+				clauses.add("(" + StringUtils.join(tClauses, " OR ") + ")");
+			}
+		}
+ 	   	hql.append(StringUtils.join(clauses, " AND "));
+
+		logger.debug("-> filter parsed" );   
+        
+    		// perform HSQL query for BatchMarkerIds
+		Query query = sessionFactory.getCurrentSession().createQuery(hql.toString());
+        
+		HashSet<String> markerIDs = new HashSet<String>();
+        
+		int start = 0, end = 0, batchSize = 2000;
+		while (start < idSetLower.size()){
+			end = start + batchSize;
+			if (end > idSetLower.size()) end = idSetLower.size();
+			logger.debug(String.format("batch %d-%d", start, end));
+			query.setParameterList("ids", idSetLower.subList(start, end));				
+			for (BatchMarkerId bmi : (List<BatchMarkerId>) query.list()) {
+				markerIDs.add(bmi.getMarker().getPrimaryID());
+			}
+			start = end;
+		}
+		idSetLower = null;
+
+	        logger.debug("-> query complete" );
+
+		List<String> markerIDList = new ArrayList<String>();
+		for (String s : markerIDs.toArray(new String[0])) {
+			markerIDList.add(s);
+		}
+
+		logger.debug("-> found " + markerIDList.size() + " marker IDs");
+		return markerIDList;
+	}
 }

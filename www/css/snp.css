@@ -1,0 +1,169 @@
+#snpAssaysWithoutStrains td, th {
+  padding: 3px;
+  text-align: center;
+  border: thin solid gray;
+}
+#snpAssays td, th {
+  padding: 3px;
+  text-align: center;
+  border: thin solid gray;
+}
+.snpStrainHeader {
+  height: 110px;
+  vertical-align: middle;
+}
+.snpMarkerHeader {
+  vertical-align: middle;
+  font-family: Arial, Helvetica;
+  padding: 3px;
+}
+.snpStrainVerticalHeader {
+  height: 110px;
+  padding-bottom: 0;
+  text-align: left;
+  vertical-align: bottom;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.snpSummaryStrainDiv {
+  color: black;
+  font-size: 1em;
+  transform: rotate(-90deg);
+  width: 20px;
+  margin-top: 85px;
+  font-weight: normal;
+}
+.snpStrainDiv {
+  color: black;
+  font-size: 1em;
+  text-indent: 6px;
+  transform: rotate(-90deg);
+  width: 20px;
+}
+.snpCentered {
+  text-align: center;
+  vertical-align: middle;
+}
+.snpSmall {
+  font-size: 0.8em;
+}
+.snpPadded {
+  padding: 3px;
+}
+.blueBG {
+  background-color: #d0e0f0;
+}
+.refBG {
+  background-color: #ff8c00;
+}
+.yellowBar {
+  background-color: #ffffcc;
+  text-align: center;
+  vertical-align: middle;
+}
+.exemplar {
+  font-weight: bold;
+}
+.allele {
+  background-color: white;
+}
+.alleleA {
+  background-color: #FF8787;
+}
+.alleleC {
+  background-color: #8787FF;
+}
+.alleleT {
+  background-color: #FFFF00;
+}
+.alleleG {
+  background-color: #00FF00;
+}
+.alleleQ {
+  background-color: white;
+  color: black;
+}
+.alleleDash {
+  background-color: #aaaaaa;
+  color: black;
+}
+.conflict {
+  text-decoration: underline;
+}
+td.shaded {
+  background-color: #F1F1F1;
+}
+#snpSummaryTable {
+  border-collapse: collapse;
+}
+#snpSummaryTable th {
+  font-family: Arial, Helvetica;
+  padding: 3px;
+  font-weight: bold;
+  vertical-align: middle;
+  text-align: left;
+  font-size: 12px;
+  border-left: thin solid gray;
+  border-right: thin solid gray;
+  cursor: move;
+}
+#snpSummaryTable td {
+  font-family: Arial, Helvetica;
+  padding: 3px;
+  vertical-align: middle;
+  font-size: 12px;
+  border-left: thin solid gray;
+  border-right: thin solid gray;
+  border-bottom: thin solid #aaaaaa;
+  white-space: nowrap;
+}
+.small {
+  font-size: 10px;
+  font-weight: normal;
+}
+.smallGray {
+  color: #999999;
+  font-size: 75%;
+}
+.ysf {
+    font-size: 110%;
+    font-weight: bold;
+    text-decoration: underline;
+}
+#rightcolumn {
+    float: left;
+    margin-left: -435px;
+    text-align: right;
+    width: 425px;
+}
+#breadbox {
+    float: left;
+    width: 100%;
+}
+#contentcolumn {
+    margin: 0 535px 0 500px;
+    white-space: normal;
+}
+#filterDiv {
+    padding-top: 2px;
+    width: 460px;
+    float: none;
+}
+#querySummary {
+    width: 400px;
+}
+.bottomlessBox {
+    border-left: thin solid gray;
+    border-right: thin solid gray;
+    border-top: thin solid gray;
+}
+.padded {
+    padding: 5px;
+}
+.inlineblock {
+    display: inline-block;
+}
+#snpSummaryDiv {
+    clear: both;
+    padding-top: 6px;
+}

@@ -149,7 +149,7 @@ public class ReferenceController {
 		logger.debug("summaryReport");
 		SearchResults<Reference> searchResults;
 		try {
-			searchResults = this.getSummaryResults(request, query, page, result);
+			searchResults = getSummaryResults(request, query, page, result);
 	        model.addAttribute("results", searchResults.getResultObjects());
 			return "referenceSummaryReport";
 		} catch (BindException be) {
@@ -170,7 +170,7 @@ public class ReferenceController {
 			@ModelAttribute Paginator page,
 			BindingResult result) throws BindException {
 
-		SearchResults<Reference> searchResults = this.getSummaryResults(request, query, page, result);
+			SearchResults<Reference> searchResults = getSummaryResults(request, query, page, result);	
         List<Reference> refList = searchResults.getResultObjects();
 
         Map<String, Set<String>> highlighting = searchResults.getResultSetMeta().getSetHighlights();
@@ -255,10 +255,10 @@ public class ReferenceController {
 			params.setIncludeMetaHighlight(true);
 			params.setIncludeRowMeta(true);
 			params.setIncludeMetaScore(true);
-			params.setPaginator(page);
-			params.setSorts(this.parseSorts(request));
-			params.setFilter(this.parseReferenceQueryForm(query, result));
-
+			params.setPaginator(page);		
+			params.setSorts(parseSorts(request));
+			params.setFilter(parseReferenceQueryForm(query, result));
+			
 			// perform query and return results as json
 			logger.debug("params parsed");
 
@@ -528,7 +528,7 @@ public class ReferenceController {
 	    // only add the extra filters to the mav if they would still allow
 	    // at least one reference to be displayed
 
-	    if (this.anyRefsLeft(queryString, query)) {
+	    if (anyRefsLeft(queryString, query)) {
 		List<String> typeFilters = query.getCleanedTypeFilter();
 
 		// assumes we only filter by one value
@@ -749,7 +749,7 @@ public class ReferenceController {
 		String authorText = query.getAuthor().trim();
 		if(authorText != null && !"".equals(authorText)){
 
-			List<String> authors = this.parseList(authorText, ";");
+			List<String> authors = parseList(authorText, ";");
 
 			String scope = query.getAuthorScope();
 
@@ -768,11 +768,8 @@ public class ReferenceController {
 		// build journal query filter
 		String journalText = query.getJournal().trim();
 		if(journalText != null && !"".equals(journalText)){
-
-			List<String> journals = this.parseList(journalText, ";");
-
-			queryList.add(new Filter(SearchConstants.REF_JOURNAL,
-					journals, Filter.Operator.OP_IN));
+			List<String> journals = parseList(journalText, ";");
+			queryList.add(new Filter(SearchConstants.REF_JOURNAL, journals, Filter.Operator.OP_IN));
 		}
 
 		// build year query filter
@@ -782,7 +779,7 @@ public class ReferenceController {
 		if(year != null && !"".equals(year)){
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){
-				List<String> years = this.parseList(year, "-");
+				List<String> years = parseList(year, "-");
 				if (years.size() > 2){
 					result.addError(
 							new FieldError("referenceQueryForm",
@@ -947,7 +944,7 @@ public class ReferenceController {
 		List<String> ids = new ArrayList<String>();
 		String idtext = query.getId().trim();
 		if (idtext != null && !"".equals(idtext)){
-			ids = this.parseList(idtext, "[;,\\s]");
+			ids = parseList(idtext, "[;,\\s]");
 		}
 
 		if (queryList.size() > 0){
@@ -1047,12 +1044,11 @@ public class ReferenceController {
 		logger.debug(query.toString());
 
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseReferenceQueryForm(query, result));
-
+		params.setFilter(parseReferenceQueryForm(query, result));
 		// perform query and return results as json
 		logger.debug("params parsed");
 
-		return this.parseFacetResponse(referenceFinder.getAuthorFacet(params));
+		return parseFacetResponse(referenceFinder.getAuthorFacet(params));
 	}
 
 	/*
@@ -1066,12 +1062,12 @@ public class ReferenceController {
 		logger.debug(query.toString());
 
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseReferenceQueryForm(query, result));
+		params.setFilter(parseReferenceQueryForm(query, result));
 
 		// perform query and return results as json
 		logger.debug("params parsed");
 
-		Map<String, List<String>> response = this.parseFacetResponse(referenceFinder.getTypeFacet(params));
+		Map<String, List<String>> response = parseFacetResponse(referenceFinder.getTypeFacet(params));
 
 		return response;
 	}
@@ -1087,12 +1083,11 @@ public class ReferenceController {
 
 		logger.debug(query.toString());
 
-		SearchParams params = new SearchParams();
-		params.setFilter(this.parseReferenceQueryForm(query, result));
-
+		SearchParams params = new SearchParams();		
+		params.setFilter(parseReferenceQueryForm(query, result));
 		// perform query and return results as json
 		logger.debug("params parsed");
-		return this.parseFacetResponse(referenceFinder.getJournalFacet(params));
+		return parseFacetResponse(referenceFinder.getJournalFacet(params));
 	}
 
 	/*
@@ -1106,12 +1101,12 @@ public class ReferenceController {
 
 		logger.debug(query.toString());
 
-		SearchParams params = new SearchParams();
-		params.setFilter(this.parseReferenceQueryForm(query, result));
+		SearchParams params = new SearchParams();		
+		params.setFilter(parseReferenceQueryForm(query, result));
 
 		// perform query and return results as json
 		logger.debug("params parsed");
-		return this.parseFacetResponse(referenceFinder.getYearFacet(params));
+		return parseFacetResponse(referenceFinder.getYearFacet(params));
 	}
 
 	/*
@@ -1125,12 +1120,12 @@ public class ReferenceController {
 
 		logger.debug(query.toString());
 
-		SearchParams params = new SearchParams();
-		params.setFilter(this.parseReferenceQueryForm(query, result));
+		SearchParams params = new SearchParams();		
+		params.setFilter(parseReferenceQueryForm(query, result));
 
 		// perform query and return results as json
 		logger.debug("params parsed");
-		return this.parseFacetResponse(referenceFinder.getDataFacet(params));
+		return parseFacetResponse(referenceFinder.getDataFacet(params));
 	}
 
 	private Map<String, List<String>> parseFacetResponse(

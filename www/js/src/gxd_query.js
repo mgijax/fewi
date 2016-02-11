@@ -121,6 +121,11 @@ var showDifferentialForm = function()
 	currentQF = "differential";
 	formTabs.selectTab(1);
 };
+var showBatchSearchForm = function()
+{
+	currentQF = "batch";
+	formTabs.selectTab(2);
+};
 
 //set up toggle for differential ribbons
 function showDifStructuresQF()
@@ -168,6 +173,8 @@ function getCurrentQF()
 		if(currentDifQF=="stage") return YAHOO.util.Dom.get("gxdDifferentialQueryForm2");
 		else if(currentDifQF=="both") return YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
 		return YAHOO.util.Dom.get("gxdDifferentialQueryForm1");
+	} else if (currentQF == 'batch') {
+		return YAHOO.util.Dom.get("gxdBatchQueryForm");
 	}
 
 	return YAHOO.util.Dom.get("gxdQueryForm");
@@ -820,6 +827,7 @@ var interceptSubmit = function(e) {
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
+YAHOO.util.Event.addListener("gxdBatchQueryForm", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit",interceptSubmit);
@@ -1317,6 +1325,15 @@ var resetQF = function (e) {
 		difForm3.theilerStage.selectedIndex=0;
 		difForm3.difTheilerStage.selectedIndex=0;
 	}
+	var batchForm = YAHOO.util.Dom.get("gxdBatchQueryForm");
+	if (batchForm) {
+		batchForm.idType.selectedIndex=0;
+		batchForm.ids.value="";
+		batchForm.fileType.selectedIndex=0;
+		batchForm.idColumn.value="1";
+		batchForm.idFile.value="";
+	}
+
 	// clear the validation errors
 	clearValidation();
 
@@ -1325,6 +1342,7 @@ var resetQF = function (e) {
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "reset", resetQF);
+YAHOO.util.Event.addListener("gxdBatchQueryForm", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", resetQF);

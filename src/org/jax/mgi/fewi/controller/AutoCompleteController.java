@@ -413,7 +413,7 @@ public class AutoCompleteController {
 	public @ResponseBody JsonSummaryResponse<VocabACSummaryRow> vocabAutoComplete(
 			@RequestParam("query") String query) {
 
-		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query);
+		SearchResults<VocabACResult> results= getVocabAutoCompleteResults(query);
 		//List<VocabACSummaryRow> summaryRows = new ArrayList<VocabACSummaryRow>();
 //
 //        for (VocabACResult result : results.getResultObjects()) {
@@ -436,8 +436,7 @@ public class AutoCompleteController {
 
 		// filter specific vocabs for this autocomplete
 		Filter vocabFilter = new Filter(SearchConstants.VOC_VOCAB,Arrays.asList("OMIM","Mammalian Phenotype"),Filter.Operator.OP_IN);
-
-		SearchResults<VocabACResult> results= this.getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
+		SearchResults<VocabACResult> results = getVocabAutoCompleteResults(query,Arrays.asList(vocabFilter));
 		new ArrayList<VocabACSummaryRow>();
 
 //        for (VocabACResult result : results.getResultObjects()) {

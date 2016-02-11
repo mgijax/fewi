@@ -245,7 +245,7 @@ public class AlleleController {
 		}
 
 		// pass on to shared code to flesh out data for the allele detail page
-		return this.prepareAllele(request, alleleList.get(0));
+		return prepareAllele(request, alleleList.get(0));
 	}
 
 	@RequestMapping(value="/key/{dbKey:.+}", method=RequestMethod.GET)
@@ -266,7 +266,7 @@ public class AlleleController {
 		}
 
 		// pass on to shared code to flesh out data for the allele detail page
-		return this.prepareAllele(request, alleleList.get(0));
+		return prepareAllele(request, alleleList.get(0));
 	}
 
 	//------------------------------------------------//
@@ -369,7 +369,7 @@ public class AlleleController {
 
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
-		params.setFilter(this.genMutationInvolvesFilter(query, alleleKey));
+		params.setFilter(genMutationInvolvesFilter(query, alleleKey));
 		logger.debug("Filter: " + params.getFilter().toString());
 
 		// perform the query and pull out requested objects

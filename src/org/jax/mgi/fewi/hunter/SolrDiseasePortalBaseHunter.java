@@ -176,13 +176,13 @@ public class SolrDiseasePortalBaseHunter extends SolrHunter<SolrHdpEntity>
           * Groupings
           * list of fields that can be uniquely grouped on
           */
-        this.groupFields.put(SearchConstants.DP_GRID_CLUSTER_KEY,DiseasePortalFields.GRID_CLUSTER_KEY);
-        this.groupFields.put(SearchConstants.DP_GENO_CLUSTER_KEY,DiseasePortalFields.GENO_CLUSTER_KEY);
-        this.groupFields.put(SearchConstants.MRK_KEY,DiseasePortalFields.MARKER_KEY);
-        this.groupFields.put(DiseasePortalFields.TERM_HEADER,DiseasePortalFields.TERM_HEADER);
-        this.groupFields.put(SearchConstants.VOC_TERM_ID,DiseasePortalFields.TERM_ID_GROUP);
-        this.groupFields.put(DiseasePortalFields.TERM_GROUP,DiseasePortalFields.TERM_GROUP);
-        this.groupFields.put("bareMarkerKey",DiseasePortalFields.MARKER_KEY);
+        groupFields.put(SearchConstants.DP_GRID_CLUSTER_KEY,DiseasePortalFields.GRID_CLUSTER_KEY);
+        groupFields.put(SearchConstants.DP_GENO_CLUSTER_KEY,DiseasePortalFields.GENO_CLUSTER_KEY);
+        groupFields.put(SearchConstants.MRK_KEY,DiseasePortalFields.MARKER_KEY);
+        groupFields.put(DiseasePortalFields.TERM_HEADER,DiseasePortalFields.TERM_HEADER);
+        groupFields.put(SearchConstants.VOC_TERM_ID,DiseasePortalFields.TERM_ID_GROUP);
+        groupFields.put(DiseasePortalFields.TERM_GROUP,DiseasePortalFields.TERM_GROUP);
+        groupFields.put("bareMarkerKey",DiseasePortalFields.MARKER_KEY);
 
 
         /*

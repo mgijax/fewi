@@ -215,7 +215,7 @@ public class GXDLitController {
         logger.debug(markerKeyFilter.toString());
 
         params.setFilter(markerKeyFilter);
-        params.setSorts(this.genSorts(request));
+        params.setSorts(genSorts(request));
         params.setPageSize(gxdLimit);
 
         logger.debug("Hitting the finder 2.");
@@ -315,7 +315,7 @@ public class GXDLitController {
         logger.debug(referenceKeyFilter.toString());
 
         params.setFilter(referenceKeyFilter);
-        params.setSorts(this.genSorts(request));
+        params.setSorts(genSorts(request));
         params.setPageSize(gxdLimit);
 
         logger.debug("Hitting the finder 2.");
@@ -368,8 +368,8 @@ public class GXDLitController {
 
         SearchParams params = new SearchParams();
 
-        params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(queryForm));
+        params.setSorts(genSorts(request));
+        params.setFilter(genFilters(queryForm));
         params.setPageSize(gxdLimit);
 
         logger.debug("Hitting the finder.");
@@ -423,8 +423,8 @@ public class GXDLitController {
 
         SearchParams params = new SearchParams();
 
-        params.setSorts(this.genSorts(request));
-        params.setFilter(this.genFilters(queryForm));
+        params.setSorts(genSorts(request));
+        params.setFilter(genFilters(queryForm));
 //		params.setIncludeSetMeta(true);
 //		params.setIncludeMetaHighlight(true);
 //		params.setIncludeRowMeta(true);
@@ -500,7 +500,7 @@ public class GXDLitController {
 
         SearchParams params = new SearchParams();
 
-        params.setFilter(this.genFilters(queryForm));
+        params.setFilter(genFilters(queryForm));
         params.setPageSize(0);
 
         logger.debug("Hitting the finder.");
@@ -946,7 +946,7 @@ public class GXDLitController {
 		//build author query filter
 		if(query.getAuthor() != null && !"".equals(query.getAuthor())){
 
-			List<String> authors = this.parseList(query.getAuthor().trim(), ";");
+			List<String> authors = parseList(query.getAuthor().trim(), ";");
 
 			String scope = query.getAuthorScope();
 
@@ -965,7 +965,7 @@ public class GXDLitController {
 		// build journal query filter
 		if(query.getJournal() != null && !"".equals(query.getJournal())){
 
-			List<String> journals = this.parseList(query.getJournal().trim(), ";");
+			List<String> journals = parseList(query.getJournal().trim(), ";");
 
 			filterList.add(new Filter(SearchConstants.REF_JOURNAL,
 					journals, Filter.Operator.OP_IN));
@@ -978,7 +978,7 @@ public class GXDLitController {
 			int rangeLoc = year.indexOf("-");
 			if(rangeLoc > -1){
 
-				List<String> years = this.parseList(year, "-");
+				List<String> years = parseList(year, "-");
 
 				if (years.size() == 2){
 					logger.debug("year range: " + years.get(0) + "-" + years.get(1));

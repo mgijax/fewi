@@ -26,6 +26,7 @@ import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
+import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
 import org.jax.mgi.fewi.searchUtil.Paginator;
@@ -104,18 +105,24 @@ public class DiseasePortalController
     // static variables
     //--------------------//
 
-    //--------------------------//
-    // Disease Portal Query Form
-    //--------------------------//
+    // values for defining how we sort facet results
+    private static String ALPHA = "alphabetic";
+    private static String RAW = "raw";
+
+    //--------------------------------------------//
+    // Disease Portal Home Page (with Query Form)
+    //--------------------------------------------//
 
 	@RequestMapping(method=RequestMethod.GET)
 	public String getQueryForm(Model model,
 			HttpSession session) {
 		model.addAttribute(new DiseasePortalQueryForm());
 		model.addAttribute("locationsFileName","");
+		model.addAttribute("numDCol", 100);
+		model.addAttribute("isHomePageRequest", 1);
 
 		logger.debug("/diseasePortal --> GET");
-		return "disease_portal_query";
+		return "hmdc/disease_portal_home";
 	}
 
 	public String truncateText(String in) {
@@ -146,18 +153,10 @@ public class DiseasePortalController
     	String queryString = request.getQueryString();
     	// if the queryString is empty, this might be a POST request
     	if(!notEmpty(queryString)) queryString = FormatHelper.queryStringFromPost(request);
-//		else
-//		{
-//			// if this is a GET, resubmit as a POST
-//			request.setAttribute("query", query);
-//			return "forward:/mgi/diseasePortal/summary";
-//		}
 
 		logger.debug("query string: " + queryString);
 		logger.debug("query form: " + query);
 
-
-		//ModelAndView mav = new ModelAndView("disease_portal_query");
 		if(notEmpty(queryString) && !queryString.contains("tab=")) queryString += "&tab=gridtab";
 		model.addAttribute("querystring", queryString);
 
@@ -167,7 +166,7 @@ public class DiseasePortalController
 		boolean useLocationsFile = DiseasePortalController.usingLocationsQuery(query,session);
 		if(useLocationsFile) model.addAttribute("locationsFileName",session.getAttribute(DiseasePortalQueryForm.LOCATIONS_FILE_VAR_NAME));
 
-		return "disease_portal_query";
+		return "hmdc/disease_portal_query";
 
     }
 
@@ -209,7 +208,7 @@ public class DiseasePortalController
 
         logger.debug("-> diseasePortal -> uploadFile -> POST started");
 
-        ModelAndView mav = new ModelAndView("disease_portal_upload_results");
+        ModelAndView mav = new ModelAndView("hmdc/disease_portal_upload_results");
 
 		logger.debug("file field: " + field);
 		// default type is VCF
@@ -358,7 +357,7 @@ public class DiseasePortalController
       	AjaxUtils.prepareAjaxHeaders(response);
 
       	// setup view object
-      	ModelAndView mav = new ModelAndView("disease_portal_grid");
+      	ModelAndView mav = new ModelAndView("hmdc/disease_portal_grid");
 
       	// search for grid cluster objects
       	SearchResults<SolrHdpGridCluster> searchResults = getGridClusters(request, query, page,session);
@@ -580,7 +579,7 @@ public class DiseasePortalController
 	}
 
       	// setup view object
-      	ModelAndView mav = new ModelAndView("disease_portal_slimgrid_detail");
+      	ModelAndView mav = new ModelAndView("hmdc/disease_portal_slimgrid_detail");
 	mav.addObject("popupRows", popupRows);
 	mav.addObject("genoClusters", genoClusters);
 	mav.addObject("termColumns", mpTermColumnsToDisplay);
@@ -658,7 +657,7 @@ public class DiseasePortalController
 		}
 
       	// setup view object
-      	ModelAndView mav = new ModelAndView("disease_portal_grid_system_popup");
+      	ModelAndView mav = new ModelAndView("hmdc/disease_portal_grid_system_popup");
 		mav.addObject("popupRows", popupRows);
 		mav.addObject("genoClusters", genoClusters);
 		mav.addObject("termColumns", mpTermColumnsToDisplay);
@@ -779,7 +778,7 @@ public class DiseasePortalController
     	}
 
       	// setup view object
-      	ModelAndView mav = new ModelAndView("disease_portal_grid_disease_popup");
+      	ModelAndView mav = new ModelAndView("hmdc/disease_portal_grid_disease_popup");
 
 		mav.addObject("popupRows", popupRows);
 		mav.addObject("humanPopupRows", humanPopupRows);
@@ -808,7 +807,7 @@ public class DiseasePortalController
         }
         HdpGenoCluster genoCluster = genoClusters.get(0);
 
-        ModelAndView mav = new ModelAndView("disease_portal_all_geno_popups");
+        ModelAndView mav = new ModelAndView("hmdc/disease_portal_all_geno_popups");
         mav.addObject("genoCluster",genoCluster);
     	return mav;
     }
@@ -1644,6 +1643,40 @@ public class DiseasePortalController
 	// facets for HMDC pages
 	// -----------------------------------------------------------------//
 
+	// now unused, kept for future use
+	private Map<String, List<String>> facetGeneric (DiseasePortalQueryForm query, BindingResult result, HttpSession session, String facetType) {
+	    logger.debug(query.toString());
+	    String order = ALPHA;
+
+	    SearchParams params = new SearchParams();
+	    params.setFilter(parseQueryForm(query, session));
+
+	    SearchResults<SolrString> facetResults = null;
+
+	    if (FacetConstants.MARKER_FEATURE_TYPE.equals(facetType)){
+		facetResults = hdpFinder.getFeatureTypeFacet(params);
+	    } else {
+		facetResults = new SearchResults<SolrString>();
+	    }
+	    return parseFacetResponse(facetResults, order);
+	}
+
+	// now unused, kept for future use
+	private Map<String, List<String>> parseFacetResponse (SearchResults<SolrString> facetResults, String order) {
+
+	    Map<String, List<String>> m = new HashMap<String, List<String>>();
+	    List<String> l = new ArrayList<String>();
+
+	    if (facetResults.getResultFacets().size() >= facetLimit) {
+		l.add("Too many results to display. Modify your search or try another filter first.");
+		m.put("error", l);
+	    } else if (ALPHA.equals(order)) {
+		m.put("resultFacets", facetResults.getSortedResultFacets());
+	    } else {
+		m.put("resultFacets", facetResults.getResultFacets());
+	    }
+	    return m; 
+	}
 
 	/* gets a list of feature types for markers which match the
 	 * current query, returned as JSON

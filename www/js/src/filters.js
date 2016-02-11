@@ -337,8 +337,8 @@ filters.addFilter = function(
 	for (var k in buttons) {
 	    buttons[k].set('disabled', 'true');
 	}
-	filters.logObject(oResponse, 'oResponse');
-//	filters.populateDialogForFilter(filterName);
+	filters.dialogBox.setHeader(popupTitle);
+	filters.dialogBox.form.innerHTML = oPayload.error;
     };
 
     // build a callback for when retrieving data from the data source

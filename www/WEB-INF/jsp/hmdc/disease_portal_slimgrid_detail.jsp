@@ -42,7 +42,7 @@
 <tr><td></td><td>Darker colors indicate <span title="The blue squares indicate mouse data and get progressively darker with more supporting annotations. The lightest color represents one annotation. 2-5 annotations is represented by a darker shade, 6-99 annotations darker still and more than 100 annotations by the darkest color." style="color: blue; text-decoration: underline">more annotations</span></td></tr>
 </table><p>
 
-<%@ include file="/WEB-INF/jsp/disease_portal_grid_popup_grid.jsp" %>
+<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_grid_popup_grid.jsp" %>
 
 <script>
 document.title = '${marker.symbol} ';

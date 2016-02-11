@@ -21,6 +21,7 @@ import mgi.frontend.datamodel.VocabTerm;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.AlleleFinder;
+import org.jax.mgi.fewi.finder.BatchFinder;
 import org.jax.mgi.fewi.finder.GxdBatchFinder;
 import org.jax.mgi.fewi.finder.GxdFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
@@ -78,6 +79,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * GXDController This controller handles the Gene Expression Data
@@ -114,6 +117,9 @@ public class GXDController {
 	//private SolrMarkerKeyHunter mrkKeyHunter;
 
 	@Autowired
+	private BatchFinder batchFinder;
+
+	@Autowired
 	private MarkerFinder markerFinder;
 
 	@Autowired
@@ -129,6 +135,9 @@ public class GXDController {
 
 	@Autowired
 	private GXDLitController gxdLitController;
+
+	@Autowired
+	private BatchController batchController;
 
 	@Autowired
 	private GxdMatrixHandler gxdMatrixHandler;
@@ -152,6 +161,7 @@ public class GXDController {
 		ModelAndView mav = new ModelAndView("gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
+		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
 		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 
 		return mav;
@@ -161,11 +171,12 @@ public class GXDController {
 	@RequestMapping("differential")
 	public ModelAndView getDifferentialQueryForm() {
 
-		logger.debug("->getQueryForm started");
+		logger.debug("->getDifferentialQueryForm started");
 
 		ModelAndView mav = new ModelAndView("gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
+		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
 		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showDifferentialQueryForm",true);
 
@@ -177,12 +188,14 @@ public class GXDController {
 	 */
 	@RequestMapping("/report*")
 	public ModelAndView resultsSummaryExport(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query) {
 
 		logger.debug("generating report");
 		// build a batch finder object and pass it to the view for iteration
-		Filter qf = this.parseGxdQueryForm(query);
+		populateMarkerIDs(session, query);
+		Filter qf = parseGxdQueryForm(query);
 		SearchParams sp = new SearchParams();
 		sp.setFilter(qf);
 		List<Sort> sorts = new ArrayList<Sort>();
@@ -196,6 +209,77 @@ public class GXDController {
 		mav.addObject("queryString", request.getQueryString());
 		return mav;
 
+	}
+
+	/* look up the marker IDs corresponding to the batch submission fields
+	 * in 'form' and add them to the special field for them in 'form'
+	 */
+	private void populateMarkerIDs(HttpSession session, GxdQueryForm form) {
+		String idString = form.getIds();
+
+		// if no string of IDs and no uploaded file, just return
+		if ( ((idString == null) || (idString.length() == 0)) && (form.getHasFile() == false) ) {
+			return;
+		}
+
+		BatchQueryForm bqf = new BatchQueryForm();
+		bqf.setIdFile(form.getIdFile());
+		bqf.setIdColumn(form.getIdColumn());
+		bqf.setFileType(form.getFileType());
+		bqf.setIds(form.getIds());
+		bqf.setIdType(form.getIdType());
+
+		List<String> ids = batchController.getIDList(bqf);
+		List<String> markerIDs = batchController.getMarkerIDs(bqf, ids);
+
+		logger.debug("Found " + markerIDs.size() + " markers for " + ids.size() + " IDs");
+
+		session.setAttribute("idSet", ids);
+		if ((markerIDs != null) && (markerIDs.size() > 0)) {
+			form.setMarkerIDs(markerIDs);
+		}
+	}
+
+	// handling for batch searches
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView getSummaryPost(HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			MultipartHttpServletRequest request) {
+
+		logger.debug("->getSummaryPost started");
+
+		session.removeAttribute("idSet");
+		logger.debug("sessionId: " + session.getId());
+
+		populateMarkerIDs(session, query);
+		query.setBatchSubmission(true);
+		logger.debug("  -> Filters: " + parseGxdQueryForm(query));
+
+		return getBatchSearchForm(session, query, request);
+	}
+
+	// "batch search" query form
+	@RequestMapping("batchSearch")
+	public ModelAndView getBatchSearchForm(HttpSession session,
+			@ModelAttribute GxdQueryForm query,
+			HttpServletRequest request) {
+
+		logger.debug("->getBatchSearchForm started");
+
+		ModelAndView mav = new ModelAndView("gxd_query");
+		mav.addObject("sort", new Paginator());
+		mav.addObject("gxdQueryForm", new GxdQueryForm());
+		mav.addObject("gxdBatchQueryForm", query);
+		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
+		mav.addObject("showBatchSearchForm",true);
+
+		if (query.getBatchSubmission()) {
+			mav.addObject("queryString", "batchSubmission=true&" + request.getQueryString());
+		} else {
+			mav.addObject("queryString", request.getQueryString());
+		}
+
+		return mav;
 	}
 
 	/*
@@ -269,12 +353,14 @@ public class GXDController {
 	 */
 	@RequestMapping("marker/report*")
 	public ModelAndView resultsMarkerSummaryExport(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query) {
 
 		logger.debug("generating GXD marker report");
 		// build a batch finder object and pass it to the view for iteration
-		Filter qf = this.parseGxdQueryForm(query);
+		populateMarkerIDs(session, query);
+		Filter qf = parseGxdQueryForm(query);
 		SearchParams sp = new SearchParams();
 		sp.setFilter(qf);
 		// use gene symbol sort
@@ -491,16 +577,17 @@ public class GXDController {
 	 */
 	@RequestMapping(value="/batch")
 	public String forwardToBatch(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query) {
 
 		logger.debug("forwarding gxd markers to batch");
 
-
+		populateMarkerIDs(session, query);
 
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 
 		GxdBatchFinder gxdBatchFinder = new GxdBatchFinder(gxdFinder,params);
 		gxdBatchFinder.batchSize = 5000;
@@ -537,13 +624,16 @@ public class GXDController {
 	 */
 	@RequestMapping("/markers/json")
 	public @ResponseBody JsonSummaryResponse<GxdMarkerSummaryRow> gxdMarkerSummaryJson(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
 			BindingResult result) throws BindException {
 
 		logger.debug("gxdMarkerSummaryJson() started");
-		SearchResults<SolrGxdMarker> searchResults = this.getGxdMarkerResults(request, query, page, result);
+		populateMarkerIDs(session, query);
+
+		SearchResults<SolrGxdMarker> searchResults = getGxdMarkerResults(request, query, page, result);
 		List<SolrGxdMarker> markerList = searchResults.getResultObjects();
 
 		List<GxdMarkerSummaryRow> summaryRows = new ArrayList<GxdMarkerSummaryRow>();
@@ -573,13 +663,16 @@ public class GXDController {
 	 */
 	@RequestMapping("/assays/json")
 	public @ResponseBody JsonSummaryResponse<GxdAssaySummaryRow> gxdAssaySummaryJson(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
 			BindingResult result) throws BindException {
 
 		logger.debug("gxdAssaySummaryJson() started");
-		SearchResults<SolrGxdAssay> searchResults = this.getGxdAssays(request, query, page, result);
+		populateMarkerIDs(session, query);
+
+		SearchResults<SolrGxdAssay> searchResults = getGxdAssays(request, query, page, result);
 		List<SolrGxdAssay> assayList = searchResults.getResultObjects();
 
 		List<GxdAssaySummaryRow> summaryRows = new ArrayList<GxdAssaySummaryRow>();
@@ -609,6 +702,7 @@ public class GXDController {
 	 */
 	@RequestMapping("/results/json")
 	public @ResponseBody JsonSummaryResponse<GxdAssayResultSummaryRow> gxdResultsSummaryJson(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
@@ -616,7 +710,9 @@ public class GXDController {
 
 		logger.debug("gxdResultsSummaryJson() started");
 		logger.debug("querystring: " + request.getQueryString());
-		SearchResults<SolrAssayResult> searchResults = this.getGxdAssayResults(request, query, page, result);
+		populateMarkerIDs(session, query);
+
+		SearchResults<SolrAssayResult> searchResults = getGxdAssayResults(request, query, page, result);
 
 		List<SolrAssayResult> resultList = searchResults.getResultObjects();
 
@@ -641,13 +737,16 @@ public class GXDController {
 
 	@RequestMapping("/images/json")
 	public @ResponseBody JsonSummaryResponse<GxdImageSummaryRow> gxdImageSummaryJson(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@ModelAttribute Paginator page,
 			BindingResult result) throws BindException {
 
 		logger.debug("gxdImageSummaryJson() started");
-		SearchResults<SolrGxdImage> searchResults = this.getGxdImages(request, query, page, result);
+		populateMarkerIDs(session, query);
+
+		SearchResults<SolrGxdImage> searchResults = getGxdImages(request, query, page, result);
 		List<SolrGxdImage> imageList = searchResults.getResultObjects();
 		//List<SolrGxdAssay> assayList = searchResults.getResultObjects();
 
@@ -688,7 +787,7 @@ public class GXDController {
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 
 		// sort using byDefaultSort
 		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
@@ -712,12 +811,15 @@ public class GXDController {
 
 	@RequestMapping("/stageMatrixPopup/json")
 	public @ResponseBody GxdStageMatrixPopup gxdStageMatrixPopupJson(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@RequestParam(value="rowId") String rowId,
 			@RequestParam(value="colId") String colId
 			) {
 		logger.debug("gxdStageMatrixPopupJson() started");
+		populateMarkerIDs(session, query);
+
 		logger.debug("request=" + request.getQueryString());
 
 		// find the requested structure
@@ -731,13 +833,13 @@ public class GXDController {
 		// the object to return as a JSON object
 		GxdStageMatrixPopup gxdStageMatrixPopup = new GxdStageMatrixPopup(structureTerm.getPrimaryID(), structureTerm.getTerm());
 
-		int imageCount = this.getGxdImageCount(request,query);
+		int imageCount = getGxdImageCount(session, request,query);
 
 		// get the results for structure/stage
 		Paginator page = new Paginator(10000000);
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		SearchResults<SolrGxdMatrixResult> searchResults = gxdFinder.searchMatrixResults(params);
 		List<SolrGxdMatrixResult> assayResultList = searchResults.getResultObjects();
 		gxdStageMatrixPopup.setAssayResultList(assayResultList);
@@ -748,12 +850,15 @@ public class GXDController {
 
 	@RequestMapping("/geneMatrixPopup/json")
 	public @ResponseBody GxdGeneMatrixPopup gxdGeneMatrixPopupJson(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query,
 			@RequestParam(value="rowId") String rowId,
 			@RequestParam(value="colId") String colId
 			) {
 		logger.debug("gxdGeneMatrixPopupJson() started");
+		populateMarkerIDs(session, query);
+
 		logger.debug("request=" + request.getQueryString());
 
 		// find the requested structure
@@ -767,13 +872,13 @@ public class GXDController {
 		// the object to return as a JSON object
 		GxdGeneMatrixPopup gxdGeneMatrixPopup = new GxdGeneMatrixPopup(structureTerm.getPrimaryID(), structureTerm.getTerm());
 
-		int imageCount = this.getGxdImageCount(request,query);
+		int imageCount = getGxdImageCount(session, request,query);
 
 		// get the results for structure/gene
 		Paginator page = new Paginator(10000000);
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		SearchResults<SolrGxdMatrixResult> searchResults = gxdFinder.searchMatrixResults(params);
 		List<SolrGxdMatrixResult> assayResultList = searchResults.getResultObjects();
 		gxdGeneMatrixPopup.setAssayResultList(assayResultList);
@@ -793,6 +898,7 @@ public class GXDController {
 			HttpSession session) throws CloneNotSupportedException
 			{
 		logger.debug("gxdStageGridJson() started");
+		populateMarkerIDs(session, query);
 
 		boolean isFirstPage = page.getStartIndex() == 0;
 		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
@@ -822,7 +928,7 @@ public class GXDController {
 		// get the matrix results for this page
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		SearchResults<SolrGxdStageMatrixResult> searchResults = gxdFinder.searchStageMatrixResults(params);
 		logger.debug("got matrix results");
 		List<SolrGxdStageMatrixResult> resultList = searchResults.getResultObjects();
@@ -849,7 +955,7 @@ public class GXDController {
 			{
 				rowsWithChildren.add(edge.getParentId());
 			}
-			Set<String> idsWithData = this.getExactStructureIds(query);
+			Set<String> idsWithData = getExactStructureIds(query);
 			idsWithData.addAll(rowsWithChildren);
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
 			//logger.debug("pruned Rows = "+parentTerms.get(0).printTree());
@@ -868,7 +974,7 @@ public class GXDController {
 			Set<String> stagesInMatrix = (Set<String>) session.getAttribute(stagesInMatrixSessionId);
 			if(stagesInMatrix==null)
 			{
-				stagesInMatrix = this.getStagesInMatrix(originalQuery);
+				stagesInMatrix = getStagesInMatrix(originalQuery);
 				session.setAttribute(stagesInMatrixSessionId,stagesInMatrix);
 			}
 			logger.debug("adding stages to mapper: stages=" + stagesInMatrix);
@@ -901,6 +1007,7 @@ public class GXDController {
 			HttpSession session) throws CloneNotSupportedException
 			{
 		logger.debug("gxdGeneGridJson() started");
+		populateMarkerIDs(session, query);
 
 		boolean isFirstPage = page.getStartIndex() == 0;
 		boolean isChildrenOfQuery = childrenOf!=null && !childrenOf.equals("");
@@ -928,7 +1035,7 @@ public class GXDController {
 		// get the matrix results for this page
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		SearchResults<SolrGxdGeneMatrixResult> searchResults = gxdFinder.searchGeneMatrixResults(params);
 		logger.debug("got matrix results");
 		List<SolrGxdGeneMatrixResult> resultList = searchResults.getResultObjects();
@@ -953,7 +1060,7 @@ public class GXDController {
 			{
 				rowsWithChildren.add(edge.getParentId());
 			}
-			Set<String> idsWithData = this.getExactStructureIds(query);
+			Set<String> idsWithData = getExactStructureIds(query);
 			idsWithData.addAll(rowsWithChildren);
 
 			parentTerms = gxdMatrixHandler.pruneEmptyRows(parentTerms,idsWithData);
@@ -989,41 +1096,49 @@ public class GXDController {
 
 	@RequestMapping("/markers/totalCount")
 	public @ResponseBody Integer getGxdMarkerCount(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		params.setPageSize(0);
 		return gxdFinder.getMarkerCount(params);
 	}
 	@RequestMapping("/assays/totalCount")
 	public @ResponseBody Integer getGxdAssayCount(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		params.setPageSize(0);
 
 		return gxdFinder.getAssayCount(params);
 	}
 	@RequestMapping("/results/totalCount")
 	public @ResponseBody Integer getGxdResultCount(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		params.setPageSize(0);
 
 		return gxdFinder.getAssayResultCount(params);
 	}
 	@RequestMapping("/images/totalCount")
 	public @ResponseBody Integer getGxdImageCount(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
 		params.setPageSize(0);
@@ -1033,9 +1148,11 @@ public class GXDController {
 
 	@RequestMapping("/totalCounts")
 	public @ResponseBody GxdCountsSummary getGxdCounts(
+			HttpSession session,
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
 		// we want to get these counts as fast as possible
@@ -1173,6 +1290,11 @@ public class GXDController {
 		String nomenclature = query.getNomenclature().trim();
 		if(nomenclature != null && !nomenclature.equals(""))
 		{
+			// suppress count and link if comma-delimited list of
+			// marker symbols in nomen field
+			if (nomenclature.indexOf(",") >= 0) {
+				return null;
+			}
 			setLitQuery=true;
 			gxdLitForm.setNomen(nomenclature);
 		}
@@ -1714,8 +1836,20 @@ public class GXDController {
 		String nomenclature = query.getNomenclature();
 		String annotationId = query.getAnnotationId();
 		if(nomenclature!=null && !nomenclature.equals("")) {
-			Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE, nomenclature);
-			if(nomenFilter != null) queryFilters.add(nomenFilter);
+			if (nomenclature.indexOf(",") >= 0) {
+				List<Filter> nomenFilters = new ArrayList<Filter>();
+				for (String s: nomenclature.split(",")) {
+					Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE, s);
+					if(nomenFilter != null) nomenFilters.add(nomenFilter);
+				}
+
+				if (nomenFilters.size() > 0) {
+					queryFilters.add(Filter.or(nomenFilters));
+				}
+			} else {
+				Filter nomenFilter = FilterUtil.generateNomenFilter(SearchConstants.MRK_NOMENCLATURE, nomenclature);
+				if(nomenFilter != null) queryFilters.add(nomenFilter);
+			}
 		}
 		// vocab annotations
 		else if(annotationId !=null && !annotationId.equals("")) {
@@ -1860,6 +1994,14 @@ public class GXDController {
 			queryFilters.add(Filter.or(aFilters));
 		}
 
+		// do we have a list of marker IDs (via the Batch Search tab)
+
+		List<String> markerIDs = query.getMarkerIDs();
+		if ((markerIDs != null) && (markerIDs.size() > 0)) {
+			Filter markerIDsFilter = new Filter(SearchConstants.MRK_ID, markerIDs, Filter.Operator.OP_IN);
+			queryFilters.add(markerIDsFilter);
+		}
+
 		// And all base filter sections
 		Filter gxdFilter = new Filter();
 		if(queryFilters.size() > 0)
@@ -1881,8 +2023,9 @@ public class GXDController {
 
 	// TODO: Returns a json mgi id list based on the filters that come in from the query form
 	@RequestMapping("/markers/idList")
-	public @ResponseBody String getIdList (HttpServletRequest request, @ModelAttribute GxdQueryForm query) {
+	public @ResponseBody String getIdList (HttpSession session, HttpServletRequest request, @ModelAttribute GxdQueryForm query) {
 
+		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
 		params.setPageSize(20000);
@@ -2058,9 +2201,9 @@ public class GXDController {
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 
-		params.setSorts(this.parseMarkerSorts(request));
+		params.setSorts(parseMarkerSorts(request));
 		//params.setSorts(Arrays.asList(IndexConstants.MRK_BY_SYMBOL));
 
 		// perform query and return results as json
@@ -2090,9 +2233,9 @@ public class GXDController {
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 
-		params.setSorts(this.parseAssaySorts(request));
+		params.setSorts(parseAssaySorts(request));
 		//params.setSorts(Arrays.asList(IndexConstants.MRK_BY_SYMBOL));
 
 		// perform query and return results as json
@@ -2122,8 +2265,8 @@ public class GXDController {
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
-		params.setSorts(this.parseAssayResultsSorts(request));
+		params.setFilter(parseGxdQueryForm(query));
+		params.setSorts(parseAssayResultsSorts(request));
 
 		// perform query and return results as json
 		logger.debug("params parsed");
@@ -2152,7 +2295,7 @@ public class GXDController {
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
 		params.setPaginator(page);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 
 		// sort using byDefaultSort
 		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
@@ -2179,7 +2322,7 @@ public class GXDController {
 		String order = ALPHA;
 
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 
 		SearchResults<SolrString> facetResults = null;
 
@@ -2204,17 +2347,19 @@ public class GXDController {
 			facetResults = new SearchResults<SolrString>();
 		}
 
-		return this.parseFacetResponse(facetResults, order);
+		return parseFacetResponse(facetResults, order);
 	}
 
 	/* gets a list of systems for the system facet list, returned as JSON
 	 */
 	@RequestMapping("/facet/system")
 	public @ResponseBody Map<String, List<String>> facetSystem(
+			HttpSession session,
 			@ModelAttribute GxdQueryForm query,
 			BindingResult result) {
 
-		return this.facetGeneric(query, result, FacetConstants.GXD_SYSTEM);
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result, FacetConstants.GXD_SYSTEM);
 	}
 
 	/* gets a list of assay types for the system facet list, returned as
@@ -2222,10 +2367,12 @@ public class GXDController {
 	 */
 	@RequestMapping("/facet/assayType")
 	public @ResponseBody Map<String, List<String>> facetAssayType(
+			HttpSession session,
 			@ModelAttribute GxdQueryForm query,
 			BindingResult result) {
 
-		return this.facetGeneric(query, result,
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
 				FacetConstants.GXD_ASSAY_TYPE);
 	}
 
@@ -2234,10 +2381,12 @@ public class GXDController {
 	 */
 	@RequestMapping("/facet/detected")
 	public @ResponseBody Map<String, List<String>> facetDetected(
+			HttpSession session,
 			@ModelAttribute GxdQueryForm query,
 			BindingResult result) {
 
-		return this.facetGeneric(query, result,
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
 				FacetConstants.GXD_DETECTED);
 	}
 
@@ -2246,10 +2395,12 @@ public class GXDController {
 	 */
 	@RequestMapping("/facet/theilerStage")
 	public @ResponseBody Map<String, List<String>> facetTheilerStage(
+			HttpSession session,
 			@ModelAttribute GxdQueryForm query,
 			BindingResult result) {
 
-		return this.facetGeneric(query, result,
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
 				FacetConstants.GXD_THEILER_STAGE);
 	}
 
@@ -2258,10 +2409,12 @@ public class GXDController {
 	 */
 	@RequestMapping("/facet/wildtype")
 	public @ResponseBody Map<String, List<String>> facetWildtype(
+			HttpSession session,
 			@ModelAttribute GxdQueryForm query,
 			BindingResult result) {
 
-		return this.facetGeneric(query, result,
+		populateMarkerIDs(session, query);
+		return facetGeneric(query, result,
 				FacetConstants.GXD_WILDTYPE);
 	}
 
@@ -2329,7 +2482,7 @@ public class GXDController {
 	{
 		SearchParams params = new SearchParams();
 		params.setPageSize(100000);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		List<String> parentIds = new ArrayList<String>();
 		for(GxdMatrixRow term : parentTerms)
 		{
@@ -2342,7 +2495,7 @@ public class GXDController {
 	{
 		SearchParams params = new SearchParams();
 		params.setPageSize(100000);
-		params.setFilter(this.parseGxdQueryForm(query));
+		params.setFilter(parseGxdQueryForm(query));
 		List<String> parentIds = new ArrayList<String>();
 		for(GxdMatrixRow term : parentTerms)
 		{

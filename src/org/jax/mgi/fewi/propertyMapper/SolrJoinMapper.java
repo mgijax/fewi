@@ -32,7 +32,7 @@ public class SolrJoinMapper {
 	 * @param fromIndex
 	 * @param fromKey
 	 */
-	public SolrJoinMapper(String toIndexUrl,String toKey,String fromIndex,String fromKey) {
+	public SolrJoinMapper(String toIndexUrl, String toKey, String fromIndex, String fromKey) {
 		this.toIndexUrl = toIndexUrl;
 		this.toKey = toKey;
 		this.fromIndex = fromIndex;
@@ -40,7 +40,7 @@ public class SolrJoinMapper {
 	}
 	
 	// Include Optional filter string for the joinTo index
-	public SolrJoinMapper(String toIndexUrl,String toKey,String fromIndex,String fromKey,String childFilter) {
+	public SolrJoinMapper(String toIndexUrl, String toKey, String fromIndex, String fromKey, String childFilter) {
 		this.toIndexUrl = toIndexUrl;
 		this.toKey = toKey;
 		this.fromIndex = fromIndex;
@@ -56,11 +56,7 @@ public class SolrJoinMapper {
 	 * Get the join clause to append to the solr query
 	 */
 
-	public String getJoinClause(String queryString) {
-		return getJoinClause(queryString,null);
-	}
-
-	public String getJoinClause(String queryString,String extraJoinClause) {
+	public String getJoinClause(String queryString, String extraJoinClause) {
 		boolean toFilterEmpty = toFilter==null || toFilter.trim().equals("");
 		boolean extraJoinClauseEmpty = extraJoinClause==null || extraJoinClause.trim().equals("");
 		

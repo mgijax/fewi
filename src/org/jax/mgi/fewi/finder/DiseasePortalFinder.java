@@ -48,7 +48,7 @@ public class DiseasePortalFinder
 	// Group results by marker key to return the distinct matching marker keys
 	public List<String> getMarkerKeys(SearchParams params)
 	{
-		SearchResults<SolrDiseasePortalMarker> results = this.huntMarkersGroup(params,true);
+		SearchResults<SolrDiseasePortalMarker> results = huntMarkersGroup(params,true);
 
 		return results.getResultKeys();
 	}

@@ -15,6 +15,7 @@
 
 # Weekly Proto
 solr.server1.url=http://scrumdog.informatics.jax.org:8992/solr/
+solr.server2.url=http://scrumdog.informatics.jax.org:8983/solr/
 
 
 #-------------------------------------------------------------------------------

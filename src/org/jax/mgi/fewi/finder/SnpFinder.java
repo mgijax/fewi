@@ -1,47 +1,161 @@
 package org.jax.mgi.fewi.finder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 
-
-/*-------*/
-/* class */
-/*-------*/
+import org.jax.mgi.fewi.hunter.SolrSNPAlleleSearchHunter;
+import org.jax.mgi.fewi.hunter.SolrSNPDataHunter;
+import org.jax.mgi.fewi.hunter.SolrSNPFunctionClassFacetHunter;
+import org.jax.mgi.fewi.hunter.SolrSNPSearchHunter;
+import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
+import org.jax.mgi.fewi.searchUtil.SearchParams;
+import org.jax.mgi.fewi.searchUtil.SearchResults;
+import org.jax.mgi.fewi.summary.ConsensusSNPSummaryRow;
+import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
+import org.jax.mgi.snpdatamodel.ConsensusSNP;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /*
- * This finder is responsible for finding SNP data
- * 
- * NOTE: This is just for testing. It is not used for anything yet. PLEASE IGNORE
- * 
- * 	-kstone
+ * This finder is responsible for finding snp(s)
  */
 
-//@Repository
-//@Transactional(value="transactionManagerSnp",readOnly=true)
+@Repository
 public class SnpFinder {
 
-    /*--------------------*/
-    /* instance variables */
-    /*--------------------*/
+	@Autowired
+	private SolrSNPDataHunter snpDataHunter;
 
-    private final Logger logger = LoggerFactory.getLogger(SnpFinder.class);
-    
-//    @Autowired
-//	private SessionFactory sessionFactorySnp;
+	@Autowired
+	private SolrSNPFunctionClassFacetHunter snpFunctionClassFacetHunter;
+
+	@Autowired
+	private SolrSNPSearchHunter snpSearchHunter;
+	
+	@Autowired
+	private SolrSNPAlleleSearchHunter snpAlleleSearchHunter;
+
+//	public SearchResults<ConsensusSNP> getSnps(SearchParams searchParams) {
+//		SearchResults<ConsensusSNP> searchResults = new SearchResults<ConsensusSNP>();
+//		snpSearchHunter.hunt(searchParams, searchResults, SearchConstants.SNPID);
 //
-//    /*---------------------------------*/
-//    /* Retrieval of SNP data
-//    /*---------------------------------*/
-//	public List<SnpStrain> getSnpStrains()
-//    {
-//    	Session s = sessionFactorySnp.openSession();
-//    	//Session s = sessionFactorySnp.getCurrentSession();
-//    	//Session s = sessionFactorySnp.getCurrentSession();
-//    	Criteria query = s.createCriteria(SnpStrain.class);
-//    	query.add(Restrictions.eq("snpStrainKey", 14));
-//    	query.addOrder(Order.asc("sequenceNum"));
-//    	List<SnpStrain> strains = query.list();
-//    	s.close();
-//    	return strains;
-//    }
+//		SearchParams dataSearchParams = new SearchParams();
+//		Filter snpIdFilter = new Filter(SearchConstants.SNPID, searchResults.getResultKeys(), Filter.Operator.OP_IN);
+//		dataSearchParams.setFilter(snpIdFilter);
+//		
+//		searchResults = new SearchResults<ConsensusSNP>();
+//		snpDataHunter.hunt(dataSearchParams, searchResults);
+//
+//		return searchResults;
+//	}
+	
+	public SearchResults<ConsensusSNP> getSnp(SearchParams searchParams) {
+
+		SearchResults<ConsensusSNP> searchResults = new SearchResults<ConsensusSNP>();
+		snpDataHunter.hunt(searchParams, searchResults);
+
+		return searchResults;
+	}
+
+	public SearchResults<ConsensusSNPSummaryRow> getSummarySnps(SearchParams searchParams, List<String> matchedMarkerIds, Filter sameDiffFilter) {
+		SearchResults<ConsensusSNP> searchResults1 = new SearchResults<ConsensusSNP>();
+
+		if(sameDiffFilter != null) {
+			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
+		} else {
+			snpSearchHunter.hunt(searchParams, searchResults1);
+		}
+		
+		HashMap<String, String> ml = new HashMap<String, String>();
+		for(String markerId: matchedMarkerIds) {
+			ml.put(markerId, markerId);
+		}
+
+		SearchParams dataSearchParams = new SearchParams();
+		Filter snpIdFilter = new Filter(SearchConstants.SNPID, searchResults1.getResultKeys(), Filter.Operator.OP_IN);
+		dataSearchParams.setFilter(snpIdFilter);
+		dataSearchParams.setPageSize(searchParams.getPageSize());
+		
+		SearchResults<ConsensusSNP> searchResults2 = new SearchResults<ConsensusSNP>();
+		snpDataHunter.hunt(dataSearchParams, searchResults2);
+		
+		List<ConsensusSNPSummaryRow> summaryRows = new ArrayList<ConsensusSNPSummaryRow>();
+		
+		
+		// <Start Sorting>
+		// <Chromosome, <StartCoodinate, Snp>>
+		TreeMap<Integer, TreeMap<Integer, ConsensusSNP>> sortedMap = new TreeMap<Integer, TreeMap<Integer, ConsensusSNP>>();
+
+		// Sort by chromosome then by start coordinate
+		for(ConsensusSNP snp: searchResults2.getResultObjects()) {
+			if(snp.getConsensusCoordinates() != null && snp.getConsensusCoordinates().size() > 0) {
+				
+				ConsensusCoordinateSNP coord = snp.getConsensusCoordinates().get(0);
+				TreeMap<Integer, ConsensusSNP> coordinateMap = null;
+				
+				int chromosomeLookup = 0;
+				String chromosome = coord.getChromosome();
+				switch (chromosome) {
+					case "X":
+						chromosomeLookup = 210;
+						break;
+					case "Y":
+						chromosomeLookup = 230;
+						break;
+					case "XY":
+						chromosomeLookup = 250;
+						break;
+					case "UN":
+						chromosomeLookup = 270;
+						break;
+					case "MT":
+						chromosomeLookup = 290;
+						break;
+					default:
+						chromosomeLookup = Integer.parseInt(chromosome);
+						break;
+				}
+
+				coordinateMap = sortedMap.get(chromosomeLookup);
+				if(coordinateMap == null) {
+					coordinateMap = new TreeMap<Integer, ConsensusSNP>();
+					sortedMap.put(chromosomeLookup, coordinateMap);
+				}
+				coordinateMap.put(coord.getStartCoordinate(), snp);
+			}
+		}
+
+		// Loop and Add
+		for(Integer chromosome: sortedMap.keySet()) {
+			for(Integer startCoordinate: sortedMap.get(chromosome).keySet()) {
+				summaryRows.add(new ConsensusSNPSummaryRow(sortedMap.get(chromosome).get(startCoordinate), ml));
+			}
+		}
+		// </End Sorting>
+		
+		
+		SearchResults<ConsensusSNPSummaryRow> ret = new SearchResults<ConsensusSNPSummaryRow>();
+		ret.setResultKeys(searchResults1.getResultKeys());
+		ret.setTotalCount(searchResults1.getTotalCount());
+		ret.setResultFacets(searchResults1.getResultFacets());
+		ret.setResultObjects(summaryRows);
+		return ret;
+	}
+	
+	/* get the function classes (as facets) for the consensus SNPs
+	 * matching the current query
+	 */
+	public List<String> getFunctionClassFacets(SearchParams params) {
+		SearchResults<ConsensusSNP> results = new SearchResults<ConsensusSNP>();
+		snpFunctionClassFacetHunter.hunt(params, results);
+		return results.getResultFacets();
+	}
+
+	public String debugFilter(Filter f) {
+		return snpSearchHunter.debugFilter(f);
+	}
+
 }

@@ -28,7 +28,9 @@
 
 <!-- Table and Wrapping div -->
 
-<div id="hdpSystemPopupHeader">Data for ${gridClusterString} and ${termHeader}</div>
+<div id="hdpSystemPopupHeader">
+  Data for ${gridClusterString} and ${termHeader} <c:if test="${ termHeader!='normal phenotype'}"> abnormalities </c:if>
+</div>
 
 <div id="markerList">
 <c:forEach var="marker" items="${markers}" varStatus="status">
@@ -41,10 +43,13 @@
 
 <table id="hdpSystemPopupLegend">
 <tr>
-   <td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td>
+	<td>*</td><td>Aspects of the system are reported to show a normal phenotype.</td></tr><tr>
+	<td class="bsn_legend">!</td><td>Indicates phenotype varies with strain background.</td></tr><tr>
+	<td></td><td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td>
 </tr>
 </table>
-<%@ include file="/WEB-INF/jsp/disease_portal_grid_popup_grid.jsp" %>
+
+<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_grid_popup_grid.jsp" %>
 
 </body>
 </html>

@@ -41,9 +41,23 @@
 {
     display: none;
 }
+#hmdcTabsUL
+{
+    margin-left: 30px;
+    margin-right: 30px;
+    border: none;
+}
 </style>
 
 <div id="diseasePortalSearch">
+
+<div id="hmdcTabs" class="yui-navset">
+	<!--
+	<ul id="hmdcTabsUL" class="yui-nav">
+		<li class="selected"><a href="#model-finder"><em>Model Finder</em></a></li>
+		<li><a href="#advanced-search"><em>Advanced Search</em></a></li>
+	</ul>
+	-->
 
 <div id="hdpPageWrapper" >
 
@@ -98,7 +112,7 @@
     <div class='relativePos'>
       <div style="position:absolute; top:6px; left:10px; ">
         <span class='queryHeaderText'>Search by disease</br> or phenotype terms</span>
-			<div style="padding-top: 12px;">
+			<div style="padding-top: 9px;">
         <span style="font-style: italic;font-size: 11px;">Click "GO" to search by entered text without selecting a term from the list.</span>
 			</div>
       </div>
@@ -107,7 +121,7 @@
 		<span style="font-size: smaller;">
       Ex:
       <a href="${configBean.FEWI_URL}diseasePortal/summary?phenotypes=105830">105830</a>,
-      <a onclick="document.forms['diseasePortalQueryForm'].phenotypes.value='Autism AND &quot;social behavior&quot;';document.forms['diseasePortalQueryForm'].numDCol.value=100;document.forms['diseasePortalQueryForm'].submit();" href="#">Autism AND "social behavior"</a>
+      <a onclick="document.forms['diseasePortalQueryForm'].phenotypes.value='Autism AND &quot;social behavior&quot;';document.forms['diseasePortalQueryForm'].submit();" href="#">Autism AND "social behavior"</a>
 		</span>
       <br/><br/>
 	Use quotes for exact match. <a onclick="javascript:openUserhelpWindow('MISC_boolean_search_help.shtml#boolean_operators'); return false;" href="MISC_boolean_search_help.shtml#boolean_operators">Hints</a> for using AND, OR, NOT, quotes, partial word matching.
@@ -125,7 +139,9 @@
     <input type="hidden" name="fGene" id="fGene" />
 	<input type="hidden" name="fHeader" id="fHeader" />
 	<input type="hidden" name="referseF" id="reverseF"/>
+	<c:if test="${empty isHomePageRequest}">
 	<input type="hidden" name="numDCol" id=numDCol />
+      </c:if>
     <input id="submit1" style="position:absolute; top:330px; left:40px; width:60px; font-size:20px;" name="submitgo" class="formButtons" value="GO" type="submit"><br/>
     <input id="resetButton" class="formButtons" style="position:absolute; top:337px; left:110px; width:60px; font-size:14px;" type="reset" >
 
@@ -220,6 +236,9 @@
     </div>
   </div> <!-- hdpQueryFormWrapper -->
 </div> <!-- hdpPageWrapper -->
+
+</div> <!-- HMDC tabs -->
+
 </div> <!--  diseasePortalSearch -->
 
 <script type="text/javascript">

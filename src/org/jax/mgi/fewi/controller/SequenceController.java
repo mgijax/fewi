@@ -361,7 +361,7 @@ public class SequenceController {
 
         // generate search parms object to pass to finders
         SearchParams params = new SearchParams();
-        params.setSorts(this.genSorts(request));
+        params.setSorts(genSorts(request));
         params.setPaginator(page);
 
         // parameter parsing

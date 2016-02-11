@@ -170,7 +170,7 @@ public class MPController {
 
 	// 8. bundle into MPSummaryRow objects
 
-	List<MPSummaryRow> rows = this.buildSummaryRows(annotList); 
+	List<MPSummaryRow> rows = buildSummaryRows(annotList); 
 	mav.addObject("genotypeCount", rows.size());
 
 	// 9. add the rows to the MAV and proceed to the JSP for formatting

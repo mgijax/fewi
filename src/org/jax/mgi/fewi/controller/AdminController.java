@@ -49,7 +49,7 @@ public class AdminController {
         logger.debug("->getAdminPage started");
 
         ModelAndView mav = new ModelAndView("admin");
-	mav = this.populateMav(mav);
+	mav = populateMav(mav);
 
         return mav;
     }
@@ -64,7 +64,7 @@ public class AdminController {
         logger.debug("->getAdminPageWithGC started");
 
         ModelAndView mav = new ModelAndView("admin");
-	mav = this.populateMav(mav);
+	mav = populateMav(mav);
 
         mav.addObject("gc", "gc");
 
@@ -105,7 +105,7 @@ public class AdminController {
 	MarkerController.clearMinimapCache();
  
         ModelAndView mav = new ModelAndView("admin");
-	mav = this.populateMav(mav);
+	mav = populateMav(mav);
         mav.addObject("clear", "clear");
 
         return mav;

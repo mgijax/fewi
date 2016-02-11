@@ -77,7 +77,7 @@ public class HomologyController {
 		// now we can go ahead and pass off to the normal code for links by
 		// HomoloGene ID
 
-		return this.prepareHomologyClassByID(hgID);
+		return prepareHomologyClassByID(hgID);
 	}
 
 	@RequestMapping(value="/key/{dbKey:.+}", method = RequestMethod.GET)
@@ -110,7 +110,7 @@ public class HomologyController {
 		// now we can go ahead and pass off to the normal code for links by
 		// HomoloGene ID
 
-		return this.prepareHomologyClassByID(hgID);
+		return prepareHomologyClassByID(hgID);
 	}
 
 	//--------------------//
@@ -121,7 +121,7 @@ public class HomologyController {
 
 		logger.debug("->homologyDetailByID started");
 
-		return this.prepareHomologyClassByID(homologyID);
+		return prepareHomologyClassByID(homologyID);
 	}
 
 	//------------------------------------------------------------
@@ -131,7 +131,7 @@ public class HomologyController {
 	private ModelAndView homologyClusterDetailByKey(@PathVariable("clusterKey") String clusterKey) {
 
 		HomologyCluster homology = homologyFinder.getClusterByKey(clusterKey);
-		return this.prepareHomologyClass(homology);
+		return prepareHomologyClass(homology);
 	}
 
 	// code shared to send back a HomoloGene class detail page, regardless of
@@ -149,7 +149,7 @@ public class HomologyController {
 		}
 		// success - we have a single object
 
-		return this.prepareHomologyClass(homologyList.get(0));
+		return prepareHomologyClass(homologyList.get(0));
 	}
 
 	// code shared to send back a HomoloGene class detail page, regardless of

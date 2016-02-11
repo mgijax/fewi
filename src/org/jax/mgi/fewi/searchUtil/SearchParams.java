@@ -67,7 +67,6 @@ public class SearchParams {
 	 */
 	public void setFilter(Filter filter) {
 		this.filter = filter;
-		return;
 	}
 
 	/**
@@ -82,7 +81,6 @@ public class SearchParams {
 	 */
 	public void addSort(Sort sort) {
 		sorts.add(sort);
-		return;
 	}
 
 	/**
@@ -90,7 +88,6 @@ public class SearchParams {
 	 */
 	public void setSorts(List<Sort> sorts) {
 		this.sorts = sorts;
-		return;
 	}
 	
 	/**

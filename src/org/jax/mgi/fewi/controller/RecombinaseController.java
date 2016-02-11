@@ -119,8 +119,8 @@ public class RecombinaseController {
         // set up search parameters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
-        params.setSorts(this.parseSummarySorts(request));
-        params.setFilter(this.parseRecombinaseQueryForm(query));
+        params.setSorts(parseSummarySorts(request));
+        params.setFilter(parseRecombinaseQueryForm(query));
         params.setIncludeMetaHighlight(true);
         params.setIncludeSetMeta(true);
 
@@ -272,8 +272,8 @@ public class RecombinaseController {
         // generate search parms object;  add pagination, sorts, and filters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
-        params.setSorts(this.genRecomSummarySorts(request));
-        params.setFilter(this.genFilters(query));
+        params.setSorts(genRecomSummarySorts(request));
+        params.setFilter(genFilters(query));
 
         // perform query, and pull out the requested objects
         searchResults = recombinaseFinder.getAssaySummary(params);
@@ -357,7 +357,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getDriverFacet(params);
 
@@ -383,7 +383,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getInducerFacet(params);
 
@@ -409,7 +409,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getSystemDetectedFacet(params);
 
@@ -435,7 +435,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getSystemNotDetectedFacet(params);
 

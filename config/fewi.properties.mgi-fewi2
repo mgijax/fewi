@@ -21,9 +21,11 @@
 
 # Weekly Proto
 solr.server1.url=http://mgi-fewi2.jax.org:9995/solr/
+solr.server2.url=http://mgi-fewi2.jax.org:8983/solr/
 
 # Front-end development indexes
 #solr.server1.url=http://cardolan:8985/solr/
+#solr.server2.url=http://cardolan:8983/solr/
 
 
 #-------------------------------------------------------------------------------

@@ -115,8 +115,20 @@ $(function(){
 </script>
 </c:if>
 
+<c:if test="${showBatchSearchForm}">
+<script>
+$(function(){
+	// open the batch search tab
+	showBatchSearchForm();
+});
+</script>
+</c:if>
+
 <script type="text/javascript">
 prepFilters();
+<c:if test="${not empty queryString}">
+var querystring = "${queryString}";
+</c:if>
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

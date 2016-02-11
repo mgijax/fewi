@@ -79,7 +79,7 @@ public class HibernateQueryFormOptionHunter
 
         List<QueryFormOption> bm = new ArrayList<QueryFormOption>();
         int start = 0;
-        for (QueryFormOption item: qr){
+        for (QueryFormOption item: qr) {
         	if (start >= startIndex && start < (startIndex + pageSize) ) {
         		bm.add(item);
         	}

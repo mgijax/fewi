@@ -614,6 +614,7 @@ public class FormatHelper {
 	}
 
 	public static String encodeQueryString(String query) {
+		if (query == null) { return null; }
 		try {
 			return UriUtils.encodeQuery(query,"UTF-8").replaceAll("%E2%80%99", "%27").replaceAll("'", "%27");
 			// Removed the single quote for %27 if this is not done all links will break due to "javascript('var=peyer's')"

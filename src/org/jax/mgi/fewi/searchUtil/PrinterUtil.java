@@ -49,12 +49,21 @@ public class PrinterUtil {
 
 	public void generateOutput(Logger logger) {
 		logger.debug(output);
+		output = "";
 	}
+
 	public void generateOutput(PrintStream out) {
 		out.println(output);
+		output = "";
+	}
+	
+	public String generateHTMLOutput() {
+		return "<pre>" + generateOutput() + "</pre>";
 	}
 
 	public String generateOutput() {
-		return output;
+		String ret = output;
+		output = "";
+		return ret;
 	}
 }
