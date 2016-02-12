@@ -6,7 +6,7 @@
 	</div>
 	<div class="detail <%=rightTdStyles.getNext() %>" style="padding-left: 10px">
 	<span class="small"><i>MGI genes/markers associated with the SNP</i></span><br/>
-	<section class="summarySec1 open">
+	<section class="summarySec1 wide" style="overflow:auto;">
 	<c:set var="tableCt" value="0"/>
 	<c:forEach var="cc" items="${snp.consensusCoordinates}">
 		<c:set var="tableCt" value="${tableCt + 1}"/>
