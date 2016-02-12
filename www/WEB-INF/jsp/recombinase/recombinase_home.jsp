@@ -13,6 +13,8 @@
 	keywords="MGI, mgi, mice, mouse, murine, mus musculus, genes, genome, genomic, recombinase activity, cre, transgene, knock-in, allele, promoter, driver, DNA recombination, loxP, conditional mutagenesis, knock-out, inducible,construct, specificity pattern, tissue, assay, recombinase reporter, reporter gene, result, staining, specimen, age, system, activity"
 />
 
+<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
+
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/home/homepages.css">
 <link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/home/recombinase.css">
 
