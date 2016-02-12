@@ -16,7 +16,7 @@
 	%>
 	<span class="small"><i>Strain alleles of submitted assays, and consensus values for this SNP</i></span><br/>
 	<a onClick="javascript:openUserhelpWindow('SNP_legend_help.shtml'); return false;" href="${configBean.USERHELP_URL}SNP_legend_help.shtml" class="bold" style="line-height: 200%">Legend</a><br/>
-		<section class="summarySec1 open">
+		<section class="summarySec1 wide" style="overflow:auto;">
 			<table id="snpAssays">
 			    <c:if test="${not empty subSnpsWithStrains}">
 				<!-- SubSNP header row -->
