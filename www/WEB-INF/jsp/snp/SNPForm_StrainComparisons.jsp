@@ -30,7 +30,7 @@
 
 				Return SNPs with alleles in the selected strains:<br/><br/>
 				<fewi:radio name="searchBySameDiff" divider="<br/>" idPrefix="searchBySameDiffOptionsList" items="${searchBySameDiffOptions}" value="${snpQueryForm.searchBySameDiff}" />
-				(only applies if the Reference is selected)<br/>
+				(only applies if a Reference is selected)<br/>
 			</div>
 		</td>
 	</tr>
