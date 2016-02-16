@@ -469,6 +469,9 @@ public class MarkerController {
 
 	private void setupPageVariables(ModelAndView mav, Marker marker) {
 
+		// Sets up variables from the queryform database
+		getQueryForm();
+
 		// add an IDLinker to the mav for use at the JSP level
 		mav.addObject("idLinker", idLinker);
 
