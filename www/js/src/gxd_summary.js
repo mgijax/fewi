@@ -129,12 +129,14 @@ handleNavigation = function (request, calledLocally) {
 	var foundParams = true;
 	// test if there is a form that needs to be populated
 	if (typeof reverseEngineerFormInput == 'function')
+		log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
 	if (typeof getQueryString == 'function')
-		window.querystring = getQueryString();
+		window.querystring = getQueryString().replace('&idFile=&', '&');
+		//window.querystring = getQueryString();
 
 	// we need the tab state of the request
 	var currentTab = getCurrentTab();
@@ -152,6 +154,7 @@ handleNavigation = function (request, calledLocally) {
 
 	if(!foundParams)
 	{
+		log("found empty request");
 		// this is how we handle an empty request.
 		if(typeof closeSummaryControl == 'function')
 			closeSummaryControl();
@@ -287,7 +290,7 @@ function getQueryStringWithFilters() {
 	if (filterString) {
 		querystringWithFilters = querystringWithFilters + "&" + filterString;
 	}
-	return querystringWithFilters;
+	return querystringWithFilters.replace("&idFile=&", "&");
 }
 
 //refresh all four counts in each tab via AJAX
@@ -873,7 +876,7 @@ var structureStageGrid = function()
 
 	var buildGrid = function()
 	{
-		if (typeof getQueryString == 'function') window.querystring = getQueryString();
+		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&', '&');
 
 		currentStageGrid = GxdTissueMatrix({
 			target : "sgTarget",
@@ -965,7 +968,7 @@ var structureGeneGrid = function()
 
 	var buildGrid = function()
 	{
-		if (typeof getQueryString == 'function') window.querystring = getQueryString();
+		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({
 			target : "ggTarget",
@@ -1080,7 +1083,7 @@ function historyInit()
 		// rebuild the global querystring
 		// if there is no getQueryString function, we assume that window.querystring is already set
 		if (typeof getQueryString == 'function')
-			window.querystring = getQueryString();
+			window.querystring = getQueryString().replace('&idFile=&', '&');
 
 		handleNavigation(currentState);
 	}

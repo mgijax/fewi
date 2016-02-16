@@ -249,11 +249,13 @@ public class GXDController {
 		logger.debug("->getSummaryPost started");
 
 		session.removeAttribute("idSet");
-		logger.debug("sessionId: " + session.getId());
+		logger.debug("  --> sessionId: " + session.getId());
 
+		logger.debug("  --> about to populateMarkerIDs()");
 		populateMarkerIDs(session, query);
+		logger.debug("  --> back from populateMarkerIDs()");
 		query.setBatchSubmission(true);
-		logger.debug("  -> Filters: " + parseGxdQueryForm(query));
+		logger.debug("  --> Filters: " + parseGxdQueryForm(query));
 
 		return getBatchSearchForm(session, query, request);
 	}
@@ -273,9 +275,18 @@ public class GXDController {
 		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showBatchSearchForm",true);
 
+		logger.debug("  --> before 'if'");
 		if (query.getBatchSubmission()) {
-			mav.addObject("queryString", "batchSubmission=true&" + request.getQueryString());
+			logger.debug("    --> in 'if'");
+			String idList = query.getIds();
+			if ((idList != null) && (idList.length() > 0)) {
+				idList = "&ids=" + idList.replaceAll("[\n\t ]+", " ");
+			} else {
+				idList = "";
+			}
+			mav.addObject("queryString", "batchSubmission=true&" + request.getQueryString() + idList);
 		} else {
+			logger.debug("    --> in 'else'");
 			mav.addObject("queryString", request.getQueryString());
 		}
 
@@ -1100,6 +1111,7 @@ public class GXDController {
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		logger.debug("called /markers/totalCount");
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
@@ -1112,6 +1124,7 @@ public class GXDController {
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		logger.debug("called /assays/totalCount");
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
@@ -1125,6 +1138,7 @@ public class GXDController {
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		logger.debug("called /results/totalCount");
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
@@ -1138,6 +1152,7 @@ public class GXDController {
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		logger.debug("called /images/totalCount");
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
@@ -1152,6 +1167,7 @@ public class GXDController {
 			HttpServletRequest request,
 			@ModelAttribute GxdQueryForm query)
 	{
+		logger.debug("called /totalCounts");
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));
@@ -2025,6 +2041,7 @@ public class GXDController {
 	@RequestMapping("/markers/idList")
 	public @ResponseBody String getIdList (HttpSession session, HttpServletRequest request, @ModelAttribute GxdQueryForm query) {
 
+		logger.debug("called /markers/idList");
 		populateMarkerIDs(session, query);
 		SearchParams params = new SearchParams();
 		params.setFilter(parseGxdQueryForm(query));

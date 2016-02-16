@@ -1,6 +1,10 @@
 function log(msg) {
     // log a message to the browser console
-    setTimeout(function() { throw new Error(msg); }, 0);
+    try {
+	console.log(msg);
+    } catch (c) {
+        setTimeout(function() { throw new Error(msg); }, 0);
+    }
 }
 
 // Form display toggle
@@ -100,6 +104,7 @@ for(var j=0;j<tsBoxIDs.length;j++)
 
 var QFHeight = 704;
 var DifQFHeight = 150;
+var BatchQFHeight = 230;
 var currentQF = "standard";
 var currentDifQF = "structure";
 // GXD form tab control
@@ -108,6 +113,7 @@ var formTabs = new YAHOO.widget.TabView('expressionSearch');
 
 formTabs.addListener("activeTabChange", function(e){
 	if(formTabs.get('activeIndex')==0) currentQF = "standard";
+	else if(formTabs.get('activeIndex')==2) currentQF = "batch";
 	else currentQF = "differential";
 });
 //basic functions to manage the form tabs
@@ -174,7 +180,7 @@ function getCurrentQF()
 		else if(currentDifQF=="both") return YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
 		return YAHOO.util.Dom.get("gxdDifferentialQueryForm1");
 	} else if (currentQF == 'batch') {
-		return YAHOO.util.Dom.get("gxdBatchQueryForm");
+		return YAHOO.util.Dom.get("gxdBatchQueryForm1");
 	}
 
 	return YAHOO.util.Dom.get("gxdQueryForm");
@@ -695,9 +701,13 @@ var toggleQF = function(oCallback,noAnimate) {
     var toggleImg = YAHOO.util.Dom.get('toggleImg');
     attributes =  { height: { to: 0 }};
 
+    var toHeight = QFHeight;
+    if (currentQF == "differential") { toHeight = DifQFHeight; }
+    else if (currentQF == "batch") { toHeight = BatchQFHeight; }
+
     if (!YAHOO.lang.isNull(toggleLink) && !YAHOO.lang.isNull(toggleImg)
     		) {
-	    attributes = { height: { to: currentQF=="differential" ? DifQFHeight : QFHeight }};
+	    attributes = { height: { to: toHeight }};
 		if (!qDisplay){
 			attributes = { height: { to: 0  }};
 			setText(toggleLink, "Click to modify search");
@@ -795,9 +805,11 @@ function closeSummaryControl()
 
 // Instead of submitting the form, do an AJAX request
 var interceptSubmit = function(e) {
+	log("in interceptSubmit()...");
 	YAHOO.util.Event.preventDefault(e);
 
 	if (!runValidation()){
+		log("in if clause")
 		// Do not allow any content to overflow the outer
 		// div when it is hiding
 		var outer = YAHOO.util.Dom.get('outer');
@@ -823,11 +835,13 @@ var interceptSubmit = function(e) {
 			gxdDataTable.setAttributes({ width: "100%" }, true);
 
 		toggleQF(openSummaryControl);
+		log("exiting if clause");
 	}
+	log("ending interceptSubmit()")
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
-YAHOO.util.Event.addListener("gxdBatchQueryForm", "submit", interceptSubmit);
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit",interceptSubmit);
@@ -961,12 +975,19 @@ var difBothRestriction  = function()
 	return setVisible;
 };
 
+/* returns false if there are NO validation errors, true if there are some
+ */
 var runValidation  = function(){
 	var result=false;
+	log("in runValidation() - currentQF: " + currentQF);
+
 	if(currentQF == "standard")
 	{
 		result = geneRestriction() || mutationRestriction();
 		setSubmitDisabled(result);
+	}
+	else if (currentQF == 'batch') {
+		result = false;			// no current validations
 	}
 	else if(currentDifQF=="structure")
 	{
@@ -981,6 +1002,7 @@ var runValidation  = function(){
 	{
 		result = difBothRestriction();
 	}
+	log("exiting runValidation() --> " + result);
 	return result;
 };
 var clearValidation = function()
@@ -1281,6 +1303,7 @@ makeStructureAC("difStructure4","difStructureContainer4");
 // Wire up the functionality to reset the query form
 //
 var resetQF = function (e) {
+	log("called resetQF");
 	if (e) YAHOO.util.Event.preventDefault(e);
 	var form = YAHOO.util.Dom.get("gxdQueryForm");
 	form.nomenclature.value = "";
@@ -1325,13 +1348,13 @@ var resetQF = function (e) {
 		difForm3.theilerStage.selectedIndex=0;
 		difForm3.difTheilerStage.selectedIndex=0;
 	}
-	var batchForm = YAHOO.util.Dom.get("gxdBatchQueryForm");
+	var batchForm = YAHOO.util.Dom.get("gxdBatchQueryForm1");
 	if (batchForm) {
 		batchForm.idType.selectedIndex=0;
 		batchForm.ids.value="";
 		batchForm.fileType.selectedIndex=0;
 		batchForm.idColumn.value="1";
-		batchForm.idFile.value="";
+//		batchForm.idFile.value=null;
 	}
 
 	// clear the validation errors
@@ -1342,7 +1365,7 @@ var resetQF = function (e) {
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "reset", resetQF);
-YAHOO.util.Event.addListener("gxdBatchQueryForm", "reset", resetQF);
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", resetQF);
@@ -1360,12 +1383,13 @@ var getQueryString = function(form) {
 			&& element.name !="_theilerStage" && element.name !="_age"
 			&& element.name !="_difTheilerStage" && element.name !="_difAge")
 		{
-			if(element.name=="locations")
+			if(element.tagName=="TEXTAREA")
 			{
-				//alert(element.name + "="  +element.value);
-				_qs.push(element.name + "="  +element.value.replace(/\s/g,' '));
+				if (element.name != 'idFile') {
+					_qs.push(element.name + "="  +element.value.replace(/\s/g,' '));
+				}
 			}
-			if(element.tagName=="INPUT")
+			else if(element.tagName=="INPUT")
 			{
 				if(element.type=="checkbox" || element.type=="radio")
 				{
@@ -1409,6 +1433,10 @@ var getQueryString = function(form) {
 					}
 				}
 			}
+			else
+			{
+				log("Unknown field: " + element.name + " (type " + element.tagName + ")");
+			}
 		}
 	}
 	return _qs.join("&");
@@ -1420,10 +1448,12 @@ var getQueryString = function(form) {
 // responsible for repopulating the form during history manager changes
 function reverseEngineerFormInput(request)
 {
+	log("called reverseEngineerFormInput");
 	var params = parseRequest(request);
 	var formID = "#gxdQueryForm";
 	var foundDifStruct=false;
 	var foundDifStage=false;
+	var foundBatch=false;
 	var filters = {};	// filters[filter name] = [ values ]
 
 	for(var key in params)
@@ -1436,6 +1466,7 @@ function reverseEngineerFormInput(request)
 		}
 		else if(key == "difStructure") foundDifStruct=true;
 		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
+		else if(key == 'idType') foundBatch=true;
 	}
 	// make sure correct form is visible
 	// this code allows for flexibility to add third ribbon
@@ -1453,13 +1484,24 @@ function reverseEngineerFormInput(request)
 	{
 		formID = "#gxdDifferentialQueryForm2";
 		showDifStagesQF();
+	} else if (foundBatch)
+	{
+		formID = "#gxdBatchQueryForm1";
+		showBatchSearchForm();
 	}
 
 	var foundParams = false;
 	resetQF();
 	for(var key in params)
 	{
-		if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
+		// need special handling for idFile field (do not set this to
+		// an empty string!)
+		if (key == 'idFile') {
+			log('skipping idFile');
+			// no op - skip it
+			// $(formID+" [name='idFile']").value = null;
+		}
+		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
 		{
 			//var input = YAHOO.util.Dom.get(key);
 			// jQuery is better suited to resolving form name parameters

@@ -3,7 +3,7 @@ div.fixed { height: 120px }
 div.top { vertical-align: top }
 div.middle { vertical-align: middle }
 </style>
-<form:form commandName="gxdBatchQueryForm" class="gxdQf" method="POST" enctype="multipart/form-data" id="gxdBatchQueryForm">
+<form:form commandName="gxdBatchQueryForm" class="gxdQf" method="POST" enctype="multipart/form-data" id="gxdBatchQueryForm1">
 <!-- query form table -->
 <form:hidden path="batchSubmission" value="true"/>
 <table class="pad5 borderedTable" width="100%">
@@ -21,7 +21,7 @@ div.middle { vertical-align: middle }
 		<div id="genesWrapper" class="top" style="padding: 3px;">
 			<div style="border-bottom: solid thin gray; width: 100%; clear:both; padding-bottom: 4px;">
 				Search by:
-				<form:select path="idType" items="${gxdQueryForm.idTypes}">
+				<form:select path="idType" items="${gxdBatchQueryForm.idTypes}">
 				<form:options items="${idTypes}"/>
 				</form:select>
 				<br/>
@@ -32,7 +32,7 @@ div.middle { vertical-align: middle }
 				<p/>
 				<span class="label">ID/Symbols List:</span>
 				<br/>
-				&nbsp;&nbsp;<form:textarea id="ids" path="ids" class="formWidth"></form:textarea>
+				&nbsp;&nbsp;<form:textarea id="ids" path="ids" class="formWidth" value="${gxdBatchQueryForm.ids}"></form:textarea>
 				<br/>
 				&nbsp;&nbsp;<span class="example">* tab, space, and newline separated ids.</span>
 			</div>
@@ -44,7 +44,7 @@ div.middle { vertical-align: middle }
 				<p/>
 				<span class="label">ID/Symbols File:</span>
 				<br/>
-				&nbsp;&nbsp;<input type="file" name="idFile" value=""> 
+				<!--				&nbsp;&nbsp;<input type="file" name="idFile"> -->
 				<p style='padding: 3px 0'/>
 				<div id="typeWrapper">
 					<div style='display: inline-block'>
