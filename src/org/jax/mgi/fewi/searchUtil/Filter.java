@@ -192,7 +192,7 @@ public class Filter {
 
 		if (hasNestedFilters()) {
 			for (Filter f : this.nestedFilters) {
-				if (f.property.equals(property)) {
+				if (f.property != null && f.property.equals(property)) {
 					return f;
 				}
 				Filter g = f.getFirstFilterFor(property);

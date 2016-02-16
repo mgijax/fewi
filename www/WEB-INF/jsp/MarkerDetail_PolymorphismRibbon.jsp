@@ -23,7 +23,7 @@
 									<c:set var="polyUrl" value="${configBean.FEWI_URL}snp/marker/${marker.primaryID}"/>
 										<div class="label" style="white-space: normal;">${item.countType}</div>
 										<div class="value"><a href="${polyUrl}">${item.count}</a>
-											<c:if test="${not empty configBean.SNP_BUILD}"><span style="font-size: smaller; font-weight: normal;">from ${configBean.SNP_BUILD}</span></c:if>
+											<c:if test="${not empty snpBuildNumber}"><span style="font-size: smaller; font-weight: normal;">from ${snpBuildNumber}</span></c:if>
 										</div>
 									</li>
 								</c:if>

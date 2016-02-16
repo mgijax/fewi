@@ -14,6 +14,7 @@ import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.summary.ConsensusSNPSummaryRow;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
 import org.jax.mgi.snpdatamodel.ConsensusSNP;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +61,18 @@ public class SnpFinder {
 		return searchResults;
 	}
 
-	public SearchResults<ConsensusSNPSummaryRow> getSummarySnps(SearchParams searchParams, List<String> matchedMarkerIds, Filter sameDiffFilter) {
+	public SearchResults<ConsensusSNPSummaryRow> getSummarySnps(SearchParams searchParams, List<String> matchedMarkerIds) {
 		SearchResults<ConsensusSNP> searchResults1 = new SearchResults<ConsensusSNP>();
 
-		if(sameDiffFilter != null) {
+		Filter sameFilter = null;
+		Filter diffFilter = null;
+		
+		if(searchParams.getFilter() != null) {
+			sameFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.SAME_STRAINS);
+			diffFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.DIFF_STRAINS);
+		}
+		
+		if(sameFilter != null || diffFilter != null) {
 			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
 		} else {
 			snpSearchHunter.hunt(searchParams, searchResults1);

@@ -770,7 +770,7 @@ public class SnpController {
 			}
 		}
 
-		SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds, sameDiffFilter);
+		SearchResults<ConsensusSNPSummaryRow> searchResults = snpFinder.getSummarySnps(params, matchedMarkerIds);
 
 		mav.addObject("snps", searchResults.getResultObjects());
 
@@ -958,11 +958,24 @@ public class SnpController {
 		// batches to save memory on the server.
 
 		List<String> matchedMarkerIds = new ArrayList<String>();
-		Filter qf = genFilters(query, matchedMarkerIds, result);
-		SearchParams sp = new SearchParams();
-		sp.setFilter(qf);
-		sp.setSorts(genSorts(request));
-		SnpBatchFinder batchFinder = new SnpBatchFinder(snpFinder, sp);
+		Filter searchFilter = genFilters(query, matchedMarkerIds, result);
+		Filter sameDiffFilter = genSameDiffFilter(query);
+		
+		SearchParams params = new SearchParams();
+		
+		if(searchFilter != null) {
+			if(sameDiffFilter != null) {
+				ArrayList<Filter> list = new ArrayList<Filter>();
+				list.add(searchFilter);
+				list.add(sameDiffFilter);
+				params.setFilter(Filter.and(list));
+			} else {
+				params.setFilter(searchFilter);
+			}
+		}
+
+		params.setSorts(genSorts(request));
+		SnpBatchFinder batchFinder = new SnpBatchFinder(snpFinder, params);
 
 		ModelAndView mav = new ModelAndView("snpSummaryReport");
 		mav.addObject("resultFinder", batchFinder);

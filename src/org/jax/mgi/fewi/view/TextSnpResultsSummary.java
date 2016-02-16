@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.finder.SnpBatchFinder;
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.summary.ConsensusSNPSummaryRow;
 import org.jax.mgi.fewi.util.FormatHelper;
@@ -20,7 +21,6 @@ import org.jax.mgi.snpdatamodel.ConsensusSNP;
 import org.jax.mgi.snpdatamodel.ConsensusCoordinateSNP;
 import org.jax.mgi.snpdatamodel.ConsensusMarkerSNP;
 import org.jax.mgi.snpdatamodel.ConsensusAlleleSNP;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,14 +151,14 @@ public class TextSnpResultsSummary extends AbstractTextView
 
 		// get our SNP data in batches, to avoid blowing out memory
 		SnpBatchFinder finder = (SnpBatchFinder) model.get("resultFinder");
-
+		
 		// get list of strains to display, in order left to right
-		List<String> strains = this.getStrains(request.getParameter("displayStrains"), finder);
+		List<String> strains = getStrains(request.getParameter("displayStrains"), finder);
 
 		// set the batchSize to a reasonable amount
 		finder.setBatchSize(5000);
 
-		writer.write(this.buildHeaderLine(strains,
+		writer.write(buildHeaderLine(strains,
 			(String) model.get("buildNumber"),
 			(String) model.get("assemblyVersion"),
 			request.getParameter("referenceStrain")));

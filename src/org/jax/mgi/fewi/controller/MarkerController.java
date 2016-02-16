@@ -123,6 +123,7 @@ public class MarkerController {
 	private Map<String,String> chromosomeOptions = null;
 	private String featureTypeHtml = null;
 	private String featureTypeJson = null;
+	private String snpBuildNumber = null;
 	private String genomeBuild = null;
 	private String mpHeaders = null;
 
@@ -138,8 +139,10 @@ public class MarkerController {
 		mav.addObject("htmlMcv", featureTypeHtml);
 		mav.addObject("jsonMcv", featureTypeJson);
 		mav.addObject("genomeBuild", genomeBuild);
+		mav.addObject("snpBuildNumber", snpBuildNumber);
 		mav.addObject("queryForm",new MarkerQueryForm());
 		return mav;
+		
 	}
 
 	@RequestMapping("/phenoPopup")
@@ -227,6 +230,7 @@ public class MarkerController {
 		mav.addObject("chromosomes", chromosomeOptions);
 		mav.addObject("htmlMcv", featureTypeHtml);
 		mav.addObject("jsonMcv", featureTypeJson);
+		mav.addObject("snpBuildNumber", snpBuildNumber);
 		mav.addObject("genomeBuild", genomeBuild);
 
 		return mav;
@@ -1845,6 +1849,18 @@ public class MarkerController {
 				genomeBuild = genomeBuilds.get(0).getDisplayValue();
 			}
 		}
+		
+		if (snpBuildNumber == null) {
+			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("snp", "build number");
+			List<QueryFormOption> optionList = options.getResultObjects();
+
+			if (optionList.size() > 0) {
+				snpBuildNumber = optionList.get(0).getDisplayValue();
+				logger.debug("Cached SNP build number: " + snpBuildNumber);
+			}
+		}
+		
+		
 	}
 	private boolean notEmpty(String s) {
 		return s!=null && !s.equals("");
