@@ -92,6 +92,9 @@ public class SnpController {
 
 	// map for options in search by pulldown
 	private static Map<String, String> searchBySameDiffOptions = null;
+	
+	// list for which marker types to show
+	private static ArrayList<String> markerfeatureTypes = null;
 
 	// dbSNP build number
 	private static String buildNumber = null;
@@ -167,6 +170,37 @@ public class SnpController {
 			for(String key: tempList.keySet()) {
 				referenceStrains.put(key, tempList.get(key));
 			}
+		}
+		
+		if (markerfeatureTypes == null) {
+			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
+			List<QueryFormOption> optionList = options.getResultObjects();
+			
+			markerfeatureTypes = new ArrayList<String>();
+			
+			ArrayList<String> markerFeatureTypesToNotDisplay = new ArrayList<String>();
+			markerFeatureTypesToNotDisplay.add("all feature types");
+			markerFeatureTypesToNotDisplay.add("QTL");
+			markerFeatureTypesToNotDisplay.add("transgene");
+			markerFeatureTypesToNotDisplay.add("cytogenetic marker");
+			markerFeatureTypesToNotDisplay.add("chromosomal deletion");
+			markerFeatureTypesToNotDisplay.add("insertion");
+			markerFeatureTypesToNotDisplay.add("chromosomal inversion");
+			markerFeatureTypesToNotDisplay.add("Robertsonian fusion");
+			markerFeatureTypesToNotDisplay.add("reciprocal chromosomal translocation");
+			markerFeatureTypesToNotDisplay.add("chromosomal translocation");
+			markerFeatureTypesToNotDisplay.add("chromosomal duplication");
+			markerFeatureTypesToNotDisplay.add("chromosomal transposition");
+			markerFeatureTypesToNotDisplay.add("unclassified cytogenetic marker");
+			markerFeatureTypesToNotDisplay.add("BAC/YAC end");
+			
+			for(QueryFormOption o: optionList) {
+				if(!markerFeatureTypesToNotDisplay.contains(o.getDisplayValue())) {
+					markerfeatureTypes.add(o.getSubmitValue());
+				}
+			}
+			
+			logger.debug("Cached " + markerfeatureTypes.size() + " Feature Type options");
 		}
 
 		if (selectableStrains == null) {
@@ -752,6 +786,20 @@ public class SnpController {
 				// pass - skip the link if conversion issue
 			}
 		}
+		
+		
+		// TODO Finish this
+		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null) {
+			String dlim = "";
+			String queryString = "";
+			for(String id: markerfeatureTypes) {
+				queryString += dlim + "mcv=" + id;
+				dlim = "&";
+			}
+			String markerSummaryLink = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "marker/summary?chromosome=" + query.getSelectedChromosome() + "&coordinate=" + query.getCoordinate() + "&coordUnit=" + query.getCoordinateUnit() + "&" + queryString;
+			mav.addObject("markerSummaryLink", markerSummaryLink);
+		}
+		
 
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
