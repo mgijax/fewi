@@ -178,6 +178,8 @@ public class SnpController {
 			
 			markerfeatureTypes = new ArrayList<String>();
 			
+			// This is a really bad way to do this but not knowing where
+			// else to put this list here it is.
 			ArrayList<String> markerFeatureTypesToNotDisplay = new ArrayList<String>();
 			markerFeatureTypesToNotDisplay.add("all feature types");
 			markerFeatureTypesToNotDisplay.add("QTL");
@@ -188,6 +190,7 @@ public class SnpController {
 			markerFeatureTypesToNotDisplay.add("chromosomal inversion");
 			markerFeatureTypesToNotDisplay.add("Robertsonian fusion");
 			markerFeatureTypesToNotDisplay.add("reciprocal chromosomal translocation");
+			markerFeatureTypesToNotDisplay.add("heritable phenotypic marker");
 			markerFeatureTypesToNotDisplay.add("chromosomal translocation");
 			markerFeatureTypesToNotDisplay.add("chromosomal duplication");
 			markerFeatureTypesToNotDisplay.add("chromosomal transposition");
@@ -787,8 +790,6 @@ public class SnpController {
 			}
 		}
 		
-		
-		// TODO Finish this
 		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null) {
 			String dlim = "";
 			String queryString = "";
@@ -799,7 +800,6 @@ public class SnpController {
 			String markerSummaryLink = ContextLoader.getConfigBean().getProperty("FEWI_URL") + "marker/summary?chromosome=" + query.getSelectedChromosome() + "&coordinate=" + query.getCoordinate() + "&coordUnit=" + query.getCoordinateUnit() + "&" + queryString;
 			mav.addObject("markerSummaryLink", markerSummaryLink);
 		}
-		
 
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
