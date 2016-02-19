@@ -182,6 +182,8 @@ public class SnpController {
 			// else to put this list here it is.
 			ArrayList<String> markerFeatureTypesToNotDisplay = new ArrayList<String>();
 			markerFeatureTypesToNotDisplay.add("all feature types");
+			markerFeatureTypesToNotDisplay.add("gene");
+			markerFeatureTypesToNotDisplay.add("other feature type");
 			markerFeatureTypesToNotDisplay.add("QTL");
 			markerFeatureTypesToNotDisplay.add("transgene");
 			markerFeatureTypesToNotDisplay.add("cytogenetic marker");
@@ -196,7 +198,7 @@ public class SnpController {
 			markerFeatureTypesToNotDisplay.add("chromosomal transposition");
 			markerFeatureTypesToNotDisplay.add("unclassified cytogenetic marker");
 			markerFeatureTypesToNotDisplay.add("BAC/YAC end");
-			
+
 			for(QueryFormOption o: optionList) {
 				if(!markerFeatureTypesToNotDisplay.contains(o.getDisplayValue())) {
 					markerfeatureTypes.add(o.getSubmitValue());
