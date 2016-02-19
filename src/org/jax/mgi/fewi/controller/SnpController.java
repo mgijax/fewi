@@ -131,7 +131,7 @@ public class SnpController {
 		if(coordinateUnits == null) {
 			coordinateUnits = new HashMap<String, String>();
 			coordinateUnits.put("bp", "bp");
-			coordinateUnits.put("mbp", "Mbp");
+			coordinateUnits.put("Mbp", "Mbp");
 		}
 
 		if (chromosomes == null) {
