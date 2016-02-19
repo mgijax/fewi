@@ -792,7 +792,7 @@ public class SnpController {
 			}
 		}
 		
-		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null) {
+		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null && searchFilter != null) {
 			String dlim = "";
 			String queryString = "";
 			for(String id: markerfeatureTypes) {
