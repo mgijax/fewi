@@ -835,6 +835,11 @@ var interceptSubmit = function(e) {
 			gxdDataTable.setAttributes({ width: "100%" }, true);
 
 		toggleQF(openSummaryControl);
+
+		if (currentQF == 'batch') {
+			// convert spaces to escaped version before submission
+			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
+		}
 		log("exiting if clause");
 	}
 	log("ending interceptSubmit()")
@@ -1385,11 +1390,9 @@ var getQueryString = function(form) {
 		{
 			if(element.tagName=="TEXTAREA")
 			{
-				if (element.name != 'idFile') {
-					_qs.push(element.name + "="  +element.value.replace(/\s/g,' '));
-				}
+				_qs.push(element.name + "="  +element.value.replace(/\s/g,' '));
 			}
-			else if(element.tagName=="INPUT")
+			else if((element.tagName=="INPUT") && (element.name != 'idFile'))
 			{
 				if(element.type=="checkbox" || element.type=="radio")
 				{

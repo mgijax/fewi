@@ -13,6 +13,12 @@ var IMAGES_PAGE_SIZE = 25;
 var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";
 var LOADING_IMG = "<img src=\""+LOADING_IMG_SRC+"\" height=\"24\" width=\"24\">";
 
+//set up XHRDataSource objects to use POST submissions
+var xhrConfig = { connMethodPost :  true,
+	maxCacheEntries : 3,
+	connXhrMode : "cancelStaleRequests"
+	};
+
 //Shortcut variable for the YUI history manager
 var History = YAHOO.util.History;
 
@@ -88,14 +94,16 @@ var generateRequest = mgiTab._rp.generateRequest;
 // to mousemine
 var getMarkerIds = function() {
 	
-	var url = fewiurl + "gxd/markers/idList?" + getQueryStringWithFilters();
+	//var url = fewiurl + "gxd/markers/idList?" + getQueryStringWithFilters();
+	var url = fewiurl + "gxd/markers/idList";
 	
 	var callback = {
 		success : function(oResponse) {
 			$("#mousemineids").val(oResponse.responseText);
 		},
 	};
-	YAHOO.util.Connect.asyncRequest('GET', url, callback);
+	// YAHOO.util.Connect.asyncRequest('GET', url, callback);
+	YAHOO.util.Connect.asyncRequest('POST', url, callback, getQueryStringWithFilters());
 };
 
 //a global variable to helpthe tab change handler know when to fire off a new query
@@ -324,6 +332,7 @@ function refreshTabCounts()
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 
+	/*
 	resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
 			{	success:handleCountRequest,
 		failure:function(o){}
@@ -340,6 +349,23 @@ function refreshTabCounts()
 			{	success:handleCountRequest,
 		failure:function(o){}
 			},null);
+	*/
+	resultsRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/results/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
+	assaysRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/assays/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
+	genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
+	imagesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/images/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
 }
 
 window.previousGxdLitQuery=""
@@ -365,10 +391,15 @@ window.previousGxdLitQuery=""
 	};
 
 	YAHOO.util.Dom.get("gxdLitInfo").innerHTML = "";
-	YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/gxdLitCount?"+querystring,
+	/* YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/gxdLitCount?"+querystring,
 			{	success:handleGxdLitCount,
 		failure:function(o){}
 			},null);
+	*/
+	YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/gxdLitCount",
+			{	success:handleGxdLitCount,
+		failure:function(o){}
+			}, querystring);
 }
 
 
@@ -401,7 +432,7 @@ var gxdGenesTable = function (oCallback) {
 	                     ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -425,8 +456,8 @@ var gxdGenesTable = function (oCallback) {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 	var paginator = mgiTab.createPaginator(
 			[50,100,250,500], // rows per page options
@@ -522,7 +553,7 @@ var gxdAssaysTable = function() {
 	                    ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/assays/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/assays/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -542,8 +573,8 @@ var gxdAssaysTable = function() {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 	var paginator = mgiTab.createPaginator(
 			[50,100,250,500], // rows per page options
@@ -636,7 +667,7 @@ var gxdResultsTable = function() {
 	                    ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/results/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/results/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -661,8 +692,8 @@ var gxdResultsTable = function() {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 
 	var paginator = mgiTab.createPaginator(
@@ -764,7 +795,7 @@ var gxdImagesTable = function() {
 	                    ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/images/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/images/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -781,8 +812,8 @@ var gxdImagesTable = function() {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 	var paginator = mgiTab.createPaginator(
 			[25,50,100,250], // rows per page options

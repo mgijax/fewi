@@ -221,6 +221,7 @@ public class GXDController {
 		if ( ((idString == null) || (idString.length() == 0)) && (form.getHasFile() == false) ) {
 			return;
 		}
+		form.setBatchSubmission(true);
 
 		BatchQueryForm bqf = new BatchQueryForm();
 		bqf.setIdFile(form.getIdFile());
@@ -2016,6 +2017,12 @@ public class GXDController {
 		if ((markerIDs != null) && (markerIDs.size() > 0)) {
 			Filter markerIDsFilter = new Filter(SearchConstants.MRK_ID, markerIDs, Filter.Operator.OP_IN);
 			queryFilters.add(markerIDsFilter);
+
+		} else if (query.getBatchSubmission()) {
+			// no markers were found for the submitted IDs, so
+			// add a filter that prevents any matches (otherwise
+			// we get all results)
+			queryFilters.add(new Filter(SearchConstants.PRIMARY_KEY, "[-10 TO -10]", Filter.Operator.OP_HAS_WORD));
 		}
 
 		// And all base filter sections
