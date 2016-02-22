@@ -45,13 +45,13 @@ div.middle { vertical-align: middle }
 			<div id="batchRight" class="fixed top" style="display: inline-block; padding-top: 4px;">
 				<div id="typeWrapper">
 				<span style="font-size: 120%">Upload File</span>
-				<p/>
-					<div style='display: inline-block'>
+				<br/>
+					<div style='display: inline-block; padding-top: 9px'>
 					<span class="label">File Type:</span><br/>
 					&nbsp;&nbsp;<span><form:radiobutton path="fileType" value="tab"/>&nbsp;tab-delimited</span><br/>
 					&nbsp;&nbsp;<span><form:radiobutton path="fileType" value="csv"/>&nbsp;comma separated</span><br/>
 					</div>
-					<div style="display: inline-block; vertical-align: top; padding-left: 15px">
+					<div style="display: inline-block; vertical-align: top; padding-left: 15px; padding-top: 9px">
 					<span class="label">ID/Symbols column:</span><br/>
 					&nbsp;&nbsp;<form:input path="idColumn" size="3"></form:input><br/>
 					<span class="example">* ID/Symbols parsed from a single column</span>
