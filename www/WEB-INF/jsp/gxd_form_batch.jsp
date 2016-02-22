@@ -44,7 +44,7 @@ div.middle { vertical-align: middle }
 				<p/>
 				<span class="label">ID/Symbols File:</span>
 				<br/>
-					&nbsp;&nbsp;<input type="file" name="idFile">
+					&nbsp;&nbsp;<input type="file" name="idFile" onChange="readFile(event)">
 				<p style='padding: 3px 0'/>
 				<div id="typeWrapper">
 					<div style='display: inline-block'>

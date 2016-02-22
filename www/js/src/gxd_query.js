@@ -1,5 +1,9 @@
+var logging = false;	// is loggging to the console enabled? (true/false)
+
 function log(msg) {
-    // log a message to the browser console
+    // log a message to the browser console, if logging is enabled
+
+    if (!logging) { return; }
     try {
 	console.log(msg);
     } catch (c) {
@@ -1359,7 +1363,7 @@ var resetQF = function (e) {
 		batchForm.ids.value="";
 		batchForm.fileType.selectedIndex=0;
 		batchForm.idColumn.value="1";
-//		batchForm.idFile.value=null;
+		$("input[name='idFile']")[0].value = null;
 	}
 
 	// clear the validation errors
@@ -1669,4 +1673,51 @@ var mutatedInOnFocus = function(e)
 };
 YAHOO.util.Event.addFocusListener(YAHOO.util.Dom.get("mutatedIn"),mutatedInOnFocus);
 
+/* read a delimited file where one column contains marker-related IDs, parse it,
+ * and update the 'ids' field in the batch QF.
+ */
+var readFile = function(e) {
+	var input = e.target;
+	var reader = new FileReader();
 
+	reader.onload = function() {
+		var separator = ',';
+		var extractedIDs = '';
+
+		if (document.querySelector('input[name = "fileType"]:checked').value == 'tab') {
+			separator = '\t';
+		}
+
+		// switch from 1-based column number from input to 0-based
+		var colNum = document.getElementById('idColumn').value - 1;
+		var text = reader.result;
+		var lines = text.split('\n');
+		var badLines = 0;		// count of bad lines
+
+		for (var lineNum in lines) {
+			var line = lines[lineNum];
+			var cols = line.split(separator);
+
+			if (cols.length > colNum) {
+				if (extractedIDs.length > 0) {
+					extractedIDs = extractedIDs + '\n' + cols[colNum];
+				} else {
+					extractedIDs = cols[colNum];
+				}
+			} else {
+				badLines++;
+			}
+		}
+
+		// split lines then extract specified column using specified
+		// delimiter
+
+		var node = document.getElementById('ids');
+		node.value = extractedIDs;
+
+		if (badLines > 0) {
+			alert(badLines + ' line(s) had too few columns');
+		}
+	};
+	reader.readAsText(input.files[0]);
+};
