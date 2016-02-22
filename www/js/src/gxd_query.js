@@ -1364,6 +1364,10 @@ var resetQF = function (e) {
 		batchForm.fileType.selectedIndex=0;
 		batchForm.idColumn.value="1";
 		$("input[name='idFile']")[0].value = null;
+
+		var msg = document.getElementById('uploadMessage');
+		msg.innerHTML = '';
+		msg.style.display = 'none';
 	}
 
 	// clear the validation errors
@@ -1690,9 +1694,10 @@ var readFile = function(e) {
 
 		// switch from 1-based column number from input to 0-based
 		var colNum = document.getElementById('idColumn').value - 1;
-		var text = reader.result;
+		var text = reader.result.trimRight();	// no trailing newline
 		var lines = text.split('\n');
 		var badLines = 0;		// count of bad lines
+		var idsAdded = 0;		// count of IDs added
 
 		for (var lineNum in lines) {
 			var line = lines[lineNum];
@@ -1704,6 +1709,7 @@ var readFile = function(e) {
 				} else {
 					extractedIDs = cols[colNum];
 				}
+				idsAdded++;
 			} else {
 				badLines++;
 			}
@@ -1714,10 +1720,21 @@ var readFile = function(e) {
 
 		var node = document.getElementById('ids');
 		node.value = extractedIDs;
+		
+		var myMsg = '';
+
+		if (idsAdded > 0) {
+			myMsg = idsAdded + ' IDs/symbols were added';
+		}
 
 		if (badLines > 0) {
-			alert(badLines + ' line(s) had too few columns');
+			if (myMsg.length > 0) { myMsg = myMsg + '; '; }
+			myMsg = myMsg + badLines + ' line(s) had too few columns';
 		}
+
+		var msg = document.getElementById('uploadMessage');
+		msg.innerHTML = myMsg;
+		msg.style.display = 'inline-block';
 	};
 	reader.readAsText(input.files[0]);
 };
