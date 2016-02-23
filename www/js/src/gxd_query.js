@@ -108,7 +108,7 @@ for(var j=0;j<tsBoxIDs.length;j++)
 
 var QFHeight = 704;
 var DifQFHeight = 150;
-var BatchQFHeight = 230;
+var BatchQFHeight = 153;
 var currentQF = "standard";
 var currentDifQF = "structure";
 // GXD form tab control
@@ -842,7 +842,8 @@ var interceptSubmit = function(e) {
 
 		if (currentQF == 'batch') {
 			// convert spaces to escaped version before submission
-			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
+			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value;
+			//YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
 		}
 		log("exiting if clause");
 	}
@@ -1525,6 +1526,9 @@ function reverseEngineerFormInput(request)
 				if(input.tagName=="TEXTAREA")
 				{
 					input.value = decodeURIComponent(params[key]);
+					if (input.id == 'ids') {
+						input.value = input.value.replace(/ /g, '\n');
+					}
 				}
 				else if(input.tagName=="INPUT")
 				{

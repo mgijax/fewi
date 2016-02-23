@@ -44,7 +44,7 @@ div.middle { vertical-align: middle }
 			</div>
 			<div id="batchRight" class="fixed top" style="display: inline-block; padding-top: 4px;">
 				<div id="typeWrapper">
-				<span style="font-size: 120%">Upload File</span>
+				<span style="font-size: 120%">Use IDs from a File</span>
 				<br/>
 					<div style='display: inline-block; padding-top: 9px'>
 					<span class="label">File Type:</span><br/>
