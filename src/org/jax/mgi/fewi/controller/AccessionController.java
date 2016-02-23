@@ -242,6 +242,13 @@ public class AccessionController {
 		logger.debug("->accessionSummary by ID started");
 		logger.debug("queryString: " + request.getQueryString());
 
+		
+		// This is a poor solution these ID's need to get propagated through
+		// But with only a few hours to implement here it is.
+		if(accID.toLowerCase().startsWith("rrid:")) {
+			accID = accID.substring(5);
+		}
+		
 		queryForm.setId(accID);
 		logger.debug("Modified Query Form: " + queryForm.toString());
 
