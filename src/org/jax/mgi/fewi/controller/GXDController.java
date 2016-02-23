@@ -276,9 +276,7 @@ public class GXDController {
 		mav.addObject("gxdDifferentialQueryForm", new GxdQueryForm());
 		mav.addObject("showBatchSearchForm",true);
 
-		logger.debug("  --> before 'if'");
 		if (query.getBatchSubmission()) {
-			logger.debug("    --> in 'if'");
 			String idList = query.getIds();
 			if ((idList != null) && (idList.length() > 0)) {
 				idList = "&ids=" + idList.replaceAll("[\n\t ]+", " ");
@@ -287,7 +285,6 @@ public class GXDController {
 			}
 			mav.addObject("queryString", "batchSubmission=true&" + request.getQueryString() + idList);
 		} else {
-			logger.debug("    --> in 'else'");
 			mav.addObject("queryString", request.getQueryString());
 		}
 
