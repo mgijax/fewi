@@ -1,4 +1,4 @@
-var logging = false;	// is loggging to the console enabled? (true/false)
+var logging = true;	// is loggging to the console enabled? (true/false)
 
 function log(msg) {
     // log a message to the browser console, if logging is enabled
@@ -312,6 +312,7 @@ var updateQuerySummary = function() {
 	var isDifStructure = currentQF=="differential" && currentDifQF=="structure";
 	var isDifStage = currentQF=="differential" && currentDifQF=="stage";
 	var isDifBoth = currentQF=="differential" && currentDifQF=="both";
+
 	if(isDifStructure)
 	{
 		// Differential Structures Section
@@ -397,10 +398,61 @@ var updateQuerySummary = function() {
 				"<br/>in any of the "+notDetectedStagesText);
 		el.appendTo(searchParams);
 	}
+	else if (currentQF == 'batch') {
+		// only two fields matter for batch searches:  the count of IDs
+		// and the scope in which to search
+
+		if (YAHOO.util.Dom.get('ids').value != '') {
+			var count = YAHOO.util.Dom.get('ids').value.split('\n').length;
+			var scope = YAHOO.util.Dom.get("idType").options[YAHOO.util.Dom.get("idType").selectedIndex].innerHTML;
+
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode("Number of IDs/symbols entered: "));
+
+			// Create a bold
+			var b = new YAHOO.util.Element(document.createElement('b'));
+			var newContent = document.createTextNode(count);
+			b.appendChild(newContent);
+			el.appendChild(b);
+
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode("Input Type: "));
+
+			// Create a bold
+			var b = new YAHOO.util.Element(document.createElement('b'));
+			var newContent = document.createTextNode('' + scope);
+			b.appendChild(newContent);
+			el.appendChild(b);
+
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			el.addClass('countHere');
+
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode(""));
+
+			var b = new YAHOO.util.Element(document.createElement('span'));
+			var newContent = document.createTextNode(getYsfGeneCount() + ' matching genes/markers found.');
+			b.appendChild(newContent);
+			el.appendChild(b);
+
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+		}
+	}
 	else
 	{
 		// Standard QF Section
-
 		// Create all the relevant search parameter elements
 		if (YAHOO.util.Dom.get('nomenclature').value != "") {
 
@@ -520,7 +572,7 @@ var updateQuerySummary = function() {
 
 			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
 			el.appendTo(searchParams);
-		}
+		} // end of structure handling
 
 
 
@@ -809,11 +861,9 @@ function closeSummaryControl()
 
 // Instead of submitting the form, do an AJAX request
 var interceptSubmit = function(e) {
-	log("in interceptSubmit()...");
 	YAHOO.util.Event.preventDefault(e);
 
 	if (!runValidation()){
-		log("in if clause")
 		// Do not allow any content to overflow the outer
 		// div when it is hiding
 		var outer = YAHOO.util.Dom.get('outer');
@@ -845,9 +895,8 @@ var interceptSubmit = function(e) {
 			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value;
 			//YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
 		}
-		log("exiting if clause");
+		resetYSF();
 	}
-	log("ending interceptSubmit()")
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
@@ -989,7 +1038,6 @@ var difBothRestriction  = function()
  */
 var runValidation  = function(){
 	var result=false;
-	log("in runValidation() - currentQF: " + currentQF);
 
 	if(currentQF == "standard")
 	{
@@ -1012,7 +1060,6 @@ var runValidation  = function(){
 	{
 		result = difBothRestriction();
 	}
-	log("exiting runValidation() --> " + result);
 	return result;
 };
 var clearValidation = function()
@@ -1313,7 +1360,6 @@ makeStructureAC("difStructure4","difStructureContainer4");
 // Wire up the functionality to reset the query form
 //
 var resetQF = function (e) {
-	log("called resetQF");
 	if (e) YAHOO.util.Event.preventDefault(e);
 	var form = YAHOO.util.Dom.get("gxdQueryForm");
 	form.nomenclature.value = "";
@@ -1460,7 +1506,6 @@ var getQueryString = function(form) {
 // responsible for repopulating the form during history manager changes
 function reverseEngineerFormInput(request)
 {
-	log("called reverseEngineerFormInput");
 	var params = parseRequest(request);
 	var formID = "#gxdQueryForm";
 	var foundDifStruct=false;
@@ -1509,7 +1554,6 @@ function reverseEngineerFormInput(request)
 		// need special handling for idFile field (do not set this to
 		// an empty string!)
 		if (key == 'idFile') {
-			log('skipping idFile');
 			// no op - skip it
 			// $(formID+" [name='idFile']").value = null;
 		}
@@ -1699,7 +1743,7 @@ var readFile = function(e) {
 		// switch from 1-based column number from input to 0-based
 		var colNum = document.getElementById('idColumn').value - 1;
 		var text = reader.result.trimRight();	// no trailing newline
-		var lines = text.split('\n');
+		var lines = text.split(/[\n\r]/g);
 		var badLines = 0;		// count of bad lines
 		var idsAdded = 0;		// count of IDs added
 

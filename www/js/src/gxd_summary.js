@@ -305,6 +305,22 @@ function getQueryStringWithFilters() {
 //store the request objects to verify the correct IDs;
 var resultsRq,assaysRs,genesRq,imagesRq;
 window.previousTabQuery="";
+
+// also use the totalGenesCount to update the You Searched For section, but
+// only on the first call (filtering should not affect that count)
+
+var updatedYSF = false;
+var ysfGeneCount = '';	// count of genes matching base query (before filters)
+
+function resetYSF() {
+	updatedYSF = false;
+	ysfGeneCount = '';
+}
+
+function getYsfGeneCount() {
+	return ysfGeneCount;
+}
+
 function refreshTabCounts()
 {
 	var querystringWithFilters = getQueryStringWithFilters();
@@ -322,7 +338,18 @@ function refreshTabCounts()
 		// resolve the request ID to its appropriate handler
 		if(o.tId==resultsRq.tId) YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
-		else if(o.tId==genesRq.tId) YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
+		else if(o.tId==genesRq.tId) {
+			log('handling gene count');
+			YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
+			log('updatedYSF: ' + updatedYSF);
+			if (!updatedYSF) {
+				updatedYSF = true;
+				ysfGeneCount = o.responseText;
+				$('.countHere').text(o.responseText + $('.countHere').text());
+				log('updated .countHere');
+			} // end - updated YSF
+			log('updatedYSF: ' + updatedYSF);
+		}
 		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = o.responseText;
 	}
 
