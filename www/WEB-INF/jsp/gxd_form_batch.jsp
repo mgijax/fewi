@@ -77,3 +77,6 @@ div.middle { vertical-align: middle }
 	</tr>
 </table>
 </form:form>
+<script>
+$("#ids").scrollTop(0);		// scroll ID text box up to top of its list
+</script>

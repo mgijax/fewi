@@ -1411,6 +1411,7 @@ var resetQF = function (e) {
 		batchForm.fileType.selectedIndex=0;
 		batchForm.idColumn.value="1";
 		$("input[name='idFile']")[0].value = null;
+		$("input[name='fileType']")[0].click();
 
 		var msg = document.getElementById('uploadMessage');
 		msg.innerHTML = '';
@@ -1743,7 +1744,7 @@ var readFile = function(e) {
 		// switch from 1-based column number from input to 0-based
 		var colNum = document.getElementById('idColumn').value - 1;
 		var text = reader.result.trimRight();	// no trailing newline
-		var lines = text.split(/[\n\r]/g);
+		var lines = text.split(/[\n\r]+/g);
 		var badLines = 0;		// count of bad lines
 		var idsAdded = 0;		// count of IDs added
 
