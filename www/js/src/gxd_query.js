@@ -403,7 +403,7 @@ var updateQuerySummary = function() {
 		// and the scope in which to search
 
 		if (YAHOO.util.Dom.get('ids').value != '') {
-			var count = YAHOO.util.Dom.get('ids').value.split('\n').length;
+			var count = YAHOO.util.Dom.get('ids').value.trimRight().split('\n').length;
 			var scope = YAHOO.util.Dom.get("idType").options[YAHOO.util.Dom.get("idType").selectedIndex].innerHTML;
 
 			// Create a span
@@ -892,7 +892,7 @@ var interceptSubmit = function(e) {
 
 		if (currentQF == 'batch') {
 			// convert spaces to escaped version before submission
-			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value;
+			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.trimRight();
 			//YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
 		}
 		resetYSF();
@@ -1753,12 +1753,15 @@ var readFile = function(e) {
 			var cols = line.split(separator);
 
 			if (cols.length > colNum) {
-				if (extractedIDs.length > 0) {
-					extractedIDs = extractedIDs + '\n' + cols[colNum];
-				} else {
-					extractedIDs = cols[colNum];
+				var tokens = cols[colNum].split(' ');
+				for (var tokenNum in tokens) {
+					if (extractedIDs.length > 0) {
+						extractedIDs = extractedIDs + '\n' + tokens[tokenNum];
+					} else {
+						extractedIDs = tokens[tokenNum];
+					}
+					idsAdded++;
 				}
-				idsAdded++;
 			} else {
 				badLines++;
 			}
