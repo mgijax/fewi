@@ -112,7 +112,11 @@ public class ExcelGxdResultsSummary  extends AbstractBigExcelView
 
 					row.createCell(11).setCellValue(r.getJNum());
 
-					row.createCell(12).setCellValue(r.getPubmedId()); //pub med id
+					if (r.getPubmedId() != null) {
+						row.createCell(12).setCellValue(r.getPubmedId()); //pub med id
+					} else {
+						row.createCell(12).setCellValue(""); //pub med id
+					}
 
 					row.createCell(13).setCellValue(r.getShortCitation());
 				}

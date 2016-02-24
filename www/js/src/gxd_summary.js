@@ -109,6 +109,36 @@ var getMarkerIds = function() {
 //a global variable to helpthe tab change handler know when to fire off a new query
 var newQueryState = false;
 
+// do a form submission based on one of the Export buttons
+var buildAndSubmit = function(formID, formAction) {
+	// find the specified form
+	var gxdForm = $("#" + formID);
+	if (gxdForm === null) {
+		alert("Can't find element (" + formID + "); action cancelled.");
+		return;
+	}
+
+	// set its action attribute
+	gxdForm.attr('action', formAction);
+
+	// remove any existing hidden parameters in the form
+	var oldFields = $("#" + formID + " input[type='hidden']").remove();
+
+	// add the parameters as hidden fields to the form
+	var querystringWithFilters = getQueryStringWithFilters();
+	var pairs = querystringWithFilters.split("&");
+
+	for (var j in pairs) {
+		var pair = pairs[j];
+		var tokens = pair.split('=');
+		var el = jQuery('<input name="' + tokens[0] + '" value="' + tokens[1] + '" type="hidden">');
+		gxdForm.append(el);
+	}
+
+	// submit the form
+	gxdForm.submit();
+};
+
 //a globabl variable to help the summary know when to generate a new datatable
 var previousQueryString = "none";
 var previousFilterString = "none";
@@ -193,23 +223,23 @@ handleNavigation = function (request, calledLocally) {
 			// Wire up report and batch buttons
 			var resultsTextReportButton = YAHOO.util.Dom.get('resultsTextDownload');
 			if (!YAHOO.lang.isNull(resultsTextReportButton)) {
-				resultsTextReportButton.setAttribute('href', fewiurl + 'gxd/report.txt?' + querystringWithFilters);
+				resultsTextReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.txt')");
 			}
 			var resultsExcelReportButton = YAHOO.util.Dom.get('resultsExcelDownload');
 			if (!YAHOO.lang.isNull(resultsExcelReportButton)) {
-				resultsExcelReportButton.setAttribute('href', fewiurl + 'gxd/report.xlsx?' + querystringWithFilters);
+				resultsExcelReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.xlsx')");
 			}
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
-				markersTextReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.txt?' + querystringWithFilters);
+				markersTextReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.txt')");
 			}
 			var markersExcelReportButton = YAHOO.util.Dom.get('markersExcelDownload');
 			if (!YAHOO.lang.isNull(markersExcelReportButton)) {
-				markersExcelReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.xlsx?' + querystringWithFilters);
+				markersExcelReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.xlsx')");
 			}
 			var markersBatchForward = YAHOO.util.Dom.get('markersBatchForward');
 			if (!YAHOO.lang.isNull(markersBatchForward)) {
-				markersBatchForward.setAttribute('href', fewiurl + 'gxd/batch?' + querystringWithFilters);
+				markersBatchForward.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/batch')");
 			}
 		}
 
