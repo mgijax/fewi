@@ -115,7 +115,8 @@ public class BatchController {
 	//-------------------------//
 	// Forward from other page/form
 	//-------------------------//
-	@RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
+	//@RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
+	@RequestMapping(value="/forwardSummary")
 	public ModelAndView batchSummary2Get(HttpSession session,HttpServletRequest request) {
 
 		BatchQueryForm queryForm = (BatchQueryForm) request.getAttribute("queryForm");
