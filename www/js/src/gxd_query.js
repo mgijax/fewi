@@ -403,7 +403,7 @@ var updateQuerySummary = function() {
 		// and the scope in which to search
 
 		if (YAHOO.util.Dom.get('ids').value != '') {
-			var count = YAHOO.util.Dom.get('ids').value.trimRight().split('\n').length;
+			var count = YAHOO.util.Dom.get('ids').value.trim().replace(/[\n]+/g, '\n').split('\n').length;
 			var scope = YAHOO.util.Dom.get("idType").options[YAHOO.util.Dom.get("idType").selectedIndex].innerHTML;
 
 			// Create a span
