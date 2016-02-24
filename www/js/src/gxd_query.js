@@ -442,7 +442,7 @@ var updateQuerySummary = function() {
 			el.appendChild(document.createTextNode(""));
 
 			var b = new YAHOO.util.Element(document.createElement('span'));
-			var newContent = document.createTextNode(getYsfGeneCount() + ' matching genes/markers found.');
+			var newContent = document.createTextNode(getYsfGeneCount() + ' matching genes/markers with expression data found.');
 			b.appendChild(newContent);
 			el.appendChild(b);
 
@@ -1776,7 +1776,11 @@ var readFile = function(e) {
 		var myMsg = '';
 
 		if (idsAdded > 0) {
-			myMsg = idsAdded + ' IDs/symbols were added';
+			if (idsAdded > 1) {
+				myMsg = idsAdded + ' lines were added';
+			} else {
+				myMsg = idsAdded + ' line was added';
+			}
 		}
 
 		if (badLines > 0) {
