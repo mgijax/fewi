@@ -31,7 +31,7 @@
 	</c:if>
 	<c:if test="${not empty markerSummaryLink}">
 		<div id="markerSummaryLinkDiv" class="padded inlineblock">
-			View <a href="${markerSummaryLink}" target="_blank">MGI Marker Summary</a>
+			View <a href="${markerSummaryLink}" target="_blank">MGI Genome Feature Summary</a>
 		</div>
 	</c:if>
 </div>
