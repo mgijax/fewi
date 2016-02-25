@@ -442,7 +442,7 @@ var updateQuerySummary = function() {
 			el.appendChild(document.createTextNode(""));
 
 			var b = new YAHOO.util.Element(document.createElement('span'));
-			var newContent = document.createTextNode(getYsfGeneCount() + ' matching genes/markers with expression data found.');
+			var newContent = document.createTextNode(getYsfGeneCount() + ' matching genes with expression data found.');
 			b.appendChild(newContent);
 			el.appendChild(b);
 
