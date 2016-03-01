@@ -139,6 +139,190 @@ var buildAndSubmit = function(formID, formAction) {
 	gxdForm.submit();
 };
 
+// parses request parameters and resets and values found with their matching form input element
+// returns false if no parameters were found
+// responsible for repopulating the form during history manager changes
+function reverseEngineerFormInput(request)
+{
+	var params = parseRequest(request);
+	var formID = "#gxdQueryForm";
+	var foundDifStruct=false;
+	var foundDifStage=false;
+	var foundBatch=false;
+	var filters = {};	// filters[filter name] = [ values ]
+
+	for(var key in params)
+	{
+		if(key == "detected")
+		{
+			// HACK for the radio buttons
+			params["detected1"] = params[key];
+			params["detected2"] = params[key];
+		}
+		else if(key == "difStructure") foundDifStruct=true;
+		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
+		else if(key == 'idType') foundBatch=true;
+	}
+	// make sure correct form is visible
+	// this code allows for flexibility to add third ribbon
+	if(foundDifStruct && foundDifStage)
+	{
+		formID = "#gxdDifferentialQueryForm3";
+		showDifBothQF();
+	}
+	else if (foundDifStruct)
+	{
+		formID = "#gxdDifferentialQueryForm1";
+		showDifStructuresQF();
+	}
+	else if (foundDifStage)
+	{
+		formID = "#gxdDifferentialQueryForm2";
+		showDifStagesQF();
+	} else if (foundBatch)
+	{
+		formID = "#gxdBatchQueryForm1";
+		showBatchSearchForm();
+	}
+
+	var foundParams = false;
+	if (typeof resetQF == 'function') { resetQF(); }
+	for(var key in params)
+	{
+		// need special handling for idFile field (do not set this to
+		// an empty string!)
+		if (key == 'idFile') {
+			// no op - skip it
+			// $(formID+" [name='idFile']").value = null;
+		}
+		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
+		{
+			//var input = YAHOO.util.Dom.get(key);
+			// jQuery is better suited to resolving form name parameters
+			var input = $(formID+" [name='"+key+"']");
+			if(input.length < 1) input = $(formID+" #"+key);
+			if(input!=undefined && input!=null && input.length > 0)
+			{
+
+				input = input[0];
+				if(input.tagName=="TEXTAREA")
+				{
+					input.value = decodeURIComponent(params[key]);
+					if (input.id == 'ids') {
+						input.value = input.value.replace(/ /g, '\n');
+					}
+				}
+				else if(input.tagName=="INPUT")
+				{
+					foundParams = true;
+					// do radio boxes
+					if(input.type == "radio")
+					{
+						if(key=="isWildType")
+						{
+							YAHOO.util.Dom.get("isWildType").checked = true;
+						}
+						else if(input.value == params[key])
+						{
+							input.checked=true;
+						}
+					}
+					// do check boxes
+					else if(input.type=="checkbox")
+					{
+						var options = [];
+						var rawParams = [].concat(params[key]);
+						for(var i=0;i<rawParams.length;i++)
+						{
+							options.push(decodeURIComponent(rawParams[i]));
+						}
+						// The YUI.get() only returns one checkbox, but we want the whole set.
+						// The class should also be set to the same name.
+						var boxes = YAHOO.util.Selector.query("."+key);
+						for(var i=0;i<boxes.length;i++)
+						{
+							var box = boxes[i];
+							var checked = false;
+							for(var j=0;j<options.length;j++)
+							{
+								if(options[j] == box.value)
+								{
+									checked = true;
+									box.checked = true;
+									break;
+								}
+							}
+							if(!checked)
+							{
+								box.checked = false;
+							}
+						}
+					}
+					else
+					{
+						if (key == "mutatedIn")
+						{
+							YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
+						}
+						input.value = decodeURIComponent(params[key]);
+					}
+				}
+				else if(input.tagName=="SELECT")
+				{
+					if (input.name == "age") {
+						// open the age tab
+						//if(foundDifStage) selectDifAge();
+						//else selectAge();
+						selectAge();
+					}
+					foundParams = true;
+					var options = [];
+					// decode all the options first
+					var rawParams = [].concat(params[key]);
+					for(var i=0;i<rawParams.length;i++)
+					{
+						options.push(decodeURIComponent(rawParams[i]));
+					}
+					// find which options need to be selected, and select them.
+					for(var key in input.children)
+					{
+						if(input[key]!=undefined)
+						{
+							var selected = false;
+							for(var j=0;j<options.length;j++)
+							{
+								if(options[j] == input[key].value)
+								{
+									selected = true;
+									input[key].selected = true;
+									break;
+								}
+							}
+							if(!selected)
+							{
+								input[key].selected = false;
+							}
+						}
+					}
+				}
+			} else if (typeof isFilterable != 'undefined' &&
+					isFilterable(key)) {
+			    // deal with filters (no form fields for them)
+				// TODO: This needs to move to a different function. Filters should not be a part of this method
+			    filters[key] = [].concat(params[key]);
+			}
+		}
+	}
+
+	if(typeof resetFacets != 'undefined')
+	{
+		resetFacets(filters);
+		prepFilters(request);	// need to reset the URLs for the filters
+	}
+	if (typeof assayTypesCheck == 'function') { assayTypesCheck(); }
+	return foundParams;
+}
+
 //a globabl variable to help the summary know when to generate a new datatable
 var previousQueryString = "none";
 var previousFilterString = "none";
@@ -189,8 +373,7 @@ handleNavigation = function (request, calledLocally) {
 	var doNewQuery = querystring != previousQueryString;
 	previousQueryString = querystring;
 
-
-	if(!foundParams)
+	if((!foundParams) && (typeof resetQF == 'function'))
 	{
 		log("found empty request");
 		// this is how we handle an empty request.
