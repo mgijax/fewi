@@ -1,3 +1,13 @@
+TAG: fewi-6-0-3-1
+DATE: 3/1/2016
+STAFF: lnh
+CHANGES: 
+ 1) config/fewi.properties.mgi-fewi1 added  solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr/
+ 2) config/fewi.properties.mgi-pubfewi1 added solr.server2.url=http://bhmgipsnp01lp.jax.org:18983/solr/
+ 3) config/fewi.properties.mgi-pubfewi2 added solr.server2.url=http://bhmgipsnp01lp.jax.org:28983/solr/
+ 4) config/fewi.properties.mgi-botfewi1 added solr.server2.url=http://bhmgibsnp01lp.jax.org:18983/solr/
+ 5) config/fewi.properties.mgi-botfewi2 added solr.server2.url=http://bhmgibsnp01lp.jax.org:28983/solr/
+
 TAG: fewi-6-0-3-0
 DATE: 2/29/2016
 STAFF: jsb
