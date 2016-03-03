@@ -757,21 +757,19 @@ public class SnpController {
 		Properties externalUrls = ContextLoader.getExternalUrls();
 		String jbrowse = externalUrls.getProperty("JBrowseHighlight");
 
-		if (jbrowse != null && searchFilter != null) {
+		Filter chromFilter = searchFilter.getFirstFilterFor(SearchConstants.CHROMOSOME);
+		Filter coordFilter = searchFilter.getFirstFilterFor(SearchConstants.STARTCOORDINATE);
+		
+		if (jbrowse != null && searchFilter != null && chromFilter != null && coordFilter != null) {
 			String chrom = null;
 			long startCoord = 0;
 			long endCoord = 0;
 
 			try {
-				if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null) && (query.getCoordinateUnit() != null)) {
-					Filter chromFilter = searchFilter.getFirstFilterFor(SearchConstants.CHROMOSOME);
-					Filter coordFilter = searchFilter.getFirstFilterFor(SearchConstants.STARTCOORDINATE);
-
-					if ((chromFilter != null) && (coordFilter != null)) {
-						chrom = chromFilter.getValues().get(0);
-						startCoord = Long.parseLong(coordFilter.getValues().get(0));
-						endCoord = Long.parseLong(coordFilter.getValues().get(1));
-					}
+				if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null) && (query.getCoordinateUnit() != null) && (chromFilter != null) && (coordFilter != null)) {
+					chrom = chromFilter.getValues().get(0);
+					startCoord = Long.parseLong(coordFilter.getValues().get(0));
+					endCoord = Long.parseLong(coordFilter.getValues().get(1));
 				}
 
 				if (chrom != null) {
@@ -792,7 +790,7 @@ public class SnpController {
 			}
 		}
 		
-		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null && searchFilter != null) {
+		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null && searchFilter != null && chromFilter != null && coordFilter != null) {
 			String dlim = "";
 			String queryString = "";
 			for(String id: markerfeatureTypes) {
