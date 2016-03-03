@@ -331,12 +331,10 @@ public class SnpController {
 
 		// Chromosome Search
 		String selectedChromosome = query.getSelectedChromosome();
-		if(selectedChromosome != null) {
+		if(selectedChromosome != null && selectedChromosome.length() > 0) {
 			Filter chrFilter = new Filter(SearchConstants.CHROMOSOME, selectedChromosome, Operator.OP_IN);
 			filterList.add(chrFilter);
-		}
 
-		if(filterList.size() > 0) {
 			// Coordinate Search
 			String coord = query.getCoordinate();
 			String coordUnit = query.getCoordinateUnit();
