@@ -92,7 +92,7 @@ public class SnpController {
 
 	// map for options in search by pulldown
 	private static Map<String, String> searchBySameDiffOptions = null;
-	
+
 	// list for which marker types to show
 	private static ArrayList<String> markerfeatureTypes = null;
 
@@ -171,13 +171,13 @@ public class SnpController {
 				referenceStrains.put(key, tempList.get(key));
 			}
 		}
-		
+
 		if (markerfeatureTypes == null) {
 			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("marker", "mcv");
 			List<QueryFormOption> optionList = options.getResultObjects();
-			
+
 			markerfeatureTypes = new ArrayList<String>();
-			
+
 			// This is a really bad way to do this but not knowing where
 			// else to put this list here it is.
 			ArrayList<String> markerFeatureTypesToNotDisplay = new ArrayList<String>();
@@ -204,7 +204,7 @@ public class SnpController {
 					markerfeatureTypes.add(o.getSubmitValue());
 				}
 			}
-			
+
 			logger.debug("Cached " + markerfeatureTypes.size() + " Feature Type options");
 		}
 
@@ -755,19 +755,20 @@ public class SnpController {
 		Properties externalUrls = ContextLoader.getExternalUrls();
 		String jbrowse = externalUrls.getProperty("JBrowseHighlight");
 
-		Filter chromFilter = searchFilter.getFirstFilterFor(SearchConstants.CHROMOSOME);
-		Filter coordFilter = searchFilter.getFirstFilterFor(SearchConstants.STARTCOORDINATE);
-		
-		if (jbrowse != null && searchFilter != null && chromFilter != null && coordFilter != null) {
+		if (jbrowse != null && searchFilter != null) {
 			String chrom = null;
 			long startCoord = 0;
 			long endCoord = 0;
 
 			try {
-				if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null) && (query.getCoordinateUnit() != null) && (chromFilter != null) && (coordFilter != null)) {
-					chrom = chromFilter.getValues().get(0);
-					startCoord = Long.parseLong(coordFilter.getValues().get(0));
-					endCoord = Long.parseLong(coordFilter.getValues().get(1));
+				if ((query.getSelectedChromosome() != null) && (query.getCoordinate() != null) && (query.getCoordinateUnit() != null)) {
+					Filter chromFilter = searchFilter.getFirstFilterFor(SearchConstants.CHROMOSOME);
+					Filter coordFilter = searchFilter.getFirstFilterFor(SearchConstants.STARTCOORDINATE);
+					if((chromFilter != null) && (coordFilter != null)) {
+						chrom = chromFilter.getValues().get(0);
+						startCoord = Long.parseLong(coordFilter.getValues().get(0));
+						endCoord = Long.parseLong(coordFilter.getValues().get(1));
+					}
 				}
 
 				if (chrom != null) {
@@ -787,8 +788,8 @@ public class SnpController {
 				// pass - skip the link if conversion issue
 			}
 		}
-		
-		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null && searchFilter != null && chromFilter != null && coordFilter != null) {
+
+		if(markerfeatureTypes != null && query.getSelectedChromosome() != null && query.getCoordinate() != null && query.getCoordinateUnit() != null && searchFilter != null) {
 			String dlim = "";
 			String queryString = "";
 			for(String id: markerfeatureTypes) {
@@ -802,9 +803,9 @@ public class SnpController {
 		SearchParams params = new SearchParams();
 		params.setPaginator(page);
 		params.setSorts(genSorts(request));
-		
+
 		Filter sameDiffFilter = genSameDiffFilter(query);
-		
+
 		if(searchFilter != null) {
 			if(sameDiffFilter != null) {
 				ArrayList<Filter> list = new ArrayList<Filter>();
@@ -1006,9 +1007,9 @@ public class SnpController {
 		List<String> matchedMarkerIds = new ArrayList<String>();
 		Filter searchFilter = genFilters(query, matchedMarkerIds, result);
 		Filter sameDiffFilter = genSameDiffFilter(query);
-		
+
 		SearchParams params = new SearchParams();
-		
+
 		if(searchFilter != null) {
 			if(sameDiffFilter != null) {
 				ArrayList<Filter> list = new ArrayList<Filter>();
