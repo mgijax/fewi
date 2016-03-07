@@ -5,6 +5,7 @@ package org.jax.mgi.fewi.finder;
 /*-------------------------------*/
 
 import java.util.List;
+import java.util.ArrayList;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSystem;
@@ -13,7 +14,9 @@ import mgi.frontend.datamodel.group.RecombinaseEntity;
 
 import org.jax.mgi.fewi.highlight.RecombinaseHighlightInfo;
 import org.jax.mgi.fewi.hunter.SolrCreAssayResultSummaryHunter;
+import org.jax.mgi.fewi.hunter.HibernateAlleleSystemHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
+import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
@@ -37,6 +40,9 @@ public class RecombinaseFinder {
 
 	private final Logger logger = LoggerFactory.getLogger (
 		RecombinaseFinder.class);
+
+	@Autowired
+	private HibernateAlleleSystemHunter alleleSystemHunter;
 
 	@Autowired
 	private SolrCreAssayResultSummaryHunter creAssayHunter;
@@ -77,6 +83,23 @@ public class RecombinaseFinder {
 	}
 
 
+	// recombinase specificity by allele ID + system's term key
+	public SearchResults<AlleleSystem> getAlleleSystems(String alleleID, String termKey) {
+		logger.debug ("->getAlleleSystems(" + alleleID + ", " + termKey + ")");
+		SearchResults<AlleleSystem> searchResults = new SearchResults<AlleleSystem>();
+
+		// collect our filters
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter(SearchConstants.ALL_ID, alleleID, Filter.Operator.OP_EQUAL));
+		filters.add(new Filter(SearchConstants.CRE_SYSTEM_KEY, termKey, Filter.Operator.OP_EQUAL));
+		SearchParams sp = new SearchParams();
+		sp.setFilter(Filter.and(filters));
+
+		alleleSystemHunter.hunt (sp, searchResults);
+
+		return searchResults;
+	}
+
 	// Recombinase Specificity
 	public SearchResults<AlleleSystem> getAlleleSystemByKey(String alleleSystemKey) {
 
@@ -84,7 +107,9 @@ public class RecombinaseFinder {
 		SearchResults<AlleleSystem> searchResults = new SearchResults<AlleleSystem>();
 		AlleleSystem alleleSystem = alleleSystemGatherer.get (AlleleSystem.class, alleleSystemKey);
 
-		searchResults.addResultObjects (alleleSystem);
+		if (alleleSystem != null) {
+			searchResults.addResultObjects (alleleSystem);
+		}
 		return searchResults;
 	}
 
