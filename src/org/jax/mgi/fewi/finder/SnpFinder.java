@@ -7,7 +7,6 @@ import java.util.TreeMap;
 
 import org.jax.mgi.fewi.hunter.SolrSNPAlleleSearchHunter;
 import org.jax.mgi.fewi.hunter.SolrSNPDataHunter;
-import org.jax.mgi.fewi.hunter.SolrSNPFunctionClassFacetHunter;
 import org.jax.mgi.fewi.hunter.SolrSNPSearchHunter;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -29,9 +28,6 @@ public class SnpFinder {
 
 	@Autowired
 	private SolrSNPDataHunter snpDataHunter;
-
-	@Autowired
-	private SolrSNPFunctionClassFacetHunter snpFunctionClassFacetHunter;
 
 	@Autowired
 	private SolrSNPSearchHunter snpSearchHunter;
@@ -73,8 +69,10 @@ public class SnpFinder {
 		}
 		
 		if(sameFilter != null || diffFilter != null) {
+			snpAlleleSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
 			snpAlleleSearchHunter.hunt(searchParams, searchResults1);
 		} else {
+			snpSearchHunter.setFacetString(IndexConstants.SNP_STRAINS);
 			snpSearchHunter.hunt(searchParams, searchResults1);
 		}
 		
@@ -157,9 +155,25 @@ public class SnpFinder {
 	/* get the function classes (as facets) for the consensus SNPs
 	 * matching the current query
 	 */
-	public List<String> getFunctionClassFacets(SearchParams params) {
+	public List<String> getFunctionClassFacets(SearchParams searchParams) {
 		SearchResults<ConsensusSNP> results = new SearchResults<ConsensusSNP>();
-		snpFunctionClassFacetHunter.hunt(params, results);
+		
+		Filter sameFilter = null;
+		Filter diffFilter = null;
+		
+		if(searchParams.getFilter() != null) {
+			sameFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.SAME_STRAINS);
+			diffFilter = searchParams.getFilter().getFirstFilterFor(SearchConstants.DIFF_STRAINS);
+		}
+		
+		if(sameFilter != null || diffFilter != null) {
+			snpAlleleSearchHunter.setFacetString(IndexConstants.SNP_FUNCTIONCLASS);
+			snpAlleleSearchHunter.hunt(searchParams, results);
+		} else {
+			snpSearchHunter.setFacetString(IndexConstants.SNP_FUNCTIONCLASS);
+			snpSearchHunter.hunt(searchParams, results);
+		}
+
 		return results.getResultFacets();
 	}
 

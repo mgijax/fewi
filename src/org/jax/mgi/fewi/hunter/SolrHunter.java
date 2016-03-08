@@ -927,4 +927,11 @@ public class SolrHunter<T> implements Hunter<T> {
 		}
 
 	}
+
+	public String getFacetString() {
+		return facetString;
+	}
+	public void setFacetString(String facetString) {
+		this.facetString = facetString;
+	}
 }

@@ -973,12 +973,21 @@ public class SnpController {
 		List<String> matchedMarkerIds = new ArrayList<String>();
 
 		// build the set of filters for the search
-		Filter searchFilters = genFilters(query, matchedMarkerIds, result);
-
+		Filter searchFilter = genFilters(query, matchedMarkerIds, result);
+		Filter sameDiffFilter = genSameDiffFilter(query);
+		
 		// perform query, and pull out the requested objects
 		SearchParams params = new SearchParams();
-		if(searchFilters != null) {
-			params.setFilter(searchFilters);
+		if(searchFilter != null) {
+
+			if(sameDiffFilter != null) {
+				ArrayList<Filter> list = new ArrayList<Filter>();
+				list.add(searchFilter);
+				list.add(sameDiffFilter);
+				params.setFilter(Filter.and(list));
+			} else {
+				params.setFilter(searchFilter);
+			}
 		}
 
 		List<String> facets = snpFinder.getFunctionClassFacets(params);
