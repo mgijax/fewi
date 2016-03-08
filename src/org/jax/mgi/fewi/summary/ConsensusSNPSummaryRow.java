@@ -53,7 +53,7 @@ public class ConsensusSNPSummaryRow {
 		String ret = "";
 		String hr = "";
 		for(ConsensusCoordinateSNP c: consensusSNP.getConsensusCoordinates()) {
-			ret += hr + "Chr:" + c.getChromosome() + ":" + c.getStartCoordinate();
+			ret += hr + "Chr" + c.getChromosome() + ":" + c.getStartCoordinate();
 			hr = "<hr>";
 		}
 		return ret;
