@@ -19,4 +19,3 @@ I have used the default deployment configuration for my prototype. You will need
     * remove JBoss/common/lib/hibernate-validator.jar. Replace it with ./lib/hibernate-validator-4.1.0.Beta1.jar
 
 
-This is the readme commit
