@@ -43,7 +43,7 @@ body.yui-skin-sam div#outer {position:relative;}
 
 <%@ include file="/WEB-INF/jsp/templates/templateHdpBodyStart.html" %>
 
-<!-- iframe for history manager's use -->
+<!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" name="yui-history-iframe" src="/fewi/blank.html"></iframe>
 <input id="yui-history-field" name="yui-history-field" type="hidden">
 
@@ -73,7 +73,6 @@ body.yui-skin-sam div#outer {position:relative;}
 <div class="summaryControl" style="display:none;">
 	<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
 		<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_summary.jsp" %>
-	
 	</div>
 </div>
 
@@ -104,7 +103,6 @@ body.yui-skin-sam div#outer {position:relative;}
 <script type="text/javascript">
 	hmdcFilters.prepFilters('${configBean.FEWI_URL}');
 </script>
-
 
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
