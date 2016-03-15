@@ -33,10 +33,10 @@
 	
 	<ui-view></ui-view>
 	<div class="searchViewBox">
-		Test Div 1
+		<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
 	</div>
 	<div class="searchViewBox">
-		Test Div 1
+		<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
 	</div>
 </div>
 
