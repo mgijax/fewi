@@ -11,7 +11,7 @@
         url: '/',
         reloadOnSearch: false,
         controller: 'SearchController',
-        templateUrl: 'search/views/search.tpl.html'
+        templateUrl: '/assets/hmdc/search/views/search.tpl.html'
       });
   }
 

@@ -1,0 +1,72 @@
+/**
+* COLORS
+*/
+.pageBackground {
+  background-color: #ffffff;
+}
+.pageBackground2 {
+  background-color: #f3f3f3;
+}
+.pageBackground3 {
+  background-color: #dedede;
+}
+.pageBackground4 {
+  background-color: #cdcdcd;
+}
+/**
+* LAYOUT VARS
+*/
+/**
+*  COMPONENT VARS
+*/
+.queryBuilder .query-row {
+  margin-top: 15px;
+  padding: 7.5px;
+  background-color: #EFEFEF;
+  border-radius: 4px;
+  border: 1px solid;
+}
+.queryBuilder .query-row:before,
+.queryBuilder .query-row:after {
+  content: " ";
+  display: table;
+}
+.queryBuilder .query-row:after {
+  clear: both;
+}
+.queryBuilder .query-row .field-selector .formly {
+  width: 100%;
+}
+.queryBuilder .query-row .field-selector .formly .formly-field {
+  width: 100%;
+}
+.queryBuilder .query-row .field-selector .formly .formly-field .form-group {
+  width: 100%;
+  margin-bottom: 0 !important;
+}
+.queryBuilder .query-row .field-selector .formly .formly-field .form-group select {
+  display: block;
+  width: 100%;
+}
+.queryBuilder .query-row .row-buttons {
+  white-space: nowrap;
+}
+.queryBuilder .query-row .row-buttons button {
+  margin-top: 5px;
+}
+.queryBuilder .query-row .inline-field {
+  display: inline-block;
+  padding-right: 7.5px;
+}
+.queryBuilder .query-row .inline-field-xs input,
+.queryBuilder .query-row .inline-field-xs select {
+  max-width: 50px;
+}
+.queryBuilder .query-row .inline-field-small input,
+.queryBuilder .query-row .inline-field-small select {
+  max-width: 100px;
+}
+.queryBuilder .query-row .inline-field-md input,
+.queryBuilder .query-row .inline-field-md select {
+  max-width: 150px;
+}
