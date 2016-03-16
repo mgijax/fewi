@@ -3,7 +3,7 @@ ShareLib_Setup_UploadLibs_md5.checksum
 fewi.war
 build.properties
 build/
-dist/
+/dist/
 cruise-output/
 mgiconfig/
 sharelib/
