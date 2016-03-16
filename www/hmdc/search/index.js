@@ -8,7 +8,10 @@
     'civic.services',
     'civic.search',
   ])
-    .run(appRun);
+    .run(appRun)
+	  .config(function($locationProvider) {
+			$locationProvider.html5Mode(true);
+	  });
 
 // @ngInject
   function appRun($rootScope, $state, $location) {

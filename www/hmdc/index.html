@@ -1,9 +1,15 @@
+<html>
+	<head>
+		<title>Test</title>
+		<base href="/">
+	</head>
+	<body>
 <link rel="stylesheet" type="text/css" href="/assets/css/hmdc/hmdc.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/vender.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/hmdc/queryBuilder.type.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/search.css" />
 
-<div ng-app="civicClient">
-   <ui-view></ui-view>
+<div ng-app="civicClient" class="container">
+	<ui-view></ui-view>
 </div>
 
 <script src="bower_components/angular/angular.js"></script>
@@ -21,3 +27,5 @@
 <script src="search/services/SearchService.js"></script>
 <script src="search/views/SearchController.js"></script>
 <script src="search/forms/queryBuilder.type.js"></script>
+	</body>
+</html>

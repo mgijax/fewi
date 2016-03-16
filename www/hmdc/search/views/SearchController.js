@@ -101,28 +101,25 @@
           conditionFields: {
             pubmed_id: [
               {
-                key: 'name',
-                type: 'queryBuilderSelect',
-                className: 'inline-field inline-field-md',
-                data: {
-                  defaultValue: 'is'
-                },
+                key: 'name', // pubmed id
+                type: 'upload',
+                className: 'inline-field',
                 templateOptions: {
-                  label: '',
-                  required: true,
-                  options: [
-                    {value: 'is', name: 'is'},
-                    {value: 'is_not', name: 'is not'}
-                  ]
+                  label: 'Upload a file',
+                  required: true
                 }
               },
               {
-                key: 'parameters[0]', // pubmed id
-                type: 'input',
+                key: 'searchtype',
+                type: 'radio',
                 className: 'inline-field',
                 templateOptions: {
-                  label: '',
-                  required: true
+                  label: 'Search for',
+                  required: true,
+                  options: [
+                    {value: 'mouse', name: 'Mouse'},
+                    {value: 'human', name: 'Human'},
+                  ]
                 }
               }
             ],
