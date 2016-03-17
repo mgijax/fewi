@@ -3,8 +3,10 @@
 	<body id="body">
 
 		<div id="headerContainer">
-			
-			<div>
+			<div class="hmdcbox">
+				HM<br>DC
+			</div>	
+			<div class="links">
 				<a href="http://localhost.jax.org/">Home</a>
 				<a href="http://localhost.jax.org/">About</a>
 				<a href="http://localhost.jax.org/">Help</a>
@@ -13,8 +15,8 @@
 				<a href="http://localhost.jax.org/">Contact Us</a>
 			</div>
 
-			<div style="float:right">
-				<a href="http://localhost.jax.org/"><img src="http://localhost.jax.org/webshare/images/mgi_logo.gif" style='height:48px; width:90px;'></a>
+			<div class="logo">
+				<a href="http://localhost.jax.org/"><img src="http://localhost.jax.org/webshare/images/mgi_logo.gif"></a>
 			</div>
 
 		</div>

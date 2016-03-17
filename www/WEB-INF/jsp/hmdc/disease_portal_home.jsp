@@ -7,16 +7,7 @@
 
 <title>Human - Mouse Disease Connection</title>
 
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
-
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
-
-<!-- import jquery UI specifically for this page -->
-<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/hmdc.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/search.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/queryBuilder.type.css" />
 
 <%@ include file="disease_portal_bodystart.jsp" %>
 
@@ -37,11 +28,14 @@
 		<ui-view></ui-view>
 	</div>
 
-	<div class="searchViewBox" ng-hide="searchResults">
-		<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
-		<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_summary.jsp" %>
-	</div>
+</div>
+
+<div class="searchViewBox" ng-hide="searchResults">
+	<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
+	<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_summary.jsp" %>
+</div>
   
+<div class="container">
 	<div class="searchViewBox">
 		<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
 	</div>

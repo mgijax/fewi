@@ -9,7 +9,7 @@
     var SearchService = $resource('/diseasePortal/summary', {},
 		{
         get: { method: 'GET', isArray: false, cache: false },
-        post: { method: 'POST', isArray: true, cache: false }
+        post: { method: 'POST', isArray: false, cache: false }
 	   }
     );
 

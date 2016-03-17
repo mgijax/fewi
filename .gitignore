@@ -19,3 +19,4 @@ www/WEB-INF/lib/snpdatamodel.jar
 www/WEB-INF/properties/GlobalConfig.properties
 www/WEB-INF/properties/fewi.properties
 www/WEB-INF/web.xml
+*.swp
