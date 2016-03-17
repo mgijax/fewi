@@ -29,4 +29,5 @@
 
 		<!--===================== End Template Head  ===========================-->
 
+		<base href="/diseasePortal">
 

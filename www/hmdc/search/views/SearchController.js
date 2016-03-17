@@ -5,10 +5,11 @@
     .config(SearchView);
 
   // @ngInject
-  function SearchView($stateProvider) {
+  function SearchView($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/diseasePortal');
     $stateProvider
       .state('search', {
-        url: '/',
+        url: '/diseasePortal',
         reloadOnSearch: false,
         controller: 'SearchController',
         templateUrl: '/assets/hmdc/search/views/search.tpl.html'

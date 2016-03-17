@@ -25,13 +25,23 @@
 <input id="yui-history-field" name="yui-history-field" type="hidden">
 
 <div ng-app="civicClient" class="container">
-	<div class="searchViewBox" style="border: 0px;margin-bottom:30px;">
+
+	<div style="border: 0px;margin-bottom:30px;">
 		<div style="text-align: center;">
 			<a href="http://localhost.jax.org/diseasePortal" style="font-size:45px;color:black;">Human <img src="http://localhost.jax.org/webshare/images/hmdc_arrow.png" style='height:42px;'> Mouse: Disease Connection</a>
 		</div>
 	</div>
-	
-	<ui-view></ui-view>
+
+	<label>Hide the query form: <input class="qfExpand" type="checkbox" ng-model="mustHide" /></label><br />
+	<div ng-hide="mustHide">
+		<ui-view></ui-view>
+	</div>
+
+	<div class="searchViewBox" ng-hide="searchResults">
+		<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
+		<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_summary.jsp" %>
+	</div>
+  
 	<div class="searchViewBox">
 		<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
 	</div>
@@ -39,6 +49,31 @@
 		<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
 	</div>
 </div>
+
+<%--
+<c:set var="jsHome" value="${configBean.FEWI_URL}assets/js"/>
+<script type="text/javascript" src="${jsHome}/fewi_utils.js"></script>
+<script type="text/javascript" src="${jsHome}/filters.js"></script>
+<script type="text/javascript" src="${jsHome}/disease_portal_filters.js"></script>
+<script type="text/javascript" src="${jsHome}/disease_portal_query.js"></script>
+<script type="text/javascript" src="${jsHome}/disease_portal_autocomplete.js"></script>
+<script type="text/javascript" src="${jsHome}/disease_portal_upload.js"></script>
+<script type="text/javascript" src="${jsHome}/disease_portal_summary.js"></script>
+
+<%    
+   String queryString = (String) request.getAttribute("querystring");
+   // need to url encode the querystring
+   request.setAttribute("encodedQueryString", FormatHelper.encodeQueryString(queryString));
+%>
+<script type="text/javascript">
+   var querystring = "${encodedQueryString}";
+</script>
+
+
+<script type="text/javascript">
+   hmdcFilters.prepFilters('${configBean.FEWI_URL}');
+</script>
+--%>
 
 <script src="/assets/hmdc/bower_components/angular/angular.js"></script>
 <script src="/assets/hmdc/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
