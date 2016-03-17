@@ -19,7 +19,7 @@
 
 	<div style="border: 0px;margin-bottom:30px;">
 		<div style="text-align: center;">
-			<a href="http://localhost.jax.org/diseasePortal" style="font-size:45px;color:black;">Human <img src="http://localhost.jax.org/webshare/images/hmdc_arrow.png" style='height:42px;'> Mouse: Disease Connection</a>
+			<a href="${configBean.FEWI_URL}/diseasePortal" style="font-size:45px;color:black;">Human <img src="${configBean.WEBSHARE_URL}images/hmdc_arrow.png" style='height:42px;'> Mouse: Disease Connection</a>
 		</div>
 	</div>
 

@@ -7,16 +7,16 @@
 				HM<br>DC
 			</div>	
 			<div class="links">
-				<a href="http://localhost.jax.org/">Home</a>
-				<a href="http://localhost.jax.org/">About</a>
-				<a href="http://localhost.jax.org/">Help</a>
-				<a href="http://localhost.jax.org/">Find Mice(IMSR)</a>
-				<a href="http://localhost.jax.org/">Downloads</a>
-				<a href="http://localhost.jax.org/">Contact Us</a>
+				<a href="${configBean.FEWI_URL}">Home</a>
+				<a href="${configBean.FEWI_URL}">About</a>
+				<a href="${configBean.FEWI_URL}">Help</a>
+				<a href="${configBean.FEWI_URL}">Find Mice(IMSR)</a>
+				<a href="${configBean.FEWI_URL}">Downloads</a>
+				<a href="${configBean.FEWI_URL}">Contact Us</a>
 			</div>
 
 			<div class="logo">
-				<a href="http://localhost.jax.org/"><img src="http://localhost.jax.org/webshare/images/mgi_logo.gif"></a>
+				<a href="${configBean.FEWI_URL}"><img src="${configBean.WEBSHARE_URL}images/mgi_logo.gif"></a>
 			</div>
 
 		</div>
