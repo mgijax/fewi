@@ -72,7 +72,7 @@ public class DiseaseController {
 			return mav;
 		}
 
-		return this.prepareDisease(disease.getPrimaryID(), "disease_detail");
+		return prepareDisease(disease.getPrimaryID(), "disease_detail");
 	}
 
 	@RequestMapping(value="/{diseaseID:.+}", method = RequestMethod.GET)
@@ -80,7 +80,7 @@ public class DiseaseController {
 
 		logger.debug("->diseaseDetailByID started");
 
-		return this.prepareDisease(diseaseID, "disease_detail");
+		return prepareDisease(diseaseID, "disease_detail");
 	}
 
 	@RequestMapping(value="/models/{diseaseID:.+}", method = RequestMethod.GET)
@@ -88,7 +88,7 @@ public class DiseaseController {
 
 		logger.debug("->diseaseModelsByID started");
 
-		return this.prepareDisease(diseaseID, "disease_models");
+		return prepareDisease(diseaseID, "disease_models");
 	}
 
 	// code shared to send back a disease detail page, regardless of

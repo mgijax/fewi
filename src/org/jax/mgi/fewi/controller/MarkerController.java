@@ -71,6 +71,8 @@ import org.jax.mgi.fewi.util.NotesTagConverter;
 import org.jax.mgi.fewi.util.link.FewiLinker;
 import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
+import org.jax.mgi.fewi.util.GOGraphConverter;
+import org.jax.mgi.fewi.util.file.TextFileReader;
 import org.jax.org.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +123,7 @@ public class MarkerController {
 	private Map<String,String> chromosomeOptions = null;
 	private String featureTypeHtml = null;
 	private String featureTypeJson = null;
+	private String snpBuildNumber = null;
 	private String genomeBuild = null;
 	private String mpHeaders = null;
 
@@ -132,23 +135,22 @@ public class MarkerController {
 
 		ModelAndView mav = new ModelAndView("marker_query");
 		mav.addObject("sort", new Paginator());
-		mav.addObject("chromosomes", this.chromosomeOptions);
+		mav.addObject("chromosomes", chromosomeOptions);
 		mav.addObject("htmlMcv", featureTypeHtml);
 		mav.addObject("jsonMcv", featureTypeJson);
 		mav.addObject("genomeBuild", genomeBuild);
+		mav.addObject("snpBuildNumber", snpBuildNumber);
 		mav.addObject("queryForm",new MarkerQueryForm());
 		return mav;
+		
 	}
 
 	@RequestMapping("/phenoPopup")
 	public ModelAndView phenoPopup (HttpServletRequest request) {
 		if (mpHeaders == null) {
-			SearchResults<QueryFormOption> mpResults =
-					queryFormOptionFinder.getQueryFormOptions("allele",
-							"phenotype");
+			SearchResults<QueryFormOption> mpResults = queryFormOptionFinder.getQueryFormOptions("allele", "phenotype");
 			List<QueryFormOption> headers = mpResults.getResultObjects();
-			logger.debug("phenoPopup() received " + headers.size()
-					+ " MP header options");
+			logger.debug("phenoPopup() received " + headers.size() + " MP header options");
 
 			StringBuffer phenoHeaders = new StringBuffer();
 
@@ -225,9 +227,10 @@ public class MarkerController {
 		mav.addObject("queryForm", queryForm);
 
 		mav.addObject("markerIds", getQueryIdsAsJson(request, queryForm));
-		mav.addObject("chromosomes", this.chromosomeOptions);
+		mav.addObject("chromosomes", chromosomeOptions);
 		mav.addObject("htmlMcv", featureTypeHtml);
 		mav.addObject("jsonMcv", featureTypeJson);
+		mav.addObject("snpBuildNumber", snpBuildNumber);
 		mav.addObject("genomeBuild", genomeBuild);
 
 		return mav;
@@ -466,8 +469,14 @@ public class MarkerController {
 
 	private void setupPageVariables(ModelAndView mav, Marker marker) {
 
+		// Sets up variables from the queryform database
+		initQueryForm();
+
 		// add an IDLinker to the mav for use at the JSP level
 		mav.addObject("idLinker", idLinker);
+
+		// add snp build number to the page
+		mav.addObject("snpBuildNumber", snpBuildNumber);
 
 		// add the marker to mav
 		mav.addObject("marker", marker);
@@ -535,7 +544,7 @@ public class MarkerController {
 		// have already been generated, then do so
 
 		if (minimaps.size() == 0) {
-			String returnedString = this.getAllMinimapUrls();
+			String returnedString = getAllMinimapUrls();
 			String[] allMinimaps = returnedString.split("\n");
 
 			logger.debug ("Got " + allMinimaps.length + " minimap URL lines");
@@ -568,7 +577,7 @@ public class MarkerController {
 				if (!cmPos.getChromosome().equalsIgnoreCase("UN")) {
 					Float cM = cmPos.getCmOffset();
 					if ((cM != null) && (cM.floatValue() >= 0.0)) {
-						minimapUrl = this.getMinimapUrl(markerKey);
+						minimapUrl = getMinimapUrl(markerKey);
 						minimaps.put (markerKey, minimapUrl);
 					}
 				}
@@ -1258,7 +1267,7 @@ public class MarkerController {
 			return mav;
 		}// success
 
-		return this.prepareMarker(markerList.get(0));
+		return prepareMarker(markerList.get(0));
 	}
 
 	@RequestMapping(value="/reference/{refID}")
@@ -1422,8 +1431,8 @@ public class MarkerController {
 			params.setIncludeMetaHighlight(true);
 			params.setIncludeSetMeta(true);
 		}
-		params.setSorts(this.genSorts(request,query));
-		params.setFilter(this.genFilters(query));
+		params.setSorts(genSorts(request,query));
+		params.setFilter(genFilters(query));
 
 		if (refKey != null) {
 			params.setFilter(new Filter(SearchConstants.REF_KEY, refKey));
@@ -1440,7 +1449,7 @@ public class MarkerController {
 
 		SearchParams sp = new SearchParams();
 		sp.setPageSize(250000);
-		sp.setFilter(this.genFilters(query));
+		sp.setFilter(genFilters(query));
 
 		// if we have nomen query, do text highlighting
 		if(notEmpty(query.getNomen())) {
@@ -1459,6 +1468,79 @@ public class MarkerController {
 
 	}
 
+	/* GO graph for an individual marker (by MGI ID)
+	 */
+	@RequestMapping(value="/gograph/{markerID:.+}", method = RequestMethod.GET)
+	public ModelAndView markerGOGraphByID(@PathVariable("markerID") String markerID) {
+		logger.debug("markerGOGraphByID started");
+
+		// setup search parameters object
+		SearchParams searchParams = new SearchParams();
+		Filter markerIdFilter = new Filter(SearchConstants.MRK_ID, markerID);
+		searchParams.setFilter(markerIdFilter);
+
+		// find the requested marker
+		SearchResults<Marker> searchResults = markerFinder.getMarkerByID(searchParams);
+		List<Marker> markerList = searchResults.getResultObjects();
+
+		// there can be only one...
+		if (markerList.size() < 1) { // none found
+			return errorMav("No Marker Found");
+		}
+		if (markerList.size() > 1) { // dupe found
+			return errorMav("Duplicate ID");
+		}
+
+		// at this point, we have a single marker
+		Marker marker = markerList.get(0);
+
+		if (marker.getHasGOGraph() != 1) {
+			return errorMav(marker.getSymbol() + " has no GO Graph");
+		}
+
+		String goGraphText = null;
+		try {
+			String goGraphPath = ContextLoader.getConfigBean().getProperty("GO_GRAPHS_PATH");
+
+			if (!goGraphPath.endsWith("/")) {
+				goGraphPath = goGraphPath + "/marker/" + markerID.replace(":", "_") + ".html";
+			} else {
+				goGraphPath = goGraphPath + "marker/" + markerID.replace(":", "_") + ".html";
+			}
+
+			logger.debug("Reading GO Graph from: " + goGraphPath);
+
+			goGraphText = TextFileReader.readFile(goGraphPath);
+
+			if (goGraphText == null) {
+				logger.debug("GO Graph text is null");
+			} else {
+				logger.debug("GO Graph text length: " + goGraphText.length());
+			}
+
+			// convert special MGI markups to their full HTML equivalents
+
+			NotesTagConverter ntc = new NotesTagConverter();
+			goGraphText = ntc.convertNotes(goGraphText, '|');
+
+			GOGraphConverter ggc = new GOGraphConverter();
+			goGraphText = ggc.translateMarkups(goGraphText);
+
+		} catch (IOException e) {
+			return errorMav("Could not read marker GO graph from file");
+		}
+
+		// generate the MAV to be passed to the detail page
+		ModelAndView mav = new ModelAndView("marker_go_graph");
+		mav.addObject("marker", marker);
+
+		// last-second cleanup at the method's end...
+		mav.addObject("goGraphText", goGraphText);
+		return mav;
+	}
+
+	/* add databaseDate to the given mav
+	 */
 	private void dbDate(ModelAndView mav) {
 		mav.addObject("databaseDate", dbInfoFinder.getSourceDatabaseDate());
 	}
@@ -1467,14 +1549,14 @@ public class MarkerController {
 	 * will be delimited by line-breaks
 	 */
 	private String getAllMinimapUrls() {
-		return this.getMinimapUrl("all");
+		return getMinimapUrl("all");
 	}
 
 	/** get a String containing the URL to the minimap for the marker with the
 	 * given markerKey
 	 */
 	private String getMinimapUrl(Integer markerKey){
-		return this.getMinimapUrl(markerKey.toString());
+		return getMinimapUrl(markerKey.toString());
 	}
 
 	/** get a String containing one or more URLs for minimaps.  If parm
@@ -1736,14 +1818,14 @@ public class MarkerController {
 		 * the selction list), then we need to pull them out of the database,
 		 * generate it, and cache it
 		 */
-		if (this.chromosomeOptions == null) {
+		if (chromosomeOptions == null) {
 			SearchResults<QueryFormOption> chrResults = queryFormOptionFinder.getQueryFormOptions("marker","chromosome");
 			List<QueryFormOption> chromosomes = chrResults.getResultObjects();
 
-			this.chromosomeOptions = new LinkedHashMap<String,String>();
-			this.chromosomeOptions.put(MarkerQueryForm.CHROMOSOME_ANY,"Any");
+			chromosomeOptions = new LinkedHashMap<String,String>();
+			chromosomeOptions.put(MarkerQueryForm.CHROMOSOME_ANY,"Any");
 			for (QueryFormOption chromosome : chromosomes) {
-				this.chromosomeOptions.put(chromosome.getSubmitValue(),chromosome.getDisplayValue());
+				chromosomeOptions.put(chromosome.getSubmitValue(),chromosome.getDisplayValue());
 			}
 		}
 
@@ -1773,6 +1855,18 @@ public class MarkerController {
 				genomeBuild = genomeBuilds.get(0).getDisplayValue();
 			}
 		}
+		
+		if (snpBuildNumber == null) {
+			SearchResults<QueryFormOption> options = queryFormOptionFinder.getQueryFormOptions("snp", "build number");
+			List<QueryFormOption> optionList = options.getResultObjects();
+
+			if (optionList.size() > 0) {
+				snpBuildNumber = optionList.get(0).getDisplayValue();
+				logger.debug("Cached SNP build number: " + snpBuildNumber);
+			}
+		}
+		
+		
 	}
 	private boolean notEmpty(String s) {
 		return s!=null && !s.equals("");

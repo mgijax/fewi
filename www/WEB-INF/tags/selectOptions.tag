@@ -6,26 +6,25 @@
 <%
 	// items can be either a Map (preferably LinkedHashMap) or a Collection of values
 	Map itemMap;
-	if(items instanceof java.lang.Iterable)
-	{
+	if(items instanceof java.lang.Iterable) {
 		itemMap = new LinkedHashMap();
-		for(Object i : (java.lang.Iterable) items)
-		{
+		for(Object i : (java.lang.Iterable) items) {
 			itemMap.put(i,i);
 		}
 	}
 	else itemMap = (Map) items;
 	
-    if(values==null)
-    {
-    	values = new ArrayList();
-    	if(value!=null) values.add(value);
-    }
+	// Defaults the selected value to the first item
+	if(values==null) {
+		values = new ArrayList();
+		if(value!=null) values.add(value);
+	}
 	
-	for(Object key : itemMap.keySet())
-	{
+	for(Object key : itemMap.keySet()) {
 		Object value = itemMap.get(key);
 		Object selected = values.contains(key) ? "selected=\"selected\"" : "";
 %>
-	<option value="<%=key %>" <%=selected %>><%=value %></option>
-<% 	} %>
+		<option value="<%=key %>" <%=selected %>><%=value %></option>
+<%
+ 	}
+%>

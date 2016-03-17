@@ -85,6 +85,7 @@ public class BigExcelBatchSummary extends AbstractBigExcelView {
 					MarkerLocation loc = m.getPreferredCoordinates();
 					if (loc != null) {
 						row.createCell(col++).setCellValue(loc.getChromosome());
+						if(loc.getStrand() == null) loc.setStrand(""); // Otherwise front end throughts null pointer exception
 						row.createCell(col++).setCellValue(loc.getStrand());
 						row.createCell(col++).setCellValue(loc.getStartCoordinate());
 						row.createCell(col++).setCellValue(loc.getEndCoordinate());

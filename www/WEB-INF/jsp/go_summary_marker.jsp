@@ -55,7 +55,7 @@
 <br>
 <div class="GO">
 <a name="text"></a><h3 class="extraLarge"><b>Go Annotations as Summary Text</b> <a href="#tabular" class="GO">(Tabular View)</a>
-<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOMarkerGraph&id=${marker.primaryID}" class="GO">(GO Graph)</a></c:if></h3>
+<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.FEWI_URL}marker/gograph/${marker.primaryID}" class="GO">(GO Graph)</a></c:if></h3>
 
 <%=ntc.convertNotes(marker.getGOText(), '|')%><br><hr><br>
 </div>
@@ -87,7 +87,7 @@ All GO annotations for ${marker.symbol} (<a href="${configBean.FEWI_URL}go/marke
 <c:if test="${empty headerTerm}">
 <a name="tabular"></a><h3 class="extraLarge"><b>Go Annotations in Tabular Form</b>
 <a href="#text" class="GO">(Text View)</a>
-<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.JAVAWI_URL}WIFetch?page=GOMarkerGraph&id=${marker.primaryID}" class="GO">(GO Graph)</a></c:if>
+<c:if test="${marker.hasGOGraph == 1}"><a href="${configBean.FEWI_URL}marker/gograph/${marker.primaryID}" class="GO">(GO Graph)</a></c:if>
 </h3>
 </c:if>
 

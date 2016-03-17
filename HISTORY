@@ -1,3 +1,38 @@
+TAG: fewi-6-0-3-4
+DATE: 03/09/2016
+STAFF: oblod
+CHANGES: Release 6-0-3-4 for fewi
+
+TAG: fewi-6-0-3-3
+DATE: 3/2/2016
+STAFF: jsb
+CHANGES: picked up config changes that were lost in last tag
+
+TAG: fewi-6-0-3-2
+DATE: 3/1/2016
+STAFF: jsb
+CHANGES: fixed bug in marker detail links to expression results
+
+TAG: fewi-6-0-3-1
+DATE: 3/1/2016
+STAFF: lnh
+CHANGES: 
+ 1) config/fewi.properties.mgi-fewi1 added  solr.server2.url=http://bhmgisnpdb01lt.jax.org:18983/solr/
+ 2) config/fewi.properties.mgi-pubfewi1 added solr.server2.url=http://bhmgipsnp01lp.jax.org:18983/solr/
+ 3) config/fewi.properties.mgi-pubfewi2 added solr.server2.url=http://bhmgipsnp01lp.jax.org:28983/solr/
+ 4) config/fewi.properties.mgi-botfewi1 added solr.server2.url=http://bhmgibsnp01lp.jax.org:18983/solr/
+ 5) config/fewi.properties.mgi-botfewi2 added solr.server2.url=http://bhmgibsnp01lp.jax.org:28983/solr/
+
+TAG: fewi-6-0-3-0
+DATE: 2/29/2016
+STAFF: jsb
+CHANGES: alpha test for Florida project
+
+TAG: fewi-6-0-2-4,fewi-6-0-2-5
+DATE: 2/9/2016
+STAFF: kstone
+CHANGES: superscript QTL notes
+
 TAG: fewi-tr12223-BP
 DATE: 1/15/2016
 STAFF: kstone
@@ -12,6 +47,11 @@ TAG: fewi-tr12070-premerge
 DATE: 12/13/15
 STAFF: pf
 CHANGES: pre-merge tag for fewi
+
+TAG: fewi-tr11937-1
+DATE: 10/19/2015
+STAFF: jsb
+CHANGES: merged post-branch changes up from trunk into our SNP dev branch
 
 TAG: fewi-6-0-1-8
 DATE: 10/13/2015

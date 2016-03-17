@@ -73,7 +73,11 @@ public class ExcelGxdMarkersSummary  extends AbstractBigExcelView
 					row.createCell(4).setCellValue(mr.getChr());
 					row.createCell(5).setCellValue(mr.getLocation());
 					row.createCell(6).setCellValue(mr.getCM());
-					row.createCell(7).setCellValue(mr.getStrand());
+					if (mr.getStrand() != null) {
+						row.createCell(7).setCellValue(mr.getStrand());
+					} else {
+						row.createCell(7).setCellValue("");
+					}
 				}
 			}
 		}

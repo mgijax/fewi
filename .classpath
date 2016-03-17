@@ -25,8 +25,8 @@
 	<classpathentry kind="lib" path="www/WEB-INF/lib/commons-configuration-1.6.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-core-asl-1.5.4.jar"/>
-	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-mapper-asl-1.5.4.jar"/>
+	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-mapper-asl-1.9.2.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/postgresql-8.3-603.jdbc3.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/com.springsource.javax.inject-1.0.0.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/dom4j-1.6.1.jar"/>
@@ -79,5 +79,6 @@
 	<classpathentry kind="lib" path="www/WEB-INF/lib/ognl-3.0.8.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/xom-1.2.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/snpdatamodel"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

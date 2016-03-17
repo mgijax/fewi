@@ -535,8 +535,8 @@ class EvidenceFacetSorter implements Comparator<String> {
 	}
 
 	public int compare (String a, String b) {
-		int aRank = this.rank(a);
-		int bRank = this.rank(b);
+		int aRank = rank(a);
+		int bRank = rank(b);
 
 		if (aRank == bRank) { return a.compareTo(b); }
 		return Double.compare(aRank, bRank);

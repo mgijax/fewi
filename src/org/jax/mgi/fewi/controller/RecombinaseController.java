@@ -119,8 +119,8 @@ public class RecombinaseController {
         // set up search parameters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
-        params.setSorts(this.parseSummarySorts(request));
-        params.setFilter(this.parseRecombinaseQueryForm(query));
+        params.setSorts(parseSummarySorts(request));
+        params.setFilter(parseRecombinaseQueryForm(query));
         params.setIncludeMetaHighlight(true);
         params.setIncludeSetMeta(true);
 
@@ -176,8 +176,47 @@ public class RecombinaseController {
         SearchResults<AlleleSystem> results = recombinaseFinder.getAlleleSystemByKey(alleleSystemKey);
         List<AlleleSystem> alleleSystems = results.getResultObjects();
 
-        // ensure we found allele system
-        if (alleleSystems.size() != 1) {
+	// Last minute hack for existing bug...  We're coming to this page with
+	// a systemKey parameter.  This sometimes refers to allele_system_key
+	// in the recombinase_allele_system table, and this works okay.
+	// Sometimes, however, it uses the other_system_key (from the
+	// recombinase_other_system table) and the system_key (from the
+	// recombinase_other_allele table), both of which identify the system
+	// in the 'term' table.  These links were not working and needed a
+	// quick fix before our release.
+
+	String alleleID = request.getParameter("id");
+
+        AlleleSystem alleleSystem = null;
+        Allele allele = null;
+	boolean foundMatch = false;
+
+	// If we found a match with our 'systemKey', is it for the expected
+	// allele?  If so, we're all set.
+	if (alleleSystems.size() == 1) {
+        	alleleSystem = alleleSystems.get(0);
+        	allele = alleleSystem.getAllele();
+
+		if (allele.getPrimaryID().equals(alleleID)) {
+			foundMatch = true;
+		} 
+	}
+	
+	// If we didn't find an alleleSystem or if we didn't find one with the
+	// right allele, then assume that the 'systemKey' refers to an
+	// 'otherSystemKey' and try that route.
+	if (!foundMatch) {
+		results = recombinaseFinder.getAlleleSystems(alleleID, alleleSystemKey);
+		alleleSystems = results.getResultObjects();
+
+		if (alleleSystems.size() == 1) {
+        		alleleSystem = alleleSystems.get(0);
+        		allele = alleleSystem.getAllele();
+			foundMatch = true;
+		}
+	}
+
+	if (!foundMatch) {
             // forward to error page
             mav = new ModelAndView("error");
             mav.addObject("errorMsg", "Allele/System not available");
@@ -186,9 +225,6 @@ public class RecombinaseController {
 	         * Remove sub-objects from AlleleSystem, and fill ModelAndView
 	         * with display data
 	         */
-        	AlleleSystem alleleSystem = alleleSystems.get(0);
-        	Allele allele = alleleSystem.getAllele();
-
 
         	String queryString = request.getQueryString();
         	if (request.getParameterMap().containsKey("alleleKey")){
@@ -272,8 +308,8 @@ public class RecombinaseController {
         // generate search parms object;  add pagination, sorts, and filters
         SearchParams params = new SearchParams();
         params.setPaginator(page);
-        params.setSorts(this.genRecomSummarySorts(request));
-        params.setFilter(this.genFilters(query));
+        params.setSorts(genRecomSummarySorts(request));
+        params.setFilter(genFilters(query));
 
         // perform query, and pull out the requested objects
         searchResults = recombinaseFinder.getAssaySummary(params);
@@ -357,7 +393,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getDriverFacet(params);
 
@@ -383,7 +419,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getInducerFacet(params);
 
@@ -409,7 +445,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getSystemDetectedFacet(params);
 
@@ -435,7 +471,7 @@ public class RecombinaseController {
 
 		// setup SearchParams & SearchResults
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseRecombinaseQueryForm(qf));
+		params.setFilter(parseRecombinaseQueryForm(qf));
 
 		SearchResults<RecombinaseEntity> facetResults = recombinaseFinder.getSystemNotDetectedFacet(params);
 

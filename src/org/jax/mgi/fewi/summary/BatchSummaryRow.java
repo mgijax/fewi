@@ -36,8 +36,6 @@ public class BatchSummaryRow {
 
 	// config values
     private final String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
-    private final String javawiUrl = ContextLoader.getConfigBean().getProperty("JAVAWI_URL");
-    //private final String wiUrl = ContextLoader.getConfigBean().getProperty("WI_URL");
 
     private static String urlPattern = "<a href='%s' target='_blank'>%s</a>";
     private static String noWrap = "<span style='white-space:nowrap;'>%s</span>";
@@ -414,7 +412,7 @@ public class BatchSummaryRow {
 
     public String getRefsnpIds(){
     	List<String> refSnpIds = new ArrayList<String>();
-    	String url = javawiUrl + "WIFetch?page=snpDetail&id=%s";
+    	String url = fewiUrl + "snp/%s";
     	if (query.getRefsnp() && batchMarkerId.getMarker() != null){
 			for (String snp : batchMarkerId.getMarker().getBatchMarkerSnps()) {
 				String snpUrl = String.format(url, snp);

@@ -47,15 +47,13 @@ public class SequenceFinder {
         logger.debug("->SequenceFinder.getSequenceByID(" + seqID + ")");
 
 	SearchParams params = new SearchParams();
-	params.setFilter(
-	    new Filter(SearchConstants.SEQ_ID, seqID) );
+	params.setFilter(new Filter(SearchConstants.SEQ_ID, seqID) );
 
-	SearchResults<Sequence> results = this.getSequenceByID(params);
+	SearchResults<Sequence> results = getSequenceByID(params);
 	List<Sequence> seqList = results.getResultObjects();
 
 	if (seqList.size() != 1) {
-	    logger.debug("->found " + seqList.size() + " sequences for ID "
-		+ seqID);
+	    logger.debug("->found " + seqList.size() + " sequences for ID " + seqID);
 	    return null;
 	}
 	return seqList.get(0);

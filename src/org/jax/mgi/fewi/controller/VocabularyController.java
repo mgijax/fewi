@@ -209,7 +209,7 @@ public class VocabularyController {
 	    matchedTerm.setTokens(tokens);
 	}
 
-	List<SolrAnatomyTerm> results = this.floatBeginsMatches(
+	List<SolrAnatomyTerm> results = floatBeginsMatches(
 	    sr.getResultObjects(), tokens);
 
 	ModelAndView mav = new ModelAndView("anatomy_search");
@@ -424,7 +424,7 @@ public class VocabularyController {
 	ModelAndView mav = new ModelAndView("anatomy_term_pane");
 
 	mav.addObject("term", term);
-	mav.addObject("title", this.getAnatomyTermDetailTitle(term)); 
+	mav.addObject("title", getAnatomyTermDetailTitle(term)); 
 
 	// compose the dropdown list for linking to term at other stages
 
@@ -436,7 +436,7 @@ public class VocabularyController {
 	VocabTerm emapaTerm = null;
 	String dropdownMsg = null;
 
-	mav.addObject("title", this.getAnatomyTermDetailTitle(term));
+	mav.addObject("title", getAnatomyTermDetailTitle(term));
 
 	if (term.getIsEmapa()) {
 	    emapaTerm = term;

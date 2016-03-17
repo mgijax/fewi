@@ -115,7 +115,8 @@ public class BatchController {
 	//-------------------------//
 	// Forward from other page/form
 	//-------------------------//
-	@RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
+	//@RequestMapping(value="/forwardSummary", method=RequestMethod.GET)
+	@RequestMapping(value="/forwardSummary")
 	public ModelAndView batchSummary2Get(HttpSession session,HttpServletRequest request) {
 
 		BatchQueryForm queryForm = (BatchQueryForm) request.getAttribute("queryForm");
@@ -123,34 +124,33 @@ public class BatchController {
 		return processSummary(session, queryForm);
 	}
 
-	private ModelAndView processSummary (HttpSession session, BatchQueryForm queryForm){
-
-		logger.info(queryForm.toString());
-
-		session.removeAttribute("idSet");        
-		logger.debug("sessionId: " + session.getId());
-
+	/* If 'mpFile' is non-null and non-empty, extracts IDs from it based
+	 * on the specified 'column' and 'fileType'.  If 'mpFile' is null,
+	 * falls abck on set of IDs in 'ids'.
+	 */
+	protected List<String> getIDList (BatchQueryForm queryForm) {
 		List<String> idList = null; 
-		MultipartFile file = queryForm.getIdFile();
 
-		if (file != null && !file.isEmpty()){
-			logger.debug("process file");
-			String sep = "";
+		MultipartFile mpFile = queryForm.getIdFile();
+
+		if (mpFile != null && !mpFile.isEmpty()){
+			logger.debug("process file: " + mpFile.getOriginalFilename());
 			String fileType = queryForm.getFileType();
+			Integer column = queryForm.getIdColumn();
+
+			String sep = "";
 			if (fileType != null && "".equals("cvs")) {
 				sep = ",";             
 			} else {
 				sep = "\t";
 			}
 
-			Integer col = queryForm.getIdColumn();
-
 			InputStream idStream;
 			StringWriter writer = new StringWriter();
 			try {
-				idStream = file.getInputStream();
+				idStream = mpFile.getInputStream();
 				IOUtils.copy(idStream , writer);
-				idList = parseColumn(writer.toString(), col, sep);
+				idList = parseColumn(writer.toString(), column, sep);
 
 				writer.close();
 				idStream.close();
@@ -161,6 +161,17 @@ public class BatchController {
 		} else {     	
 			idList = parseIds(queryForm.getIds());
 		}
+		return idList;
+	}
+
+	private ModelAndView processSummary (HttpSession session, BatchQueryForm queryForm){
+
+		logger.info(queryForm.toString());
+
+		session.removeAttribute("idSet");        
+		logger.debug("sessionId: " + session.getId());
+
+		List<String> idList = getIDList(queryForm);
 
 		if (idList != null && idList.size() > 0){
 			logger.debug("new id set: " + idList.iterator().next());
@@ -267,6 +278,14 @@ public class BatchController {
 		}
 		
 		return StringUtils.join(list, ",");
+	}
+
+	public List<String> getMarkerIDs(BatchQueryForm form, List<String> idSet) {
+		logger.debug("in BatchController.getMarkerIDs()");
+		SearchParams params = new SearchParams();
+		params.setPaginator(Paginator.ALL_PAGES);
+		params.setFilter(genFilters(form, idSet));
+		return batchFinder.getMarkerIDs(params);
 	}
 
 	/*

@@ -792,7 +792,7 @@ td.right { text-align: right }
 	<font class="label">Candidate Genes</font><p>
   	  <c:forEach var="qtlExpt" items="${qtlCandidateGenes}">
 	    (<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)<br/>
-	    ${qtlExpt.htmlNote}<p/>
+	    <fewi:qtlNote value="${qtlExpt.note}" /><p/>
 	  </c:forEach>
 	</c:if>
 	<c:if test="${not empty qtlExpts}">
@@ -800,7 +800,7 @@ td.right { text-align: right }
 	  its variants and associated markers</font><p>
   	  <c:forEach var="qtlExpt" items="${qtlExpts}">
 	    (<i><a href="${configBean.FEWI_URL}reference/${qtlExpt.jnumID}" class='MP'>${qtlExpt.jnumID}</a></i>)<br/>
-	    ${qtlExpt.htmlNote}<p/>
+	    <fewi:qtlNote value="${qtlExpt.note}" /><p/>
 	  </c:forEach>
 	</c:if>
       </font>

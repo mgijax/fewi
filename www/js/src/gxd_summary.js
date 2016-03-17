@@ -13,6 +13,12 @@ var IMAGES_PAGE_SIZE = 25;
 var LOADING_IMG_SRC = "/fewi/mgi/assets/images/loading.gif";
 var LOADING_IMG = "<img src=\""+LOADING_IMG_SRC+"\" height=\"24\" width=\"24\">";
 
+//set up XHRDataSource objects to use POST submissions
+var xhrConfig = { connMethodPost :  true,
+	maxCacheEntries : 3,
+	connXhrMode : "cancelStaleRequests"
+	};
+
 //Shortcut variable for the YUI history manager
 var History = YAHOO.util.History;
 
@@ -88,18 +94,234 @@ var generateRequest = mgiTab._rp.generateRequest;
 // to mousemine
 var getMarkerIds = function() {
 	
-	var url = fewiurl + "gxd/markers/idList?" + getQueryStringWithFilters();
+	//var url = fewiurl + "gxd/markers/idList?" + getQueryStringWithFilters();
+	var url = fewiurl + "gxd/markers/idList";
 	
 	var callback = {
 		success : function(oResponse) {
 			$("#mousemineids").val(oResponse.responseText);
 		},
 	};
-	YAHOO.util.Connect.asyncRequest('GET', url, callback);
+	// YAHOO.util.Connect.asyncRequest('GET', url, callback);
+	YAHOO.util.Connect.asyncRequest('POST', url, callback, getQueryStringWithFilters());
 };
 
 //a global variable to helpthe tab change handler know when to fire off a new query
 var newQueryState = false;
+
+// do a form submission based on one of the Export buttons
+var buildAndSubmit = function(formID, formAction) {
+	// find the specified form
+	var gxdForm = $("#" + formID);
+	if (gxdForm === null) {
+		alert("Can't find element (" + formID + "); action cancelled.");
+		return;
+	}
+
+	// set its action attribute
+	gxdForm.attr('action', formAction);
+
+	// remove any existing hidden parameters in the form
+	var oldFields = $("#" + formID + " input[type='hidden']").remove();
+
+	// add the parameters as hidden fields to the form
+	var querystringWithFilters = getQueryStringWithFilters();
+	var pairs = querystringWithFilters.split("&");
+
+	for (var j in pairs) {
+		var pair = pairs[j];
+		var tokens = pair.split('=');
+		var el = jQuery('<input name="' + tokens[0] + '" value="' + tokens[1] + '" type="hidden">');
+		gxdForm.append(el);
+	}
+
+	// submit the form
+	gxdForm.submit();
+};
+
+// parses request parameters and resets and values found with their matching form input element
+// returns false if no parameters were found
+// responsible for repopulating the form during history manager changes
+function reverseEngineerFormInput(request)
+{
+	var params = parseRequest(request);
+	var formID = "#gxdQueryForm";
+	var foundDifStruct=false;
+	var foundDifStage=false;
+	var foundBatch=false;
+	var filters = {};	// filters[filter name] = [ values ]
+
+	for(var key in params)
+	{
+		if(key == "detected")
+		{
+			// HACK for the radio buttons
+			params["detected1"] = params[key];
+			params["detected2"] = params[key];
+		}
+		else if(key == "difStructure") foundDifStruct=true;
+		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
+		else if(key == 'idType') foundBatch=true;
+	}
+	// make sure correct form is visible
+	// this code allows for flexibility to add third ribbon
+	if(foundDifStruct && foundDifStage)
+	{
+		formID = "#gxdDifferentialQueryForm3";
+		showDifBothQF();
+	}
+	else if (foundDifStruct)
+	{
+		formID = "#gxdDifferentialQueryForm1";
+		showDifStructuresQF();
+	}
+	else if (foundDifStage)
+	{
+		formID = "#gxdDifferentialQueryForm2";
+		showDifStagesQF();
+	} else if (foundBatch)
+	{
+		formID = "#gxdBatchQueryForm1";
+		showBatchSearchForm();
+	}
+
+	var foundParams = false;
+	if (typeof resetQF == 'function') { resetQF(); }
+	for(var key in params)
+	{
+		// need special handling for idFile field (do not set this to
+		// an empty string!)
+		if (key == 'idFile') {
+			// no op - skip it
+			// $(formID+" [name='idFile']").value = null;
+		}
+		else if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
+		{
+			//var input = YAHOO.util.Dom.get(key);
+			// jQuery is better suited to resolving form name parameters
+			var input = $(formID+" [name='"+key+"']");
+			if(input.length < 1) input = $(formID+" #"+key);
+			if(input!=undefined && input!=null && input.length > 0)
+			{
+
+				input = input[0];
+				if(input.tagName=="TEXTAREA")
+				{
+					input.value = decodeURIComponent(params[key]);
+					if (input.id == 'ids') {
+						input.value = input.value.replace(/ /g, '\n');
+					}
+				}
+				else if(input.tagName=="INPUT")
+				{
+					foundParams = true;
+					// do radio boxes
+					if(input.type == "radio")
+					{
+						if(key=="isWildType")
+						{
+							YAHOO.util.Dom.get("isWildType").checked = true;
+						}
+						else if(input.value == params[key])
+						{
+							input.checked=true;
+						}
+					}
+					// do check boxes
+					else if(input.type=="checkbox")
+					{
+						var options = [];
+						var rawParams = [].concat(params[key]);
+						for(var i=0;i<rawParams.length;i++)
+						{
+							options.push(decodeURIComponent(rawParams[i]));
+						}
+						// The YUI.get() only returns one checkbox, but we want the whole set.
+						// The class should also be set to the same name.
+						var boxes = YAHOO.util.Selector.query("."+key);
+						for(var i=0;i<boxes.length;i++)
+						{
+							var box = boxes[i];
+							var checked = false;
+							for(var j=0;j<options.length;j++)
+							{
+								if(options[j] == box.value)
+								{
+									checked = true;
+									box.checked = true;
+									break;
+								}
+							}
+							if(!checked)
+							{
+								box.checked = false;
+							}
+						}
+					}
+					else
+					{
+						if (key == "mutatedIn")
+						{
+							YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
+						}
+						input.value = decodeURIComponent(params[key]);
+					}
+				}
+				else if(input.tagName=="SELECT")
+				{
+					if (input.name == "age") {
+						// open the age tab
+						//if(foundDifStage) selectDifAge();
+						//else selectAge();
+						selectAge();
+					}
+					foundParams = true;
+					var options = [];
+					// decode all the options first
+					var rawParams = [].concat(params[key]);
+					for(var i=0;i<rawParams.length;i++)
+					{
+						options.push(decodeURIComponent(rawParams[i]));
+					}
+					// find which options need to be selected, and select them.
+					for(var key in input.children)
+					{
+						if(input[key]!=undefined)
+						{
+							var selected = false;
+							for(var j=0;j<options.length;j++)
+							{
+								if(options[j] == input[key].value)
+								{
+									selected = true;
+									input[key].selected = true;
+									break;
+								}
+							}
+							if(!selected)
+							{
+								input[key].selected = false;
+							}
+						}
+					}
+				}
+			} else if (typeof isFilterable != 'undefined' &&
+					isFilterable(key)) {
+			    // deal with filters (no form fields for them)
+				// TODO: This needs to move to a different function. Filters should not be a part of this method
+			    filters[key] = [].concat(params[key]);
+			}
+		}
+	}
+
+	if(typeof resetFacets != 'undefined')
+	{
+		resetFacets(filters);
+		prepFilters(request);	// need to reset the URLs for the filters
+	}
+	if (typeof assayTypesCheck == 'function') { assayTypesCheck(); }
+	return foundParams;
+}
 
 //a globabl variable to help the summary know when to generate a new datatable
 var previousQueryString = "none";
@@ -129,12 +351,14 @@ handleNavigation = function (request, calledLocally) {
 	var foundParams = true;
 	// test if there is a form that needs to be populated
 	if (typeof reverseEngineerFormInput == 'function')
+		log("request: " + request);
 		foundParams = reverseEngineerFormInput(request);
 
 	//Set the global querystring parameter for later navigation
 	// if there is no getQueryString function, we assume that window.querystring is already set
 	if (typeof getQueryString == 'function')
-		window.querystring = getQueryString();
+		window.querystring = getQueryString().replace('&idFile=&', '&');
+		//window.querystring = getQueryString();
 
 	// we need the tab state of the request
 	var currentTab = getCurrentTab();
@@ -149,9 +373,9 @@ handleNavigation = function (request, calledLocally) {
 	var doNewQuery = querystring != previousQueryString;
 	previousQueryString = querystring;
 
-
-	if(!foundParams)
+	if((!foundParams) && (typeof resetQF == 'function'))
 	{
+		log("found empty request");
 		// this is how we handle an empty request.
 		if(typeof closeSummaryControl == 'function')
 			closeSummaryControl();
@@ -182,23 +406,23 @@ handleNavigation = function (request, calledLocally) {
 			// Wire up report and batch buttons
 			var resultsTextReportButton = YAHOO.util.Dom.get('resultsTextDownload');
 			if (!YAHOO.lang.isNull(resultsTextReportButton)) {
-				resultsTextReportButton.setAttribute('href', fewiurl + 'gxd/report.txt?' + querystringWithFilters);
+				resultsTextReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.txt')");
 			}
 			var resultsExcelReportButton = YAHOO.util.Dom.get('resultsExcelDownload');
 			if (!YAHOO.lang.isNull(resultsExcelReportButton)) {
-				resultsExcelReportButton.setAttribute('href', fewiurl + 'gxd/report.xlsx?' + querystringWithFilters);
+				resultsExcelReportButton.setAttribute('onClick', "buildAndSubmit('resultsExportForm', '" + fewiurl + "gxd/report.xlsx')");
 			}
 			var markersTextReportButton = YAHOO.util.Dom.get('markersTextDownload');
 			if (!YAHOO.lang.isNull(markersTextReportButton)) {
-				markersTextReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.txt?' + querystringWithFilters);
+				markersTextReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.txt')");
 			}
 			var markersExcelReportButton = YAHOO.util.Dom.get('markersExcelDownload');
 			if (!YAHOO.lang.isNull(markersExcelReportButton)) {
-				markersExcelReportButton.setAttribute('href', fewiurl + 'gxd/marker/report.xlsx?' + querystringWithFilters);
+				markersExcelReportButton.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/marker/report.xlsx')");
 			}
 			var markersBatchForward = YAHOO.util.Dom.get('markersBatchForward');
 			if (!YAHOO.lang.isNull(markersBatchForward)) {
-				markersBatchForward.setAttribute('href', fewiurl + 'gxd/batch?' + querystringWithFilters);
+				markersBatchForward.setAttribute('onClick', "buildAndSubmit('markerExportForm', '" + fewiurl + "gxd/batch')");
 			}
 		}
 
@@ -287,13 +511,29 @@ function getQueryStringWithFilters() {
 	if (filterString) {
 		querystringWithFilters = querystringWithFilters + "&" + filterString;
 	}
-	return querystringWithFilters;
+	return querystringWithFilters.replace("&idFile=&", "&");
 }
 
 //refresh all four counts in each tab via AJAX
 //store the request objects to verify the correct IDs;
 var resultsRq,assaysRs,genesRq,imagesRq;
 window.previousTabQuery="";
+
+// also use the totalGenesCount to update the You Searched For section, but
+// only on the first call (filtering should not affect that count)
+
+var updatedYSF = false;
+var ysfGeneCount = '';	// count of genes matching base query (before filters)
+
+function resetYSF() {
+	updatedYSF = false;
+	ysfGeneCount = '';
+}
+
+function getYsfGeneCount() {
+	return ysfGeneCount;
+}
+
 function refreshTabCounts()
 {
 	var querystringWithFilters = getQueryStringWithFilters();
@@ -311,7 +551,18 @@ function refreshTabCounts()
 		// resolve the request ID to its appropriate handler
 		if(o.tId==resultsRq.tId) YAHOO.util.Dom.get("totalResultsCount").innerHTML = o.responseText;
 		else if(o.tId==assaysRq.tId) YAHOO.util.Dom.get("totalAssaysCount").innerHTML = o.responseText;
-		else if(o.tId==genesRq.tId) YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
+		else if(o.tId==genesRq.tId) {
+			log('handling gene count');
+			YAHOO.util.Dom.get("totalGenesCount").innerHTML = o.responseText;
+			log('updatedYSF: ' + updatedYSF);
+			if (!updatedYSF) {
+				updatedYSF = true;
+				ysfGeneCount = o.responseText;
+				$('.countHere').text(o.responseText + $('.countHere').text());
+				log('updated .countHere');
+			} // end - updated YSF
+			log('updatedYSF: ' + updatedYSF);
+		}
 		else if(o.tId==imagesRq.tId) YAHOO.util.Dom.get("totalImagesCount").innerHTML = o.responseText;
 	}
 
@@ -321,6 +572,7 @@ function refreshTabCounts()
 	YAHOO.util.Dom.get("totalGenesCount").innerHTML = "";
 	YAHOO.util.Dom.get("totalImagesCount").innerHTML = "";
 
+	/*
 	resultsRq = YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/results/totalCount?"+querystringWithFilters,
 			{	success:handleCountRequest,
 		failure:function(o){}
@@ -337,6 +589,23 @@ function refreshTabCounts()
 			{	success:handleCountRequest,
 		failure:function(o){}
 			},null);
+	*/
+	resultsRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/results/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
+	assaysRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/assays/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
+	genesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/markers/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
+	imagesRq = YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/images/totalCount",
+			{	success:handleCountRequest,
+		failure:function(o){}
+			}, querystringWithFilters);
 }
 
 window.previousGxdLitQuery=""
@@ -362,10 +631,15 @@ window.previousGxdLitQuery=""
 	};
 
 	YAHOO.util.Dom.get("gxdLitInfo").innerHTML = "";
-	YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/gxdLitCount?"+querystring,
+	/* YAHOO.util.Connect.asyncRequest('GET', fewiurl+"gxd/gxdLitCount?"+querystring,
 			{	success:handleGxdLitCount,
 		failure:function(o){}
 			},null);
+	*/
+	YAHOO.util.Connect.asyncRequest('POST', fewiurl+"gxd/gxdLitCount",
+			{	success:handleGxdLitCount,
+		failure:function(o){}
+			}, querystring);
 }
 
 
@@ -398,7 +672,7 @@ var gxdGenesTable = function (oCallback) {
 	                     ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/markers/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -422,8 +696,8 @@ var gxdGenesTable = function (oCallback) {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 	var paginator = mgiTab.createPaginator(
 			[50,100,250,500], // rows per page options
@@ -519,7 +793,7 @@ var gxdAssaysTable = function() {
 	                    ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/assays/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/assays/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -539,8 +813,8 @@ var gxdAssaysTable = function() {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 	var paginator = mgiTab.createPaginator(
 			[50,100,250,500], // rows per page options
@@ -633,7 +907,7 @@ var gxdResultsTable = function() {
 	                    ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/results/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/results/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -658,8 +932,8 @@ var gxdResultsTable = function() {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 
 	var paginator = mgiTab.createPaginator(
@@ -761,7 +1035,7 @@ var gxdImagesTable = function() {
 	                    ];
 
 	// DataSource instance
-	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/images/json?");
+	gxdDataSource = new YAHOO.util.XHRDataSource(fewiurl + "gxd/images/json", xhrConfig);
 	gxdDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
 	gxdDataSource.responseSchema = {
 			resultsList: "summaryRows",
@@ -778,8 +1052,8 @@ var gxdImagesTable = function() {
 			         }
 	};
 
-	gxdDataSource.maxCacheEntries = 3;
-	gxdDataSource.connXhrMode = "cancelStaleRequests";
+//	gxdDataSource.maxCacheEntries = 3;
+//	gxdDataSource.connXhrMode = "cancelStaleRequests";
 
 	var paginator = mgiTab.createPaginator(
 			[25,50,100,250], // rows per page options
@@ -873,7 +1147,7 @@ var structureStageGrid = function()
 
 	var buildGrid = function()
 	{
-		if (typeof getQueryString == 'function') window.querystring = getQueryString();
+		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&', '&');
 
 		currentStageGrid = GxdTissueMatrix({
 			target : "sgTarget",
@@ -965,7 +1239,7 @@ var structureGeneGrid = function()
 
 	var buildGrid = function()
 	{
-		if (typeof getQueryString == 'function') window.querystring = getQueryString();
+		if (typeof getQueryString == 'function') window.querystring = getQueryString().replace('&idFile=&','&');
 
 		currentGeneGrid = GxdTissueMatrix({
 			target : "ggTarget",
@@ -1080,7 +1354,7 @@ function historyInit()
 		// rebuild the global querystring
 		// if there is no getQueryString function, we assume that window.querystring is already set
 		if (typeof getQueryString == 'function')
-			window.querystring = getQueryString();
+			window.querystring = getQueryString().replace('&idFile=&', '&');
 
 		handleNavigation(currentState);
 	}

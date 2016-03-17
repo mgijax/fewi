@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 /*-------*/
 /* class */
@@ -74,16 +75,21 @@ public class GxdQueryForm implements Cloneable {
 	private List<String> matrixStructureId = new ArrayList<String>(); // used by popups and row expansions
 	private String matrixMarkerSymbol = "";
 
+	// needed for batch ID/symbol upload functionality
+	private String idType = "auto";
+	private Map<String,String> idTypes = new LinkedHashMap<String,String>();
+	private String ids;
+	private MultipartFile idFile = null;
+	private String fileType = "tab";
+	private Integer idColumn = new Integer(1);
+	private List<String> markerIDs = null;
+	private boolean batchSubmission = false;
+
 	// --------
 	// methods
 	// --------
 
-	public GxdQueryForm() {
-
-		detectedOptions.put("Yes", "detected in ");
-		detectedOptions.put("No", "not detected in ");
-		detectedOptions.put(ANY_DETECTED, "either");
-
+	private void populateAges() {
 		ages.put(ANY_AGE, "Any");
 		ages.put(EMBRYONIC, "Embryonic");
 		ages.put(POSTNATAL, "Postnatal");
@@ -128,9 +134,15 @@ public class GxdQueryForm implements Cloneable {
 		ages.put("19.5", "E19.5");
 		ages.put("20", "E20.0");
 		ages.put("20.5", "E20.5");
+	}
 
-		age.add(ANY_AGE);
+	private void populateDetectedOptions() {
+		detectedOptions.put("Yes", "detected in ");
+		detectedOptions.put("No", "not detected in ");
+		detectedOptions.put(ANY_DETECTED, "either");
+	}
 
+	private void populateStages() {
 		theilerStages.put(ANY_STAGE, "Any developmental stage");
 		theilerStages.put(1, "TS 1 (0.0-2.5 dpc)");
 		theilerStages.put(2, "TS 2 (1.0-2.5 dpc)");
@@ -160,9 +172,9 @@ public class GxdQueryForm implements Cloneable {
 		theilerStages.put(26, "TS 26 (18 dpc)");
 		theilerStages.put(27, "TS 27 (newborn)");
 		theilerStages.put(28, "TS 28 (postnatal)");
+	}
 
-		theilerStage.add(ANY_STAGE);
-
+	private void populateAssayTypes() {
 		assayTypes.add("Immunohistochemistry");
 		assayTypes.add("In situ reporter (knock in)");
 		assayTypes.add("Northern blot");
@@ -171,7 +183,9 @@ public class GxdQueryForm implements Cloneable {
 		assayTypes.add("RNase protection");
 		assayTypes.add("RT-PCR");
 		assayTypes.add("Western blot");
+	}
 
+	private void populateDifferentialFields() {
 		// init differential fields
 		for (Integer key : theilerStages.keySet()) {
 			if (!key.equals(ANY_STAGE))
@@ -183,14 +197,44 @@ public class GxdQueryForm implements Cloneable {
 			if (!key.equals(ANY_STAGE))
 				difTheilerStages.put(key, theilerStages.get(key));
 		}
-		// difTheilerStage.add(ANY_STAGE_NOT_ABOVE);
 
 		difAges.put(ANY_AGE_NOT_ABOVE, "Any age not selected above");
 		for (String key : ages.keySet()) {
 			if (key != ANY_AGE)
 				difAges.put(key, ages.get(key));
 		}
-		// difAge.add(ANY_AGE_NOT_ABOVE);
+	}
+
+	private void populateIdTypes() {
+		idTypes.put("auto", "Search all input types");
+		idTypes.put("MGI", "MGI Gene/Marker ID");
+		idTypes.put("current symbol", "Current Symbols Only");
+		idTypes.put("nomen", "All Symbols/Synonyms/Homologs");
+		idTypes.put("Entrez Gene", "Entrez Gene ID");
+		idTypes.put("Ensembl", "Ensembl ID");
+		idTypes.put("VEGA", "VEGA ID");
+		idTypes.put("UniGene", "UniGene ID");
+		idTypes.put("miRBase", "miRBase ID");
+		idTypes.put("GenBank", "GenBank/RefSeq ID");
+		idTypes.put("UniProt", "UniProt ID");
+		idTypes.put("Gene Ontology (GO)", "GO ID");
+		idTypes.put("RefSNP", "RefSNP ID");
+		idTypes.put("Affy 1.0 ST", "Affy 1.0 ST");
+		idTypes.put("Affy 430 2.0", "Affy 430 2.0");
+	}
+
+	public GxdQueryForm() {
+		// initialize option lists
+		this.populateDetectedOptions();
+		this.populateAges();
+		this.populateStages();
+		this.populateAssayTypes();
+		this.populateDifferentialFields();
+		this.populateIdTypes();
+
+		// set default values
+		age.add(ANY_AGE);
+		theilerStage.add(ANY_STAGE);
 	}
 
 	public List<String> getAssayType() {
@@ -557,6 +601,88 @@ public class GxdQueryForm implements Cloneable {
 		this.matrixMarkerSymbol = matrixMarkerSymbol;
 	}
 
+	//-------------------------------------------//
+	//--- fields related to batch submissions ---//
+	//-------------------------------------------//
+	
+	public MultipartFile getIdFile() {
+		return idFile;
+	}
+	public void setIdFile(MultipartFile idFile) {
+		this.idFile = idFile;
+	}
+
+	public Integer getIdColumn() {
+		return idColumn;
+	}
+	public void setIdColumn(Integer idColumn) {
+		this.idColumn = idColumn;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public String getIds() {
+		return ids;
+	}
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+
+	public Map<String,String> getIdTypes() {
+		return idTypes;
+	}
+	public void setIdTypes(Map<String,String> idTypes) {
+		this.idTypes = idTypes;
+	}
+
+	public String getIdType() {
+		return idType;
+	}
+	public void setIdType(String idType) {
+		this.idType = idType;
+	}
+
+	public boolean getBatchSubmission() {
+		return batchSubmission;
+	}
+	public void setBatchSubmission(boolean batchSubmission) {
+		this.batchSubmission = batchSubmission;
+	}
+
+	//-------------------------------------------------//
+	//--- convenience methods for batch submissions ---//
+	//-------------------------------------------------//
+
+	public List<String> getMarkerIDs() {
+		return markerIDs;
+	}
+	public void setMarkerIDs(List<String> markerIDs) {
+		this.markerIDs = markerIDs;
+	}
+
+	public String getIdTypeSelection() {
+		return idTypes.get(idType);
+	}
+
+	public boolean getHasFile() {
+		if (idFile == null || idFile.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	public String getFileName() {
+		if (!idFile.isEmpty()) {
+			return idFile.getOriginalFilename();
+		}
+		return "";
+	}
+
 	@Override
 	public String toString() {
 		return "GxdQueryForm [theilerStages=" + theilerStages
@@ -574,7 +700,13 @@ public class GxdQueryForm implements Cloneable {
 				+ assayTypeFilter + ", detectedFilter=" + detectedFilter
 				+ ", theilerStageFilter=" + theilerStageFilter
 				+ ", structureIDFilter=" + structureIDFilter
-				+ ", wildtypeFilter=" + wildtypeFilter + "]";
+				+ ", wildtypeFilter=" + wildtypeFilter 
+				+ ", len(IDs)=" + (ids == null ? "0" : ids.length() )
+				+ ", fileType=" + fileType
+				+ ", idColumn=" + idColumn
+				+ ", idFile=" + (idFile == null ? "null" : idFile.getOriginalFilename())
+				+ ", idTypeSelection=" + getIdTypeSelection()
+				+ "]";
 	}
 
 	@Override

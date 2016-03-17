@@ -79,7 +79,7 @@ public class AntibodyController {
 	    return mav;
 	}
 
-	return this.prepareAntibody(antibody.getPrimaryID(), "antibody_detail");
+	return prepareAntibody(antibody.getPrimaryID(), "antibody_detail");
     }
 
     //--------------------//
@@ -90,7 +90,7 @@ public class AntibodyController {
 
         logger.debug("->antibodyDetailByID started");
 
-	return this.prepareAntibody(antibodyID, "antibody_detail");
+	return prepareAntibody(antibodyID, "antibody_detail");
     }
 
     // --------------------------------------------------//

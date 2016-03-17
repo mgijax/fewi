@@ -178,6 +178,32 @@ public class Filter {
 		return (nestedFilters==null || nestedFilters.isEmpty());
 	}
 
+	/* retrieve the first-found Filter which has the given property name,
+	 * beginning with this one and traversing into nested Filters, or
+	 * null if none are found.
+	 */
+	public Filter getFirstFilterFor(String property) {
+		if (isBasicFilter()) {
+			if (property.equals(this.property)) {
+				return this;
+			}
+			return null;
+		}
+
+		if (hasNestedFilters()) {
+			for (Filter f : this.nestedFilters) {
+				if (f.property != null && f.property.equals(property)) {
+					return f;
+				}
+				Filter g = f.getFirstFilterFor(property);
+				if (g != null) {
+					return g;
+				}
+			}
+		}
+		return null;
+	}
+
     //////////////////////////////////////////////////////////////////////////
     //  STATIC METHODS - CREATING NEW FILTERS
     //////////////////////////////////////////////////////////////////////////
@@ -237,6 +263,16 @@ public class Filter {
 	 */
 	public static Filter notIn(String property, List<String> values) {
 		return new Filter(property, values, Operator.OP_NOT_IN);
+	}
+	
+	/**
+	 * Create a new Filter using the NOT IN operator.
+	 */
+	public static Filter range(String property, String value1, String value2) {
+		List<String> values = new ArrayList<String>();
+		values.add(value1);
+		values.add(value2);
+		return new Filter(property, values, Operator.OP_RANGE);
 	}
 
 	/**
@@ -389,7 +425,9 @@ public class Filter {
 	    OP_GREEDY_BEGINS(99, "GREEDY BEGIN"),
 		OP_IN(100, "IN"),
 		OP_NOT_IN(101, "!IN"),
-		OP_STRING_CONTAINS(102, "STRING CONTAINS")
+		OP_STRING_CONTAINS(102, "STRING CONTAINS"),
+		OP_EQUAL_WILDCARD_ALLOWED(200, "EQUAL WITH WILDCARD"),
+		OP_RANGE(201, "RANGE")
 	    ;
 		
 		private int	id = 0;

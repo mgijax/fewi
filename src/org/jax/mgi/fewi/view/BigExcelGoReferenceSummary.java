@@ -84,6 +84,13 @@ public class BigExcelGoReferenceSummary extends AbstractBigExcelView
 			// term
 			row.createCell(col++).setCellValue(annot.getTerm());
 
+			String qualifier = annot.getQualifier();
+			if (qualifier == null) {
+			    qualifier = "";
+			}
+
+			row.createCell(col++).setCellValue(qualifier);
+
 			// context
 			String annotExtensions = ntc.convertNotes(annot.getAnnotationExtensionTextOutput(),'|',true);
 			row.createCell(col++).setCellValue(annotExtensions);

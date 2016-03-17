@@ -371,11 +371,13 @@ border-collapse: collapse;
 							</form>
 
 	        	<div id="downloadDiv">
+			<form name="markerExportForm" id="markerExportForm" action="" method="POST">
                    <span class="label">Export:</span>
                    <a id="markersTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
                    <a id="markersExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
-                   <a id="markersBatchForward" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> Batch Query</a>
+                   <a id="markersBatchForward" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MGI Batch Query</a>
 						<a id="mouseMineLink" target="_blank" class="filterButton" onClick="javascript: mousemine.submit();"><img src="${configBean.WEBSHARE_URL}images/arrow_right.gif" width="10" height="10" /> MouseMine</a>
+			</form><!-- markerExportForm -->
                 </div>
              </div>
 	        <div id="genesdata"></div>
@@ -386,9 +388,11 @@ border-collapse: collapse;
         <div>
             <div id="toolbar" class="goldbar">
                 <div id="downloadDiv">
+		    <form name="resultsExportForm" id="resultsExportForm" action="" method="POST">
                     <span class="label">Export:</span>
                     <a id="resultsTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" /> Text File</a>
                     <a id="resultsExcelDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/excel.jpg" width="10" height="10" /> Excel File</a>
+		    </form><!-- resultsExportForm -->
                 </div>
             </div>
             <div id="resultsdata"></div>

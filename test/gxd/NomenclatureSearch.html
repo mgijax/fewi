@@ -261,10 +261,10 @@
 				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> results are returned</li>
 			</ol>
 			</li>
-			<li>Testing a gene with one of the longest names (or synonyms) that has expression results
+			<li>Testing a gene with one of the longest names (or synonyms) that has expression results (NOTE: Removed commas from this name to continue to return just 1 gene.  Change due to addition of comma-delimited lists in this field.)
 			<ol>
 				<li>open the GXD query form</li>
-				<li>Type <b concordion:set="#query">sema domain, seven thrombospondin repeats (type 1 and type 1-like), transmembrane domain (TM) and short cytoplasmic domain,(semaphorin) 5A</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">sema domain seven thrombospondin repeats (type 1 and type 1-like) transmembrane domain (TM) and short cytoplasmic domain (semaphorin) 5A</b> in the nomenclature field and press the search button</li>
 				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned and that gene's symbol is <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Sema5a</b></li>
 			</ol>
 			</li>
@@ -348,10 +348,10 @@
 				<li>verify that <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned</li>
 			</ol>
 			</li>
-			<li>Testing that punctuation and extraneous wildcards are removed (ignored)
+			<li>Testing that punctuation and extraneous wildcards are removed (ignored) (NOTE: commas no longer ignored as-of 6.03; comma removed from this test)
 			<ol>
 				<li>open the GXD query form</li>
-				<li>Type <b concordion:set="#query">Pax!@#$%^&amp;*()_-+={}[]\|`~;':",./&lt;&gt;?6</b> in the nomenclature field and press the search button</li>
+				<li>Type <b concordion:set="#query">Pax!@#$%^&amp;*()_-+={}[]\|`~;':"./&lt;&gt;?6</b> in the nomenclature field and press the search button</li>
 				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Pax6</b></li>
 				<li>Type <b concordion:set="#query">*pax***6*</b> in the nomenclature field and press the search button</li>
 				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Pax6</b></li>
@@ -366,11 +366,11 @@
 				<li>verify that <b cc:assertEquals="getGeneCountByNomen(#query)"><b cc:dynamicData="allGenes"></b></b> (all) genes are returned</li>
 			</ol>
 			</li>
-			<li>Testing Nonsense: absurdly long input matching nothing in our database
+			<li>Testing Nonsense: absurdly long input matching nothing in our database (NOTE: removed commas in input string because they are no longer ignored in 6.03)
 			<ol>
 				<li>open the GXD query form</li>
-				<li>Type <b concordion:set="#query">sema domain, seven thrombospondin repeats (type 1 and
-				type 1-like), transmembrane domain (TM) and short cytoplasmic domain,
+				<li>Type <b concordion:set="#query">sema domain seven thrombospondin repeats (type 1 and
+				type 1-like) transmembrane domain (TM) and short cytoplasmic domain
 				(semaphorin) 5AXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</b> in the nomenclature field and press the search button</li>
 				<li>verify that the user interface displays properly, <b concordion:assertEquals="getGeneCountByNomen(#query)">0</b> matching genes are returned, and <b>the page displays a standard "no matches found" message</b> It Should not break the query page</li>
 			</ol>
@@ -465,6 +465,22 @@
 				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">1</b> gene is returned with the symbol <b concordion:assertEquals="getFirstGeneSymbolByNomen(#query)">Pax6</b></li>
 			</ol>
 			</li>
+			<li>Testing that comma-delimited lists of genes work in nomenclature field (return by symbol, name, synonym)
+			<ol>
+				<li>open the GXD query form</li>
+				<li>Type <b concordion:set="#query">Pax6, Shh, Kit</b> in the nomenclature field and press the search button</li>
+				<li>verify that only <b concordion:assertEquals="getGeneCountByNomen(#query)">4</b> genes are returned.</li>
+				<li><table cc:verifyRowsUnordered="#result : getGeneSymbolsByNomen(#query)">
+				         <tr><th concordion:assertEquals="#result">Verify that only these genes are returned</th></tr>
+				        <tr><td>Kit</td></tr>
+				        <tr><td>Kitl</td></tr>
+				        <tr><td>Pax6</td></tr>
+				        <tr><td>Shh</td></tr>
+				    </table>
+				</li>
+			</ol>
+			</li>
+			
 		</ol>
 	</div>
 </div>

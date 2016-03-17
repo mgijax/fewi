@@ -289,7 +289,10 @@ function SGDataSource(config)
 			url += "&"+_self.limitField +"="+_self.batchSize;
 		}
 		$.ajax({
-			url: url
+			url: url.substring(0,url.indexOf('?')),
+			data: url.substring(url.indexOf('?') + 1),
+//			url: url,
+			method: 'POST'
 		}).done(function(data){
 			if(data==undefined || data.data==undefined || data.data.length==0)
 			{

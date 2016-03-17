@@ -99,7 +99,7 @@ public class InteractionController {
 
 		String markerIDs = request.getParameter("markerIDs");
 		if (markerIDs == null) {
-			return this.errorMav("No marker IDs found");
+			return errorMav("No marker IDs found");
 		}
 
 		// convert the marker IDs  into their respective Marker objects,
@@ -111,9 +111,9 @@ public class InteractionController {
 			List<Marker> markerList = markerSR.getResultObjects();
 
 			if (markerList.size() < 1) {
-				return this.errorMav("No marker found for ID " + id);
+				return errorMav("No marker found for ID " + id);
 			} else if (markerList.size() > 1) {
-				return this.errorMav("ID " + id + " refers to " + markerList.size() + " markers");
+				return errorMav("ID " + id + " refers to " + markerList.size() + " markers");
 			}
 
 			markers.add(markerList.get(0));
@@ -146,7 +146,7 @@ public class InteractionController {
 		AjaxUtils.prepareAjaxHeaders(response);
 		SearchParams params = new SearchParams();
 		params.setFilter(requestToFilter(request));
-		params.setSorts(this.genSorts(request));
+		params.setSorts(genSorts(request));
 		params.setPageSize(20000);
 
 		logger.debug("Params: " + params);
@@ -244,7 +244,7 @@ public class InteractionController {
 		//	sp.setFilter(Filter.or(idFilters));
 		sp.setFilter(requestToFilter(request));
 		sp.setPaginator(page);
-		sp.setSorts(this.genSorts(request));
+		sp.setSorts(genSorts(request));
 		sp.setPageSize(pageSizeInt);
 
 		// find the requested interaction objects
@@ -380,7 +380,7 @@ public class InteractionController {
 		// parse the various query parameter to generate SearchParams object
 		SearchParams params = new SearchParams();
 		params.setFilter(requestToFilter(request));
-		params.setSorts(this.genSorts(request));
+		params.setSorts(genSorts(request));
 		params.setPageSize(20000);
 
 		logger.debug("Params: " + params);
@@ -603,7 +603,7 @@ public class InteractionController {
 		}
 
 		SearchParams params = new SearchParams();
-		params.setFilter(this.parseInteractionQueryForm(qf));
+		params.setFilter(parseInteractionQueryForm(qf));
 
 		SearchResults<SolrInteraction> facetResults = null;
 
@@ -618,7 +618,7 @@ public class InteractionController {
 		} else {
 			facetResults = new SearchResults<SolrInteraction>();
 		}
-		return this.parseFacetResponse(facetResults, order);
+		return parseFacetResponse(facetResults, order);
 	}
 
 	/* get a list of validation values for the validation facet list,
@@ -627,7 +627,7 @@ public class InteractionController {
 	@RequestMapping("/facet/validation")
 	public @ResponseBody Map<String, List<String>> facetValidation (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return this.facetGeneric (qf, result, FacetConstants.INT_VALIDATION);
+		return facetGeneric (qf, result, FacetConstants.INT_VALIDATION);
 	}
 
 	/* get a list of interaction terms for the interaction facet list,
@@ -636,7 +636,7 @@ public class InteractionController {
 	@RequestMapping("/facet/interaction")
 	public @ResponseBody Map<String, List<String>> facetInteraction (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return this.facetGeneric (qf, result, FacetConstants.INT_INTERACTION);
+		return facetGeneric (qf, result, FacetConstants.INT_INTERACTION);
 	}
 
 	/* get a list of data source values for the data source facet list,
@@ -645,7 +645,7 @@ public class InteractionController {
 	@RequestMapping("/facet/dataSource")
 	public @ResponseBody Map<String, List<String>> facetDataSource (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return this.facetGeneric (qf, result, FacetConstants.INT_DATA_SOURCE);
+		return facetGeneric (qf, result, FacetConstants.INT_DATA_SOURCE);
 	}
 
 	/* get the minimum and maximum numeric scores for the score filter,
@@ -654,6 +654,6 @@ public class InteractionController {
 	@RequestMapping("/facet/score")
 	public @ResponseBody Map<String, List<String>> facetScore (@ModelAttribute InteractionQueryForm qf, BindingResult result, HttpServletResponse response) {
 		AjaxUtils.prepareAjaxHeaders(response);
-		return this.facetGeneric (qf, result, FacetConstants.INT_SCORE);
+		return facetGeneric (qf, result, FacetConstants.INT_SCORE);
 	}
 }

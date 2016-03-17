@@ -54,7 +54,7 @@ public class ImageController {
     //--------------------//
 
     private Logger logger
-      = LoggerFactory.getLogger(this.getClass().getName());
+      = LoggerFactory.getLogger(getClass().getName());
 
     @Autowired
     private ImageFinder imageFinder;
@@ -81,7 +81,7 @@ public class ImageController {
         logger.debug("->phenoImageDetailByID started");
 
         // find the requested image
-        List<Image> imageList = this.getImageForID(imageID);
+        List<Image> imageList = getImageForID(imageID);
 
         // ensure we found an image
         if (imageList.size() < 1) { // none found
@@ -104,7 +104,7 @@ public class ImageController {
         logger.debug("->molecularImageDetailByID started");
         
         // find the requested image
-        List<Image> imageList = this.getImageForID(imageID);
+        List<Image> imageList = getImageForID(imageID);
 
         // ensure we found an image
         if (imageList.size() < 1) { // none found
@@ -187,7 +187,7 @@ public class ImageController {
         logger.debug("->expressionImageDetailByID started");
 
         // find the requested image
-        List<Image> imageList = this.getImageForID(imageID);
+        List<Image> imageList = getImageForID(imageID);
 
         // ensure we found an image
         if (imageList.size() < 1) { // none found
@@ -241,7 +241,7 @@ public class ImageController {
         ModelAndView mav = new ModelAndView();
 
         // find the requested image
-        List<Image> imageList = this.getImageForID(imageID);
+        List<Image> imageList = getImageForID(imageID);
 
         // ensure we found an image
         if (imageList.size() < 1) { // none found
@@ -326,7 +326,7 @@ public class ImageController {
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
         imageSearchParams.setPageSize(10000);
-        imageSearchParams.setSorts(this.genDefaultSorts());
+        imageSearchParams.setSorts(genDefaultSorts());
         Integer alleleKey = new Integer(allele.getAlleleKey());
         Filter alleleKeyFilter
           = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
@@ -389,7 +389,7 @@ public class ImageController {
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
-        imageSearchParams.setSorts(this.genDefaultSorts());
+        imageSearchParams.setSorts(genDefaultSorts());
         Integer alleleKey = new Integer(allele.getAlleleKey());
         Filter alleleKeyFilter
           = new Filter(SearchConstants.ALL_KEY, alleleKey.toString());
@@ -458,7 +458,7 @@ public class ImageController {
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
-        imageSearchParams.setSorts(this.genDefaultSorts());
+        imageSearchParams.setSorts(genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
         Integer markerKey = new Integer(marker.getMarkerKey());
@@ -533,7 +533,7 @@ public class ImageController {
 
         // setup search parameters to get the image objects
         SearchParams imageSearchParams = new SearchParams();
-        imageSearchParams.setSorts(this.genDefaultSorts());
+        imageSearchParams.setSorts(genDefaultSorts());
         page.setResultsDefault(10);
         imageSearchParams.setPaginator(page);
         Integer markerKey = new Integer(marker.getMarkerKey());

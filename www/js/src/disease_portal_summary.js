@@ -152,8 +152,8 @@ handleNavigation = function (request, calledLocally, fromInit)
 
 		if(doNewQuery)
 		{
-			// reset the max disease col field
-			$("#numDCol").val("");
+			// reset the max disease col field (default is 100)
+			$("#numDCol").val("100");
 		}
 
 		// only reset the previousQueryString if there is a query to do

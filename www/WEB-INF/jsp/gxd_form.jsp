@@ -108,6 +108,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 <ul class="yui-nav">
     <li class="selected"><a href="#standard-gxd-expression-search"><em>Standard Search</em></a></li>
     <li><a href="#differential-gxd-expression-search"><em>Differential Expression Search</em></a></li>
+    <li><a href="#batch-search"><em>Batch Search</em></a></li>
 </ul>
 <div class="yui-content">
 <div id="standard-qf">
@@ -133,7 +134,8 @@ span.smallGrey { font-size: 75%; color: #999999; }
 			<td valign='top' style="padding-right: 15px;">
 				<hr>
 				One gene <span>e.g., Shh or kit oncogene</span><br/>
-				Genes with similar nomenclature <span>e.g., Hoxa*</span>
+				Genes with similar nomenclature <span>e.g., Hoxa*</span><br/>
+				List of genes <span>e.g., Wnt1, Bmp7, En1, Isl1...</span>
 			</td>
 			<td style="font-weight: bold; padding: 0px 10px; text-align:center;">
 				|<br/>OR<br/>|
@@ -189,7 +191,7 @@ span.smallGrey { font-size: 75%; color: #999999; }
 		<td class="cat2Gxd">Genome location</td>
 		<td>
 		    <div style='vertical-align:top; height:40px;padding-left:5px;'>
-		        <form:textarea path="locations" id="locations" name="locations" style="" cols="26" rows="2" />
+		        <form:textarea path="locations" id="locations" style="" cols="26" rows="2" />
 		        <div style='float:left; padding-left: 5px;'>Find expression data for a set of genes defined by </br>genomic interval(s) (genome build ${configBean.ASSEMBLY_VERSION}).</div>
 		    </div>
 		    <div style='font-size: 10px; font-style: italic;'>e.g., Chr12:3000000-10000000 </div>
@@ -527,5 +529,22 @@ span.smallGrey { font-size: 75%; color: #999999; }
 	</tr>
 </table>
 </div>
+<div id="batch-qf">
+<%@ include file="gxd_form_batch.jsp" %>
+</div><!-- batch-qf -->
+</div><!-- yui-content -->
+</div><!-- expressionSearch -->
+
+<!--
+<div style="background-color: white">
+basic QF : ${gxdQueryForm}
 </div>
+
+<div style="background-color: gray">
+differential QF : ${gxdDifferentialQueryForm}
 </div>
+
+<div style="background-color: white">
+batch QF : ${gxdBatchQueryForm}
+</div>
+-->

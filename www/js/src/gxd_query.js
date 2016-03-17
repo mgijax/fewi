@@ -1,6 +1,14 @@
+var logging = true;	// is loggging to the console enabled? (true/false)
+
 function log(msg) {
-    // log a message to the browser console
-    setTimeout(function() { throw new Error(msg); }, 0);
+    // log a message to the browser console, if logging is enabled
+
+    if (!logging) { return; }
+    try {
+	console.log(msg);
+    } catch (c) {
+        setTimeout(function() { throw new Error(msg); }, 0);
+    }
 }
 
 // Form display toggle
@@ -100,6 +108,7 @@ for(var j=0;j<tsBoxIDs.length;j++)
 
 var QFHeight = 704;
 var DifQFHeight = 150;
+var BatchQFHeight = 153;
 var currentQF = "standard";
 var currentDifQF = "structure";
 // GXD form tab control
@@ -108,6 +117,7 @@ var formTabs = new YAHOO.widget.TabView('expressionSearch');
 
 formTabs.addListener("activeTabChange", function(e){
 	if(formTabs.get('activeIndex')==0) currentQF = "standard";
+	else if(formTabs.get('activeIndex')==2) currentQF = "batch";
 	else currentQF = "differential";
 });
 //basic functions to manage the form tabs
@@ -120,6 +130,11 @@ var showDifferentialForm = function()
 {
 	currentQF = "differential";
 	formTabs.selectTab(1);
+};
+var showBatchSearchForm = function()
+{
+	currentQF = "batch";
+	formTabs.selectTab(2);
 };
 
 //set up toggle for differential ribbons
@@ -168,6 +183,8 @@ function getCurrentQF()
 		if(currentDifQF=="stage") return YAHOO.util.Dom.get("gxdDifferentialQueryForm2");
 		else if(currentDifQF=="both") return YAHOO.util.Dom.get("gxdDifferentialQueryForm3");
 		return YAHOO.util.Dom.get("gxdDifferentialQueryForm1");
+	} else if (currentQF == 'batch') {
+		return YAHOO.util.Dom.get("gxdBatchQueryForm1");
 	}
 
 	return YAHOO.util.Dom.get("gxdQueryForm");
@@ -295,6 +312,7 @@ var updateQuerySummary = function() {
 	var isDifStructure = currentQF=="differential" && currentDifQF=="structure";
 	var isDifStage = currentQF=="differential" && currentDifQF=="stage";
 	var isDifBoth = currentQF=="differential" && currentDifQF=="both";
+
 	if(isDifStructure)
 	{
 		// Differential Structures Section
@@ -380,10 +398,61 @@ var updateQuerySummary = function() {
 				"<br/>in any of the "+notDetectedStagesText);
 		el.appendTo(searchParams);
 	}
+	else if (currentQF == 'batch') {
+		// only two fields matter for batch searches:  the count of IDs
+		// and the scope in which to search
+
+		if (YAHOO.util.Dom.get('ids').value != '') {
+			var count = YAHOO.util.Dom.get('ids').value.trim().replace(/[\n]+/g, '\n').split('\n').length;
+			var scope = YAHOO.util.Dom.get("idType").options[YAHOO.util.Dom.get("idType").selectedIndex].innerHTML;
+
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode("Number of lines entered: "));
+
+			// Create a bold
+			var b = new YAHOO.util.Element(document.createElement('b'));
+			var newContent = document.createTextNode(count);
+			b.appendChild(newContent);
+			el.appendChild(b);
+
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode("Input Type: "));
+
+			// Create a bold
+			var b = new YAHOO.util.Element(document.createElement('b'));
+			var newContent = document.createTextNode('' + scope);
+			b.appendChild(newContent);
+			el.appendChild(b);
+
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+
+			// Create a span
+			var el = new YAHOO.util.Element(document.createElement('span'));
+			el.addClass('countHere');
+
+			//add the text node to the newly created span
+			el.appendChild(document.createTextNode(""));
+
+			var b = new YAHOO.util.Element(document.createElement('span'));
+			var newContent = document.createTextNode(getYsfGeneCount() + ' matching genes with expression data');
+			b.appendChild(newContent);
+			el.appendChild(b);
+
+			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
+			el.appendTo(searchParams);
+		}
+	}
 	else
 	{
 		// Standard QF Section
-
 		// Create all the relevant search parameter elements
 		if (YAHOO.util.Dom.get('nomenclature').value != "") {
 
@@ -503,7 +572,7 @@ var updateQuerySummary = function() {
 
 			el.appendChild(new YAHOO.util.Element(document.createElement('br')));
 			el.appendTo(searchParams);
-		}
+		} // end of structure handling
 
 
 
@@ -688,9 +757,13 @@ var toggleQF = function(oCallback,noAnimate) {
     var toggleImg = YAHOO.util.Dom.get('toggleImg');
     attributes =  { height: { to: 0 }};
 
+    var toHeight = QFHeight;
+    if (currentQF == "differential") { toHeight = DifQFHeight; }
+    else if (currentQF == "batch") { toHeight = BatchQFHeight; }
+
     if (!YAHOO.lang.isNull(toggleLink) && !YAHOO.lang.isNull(toggleImg)
     		) {
-	    attributes = { height: { to: currentQF=="differential" ? DifQFHeight : QFHeight }};
+	    attributes = { height: { to: toHeight }};
 		if (!qDisplay){
 			attributes = { height: { to: 0  }};
 			setText(toggleLink, "Click to modify search");
@@ -816,10 +889,18 @@ var interceptSubmit = function(e) {
 			gxdDataTable.setAttributes({ width: "100%" }, true);
 
 		toggleQF(openSummaryControl);
+
+		if (currentQF == 'batch') {
+			// convert spaces to escaped version before submission
+			YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.trimRight();
+			//YAHOO.util.Dom.get('ids').value = YAHOO.util.Dom.get('ids').value.replace(/ /g, '%20');
+		}
+		resetYSF();
 	}
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "submit", interceptSubmit);
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "submit", interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2","submit",interceptSubmit);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3","submit",interceptSubmit);
@@ -953,12 +1034,18 @@ var difBothRestriction  = function()
 	return setVisible;
 };
 
+/* returns false if there are NO validation errors, true if there are some
+ */
 var runValidation  = function(){
 	var result=false;
+
 	if(currentQF == "standard")
 	{
 		result = geneRestriction() || mutationRestriction();
 		setSubmitDisabled(result);
+	}
+	else if (currentQF == 'batch') {
+		result = false;			// no current validations
 	}
 	else if(currentDifQF=="structure")
 	{
@@ -1317,6 +1404,20 @@ var resetQF = function (e) {
 		difForm3.theilerStage.selectedIndex=0;
 		difForm3.difTheilerStage.selectedIndex=0;
 	}
+	var batchForm = YAHOO.util.Dom.get("gxdBatchQueryForm1");
+	if (batchForm) {
+		batchForm.idType.selectedIndex=0;
+		batchForm.ids.value="";
+		batchForm.fileType.selectedIndex=0;
+		batchForm.idColumn.value="1";
+		$("input[name='idFile']")[0].value = null;
+		$("input[name='fileType']")[0].click();
+
+		var msg = document.getElementById('uploadMessage');
+		msg.innerHTML = '';
+		msg.style.display = 'none';
+	}
+
 	// clear the validation errors
 	clearValidation();
 
@@ -1325,6 +1426,7 @@ var resetQF = function (e) {
 };
 
 YAHOO.util.Event.addListener("gxdQueryForm", "reset", resetQF);
+YAHOO.util.Event.addListener("gxdBatchQueryForm1", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm1", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm2", "reset", resetQF);
 YAHOO.util.Event.addListener("gxdDifferentialQueryForm3", "reset", resetQF);
@@ -1342,12 +1444,11 @@ var getQueryString = function(form) {
 			&& element.name !="_theilerStage" && element.name !="_age"
 			&& element.name !="_difTheilerStage" && element.name !="_difAge")
 		{
-			if(element.name=="locations")
+			if(element.tagName=="TEXTAREA")
 			{
-				//alert(element.name + "="  +element.value);
 				_qs.push(element.name + "="  +element.value.replace(/\s/g,' '));
 			}
-			if(element.tagName=="INPUT")
+			else if((element.tagName=="INPUT") && (element.name != 'idFile'))
 			{
 				if(element.type=="checkbox" || element.type=="radio")
 				{
@@ -1391,180 +1492,15 @@ var getQueryString = function(form) {
 					}
 				}
 			}
+			else
+			{
+				log("Unknown field: " + element.name + " (type " + element.tagName + ")");
+			}
 		}
 	}
 	return _qs.join("&");
 };
 
-
-// parses request parameters and resets and values found with their matching form input element
-// returns false if no parameters were found
-// responsible for repopulating the form during history manager changes
-function reverseEngineerFormInput(request)
-{
-	var params = parseRequest(request);
-	var formID = "#gxdQueryForm";
-	var foundDifStruct=false;
-	var foundDifStage=false;
-	var filters = {};	// filters[filter name] = [ values ]
-
-	for(var key in params)
-	{
-		if(key == "detected")
-		{
-			// HACK for the radio buttons
-			params["detected1"] = params[key];
-			params["detected2"] = params[key];
-		}
-		else if(key == "difStructure") foundDifStruct=true;
-		else if(key == "difTheilerStage" || key=="difAge") foundDifStage=true;
-	}
-	// make sure correct form is visible
-	// this code allows for flexibility to add third ribbon
-	if(foundDifStruct && foundDifStage)
-	{
-		formID = "#gxdDifferentialQueryForm3";
-		showDifBothQF();
-	}
-	else if (foundDifStruct)
-	{
-		formID = "#gxdDifferentialQueryForm1";
-		showDifStructuresQF();
-	}
-	else if (foundDifStage)
-	{
-		formID = "#gxdDifferentialQueryForm2";
-		showDifStagesQF();
-	}
-
-	var foundParams = false;
-	resetQF();
-	for(var key in params)
-	{
-		if(key!=undefined && key!="" && key!="detected" && params[key].length>0)
-		{
-			//var input = YAHOO.util.Dom.get(key);
-			// jQuery is better suited to resolving form name parameters
-			var input = $(formID+" [name='"+key+"']");
-			if(input.length < 1) input = $(formID+" #"+key);
-			if(input!=undefined && input!=null && input.length > 0)
-			{
-
-				input = input[0];
-				if(input.tagName=="TEXTAREA")
-				{
-					input.value = decodeURIComponent(params[key]);
-				}
-				else if(input.tagName=="INPUT")
-				{
-					foundParams = true;
-					// do radio boxes
-					if(input.type == "radio")
-					{
-						if(key=="isWildType")
-						{
-							YAHOO.util.Dom.get("isWildType").checked = true;
-						}
-						else if(input.value == params[key])
-						{
-							input.checked=true;
-						}
-					}
-					// do check boxes
-					else if(input.type=="checkbox")
-					{
-						var options = [];
-						var rawParams = [].concat(params[key]);
-						for(var i=0;i<rawParams.length;i++)
-						{
-							options.push(decodeURIComponent(rawParams[i]));
-						}
-						// The YUI.get() only returns one checkbox, but we want the whole set.
-						// The class should also be set to the same name.
-						var boxes = YAHOO.util.Selector.query("."+key);
-						for(var i=0;i<boxes.length;i++)
-						{
-							var box = boxes[i];
-							var checked = false;
-							for(var j=0;j<options.length;j++)
-							{
-								if(options[j] == box.value)
-								{
-									checked = true;
-									box.checked = true;
-									break;
-								}
-							}
-							if(!checked)
-							{
-								box.checked = false;
-							}
-						}
-					}
-					else
-					{
-						if (key == "mutatedIn")
-						{
-							YAHOO.util.Dom.get("mutatedSpecimen").checked = true;
-						}
-						input.value = decodeURIComponent(params[key]);
-					}
-				}
-				else if(input.tagName=="SELECT")
-				{
-					if (input.name == "age") {
-						// open the age tab
-						//if(foundDifStage) selectDifAge();
-						//else selectAge();
-						selectAge();
-					}
-					foundParams = true;
-					var options = [];
-					// decode all the options first
-					var rawParams = [].concat(params[key]);
-					for(var i=0;i<rawParams.length;i++)
-					{
-						options.push(decodeURIComponent(rawParams[i]));
-					}
-					// find which options need to be selected, and select them.
-					for(var key in input.children)
-					{
-						if(input[key]!=undefined)
-						{
-							var selected = false;
-							for(var j=0;j<options.length;j++)
-							{
-								if(options[j] == input[key].value)
-								{
-									selected = true;
-									input[key].selected = true;
-									break;
-								}
-							}
-							if(!selected)
-							{
-								input[key].selected = false;
-							}
-						}
-					}
-				}
-			} else if (typeof isFilterable != 'undefined' &&
-					isFilterable(key)) {
-			    // deal with filters (no form fields for them)
-				// TODO: This needs to move to a different function. Filters should not be a part of this method
-			    filters[key] = [].concat(params[key]);
-			}
-		}
-	}
-
-	if(typeof resetFacets != 'undefined')
-	{
-		resetFacets(filters);
-		prepFilters(request);	// need to reset the URLs for the filters
-	}
-	assayTypesCheck();
-	return foundParams;
-}
 
 // add the check box listeners for assay types
 var allAssayTypesBox = YAHOO.util.Dom.get("assayType-ALL");
@@ -1606,4 +1542,71 @@ var mutatedInOnFocus = function(e)
 };
 YAHOO.util.Event.addFocusListener(YAHOO.util.Dom.get("mutatedIn"),mutatedInOnFocus);
 
+/* read a delimited file where one column contains marker-related IDs, parse it,
+ * and update the 'ids' field in the batch QF.
+ */
+var readFile = function(e) {
+	var input = e.target;
+	var reader = new FileReader();
 
+	reader.onload = function() {
+		var separator = ',';
+		var extractedIDs = '';
+
+		if (document.querySelector('input[name = "fileType"]:checked').value == 'tab') {
+			separator = '\t';
+		}
+
+		// switch from 1-based column number from input to 0-based
+		var colNum = document.getElementById('idColumn').value - 1;
+		var text = reader.result.trimRight();	// no trailing newline
+		var lines = text.split(/[\n\r]+/g);
+		var badLines = 0;		// count of bad lines
+		var idsAdded = 0;		// count of IDs added
+
+		for (var lineNum in lines) {
+			var line = lines[lineNum];
+			var cols = line.split(separator);
+
+			if (cols.length > colNum) {
+				var tokens = cols[colNum].split(' ');
+				for (var tokenNum in tokens) {
+					if (extractedIDs.length > 0) {
+						extractedIDs = extractedIDs + '\n' + tokens[tokenNum];
+					} else {
+						extractedIDs = tokens[tokenNum];
+					}
+					idsAdded++;
+				}
+			} else {
+				badLines++;
+			}
+		}
+
+		// split lines then extract specified column using specified
+		// delimiter
+
+		var node = document.getElementById('ids');
+		node.value = extractedIDs;
+		
+		var myMsg = '';
+
+		if (idsAdded > 0) {
+			if (idsAdded > 1) {
+				myMsg = idsAdded + ' lines were added';
+			} else {
+				myMsg = idsAdded + ' line was added';
+			}
+		}
+
+		if (badLines > 0) {
+			if (myMsg.length > 0) { myMsg = myMsg + '; '; }
+			myMsg = myMsg + badLines + ' line(s) had too few columns';
+		}
+
+		var msg = document.getElementById('uploadMessage');
+		msg.innerHTML = myMsg;
+		msg.style.display = 'inline-block';
+	};
+	reader.readAsText(input.files[0]);
+};

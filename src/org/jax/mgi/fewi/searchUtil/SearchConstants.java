@@ -33,6 +33,7 @@ public class SearchConstants {
     public static final String MRK_ID               = "marker_id";
 	public static final String MRK_TERM_ID 			= "markerTermId";
     public static final String MRK_SYMBOL               = "marker_symbol";
+    public static final String MRK_SYMBOL_LOWER         = "markerSymbolLower";
     public static final String MRK_NOMENCLATURE			= "nomenclature";
 	public static final String FEATURE_TYPE = "featureType";
 	public static final String FEATURE_TYPE_KEY = "featureTypeKey";
@@ -206,4 +207,15 @@ public class SearchConstants {
 	// matrix view groups
 	public static final String STAGE_MATRIX_GROUP = "stageMatrixGroup";
 	public static final String GENE_MATRIX_GROUP = "geneMatrixGroup";
+	
+	// snp index constants
+	public static final String SNPID = "snpId";
+	public static final String STARTCOORDINATE = "startcoordinate";
+	public static final String VARIATIONCLASS = "variationclass";
+	public static final String FUNCTIONCLASS = "functionclass";
+	public static final String MARKERID = "markerId";
+	public static final String STRAINS = "strains";
+	public static final String DIFF_STRAINS = "diffstrains";
+	public static final String SAME_STRAINS = "samestrains";
+
 }

@@ -24,8 +24,8 @@ public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface
 			if(filter.isQuoted()) {
 				printni("\"" + filter.getValue() + "\"");
 			} else {
-				if(
-					filter.getValue().equals("AND") ||
+				if( filter.getValue() != null &&
+					(filter.getValue().equals("AND") ||
 					filter.getValue().equals("(AND") ||
 					filter.getValue().equals("AND)") ||
 					filter.getValue().equals("OR") ||
@@ -33,7 +33,7 @@ public class PrettyFilterPrinter extends PrinterUtil implements VisitorInterface
 					filter.getValue().equals("OR)") ||
 					filter.getValue().equals("(NOT") ||
 					filter.getValue().equals("NOT)") ||
-					filter.getValue().equals("NOT")
+					filter.getValue().equals("NOT"))
 				) {
 					printni(filter.getValue().toLowerCase());
 				} else {
