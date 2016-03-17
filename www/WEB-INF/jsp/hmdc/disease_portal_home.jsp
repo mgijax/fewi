@@ -3,7 +3,7 @@
 <%@ page import = "org.jax.mgi.fewi.util.StyleAlternator" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
-<%@ include file="/WEB-INF/jsp/templates/templateHeadNoReset.html" %>
+<%@ include file="disease_portal_header.jsp" %>
 
 <title>Human - Mouse Disease Connection</title>
 
@@ -18,7 +18,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/hmdc/search.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/hmdc/queryBuilder.type.css" />
 
-<%@ include file="/WEB-INF/jsp/templates/templateHdpBodyStart.html" %>
+<%@ include file="disease_portal_bodystart.jsp" %>
 
 <!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" name="yui-history-iframe" src="${configBean.FEWI_URL}blank.html"></iframe>

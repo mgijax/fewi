@@ -2,10 +2,7 @@
 
 <%@ page trimDirectiveWhitespaces="true" %>
 
-<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
-
-<%@ include file="/WEB-INF/jsp/google_analytics_pageview.jsp" %>
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
+<%@ include file="disease_portal_header.jsp" %>
 
 <title>${marker.symbol} phenotype data</title>
 
