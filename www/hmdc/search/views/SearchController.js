@@ -100,7 +100,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'Use * for wildcard. Examples: Pax*, gremlin'
+                  placeholder: 'Examples: Pax*, gremlin. Use * for wildcard.'
                 }
               }
             ],
@@ -124,7 +124,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'Use * for wildcard. Examples: hippocamp* cardiovascular'
+                  placeholder: 'Examples: hippocamp* cardiovascular. Use * for wildcard.'
                 }
               }
             ],
