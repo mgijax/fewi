@@ -79,8 +79,8 @@
                   { value: 'phenotype', name: 'Phenotype/Disease (name)' },
                   { value: 'phenotype_id', name: 'Phenotype/Disease (ID)' },
                   { value: 'location', name: 'Location (chromosome region)' },
-                  { value: 'gene_upload', name: 'Gene File Upload'},
-                  { value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
+                  //{ value: 'gene_upload', name: 'Gene File Upload'},
+                  //{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
                 ],
                 onChange: function(value, options, scope) {
                   scope.model.condition = {
@@ -94,7 +94,7 @@
           conditionFields: {
             gene: [
               {
-                key: 'gene',
+                key: 'input',
                 type: 'input',
                 className: 'inline-field',
                 templateOptions: {
@@ -106,7 +106,7 @@
             ],
             gene_id: [
               {
-                key: 'gene_id',
+                key: 'input',
                 type: 'input',
                 className: 'inline-field',
                 templateOptions: {
@@ -118,7 +118,7 @@
             ],
             phenotype: [
               {
-                key: 'phenotype',
+                key: 'input',
                 type: 'input',
                 className: 'inline-field',
                 templateOptions: {
@@ -130,7 +130,7 @@
             ],
             phenotype_id: [
               {
-                key: 'phenotype_id',
+                key: 'input',
                 type: 'input',
                 className: 'inline-field',
                 templateOptions: {
@@ -142,7 +142,7 @@
             ],
             location: [
               {
-                key: 'location',
+                key: 'input',
                 type: 'input',
                 className: 'inline-field',
                 templateOptions: {
@@ -152,7 +152,7 @@
                 }
               },
               {
-                key: 'type',
+                key: 'parameters[0]',
                 type: 'radio',
                 className: 'inline-field',
                 templateOptions: {
@@ -165,6 +165,7 @@
                 }
               }
             ],
+/*
             gene_upload: [
               {
                 key: 'file', // pubmed id
@@ -213,6 +214,7 @@
                 }
               }
             ]
+*/
           }
         }
       }
