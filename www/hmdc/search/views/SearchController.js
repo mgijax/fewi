@@ -74,7 +74,7 @@
                 required: true,
                 options: [
                   { value: '', name: 'Please select a field' },
-                  { value: 'gene', name: 'Gene (symbol name)' },
+                  { value: 'gene', name: 'Gene (symbol or name)' },
                   { value: 'gene_id', name: 'Gene (ID)' },
                   { value: 'phenotype', name: 'Phenotype/Disease (name)' },
                   { value: 'phenotype_id', name: 'Phenotype/Disease (ID)' },
@@ -100,7 +100,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'Use * for wildcard. Examples: Pax* gremlin'
+                  placeholder: 'Use * for wildcard. Examples: Pax*, gremlin'
                 }
               }
             ],
@@ -112,7 +112,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'MGI:000000'
+                  placeholder: 'Examples: MGI:105098, MGI:97490'
                 }
               }
             ],
@@ -136,7 +136,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'HP:0001744 222100 MP:0000000'
+                  placeholder: 'Examples: HP:0001744, 222100, MP:0008260'
                 }
               }
             ],
@@ -148,7 +148,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'Chr12:3000000-10000000'
+                  placeholder: 'Example: Chr12:3000000-10000000'
                 }
               },
               {
