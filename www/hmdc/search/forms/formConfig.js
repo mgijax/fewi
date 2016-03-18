@@ -3,8 +3,8 @@
   angular.module('civic.config')
     .constant('formConfig', {
       options: {
-        labelColWidth: 2,
-        inputColWidth: 5,
+        labelColWidth: 3,
+        inputColWidth: 6,
         helpColWidth: 5
       }
     })

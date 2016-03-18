@@ -6,25 +6,11 @@
 
   // @ngInject
   function SearchResource($resource) {
-    var SearchService = $resource('/api/:entity/search/:token',
-      {
-        token: '@token',
-        entity: '@entity'
-      },
-      {
-        post: {
-          method: 'POST',
-          isArray: false,
-          cache: false
-        }
-      },
-      {
-        get: {
-          method: 'GET',
-          isArray: false,
-          cache: false
-        }
-      }
+    var SearchService = $resource('/diseasePortal/summary', {},
+		{
+        get: { method: 'GET', isArray: false, cache: false },
+        post: { method: 'POST', isArray: false, cache: false }
+	   }
     );
 
     return SearchService;

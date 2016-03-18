@@ -24,50 +24,13 @@
   padding: 10px;
   border: 1px solid #759BC1;
 }
-.searchViewBox {
-  padding: 10px;
-  border: 1px solid #759BC1;
-  margin-top: 30px;
-}
-.searchView .title-row {
-  margin: 0 -15px;
-  padding: 0 15px;
-  margin-bottom: 15px;
-  background-image: linear-gradient(#dedede, #dedede 60%, #cacaca);
-  background-repeat: no-repeat;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdedede', endColorstr='#ffcacaca', GradientType=0);
-}
-.searchView .title-row .name h3 {
-  margin: 0;
-  display: inline-block;
-  line-height: 2em;
-}
-.searchView .title-row > .row {
-  border-bottom: 1px solid #CCC;
-  background-image: url('/assets/images/grey_stripes.png');
-}
-.searchView .button-row {
-  margin-top: 15px;
-}
-.searchView .form-warning {
-  color: #942830;
-  padding-right: 15px;
-  display: inline-block;
-}
-.searchView .entity-grid {
-  border-top: 3px solid #CCC;
-  padding-top: 7.5px;
-  margin-top: 15px;
-}
-.searchView .operator-prompt .prompt-text {
-  line-height: 34px;
-}
-.searchView .operator-prompt .form-group {
-  margin: 0;
-  padding: 0;
-}
 .searchView .operator-prompt .operator-select {
   display: inline-block;
   margin: 0;
   padding: 0;
+}
+.searchViewBox {
+  padding: 10px;
+  border: 1px solid #759BC1;
+  margin-top: 30px;
 }

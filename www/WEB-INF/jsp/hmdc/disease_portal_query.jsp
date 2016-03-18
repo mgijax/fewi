@@ -4,18 +4,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
-<%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
+
+<%@ include file="disease_portal_header.jsp" %>
 
 <title>Human – Mouse Disease Connection</title>
-
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <!-- import jquery UI specifically for this page -->
-<link rel="stylesheet" type="text/css" href="${configBean.WEBSHARE_URL}css/jquery-ui-1.10.2.custom.min.css" />
 
-<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/disease_portal.css" />
 <%-- Please add styles to disease_portal.css
 Also disease_portal.css need to be imported last in order for the styles to override jquery-ui
 <style>
@@ -41,7 +38,7 @@ body.yui-skin-sam div#outer {position:relative;}
     document.documentElement.className = "yui-pe";
 </script>
 
-<%@ include file="/WEB-INF/jsp/templates/templateHdpBodyStart.html" %>
+<%@ include file="disease_portal_bodystart.jsp" %>
 
 <!-- iframe for history managers use -->
 <iframe id="yui-history-iframe" name="yui-history-iframe" src="/fewi/blank.html"></iframe>
