@@ -69,20 +69,20 @@
 </script>
 --%>
 
-<script src="/assets/hmdc/bower_components/angular/angular.js"></script>
-<script src="/assets/hmdc/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-<script src="/assets/hmdc/bower_components/api-check/dist/api-check.js"></script>
-<script src="/assets/hmdc/bower_components/angular-formly/dist/formly.js"></script>
-<script src="/assets/hmdc/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/assets/hmdc/bower_components/angular-resource/angular-resource.js"></script>
-<script src="/assets/hmdc/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
-<script src="/assets/hmdc/search/index.js"></script>
-<script src="/assets/hmdc/search/forms/formConfig.js"></script>
-<script src="/assets/hmdc/search/forms/fieldWrappers/basicFieldWrappers.js"></script>
-<script src="/assets/hmdc/search/forms/fieldTypes/basicFieldTypes.js"></script>
-<script src="/assets/hmdc/search/forms/fieldTypes/multiInput.js"></script>
-<script src="/assets/hmdc/search/services/SearchService.js"></script>
-<script src="/assets/hmdc/search/views/SearchController.js"></script>
-<script src="/assets/hmdc/search/forms/queryBuilder.type.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular/angular.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/api-check/dist/api-check.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-formly/dist/formly.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-resource/angular-resource.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/index.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/formConfig.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/fieldWrappers/basicFieldWrappers.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/fieldTypes/basicFieldTypes.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/fieldTypes/multiInput.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/services/SearchService.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/views/SearchController.js"></script>
+<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/queryBuilder.type.js"></script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>

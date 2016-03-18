@@ -30,9 +30,9 @@
 
 		<!--===================== End Template Head  ===========================-->
 		<!-- import jquery UI specifically for this page -->
-		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/hmdc/hmdc.css" />
-		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/hmdc/search.css" />
-		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}assets/css/hmdc/queryBuilder.type.css" />
+		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/search.css" />
+		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/css/hmdc/queryBuilder.type.css" />
 
 		<base href="/diseasePortal">
 
