@@ -34,3 +34,6 @@
   border: 1px solid #759BC1;
   margin-top: 30px;
 }
+.form-inline .form-control {
+	width: 100%;
+}
