@@ -24,7 +24,7 @@
 	</div>
 
 	<label>Hide the query form: <input class="qfExpand" type="checkbox" ng-model="mustHide" /></label><br />
-	<div ng-hide="mustHide">
+	<div class="animate-show" ng-hide="mustHide">
 		<ui-view></ui-view>
 	</div>
 
