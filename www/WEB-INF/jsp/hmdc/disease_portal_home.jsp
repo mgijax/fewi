@@ -46,30 +46,33 @@
 	</div>
 </div>
 
-<%--
+<script type="text/javascript">
+    var fewiurl = "http://www.informatics.jax.org/";
+    var assemblyBuild = "GRCm38";
+</script>
+
 <c:set var="jsHome" value="${configBean.FEWI_URL}assets/js"/>
 <script type="text/javascript" src="${jsHome}/fewi_utils.js"></script>
 <script type="text/javascript" src="${jsHome}/filters.js"></script>
 <script type="text/javascript" src="${jsHome}/disease_portal_filters.js"></script>
 <script type="text/javascript" src="${jsHome}/disease_portal_query.js"></script>
-<script type="text/javascript" src="${jsHome}/disease_portal_autocomplete.js"></script>
-<script type="text/javascript" src="${jsHome}/disease_portal_upload.js"></script>
-<script type="text/javascript" src="${jsHome}/disease_portal_summary.js"></script>
 
 <%    
    String queryString = (String) request.getAttribute("querystring");
    // need to url encode the querystring
    request.setAttribute("encodedQueryString", FormatHelper.encodeQueryString(queryString));
 %>
+
 <script type="text/javascript">
    var querystring = "${encodedQueryString}";
 </script>
 
+<script type="text/javascript" src="${jsHome}/disease_portal_summary.js"></script>
 
 <script type="text/javascript">
    hmdcFilters.prepFilters('${configBean.FEWI_URL}');
 </script>
---%>
+
 
 <script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular/angular.js"></script>
 <script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-ui-router/release/angular-ui-router.js"></script>

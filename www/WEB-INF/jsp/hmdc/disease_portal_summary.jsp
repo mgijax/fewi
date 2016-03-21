@@ -1,29 +1,3 @@
-<style>
-	.yui-skin-sam .yui-dt th {
-		background:url(${configBean.WEBSHARE_URL}images/cre/SpriteYuiOverRide.png)
-		repeat-x 0 -1300px;
-	}
-	.yui-skin-sam th.yui-dt-asc,.yui-skin-sam th.yui-dt-desc {
-		background:url(${configBean.WEBSHARE_URL}images/cre/SpriteYuiOverRide.png)
-		repeat-x 0 -1400px;
-	}
-	.yui-skin-sam th.yui-dt-sortable .yui-dt-liner {
-		background:url(${configBean.WEBSHARE_URL}images/cre/creSortableArrow.png)
-		no-repeat right;
-	}
-	.yui-skin-sam th.yui-dt-asc .yui-dt-liner {
-		background:url(${configBean.WEBSHARE_URL}images/cre/creDownArrow.png)
-		no-repeat right;
-	}
-	.yui-skin-sam th.yui-dt-desc .yui-dt-liner {
-		background:url(${configBean.WEBSHARE_URL}images/cre/creUpArrow.png)
-		no-repeat right;
-	}
-	.facetFilter .yui-panel .bd {
-		width: 285px
-	}
-</style>
-
 <div id="summary">
 	<div id="querySummary" style="float:left;margin-left:0">
 		<div class="innertube" style="width:500px;">
