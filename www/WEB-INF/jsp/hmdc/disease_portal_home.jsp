@@ -15,32 +15,34 @@
 <iframe id="yui-history-iframe" name="yui-history-iframe" src="${configBean.FEWI_URL}blank.html"></iframe>
 <input id="yui-history-field" name="yui-history-field" type="hidden">
 
-<div ng-app="civicClient" class="container">
+<div ng-app="civicClient">
+	<div class="container">
 
-	<div style="border: 0px;margin-bottom:30px;">
-		<div style="text-align: center;">
-			<a href="${configBean.FEWI_URL}/diseasePortal" style="font-size:45px;color:black;">Human <img src="${configBean.WEBSHARE_URL}images/hmdc_arrow.png" style='height:42px;'> Mouse: Disease Connection</a>
+		<div style="border: 0px;margin-bottom:30px;">
+			<div style="text-align: center;">
+				<a href="${configBean.FEWI_URL}/diseasePortal" style="font-size:45px;color:black;">Human <img src="${configBean.WEBSHARE_URL}images/hmdc_arrow.png" style='height:42px;'> Mouse: Disease Connection</a>
+			</div>
 		</div>
+
+		<label>Hide the query form: <input type="checkbox" ng-model="mustHide" /></label><br />
+		<div class="animate-show" ng-hide="mustHide">
+			<ui-view></ui-view>
+		</div>
+
 	</div>
 
-	<label>Hide the query form: <input class="qfExpand" type="checkbox" ng-model="mustHide" /></label><br />
-	<div class="animate-show" ng-hide="mustHide">
-		<ui-view></ui-view>
+	<div style="display:none;" class="searchViewBox" ng-style="loaded" ng-hide="emptyResults">
+		<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
+		<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_summary.jsp" %>
 	</div>
-
-</div>
-
-<div class="searchViewBox" ng-hide="searchResults">
-	<div id="resultbar" class="bluebar" style="background-color: #ffdab3;">Results</div>
-	<%@ include file="/WEB-INF/jsp/hmdc/disease_portal_summary.jsp" %>
-</div>
-  
-<div class="container">
-	<div class="searchViewBox">
-		<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
-	</div>
-	<div class="searchViewBox">
-		<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
+	  
+	<div class="container">
+		<div class="searchViewBox">
+			<%@ include file="/WEB-INF/jsp/static/home/hmdc/resource_links.jsp" %>
+		</div>
+		<div class="searchViewBox">
+			<%@ include file="/WEB-INF/jsp/static/home/hmdc/research_news.jsp" %>
+		</div>
 	</div>
 </div>
 

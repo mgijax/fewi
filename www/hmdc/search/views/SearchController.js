@@ -17,14 +17,20 @@
   }
 
   // @ngInject
-  function SearchController($scope, $log, Search) {
+  function SearchController($rootScope, $scope, $log, Search) {
     var vm = $scope.vm = {};
 
     vm.onSubmit = onSubmit;
-
+    
+    $rootScope.mustHide = false;
+    $rootScope.emptyResults = true;
+    $rootScope.loaded = { display:'block' };
+    
     function onSubmit() {
       $log.debug(JSON.stringify(vm.model));
       Search.post(vm.model);
+      $rootScope.mustHide = true;
+      $rootScope.emptyResults = false;
     }
 
     vm.operatorField = [
