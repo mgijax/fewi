@@ -452,6 +452,7 @@ div.framed {
 	color: rgb(0, 0, 238);
   }
 
+
 #headerContainer {
 	background: #ffdab3; /* For browsers that do not support gradients */
 	background: -webkit-linear-gradient(left top, #ffdab3, #dce8f4); /* For Safari 5.1 to 6.0 */
@@ -470,6 +471,7 @@ div.framed {
 #headerContainer .links a {
 	margin-left: 10px;
 	font-size: 20px;
+	color:#000000;
 }
 
 #headerContainer .hmdcbox {

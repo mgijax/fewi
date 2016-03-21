@@ -50,28 +50,6 @@ body.yui-skin-sam div#outer {position:relative;}
 <![endif]-->
 
 <style>
-#headerContainer {
-    background-color: #DDDDDD;
-    height: 148px;
-    width: 100%;
-    /*border:1px solid;*/
-}
-#hdpBannerContainer {
-    background-color: #DDDDDD;
-    height: 148px;
-    position:relative;
-    width: 820px;
-    margin: 0 auto;
-    /*border:1px solid;*/
-}
-.headerHomepageLinks {
-  text-decoration:none;
-}
-a.headerHomepageLinks:link {color:#000000;}
-a.headerHomepageLinks:visited {color:#000000;}
-a.headerHomepageLinks:hover {color:#000000;}
-a.headerHomepageLinks:active {color:#000000;}
-
 .tab-nav
 {
 	float: left;
