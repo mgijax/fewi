@@ -20,8 +20,8 @@
 #----- solr server urls -----#
 
 # Weekly Proto
-solr.server1.url=http://mgi-botfewi1.jax.org:9995/solr/
-solr.server2.url=http://bhmgibsnp01lp.jax.org:18983/solr/
+solr.server1.url=http://mgi-botfewi1.jax.org:9995/solr
+solr.server2.url=http://bhmgibsnp01lp.jax.org:18983/solr
 
 # Front-end development indexes
 #solr.server1.url=http://cardolan:8985/solr/
