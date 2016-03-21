@@ -1,7 +1,6 @@
 package org.jax.mgi.fewi.hunter;
 
 import org.jax.mgi.shr.fe.IndexConstants;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository

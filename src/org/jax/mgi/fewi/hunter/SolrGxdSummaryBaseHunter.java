@@ -228,8 +228,7 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 			String assayKey = (String) doc
 					.getFieldValue(GxdResultFields.ASSAY_KEY);
 			String age = (String) doc.getFieldValue(GxdResultFields.AGE);
-			List<String> anatomicalSystems = (List<String>) doc
-					.getFieldValue(GxdResultFields.ANATOMICAL_SYSTEM);
+			//List<String> anatomicalSystems = (List<String>) doc.getFieldValue(GxdResultFields.ANATOMICAL_SYSTEM);
 			String assayMgiid = (String) doc
 					.getFieldValue(GxdResultFields.ASSAY_MGIID);
 			String detectionLevel = (String) doc
