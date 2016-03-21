@@ -7,7 +7,7 @@ build.properties
 build/
 dist/
 cruise-output/
-mgiconfig/
+mgiconfig
 sharelib/
 src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearch.tokens
 src/org/jax/mgi/fewi/antlr/BooleanSearch/SolrBooleanSearchLexer.java
