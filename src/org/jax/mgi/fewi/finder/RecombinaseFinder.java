@@ -4,8 +4,8 @@ package org.jax.mgi.fewi.finder;
 /* to be changed for each Finder */
 /*-------------------------------*/
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSystem;
@@ -13,8 +13,8 @@ import mgi.frontend.datamodel.AlleleSystemAssayResult;
 import mgi.frontend.datamodel.group.RecombinaseEntity;
 
 import org.jax.mgi.fewi.highlight.RecombinaseHighlightInfo;
-import org.jax.mgi.fewi.hunter.SolrCreAssayResultSummaryHunter;
 import org.jax.mgi.fewi.hunter.HibernateAlleleSystemHunter;
+import org.jax.mgi.fewi.hunter.SolrCreAssayResultSummaryHunter;
 import org.jax.mgi.fewi.objectGatherer.HibernateObjectGatherer;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
@@ -112,6 +112,27 @@ public class RecombinaseFinder {
 		}
 		return searchResults;
 	}
+	
+
+
+	public SearchResults<AlleleSystem> getAlleleSystemBySystem(String alleleId, String system) {
+		logger.debug ("->getAlleleSystemBySystem("+system+")");
+		SearchResults<AlleleSystem> searchResults = new SearchResults<AlleleSystem>();
+		
+		SearchParams params = new SearchParams();
+		params.setPageSize(1);
+		params.setFilter(new Filter(SearchConstants.ALL_ID, alleleId));
+		params.setFilter(new Filter(SearchConstants.CRE_SYSTEM, system));
+		
+		List<AlleleSystem> alleleSystems = alleleSystemGatherer.get (AlleleSystem.class, system, "system");
+
+		if (alleleSystems.size() == 1) {
+			searchResults.addResultObjects (alleleSystems.get(0));
+		}
+		
+		return searchResults;
+	}
+
 
 
 	// Recombinase Specificity Assay Summary

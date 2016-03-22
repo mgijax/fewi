@@ -51,6 +51,8 @@ public class HibernateAlleleSystemHunter
 			clauses.add ("allele_id = '" + f.getValue() + "'");
 		    } else if (SearchConstants.CRE_SYSTEM_KEY.equals(prop)) {
 			clauses.add ("system_key = " + f.getValue());
+		    } else if (SearchConstants.CRE_SYSTEM.equals(prop)) {
+		    	clauses.add("system = " + f.getValue());
 		    } else {
 			if (prop != null) {
 			    logger.debug("unknown filter (" + prop + "); return empty");

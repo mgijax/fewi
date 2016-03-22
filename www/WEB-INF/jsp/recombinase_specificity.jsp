@@ -301,7 +301,7 @@ function show (i)
     
       <c:when test="${otherSystemsSize < '7'}">
         <c:forEach var="oSystem" items="${otherSystems}" varStatus="status">
-          <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&systemKey=${oSystem.otherSystemKey}">
+          <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&system=<fewi:encode value="${oSystem.otherSystem}"/>">
             ${oSystem.otherSystem}</a><c:if test="${not status.last}">,</c:if>
         </c:forEach>
 
@@ -314,7 +314,7 @@ function show (i)
             style='cursor: pointer;'>
           <c:forEach var="oSystem" items="${otherSystems}" varStatus="status">
             <c:if test="${status.count < '5' }">
-              <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&systemKey=${oSystem.otherSystemKey}">
+              <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&system=<fewi:encode value="${oSystem.otherSystem}"/>">
                 ${oSystem.otherSystem}</a><c:if test="${status.count < '4'}">,</c:if>
               <c:if test="${status.count == '4' }">
                 <span onClick='show("systemListHidden"); hide("systemListDefault");' 
@@ -330,7 +330,7 @@ function show (i)
             onClick='show("systemListDefault"); hide("systemListHidden");'
             style='cursor: pointer;'>
           <c:forEach var="oSystem" items="${otherSystems}" varStatus="status">
-          <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&systemKey=${oSystem.otherSystemKey}">
+          <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oSystem.alleleID}&system=<fewi:encode value="${oSystem.otherSystem}"/>">
             ${oSystem.otherSystem}</a><c:if test="${not status.last}">,</c:if>
           </c:forEach>
           <span onClick='show("systemListDefault"); hide("systemListHidden");' 
@@ -379,7 +379,7 @@ function show (i)
       <c:when test="${otherAllelesSize < '7'}">
         <c:forEach var="oAllele" items="${otherAlleles}" varStatus="status">
           <% AlleleSystemOtherAllele asoa = (AlleleSystemOtherAllele)pageContext.getAttribute("oAllele"); %>
-          <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&systemKey=${oAllele.systemKey}">
+          <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&system=<fewi:encode value="${oAllele.system}"/>">
             <%=FormatHelper.superscript(asoa.getOtherAlleleSymbol())%></a><c:if test="${not status.last}">,</c:if>
         </c:forEach>
       </c:when>
@@ -393,7 +393,7 @@ function show (i)
           <c:forEach var="oAllele" items="${otherAlleles}" varStatus="status">
             <% AlleleSystemOtherAllele asoa = (AlleleSystemOtherAllele)pageContext.getAttribute("oAllele"); %>
             <c:if test="${status.count < '5' }">
-              <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&systemKey=${oAllele.systemKey}">
+              <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&system=<fewi:encode value="${oAllele.system}"/>">
                 <%=FormatHelper.superscript(asoa.getOtherAlleleSymbol())%></a><c:if test="${status.count < '4' }">,</c:if>
                 <c:if test="${status.count == '4' }">
                   <span onClick='show("alleleListHidden"); hide("alleleListDefault");' 
@@ -410,7 +410,7 @@ function show (i)
             style='cursor: pointer;'>
           <c:forEach var="oAllele" items="${otherAlleles}" varStatus="status">
             <% AlleleSystemOtherAllele asoa = (AlleleSystemOtherAllele)pageContext.getAttribute("oAllele"); %>
-            <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&systemKey=${oAllele.systemKey}">
+            <a href="${configBean.FEWI_URL}recombinase/specificity?id=${oAllele.otherAlleleID}&system=<fewi:encode value="${oAllele.system}"/>">
               <%=FormatHelper.superscript(asoa.getOtherAlleleSymbol())%></a><c:if test="${not status.last}">,</c:if>
           </c:forEach>
           <span onClick='show("alleleListDefault"); hide("alleleListHidden");' 

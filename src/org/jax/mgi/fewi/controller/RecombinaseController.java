@@ -6,11 +6,11 @@ package org.jax.mgi.fewi.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +33,6 @@ import org.jax.mgi.fewi.searchUtil.SearchParams;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.Sort;
 import org.jax.mgi.fewi.searchUtil.SortConstants;
-import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.summary.JsonSummaryResponse;
 import org.jax.mgi.fewi.summary.RecomImage;
 import org.jax.mgi.fewi.summary.RecomImageRow;
@@ -166,14 +165,23 @@ public class RecombinaseController {
     //-------------------------------//
     @RequestMapping("/specificity")
     public ModelAndView creSpecificity( HttpServletRequest request,
-    		@RequestParam("systemKey") String alleleSystemKey) {
+    		@RequestParam("id") String alleleId,
+    		@RequestParam("systemKey") String alleleSystemKey,
+    		@RequestParam("system") String system) {
 
         logger.debug("->creSpecificity() started");
 
         ModelAndView mav = new ModelAndView("recombinase/recombinase_specificity");
 
         // search for allele system
-        SearchResults<AlleleSystem> results = recombinaseFinder.getAlleleSystemByKey(alleleSystemKey);
+        SearchResults<AlleleSystem> results;
+        if (alleleSystemKey != null && !"".equals(alleleSystemKey)) {
+        	results = recombinaseFinder.getAlleleSystemByKey(alleleSystemKey);
+        }
+        else {
+        	// use allele ID and system label if we don't have the database key
+        	results = recombinaseFinder.getAlleleSystemBySystem(alleleId, system);
+        }
         List<AlleleSystem> alleleSystems = results.getResultObjects();
 
 	// Last minute hack for existing bug...  We're coming to this page with
