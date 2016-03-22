@@ -165,9 +165,9 @@ public class RecombinaseController {
     //-------------------------------//
     @RequestMapping("/specificity")
     public ModelAndView creSpecificity( HttpServletRequest request,
-    		@RequestParam("id") String alleleId,
-    		@RequestParam("systemKey") String alleleSystemKey,
-    		@RequestParam("system") String system) {
+    		@RequestParam(value="id", required=false) String alleleId,
+    		@RequestParam(value="systemKey", required=false) String alleleSystemKey,
+    		@RequestParam(value="system", required=false) String system) {
 
         logger.debug("->creSpecificity() started");
 
