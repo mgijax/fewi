@@ -112,7 +112,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'Examples: MGI:105098, MGI:97490'
+                  placeholder: 'Examples: MGI:105098, MGI:97490, 5080'
                 }
               }
             ],
@@ -124,7 +124,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'Examples: hippocamp* cardiovascular. Use * for wildcard.'
+                  placeholder: 'Examples: hippocamp*, cardiovascular. Use * for wildcard.'
                 }
               }
             ],
@@ -136,7 +136,7 @@
                 templateOptions: {
                   label: '',
                   required: true,
-                  placeholder: 'Examples: HP:0001744, 222100, MP:0008260'
+                  placeholder: 'Examples: HP:0001744, OMIM:222100, MP:0008260'
                 }
               }
             ],
