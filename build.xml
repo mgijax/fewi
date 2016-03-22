@@ -267,10 +267,9 @@
 		<copy file="./www/WEB-INF/properties/textviews.properties" todir="./www/WEB-INF/classes" overwrite="true" />
 		<delete file="${war.file}"/>
 		<delete dir="${war.file}"/>
+		
 		<war destfile="${war.file}" webxml="www/WEB-INF/web.xml">
-			<fileset dir="www" />
-			<exclude name="www/js/tests/**" />
-			<exclude name="www/js/src/**" />
+			<fileset dir="www" excludes="js/src/**,js/tests/**" />
 		</war>
 		
 		<!-- Clear minified js build files -->
