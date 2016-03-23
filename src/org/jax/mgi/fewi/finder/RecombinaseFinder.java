@@ -5,6 +5,7 @@ package org.jax.mgi.fewi.finder;
 /*-------------------------------*/
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import mgi.frontend.datamodel.Allele;
@@ -116,19 +117,17 @@ public class RecombinaseFinder {
 
 
 	public SearchResults<AlleleSystem> getAlleleSystemBySystem(String alleleId, String system) {
-		logger.debug ("->getAlleleSystemBySystem("+system+")");
+		logger.debug ("->getAlleleSystemBySystem("+ alleleId + "," + system + ")");
 		SearchResults<AlleleSystem> searchResults = new SearchResults<AlleleSystem>();
 		
 		SearchParams params = new SearchParams();
 		params.setPageSize(1);
-		params.setFilter(new Filter(SearchConstants.ALL_ID, alleleId));
-		params.setFilter(new Filter(SearchConstants.CRE_SYSTEM, system));
+		params.setFilter(Filter.and(Arrays.asList(
+				new Filter(SearchConstants.ALL_ID, alleleId),
+				new Filter(SearchConstants.CRE_SYSTEM, system)
+		)));
 		
-		List<AlleleSystem> alleleSystems = alleleSystemGatherer.get (AlleleSystem.class, system, "system");
-
-		if (alleleSystems.size() == 1) {
-			searchResults.addResultObjects (alleleSystems.get(0));
-		}
+		this.alleleSystemHunter.hunt(params, searchResults);
 		
 		return searchResults;
 	}

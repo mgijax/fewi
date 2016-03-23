@@ -69,7 +69,7 @@
 
 <br/>
 
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase_summary_1.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase/recombinase_summary_1.js"></script>
 <div id="summary" style="width:1150px;">
 	<div id="breadbox">
 		<div id="contentcolumn" style="margin:0px;">
@@ -151,7 +151,7 @@ These JS files and local definitions need be defined in this order
 	}
 </script>
 
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase_summary_3.js"></script>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/recombinase/recombinase_summary_2.js"></script>
 
 <script type="text/javascript">
 	filters.setQueryStringFunction(getQuerystring);
