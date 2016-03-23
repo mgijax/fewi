@@ -20,6 +20,15 @@
   function SearchController($rootScope, $scope, $log, Search) {
     var vm = $scope.vm = {};
 
+    $scope.tab = 3;
+    $scope.setTab = function(newTab) {
+       $scope.tab = newTab;
+    };
+
+    $scope.isSet = function(tabNum) {
+       return $scope.tab == tabNum;
+    };
+
     vm.onSubmit = onSubmit;
     
     $rootScope.mustHide = false;
@@ -28,9 +37,13 @@
     
     function onSubmit() {
       $log.debug(JSON.stringify(vm.model));
-      Search.post(vm.model);
-      $rootScope.mustHide = true;
-      $rootScope.emptyResults = false;
+      Search.post(vm.model)
+			.then(function(response) {
+				$rootScope.diseaseResponse = response;
+				$rootScope.mustHide = true;
+				$rootScope.emptyResults = false;
+			}
+		);
     }
 
     vm.operatorField = [

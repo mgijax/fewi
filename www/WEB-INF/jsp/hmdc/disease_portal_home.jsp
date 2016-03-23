@@ -15,7 +15,7 @@
 <iframe id="yui-history-iframe" name="yui-history-iframe" src="${configBean.FEWI_URL}blank.html"></iframe>
 <input id="yui-history-field" name="yui-history-field" type="hidden">
 
-<div ng-app="civicClient">
+<div ng-app="civicClient" ng-controller="SearchController">
 	<div class="container">
 
 		<div style="border: 0px;margin-bottom:30px;">
@@ -55,7 +55,9 @@
 <script type="text/javascript" src="${jsHome}/fewi_utils.js"></script>
 <script type="text/javascript" src="${jsHome}/filters.js"></script>
 <script type="text/javascript" src="${jsHome}/disease_portal_filters.js"></script>
+<!--
 <script type="text/javascript" src="${jsHome}/disease_portal_query.js"></script>
+-->
 
 <%    
    String queryString = (String) request.getAttribute("querystring");
@@ -66,8 +68,9 @@
 <script type="text/javascript">
    var querystring = "${encodedQueryString}";
 </script>
-
+<!--
 <script type="text/javascript" src="${jsHome}/disease_portal_summary.js"></script>
+-->
 
 <script type="text/javascript">
    hmdcFilters.prepFilters('${configBean.FEWI_URL}');

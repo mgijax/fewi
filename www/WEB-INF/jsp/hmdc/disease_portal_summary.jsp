@@ -1,7 +1,7 @@
 <div id="summary">
 	<div id="querySummary" style="float:left;margin-left:0">
 		<div class="innertube" style="width:500px;">
-			<div id="searchSummary"> <!-- filled via js --> </div>
+			<div id="searchSummary"></div>
 		</div>
 	</div>
 
@@ -41,12 +41,12 @@
 
 <div id="resultSummary" class="yui-navset">
 	<ul class="yui-nav">
-		<li><a id="gridtab" href="#grid"><em>Gene Homologs x Phenotypes/Diseases</em></a></li>
-		<li><a id="genestab" href="#genes"><em>Genes (<span id="totalGenesCount"></span>)</em></a></li>
-		<li><a id="diseasestab" href="#diseases"><em>Diseases (<span id="totalDiseasesCount"></span>)</em></a></li>
+		<li ng-class="{ selected: isSet(1) }"><a ng-click="setTab(1)"><em>Gene Homologs x Phenotypes/Diseases</em></a></li>
+		<li ng-class="{ selected: isSet(2) }"><a ng-click="setTab(2)"><em>Genes (<span id="totalGenesCount"></span>)</em></a></li>
+		<li ng-class="{ selected: isSet(3) }"><a ng-click="setTab(3)"><em>Diseases (<span id="totalDiseasesCount"></span>)</em></a></li>
 	</ul>
 	<div class="yui-content">
-		<div>
+		<div ng-show="isSet(1)">
 			<div id="legendArea" style="background-color:#F7F7F7; border:2px solid #AAA; width:860px; margin-bottom: 4px;">
 				<div style="padding:5px 2px;">
 					<table>
@@ -86,21 +86,21 @@
 				</div>
 			</div>
 
-			<div id="griddata"></div>
+			<div id="griddata">{{gridResponse}}</div>
 			<div id="griddata_loading"><img src="/fewi/mgi/assets/images/loading.gif" height="24" width="24"> Preparing Data and Building Grid. Please Wait...</div>
 		</div>
-		<div>
+		<div ng-show="isSet(2)">
 			<div style="padding-bottom:6px; padding-top:4px;">
 				<span class="label">Export:</span><a id="markersTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" />Text File</a> 
 			</div>
-			<div id="genesdata"></div>
+			<div id="genesdata">{{geneResponse}}</div>
 			<div id="debug"></div>
 		</div>
-		<div>
+		<div ng-show="isSet(3)">
 			<div style="padding-bottom:6px; padding-top:4px;">
 				<span class="label">Export:</span><a id="diseaseTextDownload" class="filterButton"><img src="${configBean.WEBSHARE_URL}images/text.png" width="10" height="10" />Text File</a> 
 			</div>
-			<div id="diseasesdata"></div>
+			<div id="diseasesdata">{{diseaseResponse}}</div>
 		</div>
 	</div>
 	<div id="paginationBottom" style="float:right;">&nbsp;</div>

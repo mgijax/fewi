@@ -6,7 +6,7 @@
 
   // @ngInject
   function SearchResource($resource) {
-    var SearchService = $resource('/diseasePortal/grid', {},
+    var SearchService = $resource('/diseasePortal/diseases/json?phenotypes=105830&results=250&startIndex=0', {},
 		{
         get: { method: 'GET', isArray: false, cache: false },
         post: { method: 'POST', isArray: false, cache: false }
