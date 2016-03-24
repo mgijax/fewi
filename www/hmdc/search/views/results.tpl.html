@@ -1,0 +1,5 @@
+	<tabset>
+		<tab ng-repeat="(key, value) in vm.tabs" heading="{{ value.count > 0 ? value.heading + ' (' + value.count + ')' : value.heading }}" active="value.active">
+			<div ng-include src="value.template"></div>
+		</tab>
+	</tabset>

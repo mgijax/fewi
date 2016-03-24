@@ -65,6 +65,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -1668,4 +1669,101 @@ public class DiseasePortalController
 		mav.addObject("errorMsg", message);
 		return mav;
 	}
+	
+	
+	//TODO Finish this
+	
+	@RequestMapping(value="/gridQuery")
+	public @ResponseBody JsonSummaryResponse<HdpDiseaseSummaryRow> gridQuery(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestBody String jsonInput) throws Exception {
+
+		JsonSummaryResponse<HdpDiseaseSummaryRow> jsonResponse = new JsonSummaryResponse<HdpDiseaseSummaryRow>();
+		jsonResponse.setTotalCount(0);
+		return jsonResponse;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value="/geneQuery")
+	public @ResponseBody JsonSummaryResponse<HdpMarkerSummaryRow> geneQuery(
+			HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestBody String jsonInput) throws Exception {
+
+		SearchParams params = new SearchParams();
+		params.setIncludeSetMeta(true);
+		params.setIncludeRowMeta(true);
+		params.setIncludeMetaScore(true);
+
+		System.out.println("Json: " + jsonInput);
+		
+		params.setFilter(new Filter(SearchConstants.VOC_TERM, "105830", Filter.Operator.OP_HAS_WORD));
+
+		SearchResults<SolrDiseasePortalMarker> searchResults = hdpFinder.getMarkers(params);
+		
+		List<SolrDiseasePortalMarker> mList = searchResults.getResultObjects();
+
+		List<HdpMarkerSummaryRow> summaryRows = new ArrayList<HdpMarkerSummaryRow>();
+
+		Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
+
+		for (SolrDiseasePortalMarker m : mList) {
+			if (m != null) {
+				HdpMarkerSummaryRow summaryRow = new HdpMarkerSummaryRow(m);
+				if(highlights.containsKey(m.getMarkerKey()))
+				{
+					summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(m.getMarkerKey())));
+				}
+				summaryRows.add(summaryRow);
+			} else {
+				logger.debug("--> Null Object");
+			}
+		}
+		JsonSummaryResponse<HdpMarkerSummaryRow> jsonResponse = new JsonSummaryResponse<HdpMarkerSummaryRow>();
+		jsonResponse.setSummaryRows(summaryRows);
+		jsonResponse.setTotalCount(searchResults.getTotalCount());
+		return jsonResponse;
+		
+	}
+	
+	@RequestMapping(value="/diseaseQuery")
+	public @ResponseBody JsonSummaryResponse<HdpDiseaseSummaryRow> diseaseQuery(
+			HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestBody String jsonInput) throws Exception {
+		
+		AjaxUtils.prepareAjaxHeaders(response);
+
+		SearchParams params = new SearchParams();
+		params.setIncludeSetMeta(true);
+		params.setIncludeRowMeta(true);
+		params.setIncludeMetaScore(true);
+
+		System.out.println("Json: " + jsonInput);
+
+		
+		params.setFilter(new Filter(SearchConstants.VOC_TERM, "105830", Filter.Operator.OP_HAS_WORD));
+
+		SearchResults<SolrVocTerm> searchResults = hdpFinder.getDiseases(params);
+		
+		List<HdpDiseaseSummaryRow> termList = new ArrayList<HdpDiseaseSummaryRow>();
+
+		Map<String,Set<String>> highlights = searchResults.getResultSetMeta().getSetHighlights();
+
+		for(SolrVocTerm term : searchResults.getResultObjects()) {
+			HdpDiseaseSummaryRow summaryRow = new HdpDiseaseSummaryRow(term);
+			if(highlights.containsKey(term.getPrimaryId())) {
+				summaryRow.setHighlightedFields(new ArrayList<String>(highlights.get(term.getPrimaryId())));
+			}
+			termList.add(summaryRow);
+		}
+
+		JsonSummaryResponse<HdpDiseaseSummaryRow> jsonResponse = new JsonSummaryResponse<HdpDiseaseSummaryRow>();
+		jsonResponse.setTotalCount(searchResults.getTotalCount());
+		jsonResponse.setSummaryRows(termList);
+		return jsonResponse;
+	}
+	
 }

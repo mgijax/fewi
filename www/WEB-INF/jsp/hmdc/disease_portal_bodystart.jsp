@@ -1,6 +1,6 @@
 		<!--===================== Body Start ===========================-->
 	</head>
-	<body id="body" class="yui-skin-sam">
+	<body id="body">
 
 		<div id="headerContainer">
 			<div class="hmdcbox">

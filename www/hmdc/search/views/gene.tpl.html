@@ -1,0 +1,29 @@
+Export: <a id="markersTextDownload" class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
+
+<table class="table table-bordered table-striped" ng-show="vm.results.geneResults.totalCount > 0">
+	<thead>
+		<tr>
+			<td>Organism</td>
+			<td>Gene Symbol</td>
+			<td>Genetic Location</td>
+			<td>Genome Coordinates</td>
+			<td>Associated Human Diseases (source)</td>
+			<td>Abnormal Mouse Phenotypes<br>Reported in these Systems</td>
+			<td>References in MGI</td>
+			<td>Mice With Mutations<br>In this Gene (IMSR)</td>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<tr ng-repeat="sumrow in vm.results.geneResults.summaryRows">
+			<td>{{ sumrow.organism }}</td>
+			<td><nobr><div ng-bind-html="displayHTML(sumrow.symbol)"></div></nobr></td>
+			<td><nobr>{{ sumrow.location }}</nobr></td>
+			<td><div ng-bind-html="displayHTML(sumrow.coordinate)"></div></td>
+			<td><div ng-bind-html="displayHTML(sumrow.disease)"></div></td>
+			<td>{{ sumrow.system }}</td>
+			<td><div ng-bind-html="displayHTML(sumrow.allRefCount)"></div></td>
+			<td><div ng-bind-html="displayHTML(sumrow.imsrCount)"></div></td>
+		</tr>
+	</tbody>
+</table>

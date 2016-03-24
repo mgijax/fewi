@@ -1,26 +1,13 @@
+<!DOCTYPE html>
+
 <html>
 	<head>
 		<title>Test</title>
-		<base href="/">
-	</head>
-	<body>
-		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/queryBuilder.type.css" />
+		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/bootstrap/dist/css/bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="/assets/css/hmdc/search.css" />
 
-		<div ng-app="civicClient" class="container" ng-cloak>
-			<label>Hide the query form: <input type="checkbox" ng-model="mustHide" /></label><br />
-			<div class="animate-show" ng-hide="mustHide">
-				<ui-view></ui-view>
-			</div>
-
-			<div style="display:none;" class="searchViewBox" ng-hide="emptyResults" ng-style="loaded">
-				Results
-			</div>
-		</div>
-
 		<script src="bower_components/angular/angular.js"></script>
-		<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+		<script src="bower_components/angular-route/angular-route.js"></script>
 		<script src="bower_components/api-check/dist/api-check.js"></script>
 		<script src="bower_components/angular-formly/dist/formly.js"></script>
 		<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -34,5 +21,17 @@
 		<script src="search/services/SearchService.js"></script>
 		<script src="search/views/SearchController.js"></script>
 		<script src="search/forms/queryBuilder.type.js"></script>
+
+	</head>
+	<body>
+		<div ng-app="civicClient" ng-controller="SearchController">
+			<div class="searchView container">
+				<div ng-include="'/assets/hmdc/search/views/search.tpl.html'"></div>
+			</div>
+			<div class="results container-fluid">
+				<div ng-include="'/assets/hmdc/search/views/results.tpl.html'"></div>
+			</div>
+		</div>
+
 	</body>
 </html>

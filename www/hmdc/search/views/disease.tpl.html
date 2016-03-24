@@ -1,0 +1,25 @@
+Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
+
+<table class="table table-bordered table-striped" ng-show="vm.results.diseaseResults.totalCount > 0">
+	<thead>
+		<tr>
+			<td>Disease</td>
+			<td>OMIM ID</td>
+			<td>Mouse Models</td>
+			<td>Associated Genes from Mouse Models</td>
+			<td>Associated Human Genes (source)</td>
+			<td>References using <br>Mouse Models</td>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<tr ng-repeat="sumrow in vm.results.diseaseResults.summaryRows">
+			<td><div ng-bind-html="displayHTML(sumrow.disease)"></div></td>
+			<td>{{ sumrow.diseaseId }}</td>
+			<td><div ng-bind-html="displayHTML(sumrow.diseaseModels)"></div></td>
+			<td>{{ sumrow.mouseMarkers }}</td>
+			<td>{{ sumrow.humanMarkers }}</td>
+			<td><div ng-bind-html="displayHTML(sumrow.refCount)"></div></td>
+		</tr>
+	</tbody>
+</table>
