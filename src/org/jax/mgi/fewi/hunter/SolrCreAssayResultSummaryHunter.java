@@ -8,11 +8,11 @@ import java.util.Set;
 
 import mgi.frontend.datamodel.group.RecombinaseEntity;
 
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrDocument;
 import org.jax.mgi.fewi.propertyMapper.SolrPropertyMapper;
 import org.jax.mgi.fewi.searchUtil.MetaData;
@@ -84,8 +84,6 @@ public class SolrCreAssayResultSummaryHunter extends SolrHunter<RecombinaseEntit
         sortMap.put(SortConstants.CRE_TYPE, new SolrSortMapper(CreFields.ALL_TYPE_SORT));
         sortMap.put(SortConstants.CRE_INDUCIBLE, new SolrSortMapper(CreFields.INDUCER));
         sortMap.put(SortConstants.CRE_REF_COUNT, new SolrSortMapper(CreFields.ALL_REFERENCE_COUNT_SORT));
-        sortMap.put(SortConstants.CRE_DETECTED_COUNT, new SolrSortMapper(CreFields.DETECTED_COUNT));
-        sortMap.put(SortConstants.CRE_NOT_DETECTED_COUNT, new SolrSortMapper(CreFields.NOT_DETECTED_COUNT));
 
         // result level sorts
         sortMap.put(SortConstants.CRE_BY_STRUCTURE, new SolrSortMapper(CreFields.BY_STRUCTURE));

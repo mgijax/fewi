@@ -9,7 +9,6 @@ import java.util.Set;
 import mgi.frontend.datamodel.Allele;
 import mgi.frontend.datamodel.AlleleSynonym;
 import mgi.frontend.datamodel.AlleleSystem;
-import mgi.frontend.datamodel.RecombinaseInfo;
 
 import org.apache.commons.lang.StringUtils;
 import org.jax.mgi.fewi.config.ContextLoader;
@@ -32,9 +31,6 @@ public class RecombinaseSummary {
 	private Set<String> detectedHighlights;
 	private Set<String> notDetectedHighlights;
 
-	// for convenience, this is the allele's RecombinaseInfo object
-	private final RecombinaseInfo recombinaseInfo;
-
 	private final String fewiUrl = ContextLoader.getConfigBean().getProperty("FEWI_URL");
 
 	// to be used in creating custom css ids
@@ -52,8 +48,6 @@ public class RecombinaseSummary {
 
     	if(this.detectedHighlights==null) this.detectedHighlights = new HashSet<String>();
     	if(this.notDetectedHighlights==null) this.notDetectedHighlights = new HashSet<String>();
-
-    	this.recombinaseInfo = allele.getRecombinaseInfo();
     }
 
     //------------------------
@@ -69,11 +63,7 @@ public class RecombinaseSummary {
     public String getDetectedCount()
     {
 
-    	List<AlleleSystem> affectedSystems = new ArrayList<AlleleSystem>();
-    	
-    	if (this.recombinaseInfo != null) {
-    		affectedSystems = this.recombinaseInfo.getAffectedSystems();
-    	}
+    	List<AlleleSystem> affectedSystems = this.allele.getAffectedSystems();
     	
     	StringBuffer linkedSystems = new StringBuffer();
 
@@ -103,10 +93,7 @@ public class RecombinaseSummary {
     public String getNotDetectedCount()
     {
     	
-    	List<AlleleSystem> unaffectedSystems = new ArrayList<AlleleSystem>();
-    	if (this.recombinaseInfo != null) {
-    		unaffectedSystems = this.recombinaseInfo.getUnaffectedSystems();
-    	}
+    	List<AlleleSystem> unaffectedSystems = this.allele.getUnaffectedSystems();
 
     	StringBuffer linkedSystems = new StringBuffer();
 
