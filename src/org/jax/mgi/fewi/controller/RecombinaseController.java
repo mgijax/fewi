@@ -147,6 +147,7 @@ public class RecombinaseController {
 
 
             summaries.add(new RecombinaseSummary(allele, detectedHighlights, notDetectedHighlights));
+            logger.debug(new RecombinaseSummary(allele, detectedHighlights, notDetectedHighlights).getDetectedSystems());
         }
 
         JsonSummaryResponse<RecombinaseSummary> jsonResponse = new JsonSummaryResponse<RecombinaseSummary>();

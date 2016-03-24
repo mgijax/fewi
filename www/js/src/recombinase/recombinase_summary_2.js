@@ -91,8 +91,8 @@ function main() {
         fields: [
 			{key:"driver"},
 			{key:"nomenclature"},
-            {key:"detectedCount"},
-            {key:"notDetectedCount"},
+            {key:"detectedSystems"},
+            {key:"notDetectedSystems"},
             {key:"inducibleNote"},
             {key:"imsrCount"},
             {key:"countOfReferences"},
