@@ -60,7 +60,7 @@ public class RecombinaseSummary {
     	return refCounts;
     }
 
-    public String getDetectedCount()
+    public String getDetectedSystems()
     {
 
     	List<AlleleSystem> affectedSystems = this.allele.getAffectedSystems();
@@ -90,7 +90,7 @@ public class RecombinaseSummary {
 	}
 
 
-    public String getNotDetectedCount()
+    public String getNotDetectedSystems()
     {
     	
     	List<AlleleSystem> unaffectedSystems = this.allele.getUnaffectedSystems();
