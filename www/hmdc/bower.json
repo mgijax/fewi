@@ -2,8 +2,8 @@
   "name": "civicClient",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "1.4.7",
-    "angular-ui-router": "0.2.15",
+    "angular": "1.5.2",
+    "angular-route": "1.5.2",
     "angular-formly": "7.1.2",
     "angular-bootstrap": "0.13.4",
     "angular-resource": "1.4.7",
@@ -11,7 +11,7 @@
     "api-check": "7.5.3"
   },
   "resolutions": {
-    "angular": "~1.4.7",
+    "angular": "~1.5.2",
     "angular-bootstrap": "0.13.4"
   }
 }
