@@ -125,7 +125,7 @@ public class RecombinaseController {
 
         // issue the query and get back the matching Allele objects
         SearchResults<Allele> searchResults = recombinaseFinder.searchRecombinases(params);
-
+        
         RecombinaseHighlightInfo highlightInfo = new RecombinaseHighlightInfo();
         if (!empty(query.getStructure()) || !empty(query.getSystem()) || !empty(query.getDetected()))
         {

@@ -25,7 +25,7 @@ public class RecombinaseSummary {
 	//-------------------
 	// instance variables
 	//-------------------
-
+	
 	// primary object for a RecombinaseSummary is an Allele
 	private final Allele allele;
 
@@ -61,14 +61,20 @@ public class RecombinaseSummary {
     //------------------------
 
     public String getCountOfReferences() {
-    	return "<a href='"+fewiUrl+"/reference/allele/" + this.allele.getPrimaryID()
-    		+ "?typeFilter=Literature' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
+    	String refCounts = "<a href='"+fewiUrl+"/reference/allele/" + this.allele.getPrimaryID()
+        		+ "?typeFilter=Literature' target='_blank'>" + this.allele.getCountOfReferences().toString() + "</a>";
+    	return refCounts;
     }
 
     public String getDetectedCount()
     {
-    	List<AlleleSystem> affectedSystems = this.recombinaseInfo.getAffectedSystems();
 
+    	List<AlleleSystem> affectedSystems = new ArrayList<AlleleSystem>();
+    	
+    	if (this.recombinaseInfo != null) {
+    		affectedSystems = this.recombinaseInfo.getAffectedSystems();
+    	}
+    	
     	StringBuffer linkedSystems = new StringBuffer();
 
     	if (affectedSystems.size() > 0)
@@ -96,7 +102,11 @@ public class RecombinaseSummary {
 
     public String getNotDetectedCount()
     {
-    	List<AlleleSystem> unaffectedSystems = this.recombinaseInfo.getUnaffectedSystems();
+    	
+    	List<AlleleSystem> unaffectedSystems = new ArrayList<AlleleSystem>();
+    	if (this.recombinaseInfo != null) {
+    		unaffectedSystems = this.recombinaseInfo.getUnaffectedSystems();
+    	}
 
     	StringBuffer linkedSystems = new StringBuffer();
 
@@ -126,7 +136,8 @@ public class RecombinaseSummary {
 	}
 
 	public String getDriver() {
-    	return this.allele.getDriver();
+		String driver = this.allele.getDriver();
+    	return driver;
     }
 
     public String getImsrCount()
@@ -142,6 +153,7 @@ public class RecombinaseSummary {
     	sb.append("&states=embryo&states=live&states=ovaries&states=sperm' target='_blank'>");
     	sb.append(this.allele.getImsrStrainCount());
     	sb.append("</a>");
+    	
     	return sb.toString();
     }
 
