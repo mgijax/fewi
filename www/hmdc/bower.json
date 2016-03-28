@@ -6,6 +6,7 @@
     "angular-route": "1.5.2",
     "angular-formly": "7.1.2",
     "angular-bootstrap": "0.13.4",
+    "angular-utils-pagination": "0.11.0",
     "angular-resource": "1.4.7",
     "angular-formly-templates-bootstrap": "6.1.5",
     "api-check": "7.5.3"
