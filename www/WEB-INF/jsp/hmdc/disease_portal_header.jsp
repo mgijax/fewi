@@ -15,6 +15,7 @@
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-formly/dist/formly.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-resource/angular-resource.js"></script>
+		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-table/src/main/webapp/js/lib/angular-table.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/index.js"></script>
 		<script src="${configBean.FEWI_URL}/assets/hmdc/search/forms/formConfig.js"></script>
