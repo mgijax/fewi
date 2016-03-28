@@ -198,6 +198,9 @@ tr.gray td {background-color:#EEEEEE;}
 					<tr><th>Allele Symbol</th><th>System</th></tr>
 					<tr><td>Emx1&lt;tm1(cre)Ito&gt;</td><td>nervous system</td></tr>
 					<tr><td>Tg(Emx1-cre)1Ito</td><td>nervous system</td></tr>
+					<tr><td>Gad2&lt;tm1(cre/ERT2)Zjh&gt;</td><td>nervous system</td></tr>
+					<tr><td>Tg(mI56i-flpe)39Fsh</td><td>nervous system</td></tr>
+					<tr><td>Vip&lt;tm1(cre)Zjh&gt;</td><td>nervous system</td></tr>
 				</table>
                 </li>
             </ol>
@@ -207,6 +210,7 @@ tr.gray td {background-color:#EEEEEE;}
  			<p concordion:manual="true">passed jeffc 04/09/2014</p>
     		<ol>
     			<!-- The synonym chosen has word "bulbar" that does not appear in any EMAPA structure, to discount any false positives -->
+    			<!-- This test no longer works, needs to be fixed with a new term -->
                 <li>From the Recombinase query form search for Recombinase Activity in <b>bulbar cushion</b> (synonym of "endocardial cushion tissue")</li>
                 <li>When the summary page displays confirm the following systems are bolded(only the systems that contain the search term should be bolded):
                 		<table>
@@ -220,6 +224,7 @@ tr.gray td {background-color:#EEEEEE;}
 
         	<li>Verify querying by a term highlights all matching systems for both Detected and Not Detected columns(sto177)
  			<p concordion:manual="true">passed jeffc 04/09/2014</p>
+ 			<!-- This test needs to be updated with different data -->
     		<ol>
                 <li>From the Recombinase query form search for Recombinase Activity in <b>heart</b></li>
                 <li>When the summary page displays confirm the following systems are bolded, under the appropriate columns (either detected or not detected):
