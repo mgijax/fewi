@@ -13,7 +13,7 @@
 		$scope.displayHTML = function(html) {
 			return $sce.trustAsHtml(html);
 		}
-		
+
 		function onSubmit() {
 			vm.query = vm.model;
 			console.log("Submit: " + JSON.stringify(vm.model));
@@ -48,20 +48,19 @@
 					console.log(error);
 					vm.errorMessage = error;
 			});
-
 		}
 
 		vm.tabs = {
 			"gridTab": {
 				"count": 0,
 				"heading": "Gene Homologs x Phenotypes/Diseases",
-				"active": true,
+				"active": false,
 				"template": "/assets/hmdc/search/views/grid.tpl.html"
 			},
 			"geneTab": {
 				"count": 0,
 				"heading": "Genes",
-				"active": false,
+				"active": true,
 				"template": "/assets/hmdc/search/views/gene.tpl.html"
 			},
 			"diseaseTab": {
@@ -120,10 +119,10 @@
 								required: true,
 								options: [
 									{ value: '', name: 'Please select a field' },
-									{ value: 'gene', name: 'Gene (symbol or name)' },
-									{ value: 'gene_id', name: 'Gene (ID)' },
-									{ value: 'phenotype', name: 'Phenotype/Disease (name)' },
-									{ value: 'phenotype_id', name: 'Phenotype/Disease (ID)' },
+									{ value: 'nomenclature', name: 'Gene (symbol or name)' },
+									{ value: 'marker_key', name: 'Gene (ID)' },
+									{ value: 'term', name: 'Phenotype/Disease (name)' },
+									{ value: 'termId', name: 'Phenotype/Disease (ID)' },
 									{ value: 'location', name: 'Location (chromosome region)' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
@@ -138,7 +137,7 @@
 						}
 					],
 					conditionFields: {
-						gene: [
+						nomenclature: [
 							{
 								key: 'input',
 								type: 'input',
@@ -150,7 +149,7 @@
 								}
 							}
 						],
-						gene_id: [
+						marker_key: [
 							{
 								key: 'input',
 								type: 'input',
@@ -162,7 +161,7 @@
 								}
 							}
 						],
-						phenotype: [
+						term: [
 							{
 								key: 'input',
 								type: 'input',
@@ -174,7 +173,7 @@
 								}
 							}
 						],
-						phenotype_id: [
+						termId: [
 							{
 								key: 'input',
 								type: 'input',

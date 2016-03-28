@@ -252,8 +252,7 @@ public class DiseasePortalFinder
 	}
 	
 	private SearchResults<SolrDiseasePortalMarker> huntMarkersGroup(SearchParams params,boolean justKeys) {
-		SearchResults<SolrHdpEntity> results
-		= new SearchResults<SolrHdpEntity>();
+		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 
 		// make sure that only documents with marker keys are included in the
 		// group (otherwise you get weird off-by-one error in the count) also

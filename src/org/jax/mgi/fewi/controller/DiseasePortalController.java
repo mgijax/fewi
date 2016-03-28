@@ -19,16 +19,21 @@ import mgi.frontend.datamodel.Term;
 import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
+import org.jax.mgi.fewi.forms.models.Condition;
+import org.jax.mgi.fewi.forms.models.ConditionGroup;
+import org.jax.mgi.fewi.forms.models.ConditionQuery;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
+import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -54,8 +59,10 @@ import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
 import org.jax.mgi.fewi.util.file.FileProcessorOutput;
 import org.jax.mgi.fewi.util.file.VcfProcessorOutput;
+import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
+import org.jax.mgi.snpdatamodel.ConsensusSNP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1684,9 +1691,20 @@ public class DiseasePortalController
 	
 	
 	
-	
-	
-	
+	private Filter genQueryFilter(ConditionGroup group) {
+		
+		List<Filter> filterList = new ArrayList<Filter>();
+		
+		for(ConditionQuery cq: group.getQueries()) {
+			filterList.add(cq.genFilter());
+		}
+
+		if(group.getOperator().equals("AND")) {
+			return Filter.and(filterList);
+		} else {
+			return Filter.or(filterList);
+		}
+	}
 	
 	
 	
@@ -1701,7 +1719,15 @@ public class DiseasePortalController
 
 		System.out.println("Json: " + jsonInput);
 		
-		params.setFilter(new Filter(SearchConstants.VOC_TERM, "105830", Filter.Operator.OP_HAS_WORD));
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			ConditionGroup group = (ConditionGroup)mapper.readValue(jsonInput, ConditionGroup.class);
+			params.setFilter(genQueryFilter(group));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//params.setFilter(new Filter(SearchConstants.VOC_TERM, "105830", Filter.Operator.OP_HAS_WORD));
 
 		SearchResults<SolrDiseasePortalMarker> searchResults = hdpFinder.getMarkers(params);
 		
@@ -1729,7 +1755,7 @@ public class DiseasePortalController
 		return jsonResponse;
 		
 	}
-	
+
 	@RequestMapping(value="/diseaseQuery")
 	public @ResponseBody JsonSummaryResponse<HdpDiseaseSummaryRow> diseaseQuery(
 			HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestBody String jsonInput) throws Exception {
@@ -1742,10 +1768,15 @@ public class DiseasePortalController
 		params.setIncludeMetaScore(true);
 
 		System.out.println("Json: " + jsonInput);
-
 		
-		params.setFilter(new Filter(SearchConstants.VOC_TERM, "105830", Filter.Operator.OP_HAS_WORD));
-
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			ConditionGroup group = (ConditionGroup)mapper.readValue(jsonInput, ConditionGroup.class);
+			params.setFilter(genQueryFilter(group));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		SearchResults<SolrVocTerm> searchResults = hdpFinder.getDiseases(params);
 		
 		List<HdpDiseaseSummaryRow> termList = new ArrayList<HdpDiseaseSummaryRow>();
