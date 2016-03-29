@@ -4,7 +4,7 @@
 		.controller('SearchController', SearchController);
 
 	// @ngInject
-	function SearchController($rootScope, $scope, $log, Search, $sce) {
+	function SearchController($rootScope, $scope, $log, Search, $sce, ngDialog) {
 		var vm = $scope.vm = {};
 
 		vm.onSubmit = onSubmit;
@@ -12,6 +12,14 @@
 
 		$scope.displayHTML = function(html) {
 			return $sce.trustAsHtml(html);
+		}
+
+		$scope.openDiseaseSource = function() {
+			ngDialog.open({ template: 'DiseaseSource' });
+		}
+
+		$scope.openGeneSource = function() {
+			ngDialog.open({ template: 'GeneSource' });
 		}
 
 		function onSubmit() {

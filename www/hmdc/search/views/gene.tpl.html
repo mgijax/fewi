@@ -1,5 +1,6 @@
 Export: <a id="markersTextDownload" class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&amp;numDCol=100"><img src="http://www.informatics.jax.org/webshare/images/text.png" width="10" height="10">Text File</a> 
 
+
 <table class="table table-bordered table-striped" ng-show="vm.results.geneResults.totalCount > 0">
 	<thead>
 		<tr>
@@ -7,7 +8,7 @@ Export: <a id="markersTextDownload" class="btn" href="/diseasePortal/marker/repo
 			<td>Gene Symbol</td>
 			<td>Genetic Location</td>
 			<td>Genome Coordinates</td>
-			<td>Associated Human Diseases (source)</td>
+			<td>Associated Human Diseases (<a href="" ng-click="openGeneSource();">Source</a>)</td>
 			<td>Abnormal Mouse Phenotypes<br>Reported in these Systems</td>
 			<td>References in MGI</td>
 			<td>Mice With Mutations<br>In this Gene (IMSR)</td>
@@ -27,3 +28,4 @@ Export: <a id="markersTextDownload" class="btn" href="/diseasePortal/marker/repo
 		</tr>
 	</tbody>
 </table>
+<script type="text/ng-template" id="GeneSource">Hi this is a box with text</script>
