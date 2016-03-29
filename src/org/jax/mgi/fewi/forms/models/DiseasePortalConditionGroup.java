@@ -2,10 +2,10 @@ package org.jax.mgi.fewi.forms.models;
 
 import java.util.List;
 
-public class ConditionGroup {
+public class DiseasePortalConditionGroup {
 
 	private String operator;
-	private List<ConditionQuery> queries;
+	private List<DiseasePortalConditionQuery> queries;
 	
 
 	public String getOperator() {
@@ -14,10 +14,10 @@ public class ConditionGroup {
 	public void setOperator(String operator) {
 		this.operator = operator;
 	}
-	public List<ConditionQuery> getQueries() {
+	public List<DiseasePortalConditionQuery> getQueries() {
 		return queries;
 	}
-	public void setQueries(List<ConditionQuery> queries) {
+	public void setQueries(List<DiseasePortalConditionQuery> queries) {
 		this.queries = queries;
 	}
 }

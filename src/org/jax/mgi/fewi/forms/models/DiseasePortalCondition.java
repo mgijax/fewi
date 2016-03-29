@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-public class Condition {
+public class DiseasePortalCondition {
 
 	private String input;
 	private List<String> parameters;

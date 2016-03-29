@@ -27,9 +27,9 @@ import org.jax.mgi.fewi.finder.DiseasePortalFinderOLD;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
-import org.jax.mgi.fewi.forms.models.Condition;
-import org.jax.mgi.fewi.forms.models.ConditionGroup;
-import org.jax.mgi.fewi.forms.models.ConditionQuery;
+import org.jax.mgi.fewi.forms.models.DiseasePortalCondition;
+import org.jax.mgi.fewi.forms.models.DiseasePortalConditionGroup;
+import org.jax.mgi.fewi.forms.models.DiseasePortalConditionQuery;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
@@ -1695,11 +1695,11 @@ public class DiseasePortalController
 	
 	
 	
-	private Filter genQueryFilter(ConditionGroup group) {
+	private Filter genQueryFilter(DiseasePortalConditionGroup group) {
 		
 		List<Filter> filterList = new ArrayList<Filter>();
 		
-		for(ConditionQuery cq: group.getQueries()) {
+		for(DiseasePortalConditionQuery cq: group.getQueries()) {
 			filterList.add(cq.genFilter());
 		}
 
@@ -1725,7 +1725,7 @@ public class DiseasePortalController
 		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			ConditionGroup group = (ConditionGroup)mapper.readValue(jsonInput, ConditionGroup.class);
+			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
 			params.setFilter(genQueryFilter(group));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1775,7 +1775,7 @@ public class DiseasePortalController
 		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			ConditionGroup group = (ConditionGroup)mapper.readValue(jsonInput, ConditionGroup.class);
+			DiseasePortalConditionGroup group = (DiseasePortalConditionGroup)mapper.readValue(jsonInput, DiseasePortalConditionGroup.class);
 			params.setFilter(genQueryFilter(group));
 		} catch (IOException e) {
 			e.printStackTrace();
