@@ -119,9 +119,9 @@
 								required: true,
 								options: [
 									{ value: '', name: 'Please select a field' },
-									{ value: 'nomenclature', name: 'Gene (symbol or name)' },
+									{ value: 'mnS', name: 'Gene (symbol or name)' },
 									{ value: 'marker_key', name: 'Gene (ID)' },
-									{ value: 'term', name: 'Phenotype/Disease (name)' },
+									{ value: 'tsD', name: 'Phenotype/Disease (name)' },
 									{ value: 'termId', name: 'Phenotype/Disease (ID)' },
 									{ value: 'location', name: 'Location (chromosome region)' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
@@ -137,7 +137,8 @@
 						}
 					],
 					conditionFields: {
-						nomenclature: [
+						// These are passed all the way to solr
+						mnS: [
 							{
 								key: 'input',
 								type: 'input',
@@ -161,7 +162,8 @@
 								}
 							}
 						],
-						term: [
+						// These are passed all the way to solr
+						tsD: [
 							{
 								key: 'input',
 								type: 'input',

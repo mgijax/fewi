@@ -46,7 +46,7 @@ import org.hibernate.SessionFactory;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.config.ContextLoader;
 import org.jax.mgi.fewi.finder.DbInfoFinder;
-import org.jax.mgi.fewi.finder.DiseasePortalFinder;
+import org.jax.mgi.fewi.finder.DiseasePortalFinderOLD;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.QueryFormOptionFinder;
 import org.jax.mgi.fewi.finder.ReferenceFinder;
@@ -111,7 +111,7 @@ public class MarkerController {
 	private ReferenceFinder referenceFinder;
 
 	@Autowired
-	private DiseasePortalFinder hdpFinder;
+	private DiseasePortalFinderOLD hdpFinder;
 
 	@Autowired
 	private IDLinker idLinker;

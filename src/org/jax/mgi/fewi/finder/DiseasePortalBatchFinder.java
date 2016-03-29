@@ -18,7 +18,7 @@ import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
  */
 public class DiseasePortalBatchFinder 
 {
-	private DiseasePortalFinder finder;
+	private DiseasePortalFinderOLD finder;
 	// no search params means "get me everything"
 	public SearchParams searchParams = null;
 	// default values
@@ -26,13 +26,13 @@ public class DiseasePortalBatchFinder
 	public Integer currentOffset = 0;
 	private Integer totalCount = null;
 	
-	public DiseasePortalBatchFinder(DiseasePortalFinder finder,SearchParams searchParams)
+	public DiseasePortalBatchFinder(DiseasePortalFinderOLD finder,SearchParams searchParams)
 	{
 		this.finder=finder;
 		this.searchParams=searchParams;
 	}
 	
-	public DiseasePortalBatchFinder(DiseasePortalFinder finder,SearchParams searchParams,Integer batchSize)
+	public DiseasePortalBatchFinder(DiseasePortalFinderOLD finder,SearchParams searchParams,Integer batchSize)
 	{
 		this.finder=finder;
 		this.searchParams=searchParams;

@@ -46,7 +46,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class SolrDiseasePortalHunter extends SolrDiseasePortalBaseHunter
+public class SolrDiseasePortalHunterOLD extends SolrDiseasePortalBaseHunter
 {
     /***
      * The constructor sets up this hunter so that it is specific to diseasePortal
@@ -54,7 +54,7 @@ public class SolrDiseasePortalHunter extends SolrDiseasePortalBaseHunter
      * inherited from its superclass, and then relies on the superclass to
      * perform all of the needed work via the hunt() method.
      */
-    public SolrDiseasePortalHunter()
+    public SolrDiseasePortalHunterOLD()
     {
         /*
          * The name of the field we want to iterate through the documents for
@@ -66,7 +66,7 @@ public class SolrDiseasePortalHunter extends SolrDiseasePortalBaseHunter
 
     @Override
     protected void packInformation(QueryResponse rsp, SearchResults<SolrHdpEntity> sr,
-            SearchParams sp) {
+      SearchParams sp) {
 
         // A list of all the primary keys in the document
 

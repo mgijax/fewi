@@ -23,6 +23,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
 import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
+import org.jax.mgi.fewi.finder.DiseasePortalFinderOLD;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
@@ -99,6 +100,9 @@ public class DiseasePortalController
 	// get the finders used by various methods
 	@Autowired
 	private DiseasePortalFinder hdpFinder;
+	
+	@Autowired
+	private DiseasePortalFinderOLD hdpFinderOLD;
 
 	@Autowired
 	private MarkerFinder markerFinder;
@@ -687,7 +691,7 @@ public class DiseasePortalController
 		SearchParams sp = new SearchParams();
 		sp.setFilter(parseQueryForm(query,session));
 		sp.setPageSize(10000);
-		SearchResults<SolrHdpGridData> sr = hdpFinder.searchAnnotationsInPopupResults(sp);
+		SearchResults<SolrHdpGridData> sr = hdpFinderOLD.searchAnnotationsInPopupResults(sp);
 		// map the results by marker key
 		Map<Integer,List<SolrHdpGridData>> humanResults = new HashMap<Integer,List<SolrHdpGridData>>();
 		for(SolrHdpGridData gir : sr.getResultObjects()) {
@@ -736,7 +740,7 @@ public class DiseasePortalController
 
 	@RequestMapping(value="genoCluster/view/{genoClusterKey:.+}", method = RequestMethod.GET)
 	public ModelAndView genoClusterView(@PathVariable("genoClusterKey") String genoClusterKey) {
-		List<HdpGenoCluster> genoClusters = hdpFinder.getGenoClusterByKey(genoClusterKey);
+		List<HdpGenoCluster> genoClusters = hdpFinderOLD.getGenoClusterByKey(genoClusterKey);
 		// there can be only one...
 		if (genoClusters.size() < 1) { // none found
 			ModelAndView mav = new ModelAndView("error");
@@ -786,29 +790,29 @@ public class DiseasePortalController
 	}
 
 
-	//--------------------------------//
-	// Disease Portal Marker Downloads
-	//--------------------------------//
-	@RequestMapping("marker/report*")
-	public ModelAndView resultsMarkerSummaryExport(HttpServletRequest request, HttpSession session, @ModelAttribute DiseasePortalQueryForm query)  {
-
-		logger.debug("generating HDP marker report download");
-
-		ModelAndView mav = new ModelAndView("hdpMarkersSummaryReport");
-
-		Filter qf = parseQueryForm(query,session);
-		SearchParams sp = new SearchParams();
-		sp.setFilter(qf);
-		List<Sort> sorts = genMarkerSorts(request);
-		sp.setSorts(sorts);
-		DiseasePortalBatchFinder batchFinder = new DiseasePortalBatchFinder(hdpFinder,sp);
-
-		mav.addObject("markerFinder", batchFinder);
-
-		logger.debug("controller finished - routing to view object");
-
-		return mav;
-	}
+//	//--------------------------------//
+//	// Disease Portal Marker Downloads
+//	//--------------------------------//
+//	@RequestMapping("marker/report*")
+//	public ModelAndView resultsMarkerSummaryExport(HttpServletRequest request, HttpSession session, @ModelAttribute DiseasePortalQueryForm query)  {
+//
+//		logger.debug("generating HDP marker report download");
+//
+//		ModelAndView mav = new ModelAndView("hdpMarkersSummaryReport");
+//
+//		Filter qf = parseQueryForm(query,session);
+//		SearchParams sp = new SearchParams();
+//		sp.setFilter(qf);
+//		List<Sort> sorts = genMarkerSorts(request);
+//		sp.setSorts(sorts);
+//		DiseasePortalBatchFinder batchFinder = new DiseasePortalBatchFinder(hdpFinder,sp);
+//
+//		mav.addObject("markerFinder", batchFinder);
+//
+//		logger.debug("controller finished - routing to view object");
+//
+//		return mav;
+//	}
 
 
 	//----------------------------//
@@ -840,26 +844,26 @@ public class DiseasePortalController
 	}
 
 
-	//--------------------------------//
-	// Disease Portal Disease Downloads
-	//--------------------------------//
-	@RequestMapping("disease/report*")
-	public ModelAndView resultsDiseaseSummaryExport(HttpServletRequest request, HttpSession session, @ModelAttribute DiseasePortalQueryForm query) {
-
-		logger.debug("generating HDP disease report download");
-
-		ModelAndView mav = new ModelAndView("hdpDiseaseSummaryReport");
-
-		Filter qf = parseQueryForm(query,session);
-		SearchParams sp = new SearchParams();
-		sp.setFilter(qf);
-		List<Sort> sorts = genDiseaseSorts(request);
-		sp.setSorts(sorts);
-		DiseasePortalBatchFinder batchFinder = new DiseasePortalBatchFinder(hdpFinder,sp);
-
-		mav.addObject("diseaseFinder", batchFinder);
-		return mav;
-	}
+//	//--------------------------------//
+//	// Disease Portal Disease Downloads
+//	//--------------------------------//
+//	@RequestMapping("disease/report*")
+//	public ModelAndView resultsDiseaseSummaryExport(HttpServletRequest request, HttpSession session, @ModelAttribute DiseasePortalQueryForm query) {
+//
+//		logger.debug("generating HDP disease report download");
+//
+//		ModelAndView mav = new ModelAndView("hdpDiseaseSummaryReport");
+//
+//		Filter qf = parseQueryForm(query,session);
+//		SearchParams sp = new SearchParams();
+//		sp.setFilter(qf);
+//		List<Sort> sorts = genDiseaseSorts(request);
+//		sp.setSorts(sorts);
+//		DiseasePortalBatchFinder batchFinder = new DiseasePortalBatchFinder(hdpFinder,sp);
+//
+//		mav.addObject("diseaseFinder", batchFinder);
+//		return mav;
+//	}
 
 
 	//----------------------------//
@@ -899,7 +903,7 @@ public class DiseasePortalController
 
 		// perform query
 		logger.debug("getAnnotationsInResults finished");
-		SearchResults<SolrHdpGridData> results = hdpFinder.searchAnnotationsInGridResults(params);
+		SearchResults<SolrHdpGridData> results = hdpFinderOLD.searchAnnotationsInGridResults(params);
 
 		List<SolrHdpGridData> annotations = results.getResultObjects();
 
@@ -927,7 +931,7 @@ public class DiseasePortalController
 		// perform query and return results as json
 		logger.debug("getSummaryResultsByGene finished");
 
-		return hdpFinder.getGridClusters(params);
+		return hdpFinderOLD.getGridClusters(params);
 	}
 
 	public SearchResults<SolrString> getHighlightedColumns(HttpServletRequest request, @ModelAttribute DiseasePortalQueryForm query, HttpSession session) {
@@ -944,7 +948,7 @@ public class DiseasePortalController
 		params.setPageSize(100000);
 
 		logger.debug("getHighlightedColumns finished");
-		SearchResults<SolrString> results = hdpFinder.getHighlightedColumns(params);
+		SearchResults<SolrString> results = hdpFinderOLD.getHighlightedColumns(params);
 
 		return results;
 	}
@@ -973,7 +977,7 @@ public class DiseasePortalController
 		}
 
 		logger.debug("getHighlightedColumns finished");
-		SearchResults<SolrString> results = hdpFinder.getHighlightedColumnHeaders(params);
+		SearchResults<SolrString> results = hdpFinderOLD.getHighlightedColumnHeaders(params);
 
 		return results;
 	}
@@ -991,7 +995,7 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridDiseaseColumns finished");
-		SearchResults<SolrString> results = hdpFinder.getGridDiseases(params);
+		SearchResults<SolrString> results = hdpFinderOLD.getGridDiseases(params);
 
 		return results;
 	}
@@ -1008,7 +1012,7 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridMpHeaderColumns finished");
-		SearchResults<SolrString> results = hdpFinder.huntGridMPHeadersGroup(params);
+		SearchResults<SolrString> results = hdpFinderOLD.huntGridMPHeadersGroup(params);
 
 		List<String> headerCols = new ArrayList<String>();
 		for(SolrString ss : results.getResultObjects()) {
@@ -1031,7 +1035,7 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridMpTermColumns finished");
-		SearchResults<SolrVocTerm> results = hdpFinder.huntGridMPTermsGroup(params);
+		SearchResults<SolrVocTerm> results = hdpFinderOLD.huntGridMPTermsGroup(params);
 		return results.getResultObjects();
 	}
 
@@ -1049,7 +1053,7 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridDiseaseTermColumns finished");
-		SearchResults<SolrVocTerm> results = hdpFinder.huntGridDiseaseTermsGroup(params);
+		SearchResults<SolrVocTerm> results = hdpFinderOLD.huntGridDiseaseTermsGroup(params);
 		return results.getResultObjects();
 	}
 
@@ -1069,7 +1073,7 @@ public class DiseasePortalController
 
 		// perform query and return results as json
 		logger.debug("getGridHumanMarkers finished");
-		SearchResults<SolrDiseasePortalMarker> results = hdpFinder.huntGridHumanMarkerGroup(params);
+		SearchResults<SolrDiseasePortalMarker> results = hdpFinderOLD.huntGridHumanMarkerGroup(params);
 
 
 		return results.getResultObjects();
@@ -1101,7 +1105,7 @@ public class DiseasePortalController
 		// perform query and return results as json
 		logger.debug("getSummaryResultsByGene finished");
 
-		return hdpFinder.getMarkers(params);
+		return hdpFinderOLD.getMarkers(params);
 	}
 
 	public SearchResults<SolrVocTerm> getSummaryResultsByDisease(HttpServletRequest request, @ModelAttribute DiseasePortalQueryForm query,
@@ -1131,7 +1135,7 @@ public class DiseasePortalController
 		// perform query and return results as json
 		logger.debug("params parsed");
 
-		return hdpFinder.getDiseases(params);
+		return hdpFinderOLD.getDiseases(params);
 	}
 
 	// NOTE: We are only using this function for testing MP query at the momemnt
@@ -1162,7 +1166,7 @@ public class DiseasePortalController
 		// perform query and return results as json
 		logger.debug("params parsed");
 
-		return hdpFinder.getPhenotypes(params);
+		return hdpFinderOLD.getPhenotypes(params);
 	}
 
 	public SearchResults<HdpGenoCluster> getGenoClusters(
@@ -1185,7 +1189,7 @@ public class DiseasePortalController
 		// perform query
 		logger.debug("getSummaryResultsByGene finished");
 
-		return hdpFinder.getGenoClusters(params);
+		return hdpFinderOLD.getGenoClusters(params);
 	}
 
 	//--------------------------------------------------------------------//
@@ -1464,7 +1468,7 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 		params.setFilter(parseQueryForm(query,session));
 		params.setPageSize(0);
-		return hdpFinder.getGridClusterCount(params);
+		return hdpFinderOLD.getGridClusterCount(params);
 	}
 	
 	@RequestMapping("/markers/totalCount")
@@ -1472,7 +1476,7 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 		params.setFilter(parseQueryForm(query,session));
 		params.setPageSize(0);
-		return hdpFinder.getMarkerCount(params);
+		return hdpFinderOLD.getMarkerCount(params);
 	}
 	
 	@RequestMapping("/diseases/totalCount")
@@ -1480,7 +1484,7 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 		params.setFilter(parseQueryForm(query,session));
 		params.setPageSize(0);
-		return hdpFinder.getDiseaseCount(params);
+		return hdpFinderOLD.getDiseaseCount(params);
 	}
 
 	// -----------------------------------------------------------------//
@@ -1498,7 +1502,7 @@ public class DiseasePortalController
 		SearchResults<SolrString> facetResults = null;
 
 		if (FacetConstants.MARKER_FEATURE_TYPE.equals(facetType)){
-			facetResults = hdpFinder.getFeatureTypeFacet(params);
+			facetResults = hdpFinderOLD.getFeatureTypeFacet(params);
 		} else {
 			facetResults = new SearchResults<SolrString>();
 		}
@@ -1599,7 +1603,7 @@ public class DiseasePortalController
 		SearchParams sp = new SearchParams();
 		sp.setPageSize(1);
 		sp.setFilter(new Filter(SearchConstants.DP_GRID_CLUSTER_KEY, gridClusterKey, Filter.Operator.OP_EQUAL));
-		SearchResults<SolrHdpGridCluster> gridClusters = hdpFinder.getGridClusters(sp);
+		SearchResults<SolrHdpGridCluster> gridClusters = hdpFinderOLD.getGridClusters(sp);
 		if(gridClusters.getResultObjects().size()>0) {
 			SolrHdpGridCluster gridCluster = gridClusters.getResultObjects().get(0);
 			List<String> symbols = new ArrayList<String>();
@@ -1649,8 +1653,8 @@ public class DiseasePortalController
 				if(locationFilters.size()>0) {
 					sp.setFilter(Filter.or(locationFilters));
 					// query solr for the matching marker keys
-					if(tokenBatches.size()==1) return hdpFinder.getMarkerKeys(sp);
-					else markerKeys.addAll(hdpFinder.getMarkerKeys(sp));
+					if(tokenBatches.size()==1) return hdpFinderOLD.getMarkerKeys(sp);
+					else markerKeys.addAll(hdpFinderOLD.getMarkerKeys(sp));
 				}
 			}
 		}

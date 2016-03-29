@@ -4,7 +4,7 @@
 		.factory('Search', SearchService);
 
 	function SearchService($rootScope, $http) {
-		var urlBase = 'http://localhost.jax.org/diseasePortal';
+		var urlBase = '/diseasePortal';
 
 		return {
 			diseaseQuery: function(formData) {

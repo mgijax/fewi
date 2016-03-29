@@ -5,7 +5,7 @@ import java.util.List;
 import mgi.frontend.datamodel.Disease;
 
 import org.jax.mgi.fewi.finder.DiseaseFinder;
-import org.jax.mgi.fewi.finder.DiseasePortalFinder;
+import org.jax.mgi.fewi.finder.DiseasePortalFinderOLD;
 import org.jax.mgi.fewi.searchUtil.SearchResults;
 import org.jax.mgi.fewi.searchUtil.entities.SolrVocTerm;
 import org.jax.mgi.fewi.util.link.IDLinker;
@@ -32,7 +32,7 @@ public class DiseaseController {
 	private DiseaseFinder diseaseFinder;
 
 	@Autowired 
-	DiseasePortalFinder diseasePortalFinder;
+	DiseasePortalFinderOLD diseasePortalFinder;
 
 	@Autowired
 	private IDLinker idLinker;
