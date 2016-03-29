@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.Filter;
+import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 
@@ -28,20 +29,30 @@ public class DiseasePortalConditionQuery {
 	public Filter genFilter() {
 		List<String> tokens = Arrays.asList(condition.getTokens());
 		
-		if(field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE)) {
-			List<Filter> list = new ArrayList<Filter>();
-			list.add(new Filter(field, tokens, Operator.OP_HAS_WORD));
-			list.add(new Filter(DiseasePortalFields.TERM_TYPE, "OMIM", Operator.OP_EQUAL));
-			return Filter.and(list);
-		} else if(field.equals(DiseasePortalFields.TERM_ID)) {
+		
+		if(field.equals(DiseasePortalFields.MARKER_NOMEN_SEARCH)) {
+			return new Filter(field, tokens, Operator.OP_HAS_WORD);
+		} else if(field.equals(DiseasePortalFields.MARKER_ID_SEARCH)) {
 			List<String> quoted = new ArrayList<String>();
 			for(String t: tokens) {
 				quoted.add("\"" + t + "\"");
 			}
 			return new Filter(field, quoted, Operator.OP_HAS_WORD);
-		
+		} else if(field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE)) {
+			List<Filter> list = new ArrayList<Filter>();
+			list.add(new Filter(field, tokens, Operator.OP_IN));
+			list.add(new Filter(DiseasePortalFields.TERM_TYPE, "OMIM", Operator.OP_EQUAL));
+			list.add(new Filter(DiseasePortalFields.MARKER_KEY,"[* TO *]",Filter.Operator.OP_HAS_WORD));
+			return Filter.and(list);
+		} else if(field.equals(DiseasePortalFields.TERM_SEARCH)) {
+			List<String> quoted = new ArrayList<String>();
+			for(String t: tokens) {
+				quoted.add("\"" + t + "\"");
+			}
+			return new Filter(field, quoted, Operator.OP_HAS_WORD);
 		} else {
 			return new Filter(field, tokens, Operator.OP_HAS_WORD);
 		}
+		
 	}
 }

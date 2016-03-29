@@ -1720,6 +1720,7 @@ public class DiseasePortalController
 		params.setIncludeSetMeta(true);
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
+		params.setPageSize(10000);
 
 		System.out.println("Json: " + jsonInput);
 		
@@ -1770,6 +1771,7 @@ public class DiseasePortalController
 		params.setIncludeSetMeta(true);
 		params.setIncludeRowMeta(true);
 		params.setIncludeMetaScore(true);
+		params.setPageSize(10000);
 
 		System.out.println("Json: " + jsonInput);
 		

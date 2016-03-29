@@ -68,13 +68,13 @@
 			"geneTab": {
 				"count": 0,
 				"heading": "Genes",
-				"active": true,
+				"active": false,
 				"template": "/assets/hmdc/search/views/gene.tpl.html"
 			},
 			"diseaseTab": {
 				"count": 0,
 				"heading": "Diseases",
-				"active": false,
+				"active": true,
 				"template": "/assets/hmdc/search/views/disease.tpl.html"
 			}
 
@@ -128,9 +128,9 @@
 								options: [
 									{ value: '', name: 'Please select a field' },
 									{ value: 'mnS', name: 'Gene (symbol or name)' },
-									{ value: 'marker_key', name: 'Gene (ID)' },
+									{ value: 'miS', name: 'Gene (ID)' },
 									{ value: 'tsD', name: 'Phenotype/Disease (name)' },
-									{ value: 'termId', name: 'Phenotype/Disease (ID)' },
+									{ value: 'tS', name: 'Phenotype/Disease (ID)' },
 									{ value: 'location', name: 'Location (chromosome region)' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
@@ -158,7 +158,7 @@
 								}
 							}
 						],
-						marker_key: [
+						miS: [
 							{
 								key: 'input',
 								type: 'input',
@@ -183,7 +183,7 @@
 								}
 							}
 						],
-						termId: [
+						tS: [
 							{
 								key: 'input',
 								type: 'input',
