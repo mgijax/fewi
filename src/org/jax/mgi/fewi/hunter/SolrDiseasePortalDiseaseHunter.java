@@ -41,15 +41,13 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntity> {
 
 			vt.setTerm((String)doc.getFieldValue(DiseasePortalFields.TERM));
 			vt.setPrimaryId(termId);
-			String vocab = (String)doc.getFieldValue(DiseasePortalFields.TERM_TYPE);
+			String vocab = ((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_TYPE)).get(0);
 			vt.setVocabName(vocab);
-			if("OMIM".equalsIgnoreCase(vocab))
-			{
-				vt.setDiseaseRefCount((Integer)doc.getFieldValue(DiseasePortalFields.DISEASE_REF_COUNT));
-				vt.setDiseaseModelCount(((Integer)doc.getFieldValue(DiseasePortalFields.DISEASE_MODEL_COUNTS)));
-				vt.setDiseaseMouseMarkers(((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_MOUSESYMBOL)));
-				vt.setDiseaseHumanMarkers(((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_HUMANSYMBOL)));
-			}
+
+			vt.setDiseaseRefCount((Integer)doc.getFieldValue(DiseasePortalFields.DISEASE_REF_COUNT));
+			vt.setDiseaseModelCount(((Integer)doc.getFieldValue(DiseasePortalFields.DISEASE_MODEL_COUNTS)));
+			vt.setDiseaseMouseMarkers(((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_MOUSESYMBOL)));
+			vt.setDiseaseHumanMarkers(((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_HUMANSYMBOL)));
 
 			// return just the term name for now
 			sr.addResultObjects(vt);
@@ -63,13 +61,9 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntity> {
 
 	}
 
-	//	@Value("${solr.dp.disease.url}")
-	//	public void setSolrUrl(String solrUrl) {
-	//		super.solrUrl = solrUrl;
-	//	}
-
-	@Value("${solr.disease_portal.url}")
+	@Value("${solr.dp.disease.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
 	}
+
 }
