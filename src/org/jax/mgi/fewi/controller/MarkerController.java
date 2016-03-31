@@ -73,7 +73,7 @@ import org.jax.mgi.fewi.util.link.IDLinker;
 import org.jax.mgi.fewi.util.link.ProviderLinker;
 import org.jax.mgi.fewi.util.GOGraphConverter;
 import org.jax.mgi.fewi.util.file.TextFileReader;
-import org.jax.org.mgi.shr.fe.util.TextFormat;
+import org.jax.mgi.shr.fe.util.TextFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
