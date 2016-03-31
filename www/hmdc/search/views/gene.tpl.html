@@ -28,4 +28,7 @@ Export: <a id="markersTextDownload" class="btn" href="/diseasePortal/marker/repo
 		</tr>
 	</tbody>
 </table>
-<script type="text/ng-template" id="GeneSource">Hi this is a box with text</script>
+Showing {{ vm.results.geneResults.summaryRows.length }} of {{ vm.results.geneResults.totalCount }} total records.
+<script type="text/ng-template" id="GeneSource">
+Disease associations for human genes are from the NCBI mim2gene_medgen file and include annotations from OMIM, NCBI curation, Gene Reviews, and Gene Tests. Mouse genes are associated with human diseases through mouse genotypes described in publications.
+</script>
