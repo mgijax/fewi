@@ -3,6 +3,7 @@ package org.jax.mgi.fewi.searchUtil.entities;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.entities.group.SolrGxdEntity;
+import org.jax.mgi.shr.jsonmodel.GxdImageMeta;
 
 public class SolrGxdImage implements SolrGxdEntity {
 
@@ -17,7 +18,7 @@ public class SolrGxdImage implements SolrGxdEntity {
 	Integer imageWidth;
 	Integer imageHeight;
 	String assayID;
-	List<String> metaData;
+	List<GxdImageMeta> metaData;
 
 	public String getAssayID() {
 		return assayID;
@@ -27,11 +28,11 @@ public class SolrGxdImage implements SolrGxdEntity {
 		this.assayID = assayID;
 	}
 
-	public List<String> getMetaData() {
+	public List<GxdImageMeta> getMetaData() {
 		return metaData;
 	}
 
-	public void setMetaData(List<String> metaData) {
+	public void setMetaData(List<GxdImageMeta> metaData) {
 		this.metaData = metaData;
 	}
 
