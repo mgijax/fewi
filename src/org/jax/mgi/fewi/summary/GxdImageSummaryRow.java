@@ -66,7 +66,7 @@ public class GxdImageSummaryRow {
 
 	public String getMetaData() {
 		String html = "<table id=\"gxd_image_meta\">"
-				+ "<tr><th>Gene</th><th>Assay Type</th><th>Result Details</th></tr>";
+				+ "<tr><th>Gene</th><th>Assay Type</th><th>Type</th><th>Result Details</th></tr>";
 		
 		for (GxdImageMeta metaData : image.getMetaData()) {
 
@@ -109,8 +109,17 @@ public class GxdImageSummaryRow {
 						+ "assay/" + image.getAssayID() + "\">"
 						+ image.getImageLabel() + "</a>";
 			}
+			
+			
+			// determine type field
+			String type = "";
+			if (metaData.getHybridization() != null) {
+				type = metaData.getHybridization();
+			}
+			
 			html += "<tr><td class=\"nowrap\">" + metaData.getMarkerSymbol() + "</td>"
 					+ "<td class=\"nowrap\">" + metaData.getAssayType() + "</td>"
+					+ "<td class=\"nowrap\">" + type + "</td>"
 					+ "<td>" + specLabelsHtml + "</td></tr>";
 		}
 		html += "</table>";
