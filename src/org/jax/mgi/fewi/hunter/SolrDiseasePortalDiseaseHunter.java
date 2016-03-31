@@ -41,7 +41,7 @@ public class SolrDiseasePortalDiseaseHunter extends SolrHunter<SolrHdpEntity> {
 
 			vt.setTerm((String)doc.getFieldValue(DiseasePortalFields.TERM));
 			vt.setPrimaryId(termId);
-			String vocab = ((List<String>)doc.getFieldValue(DiseasePortalFields.TERM_TYPE)).get(0);
+			String vocab = (String)doc.getFieldValue(DiseasePortalFields.TERM_TYPE);
 			vt.setVocabName(vocab);
 
 			vt.setDiseaseRefCount((Integer)doc.getFieldValue(DiseasePortalFields.DISEASE_REF_COUNT));
