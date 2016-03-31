@@ -31,12 +31,12 @@ public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntity> {
 
 		for (SolrDocument doc : sdl) {
 
-    		Integer markerKey = (Integer)doc.getFieldValue(DiseasePortalFields.MARKER_KEY);
-    		// return just the marker key for now
-    		//sr.addResultObjects(markerKey);
-    		if(markerKey != null) keys.add(markerKey.toString());
-    		String markerKeyString = markerKey != null ? markerKey.toString() : "";
-			
+			Integer markerKey = (Integer)doc.getFieldValue(DiseasePortalFields.MARKER_KEY);
+			// return just the marker key for now
+			//sr.addResultObjects(markerKey);
+			if(markerKey != null) keys.add(markerKey.toString());
+			String markerKeyString = markerKey != null ? markerKey.toString() : "";
+
 			SolrDiseasePortalMarker marker = new SolrDiseasePortalMarker();
 			marker.setMarkerKey(markerKey.toString());
 			marker.setOrganism((String)doc.getFieldValue(DiseasePortalFields.ORGANISM));
@@ -59,19 +59,19 @@ public class SolrDiseasePortalGeneHunter extends SolrHunter<SolrHdpEntity> {
 			keys.add(markerKeyString);
 			sr.addResultObjects(marker);
 		}
-		
+
 		if (keys != null) {
 			sr.setResultKeys(keys);
 		}
 	}
 
-	//	@Value("${solr.dp.gene.url}")
-	//	public void setSolrUrl(String solrUrl) {
-	//		super.solrUrl = solrUrl;
-	//	}
-
-	@Value("${solr.disease_portal.url}")
+	@Value("${solr.dp.gene.url}")
 	public void setSolrUrl(String solrUrl) {
 		super.solrUrl = solrUrl;
-	}	
+	}
+
+	//	@Value("${solr.disease_portal.url}")
+	//	public void setSolrUrl(String solrUrl) {
+	//		super.solrUrl = solrUrl;
+	//	}	
 }

@@ -27,25 +27,25 @@
 			console.log("Submit: " + JSON.stringify(vm.model));
 			vm.results = {};
 
-			Search.gridQuery(vm.model).
-				then(function(response) {
-					console.log(response.data);
-					vm.results.gridResults = response.data;
-					vm.mustHide = true;
-				}, function (error) {
-					console.log(error);
-					vm.errorMessage = error;
-			});
-			Search.geneQuery(vm.model).
-				then(function(response) {
-					console.log(response.data);
-					vm.results.geneResults = response.data;
-					vm.tabs.geneTab.count = vm.results.geneResults.totalCount;
-					vm.mustHide = true;
-				}, function (error) {
-					console.log(error);
-					vm.errorMessage = error;
-			});
+//			Search.gridQuery(vm.model).
+//				then(function(response) {
+//					console.log(response.data);
+//					vm.results.gridResults = response.data;
+//					vm.mustHide = true;
+//				}, function (error) {
+//					console.log(error);
+//					vm.errorMessage = error;
+//			});
+//			Search.geneQuery(vm.model).
+//				then(function(response) {
+//					console.log(response.data);
+//					vm.results.geneResults = response.data;
+//					vm.tabs.geneTab.count = vm.results.geneResults.totalCount;
+//					vm.mustHide = true;
+//				}, function (error) {
+//					console.log(error);
+//					vm.errorMessage = error;
+//			});
 			Search.diseaseQuery(vm.model).
 				then(function(response) {
 					console.log(response.data);
