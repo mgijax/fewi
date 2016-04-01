@@ -39,7 +39,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="button-row pull-right">
-							<span class="form-warning" ng-if="vm.form.$pristine === false && vm.form.$invalid">
+							<span class="text-danger" ng-if="vm.form.$pristine === false && vm.form.$invalid">
 								Ensure all fields are specified to submit your search.
 							</span>
 							<button
@@ -54,5 +54,7 @@
 					</div>
 				</div>
 			</div>
+			{{ vm.query }}
 		</div>
 	</div>
+

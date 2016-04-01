@@ -37,3 +37,11 @@
 .form-inline .form-control {
 	width: 100%;
 }
+
+.container-fluid {
+	width: 97%;
+}
+
+.queryBuilder .row {
+	min-height: 50px;
+}
