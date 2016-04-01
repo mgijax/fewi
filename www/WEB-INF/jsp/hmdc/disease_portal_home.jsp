@@ -11,7 +11,16 @@
 
 <%@ include file="disease_portal_bodystart.jsp" %>
 
-<div ng-app="civicClient" ng-controller="SearchController">
+<div style="width: 175px;">
+	<form>
+		<div class="form-group">
+			<label>Theme</label>
+			<select class="form-control" ng-model="css" ng-options="boot.url as boot.name for boot in boots"></select>
+		</div>
+	</form>
+</div>
+
+<div ng-controller="SearchController">
 
 	<div class="container">
 		<div style="border: 0px;margin-bottom:30px;text-align: center;">
