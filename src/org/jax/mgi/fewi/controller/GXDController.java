@@ -78,9 +78,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * GXDController This controller handles the Gene Expression Data
@@ -158,7 +157,7 @@ public class GXDController {
 
 		logger.debug("->getQueryForm started");
 
-		ModelAndView mav = new ModelAndView("gxd_query");
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
@@ -173,7 +172,7 @@ public class GXDController {
 
 		logger.debug("->getDifferentialQueryForm started");
 
-		ModelAndView mav = new ModelAndView("gxd_query");
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", new GxdQueryForm());
@@ -269,7 +268,7 @@ public class GXDController {
 
 		logger.debug("->getBatchSearchForm started");
 
-		ModelAndView mav = new ModelAndView("gxd_query");
+		ModelAndView mav = new ModelAndView("gxd/gxd_query");
 		mav.addObject("sort", new Paginator());
 		mav.addObject("gxdQueryForm", new GxdQueryForm());
 		mav.addObject("gxdBatchQueryForm", query);
@@ -303,7 +302,7 @@ public class GXDController {
 		logger.debug("query string: " + request.getQueryString());
 		logger.debug("query form: " + query);
 
-		ModelAndView mav = new ModelAndView("gxd_generic_summary");
+		ModelAndView mav = new ModelAndView("gxd/gxd_generic_summary");
 		mav.addObject("queryString", request.getQueryString());
 
 		// the marker ID is an optional field; if it exists, get the
@@ -399,7 +398,7 @@ public class GXDController {
 		logger.debug("->summaryByStructureId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_structure");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_structure");
 
 		// setup search parameters object to gather the requested term
 		SearchParams searchParams = new SearchParams();
@@ -437,7 +436,7 @@ public class GXDController {
 		logger.debug("->summeryByRefId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_reference");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_reference");
 
 		// setup search parameters object to gather the requested marker
 		SearchParams referenceSearchParams = new SearchParams();
@@ -478,7 +477,7 @@ public class GXDController {
 		logger.debug("->summeryByallId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_allele");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_allele");
 
 
 		// setup search parameters object to gather the requested marker
@@ -547,7 +546,7 @@ public class GXDController {
 		logger.debug("->summeryByMrkId started");
 
 		// setup view object
-		ModelAndView mav = new ModelAndView("gxd_summary_by_marker");
+		ModelAndView mav = new ModelAndView("gxd/gxd_summary_by_marker");
 
 		String error = addMarkerToMav(mav, mrkID);
 		if (error != null) {

@@ -63,13 +63,53 @@ public class GxdImageSummaryRow {
 	public String getImageLabel() {
 		return image.getImageLabel();
 	}
-
-	public String getMetaData() {
-		String html = "<table id=\"gxd_image_meta\">"
-				+ "<tr><th>Gene</th><th>Assay Type</th><th>Type</th><th>Result Details</th></tr>";
-		
+	
+	public String getGene() {
+		List<String> genes = new ArrayList<String>();
 		for (GxdImageMeta metaData : image.getMetaData()) {
-
+			
+			String geneHtml = "<li class=\"nowrap\">" + metaData.getMarkerSymbol() + "</li>";			
+			genes.add(geneHtml);
+			
+		}
+		
+		return "<ul>" + StringUtils.join(genes, "") + "</ul>";
+	}
+	
+	public String getAssayType() {
+		List<String> assayTypes = new ArrayList<String>();
+		for (GxdImageMeta metaData : image.getMetaData()) {
+			
+			String assayTypeHtml = "<li class=\"nowrap\">" + metaData.getAssayType() + "</li>";			
+			assayTypes.add(assayTypeHtml);
+			
+		}
+		
+		return "<ul>" + StringUtils.join(assayTypes, "") + "</ul>";
+	}
+	
+	
+	public String getType() {
+		List<String> types = new ArrayList<String>();
+		for (GxdImageMeta metaData : image.getMetaData()) {
+			
+			String type = "";
+			if (metaData.getHybridization() != null) {
+				type = metaData.getHybridization();
+			}
+			String assayTypeHtml = "<li class=\"nowrap\">" + type + "</li>";			
+			types.add(assayTypeHtml);
+			
+		}
+		
+		return "<ul>" + StringUtils.join(types, "") + "</ul>";
+	}
+	
+	public String getSpecimenLabel() {
+		
+		List<String> specLabels = new ArrayList<String>();
+		for (GxdImageMeta metaData : image.getMetaData()) {
+			
 			// generate the correct specimen label links
 			List<String> specLabelLinks = new ArrayList<String>();
 			for(GxdSpecimenLabel labelObject : metaData.getSpecimenLabels()) {
@@ -110,19 +150,13 @@ public class GxdImageSummaryRow {
 						+ image.getImageLabel() + "</a>";
 			}
 			
-			
-			// determine type field
-			String type = "";
-			if (metaData.getHybridization() != null) {
-				type = metaData.getHybridization();
-			}
-			
-			html += "<tr><td class=\"nowrap\">" + metaData.getMarkerSymbol() + "</td>"
-					+ "<td class=\"nowrap\">" + metaData.getAssayType() + "</td>"
-					+ "<td class=\"nowrap\">" + type + "</td>"
-					+ "<td>" + specLabelsHtml + "</td></tr>";
+			specLabelsHtml = "<li>" + specLabelsHtml + "</li>";
+			specLabels.add(specLabelsHtml);
+
 		}
-		html += "</table>";
-		return html;
+		
+		return "<ul>" + StringUtils.join(specLabels, "") + "</ul>";
+		
+			
 	}
 }

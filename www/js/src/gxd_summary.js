@@ -1030,8 +1030,11 @@ var gxdImagesTable = function() {
 	// Column definitions
 	var myColumnDefs = [
 	                    // sortable:true enables sorting
-	                    {key: "image", label: "Image", sortable: false},
-	                    {key: "metaData", label: "Meta Data", sortable:false}
+	                    {key: "image", label: "", sortable: false},
+	                    {key: "gene", label: "Gene", sortable: true},
+	                    {key: "assayType", label: "Assay Type", sortable: true},
+	                    {key: "type", label: "Type", sortable: true},
+	                    {key: "specimenLabel", label: "Result Details", sortable: false}
 	                    ];
 
 	// DataSource instance
@@ -1041,7 +1044,10 @@ var gxdImagesTable = function() {
 			resultsList: "summaryRows",
 			fields: [
 			         {key: "image"},
-			         {key: "metaData"}
+			         {key: "gene"},
+			         {key: "assayType"},
+			         {key: "type"},
+			         {key: "specimenLabel"}
 			         ],
 			         metaFields: {
 			        	 totalRecords: "totalCount",

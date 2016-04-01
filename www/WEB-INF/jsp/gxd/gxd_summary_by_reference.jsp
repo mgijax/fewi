@@ -6,12 +6,7 @@
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<title>${marker.symbol} Gene Expression Results - GXD</title>
-
-<meta name="description" content="View gene expression results for ${marker.symbol} with assay type, age, structure, image, mutant allele, reference" />
-<meta name="keywords" content="MGI, GXD, ${marker.symbol}, mice, mouse, murine, mus musculus, gene expression assay, immunohistochemistry, in situ reporter, blot, RNA in situ, RNase, RT-PCR, Northern blot, Western blot" />
-<meta name="robots" content="NOODP" />
-<meta name="robots" content="NOYDIR" />
+<title>Mouse Gene Expression Data Search</title>
 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
@@ -95,11 +90,32 @@ body.yui-skin-sam div#outer {position:relative;}
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
-<%@ include file="/WEB-INF/jsp/gxd_marker_header.jsp" %>
+
+
+<!-- header table -->
+<table class="summaryHeader">
+<tr >
+  <td class="summaryHeaderCat1Gxd">
+       <b>Reference</b>
+  </td>
+  <td class="summaryHeaderData1">
+    
+    <a style="font-size:x-large;  font-weight: bold; padding-bottom:10px;" 
+      href="${configBean.FEWI_URL}reference/${reference.jnumID}">
+      ${reference.jnumID}
+    </a>
+    
+    <div style="padding:4px;"> </div>
+    
+    ${reference.shortCitation}
+  </td>
+</tr>
+</table>
+
 
 <!-- GXD Summary -->
 <div class="summaryControl" style="">
-	<%@ include file="/WEB-INF/jsp/gxd_summary.jsp" %>
+	<%@ include file="/WEB-INF/jsp/gxd/gxd_summary.jsp" %>
 </div>
 
 <script type="text/javascript">
@@ -107,13 +123,11 @@ body.yui-skin-sam div#outer {position:relative;}
     var mgiMarkerId = "${marker.primaryID}";
     var searchedStage = "${theilerStage}";
     var searchedAssayType = "${assayType}";
-    var searchedStructure = "${structure}";
-    var searchedStructureId = "${strucureId}";
-    var querystring = "markerMgiId=${marker.primaryID}&theilerStage=${theilerStage}&assayType=${assayType}&tab=${tab}";
+    var querystring = "jnum=${reference.jnumID}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
-<%@ include file="/WEB-INF/jsp/gxd_summary_js.jsp" %>
+<%@ include file="/WEB-INF/jsp/gxd/gxd_summary_js.jsp" %>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_by_marker_query.js">
 </script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>

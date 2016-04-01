@@ -6,15 +6,10 @@
 <% StyleAlternator stripe  = (StyleAlternator)request.getAttribute("stripe"); %>
 <%@ include file="/WEB-INF/jsp/templates/templateHead.html" %>
 
-<%@ include file="/WEB-INF/jsp/includes.jsp" %>
+<title>Mouse Gene Expression Data Search</title>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-<c:if test="${empty fromSlimgrid}">
-  <c:set var="pageTitle" value="Mouse Gene Expression Data Search"/>
-</c:if>
-<c:if test="${not empty fromSlimgrid}">
-  <c:set var="pageTitle" value="${marker.symbol} ${structure} gene expression"/>
-</c:if>
-<title>${pageTitle}</title>
+<%@ include file="/WEB-INF/jsp/includes.jsp" %>
 
 <style>
 .left { float: left; }
@@ -27,7 +22,7 @@
 #resultSummary .yui-content{background-color:#eee;border:1px solid #808080; border-top: none;}
 #resultSummary .yui-nav {border-bottom:solid 1px black;}
 
-#expressionSearch {border:0;padding-left:5px; text-align: left; font-size: 12px;}
+#expressionSearch {border:0;padding-left:2px; padding-right:2px; text-align: left; font-size: 12px;}
 #expressionSearch .selected a,
 #expressionSearch .selected a:focus,
 #expressionSearch .selected a:hover{ margin-left: 0px;border:1px solid #808080;border-bottom:solid 1px #eee; color:black; background:none; background-color:#eee;}
@@ -36,12 +31,11 @@
 
 table.noborder, table.noborder td , table.noborder th { border: none; }
 
-#gxdQueryForm table tr td table tr td ul li span { font-size: 10px; font-style: italic; }
 
 body.yui-skin-sam .yui-panel .hd,
 body.yui-skin-sam .yui-ac-hd { background:none; background-color:#025; color:#fff; font-weight: bold;}
 body.yui-skin-sam .yui-ac-hd {padding: 5px;}
-body.yui-skin-sam div#outer {overflow:visible;}
+body.yui-skin-sam div#outerGxd {overflow:visible;}
 
 .yui-dt table {width: 100%;}
 
@@ -49,18 +43,10 @@ td.yui-dt-col-assayID div.yui-dt-liner span {font-size: 75%;}
 
 .yui-skin-sam .yui-tt .bd
 {
-	background-color:#ddf; 
+	background-color:#ddf;
 	color:#005;
 	border:2px solid #005;
 }
-
-.yui-skin-sam th.yui-dt-asc .yui-dt-liner { 
-	    background:none;
-} 
-.yui-skin-sam th.yui-dt-desc .yui-dt-liner { 
-	    background:none; 
-} 
-
 </style>
 <!--[if IE]>
 <style>
@@ -72,7 +58,7 @@ body.yui-skin-sam div#outer {position:relative;}
 #qwrap, #expressionSearch .yui-navset {position:absolute;}
 #toggleQF { overflow:auto; }
 */
-body.yui-skin-sam div#outer {position:relative;}
+body.yui-skin-sam div#outerGxd {position:relative;}
 #expressionSearch .yui-navset {position:absolute;}
 </style>
 <![endif]-->
@@ -89,45 +75,60 @@ body.yui-skin-sam div#outer {position:relative;}
 <iframe id="yui-history-iframe" src="/fewi/blank.html"></iframe>
 <input id="yui-history-field" type="hidden">
 
-<% // special help link for slimgrid %>
-<c:set var="helpHash" value="#summary"/>
-<c:if test="${not (empty marker or empty structure or empty structureId)}">
-  <c:set var="helpHash" value="#tissuematrix"/>
-</c:if>
 
 <!-- header bar -->
-<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml${helpHash}">	
-		<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
+<div id="titleBarWrapperGxd" userdoc="EXPRESSION_help.shtml">
+	<a href="${configBean.HOMEPAGES_URL}expression.shtml"><img class="gxdLogo" src="${configBean.WEBSHARE_URL}images/gxd_logo.png" height="75"></a>
 	<span class="titleBarMainTitleGxd" style='display:inline-block; margin-top: 20px;'>Gene Expression Data</span>
 </div>
 
-<!-- include a marker header, if needed -->
-<%@ include file="/WEB-INF/jsp/gxd_marker_header.jsp" %>
 
-<!-- GXD Summary -->
-<div class="summaryControl" style="">
-	<%@ include file="/WEB-INF/jsp/gxd_summary.jsp" %>
+<div id="outerGxd">
+    <div id="toggleQF" class="summaryControl" style="display:none"><span id="toggleImg" class="qfExpand" style="margin-right:15px; margin-top:0px;"></span><span id="toggleLink" class="filterButton">Click to modify search</span></div>
+    <div id="qwrap">
+    	<%@ include file="/WEB-INF/jsp/gxd/gxd_form.jsp" %>
+    </div>
+</div>
+<br clear="all" />
+<div class="summaryControl" style="display:none;">
+<div id="resultbar" class="goldbar">Results</div>
+	<%@ include file="/WEB-INF/jsp/gxd/gxd_summary.jsp" %>
+
 </div>
 
 <script type="text/javascript">
     var fewiurl = "${configBean.FEWI_URL}";
-    var mgiMarkerId = "${marker.primaryID}";
-    var searchedStage = "${theilerStage}";
-    var searchedAssayType = "${assayType}";
-    var searchedStructure = "${structure}";
-    var searchedStructureId = "${structureId}";
-    var nomenclature = "${nomenclature}";
-    var querystring = "${queryString}";
     var assemblyBuild = "${configBean.ASSEMBLY_VERSION}";
 </script>
 
-<%@ include file="/WEB-INF/jsp/gxd_summary_js.jsp" %>
-<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_by_marker_query.js">
-</script>
+<%@ include file="/WEB-INF/jsp/gxd/gxd_summary_js.jsp" %>
+<script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_query.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary.js"></script>
 <script type="text/javascript" src="${configBean.FEWI_URL}assets/js/gxd_summary_filters.js"></script>
+
+<c:if test="${showDifferentialQueryForm}">
+<script>
+$(function(){
+	// open the differential query form
+	showDifferentialForm();
+});
+</script>
+</c:if>
+
+<c:if test="${showBatchSearchForm}">
+<script>
+$(function(){
+	// open the batch search tab
+	showBatchSearchForm();
+});
+</script>
+</c:if>
+
 <script type="text/javascript">
 prepFilters();
+<c:if test="${not empty queryString}">
+var querystring = "${queryString}";
+</c:if>
 </script>
 
 <%@ include file="/WEB-INF/jsp/templates/templateBodyStop.html" %>
