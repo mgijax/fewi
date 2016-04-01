@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 
-<html>
+<html ng-app="civicClient" ng-controller="StyleController">
 	<head>
 		<title>Test</title>
 		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" ng-href="https://bootswatch.com/{{ css }}/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/ng-dialog/css/ngDialog.min.css" />
 		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/ng-dialog/css/ngDialog-theme-default.css" />
 		<link rel="stylesheet" type="text/css" href="/assets/hmdc/bower_components/angular-table/src/main/webapp/css/lib/angular-table.css" />
@@ -25,12 +26,21 @@
 		<script src="search/forms/fieldTypes/basicFieldTypes.js"></script>
 		<script src="search/forms/fieldTypes/multiInput.js"></script>
 		<script src="search/services/SearchService.js"></script>
+		<script src="search/views/StyleController.js"></script>
 		<script src="search/views/SearchController.js"></script>
 		<script src="search/forms/queryBuilder.type.js"></script>
 
 	</head>
 	<body>
-		<div ng-app="civicClient" ng-controller="SearchController">
+		<div style="width: 175px;">
+			<form>
+				<div class="form-group">
+					<label>Theme</label>
+					<select class="form-control" ng-model="css" ng-options="boot.url as boot.name for boot in boots"></select>
+				</div>
+			</form>
+		</div>
+		<div ng-controller="SearchController">
 			<div class="searchView container">
 				<div ng-include="'/assets/hmdc/search/views/search.tpl.html'"></div>
 			</div>
