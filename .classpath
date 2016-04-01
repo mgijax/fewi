@@ -14,6 +14,7 @@
 	<classpathentry kind="lib" path="www/WEB-INF/lib/poi-ooxml-3.12-20150511.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/poi-ooxml-schemas-3.12-20150511.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/poi-scratchpad-3.12-20150511.jar"/>
+	<classpathentry kind="lib" path="www/WEB-INF/lib/watch-task-1.0.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="www/WEB-INF/properties"/>
 	<classpathentry kind="src" path="test"/>
@@ -25,8 +26,8 @@
 	<classpathentry kind="lib" path="www/WEB-INF/lib/commons-configuration-1.6.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-core-asl-1.5.4.jar"/>
-	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-mapper-asl-1.5.4.jar"/>
+	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="www/WEB-INF/lib/jackson-mapper-asl-1.9.2.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/postgresql-8.3-603.jdbc3.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/com.springsource.javax.inject-1.0.0.jar"/>
 	<classpathentry kind="lib" path="www/WEB-INF/lib/dom4j-1.6.1.jar"/>
