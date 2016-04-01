@@ -129,8 +129,8 @@
 									{ value: '', name: 'Please select a field' },
 									{ value: 'mnS', name: 'Gene (symbol or name)' },
 									{ value: 'miS', name: 'Gene (ID)' },
-									{ value: 'tsD', name: 'Phenotype/Disease (name)' },
-									{ value: 'tS', name: 'Phenotype/Disease (ID)' },
+									{ value: 'tsDtext', name: 'Phenotype/Disease (name)' },
+									{ value: 'tsDid', name: 'Phenotype/Disease (ID)' },
 									{ value: 'location', name: 'Location (chromosome region)' },
 									//{ value: 'gene_upload', name: 'Gene File Upload'},
 									//{ value: 'vcd_upload', name: 'VCF file (v4.0 or later)' }
@@ -171,7 +171,7 @@
 							}
 						],
 						// These are passed all the way to solr
-						tsD: [
+						tsDtext: [
 							{
 								key: 'input',
 								type: 'input',
@@ -183,7 +183,7 @@
 								}
 							}
 						],
-						tS: [
+						tsDid: [
 							{
 								key: 'input',
 								type: 'input',
