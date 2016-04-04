@@ -2214,15 +2214,7 @@ public class GXDController {
 		if (sortRequested == null) {
 			return sorts;
 		}
-
-		// expected sort values
-		if ("type".equalsIgnoreCase(sortRequested)){
-			sortRequested = SortConstants.BY_IMAGE_HYBRIDIZATION;
-		} else if ("gene".equalsIgnoreCase(sortRequested)){
-			sortRequested = SortConstants.BY_IMAGE_MARKER;
-		} else {
-			sortRequested = SortConstants.BY_IMAGE_ASSAY_TYPE;
-		}
+		
 
 		String dirRequested  = request.getParameter("dir");
 		boolean desc = false;
@@ -2230,10 +2222,23 @@ public class GXDController {
 			desc = true;
 		}
 
-		Sort sort = new Sort(sortRequested, desc);
-		sorts.add(sort);
+		// expected sort values
+		if ("type".equalsIgnoreCase(sortRequested)){
+			// blots have no hybridization values, so we sort secondarily by assay type
+			sorts.add(new Sort(SortConstants.BY_IMAGE_HYBRIDIZATION, desc));
+			sorts.add(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE, true));
+			
+		} else if ("gene".equalsIgnoreCase(sortRequested)){
+			
+			sorts.add(new Sort(SortConstants.BY_IMAGE_MARKER, desc));
+			
+		} else {
+			
+			sorts.add(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE));
+		}
 
-		logger.debug ("sort: " + sort.toString());
+
+		logger.debug ("sort: " + StringUtils.join(sorts, ", "));
 		return sorts;
 	}
 
