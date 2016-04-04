@@ -96,6 +96,12 @@ public class SortConstants {
 
 	// general...
 	public static final String SEQUENCE_NUM = "sequenceNum";
+	
+	// gxd image panes
+
+	public static final String BY_IMAGE_ASSAY_TYPE = "byImageAssayType";
+	public static final String BY_IMAGE_MARKER = "byImageMarker";
+	public static final String BY_IMAGE_HYBRIDIZATION = "byImageHybridization";
 
     // faux entry;  used by webapp class template
 	public static final String FOO_SORT              = "fooSort";

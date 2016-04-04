@@ -185,10 +185,11 @@ public class SolrGxdSummaryBaseHunter extends SolrHunter<SolrGxdEntity> {
 		sortMap.put(SortConstants.GXD_LOCATION, new SolrSortMapper(
 				GxdResultFields.M_BY_LOCATION));
 
-		// this is only available on the join index gxdImagePane (use wisely my
+		// these are only available on the join index gxdImagePane (use wisely my
 		// friend)
-		sortMap.put(SortConstants.BY_DEFAULT, new SolrSortMapper(
-				IndexConstants.BY_DEFAULT));
+		sortMap.put(SortConstants.BY_IMAGE_ASSAY_TYPE, new SolrSortMapper(ImagePaneFields.BY_ASSAY_TYPE));
+		sortMap.put(SortConstants.BY_IMAGE_MARKER, new SolrSortMapper(ImagePaneFields.BY_MARKER));
+		sortMap.put(SortConstants.BY_IMAGE_HYBRIDIZATION, new SolrSortMapper(ImagePaneFields.BY_HYBRIDIZATION));
 
 		/*
 		 * Groupings list of fields that can be uniquely grouped on

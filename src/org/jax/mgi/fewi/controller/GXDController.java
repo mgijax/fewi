@@ -797,8 +797,8 @@ public class GXDController {
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
 
-		// sort using byDefaultSort
-		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
+		// sort using byAssayType
+		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE)));
 
 		SearchResults<SolrGxdImage> results = gxdFinder.searchImages(params);
 
@@ -2197,6 +2197,45 @@ public class GXDController {
 		return sorts;
 
 	}
+	
+	/*
+	 * Parses requested sort parameters for gxd marker image summary.
+	 */
+	private List<Sort> parseImageSorts(HttpServletRequest request) {
+
+		logger.debug("->parseImageSorts started");
+
+		List<Sort> sorts = new ArrayList<Sort>();
+
+		// retrieve requested sort order; set default if not supplied
+		String sortRequested = request.getParameter("sort");
+
+		// empty
+		if (sortRequested == null) {
+			return sorts;
+		}
+
+		// expected sort values
+		if ("type".equalsIgnoreCase(sortRequested)){
+			sortRequested = SortConstants.BY_IMAGE_HYBRIDIZATION;
+		} else if ("gene".equalsIgnoreCase(sortRequested)){
+			sortRequested = SortConstants.BY_IMAGE_MARKER;
+		} else {
+			sortRequested = SortConstants.BY_IMAGE_ASSAY_TYPE;
+		}
+
+		String dirRequested  = request.getParameter("dir");
+		boolean desc = false;
+		if("desc".equalsIgnoreCase(dirRequested)){
+			desc = true;
+		}
+
+		Sort sort = new Sort(sortRequested, desc);
+		sorts.add(sort);
+
+		logger.debug ("sort: " + sort.toString());
+		return sorts;
+	}
 
 
 	// -----------------------------------------------------------------//
@@ -2317,9 +2356,9 @@ public class GXDController {
 		params.setPaginator(page);
 		params.setFilter(parseGxdQueryForm(query));
 
-		// sort using byDefaultSort
-		params.setSorts(Arrays.asList(new Sort(SortConstants.BY_DEFAULT)));
-
+		// sort using byAssayType
+		params.setSorts(this.parseImageSorts(request));
+		
 		// perform query and return results as json
 		logger.debug("params parsed");
 
