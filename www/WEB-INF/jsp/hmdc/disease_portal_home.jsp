@@ -11,7 +11,7 @@
 
 <%@ include file="disease_portal_bodystart.jsp" %>
 
-<div style="width: 175px;">
+<div style="display: none;width: 175px;">
 	<form>
 		<div class="form-group">
 			<label>Theme</label>

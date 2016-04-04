@@ -269,7 +269,7 @@
 		<delete dir="${war.file}"/>
 		
 		<war destfile="${war.file}" webxml="www/WEB-INF/web.xml">
-			<fileset dir="www" excludes="js/src/**,js/tests/**" />
+			<fileset dir="www" excludes="js/src/**,js/tests/**,hmdc/assets/**" />
 		</war>
 		
 		<!-- Clear minified js build files -->

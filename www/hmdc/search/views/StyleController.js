@@ -5,7 +5,7 @@
 
 	function StyleController($rootScope, $scope, $log, Search, $sce, ngDialog) {
 		
-		$scope.css = 'cosmo';
+		$scope.css = 'spacelab';
 
 		$scope.boots = [
 			{ name: "Cerulean", url: "cerulean" },
