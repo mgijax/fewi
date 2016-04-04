@@ -2234,7 +2234,7 @@ public class GXDController {
 			
 		} else {
 			
-			sorts.add(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE));
+			sorts.add(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE, desc));
 		}
 
 
