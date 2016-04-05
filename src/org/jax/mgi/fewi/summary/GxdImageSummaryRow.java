@@ -89,20 +89,20 @@ public class GxdImageSummaryRow {
 	}
 	
 	
-	public String getType() {
-		List<String> types = new ArrayList<String>();
+	public String getHybridization() {
+		List<String> hybridizations = new ArrayList<String>();
 		for (GxdImageMeta metaData : image.getMetaData()) {
 			
 			String type = "";
 			if (metaData.getHybridization() != null) {
 				type = metaData.getHybridization();
 			}
-			String assayTypeHtml = "<li class=\"nowrap\">" + type + "</li>";			
-			types.add(assayTypeHtml);
+			String html = "<li class=\"nowrap\">" + type + "</li>";			
+			hybridizations.add(html);
 			
 		}
 		
-		return "<ul>" + StringUtils.join(types, "") + "</ul>";
+		return "<ul>" + StringUtils.join(hybridizations, "") + "</ul>";
 	}
 	
 	public String getSpecimenLabel() {

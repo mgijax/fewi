@@ -1023,7 +1023,7 @@ var gxdImagesTable = function() {
 	                    {key: "image", label: "", sortable: false},
 	                    {key: "gene", label: "Gene", sortable: true},
 	                    {key: "assayType", label: "Assay Type", sortable: true},
-	                    {key: "type", label: "Type", sortable: true},
+	                    {key: "hybridization", label: "Specimen Type", sortable: true},
 	                    {key: "specimenLabel", label: "Result Details", sortable: false}
 	                    ];
 
@@ -1036,7 +1036,7 @@ var gxdImagesTable = function() {
 			         {key: "image"},
 			         {key: "gene"},
 			         {key: "assayType"},
-			         {key: "type"},
+			         {key: "hybridization"},
 			         {key: "specimenLabel"}
 			         ],
 			         metaFields: {

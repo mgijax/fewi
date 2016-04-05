@@ -2223,9 +2223,9 @@ public class GXDController {
 		}
 
 		// expected sort values
-		if ("type".equalsIgnoreCase(sortRequested)){
+		if ("hybridization".equalsIgnoreCase(sortRequested)){
 			
-			// There is a custom sort on "type" for descending vs ascending
+			// There is a custom sort on hybridization/"Specimen Type" for descending vs ascending
 			//   Not Specified and blot assays always sort to the bottom either way
 			if (desc) {
 				sorts.add(new Sort(SortConstants.BY_IMAGE_HYBRIDIZATION_DESC, false));
