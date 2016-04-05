@@ -2224,9 +2224,15 @@ public class GXDController {
 
 		// expected sort values
 		if ("type".equalsIgnoreCase(sortRequested)){
-			// blots have no hybridization values, so we sort secondarily by assay type
-			sorts.add(new Sort(SortConstants.BY_IMAGE_HYBRIDIZATION, desc));
-			sorts.add(new Sort(SortConstants.BY_IMAGE_ASSAY_TYPE, true));
+			
+			// There is a custom sort on "type" for descending vs ascending
+			//   Not Specified and blot assays always sort to the bottom either way
+			if (desc) {
+				sorts.add(new Sort(SortConstants.BY_IMAGE_HYBRIDIZATION_DESC, false));
+			}
+			else {
+				sorts.add(new Sort(SortConstants.BY_IMAGE_HYBRIDIZATION_ASC, false));
+			}
 			
 		} else if ("gene".equalsIgnoreCase(sortRequested)){
 			

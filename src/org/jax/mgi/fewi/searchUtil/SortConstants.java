@@ -101,7 +101,9 @@ public class SortConstants {
 
 	public static final String BY_IMAGE_ASSAY_TYPE = "byImageAssayType";
 	public static final String BY_IMAGE_MARKER = "byImageMarker";
-	public static final String BY_IMAGE_HYBRIDIZATION = "byImageHybridization";
+	public static final String BY_IMAGE_HYBRIDIZATION_ASC = "byImageHybridizationAsc";
+	public static final String BY_IMAGE_HYBRIDIZATION_DESC = "byImageHybridizationDesc";
+
 
     // faux entry;  used by webapp class template
 	public static final String FOO_SORT              = "fooSort";
