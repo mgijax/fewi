@@ -88,9 +88,9 @@ public class SolrDiseasePortalBaseHunter extends SolrHunter<SolrHdpEntity>
 		/*
 		 * query by term
 		 * */
-		propertyMap.put(SearchConstants.VOC_TERM_ID, new SolrPropertyMapper(DiseasePortalFields.TERM_ID_SEARCH));
+		propertyMap.put(SearchConstants.VOC_TERM_ID, new SolrPropertyMapper(DiseasePortalFields.TERM_SEARCH_DISEASE_ID));
 
-		propertyMap.put(SearchConstants.VOC_TERM, new SolrPropertyMapper(DiseasePortalFields.TERM_SEARCH));
+		propertyMap.put(SearchConstants.VOC_TERM, new SolrPropertyMapper(DiseasePortalFields.TERM_SEARCH_DISEASE_TEXT));
 
 		// This is a special field, set up for mapping MP terms to diseases
 		// it is only used in the diseasePortal diseases summary (use instead of TERM_SEARCH)
