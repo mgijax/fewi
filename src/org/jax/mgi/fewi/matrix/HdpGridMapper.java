@@ -29,8 +29,7 @@ public class HdpGridMapper {
 	 * the above identifier). Not all colIds will have a matching
 	 * gridAnnotation.
 	 */
-	public HdpGridMapper(List<String> colIdList,
-			List<? extends HdpGridAnnotation> gridAnnotations) {
+	public HdpGridMapper(List<String> colIdList, List<? extends HdpGridAnnotation> gridAnnotations) {
 		this.colIdList = colIdList;
 		this.gridAnnotations = new ArrayList<HdpGridAnnotation>(gridAnnotations);
 		init();
@@ -250,6 +249,8 @@ public class HdpGridMapper {
 	 * Method to calculate bin size for MP terms based on number of annotations
 	 */
 	public int calculateMpBinSize(int annotCount) {
+		// It seems that the following would be better:
+		// Math.ceil(Math.log(x))+1
 		if (annotCount < 1)
 			return 0;
 		if (annotCount < 2)
@@ -265,6 +266,8 @@ public class HdpGridMapper {
 	 * Method to calculate bin size for diseases based on number of annotations
 	 */
 	public int calculateDiseaseBinSize(int annotCount) {
+		// It seems that the following would be better:
+		// Math.ceil(Math.log(x))+1
 		if (annotCount < 1)
 			return 0;
 		if (annotCount < 2)

@@ -21,20 +21,17 @@ import mgi.frontend.datamodel.hdp.HdpGenoCluster;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jax.mgi.fewi.antlr.BooleanSearch.BooleanSearch;
-import org.jax.mgi.fewi.finder.DiseasePortalBatchFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinder;
 import org.jax.mgi.fewi.finder.DiseasePortalFinderOLD;
 import org.jax.mgi.fewi.finder.MarkerFinder;
 import org.jax.mgi.fewi.finder.TermFinder;
 import org.jax.mgi.fewi.forms.DiseasePortalQueryForm;
-import org.jax.mgi.fewi.forms.models.DiseasePortalCondition;
 import org.jax.mgi.fewi.forms.models.DiseasePortalConditionGroup;
 import org.jax.mgi.fewi.forms.models.DiseasePortalConditionQuery;
 import org.jax.mgi.fewi.matrix.HdpGridMapper;
 import org.jax.mgi.fewi.searchUtil.FacetConstants;
 import org.jax.mgi.fewi.searchUtil.Filter;
 import org.jax.mgi.fewi.searchUtil.Filter.JoinClause;
-import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.fewi.searchUtil.Paginator;
 import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.SearchParams;
@@ -60,10 +57,8 @@ import org.jax.mgi.fewi.util.QueryParser;
 import org.jax.mgi.fewi.util.file.FileProcessor;
 import org.jax.mgi.fewi.util.file.FileProcessorOutput;
 import org.jax.mgi.fewi.util.file.VcfProcessorOutput;
-import org.jax.mgi.shr.fe.IndexConstants;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 import org.jax.mgi.shr.fe.query.SolrLocationTranslator;
-import org.jax.mgi.snpdatamodel.ConsensusSNP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -325,7 +320,7 @@ public class DiseasePortalController
 	//-----------------------//
 	// Disease Portal Grid
 	//-----------------------//
-
+	// TODO Replicate this 
 	@RequestMapping(value="/grid")
 	public ModelAndView diseaseGrid(HttpServletRequest request, HttpServletResponse response, HttpSession session,
 			@ModelAttribute DiseasePortalQueryForm query, @ModelAttribute Paginator page) throws Exception {
@@ -890,7 +885,7 @@ public class DiseasePortalController
 	//--------------------------------------------------------------------//
 	// Public convenience methods
 	//--------------------------------------------------------------------//
-
+	// TODO
 	public List<SolrHdpGridData> getAnnotationsInResults(@ModelAttribute DiseasePortalQueryForm query, List<String> gridClusterKeys, HttpSession session) {
 		logger.debug("-->getAnnotationsInResults");
 
@@ -1685,15 +1680,9 @@ public class DiseasePortalController
 	//TODO Finish this
 	
 	@RequestMapping(value="/gridQuery")
-	public @ResponseBody JsonSummaryResponse<HdpDiseaseSummaryRow> gridQuery(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestBody String jsonInput) throws Exception {
-
-		JsonSummaryResponse<HdpDiseaseSummaryRow> jsonResponse = new JsonSummaryResponse<HdpDiseaseSummaryRow>();
-		jsonResponse.setTotalCount(0);
-		return jsonResponse;
+	public @ResponseBody String gridQuery(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestBody String jsonInput) throws Exception {
+		return "{\"gridMPHeaders\":[\"behavior/neurological\",\"cardiovascular system\",\"cellular\",\"craniofacial\",\"digestive/alimentary system\",\"embryogenesis\",\"endocrine/exocrine glands\",\"growth/size/body\",\"hearing/vestibular/ear\",\"homeostasis/metabolism\",\"immune system\",\"integument\",\"mortality/aging\",\"muscle\",\"nervous system\",\"pigmentation\",\"renal/urinary system\",\"reproductive system\",\"respiratory system\",\"skeleton\",\"taste/olfaction\",\"tumorigenesis\",\"vision/eye\",\"normal phenotype\"],\"gridOMIMHeaders\":[\"Aniridia,Cerebellar Ataxia,and Mental Retardation\",\"Aniridia; AN\",\"Anterior Segment Mesenchymal Dysgenesis; ASMD\",\"Coloboma\",\"Foveal Hypoplasia 1; FVH1\",\"Keratitis,Hereditary\",\"Optic Nerve Hypoplasia,Bilateral\",\"Peters Anomaly\",\"Wilms Tumor,Aniridia,Genitourinary Anomalies,and Mental Retardation Syndrome; WAGR\"],\"gridRows\":[{\"gridCluster\":{\"gridClusterKey\":3426660,\"homologeneId\":null,\"mouseSymbols\":[\"Del(2)Pax6<11Neu>\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Del(2)Pax6<11Neu>\",\"name\":\"deletion,Chr 2,Neuherberg 11\",\"featureType\":\"chromosomal deletion\",\"markerKey\":\"346866\"}],\"humanMarkers\":[]},\"title\":\"Del(2)Pax6<sup>11Neu</sup>\",\"diseaseCells\":{},\"mpHeaderCells\":{\"growth/size/body\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"mortality/aging\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"nervous system\":{\"isNormal\":false,\"annotCount\":4,\"humanAnnotCount\":0},\"pigmentation\":{\"isNormal\":false,\"annotCount\":4,\"humanAnnotCount\":0},\"vision/eye\":{\"isNormal\":false,\"annotCount\":9,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3402321,\"homologeneId\":null,\"mouseSymbols\":[\"Pax6\"],\"humanSymbols\":[\"PAX6\"],\"homologySource\":\"HomoloGene\",\"mouseMarkers\":[{\"symbol\":\"Pax6\",\"name\":\"paired box 6\",\"featureType\":\"protein coding gene\",\"markerKey\":\"12184\"}],\"humanMarkers\":[{\"symbol\":\"PAX6\",\"name\":\"paired box 6\",\"featureType\":\"\",\"markerKey\":\"22146\"}]},\"title\":\"PAX6,Pax6\",\"diseaseCells\":{\"Aniridia,Cerebellar Ataxia,and Mental Retardation\":{\"isNormal\":false,\"annotCount\":0,\"humanAnnotCount\":1},\"Aniridia; AN\":{\"isNormal\":false,\"annotCount\":6,\"humanAnnotCount\":1},\"Anterior Segment Mesenchymal Dysgenesis; ASMD\":{\"isNormal\":false,\"annotCount\":4,\"humanAnnotCount\":0},\"Coloboma\":{\"isNormal\":false,\"annotCount\":0,\"humanAnnotCount\":1},\"Foveal Hypoplasia 1; FVH1\":{\"isNormal\":false,\"annotCount\":0,\"humanAnnotCount\":1},\"Keratitis,Hereditary\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":1},\"Optic Nerve Hypoplasia,Bilateral\":{\"isNormal\":false,\"annotCount\":0,\"humanAnnotCount\":1},\"Peters Anomaly\":{\"isNormal\":false,\"annotCount\":5,\"humanAnnotCount\":1},\"Wilms Tumor,Aniridia,Genitourinary Anomalies,and Mental Retardation Syndrome; WAGR\":{\"isNormal\":false,\"annotCount\":0,\"humanAnnotCount\":1}},\"mpHeaderCells\":{\"behavior/neurological\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"cardiovascular system\":{\"isNormal\":false,\"annotCount\":3,\"humanAnnotCount\":0},\"cellular\":{\"isNormal\":false,\"annotCount\":11,\"humanAnnotCount\":0},\"craniofacial\":{\"isNormal\":false,\"annotCount\":40,\"humanAnnotCount\":0},\"digestive/alimentary system\":{\"isNormal\":false,\"annotCount\":3,\"humanAnnotCount\":0},\"embryogenesis\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"endocrine/exocrine glands\":{\"isNormal\":false,\"annotCount\":16,\"humanAnnotCount\":0},\"growth/size/body\":{\"isNormal\":false,\"annotCount\":22,\"humanAnnotCount\":0},\"hearing/vestibular/ear\":{\"isNormal\":false,\"annotCount\":2,\"humanAnnotCount\":0},\"homeostasis/metabolism\":{\"isNormal\":false,\"annotCount\":11,\"humanAnnotCount\":0},\"immune system\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"integument\":{\"isNormal\":false,\"annotCount\":4,\"humanAnnotCount\":0},\"mortality/aging\":{\"isNormal\":false,\"annotCount\":23,\"humanAnnotCount\":0},\"muscle\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"nervous system\":{\"isNormal\":false,\"annotCount\":60,\"humanAnnotCount\":0},\"pigmentation\":{\"isNormal\":false,\"annotCount\":10,\"humanAnnotCount\":0},\"renal/urinary system\":{\"isNormal\":true,\"annotCount\":1,\"humanAnnotCount\":0},\"reproductive system\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"respiratory system\":{\"isNormal\":false,\"annotCount\":11,\"humanAnnotCount\":0},\"skeleton\":{\"isNormal\":false,\"annotCount\":6,\"humanAnnotCount\":0},\"taste/olfaction\":{\"isNormal\":false,\"annotCount\":3,\"humanAnnotCount\":0},\"tumorigenesis\":{\"isNormal\":false,\"annotCount\":4,\"humanAnnotCount\":0},\"vision/eye\":{\"isNormal\":false,\"annotCount\":318,\"humanAnnotCount\":0},\"normal phenotype\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3426662,\"homologeneId\":null,\"mouseSymbols\":[\"Del(2)Pax6<12Neu>\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Del(2)Pax6<12Neu>\",\"name\":\"deletion,Chr 2,Neuherberg 12\",\"featureType\":\"chromosomal deletion\",\"markerKey\":\"346879\"}],\"humanMarkers\":[]},\"title\":\"Del(2)Pax6<sup>12Neu</sup>\",\"diseaseCells\":{},\"mpHeaderCells\":{\"growth/size/body\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"mortality/aging\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"nervous system\":{\"isNormal\":false,\"annotCount\":4,\"humanAnnotCount\":0},\"pigmentation\":{\"isNormal\":true,\"annotCount\":1,\"humanAnnotCount\":0},\"vision/eye\":{\"isNormal\":false,\"annotCount\":9,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3426661,\"homologeneId\":null,\"mouseSymbols\":[\"Del(2)Pax6<13Neu>\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Del(2)Pax6<13Neu>\",\"name\":\"deletion,Chr 2,Neuherberg 13\",\"featureType\":\"chromosomal deletion\",\"markerKey\":\"346877\"}],\"humanMarkers\":[]},\"title\":\"Del(2)Pax6<sup>13Neu</sup>\",\"diseaseCells\":{},\"mpHeaderCells\":{\"growth/size/body\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"mortality/aging\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"pigmentation\":{\"isNormal\":true,\"annotCount\":1,\"humanAnnotCount\":0},\"vision/eye\":{\"isNormal\":false,\"annotCount\":2,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3426764,\"homologeneId\":null,\"mouseSymbols\":[\"Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy\",\"name\":\"transgene insertion 1,Anastassia Stoykova\",\"featureType\":\"transgene\",\"markerKey\":\"382178\"}],\"humanMarkers\":[]},\"title\":\"Tg(CAG-EGFP,-Pax6*5a,-lacZ)1Stoy\",\"diseaseCells\":{},\"mpHeaderCells\":{\"vision/eye\":{\"isNormal\":true,\"annotCount\":1,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3426765,\"homologeneId\":null,\"mouseSymbols\":[\"Tg(CAG-EGFP,-Pax6,-lacZ)1Stoy\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Tg(CAG-EGFP,-Pax6,-lacZ)1Stoy\",\"name\":\"transgene insertion 1,Anastassia Stoykova\",\"featureType\":\"transgene\",\"markerKey\":\"382179\"}],\"humanMarkers\":[]},\"title\":\"Tg(CAG-EGFP,-Pax6,-lacZ)1Stoy\",\"diseaseCells\":{},\"mpHeaderCells\":{\"vision/eye\":{\"isNormal\":false,\"annotCount\":2,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3427445,\"homologeneId\":null,\"mouseSymbols\":[\"Tg(PAX6)77Ndha\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Tg(PAX6)77Ndha\",\"name\":\"transgene insertion 77,Nicholas Hastie\",\"featureType\":\"transgene\",\"markerKey\":\"446501\"}],\"humanMarkers\":[]},\"title\":\"Tg(PAX6)77Ndha\",\"diseaseCells\":{},\"mpHeaderCells\":{\"nervous system\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"pigmentation\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0},\"vision/eye\":{\"isNormal\":false,\"annotCount\":27,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3427583,\"homologeneId\":null,\"mouseSymbols\":[\"Tg(Pax6-HRAS*G12V)2044Ove\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Tg(Pax6-HRAS*G12V)2044Ove\",\"name\":\"transgene insertion 2044,Paul A Overbeek\",\"featureType\":\"transgene\",\"markerKey\":\"451735\"}],\"humanMarkers\":[]},\"title\":\"Tg(Pax6-HRAS*G12V)2044Ove\",\"diseaseCells\":{},\"mpHeaderCells\":{\"vision/eye\":{\"isNormal\":false,\"annotCount\":7,\"humanAnnotCount\":0}}},{\"gridCluster\":{\"gridClusterKey\":3427973,\"homologeneId\":null,\"mouseSymbols\":[\"Tg(Pax6-TAg)1796Hur\"],\"humanSymbols\":[],\"homologySource\":null,\"mouseMarkers\":[{\"symbol\":\"Tg(Pax6-TAg)1796Hur\",\"name\":\"transgene insertion 1796,Richard L Hurwitz\",\"featureType\":\"transgene\",\"markerKey\":\"584110\"}],\"humanMarkers\":[]},\"title\":\"Tg(Pax6-TAg)1796Hur\",\"diseaseCells\":{\"Retinoblastoma; RB1\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0}},\"mpHeaderCells\":{\"tumorigenesis\":{\"isNormal\":false,\"annotCount\":2,\"humanAnnotCount\":0},\"vision/eye\":{\"isNormal\":false,\"annotCount\":1,\"humanAnnotCount\":0}}}]}";
 	}
-	
-	
-	
 	
 	private Filter genQueryFilter(DiseasePortalConditionGroup group) {
 		
