@@ -32,8 +32,8 @@ public class DiseasePortalConditionQuery {
 		if(
 			field.equals(DiseasePortalFields.MARKER_NOMEN_SEARCH) ||
 			field.equals(DiseasePortalFields.MARKER_ID_SEARCH) ||
-			field.equals(DiseasePortalFields.TERM_SEARCH_DISEASE_TEXT) ||
-			field.equals(DiseasePortalFields.TERM_SEARCH_DISEASE_ID)
+			field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT) ||
+			field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)
 			) {
 			if(condition.getInput().toLowerCase().startsWith("omim:")) {
 				condition.setInput(condition.getInput().replace("(?i)omim:", ""));
