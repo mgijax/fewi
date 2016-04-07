@@ -36,7 +36,7 @@ public class DiseasePortalConditionQuery {
 			field.equals(DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_ID)
 			) {
 			if(condition.getInput().toLowerCase().startsWith("omim:")) {
-				condition.setInput(condition.getInput().replace("(?i)omim:", ""));
+				condition.setInput(condition.getInput().replaceAll("(?i)omim:", ""));
 			}
 			return new Filter(field, "\"" + condition.getInput() + "\"", Operator.OP_HAS_WORD);
 		} else {
