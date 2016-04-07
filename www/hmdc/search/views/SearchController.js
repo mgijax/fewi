@@ -9,6 +9,7 @@
 
 		vm.onSubmit = onSubmit;
 		vm.mustHide = false;
+		vm.mustHideLegend = true;
 
 		$scope.displayHTML = function(html) {
 			return $sce.trustAsHtml(html);
@@ -27,15 +28,16 @@
 			console.log("Submit: " + JSON.stringify(vm.model));
 			vm.results = {};
 
-//			Search.gridQuery(vm.model).
-//				then(function(response) {
-//					console.log(response.data);
-//					vm.results.gridResults = response.data;
-//					vm.mustHide = true;
-//				}, function (error) {
-//					console.log(error);
-//					vm.errorMessage = error;
-//			});
+			Search.gridQuery(vm.model).
+				then(function(response) {
+					console.log(response.data);
+					vm.results.grid = {};
+					vm.results.grid.data = response.data;
+					vm.mustHide = true;
+				}, function (error) {
+					console.log(error);
+					vm.errorMessage = error;
+			});
 //			Search.geneQuery(vm.model).
 //				then(function(response) {
 //					console.log(response.data);

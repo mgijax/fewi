@@ -1,4 +1,5 @@
-		<div id="legendArea" style="background-color:#F7F7F7; border:2px solid #AAA; width:860px; margin-bottom: 4px;">
+		<label>Hide Legend <input type="checkbox" ng-model="vm.mustHideLegend" /></label><br />
+		<div ng-hide="vm.mustHideLegend" style="background-color:#F7F7F7; border:2px solid #AAA; width:860px; margin-bottom: 4px;">
 			<div style="padding:5px 2px;">
 				<table>
 					<tr>
@@ -36,3 +37,5 @@
 				</table>
 			</div>
 		</div>
+
+		<div ui-grid="vm.results.grid" class="grid" ui-grid-pinning></div>

@@ -168,6 +168,7 @@ public class DiseasePortalQueryForm
 	 */
 	public void setNumDCol(String num) {
 		try {
+			if(num == null || num.equals("")) num = "0";
 			int i = Integer.parseInt(num);
 			this.numDCol = i;
 		} catch (NumberFormatException e) {
