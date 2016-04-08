@@ -1,0 +1,36 @@
+{
+  "name": "ng-cells",
+  "version": "0.4.0",
+  "main": [
+    "dist/latest/ng-cells.js",
+    "dist/latest/ng-cells.min.js",
+    "dist/latest/ng-cells.css"
+  ],
+
+
+  "homepage": "http://gdepourtales.github.io/ng-cells/",
+  "authors": [
+    "guy <guy@gadp.ch>"
+  ],
+  "description": "Flexible table angularjs directive",
+  "keywords": [
+    "angularjs",
+    "directive",
+    "table"
+  ],
+  "license": "Apache 2.0",
+  "ignore": [
+    "Gruntfile.js",
+    "css",
+    "doc",
+    "generated",
+    "lib",
+    "src",
+    "test"
+  ],
+    "dependencies": {
+        "angular": ">1.2.3",
+        "angular-sanitize": ">1.2.3",
+      "ng-scrollable": "gdepourtales/ng-scrollable#831b6abb8d964315c22581338d00f03befb9a852"
+    }
+}

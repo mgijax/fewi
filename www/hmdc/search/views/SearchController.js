@@ -32,7 +32,46 @@
 				then(function(response) {
 					console.log(response.data);
 					vm.results.grid = {};
-					vm.results.grid.data = response.data;
+					//vm.results.grid.data = response.data;
+					vm.results.grid.data = [];
+
+					var headerContent = [];
+					headerContent.push("Human Gene");
+					headerContent.push("Mouse Gene");
+					for(var header in response.data.gridMPHeaders) {
+						headerContent.push("<span>" + response.data.gridMPHeaders[header] + "</span>");
+					}
+					for(var header in response.data.gridOMIMHeaders) {
+						headerContent.push("<span>" + response.data.gridOMIMHeaders[header] + "</span>");
+					}
+					headerContent.push("");
+					vm.results.grid.data.push(headerContent);
+
+					for(var key in response.data.gridRows) {
+						key = response.data.gridRows[key];
+						console.log("Key: " + key);
+						var rowContent = [];
+						rowContent.push(key.gridCluster.humanSymbols.join());
+						rowContent.push(key.gridCluster.mouseSymbols.join());
+						for(var header in response.data.gridMPHeaders) {
+							header = response.data.gridMPHeaders[header];
+							if(key.mpHeaderCells[header]) {
+								rowContent.push(key.mpHeaderCells[header].annotCount + "," + key.mpHeaderCells[header].humanAnnotCount);
+							} else {
+								rowContent.push(0);
+							}
+						}
+						for(var header in response.data.gridOMIMHeaders) {
+							header = response.data.gridOMIMHeaders[header];
+							if(key.diseaseCells[header]) {
+								rowContent.push(key.diseaseCells[header].annotCount + "," + key.diseaseCells[header].humanAnnotCount);
+							} else {
+								rowContent.push(0);
+							}
+						}
+						vm.results.grid.data.push(rowContent);
+					}
+
 					vm.mustHide = true;
 				}, function (error) {
 					console.log(error);

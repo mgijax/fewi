@@ -1,11 +1,9 @@
 package org.jax.mgi.fewi.forms.models;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.jax.mgi.fewi.searchUtil.Filter;
-import org.jax.mgi.fewi.searchUtil.SearchConstants;
 import org.jax.mgi.fewi.searchUtil.Filter.Operator;
 import org.jax.mgi.shr.fe.indexconstants.DiseasePortalFields;
 

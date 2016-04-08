@@ -1,0 +1,39 @@
+		<label>Hide Legend <input type="checkbox" ng-model="vm.mustHideLegend" /></label><br />
+		<div ng-hide="vm.mustHideLegend" style="background-color:#F7F7F7; border:2px solid #AAA; width:860px; margin-bottom: 4px;">
+			<div style="padding:5px 2px;">
+				<table>
+					<tr>
+						<td><div style="font-weight:bold; padding-right: 5px;">Legend:</div></td>
+						<td>The matrix includes all phenotypes/diseases associated with mouse models and human genes returned.</td>
+					</tr><tr>
+						<td></td>
+						<td><span class="highlight">Highlighted Columns</span> contain at least one phenotype or disease result matching your search term(s).</td>
+					</tr><tr>
+						<td></td>
+						<td style="padding-left: 20px; padding-top: 5px;">
+							<table>
+								<tr>
+									<td>
+										<div style="width:20px; height:20px; background-color: #49648B; display: inline-block;">
+											<div style="width:100%;height:100%; background: url('/assets/images/hdp/human_cell_sprite.gif') -6px 0px;"></div>
+										</div>
+									</td>
+									<td style="padding-left: 5px;">
+										<div style="display:inline-block;"> - Terms are annotated to genes in <strong style="background-color:#ffdab3; color:#000; font-size:12px;">human</strong>/<strong style="background-color: #49648B; color:#FFF; font-size:12px;">mouse</strong>. 
+											Darker colors indicate <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml#hdp_results'); return false;" href="/usrhelp/disease_connection_help.shtml#hdp_results">more annotations</a>.
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>N</strong></td>
+									<td style="padding-left: 5px;">- No abnormal phenotype observed.</td>
+								</tr>
+							</table>
+						</td>
+					</tr><tr> 
+						<td style="vertical-align: top;"><span style="font-weight:bold;">NOTE:</span></td>
+						<td>In searches with phenotype/disease terms, only the phenotypes/diseases of the matching models/genes are displayed. In searches using gene or location parameters only, the complete phenotype profiles of the matching gene mutations are displayed. <a onclick="javascript:openUserhelpWindow('disease_connection_help.shtml'); return false;" href="${configBean.USERHELP_URL}disease_connection_help.shtml">More...</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>

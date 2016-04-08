@@ -88,3 +88,69 @@
 .st-sort-descent:before {
     content: '\25BC';
 }
+
+.cell.left.header td {
+	width: auto;
+}
+
+/* Header */
+td.cell.center.header, td.cell.right.header {
+  height: 220px;
+  width: 40px;
+}
+
+/* Row */
+td.center.cell.middle, td.right.cell.middle {
+  width: 40px;
+  border-top: 1px solid #dddddd;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+  vertical-align: middle;
+  text-align: center;
+}
+
+td.cell.left.middle {
+  border-top: 1px solid #dddddd;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+}
+
+td.cell.left.header {
+  vertical-align: bottom;
+}
+
+td.cell.right.header.last {
+	width: 220px;
+}
+
+.cell.center.header > div, .cell.right.header > div {
+  position: relative;
+  top: 0px;
+  left: 110px;
+  height: 100%;
+  -ms-transform:skew(-45deg,0deg);
+  -moz-transform:skew(-45deg,0deg);
+  -webkit-transform:skew(-45deg,0deg);
+  -o-transform:skew(-45deg,0deg);
+  transform:skew(-45deg,0deg);
+  overflow: hidden;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+  border-top: 1px solid #dddddd;
+}
+
+.cell.center.header > div > span, .cell.right.header > div > span {
+  -ms-transform:skew(45deg,0deg) rotate(315deg);
+  -moz-transform:skew(45deg,0deg) rotate(315deg);
+  -webkit-transform:skew(45deg,0deg) rotate(315deg);
+  -o-transform:skew(45deg,0deg) rotate(315deg);
+  transform:skew(45deg,0deg) rotate(315deg);
+  position: absolute;
+  bottom: 30px; /* 40 cos(45) = 28 with an additional 2px margin*/
+  left: -25px; /*Because it looked good, but there is probably a mathematical link here as well*/
+  display: inline-block;
+  // width: 100%;
+  width: 85px; /* 80 / cos(45) - 40 cos (45) = 85 where 80 is the height of the cell, 40 the width of the cell and 45 the transform angle*/
+  text-align: left;
+  white-space: nowrap; /*whether to display in one line or not*/
+}

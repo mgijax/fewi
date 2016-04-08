@@ -1,0 +1,31 @@
+{
+  "name": "ngScrollable",
+  "homepage": "https://github.com/gdepourtales/ng-scrollable",
+  "authors": [
+    "Alexander Eichhorn <alex@kidtsunami.com>"
+  ],
+  "description": "Superamazing scrollbars for AngularJS",
+  "main": [
+    "min/ng-scrollable.min.css",
+    "min/ng-scrollable.min.js"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "*"
+  },
+  "_release": "831b6abb8d",
+  "_resolution": {
+    "type": "commit",
+    "commit": "831b6abb8d964315c22581338d00f03befb9a852"
+  },
+  "_source": "git://github.com/gdepourtales/ng-scrollable.git",
+  "_target": "831b6abb8d964315c22581338d00f03befb9a852",
+  "_originalSource": "gdepourtales/ng-scrollable"
+}
