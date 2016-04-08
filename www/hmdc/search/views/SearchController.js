@@ -71,6 +71,9 @@
 						}
 						vm.results.grid.data.push(rowContent);
 					}
+					vm.results.grid.data.push([]);
+
+					vm.results.grid.rowcount = response.data.gridRows.length >= 18 ? 18 : response.data.gridRows.length;
 
 					vm.mustHide = true;
 				}, function (error) {

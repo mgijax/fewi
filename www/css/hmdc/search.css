@@ -89,8 +89,12 @@
     content: '\25BC';
 }
 
-.cell.left.header td {
+td.cell.left.header {
 	width: auto;
+}
+
+td.cell.middle.right.first {
+	display: none;
 }
 
 /* Header */
