@@ -164,3 +164,34 @@ td.cell.right.header.last {
   text-align: left;
   white-space: nowrap; /*whether to display in one line or not*/
 }
+
+#headerContainer {
+   background: #ffdab3; /* For browsers that do not support gradients */
+   background: -webkit-linear-gradient(left top, #ffdab3, #dce8f4); /* For Safari 5.1 to 6.0 */
+   background: -o-linear-gradient(bottom right, #ffdab3, #dce8f4); /* For Opera 11.1 to 12.0 */
+   background: -moz-linear-gradient(bottom right, #ffdab3, #dce8f4); /* For Firefox 3.6 to 15 */
+   background: linear-gradient(to bottom right, #ffdab3, #dce8f4); /* Standard syntax */
+   height: 65px;
+   width: 100%;
+}
+
+#headerContainer .links {
+   margin-top: 36px;
+   margin-left: 30px;
+   float: left;
+}
+#headerContainer .links a {
+   margin-left: 10px;
+   font-size: 20px;
+   color:#000000;
+}
+
+#headerContainer .hmdcbox {
+   float: left;
+   font-size: 23px;
+   border: 1px solid;
+}
+#headerContainer .logo {
+   float: right;
+}
+
