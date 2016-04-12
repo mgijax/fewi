@@ -967,7 +967,7 @@ public class DiseasePortalController
 		Filter termSearchFilter = Filter.extractTermsForNestedFilter(gridClusterFilter);
 
 		gridClusterFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_GRID_COLUMNS);
-		termSearchFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
+		termSearchFilter.replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT);
 
 		if(gridClusterFilter.getNestedFilters() != null && gridClusterFilter.getNestedFilters().size() > 0 && termSearchFilter.getNestedFilters() != null && termSearchFilter.getNestedFilters().size() > 0) {
 			Filter andFilter = new Filter();

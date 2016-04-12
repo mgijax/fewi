@@ -2,7 +2,7 @@ project.name=fewi
 
 <!--jboss directories -->
 jboss.dir=/data/jboss
-deploy.dir=/data/jboss/standalone/deployments
+deploy.dir=/data/jboss/bluebob/deployments
 
 <!--fewi product directories -->
 lib.dir=www/WEB-INF/lib
@@ -12,16 +12,17 @@ compile.dir=www/WEB-INF/classes
 testoutput.dir=testoutput
 
 <!--local server directories -->
-fedatamodel.dir=dist
-snpdatamodel.dir=dist
-lib_java_fe.dir=dist
-global_config.dir=mgiconfig/web
+#fedatamodel.dir=dist
+fedatamodel.dir=/home/jsb/hpo/pub/fedatamodel/dist/
+snpdatamodel.dir=/home/jsb/hpo/pub/snpdatamodel/dist/
+lib_java_fe.dir=/home/jsb/hpo/pub/lib/java/
+global_config.dir=/home/jsb/hpo/pub/mgiconfig/web
 
 <!--data sources -->
 datasource=postgresDev-local-ds.xml
 jdbcdriver=sharelib/postgresql-9.0-801.jdbc4.jar
 
 <!--config files -->
-#config.file=fewi.properties.default
+#onfig.file=fewi.properties.bluebob
 web_xml.file=web.xml.public
 #web_xml.file=web.xml.dev
