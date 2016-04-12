@@ -52,10 +52,10 @@
 					return "background: linear-gradient(135deg, " + hac + " 50%, rgb(0,0,0) 0%, " + ac + " 50%);";
 				}
 				if(hac) {
-					return "background: linear-gradient(135deg, rgb(0,0,0) 0%, rgb(0,0,0) 0%, " + hac + " 0%);";
+					return "background: linear-gradient(135deg, " + hac +  " 0%, " + hac + " 0%, " + hac + " 0%);";
 				}
 				if(ac) {
-					return "background: linear-gradient(135deg, " + ac + " 100%, rgb(0,0,0) 0%, rgb(0,0,0) 0%);";
+					return "background: linear-gradient(135deg, " + ac + " 100%, " + ac + " 0%, " + ac + " 0%);";
 				}
 			}
 		}
