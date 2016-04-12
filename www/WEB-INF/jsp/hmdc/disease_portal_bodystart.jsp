@@ -1,7 +1,6 @@
-		<!--===================== Body Start ===========================-->
+	<!--===================== Body Start: disease_portal_bodystart.jsp ===========================-->
 	</head>
 	<body id="body">
-
 		<div id="headerContainer">
 			<div class="hmdcbox">
 				HM<br>DC
@@ -18,7 +17,4 @@
 			<div class="logo">
 				<a href="${configBean.FEWI_URL}"><img src="${configBean.WEBSHARE_URL}images/mgi_logo.gif"></a>
 			</div>
-
 		</div>
-		
-		<div id="templateBodyInsert"> <!-- wrapper around inserted page body -->

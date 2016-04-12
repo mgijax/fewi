@@ -32,10 +32,10 @@
 		<script src="search/views/StyleController.js"></script>
 		<script src="search/views/SearchController.js"></script>
 		<script src="search/forms/queryBuilder.type.js"></script>
-
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
 	</head>
-	<body>
-		<div style="width: 175px;">
+	<body id="body">
+		<div style="display: none;width: 175px;">
 			<form>
 				<div class="form-group">
 					<label>Theme</label>
@@ -47,7 +47,7 @@
 			<div class="searchView container">
 				<div ng-include="'/assets/hmdc/search/views/search.tpl.html'"></div>
 			</div>
-			<div class="results container-fluid" ng-show="vm.results.diseaseResults">
+			<div class="container-fluid searchViewBox" ng-show="vm.results.diseaseResults">
 				<div ng-include="'/assets/hmdc/search/views/results.tpl.html'"></div>
 			</div>
 		</div>

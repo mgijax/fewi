@@ -1,8 +1,8 @@
 <!DOCTYPE html>
+<!--===================== Template Head: disease_portal_header.jsp ===========================-->
 
 <html ng-app="civicClient" ng-controller="StyleController">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 		<!-- import jquery UI specifically for this page -->
 		<link rel="stylesheet" type="text/css" href="${configBean.FEWI_URL}/assets/hmdc/bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -37,4 +37,3 @@
 
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-		<!--===================== End Template Head  ===========================-->
