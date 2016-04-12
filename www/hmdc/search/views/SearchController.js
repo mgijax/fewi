@@ -23,6 +23,45 @@
 			ngDialog.open({ template: 'GeneSource' });
 		}
 
+		$scope.handleClick = function(event, cellData) {
+			console.log(cellData);
+		}
+
+		$scope.formatFun = function(value, row, col, formattedValue) {
+			if(value && value.isNormal) {
+				console.log(value);
+				return "N";
+			}
+		}
+
+		$scope.styleFun = function(value, row, col) {
+			if(value) {
+				var hac = "#F7861D";
+				if(value.humanAnnotCount < 100) hac = "#F4A041";
+				if(value.humanAnnotCount < 6) hac = "#F2BF79";
+				if(value.humanAnnotCount < 2) hac = "#FBDBB4";
+				if(value.humanAnnotCount < 1) hac = "";
+
+				var ac = "#0C2255";
+				if(value.annotCount < 100) ac = "#48648B";
+				if(value.annotCount < 6) ac = "#879EBA";
+				if(value.annotCount < 2) ac = "#C6D6E8";
+				if(value.annotCount < 1) ac = "";
+
+				if(hac && ac) {
+					return "background: linear-gradient(135deg, " + hac + " 50%, rgb(0,0,0) 0%, " + ac + " 50%);";
+				}
+				if(hac) {
+					return "background: linear-gradient(135deg, rgb(0,0,0) 0%, rgb(0,0,0) 0%, " + hac + " 0%);";
+				}
+				if(ac) {
+					return "background: linear-gradient(135deg, " + ac + " 100%, rgb(0,0,0) 0%, rgb(0,0,0) 0%);";
+				}
+			}
+		}
+
+
+
 		function onSubmit() {
 			vm.query = vm.model;
 			console.log("Submit: " + JSON.stringify(vm.model));
@@ -30,7 +69,6 @@
 
 			Search.gridQuery(vm.model).
 				then(function(response) {
-					console.log(response.data);
 					vm.results.grid = {};
 					//vm.results.grid.data = response.data;
 					vm.results.grid.data = [];
@@ -38,9 +76,11 @@
 					var headerContent = [];
 					headerContent.push("Human Gene");
 					headerContent.push("Mouse Gene");
+					// Push the MP Headers into the headerContent row
 					for(var header in response.data.gridMPHeaders) {
 						headerContent.push("<span>" + response.data.gridMPHeaders[header] + "</span>");
 					}
+					// Push the OMIM Headers into the headerContent row
 					for(var header in response.data.gridOMIMHeaders) {
 						headerContent.push("<span>" + response.data.gridOMIMHeaders[header] + "</span>");
 					}
@@ -49,55 +89,45 @@
 
 					for(var key in response.data.gridRows) {
 						key = response.data.gridRows[key];
-						console.log("Key: " + key);
 						var rowContent = [];
-						rowContent.push(key.gridCluster.humanSymbols.join());
-						rowContent.push(key.gridCluster.mouseSymbols.join());
+
+						var subscript = 
+
+						rowContent.push(key.gridCluster.humanSymbols.join().replace(/<([^>]*)>/, "<sup>$1</sup>"));
+						rowContent.push(key.gridCluster.mouseSymbols.join().replace(/<([^>]*)>/, "<sup>$1</sup>"));
 						for(var header in response.data.gridMPHeaders) {
 							header = response.data.gridMPHeaders[header];
-							if(key.mpHeaderCells[header]) {
-								rowContent.push(key.mpHeaderCells[header].annotCount + "," + key.mpHeaderCells[header].humanAnnotCount);
-							} else {
-								rowContent.push(0);
-							}
+							rowContent.push(key.mpHeaderCells[header]);
 						}
 						for(var header in response.data.gridOMIMHeaders) {
 							header = response.data.gridOMIMHeaders[header];
-							if(key.diseaseCells[header]) {
-								rowContent.push(key.diseaseCells[header].annotCount + "," + key.diseaseCells[header].humanAnnotCount);
-							} else {
-								rowContent.push(0);
-							}
+							rowContent.push(key.diseaseCells[header]);
 						}
 						vm.results.grid.data.push(rowContent);
 					}
 					vm.results.grid.data.push([]);
 
 					vm.results.grid.rowcount = response.data.gridRows.length >= 18 ? 18 : response.data.gridRows.length;
+					vm.results.grid.totalrowcount = response.data.gridRows.length + 1;
 
 					vm.mustHide = true;
 				}, function (error) {
-					console.log(error);
 					vm.errorMessage = error;
 			});
 //			Search.geneQuery(vm.model).
 //				then(function(response) {
-//					console.log(response.data);
 //					vm.results.geneResults = response.data;
 //					vm.tabs.geneTab.count = vm.results.geneResults.totalCount;
 //					vm.mustHide = true;
 //				}, function (error) {
-//					console.log(error);
 //					vm.errorMessage = error;
 //			});
 			Search.diseaseQuery(vm.model).
 				then(function(response) {
-					console.log(response.data);
 					vm.results.diseaseResults = response.data;
 					vm.tabs.diseaseTab.count = vm.results.diseaseResults.totalCount;
 					vm.mustHide = true;
 				}, function (error) {
-					console.log(error);
 					vm.errorMessage = error;
 			});
 		}
@@ -106,7 +136,7 @@
 			"gridTab": {
 				"count": 0,
 				"heading": "Gene Homologs x Phenotypes/Diseases",
-				"active": false,
+				"active": true,
 				"template": "/assets/hmdc/search/views/grid.tpl.html"
 			},
 			"geneTab": {
@@ -118,7 +148,7 @@
 			"diseaseTab": {
 				"count": 0,
 				"heading": "Diseases",
-				"active": true,
+				"active": false,
 				"template": "/assets/hmdc/search/views/disease.tpl.html"
 			}
 
