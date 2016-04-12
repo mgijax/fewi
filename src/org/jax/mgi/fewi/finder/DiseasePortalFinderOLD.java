@@ -305,7 +305,7 @@ public class DiseasePortalFinderOLD
 	private SearchResults<SolrString> huntHighlightedColumns(SearchParams params) {
 		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 
-		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
+		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT);
 
 		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_GROUP);
 
@@ -321,7 +321,7 @@ public class DiseasePortalFinderOLD
 	private SearchResults<SolrString> huntHighlightedColumnHeaders(SearchParams params) {
 		SearchResults<SolrHdpEntity> results = new SearchResults<SolrHdpEntity>();
 
-		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH);
+		params.getFilter().replaceProperty(DiseasePortalFields.TERM, DiseasePortalFields.TERM_SEARCH_FOR_DISEASE_TEXT);
 
 		hdpHunter.hunt(params, results, DiseasePortalFields.TERM_HEADER);
 
