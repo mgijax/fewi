@@ -17,10 +17,10 @@ Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&
 		<tr ng-repeat="row in displayedCollection">
 			<td><a href="/disease/{{ row.diseaseId }}">{{ row.disease }}</a></td>
 			<td><a href="/disease/{{ row.diseaseId }}">{{ row.diseaseId }}</a></td>
-			<td><a href="/disease/models/{{ row.diseaseId }}">{{ row.diseaseModels }}</a></td>
+			<td><a ng-if="row.diseaseModels > 0" href="/disease/models/{{ row.diseaseId }}">{{ row.diseaseModels }}</a></td>
 			<td><div ng-bind-html="displayHTML(row.mouseMarkers)"></div></td>
 			<td><div ng-bind-html="displayHTML(row.humanMarkers)"></div></td>
-			<td><a href="/reference/disease/{{ row.diseaseId }}?typeFilter=Literature">{{ row.refCount }}</a></td>
+			<td><a ng-if="row.refCount > 0" href="/reference/disease/{{ row.diseaseId }}?typeFilter=Literature">{{ row.refCount }}</a></td>
 		</tr>
 	</tbody>
 	<tfoot>
