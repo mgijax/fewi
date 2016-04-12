@@ -4,7 +4,7 @@ Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&
 <table class="table table-bordered table-striped" st-table="displayedCollection" st-safe-src="vm.results.diseaseResults.summaryRows" ng-show="vm.results.diseaseResults.totalCount > 0">
 	<thead>
 		<tr>
-			<th st-ratio="35" st-sort="disease">Disease</th>
+			<th st-ratio="35" st-sort="disease" st-sort-default="disease">Disease</th>
 			<th st-ratio="5" st-sort="diseaseId">OMIM ID</th>
 			<th st-ratio="10">Mouse Models</th>
 			<th st-ratio="30" st-sort="mouseMarkers">Associated Genes from Mouse Models</th>
@@ -15,12 +15,12 @@ Export: <a class="btn" href="/diseasePortal/marker/report.txt?phenotypes=105830&
 	
 	<tbody>
 		<tr ng-repeat="row in displayedCollection">
-			<td><div ng-bind-html="displayHTML(row.disease)"></div></td>
-			<td>{{ row.diseaseId }}</td>
-			<td><div ng-bind-html="displayHTML(row.diseaseModels)"></div></td>
+			<td><a href="/disease/{{ row.diseaseId }}">{{ row.disease }}</a></td>
+			<td><a href="/disease/{{ row.diseaseId }}">{{ row.diseaseId }}</a></td>
+			<td><a href="/disease/models/{{ row.diseaseId }}">{{ row.diseaseModels }}</a></td>
 			<td><div ng-bind-html="displayHTML(row.mouseMarkers)"></div></td>
-			<td>{{ row.humanMarkers }}</td>
-			<td><div ng-bind-html="displayHTML(row.refCount)"></div></td>
+			<td><div ng-bind-html="displayHTML(row.humanMarkers)"></div></td>
+			<td><a href="/reference/disease/{{ row.diseaseId }}?typeFilter=Literature">{{ row.refCount }}</a></td>
 		</tr>
 	</tbody>
 	<tfoot>

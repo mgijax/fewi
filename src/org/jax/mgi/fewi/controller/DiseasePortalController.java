@@ -1719,7 +1719,8 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 		params.setIncludeSetMeta(true);
 		params.setIncludeRowMeta(true);
-		params.setIncludeMetaScore(true);
+		//params.setIncludeMetaScore(true);
+		params.setIncludeHighlightMarkup(true);
 		params.setPageSize(10000);
 
 		System.out.println("Json: " + jsonInput);
@@ -1770,7 +1771,8 @@ public class DiseasePortalController
 		SearchParams params = new SearchParams();
 		params.setIncludeSetMeta(true);
 		params.setIncludeRowMeta(true);
-		params.setIncludeMetaScore(true);
+		//params.setIncludeMetaScore(true);
+		params.setIncludeHighlightMarkup(true);
 		params.setPageSize(10000);
 
 		System.out.println("Json: " + jsonInput);
