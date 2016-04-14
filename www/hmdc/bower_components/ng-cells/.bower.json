@@ -38,7 +38,6 @@
     "commit": "2ec7024a48708d2353550a3ff7b5ddb30fca1482"
   },
   "_source": "https://github.com/gdepourtales/ng-cells.git",
-  "_target": "^0.4.0",
-  "_originalSource": "ng-cells",
-  "_direct": true
+  "_target": "0.4.0",
+  "_originalSource": "ng-cells"
 }

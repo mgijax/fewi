@@ -22,10 +22,10 @@
   },
   "_release": "831b6abb8d",
   "_resolution": {
-    "type": "commit",
-    "commit": "831b6abb8d964315c22581338d00f03befb9a852"
+    "type": "tag",
+    "commit": "0.2.5"
   },
-  "_source": "git://github.com/gdepourtales/ng-scrollable.git",
+  "_source": "git://github.com/echa/ng-scrollable.git",
   "_target": "831b6abb8d964315c22581338d00f03befb9a852",
   "_originalSource": "gdepourtales/ng-scrollable"
 }
